@@ -1,0 +1,258 @@
+/* HOMEPAGE STYLES — Navy + Orange classic automotive */
+
+/* ---- HERO ---- */
+.hero {
+  background: linear-gradient(160deg, var(--navy-900) 0%, var(--navy-800) 60%, var(--navy-700) 100%);
+  padding: 4rem 2rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(36,96,160,0.15));
+  pointer-events: none;
+}
+
+.heroInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.heroContent {}
+.heroEyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--orange-400);
+  margin-bottom: 0.75rem;
+}
+.heroTitle {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+.heroOrange { color: var(--orange-400); }
+.heroLead {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.7;
+  margin-bottom: 1.75rem;
+  max-width: 500px;
+}
+
+.heroCtas { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
+
+.heroPhoneBtn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--orange-500); color: #fff;
+  padding: 0.75rem 1.5rem; border-radius: var(--radius-md);
+  font-weight: 700; font-size: 1rem; text-decoration: none;
+  transition: background 0.15s; min-height: 48px;
+}
+.heroPhoneBtn:hover { background: var(--orange-600); color: #fff; text-decoration: none; }
+
+.heroWaBtn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: #25d366; color: #fff;
+  padding: 0.75rem 1.25rem; border-radius: var(--radius-md);
+  font-weight: 600; font-size: 0.95rem; text-decoration: none;
+  transition: background 0.15s; min-height: 48px;
+}
+.heroWaBtn:hover { background: #1fba57; color: #fff; text-decoration: none; }
+
+.heroUrgentBtn {
+  display: inline-flex; align-items: center;
+  background: transparent; color: rgba(255,255,255,0.8);
+  padding: 0.75rem 1rem; border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.25);
+  font-weight: 600; font-size: 0.9rem; text-decoration: none;
+  transition: all 0.15s; min-height: 48px;
+}
+.heroUrgentBtn:hover { border-color: rgba(255,255,255,0.6); color: #fff; text-decoration: none; }
+
+.heroTrust { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.trustPill {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-size: 0.75rem; font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 0.3rem 0.75rem; border-radius: 3px;
+}
+
+/* Hero Visual */
+.heroVisual {}
+.heroImg {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 16/10;
+  background: rgba(255,255,255,0.03);
+  margin-bottom: 1rem;
+}
+.heroImgPlaceholder {
+  height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0.75rem; color: rgba(255,255,255,0.35);
+  font-size: 0.8rem; text-align: center; padding: 1.5rem;
+}
+.heroImgPlaceholder small { font-size: 0.7rem; opacity: 0.6; }
+.carSvg { width: 120px; height: 75px; margin-bottom: 0.5rem; }
+
+.heroStats {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+.heroStat { flex: 1; text-align: center; }
+.heroStat strong { display: block; font-size: 1.4rem; font-weight: 700; color: var(--orange-400); line-height: 1; margin-bottom: 0.2rem; }
+.heroStat span { font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em; }
+.heroStatDiv { width: 1px; background: rgba(255,255,255,0.1); height: 40px; }
+
+/* ---- EMERGENCY STRIP ---- */
+.emergencyStrip {
+  background: var(--navy-800);
+  border-top: 3px solid var(--orange-500);
+  padding: 0.75rem 2rem;
+}
+.emergencyInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.emergencyItem {
+  display: flex; align-items: center; gap: 0.6rem;
+  color: rgba(255,255,255,0.8); font-size: 0.875rem;
+}
+.emergencyItem svg { color: var(--orange-400); flex-shrink: 0; }
+.emergencyItem a { color: #fff; text-decoration: none; }
+.emergencyItem a:hover { color: var(--orange-400); }
+.emergencyItem strong { color: #fff; }
+.emergencyPhone {
+  font-size: 1.05rem; font-weight: 700; color: var(--orange-400);
+  text-decoration: none; border: 2px solid var(--orange-500);
+  padding: 0.4rem 1rem; border-radius: var(--radius-md); white-space: nowrap;
+  transition: all 0.15s;
+}
+.emergencyPhone:hover { background: var(--orange-500); color: #fff; text-decoration: none; }
+
+/* ---- SERVICES ---- */
+.services { padding: 4rem 0; }
+.sectionHead { margin-bottom: 2.5rem; }
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.serviceCard {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1.25rem; background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.serviceCard:hover { border-color: var(--navy-300); box-shadow: var(--shadow-md); transform: translateY(-1px); text-decoration: none; }
+.serviceIconBox {
+  width: 48px; height: 48px; flex-shrink: 0;
+  background: var(--navy-50); border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--navy-600);
+  transition: background 0.15s, color 0.15s;
+}
+.serviceCard:hover .serviceIconBox { background: var(--navy-800); color: #fff; }
+.serviceBody { flex: 1; }
+.serviceTitle { font-size: 0.9rem; font-weight: 600; color: var(--gray-900); margin-bottom: 0.25rem; }
+.serviceDesc { font-size: 0.8rem; color: var(--gray-500); margin: 0; line-height: 1.5; }
+.serviceArrow { font-size: 1rem; color: var(--gray-300); flex-shrink: 0; align-self: center; transition: color 0.15s; }
+.serviceCard:hover .serviceArrow { color: var(--orange-500); }
+.servicesCta { text-align: center; margin-top: 2rem; }
+
+/* ---- BRANDS ---- */
+.brandsSection { padding: 2rem 0; background: var(--gray-50); border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); }
+.brandsTitle { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gray-400); margin-bottom: 0.75rem; }
+.brandsList { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.brandTag {
+  background: #fff; border: 1px solid var(--gray-200);
+  color: var(--gray-700); font-size: 0.8rem; font-weight: 500;
+  padding: 0.3rem 0.75rem; border-radius: var(--radius-sm);
+  text-decoration: none; transition: all 0.12s;
+}
+.brandTag:hover { border-color: var(--navy-300); color: var(--navy-800); background: var(--navy-50); text-decoration: none; }
+
+/* ---- COMPARE ---- */
+.compare { padding: 4rem 0; background: var(--gray-50); }
+.compareGrid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: center; }
+.checkList { list-style: none; padding: 0; margin: 1rem 0 1.5rem; }
+.checkItem { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; font-size: 0.9rem; color: var(--gray-700); border-bottom: 1px solid var(--gray-200); }
+.checkIcon { color: var(--color-success); flex-shrink: 0; }
+.compareTableWrap { overflow-x: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; }
+
+/* ---- REVIEWS ---- */
+.reviews { padding: 4rem 0; }
+.ratingBig { display: flex; align-items: center; gap: 1rem; margin-top: 0.75rem; }
+.ratingNum { font-size: 3rem; font-weight: 700; color: var(--gray-900); line-height: 1; }
+.reviewGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2rem; }
+.reviewCard { background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.reviewText { font-size: 0.875rem; color: var(--gray-600); line-height: 1.7; font-style: italic; flex: 1; margin: 0; }
+.reviewMeta { display: flex; align-items: center; gap: 0.75rem; }
+.reviewAvatar { width: 36px; height: 36px; border-radius: 50%; background: var(--navy-800); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; flex-shrink: 0; }
+.reviewMeta strong { display: block; font-size: 0.85rem; color: var(--gray-900); }
+.reviewMeta span { font-size: 0.75rem; color: var(--gray-400); }
+
+/* ---- FAQ ---- */
+.faqSection { padding: 4rem 0; background: var(--gray-50); }
+.faqGrid { display: grid; grid-template-columns: 280px 1fr; gap: 3rem; align-items: start; }
+
+/* ---- FINAL CTA ---- */
+.finalCta { background: var(--navy-900); padding: 4rem 2rem; }
+.finalCtaInner { max-width: 700px; margin: 0 auto; text-align: center; }
+.finalCtaInner h2 { color: #fff; font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 0.75rem; }
+.finalCtaInner p { color: rgba(255,255,255,0.7); margin-bottom: 2rem; }
+.finalCtaBtns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+.waBtn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: #25d366; color: #fff;
+  padding: 0.85rem 2rem; border-radius: var(--radius-md);
+  font-weight: 700; font-size: 1rem;
+  text-decoration: none; min-height: 52px;
+  transition: background 0.15s;
+}
+.waBtn:hover { background: #1fba57; color: #fff; text-decoration: none; }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 1024px) {
+  .heroInner { grid-template-columns: 1fr; }
+  .heroVisual { display: none; }
+  .servicesGrid { grid-template-columns: repeat(2, 1fr); }
+  .compareGrid { grid-template-columns: 1fr; }
+  .reviewGrid { grid-template-columns: 1fr; }
+  .faqGrid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .heroCtas { flex-direction: column; }
+  .heroPhoneBtn, .heroWaBtn, .heroUrgentBtn { width: 100%; justify-content: center; }
+  .emergencyInner { flex-direction: column; gap: 0.75rem; }
+  .servicesGrid { grid-template-columns: 1fr; }
+  .finalCtaBtns { flex-direction: column; }
+}

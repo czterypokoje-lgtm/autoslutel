@@ -1,0 +1,44 @@
+.ctaBand { background: var(--navy-800); border-top: 3px solid var(--orange-500); padding: 2rem; }
+.ctaBandInner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+.ctaBandInner h3 { color: #fff; font-size: 1.3rem; margin-bottom: 0.25rem; }
+.ctaBandInner p { color: rgba(255,255,255,0.65); margin: 0; font-size: 0.875rem; }
+.ctaBtns { display: flex; gap: 0.75rem; flex-shrink: 0; flex-wrap: wrap; }
+.ctaPhoneBtn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--orange-500); color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 700; text-decoration: none; transition: background 0.15s; white-space: nowrap; }
+.ctaPhoneBtn:hover { background: var(--orange-600); color: #fff; text-decoration: none; }
+.ctaWaBtn { display: inline-flex; align-items: center; background: #25d366; color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 700; text-decoration: none; transition: background 0.15s; }
+.ctaWaBtn:hover { background: #1fba57; color: #fff; text-decoration: none; }
+
+.footer { background: var(--navy-900); }
+.footerGrid { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2.5rem; }
+
+.footerBrand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.footerLogo { width: 40px; height: 40px; flex-shrink: 0; }
+.footerBrandName { font-size: 0.95rem; font-weight: 700; color: #fff; }
+.footerBrandSub { font-size: 0.65rem; color: var(--orange-400); text-transform: uppercase; letter-spacing: 0.08em; }
+.footerDesc { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; margin-bottom: 0.75rem; }
+.footerBadges { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+.footerBadges span { font-size: 0.68rem; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.08); padding: 0.2rem 0.5rem; border-radius: 2px; }
+.footerContact { display: flex; flex-direction: column; gap: 0.25rem; }
+.footerContact a { font-size: 0.82rem; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.12s; }
+.footerContact a:hover { color: var(--orange-400); }
+.hours { font-size: 0.78rem; color: var(--orange-400); font-weight: 600; }
+
+.colTitle { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); margin-bottom: 0.75rem; }
+.linkList { list-style: none; padding: 0; margin: 0; }
+.linkList li { margin-bottom: 0.35rem; }
+.linkList a { font-size: 0.82rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.12s; }
+.linkList a:hover { color: #fff; }
+
+.bottomBar { border-top: 1px solid rgba(255,255,255,0.06); }
+.bottomInner { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.bottomInner p { font-size: 0.75rem; color: rgba(255,255,255,0.3); margin: 0; }
+.bottomLinks { display: flex; gap: 1.5rem; }
+.bottomLinks a { font-size: 0.75rem; color: rgba(255,255,255,0.3); text-decoration: none; }
+.bottomLinks a:hover { color: rgba(255,255,255,0.7); }
+
+@media (max-width: 1024px) { .footerGrid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) {
+  .footerGrid { grid-template-columns: 1fr; padding: 2rem 1rem; }
+  .ctaBandInner { flex-direction: column; }
+  .bottomInner { flex-direction: column; align-items: flex-start; }
+}

@@ -1,0 +1,146 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import Script from 'next/script';
+import { BRANDS } from '../../../config/brands';
+import { CITIES } from '@/config/cities';
+import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+
+export async function generateStaticParams() {
+  return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-sleutel-programmeren` }));
+}
+
+export async function generateMetadata(props: { params: Promise<{ merkSlug: string }> }): Promise<Metadata> {
+  const params = await props.params;
+  const merkSlug = params.merkSlug;
+  const decodedSlug = decodeURIComponent(merkSlug).toLowerCase();
+  
+  const brand = BRANDS.find(b => {
+    const base = b.nameSlug.toLowerCase();
+    return decodedSlug === `${base}-sleutel-programmeren` || decodedSlug === base;
+  });
+
+  if (!brand) return {};
+  return {
+    title: `${brand.name} Sleutel Programmeren | ${brand.system.split('/')[0]} | Mobiel | ${SITE_CONFIG.name}`,
+    description: `${brand.name} autosleutel programmering. ${brand.system}. Alle modellen. Goedkoper dan ${brand.name} dealer. Mobiel aan huis. Bel: ${SITE_CONFIG.phone}`,
+    alternates: { canonical: `${SITE_CONFIG.domain}/merken/${merkSlug}` },
+  };
+}
+
+export default async function BrandPage(props: { params: Promise<{ merkSlug: string }> }) {
+  const params = await props.params;
+  const merkSlug = params.merkSlug;
+  const decodedSlug = decodeURIComponent(merkSlug).toLowerCase();
+
+  const brand = BRANDS.find(b => {
+    const base = b.nameSlug.toLowerCase();
+    return decodedSlug === `${base}-sleutel-programmeren` || decodedSlug === base;
+  });
+
+  if (!brand) notFound();
+
+  const p1Cities = CITIES.filter(c => c.priority === 'P1').slice(0, 10);
+
+  const schema = {
+    '@context': 'https://schema.org', '@type': 'Service',
+    name: `${brand.name} Sleutel Programmeren`,
+    description: `Professionele sleutelprogrammering voor alle ${brand.name} modellen. Mobiele service op locatie.`,
+    provider: { '@type': 'Locksmith', name: SITE_CONFIG.fullName, telephone: SITE_CONFIG.phoneTel },
+  };
+
+  return (
+    <>
+      <Script id={`brand-schema-${brand.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <main>
+        {/* Hero Section */}
+        <section style={{ background: 'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding: '4rem 2rem 3rem' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+            <nav style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.45)', marginBottom: '1rem', display: 'flex', gap: '0.5rem' }}>
+              <Link href="/" style={{ color: 'rgba(255,255,255,0.45)' }}>Home</Link> /
+              <Link href="/merken" style={{ color: 'rgba(255,255,255,0.45)' }}>Merken</Link> /
+              <span style={{ color: 'rgba(255,255,255,0.7)' }}>{brand.name}</span>
+            </nav>
+            <h1 style={{ color: '#fff', fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', marginBottom: '1.25rem', lineHeight: 1.1 }}>
+              {brand.name} Sleutel Programmeren &amp; Bijmaken <br />
+              <span style={{ color: 'var(--orange-400)' }}>Direct Ter Plaatse</span>
+            </h1>
+            <p style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 700, fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '2rem' }}>
+              Is uw {brand.name} sleutel kwijt, gestolen of werkt de afstandsbediening niet meer?
+              Wij programmeren alle {brand.name} modellen (CAS, FEM, BDC, MQB, Smart Key) direct aan huis.
+              Bespaar tot 50% vergeleken met de dealer.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg" id={`brand-hero-${brand.slug}-phone`}>{SITE_CONFIG.phone}</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="wa-btn" style={{ background:'#25d366', color:'#fff', padding:'0.85rem 2rem', borderRadius:'6px', fontWeight:700, textDecoration:'none', display:'flex', alignItems:'center', gap:'0.5rem' }} id={`brand-hero-${brand.slug}-wa`}>WhatsApp Direct</a>
+            </div>
+          </div>
+        </section>
+
+        {/* Models Grid */}
+        {brand.models && brand.models.length > 0 && (
+          <section style={{ padding: '4rem 0', background: 'var(--gray-50)' }}>
+            <div className="container">
+              <h2 style={{ marginBottom: '2rem' }}>Ondersteunde {brand.name} Modellen</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                {brand.models.map(m => (
+                  <Link key={m.slug} href={`/merken/${merkSlug}/${m.slug}`} 
+                    style={{ background: '#fff', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--gray-200)', textDecoration: 'none', transition: 'transform 0.2s', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+                    className="model-card">
+                    <strong style={{ fontSize: '1.1rem', color: 'var(--gray-900)' }}>{m.name}</strong>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--gray-500)' }}>Bouwjaren: {m.years}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--orange-500)', fontWeight: 600, marginTop: '0.5rem' }}>Details &amp; Prijs →</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Technical Section */}
+        <section style={{ padding: '5rem 0' }}>
+          <div className="container">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+              <div>
+                <h2>{brand.name} Specialist — Dealer Niveau</h2>
+                <p style={{ marginBottom: '1.5rem', lineHeight: 1.8 }}>
+                  Wij maken gebruik van exact dezelfde apparatuur als de {brand.name} dealer, maar dan volledig mobiel.
+                  Met tools zoals <strong>{brand.system}</strong> kunnen wij direct in de computer van uw auto programmeren,
+                  ook wanneer u <strong>alle sleutels kwijt</strong> bent.
+                </p>
+                <ul className="check-list" style={{ columns: 1 }}>
+                  <li>Zelfde dag service (klaar terwijl u wacht)</li>
+                  <li>Geen sleepkosten naar de garage</li>
+                  <li>Originele OEM {brand.name} sleutels op voorraad</li>
+                  <li>Inclusief slijpen van de noodsleutel</li>
+                  <li>Verzekeringsklare facturen</li>
+                </ul>
+              </div>
+              <div style={{ background: 'var(--navy-900)', color: '#fff', padding: '3rem', borderRadius: '16px' }}>
+                <h3 style={{ color: 'var(--orange-400)', marginBottom: '1rem' }}>Direct een prijsopgave?</h3>
+                <p style={{ marginBottom: '2rem', opacity: 0.8 }}>Geef uw {brand.name} model en bouwjaar door via WhatsApp en ontvang direct een vaste prijs.</p>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg" style={{ width: '100%', textAlign: 'center' }} id="brand-tech-wa">WhatsApp Nu</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Local presence / City links */}
+        <section style={{ padding: '4rem 0', background: 'var(--gray-50)' }}>
+          <div className="container">
+            <h3>Wij komen naar u toe in heel NL &amp; BE</h3>
+            <p style={{ marginBottom: '1.5rem' }}>Populaire locaties voor {brand.name} sleutel service:</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+              {p1Cities.map(c => (
+                <Link key={c.slug} href={`/steden/${c.slug}/${merkSlug}`} 
+                  style={{ padding: '0.5rem 1rem', background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '20px', fontSize: '0.85rem', color: 'var(--gray-700)', textDecoration: 'none' }}>
+                  {brand.name} in {c.city}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
+  );
+}
