@@ -107,6 +107,49 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                     </li>
                   ))}
                 </ol>
+
+                <div className={styles.seoContent}>
+                  <h2>24/7 {service.title} in Uw Regio</h2>
+                  <p>Bent u op zoek naar een betrouwbare en ervaren specialist voor {service.title.toLowerCase()}? Zoek niet verder dan de 24/7 service van {SITE_CONFIG.name}. Wij leveren een breed scala aan diensten om u te helpen met al uw autosleutel en vergrendelingsproblemen. Of u nu hulp nodig heeft met uw autosleutels, contactslot, een nieuwe autosleutel bijmaken of het vervangen van een verloren sleutel, wij kunnen helpen. Wij bieden ook een spoedservice als u bent buitengesloten uit uw auto.</p>
+                  
+                  <p>Ons ervaren en gecertificeerde team van mobiele autosleutel specialisten staat klaar om u zo snel mogelijk weer op weg te helpen. Wij zijn vastberaden om direct een oplossing te vinden en houden u binnen enkele minuten op de hoogte van onze aankomsttijd.</p>
+                  
+                  <p>Door ons te bellen bent u verzekerd van de kwaliteit en betrouwbaarheid van onze diensten. Bel ons vandaag nog om meer te weten te komen over onze {service.title.toLowerCase()} diensten!</p>
+
+                  <h3>Veilige & Efficiënte Voertuig Toegang</h3>
+                  <p>Als een van de toonaangevende mobiele autosleutel specialisten dekken wij al uw behoeften op het gebied van voertuigtoegang. Wanneer u voor ons kiest, krijgt u in een mum van tijd weer veilig toegang tot uw voertuig en ons doel is om u binnen enkele minuten weer op weg te helpen. Wij streven ernaar om bij alle spoedgevallen binnen {SITE_CONFIG.responseTime} ter plaatse te zijn. Al het werk wordt uitgevoerd door volledig gekwalificeerde en zeer ervaren specialisten, zodat u in veilige handen bent.</p>
+
+                  <h3>Autosleutelmaker Bij U in de Buurt</h3>
+                  <p>Als u ooit een autosleutel specialist nodig heeft, hoeft u zich geen zorgen te maken! Wij zijn betrouwbare slotenmakers in de regio die u altijd kunnen helpen. {SITE_CONFIG.name} levert betaalbare service; we kunnen op elk moment van de dag op uw locatie zijn en hebben uw auto zo weer open. Het grootste voordeel is dat onze autosleutel specialist naar u toe komt! Dit bespaart u wachttijd en dure sleepkosten. En als u zich zorgen maakt over de kosten, wees gerust – bij {SITE_CONFIG.name} bieden we de meest concurrerende tarieven in de regio.</p>
+
+                  <h3>Spoed Autosleutel Diensten</h3>
+                  <p>Ons bedrijf biedt deskundige specialisten die u uit elke noodsituatie helpen. Bovendien, of u nu thuis staat, op het werk of langs de weg, we zijn altijd beschikbaar om u te helpen. Bel ons voor spoed autosleutel diensten. Ons team is getraind om uw probleem efficiënt af te handelen en we begrijpen volkomen dat dergelijke situaties stressvol kunnen zijn.</p>
+
+                  <h3>Professionele Autosleutel Diensten:</h3>
+                  <p>Geniet van onze professionele, vriendelijke en probleemloze autosleutel diensten. Onze specialisten en technici zijn gecertificeerd en betrouwbaar. Ons bedrijf biedt 24-uurs service bij u aan de deur. Wij repareren, vervangen en openen elk autoslot.</p>
+
+                  <h3>Betrouwbare Service voor Betaalbare Prijzen:</h3>
+                  <p>Bij {SITE_CONFIG.name} zijn we toegewijd aan het leveren van snelle, betrouwbare diensten tegen betaalbare prijzen aan onze klanten. We begrijpen dat noodgevallen op elk moment van de dag of nacht kunnen gebeuren, daarom leveren we een 24-uurs autosleutel spoedservice, elke dag van de week.</p>
+
+                  <h3>Onze Autosleutel Specialist zal:</h3>
+                  <ul className={styles.checkList}>
+                    <li>Binnen {SITE_CONFIG.responseTime} bij u op locatie zijn.</li>
+                    <li>Bij spoed direct naar u toe komen.</li>
+                    <li>Ter plaatse een nieuwe sleutel voor u leveren (en een reserve als u dat wilt).</li>
+                    <li>Uw sleutel opnieuw programmeren indien nodig.</li>
+                    <li>Een beschadigde sleutel vervangen.</li>
+                  </ul>
+
+                  <h3>Waarom Kiezen Voor Onze Service?</h3>
+                  <ul className={styles.checkList}>
+                    <li>Gecertificeerde specialisten.</li>
+                    <li>24/7 beschikbaarheid.</li>
+                    <li>Professionele service.</li>
+                    <li>Gebruik van geavanceerde en gespecialiseerde apparatuur.</li>
+                    <li>Eerlijke en vaste prijzen vooraf.</li>
+                    <li>Snelle service & tevredenheidsgarantie.</li>
+                  </ul>
+                </div>
               </div>
 
               {/* Side CTA */}

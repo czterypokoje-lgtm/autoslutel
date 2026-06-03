@@ -64,3 +64,13 @@
 
 @media (max-width: 968px) { .contentGrid { grid-template-columns: 1fr; } .sidebar { position: static; } }
 @media (max-width: 640px) { .hero { padding: 2.5rem 1rem; } .heroCtas { flex-direction: column; } }
+
+.seoContent { background: #fff; padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-top: 2.5rem; }
+.seoContent h2, .seoContent h3 { color: var(--navy-800); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+.seoContent h2:first-child { margin-top: 0; }
+.seoContent h2 { font-size: 1.5rem; }
+.seoContent h3 { font-size: 1.25rem; }
+.seoContent p { font-size: 0.95rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem; }
+.checkList { list-style: none; padding: 0; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.checkList li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.95rem; color: var(--gray-700); }
+.checkList li::before { content: "✓"; color: var(--orange-500); font-weight: bold; }
