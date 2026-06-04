@@ -225,7 +225,7 @@ export function CityServiceView({
               {city.city} · {city.region}
             </p>
 
-            <h1>{isFR ? `${service.title} à ${city.city}` : `${service.title} in ${city.city}`}</h1>
+            <h1>{isFR ? `Besoin de ${service.title.toLowerCase()} à ${city.city} ? Service mobile!` : `${service.title} in ${city.city} nodig? Mobiel op uw locatie!`}</h1>
 
             <p className={styles.heroLead}>{uniqueIntro}</p>
 

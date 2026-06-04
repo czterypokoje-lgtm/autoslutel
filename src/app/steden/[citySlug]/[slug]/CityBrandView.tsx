@@ -51,6 +51,32 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
     mainEntity: faqItems.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   };
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Steden', item: `${SITE_CONFIG.domain}/steden` },
+      { '@type': 'ListItem', position: 3, name: city.city, item: `${SITE_CONFIG.domain}/steden/${citySlug}` },
+      { '@type': 'ListItem', position: 4, name: brand.name, item: `${SITE_CONFIG.domain}/steden/${citySlug}/${brandSlug}` },
+    ],
+  };
+
+  const techNotes: Record<string, string> = {
+    'volkswagen-sleutel-programmeren': 'Onze technici zijn volledig uitgerust om de modernste VAG sleutelsystemen te programmeren, inclusief ondersteuning voor de nieuwste MQB en SFD beveiligingsplatforms.',
+    'bmw-sleutel-programmeren': 'Wij programmeren ter plaatse alle BMW startblokkering systemen, waaronder CAS1, CAS2, CAS3, CAS4 en de nieuwere FEM/BDC modules.',
+    'mercedes-sleutel-programmeren': 'Als Mercedes-Benz specialist programmeren we sleutels direct in uw EIS/EZS contactslotmodule en ondersteunen we zowel FBS3 als FBS4 systemen.',
+    'audi-sleutel-programmeren': 'Complete ondersteuning voor alle Audi transponder- en smartkey-systemen, inclusief BCM2 en MQB startonderbrekers.',
+    'opel-sleutel-programmeren': 'Opel transponders en afstandsbedieningen programmeren we snel via de OBD-poort, inclusief de nieuwste generatie smart keys.',
+    'peugeot-sleutel-programmeren': 'Expertise in PSA sleuteltechnologie voor het inleren van afstandsbedieningen en keyless-go systemen op locatie.',
+    'renault-sleutel-programmeren': 'Directe programmering van Renault keycards en smart keys via onze mobiele OBD diagnose-apparatuur.',
+  };
+  const techNote = techNotes[brandSlug] || `Wij programmeren en programmeren de transpondersleutels van ${brand.name} direct op uw locatie via moderne diagnose-apparatuur.`;
+
+  const geoNote = city.subAreas.length > 0 
+    ? `Onze mobiele bus is actief in heel ${city.city}, inclusief omliggende wijken en gebieden zoals ${city.subAreas.slice(0, 3).join(', ')}.`
+    : `Onze mobiele bus bedient de gehele regio van ${city.city} direct aan huis of op het werk.`;
+
   const relatedBrands = BRANDS.filter(b => b.priority === 'P1' && b.slug !== brand.slug).slice(0, 5);
   const relatedCities = CITIES.filter(c => c.country === city.country && c.slug !== citySlug && c.priority !== 'P3').slice(0, 5);
 
@@ -58,6 +84,7 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
     <>
       <Script id={`combo-ls-${citySlug}-${brand.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script id={`combo-faq-${citySlug}-${brand.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <Script id={`combo-breadcrumb-${citySlug}-${brand.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* Hero */}
         <section style={{ background: 'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding: '4rem 2rem 3rem' }}>
@@ -72,10 +99,12 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
               {city.city} · {city.region}
             </p>
             <h1 style={{ color: '#fff', fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', marginBottom: '1rem' }}>
-              {`${brand.name} ${isFR ? 'Programmation Clé' : 'Sleutel Programmeren'} ${city.city}`}
+              {isFR 
+                ? `Besoin d'une programmation de clé ${brand.name} à ${city.city} ? Service mobile!`
+                : `${brand.name} Sleutel Programmeren in ${city.city}? Mobiele Sleutelspecialist!`}
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '1rem', lineHeight: 1.7, marginBottom: '1.5rem', maxWidth: 680 }}>
-              {brand.excerpt} {t.heroSub} <strong style={{ color: '#fff' }}>{city.travelTime}</strong>.
+              {brand.excerpt} {techNote} {geoNote} {t.heroSub} <strong style={{ color: '#fff' }}>{city.travelTime}</strong>.
               Systeem: <strong style={{ color: '#fff' }}>{brand.system}</strong>. {t.cheaper}
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
