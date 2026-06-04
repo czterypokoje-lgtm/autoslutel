@@ -81,7 +81,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <div className="container">
             <h2>Populaire Merken in {city.city}</h2>
             <div className={styles.brandGrid}>
-              {BRANDS.filter(b => b.priority === 'P1').map(b => (
+              {BRANDS.map(b => (
                 <Link key={b.slug} href={`/steden/${citySlug}/${b.nameSlug}-sleutel-programmeren`} className={styles.brandCard} id={`city-brand-${b.slug}`}>
                   <strong>{b.name}</strong>
                   <span>{b.system.split('/')[0].trim()}</span>
