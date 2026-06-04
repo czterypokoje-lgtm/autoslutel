@@ -101,7 +101,7 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
             <h1 style={{ color: '#fff', fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', marginBottom: '1rem' }}>
               {isFR 
                 ? `Besoin d'une programmation de clé ${brand.name} à ${city.city} ? Service mobile!`
-                : `${brand.name} Sleutel Programmeren in ${city.city}? Mobiele Sleutelspecialist!`}
+                : `${brand.name} Autosleutel Bijmaken & Programmeren in ${city.city}? Mobiel ter plaatse!`}
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '1rem', lineHeight: 1.7, marginBottom: '1.5rem', maxWidth: 680 }}>
               {brand.excerpt} {techNote} {geoNote} {t.heroSub} <strong style={{ color: '#fff' }}>{city.travelTime}</strong>.

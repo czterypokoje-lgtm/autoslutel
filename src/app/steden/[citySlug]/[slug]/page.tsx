@@ -51,8 +51,8 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const brand = getBrandFromSlug(slug);
   if (brand) {
     return {
-      title: `${brand.name} Sleutel Programmeren ${city.city} | Mobiel | ${SITE_CONFIG.name}`,
-      description: `${brand.name} autosleutel programmering in ${city.city}. ${brand.system.split('/')[0]}. Mobiel aan huis. ${city.travelTime} reactietijd. Goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
+      title: `${brand.name} Autosleutel Bijmaken & Programmeren ${city.city} | ${SITE_CONFIG.name}`,
+      description: `${brand.name} autosleutel bijmaken en programmeren in ${city.city}. ${brand.system.split('/')[0]}. Mobiel op locatie. ${city.travelTime} reactietijd. Goedkoper dan de dealer. Bel: ${SITE_CONFIG.phone}`,
       alternates: { canonical: `${SITE_CONFIG.domain}/steden/${citySlug}/${slug}` },
     };
   }
