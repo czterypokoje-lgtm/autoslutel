@@ -45,7 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // 5. Model Pages (Year SEO)
-  const modelPages: any[] = [];
+  const modelPages: MetadataRoute.Sitemap = [];
   BRANDS.forEach(b => {
     if (b.models) {
       b.models.forEach(m => {
@@ -60,7 +60,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   // 6. Combo Pages (City x Brand)
-  const comboPages: any[] = [];
+  const comboPages: MetadataRoute.Sitemap = [];
   CITIES.forEach(city => {
     BRANDS.forEach(brand => {
       if (
@@ -78,12 +78,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
+  // 7. Combo Pages (City x Service)
+  const cityServicePages: MetadataRoute.Sitemap = [];
+  CITIES.forEach(city => {
+    const coreSlugs = ['alle-sleutels-kwijt-auto', 'sleutel-bijmaken', 'transponder-sleutel-programmeren', 'smart-key-programmeren', 'contact-reparatie'];
+    const services = city.priority === 'P3'
+      ? DIENSTEN.filter(s => coreSlugs.includes(s.slug))
+      : DIENSTEN;
+    services.forEach(service => {
+      cityServicePages.push({
+        url: `${base}/steden/${city.slug}/${service.slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly' as const,
+        priority: 0.75,
+      });
+    });
+  });
+
   return [
     ...corePages,
     ...servicePages,
     ...cityPages,
     ...brandPages,
     ...modelPages,
-    ...comboPages
+    ...comboPages,
+    ...cityServicePages
   ];
 }

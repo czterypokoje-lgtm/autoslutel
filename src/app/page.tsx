@@ -6,8 +6,8 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 
 export const metadata: Metadata = {
-  title: 'Autosleutel Expert | Mobiele Autoslotenmaker | Alle Merken | 24/7',
-  description: 'Professionele mobiele autosleutelprogrammering voor alle merken in Nederland en België. Zelfde dag. Goedkoper dan dealer. Bel: 06-XX XX XX XX',
+  title: 'Autosleutel Expert | Dé Autosleutelspecialist | Alle Merken | 24/7',
+  description: 'Professionele autosleutelspecialist voor alle merken in Nederland en België. Mobiele service, zelfde dag ter plaatse. Goedkoper dan de dealer. Bel direct: 06-XX XX XX XX',
   alternates: { canonical: SITE_CONFIG.domain },
 };
 
@@ -38,7 +38,7 @@ export default function HomePage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>Mobiele Autoslotenmaker — Heel Nederland & België</p>
+            <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Heel Nederland & België</p>
             <h1 className={styles.heroTitle}>
               Autosleutel Kwijt of Defect?<br />
               <span className={styles.heroOrange}>Wij Zijn Er Binnen 30–60 Minuten</span>
@@ -213,7 +213,7 @@ export default function HomePage() {
             ].map((r, i) => (
               <div key={i} className={styles.reviewCard}>
                 <div className="stars">★★★★★</div>
-                <p className={styles.reviewText}>"{r.text}"</p>
+                <p className={styles.reviewText}>&quot;{r.text}&quot;</p>
                 <div className={styles.reviewMeta}>
                   <div className={styles.reviewAvatar}>{r.name[0]}</div>
                   <div>

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Script from 'next/script';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
+import { DIENSTEN } from '@/config/diensten';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
 
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const city = CITIES.find(c => c.slug === citySlug);
   if (!city) return {};
   return {
-    title: `Autosleutel Programmeren ${city.city} | Mobiele Service | 24/7 | ${SITE_CONFIG.name}`,
+    title: `Autosleutel Bijmaken ${city.city} | Mobiele Service | 24/7 | ${SITE_CONFIG.name}`,
     description: `Autosleutel programmering in ${city.city}. Alle merken. Mobiel aan huis. ${city.travelTime} reactietijd. Goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
     keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `sleutel kwijt ${city.city.toLowerCase()}`],
     alternates: { canonical: `${SITE_CONFIG.domain}/steden/${citySlug}` },
@@ -54,7 +55,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <Link href="/">Home</Link> <span>/</span> <Link href="/steden">Steden</Link> <span>/</span> <span>{city.city}</span>
             </nav>
             <div className={styles.heroLabel}>{city.country === 'BE' ? 'BE' : 'NL'} — {city.region}</div>
-            <h1>Autosleutel Programmeren {city.city} — Mobiele Service</h1>
+            <h1>Autosleutel Bijmaken {city.city} — Dé Sleutelspecialist</h1>
             <p className={styles.heroLead}>
               Vanuit Eindhoven bereiken wij {city.city} in gemiddeld <strong>{city.travelTime}</strong>.
               Alle merken, ter plaatse geprogrammeerd.{isFR ? ' Service en français disponible.' : ''}
@@ -90,7 +91,25 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
-        {/* Sub-areas */}
+        {/* All services in this city */}
+        <section className={styles.sectionAlt}>
+          <div className="container">
+            <h2>Onze Diensten in {city.city}</h2>
+            <p style={{ color: 'var(--gray-600)', marginBottom: '1.5rem', maxWidth: 640 }}>
+              Van sleutel kwijt tot smart key programmeren — wij zijn mobiel binnen {city.travelTime} bij u in {city.city}.
+            </p>
+            <div className={styles.brandGrid}>
+              {DIENSTEN.map(s => (
+                <Link key={s.slug} href={`/steden/${citySlug}/${s.slug}`} className={styles.brandCard} id={`city-svc-${s.slug}`}>
+                  <strong>{s.title}</strong>
+                  <span>{s.priceFrom ?? '24/7 beschikbaar'}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
         {city.subAreas.length > 0 && (
           <section className={styles.sectionAlt}>
             <div className="container">
@@ -107,7 +126,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <div className="container">
             <div className={styles.whyGrid}>
               <div>
-                <h2>Waarom Autosleutel Expert in {city.city}?</h2>
+                <h2>Waarom Onze Autosleutelspecialist in {city.city}?</h2>
                 <ul className={styles.checkList}>
                   {[
                     `${city.travelTime} reactietijd vanuit Eindhoven`,

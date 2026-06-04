@@ -61,9 +61,9 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <Link href="/merken" style={{ color: 'rgba(255,255,255,0.45)' }}>Merken</Link> /
               <span style={{ color: 'rgba(255,255,255,0.7)' }}>{brand.name}</span>
             </nav>
-            <h1 style={{ color: '#fff', fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)', marginBottom: '1.25rem', lineHeight: 1.1 }}>
-              {brand.name} Sleutel Programmeren &amp; Bijmaken <br />
-              <span style={{ color: 'var(--orange-400)' }}>Direct Ter Plaatse</span>
+            <h1 style={{ color: '#fff', fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', marginBottom: '1rem' }}>
+              {`${brand.name} Sleutel Programmeren & Bijmaken`} <br />
+              <span style={{ color: 'var(--orange-500)' }}>Mobiel Ter Plaatse</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 700, fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '2rem' }}>
               Is uw {brand.name} sleutel kwijt, gestolen of werkt de afstandsbediening niet meer?

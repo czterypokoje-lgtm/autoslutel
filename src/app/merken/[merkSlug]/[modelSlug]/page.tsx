@@ -80,10 +80,10 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
               <span style={{ color: 'rgba(255,255,255,0.7)' }}>{model.name}</span>
             </nav>
             <h1 style={{ color: '#fff', fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', marginBottom: '1rem' }}>
-              {brand.name} {model.name} Sleutel Bijmaken &amp; Programmeren
+              {`${brand.name} ${model.name} Sleutel Bijmaken & Programmeren`}
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 720, lineHeight: 1.7, marginBottom: '1.5rem' }}>
-              Is uw {brand.name} {model.name} sleutel kwijt, gestolen of defect? Wij programmeren nieuwe sleutels
+              {`Is uw ${brand.name} ${model.name} sleutel kwijt, gestolen of defect? Wij programmeren nieuwe sleutels `}
               ter plaatse voor alle bouwjaren tussen <strong>{yearList[0]} en {yearList[yearList.length - 1]}</strong>.
               Snel, vakkundig en tot 50% goedkoper dan de dealer.
             </p>
@@ -134,7 +134,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
                   <li style={{ marginBottom: '1rem' }}>✅ <strong>Geen Sleepkosten</strong>: Wij komen naar uw {brand.name} toe.</li>
                   <li style={{ marginBottom: '1rem' }}>✅ <strong>Klaar terwijl u wacht</strong>: Meestal binnen 45 minuten.</li>
                   <li style={{ marginBottom: '1rem' }}>✅ <strong>Dealer Kwaliteit</strong>: Originele chips en software.</li>
-                  <li style={{ marginBottom: '1rem' }}>✅ <strong>24/7 Bereikbaar</strong>: Ook in het weekend en 's nachts.</li>
+                  <li style={{ marginBottom: '1rem' }}>✅ <strong>24/7 Bereikbaar</strong>: Ook in het weekend en &apos;s nachts.</li>
                 </ul>
               </div>
             </div>

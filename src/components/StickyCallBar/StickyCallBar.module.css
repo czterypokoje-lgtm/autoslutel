@@ -1,0 +1,50 @@
+/* Sticky bottom call bar — mobile only */
+.bar {
+  display: none; /* hidden on desktop */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--navy-900, #0d2137);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  /* iPhone notch safe area */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.phoneBtn,
+.waBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: opacity 0.15s;
+}
+
+.phoneBtn:active,
+.waBtn:active {
+  opacity: 0.8;
+}
+
+.phoneBtn {
+  background: var(--orange-500, #f97316);
+  color: #fff;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.waBtn {
+  background: #25d366;
+  color: #fff;
+}
+
+@media (max-width: 767px) {
+  .bar {
+    display: flex;
+  }
+}

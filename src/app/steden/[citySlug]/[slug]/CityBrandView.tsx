@@ -1,47 +1,10 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import Script from 'next/script';
-import { BRANDS } from '@/config/brands';
-import { CITIES } from '@/config/cities';
+import { BRANDS, type Brand } from '@/config/brands';
+import { CITIES, type City } from '@/config/cities';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
-// Generate all city × brand combo pages
-export async function generateStaticParams() {
-  const params: { citySlug: string; brandSlug: string }[] = [];
-  for (const city of CITIES) {
-    for (const brand of BRANDS) {
-      // P1 cities get all P1+P2 brands; P2 cities get P1 brands; P3 cities get P1 brands only
-      if (
-        (city.priority === 'P1' && (brand.priority === 'P1' || brand.priority === 'P2')) ||
-        (city.priority === 'P2' && brand.priority === 'P1') ||
-        (city.priority === 'P3' && brand.priority === 'P1')
-      ) {
-        params.push({ citySlug: city.slug, brandSlug: `${brand.nameSlug}-sleutel-programmeren` });
-      }
-    }
-  }
-  return params;
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ citySlug: string; brandSlug: string }> }): Promise<Metadata> {
-  const { citySlug, brandSlug } = await params;
-  const city = CITIES.find(c => c.slug === citySlug);
-  const brand = BRANDS.find(b => `${b.nameSlug}-sleutel-programmeren` === brandSlug);
-  if (!city || !brand) return {};
-  return {
-    title: `${brand.name} Sleutel Programmeren ${city.city} | Mobiel | ${SITE_CONFIG.name}`,
-    description: `${brand.name} autosleutel programmering in ${city.city}. ${brand.system.split('/')[0]}. Mobiel aan huis. ${city.travelTime} reactietijd. Goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
-    alternates: { canonical: `${SITE_CONFIG.domain}/steden/${citySlug}/${brandSlug}` },
-  };
-}
-
-export default async function CityBrandPage({ params }: { params: Promise<{ citySlug: string; brandSlug: string }> }) {
-  const { citySlug, brandSlug } = await params;
-  const city = CITIES.find(c => c.slug === citySlug);
-  const brand = BRANDS.find(b => `${b.nameSlug}-sleutel-programmeren` === brandSlug);
-  if (!city || !brand) notFound();
-
+export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: string, brandSlug: string, city: City, brand: Brand }) {
   const isFR = city.lang === 'FR';
 
   const t = {
@@ -88,7 +51,6 @@ export default async function CityBrandPage({ params }: { params: Promise<{ city
     mainEntity: faqItems.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   };
 
-  // Related combos: same city different brands + same brand different cities
   const relatedBrands = BRANDS.filter(b => b.priority === 'P1' && b.slug !== brand.slug).slice(0, 5);
   const relatedCities = CITIES.filter(c => c.country === city.country && c.slug !== citySlug && c.priority !== 'P3').slice(0, 5);
 
@@ -110,7 +72,7 @@ export default async function CityBrandPage({ params }: { params: Promise<{ city
               {city.city} · {city.region}
             </p>
             <h1 style={{ color: '#fff', fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', marginBottom: '1rem' }}>
-              {brand.name} {isFR ? 'Programmation Clé' : 'Sleutel Programmeren'} {city.city}
+              {`${brand.name} ${isFR ? 'Programmation Clé' : 'Sleutel Programmeren'} ${city.city}`}
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '1rem', lineHeight: 1.7, marginBottom: '1.5rem', maxWidth: 680 }}>
               {brand.excerpt} {t.heroSub} <strong style={{ color: '#fff' }}>{city.travelTime}</strong>.
@@ -207,7 +169,7 @@ export default async function CityBrandPage({ params }: { params: Promise<{ city
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                   {relatedBrands.map(b => (
                     <Link key={b.slug} href={`/steden/${citySlug}/${b.nameSlug}-sleutel-programmeren`} style={{ fontSize: '0.875rem', color: 'var(--navy-600)', textDecoration: 'none', padding: '0.3rem 0', borderBottom: '1px solid var(--gray-200)' }} id={`rel-brand-${b.slug}`}>
-                      {b.name} {isFR ? 'Programmation Clé' : 'Sleutel Programmeren'} {city.city} →
+                      {`${b.name} ${isFR ? 'Programmation Clé' : 'Sleutel Programmeren'} ${city.city} →`}
                     </Link>
                   ))}
                 </div>
@@ -217,7 +179,7 @@ export default async function CityBrandPage({ params }: { params: Promise<{ city
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                   {relatedCities.map(c => (
                     <Link key={c.slug} href={`/steden/${c.slug}/${brandSlug}`} style={{ fontSize: '0.875rem', color: 'var(--navy-600)', textDecoration: 'none', padding: '0.3rem 0', borderBottom: '1px solid var(--gray-200)' }} id={`rel-city-${c.slug}`}>
-                      {brand.name} {isFR ? 'Programmation Clé' : 'Sleutel Programmeren'} {c.city} →
+                      {`${brand.name} ${isFR ? 'Programmation Clé' : 'Sleutel Programmeren'} ${c.city} →`}
                     </Link>
                   ))}
                 </div>

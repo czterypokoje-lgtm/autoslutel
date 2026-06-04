@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
 import UrgencyBanner from '@/components/UrgencyBanner/UrgencyBanner';
+import StickyCallBar from '@/components/StickyCallBar/StickyCallBar';
 import { SITE_CONFIG } from '@/config/site.config';
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -33,24 +34,22 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
 };
 
-const localBusinessSchema = {
+// Organization schema — sitewide baseline. Does NOT contain a city address.
+// Each individual city/service page injects its own Locksmith schema.
+const organizationSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Locksmith',
-  '@id': `${SITE_CONFIG.domain}/#business`,
+  '@type': 'Organization',
+  '@id': `${SITE_CONFIG.domain}/#organization`,
   name: SITE_CONFIG.fullName,
   url: SITE_CONFIG.domain,
+  logo: `${SITE_CONFIG.domain}/logo.png`,
   telephone: SITE_CONFIG.phoneTel,
-  priceRange: '€€',
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: SITE_CONFIG.address.city,
-    addressRegion: SITE_CONFIG.address.region,
-    postalCode: SITE_CONFIG.address.postal,
-    addressCountry: 'NL',
-  },
-  geo: { '@type': 'GeoCoordinates', latitude: SITE_CONFIG.geo.lat, longitude: SITE_CONFIG.geo.lng },
-  openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '00:00', closes: '23:59' }],
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: SITE_CONFIG.rating, reviewCount: SITE_CONFIG.reviewCount, bestRating: '5' },
+  email: SITE_CONFIG.email,
+  sameAs: [
+    SITE_CONFIG.social.facebook,
+    SITE_CONFIG.social.instagram,
+    SITE_CONFIG.social.google,
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -58,8 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="nl" className={ibmPlexSans.variable}>
       <head>
         <meta name="theme-color" content="#0d2137" />
-        {/* Route Refresh Trigger — Fix for dynamic slugs */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+        <script id="schema-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
       </head>
       <body style={{ fontFamily: 'var(--font-ibm, IBM Plex Sans, sans-serif)' }}>
         <UrgencyBanner />
@@ -67,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Footer />
         <WhatsAppButton />
+        <StickyCallBar />
       </body>
     </html>
   );
