@@ -32,7 +32,7 @@ export default function OverOnsPage() {
       <Script id="over-ons-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
       <section style={{ 
-        background: 'linear-gradient(135deg, rgba(7,14,26,0.85) 0%, rgba(10,22,40,0.95) 100%), url("/images/seo/auto_sleutel_utrecht_achtergrond_service.jpg")',
+        background: 'linear-gradient(135deg, rgba(7,14,26,0.85) 0%, rgba(10,22,40,0.95) 100%), url("/images/seo/auto_sleutel_utrecht_achtergrond_service.webp")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         padding: '6rem 2rem' 
@@ -79,7 +79,7 @@ export default function OverOnsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
           <div>
             <img 
-              src="/images/seo/auto_sleutel_utrecht_24uur_workshop.jpg" 
+              src="/images/seo/auto_sleutel_utrecht_24uur_workshop.webp" 
               alt="Professionele autosleutel werkplaats en gereedschap in Utrecht voor 24 uur service" 
               style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
             />
@@ -91,11 +91,13 @@ export default function OverOnsPage() {
           </div>
         </div>
 
+
+
         {/* Mobile Work & Inventory Section */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
           <div style={{ order: 2 }}>
             <img 
-              src="/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.jpg" 
+              src="/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.webp" 
               alt="Slotenmaker in Utrecht werkzaamheden op locatie 24 uur service" 
               style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
             />
@@ -109,7 +111,7 @@ export default function OverOnsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
           <div>
             <img 
-              src="/images/seo/slotenmaker_voorraad_utrecht_sleutels.jpg" 
+              src="/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp" 
               alt="Grote voorraad autosleutels slotenmaker Utrecht" 
               style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
             />
