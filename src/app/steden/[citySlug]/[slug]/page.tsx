@@ -9,7 +9,7 @@ import { CityServiceView } from './CityServiceView';
 
 // ── helpers ────────────────────────────────────────────────
 function getBrandFromSlug(slug: string) {
-  return BRANDS.find(b => `${b.nameSlug}-sleutel-programmeren` === slug);
+  return BRANDS.find(b => `${b.nameSlug}-autosleutel-bijmaken` === slug);
 }
 function getServiceFromSlug(slug: string) {
   return DIENSTEN.find(s => s.slug === slug);
@@ -27,11 +27,11 @@ export async function generateStaticParams() {
         (city.priority === 'P2' && brand.priority === 'P1') ||
         (city.priority === 'P3' && brand.priority === 'P1');
       if (eligible) {
-        params.push({ citySlug: city.slug, slug: `${brand.nameSlug}-sleutel-programmeren` });
+        params.push({ citySlug: city.slug, slug: `${brand.nameSlug}-autosleutel-bijmaken` });
       }
     }
     // Service combos — all services for all P1+P2 cities; core 5 for P3
-    const coreSlugs = ['alle-sleutels-kwijt-auto', 'sleutel-bijmaken', 'transponder-sleutel-programmeren', 'smart-key-programmeren', 'contact-reparatie'];
+    const coreSlugs = ['alle-sleutels-kwijt-auto', 'sleutel-bijmaken', 'transponder-programmeren', 'smart-key-programmeren', 'contactslot-reparatie'];
     const services = city.priority === 'P3'
       ? DIENSTEN.filter(s => coreSlugs.includes(s.slug))
       : DIENSTEN;
@@ -51,8 +51,8 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const brand = getBrandFromSlug(slug);
   if (brand) {
     return {
-      title: `${brand.name} Autosleutel Bijmaken & Programmeren ${city.city} | ${SITE_CONFIG.name}`,
-      description: `${brand.name} autosleutel bijmaken en programmeren in ${city.city}. ${brand.system.split('/')[0]}. Mobiel op locatie. ${city.travelTime} reactietijd. Goedkoper dan de dealer. Bel: ${SITE_CONFIG.phone}`,
+      title: `${brand.name} Autosleutel Bijmaken ${city.city} | Autosleutel Specialist | ${SITE_CONFIG.name}`,
+      description: `${brand.name} autosleutel bijmaken & programmeren in ${city.city}. Autosleutel Specialist — ${brand.system.split('/')[0]}. Mobiel ter plaatse. ${city.travelTime} reactietijd. Tot 50% goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
       alternates: { canonical: `${SITE_CONFIG.domain}/steden/${citySlug}/${slug}` },
     };
   }

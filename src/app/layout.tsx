@@ -18,17 +18,23 @@ const ibmPlexSans = IBM_Plex_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.domain),
   title: {
-    default: 'Autosleutel Expert | Mobiele Sleutelprogrammering | Alle Merken | 24/7',
+    default: 'Autosleutel24 | Mobiele Sleutelprogrammering | Alle Merken | 24/7',
     template: `%s | ${SITE_CONFIG.name}`,
   },
-  description: 'Professionele mobiele autosleutelprogrammering in heel Nederland en België. Alle merken en modellen. Zelfde dag service. Bel: 06-XX XX XX XX',
-  keywords: ['autosleutel programmeren', 'autosleutel kwijt', 'mobiele autoslotenmaker', 'sleutel bijmaken eindhoven', 'transponder sleutel programmeren', 'BMW sleutel programmeren', 'Mercedes sleutel programmeren'],
-  alternates: { canonical: SITE_CONFIG.domain },
+  description: `Professionele mobiele autosleutelprogrammering in Utrecht en omstreken. Alle merken en modellen. Zelfde dag service. Bel: ${SITE_CONFIG.phone}`,
+  keywords: ['autosleutel programmeren', 'autosleutel kwijt', 'mobiele autoslotenmaker', 'sleutel bijmaken utrecht', 'transponder sleutel programmeren', 'BMW sleutel programmeren', 'Mercedes sleutel programmeren'],
+  alternates: {
+    canonical: SITE_CONFIG.domain,
+    languages: {
+      'nl-NL': SITE_CONFIG.domain,
+      'x-default': SITE_CONFIG.domain,
+    },
+  },
   openGraph: {
     type: 'website', locale: 'nl_NL', url: SITE_CONFIG.domain, siteName: SITE_CONFIG.name,
-    title: 'Autosleutel Expert | Mobiele Sleutelprogrammering | Alle Merken',
+    title: 'Autosleutel24 | Mobiele Sleutelprogrammering | Alle Merken',
     description: 'Professionele mobiele autosleutelprogrammering. Alle merken. Zelfde dag. Bel nu.',
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Autosleutel Expert' }],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel24' }],
   },
   twitter: { card: 'summary_large_image' },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
@@ -52,12 +58,26 @@ const organizationSchema = {
   ],
 };
 
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_CONFIG.domain}/#website`,
+  name: SITE_CONFIG.name,
+  url: SITE_CONFIG.domain,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${SITE_CONFIG.domain}/?s={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="nl" className={ibmPlexSans.variable}>
       <head>
         <meta name="theme-color" content="#0d2137" />
         <script id="schema-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+        <script id="schema-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
       </head>
       <body style={{ fontFamily: 'var(--font-ibm, IBM Plex Sans, sans-serif)' }}>
         <UrgencyBanner />

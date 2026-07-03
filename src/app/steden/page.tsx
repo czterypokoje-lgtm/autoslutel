@@ -4,17 +4,15 @@ import { CITIES } from '@/config/cities';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Alle Steden | ${SITE_CONFIG.name} | Nederland & België`,
-  description: 'Autosleutel Expert bedient heel Nederland en België. Eindhoven, Amsterdam, Rotterdam, Antwerpen, Brussel en 35+ andere steden.',
+  title: `Alle Steden | ${SITE_CONFIG.name} | Nederland`,
+  description: 'Autosleutel24 bedient heel Nederland. Utrecht, Eindhoven, Amsterdam, Rotterdam, Almere, Amersfoort en 25+ andere steden.',
   alternates: { canonical: `${SITE_CONFIG.domain}/steden` },
 };
 
 const groups = [
-  { title: 'Noord-Brabant & Limburg', filter: (c: typeof CITIES[0]) => ['Noord-Brabant','Limburg'].includes(c.region) && c.country === 'NL' },
+  { title: 'Noord-Brabant & Limburg', filter: (c: typeof CITIES[0]) => ['Noord-Brabant','Limburg'].includes(c.region) },
   { title: 'West & Randstad', filter: (c: typeof CITIES[0]) => ['Noord-Holland','Zuid-Holland','Utrecht','Flevoland'].includes(c.region) },
   { title: 'Oost & Noord Nederland', filter: (c: typeof CITIES[0]) => ['Gelderland','Overijssel','Groningen','Friesland'].includes(c.region) },
-  { title: 'België — Vlaanderen', filter: (c: typeof CITIES[0]) => c.country === 'BE' && c.lang !== 'FR' },
-  { title: 'België — Wallonië & Brussel', filter: (c: typeof CITIES[0]) => c.country === 'BE' && c.lang === 'FR' },
 ];
 
 export default function Steden() {
@@ -24,7 +22,7 @@ export default function Steden() {
         <p style={{ fontSize:'0.72rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', color:'var(--orange-400)', marginBottom:'0.75rem' }}>SERVICEDEKKING</p>
         <h1 style={{ color:'#fff', marginBottom:'1rem' }}>Alle Steden — {CITIES.length} Locaties</h1>
         <p style={{ color:'rgba(255,255,255,0.7)', fontSize:'1rem', maxWidth:580, margin:'0 auto' }}>
-          Mobiele autosleutel service door heel Nederland en België. Klik op uw stad voor reactietijden en specifieke info.
+          Mobiele autosleutel service door heel Nederland. Klik op uw stad voor reactietijden en specifieke info.
         </p>
       </section>
 

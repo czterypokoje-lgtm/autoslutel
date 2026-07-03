@@ -8,7 +8,13 @@ export const metadata: Metadata = {
   title: 'Autosleutel Kwijt? | Direct Hulp | 24/7 Mobiele Service | Bel Nu',
   description: `Autosleutel kwijt? Wij helpen direct. Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel: ${SITE_CONFIG.phone}`,
   keywords: ['autosleutel kwijt','alle sleutels kwijt auto','auto sleutel kwijt wat te doen','nieuwe autosleutel laten maken','sleutel kwijt autoslotenmaker'],
-  alternates: { canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt` },
+  alternates: {
+    canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
+    languages: {
+      'nl-NL': `${SITE_CONFIG.domain}/autosleutel-kwijt`,
+      'x-default': `${SITE_CONFIG.domain}/autosleutel-kwijt`,
+    },
+  },
 };
 
 const faqItems = [
@@ -35,10 +41,34 @@ const schema = {
   mainEntity: faqItems.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
 };
 
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+    { '@type': 'ListItem', position: 2, name: 'Autosleutel Kwijt', item: `${SITE_CONFIG.domain}/autosleutel-kwijt` },
+  ],
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'Wat te doen als u uw autosleutel kwijt bent',
+  description: 'Volg dit 5-stappenplan om direct hulp te krijgen bij verloren of gestolen autosleutels.',
+  step: steps.map((s, i) => ({
+    '@type': 'HowToStep',
+    position: i + 1,
+    name: s.title,
+    text: s.desc,
+  })),
+};
+
 export default function AutosleutelKwijt() {
   return (
     <>
       <Script id="akl-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <Script id="akl-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="akl-howto-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <main>
         {/* EMERGENCY HERO — CTA absolute top priority */}
         <section style={{ background:'var(--color-danger)', padding:'2rem', textAlign:'center' }}>
@@ -106,7 +136,7 @@ export default function AutosleutelKwijt() {
                 <tbody>
                   {brandPrices.map(b => (
                     <tr key={b.slug}>
-                      <td><Link href={`/merken/${b.nameSlug}-sleutel-programmeren`} style={{ fontWeight:600, color:'var(--navy-600)' }}>{b.name}</Link></td>
+                      <td><Link href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} style={{ fontWeight:600, color:'var(--navy-600)' }}>{b.name}</Link></td>
                       <td style={{ fontSize:'0.82rem', color:'var(--gray-400)' }}>{b.system.split('/')[0]}</td>
                       <td className="price-col">Bel voor prijs</td>
                       <td style={{ color:'var(--gray-400)', fontSize:'0.85rem' }}>+40–60%</td>

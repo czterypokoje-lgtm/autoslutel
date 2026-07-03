@@ -17,236 +17,491 @@ export type Service = {
 };
 
 export const DIENSTEN: Service[] = [
+  // ── 1. AUTODEUR OPENEN ─────────────────────────────────────
   {
-    slug: 'sleutel-bijmaken',
-    title: 'Sleutel Bijmaken',
-    metaTitle: 'Autosleutel Bijmaken | Reserve Sleutel Programmeren | Alle Merken | Mobiel',
-    metaDesc: 'Autosleutel bijmaken aan huis. Reserve sleutel programmeren voor alle merken en modellen. Goedkoper dan dealer. Bel: 06-XX XX XX XX',
-    h1: 'Autosleutel Bijmaken — Reserve Sleutel Ter Plaatse Geprogrammeerd',
-    intro: 'Een reserve sleutel is de beste verzekering tegen een onbereikbare auto. Wij maken reserve sleutels voor alle merken en modellen aan huis — geen sleepkosten, geen afspraken bij de dealer.',
-    priceFrom: 'Prijs op aanvraag (indicatie €95–€250)',
-    duration: '45–120 minuten',
+    slug: 'autodeur-openen',
+    title: 'Autodeur Openen',
+    metaTitle: 'Autodeur Openen Zonder Sleutel | Schadevrij & 24/7 Mobiel',
+    metaDesc: 'Autodeur openen zonder sleutel? Wij openen uw auto 100% schadevrij op locatie. Gemiddeld binnen 30 min ter plaatse in Utrecht & Amsterdam. Bel direct!',
+    h1: 'Autodeur Openen Zonder Sleutel — Mobiel & Schadevrij ter Plaatse',
+    intro: 'Heeft u uw autosleutels in de auto laten liggen of is de deur dichtgevallen? Wij openen uw autodeur 100% schadevrij. Met onze mobiele service zijn we gemiddeld binnen 30 minuten op uw locatie in de regio Utrecht en Amsterdam.',
+    system: 'Lishi Lock Decoders / Over-the-shoulder tools',
+    priceFrom: 'Vanaf €95',
+    duration: '15–30 minuten',
     steps: [
-      'Bel of WhatsApp ons — geef uw automerk, model en bouwjaar door',
-      'Wij rijden naar uw locatie (huis, werk, parkeerplaats)',
-      'Wij lezen het bestaande sleutelsysteem uit met professionele tools',
-      'Nieuwe sleutel wordt gesneden én geprogrammeerd',
-      'Test: alle deuren, motor start, afstandsbediening werkt',
-      'Verzekeringsklare factuur meegegeven',
+      'U neemt contact op via telefoon of WhatsApp en geeft uw locatie en automodel door',
+      'Onze mobiele specialist rijdt direct naar uw locatie',
+      'Identiteitscontrole: we controleren of u de rechtmatige eigenaar bent',
+      'De autodeur wordt schadevrij geopend met speciaal locksmith gereedschap',
+      'U ontvangt direct een officiële, verzekeringsklare factuur'
     ],
     faq: [
-      { q: 'Kan ik een sleutel bijmaken zonder de originele sleutel?', a: 'In veel gevallen ja. Bij AKL (Alle Sleutels Kwijt) service programmeren wij direct via OBD of bench methode. Bel voor de mogelijkheden voor uw merk.' },
-      { q: 'Hoe lang duurt het bijmaken van een sleutel?', a: 'Gemiddeld 45–120 minuten. BMW en Mercedes duren langer vanwege complexere systemen (CAS/EIS). VW/Toyota gaat sneller.' },
-      { q: 'Kost een bijgemaakte sleutel minder dan bij de dealer?', a: 'Ja, gemiddeld 30–50% minder. Wij komen bovendien naar u toe — geen sleepkosten of vervoerskosten.' },
+      { q: 'Beschadigt u mijn auto bij het openen?', a: 'Nee. Wij gebruiken uitsluitend professioneel lockpick- en decoderegereedschap (zoals Lishi tools) dat speciaal voor uw autotype is ontworpen. Hierdoor openen we uw deur 100% schadevrij, zonder krassen of deuken.' },
+      { q: 'Hoe snel kunt u mijn autodeur openen?', a: 'Onze mobiele bussen rijden door de hele regio Utrecht en Amsterdam. We zijn gemiddeld binnen 30 minuten ter plaatse.' },
+      { q: 'Kan elke auto schadevrij worden geopend?', a: 'Ja, wij kunnen vrijwel alle automerken en modellen schadevrij openen, inclusief auto\'s met dubbele vergrendeling (deadlock systemen) zoals BMW, Audi en Volkswagen.' }
     ],
-    relatedSlugs: ['transponder-sleutel-programmeren', 'smart-key-programmeren', 'reservesleutel-maken'],
+    relatedSlugs: ['sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot']
   },
   {
-    slug: 'transponder-sleutel-programmeren',
-    title: 'Transponder Sleutel Programmeren',
-    metaTitle: 'Transponder Sleutel Programmeren | Chip Sleutel | Alle Merken | Mobiel 24/7',
-    metaDesc: 'Transponder sleutel programmeren voor alle merken. Chip-sleutels en ID-chips ter plaatse geprogrammeerd. Goedkoper dan dealer. Bel: 06-XX XX XX XX',
-    h1: 'Transponder Sleutel Programmeren — Chip Sleutel Ter Plaatse',
-    intro: 'De meeste auto\'s vanaf 1995 gebruiken een transponder chip in de sleutel. Zonder correcte programmering start de motor niet. Wij programmeren transponder sleutels voor alle merken en systemen mobiel aan huis.',
-    system: 'ID46, ID48, ID4D, PCF7936, PCF7945, PCF7953, Hitag2, Hitag3, Hitag Pro',
-    priceFrom: 'Prijs op aanvraag (afhankelijk van chip-type)',
-    duration: '30–90 minuten',
+    slug: 'sleutel-in-auto',
+    title: 'Sleutel in Auto',
+    metaTitle: 'Sleutel in Auto Laten Liggen? | Auto Schadevrij Openen | 24/7 Mobiel',
+    metaDesc: 'Autosleutel in de auto laten liggen en deuren op slot? Wij openen uw gesloten auto 100% schadevrij op locatie. 24/7 spoedhulp. Bel nu!',
+    h1: 'Sleutel in Auto Laten Liggen? — Wij Openen Uw Auto Schadevrij',
+    intro: 'Het overkomt de beste: u stapt uit, de deuren vallen in het slot, en uw autosleutel ligt nog op de stoel of in het contactslot. Geen paniek. Onze specialisten openen uw auto ter plaatse zonder enige vorm van schade.',
+    system: 'Lishi HU66, HU92, HU101, HU162T Decoders',
+    priceFrom: 'Vanaf €95',
+    duration: '15–30 minuten',
     steps: [
-      'Diagnose: uitlezen huidige transponder type via OBD of sleutellezer',
-      'Juiste transponder chip geselecteerd uit onze voorraad',
-      'Chip klonen of nieuw programmeren in het ECU/immo systeem',
-      'Sleutel gesneden op maat (indien nodig)',
-      'Volledige test: motor start, immobilizer deactiveert correct',
+      'Bel direct en leg de situatie uit',
+      'Onze mobiele bus komt direct naar uw locatie in Utrecht of Amsterdam',
+      'Wij decoderen de slotcilinder om de auto elektronisch te ontgrendelen',
+      'U heeft uw sleutel weer terug zonder sleepkosten of dealer-tarieven'
     ],
     faq: [
-      { q: 'Wat is het verschil tussen een transponder sleutel en een normale sleutel?', a: 'Een transponder sleutel heeft een RFID chip ingebouwd. De auto controleert of de chip herkend wordt voor de motor mag starten. Zonder chip start de auto niet.' },
-      { q: 'Kan een transponder sleutel worden gekloonet?', a: 'Ja, voor veel oudere systemen is klonen mogelijk. Nieuwere encrypted chips (Hitag Pro, DST80) vereisen ECU-programmering. Wij hebben apparatuur voor beide methoden.' },
-      { q: 'Mijn sleutel draait maar de auto start niet — is dat de transponder?', a: 'Zeer waarschijnlijk. Controleer of het dashboard immo-lampje brandt. Bel ons — wij diagnosticeren ter plaatse.' },
+      { q: 'Hoe opent u een auto met de sleutel er nog in?', a: 'Wij maken gebruik van mechanische decoders (Lishi) die de slotplaatjes in de cilinder één voor één uitlijnen, alsof de originele sleutel wordt omgedraaid. Dit voorkomt dat we ramen hoeven in te slaan of deurrubbers beschadigen.' },
+      { q: 'Werkt dit ook als de accu van de auto leeg is?', a: 'Ja. Zelfs bij een lege accu kunnen wij de auto mechanisch openen via de noodcilinder in de handgreep.' }
     ],
-    relatedSlugs: ['sleutel-bijmaken', 'smart-key-programmeren', 'contact-reparatie'],
+    relatedSlugs: ['autodeur-openen', 'deur-dichtgevallen', 'kofferbak-openen', 'noodopening-auto']
+  },
+  {
+    slug: 'deur-dichtgevallen',
+    title: 'Deur Dichtgevallen',
+    metaTitle: 'Autodeur Dichtgevallen met Sleutel erin? | Snel Geopend | 24/7',
+    metaDesc: 'Deur van de auto dichtgevallen en de sleutel ligt binnen? Onze mobiele locksmith opent uw deur schadevrij. 24/7 Utrecht & Amsterdam.',
+    h1: 'Autodeur Dichtgevallen met Sleutel erin? — Direct Geopend',
+    intro: 'Als uw autodeur is dichtgevallen met de sleutel erin en de auto automatisch op slot is gegaan, wilt u snel weer toegang. Onze mobiele slotenmakers zijn 24 uur per dag stand-by om uw autodeur schadevrij te openen.',
+    system: 'Professional Locksmith Bypass Tools',
+    priceFrom: 'Vanaf €95',
+    duration: '15–30 minuten',
+    steps: [
+      'Bel ons storingsnummer voor directe hulp',
+      'We sturen de dichtstbijzijnde monteur naar u toe',
+      'Schadevrije opening via de deurgreep of slotcilinder',
+      'U kunt uw weg direct vervolgen'
+    ],
+    faq: [
+      { q: 'Waarom gaat een auto zomaar op slot als de deur dichtvalt?', a: 'Veel moderne auto\'s hebben een automatische vergrendelingsfunctie (auto-relock) die geactiveerd wordt na een bepaalde tijd of als de sleutel buiten het bereik van de startonderbreker-antenne ligt.' },
+      { q: 'Moet ik mijn deurslot achteraf vervangen?', a: 'Nee, onze technieken laten het deurslot en de elektronica volledig intact. U kunt uw bestaande sleutels gewoon blijven gebruiken.' }
+    ],
+    relatedSlugs: ['autodeur-openen', 'sleutel-in-auto', 'kofferbak-openen', 'sleutel-afgebroken-in-slot']
+  },
+  {
+    slug: 'kofferbak-openen',
+    title: 'Kofferbak Openen',
+    metaTitle: 'Sleutel in Kofferbak Laten Liggen? | Schadevrij Openen | 24/7',
+    metaDesc: 'Autosleutel in de kofferbak laten liggen en de auto zit op slot? Wij openen uw kofferbak 100% schadevrij op locatie. Bel nu voor spoedhulp!',
+    h1: 'Kofferbak Openen Zonder Sleutel — Snel & Schadevrij ter Plaatse',
+    intro: 'Sleutel in de kofferbak laten liggen en zit de auto op slot? Kofferbakken hebben vaak een complexer mechanisme met een dubbele vergrendeling (deadlock). Wij beschikken over de juiste tools om uw kofferbak schadevrij te openen via de slotcilinder of door de boardcomputer elektronisch aan te sturen.',
+    system: 'Lishi Laser Picks & OBD electronic triggers',
+    priceFrom: 'Vanaf €95',
+    duration: '20–45 minuten',
+    steps: [
+      'U belt ons en meldt dat de sleutel in de kofferbak ligt',
+      'Onze specialist komt ter plaatse en inspecteert het voertuig',
+      'De auto wordt via het portierslot of de kofferbakcilinder geopend',
+      'U heeft uw sleutel direct weer in handen'
+    ],
+    faq: [
+      { q: 'Waarom is een kofferbak openen moeilijker dan een portier?', a: 'Bij veel auto\'s (vooral sedans en premium merken zoals BMW of Audi) schakelt de centrale vergrendelingsknop op het dashboard uit als de auto op slot zit. Hierdoor moeten we de kofferbak mechanisch manipuleren of de module direct via de OBD-poort triggeren.' },
+      { q: 'Kan de kofferbak open zonder schade aan de lak of het slot?', a: 'Ja, 100% gegarandeerd. We gebruiken laser lockpicks die de lak en cilinder absoluut niet beschadigen.' }
+    ],
+    relatedSlugs: ['autodeur-openen', 'sleutel-in-auto', 'deur-dichtgevallen', 'sleutel-afgebroken-in-slot']
+  },
+  {
+    slug: 'sleutel-afgebroken-in-slot',
+    title: 'Sleutel Afgebroken in Slot',
+    metaTitle: 'Autosleutel Afgebroken in Slot of Contact? | Verwijderen & Nieuwe Sleutel',
+    metaDesc: 'Autosleutel afgebroken in het deurslot of contactslot? Wij halen de afgebroken sleutel schadevrij uit het slot en maken direct een nieuwe sleutel ter plaatse.',
+    h1: 'Autosleutel Afgebroken in Slot of Contactslot? — Wij Lossen Het Op',
+    intro: 'Is uw autosleutel afgebroken in het deurslot of contactslot? Probeer het afgebroken deel er niet zelf uit te peuteren, dit kan de interne plaatjes beschadigen. Onze monteurs halen de sleutel schadevrij uit de cilinder en snijden direct een nieuwe autosleutel op locatie.',
+    system: 'Professional Key Extractors & CNC Computerized Key Cutters',
+    priceFrom: 'Vanaf €120',
+    duration: '30–60 minuten',
+    steps: [
+      'Bel ons en meld dat de sleutel is afgebroken',
+      'Wij komen met een mobiele werkplaats naar u toe',
+      'Met extractie-tools halen we het afgebroken deel schadevrij uit de cilinder',
+      'Op basis van de twee helften snijden we een nieuwe sleutelbaard met onze CNC-machine',
+      'De nieuwe sleutel wordt geprogrammeerd en getest'
+    ],
+    faq: [
+      { q: 'Kan een afgebroken sleutel altijd uit het contactslot worden gehaald?', a: 'Ja, in 99% van de gevallen kunnen we het afgebroken deel met speciale extractiesleutels en micro-haken verwijderen zonder het complete contactslot te hoeven vervangen.' },
+      { q: 'Krijg ik direct een nieuwe sleutel?', a: 'Ja. Onze mobiele bus is uitgerust met een computergestuurde CNC-sleutelmachine waarmee we de sleutelbaard ter plaatse nauwkeurig namaken.' }
+    ],
+    relatedSlugs: ['autodeur-openen', 'sleutel-bijmaken', 'contactslot-reparatie', 'autosleutel-reparatie']
+  },
+
+  // ── 2. AUTOSLEUTEL BIJMAKEN ───────────────────────────────
+  {
+    slug: 'sleutel-bijmaken',
+    title: 'Autosleutel Bijmaken',
+    metaTitle: 'Autosleutel Bijmaken | Reserve Autosleutel Namaken | 12 Mnd Garantie',
+    metaDesc: 'Autosleutel bijmaken op locatie? Reserve sleutel programmeren voor alle merken. Goedkoper dan de dealer, direct klaar met 12 maanden garantie. Bel nu!',
+    h1: 'Autosleutel Bijmaken & Programmeren — Mobiele Service op Locatie',
+    intro: 'Wilt u een reservesleutel laten maken om te voorkomen dat u ooit buitengesloten raakt? Wij maken en programmeren reservesleutels voor alle merken en modellen direct aan huis of op uw werk. U krijgt standaard 12 maanden garantie op de elektronica en de transponder chip.',
+    system: 'AVDI, Lonsdor K518, VVDI, Autel IM608 Pro',
+    priceFrom: 'Vanaf €95',
+    duration: '30–60 minuten',
+    steps: [
+      'Geef uw merk, model en bouwjaar door via telefoon of WhatsApp',
+      'Wij plannen een moment in dat u uitkomt op uw locatie',
+      'We snijden de sleutelbaard op maat met een CNC-computergestuurde machine',
+      'We programmeren de transponder en afstandsbediening via de OBD-diagnosepoort',
+      'Volledige test van alle functies (deuren, kofferbak, motor starten)'
+    ],
+    faq: [
+      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een reserve transpondersleutel begint bij €95. Een sleutel met afstandsbediening kost gemiddeld €120 tot €250, afhankelijk van het model. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
+      { q: 'Krijg ik garantie op de nieuwe autosleutel?', a: 'Ja, u ontvangt 12 maanden volledige garantie op de programmering en de elektronische componenten van de sleutel.' },
+      { q: 'Moet ik met de auto langskomen?', a: 'Nee. Onze specialist komt met een volledig uitgeruste mobiele werkplaats naar u toe in Utrecht of Amsterdam.' }
+    ],
+    relatedSlugs: ['transponder-programmeren', 'afstandsbediening-bijmaken', 'smart-key-programmeren', 'reservesleutel-maken']
+  },
+  {
+    slug: 'transponder-programmeren',
+    title: 'Transponder Programmeren',
+    metaTitle: 'Transponder Sleutel Programmeren | Startonderbreker Chip Inleren',
+    metaDesc: 'Transponder sleutel programmeren op locatie. Specialist in Megamos ID48, PCF7936, Hitag Pro & DST-AES chips. 12 maanden garantie. Bel nu!',
+    h1: 'Transponder Sleutel Programmeren — Immo & Chip Inleren',
+    intro: 'De transponder is een kleine microchip in uw autosleutel die communiceert met de startonderbreker (immobilizer) van uw auto. Zonder correcte transponder start de motor niet. Wij programmeren en schrijven transponderchips rechtstreeks in de boordcomputer van uw voertuig.',
+    system: 'Megamos ID48, NXP PCF7935 / PCF7936 / PCF7945 / PCF7953, Hitag 2 / 3 / Pro, DST40 / DST80 / DST-AES',
+    priceFrom: 'Vanaf €95',
+    duration: '30–60 minuten',
+    steps: [
+      'We lezen het startonderbreker-systeem uit met OBD-diagnosetools',
+      'De juiste transponderchip (zoals ID48 of PCF7936) wordt geselecteerd',
+      'De chip wordt gekoppeld aan de ECU/Immobilizer van uw voertuig',
+      'De motorstart wordt gecontroleerd om de startonderbreking te verifiëren'
+    ],
+    faq: [
+      { q: 'Kan een defecte transponder chip worden vervangen?', a: 'Ja. Als uw auto de sleutel niet meer herkent (vaak knippert er dan een sleutellampje op het dashboard), kunnen wij de oude chip deprogrammeren en een nieuwe transponder inlezen.' },
+      { q: 'Welke transponder chips ondersteunt u?', a: 'Wij ondersteunen alle gangbare chips waaronder de Megamos ID48 (Audi/VW), NXP Hitag Pro (BMW/Opel), Texas Instruments DST-AES (Toyota) en de PCF7936.' }
+    ],
+    relatedSlugs: ['sleutel-bijmaken', 'smart-key-programmeren', 'afstandsbediening-bijmaken', 'contactslot-reparatie']
+  },
+  {
+    slug: 'afstandsbediening-bijmaken',
+    title: 'Afstandsbediening Bijmaken',
+    metaTitle: 'Autosleutel met Afstandsbediening Bijmaken | OEM Kwaliteit | 24/7',
+    metaDesc: 'Nieuwe afstandsbediening voor uw auto nodig? Wij programmeren afstandsbedieningen op locatie. Centrale vergrendeling, OEM chips, 12 mnd garantie.',
+    h1: 'Autosleutel met Afstandsbediening Bijmaken & Synchroniseren',
+    intro: 'Wilt u een sleutel met werkende knoppen voor centrale vergrendeling? Wij programmeren autosleutels met afstandsbediening voor vrijwel alle merken. We gebruiken uitsluitend hoogwaardige OEM-kwaliteit printplaten en chips met ASK of FSK modulatie.',
+    system: 'ASK / FSK Rolling Code, NXP PCF7946 / PCF7961, Hitag2, 315MHz / 433MHz / 868MHz',
+    priceFrom: 'Vanaf €120',
+    duration: '30–60 minuten',
+    steps: [
+      'Sleutelbaard mechanisch slijpen op basis van uw slot',
+      'De printplaat van de afstandsbediening synchroniseren met de BCM (Body Control Module)',
+      'Centrale vergrendeling en eventuele kofferbak/alarm-knoppen configureren',
+      'Signaalsterkte en rolling code beveiliging testen'
+    ],
+    faq: [
+      { q: 'Waarom werkt de afstandsbediening soms niet na het vervangen van de batterij?', a: 'Sommige autosleutels verliezen hun synchronisatie als de batterij te lang leeg is geweest. Wij kunnen de afstandsbediening via een speciale procedure opnieuw inleren op uw auto.' },
+      { q: 'Zijn de afstandsbedieningen die u levert origineel?', a: 'Wij leveren zowel originele OEM-sleutels als kwalitatieve aftermarket alternatieven die identiek functioneren. U heeft altijd de keuze en krijgt 12 maanden garantie.' }
+    ],
+    relatedSlugs: ['sleutel-bijmaken', 'smart-key-programmeren', 'transponder-programmeren', 'batterij-vervangen']
   },
   {
     slug: 'smart-key-programmeren',
     title: 'Smart Key / Keyless Entry Programmeren',
-    metaTitle: 'Smart Key Programmeren | Keyless Entry | Comfort Access | Alle Merken | Mobiel',
-    metaDesc: 'Smart key en keyless entry sleutels programmeren voor alle merken. Proximity key, comfort access, push-to-start. Mobiel aan huis. Bel: 06-XX XX XX XX',
-    h1: 'Smart Key & Keyless Entry Programmeren — Proximity Sleutels',
-    intro: 'Moderne auto\'s met push-to-start en keyless entry gebruiken proximity smart keys die speciale programmering vereisen. Wij programmeren alle typen smart keys en keyless entry systemen voor alle merken.',
-    system: 'BMW CAS/FEM/BDC, Mercedes KEYLESS-GO, Audi MMI, Toyota Smart Key, Ford PEPS, VW Comfort Access',
-    priceFrom: 'Prijs op aanvraag (indicatie €180–€450)',
-    duration: '60–150 minuten',
+    metaTitle: 'Smart Key Programmeren | Keyless Go & Proximity Sleutels',
+    metaDesc: 'Keyless entry & smart keys programmeren op locatie. Specialist in BMW CAS4/FEM/BDC, VAG MQB, Mercedes FBS3/FBS4. 12 maanden garantie. Bel!',
+    h1: 'Smart Key & Keyless Entry Programmeren — Proximity Specialist',
+    intro: 'Moderne voertuigen met een startknop maken gebruik van "Smart Keys" of "Proximity Keys" die communiceren via antennes in het interieur. Het inleren hiervan vereist gespecialiseerde programmeerapparatuur op dealer-niveau. Wij programmeren smart keys voor alle merken, inclusief Mercedes FBS3/FBS4 en BMW FEM/BDC.',
+    system: 'BMW CAS4+ / FEM / BDC / BDC2, Mercedes-Benz FBS3 / FBS4 / EIS / ELV, VAG MQB / MQB48 / MLB / SFD, JLR KVM / RFA / BCM',
+    priceFrom: 'Vanaf €180',
+    duration: '45–90 minuten',
     steps: [
-      'OBD uitlezen: huidige smart key systeem en configuratie',
-      'Nieuwe proximity key fob besteld of uit voorraad',
-      'Programmering via OBD of dealer-niveau tool (AVDI/VVDI)',
-      'Comfort access, automatisch vergrendelen, proximity detectie getest',
-      'Push-to-start functionaliteit volledig getest',
+      'OBD diagnostics verbinding opzetten met de startcomputer',
+      'Bestaande sleutels controleren en synchroniseren',
+      'Proximity transponder inleren via de ringantenne',
+      'Keyless-Go (starten zonder sleutel in de lader) en Keyless Entry testen'
     ],
     faq: [
-      { q: 'Kan mijn gestolen smart key worden uitgeschakeld?', a: 'Ja. Bij AKL service wissen wij alle bestaande sleutels uit het systeem en programmeren nieuwe. De gestolen sleutel wordt 100% onbruikbaar.' },
-      { q: 'Werkt een smart key ook als de batterij leeg is?', a: 'Ja, er is een mechanische noodsleutel in de fob verstopt. De start werkt via inductie. Wij leggen dit ook uit bij de service.' },
-      { q: 'Mijn push-to-start werkt niet — wat nu?', a: 'Mogelijke oorzaken: lege sleutelbatterij, defecte antenne, of programmeerprobleem. Bel ons — wij diagnosticeren ter plaatse.' },
+      { q: 'Wat is het verschil tussen FBS3 en FBS4 bij Mercedes?', a: 'FBS3 is de oudere generatie (inleersleutels via infrarood). FBS4 is de nieuwste generatie (2014+). Wij hebben speciale hardware (zoals G-Box 3 en AVDI) om ook complexe FBS3-systemen en specifieke FBS4-sleutels succesvol te programmeren.' },
+      { q: 'Kan een verloren Keyless sleutel worden misbruikt?', a: 'Nee. Bij het inleren van de nieuwe smart key wissen wij de verloren of gestolen sleutel direct uit het geheugen van het voertuig. De verloren sleutel kan de auto dan niet meer openen of starten.' }
     ],
-    relatedSlugs: ['transponder-sleutel-programmeren', 'sleutel-bijmaken', 'alarm-programmeren'],
+    relatedSlugs: ['sleutel-bijmaken', 'transponder-programmeren', 'afstandsbediening-bijmaken', 'ghost-immobiliser']
   },
   {
     slug: 'reservesleutel-maken',
     title: 'Reservesleutel Laten Maken',
-    metaTitle: 'Reservesleutel Auto Laten Maken | Alle Merken | Mobiel Aan Huis | Goedkoop',
-    metaDesc: 'Reservesleutel laten maken voor uw auto. Alle merken. Wij komen aan huis. Geen sleepkosten. Goedkoper dan dealer. Bel: 06-XX XX XX XX',
-    h1: 'Reservesleutel Laten Maken — Mobiel, Snel, Goedkoper Dan Dealer',
-    intro: 'Een reservesleutel is geen luxe maar een noodzaak. Wij maken reservesleutels voor alle merken — van eenvoudige transponder sleutels tot complexe BMW CAS4+ en Mercedes EIS smart keys.',
-    priceFrom: 'Prijs op aanvraag',
+    metaTitle: 'Reservesleutel Auto Laten Maken | 12 Maanden Garantie | Mobiel',
+    metaDesc: 'Extra reservesleutel voor uw auto laten maken? Wij programmeren reservesleutels voor alle merken op locatie. Goedkoper dan dealer. Bel nu!',
+    h1: 'Reservesleutel Auto Laten Maken — Voorkom Hoge Sleepkosten',
+    intro: 'Als u nog maar één autosleutel heeft, loopt u een groot risico. Bij verlies van uw laatste sleutel (All Keys Lost) zijn de kosten voor opening en programmering vele malen hoger. Laat daarom tijdig een reservesleutel maken. Wij komen bij u op locatie in Utrecht of Amsterdam, zodat u geen tijd verliest.',
+    system: 'Transponder Cloners / OBD programming tools',
+    priceFrom: 'Vanaf €95',
+    duration: '30–60 minuten',
+    steps: [
+      'U kiest of u een eenvoudige reservesleutel (zonder knoppen) of een afstandsbediening wilt',
+      'We slijpen de mechanische sleutel op basis van uw huidige sleutel',
+      'We klonen de transponder chip of schrijven deze in via de OBD-poort',
+      'De nieuwe sleutel wordt direct op werking getest'
+    ],
+    faq: [
+      { q: 'Kan ik ook een eenvoudige reservesleutel zonder knoppen krijgen?', a: 'Ja, dat is een uitstekende budgetoptie. Deze sleutel kan de deuren mechanisch openen en bevat de juiste transponder chip om de motor te starten. Dit kan al vanaf €95.' },
+      { q: 'Hoe lang duurt het maken van een reservesleutel?', a: 'Binnen 30 tot 60 minuten is uw nieuwe reservesleutel klaar en volledig geprogrammeerd.' }
+    ],
+    relatedSlugs: ['sleutel-bijmaken', 'transponder-programmeren', 'afstandsbediening-bijmaken', 'smart-key-programmeren']
+  },
+
+  // ── 3. AUTOSLEUTEL KWIJT ──────────────────────────────────
+  {
+    slug: 'autosleutel-kwijt',
+    title: 'Autosleutel Kwijt',
+    metaTitle: 'Autosleutel Kwijt of Verloren? | Direct Nieuwe Sleutel op Locatie',
+    metaDesc: 'Autosleutel kwijt, verloren of gestolen? Onze mobiele autosleutelservice komt direct naar u toe in Utrecht & Amsterdam. 24/7 spoedhulp. Bel nu!',
+    h1: 'Autosleutel Kwijt of Verloren? — Wij Helpen U Direct Weer op Weg',
+    intro: 'Bent u uw autosleutel verloren, is deze gestolen of in het water gevallen? Onze mobiele autosleutelservice helpt u direct ter plaatse. Wij openen uw auto schadevrij, wissen de oude sleutels uit het geheugen (tegen diefstal) en programmeren direct een nieuwe set sleutels.',
+    system: 'EEPROM / MCU programmering & OBD software keys',
+    priceFrom: 'Vanaf €190',
     duration: '45–120 minuten',
     steps: [
-      'Bel voor prijs op maat — geef merk, model en bouwjaar',
-      'Wij rijden naar uw locatie met de juiste sleutelbehuizing',
-      'Sleutel snijden op maat van uw slot',
-      'Transponder/smart key programmering in het ECU',
-      'Volledige test alle functies',
+      'Bel direct en vermeld uw locatie en het automodel',
+      'Onze bus met mobiele programmeer- en snijapparatuur komt naar u toe',
+      'Wij openen de autodeur 100% schadevrij',
+      'De verloren sleutel wordt elektronisch geblokkeerd',
+      'Een nieuwe transpondersleutel of smart key wordt geprogrammeerd'
     ],
     faq: [
-      { q: 'Hoeveel sleutels kan mijn auto onthouden?', a: 'Afhankelijk van het systeem: VW/Audi 8 sleutels, BMW 10 sleutels, Toyota 4–8. Wij controleren het beschikbare aantal bij uw auto.' },
-      { q: 'Heeft mijn dealer toestemming nodig?', a: 'Nee. Wij mogen als professional reservesleutels maken voor elk merk — ook zonder dealertoestemming.' },
+      { q: 'Wat moet ik doen als mijn autosleutel gestolen is?', a: 'Bel ons direct. Wij kunnen via de OBD-poort de diefstalbeveiliging zo instellen dat de gestolen sleutel direct uit de computer wordt gewist. Hierdoor kan de dief de auto niet meer starten. Eventueel passen we ook de mechanische sloten aan.' },
+      { q: 'Vergoedt de verzekering de kosten als ik mijn sleutel kwijt ben?', a: 'In veel gevallen wel, mits u all-risk of WA+ verzekerd bent met diefstaldekking. U krijgt van ons altijd een officiële, gespecificeerde factuur die u kunt indienen bij uw verzekeraar.' }
     ],
-    relatedSlugs: ['sleutel-bijmaken', 'transponder-sleutel-programmeren', 'smart-key-programmeren'],
+    relatedSlugs: ['noodopening-auto', 'alle-sleutels-kwijt-auto', 'autodeur-openen', 'sleutel-bijmaken']
   },
   {
-    slug: 'contact-reparatie',
-    title: 'Contact / Contactslot Reparatie',
-    metaTitle: 'Contactslot Reparatie | Auto Contact Defect | Mobiliseren | Alle Merken | Mobiel',
-    metaDesc: 'Contactslot defect of beschadigd? Wij repareren of vervangen het contactslot ter plaatse. Alle merken. 24/7 mobiel. Bel: 06-XX XX XX XX',
-    h1: 'Contact Reparatie — Contactslot Defect of Beschadigd?',
-    intro: 'Een defect contactslot legt uw auto volledig stil. Wij repareren of vervangen het contactslot (inclusief EIS/ESL bij Mercedes) mobiel aan huis. Geen sleepkosten naar de garage.',
-    priceFrom: 'Afhankelijk van diagnose — bel voor prijs',
-    duration: '60–240 minuten',
+    slug: 'noodopening-auto',
+    title: 'Noodopening',
+    metaTitle: 'Noodopening Auto | Snel & Schadevrij Geopend | 24/7 Spoed',
+    metaDesc: 'Noodopening van uw auto nodig? Binnen 30 min ter plaatse in Utrecht en Amsterdam. 100% schadevrij geopend door experts. Bel direct!',
+    h1: 'Noodopening Auto — Snel & Schadevrij Binnen 30 Minuten',
+    intro: 'Zit uw huisdier of kind in de auto en zijn de deuren dichtgevallen? Of heeft u met spoed toegang nodig tot uw voertuig omdat de sleutels binnen liggen? Wij voeren direct een noodopening uit. We zijn 24/7 bereikbaar en garanderen een 100% schadevrije opening.',
+    system: 'Deadlock bypass tools & Laser Decoders',
+    priceFrom: 'Vanaf €95',
+    duration: '15–30 minuten',
     steps: [
-      'Diagnose via OBD: elektrisch of mechanisch contactprobleem',
-      'Inschatting reparatie of vervanging noodzakelijk',
-      'Contactslot reparatie of vervangen',
-      'Hercoderen sleutels aan nieuw contactslot',
-      'Volledige mobiliteitest: start, rijden mogelijk',
+      'U belt onze spoedlijn (directe prioriteit)',
+      'De dichtstbijzijnde mobiele bus rijdt met zwaailicht/spoed naar u toe',
+      'Het portierslot wordt mechanisch gedecoreerd en geopend binnen enkele minuten',
+      'Direct toegang tot de auto'
     ],
     faq: [
-      { q: 'Mijn sleutel draait niet in het contact — wat kan dit zijn?', a: 'Mechanische slijtage, stuurwielslot vergrendeld, of beschadiging door inbraakpoging. Bel ons — wij diagnosticeren ter plaatse.' },
-      { q: 'Moet mijn auto naar de garage voor contactreparatie?', a: 'Nee. Wij komen naar u toe. Onze bus heeft alle gereedschappen en onderdelen voor de meeste merken.' },
-      { q: 'Kan ik na contactvervanging mijn oude sleutels nog gebruiken?', a: 'Ja, wij hercoderen uw bestaande sleutels aan het nieuwe contactslot. Geen nieuwe sleutels nodig.' },
+      { q: 'Kunnen jullie ook auto\'s openen die op "deadlock" staan?', a: 'Ja. Deadlock betekent dat de deurgrepen aan de binnenkant elektronisch zijn uitgeschakeld. Wij openen deze voertuigen via de mechanische slotcilinder met Lishi decoders, waardoor de auto denkt dat de originele sleutel wordt gebruikt.' },
+      { q: 'Hoe snel bent u bij mij bij een noodgeval?', a: 'Bij noodgevallen (zoals een kind of dier in de auto) geven wij absolute prioriteit en zijn we meestal binnen 15 tot 20 minuten op locatie.' }
     ],
-    relatedSlugs: ['sleutel-bijmaken', 'transponder-sleutel-programmeren', 'alarm-programmeren'],
-  },
-  {
-    slug: 'alarm-programmeren',
-    title: 'Autoalarm Programmeren',
-    metaTitle: 'Autoalarm Programmeren | Installatie & Storing | Alle Merken | Mobiel 24/7',
-    metaDesc: 'Autoalarm programmeren, installeren of storingsoplossing. Ghost immobilizer. Alle merken. Mobiel aan huis. Bel: 06-XX XX XX XX',
-    h1: 'Autoalarm Programmeren — Installatie, Storing & Ghost Immobilizer',
-    intro: 'Van fabrieksalarm storing tot Ghost immobilizer installatie — wij programmeren en installeren alle typen autoalarmsystemen mobiel aan huis.',
-    priceFrom: 'Bel voor prijs op maat',
-    duration: '60–180 minuten',
-    steps: [
-      'Diagnose: fabrieksalarm of aftermarket systeem',
-      'Uitlezen storingscodes en systeemconfiguratie',
-      'Reparatie, hercodering of nieuwe installatie',
-      'Ghost immobilizer: installatie en PIN-code programmering',
-      'Volledige test anti-diefstal bescherming',
-    ],
-    faq: [
-      { q: 'Wat is een Ghost immobilizer?', a: 'Een Ghost immobilizer is een onzichtbaar anti-diefstal systeem dat een geheime PIN-code vereist voor de auto kan starten. Niet te vinden door dieven.' },
-      { q: 'Mijn alarm slaat continu aan — wat nu?', a: 'Bel ons. Wij kunnen een alarm tijdelijk deactiveren en daarna correct programmeren. 24/7 beschikbaar.' },
-      { q: 'Kan ik een aftermarket alarm laten verwijderen?', a: 'Ja. Wij verwijderen aftermarket alarmen professioneel en zorgen dat het voertuig correct reageert op het fabriekssleutelsysteem.' },
-    ],
-    relatedSlugs: ['smart-key-programmeren', 'transponder-sleutel-programmeren', 'contact-reparatie'],
+    relatedSlugs: ['autodeur-openen', 'sleutel-in-auto', 'deur-dichtgevallen', 'autosleutel-kwijt']
   },
   {
     slug: 'alle-sleutels-kwijt-auto',
-    title: 'Alle Sleutels Kwijt',
-    metaTitle: 'Alle Autosleutels Kwijt? | AKL Service | Alle Merken | Mobiel 24/7',
-    metaDesc: 'Bent u alle autosleutels kwijt? Wij maken ter plaatse nieuwe sleutels voor elk merk. Geen sleepkosten. 24/7 mobiele hulp. Bel: 06-XX XX XX XX',
-    h1: 'Alle Autosleutels Kwijt? — Wij Helpen U Ter Plaatse Terug op Weg',
-    intro: 'Het is een nachtmerrie: u bent alle sleutels van uw auto kwijt. De dealer vraagt hoofdprijzen en weken wachttijd. Wij lossen het vandaag nog op. Wij openen uw auto schadevrij en programmeren nieuwe sleutels direct in het ECU.',
-    system: 'AKL (All Keys Lost) specialist voor BMW CAS/FEM, Mercedes EIS, VW MQB, Toyota G/H chip',
-    priceFrom: 'Prijs op aanvraag (indicatie €250–€650)',
-    duration: '90–240 minuten',
-    steps: [
-      'Identiteitscontrole: wij verifiëren dat u de eigenaar van het voertuig bent',
-      'Schadevrije opening: wij openen de deur zonder krassen of schade',
-      'Mechanische sleutelcode: wij lezen de mechanische code uit het slot',
-      'EEPROM/OBD programmering: wij schrijven nieuwe sleutelgegevens direct in de computer',
-      'Synchronisatie: alle systemen worden weer werkend gemaakt',
-    ],
-    faq: [
-      { q: 'Moet mijn auto worden weggesleept?', a: 'Nee. Dat is het grote voordeel van onze mobiele service. Wij doen alles op de locatie waar uw auto staat.' },
-      { q: 'Worden de oude (verloren) sleutels geblokkeerd?', a: 'Ja. Bij een AKL service wissen wij alle oude sleutels uit het geheugen van de auto. Als iemand uw oude sleutel vindt, kan hij de auto niet meer starten.' },
-    ],
-    relatedSlugs: ['sleutel-bijmaken', 'smart-key-programmeren', 'contact-reparatie'],
-  },
-  {
-    slug: 'ecu-clonen-component-protection',
-    title: 'ECU Clonen & Component Protection',
-    metaTitle: 'ECU Clonen | Component Protection Vrijgeven | Alle Merken | Specialist',
-    metaDesc: 'ECU clonen, motormanagement programmeren of component protection vrijgeven. Specialistische service voor alle merken. Bel: 06-XX XX XX XX',
-    h1: 'ECU Clonen & Component Protection — Elektronische Specialist',
-    intro: 'Heeft u een tweedehands ECU of module gekocht? Wij clonen de gegevens van uw oude module naar de nieuwe, of geven "Component Protection" vrij zodat de module werkt in uw auto.',
-    system: 'Bosch, Continental, Magneti Marelli, Delphi, VDO',
-    priceFrom: 'Vanaf €150',
+    title: 'Alle Sleutels Kwijt (AKL)',
+    metaTitle: 'Alle Autosleutels Kwijt? | AKL Specialist op Locatie | 24/7',
+    metaDesc: 'Alle autosleutels kwijt? Laat uw auto niet wegslepen naar de dealer! Wij maken nieuwe sleutels ter plaatse op locatie. Inclusief programmering. Bel nu!',
+    h1: 'Alle Autosleutels Kwijt? — Mobiele Sleutelmaker ter Plaatse',
+    intro: 'Het is de ultieme nachtmerrie: u bent alle sleutels van uw auto kwijt (All Keys Lost). De dealer vraagt hoofdprijzen en u moet vaak weken wachten op een sleutel uit de fabriek. Wij lossen dit vandaag nog op locatie op. Onze bussen bevatten alle benodigde EEPROM-programmeertools en sleutel-CNC-machines om uw auto ter plaatse te programmeren.',
+    system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
+    priceFrom: 'Vanaf €250',
     duration: '60–180 minuten',
     steps: [
-      'Uitlezen data van de defecte/originele module (Bench of Boot)',
-      'Aanpassen van VIN, IMMO data of Kilometerstand indien nodig',
-      'Schrijven van data naar de nieuwe/gebruikte module',
-      'Online inleren of Component Protection vrijgeven',
-      'Volledige systeemdiagnose',
+      'We verifiëren uw identiteit en eigendomspapieren',
+      'De auto wordt schadevrij geopend',
+      'De mechanische sleutelcode wordt uitgesleuteld of gelezen uit de slotcilinder',
+      'De ECU of startmodule (zoals BMW BDC of Mercedes EIS) wordt uitgelezen',
+      'Nieuwe transpondersleutels worden direct in het geheugen geschreven',
+      'De verloren sleutels worden definitief geblokkeerd'
     ],
     faq: [
-      { q: 'Wat is Component Protection?', a: 'Dit is een beveiliging van o.a. de VAG-groep (Audi/VW) die voorkomt dat modules uit andere auto\'s zomaar werken. Wij kunnen dit officieel vrijgeven.' },
-      { q: 'Kan elke computer worden gekloond?', a: 'Niet elke computer, maar wel ca. 95%. Wij gebruiken professionele tools zoals Autotuner en KESS3.' },
+      { q: 'Moet de auto worden weggesleept als ik alle sleutels kwijt ben?', a: 'Nee. In tegenstelling tot de dealer (die vaak de auto in hun werkplaats wil hebben) doen wij alles op de plek waar de auto geparkeerd staat. Dit bespaart u dure sleepkosten.' },
+      { q: 'Kan dit voor elk automerk?', a: 'Wij kunnen reservesleutels maken bij verlies van alle sleutels voor 98% van de merken op de weg, inclusief complexe VAG MQB48 (VW Golf 8, Audi A3 8Y) en Mercedes FBS3 systemen.' }
     ],
-    relatedSlugs: ['transponder-sleutel-programmeren', 'alarm-programmeren', 'contact-reparatie'],
+    relatedSlugs: ['autosleutel-kwijt', 'sleutel-bijmaken', 'smart-key-programmeren', 'contactslot-reparatie']
+  },
+
+  // ── 4. BATTERIJ VERVANGEN ─────────────────────────────────
+  {
+    slug: 'batterij-vervangen',
+    title: 'Batterij Vervangen',
+    metaTitle: 'Batterij Autosleutel Vervangen | Vaste Prijs €15–€20 | Mobiel',
+    metaDesc: 'Autosleutel batterij leeg? Wij vervangen uw autosleutel batterij op locatie voor een vaste prijs van €15 tot €20. Varta, Panasonic, Duracell. Bel!',
+    h1: 'Batterij Autosleutel Vervangen — Vaste Prijs op Locatie',
+    intro: 'Krijgt u de melding "Sleutelbatterij bijna leeg" op uw dashboard, of reageert de auto pas na meerdere keren drukken? Voorkom dat de sleutel er plotseling mee ophoudt. Wij vervangen uw sleutelbatterij op locatie met A-merk knoopcellen (Duracell, Panasonic of Varta) voor een vaste, all-in prijs van €15 tot €20.',
+    system: 'Knoopcellen: CR2032, CR2025, CR1620, CR1616, CR2450 (Duracell, Panasonic, Varta)',
+    priceFrom: 'Vaste prijs €15 - €20',
+    duration: '5–10 minuten',
+    steps: [
+      'Onze monteur controleert de signaalsterkte van de sleutel',
+      'De behuizing wordt voorzichtig geopend zonder beschadigingen',
+      'De oude knoopcel wordt verwijderd en de contactpunten gereinigd',
+      'Een nieuwe, originele A-merk batterij (bijv. Panasonic CR2032) wordt geplaatst',
+      'De sleutel wordt opnieuw getest op werking en signaalsterkte'
+    ],
+    faq: [
+      { q: 'Welke batterij zit er in mijn autosleutel?', a: 'De meeste autosleutels gebruiken een CR2032 of CR2025 lithium batterij. Sommige Japanse merken (Toyota/Lexus) gebruiken de kleinere CR1620 of CR1616, terwijl nieuwere smart keys (BMW G-serie) de extra dikke CR2450 vereisen. Wij hebben alle maten op voorraad.' },
+      { q: 'Verliest mijn sleutel de code als de batterij eruit is?', a: 'Bij een snelle batterijwissel blijft de code gewoon bewaard. Als de batterij echter dagenlang leeg is geweest, kan synchronisatie nodig zijn. Onze monteur voert dit direct gratis uit bij de wissel.' },
+      { q: 'Waarom mag ik geen goedkope batterij gebruiken?', a: 'Goedkope batterijen (zoals van budgetwinkels) verliezen snel hun spanning en kunnen gaan lekken, wat de printplaat van uw dure sleutel permanent kan beschadigen. Wij gebruiken uitsluitend Varta, Panasonic en Duracell.' }
+    ],
+    relatedSlugs: ['afstandsbediening-bijmaken', 'smart-key-programmeren', 'autosleutel-reparatie', 'behuizing-vervangen']
+  },
+
+  // ── 5. AUTOSLEUTEL REPARATIE ──────────────────────────────
+  {
+    slug: 'autosleutel-reparatie',
+    title: 'Autosleutel Reparatie',
+    metaTitle: 'Autosleutel Reparatie | Behuizing & Knoppen Solderen | Utrecht',
+    metaDesc: 'Autosleutel kapot of defect? Wij repareren printplaten, knoppen en behuizingen ter plaatse. Bespaar tot 70% t.o.v. een nieuwe sleutel. Bel nu!',
+    h1: 'Autosleutel Reparatie — Bespaar op een Nieuwe Autosleutel',
+    intro: 'Heeft uw autosleutel waterschade opgelopen, zijn de drukknoppen lam, of start de auto niet meer doordat de spoel op de printplaat beschadigd is? Een nieuwe sleutel is niet altijd nodig. Wij repareren uw autosleutel vakkundig met precisie soldeerwerk, wat u tot 70% van de kosten van een nieuwe sleutel bespaart.',
+    system: 'Micro-soldering, SMD tactile switch replacements, Transponder coil repair',
+    priceFrom: 'Vanaf €49',
+    duration: '20–45 minuten',
+    steps: [
+      'We meten de printplaat door om de exacte storing te vinden',
+      'Defecte micro-switches of spoelen worden gedesoldeerd',
+      'Nieuwe componenten worden onder de microscoop gesoldeerd',
+      'De sleutel wordt getest met een RF-frequentietester',
+      'Optioneel plaatsen we de printplaat in een nieuwe behuizing'
+    ],
+    faq: [
+      { q: 'Is een autosleutel na waterschade nog te redden?', a: 'Vaak wel, mits er snel wordt gehandeld. We reinigen de printplaat ultrasoon om corrosie te verwijderen en vervangen eventuele kortgesloten SMD-componenten.' },
+      { q: 'Wat kost een autosleutel reparatie?', a: 'Gemiddeld liggen de kosten voor een knop- of behuizingreparatie tussen de €49 en €85. Dit is aanzienlijk goedkoper dan een volledig nieuwe sleutel inleren.' }
+    ],
+    relatedSlugs: ['behuizing-vervangen', 'knoppen-repareren', 'contactslot-reparatie', 'batterij-vervangen']
   },
   {
-    slug: 'ghost-immobiliser-installeren',
-    title: 'Ghost Immobiliser Installeren',
-    metaTitle: 'Ghost Immobiliser Installatie | Onzichtbare Diefstalbeveiliging | 24/7',
-    metaDesc: 'Laat een Ghost Immobiliser installeren. De ultieme onzichtbare diefstalbeveiliging. Geen signaal, geen diefstal mogelijk. Bel: 06-XX XX XX XX',
-    h1: 'Ghost Immobiliser Installatie — De Ultieme Beveiliging',
-    intro: 'De Ghost Immobiliser is een uniek systeem dat via het CAN-bus netwerk van uw auto werkt. De auto start pas na het invoeren van een unieke code via de knoppen op uw stuur of dashboard.',
-    system: 'Autowatch Ghost II / CAN-bus security',
+    slug: 'behuizing-vervangen',
+    title: 'Behuizing Vervangen',
+    metaTitle: 'Sleutelbehuizing Vervangen Auto | Nieuwe Sleutelbehuizing',
+    metaDesc: 'Autosleutel behuizing kapot of versleten? Wij vervangen uw sleutelbehuizing ter plaatse door een nieuw, stevig exemplaar van OEM kwaliteit.',
+    h1: 'Sleutelbehuizing Vervangen — Geef Uw Sleutel een Tweede Leven',
+    intro: 'Is de plastic behuizing van uw sleutel gescheurd, zijn de rubberen knoppen doorgedrukt of klapt het ijzeren gedeelte niet meer goed uit? Wij vervangen uw sleutelbehuizing ter plaatse door een nieuw OEM-kwaliteit exemplaar. De elektronica en de transponder chip worden voorzichtig overgezet, waardoor uw sleutel weer als nieuw functioneert.',
+    system: 'OEM replacement key shells (folding / smart keys)',
+    priceFrom: 'Vanaf €49',
+    duration: '15–30 minuten',
+    steps: [
+      'De oude behuizing wordt voorzichtig opengemaakt (soms opengefreesd bij gelijmde types)',
+      'De kwetsbare printplaat en transponder chip worden schadevrij verwijderd',
+      'De interne componenten worden schoongemaakt en gecontroleerd',
+      'Alles wordt overgezet naar de nieuwe behuizing',
+      'De sleutelbaard wordt overgezet of nieuw gesneden'
+    ],
+    faq: [
+      { q: 'Waarom moet een gelijmde sleutel (zoals Ford of Opel) opengefreesd worden?', a: 'Fabriekssleutels van o.a. Ford en Opel zijn ultrasoon dichtgelijmd om waterdicht te zijn. Om de printplaat te kunnen redden, moeten we de oude behuizing met precisiegereedschap opensnijden. Wij hebben hier speciale mallen voor.' },
+      { q: 'Start mijn auto nog steeds na het overzetten van de behuizing?', a: 'Ja. Omdat we de originele transponder chip (die gekoppeld is aan uw startonderbreker) meeverhuizen naar de nieuwe behuizing, blijft de sleutel gewoon starten.' }
+    ],
+    relatedSlugs: ['autosleutel-reparatie', 'knoppen-repareren', 'batterij-vervangen', 'sleutel-bijmaken']
+  },
+  {
+    slug: 'knoppen-repareren',
+    title: 'Knoppen Repareren',
+    metaTitle: 'Autosleutel Drukknoppen Repareren | Switches Solderen | Utrecht',
+    metaDesc: 'Werken de knoppen van uw autosleutel niet meer? Wij solderen nieuwe micro-switches op de printplaat. Snel klaar op locatie. Bel nu!',
+    h1: 'Autosleutel Drukknoppen Repareren — SMD Micro-Switches Solderen',
+    intro: 'Reageert de auto niet meer op de knopjes van uw sleutel, hoewel de batterij wel vol is en het LED-lampje misschien wel knippert? Vaak zijn de micro-switches op de printplaat lam, afgebroken of versleten. Wij solderen nieuwe switches op de printplaat met professionele SMD-soldeertechnieken.',
+    system: 'SMD Micro-soldering / PCB Switch replacement',
+    priceFrom: 'Vanaf €49',
+    duration: '20–40 minuten',
+    steps: [
+      'We demonteren de sleutel en inspecteren de printplaat onder een microscoop',
+      'De defecte knopjes worden voorzichtig losgesoldeerd',
+      'Er worden nieuwe, originele micro-switches op de printplaat gesoldeerd',
+      'We testen de signaaloverdracht en monteren de sleutel weer'
+    ],
+    faq: [
+      { q: 'Wat is een micro-switch?', a: 'Een micro-switch is het kleine elektronische knopje op de printplaat dat contact maakt als u op de buitenkant van de sleutel drukt. Door intensief gebruik slijten de interne metalen contacten of breken de soldeereilandjes los.' },
+      { q: 'Kan elk type knopje worden vervangen?', a: 'Ja, wij hebben vrijwel alle typen SMD-schakelaars voor alle automerken op voorraad in onze mobiele bussen.' }
+    ],
+    relatedSlugs: ['autosleutel-reparatie', 'behuizing-vervangen', 'batterij-vervangen', 'afstandsbediening-bijmaken']
+  },
+  {
+    slug: 'contactslot-reparatie',
+    title: 'Contactslot Reparatie',
+    metaTitle: 'Contactslot Reparatie of Vervangen | Mercedes EIS/ELV Specialist',
+    metaDesc: 'Contactslot defect of draait de sleutel niet om? Wij repareren contactsloten en stuurkolomsloten ter plaatse. Mercedes EIS/ELV specialist. Bel!',
+    h1: 'Contactslot Reparatie & Vervanging — Direct ter Plaatse',
+    intro: 'Draait uw autosleutel niet meer om in het contactslot, of start de auto elektrisch niet meer nadat u de sleutel omdraait? Een defect contactslot (mechanisch of elektronisch) legt uw auto volledig stil. Wij repareren of vervangen uw contactslot direct op locatie. We zijn tevens gespecialiseerd in Mercedes EIS (Elektronisch Ontstekingsslot) en ELV (Elektronisch Stuurslot) reparatie.',
+    system: 'Mercedes EIS / ELV / ESL systemen, BMW CAS/Immo synchronisatie, mechanical ignition locks',
+    priceFrom: 'Vanaf €150',
+    duration: '45–120 minuten',
+    steps: [
+      'Mechanische en elektrische diagnose van het contactslot',
+      'Demonteren van de stuurkolom of het dashboardpaneel',
+      'Repareren van de interne cilinderplaatjes of het vervangen van de elektronische spoel',
+      'Hercoderen van de bestaande autosleutels aan het nieuwe slot (zo nodig)',
+      'Uitgebreide starttest en systeemdiagnose'
+    ],
+    faq: [
+      { q: 'Mijn Mercedes sleutel klikt niet en stuurslot ontgrendelt niet, wat nu?', a: 'Dit is een bekend probleem bij Mercedes (W204, W212, etc.) en duidt bijna altijd op een defect ELV (elektronisch stuurslot) of EIS module. Dealers vervangen de hele stuurkolom voor ca. €1.200. Wij repareren de module ter plaatse of programmeren een emulator voor een fractie van die prijs.' },
+      { q: 'Moet ik na contactslot-reparatie een andere sleutel gebruiken?', a: 'Nee. Wij bouwen het nieuwe mechanische slot zo om dat het perfect past op de code van uw huidige deursleutels. U behoudt dus gewoon één sleutel voor de hele auto.' }
+    ],
+    relatedSlugs: ['autosleutel-reparatie', 'sleutel-afgebroken-in-slot', 'transponder-programmeren', 'alle-sleutels-kwijt-auto']
+  },
+
+  // ── 6. AUTO BEVEILIGING ───────────────────────────────────
+  {
+    slug: 'auto-beveiliging',
+    title: 'Auto Beveiliging',
+    metaTitle: 'Auto Beveiliging | Autoalarm & Ghost Immobiliser Utrecht',
+    metaDesc: 'Beveilig uw auto tegen relay attacks en sleutelklonen. Wij installeren autoalarmen en Ghost Immobilisers op locatie. 12 mnd garantie. Bel direct!',
+    h1: 'Auto Beveiliging — Bescherm Uw Auto Tegen Moderne Diefstal',
+    intro: 'Moderne autodieven maken gebruik van signaalversterkers (relay attacks) en OBD-keyprogrammers om auto\'s binnen enkele seconden geluidloos mee te nemen. Wij beveiligen uw auto met gecertificeerde CAN-bus startonderbrekers (zoals de Ghost Immobiliser) en alarmsystemen, zodat uw voertuig maximaal beschermd is.',
+    system: 'Autowatch Ghost II CAN-bus, SCM goedgekeurde klasse 3/4/5 alarmen',
+    priceFrom: 'Vanaf €299',
+    duration: '60–180 minuten',
+    steps: [
+      'Analyse van de kwetsbaarheden van uw specifieke autotype',
+      'Professionele en onzichtbare inbouw van het beveiligingssysteem',
+      'Programmering van de CAN-bus software en PIN-codes',
+      'Demonstratie van het systeem aan de klant'
+    ],
+    faq: [
+      { q: 'Wat is een relay attack?', a: 'Bij een relay attack vangen dieven het signaal van uw keyless sleutel op (bijvoorbeeld terwijl deze in uw gang ligt) en sturen dit door naar een ontvanger bij uw auto. De auto denkt dat de sleutel dichtbij is, opent en start. Een extra startbeveiliging voorkomt dit.' },
+      { q: 'Is auto beveiliging op locatie in te bouwen?', a: 'Ja. Onze monteurs bouwen alarmsystemen en startonderbrekers professioneel in bij u op de oprit of in uw garage.' }
+    ],
+    relatedSlugs: ['ghost-immobiliser', 'autoalarm-programmeren', 'smart-key-programmeren']
+  },
+  {
+    slug: 'autoalarm-programmeren',
+    title: 'Autoalarm Programmeren',
+    metaTitle: 'Autoalarm Programmeren | Alarm Storing Oplossen Utrecht',
+    metaDesc: 'Autoalarm storing of programmeren? Wij lezen uw alarmmodule uit en deactiveren of configureren alarmsystemen op locatie. 24/7 storingsdienst.',
+    h1: 'Autoalarm Programmeren & Storingshulp op Locatie',
+    intro: 'Heeft u last van een alarmstoring waarbij de sirene continu loeit, of wilt u een fabrieksalarm (SCM klasse 3/4) programmeren of uitschakelen? Wij kunnen via OBD-diagnose uw alarmmodule uitlezen, foutcodes wissen of alarmsystemen correct configureren.',
+    system: 'SCM Klasse 3/4/5, Clifford, Defa, Cobra alarmen, OBD diagnostic scanners',
+    priceFrom: 'Vanaf €120',
+    duration: '30–90 minuten',
+    steps: [
+      'Uitlezen van de alarmfouten via de boordcomputer (OBD)',
+      'Opsporen van defecte sensoren of kabelbreuken',
+      'Herprogrammeren of tijdelijk deactiveren van de alarmmodule',
+      'Testen van de hellingshoek-, interieur- en deursensoren'
+    ],
+    faq: [
+      { q: 'Kan een af fabriek alarm tijdelijk worden uitgeschakeld?', a: 'Ja. Als het alarm door een storing blijft afgaan, kunnen wij de module elektronisch deactiveren via de software, zodat u in ieder geval rustig kunt rijden en slapen.' },
+      { q: 'Ondersteunt u aftermarket alarmen?', a: 'Ja, wij kunnen storingen diagnosticeren in zowel originele fabriekssystemen als naderhand ingebouwde systemen (Cobra, Clifford, Defa).' }
+    ],
+    relatedSlugs: ['auto-beveiliging', 'ghost-immobiliser', 'smart-key-programmeren']
+  },
+  {
+    slug: 'ghost-immobiliser',
+    title: 'Ghost Immobiliser',
+    metaTitle: 'Ghost Immobiliser Installeren | CAN-Bus Startonderbreker',
+    metaDesc: 'Laat een Ghost Immobiliser installeren. Ultieme onzichtbare startbeveiliging via CAN-bus. Beveiligd tegen keyless-cloning. Bel voor info!',
+    h1: 'Ghost Immobiliser Installatie — De Ultieme Onzichtbare Startbeveiliging',
+    intro: 'De Autowatch Ghost Immobiliser is de meest effectieve beveiliging tegen moderne autodiefstal. Het is een minuscuul apparaatje dat onzichtbaar in de bekabeling van uw auto wordt weggewerkt. Het startonderbrekingssysteem werkt via het CAN-bus netwerk: de auto start pas nadat u een persoonlijke PIN-code invoert via de bestaande knoppen op uw stuur of dashboard (bijv. volumeknoppen of cruisecontrol).',
+    system: 'Autowatch Ghost II CAN-bus Protection system',
     priceFrom: 'Vanaf €499 inclusief montage',
-    duration: '120–180 minuten',
+    duration: '90–150 minuten',
     steps: [
-      'Onzichtbare installatie in het kabelnetwerk van de auto',
-      'Programmering van de unieke PIN-code naar wens van de klant',
-      'Uitleg over de Service Mode (voor garagebezoek)',
-      'Koppeling met de smartphone app (optioneel)',
-      'Certificaat van installatie',
+      'Het systeem wordt onzichtbaar ingebouwd in het CAN-bus netwerk van de auto',
+      'We programmeren de door u gewenste unieke knoppencombinatie (PIN-code)',
+      'We leggen uit hoe de Service/Valet-modus werkt (voor garagebezoeken)',
+      'U ontvangt de unieke noodcodekaart'
     ],
     faq: [
-      { q: 'Kan een dief het systeem vinden?', a: 'Nee. Er zijn geen draden doorgeknipt en het systeem zendt geen radio-signalen uit. Het is onvindbaar voor scanners.' },
-      { q: 'Behoud ik mijn fabrieksgarantie?', a: 'Ja, de installatie is non-invasief voor de software van de fabrikant.' },
+      { q: 'Kan een dief de Ghost Immobiliser vinden of omzeilen?', a: 'Nee. Omdat het apparaatje geen radiosignalen (zoals RF of Bluetooth) uitzendt en geen klikgeluiden maakt, is het onvindbaar voor signaalscanners. Zelfs als een dief uw sleutel heeft gekloond of de OBD-poort hackt, zal de motor weigeren te starten.' },
+      { q: 'Behoud ik mijn fabrieksgarantie na installatie?', a: 'Ja. De Ghost Immobiliser maakt geen fysieke wijzigingen in de originele software van het voertuig en er worden geen draden doorgeknipt. Het luistert en communiceert uitsluitend via het CAN-bus netwerk.' },
+      { q: 'Hoeveel knoppen kan de PIN-code bevatten?', a: 'De PIN-code kan bestaan uit een combinatie van 4 tot 20 knoppen, waardoor het kraken van de code statistisch onmogelijk is.' }
     ],
-    relatedSlugs: ['alarm-programmeren', 'smart-key-programmeren', 'sleutel-bijmaken'],
-  },
-  {
-    slug: 'bedrijfswagen-sleutel-beheer',
-    title: 'Bedrijfswagen Sleutel Beheer',
-    metaTitle: 'Bedrijfswagen Sleutel Beheer | Wagenpark Sleutelservice | Zakelijk',
-    metaDesc: 'Sleutelbeheer voor uw bedrijfswagens. Reservesleutels voor uw hele wagenpark. Snelle service, zakelijke factuur. Bel: 06-XX XX XX XX',
-    h1: 'Bedrijfswagen Sleutel Beheer — Voor Ondernemers en Wagenparkbeheerders',
-    intro: 'Als uw bedrijfswagen stilstaat, kost dat geld. Wij bieden preventief sleutelbeheer voor wagenparken. Wij maken reservesleutels voor alle bussen en vrachtwagens (Iveco, DAF, MAN, Scania) ter plaatse op uw bedrijf.',
-    system: 'Daily, Transporter, Transit, Vivaro, Expert, Boxer, Ducato, XF, TGX, R-Serie',
-    priceFrom: 'Zakelijke tarieven op aanvraag',
-    duration: 'Op afspraak',
-    steps: [
-      'Inventarisatie van uw huidige wagenpark',
-      'Planning voor het maken van reservesleutels op uw locatie',
-      'Programmering van meerdere voertuigen op één dag',
-      'Beheer van sleutelcodes voor snelle hulp bij verlies in de toekomst',
-      'Verzamelrekening met BTW-specificatie',
-    ],
-    faq: [
-      { q: 'Werkt u ook op zaterdag voor bedrijven?', a: 'Ja. Wij begrijpen dat uw bussen doordeweeks op de weg moeten zijn. Wij kunnen op zaterdag uw hele vloot voorzien van reservesleutels.' },
-      { q: 'Biedt u korting bij meerdere voertuigen?', a: 'Zeker. Voor wagenparkbeheerders hanteren wij speciale projecttarieven.' },
-    ],
-    relatedSlugs: ['sleutel-bijmaken', 'transponder-sleutel-programmeren', 'contact-reparatie'],
-  },
+    relatedSlugs: ['auto-beveiliging', 'autoalarm-programmeren', 'smart-key-programmeren']
+  }
 ];

@@ -14,15 +14,16 @@ const diensten = [
 ];
 
 const steden = [
-  ['Eindhoven', '/steden/eindhoven'],
-  ['Tilburg', '/steden/tilburg'],
-  ['Breda', '/steden/breda'],
-  ['Den Bosch', '/steden/den-bosch'],
+  ['Utrecht', '/steden/utrecht'],
   ['Amsterdam', '/steden/amsterdam'],
   ['Rotterdam', '/steden/rotterdam'],
-  ['Utrecht', '/steden/utrecht'],
-  ['Antwerpen', '/steden/antwerpen'],
-  ['Brussel', '/steden/bruxelles-brussel'],
+  ['Den Bosch', '/steden/den-bosch'],
+  ['Amersfoort', '/steden/amersfoort'],
+  ['Leusden', '/steden/leusden'],
+  ['Soest', '/steden/soest'],
+  ['Hilversum', '/steden/hilversum'],
+  ['Culemborg', '/steden/culemborg'],
+  ['Gouda', '/steden/gouda'],
   ['Alle steden →', '/steden'],
 ];
 
@@ -67,11 +68,11 @@ export default function Footer() {
                 <rect x="15" y="23" width="3" height="2" rx="1" fill="white"/>
               </svg>
               <div>
-                <div className={styles.footerBrandName}>Autosleutel Expert</div>
-                <div className={styles.footerBrandSub}>Eindhoven · 24/7</div>
+                <div className={styles.footerBrandName}>Autosleutel24</div>
+                <div className={styles.footerBrandSub}>Utrecht · 24/7</div>
               </div>
             </div>
-            <p className={styles.footerDesc}>Professionele mobiele autosleutelprogrammering voor alle merken. Eindhoven en heel Nederland &amp; België.</p>
+            <p className={styles.footerDesc}>Professionele mobiele autosleutelprogrammering voor alle merken. Utrecht en heel Nederland.</p>
             <div className={styles.footerBadges}>
               <span>KVK: {SITE_CONFIG.kvk}</span>
               <span>BTW: {SITE_CONFIG.btw}</span>
@@ -98,9 +99,15 @@ export default function Footer() {
             <h4 className={styles.colTitle}>Merken</h4>
             <ul className={styles.linkList}>
               {BRANDS.filter(b => b.priority === 'P1').map(b => (
-                <li key={b.slug}><Link href={`/merken/${b.nameSlug}-sleutel-programmeren`}>{b.name}</Link></li>
+                <li key={b.slug}><Link href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}>{b.name}</Link></li>
               ))}
               <li><Link href="/merken">Alle 38 merken →</Link></li>
+            </ul>
+            <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Blog &amp; Advies</h4>
+            <ul className={styles.linkList}>
+              <li><Link href="/blog/autosleutel-batterij-vervangen-stappenplan">Batterij Vervangen</Link></li>
+              <li><Link href="/blog/ghost-immobiliser-utrecht">Ghost Immobiliser</Link></li>
+              <li><Link href="/blog/autosleutel-gestolen-wat-te-doen">Sleutel Gestolen?</Link></li>
             </ul>
           </div>
 

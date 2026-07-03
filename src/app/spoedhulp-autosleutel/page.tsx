@@ -7,7 +7,13 @@ export const metadata: Metadata = {
   title: '24/7 Spoedhulp Autosleutel | Direct Mobiel | Alle Merken | Bel Nu',
   description: `Autosleutel spoed? 24/7 mobiele hulp aan huis. Alle merken. Gemiddeld ${SITE_CONFIG.responseTime} reactietijd. Bel: ${SITE_CONFIG.phone}`,
   keywords: ['spoedhulp autosleutel', '24 uur slotenmaker auto', 'autoslotenmaker spoed', 'nacht slotenmaker auto', 'weekend autosleutel'],
-  alternates: { canonical: `${SITE_CONFIG.domain}/spoedhulp-autosleutel` },
+  alternates: {
+    canonical: `${SITE_CONFIG.domain}/spoedhulp-autosleutel`,
+    languages: {
+      'nl-NL': `${SITE_CONFIG.domain}/spoedhulp-autosleutel`,
+      'x-default': `${SITE_CONFIG.domain}/spoedhulp-autosleutel`,
+    },
+  },
 };
 
 const urgentServices = [
@@ -27,10 +33,20 @@ const schema = {
   openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '00:00', closes: '23:59' }],
 };
 
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+    { '@type': 'ListItem', position: 2, name: 'Spoedhulp', item: `${SITE_CONFIG.domain}/spoedhulp-autosleutel` },
+  ],
+};
+
 export default function SpoedhulpPage() {
   return (
     <>
       <Script id="spoed-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <Script id="spoed-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* Emergency strip */}
         <section style={{ background: 'var(--color-danger)', padding: '1.75rem 2rem', textAlign: 'center' }}>

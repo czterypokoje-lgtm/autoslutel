@@ -1,14 +1,81 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 import styles from './page.module.css';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 
 export const metadata: Metadata = {
-  title: 'Autosleutel Expert | Dé Autosleutelspecialist | Alle Merken | 24/7',
-  description: 'Professionele autosleutelspecialist voor alle merken in Nederland en België. Mobiele service, zelfde dag ter plaatse. Goedkoper dan de dealer. Bel direct: 06-XX XX XX XX',
-  alternates: { canonical: SITE_CONFIG.domain },
+  title: 'Autosleutel24 | Dé Autosleutelspecialist | Alle Merken | 24/7',
+  description: `Professionele autosleutelspecialist voor alle merken. Mobiele service in Utrecht en omstreken, zelfde dag ter plaatse. Goedkoper dan de dealer. Bel direct: ${SITE_CONFIG.phone}`,
+  alternates: {
+    canonical: SITE_CONFIG.domain,
+    languages: {
+      'nl-NL': SITE_CONFIG.domain,
+      'x-default': SITE_CONFIG.domain,
+    },
+  },
+};
+
+const locksmithSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Locksmith',
+  '@id': `${SITE_CONFIG.domain}/#locksmith`,
+  name: SITE_CONFIG.fullName,
+  url: SITE_CONFIG.domain,
+  telephone: SITE_CONFIG.phoneTel,
+  email: SITE_CONFIG.email,
+  priceRange: '€€',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Mobiele Service',
+    addressLocality: SITE_CONFIG.address.city,
+    addressRegion: SITE_CONFIG.address.region,
+    postalCode: SITE_CONFIG.address.postal,
+    addressCountry: SITE_CONFIG.address.country,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: SITE_CONFIG.geo.lat,
+    longitude: SITE_CONFIG.geo.lng,
+  },
+  areaServed: {
+    '@type': 'GeoCircle',
+    geoMidpoint: {
+      '@type': 'GeoCoordinates',
+      latitude: SITE_CONFIG.serviceArea.lat,
+      longitude: SITE_CONFIG.serviceArea.lng,
+    },
+    geoRadius: SITE_CONFIG.serviceArea.radiusMeters,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+      opens: '00:00',
+      closes: '23:59',
+    },
+  ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: SITE_CONFIG.rating,
+    reviewCount: SITE_CONFIG.reviewCount,
+    bestRating: '5',
+  },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: SITE_CONFIG.domain,
+    },
+  ],
 };
 
 const services = [
@@ -21,24 +88,27 @@ const services = [
 ];
 
 const galleryItems = [
-  { title: 'Bus en gereedschappen', src: '/hero-auto.png' },
-  { title: 'Sleutel Programmering', src: '/gallery/1.png' },
-  { title: 'Gereedschappen', src: '/gallery/2.png' },
-  { title: 'Mercedes EIS bench', src: '/gallery/2.png' },
-  { title: 'VW Golf 8 SFD', src: '/gallery/1.png' },
-  { title: 'Toyota bypass kabel', src: '/gallery/2.png' },
-  { title: 'Voor/na sleutel', src: '/gallery/1.png' },
-  { title: 'Klantmoment', src: '/hero-auto.png' },
+  { title: 'Professionele Werkplaats Utrecht', src: '/autosleutel24-sleutelbijmaken-utrecht.jpg', alt: 'Autosleutel24 professionele werkplaats in Utrecht voor autosleutel bijmaken en programmeren' },
+  { title: 'Sleutel Programmering', src: '/gallery/1.png', alt: 'Autosleutel programmering ter plaatse door specialist' },
+  { title: 'Gereedschappen', src: '/gallery/2.png', alt: 'Diagnoseapparatuur en programmeertools voor autosleutels' },
+  { title: 'Mercedes EIS bench', src: '/gallery/2.png', alt: 'Mercedes EIS contactslot reparatie op testbank' },
+  { title: 'VW Golf 8 SFD', src: '/gallery/1.png', alt: 'Volkswagen Golf 8 smart key programmering met SFD bypass' },
+  { title: 'Toyota bypass kabel', src: '/gallery/2.png', alt: 'Toyota OBD-kabel bypass voor sleutels inleren' },
+  { title: 'Voor/na sleutel', src: '/gallery/1.png', alt: 'Autosleutel behuizing reparatie voor en na resultaat' },
+  { title: 'Klantmoment', src: '/hero-auto.png', alt: 'Tevreden klant met nieuw geprogrammeerde reservesleutel' },
 ];
 
 export default function HomePage() {
   return (
-    <main>
+    <>
+      <Script id="home-locksmith-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locksmithSchema) }} />
+      <Script id="home-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <main>
       {/* ===== HERO ===== */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Heel Nederland & België</p>
+            <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Heel Nederland</p>
             <h1 className={styles.heroTitle}>
               Autosleutel Kwijt of Defect?<br />
               <span className={styles.heroOrange}>Wij Zijn Er Binnen 30–60 Minuten</span>
@@ -150,7 +220,7 @@ export default function HomePage() {
           <p className={styles.brandsTitle}>WIJ PROGRAMMEREN ALLE MERKEN</p>
           <div className={styles.brandsList}>
             {BRANDS.slice(0, 24).map(b => (
-              <Link key={b.slug} href={`/merken/${b.nameSlug}-sleutel-programmeren`} className={styles.brandTag}>{b.name}</Link>
+              <Link key={b.slug} href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} className={styles.brandTag}>{b.name}</Link>
             ))}
           </div>
         </div>
@@ -207,7 +277,7 @@ export default function HomePage() {
           </div>
           <div className={styles.reviewGrid}>
             {[
-              { text: 'Alle BMW sleutels kwijt. Dealer: 2 weken en €1.400. Autosleutel Expert: zelfde dag, €580. Aanrader.', name: 'Mark V.', city: 'Eindhoven', car: 'BMW X5' },
+              { text: 'Alle BMW sleutels kwijt. Dealer: 2 weken en €1.400. Autosleutel24: zelfde dag, €580. Aanrader.', name: 'Mark V.', city: 'Utrecht', car: 'BMW X5' },
               { text: 'Golf 8 SFD probleem. Geen enkele andere specialist kon het oplossen. Binnen 3 uur gereed.', name: 'Peter D.', city: 'Tilburg', car: 'VW Golf 8' },
               { text: 'Mercedes Sprinter vloot — vaste prijsafspraken, prioriteit service. Perfecte B2B partner.', name: 'R. Jacobs', city: 'Breda', car: 'Mercedes Sprinter' },
             ].map((r, i) => (
@@ -238,7 +308,7 @@ export default function HomePage() {
               <div key={i} className="gallery-item" style={{position: 'relative'}}>
                 <Image 
                   src={item.src} 
-                  alt={item.title} 
+                  alt={item.alt} 
                   fill 
                   style={{objectFit: 'cover'}}
                 />
@@ -255,7 +325,7 @@ export default function HomePage() {
       <section className={styles.finalCta}>
         <div className={styles.finalCtaInner}>
           <h2>Autosleutel Probleem? Bel Nu — 24/7</h2>
-          <p>Gemiddeld binnen 30–60 minuten bij u. Alle merken. Heel Nederland en België.</p>
+          <p>Gemiddeld binnen 30–60 minuten bij u. Alle merken. Heel Nederland.</p>
           <div className={styles.finalCtaBtns}>
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg">{SITE_CONFIG.phone}</a>
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.waBtn}>WhatsApp Direct</a>
@@ -263,5 +333,6 @@ export default function HomePage() {
         </div>
       </section>
     </main>
+    </>
   );
 }

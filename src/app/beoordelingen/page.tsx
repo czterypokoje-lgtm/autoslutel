@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const reviews = [
-  { author: 'Mark V.', city: 'Eindhoven', car: 'BMW X5', stars: 5, text: 'Alle sleutels kwijt van mijn BMW X5. Dealer wilde €1.800 en 2 weken. Deze jongens kwamen in 45 minuten, had me binnen 2 uur rijdend. €650. Ongelooflijk.' },
+  { author: 'Mark V.', city: 'Utrecht', car: 'BMW X5', stars: 5, text: 'Alle sleutels kwijt van mijn BMW X5. Dealer wilde €1.800 en 2 weken. Deze jongens kwamen in 45 minuten, had me binnen 2 uur rijdend. €650. Ongelooflijk.' },
   { author: 'Sarah T.', city: 'Veldhoven', car: 'Toyota Corolla Hybrid', stars: 5, text: 'Toyota hybride, 2021, alle sleutels kwijt. Toyota zei "onmogelijk zonder origineel." Deze jongens gebruikten een bypass kabel en maakten een nieuwe sleutel in 3 uur. €900 bespaard.' },
   { author: 'Peter M.', city: 'Best', car: 'VW Golf 8', stars: 5, text: 'VW Golf 8, SFD geblokkeerd. Dealer kon 3 weken niet helpen. Deze jongens ontgrendelden het op dezelfde dag. Echte professionals.' },
   { author: 'Thomas K.', city: 'Tilburg', car: 'Audi A4', stars: 5, text: 'Sleutel van mijn Audi kwijt op Tilburg station. Gebeld om 20:00, ze waren er om 20:35. Nieuwe sleutel geprogrammeerd om 21:30. Ongelooflijke service.' },

@@ -117,6 +117,114 @@
 }
 .dropAll:hover { color: var(--orange-500); text-decoration: none; }
 
+/* Large Dropdown (Hierarchical Grid) */
+.dropMenuLarge {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  padding: 1.5rem;
+  width: 760px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-4px);
+  transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
+  z-index: var(--z-dropdown);
+}
+.dropdown:hover .dropMenuLarge {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.dropGridLarge {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem 2rem;
+  margin-bottom: 1rem;
+}
+
+.dropColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pillarTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--navy-800);
+  text-decoration: none;
+  border-bottom: 2px solid var(--gray-100);
+  padding-bottom: 0.25rem;
+  display: block;
+}
+.pillarTitle:hover {
+  color: var(--orange-500);
+  text-decoration: none;
+}
+
+.subList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.subLinkItem {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  text-decoration: none;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.12s ease;
+}
+.subLinkItem:hover {
+  background: var(--navy-50);
+  color: var(--navy-800);
+  text-decoration: none;
+  padding-left: 0.6rem;
+}
+
+/* Mobile Hierarchical Styling */
+.mobileDienstenGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-left: 0.5rem;
+}
+
+.mobilePillarBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mobilePillarLink {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--navy-800);
+  text-decoration: none;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.mobileSubLink {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  text-decoration: none;
+  padding: 0.25rem 1rem;
+  transition: all 0.12s ease;
+}
+.mobileSubLink:hover {
+  color: var(--orange-500);
+}
+
 /* Actions */
 .actions { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
 

@@ -1,15 +1,33 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: `Contact | ${SITE_CONFIG.name}`,
   description: `Neem contact op met ${SITE_CONFIG.fullName}. Bel, WhatsApp, of stuur een bericht. 24/7 bereikbaar. Reactietijd: ${SITE_CONFIG.responseTime}.`,
-  alternates: { canonical: `${SITE_CONFIG.domain}/contact` },
+  alternates: {
+    canonical: `${SITE_CONFIG.domain}/contact`,
+    languages: {
+      'nl-NL': `${SITE_CONFIG.domain}/contact`,
+      'x-default': `${SITE_CONFIG.domain}/contact`,
+    },
+  },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+    { '@type': 'ListItem', position: 2, name: 'Contact', item: `${SITE_CONFIG.domain}/contact` },
+  ],
 };
 
 export default function ContactPage() {
   return (
-    <main>
+    <>
+      <Script id="contact-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <main>
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
         <span className="section-label">CONTACT</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Neem Contact Op</h1>
@@ -43,6 +61,17 @@ export default function ContactPage() {
               <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>KVK: {SITE_CONFIG.kvk}</p>
               <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>BTW: {SITE_CONFIG.btw}</p>
               <p style={{ fontSize: '0.9rem', color: 'var(--color-success)', fontWeight: 600 }}>🕐 {SITE_CONFIG.hoursShort}</p>
+            </div>
+
+            <div style={{ marginTop: '2rem' }}>
+              <img 
+                src="/autosleutel24-sleutelbijmaken-utrecht.jpg" 
+                alt="Autosleutel24 professionele werkplaats in Utrecht voor autosleutel bijmaken en programmeren" 
+                style={{ width: '100%', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }} 
+              />
+              <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '0.5rem', textAlign: 'center', fontStyle: 'italic' }}>
+                Onze professionele werkplaats in Utrecht voor autosleutel reparatie & programmering.
+              </p>
             </div>
           </div>
 
@@ -90,5 +119,6 @@ export default function ContactPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

@@ -1,14 +1,21 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: `Veelgestelde Vragen | ${SITE_CONFIG.name}`,
   description: 'Antwoorden op veelgestelde vragen over autosleutels. Kosten, tijdsduur, verzekering, merken, en meer.',
-  alternates: { canonical: `${SITE_CONFIG.domain}/veelgestelde-vragen` },
+  alternates: {
+    canonical: `${SITE_CONFIG.domain}/veelgestelde-vragen`,
+    languages: {
+      'nl-NL': `${SITE_CONFIG.domain}/veelgestelde-vragen`,
+      'x-default': `${SITE_CONFIG.domain}/veelgestelde-vragen`,
+    },
+  },
 };
 
 const faqs = [
-  { q: 'Hoe snel kunt u mijn autosleutel vervangen?', a: 'Onze gemiddelde reactietijd in Eindhoven is 34 minuten. Buiten Eindhoven zijn wij doorgaans binnen 30-90 minuten bij u, afhankelijk van uw locatie.' },
+  { q: 'Hoe snel kunt u mijn autosleutel vervangen?', a: 'Onze gemiddelde reactietijd in Utrecht is 34 minuten. Buiten Utrecht zijn wij doorgaans binnen 30-90 minuten bij u, afhankelijk van uw locatie.' },
   { q: 'Moet ik mijn auto naar u toe slepen?', a: 'Nee! Wij zijn volledig mobiel. Onze uitgeruste bus komt naar uw locatie — thuis, op het werk, op een parkeerplaats, of langs de weg. Geen sleepkosten.' },
   { q: 'Wordt mijn autosleutel vergoed door de verzekering?', a: 'De meeste All Risk polissen vergoeden gestolen autosleutels. Sommige polissen dekken ook verloren sleutels. Wij verstrekken altijd verzekeringsklare, gespecificeerde facturen.' },
   { q: 'Kunt u een sleutel maken als ik geen reserve heb?', a: 'Ja! Dit noemen wij AKL (Alle Sleutels Kwijt) service. Wij kunnen voor alle merken en modellen een nieuwe sleutel programmeren zonder originele sleutel aanwezig.' },
@@ -17,12 +24,37 @@ const faqs = [
   { q: 'Wat kost een autosleutel bijmaken?', a: 'Prijzen starten vanaf €180 voor een eenvoudige sleutel. Complexe systemen (BMW BDC, VW MQB48) kosten meer. Altijd een vaste prijs afspreken vóór de werkzaamheden.' },
   { q: 'Welke garantie geeft u?', a: 'Wij geven 12 maanden garantie op alle sleutelprogrammering. Als de sleutel niet meer werkt door onze programmering, lossen wij het gratis op.' },
   { q: 'Kunnen jullie een Ghost Immobiliser installeren?', a: 'Ja! Wij installeren TASSA gecertificeerde Ghost Immobilisers voor alle merken. De installatie duurt 1,5-2 uur en wij verstrekken een certificaat voor uw verzekering.' },
-  { q: 'Werken jullie ook in België en Duitsland?', a: 'Ja! Wij bedienen Antwerpen, Brussel, Leuven, Hasselt, Lommel en de Düsseldorf/Keulen/Aachen regio. Grensoverschrijdende service is geen probleem.' },
+  { q: 'Werken jullie door heel Nederland?', a: 'Ja! Wij bedienen heel Nederland vanuit onze hoofdlocatie in Utrecht. Of u nu in Utrecht, Amsterdam, Rotterdam, Eindhoven, of daarbuiten bent, onze mobiele servicebussen komen naar u toe.' },
 ];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+    { '@type': 'ListItem', position: 2, name: 'Veelgestelde Vragen', item: `${SITE_CONFIG.domain}/veelgestelde-vragen` },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.a,
+    },
+  })),
+};
 
 export default function FAQPage() {
   return (
-    <main>
+    <>
+      <Script id="faq-schema-page" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <Script id="faq-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <main>
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
         <span className="section-label">FAQ</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Veelgestelde Vragen</h1>
@@ -51,5 +83,6 @@ export default function FAQPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

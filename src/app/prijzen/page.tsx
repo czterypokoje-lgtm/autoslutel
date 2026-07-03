@@ -1,12 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: `Prijzen Autosleutel Programmeren | Indicatie & Tarieven | ${SITE_CONFIG.name}`,
   description: 'Indicatieve prijzen voor autosleutel bijmaken en programmeren. Exacte prijs altijd vooraf afgesproken. Bespaar 30–50% vs dealer. Bel voor offerte.',
-  alternates: { canonical: `${SITE_CONFIG.domain}/prijzen` },
+  alternates: {
+    canonical: `${SITE_CONFIG.domain}/prijzen`,
+    languages: {
+      'nl-NL': `${SITE_CONFIG.domain}/prijzen`,
+      'x-default': `${SITE_CONFIG.domain}/prijzen`,
+    },
+  },
 };
 
 // All rows: service | from | up to | notes
@@ -32,9 +39,20 @@ const surcharges = [
   { time: 'Zondag & feestdagen',       label: '+25% toeslag',       color: 'var(--color-danger)' },
 ];
 
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+    { '@type': 'ListItem', position: 2, name: 'Prijzen', item: `${SITE_CONFIG.domain}/prijzen` },
+  ],
+};
+
 export default function PrijzenPage() {
   return (
-    <main>
+    <>
+      <Script id="prijzen-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <main>
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
@@ -159,5 +177,6 @@ export default function PrijzenPage() {
 
       </div>
     </main>
+    </>
   );
 }

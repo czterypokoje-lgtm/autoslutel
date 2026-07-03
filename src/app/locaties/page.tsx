@@ -5,15 +5,13 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: `Alle Locaties | ${SITE_CONFIG.name}`,
-  description: 'Autosleutel specialist in heel Nederland en België. Eindhoven, Tilburg, Breda, Amsterdam, Rotterdam, Antwerpen, Brussel en meer. Mobiele service 24/7.',
+  description: 'Autosleutel specialist in heel Nederland. Utrecht, Tilburg, Breda, Amsterdam, Rotterdam en meer. Mobiele service 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/locaties` },
 };
 
 const groups = [
-  { title: '🇳🇱 Noord-Brabant & Limburg', locs: LOCATIONS.filter(l => ['Tilburg','Breda','Den Bosch','Helmond','Weert','Venlo','Roermond','Maastricht'].includes(l.city)) },
-  { title: '🇳🇱 Rest van Nederland', locs: LOCATIONS.filter(l => ['Utrecht','Arnhem','Nijmegen','Rotterdam','Den Haag','Amsterdam'].includes(l.city)) },
-  { title: '🇧🇪 België', locs: LOCATIONS.filter(l => l.country === 'BE') },
-  { title: '🇩🇪 Duitsland', locs: LOCATIONS.filter(l => l.country === 'DE') },
+  { title: 'Noord-Brabant & Limburg', locs: LOCATIONS.filter(l => ['Tilburg','Breda','Den Bosch','Helmond','Weert','Venlo','Roermond','Maastricht'].includes(l.city)) },
+  { title: 'Midden & West Nederland', locs: LOCATIONS.filter(l => ['Utrecht','Arnhem','Nijmegen','Rotterdam','Den Haag','Amsterdam'].includes(l.city)) },
 ];
 
 export default function LocatiesPage() {
@@ -21,9 +19,9 @@ export default function LocatiesPage() {
     <main>
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
         <span className="section-label">DEKKING</span>
-        <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Alle 22 Locaties</h1>
+        <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Alle {LOCATIONS.length} Locaties</h1>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 640, margin: '0 auto' }}>
-          Vanuit Eindhoven bedienen wij heel Nederland, België, en Düsseldorf/Keulen/Aachen. Mobiel, 24/7.
+          Vanuit Utrecht bedienen wij heel Nederland. Mobiel, 24/7.
         </p>
       </section>
 

@@ -10,7 +10,7 @@ export async function generateStaticParams() {
   BRANDS.forEach(brand => {
     if (brand.models) {
       brand.models.forEach(model => {
-        params.push({ merkSlug: `${brand.nameSlug}-sleutel-programmeren`, modelSlug: model.slug });
+        params.push({ merkSlug: `${brand.nameSlug}-autosleutel-bijmaken`, modelSlug: model.slug });
       });
     }
   });
@@ -26,14 +26,14 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
 
   const brand = BRANDS.find(b => {
     const base = b.nameSlug.toLowerCase();
-    return decodedBrand === `${base}-sleutel-programmeren` || decodedBrand === base;
+    return decodedBrand === `${base}-autosleutel-bijmaken` || decodedBrand === base;
   });
   
   const model = brand?.models?.find(m => m.slug.toLowerCase() === decodedModel);
   if (!brand || !model) return {};
 
-  const title = `${brand.name} ${model.name} Sleutel Programmeren | Bouwjaren: ${model.years} | ${SITE_CONFIG.name}`;
-  const desc = `${brand.name} ${model.name} autosleutel bijmaken of programmeren. Wij ondersteunen bouwjaren ${model.years}. Mobiel aan huis, 24/7 bereikbaar. Goedkoper dan de dealer.`;
+  const title = `${brand.name} ${model.name} Autosleutel Bijmaken | Autosleutel Specialist | Bouwjaren: ${model.years} | ${SITE_CONFIG.name}`;
+  const desc = `${brand.name} ${model.name} autosleutel bijmaken of programmeren. Autosleutel Specialist — bouwjaren ${model.years}. Mobiel aan huis, 24/7 bereikbaar. Goedkoper dan de dealer.`;
 
   return {
     title, description: desc,
@@ -50,7 +50,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
 
   const brand = BRANDS.find(b => {
     const base = b.nameSlug.toLowerCase();
-    return decodedBrand === `${base}-sleutel-programmeren` || decodedBrand === base;
+    return decodedBrand === `${base}-autosleutel-bijmaken` || decodedBrand === base;
   });
 
   const model = brand?.models?.find(m => m.slug.toLowerCase() === decodedModel);
@@ -61,7 +61,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
 
   const schema = {
     '@context': 'https://schema.org', '@type': 'Service',
-    name: `${brand.name} ${model.name} Sleutel Programmeren`,
+    name: `${brand.name} ${model.name} Autosleutel Bijmaken`,
     provider: { '@type': 'Locksmith', name: SITE_CONFIG.fullName, telephone: SITE_CONFIG.phoneTel },
     description: `Gespecialiseerde autosleutel service voor de ${brand.name} ${model.name}. Ondersteunt bouwjaren ${model.years}.`,
   };
@@ -80,7 +80,8 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
               <span style={{ color: 'rgba(255,255,255,0.7)' }}>{model.name}</span>
             </nav>
             <h1 style={{ color: '#fff', fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', marginBottom: '1rem' }}>
-              {`${brand.name} ${model.name} Sleutel Bijmaken & Programmeren`}
+              {`${brand.name} ${model.name} Autosleutel Bijmaken & Programmeren`} <br />
+              <span style={{ color: 'var(--orange-500)', fontSize: '0.7em' }}>Autosleutel Specialist — Mobiel Ter Plaatse</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 720, lineHeight: 1.7, marginBottom: '1.5rem' }}>
               {`Is uw ${brand.name} ${model.name} sleutel kwijt, gestolen of defect? Wij programmeren nieuwe sleutels `}

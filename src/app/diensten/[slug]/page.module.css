@@ -72,5 +72,133 @@
 .seoContent h3 { font-size: 1.25rem; }
 .seoContent p { font-size: 0.95rem; line-height: 1.6; color: var(--gray-700); margin-bottom: 1rem; }
 .checkList { list-style: none; padding: 0; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
-.checkList li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.95rem; color: var(--gray-700); }
-.checkList li::before { content: "✓"; color: var(--orange-500); font-weight: bold; }
+.checkList li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.95rem; color: var(--gray-700); padding-left: 1.5rem; position: relative; }
+.checkList li::before { content: "✓"; color: var(--orange-500); font-weight: bold; position: absolute; left: 0; top: 0; }
+
+/* ---- TRUST BAR ---- */
+.trustBar {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1.25rem 2rem;
+}
+.trustBarInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+}
+.trustIcon {
+  color: #f97316;
+  font-size: 1rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* ---- REVIEWS ---- */
+.reviews {
+  padding: 4rem 0;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  margin-top: 2rem;
+}
+.ratingBig {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.ratingNum {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+}
+.reviewGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.reviewCardSection {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+.reviewText {
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.7;
+  font-style: italic;
+  flex: 1;
+  margin: 0;
+}
+.reviewMetaSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.reviewAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0f172a;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+.reviewMetaSection strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #0f172a;
+}
+.reviewMetaSection span {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+.ratingStarsReview {
+  color: #f59e0b;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 900px) {
+  .reviewGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .reviewGrid {
+    grid-template-columns: 1fr;
+  }
+  .trustBar {
+    padding: 1rem;
+  }
+  .trustBarInner {
+    gap: 0.5rem 1rem;
+  }
+  .trustItem {
+    font-size: 0.82rem;
+  }
+}
+

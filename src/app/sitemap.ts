@@ -3,6 +3,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 import { DIENSTEN } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
+import { BLOG_POSTS } from '@/config/services';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_CONFIG.domain;
@@ -38,7 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // 4. Brand Pages
   const brandPages = BRANDS.map(b => ({
-    url: `${base}/merken/${b.nameSlug}`,
+    url: `${base}/merken/${b.nameSlug}-autosleutel-bijmaken`,
     lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.85,
@@ -50,7 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     if (b.models) {
       b.models.forEach(m => {
         modelPages.push({
-          url: `${base}/merken/${b.nameSlug}/${m.slug}`,
+          url: `${base}/merken/${b.nameSlug}-autosleutel-bijmaken/${m.slug}`,
           lastModified: now,
           changeFrequency: 'monthly' as const,
           priority: 0.8,
@@ -69,7 +70,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         (city.priority === 'P3' && brand.priority === 'P1')
       ) {
         comboPages.push({
-          url: `${base}/steden/${city.slug}/${brand.nameSlug}-sleutel-programmeren`,
+          url: `${base}/steden/${city.slug}/${brand.nameSlug}-autosleutel-bijmaken`,
           lastModified: now,
           changeFrequency: 'monthly' as const,
           priority: 0.7,
@@ -81,7 +82,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 7. Combo Pages (City x Service)
   const cityServicePages: MetadataRoute.Sitemap = [];
   CITIES.forEach(city => {
-    const coreSlugs = ['alle-sleutels-kwijt-auto', 'sleutel-bijmaken', 'transponder-sleutel-programmeren', 'smart-key-programmeren', 'contact-reparatie'];
+    const coreSlugs = ['alle-sleutels-kwijt-auto', 'sleutel-bijmaken', 'transponder-programmeren', 'smart-key-programmeren', 'contactslot-reparatie'];
     const services = city.priority === 'P3'
       ? DIENSTEN.filter(s => coreSlugs.includes(s.slug))
       : DIENSTEN;
@@ -95,6 +96,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
+  // 8. Blog Pages
+  const blogPages = BLOG_POSTS.map(b => ({
+    url: `${base}/blog/${b.slug}`,
+    lastModified: now,
+    changeFrequency: 'weekly' as const,
+    priority: 0.75,
+  }));
+
   return [
     ...corePages,
     ...servicePages,
@@ -102,6 +111,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...brandPages,
     ...modelPages,
     ...comboPages,
-    ...cityServicePages
+    ...cityServicePages,
+    ...blogPages
   ];
 }

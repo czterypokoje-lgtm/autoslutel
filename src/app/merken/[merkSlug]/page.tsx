@@ -7,7 +7,7 @@ import { CITIES } from '@/config/cities';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export async function generateStaticParams() {
-  return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-sleutel-programmeren` }));
+  return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
 }
 
 export async function generateMetadata(props: { params: Promise<{ merkSlug: string }> }): Promise<Metadata> {
@@ -17,13 +17,13 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
   
   const brand = BRANDS.find(b => {
     const base = b.nameSlug.toLowerCase();
-    return decodedSlug === `${base}-sleutel-programmeren` || decodedSlug === base;
+    return decodedSlug === `${base}-autosleutel-bijmaken` || decodedSlug === base;
   });
 
   if (!brand) return {};
   return {
-    title: `${brand.name} Sleutel Programmeren | ${brand.system.split('/')[0]} | Mobiel | ${SITE_CONFIG.name}`,
-    description: `${brand.name} autosleutel programmering. ${brand.system}. Alle modellen. Goedkoper dan ${brand.name} dealer. Mobiel aan huis. Bel: ${SITE_CONFIG.phone}`,
+    title: `${brand.name} Autosleutel Bijmaken | Autosleutel Specialist | ${SITE_CONFIG.name}`,
+    description: `${brand.name} autosleutel bijmaken & programmeren. ${brand.system}. Alle modellen. Autosleutel Specialist — tot 50% goedkoper dan ${brand.name} dealer. Mobiel aan huis. Bel: ${SITE_CONFIG.phone}`,
     alternates: { canonical: `${SITE_CONFIG.domain}/merken/${merkSlug}` },
   };
 }
@@ -35,7 +35,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
 
   const brand = BRANDS.find(b => {
     const base = b.nameSlug.toLowerCase();
-    return decodedSlug === `${base}-sleutel-programmeren` || decodedSlug === base;
+    return decodedSlug === `${base}-autosleutel-bijmaken` || decodedSlug === base;
   });
 
   if (!brand) notFound();
@@ -44,8 +44,8 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
 
   const schema = {
     '@context': 'https://schema.org', '@type': 'Service',
-    name: `${brand.name} Sleutel Programmeren`,
-    description: `Professionele sleutelprogrammering voor alle ${brand.name} modellen. Mobiele service op locatie.`,
+    name: `${brand.name} Autosleutel Bijmaken — Autosleutel Specialist`,
+    description: `Professionele autosleutel bijmaken & programmeren voor alle ${brand.name} modellen. Autosleutel Specialist mobiele service op locatie.`,
     provider: { '@type': 'Locksmith', name: SITE_CONFIG.fullName, telephone: SITE_CONFIG.phoneTel },
   };
 
@@ -62,8 +62,8 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <span style={{ color: 'rgba(255,255,255,0.7)' }}>{brand.name}</span>
             </nav>
             <h1 style={{ color: '#fff', fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', marginBottom: '1rem' }}>
-              {`${brand.name} Sleutel Programmeren & Bijmaken`} <br />
-              <span style={{ color: 'var(--orange-500)' }}>Mobiel Ter Plaatse</span>
+              {`${brand.name} Autosleutel Bijmaken & Programmeren`} <br />
+              <span style={{ color: 'var(--orange-500)' }}>Autosleutel Specialist — Mobiel Ter Plaatse</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 700, fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '2rem' }}>
               Is uw {brand.name} sleutel kwijt, gestolen of werkt de afstandsbediening niet meer?

@@ -4,24 +4,69 @@ import { useState, useEffect } from 'react';
 import styles from './Navigation.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
 
-const DienstenLinks = [
-  { href: '/diensten/sleutel-bijmaken', label: 'Sleutel Bijmaken' },
-  { href: '/diensten/transponder-sleutel-programmeren', label: 'Transponder Sleutel' },
-  { href: '/diensten/smart-key-programmeren', label: 'Smart Key / Keyless' },
-  { href: '/diensten/reservesleutel-maken', label: 'Reservesleutel Maken' },
-  { href: '/diensten/contact-reparatie', label: 'Contact Reparatie' },
-  { href: '/diensten/alarm-programmeren', label: 'Alarm Programmeren' },
+const DienstenStructure = [
+  {
+    title: 'Autodeur Openen',
+    href: '/diensten/autodeur-openen',
+    subs: [
+      { href: '/diensten/sleutel-in-auto', label: 'Sleutel in Auto' },
+      { href: '/diensten/deur-dichtgevallen', label: 'Deur Dichtgevallen' },
+      { href: '/diensten/kofferbak-openen', label: 'Kofferbak Openen' },
+      { href: '/diensten/sleutel-afgebroken-in-slot', label: 'Sleutel Afgebroken in Slot' },
+    ]
+  },
+  {
+    title: 'Autosleutel Bijmaken',
+    href: '/diensten/sleutel-bijmaken',
+    subs: [
+      { href: '/diensten/transponder-programmeren', label: 'Transponder Programmeren' },
+      { href: '/diensten/afstandsbediening-bijmaken', label: 'Afstandsbediening Bijmaken' },
+      { href: '/diensten/smart-key-programmeren', label: 'Smart Key / Keyless' },
+      { href: '/diensten/reservesleutel-maken', label: 'Reservesleutel Maken' },
+    ]
+  },
+  {
+    title: 'Autosleutel Kwijt',
+    href: '/diensten/autosleutel-kwijt',
+    subs: [
+      { href: '/diensten/noodopening-auto', label: 'Noodopening' },
+      { href: '/diensten/alle-sleutels-kwijt-auto', label: 'Alle Sleutels Kwijt (AKL)' },
+    ]
+  },
+  {
+    title: 'Batterij Vervangen',
+    href: '/diensten/batterij-vervangen',
+    price: '€15 - €20',
+    subs: []
+  },
+  {
+    title: 'Autosleutel Reparatie',
+    href: '/diensten/autosleutel-reparatie',
+    subs: [
+      { href: '/diensten/behuizing-vervangen', label: 'Behuizing Vervangen' },
+      { href: '/diensten/knoppen-repareren', label: 'Knoppen Repareren' },
+      { href: '/diensten/contactslot-reparatie', label: 'Contactslot Reparatie' },
+    ]
+  },
+  {
+    title: 'Auto Beveiliging',
+    href: '/diensten/auto-beveiliging',
+    subs: [
+      { href: '/diensten/autoalarm-programmeren', label: 'Autoalarm Programmeren' },
+      { href: '/diensten/ghost-immobiliser', label: 'Ghost Immobiliser' },
+    ]
+  }
 ];
 
 const MerkenLinks = [
-  { href: '/merken/bmw-sleutel-programmeren', label: 'BMW' },
-  { href: '/merken/mercedes-sleutel-programmeren', label: 'Mercedes-Benz' },
-  { href: '/merken/volkswagen-sleutel-programmeren', label: 'Volkswagen' },
-  { href: '/merken/audi-sleutel-programmeren', label: 'Audi' },
-  { href: '/merken/toyota-sleutel-programmeren', label: 'Toyota' },
-  { href: '/merken/ford-sleutel-programmeren', label: 'Ford' },
-  { href: '/merken/volvo-sleutel-programmeren', label: 'Volvo' },
-  { href: '/merken/opel-sleutel-programmeren', label: 'Opel' },
+  { href: '/merken/bmw-autosleutel-bijmaken', label: 'BMW' },
+  { href: '/merken/mercedes-autosleutel-bijmaken', label: 'Mercedes-Benz' },
+  { href: '/merken/volkswagen-autosleutel-bijmaken', label: 'Volkswagen' },
+  { href: '/merken/audi-autosleutel-bijmaken', label: 'Audi' },
+  { href: '/merken/toyota-autosleutel-bijmaken', label: 'Toyota' },
+  { href: '/merken/ford-autosleutel-bijmaken', label: 'Ford' },
+  { href: '/merken/volvo-autosleutel-bijmaken', label: 'Volvo' },
+  { href: '/merken/opel-autosleutel-bijmaken', label: 'Opel' },
 ];
 
 const ProblemenLinks = [
@@ -50,7 +95,7 @@ export default function Navigation() {
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
         {/* Logo */}
-        <Link href="/" className={styles.logo} aria-label="Autosleutel Expert — naar homepage">
+        <Link href="/" className={styles.logo} aria-label="Autosleutel24 — naar homepage">
           <svg className={styles.logoIcon} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect width="40" height="40" rx="4" fill="#0d2137"/>
             <path d="M22 14a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" fill="#e8520a"/>
@@ -59,8 +104,8 @@ export default function Navigation() {
             <rect x="15" y="23" width="3" height="2" rx="1" fill="white"/>
           </svg>
           <div className={styles.logoText}>
-            <span className={styles.logoMain}>Autosleutel Expert</span>
-            <span className={styles.logoSub}>Eindhoven · 24/7</span>
+            <span className={styles.logoMain}>Autosleutel24</span>
+            <span className={styles.logoSub}>Utrecht · 24/7</span>
           </div>
         </Link>
 
@@ -72,11 +117,24 @@ export default function Navigation() {
               Diensten
               <svg className={styles.chevron} viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>
             </button>
-            <div className={styles.dropMenu}>
+            <div className={styles.dropMenuLarge}>
               <div className={styles.dropHeader}>Onze Diensten</div>
-              {DienstenLinks.map(l => (
-                <Link key={l.href} href={l.href} className={styles.dropItem}>{l.label}</Link>
-              ))}
+              <div className={styles.dropGridLarge}>
+                {DienstenStructure.map(pillar => (
+                  <div key={pillar.title} className={styles.dropColumn}>
+                    <Link href={pillar.href} className={styles.pillarTitle}>
+                      {pillar.title} {pillar.price ? ` (${pillar.price})` : ''}
+                    </Link>
+                    {pillar.subs.length > 0 && (
+                      <div className={styles.subList}>
+                        {pillar.subs.map(sub => (
+                          <Link key={sub.href} href={sub.href} className={styles.subLinkItem}>{sub.label}</Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
               <div className={styles.dropDivider} />
               <Link href="/diensten" className={styles.dropAll}>Alle diensten bekijken →</Link>
             </div>
@@ -116,6 +174,7 @@ export default function Navigation() {
 
           <Link href="/steden" className={styles.navLink}>Steden</Link>
           <Link href="/prijzen" className={styles.navLink}>Prijzen</Link>
+          <Link href="/blog" className={styles.navLink}>Blog &amp; Advies</Link>
           <Link href="/over-ons" className={styles.navLink}>Over Ons</Link>
         </nav>
 
@@ -162,7 +221,20 @@ export default function Navigation() {
 
         <div className={styles.mobileSection}>
           <div className={styles.mobileSectionTitle}>Diensten</div>
-          {DienstenLinks.map(l => <Link key={l.href} href={l.href} className={styles.mobileLink} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
+          <div className={styles.mobileDienstenGroup}>
+            {DienstenStructure.map(pillar => (
+              <div key={pillar.title} className={styles.mobilePillarBlock}>
+                <Link href={pillar.href} className={styles.mobilePillarLink} onClick={() => setMobileOpen(false)}>
+                  {pillar.title} {pillar.price ? ` (${pillar.price})` : ''}
+                </Link>
+                {pillar.subs.map(sub => (
+                  <Link key={sub.href} href={sub.href} className={styles.mobileSubLink} onClick={() => setMobileOpen(false)}>
+                    {sub.label}
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className={styles.mobileSection}>
@@ -174,6 +246,7 @@ export default function Navigation() {
         <div className={styles.mobileDivider} />
         <Link href="/steden" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Steden</Link>
         <Link href="/prijzen" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Prijzen</Link>
+        <Link href="/blog" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Blog &amp; Advies</Link>
         <Link href="/over-ons" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Over Ons</Link>
         <Link href="/contact" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Contact</Link>
       </div>

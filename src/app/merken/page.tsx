@@ -33,7 +33,7 @@ export default function MerkenPage() {
             <h2 style={{ fontSize: '1.1rem', fontWeight: 700, paddingBottom: '0.75rem', marginBottom: '1rem', borderBottom: '2px solid var(--gray-200)', color: 'var(--gray-900)' }}>{g.title}</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.75rem' }}>
               {g.brands.map(b => (
-                <Link key={b.slug} href={`/merken/${b.nameSlug}-sleutel-programmeren`} id={`merk-${b.slug}`}
+                <Link key={b.slug} href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} id={`merk-${b.slug}`}
                   style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', padding: '1rem 1.25rem', background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '4px', textDecoration: 'none', transition: 'all 0.15s' }}>
                   <strong style={{ fontSize: '0.95rem', color: 'var(--gray-900)' }}>{b.name}</strong>
                   <span style={{ fontSize: '0.78rem', color: 'var(--gray-400)' }}>{b.system}</span>

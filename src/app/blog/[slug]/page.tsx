@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Script from 'next/script';
 import { BLOG_POSTS } from '@/config/services';
 import { SITE_CONFIG } from '@/config/site.config';
+import { BLOG_CONTENT } from '@/config/blog_content';
 
 export async function generateStaticParams() {
   return BLOG_POSTS.map((p) => ({ slug: p.slug }));
@@ -16,7 +18,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${post.title} | ${SITE_CONFIG.name}`,
     description: post.excerpt,
     keywords: post.keywords,
-    alternates: { canonical: `${SITE_CONFIG.domain}/blog/${slug}` },
+    alternates: {
+      canonical: `${SITE_CONFIG.domain}/blog/${slug}`,
+      languages: {
+        'nl-NL': `${SITE_CONFIG.domain}/blog/${slug}`,
+        'x-default': `${SITE_CONFIG.domain}/blog/${slug}`,
+      },
+    },
   };
 }
 
@@ -25,8 +33,102 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = BLOG_POSTS.find((p) => p.slug === slug);
   if (!post) notFound();
 
+  const postContent = BLOG_CONTENT[slug];
+
+  const blogPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${SITE_CONFIG.domain}/blog/${slug}#blogposting`,
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.publishDate,
+    dateModified: post.publishDate,
+    mainEntityOfPage: `${SITE_CONFIG.domain}/blog/${slug}`,
+    author: {
+      '@type': 'Organization',
+      name: SITE_CONFIG.fullName,
+      url: SITE_CONFIG.domain,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_CONFIG.fullName,
+      url: SITE_CONFIG.domain,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_CONFIG.domain}/logo.png`,
+      },
+    },
+    image: `${SITE_CONFIG.domain}/og-image.jpg`,
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_CONFIG.domain}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_CONFIG.domain}/blog/${slug}` },
+    ],
+  };
+
+  let faqSchema: any = null;
+  if (slug === 'autosleutel-bijmaken-zonder-origineel') {
+    faqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Kan ik een autosleutel bijmaken zonder origineel?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Ja, dat kan zeker. Een mobiele autosleutelspecialist kan op locatie een nieuwe sleutel frezen en programmeren via de OBD-poort of direct op de ECU van de auto, zelfs als alle sleutels kwijt zijn.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Welke gegevens heeft de sleutelmaker nodig?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Om een sleutel te maken zonder origineel zijn het merk, model, bouwjaar, het identificatienummer (VIN/chassisnummer) van de auto en een geldig legitimatiebewijs en eigendomsbewijs vereist.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Hoeveel kost het om een autosleutel bij te maken zonder origineel?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'De kosten variëren van €180 voor standaard transponder sleutels tot €350 tot €650 voor complexe smart keys (bijvoorbeeld BMW, Mercedes, Tesla). Dit is inclusief programmeren en slijpen ter plaatse.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Hoe lang duurt het inlezen en maken van de sleutel?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Gemiddeld duurt het proces ter plaatse 30 tot 60 minuten. Bij complexere startonderbrekersystemen (zoals CAS4/FEM bij BMW of FBS4 bij Mercedes) kan het tot 2 uur duren.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Kan de dealer ook een sleutel maken zonder origineel?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Ja, maar de dealer moet de auto vaak weggesleept hebben naar de werkplaats en bestelt de sleutel bij de fabriek, wat 3 tot 14 dagen wachttijd en hoge sleepkosten met zich meebrengt.',
+          },
+        },
+      ],
+    };
+  }
+
   return (
-    <main>
+    <>
+      <Script id={`blog-post-schema-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }} />
+      <Script id={`blog-post-bc-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {faqSchema && (
+        <Script id={`blog-post-faq-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      )}
+      <main>
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <Link href="/blog" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', textDecoration: 'none' }}>← Terug naar Blog</Link>
@@ -43,16 +145,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       </section>
 
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '3rem 2rem' }}>
-        <div style={{ background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '8px', padding: '1rem 1.5rem', marginBottom: '2rem', fontSize: '0.9rem', color: '#856404' }}>
-          📝 <strong>Tip:</strong> Voeg hier de volledige blog content toe. Gebruik H2/H3 koppen, afbeeldingen, en interne links naar dienst-pagina&apos;s voor maximale SEO waarde.
-        </div>
-
-        <h2>Wat U Moet Weten</h2>
-        <p>{post.excerpt} In dit artikel gaan wij dieper in op dit onderwerp en geven wij u praktische tips.</p>
-
-        <h2>Veelgestelde Vragen Over Dit Onderwerp</h2>
-        <p>Heeft u vragen? Neem contact met ons op via telefoon of WhatsApp.</p>
+      <div className="blog-content" style={{ maxWidth: 800, margin: '0 auto', padding: '3rem 2rem' }}>
+        {postContent ? (
+          postContent
+        ) : (
+          <>
+            <h2>Wat U Moet Weten</h2>
+            <p>{post.excerpt} In dit artikel gaan wij dieper in op dit onderwerp en geven wij u praktische tips.</p>
+          </>
+        )}
 
         <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
           <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Hulp Nodig?</h3>
@@ -63,5 +164,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
       </div>
     </main>
+    </>
   );
 }

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!loc) return {};
   return {
     title: `Autosleutel Bijmaken ${loc.city} | Mobiele Service | ${SITE_CONFIG.responseTime}`,
-    description: `Autosleutel bijmaken in ${loc.city}. Mobiele service, alle merken. Alle sleutels kwijt? Wij komen naar u toe. BMW, Mercedes, Audi, VW, Toyota. ${loc.travelTime} vanuit Eindhoven. 24/7.`,
+    description: `Autosleutel bijmaken in ${loc.city}. Mobiele service, alle merken. Alle sleutels kwijt? Wij komen naar u toe. BMW, Mercedes, Audi, VW, Toyota. ${loc.travelTime} vanuit Utrecht. 24/7.`,
     keywords: [`autosleutel bijmaken ${loc.city.toLowerCase()}`, `autosleutel ${loc.city.toLowerCase()}`, `sleutel kwijt ${loc.city.toLowerCase()}`, `mobiele autosleutel specialist ${loc.city.toLowerCase()}`],
     alternates: { canonical: `${SITE_CONFIG.domain}/locaties/${slug}` },
   };
@@ -69,7 +69,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
               </div>
               <h1>Autosleutel Bijmaken {loc.city} — Mobiele Auto Slotenmaker</h1>
               <p className={styles.heroDesc}>
-                Vanuit onze Eindhoven basis bereiken wij {loc.city} in ongeveer <strong>{loc.travelTime}</strong>. Of u thuis bent, op het werk, of gestrand — wij komen naar u toe.
+                Vanuit onze Utrecht basis bereiken wij {loc.city} in ongeveer <strong>{loc.travelTime}</strong>. Of u thuis bent, op het werk, of gestrand — wij komen naar u toe.
               </p>
               <div className={styles.heroCtas}>
                 <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id={`loc-${loc.city.toLowerCase()}-phone`}>
@@ -80,7 +80,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
                 </a>
               </div>
               <div className={styles.heroStats}>
-                <div className={styles.stat}><strong>{loc.travelTime}</strong><span>Reistijd vanuit Eindhoven</span></div>
+                <div className={styles.stat}><strong>{loc.travelTime}</strong><span>Reistijd vanuit Utrecht</span></div>
                 <div className={styles.stat}><strong>24/7</strong><span>Bereikbaar</span></div>
                 <div className={styles.stat}><strong>Alle merken</strong><span>BMW, Mercedes, VW, Toyota...</span></div>
               </div>
@@ -124,7 +124,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
               <div>
                 <h2>Waarom Kiezen voor Ons in {loc.city}?</h2>
                 <ul className={styles.whyList}>
-                  <li>✅ {loc.travelTime} reactie vanuit Eindhoven</li>
+                  <li>✅ {loc.travelTime} reactie vanuit Utrecht</li>
                   <li>✅ Geen sleepkosten nodig — volledig mobiel</li>
                   <li>✅ Service op dezelfde dag</li>
                   <li>✅ Concurrerende prijzen vs {loc.city} dealers</li>

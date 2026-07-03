@@ -7,12 +7,18 @@ export const metadata: Metadata = {
   title: 'Auto Op Slot? Sleutel Vergeten? | Schadevrij Openen | 24/7 Mobiel',
   description: `Auto op slot en sleutels erin vergeten? Wij openen uw auto schadevrij. 24/7 mobiel. Reactietijd ${SITE_CONFIG.responseTime}. Bel: ${SITE_CONFIG.phone}`,
   keywords: ['auto op slot', 'sleutel vergeten in auto', 'auto openen sleutels erin', 'autoslotenmaker schadevrij', 'auto openen 24 uur'],
-  alternates: { canonical: `${SITE_CONFIG.domain}/auto-op-slot` },
+  alternates: {
+    canonical: `${SITE_CONFIG.domain}/auto-op-slot`,
+    languages: {
+      'nl-NL': `${SITE_CONFIG.domain}/auto-op-slot`,
+      'x-default': `${SITE_CONFIG.domain}/auto-op-slot`,
+    },
+  },
 };
 
 const faqItems = [
   { q: 'Beschadigt u mijn auto bij het openen?', a: 'Nee. Wij gebruiken professionele Lock Pick sets en Long Reach tools die geen beschadiging veroorzaken aan uw portier, rubber of lak. Schadevrij openen is onze standaard.' },
-  { q: 'Hoe snel kunt u mijn auto openen?', a: `Gemiddeld ${SITE_CONFIG.responseTime} na uw belletje. In Eindhoven soms al binnen 20 minuten.` },
+  { q: 'Hoe snel kunt u mijn auto openen?', a: `Gemiddeld ${SITE_CONFIG.responseTime} na uw belletje. In Utrecht soms al binnen 20 minuten.` },
   { q: 'Werkt u ook midden in de nacht?', a: 'Ja. Wij zijn 24 uur per dag, 7 dagen per week beschikbaar. Nacht toeslag van +25% buiten kantooruren (na 20:00 en voor 08:00).' },
   { q: 'Kan ik bewijzen dat het mijn auto is?', a: 'Ja, wij vragen om een rijbewijs of kentekenbewijs op naam. Dit is verplicht voor onze veiligheidsprotocollen.' },
   { q: 'Vergoedt mijn verzekering dit?', a: 'Soms, afhankelijk van uw polis. Wij geven altijd een gespecificeerde factuur die u kunt indienen.' },
@@ -30,10 +36,20 @@ const schema = {
   mainEntity: faqItems.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
 };
 
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+    { '@type': 'ListItem', position: 2, name: 'Auto Op Slot', item: `${SITE_CONFIG.domain}/auto-op-slot` },
+  ],
+};
+
 export default function AutoOpSlot() {
   return (
     <>
       <Script id="autos-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <Script id="autos-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* Emergency call strip */}
         <section style={{ background: 'var(--color-danger)', padding: '1.75rem 2rem', textAlign: 'center' }}>
