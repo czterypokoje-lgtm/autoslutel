@@ -209,6 +209,15 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
 
                 <div className={styles.seoContent}>
                   <h2>24/7 {service.title} in Uw Regio</h2>
+                  
+                  {slug === 'autodeur-openen' && (
+                    <img 
+                      src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
+                      alt="Auto deur schadevrij openen door professionele mobiele slotenmaker in Utrecht - 24/7 service" 
+                      style={{ width: '100%', borderRadius: '12px', margin: '1rem 0 2rem 0', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '16/9' }}
+                    />
+                  )}
+
                   <p>Bent u op zoek naar een betrouwbare en ervaren specialist voor {service.title.toLowerCase()}? Zoek niet verder dan de 24/7 service van {SITE_CONFIG.name}. Wij leveren een breed scala aan diensten om u te helpen met al uw autosleutel en vergrendelingsproblemen. Of u nu hulp nodig heeft met uw autosleutels, contactslot, een nieuwe autosleutel bijmaken of het vervangen van een verloren sleutel, wij kunnen helpen. Wij bieden ook een spoedservice als u bent buitengesloten uit uw auto.</p>
                   
                   <p>Ons ervaren en gecertificeerde team van mobiele autosleutel specialisten staat klaar om u zo snel mogelijk weer op weg te helpen. Wij zijn vastberaden om direct een oplossing te vinden en houden u binnen enkele minuten op de hoogte van onze aankomsttijd.</p>
