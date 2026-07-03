@@ -31,7 +31,12 @@ export default function OverOnsPage() {
     <>
       <Script id="over-ons-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
-      <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem' }}>
+      <section style={{ 
+        background: 'linear-gradient(135deg, rgba(7,14,26,0.85) 0%, rgba(10,22,40,0.95) 100%), url("/images/seo/auto_sleutel_utrecht_achtergrond_service.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        padding: '6rem 2rem' 
+      }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <span className="section-label">OVER ONS</span>
           <h1 style={{ color: '#fff', marginBottom: '1rem' }}>De Autosleutel Specialist van Utrecht</h1>
@@ -74,15 +79,44 @@ export default function OverOnsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
           <div>
             <img 
-              src="/autosleutel24-sleutelbijmaken-utrecht.jpg" 
-              alt="Autosleutel24 professionele werkplaats in Utrecht voor autosleutel bijmaken en autosleutels programmeren" 
-              style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)' }} 
+              src="/images/seo/auto_sleutel_utrecht_24uur_workshop.jpg" 
+              alt="Professionele autosleutel werkplaats en gereedschap in Utrecht voor 24 uur service" 
+              style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
             />
           </div>
           <div>
             <h2>Onze Professionele Werkplaats</h2>
             <p>Bij Autosleutel24 Utrecht geloven we in het leveren van topkwaliteit. Daarom beschikken we naast onze mobiele bussen over een eigen, fysieke werkplaats in Utrecht. Deze is speciaal uitgerust met CNC-gestuurde sleutel-freesmachines, soldeerstations voor fijnmicro-solderen en geavanceerde programmeerapparaten.</p>
             <p>Of het nu gaat om het dupliceren van een reservesleutel, het inlezen van een transponder of het herstellen van een defect printplaatje; in onze werkplaats voeren we alle handelingen met uiterste precisie uit.</p>
+          </div>
+        </div>
+
+        {/* Mobile Work & Inventory Section */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
+          <div style={{ order: 2 }}>
+            <img 
+              src="/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.jpg" 
+              alt="Slotenmaker in Utrecht werkzaamheden op locatie 24 uur service" 
+              style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
+            />
+          </div>
+          <div style={{ order: 1 }}>
+            <h2>Service Op Locatie & 24/7 Bereikbaar</h2>
+            <p>Problemen met uw autosleutel gebeuren vaak op de meest ongelegen momenten. Met onze volledig uitgeruste mobiele servicebussen komen we direct naar u toe, waar u zich ook bevindt in de regio Utrecht. U hoeft uw auto niet te slepen naar de dealer, wij fixen het op locatie!</p>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
+          <div>
+            <img 
+              src="/images/seo/slotenmaker_voorraad_utrecht_sleutels.jpg" 
+              alt="Grote voorraad autosleutels slotenmaker Utrecht" 
+              style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
+            />
+          </div>
+          <div>
+            <h2>Grote Voorraad Originele Sleutels</h2>
+            <p>Om u zo snel mogelijk weer op weg te helpen, beschikken wij over een enorme voorraad aan originele en aftermarket autosleutels. Van moderne smart keys (keyless go) tot traditionele transpondersleutels, wij hebben de juiste sleutel voor 99% van alle automerken direct op voorraad.</p>
           </div>
         </div>
 
