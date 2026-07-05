@@ -79,12 +79,48 @@ const breadcrumbSchema = {
 };
 
 const services = [
-  { title: 'Sleutel Bijmaken', desc: 'Reserve sleutel laten programmeren voor alle merken en modellen.', href: '/diensten/sleutel-bijmaken' },
-  { title: 'Transponder Programmeren', desc: 'Chip-sleutels en transponders voor alle systemen ter plaatse.', href: '/diensten/transponder-sleutel-programmeren' },
-  { title: 'Smart Key / Keyless', desc: 'Proximity keys, comfort access en keyless entry systemen.', href: '/diensten/smart-key-programmeren' },
-  { title: 'Contact Reparatie', desc: 'Contactslot defect of beschadigd? Wij repareren of vervangen.', href: '/diensten/contact-reparatie' },
-  { title: 'Auto Openen', desc: 'Sleutels in auto vergeten of auto op slot? Schadevrij openen.', href: '/auto-op-slot' },
-  { title: 'Alarm Programmeren', desc: 'Autoalarm installatie, programmering en storingsoplossing.', href: '/diensten/alarm-programmeren' },
+  { 
+    title: 'Sleutel Bijmaken', 
+    desc: 'Reserve sleutel laten programmeren voor alle merken en modellen ter plaatse.', 
+    href: '/diensten/sleutel-bijmaken',
+    src: '/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp',
+    alt: 'Autosleutel bijmaken en programmeren in Utrecht en heel Nederland - klaar terwijl u wacht op locatie'
+  },
+  { 
+    title: 'Transponder Programmeren', 
+    desc: 'Chip-sleutels en transponders voor alle systemen met mobiele apparatuur ingeleerd.', 
+    href: '/diensten/transponder-sleutel-programmeren',
+    src: '/images/seo/reserve_autosleutel_transponder_programmeren_utrecht.webp',
+    alt: 'Transponder sleutel programmeren en chip inleren voor alle automerken op locatie in Utrecht'
+  },
+  { 
+    title: 'Smart Key / Keyless', 
+    desc: 'Proximity keys, comfort access en keyless entry systemen storingen oplossen en inleren.', 
+    href: '/diensten/smart-key-programmeren',
+    src: '/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp',
+    alt: 'Smart key en keyless entry autosleutels inleren en programmeren met mobiele apparatuur in Utrecht'
+  },
+  { 
+    title: 'Contact Reparatie', 
+    desc: 'Contactslot defect of beschadigd? Wij repareren of vervangen direct op uw locatie.', 
+    href: '/diensten/contact-reparatie',
+    src: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
+    alt: 'Contactslot reparatie en vervangen voor alle merken auto\'s ter plaatse in Utrecht zonder sleepkosten'
+  },
+  { 
+    title: 'Auto Openen', 
+    desc: 'Sleutels in auto vergeten of autodeur in het slot? Wij openen uw auto 100% schadevrij.', 
+    href: '/auto-op-slot',
+    src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp',
+    alt: 'Auto schadevrij openen bij sleutels in auto vergeten of autodeur op slot in Utrecht en omgeving'
+  },
+  { 
+    title: 'Alarm Programmeren', 
+    desc: 'Autoalarm installatie, programmering en storingsoplossing door gecertificeerde specialisten.', 
+    href: '/diensten/alarm-programmeren',
+    src: '/images/seo/slotenmaker_gereedschap_utrecht_spoed.webp',
+    alt: 'Autoalarm installeren, storingen oplossen en afstandsbediening programmeren door autosleutelspecialist'
+  },
 ];
 
 const galleryItems = [
@@ -190,21 +226,35 @@ export default function HomePage() {
           <div className={styles.servicesGrid}>
             {services.map((s, i) => (
               <Link key={i} href={s.href} className={styles.serviceCard} id={`svc-${i}`}>
-                <div className={styles.serviceIconBox}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="24" height="24">
-                    {i === 0 && <><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></>}
-                    {i === 1 && <><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></>}
-                    {i === 2 && <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>}
-                    {i === 3 && <><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></>}
-                    {i === 4 && <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></>}
-                    {i === 5 && <><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></>}
-                  </svg>
+                <div className={styles.serviceImgBox}>
+                  <Image
+                    src={s.src}
+                    alt={s.alt}
+                    width={400}
+                    height={225}
+                    className={styles.serviceImg}
+                  />
                 </div>
                 <div className={styles.serviceBody}>
-                  <h3 className={styles.serviceTitle}>{s.title}</h3>
+                  <div className={styles.serviceTitleRow}>
+                    <div className={styles.serviceIconBox}>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
+                        {i === 0 && <><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></>}
+                        {i === 1 && <><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></>}
+                        {i === 2 && <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>}
+                        {i === 3 && <><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></>}
+                        {i === 4 && <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></>}
+                        {i === 5 && <><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></>}
+                      </svg>
+                    </div>
+                    <h3 className={styles.serviceTitle}>{s.title}</h3>
+                  </div>
                   <p className={styles.serviceDesc}>{s.desc}</p>
+                  <div className={styles.serviceFooter}>
+                    <span className={styles.serviceLinkText}>Bekijk dienst</span>
+                    <span className={styles.serviceArrow}>→</span>
+                  </div>
                 </div>
-                <span className={styles.serviceArrow}>→</span>
               </Link>
             ))}
           </div>
