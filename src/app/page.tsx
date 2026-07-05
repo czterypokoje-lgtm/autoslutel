@@ -123,6 +123,20 @@ const services = [
   },
 ];
 
+const serviceAreaCities = [
+  { name: 'Zeist', slug: 'zeist', time: '18-22 min' },
+  { name: 'Almere', slug: 'almere', time: '35-45 min' },
+  { name: 'Utrecht', slug: 'utrecht', time: '15-20 min' },
+  { name: 'Amsterdam', slug: 'amsterdam', time: '45-60 min' },
+  { name: 'Amsterdam-Zuid', slug: 'amsterdam-zuid', time: '45-60 min' },
+  { name: 'Amsterdam-Oost', slug: 'amsterdam-oost', time: '45-60 min' },
+  { name: 'Amersfoort', slug: 'amersfoort', time: '30-35 min' },
+  { name: 'Hilversum', slug: 'hilversum', time: '35-42 min' },
+  { name: 'Huizen', slug: 'huizen', time: '35-45 min' },
+  { name: 'Diemen', slug: 'diemen', time: '35-45 min' },
+  { name: 'Amstelveen', slug: 'amstelveen', time: '40-50 min' },
+];
+
 const galleryItems = [
   { title: 'Professionele Werkplaats Utrecht', src: '/autosleutel24-sleutelbijmaken-utrecht.jpg', alt: 'Autosleutel24 professionele werkplaats in Utrecht voor autosleutel bijmaken en programmeren' },
   { title: 'Sleutel Programmering', src: '/gallery/1.png', alt: 'Autosleutel programmering ter plaatse door specialist' },
@@ -272,6 +286,61 @@ export default function HomePage() {
             {BRANDS.slice(0, 24).map(b => (
               <Link key={b.slug} href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} className={styles.brandTag}>{b.name}</Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== SERVICE AREA & MAP PREVIEW (SEO) ===== */}
+      <section className={styles.serviceAreaSection}>
+        <div className="container">
+          <div className="text-center" style={{ marginBottom: '2rem' }}>
+            <p className="section-eyebrow">MOBIELE SERVICE WERKGEBIED</p>
+            <h2 className="section-title">Direct Op Locatie in Uw Regio</h2>
+            <p className="section-lead">Onze mobiele bussen patrouilleren dagelijks in Midden-Nederland en de Randstad.</p>
+          </div>
+          
+          <div className={styles.serviceAreaGrid}>
+            <div className={styles.serviceAreaText}>
+              <p className={styles.serviceAreaLead}>
+                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied met volledig uitgeruste mobiele werkplaatsen. Of u nu uw autosleutel bent verloren in het centrum van <strong>Utrecht</strong>, met een defect contactslot staat in <strong>Amsterdam-Zuid</strong>, of met spoed een transpondersleutel wilt laten inleren in <strong>Almere</strong> of <strong>Hilversum</strong> — wij komen direct naar uw thuis- of strandinglocatie.
+              </p>
+              <p className={styles.serviceAreaSub}>
+                Dankzij onze geavanceerde GPS-gestuurde routeplanning zijn onze monteurs meestal binnen <strong>20 tot 60 minuten</strong> ter plaatse. Geen wegsleepkosten naar de dealer en altijd 100% schadevrij geopend en geprogrammeerd. Klik op uw regio voor lokale tarieven en aankomsttijden:
+              </p>
+              <div className={styles.serviceAreaPills}>
+                {serviceAreaCities.map((city) => (
+                  <Link key={city.slug} href={`/steden/${city.slug}`} className={styles.cityPill}>
+                    <span>📍 {city.name}</span>
+                    <span className={styles.cityPillTime}>{city.time}</span>
+                  </Link>
+                ))}
+              </div>
+              <div style={{ marginTop: '0.75rem' }}>
+                <Link href="/steden" className="btn btn-navy">Bekijk alle 45+ steden in ons werkgebied</Link>
+              </div>
+            </div>
+
+            <div className={styles.mapContainerWrap}>
+              <div className={styles.mapLiveBanner}>
+                <span className={styles.liveIndicator}>
+                  <span className={styles.liveDot}></span>
+                  <strong>Live bussen actief</strong> in regio Utrecht &amp; Randstad
+                </span>
+                <span style={{ fontSize: '0.8rem', opacity: 0.85 }}>24/7 Noodhulp</span>
+              </div>
+              <div className={styles.mapBox}>
+                <iframe
+                  src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4&ehbc=2E312F"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Autosleutel24 Mobiele Service Werkgebied en Servicegebieden Google Map"
+                ></iframe>
+              </div>
+            </div>
           </div>
         </div>
       </section>
