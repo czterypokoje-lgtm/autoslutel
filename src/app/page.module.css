@@ -246,17 +246,74 @@
 .serviceCard:hover .serviceArrow { color: var(--orange-500); transform: translateX(4px); }
 .servicesCta { text-align: center; margin-top: 2.5rem; }
 
-/* ---- BRANDS ---- */
-.brandsSection { padding: 2rem 0; background: var(--gray-50); border-top: 1px solid var(--gray-200); border-bottom: 1px solid var(--gray-200); }
-.brandsTitle { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gray-400); margin-bottom: 0.75rem; }
-.brandsList { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.brandTag {
-  background: #fff; border: 1px solid var(--gray-200);
-  color: var(--gray-700); font-size: 0.8rem; font-weight: 500;
-  padding: 0.3rem 0.75rem; border-radius: var(--radius-sm);
-  text-decoration: none; transition: all 0.12s;
+/* ---- BRANDS SEO SECTION ---- */
+.brandsSection {
+  padding: 4rem 0;
+  background: #fff;
+  border-top: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--gray-200);
 }
-.brandTag:hover { border-color: var(--navy-300); color: var(--navy-800); background: var(--navy-50); text-decoration: none; }
+.brandsSeoHeader {
+  margin-bottom: 1.75rem;
+}
+.brandsHeading {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--navy-900);
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.02em;
+}
+.brandsLead {
+  font-size: 1.05rem;
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+.brandsCheckList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+  margin-bottom: 2.25rem;
+}
+.brandsCheckItem {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: 1.04rem;
+  line-height: 1.6;
+}
+.brandCheckIcon {
+  color: var(--orange-500);
+  font-weight: 800;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.brandLinkOrange {
+  color: var(--orange-500);
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.brandLinkOrange:hover {
+  color: var(--orange-600);
+  text-decoration: underline;
+}
+.brandModelsText {
+  color: var(--gray-700);
+}
+.brandsAllLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--orange-500);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.brandsAllLink:hover {
+  color: var(--orange-600);
+  text-decoration: underline;
+}
 
 /* ---- SERVICE AREA & MAP PREVIEW ---- */
 .serviceAreaSection {

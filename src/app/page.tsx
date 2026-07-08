@@ -279,15 +279,83 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== BRANDS ===== */}
+      {/* ===== BRANDS (SEO CHECKMARK LIST) ===== */}
       <section className={styles.brandsSection}>
         <div className="container">
-          <p className={styles.brandsTitle}>WIJ PROGRAMMEREN ALLE MERKEN</p>
-          <div className={styles.brandsList}>
-            {BRANDS.slice(0, 24).map(b => (
-              <Link key={b.slug} href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} className={styles.brandTag}>{b.name}</Link>
-            ))}
+          <div className={styles.brandsSeoHeader}>
+            <h2 className={styles.brandsHeading}>Welke Merken Bedienen Wij?</h2>
+            <p className={styles.brandsLead}>
+              Wij maken en programmeren autosleutels voor alle gangbare merken direct ter plaatse. Onze mobiele apparatuur ondersteunt:
+            </p>
           </div>
+          <div className={styles.brandsCheckList}>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/volkswagen-autosleutel-bijmaken" className={styles.brandLinkOrange}>Volkswagen</Link>
+                <span className={styles.brandModelsText}> — Golf, Polo, Tiguan, Transporter, Passat, Caddy (MQB &amp; PQ35 platform)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/bmw-autosleutel-bijmaken" className={styles.brandLinkOrange}>BMW</Link>
+                <span className={styles.brandModelsText}> — 1-serie, 3-serie, 5-serie, X1, X3, X5 (CAS3 / CAS4 / FEM / BDC systemen)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/mercedes-autosleutel-bijmaken" className={styles.brandLinkOrange}>Mercedes-Benz</Link>
+                <span className={styles.brandModelsText}> — A-Klasse, C-Klasse, E-Klasse, Sprinter, Vito (EIS / ESL / FBS3 / FBS4)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/audi-autosleutel-bijmaken" className={styles.brandLinkOrange}>Audi</Link>
+                <span className={styles.brandModelsText}> — A1, A3, A4, A6, Q3, Q5, Q7 (MLB &amp; MQB platform)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/ford-autosleutel-bijmaken" className={styles.brandLinkOrange}>Ford</Link>
+                <span className={styles.brandModelsText}> — Focus, Fiesta, Transit, Kuga, Puma (PAT2 / PAT3 / PAT4 smartkey)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/toyota-autosleutel-bijmaken" className={styles.brandLinkOrange}>Toyota</Link>
+                <span className={styles.brandModelsText}> — Aygo, Yaris, Corolla, RAV4, C-HR (G-chip / H-chip / Smart Entry)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/peugeot-autosleutel-bijmaken" className={styles.brandLinkOrange}>Peugeot</Link>
+                <span className={styles.brandModelsText}> — 208, 308, 2008, 3008, Partner, Boxer (BSI &amp; PIN-code uitlezen)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/renault-autosleutel-bijmaken" className={styles.brandLinkOrange}>Renault</Link>
+                <span className={styles.brandModelsText}> — Clio, Captur, Megane, Trafic, Master (Keycard &amp; Smartkey systemen)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/opel-autosleutel-bijmaken" className={styles.brandLinkOrange}>Opel</Link>
+                <span className={styles.brandModelsText}> — Corsa, Astra, Mokka, Vivaro (ID46 / ID48 transponder &amp; keyless)</span>
+              </div>
+            </div>
+          </div>
+          <Link href="/merken" className={styles.brandsAllLink}>
+            Bekijk alle merken die wij bedienen →
+          </Link>
         </div>
       </section>
 
