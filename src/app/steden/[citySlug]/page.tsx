@@ -388,9 +388,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {/* Neighborhoods / Nearby cities SEO block */}
         <section className={styles.sectionAlt}>
           <div className="container">
-            <h2>Waar Komen Wij voor Sleutel Bijmaken in {city.city}?</h2>
+            <h2>Waar Komen Wij voor Auto Slotenmaker in {city.city}?</h2>
             <p className={styles.seoIntro}>
-              Wij zijn mobiel actief in regio {city.region} en omstreken. Binnen gemiddeld {city.travelTime} staan wij voor u klaar in:
+              Als dé mobiele <strong>auto slotenmaker</strong> zijn wij actief in regio {city.region} en omstreken. Heeft u uw <strong>sleutel in auto</strong> laten liggen, heeft u hulp nodig bij het <strong>autodeur openen</strong> zonder schade, of moeten we een <strong>autosleutel bijmaken</strong> of <strong>autosleutels repareren</strong>? Binnen gemiddeld {city.travelTime} staan wij voor u klaar in:
             </p>
             <ul className={styles.seoList}>
               {city.subAreas.length > 0 ? (
