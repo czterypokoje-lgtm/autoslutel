@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
@@ -138,6 +139,79 @@ export default function PrijzenPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Trust Gallery: Onze Mobiele Werkplaats & Apparatuur */}
+        <div className={styles.trustSection}>
+          <h2 className={styles.tableTitle}>Onze Mobiele Werkplaats &amp; Apparatuur in Utrecht &amp; Amsterdam</h2>
+          <p style={{ color: 'var(--gray-600)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+            Wij werken uitsluitend met gecertificeerde diagnose- en programmeerapparatuur. Onze mobiele servicebussen zijn volledig uitgerust om transpondersleutels, smart keys en contactsloten ter plaatse in Utrecht, Amsterdam en heel Midden-Nederland 100% schadevrij te programmeren.
+          </p>
+          <div className={styles.trustGrid}>
+            <div className={styles.trustItem}>
+              <div className={styles.trustImgWrap}>
+                <Image
+                  src="/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp"
+                  alt="Autosleutel reparatie en behuizing vervangen op locatie in Utrecht en Amsterdam door gecertificeerde mobiele slotenmaker (GPS Utrecht &amp; Amsterdam)"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 500px"
+                  className={styles.trustImg}
+                />
+              </div>
+              <div className={styles.trustContent}>
+                <h3 className={styles.trustTitle}>Mobiele Sleutelreparatie Ter Plaats</h3>
+                <p className={styles.trustDesc}>Directe reparatie van defecte sleutelbehuizingen, transponders en printplaten op locatie in Utrecht en Amsterdam.</p>
+              </div>
+            </div>
+
+            <div className={styles.trustItem}>
+              <div className={styles.trustImgWrap}>
+                <Image
+                  src="/images/seo/autosleutel_programmeren_op_locatie_utrecht_amsterdam.webp"
+                  alt="Autosleutel programmeren en inleren op locatie Utrecht en Amsterdam - werkplaats in mobiele servicebus"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 500px"
+                  className={styles.trustImg}
+                />
+              </div>
+              <div className={styles.trustContent}>
+                <h3 className={styles.trustTitle}>Programmeren Op Locatie</h3>
+                <p className={styles.trustDesc}>Inleren van transpondersleutels en smart keys ter plaatse zonder uw voertuig naar de dealer te hoeven wegslepen.</p>
+              </div>
+            </div>
+
+            <div className={styles.trustItem}>
+              <div className={styles.trustImgWrap}>
+                <Image
+                  src="/images/seo/autosleutel_voorraad_alle_merken_utrecht_amsterdam.webp"
+                  alt="Ruime voorraad originele autosleutels en transponders voor alle merken in Utrecht en Amsterdam servicegebied"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 500px"
+                  className={styles.trustImg}
+                />
+              </div>
+              <div className={styles.trustContent}>
+                <h3 className={styles.trustTitle}>Originele Voorraad Alle Merken</h3>
+                <p className={styles.trustDesc}>Uitgebreide voorraad OEM-sleutels, smart keys en transponderchips voor direct gebruik bij sleutelverlies.</p>
+              </div>
+            </div>
+
+            <div className={styles.trustItem}>
+              <div className={styles.trustImgWrap}>
+                <Image
+                  src="/images/seo/professionele_diagnose_apparatuur_utrecht_amsterdam.webp"
+                  alt="Dealer-niveau diagnose apparatuur Autel IM608 Pro en AVDI voor autosleutel programmering in Utrecht en Amsterdam"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 500px"
+                  className={styles.trustImg}
+                />
+              </div>
+              <div className={styles.trustContent}>
+                <h3 className={styles.trustTitle}>Dealer-Niveau Apparatuur</h3>
+                <p className={styles.trustDesc}>Geavanceerde diagnoseapparatuur voor veilige toegang tot ECU, CAS, FEM, MQB en EIS systemen.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Why cheaper */}

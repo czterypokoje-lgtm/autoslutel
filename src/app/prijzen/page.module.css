@@ -62,3 +62,56 @@
   .noteCell { display: none; }
   .ctaBtns { flex-direction: column; align-items: center; }
 }
+
+/* Trust Gallery */
+.trustSection {
+  margin-top: 3.5rem;
+}
+.trustGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+}
+.trustItem {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.trustItem:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+}
+.trustImgWrap {
+  width: 100%;
+  height: 240px;
+  position: relative;
+  background: var(--gray-100);
+  overflow: hidden;
+}
+.trustImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.trustContent {
+  padding: 1.25rem 1.25rem 1.4rem;
+}
+.trustTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  margin-bottom: 0.35rem;
+}
+.trustDesc {
+  font-size: 0.88rem;
+  color: var(--gray-600);
+  line-height: 1.55;
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .trustGrid { grid-template-columns: 1fr; }
+}
