@@ -527,6 +527,7 @@ export default function HomePage() {
               <div className="stars">★★★★★</div>
               <span style={{fontSize: '0.8rem', color: 'var(--gray-500)'}}>247 Google beoordelingen</span>
             </div>
+          </div>
           <h2 className="text-center" style={{ marginBottom: '1rem' }}>Ervaringen</h2>
           <div className={styles.reviewGrid}>
             {SHARED_GOOGLE_REVIEWS.map((r, i) => (
