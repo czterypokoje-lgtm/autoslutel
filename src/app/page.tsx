@@ -6,6 +6,7 @@ import styles from './page.module.css';
 import dynamic from 'next/dynamic';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
+import FaqSection from '@/components/FaqSection/FaqSection';
 
 const InstantServiceMap = dynamic(() => import('@/components/InstantServiceMap'), { ssr: true });
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
@@ -547,6 +548,9 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      {/* ===== FAQ ===== */}
+      <FaqSection />
 
     </main>
     </>
