@@ -45,14 +45,12 @@ export default function Steden() {
           return (
             <div key={g.title} style={{ marginBottom:'3rem' }}>
               <h2 style={{ fontSize:'1.15rem', fontWeight:700, paddingBottom:'0.75rem', marginBottom:'1rem', borderBottom:'2px solid var(--gray-200)' }}>{g.title}</h2>
-              <p style={{ fontSize: '0.9rem', color: 'var(--gray-600)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-                Heeft u met spoed een <strong>auto slotenmaker</strong> nodig in de regio <strong>{g.title}</strong>? Autosleutel24 is uw betrouwbare, mobiele specialist. Wij zijn gespecialiseerd in <strong>autosleutels repareren</strong>, een nieuwe <strong>autosleutel bijmaken</strong> op locatie, en <strong>autodeur openen</strong> (bijv. als uw <strong>sleutel in auto</strong> ligt). Of u nu uw <strong>autosleutel kwijt</strong> bent, een <strong>contactslot reparatie</strong> nodig heeft of een extra <strong>reservesleutel</strong> wilt laten maken — wij helpen u direct weer op weg. Bekijk hieronder onze exacte servicegebieden in {g.title}.
-              </p>
+
               <ul className={styles.seoList}>
                 {cities.map(c => (
                   <li key={c.slug}>
                     <Link href={`/steden/${c.slug}`} id={`stad-${c.slug}`}>
-                      <strong style={{ color: 'var(--orange-500)' }}>{c.city}</strong> — Autosleutel bijmaken binnen {c.travelTime}
+                      <strong style={{ color: 'var(--orange-500)' }}>{c.city}</strong>
                     </Link>
                   </li>
                 ))}

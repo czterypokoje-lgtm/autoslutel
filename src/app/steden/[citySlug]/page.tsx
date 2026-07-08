@@ -401,7 +401,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   
                   return (
                     <li key={area}>
-                      <strong>{displayName}</strong> — Mobiele service ter plaatse
+                      <strong>{displayName}</strong>
                     </li>
                   );
                 })
@@ -409,7 +409,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 nearby.map(c => (
                   <li key={c.slug}>
                     <Link href={`/steden/${c.slug}`}>
-                      <strong>{c.city}</strong> — Autosleutel bijmaken binnen {c.travelTime}
+                      <strong>{c.city}</strong>
                     </Link>
                   </li>
                 ))
