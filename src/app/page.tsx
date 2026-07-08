@@ -104,9 +104,9 @@ const services = [
     alt: 'Transponder sleutel programmeren en chip inleren voor alle automerken op locatie in Utrecht'
   },
   { 
-    title: 'Autosleutel Reparatie', 
-    desc: 'Is de behuizing van uw autosleutel versleten, reageren de druktoetsen van de afstandsbediening niet meer of is het sleutelblad afgebroken? Een versleten of kapotte sleutel hoeft in veel gevallen niet direct volledig te worden vervangen door een dure nieuwe autosleutel. Onze mobiele specialisten repareren autosleutels en afstandsbedieningen vakkundig aan huis of onderweg. Wij vervangen beschadigde sleutelbehuizingen, solderen losse microschakelaars op de printplaat, vernieuwen oplaadbare accu\'s of batterijen en frezen direct een vers sleutelblad op maat. Hiermee functioneert uw huidige sleutel weer als nieuw en bespaart u aanzienlijk op reparatiekosten bij de autogarage.', 
-    href: '/diensten/autosleutel-reparatie',
+    title: 'Autosleutels Repareren', 
+    desc: 'Is de behuizing van uw sleutel gescheurd, zijn de drukknoppen lam of werkt het klapmechanisme niet meer? In plaats van direct een dure nieuwe sleutel aan te schaffen, kunnen wij in 90% van de gevallen uw huidige autosleutel repareren. Wij vervangen de behuizing, solderen nieuwe micro-switches op de printplaat en plaatsen nieuwe batterijen. Klaar terwijl u wacht, met garantie.', 
+    href: '/diensten/autosleutels-repareren',
     src: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp',
     alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
   },

@@ -297,13 +297,9 @@ const PILLAR_DETAILS: Record<string, PillarDetail> = {
   },
   'batterij-vervangen': {
     name: 'Batterij Vervangen',
-    chips: 'Lithium knoopcellen (Panasonic, Duracell en Varta CR2032, CR2025, CR2450, CR1620, CR1616)',
-    equipment: 'RF frequentietesters, digitale spanningstesters en precisie plectrum openers',
-    method: 'handmatige demontage van de behuizing met specialistische tools om breuken te voorkomen, inclusief her-synchronisatie na batterijwissel.',
-    keywords: ['autosleutel batterij vervangen', 'sleutelbatterij bijna leeg', 'Panasonic CR2032 knoopcel', 'Duracell autosleutel batterij', 'Varta knoopcellen'],
-  },
-  'autosleutel-reparatie': {
-    name: 'Autosleutel Reparatie',
+},
+  'autosleutels-repareren': {
+    name: 'Autosleutels Repareren',
     chips: 'SMD tactile switches, transponder spoelen (coils) en contactslot emulators',
     equipment: 'SMD soldeerstation, hete lucht rework station, microscoop en frequentietesters',
     method: 'ultrasone reiniging van printplaten bij waterschade en microsolderen van defecte contacten, knoppen en transponderspoelen onder de microscoop.',
@@ -331,8 +327,8 @@ function getPillarKey(serviceSlug: string): string {
   if (serviceSlug === 'batterij-vervangen') {
     return 'batterij-vervangen';
   }
-  if (['autosleutel-reparatie', 'behuizing-vervangen', 'knoppen-repareren', 'contactslot-reparatie'].includes(serviceSlug)) {
-    return 'autosleutel-reparatie';
+  if (['autosleutels-repareren', 'behuizing-vervangen', 'knoppen-repareren', 'contactslot-reparatie'].includes(serviceSlug)) {
+    return 'autosleutels-repareren';
   }
   if (['auto-beveiliging', 'autoalarm-programmeren', 'ghost-immobiliser'].includes(serviceSlug)) {
     return 'auto-beveiliging';
@@ -397,7 +393,7 @@ function generateServiceParagraphs(service: Service, city: City, localDetails: C
     p2 = `Het verliezen van al uw autosleutels is een stressvolle situatie, zeker als uw voertuig op een drukke locatie staat zoals bij ${landmark} (${postcode}). Dealers adviseren vaak om de auto te laten wegslepen, wat extra kosten en gedoe met zich meebrengt. Onze mobiele service lost dit op locatie in ${cityName} op. Wij openen de auto schadevrij en schrijven direct een nieuwe sleutel in de startonderbreker van de auto, zodat u direct weer kunt rijden.`;
   } else if (pKey === 'batterij-vervangen') {
     p2 = `Als u een waarschuwing krijgt dat uw sleutelbatterij zwak is, is het raadzaam deze direct te vervangen om te voorkomen dat u niet meer kunt starten bij bijvoorbeeld ${landmark} (${postcode}). Voor een vaste prijs van €15 tot €20 komen wij naar u toe in ${cityName} om een hoogwaardige batterij te plaatsen. We testen direct de signaalsterkte en voeren indien nodig een her-synchronisatie uit.`;
-  } else if (pKey === 'autosleutel-reparatie') {
+  } else if (pKey === 'autosleutels-repareren') {
     p2 = `Een knop die niet meer reageert of een behuizing die kapot is gegaan na een val bij ${landmark} in ${cityName} (${postcode}) hoeft niet direct te betekenen dat u een dure nieuwe sleutel moet kopen. Onze specialisten voeren precisiereparaties en behuizingswissels uit ter plaatse. Dit bespaart u geld en zorgt ervoor dat uw vertrouwde sleutel weer jaren meegaat.`;
   } else {
     p2 = `Met de toenemende autodiefstallen door relay attacks, bijvoorbeeld rondom drukke gebieden zoals ${landmark} (${postcode}), is extra beveiliging cruciaal. Wij installeren de geavanceerde Ghost Immobiliser direct bij u op de oprit in ${cityName}. Dit CAN-bus startonderbrekingssysteem is onzichtbaar voor dieven en zorgt ervoor dat uw auto niet kan worden gestart zonder de juiste PIN-code, zelfs niet als de originele sleutel is gekopieerd.`;
@@ -494,7 +490,7 @@ function generateBulletList(service: Service, city: City, localDetails: CityDeta
       { strong: 'A-merk batterijen:', text: `Wij gebruiken uitsluitend Panasonic, Duracell en Varta knoopcellen.` }
     ];
   }
-  if (pKey === 'autosleutel-reparatie') {
+  if (pKey === 'autosleutels-repareren') {
     return [
       { strong: 'Knoppen defect:', text: `De drukknoppen reageren niet meer of de soldeereilanden op de printplaat zijn losgelaten.` },
       { strong: 'Behuizing versleten:', text: `De plastic behuizing is gescheurd of de sleutelbaard klapt niet meer uit.` },
@@ -571,7 +567,7 @@ function generateSteps(service: Service, city: City) {
       { title: 'Testen en Garantie', text: `U test de sleutel op uw auto. U ontvangt 12 maanden garantie op de batterijspanning.` }
     ];
   }
-  if (pKey === 'autosleutel-reparatie') {
+  if (pKey === 'autosleutels-repareren') {
     return [
       { title: 'Leg het probleem uit', text: `Bel of stuur een foto via WhatsApp van uw defecte sleutel om de reparatiemogelijkheden te bespreken.` },
       { title: 'Wij komen naar uw locatie', text: `Onze monteur komt met een mobiele werkplaats naar u toe in ${city.city} (gemiddeld binnen ${city.travelTime}).` },

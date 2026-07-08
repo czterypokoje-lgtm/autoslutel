@@ -129,7 +129,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Kan een afgebroken sleutel altijd uit het contactslot worden gehaald?', a: 'Ja, in 99% van de gevallen kunnen we het afgebroken deel met speciale extractiesleutels en micro-haken verwijderen zonder het complete contactslot te hoeven vervangen.' },
       { q: 'Krijg ik direct een nieuwe sleutel?', a: 'Ja. Onze mobiele bus is uitgerust met een computergestuurde CNC-sleutelmachine waarmee we de sleutelbaard ter plaatse nauwkeurig namaken.' }
     ],
-    relatedSlugs: ['autodeur-openen', 'sleutel-bijmaken', 'contactslot-reparatie', 'autosleutel-reparatie']
+    relatedSlugs: ['autodeur-openen', 'sleutel-bijmaken', 'contactslot-reparatie', 'autosleutels-repareren']
   },
 
   // ── 2. AUTOSLEUTEL BIJMAKEN ───────────────────────────────
@@ -340,16 +340,16 @@ export const DIENSTEN: Service[] = [
       { q: 'Verliest mijn sleutel de code als de batterij eruit is?', a: 'Bij een snelle batterijwissel blijft de code gewoon bewaard. Als de batterij echter dagenlang leeg is geweest, kan synchronisatie nodig zijn. Onze monteur voert dit direct gratis uit bij de wissel.' },
       { q: 'Waarom mag ik geen goedkope batterij gebruiken?', a: 'Goedkope batterijen (zoals van budgetwinkels) verliezen snel hun spanning en kunnen gaan lekken, wat de printplaat van uw dure sleutel permanent kan beschadigen. Wij gebruiken uitsluitend Varta, Panasonic en Duracell.' }
     ],
-    relatedSlugs: ['afstandsbediening-bijmaken', 'smart-key-programmeren', 'autosleutel-reparatie', 'behuizing-vervangen']
+    relatedSlugs: ['afstandsbediening-bijmaken', 'smart-key-programmeren', 'autosleutels-repareren', 'behuizing-vervangen']
   },
 
   // ── 5. AUTOSLEUTEL REPARATIE ──────────────────────────────
   {
-    slug: 'autosleutel-reparatie',
-    title: 'Autosleutel Reparatie',
-    metaTitle: 'Autosleutel Reparatie | Behuizing & Knoppen Solderen | Utrecht',
-    metaDesc: 'Autosleutel kapot of defect? Wij repareren printplaten, knoppen en behuizingen ter plaatse. Bespaar tot 70% t.o.v. een nieuwe sleutel. Bel nu!',
-    h1: 'Autosleutel Reparatie — Bespaar op een Nieuwe Autosleutel',
+    slug: 'autosleutels-repareren',
+    title: 'Autosleutels Repareren',
+    metaTitle: 'Autosleutels Repareren | Behuizing & Knoppen Solderen | Utrecht',
+    metaDesc: 'Autosleutel kapot? Wij repareren uw autosleutel op locatie in Utrecht en omstreken. Nieuwe behuizing, knoppen solderen, batterij vervangen. Bel direct!',
+    h1: 'Autosleutels Repareren — Bespaar op een Nieuwe Autosleutel',
     intro: 'Heeft uw autosleutel waterschade opgelopen, zijn de drukknoppen lam, of start de auto niet meer doordat de spoel op de printplaat beschadigd is? Een nieuwe sleutel is niet altijd nodig. Wij repareren uw autosleutel vakkundig met precisie soldeerwerk, wat u tot 70% van de kosten van een nieuwe sleutel bespaart.',
     system: 'Micro-soldering, SMD tactile switch replacements, Transponder coil repair',
     priceFrom: 'Vanaf €49',
@@ -388,7 +388,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Waarom moet een gelijmde sleutel (zoals Ford of Opel) opengefreesd worden?', a: 'Fabriekssleutels van o.a. Ford en Opel zijn ultrasoon dichtgelijmd om waterdicht te zijn. Om de printplaat te kunnen redden, moeten we de oude behuizing met precisiegereedschap opensnijden. Wij hebben hier speciale mallen voor.' },
       { q: 'Start mijn auto nog steeds na het overzetten van de behuizing?', a: 'Ja. Omdat we de originele transponder chip (die gekoppeld is aan uw startonderbreker) meeverhuizen naar de nieuwe behuizing, blijft de sleutel gewoon starten.' }
     ],
-    relatedSlugs: ['autosleutel-reparatie', 'knoppen-repareren', 'batterij-vervangen', 'sleutel-bijmaken']
+    relatedSlugs: ['autosleutels-repareren', 'knoppen-repareren', 'batterij-vervangen', 'sleutel-bijmaken']
   },
   {
     slug: 'knoppen-repareren',
@@ -410,7 +410,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Wat is een micro-switch?', a: 'Een micro-switch is het kleine elektronische knopje op de printplaat dat contact maakt als u op de buitenkant van de sleutel drukt. Door intensief gebruik slijten de interne metalen contacten of breken de soldeereilandjes los.' },
       { q: 'Kan elk type knopje worden vervangen?', a: 'Ja, wij hebben vrijwel alle typen SMD-schakelaars voor alle automerken op voorraad in onze mobiele bussen.' }
     ],
-    relatedSlugs: ['autosleutel-reparatie', 'behuizing-vervangen', 'batterij-vervangen', 'afstandsbediening-bijmaken']
+    relatedSlugs: ['autosleutels-repareren', 'behuizing-vervangen', 'batterij-vervangen', 'afstandsbediening-bijmaken']
   },
   {
     slug: 'contactslot-reparatie',
@@ -433,7 +433,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Mijn Mercedes sleutel klikt niet en stuurslot ontgrendelt niet, wat nu?', a: 'Dit is een bekend probleem bij Mercedes (W204, W212, etc.) en duidt bijna altijd op een defect ELV (elektronisch stuurslot) of EIS module. Dealers vervangen de hele stuurkolom voor ca. €1.200. Wij repareren de module ter plaatse of programmeren een emulator voor een fractie van die prijs.' },
       { q: 'Moet ik na contactslot-reparatie een andere sleutel gebruiken?', a: 'Nee. Wij bouwen het nieuwe mechanische slot zo om dat het perfect past op de code van uw huidige deursleutels. U behoudt dus gewoon één sleutel voor de hele auto.' }
     ],
-    relatedSlugs: ['autosleutel-reparatie', 'sleutel-afgebroken-in-slot', 'transponder-programmeren', 'alle-sleutels-kwijt-auto']
+    relatedSlugs: ['autosleutels-repareren', 'sleutel-afgebroken-in-slot', 'transponder-programmeren', 'alle-sleutels-kwijt-auto']
   },
 
   // ── 6. AUTO BEVEILIGING ───────────────────────────────────

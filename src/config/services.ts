@@ -359,7 +359,7 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     'batterij-vervangen': [
       'autosleutel-batterij-vervangen-stappenplan'
     ],
-    'autosleutel-reparatie': [
+    'autosleutels-repareren': [
       'autosleutel-batterij-vervangen-stappenplan',
       'verzekering-dekt-autosleutel-vervangen'
     ],

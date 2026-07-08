@@ -41,8 +41,8 @@ const DienstenStructure = [
     subs: []
   },
   {
-    title: 'Autosleutel Reparatie',
-    href: '/diensten/autosleutel-reparatie',
+    title: 'Autosleutels Repareren',
+    href: '/diensten/autosleutels-repareren',
     subs: [
       { href: '/diensten/behuizing-vervangen', label: 'Behuizing Vervangen' },
       { href: '/diensten/knoppen-repareren', label: 'Knoppen Repareren' },
