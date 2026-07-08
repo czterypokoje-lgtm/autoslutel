@@ -274,6 +274,38 @@ export const BLOG_POSTS = [
     publishDate: '2026-07-08',
     readTime: '7 min',
   },
+  {
+    slug: 'auto-openen-zonder-sleutel-schadevrij',
+    title: 'Auto Openen Zonder Sleutel: 100% Schadevrij',
+    excerpt: 'Sleutel in de auto laten liggen? Breek geen ruit in! Ontdek hoe wij uw autodeur schadevrij openen met specialistisch gereedschap.',
+    keywords: ['auto openen zonder sleutel', 'sleutel in auto laten liggen', 'autodeur openmaken zonder schade', 'auto slotenmaker'],
+    publishDate: '2026-07-09',
+    readTime: '5 min',
+  },
+  {
+    slug: 'autosleutel-kwijt-wat-nu-stappenplan',
+    title: 'Autosleutel Kwijt? Dit is het Directe Stappenplan',
+    excerpt: 'Alle autosleutels kwijt? Raak niet in paniek. Lees precies wat u moet doen en hoe wij op locatie direct een nieuwe sleutel inleren.',
+    keywords: ['autosleutel kwijt', 'autosleutel verloren', 'alle autosleutels kwijt', 'reserve sleutel kwijt'],
+    publishDate: '2026-07-10',
+    readTime: '6 min',
+  },
+  {
+    slug: 'autosleutel-bijmaken-kosten-prijslijst',
+    title: 'Wat zijn de Kosten van een Autosleutel Bijmaken?',
+    excerpt: 'Een eerlijke en transparante prijslijst voor het bijmaken van transpondersleutels, klapsleutels en smart keys. Ontdek waarom wij goedkoper zijn dan de dealer.',
+    keywords: ['autosleutel bijmaken kosten', 'wat kost een autosleutel', 'autosleutel prijs', 'goedkoop autosleutel bijmaken'],
+    publishDate: '2026-07-11',
+    readTime: '6 min',
+  },
+  {
+    slug: 'sleutel-bijmaken-auto-mobiele-service',
+    title: 'Sleutel Bijmaken Auto: Snel, Mobiel & Betrouwbaar',
+    excerpt: 'Een reserve sleutel bijmaken voor uw auto was nog nooit zo makkelijk. Onze mobiele werkplaats komt naar u toe voor alle merken en modellen.',
+    keywords: ['sleutel bijmaken auto', 'auto reservesleutel maken', 'mobiele autosleutelmaker', 'autosleutel kopiëren'],
+    publishDate: '2026-07-12',
+    readTime: '5 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {

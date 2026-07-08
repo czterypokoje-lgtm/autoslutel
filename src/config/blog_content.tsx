@@ -750,5 +750,180 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </div>
     </>
   ),
+  'auto-openen-zonder-sleutel-schadevrij': (
+    <>
+      <h2>Auto openen zonder sleutel: Doe het veilig en 100% schadevrij</h2>
+      <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+        <Image 
+          src="/images/blog/auto_openen_zonder_sleutel_schadevrij.png" 
+          alt="Professionele slotenmaker gebruikt een Lishi pick en air wedge om een autodeur schadevrij te openen" 
+          fill 
+          style={{ objectFit: 'cover' }}
+          unoptimized={true}
+        />
+      </div>
+      <p>
+        Heeft u per ongeluk uw sleutel in de auto laten liggen en is de deur in het slot gevallen? Dit is een van de meest frustrerende situaties voor een automobilist. De eerste neiging is vaak om het zelf op te lossen met een kledinghanger, een stuk ijzerdraad, of in het ergste geval: het inslaan van een ruit. Wij raden dit ten zeerste af. Zelf uw <strong>auto openen zonder sleutel</strong> leidt in 95% van de gevallen tot ernstige lakschade, kapotte deurrubbers of dure reparaties aan het raammechanisme.
+      </p>
+
+      <h3>Waarom u niet zelf moet proberen in te breken</h3>
+      <p>
+        Moderne auto's zijn uitgerust met geavanceerde "deadlock" systemen en anti-inbraak mechanismen. Het forceren van een deur met een koevoet of ijzerdraad activeert deze systemen, waardoor de auto volledig blokkeert. Bovendien kost het vervangen van een ingetikt zijraampje al snel €250 tot €400, exclusief de tijd die u kwijt bent aan het opruimen van de glasscherven.
+      </p>
+
+      <h3>Hoe wij uw auto schadevrij openen</h3>
+      <p>
+        Als professionele auto slotenmaker beschikken wij over specialistisch gereedschap dat speciaal is ontworpen om autodeuren 100% schadevrij te openen:
+      </p>
+      <ul>
+        <li><strong>Air wedges (Pompkussentjes):</strong> Wij plaatsen een speciaal luchtkussentje tussen de deur en de carrosserie. Door dit zachtjes op te pompen, creëren we exact genoeg ruimte om met een gecoate tool de deurhendel aan de binnenkant over te halen, zonder de lak of rubbers te beschadigen.</li>
+        <li><strong>Lishi lock picks:</strong> Voor high-end auto's (zoals BMW, Mercedes of Audi) die over een "deadlock" beschikken, gebruiken wij Lishi decoders. Hiermee "lezen" we het slot aan de buitenkant en openen we de deur alsof we de originele sleutel gebruiken.</li>
+      </ul>
+
+      <h3>Spoedhulp op locatie</h3>
+      <p>
+        Staat u in de kou en moet de auto open? Onze mobiele servicebus is 24/7 beschikbaar in de gehele regio. Wij zijn vaak binnen 30 tot 60 minuten ter plaatse om u weer op weg te helpen.
+      </p>
+      <div style={{ background: '#f8fafc', borderLeft: '4px solid #dc2626', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
+        <strong>Sleutel in de auto? Breek niets af!</strong> Bel direct Autosleutel24 op <a href={WHATSAPP_URL} style={{ color: '#dc2626', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a>. Wij openen uw deur gegarandeerd 100% schadevrij.
+      </div>
+    </>
+  ),
+  'autosleutel-kwijt-wat-nu-stappenplan': (
+    <>
+      <h2>Autosleutel kwijt: Wat nu? Het directe stappenplan</h2>
+      <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+        <Image 
+          src="/images/blog/autosleutel_kwijt_wat_nu_stappenplan.png" 
+          alt="Opgeluchte bestuurder krijgt een nieuwe autosleutel van een mobiele slotenmaker na het kwijtraken van alle sleutels" 
+          fill 
+          style={{ objectFit: 'cover' }}
+          unoptimized={true}
+        />
+      </div>
+      <p>
+        U bent uw <strong>autosleutel kwijt</strong> en u heeft geen reservesleutel meer. Paniek slaat toe, want u kunt de auto niet in en zeker niet starten. Een veelgemaakte fout is het direct bellen van de merkdealer. De dealer zal eisen dat uw auto wordt weggesleept naar hun werkplaats, waarna zij een sleutel in de fabriek moeten bestellen. Dit proces duurt gemiddeld 1 tot 2 weken en kost u naast de dure sleutel ook torenhoge sleepkosten. Gelukkig is er een veel snellere en goedkopere oplossing.
+      </p>
+
+      <h3>Stappenplan: Alle autosleutels kwijt</h3>
+      <p>Volg deze stappen als u uw sleutel bent verloren:</p>
+      <ol>
+        <li><strong>Blijf rustig en controleer de omgeving:</strong> Kijk goed in uw zakken, tassen en op de route die u heeft gelopen. Soms ligt de sleutel op een onverwachte plek.</li>
+        <li><strong>Controleer of de sleutel niet in de auto ligt:</strong> Kijk door de ramen. Ligt de sleutel op de stoel of in het contact? Dan kunnen wij de deur schadevrij voor u openen.</li>
+        <li><strong>Verzamel uw voertuiggegevens:</strong> Noteer uw kenteken, het merk, model, en het bouwjaar van uw auto. Zoek ook uw legitimatiebewijs en het kentekenbewijs, want wij moeten verifiëren dat u de eigenaar bent.</li>
+        <li><strong>Bel een mobiele autosleutelspecialist:</strong> Neem contact op met Autosleutel24. Wij bieden de <em>All Keys Lost (AKL)</em> service op locatie.</li>
+      </ol>
+
+      <h3>Hoe wij op locatie een nieuwe sleutel inleren</h3>
+      <p>
+        Wanneer u Autosleutel24 inschakelt, komen wij met onze geavanceerde mobiele werkplaats naar de plek waar uw auto staat. Ons proces ziet er als volgt uit:
+      </p>
+      <ul>
+        <li><strong>Auto openen:</strong> Wij openen de afgesloten deuren schadevrij met professionele tools.</li>
+        <li><strong>Sleutelcode uitlezen:</strong> Wij lezen het slot uit of halen de sleutelcode uit de boordcomputer (ECU) om een mechanische sleutelbaard te frezen.</li>
+        <li><strong>Startonderbreker programmeren:</strong> Via de OBD2-diagnosepoort van uw auto koppelen we een nieuwe transponderchip (en afstandsbediening) aan uw auto.</li>
+        <li><strong>Beveiliging:</strong> Wij wissen de verloren sleutel direct uit het systeem van uw auto. De vinder van uw oude sleutel kan er dus niets meer mee beginnen!</li>
+      </ul>
+      <p>
+        Dit hele proces vindt plaats bij u op de oprit of langs de weg, meestal binnen 60 minuten nadat wij arriveren. U bespaart tijd, sleepkosten en u bent dezelfde dag nog op weg.
+      </p>
+      <div style={{ background: '#f8fafc', borderLeft: '4px solid #1d4ed8', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
+        <strong>Alle sleutels kwijt?</strong> Wij komen direct naar u toe. Stuur een bericht of bel <a href={WHATSAPP_URL} style={{ color: '#1d4ed8', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a> voor onmiddellijke pechhulp.
+      </div>
+    </>
+  ),
+  'autosleutel-bijmaken-kosten-prijslijst': (
+    <>
+      <h2>Wat zijn de kosten van een autosleutel bijmaken? Een transparant overzicht</h2>
+      <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+        <Image 
+          src="/images/blog/autosleutel_bijmaken_kosten_prijslijst.png" 
+          alt="Moderne autosleutel op een tablet met een transparante prijslijst en factuur, betrouwbare slotenmaker service" 
+          fill 
+          style={{ objectFit: 'cover' }}
+          unoptimized={true}
+        />
+      </div>
+      <p>
+        Als u een extra sleutel wilt laten maken, is de eerste vraag logischerwijs: <strong>wat zijn de autosleutel bijmaken kosten?</strong> De prijs voor een nieuwe autosleutel is afhankelijk van de complexiteit van de technologie in uw sleutel. Een oude mechanische sleutel is immers veel goedkoper dan een moderne Keyless Entry (Smart Key) van een premium merk. In dit artikel geven we u een eerlijk en transparant overzicht van de gemiddelde kosten.
+      </p>
+
+      <h3>Drie soorten autosleutels en hun prijskaartje</h3>
+      
+      <h4>1. Standaard Transpondersleutel (Vanaf €89)</h4>
+      <p>
+        Dit is een basis sleutel met een ingebouwde chip (transponder) die de startonderbreker deactiveert, maar zonder knopjes voor centrale deurvergrendeling. Dit type sleutel komt veel voor bij auto's van voor 2010 of als reserve "noodsleutel". De kosten voor het frezen en inleren beginnen meestal rond de €89.
+      </p>
+
+      <h4>2. Klapsleutel met Afstandsbediening (Vanaf €130 - €180)</h4>
+      <p>
+        De welbekende sleutel die inklapt en voorzien is van knopjes (open, dicht, kofferbak). Omdat deze sleutel zowel een mechanisch deel, een transponderchip als een afstandsbedieningscircuit bevat, liggen de kosten iets hoger. Afhankelijk van het merk variëren de kosten bij ons tussen de €130 en €180 inclusief programmering.
+      </p>
+
+      <h4>3. Smart Key / Keyless Entry (Vanaf €180 - €350)</h4>
+      <p>
+        De modernste sleutels die u in uw broekzak kunt houden om de auto te openen en te starten. Deze bevatten complexe cryptografische technologie (zoals bij BMW's FEM/BDC systemen of Mercedes FBS3). Het bijmaken en veilig inleren van een Smart Key is precisiewerk. Bij Autosleutel24 kost dit, afhankelijk van het model, tussen de €180 en €350. Ter vergelijking: bij de dealer betaalt u hier vaak tussen de €400 en €650 voor!
+      </p>
+
+      <h3>Waarom is Autosleutel24 goedkoper dan de dealer?</h3>
+      <p>
+        Veel mensen vragen zich af waarom het prijsverschil tussen de dealer en een specialist zo groot is. Het antwoord is simpel: overheadkosten. Een dealer heeft een enorm, duur pand en veel personeel. Bovendien bestellen zij de voorgeprogrammeerde sleutels via een trage, logistieke keten vanuit de fabriek. 
+      </p>
+      <p>
+        Wij zijn mobiele specialisten. Wij hebben geen dure showroom en we kopen ongeprogrammeerde OEM-kwaliteit sleutels rechtstreeks in. Met onze eigen, geavanceerde software programmeren we de sleutels zelf. Dit kostenvoordeel berekenen wij direct door in een lagere prijs voor u.
+      </p>
+
+      <div style={{ background: '#f8fafc', borderLeft: '4px solid #10b981', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
+        <strong>Wilt u de exacte prijs voor uw auto weten?</strong> Bij ons krijgt u vooraf altijd een vaste, transparante all-in prijs (inclusief frezen, programmeren en BTW). Bel of app ons op <a href={WHATSAPP_URL} style={{ color: '#10b981', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a> met uw merk, model en bouwjaar, en wij geven u direct de prijs!
+      </div>
+    </>
+  ),
+  'sleutel-bijmaken-auto-mobiele-service': (
+    <>
+      <h2>Sleutel bijmaken auto: De kracht van de mobiele service</h2>
+      <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+        <Image 
+          src="/images/blog/sleutel_bijmaken_auto_mobiele_service.png" 
+          alt="Geavanceerde CNC sleutelfreesmachine in actie in een mobiele slotenmaker servicebus voor het frezen van een nieuwe autosleutel" 
+          fill 
+          style={{ objectFit: 'cover' }}
+          unoptimized={true}
+        />
+      </div>
+      <p>
+        Een extra <strong>sleutel bijmaken voor uw auto</strong> is iets wat automobilisten vaak uitstellen. "Dat doe ik nog wel een keer", is een veelgehoorde gedachte. Totdat de enige sleutel kwijt is, en de kosten en stress ineens enorm oplopen. Gelukkig was een autosleutel kopiëren nog nooit zo eenvoudig dankzij de opkomst van de mobiele autosleutelservice.
+      </p>
+
+      <h3>De nadelen van de traditionele weg (De Dealer)</h3>
+      <p>
+        Wanneer u besluit een extra sleutel aan te schaffen, is de eerste gedachte vaak de autodealer. Dit gaat echter gepaard met veel ongemak:
+      </p>
+      <ul>
+        <li>U moet een afspraak inplannen (vaak weken wachttijd).</li>
+        <li>U moet uw auto een halve dag achterlaten bij de garage.</li>
+        <li>De prijzen zijn exceptioneel hoog vanwege merktoeslagen.</li>
+      </ul>
+
+      <h3>Waarom kiezen voor Autosleutel24?</h3>
+      <p>
+        Autosleutel24 pakt het anders aan. Wij begrijpen dat uw tijd kostbaar is. Daarom hebben wij een volledige, hightech werkplaats ingebouwd in onze servicebussen. Wij komen naar u toe — of u nu thuis bent, op het werk, of langs de snelweg staat.
+      </p>
+      
+      <h4>Onze technologie in de bus:</h4>
+      <ul>
+        <li><strong>Laser CNC-freesmachines:</strong> Wij frezen de mechanische sleutelbaard ter plekke tot op de millimeter nauwkeurig na. Zelfs als uw oude sleutel versleten is, decoderen wij het originele fabrieksprofiel voor een perfect werkend nieuw exemplaar.</li>
+        <li><strong>OBD2-Programmeerapparatuur:</strong> Van Volkswagen's MQB-platform tot de beveiligde CAN-bus netwerken van BMW en Mercedes; onze apparatuur is vaak nog uitgebreider dan die van de merkdealer zelf. Wij koppelen de cryptografische codes van de nieuwe transponder direct veilig aan uw boordcomputer.</li>
+      </ul>
+
+      <h3>Voorkomen is beter (en goedkoper) dan genezen</h3>
+      <p>
+        Wacht niet tot uw laatste sleutel wegraakt of in de wasmachine belandt. Het maken van een kopie wanneer u nog een werkende sleutel heeft, is een snel en voordelig proces (vaak binnen 30 minuten afgerond). Zodra u alle sleutels kwijt bent (een "All Keys Lost" situatie), is het proces veel arbeidsintensiever en dus duurder, omdat we sloten moeten decoderen om te achterhalen welke sleutel in uw auto past.
+      </p>
+
+      <div style={{ background: '#f8fafc', borderLeft: '4px solid #0f62fe', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
+        <strong>Plan vandaag nog een afspraak in!</strong> Wij komen naar uw woning of kantoor om een extra autosleutel bij te maken terwijl u wacht. App ons uw kenteken op <a href={WHATSAPP_URL} style={{ color: '#0f62fe', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a> en wij regelen de rest!
+      </div>
+    </>
+  ),
 };
 
