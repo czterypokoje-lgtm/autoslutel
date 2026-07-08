@@ -177,6 +177,34 @@ export const FAQ_GLOBAL: FaqItem[] = [
     q: 'Welke types autosleutels kunnen tegenwoordig worden bijgemaakt?',
     a: 'Autosleutel24 kan alle typen sleutels bijmaken: 1) Traditionele mechanische sleutels. 2) Transpondersleutels (met startonderbreker). 3) Klapsleutels met afstandsbediening (centrale vergrendeling). 4) Smart Keys / Keyless Entry fobs voor push-to-start systemen. 5) Insteeksleutels (zoals voor Volkswagen Passat of Audi).',
   },
+  {
+    q: 'Waar kan ik een reservesleutel laten maken in Nederland?',
+    a: 'Voor het laten maken van een reservesleutel voor uw auto in Nederland kunt u terecht bij de merkdealer of een gespecialiseerde mobiele slotenmaker. Autosleutel24 is de snelste optie in Midden-Nederland. Wij komen als mobiele service naar uw locatie toe om de reservesleutel te frezen en in te leren op uw auto.',
+  },
+  {
+    q: 'Hoeveel kost het om een reservesleutel te bestellen?',
+    a: 'De kosten voor een nieuwe autosleutel (reservesleutel) variëren van €89 voor een standaard transpondersleutel tot €350 voor geavanceerde smart keys. Bestelt u deze bij een dealer, dan vallen de kosten vaak twee keer zo hoog uit door administratie- en programmeerkosten. Bij Autosleutel24 betaalt u een transparante all-in prijs.',
+  },
+  {
+    q: 'Wat is de beste plek om een reservesleutel te laten bijmaken?',
+    a: 'De beste plek is een onafhankelijke autosleutel specialist zoals Autosleutel24. Waarom? Een reguliere schoenmaker kan vaak alleen eenvoudige sleutels zonder startonderbreker kopiëren, en een dealer is erg duur en traag. Wij bieden dealer-kwaliteit sleutels, inclusief het programmeren van de afstandsbediening, tegen een veel lagere prijs, gewoon bij u voor de deur.',
+  },
+  {
+    q: 'Kan ik online een reservesleutel laten maken en thuis laten bezorgen?',
+    a: 'Nee, een volledig werkende moderne autosleutel kan niet simpelweg online besteld en per post bezorgd worden. De startonderbreker-chip in de sleutel moet namelijk via de OBD2-poort in de auto zélf geprogrammeerd worden. Wel komt Autosleutel24 bij u thuis langs om dit gehele proces veilig op uw oprit uit te voeren.',
+  },
+  {
+    q: 'Sleutelbehuizing vervangen auto: is dat mogelijk?',
+    a: 'Ja! Werkt de elektronica van uw huidige autosleutel nog goed, maar zijn de drukknopjes kapot of is de behuizing beschadigd? Wij kunnen de interne printplaat en transponderchip overzetten naar een compleet nieuwe, stevige sleutelbehuizing. Dit is een zeer voordelige reparatie vergeleken met het kopen van een compleet nieuwe sleutel.',
+  },
+  {
+    q: 'Hoe werkt een autosleutelmaker service aan huis?',
+    a: 'Onze mobiele autosleutelmaker service aan huis werkt heel simpel: u belt of WhatsAppt ons (06 11 75 12 31) uw kenteken en locatie. Wij komen met onze volledig uitgeruste servicebus naar u toe. In onze bus hebben we computergestuurde freesmachines en OBD-programmeerapparatuur. Binnen 30 minuten rijdt u weer met een perfect werkende nieuwe sleutel.',
+  },
+  {
+    q: 'Wat is het verschil tussen een reserve autosleutel en een hoofdsleutel?',
+    a: 'Bij auto\'s functioneren beide sleutels technisch gezien hetzelfde: ze starten de auto en openen de deuren. Soms is een "reservesleutel" (of noodsleutel) echter een kale mechanische transpondersleutel zonder afstandsbediening-knopjes, terwijl de hoofdsleutel een klapsleutel of smart key is. Wij kunnen beide varianten voor u bijmaken.',
+  },
 ];
 
 // ── SERVICE-SPECIFIC FAQs ──
