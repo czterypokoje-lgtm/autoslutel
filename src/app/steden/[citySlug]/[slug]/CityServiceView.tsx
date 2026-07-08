@@ -297,7 +297,11 @@ const PILLAR_DETAILS: Record<string, PillarDetail> = {
   },
   'batterij-vervangen': {
     name: 'Batterij Vervangen',
-},
+    chips: 'Lithium knoopcellen (Panasonic, Duracell en Varta CR2032, CR2025, CR2450, CR1620, CR1616)',
+    equipment: 'RF frequentietesters, digitale spanningstesters en precisie plectrum openers',
+    method: 'handmatige demontage van de behuizing met specialistische tools om breuken te voorkomen, inclusief her-synchronisatie na batterijwissel.',
+    keywords: ['autosleutel batterij vervangen', 'sleutelbatterij bijna leeg', 'Panasonic CR2032 knoopcel', 'Duracell autosleutel batterij', 'Varta knoopcellen'],
+  },
   'autosleutels-repareren': {
     name: 'Autosleutels Repareren',
     chips: 'SMD tactile switches, transponder spoelen (coils) en contactslot emulators',
