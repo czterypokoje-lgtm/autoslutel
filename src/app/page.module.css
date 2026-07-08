@@ -229,26 +229,41 @@
 .serviceCard:hover .serviceIconBox {
   background: var(--navy-800); color: #fff;
 }
-.serviceTitle { font-size: 1.05rem; font-weight: 700; color: var(--gray-900); margin: 0; }
-.serviceDesc { font-size: 0.875rem; color: var(--gray-600); margin: 0 0 1.25rem 0; line-height: 1.55; flex: 1; }
+.serviceImgLink {
+  display: block;
+  overflow: hidden;
+}
+.serviceTitle { font-size: 1.08rem; font-weight: 700; color: var(--gray-900); margin: 0; }
+.serviceTitleLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.serviceTitleLink:hover {
+  color: var(--orange-500);
+}
+.serviceDesc { font-size: 0.88rem; color: var(--gray-600); margin: 0 0 1.25rem 0; line-height: 1.6; flex: 1; }
 .serviceFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding-top: 1rem;
   border-top: 1px solid var(--gray-100);
 }
-.serviceLinkText {
-  font-size: 0.85rem;
+.serviceCardBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--navy-800);
-  transition: color 0.15s;
+  text-decoration: none;
+  transition: color 0.15s ease;
 }
-.serviceCard:hover .serviceLinkText {
+.serviceCardBtn:hover {
   color: var(--orange-500);
 }
 .serviceArrow { font-size: 1.1rem; color: var(--gray-400); transition: transform 0.2s, color 0.15s; }
-.serviceCard:hover .serviceArrow { color: var(--orange-500); transform: translateX(4px); }
+.serviceCard:hover .serviceArrow,
+.serviceCardBtn:hover .serviceArrow { color: var(--orange-500); transform: translateX(4px); }
 .servicesCta { text-align: center; margin-top: 2.5rem; }
 
 /* ---- BRANDS SEO SECTION ---- */

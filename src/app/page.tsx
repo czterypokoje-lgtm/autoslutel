@@ -82,42 +82,42 @@ const breadcrumbSchema = {
 const services = [
   { 
     title: 'Sleutel Bijmaken', 
-    desc: 'Reserve sleutel laten programmeren voor alle merken en modellen ter plaatse.', 
+    desc: 'Heeft u slechts één autosleutel of wilt u direct een professionele reservesleutel laten bijmaken en programmeren zonder lange wachttijden of hoge dealerprijzen? Onze gecertificeerde mobiele slotenmakers komen 24/7 naar uw locatie in heel Nederland, inclusief regio Utrecht, Amsterdam en Midden-Nederland. Wij snijden en slijpen mechanische sleutelbladen met uiterste precisie en leren transponderchips, afstandsbedieningen en moderne smart keys ter plaatse in via uw OBD2-poort. Zo voorkomt u dure wegsleepkosten naar de merkdealer en bent u binnen 30 tot 60 minuten weer veilig onderweg met een volledig werkende, geteste reservesleutel inclusief garantie.', 
     href: '/diensten/sleutel-bijmaken',
     src: '/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp',
     alt: 'Autosleutel bijmaken en programmeren in Utrecht en heel Nederland - klaar terwijl u wacht op locatie'
   },
   { 
     title: 'Transponder Programmeren', 
-    desc: 'Chip-sleutels en transponders voor alle systemen met mobiele apparatuur ingeleerd.', 
+    desc: 'Moderne personenauto\'s en bedrijfswagens zijn uitgerust met geavanceerde startonderbrekers en cryptografische transponders die communiceren met de ECU en immobilizer van uw voertuig. Wanneer uw transponderchip defect is, de sleutel niet meer wordt herkend of na een lege batterij de synchronisatie kwijt is, start uw motor niet meer. Met onze professionele dealer-niveau diagnose-apparatuur programmeren en herstellen wij transpondersleutels van alle merken ter plaatse op locatie. Wij uitlezen foutcodes, resetten de startblokkering en synchroniseren nieuwe crypto-transponders vakkundig en veilig. U bespaart tot wel honderden euro\'s vergeleken met officiële dealers en behoudt uw fabrieksbeveiliging.', 
     href: '/diensten/transponder-sleutel-programmeren',
     src: '/images/seo/reserve_autosleutel_transponder_programmeren_utrecht.webp',
     alt: 'Transponder sleutel programmeren en chip inleren voor alle automerken op locatie in Utrecht'
   },
   { 
     title: 'Autosleutel Reparatie', 
-    desc: 'Behuizing kapot, drukknoppen versleten of transponder defect? Wij herstellen uw sleutel direct vakkundig ter plaatse.', 
+    desc: 'Is de behuizing van uw autosleutel versleten, reageren de druktoetsen van de afstandsbediening niet meer of is het sleutelblad afgebroken? Een versleten of kapotte sleutel hoeft in veel gevallen niet direct volledig te worden vervangen door een dure nieuwe autosleutel. Onze mobiele specialisten repareren autosleutels en afstandsbedieningen vakkundig aan huis of onderweg. Wij vervangen beschadigde sleutelbehuizingen, solderen losse microschakelaars op de printplaat, vernieuwen oplaadbare accu\'s of batterijen en frezen direct een vers sleutelblad op maat. Hiermee functioneert uw huidige sleutel weer als nieuw en bespaart u aanzienlijk op reparatiekosten bij de autogarage.', 
     href: '/diensten/autosleutel-reparatie',
     src: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp',
     alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
   },
   { 
     title: 'Contact Reparatie', 
-    desc: 'Contactslot defect of beschadigd? Wij repareren of vervangen direct op uw locatie.', 
+    desc: 'Draait uw autosleutel niet meer soepel rond in het contactslot, zit het stuurwielslot muurvast of start uw auto niet door elektronische ontstekingsproblemen? Mechanische slijtage aan de interne slotplaatjes of storingen in elektronische contactsloten zoals Mercedes EIS (Elektronisch Ontstekingsslot) en ELV (Elektronisch Stuurslot) kunnen uw auto compleet blokkeren. Wij komen direct met onze servicewagen naar uw pechlocatie om uw kapotte contactslot vakkundig te repareren, reviseren of compleet te vervangen. Daarbij passen wij het nieuwe slot aan op uw bestaande sleutelcode, zodat u gewoon één sleutel blijft gebruiken voor alle portieren en het contactslot.', 
     href: '/diensten/contactslot-reparatie',
     src: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
     alt: 'Contactslot reparatie en vervangen voor alle merken auto\'s ter plaatse in Utrecht zonder sleepkosten'
   },
   { 
     title: 'Auto Openen', 
-    desc: 'Sleutels in auto vergeten of autodeur in het slot? Wij openen uw auto 100% schadevrij.', 
+    desc: 'Liggen uw autosleutels nog op de autostoel of in de kofferbak terwijl de portieren automatisch in het slot zijn gevallen? Of bent u onderweg uw sleutels verloren en heeft u met spoed toegang nodig tot uw voertuig? Onze gecertificeerde autoslotenmakers zijn 24 uur per dag en 7 dagen per week beschikbaar om uw autodeur 100% schadevrij te openen. Wij maken gebruik van specialistische lockpick-gereedschappen, luchtkussens en optische precisie-instrumenten om deursloten van alle automerken te openen zonder krassen op de lak of schade aan uw rubbers en mechaniek. Snel ter plaatse en direct opgelost.', 
     href: '/auto-op-slot',
     src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp',
     alt: 'Auto schadevrij openen bij sleutels in auto vergeten of autodeur op slot in Utrecht en omgeving'
   },
   { 
     title: 'Smart Key / Keyless', 
-    desc: 'Proximity keys, comfort access en keyless entry systemen storingen oplossen en inleren.', 
+    desc: 'Heeft u problemen met uw keyless entry of keyless go autosleutel, of wordt uw proximity smart key niet meer gedetecteerd door de sensoren van uw auto? Moderne draadloze smart keys en comfort access sleutels vereisen uiterst gespecialiseerde programmering en beveiligde encryptiesleutels om naadloos te communiceren met het boordnet van uw wagen. Wij leveren, inleren en synchroniseren originele en hoogwaardige aftermarket smart keys voor onder andere BMW, Mercedes, Volkswagen, Audi, Ford en Renault direct bij u thuis of op locatie. Met geavanceerde cryptografische codering garanderen wij dat uw auto optimaal beveiligd blijft tegen elektronische diefstal en relay-attacks.', 
     href: '/diensten/smart-key-programmeren',
     src: '/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp',
     alt: 'Smart key en keyless entry autosleutels inleren en programmeren met mobiele apparatuur in Utrecht'
@@ -250,37 +250,43 @@ export default function HomePage() {
           </div>
           <div className={styles.servicesGrid}>
             {services.map((s, i) => (
-              <Link key={i} href={s.href} className={styles.serviceCard} id={`svc-${i}`}>
-                <div className={styles.serviceImgBox}>
-                  <Image
-                    src={s.src}
-                    alt={s.alt}
-                    width={400}
-                    height={225}
-                    className={styles.serviceImg}
-                  />
-                </div>
+              <article key={i} className={styles.serviceCard} id={`svc-${i}`}>
+                <Link href={s.href} className={styles.serviceImgLink} aria-label={s.title}>
+                  <div className={styles.serviceImgBox}>
+                    <Image
+                      src={s.src}
+                      alt={s.alt}
+                      width={400}
+                      height={225}
+                      className={styles.serviceImg}
+                    />
+                  </div>
+                </Link>
                 <div className={styles.serviceBody}>
                   <div className={styles.serviceTitleRow}>
                     <div className={styles.serviceIconBox}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
                         {i === 0 && <><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></>}
                         {i === 1 && <><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></>}
-                        {i === 2 && <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>}
+                        {i === 2 && <><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></>}
                         {i === 3 && <><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></>}
                         {i === 4 && <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></>}
                         {i === 5 && <><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></>}
                       </svg>
                     </div>
-                    <h3 className={styles.serviceTitle}>{s.title}</h3>
+                    <h3 className={styles.serviceTitle}>
+                      <Link href={s.href} className={styles.serviceTitleLink}>{s.title}</Link>
+                    </h3>
                   </div>
                   <p className={styles.serviceDesc}>{s.desc}</p>
                   <div className={styles.serviceFooter}>
-                    <span className={styles.serviceLinkText}>Bekijk dienst</span>
-                    <span className={styles.serviceArrow}>→</span>
+                    <Link href={s.href} className={styles.serviceCardBtn}>
+                      <span>Bekijk dienst &amp; tarieven</span>
+                      <span className={styles.serviceArrow}>→</span>
+                    </Link>
                   </div>
                 </div>
-              </Link>
+              </article>
             ))}
           </div>
           <div className={styles.servicesCta}>
