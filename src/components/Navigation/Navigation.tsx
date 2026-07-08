@@ -6,9 +6,10 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 const DienstenStructure = [
   {
-    title: 'Autodeur Openen',
-    href: '/diensten/autodeur-openen',
+    title: 'Auto Slotenmaker',
+    href: '/diensten/auto-slotenmaker',
     subs: [
+      { href: '/auto-op-slot', label: 'Autodeur Openen' },
       { href: '/diensten/sleutel-in-auto', label: 'Sleutel in Auto' },
       { href: '/diensten/deur-dichtgevallen', label: 'Deur Dichtgevallen' },
       { href: '/diensten/kofferbak-openen', label: 'Kofferbak Openen' },

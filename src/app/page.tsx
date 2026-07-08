@@ -118,9 +118,9 @@ const services = [
     alt: 'Contactslot reparatie en vervangen voor alle merken auto\'s ter plaatse in Utrecht zonder sleepkosten'
   },
   { 
-    title: 'Auto Openen', 
-    desc: 'Liggen uw autosleutels nog op de autostoel of in de kofferbak terwijl de portieren automatisch in het slot zijn gevallen? Of bent u onderweg uw sleutels verloren en heeft u met spoed toegang nodig tot uw voertuig? Onze gecertificeerde autoslotenmakers zijn 24 uur per dag en 7 dagen per week beschikbaar om uw autodeur 100% schadevrij te openen. Wij maken gebruik van specialistische lockpick-gereedschappen, luchtkussens en optische precisie-instrumenten om deursloten van alle automerken te openen zonder krassen op de lak of schade aan uw rubbers en mechaniek. Snel ter plaatse en direct opgelost.', 
-    href: '/auto-op-slot',
+    title: 'Auto Slotenmaker', 
+    desc: 'Zoekt u met spoed een professionele auto slotenmaker in de buurt? Of u nu uw autosleutels kwijt bent, ze nog in de auto liggen (autodeur openen), of het slot geforceerd is na inbraak: onze 24/7 mobiele auto slotenmaker service lost het direct op. Wij openen uw auto 100% schadevrij met specialistisch Lishi-gereedschap en kunnen ter plekke nieuwe sleutels en afstandsbedieningen inleren. Sneller en goedkoper dan de dealer, direct op uw locatie.', 
+    href: '/diensten/auto-slotenmaker',
     src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp',
     alt: 'Auto schadevrij openen bij sleutels in auto vergeten of autodeur op slot in Utrecht en omgeving'
   },

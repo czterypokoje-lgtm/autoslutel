@@ -229,6 +229,26 @@ export const FAQ_GLOBAL: FaqItem[] = [
     q: 'Hoe veilig zijn autosleutels met transponderchip?',
     a: 'Transpondersleutels zijn uiterst veilig. Ze bevatten een RFID-chip met een versleutelde cryptografische code die correspondeert met de startonderbreker in de boordcomputer (ECU). Pas als de computer de juiste code leest, krijgt de brandstofpomp vrijgave. Daarom kan niemand uw auto starten met alleen een geslepen stuk ijzer. Bij verlies programmeren we de oude transpondercode direct uit, zodat de verloren sleutel waardeloos wordt.',
   },
+  {
+    q: 'Wat kost een auto slotenmaker voor het openen van een deur?',
+    a: 'De kosten voor een auto slotenmaker voor het openen van uw deur zonder schade starten doorgaans vanaf €75 tot €125, afhankelijk van uw locatie, het tijdstip (dag/nacht) en het automerk. Bij Autosleutel24 hanteren wij vaste en transparante tarieven voor noodopeningen, zodat u nooit voor verrassingen staat. Neem contact op voor een directe prijsopgave.',
+  },
+  {
+    q: 'Welke 24-uurs auto slotenmaker heeft de beste recensies?',
+    a: 'Autosleutel24 is de best beoordeelde 24-uurs auto slotenmaker in Midden-Nederland met een gemiddelde score van 4.9 uit 5 sterren op basis van meer dan 240 Google reviews. Klanten prijzen vooral onze snelle aankomsttijd (vaak binnen 30 minuten), het schadevrij openen en onze transparante vooraf gecommuniceerde prijzen.',
+  },
+  {
+    q: 'Vervangen van autoslot na inbraak, doen jullie dat ook?',
+    a: 'Ja, als uw autodeurslot of contactslot geforceerd of beschadigd is na een inbraakpoging, kan onze auto slotenmaker dit direct op locatie repareren of vervangen. Wij kunnen het nieuwe slot mechanisch aanpassen (pinnen) op uw bestaande sleutel, zodat u geen compleet nieuwe sleutelset voor alle deuren hoeft aan te schaffen.',
+  },
+  {
+    q: 'Hoe werkt een auto slotenmaker bij het schadevrij openen van een auto?',
+    a: 'Een professionele auto slotenmaker slaat geen ruiten in en buigt geen deuren krom. Wij gebruiken specialistisch Lishi-gereedschap. Hiermee "lezen" en manipuleren we de interne plaatjes van de slotcilinder, alsof de originele sleutel wordt gebruikt. Binnen enkele minuten springt de deur veilig en 100% schadevrij open.',
+  },
+  {
+    q: 'Is er een auto slotenmaker die ook direct sleutels kan bijmaken op locatie?',
+    a: 'Absoluut. Waar veel reguliere pechhulpdiensten (zoals ANWB) uw auto alleen kunnen openen of wegslepen, is Autosleutel24 een volwaardige mobiele auto slotenmaker. Nadat wij uw auto hebben geopend, kunnen we in onze servicebus direct een nieuwe sleutel frezen en de transponder inleren, zelfs als u alle sleutels kwijt bent.',
+  },
 ];
 
 // ── SERVICE-SPECIFIC FAQs ──
