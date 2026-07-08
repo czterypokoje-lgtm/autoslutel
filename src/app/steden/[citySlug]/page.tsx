@@ -227,7 +227,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               {BRANDS.map(b => (
                 <li key={b.slug}>
                   <Link href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`}>
-                    <strong>{b.name}</strong> — Sleutel bijmaken in {city.city} ({b.system.split('/')[0].trim()})
+                    <strong>{b.name}</strong> — Autosleutel bijmaken in {city.city} ({b.system.split('/')[0].trim()})
                   </Link>
                 </li>
               ))}

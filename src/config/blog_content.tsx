@@ -202,7 +202,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   ),
   'bmw-bdc2-sleutel-bijmaken-2026': (
     <>
-      <h2>BMW BDC2 Sleutel Bijmaken: Technische Uitleg</h2>
+      <h2>BMW BDC2 Autosleutel Bijmaken: Technische Uitleg</h2>
       <p>
         BMW maakt in haar F- en G-serie modellen (zoals de 1-serie, 3-serie en X5 vanaf ca. 2015) gebruik van de <strong>FEM (Front Body Module)</strong> of <strong>BDC (Body Domain Controller)</strong> startonderbrekersysteem. Dit zijn uiterst complexe computersystemen die de elektronische startblokkering beheren.
       </p>
@@ -960,7 +960,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   ),
   'sleutel-bijmaken-auto-mobiele-service': (
     <>
-      <h2>Sleutel bijmaken auto: De kracht van de mobiele service</h2>
+      <h2>Autosleutel bijmaken auto: De kracht van de mobiele service</h2>
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/sleutel_bijmaken_auto_mobiele_service.png" 
@@ -971,7 +971,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         />
       </div>
       <p>
-        Een extra <strong>sleutel bijmaken voor uw auto</strong> is iets wat automobilisten vaak uitstellen. "Dat doe ik nog wel een keer", is een veelgehoorde gedachte. Totdat de enige autosleutel kwijt is, en de kosten en stress ineens enorm oplopen. Gelukkig was een autosleutel kopiëren nog nooit zo eenvoudig dankzij de opkomst van de mobiele autosleutelservice.
+        Een extra <strong>autosleutel bijmaken voor uw auto</strong> is iets wat automobilisten vaak uitstellen. "Dat doe ik nog wel een keer", is een veelgehoorde gedachte. Totdat de enige autosleutel kwijt is, en de kosten en stress ineens enorm oplopen. Gelukkig was een autosleutel kopiëren nog nooit zo eenvoudig dankzij de opkomst van de mobiele autosleutelservice.
       </p>
 
       <h3>De nadelen van de traditionele weg (De Dealer)</h3>

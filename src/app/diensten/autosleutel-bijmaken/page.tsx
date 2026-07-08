@@ -7,7 +7,7 @@ import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleRevi
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Sleutel Bijmaken Ter Plaatse — Vaste Prijs | Autosleutel24',
+  title: 'Autosleutel Bijmaken Ter Plaatse — Vaste Prijs | Autosleutel24',
   description: 'Autosleutel bijmaken door onze mobiele specialist. Reserve sleutel + programmering ter plaatse. Vaste prijs vanaf €95. 24/7. Bel 06 11 75 12 31.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/sleutel-bijmaken` },
 };
@@ -31,13 +31,13 @@ export default function SleutelBijmakenPage() {
     "priceRange": "€€",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
-      "name": "Sleutel Bijmaken Diensten",
+      "name": "Autosleutel Bijmaken Diensten",
       "itemListElement": [
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "Standaard Sleutel Bijmaken",
+            "name": "Standaard Autosleutel Bijmaken",
             "description": "Reserve sleutel voor oudere modellen zonder chip"
           },
           "price": "95",
@@ -47,7 +47,7 @@ export default function SleutelBijmakenPage() {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "Transponder Sleutel Bijmaken",
+            "name": "Transponder Autosleutel Bijmaken",
             "description": "Sleutel met chip voor merken als Volkswagen, Opel, Ford"
           },
           "price": "149",
@@ -105,7 +105,7 @@ export default function SleutelBijmakenPage() {
         <section className={styles.hero}>
           <div className={styles.heroInner}>
             <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-              <Link href="/">Home</Link> <span>/</span> <Link href="/diensten">Diensten</Link> <span>/</span> <span>Sleutel Bijmaken</span>
+              <Link href="/">Home</Link> <span>/</span> <Link href="/diensten">Diensten</Link> <span>/</span> <span>Autosleutel Bijmaken</span>
             </nav>
             <h1>Autosleutel Bijmaken — Mobiel Ter Plaatse in de Randstad</h1>
             <p className={styles.heroLead}>
@@ -230,7 +230,7 @@ export default function SleutelBijmakenPage() {
 
                 {/* Section 3 */}
                 <div>
-                  <h2>Hoe Werkt het Sleutel Bijmaken bij Autosleutel24?</h2>
+                  <h2>Hoe Werkt het Autosleutel Bijmaken bij Autosleutel24?</h2>
                   <ol className={styles.stepList}>
                     <li className={styles.stepItem}>
                       <span className={styles.stepNum}>1</span>
@@ -284,7 +284,7 @@ export default function SleutelBijmakenPage() {
 
                 {/* Section 5 */}
                 <div>
-                  <h2>Waar Komen Wij voor Sleutel Bijmaken?</h2>
+                  <h2>Waar Komen Wij voor Autosleutel Bijmaken?</h2>
                   <p>
                     Wij zijn mobiel actief in de regio Utrecht en omliggende steden. Populaire locaties:
                   </p>
@@ -302,11 +302,11 @@ export default function SleutelBijmakenPage() {
 
                 {/* Section 6 - FAQ */}
                 <div>
-                  <h2>Veelgestelde Vragen over Sleutel Bijmaken</h2>
+                  <h2>Veelgestelde Vragen over Autosleutel Bijmaken</h2>
 
                   <details className={styles.faqItem}>
                     <summary className={styles.faqQuestion}>
-                      Kan ik een sleutel bijmaken zonder de originele?
+                      Kan ik een autosleutel bijmaken zonder de originele?
                       <span className={styles.faqChevron}>+</span>
                     </summary>
                     <p className={styles.faqAnswer}>
@@ -392,7 +392,7 @@ export default function SleutelBijmakenPage() {
 
             {/* Bottom CTA block */}
             <div className={styles.ctaBlock}>
-              <h2>Sleutel Bijmaken Nodig? Bel Direct</h2>
+              <h2>Autosleutel Bijmaken Nodig? Bel Direct</h2>
               <p>Onze mobiele specialist staat binnen 30 min bij u in Utrecht. Vaste prijs, geen verrassingen.</p>
               <div className={styles.ctaBtnsGrid}>
                 <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary} id="sb-bottom-phone">Bel: {SITE_CONFIG.phone}</a>

@@ -92,9 +92,9 @@ const breadcrumbSchema = {
 
 const services = [
   { 
-    title: 'Sleutel Bijmaken', 
+    title: 'Autosleutel Bijmaken', 
     desc: 'Heeft u slechts één autosleutel of wilt u direct een professionele reservesleutel laten bijmaken en programmeren zonder lange wachttijden of hoge dealerprijzen? Onze gecertificeerde mobiele slotenmakers komen 24/7 naar uw locatie in heel Nederland, inclusief regio Utrecht, Amsterdam en Midden-Nederland. Wij snijden en slijpen mechanische sleutelbladen met uiterste precisie en leren transponderchips, afstandsbedieningen en moderne smart keys ter plaatse in via uw OBD2-poort. Zo voorkomt u dure wegsleepkosten naar de merkdealer en bent u binnen 30 tot 60 minuten weer veilig onderweg met een volledig werkende, geteste reservesleutel inclusief garantie.', 
-    href: '/diensten/sleutel-bijmaken',
+    href: '/diensten/autosleutel-bijmaken',
     src: '/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp',
     alt: 'Autosleutel bijmaken en programmeren in Utrecht en heel Nederland - klaar terwijl u wacht op locatie'
   },

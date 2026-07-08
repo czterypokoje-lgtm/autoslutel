@@ -428,7 +428,7 @@ function cityUniqueFAQ(service: Service, city: City, localDetails: CityDetail, p
 
   return [
     {
-      q: `Kan ik een sleutel bijmaken zonder de originele in ${cityName}?`,
+      q: `Kan ik een autosleutel bijmaken zonder de originele in ${cityName}?`,
       a: `Ja. Wij hebben apparatuur om een nieuwe sleutel te genereren op basis van het contactslot of het immobilizer systeem ter plaatse in ${cityName}. Dit geldt voor de meeste merken vanaf bouwjaar 1995.`,
     },
     {

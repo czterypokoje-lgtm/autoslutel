@@ -332,7 +332,7 @@ export function getFaqForCity(cityName: string): FaqItem[] {
     },
     {
       q: `Maken jullie ook autosleutels bij in ${cityName}?`,
-      a: `Ja, wij bieden onze volledige service in ${cityName}: sleutel bijmaken, transponder programmeren, smart key bijmaken, auto openen en contactslot repareren. Dit alles op uw locatie — wij komen naar u toe.`,
+      a: `Ja, wij bieden onze volledige service in ${cityName}: autosleutel bijmaken, transponder programmeren, smart key bijmaken, auto openen en contactslot repareren. Dit alles op uw locatie — wij komen naar u toe.`,
     },
     {
       q: `Wat zijn de kosten voor autosleutel service in ${cityName}?`,

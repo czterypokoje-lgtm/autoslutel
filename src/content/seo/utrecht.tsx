@@ -85,7 +85,7 @@ export default function UtrechtSeoContent() {
         of om 06:00 bij UMC Utrecht. Nachttoeslag: €25 bovenop standaardtarief.
       </p>
 
-      <h3>Kan ik een sleutel bijmaken zonder origineel in Utrecht?</h3>
+      <h3>Kan ik een autosleutel bijmaken zonder origineel in Utrecht?</h3>
       <p>
         <strong>Ja.</strong> Wij hebben apparatuur om een nieuwe sleutel te genereren op basis van het contactslot 
         of immobilizer systeem. Dit geldt voor de meeste merken vanaf bouwjaar 1995. Voor sommige nieuwe modellen 

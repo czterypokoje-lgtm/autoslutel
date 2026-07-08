@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   keywords: [
     'autosleutelbijmaken', 'autosleutel24', 'autosleutejkwijt', 'autosleutel kwijt',
     'autosleutel bijmaken', 'autosleutel programmeren', 'reservesleutel auto bijmaken',
-    'mobiele autoslotenmaker', 'sleutel bijmaken utrecht', 'transponder sleutel programmeren',
-    'BMW sleutel bijmaken', 'Mercedes sleutel programmeren', 'Volkswagen autosleutel bijmaken',
+    'mobiele autoslotenmaker', 'autosleutel bijmaken utrecht', 'transponder sleutel programmeren',
+    'BMW autosleutel bijmaken', 'Mercedes sleutel programmeren', 'Volkswagen autosleutel bijmaken',
     'autosleutel bijmaken kosten', 'autosleutel bijmaken amsterdam', 'sleutelmaker 24 uur',
     'autosleutel laten bijmaken', 'autosleutel specialist utrecht', 'klapsleutel bijmaken',
     'smart key programmeren', 'autosleutel bijmaken almere', 'autosleutel bijmaken amersfoort',
@@ -76,7 +76,7 @@ const localBusinessSchema = {
   '@id': `${SITE_CONFIG.domain}/#localbusiness`,
   name: SITE_CONFIG.name,
   alternateName: 'Autosleutel24 Utrecht',
-  description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Sleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Werkzaam in Utrecht, Amsterdam, Almere, Amersfoort en heel Nederland.',
+  description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Werkzaam in Utrecht, Amsterdam, Almere, Amersfoort en heel Nederland.',
   url: SITE_CONFIG.domain,
   logo: {
     '@type': 'ImageObject',

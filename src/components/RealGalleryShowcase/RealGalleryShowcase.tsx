@@ -59,7 +59,7 @@ export const REAL_GALLERY_PROJECTS: GalleryProject[] = [
   {
     id: 10,
     src: '/images/gallery/autosleutel_kia_smartkey_bijmaken_amsterdam_west.webp',
-    alt: 'Kia smart key sleutel bijmaken en transponder inleren Amsterdam West'
+    alt: 'Kia smart key autosleutel bijmaken en transponder inleren Amsterdam West'
   },
   {
     id: 11,

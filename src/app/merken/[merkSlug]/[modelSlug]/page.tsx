@@ -122,7 +122,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
                   om direct in de computer van uw auto te programmeren.
                 </p>
                 <ul className="check-list">
-                  <li>Reserve sleutel bijmaken (terwijl u wacht)</li>
+                  <li>Reserve autosleutel bijmaken (terwijl u wacht)</li>
                   <li>Alle sleutels kwijt (AKL) - wij openen en maken nieuwe</li>
                   <li>Afstandsbediening inleren</li>
                   <li>Keyless Entry / Smart Key activatie</li>

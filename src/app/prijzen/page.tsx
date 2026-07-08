@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 // All rows: service | from | up to | notes
 const priceRows = [
-  { service: 'Sleutel bijmaken (reserve)', from: '€ 95', to: '€ 250', note: 'Afhankelijk van chip type & merk' },
+  { service: 'Autosleutel bijmaken (reserve)', from: '€ 95', to: '€ 250', note: 'Afhankelijk van chip type & merk' },
   { service: 'Alle sleutels kwijt (AKL)', from: '€ 180', to: '€ 650', note: 'BMW/Porsche/Tesla bovenaan de range' },
   { service: 'Smart key / keyless entry', from: '€ 180', to: '€ 450', note: 'Proximity fob incl. programmering' },
   { service: 'Transponder klonen', from: '€ 75',  to: '€ 180', note: 'ID46, Hitag2, PCF7936/53' },
