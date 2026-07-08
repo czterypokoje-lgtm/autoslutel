@@ -14,17 +14,17 @@ const diensten = [
 ];
 
 const steden = [
-  ['Utrecht', '/steden/utrecht'],
+  ['Utrecht (Hoofdlocatie)', '/steden/utrecht'],
   ['Amsterdam', '/steden/amsterdam'],
-  ['Rotterdam', '/steden/rotterdam'],
-  ['Den Bosch', '/steden/den-bosch'],
+  ['Amsterdam-Zuid', '/steden/amsterdam-zuid'],
+  ['Almere', '/steden/almere'],
   ['Amersfoort', '/steden/amersfoort'],
-  ['Leusden', '/steden/leusden'],
-  ['Soest', '/steden/soest'],
   ['Hilversum', '/steden/hilversum'],
-  ['Culemborg', '/steden/culemborg'],
-  ['Gouda', '/steden/gouda'],
-  ['Alle steden →', '/steden'],
+  ['Bussum', '/steden/bussum'],
+  ['Naarden', '/steden/naarden'],
+  ['Amstelveen', '/steden/amstelveen'],
+  ['Zeist', '/steden/zeist'],
+  ['Alle steden & regio\'s →', '/steden'],
 ];
 
 const spoed = [
@@ -72,7 +72,7 @@ export default function Footer() {
                 <div className={styles.footerBrandSub}>Utrecht · 24/7</div>
               </div>
             </div>
-            <p className={styles.footerDesc}>Professionele mobiele autosleutelprogrammering voor alle merken. Utrecht en heel Nederland.</p>
+            <p className={styles.footerDesc}>Professionele mobiele autosleutelprogrammering voor alle merken. Hoofdlocatie Utrecht, direct actief in Amsterdam-Zuid, Amersfoort, Almere, &apos;t Gooi (Hilversum, Bussum, Naarden) en heel Nederland.</p>
             <div className={styles.footerBadges}>
               <span>KVK: {SITE_CONFIG.kvk}</span>
               <span>BTW: {SITE_CONFIG.btw}</span>

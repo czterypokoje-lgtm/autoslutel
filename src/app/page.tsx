@@ -124,17 +124,18 @@ const services = [
 ];
 
 const serviceAreaCities = [
-  { name: 'Zeist', slug: 'zeist', time: '18-22 min' },
+  { name: 'Utrecht (Hoofdlocatie)', slug: 'utrecht', time: '15-20 min' },
+  { name: 'Amsterdam', slug: 'amsterdam', time: '40-55 min' },
+  { name: 'Amsterdam-Zuid', slug: 'amsterdam-zuid', time: '35-45 min' },
   { name: 'Almere', slug: 'almere', time: '35-45 min' },
-  { name: 'Utrecht', slug: 'utrecht', time: '15-20 min' },
-  { name: 'Amsterdam', slug: 'amsterdam', time: '45-60 min' },
-  { name: 'Amsterdam-Zuid', slug: 'amsterdam-zuid', time: '45-60 min' },
-  { name: 'Amsterdam-Oost', slug: 'amsterdam-oost', time: '45-60 min' },
-  { name: 'Amersfoort', slug: 'amersfoort', time: '30-35 min' },
-  { name: 'Hilversum', slug: 'hilversum', time: '35-42 min' },
+  { name: 'Amersfoort', slug: 'amersfoort', time: '25-35 min' },
+  { name: 'Hilversum', slug: 'hilversum', time: '30-40 min' },
+  { name: 'Bussum', slug: 'bussum', time: '30-40 min' },
+  { name: 'Naarden', slug: 'naarden', time: '30-40 min' },
+  { name: 'Amstelveen', slug: 'amstelveen', time: '35-45 min' },
+  { name: 'Zeist', slug: 'zeist', time: '18-22 min' },
   { name: 'Huizen', slug: 'huizen', time: '35-45 min' },
   { name: 'Diemen', slug: 'diemen', time: '35-45 min' },
-  { name: 'Amstelveen', slug: 'amstelveen', time: '40-50 min' },
 ];
 
 const galleryItems = [
@@ -302,7 +303,7 @@ export default function HomePage() {
           <div className={styles.serviceAreaGrid}>
             <div className={styles.serviceAreaText}>
               <p className={styles.serviceAreaLead}>
-                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied met volledig uitgeruste mobiele werkplaatsen. Of u nu uw autosleutel bent verloren in het centrum van <strong>Utrecht</strong>, met een defect contactslot staat in <strong>Amsterdam-Zuid</strong>, of met spoed een transpondersleutel wilt laten inleren in <strong>Almere</strong> of <strong>Hilversum</strong> — wij komen direct naar uw thuis- of strandinglocatie.
+                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied vanuit onze hoofdlocatie in <strong>Utrecht</strong>. Of u nu uw autosleutel bent verloren in <strong>Utrecht</strong> of <strong>Amsterdam-Zuid</strong>, met een defect contactslot staat in <strong>Amersfoort</strong> of <strong>Almere</strong>, of met spoed een transpondersleutel wilt laten inleren in &apos;t Gooi (<strong>Hilversum</strong>, <strong>Bussum</strong>, <strong>Naarden</strong>) of <strong>Amstelveen</strong> — wij komen direct naar uw thuis- of strandinglocatie.
               </p>
               <p className={styles.serviceAreaSub}>
                 Dankzij onze geavanceerde GPS-gestuurde routeplanning zijn onze monteurs meestal binnen <strong>20 tot 60 minuten</strong> ter plaatse. Geen wegsleepkosten naar de dealer en altijd 100% schadevrij geopend en geprogrammeerd. Klik op uw regio voor lokale tarieven en aankomsttijden:
