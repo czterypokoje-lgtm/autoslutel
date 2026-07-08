@@ -18,7 +18,7 @@ const DienstenStructure = [
   },
   {
     title: 'Autosleutel Bijmaken',
-    href: '/diensten/sleutel-bijmaken',
+    href: '/diensten/autosleutel-bijmaken',
     subs: [
       { href: '/diensten/transponder-programmeren', label: 'Transponder Programmeren' },
       { href: '/diensten/afstandsbediening-bijmaken', label: 'Afstandsbediening Bijmaken' },

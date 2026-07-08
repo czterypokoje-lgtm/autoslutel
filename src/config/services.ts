@@ -310,7 +310,7 @@ export const BLOG_POSTS = [
 
 export function getRelatedBlogPosts(serviceSlug: string) {
   const mapping: Record<string, string[]> = {
-    'sleutel-bijmaken': [
+    'autosleutel-bijmaken': [
       'autosleutel-kosten-per-merk-2026',
       'dealer-vs-mobiele-sleutelmaker',
       'autosleutel-bijmaken-zonder-origineel',

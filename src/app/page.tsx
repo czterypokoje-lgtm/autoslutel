@@ -488,7 +488,7 @@ export default function HomePage() {
                 <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> 12 maanden garantie</li>
                 <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Verzekeringsklare facturen</li>
               </ul>
-              <Link href="/prijzen" className="btn btn-primary">Bekijk alle prijzen</Link>
+              <Link href="/diensten/autosleutel-bijmaken" className="btn btn-primary btn-lg">Autosleutel Bijmaken</Link>
             </div>
             <div className={styles.compareTableWrap}>
               <table className="price-table">

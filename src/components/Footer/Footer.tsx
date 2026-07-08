@@ -4,7 +4,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../../config/brands';
 
 const diensten = [
-  ['Sleutel Bijmaken', '/diensten/sleutel-bijmaken'],
+  ['Autosleutel Bijmaken', '/diensten/autosleutel-bijmaken'],
   ['Transponder Sleutel', '/diensten/transponder-sleutel-programmeren'],
   ['Smart Key / Keyless', '/diensten/smart-key-programmeren'],
   ['Contact Reparatie', '/diensten/contact-reparatie'],
