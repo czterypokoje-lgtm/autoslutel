@@ -152,7 +152,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
         {/* Local presence / City links */}
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)' }}>
           <div className="container">
-            <h3>Wij komen naar u toe in heel NL &amp; BE</h3>
+            <h3>Wij komen naar u toe in heel Nederland</h3>
             <p style={{ marginBottom: '1.5rem' }}>Populaire locaties voor {brand.name} sleutel service:</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
               {p1Cities.map(c => (

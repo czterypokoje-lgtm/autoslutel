@@ -57,7 +57,7 @@ export default function SpoedhulpPage() {
             Bel Nu: {SITE_CONFIG.phone}
           </a>
           <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem', marginTop: '0.75rem', marginBottom: 0 }}>
-            Reactietijd: {SITE_CONFIG.responseTime} · 24/7 · Alle merken · Heel NL &amp; BE
+            Reactietijd: {SITE_CONFIG.responseTime} · 24/7 · Alle merken · Heel Nederland
           </p>
         </section>
 

@@ -357,7 +357,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <h2>Voor Welke Merken Bieden Wij {service.title}?</h2>
                   <p>
-                    Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse en Belgische wegen. Wij zijn specialist in onder andere:
+                    Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:
                   </p>
                   <ul className={styles.bulletList}>
                     {popularBrands.map(b => (
