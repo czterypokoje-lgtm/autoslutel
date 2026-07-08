@@ -9,272 +9,218 @@ export interface GalleryProject {
   src: string;
   brand: string;
   title: string;
-  city: string;
-  gps: string;
-  alt: string;
   category: string;
+  alt: string;
 }
 
 export const REAL_GALLERY_PROJECTS: GalleryProject[] = [
   {
     id: 1,
-    src: '/images/gallery/autosleutel_bmw_reservesleutel_bijmaken_utrecht_amsterdam.webp',
-    brand: 'BMW',
-    title: 'BMW FEM/CAS Sleutel Bijmaken',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'BMW',
-    alt: 'BMW autosleutel reservesleutel bijmaken en programmeren op locatie Utrecht en Amsterdam GPS 52.09 N'
+    src: '/images/gallery/autosleutel_ford_reservesleutel_bijmaken_utrecht_centrum.webp',
+    brand: 'Ford',
+    title: 'Ford Reservesleutel Programmeren',
+    category: 'Ford & Opel',
+    alt: 'Ford autosleutel reservesleutel bijmaken en programmeren op locatie in Utrecht Centrum'
   },
   {
     id: 2,
-    src: '/images/gallery/autosleutel_mercedes_eis_reservesleutel_utrecht_amsterdam.webp',
-    brand: 'Mercedes',
-    title: 'Mercedes Chromen IR Sleutel',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.3676 N, 4.9041 E',
-    category: 'Mercedes',
-    alt: 'Mercedes EIS contactslot chromen autosleutel bijmaken en inleren op locatie Amsterdam en Utrecht'
+    src: '/images/gallery/autosleutel_hyundai_reservesleutel_programmeren_utrecht_zuid.webp',
+    brand: 'Hyundai',
+    title: 'Hyundai Smart Key Inleren',
+    category: 'Aziatisch',
+    alt: 'Hyundai autosleutel bijmaken en keyless smart key inleren in Utrecht Zuid'
   },
   {
     id: 3,
-    src: '/images/gallery/autosleutel_porsche_cayenne_sleutel_bijmaken_utrecht.webp',
-    brand: 'Porsche',
-    title: 'Porsche Cayenne Keyless Sleutel',
-    city: 'Utrecht',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Porsche',
-    alt: 'Porsche Cayenne smart key keyless entry autosleutel programmeren Utrecht en Amersfoort'
+    src: '/images/gallery/autosleutel_specialist_mobiele_werkplaats_utrecht_leidsche_rijn.webp',
+    brand: 'Mobiele Service',
+    title: 'Mobiele Servicebus & Diagnose',
+    category: 'Overig',
+    alt: 'Autosleutel24 mobiele servicebus met diagnoseapparatuur op locatie in Utrecht Leidsche Rijn'
   },
   {
     id: 4,
-    src: '/images/gallery/autosleutel_audi_reservesleutel_inleren_utrecht_amsterdam.webp',
+    src: '/images/gallery/autosleutel_audi_reservesleutel_inleren_utrecht_overvecht.webp',
     brand: 'Audi',
     title: 'Audi A4/A6 Keyless Sleutel',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.0907 N, 5.1214 E',
     category: 'VW & Audi',
-    alt: 'Audi smart key autosleutel inleren op locatie Utrecht Amsterdam Almere'
+    alt: 'Audi smart key autosleutel inleren op locatie Utrecht Overvecht'
   },
   {
     id: 5,
-    src: '/images/gallery/autosleutel_volkswagen_golf_reservesleutel_utrecht_amsterdam.webp',
-    brand: 'Volkswagen',
-    title: 'Volkswagen Golf SFD Sleutel',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.0907 N, 5.1214 E',
+    src: '/images/gallery/autosleutel_audi_smartkey_programmeren_utrecht_west.webp',
+    brand: 'Audi',
+    title: 'Audi Smart Key Programmering',
     category: 'VW & Audi',
-    alt: 'Volkswagen Golf reservesleutel bijmaken en programmeren met SFD beveiliging Utrecht'
+    alt: 'Audi smartkey reservesleutel programmeren en transponder inleren Utrecht West'
   },
   {
     id: 6,
-    src: '/images/gallery/autosleutel_ford_reservesleutel_bijmaken_utrecht_amsterdam.webp',
-    brand: 'Ford',
-    title: 'Ford Focus & Fiesta Reservesleutel',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Ford & Opel',
-    alt: 'Ford reservesleutel bijmaken en programmeren op locatie in Utrecht en Amsterdam'
+    src: '/images/gallery/autosleutel_bmw_reservesleutel_bijmaken_utrecht_oost.webp',
+    brand: 'BMW',
+    title: 'BMW FEM/CAS Sleutel Bijmaken',
+    category: 'BMW',
+    alt: 'BMW autosleutel reservesleutel bijmaken en programmeren op locatie Utrecht Oost'
   },
   {
     id: 7,
-    src: '/images/gallery/autosleutel_bmw_sleutel_programmeren_op_locatie_utrecht.webp',
+    src: '/images/gallery/autosleutel_bmw_sleutel_programmeren_amsterdam_centrum.webp',
     brand: 'BMW',
     title: 'BMW Sleutel Programmeren Op Locatie',
-    city: 'Utrecht',
-    gps: '52.0907 N, 5.1214 E',
     category: 'BMW',
-    alt: 'BMW sleutel programmeren op locatie mobiele service Utrecht'
+    alt: 'BMW sleutel programmeren op locatie mobiele service Amsterdam Centrum'
   },
   {
     id: 8,
-    src: '/images/gallery/autosleutel_mercedes_benz_sleutel_programmeren_utrecht.webp',
-    brand: 'Mercedes',
-    title: 'Mercedes-Benz Sleutel Inleren',
-    city: 'Utrecht & Amersfoort',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Mercedes',
-    alt: 'Mercedes-Benz autosleutel inleren en transponder kopiëren op locatie Utrecht'
+    src: '/images/gallery/autosleutel_ford_transit_focus_sleutel_amsterdam_zuid.webp',
+    brand: 'Ford',
+    title: 'Ford Transit Bedrijfswagen Sleutel',
+    category: 'Ford & Opel',
+    alt: 'Ford Transit bedrijfswagen reservesleutel bijmaken Amsterdam Zuid'
   },
   {
     id: 9,
-    src: '/images/gallery/autosleutel_porsche_911_macan_sleutel_programmeren_utrecht.webp',
-    brand: 'Porsche',
-    title: 'Porsche 911 & Macan Programmering',
-    city: 'Utrecht & Hilversum',
-    gps: '52.2292 N, 5.1703 E',
-    category: 'Porsche',
-    alt: 'Porsche 911 en Porsche Macan autosleutel bijmaken en keyless programmeren'
+    src: '/images/gallery/autosleutel_jeep_reservesleutel_amsterdam_noord.webp',
+    brand: 'Jeep',
+    title: 'Jeep Keyless Entry Reservesleutel',
+    category: 'Overig',
+    alt: 'Jeep autosleutel en keyless entry afstandsbediening programmeren Amsterdam Noord'
   },
   {
     id: 10,
-    src: '/images/gallery/autosleutel_toyota_corolla_reservesleutel_utrecht_almere.webp',
-    brand: 'Toyota',
-    title: 'Toyota Corolla Smart Key',
-    city: 'Utrecht & Almere',
-    gps: '52.3702 N, 5.2141 E',
+    src: '/images/gallery/autosleutel_kia_smartkey_bijmaken_amsterdam_west.webp',
+    brand: 'Kia',
+    title: 'Kia Smart Key Bijmaken',
     category: 'Aziatisch',
-    alt: 'Toyota Corolla smart key keyless go autosleutel bijmaken Utrecht en Almere'
+    alt: 'Kia smart key sleutel bijmaken en transponder inleren Amsterdam West'
   },
   {
     id: 11,
-    src: '/images/gallery/autosleutel_audi_smartkey_programmeren_utrecht_almere.webp',
-    brand: 'Audi',
-    title: 'Audi Smart Key Programmering',
-    city: 'Utrecht & Almere',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'VW & Audi',
-    alt: 'Audi smartkey reservesleutel programmeren en transponder inleren Almere Utrecht'
+    src: '/images/gallery/autosleutel_mercedes_eis_reservesleutel_amsterdam_oost.webp',
+    brand: 'Mercedes',
+    title: 'Mercedes Chromen IR Sleutel',
+    category: 'Mercedes',
+    alt: 'Mercedes EIS contactslot chromen autosleutel bijmaken en inleren Amsterdam Oost'
   },
   {
     id: 12,
-    src: '/images/gallery/autosleutel_porsche_panamera_reservesleutel_utrecht_amsterdam.webp',
-    brand: 'Porsche',
-    title: 'Porsche Panamera Reservesleutel',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Porsche',
-    alt: 'Porsche Panamera autosleutel bijmaken op locatie Utrecht Amsterdam'
+    src: '/images/gallery/autosleutel_mercedes_benz_sleutel_programmeren_almere_centrum.webp',
+    brand: 'Mercedes',
+    title: 'Mercedes-Benz Sleutel Inleren',
+    category: 'Mercedes',
+    alt: 'Mercedes-Benz autosleutel inleren en transponder kopiëren Almere Centrum'
   },
   {
     id: 13,
-    src: '/images/gallery/autosleutel_volkswagen_polo_sleutel_programmeren_utrecht.webp',
-    brand: 'Volkswagen',
-    title: 'Volkswagen Polo Transponder Sleutel',
-    city: 'Utrecht',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'VW & Audi',
-    alt: 'Volkswagen Polo reservesleutel bijmaken en afstandsbediening inleren Utrecht'
+    src: '/images/gallery/autosleutel_nissan_qashqai_sleutel_bijmaken_almere_stad.webp',
+    brand: 'Nissan',
+    title: 'Nissan Qashqai Smart Key',
+    category: 'Aziatisch',
+    alt: 'Nissan Qashqai autosleutel bijmaken en keyless entry programmeren Almere Stad'
   },
   {
     id: 14,
-    src: '/images/gallery/autosleutel_nissan_qashqai_sleutel_bijmaken_utrecht.webp',
+    src: '/images/gallery/autosleutel_nissan_reservesleutel_almere_poort.webp',
     brand: 'Nissan',
-    title: 'Nissan Qashqai Smart Key',
-    city: 'Utrecht',
-    gps: '52.0907 N, 5.1214 E',
+    title: 'Nissan Reservesleutel Programmeren',
     category: 'Aziatisch',
-    alt: 'Nissan Qashqai autosleutel bijmaken en keyless entry programmeren Utrecht'
+    alt: 'Nissan reservesleutel programmeren en sleutelbaard slijpen Almere Poort'
   },
   {
     id: 15,
-    src: '/images/gallery/autosleutel_opel_astra_reservesleutel_utrecht_almere.webp',
+    src: '/images/gallery/autosleutel_opel_astra_reservesleutel_almere_buiten.webp',
     brand: 'Opel',
     title: 'Opel Astra Sleutel Bijmaken',
-    city: 'Utrecht & Almere',
-    gps: '52.3702 N, 5.2141 E',
     category: 'Ford & Opel',
-    alt: 'Opel Astra reservesleutel bijmaken op locatie Utrecht Almere'
+    alt: 'Opel Astra reservesleutel bijmaken op locatie Almere Buiten'
   },
   {
     id: 16,
-    src: '/images/gallery/autosleutel_porsche_reservesleutel_inleren_utrecht_almere.webp',
-    brand: 'Porsche',
-    title: 'Porsche Sportsleutel Inleren',
-    city: 'Utrecht & Almere',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Porsche',
-    alt: 'Porsche sportmodel autosleutel inleren en programmeren Utrecht Almere'
+    src: '/images/gallery/autosleutel_opel_corsa_sleutel_bijmaken_almere_haven.webp',
+    brand: 'Opel',
+    title: 'Opel Corsa Klapsleutel Inleren',
+    category: 'Ford & Opel',
+    alt: 'Opel Corsa klapsleutel bijmaken en transponder inleren Almere Haven'
   },
   {
     id: 17,
-    src: '/images/gallery/autosleutel_kia_smartkey_bijmaken_utrecht_almere.webp',
-    brand: 'Kia',
-    title: 'Kia Smart Key Bijmaken',
-    city: 'Utrecht & Almere',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Aziatisch',
-    alt: 'Kia smart key sleutel bijmaken en transponder inleren Utrecht en Almere'
+    src: '/images/gallery/autosleutel_porsche_cayenne_sleutel_bijmaken_amersfoort_centrum.webp',
+    brand: 'Porsche',
+    title: 'Porsche Cayenne Keyless Sleutel',
+    category: 'Porsche',
+    alt: 'Porsche Cayenne smart key keyless entry autosleutel programmeren Amersfoort Centrum'
   },
   {
     id: 18,
-    src: '/images/gallery/autosleutel_ford_transit_focus_sleutel_bijmaken_utrecht.webp',
-    brand: 'Ford',
-    title: 'Ford Transit Bedrijfswagen Sleutel',
-    city: 'Utrecht & Amersfoort',
-    gps: '52.1561 N, 5.3878 E',
-    category: 'Ford & Opel',
-    alt: 'Ford Transit bedrijfswagen reservesleutel bijmaken Utrecht Amersfoort'
+    src: '/images/gallery/autosleutel_porsche_911_macan_sleutel_amersfoort_vathorst.webp',
+    brand: 'Porsche',
+    title: 'Porsche 911 & Macan Programmering',
+    category: 'Porsche',
+    alt: 'Porsche 911 en Porsche Macan autosleutel bijmaken Amersfoort Vathorst'
   },
   {
     id: 19,
-    src: '/images/gallery/autosleutel_hyundai_reservesleutel_programmeren_utrecht_almere.webp',
-    brand: 'Hyundai',
-    title: 'Hyundai Smart Key Inleren',
-    city: 'Utrecht & Almere',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Aziatisch',
-    alt: 'Hyundai autosleutel bijmaken en smart key inleren Utrecht Almere'
+    src: '/images/gallery/autosleutel_porsche_panamera_reservesleutel_amersfoort_noord.webp',
+    brand: 'Porsche',
+    title: 'Porsche Panamera Reservesleutel',
+    category: 'Porsche',
+    alt: 'Porsche Panamera autosleutel bijmaken op locatie Amersfoort Noord'
   },
   {
     id: 20,
-    src: '/images/gallery/autosleutel_porsche_smartkey_bijmaken_utrecht.webp',
+    src: '/images/gallery/autosleutel_porsche_reservesleutel_amersfoort_zuid.webp',
     brand: 'Porsche',
-    title: 'Porsche Smart Key Bijmaken',
-    city: 'Utrecht',
-    gps: '52.0907 N, 5.1214 E',
+    title: 'Porsche Sportsleutel Inleren',
     category: 'Porsche',
-    alt: 'Porsche smartkey en reservesleutel bijmaken Utrecht'
+    alt: 'Porsche sportmodel autosleutel inleren en programmeren Amersfoort Zuid'
   },
   {
     id: 21,
-    src: '/images/gallery/autosleutel_nissan_reservesleutel_programmeren_utrecht_amsterdam.webp',
-    brand: 'Nissan',
-    title: 'Nissan Reservesleutel Programmeren',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.3676 N, 4.9041 E',
-    category: 'Aziatisch',
-    alt: 'Nissan reservesleutel programmeren en sleutelbaard slijpen Utrecht Amsterdam'
+    src: '/images/gallery/autosleutel_porsche_smartkey_bijmaken_amersfoort_west.webp',
+    brand: 'Porsche',
+    title: 'Porsche Smart Key Bijmaken',
+    category: 'Porsche',
+    alt: 'Porsche smartkey en reservesleutel bijmaken Amersfoort West'
   },
   {
     id: 22,
-    src: '/images/gallery/autosleutel_opel_corsa_sleutel_bijmaken_utrecht_amsterdam.webp',
-    brand: 'Opel',
-    title: 'Opel Corsa Klapsleutel Inleren',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Ford & Opel',
-    alt: 'Opel Corsa klapsleutel bijmaken en transponder inleren Utrecht Amsterdam'
+    src: '/images/gallery/autosleutel_skoda_octavia_reservesleutel_hilversum.webp',
+    brand: 'Skoda',
+    title: 'Skoda Octavia Sleutel Programmeren',
+    category: 'VW & Audi',
+    alt: 'Skoda Octavia autosleutel bijmaken en programmeren op locatie Hilversum'
   },
   {
     id: 23,
-    src: '/images/gallery/autosleutel_skoda_octavia_reservesleutel_utrecht_amsterdam.webp',
-    brand: 'Skoda',
-    title: 'Skoda Octavia Sleutel Programmeren',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'VW & Audi',
-    alt: 'Skoda Octavia autosleutel bijmaken en programmeren op locatie Utrecht'
+    src: '/images/gallery/autosleutel_toyota_corolla_reservesleutel_zeist.webp',
+    brand: 'Toyota',
+    title: 'Toyota Corolla Smart Key',
+    category: 'Aziatisch',
+    alt: 'Toyota Corolla smart key keyless go autosleutel bijmaken Zeist'
   },
   {
     id: 24,
-    src: '/images/gallery/autosleutel_volvo_xc60_v40_sleutel_bijmaken_utrecht.webp',
+    src: '/images/gallery/autosleutel_volvo_xc60_v40_sleutel_bijmaken_nieuwegein.webp',
     brand: 'Volvo',
     title: 'Volvo XC60 / V40 Sleutel Inleren',
-    city: 'Utrecht & Amersfoort',
-    gps: '52.0907 N, 5.1214 E',
     category: 'Overig',
-    alt: 'Volvo XC60 V40 autosleutel bijmaken en smart key inleren Utrecht'
+    alt: 'Volvo XC60 V40 autosleutel bijmaken en smart key inleren Nieuwegein'
   },
   {
     id: 25,
-    src: '/images/gallery/autosleutel_jeep_reservesleutel_programmeren_utrecht_amsterdam.webp',
-    brand: 'Jeep',
-    title: 'Jeep Keyless Entry Reservesleutel',
-    city: 'Utrecht & Amsterdam',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Overig',
-    alt: 'Jeep autosleutel en keyless entry afstandsbediening programmeren Utrecht'
+    src: '/images/gallery/autosleutel_volkswagen_golf_reservesleutel_maarssen.webp',
+    brand: 'Volkswagen',
+    title: 'Volkswagen Golf SFD Sleutel',
+    category: 'VW & Audi',
+    alt: 'Volkswagen Golf reservesleutel bijmaken en programmeren Maarssen'
   },
   {
     id: 26,
-    src: '/images/gallery/autosleutel_specialist_mobiele_werkplaats_utrecht_amsterdam.webp',
-    brand: 'Mobiele Service',
-    title: 'Mobiele Servicebus & Diagnose',
-    city: 'Heel Nederland',
-    gps: '52.0907 N, 5.1214 E',
-    category: 'Overig',
-    alt: 'Autosleutel24 mobiele servicebus met diagnoseapparatuur op locatie in heel Nederland'
+    src: '/images/gallery/autosleutel_volkswagen_polo_sleutel_programmeren_houten.webp',
+    brand: 'Volkswagen',
+    title: 'Volkswagen Polo Transponder Sleutel',
+    category: 'VW & Audi',
+    alt: 'Volkswagen Polo reservesleutel bijmaken en afstandsbediening inleren Houten'
   }
 ];
 
@@ -282,10 +228,32 @@ const FILTER_CATEGORIES = ['Alle Projecten (26)', 'BMW', 'Mercedes', 'Porsche', 
 
 export default function RealGalleryShowcase() {
   const [activeTab, setActiveTab] = useState('Alle Projecten (26)');
+  const [currentPage, setCurrentPage] = useState(0);
 
   const filteredProjects = activeTab === 'Alle Projecten (26)'
     ? REAL_GALLERY_PROJECTS
     : REAL_GALLERY_PROJECTS.filter(p => p.category === activeTab);
+
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+
+  const handleTabChange = (cat: string) => {
+    setActiveTab(cat);
+    setCurrentPage(0);
+  };
+
+  const handlePrev = () => {
+    setCurrentPage(prev => (prev > 0 ? prev - 1 : totalPages - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage(prev => (prev < totalPages - 1 ? prev + 1 : 0));
+  };
+
+  const currentSlice = filteredProjects.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
 
   return (
     <div className={styles.showcaseWrapper}>
@@ -294,7 +262,7 @@ export default function RealGalleryShowcase() {
         {FILTER_CATEGORIES.map((cat) => (
           <button
             key={cat}
-            onClick={() => setActiveTab(cat)}
+            onClick={() => handleTabChange(cat)}
             className={`${styles.filterBtn} ${activeTab === cat ? styles.filterBtnActive : ''}`}
           >
             {cat}
@@ -302,10 +270,10 @@ export default function RealGalleryShowcase() {
         ))}
       </div>
 
-      {/* HORIZONTAL CONTINUOUS SHOWCASE STRIP (SCROLLABLE & INTERACTIVE) */}
+      {/* STABLE HIGH-IMPACT 4-CARD SLIDER */}
       <div className={styles.sliderContainer}>
         <div className={styles.grid}>
-          {filteredProjects.map((project, index) => (
+          {currentSlice.map((project, index) => (
             <div key={project.id} className={styles.card}>
               <div className={styles.imageContainer}>
                 <Image
@@ -313,24 +281,41 @@ export default function RealGalleryShowcase() {
                   alt={project.alt}
                   fill
                   sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 340px"
-                  loading={index < 4 ? "eager" : "lazy"}
+                  loading={index < 2 ? "eager" : "lazy"}
                   style={{ objectFit: 'cover' }}
                 />
                 <div className={styles.topBadges}>
                   <span className={styles.brandBadge}>{project.brand}</span>
-                  <span className={styles.gpsBadge}>📍 {project.city}</span>
                 </div>
                 <div className={styles.overlay}>
-                  <div className={styles.overlayContent}>
-                    <h3 className={styles.cardTitle}>{project.title}</h3>
-                    <p className={styles.cardGps}>SEO GPS: {project.gps}</p>
-                    <span className={styles.tag}>Op Locatie Geprogrammeerd</span>
-                  </div>
+                  <h3 className={styles.cardTitle}>{project.title}</h3>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {/* SLIDER NAVIGATION ARROWS & DOTS */}
+        {totalPages > 1 && (
+          <div className={styles.sliderNav}>
+            <button onClick={handlePrev} className={styles.arrowBtn} aria-label="Vorige foto's">
+              &#8592;
+            </button>
+            <div className={styles.dots}>
+              {Array.from({ length: totalPages }).map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentPage(idx)}
+                  className={`${styles.dot} ${currentPage === idx ? styles.dotActive : ''}`}
+                  aria-label={`Slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+            <button onClick={handleNext} className={styles.arrowBtn} aria-label="Volgende foto's">
+              &#8594;
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
