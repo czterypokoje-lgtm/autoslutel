@@ -267,3 +267,77 @@ export const BLOG_POSTS = [
     readTime: '5 min',
   },
 ];
+
+export function getRelatedBlogPosts(serviceSlug: string) {
+  const mapping: Record<string, string[]> = {
+    'sleutel-bijmaken': [
+      'autosleutel-kosten-per-merk-2026',
+      'dealer-vs-mobiele-sleutelmaker',
+      'autosleutel-bijmaken-zonder-origineel',
+      'dealer-vs-slotenmaker-kostenverschil'
+    ],
+    'reservesleutel-maken': [
+      'autosleutel-kosten-per-merk-2026',
+      'dealer-vs-mobiele-sleutelmaker',
+      'autosleutel-bijmaken-zonder-origineel'
+    ],
+    'afstandsbediening-bijmaken': [
+      'autosleutel-kosten-per-merk-2026',
+      'dealer-vs-mobiele-sleutelmaker',
+      'autosleutel-bijmaken-zonder-origineel'
+    ],
+    'transponder-programmeren': [
+      'autosleutel-kosten-per-merk-2026',
+      'sfd-lock-vw-golf-8-uitleg',
+      'bmw-bdc2-sleutel-bijmaken-2026'
+    ],
+    'smart-key-programmeren': [
+      'autosleutel-kosten-per-merk-2026',
+      'bmw-bdc2-sleutel-bijmaken-2026',
+      'toyota-hybride-sleutel-vervangen'
+    ],
+    'autosleutel-kwijt': [
+      'alle-sleutels-kwijt-wat-nu-utrecht',
+      'sleutel-kwijt-utrecht-stappenplan',
+      'autosleutel-bijmaken-zonder-origineel',
+      'autosleutel-gestolen-wat-te-doen'
+    ],
+    'alle-sleutels-kwijt-auto': [
+      'alle-sleutels-kwijt-wat-nu-utrecht',
+      'sleutel-kwijt-utrecht-stappenplan',
+      'autosleutel-bijmaken-zonder-origineel',
+      'case-study-bmw-besparing'
+    ],
+    'ghost-immobiliser': [
+      'ghost-immobiliser-utrecht',
+      'faraday-pouch-bescherming-relay-attack'
+    ],
+    'auto-beveiliging': [
+      'ghost-immobiliser-utrecht',
+      'faraday-pouch-bescherming-relay-attack'
+    ],
+    'batterij-vervangen': [
+      'autosleutel-batterij-vervangen-stappenplan'
+    ],
+    'autosleutel-reparatie': [
+      'autosleutel-batterij-vervangen-stappenplan',
+      'verzekering-dekt-autosleutel-vervangen'
+    ],
+    'behuizing-vervangen': [
+      'autosleutel-batterij-vervangen-stappenplan'
+    ],
+    'knoppen-repareren': [
+      'autosleutel-batterij-vervangen-stappenplan'
+    ]
+  };
+
+  const slugs = mapping[serviceSlug];
+  if (slugs) {
+    return BLOG_POSTS.filter(post => slugs.includes(post.slug));
+  }
+
+  // Fallback to general helpful articles
+  return BLOG_POSTS.filter(post => 
+    ['autosleutel-kosten-per-merk-2026', 'dealer-vs-mobiele-sleutelmaker', 'verzekering-dekt-autosleutel-vervangen'].includes(post.slug)
+  );
+}

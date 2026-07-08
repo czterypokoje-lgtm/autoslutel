@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Script from 'next/script';
 import { DIENSTEN, type Service } from '@/config/diensten';
+import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { CITIES, type City } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
@@ -1108,6 +1109,44 @@ export function CityServiceView({
 
           </div>
         </section>
+
+        {/* ── RELATED BLOGS SECTION ────────────────────────────────── */}
+        {(() => {
+          const relatedPosts = getRelatedBlogPosts(service.slug);
+          if (!relatedPosts || relatedPosts.length === 0) return null;
+          return (
+            <section className={styles.relatedBlogsSection}>
+              <div className={styles.relatedBlogsContainer}>
+                <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+                  GERELATEERDE KENNIS &amp; ADVIES IN {city.city.toUpperCase()}
+                </p>
+                <h2 className={styles.relatedBlogsTitle}>
+                  Handige artikelen over {service.title}
+                </h2>
+                <div className={styles.relatedBlogsGrid}>
+                  {relatedPosts.map((post) => (
+                    <Link
+                      key={post.slug}
+                      href={`/blog/${post.slug}`}
+                      className={styles.blogPostCard}
+                      id={`csvc-related-blog-${post.slug}`}
+                    >
+                      <div className={styles.blogPostMeta}>
+                        <span className={styles.blogPostReadTime}>{post.readTime} lezen</span>
+                        <span className={styles.blogPostDate}>
+                          {new Date(post.publishDate).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </span>
+                      </div>
+                      <h3 className={styles.blogPostTitle}>{post.title}</h3>
+                      <p className={styles.blogPostExcerpt}>{post.excerpt}</p>
+                      <span className={styles.blogPostLink}>Lees artikel →</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        })()}
 
         {/* ── REVIEWS SECTION ────────────────────────────────────── */}
         <section className={styles.reviews}>
