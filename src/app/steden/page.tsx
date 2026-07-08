@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CITIES } from '@/config/cities';
 import { SITE_CONFIG } from '@/config/site.config';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: `Autosleutel Bijmaken per Stad | Alle ${CITIES.length} Locaties Nederland | ${SITE_CONFIG.name}`,
@@ -44,15 +45,15 @@ export default function Steden() {
           return (
             <div key={g.title} style={{ marginBottom:'3rem' }}>
               <h2 style={{ fontSize:'1.15rem', fontWeight:700, paddingBottom:'0.75rem', marginBottom:'1rem', borderBottom:'2px solid var(--gray-200)' }}>{g.title}</h2>
-              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px, 1fr))', gap:'0.75rem' }}>
+              <ul className={styles.seoList}>
                 {cities.map(c => (
-                  <Link key={c.slug} href={`/steden/${c.slug}`} id={`stad-${c.slug}`}
-                    style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'0.875rem 1rem', background:'#fff', border:'1px solid var(--gray-200)', borderRadius:'4px', textDecoration:'none', fontWeight:600, color:'var(--gray-800)', fontSize:'0.9rem', transition:'all 0.15s' }}>
-                    <span>{c.city}</span>
-                    <span style={{ fontSize:'0.75rem', color:'var(--orange-500)', fontWeight:600 }}>{c.travelTime}</span>
-                  </Link>
+                  <li key={c.slug}>
+                    <Link href={`/steden/${c.slug}`} id={`stad-${c.slug}`}>
+                      <strong>{c.city}</strong> — Binnen {c.travelTime}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           );
         })}
