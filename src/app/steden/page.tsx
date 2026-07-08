@@ -45,11 +45,14 @@ export default function Steden() {
           return (
             <div key={g.title} style={{ marginBottom:'3rem' }}>
               <h2 style={{ fontSize:'1.15rem', fontWeight:700, paddingBottom:'0.75rem', marginBottom:'1rem', borderBottom:'2px solid var(--gray-200)' }}>{g.title}</h2>
+              <p style={{ fontSize: '0.9rem', color: 'var(--gray-600)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+                Heeft u met spoed een autosleutel nodig in de regio <strong>{g.title}</strong>? Autosleutel24 is uw betrouwbare, mobiele specialist voor het <strong>autosleutel bijmaken</strong>, programmeren en inleren op locatie. Of u nu uw autosleutel kwijt bent, de sleutel in de auto ligt, of u preventief een reservesleutel wilt — wij helpen u direct weer op weg. Bekijk hieronder onze exacte servicegebieden in {g.title}.
+              </p>
               <ul className={styles.seoList}>
                 {cities.map(c => (
                   <li key={c.slug}>
                     <Link href={`/steden/${c.slug}`} id={`stad-${c.slug}`}>
-                      <strong>{c.city}</strong> — Binnen {c.travelTime}
+                      <strong style={{ color: 'var(--orange-500)' }}>{c.city}</strong> — Autosleutel bijmaken binnen {c.travelTime}
                     </Link>
                   </li>
                 ))}
