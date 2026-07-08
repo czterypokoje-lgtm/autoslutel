@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const BLOG_CONTENT: Record<string, React.ReactNode> = {
@@ -659,6 +660,15 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   'autosleutel-bijmaken-tips-snel-veilig': (
     <>
       <h2>Wat is het proces van autosleutel bijmaken?</h2>
+      <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+        <Image 
+          src="/images/blog/autosleutel_bijmaken_specialist_utrecht.png" 
+          alt="Professionele autosleutelmaker in Utrecht bezig met het programmeren en frezen van een nieuwe transpondersleutel in een mobiele servicebus" 
+          fill 
+          style={{ objectFit: 'cover' }}
+          unoptimized={true}
+        />
+      </div>
       <p>
         Het bijmaken van een autosleutel is een proces dat begint met het identificeren van het type sleutel dat je nodig hebt. Moderne autosleutels zijn vaak meer dan alleen een stuk metaal; ze kunnen transponders of slimme technologie bevatten die communiceren met het voertuig. Het eerste wat Autosleutel24 als gespecialiseerde mobiele slotenmaker zal doen, is je huidige sleutel analyseren om te bepalen welk type sleutel je nodig hebt. Dit kan variëren van een eenvoudige mechanische sleutel tot een complexe sleutel met ingebouwde elektronische componenten.
       </p>
@@ -690,6 +700,16 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <p>
         Nog geavanceerder zijn de slimme sleutels, ook wel bekend als keyless entry-sleutels. Deze sleutels maken gebruik van radiogolven om met de auto te communiceren, waardoor je de deuren kunt ontgrendelen en de motor kunt starten zonder de sleutel fysiek in het slot of contact te steken. Bij Autosleutel24 hebben we de apparatuur om al deze typen sleutels te dupliceren.
       </p>
+
+      <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
+        <Image 
+          src="/images/blog/smart_key_programmeren_utrecht_auto.png" 
+          alt="Moderne keyless entry smart key geprogrammeerd voor een premium auto op het dashboard, mobiele service Utrecht" 
+          fill 
+          style={{ objectFit: 'cover' }}
+          unoptimized={true}
+        />
+      </div>
 
       <h3>Voor- en nadelen van het zelf bijmaken van autosleutels</h3>
       <p>
