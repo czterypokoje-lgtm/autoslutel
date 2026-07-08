@@ -217,7 +217,7 @@ export default function SleutelBijmakenPage() {
                   </p>
                   <div style={{ margin: '1.5rem 0' }}>
                     <img 
-                      src="/autosleutel24-sleutelbijmaken-utrecht.jpg" 
+                      src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
                       alt="Autosleutel24 professionele werkplaats in Utrecht uitgerust met CNC sleutel-freesmachines, soldeerstations en programmeerapparatuur" 
                       style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }} 
                     />

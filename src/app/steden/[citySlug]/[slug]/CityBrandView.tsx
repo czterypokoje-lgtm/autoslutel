@@ -272,7 +272,7 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
                 <div>
                   <h2>Professionele {brand.name} Programmering — Zonder Wegslepen</h2>
                   <img 
-                    src="/autosleutel24-sleutelbijmaken-utrecht.jpg" 
+                    src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
                     alt={`Professionele mobiele service voor ${brand.name} autosleutel bijmaken in ${city.city} - direct op locatie`} 
                     style={{ width: '100%', borderRadius: '12px', margin: '1.25rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', objectFit: 'cover', aspectRatio: '16/9' }}
                   />

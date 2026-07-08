@@ -32,7 +32,7 @@ export default function GalerijPage() {
             </div>
             <div>
               <img 
-                src="/autosleutel24-sleutelbijmaken-utrecht.jpg" 
+                src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
                 alt="Autosleutel24 professionele sleutelmaker werkplaats in Utrecht met transponder programmeertools en soldeerbouten" 
                 style={{ width: '100%', borderRadius: '12px', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }} 
               />
@@ -44,7 +44,7 @@ export default function GalerijPage() {
         <div style={{ marginBottom: '3rem' }}>
           <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem', textAlign: 'center' }}>Alle 26 Projectfoto&apos;s uit Onze Praktijk</h2>
           <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)', marginBottom: '2rem' }}>
-            Filter op automerk of bekijk alle praktijkprojecten met geolocatie GPS dekking.
+            Bekijk alle praktijkprojecten uit Utrecht, Amsterdam, Almere, Amersfoort en heel Nederland.
           </p>
           <RealGalleryShowcase />
         </div>

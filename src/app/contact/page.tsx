@@ -65,7 +65,7 @@ export default function ContactPage() {
 
             <div style={{ marginTop: '2rem' }}>
               <img 
-                src="/autosleutel24-sleutelbijmaken-utrecht.jpg" 
+                src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
                 alt="Autosleutel24 professionele werkplaats in Utrecht voor autosleutel bijmaken en programmeren" 
                 style={{ width: '100%', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }} 
               />
