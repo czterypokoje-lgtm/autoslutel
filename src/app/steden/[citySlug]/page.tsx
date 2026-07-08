@@ -330,16 +330,41 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
-        {/* Gallery placeholder */}
+        {/* SEO Gallery */}
         <section className="gallery-section">
           <div className="container">
             <h2>Service in {city.city} &mdash; Galerij</h2>
             <div className="gallery-grid">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="gallery-item">
-                  <div className="gallery-placeholder">
-                    <svg className="gallery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    <span>Foto {city.city} &mdash; {i + 1}</span>
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden', borderRadius: 'var(--radius-md)' }}>
+                    <Image
+                      src={`/images/cities/${citySlug}/autosleutel-bijmaken-${citySlug}-${i + 1}.webp`}
+                      alt={`Autosleutel bijmaken en inleren op locatie in ${city.city} - Foto ${i + 1}`}
+                      fill
+                      unoptimized={true}
+                      loading="lazy"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      style={{ objectFit: 'cover' }}
+                    />
+                    <Script id={`gallery-gps-${citySlug}-${i}`} type="application/ld+json" dangerouslySetInnerHTML={{
+                      __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "ImageObject",
+                        "contentUrl": `https://autosleutel24.nl/images/cities/${citySlug}/autosleutel-bijmaken-${citySlug}-${i + 1}.webp`,
+                        "name": `Autosleutel bijmaken ${city.city} - Foto ${i + 1}`,
+                        "description": `Autosleutel bijmaken, inleren en programmeren op locatie in ${city.city}.`,
+                        "contentLocation": {
+                          "@type": "Place",
+                          "name": city.city,
+                          "geo": {
+                            "@type": "GeoCoordinates",
+                            "latitude": parseFloat(city.geo.lat),
+                            "longitude": parseFloat(city.geo.lng)
+                          }
+                        }
+                      })
+                    }} />
                   </div>
                 </div>
               ))}
