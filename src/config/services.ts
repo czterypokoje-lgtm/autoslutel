@@ -266,6 +266,14 @@ export const BLOG_POSTS = [
     publishDate: '2026-04-23',
     readTime: '5 min',
   },
+  {
+    slug: 'autosleutel-bijmaken-tips-snel-veilig',
+    title: 'Autosleutel Bijmaken: Tips voor Snel en Veilig Resultaat',
+    excerpt: 'Verlies je vaak je autosleutel? Geen paniek! Ontdek handige tips voor het snel en veilig bijmaken van je autosleutel bij Autosleutel24, zodat je altijd mobiel blijft.',
+    keywords: ['autosleutel bijmaken', 'snel autosleutel bijmaken', 'veilig autosleutel bijmaken', 'autosleutel dupliceren'],
+    publishDate: '2026-07-08',
+    readTime: '7 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {
