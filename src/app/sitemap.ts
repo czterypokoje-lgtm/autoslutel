@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: 'weekly' as const,
     priority: p === '' ? 1.0 : 0.8,
+    images: [`${base}/og-image.png`, `${base}/logo.png`],
   }));
 
   // 2. Service Pages
