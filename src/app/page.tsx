@@ -105,7 +105,11 @@ const services = [
   },
   { 
     title: 'Autosleutels Repareren', 
-    desc: 'Is de behuizing van uw sleutel gescheurd, zijn de drukknoppen lam of werkt het klapmechanisme niet meer? In plaats van direct een dure nieuwe sleutel aan te schaffen, kunnen wij in 90% van de gevallen uw huidige autosleutel repareren. Wij vervangen de behuizing, solderen nieuwe micro-switches op de printplaat en plaatsen nieuwe batterijen. Klaar terwijl u wacht, met garantie.', 
+    desc: (
+      <>
+        Is de behuizing van uw sleutel gescheurd, zijn de drukknoppen lam of werkt het klapmechanisme niet meer? In plaats van direct een dure nieuwe autosleutel aan te schaffen, kunnen onze specialisten in 90% van de gevallen uw huidige <strong style={{color: 'var(--navy-900)'}}>autosleutels repareren</strong>. Wij vervangen versleten behuizingen, solderen met uiterste precisie nieuwe micro-switches op de printplaat en plaatsen hoogwaardige Varta of Panasonic batterijen. Doordat wij mobiel werken, komen we naar u toe om uw autosleutel en afstandsbediening ter plekke te herstellen. Dit is aanzienlijk sneller en goedkoper dan via de officiële autodealer. Klaar terwijl u wacht, inclusief garantie!
+      </>
+    ),
     href: '/diensten/autosleutels-repareren',
     src: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp',
     alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
@@ -119,7 +123,11 @@ const services = [
   },
   { 
     title: 'Auto Slotenmaker', 
-    desc: 'Zoekt u met spoed een professionele auto slotenmaker in de buurt? Of u nu uw autosleutels kwijt bent, ze nog in de auto liggen (autodeur openen), of het slot geforceerd is na inbraak: onze 24/7 mobiele auto slotenmaker service lost het direct op. Wij openen uw auto 100% schadevrij met specialistisch Lishi-gereedschap en kunnen ter plekke nieuwe sleutels en afstandsbedieningen inleren. Sneller en goedkoper dan de dealer, direct op uw locatie.', 
+    desc: (
+      <>
+        Zoekt u met spoed een betrouwbare en erkende <strong style={{color: 'var(--navy-900)'}}>auto slotenmaker in de buurt</strong>? Of u nu uw complete sleutelbos kwijt bent, de sleutels nog in de kofferbak liggen (autodeur openen), of uw deurslot geforceerd is na een inbraakpoging: onze 24-uurs mobiele auto slotenmaker lost het direct op. Wij openen deuren van alle automerken 100% schadevrij met behulp van geavanceerde lockpick en Lishi-instrumenten. Daarnaast frezen en programmeren we direct op locatie een nieuwe chip of smart key in. Ervaar de snelste service van Nederland, zonder verborgen kosten of onnodige sleepdiensten naar een garage.
+      </>
+    ),
     href: '/diensten/auto-slotenmaker',
     src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp',
     alt: 'Auto schadevrij openen bij sleutels in auto vergeten of autodeur op slot in Utrecht en omgeving'
