@@ -171,7 +171,7 @@ export default function PrijzenPage() {
                   alt="Autosleutel programmeren en inleren op locatie in Utrecht en Amsterdam - werkplaats in mobiele servicebus (GPS Utrecht & Amsterdam)"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
-                  className={styles.trustImg}
+                  className={styles.trustImgTop}
                 />
               </div>
               <div className={styles.trustContent}>
