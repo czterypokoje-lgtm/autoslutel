@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Script from 'next/script';
 import styles from './page.module.css';
+import InstantServiceMap from '@/components/InstantServiceMap';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 
@@ -432,25 +433,7 @@ export default function HomePage() {
             </div>
 
             <div className={styles.mapContainerWrap}>
-              <div className={styles.mapLiveBanner}>
-                <span className={styles.liveIndicator}>
-                  <span className={styles.liveDot}></span>
-                  <strong>Live bussen actief</strong> in regio Utrecht &amp; Randstad
-                </span>
-                <span style={{ fontSize: '0.8rem', opacity: 0.85 }}>24/7 Noodhulp</span>
-              </div>
-              <div className={styles.mapBox}>
-                <iframe
-                  src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4&ehbc=2E312F"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Autosleutel24 Mobiele Service Werkgebied en Servicegebieden Google Map"
-                ></iframe>
-              </div>
+              <InstantServiceMap />
             </div>
           </div>
         </div>
