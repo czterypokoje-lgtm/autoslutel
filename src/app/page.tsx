@@ -527,17 +527,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== FINAL CTA ===== */}
-      <section className={styles.finalCta}>
-        <div className={styles.finalCtaInner}>
-          <h2>Autosleutel Probleem? Bel Nu — 24/7</h2>
-          <p>Gemiddeld binnen 30–60 minuten bij u. Alle merken. Heel Nederland.</p>
-          <div className={styles.finalCtaBtns}>
-            <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg">{SITE_CONFIG.phone}</a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.waBtn}>WhatsApp Direct</a>
-          </div>
-        </div>
-      </section>
     </main>
     </>
   );
