@@ -246,7 +246,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               {DIENSTEN.map(s => (
                 <li key={s.slug}>
                   <Link href={`/steden/${citySlug}/${s.slug}`}>
-                    <strong>{s.title} {city.city}</strong> — {s.priceFrom ? `Vanaf ${s.priceFrom}` : '24/7 beschikbaar'}
+                    <strong>{s.title} {city.city}</strong> — {s.priceFrom || '24/7 beschikbaar'}
                   </Link>
                 </li>
               ))}
