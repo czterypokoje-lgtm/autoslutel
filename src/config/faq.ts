@@ -58,6 +58,66 @@ export const FAQ_GLOBAL: FaqItem[] = [
     a: 'Een klapsleutel (flip key) heeft een mechanische sleutelbaar die inklapt in de behuizing. De sleutel bevat een transponder of remote-functie. Wij kunnen het sleutelblad vervangen, de transponder programmeren en het remote-gedeelte inleren op uw auto.',
   },
   {
+    q: 'Hoe werkt het bijmaken van een autosleutel?',
+    a: 'Als u nog een werkende autosleutel heeft, lezen wij de transponderchip uit en kopiëren we deze data naar een nieuwe chip. Daarna frezen we met een computergestuurde CNC-machine de sleutelbaard nauwkeurig na. Dit proces duurt doorgaans 20 tot 30 minuten per sleutel op uw locatie.',
+  },
+  {
+    q: 'Autosleutel verloren, welke diensten bieden vervanging aan?',
+    a: 'Wanneer u uw autosleutel bent verloren, bieden wij als gespecialiseerde mobiele slotenmaker een complete All Keys Lost (AKL) vervangingsdienst aan. Wij komen naar uw locatie, openen de auto schadevrij, frezen een nieuwe sleutel op basis van de slotcilinder, en programmeren de transponder of smart key in de boordcomputer. Dit is aanzienlijk sneller en goedkoper dan uw auto naar de merkdealer laten wegslepen.',
+  },
+  {
+    q: 'Stappenplan autosleutel verloren?',
+    a: '1. Blijf rustig en zoek op voor de hand liggende plekken. 2. Controleer of de sleutel niet per ongeluk in de auto ligt. 3. Zoek de reservesleutel. 4. Geen reservesleutel? Zoek uw kentekenbewijs en legitimatie op. 5. Bel Autosleutel24 (06 11 75 12 31). Wij komen direct naar u toe om op locatie een nieuwe sleutel te maken en in te leren.',
+  },
+  {
+    q: 'Waar vind ik een autosleutelmaker in mijn buurt?',
+    a: 'Autosleutel24 is dé mobiele autosleutelmaker in Midden-Nederland. Omdat wij werken vanuit een volledig uitgeruste servicebus, brengen wij de werkplaats naar u toe in Utrecht, Amsterdam, Almere, Amersfoort en omstreken. U hoeft dus niet op zoek naar een fysieke winkel in uw buurt; wij komen direct naar uw auto.',
+  },
+  {
+    q: 'Kosten voor het bijmaken van een autosleutel zonder reserve?',
+    a: 'Het bijmaken van een autosleutel zonder originele reserve (All Keys Lost) kost meer dan een simpele kopie, omdat we het slot moeten decoderen. De kosten starten rond de €150 voor mechanische sleutels en kunnen oplopen voor moderne smart keys. Bij Autosleutel24 betaalt u echter altijd een vaste, transparante prijs die tot wel 50% lager ligt dan bij de autodealer, zonder extra sleepkosten.',
+  },
+  {
+    q: 'Kan een autosleutel met afstandsbediening zonder originele sleutel worden gemaakt?',
+    a: 'Ja, absoluut. Met onze geavanceerde OBD2-diagnoseapparatuur kunnen wij een geheel nieuwe autosleutel met afstandsbediening (en transponder) inleren in de boordcomputer van uw auto, zelfs als u de originele sleutel niet meer heeft. De oude, verloren afstandsbediening wissen wij direct uit het systeem ter preventie van diefstal.',
+  },
+  {
+    q: 'Auto openen zonder sleutel door professional?',
+    a: 'Heeft u uw sleutel in de auto laten liggen? Autosleutel24 is gespecialiseerd in het 100% schadevrij openen van auto\'s. Wij gebruiken hiervoor professionele technieken zoals air wedges en Lishi lock picks. Hiermee manipuleren we het slot zonder de lak, ramen of rubbers te beschadigen. Probeer dit nooit zelf met een kledinghanger, dit leidt vrijwel altijd tot dure schade.',
+  },
+  {
+    q: 'Autosleutel kwijt, kan de dealer een nieuwe maken?',
+    a: 'Ja, de merkdealer kan een nieuwe sleutel maken, maar dit brengt nadelen met zich mee. U moet uw auto op eigen kosten naar de dealer laten slepen, en het bestellen van een sleutel bij de fabriek duurt vaak 1 tot 2 weken. Autosleutel24 biedt een sneller en goedkoper alternatief: wij maken en programmeren de sleutel direct bij u op locatie, terwijl u wacht.',
+  },
+  {
+    q: 'Vervangende autosleutel bestellen online?',
+    a: 'U kunt online lege sleutelbehuizingen bestellen, maar het online bestellen van een volledig werkende transpondersleutel is onmogelijk. Een sleutel moet namelijk fysiek worden ingeleerd op de unieke startonderbreker van uw auto via de OBD-poort. Autosleutel24 levert originele OEM-kwaliteit sleutels en verzorgt de volledige programmering bij u thuis.',
+  },
+  {
+    q: 'Hoe werkt autosleutel programmeren na verlies?',
+    a: 'Na het verlies van uw sleutels sluiten wij onze diagnoseapparatuur aan op de OBD2-poort van uw auto. We communiceren met de ECU (boordcomputer) om veiligheidscodes te verifiëren. Vervolgens schrijven we de unieke digitale code van de nieuwe transponderchip in het geheugen van de auto. Als laatste stap wissen we de verloren sleutel uit het systeem, zodat deze de auto niet meer kan starten.',
+  },
+  {
+    q: 'Is autosleutel kwijt gedekt door verzekering?',
+    a: 'Dit hangt af van uw polis. Bij een WA+ Beperkt Casco of All-Risk verzekering worden de kosten voor het vervangen van verloren of gestolen autosleutels (en soms het vervangen van de sloten) vaak gedekt door de verzekeraar. Controleer uw polisvoorwaarden. Wij voorzien u altijd van een officiële factuur die u kunt indienen bij uw verzekeringsmaatschappij.',
+  },
+  {
+    q: 'Wat zijn de opties bij alle autosleutels kwijt?',
+    a: 'Bij verlies van alle sleutels heeft u twee opties: 1) De auto laten wegslepen naar de dealer, wat duur is en weken duurt. 2) Een mobiele slotenmaker zoals Autosleutel24 inschakelen. Wij komen direct naar u toe, openen de auto, frezen een nieuwe sleutel op basis van het slot en programmeren deze direct in. Dit is de snelste en meest voordelige optie.',
+  },
+  {
+    q: 'Hoe vind ik een goedkope autosleutelmaker?',
+    a: 'Kies voor een onafhankelijke, mobiele specialist in plaats van de officiële autodealer. Omdat mobiele autosleutelmakers zoals Autosleutel24 geen duur pand of showroom hebben, liggen de overheadkosten veel lager. Wij kopen direct in en berekenen dit voordeel door aan de klant, waardoor we vaak de goedkoopste en snelste optie in de regio zijn.',
+  },
+  {
+    q: 'Kan ik een autosleutel online bestellen en laten programmeren?',
+    a: 'Het zelf online bestellen van een sleutel (via AliExpress of eBay) wordt afgeraden, omdat deze vaak van slechte kwaliteit zijn of niet de juiste chip bevatten voor uw specifieke model. Wij kunnen door de klant aangeleverde sleutels soms programmeren, maar geven hier geen garantie op. Wij raden aan om onze hoogwaardige OEM-sleutels te gebruiken inclusief garantie en inleren.',
+  },
+  {
+    q: 'Autosleutel kwijt, wat kost het vervangen door een universele sleutel?',
+    a: 'Een volledig "universele" autosleutel bestaat niet voor moderne auto\'s, omdat elke auto een unieke cryptografische startonderbreker heeft. Wel gebruiken wij hoogwaardige aftermarket (OEM-kwaliteit) sleutels die we specifiek voor uw auto programmeren. Dit kost, afhankelijk van het model en type (transponder of smart key), tussen de €150 en €350 in een situatie waarbij alle sleutels kwijt zijn.',
+  },
+  {
     q: 'Hoelang duurt het bijmaken van een autosleutel?',
     a: 'Voor een standaard transponder sleutel duurt het 20–45 minuten ter plaatse. Smart keys en keyless entry systemen kunnen 45–90 minuten duren. Wij beginnen pas als u akkoord gaat met de vaste prijs.',
   },
