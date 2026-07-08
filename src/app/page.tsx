@@ -460,7 +460,7 @@ export default function HomePage() {
               <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', marginTop: '1.5rem', marginBottom: '1.5rem', lineHeight: '1.8', color: 'var(--gray-700)' }}>
                 {serviceAreaCities.map((city) => (
                   <li key={city.slug} style={{ marginBottom: '0.25rem' }}>
-                    <Link href={`/steden/${city.slug}`} style={{ color: 'var(--navy-600)', textDecoration: 'underline', fontWeight: 500 }}>
+                    <Link href={`/steden/${city.slug}`} style={{ color: 'var(--orange-500)', textDecoration: 'underline', fontWeight: 600 }}>
                       {city.name}
                     </Link>
                   </li>
