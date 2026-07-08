@@ -427,6 +427,18 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== GALLERY ===== */}
+      <section className="gallery-section">
+        <div className="container">
+          <p className="section-eyebrow">GALERIJ</p>
+          <h2 className="section-title">Ons Werk in Beelden</h2>
+          <p className="section-lead" style={{ maxWidth: 880, margin: '0 auto 2.5rem', lineHeight: '1.75', fontSize: '0.98rem', color: 'var(--gray-600)' }}>
+            Bekijk hieronder een selectie van onze afgeronde praktijkprojecten en tevreden klanten in heel Nederland. Als erkend autosleutel specialist zijn wij dagelijks actief met onze volledig uitgeruste mobiele servicebus in onder andere Utrecht, Amsterdam, Almere, Amersfoort en omstreken. Of het nu gaat om het bijmaken van een reservesleutel, het vakkundig inleren van keyless entry smart keys, of spoedreparaties bij een verloren of defecte autosleutel ter plaatse: wij garanderen schadevrij werk met originele OEM-diagnoseapparatuur. Dankzij onze transparante tarieven, snelle responstijden en jarenlange expertise bespaart u onnodige wegsleepkosten en lange wachttijden bij de officiële merkdealer. Blader door onze recente klussen en ontdek direct waarom duizenden automobilisten vertrouwen op onze mobiele sleutelservice.
+          </p>
+          <RealGalleryShowcase />
+        </div>
+      </section>
+
       {/* ===== SERVICE AREA & MAP PREVIEW (SEO) ===== */}
       <section className={styles.serviceAreaSection}>
         <div className="container">
@@ -535,17 +547,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== GALLERY ===== */}
-      <section className="gallery-section">
-        <div className="container">
-          <p className="section-eyebrow">GALERIJ</p>
-          <h2 className="section-title">Ons Werk in Beelden</h2>
-          <p className="section-lead" style={{ maxWidth: 880, margin: '0 auto 2.5rem', lineHeight: '1.75', fontSize: '0.98rem', color: 'var(--gray-600)' }}>
-            Bekijk hieronder een selectie van onze afgeronde praktijkprojecten en tevreden klanten in heel Nederland. Als erkend autosleutel specialist zijn wij dagelijks actief met onze volledig uitgeruste mobiele servicebus in onder andere Utrecht, Amsterdam, Almere, Amersfoort en omstreken. Of het nu gaat om het bijmaken van een reservesleutel, het vakkundig inleren van keyless entry smart keys, of spoedreparaties bij een verloren of defecte autosleutel ter plaatse: wij garanderen schadevrij werk met originele OEM-diagnoseapparatuur. Dankzij onze transparante tarieven, snelle responstijden en jarenlange expertise bespaart u onnodige wegsleepkosten en lange wachttijden bij de officiële merkdealer. Blader door onze recente klussen en ontdek direct waarom duizenden automobilisten vertrouwen op onze mobiele sleutelservice.
-          </p>
-          <RealGalleryShowcase />
-        </div>
-      </section>
 
     </main>
     </>
