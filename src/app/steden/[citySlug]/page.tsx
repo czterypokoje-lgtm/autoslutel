@@ -394,11 +394,17 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             </p>
             <ul className={styles.seoList}>
               {city.subAreas.length > 0 ? (
-                city.subAreas.map(area => (
-                  <li key={area}>
-                    <strong>{city.city} {area}</strong> — Mobiele service ter plaatse
-                  </li>
-                ))
+                city.subAreas.map(area => {
+                  const areaLower = area.toLowerCase();
+                  const cityLower = city.city.toLowerCase();
+                  const displayName = areaLower.startsWith(cityLower) ? area : `${city.city} ${area}`;
+                  
+                  return (
+                    <li key={area}>
+                      <strong>{displayName}</strong> — Mobiele service ter plaatse
+                    </li>
+                  );
+                })
               ) : (
                 nearby.map(c => (
                   <li key={c.slug}>
