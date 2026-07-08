@@ -15,6 +15,11 @@
   background: linear-gradient(90deg, transparent, rgba(36,96,160,0.15));
   pointer-events: none;
 }
+.heroBackground {
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: 0;
+}
 
 .heroInner {
   max-width: 1200px;

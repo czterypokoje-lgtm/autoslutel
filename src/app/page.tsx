@@ -158,6 +158,15 @@ export default function HomePage() {
       <main>
       {/* ===== HERO ===== */}
       <section className={styles.hero}>
+        <Image
+          src="/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp"
+          alt="Autosleutel specialist Utrecht en Amsterdam mobiele service - Sleutel bijmaken en auto openen op locatie"
+          fill
+          priority
+          quality={82}
+          className={styles.heroBackground}
+          sizes="100vw"
+        />
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
             <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Heel Nederland</p>
