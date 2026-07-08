@@ -336,7 +336,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <div className="container">
             <h2>Service in {city.city} &mdash; Galerij</h2>
             <div className="gallery-grid">
-              {[...Array(6)].map((_, i) => (
+              {[...Array(8)].map((_, i) => (
                 <div key={i} className="gallery-item">
                   <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden', borderRadius: 'var(--radius-md)' }}>
                     <Image

@@ -9,7 +9,9 @@ SRC_IMAGES = [
     "autosleutel_ford_reservesleutel_bijmaken_utrecht_centrum.webp",
     "autosleutel_hyundai_reservesleutel_programmeren_utrecht_zuid.webp",
     "autosleutel_specialist_mobiele_werkplaats_utrecht_leidsche_rijn.webp",
-    "autosleutel_kia_smartkey_bijmaken_amsterdam_west.webp"
+    "autosleutel_kia_smartkey_bijmaken_amsterdam_west.webp",
+    "autosleutel_mercedes_benz_sleutel_programmeren_almere_centrum.webp",
+    "autosleutel_nissan_qashqai_sleutel_bijmaken_almere_stad.webp"
 ]
 
 def get_cities():
