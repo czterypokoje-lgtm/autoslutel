@@ -23,7 +23,8 @@ export const metadata: Metadata = {
   },
   description: `Autosleutel kwijt of defect? Professionele mobiele autosleutelspecialist in Utrecht, Amsterdam, Almere & heel Nederland. Alle merken. Zelfde dag service. Goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
   keywords: [
-    'autosleutel bijmaken', 'autosleutel programmeren', 'autosleutel kwijt', 'reservesleutel auto bijmaken',
+    'autosleutelbijmaken', 'autosleutel24', 'autosleutejkwijt', 'autosleutel kwijt',
+    'autosleutel bijmaken', 'autosleutel programmeren', 'reservesleutel auto bijmaken',
     'mobiele autoslotenmaker', 'sleutel bijmaken utrecht', 'transponder sleutel programmeren',
     'BMW sleutel bijmaken', 'Mercedes sleutel programmeren', 'Volkswagen autosleutel bijmaken',
     'autosleutel bijmaken kosten', 'autosleutel bijmaken amsterdam', 'sleutelmaker 24 uur',
