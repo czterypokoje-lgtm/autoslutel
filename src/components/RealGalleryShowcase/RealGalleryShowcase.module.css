@@ -1,0 +1,155 @@
+.showcaseWrapper {
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.filterBtn {
+  background: var(--gray-200, #1e293b);
+  color: var(--gray-700, #e2e8f0);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.filterBtn:hover {
+  background: rgba(249, 115, 22, 0.15);
+  border-color: #f97316;
+  color: #f97316;
+}
+
+.filterBtnActive {
+  background: #f97316 !important;
+  color: #ffffff !important;
+  border-color: #f97316 !important;
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.35);
+}
+
+.sliderContainer {
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(249, 115, 22, 0.2);
+  border-color: rgba(249, 115, 22, 0.4);
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.imageContainer img {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover .imageContainer img {
+  transform: scale(1.06);
+}
+
+.topBadges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.brandBadge {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  color: #f97316;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gpsBadge {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(7, 14, 26, 0.95) 0%, rgba(7, 14, 26, 0.3) 50%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.2rem;
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.overlayContent {
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.cardTitle {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem 0;
+  line-height: 1.3;
+}
+
+.cardGps {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.tag {
+  display: inline-block;
+  background: rgba(249, 115, 22, 0.2);
+  color: #f97316;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+}

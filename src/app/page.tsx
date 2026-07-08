@@ -6,6 +6,7 @@ import styles from './page.module.css';
 import InstantServiceMap from '@/components/InstantServiceMap';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
+import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
 
 export const metadata: Metadata = {
   title: 'Autosleutel24 | Dé Autosleutelspecialist | Alle Merken | 24/7',
@@ -137,17 +138,6 @@ const serviceAreaCities = [
   { name: 'Zeist', slug: 'zeist', time: '18-22 min' },
   { name: 'Huizen', slug: 'huizen', time: '35-45 min' },
   { name: 'Diemen', slug: 'diemen', time: '35-45 min' },
-];
-
-const galleryItems = [
-  { title: 'Professionele Werkplaats Utrecht', src: '/autosleutel24-sleutelbijmaken-utrecht.jpg', alt: 'Autosleutel24 professionele werkplaats in Utrecht voor autosleutel bijmaken en programmeren' },
-  { title: 'Sleutel Programmering', src: '/gallery/1.png', alt: 'Autosleutel programmering ter plaatse door specialist' },
-  { title: 'Gereedschappen', src: '/gallery/2.png', alt: 'Diagnoseapparatuur en programmeertools voor autosleutels' },
-  { title: 'Mercedes EIS bench', src: '/gallery/2.png', alt: 'Mercedes EIS contactslot reparatie op testbank' },
-  { title: 'VW Golf 8 SFD', src: '/gallery/1.png', alt: 'Volkswagen Golf 8 smart key programmering met SFD bypass' },
-  { title: 'Toyota bypass kabel', src: '/gallery/2.png', alt: 'Toyota OBD-kabel bypass voor sleutels inleren' },
-  { title: 'Voor/na sleutel', src: '/gallery/1.png', alt: 'Autosleutel behuizing reparatie voor en na resultaat' },
-  { title: 'Klantmoment', src: '/hero-auto.png', alt: 'Tevreden klant met nieuw geprogrammeerde reservesleutel' },
 ];
 
 export default function HomePage() {
@@ -530,22 +520,8 @@ export default function HomePage() {
         <div className="container">
           <p className="section-eyebrow">GALERIJ</p>
           <h2 className="section-title">Ons Werk in Beelden</h2>
-          <p className="section-lead">Recente projecten en mobiele service in actie.</p>
-          <div className="gallery-grid">
-            {galleryItems.map((item, i) => (
-              <div key={i} className="gallery-item" style={{position: 'relative'}}>
-                <Image 
-                  src={item.src} 
-                  alt={item.alt} 
-                  fill 
-                  style={{objectFit: 'cover'}}
-                />
-                <div style={{position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.6)', padding: '0.5rem', color: '#fff', fontSize: '0.7rem', fontWeight: 600}}>
-                  {item.title}
-                </div>
-              </div>
-            ))}
-          </div>
+          <p className="section-lead">Recente projecten en mobiele service in actie — alle merken & modellen.</p>
+          <RealGalleryShowcase />
         </div>
       </section>
 

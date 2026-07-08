@@ -1,44 +1,33 @@
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
+import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
 
 export const metadata: Metadata = {
   title: `Galerij | ${SITE_CONFIG.name}`,
-  description: 'Galerij van autosleutel werkzaamheden. Voor/na, tools, klantmomenten, BMW, Mercedes, VW, Toyota.',
+  description: 'Galerij van autosleutel werkzaamheden. 26 echte praktijk projecten: BMW, Mercedes, VW, Audi, Porsche, Toyota met GPS geolocatie.',
   alternates: { canonical: `${SITE_CONFIG.domain}/galerij` },
 };
-
-const categories = [
-  { title: '🔑 Voor/Na Sleutels', items: 8 },
-  { title: '🚐 Bus & Gereedschappen', items: 6 },
-  { title: '🔵 BMW Klussen', items: 6 },
-  { title: '⭐ Mercedes Klussen', items: 6 },
-  { title: '🔧 VW/Audi Klussen', items: 6 },
-  { title: '🔴 Toyota/Lexus Klussen', items: 6 },
-  { title: '👻 Ghost Immobiliser', items: 4 },
-  { title: '😊 Klantmomenten', items: 8 },
-];
 
 export default function GalerijPage() {
   return (
     <main>
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
-        <span className="section-label">GALERIJ</span>
+        <span className="section-label">GALERIJ & PROJECTEN</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Ons Werk in Beelden</h1>
-        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 600, margin: '0 auto' }}>
-          Voor/na foto&apos;s, gereedschappen, klantmomenten. Voeg uw WebP foto&apos;s toe aan /public/gallery/
+        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, margin: '0 auto' }}>
+          Bekijk onze 26 recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in Utrecht, Amsterdam, Almere en heel Nederland.
         </p>
       </section>
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
-        
         {/* Werkplaats Section */}
         <div style={{ marginBottom: '4rem', background: 'var(--color-bg-alt)', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--color-border)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem', alignItems: 'center' }}>
             <div>
-              <span className="section-label" style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em' }}>UTRECHT WERKPLAATS</span>
-              <h2 style={{ fontSize: '1.8rem', marginTop: '0.5rem', marginBottom: '1rem' }}>Onze Professionele Werkplaats</h2>
+              <span className="section-label" style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em' }}>UTRECHT WERKPLAATS & MOBIELE SERVICE</span>
+              <h2 style={{ fontSize: '1.8rem', marginTop: '0.5rem', marginBottom: '1rem' }}>Professionele Autosleutel Specialist</h2>
               <p style={{ color: 'var(--color-text-secondary)', lineHeight: '1.7', fontSize: '0.95rem' }}>
-                Onze professionele, fysieke werkplaats in Utrecht is de plek waar wij geavanceerde sleutelreparaties en programmeringen uitvoeren. Van SMD microsolderen op printplaten tot het decoderen van complexe startblokkeringen en het uitlijnen van mechanische CNC sleutel-freesmachines — we hebben alle expertise in eigen huis.
+                Onze professionele werkplaats in Utrecht en onze volledig uitgeruste mobiele servicebus zijn voorzien van de modernste OEM diagnose- en programmeertools. Van BMW FEM/BDC en Mercedes EIS tot Volkswagen SFD en Porsche smart keys — wij programmeren sleutels voor alle merken op locatie.
               </p>
             </div>
             <div>
@@ -51,22 +40,14 @@ export default function GalerijPage() {
           </div>
         </div>
 
-        {categories.map((cat) => (
-          <div key={cat.title} style={{ marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: '1.4rem', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '2px solid var(--color-border)' }}>{cat.title}</h2>
-            <div className="gallery-grid">
-              {[...Array(cat.items)].map((_, i) => (
-                <div key={i} className="gallery-item">
-                  <div className="gallery-item-placeholder">
-                    <span>📷</span>
-                    <span>{cat.title}</span>
-                    <small>Foto {i + 1}.webp</small>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+        {/* 26 REAL PHOTOS SHOWCASE */}
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem', textAlign: 'center' }}>Alle 26 Projectfoto&apos;s uit Onze Praktijk</h2>
+          <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)', marginBottom: '2rem' }}>
+            Filter op automerk of bekijk alle praktijkprojecten met geolocatie GPS dekking.
+          </p>
+          <RealGalleryShowcase />
+        </div>
       </div>
     </main>
   );
