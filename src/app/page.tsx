@@ -95,16 +95,16 @@ const services = [
     alt: 'Transponder sleutel programmeren en chip inleren voor alle automerken op locatie in Utrecht'
   },
   { 
-    title: 'Smart Key / Keyless', 
-    desc: 'Proximity keys, comfort access en keyless entry systemen storingen oplossen en inleren.', 
-    href: '/diensten/smart-key-programmeren',
-    src: '/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp',
-    alt: 'Smart key en keyless entry autosleutels inleren en programmeren met mobiele apparatuur in Utrecht'
+    title: 'Autosleutel Reparatie', 
+    desc: 'Behuizing kapot, drukknoppen versleten of transponder defect? Wij herstellen uw sleutel direct vakkundig ter plaatse.', 
+    href: '/diensten/autosleutel-reparatie',
+    src: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp',
+    alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
   },
   { 
     title: 'Contact Reparatie', 
     desc: 'Contactslot defect of beschadigd? Wij repareren of vervangen direct op uw locatie.', 
-    href: '/diensten/contact-reparatie',
+    href: '/diensten/contactslot-reparatie',
     src: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
     alt: 'Contactslot reparatie en vervangen voor alle merken auto\'s ter plaatse in Utrecht zonder sleepkosten'
   },
@@ -116,11 +116,11 @@ const services = [
     alt: 'Auto schadevrij openen bij sleutels in auto vergeten of autodeur op slot in Utrecht en omgeving'
   },
   { 
-    title: 'Alarm Programmeren', 
-    desc: 'Autoalarm installatie, programmering en storingsoplossing door gecertificeerde specialisten.', 
-    href: '/diensten/alarm-programmeren',
-    src: '/images/seo/slotenmaker_gereedschap_utrecht_spoed.webp',
-    alt: 'Autoalarm installeren, storingen oplossen en afstandsbediening programmeren door autosleutelspecialist'
+    title: 'Smart Key / Keyless', 
+    desc: 'Proximity keys, comfort access en keyless entry systemen storingen oplossen en inleren.', 
+    href: '/diensten/smart-key-programmeren',
+    src: '/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp',
+    alt: 'Smart key en keyless entry autosleutels inleren en programmeren met mobiele apparatuur in Utrecht'
   },
 ];
 
