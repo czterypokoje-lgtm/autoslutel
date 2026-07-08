@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
 import { CITIES } from '@/config/cities';
+import { BRANDS } from '@/config/brands';
+import { DIENSTEN } from '@/config/diensten';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
 import styles from './page.module.css';
