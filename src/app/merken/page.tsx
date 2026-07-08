@@ -19,20 +19,23 @@ const groups = [
 export default function MerkenPage() {
   return (
     <main>
-      <section style={{ position: 'relative', background: 'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden' }}>
-        <Image
-          src="/images/seo/autosleutel_merken_bmw_mercedes_volkswagen_audi_toyota_ford_volvo_skoda_honda_nissan_smart_porsche.webp"
-          alt="Autosleutel bijmaken en programmeren op locatie in Utrecht en Amsterdam voor alle automerken inclusief Volkswagen, BMW, Mercedes, Audi, Ford, Toyota, Honda, Volvo, Skoda, Nissan, Smart, Porsche (GPS Utrecht & Amsterdam)"
-          fill
-          priority
-          style={{ objectFit: 'cover', opacity: 0.15, zIndex: 0 }}
-        />
-        <div style={{ position: 'relative', zIndex: 1 }}>
+      <section style={{ background: 'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding: '4rem 2rem 5rem', textAlign: 'center', overflow: 'hidden', position: 'relative' }}>
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--orange-400)', marginBottom: '0.75rem' }}>MERKEN</p>
           <h1 style={{ color: '#fff', marginBottom: '1rem' }}>38 Automerken — Alle Sleutelsystemen</h1>
-          <p style={{ color: 'rgba(255,255,255,0.7)', maxWidth: 580, margin: '0 auto 1.5rem', fontSize: '1.05rem', lineHeight: '1.6' }}>
+          <p style={{ color: 'rgba(255,255,255,0.7)', maxWidth: 650, margin: '0 auto 2rem', fontSize: '1.05rem', lineHeight: '1.6' }}>
             Van BMW CAS4+ tot VW MQB SFD en Toyota G-chip. Dealer-niveau tools voor elk merk. Mobiel aan huis.
           </p>
+          <div style={{ maxWidth: '800px', margin: '0 auto 2.5rem', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <Image
+              src="/images/seo/autosleutel_merken_bmw_mercedes_volkswagen_audi_toyota_ford_volvo_skoda_honda_nissan_smart_porsche.webp"
+              alt="Autosleutel bijmaken en programmeren op locatie in Utrecht en Amsterdam voor alle automerken inclusief Volkswagen, BMW, Mercedes, Audi, Ford, Toyota, Honda, Volvo, Skoda, Nissan, Smart, Porsche (GPS Utrecht & Amsterdam)"
+              width={1200}
+              height={675}
+              priority
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+          </div>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id="merken-hero-phone">{SITE_CONFIG.phone}</a>
         </div>
       </section>
