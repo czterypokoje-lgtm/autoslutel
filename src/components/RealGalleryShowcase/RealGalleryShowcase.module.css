@@ -73,9 +73,9 @@
 }
 
 .arrowBtn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  background: rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  color: #0f172a;
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -105,7 +105,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(15, 23, 42, 0.25);
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
