@@ -195,7 +195,6 @@ export default function HomePage() {
               <span className={styles.trustPill}>✓ 24/7 Bereikbaar</span>
             </div>
           </div>
-          </div>
         </div>
       </section>
 
