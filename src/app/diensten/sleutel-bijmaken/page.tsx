@@ -6,7 +6,7 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Sleutel Bijmaken Ter Plaatse — Vaste Prijs | Autosleutel24',
-  description: 'Autosleutel bijmaken door onze mobiele specialist. Reserve sleutel + programmering ter plaatse. Vaste prijs vanaf €95. 24/7. Bel 06-XX XX XX XX.',
+  description: 'Autosleutel bijmaken door onze mobiele specialist. Reserve sleutel + programmering ter plaatse. Vaste prijs vanaf €95. 24/7. Bel 06 11 75 12 31.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/sleutel-bijmaken` },
 };
 

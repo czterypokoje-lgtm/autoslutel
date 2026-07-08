@@ -9,9 +9,9 @@ export const SITE_CONFIG = {
   tagline: 'Mobiele Sleutelprogrammering — Alle Merken',
   domain: 'https://www.autosleutel24.nl', // primary
 
-  phone: '06 38 22 24 24',
-  phoneTel: '+31638222424',
-  whatsapp: '31638222424',
+  phone: '06 11 75 12 31',
+  phoneTel: '+31611751231',
+  whatsapp: '31611751231',
   email: 'info@autosleutel24.nl',
 
   address: {
