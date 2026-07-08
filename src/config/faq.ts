@@ -205,6 +205,30 @@ export const FAQ_GLOBAL: FaqItem[] = [
     q: 'Wat is het verschil tussen een reserve autosleutel en een hoofdsleutel?',
     a: 'Bij auto\'s functioneren beide sleutels technisch gezien hetzelfde: ze starten de auto en openen de deuren. Soms is een "reservesleutel" (of noodsleutel) echter een kale mechanische transpondersleutel zonder afstandsbediening-knopjes, terwijl de hoofdsleutel een klapsleutel of smart key is. Wij kunnen beide varianten voor u bijmaken.',
   },
+  {
+    q: 'Welke batterij zit er in een autosleutel afstandsbediening en hoe vervang ik deze?',
+    a: 'In 90% van de gevallen gebruikt een autosleutel afstandsbediening een CR2032 of CR2025 lithium knoopcelbatterij. U kunt deze zelf vervangen door de behuizing voorzichtig open te klikken met een platte schroevendraaier of muntstuk. Werkt de sleutel na het vervangen van de batterij nog niet? Dan moet de sleutel mogelijk opnieuw worden ingeleerd, of is de chip defect. Autosleutel24 kan dit op locatie voor u repareren.',
+  },
+  {
+    q: 'Hoe werkt het programmeren van een autosleutel bij verschillende automerken?',
+    a: 'Hoewel het basisprincipe (OBD2-uitlezing) gelijk is, verschilt de software per automerk enorm. Volkswagen (VAG) gebruikt bijvoorbeeld UDS-protocollen, terwijl BMW werkt met CAS- of FEM-modules. Autosleutel24 beschikt over merkspecifieke, geavanceerde licenties en uitleesapparatuur. Hierdoor kunnen wij de transponderchip veilig en foutloos programmeren voor vrijwel alle Europese, Aziatische en Amerikaanse automerken.',
+  },
+  {
+    q: 'Wat is het telefoonnummer voor pechhulp bij een verloren autosleutel?',
+    a: 'Staat u met spoed stil omdat uw autosleutels kwijt, gestolen of in de auto achtergebleven zijn? Bel direct het noodnummer van Autosleutel24: 06 11 75 12 31. Wij fungeren als pechhulp voor autosleutels en zijn 24/7 bereikbaar in Midden-Nederland. We komen naar u toe en lossen het probleem direct op.',
+  },
+  {
+    q: 'Wat is het verschil tussen een gewone autosleutel en een slimme autosleutel (smart key)?',
+    a: 'Een "gewone" autosleutel of klapsleutel heeft een fysieke ijzeren sleutelbaard die u in het contactslot steekt en omdraait, gecombineerd met een transponderchip. Een "slimme" autosleutel (Keyless Go / Smart Key) zendt continu een uniek radiosignaal uit. Zodra u in de buurt van de auto bent, gaat deze automatisch open en kunt u starten via de start/stop-knop. Wij kunnen beide typen sleutels bijmaken en programmeren.',
+  },
+  {
+    q: 'Hoe kan ik een afspraak maken voor autosleutel kopiëren?',
+    a: 'U kunt heel eenvoudig een afspraak maken door te bellen of een WhatsApp-bericht te sturen naar 06 11 75 12 31. Stuur uw locatie en een foto van uw kentekenbewijs (of kenteken) door. We plannen vervolgens direct een afspraak in. Omdat we mobiel werken, komen we de autosleutel kopiëren op een moment en locatie die u uitkomt: thuis, op het werk, of onderweg.',
+  },
+  {
+    q: 'Hoe veilig zijn autosleutels met transponderchip?',
+    a: 'Transpondersleutels zijn uiterst veilig. Ze bevatten een RFID-chip met een versleutelde cryptografische code die correspondeert met de startonderbreker in de boordcomputer (ECU). Pas als de computer de juiste code leest, krijgt de brandstofpomp vrijgave. Daarom kan niemand uw auto starten met alleen een geslepen stuk ijzer. Bij verlies programmeren we de oude transpondercode direct uit, zodat de verloren sleutel waardeloos wordt.',
+  },
 ];
 
 // ── SERVICE-SPECIFIC FAQs ──
