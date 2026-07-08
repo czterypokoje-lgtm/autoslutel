@@ -15,7 +15,7 @@ export default function UtrechtSeoContent() {
         Specifieke locaties waar wij regelmatig werken in Utrecht:
       </p>
       <ul>
-        <li><strong>Parkeergarage Hoog Catharijne</strong> — Drukste garage van Nederland. Sleutel kwijt? Wij komen naar niveau -3.</li>
+        <li><strong>Parkeergarage Hoog Catharijne</strong> — Drukste garage van Nederland. Autosleutel kwijt? Wij komen naar niveau -3.</li>
         <li><strong>Jaarbeurs / TradeFair Utrecht</strong> — Zakelijke evenementen. Veel lease-auto's met smart keys.</li>
         <li><strong>UMC Utrecht</strong> — 24/7 parkeergarages. Spoedhulp voor personeel en bezoekers.</li>
         <li><strong>Universiteitsbibliotheek Utrecht (UBU)</strong> — Studenten met oudere VW Polo en Opel Corsa.</li>

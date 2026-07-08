@@ -90,7 +90,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <span style={{ color: 'var(--orange-500)' }}>Autosleutel Specialist — Mobiel Ter Plaatse</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 700, fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '2rem' }}>
-              Is uw {brand.name} sleutel kwijt, gestolen of werkt de afstandsbediening niet meer?
+              Is uw {brand.name} autosleutel kwijt, gestolen of werkt de afstandsbediening niet meer?
               Wij programmeren alle {brand.name} modellen (CAS, FEM, BDC, MQB, Smart Key) direct aan huis.
               Bespaar tot 50% vergeleken met de dealer.
             </p>

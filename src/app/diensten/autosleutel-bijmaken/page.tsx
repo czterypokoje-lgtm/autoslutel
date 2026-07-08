@@ -150,7 +150,7 @@ export default function SleutelBijmakenPage() {
                   </p>
                   <ul className={styles.bulletList}>
                     <li><strong>Preventie:</strong> U heeft één sleutel en wilt een reserve voordat de eerste kwijt raakt of stuk gaat.</li>
-                    <li><strong>Sleutel kwijt:</strong> Uw enige sleutel is verloren. Wij maken een nieuwe op basis van het slot of het immobilizer systeem.</li>
+                    <li><strong>Autosleutel kwijt:</strong> Uw enige sleutel is verloren. Wij maken een nieuwe op basis van het slot of het immobilizer systeem.</li>
                     <li><strong>Sleutel afgebroken:</strong> De sleutel is gebroken in het contactslot of de deur. Wij extraheren het fragment en maken een vervanger.</li>
                     <li><strong>Sleutel gestolen:</strong> Wij maken een nieuwe sleutel en wissen de oude uit het systeem zodat de gestolen sleutel niet meer werkt.</li>
                     <li><strong>Reserve voor partner/kind:</strong> Twee sleutels zijn het minimum. Wij maken een tweede, third of fourth sleutel tegen een gereduceerd tarief.</li>

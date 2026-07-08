@@ -266,7 +266,7 @@ export const DIENSTEN: Service[] = [
     ],
     faq: [
       { q: 'Wat moet ik doen als mijn autosleutel gestolen is?', a: 'Bel ons direct. Wij kunnen via de OBD-poort de diefstalbeveiliging zo instellen dat de gestolen sleutel direct uit de computer wordt gewist. Hierdoor kan de dief de auto niet meer starten. Eventueel passen we ook de mechanische sloten aan.' },
-      { q: 'Vergoedt de verzekering de kosten als ik mijn sleutel kwijt ben?', a: 'In veel gevallen wel, mits u all-risk of WA+ verzekerd bent met diefstaldekking. U krijgt van ons altijd een officiële, gespecificeerde factuur die u kunt indienen bij uw verzekeraar.' }
+      { q: 'Vergoedt de verzekering de kosten als ik mijn autosleutel kwijt ben?', a: 'In veel gevallen wel, mits u all-risk of WA+ verzekerd bent met diefstaldekking. U krijgt van ons altijd een officiële, gespecificeerde factuur die u kunt indienen bij uw verzekeraar.' }
     ],
     relatedSlugs: ['noodopening-auto', 'alle-sleutels-kwijt-auto', 'autodeur-openen', 'sleutel-bijmaken']
   },

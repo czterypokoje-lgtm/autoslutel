@@ -84,7 +84,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
               <span style={{ color: 'var(--orange-500)', fontSize: '0.7em' }}>Autosleutel Specialist — Mobiel Ter Plaatse</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.75)', maxWidth: 720, lineHeight: 1.7, marginBottom: '1.5rem' }}>
-              {`Is uw ${brand.name} ${model.name} sleutel kwijt, gestolen of defect? Wij programmeren nieuwe sleutels `}
+              {`Is uw ${brand.name} ${model.name} autosleutel kwijt, gestolen of defect? Wij programmeren nieuwe sleutels `}
               ter plaatse voor alle bouwjaren tussen <strong>{yearList[0]} en {yearList[yearList.length - 1]}</strong>.
               Snel, vakkundig en tot 50% goedkoper dan de dealer.
             </p>

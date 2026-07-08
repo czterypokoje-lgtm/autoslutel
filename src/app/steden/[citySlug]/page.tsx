@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   return {
     title: `Autosleutel Bijmaken ${city.city} | Mobiel Programmeren 24/7 | Bel 06 11 75 12 31`,
     description: `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen ${city.travelTime} ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
-    keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `sleutel kwijt ${city.city.toLowerCase()}`, `reservesleutel auto ${city.city.toLowerCase()}`],
+    keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `autosleutel kwijt ${city.city.toLowerCase()}`, `reservesleutel auto ${city.city.toLowerCase()}`],
     alternates: {
       canonical: pageUrl,
       languages: {

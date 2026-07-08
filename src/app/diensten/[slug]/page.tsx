@@ -77,7 +77,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
     { strong: 'Elektronische storing in de centrale vergrendeling:', text: 'Het slot weigert dienst of de keyless-entry module detecteert de sleutel niet meer na een spanningsdip.' }
   ] : isKey ? [
     { strong: 'U heeft slechts één werkende sleutel over:', text: 'Voorkom acute stress en hoge wegsleepkosten door tijdig een reserve autosleutel met startonderbreker te laten bijmaken.' },
-    { strong: 'Sleutel kwijtgeraakt of gestolen:', text: 'Wij wissen direct de verloren of gestolen sleutels uit de boordcomputer (ECU) zodat uw auto 100% beveiligd blijft tegen diefstal.' },
+    { strong: 'Autosleutel kwijtgeraakt of gestolen:', text: 'Wij wissen direct de verloren of gestolen sleutels uit de boordcomputer (ECU) zodat uw auto 100% beveiligd blijft tegen diefstal.' },
     { strong: 'Behuizing versleten of knoppen ingedrukt:', text: 'Het sleutelblad is krom of de rubberen drukknoppen zijn kapot waardoor vocht de printplaat kan beschadigen.' },
     { strong: 'Transponder of chip wordt niet meer herkend:', text: 'De startmotor draait wel, maar de motor slaat niet aan omdat het startblokkeringssignaal niet doorkomt.' },
     { strong: 'Extra sleutel nodig voor partner of gezinslid:', text: 'Direct ter plaatse ingeleerd en getest op alle portieren en het contactslot.' }

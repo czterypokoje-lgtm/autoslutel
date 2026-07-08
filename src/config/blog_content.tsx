@@ -246,7 +246,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   ),
   'case-study-bmw-besparing': (
     <>
-      <h2>Casus: BMW X5 Sleutel Kwijt in Utrecht</h2>
+      <h2>Casus: BMW X5 Autosleutel Kwijt in Utrecht</h2>
       <p>
         Vorige week kregen we een oproep van een wanhopige klant die zijn BMW X5 sleutel was verloren op het parkeerterrein bij de Jaarbeurs in Utrecht. Hij had geen reservesleutel en de auto stond op slot.
       </p>
@@ -574,7 +574,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   ),
   'sleutel-kwijt-utrecht-stappenplan': (
     <>
-      <h2>Sleutel Kwijt in Utrecht: 5 Stappen Directe Hulp</h2>
+      <h2>Autosleutel Kwijt in Utrecht: 5 Stappen Directe Hulp</h2>
       <p>
         Bent u uw autosleutel verloren of is uw autosleutel gestolen in Utrecht? Dit is een uiterst vervelende situatie, zeker als u geparkeerd staat op een drukke locatie zoals bij het Centraal Station, Hoog Catharijne, het Media Park of de Jaarbeurs Utrecht. Gelukkig hoeft u uw auto niet te laten wegslepen naar een dealer. Onze Utrechtse mobiele autosleutelservice komt direct naar u toe en lost het probleem ter plaatse op. Met onze 30-minuten reactietijd belofte zijn we supersnel bij u in Utrecht en omgeving. Volg dit directe 5-stappenplan om uw auto snel, veilig en schadevrij weer op weg te helpen.
       </p>
@@ -880,12 +880,12 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Tips om te voorkomen dat je je autosleutel verliest</h3>
       <p>
-        Het verliezen van je autosleutel kan een kostbare en stressvolle ervaring zijn. Gelukkig zijn er verschillende maatregelen die je kunt nemen om te voorkomen dat je je sleutel kwijtraakt.
+        Het verliezen van je autosleutel kan een kostbare en stressvolle ervaring zijn. Gelukkig zijn er verschillende maatregelen die je kunt nemen om te voorkomen dat je je autosleutel kwijtraakt.
       </p>
       <ul>
         <li>Een van de eenvoudigste en effectiefste manieren is door een vaste plek te hebben waar je je sleutel altijd bewaart. Dit kan een sleutelbakje bij de voordeur zijn, of een specifieke zak in je tas.</li>
         <li>Het gebruik van een sleutelhanger of Bluetooth sleuteltracker (zoals een Apple AirTag) kan ook helpen om je sleutel gemakkelijker terug te vinden.</li>
-        <li>Een andere nuttige tip is om <strong>altijd een reservesleutel bij de hand te hebben</strong>. Bewaar de reservesleutel op een veilige en toegankelijke plek. Als je je hoofd sleutel kwijtraakt, heb je altijd een backup.</li>
+        <li>Een andere nuttige tip is om <strong>altijd een reservesleutel bij de hand te hebben</strong>. Bewaar de reservesleutel op een veilige en toegankelijke plek. Als je je hoofd autosleutel kwijtraakt, heb je altijd een backup.</li>
       </ul>
 
       <h3>Verzekering en autosleutels: wat je moet weten</h3>
@@ -898,7 +898,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Conclusie: slim omgaan met autosleutels en kosten besparen</h3>
       <p>
-        Het verliezen van een autosleutel kan een vervelende en kostbare ervaring zijn, maar door slim om te gaan met je sleutels kun je de kans op verlies minimaliseren en kosten besparen. Het is belangrijk om te weten wat te doen als je je sleutel kwijtraakt, wat de kosten zijn voor het bijmaken van een nieuwe sleutel en waar je deze kunt laten maken.
+        Het verliezen van een autosleutel kan een vervelende en kostbare ervaring zijn, maar door slim om te gaan met je sleutels kun je de kans op verlies minimaliseren en kosten besparen. Het is belangrijk om te weten wat te doen als je je autosleutel kwijtraakt, wat de kosten zijn voor het bijmaken van een nieuwe sleutel en waar je deze kunt laten maken.
       </p>
       <p>
         Door een vaste plek te hebben voor je sleutel en het altijd bij de hand hebben van een reservesleutel, kun je de kans op verlies aanzienlijk verkleinen.
@@ -971,7 +971,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         />
       </div>
       <p>
-        Een extra <strong>sleutel bijmaken voor uw auto</strong> is iets wat automobilisten vaak uitstellen. "Dat doe ik nog wel een keer", is een veelgehoorde gedachte. Totdat de enige sleutel kwijt is, en de kosten en stress ineens enorm oplopen. Gelukkig was een autosleutel kopiëren nog nooit zo eenvoudig dankzij de opkomst van de mobiele autosleutelservice.
+        Een extra <strong>sleutel bijmaken voor uw auto</strong> is iets wat automobilisten vaak uitstellen. "Dat doe ik nog wel een keer", is een veelgehoorde gedachte. Totdat de enige autosleutel kwijt is, en de kosten en stress ineens enorm oplopen. Gelukkig was een autosleutel kopiëren nog nooit zo eenvoudig dankzij de opkomst van de mobiele autosleutelservice.
       </p>
 
       <h3>De nadelen van de traditionele weg (De Dealer)</h3>

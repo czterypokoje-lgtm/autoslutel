@@ -7,7 +7,7 @@ import { BRANDS } from '@/config/brands';
 export const metadata: Metadata = {
   title: 'Autosleutel Kwijt? | Direct Hulp | 24/7 Mobiele Service | Bel Nu',
   description: `Autosleutel kwijt? Wij helpen direct. Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel: ${SITE_CONFIG.phone}`,
-  keywords: ['autosleutel kwijt','alle sleutels kwijt auto','auto sleutel kwijt wat te doen','nieuwe autosleutel laten maken','sleutel kwijt autoslotenmaker'],
+  keywords: ['autosleutel kwijt','alle sleutels kwijt auto','auto autosleutel kwijt wat te doen','nieuwe autosleutel laten maken','autosleutel kwijt autoslotenmaker'],
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
     languages: {
@@ -166,7 +166,7 @@ export default function AutosleutelKwijt() {
 
         {/* Bottom emergency CTA */}
         <section style={{ background:'var(--color-danger)', padding:'3rem 2rem', textAlign:'center' }}>
-          <h2 style={{ color:'#fff', marginBottom:'0.5rem' }}>Sleutel Kwijt? Bel Direct</h2>
+          <h2 style={{ color:'#fff', marginBottom:'0.5rem' }}>Autosleutel Kwijt? Bel Direct</h2>
           <p style={{ color:'rgba(255,255,255,0.8)', marginBottom:'1.5rem' }}>Wij zijn 24/7 bereikbaar. Gemiddeld {SITE_CONFIG.responseTime} bij u ter plaatse.</p>
           <div style={{ display:'flex', gap:'0.75rem', justifyContent:'center', flexWrap:'wrap' }}>
             <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background:'#fff', color:'var(--color-danger)', padding:'1rem 2.5rem', borderRadius:'4px', fontWeight:700, fontSize:'1.1rem', textDecoration:'none', display:'inline-flex', alignItems:'center' }} id="akl-bottom-phone">

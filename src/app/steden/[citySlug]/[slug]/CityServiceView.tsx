@@ -470,7 +470,7 @@ function generateBulletList(service: Service, city: City, localDetails: CityDeta
   if (pKey === 'sleutel-bijmaken') {
     return [
       { strong: 'Preventie:', text: `U heeft nog maar één werkende sleutel en wilt een reserve om buitensluiting in ${cityName} te voorkomen.` },
-      { strong: 'Sleutel kwijt:', text: `Uw enige sleutel is verloren. Wij maken direct een nieuwe smart key of transponder sleutel ter plaatse.` },
+      { strong: 'Autosleutel kwijt:', text: `Uw enige sleutel is verloren. Wij maken direct een nieuwe smart key of transponder sleutel ter plaatse.` },
       { strong: 'Sleutel afgebroken:', text: `De sleutel is afgebroken. Wij extraheren de resten en snijden een nieuwe sleutelbaard.` },
       { strong: 'Sleutel gestolen:', text: `Wij programmeren een nieuwe sleutel en deprogrammeren de gestolen sleutel direct.` },
       { strong: 'Reservesleutel:', text: `Een extra sleutel voor uw partner, kinderen of werknemers tegen een gereduceerd tarief.` }

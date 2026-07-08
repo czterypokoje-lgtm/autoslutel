@@ -63,7 +63,7 @@ const sections = [
     faqs: [FAQ_GLOBAL[1], FAQ_GLOBAL[5], FAQ_GLOBAL[13]],
   },
   {
-    title: '🔑 Sleutel Kwijt & Bijmaken',
+    title: '🔑 Autosleutel Kwijt & Bijmaken',
     faqs: [FAQ_GLOBAL[2], FAQ_GLOBAL[3], FAQ_AUTOSLEUTEL_BIJMAKEN[0], FAQ_AUTOSLEUTEL_BIJMAKEN[1], FAQ_GLOBAL[12]],
   },
   {
