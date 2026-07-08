@@ -10,16 +10,16 @@ export type FaqItem = { q: string; a: string };
 // ── GLOBAL FAQs (used on homepage, FAQ page, and as fallback) ──
 export const FAQ_GLOBAL: FaqItem[] = [
   {
-    q: 'Wat kost het bijmaken van een autosleutel?',
-    a: 'De kosten voor het bijmaken van een autosleutel variëren van €89 tot €350, afhankelijk van het merk, model en type sleutel (transponder, smart key, klapsleutel). Wij geven altijd een vaste prijs vóór we beginnen. Geen verrassingen achteraf. Bel 06 11 75 12 31 voor een gratis prijsopgave.',
+    q: 'Wat kost het gemiddeld om een autosleutel bij te laten maken in Nederland?',
+    a: 'Gemiddeld kost het bijmaken van een autosleutel in Nederland tussen de €89 en €350. De exacte prijs is afhankelijk van uw merk, bouwjaar en type sleutel (gewone transpondersleutel, klapsleutel of smart key). Omdat wij als mobiele sleutelmaker geen dure showroom hebben, zijn we vaak tot wel 50% goedkoper dan uw merkdealer. U krijgt bij Autosleutel24 altijd vooraf een vaste prijsopgave zonder verborgen kosten.',
   },
   {
     q: 'Hoe snel kunt u bij mij zijn?',
     a: 'In Utrecht zijn we gemiddeld binnen 15–30 minuten ter plaatse. In Amsterdam, Almere en Amersfoort 30–60 minuten. Wij zijn 24 uur per dag, 7 dagen per week beschikbaar — ook op zondag en feestdagen.',
   },
   {
-    q: 'Mijn autosleutel is kwijt, wat nu?',
-    a: 'Bel ons direct op 06 11 75 12 31 of stuur een WhatsApp. Wij komen naar uw locatie en maken ter plaatse een nieuwe autosleutel — inclusief transponder programmeren. U hoeft de auto niet te laten slepen naar de dealer.',
+    q: 'Wat moet ik doen als ik mijn autosleutel kwijt ben?',
+    a: 'Blijf rustig en bel direct de mobiele service van Autosleutel24 (06 11 75 12 31). Wij komen direct naar uw locatie met onze servicebus. U hoeft uw auto niet te laten wegslepen naar een dealer. Wij lezen de slotcilinder of boordcomputer uit, snijden ter plekke een nieuw sleutelblad en programmeren de startonderbreker. De oude, verloren sleutel wissen we direct uit het systeem voor uw veiligheid.',
   },
   {
     q: 'Kunnen jullie ook een reservesleutel bijmaken zonder het origineel?',
@@ -38,12 +38,12 @@ export const FAQ_GLOBAL: FaqItem[] = [
     a: 'Wij werken met alle gangbare merken: BMW, Mercedes-Benz, Volkswagen, Audi, Toyota, Ford, Opel, Renault, Peugeot, Citroën, Kia, Hyundai, Volvo, Skoda, Nissan, Jeep, Porsche, Seat, Fiat, Honda en meer. Inclusief elektrische voertuigen (EV).',
   },
   {
-    q: 'Wat is een transponder sleutel?',
-    a: 'Een transponder sleutel heeft een kleine elektronische chip ingebouwd die communiceert met de startonderbreker van uw auto. Zonder de juiste transpondercode start de motor niet — ook al heeft u de juiste sleutelvorm. Wij programmeren transponders voor alle merken ter plaatse.',
+    q: 'Hoe kan ik een transpondersleutel programmeren zonder naar de dealer te gaan?',
+    a: 'U kunt een transpondersleutel niet zelf programmeren zonder gespecialiseerde OBD-uitleesapparatuur (zoals Autel of Xhorse). Gelukkig hoeft u niet naar de dealer! Autosleutel24 komt als mobiele specialist met dealer-niveau diagnoseapparatuur naar u toe. Wij programmeren de transponderchip binnen enkele minuten veilig in via de OBD2-poort van uw auto, direct op uw eigen oprit of werkplek.',
   },
   {
-    q: 'Hoe werkt een Smart Key / keyless entry?',
-    a: 'Een Smart Key communiceert draadloos met uw auto via radiofrequentie. U hoeft de sleutel niet uit uw zak te halen om de auto te openen of te starten. Wij kunnen Smart Keys bijmaken en programmeren voor Mercedes, BMW, Audi, Volkswagen, Toyota, Kia en meer.',
+    q: 'Wat kan ik doen als mijn keyless entry sleutel niet meer werkt?',
+    a: 'Controleer allereerst de batterij (vaak een CR2032 of CR2025 knoopcel) en vervang deze indien nodig. Werkt de keyless entry (smart key) nog steeds niet? Dan kan de sleutel zijn synchronisatie verloren hebben of is de chip defect. Houd de sleutel strak tegen de startknop (of noodantenne) om de auto alsnog mechanisch of via NCF te starten. Bel ons vervolgens direct: wij repareren of vervangen uw smart key ter plaatse.',
   },
   {
     q: 'Hebben jullie een KVK-nummer?',
@@ -121,6 +121,10 @@ export const FAQ_AUTO_OP_SLOT: FaqItem[] = [
   {
     q: 'Kunt u mijn auto openen zonder schade?',
     a: 'Ja. Wij gebruiken uitsluitend professioneel locksmith-gereedschap: Lishi decoders, air-wedge tools en J-tools. Uw lak, ramen en deursealen blijven 100% intact. Wij werken ook bij auto\'s met extra deadlock-beveiliging.',
+  },
+  {
+    q: 'Hoe kan ik mijn auto openen als ik mijn sleutel binnen heb laten liggen zonder schade te maken?',
+    a: 'Probeer het nooit zelf met een kledinghanger of door een ruit in te slaan; de schadekosten (en lakschade) vallen vaak veel hoger uit. Bel een professionele auto slotenmaker. Wij gebruiken speciale Lishi-slotdecoders of pomp-kussentjes (air wedges) om de deuren 100% schadevrij te openen, binnen enkele minuten. Zelfs als het contact aan staat of de sleutel in de kofferbak ligt, krijgen wij hem onbeschadigd open.',
   },
   {
     q: 'Wat als mijn autosleutel in de auto zit en de deur op slot is?',
