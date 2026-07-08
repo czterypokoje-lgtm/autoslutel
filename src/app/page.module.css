@@ -7,6 +7,19 @@
   position: relative;
   overflow: hidden;
 }
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.7); /* Dark overlay for text readability */
+  z-index: 1;
+  pointer-events: none;
+}
+.heroBackground {
+  object-fit: cover;
+  opacity: 0.8;
+  z-index: 0;
+}
 
 .heroInner {
   max-width: 800px;
@@ -16,7 +29,7 @@
   align-items: center;
   text-align: center;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .heroContent {}

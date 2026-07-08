@@ -166,6 +166,34 @@ export default function HomePage() {
       <main>
       {/* ===== HERO ===== */}
       <section className={styles.hero}>
+        <Image
+          src="/autosleutel-utrecht-specialist-mobiel.webp"
+          alt="Mobiele autosleutel specialist Utrecht - Sleutel ter plaatse bijmaken"
+          fill
+          priority
+          fetchPriority="high"
+          quality={70}
+          className={styles.heroBackground}
+          sizes="100vw"
+        />
+        <Script id="hero-image-gps" type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "contentUrl": "https://autosleutel24.nl/autosleutel-utrecht-specialist-mobiel.webp",
+            "name": "Mobiele autosleutel specialist Utrecht",
+            "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht en omgeving door Autosleutel24.",
+            "contentLocation": {
+              "@type": "Place",
+              "name": "Utrecht",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 52.0907,
+                "longitude": 5.1214
+              }
+            }
+          })
+        }} />
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
             <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Heel Nederland</p>
