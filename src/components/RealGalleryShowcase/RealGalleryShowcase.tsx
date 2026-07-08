@@ -150,12 +150,18 @@ export default function RealGalleryShowcase() {
   const itemsPerPage = 4;
   const totalPages = Math.ceil(REAL_GALLERY_PROJECTS.length / itemsPerPage);
 
+  // Chunk projects into pages of 4 so all pages stay mounted in DOM (ZERO black flash)
+  const slides: GalleryProject[][] = [];
+  for (let i = 0; i < REAL_GALLERY_PROJECTS.length; i += itemsPerPage) {
+    slides.push(REAL_GALLERY_PROJECTS.slice(i, i + itemsPerPage));
+  }
+
   useEffect(() => {
     if (isPaused) return;
 
     const interval = setInterval(() => {
       setCurrentPage((prevPage) => (prevPage + 1) % totalPages);
-    }, 5000); // 5 seconds autoplay
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [isPaused, totalPages]);
@@ -168,55 +174,58 @@ export default function RealGalleryShowcase() {
     setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0));
   };
 
-  const currentSlice = REAL_GALLERY_PROJECTS.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
-
   return (
     <div
       className={styles.showcaseWrapper}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* PURE 4-PHOTO SLIDER GRID */}
-      <div className={styles.sliderContainer}>
-        <div className={styles.grid}>
-          {currentSlice.map((project, index) => (
-            <div key={project.id} className={styles.card}>
-              <div className={styles.imageContainer}>
-                <Image
-                  src={project.src}
-                  alt={project.alt}
-                  fill
-                  sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 340px"
-                  loading={index < 2 ? "eager" : "lazy"}
-                  style={{ objectFit: 'cover' }}
-                />
+      <div className={styles.sliderViewport}>
+        <div
+          className={styles.sliderTrack}
+          style={{ transform: `translate3d(-${currentPage * 100}%, 0, 0)` }}
+        >
+          {slides.map((slideProjects, slideIdx) => (
+            <div key={slideIdx} className={styles.slidePage}>
+              <div className={styles.grid}>
+                {slideProjects.map((project, idx) => (
+                  <div key={project.id} className={styles.card}>
+                    <div className={styles.imageContainer}>
+                      <Image
+                        src={project.src}
+                        alt={project.alt}
+                        fill
+                        sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 340px"
+                        loading={slideIdx < 3 ? "eager" : "lazy"}
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
         </div>
+      </div>
 
-        {/* SLIDER NAVIGATION ARROWS & DOTS */}
-        <div className={styles.sliderNav}>
-          <button onClick={handlePrev} className={styles.arrowBtn} aria-label="Vorige foto's">
-            &#8592;
-          </button>
-          <div className={styles.dots}>
-            {Array.from({ length: totalPages }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentPage(idx)}
-                className={`${styles.dot} ${currentPage === idx ? styles.dotActive : ''}`}
-                aria-label={`Slide ${idx + 1}`}
-              />
-            ))}
-          </div>
-          <button onClick={handleNext} className={styles.arrowBtn} aria-label="Volgende foto's">
-            &#8594;
-          </button>
+      {/* SLIDER NAVIGATION ARROWS & DOTS */}
+      <div className={styles.sliderNav}>
+        <button onClick={handlePrev} className={styles.arrowBtn} aria-label="Vorige foto's">
+          &#8592;
+        </button>
+        <div className={styles.dots}>
+          {Array.from({ length: totalPages }).map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentPage(idx)}
+              className={`${styles.dot} ${currentPage === idx ? styles.dotActive : ''}`}
+              aria-label={`Slide ${idx + 1}`}
+            />
+          ))}
         </div>
+        <button onClick={handleNext} className={styles.arrowBtn} aria-label="Volgende foto's">
+          &#8594;
+        </button>
       </div>
     </div>
   );

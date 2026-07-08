@@ -1,10 +1,24 @@
 .showcaseWrapper {
   width: 100%;
   margin: 1.5rem 0;
+  overflow: hidden;
 }
 
-.sliderContainer {
+.sliderViewport {
   width: 100%;
+  overflow: hidden;
+}
+
+.sliderTrack {
+  display: flex;
+  width: 100%;
+  transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+.slidePage {
+  width: 100%;
+  flex: 0 0 100%;
 }
 
 .grid {
@@ -46,6 +60,7 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  background: #0f172a;
 }
 
 /* SLIDER NAVIGATION */
