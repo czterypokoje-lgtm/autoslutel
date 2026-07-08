@@ -4,9 +4,20 @@ import { CITIES } from '@/config/cities';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Alle Steden | ${SITE_CONFIG.name} | Nederland`,
-  description: 'Autosleutel24 bedient heel Nederland. Utrecht, Eindhoven, Amsterdam, Rotterdam, Almere, Amersfoort en 25+ andere steden.',
-  alternates: { canonical: `${SITE_CONFIG.domain}/steden` },
+  title: `Autosleutel Bijmaken per Stad | Alle ${CITIES.length} Locaties Nederland | ${SITE_CONFIG.name}`,
+  description: `Mobiele autosleutelspecialist in ${CITIES.length} steden in Nederland. Utrecht, Amsterdam, Almere, Amersfoort, Hilversum, Bussum en meer. Zelfde dag ter plaatse. Bel ${SITE_CONFIG.phone}`,
+  alternates: {
+    canonical: `${SITE_CONFIG.domain}/steden`,
+    languages: {
+      'nl-NL': `${SITE_CONFIG.domain}/steden`,
+      'x-default': `${SITE_CONFIG.domain}/steden`,
+    },
+  },
+  openGraph: {
+    url: `${SITE_CONFIG.domain}/steden`,
+    title: `Autosleutel Bijmaken in ${CITIES.length} Steden | Heel Nederland`,
+    description: `Mobiele autosleutelspecialist in ${CITIES.length} steden. Zelfde dag service. Bel ${SITE_CONFIG.phone}`,
+  },
 };
 
 const groups = [

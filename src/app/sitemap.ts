@@ -11,9 +11,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // 1. Core Pages
   const corePages = [
-    '', '/diensten', '/locaties', '/merken', '/prijzen', '/blog',
+    '', '/diensten', '/steden', '/merken', '/prijzen', '/blog',
     '/over-ons', '/galerij', '/beoordelingen', '/veelgestelde-vragen',
-    '/contact', '/privacybeleid', '/auto-op-slot', '/spoedhulp-autosleutel'
+    '/contact', '/privacybeleid', '/auto-op-slot', '/spoedhulp-autosleutel',
+    '/autosleutel-kwijt'
   ].map(p => ({
     url: `${base}${p}`,
     lastModified: now,

@@ -7,9 +7,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/_next/'],
+        disallow: ['/api/'],
+        // NOTE: /_next/ is intentionally NOT blocked — Google needs JS chunks for rendering
       },
       {
+        // Allow AI bots to index content for LLM citations & AI search visibility
         userAgent: [
           'GPTBot',
           'ChatGPT-User',
@@ -18,12 +20,16 @@ export default function robots(): MetadataRoute.Robots {
           'Google-Extended',
           'Applebot-Extended',
           'PerplexityBot',
+          'YouBot',
+          'Amazonbot',
+          'anthropic-ai',
+          'Bytespider',
         ],
         allow: '/',
-        disallow: ['/api/', '/_next/'],
+        disallow: ['/api/'],
       },
     ],
     sitemap: `${SITE_CONFIG.domain}/sitemap.xml`,
-    host: SITE_CONFIG.domain,
+    // NOTE: 'host' directive is NOT supported by Google — removed
   };
 }

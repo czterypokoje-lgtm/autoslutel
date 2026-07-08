@@ -17,15 +17,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const service = DIENSTEN.find(s => s.slug === slug);
   if (!service) return {};
+  const pageUrl = `${SITE_CONFIG.domain}/diensten/${slug}`;
   return {
-    title: service.metaTitle,
+    title: `${service.title} | Mobiel & 100% Schadevrij | Bel 06 11 75 12 31`,
     description: service.metaDesc,
     alternates: {
-      canonical: `${SITE_CONFIG.domain}/diensten/${slug}`,
+      canonical: pageUrl,
       languages: {
-        'nl-NL': `${SITE_CONFIG.domain}/diensten/${slug}`,
-        'x-default': `${SITE_CONFIG.domain}/diensten/${slug}`,
+        'nl-NL': pageUrl,
+        'x-default': pageUrl,
       },
+    },
+    openGraph: {
+      url: pageUrl,
+      title: `${service.title} | Mobiel & Schadevrij ter Plaatse`,
+      description: service.metaDesc,
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `${service.title} — Autosleutel24` }],
     },
   };
 }

@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/locaties",
+        destination: "/steden",
+        permanent: true,
+      },
+      {
+        source: "/locaties/:slug",
+        destination: "/steden/:slug",
+        permanent: true,
+      },
+      {
         source: "/merken/:merkSlug-sleutel-programmeren",
         destination: "/merken/:merkSlug-autosleutel-bijmaken",
         permanent: true,

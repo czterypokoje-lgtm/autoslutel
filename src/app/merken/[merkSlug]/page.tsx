@@ -21,10 +21,23 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
   });
 
   if (!brand) return {};
+  const pageUrl = `${SITE_CONFIG.domain}/merken/${merkSlug}`;
   return {
-    title: `${brand.name} Autosleutel Bijmaken | Autosleutel Specialist | ${SITE_CONFIG.name}`,
+    title: `${brand.name} Autosleutel Bijmaken & Programmeren | Bel 06 11 75 12 31`,
     description: `${brand.name} autosleutel bijmaken & programmeren. ${brand.system}. Alle modellen. Autosleutel Specialist — tot 50% goedkoper dan ${brand.name} dealer. Mobiel aan huis. Bel: ${SITE_CONFIG.phone}`,
-    alternates: { canonical: `${SITE_CONFIG.domain}/merken/${merkSlug}` },
+    alternates: {
+      canonical: pageUrl,
+      languages: {
+        'nl-NL': pageUrl,
+        'x-default': pageUrl,
+      },
+    },
+    openGraph: {
+      url: pageUrl,
+      title: `${brand.name} Autosleutel Bijmaken & Programmeren | 24/7 Mobiel`,
+      description: `${brand.name} autosleutel bijmaken & inleren op locatie. Goedkoper dan de dealer. Zelfde dag klaar met 12 maanden garantie. Bel direct!`,
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `${brand.name} reservesleutel bijmaken — Autosleutel24` }],
+    },
   };
 }
 
@@ -49,9 +62,20 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
     provider: { '@type': 'Locksmith', name: SITE_CONFIG.fullName, telephone: SITE_CONFIG.phoneTel },
   };
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Merken', item: `${SITE_CONFIG.domain}/merken` },
+      { '@type': 'ListItem', position: 3, name: brand.name, item: `${SITE_CONFIG.domain}/merken/${merkSlug}` },
+    ],
+  };
+
   return (
     <>
       <Script id={`brand-schema-${brand.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <Script id={`brand-breadcrumb-${brand.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* Hero Section */}
         <section style={{ background: 'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding: '4rem 2rem 3rem' }}>

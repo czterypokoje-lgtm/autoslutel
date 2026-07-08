@@ -9,6 +9,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
 import UtrechtSeo from '@/content/seo/utrecht';
 import AmsterdamSeo from '@/content/seo/amsterdam';
+import { getFaqForCity } from '@/config/faq';
 
 const SeoComponents: Record<string, React.FC> = {
   utrecht: UtrechtSeo,
@@ -80,16 +81,23 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const { citySlug } = await params;
   const city = CITIES.find(c => c.slug === citySlug);
   if (!city) return {};
+  const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
   return {
-    title: `Autosleutel Bijmaken ${city.city} | Mobiele Service | 24/7 | ${SITE_CONFIG.name}`,
-    description: `Autosleutel programmering in ${city.city}. Alle merken. Mobiel aan huis. ${city.travelTime} reactietijd. Goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
-    keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `sleutel kwijt ${city.city.toLowerCase()}`],
+    title: `Autosleutel Bijmaken ${city.city} | Mobiel Programmeren 24/7 | Bel 06 11 75 12 31`,
+    description: `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen ${city.travelTime} ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
+    keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `sleutel kwijt ${city.city.toLowerCase()}`, `reservesleutel auto ${city.city.toLowerCase()}`],
     alternates: {
-      canonical: `${SITE_CONFIG.domain}/steden/${citySlug}`,
+      canonical: pageUrl,
       languages: {
-        'nl-NL': `${SITE_CONFIG.domain}/steden/${citySlug}`,
-        'x-default': `${SITE_CONFIG.domain}/steden/${citySlug}`,
+        'nl-NL': pageUrl,
+        'x-default': pageUrl,
       },
+    },
+    openGraph: {
+      url: pageUrl,
+      title: `Autosleutel Bijmaken ${city.city} | Mobiel Programmeren 24/7`,
+      description: `Autosleutel kwijt of reserve bijmaken in ${city.city}? Wij zijn er binnen ${city.travelTime} ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
   };
 }
@@ -138,10 +146,25 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     ],
   };
 
+  const cityFaqs = getFaqForCity(city.city);
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: cityFaqs.map(f => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.a,
+      },
+    })),
+  };
+
   return (
     <>
       <Script id={`city-schema-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script id={`city-breadcrumb-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id={`city-faq-schema-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <main>
         {/* Hero */}
         <section className={styles.hero}>

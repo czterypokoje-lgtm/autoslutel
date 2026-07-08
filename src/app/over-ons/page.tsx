@@ -50,7 +50,8 @@ export default function OverOnsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'start' }}>
           <div>
             <h2>Wie Zijn Wij?</h2>
-            <p>Autosleutel24 Utrecht is een mobiele dienst gespecialiseerd in autosleutelprogrammering voor alle merken en modellen. Wij komen naar u toe — of u nu thuis bent, op het werk, of gestrand langs de weg.</p>
+            <p>Autosleutel24 Utrecht is opgericht door Ahmed, een gecertificeerd autosleutelspecialist met meer dan 10 jaar ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
+            <p>Wij zijn een mobiele dienst gespecialiseerd in autosleutelprogrammering voor alle merken en modellen. Wij komen naar u toe — of u nu thuis bent, op het werk, of gestrand langs de weg.</p>
             <p>Onze focus: eerlijke prijzen, snelle reactie, en technisch excellent werk. Geen vage verhalen — gewoon het probleem oplossen.</p>
 
             <h3>Onze Waarden</h3>

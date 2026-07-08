@@ -9,14 +9,20 @@ import { BRANDS } from '../config/brands';
 import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
 
 export const metadata: Metadata = {
-  title: 'Autosleutel24 | Dé Autosleutelspecialist | Alle Merken | 24/7',
-  description: `Professionele autosleutelspecialist voor alle merken. Mobiele service in Utrecht en omstreken, zelfde dag ter plaatse. Goedkoper dan de dealer. Bel direct: ${SITE_CONFIG.phone}`,
+  title: 'Autosleutel Bijmaken & Programmeren Utrecht | Mobiele Sleutelmaker 24/7',
+  description: `Autosleutel kwijt of defect? Mobiele autosleutelspecialist in Utrecht, Amsterdam & Almere. Alle merken. Zelfde dag ter plaatse. Goedkoper dan dealer. ⭐ 4.9/5. Bel direct: ${SITE_CONFIG.phone}`,
   alternates: {
     canonical: SITE_CONFIG.domain,
     languages: {
       'nl-NL': SITE_CONFIG.domain,
       'x-default': SITE_CONFIG.domain,
     },
+  },
+  openGraph: {
+    url: SITE_CONFIG.domain,
+    title: 'Autosleutel Bijmaken & Programmeren Utrecht | 24/7 Mobiel',
+    description: 'Autosleutel kwijt? Mobiele specialist, alle merken, zelfde dag. Goedkoper dan dealer. ⭐ 4.9/5 Google. Bel 06 11 75 12 31',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel bijmaken Utrecht — Autosleutel24 mobiele specialist' }],
   },
 };
 
