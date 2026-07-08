@@ -166,16 +166,6 @@ export default function HomePage() {
       <main>
       {/* ===== HERO ===== */}
       <section className={styles.hero}>
-        <Image
-          src="/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp"
-          alt="Autosleutel specialist Utrecht en Amsterdam mobiele service - Sleutel bijmaken en auto openen op locatie"
-          fill
-          priority
-          fetchPriority="high"
-          quality={60}
-          className={styles.heroBackground}
-          sizes="100vw"
-        />
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
             <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Heel Nederland</p>
@@ -205,30 +195,6 @@ export default function HomePage() {
               <span className={styles.trustPill}>✓ 24/7 Bereikbaar</span>
             </div>
           </div>
-
-          <div className={styles.heroVisual}>
-            <div className={styles.heroImg}>
-              <Image 
-                src="/hero-auto.webp" 
-                alt="Mobiele Autoslotenmaker Service" 
-                width={600} 
-                height={400} 
-                priority
-                fetchPriority="high"
-                quality={75}
-                className={styles.heroImgFull}
-                style={{objectFit: 'cover', width: '100%', height: '100%'}}
-              />
-            </div>
-            <div className={styles.heroStats}>
-              <div className={styles.heroStat}><strong>30 min</strong><span>Gem. Reactietijd</span></div>
-              <div className={styles.heroStatDiv}></div>
-              <div className={styles.heroStat}><strong>247</strong><span>Klanten Geholpen</span></div>
-              <div className={styles.heroStatDiv}></div>
-              <div className={styles.heroStat}><strong>38</strong><span>Merken</span></div>
-              <div className={styles.heroStatDiv}></div>
-              <div className={styles.heroStat}><strong>24/7</strong><span>Service</span></div>
-            </div>
           </div>
         </div>
       </section>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -460,18 +461,8 @@ export default function SleutelBijmakenPage() {
               </div>
             </div>
             <div className={styles.reviewGrid}>
-              {reviews.map((r, i) => (
-                <div key={i} className={styles.reviewCardSection}>
-                  <div className={styles.ratingStarsReview}>★★★★★</div>
-                  <p className={styles.reviewText}>&quot;{r.text}&quot;</p>
-                  <div className={styles.reviewMetaSection}>
-                    <div className={styles.reviewAvatar}>{r.name[0]}</div>
-                    <div>
-                      <strong>{r.name}</strong>
-                      <span>{r.city} — {r.car}</span>
-                    </div>
-                  </div>
-                </div>
+              {SHARED_GOOGLE_REVIEWS.map((review, i) => (
+                <GoogleReviewCard key={i} review={review} />
               ))}
             </div>
           </div>
