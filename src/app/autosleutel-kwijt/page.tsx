@@ -106,7 +106,7 @@ export default function AutosleutelKwijt() {
         <section style={{ padding:'3.5rem 0' }}>
           <div className="container">
             <h2>Wat Te Doen Als Je Autosleutel Kwijt Is (5 Stappen)</h2>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(300px, 1fr))', gap:'1rem', marginTop:'1.5rem' }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap:'1rem', marginTop:'1.5rem' }}>
               {steps.map(s => (
                 <div key={s.n} style={{ display:'flex', gap:'1rem', padding:'1.25rem', background:'#fff', border:'1px solid var(--gray-200)', borderRadius:'6px', alignItems:'flex-start' }}>
                   <div style={{ width:36, height:36, borderRadius:'50%', background:s.n==='3'?'var(--color-danger)':'var(--navy-800)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'1rem', flexShrink:0 }}>{s.n}</div>

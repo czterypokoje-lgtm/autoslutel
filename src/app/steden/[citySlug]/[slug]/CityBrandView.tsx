@@ -305,7 +305,7 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
                   <div>
                     <h2>{t.modelsTitle}</h2>
                     <p>{t.modelsSub}</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))', gap: '1rem', marginTop: '1rem' }}>
                       {brand.models.map(m => (
                         <Link key={m.slug} href={`/merken/${brand.nameSlug}/${m.slug}`} id={`cb-model-${m.slug}`}
                           style={{ padding: '1rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', textDecoration: 'none', transition: 'all 0.15s' }}>
@@ -336,7 +336,7 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
 
                 {/* Section 6: Related Internal Links */}
                 <div style={{ marginTop: '3rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1.5rem' }}>
                     <div>
                       <h3 style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Andere Merken in {city.city}</h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>

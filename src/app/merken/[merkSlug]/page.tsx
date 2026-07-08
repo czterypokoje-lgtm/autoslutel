@@ -106,7 +106,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
           <section style={{ padding: '4rem 0', background: 'var(--gray-50)' }}>
             <div className="container">
               <h2 style={{ marginBottom: '2rem' }}>Ondersteunde {brand.name} Modellen</h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1rem' }}>
                 {brand.models.map(m => (
                   <Link key={m.slug} href={`/merken/${merkSlug}/${m.slug}`} 
                     style={{ background: '#fff', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--gray-200)', textDecoration: 'none', transition: 'transform 0.2s', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
@@ -124,7 +124,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
         {/* Technical Section */}
         <section style={{ padding: '5rem 0' }}>
           <div className="container">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', alignItems: 'center' }}>
               <div>
                 <h2>{brand.name} Specialist — Dealer Niveau</h2>
                 <p style={{ marginBottom: '1.5rem', lineHeight: 1.8 }}>

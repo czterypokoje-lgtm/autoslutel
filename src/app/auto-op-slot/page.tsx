@@ -83,7 +83,7 @@ export default function AutoOpSlot() {
         <section style={{ padding: '3.5rem 0' }}>
           <div className="container">
             <h2>Wat Wij Doen — 4 Stappen</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
               {steps.map(s => (
                 <div key={s.n} style={{ display: 'flex', gap: '1rem', padding: '1.25rem', background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '6px', alignItems: 'flex-start' }}>
                   <div style={{ width: 36, height: 36, borderRadius: '50%', background: s.n === '1' ? 'var(--color-danger)' : 'var(--navy-800)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1rem', flexShrink: 0 }}>{s.n}</div>
@@ -102,7 +102,7 @@ export default function AutoOpSlot() {
         <section style={{ padding: '3.5rem 0', background: 'var(--gray-50)' }}>
           <div className="container">
             <h2>Waarom Schadevrij Openen?</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
               {[
                 { title: 'Geen Schade aan Portier', desc: 'Onze Long Reach tools passeren het raam zonder krassen of deuken in uw portier.' },
                 { title: 'Geen Beschadigde Rubbers', desc: 'Professionele techniek voorkomt dat deur- en raamrubbers worden beschadigd of verscheurd.' },

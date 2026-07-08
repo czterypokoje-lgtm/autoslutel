@@ -90,7 +90,7 @@ export default function SpoedhulpPage() {
         <section style={{ padding: '3.5rem 0' }}>
           <div className="container">
             <h2>Spoedproblemen die Wij Direct Oplossen</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
               {urgentServices.map(s => (
                 <Link key={s.href} href={s.href} style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', padding: '1.25rem', background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '6px', textDecoration: 'none', transition: 'all 0.15s' }} id={`spoed-svc-${s.href.replace(/\//g,'-')}`}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

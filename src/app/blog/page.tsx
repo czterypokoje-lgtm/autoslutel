@@ -21,7 +21,7 @@ export default function BlogPage() {
       </section>
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '1.5rem' }}>
           {BLOG_POSTS.map((post) => (
             <Link
               key={post.slug}

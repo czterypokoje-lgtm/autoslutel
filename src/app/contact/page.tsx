@@ -37,7 +37,7 @@ export default function ContactPage() {
       </section>
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '3rem', alignItems: 'start' }}>
           {/* Contact Info */}
           <div>
             <h2 style={{ marginBottom: '1.5rem' }}>Directe Contactopties</h2>

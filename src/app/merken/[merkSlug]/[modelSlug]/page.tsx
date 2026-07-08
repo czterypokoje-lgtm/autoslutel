@@ -100,7 +100,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
           <div className="container">
             <h2>Ondersteunde Bouwjaren {brand.name} {model.name}</h2>
             <p style={{ marginBottom: '1.5rem' }}>Wij kunnen sleutels programmeren voor de volgende {brand.name} {model.name} bouwjaren:</p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 100px), 1fr))', gap: '0.5rem' }}>
               {yearList.map(year => (
                 <div key={year} style={{ padding: '0.75rem', background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '4px', textAlign: 'center', fontSize: '0.9rem', fontWeight: 600, color: 'var(--gray-700)' }}>
                   {year}
@@ -113,7 +113,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
         {/* Technical Info */}
         <section style={{ padding: '3.5rem 0', background: 'var(--gray-50)' }}>
           <div className="container">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '3rem', alignItems: 'start' }}>
               <div>
                 <h2>Technische Details {brand.name} {model.name}</h2>
                 <p>

@@ -82,7 +82,7 @@ export default function AutoSlotenmaker() {
         <section style={{ padding: '3.5rem 0' }}>
           <div className="container">
             <h2>Wat Wij Doen — 4 Stappen</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
               {steps.map(s => (
                 <div key={s.n} style={{ display: 'flex', gap: '1rem', padding: '1.25rem', background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '6px', alignItems: 'flex-start' }}>
                   <div style={{ width: 36, height: 36, borderRadius: '50%', background: s.n === '1' ? 'var(--color-danger)' : 'var(--navy-800)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1rem', flexShrink: 0 }}>{s.n}</div>
@@ -100,7 +100,7 @@ export default function AutoSlotenmaker() {
         <section style={{ padding: '3.5rem 0', background: '#f5f7fa' }}>
           <div className="container">
             <h2 style={{ marginBottom: '2rem', textAlign: 'center' }}>Diensten van uw Auto Slotenmaker</h2>
-            <div style={{ display: 'grid', gap: '2rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+            <div style={{ display: 'grid', gap: '2rem', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))' }}>
               
               <div style={{ background: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                 <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', color: 'var(--navy-900)' }}>Schadevrij Auto Openen</h3>

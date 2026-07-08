@@ -47,7 +47,7 @@ export default function OverOnsPage() {
       </section>
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'start' }}>
           <div>
             <h2>Wie Zijn Wij?</h2>
             <p>Autosleutel24 Utrecht is opgericht door Ahmed, een gecertificeerd autosleutelspecialist met meer dan 10 jaar ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
@@ -77,7 +77,7 @@ export default function OverOnsPage() {
         </div>
 
         {/* Workshop Image Section */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
           <div>
             <img 
               src="/images/seo/auto_sleutel_utrecht_24uur_workshop.webp" 
@@ -95,7 +95,7 @@ export default function OverOnsPage() {
 
 
         {/* Mobile Work & Inventory Section */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
           <div style={{ order: 2 }}>
             <img 
               src="/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.webp" 
@@ -109,7 +109,7 @@ export default function OverOnsPage() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
           <div>
             <img 
               src="/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp" 
@@ -124,7 +124,7 @@ export default function OverOnsPage() {
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '4rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
           {[
             { num: '127+', label: 'Tevreden klanten', sub: 'Google beoordeeld' },
             { num: '4.9★', label: 'Google score', sub: 'Gemiddeld' },
