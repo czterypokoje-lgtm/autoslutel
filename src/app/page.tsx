@@ -3,10 +3,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Script from 'next/script';
 import styles from './page.module.css';
-import InstantServiceMap from '@/components/InstantServiceMap';
+import dynamic from 'next/dynamic';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
-import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
+
+const InstantServiceMap = dynamic(() => import('@/components/InstantServiceMap'), { ssr: true });
+const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
 export const metadata: Metadata = {
   title: 'Autosleutel Bijmaken & Programmeren Utrecht | Mobiele Sleutelmaker 24/7',
@@ -160,7 +162,7 @@ export default function HomePage() {
           fill
           priority
           fetchPriority="high"
-          quality={82}
+          quality={60}
           className={styles.heroBackground}
           sizes="100vw"
         />
@@ -201,6 +203,9 @@ export default function HomePage() {
                 alt="Mobiele Autoslotenmaker Service" 
                 width={600} 
                 height={400} 
+                priority
+                fetchPriority="high"
+                quality={75}
                 className={styles.heroImgFull}
                 style={{objectFit: 'cover', width: '100%', height: '100%'}}
               />
