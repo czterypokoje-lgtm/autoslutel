@@ -214,18 +214,23 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </div>
 
-        {/* Top brands in this city */}
+        {/* Top brands in this city (SEO List) */}
         <section className={styles.section}>
           <div className="container">
-            <h2>Populaire Merken in {city.city}</h2>
-            <div className={styles.brandGrid}>
+            <h2>Welke Merken Bedienen Wij in {city.city}?</h2>
+            <p className={styles.seoIntro}>
+              Wij maken en programmeren autosleutels voor alle gangbare automerken direct ter plaatse in {city.city}. 
+              Onze mobiele dealer-niveau apparatuur ondersteunt:
+            </p>
+            <ul className={styles.seoList}>
               {BRANDS.map(b => (
-                <Link key={b.slug} href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`} className={styles.brandCard} id={`city-brand-${b.slug}`}>
-                  <strong>{b.name}</strong>
-                  <span>{b.system.split('/')[0].trim()}</span>
-                </Link>
+                <li key={b.slug}>
+                  <Link href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`}>
+                    <strong>{b.name}</strong> — Sleutel bijmaken in {city.city} ({b.system.split('/')[0].trim()})
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
@@ -233,30 +238,63 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         <section className={styles.sectionAlt}>
           <div className="container">
             <h2>Onze Diensten in {city.city}</h2>
-            <p style={{ color: 'var(--gray-600)', marginBottom: '1.5rem', maxWidth: 640 }}>
-              Van sleutel kwijt tot smart key programmeren — wij zijn mobiel binnen {city.travelTime} bij u in {city.city}.
+            <p className={styles.seoIntro}>
+              Heeft u met spoed een autosleutel nodig of bent u uw sleutels kwijt in {city.city}? Wij bieden de volgende diensten op locatie:
             </p>
-            <div className={styles.brandGrid}>
+            <ul className={styles.seoList}>
               {DIENSTEN.map(s => (
-                <Link key={s.slug} href={`/steden/${citySlug}/${s.slug}`} className={styles.brandCard} id={`city-svc-${s.slug}`}>
-                  <strong>{s.title}</strong>
-                  <span>{s.priceFrom ?? '24/7 beschikbaar'}</span>
-                </Link>
+                <li key={s.slug}>
+                  <Link href={`/steden/${citySlug}/${s.slug}`}>
+                    <strong>{s.title} {city.city}</strong> — {s.priceFrom ? `Vanaf ${s.priceFrom}` : '24/7 beschikbaar'}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
-        {city.subAreas.length > 0 && (
-          <section className={styles.sectionAlt}>
-            <div className="container">
-              <h2>Gebieden die Wij Bedienen in en Rondom {city.city}</h2>
-              <div className={styles.areaChips}>
-                {city.subAreas.map(a => <span key={a} className={styles.chip}>{a}</span>)}
-              </div>
+        {/* Comparison Table */}
+        <section className={styles.section}>
+          <div className="container">
+            <h2 className={styles.tableTitle}>Waarom Ons? Bespaar 30–50% vs Dealer in {city.city}</h2>
+            <p className={styles.tableDesc}>
+              Dealer-niveau apparatuur, transparante prijzen, dezelfde dag service. Wij komen naar u toe in {city.city}.
+            </p>
+            <div className={styles.comparisonWrapper}>
+              <table className={styles.comparisonTable}>
+                <thead>
+                  <tr>
+                    <th>Vergelijking</th>
+                    <th>Dealer in {city.city}</th>
+                    <th className={styles.tableHighlight}>Autosleutel24 ✓</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Prijs</td>
+                    <td>€300 – €900</td>
+                    <td className={styles.tableHighlight}>€150 – €500</td>
+                  </tr>
+                  <tr>
+                    <td>Wachttijd</td>
+                    <td>3 – 14 dagen</td>
+                    <td className={styles.tableHighlight}>Zelfde dag in {city.city}</td>
+                  </tr>
+                  <tr>
+                    <td>Sleepkosten</td>
+                    <td>€100 – €150</td>
+                    <td className={styles.tableHighlight}>Geen (wij komen naar u)</td>
+                  </tr>
+                  <tr>
+                    <td>Garantie</td>
+                    <td>Ja</td>
+                    <td className={styles.tableHighlight}>12 maanden</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         {/* Why us */}
         <section className={styles.section}>
@@ -321,18 +359,30 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </section>
         )}
 
-        {/* Nearby cities */}
+        {/* Neighborhoods / Nearby cities SEO block */}
         <section className={styles.sectionAlt}>
           <div className="container">
-            <h2>Andere Steden in de Buurt</h2>
-            <div className={styles.nearbyGrid}>
-              {nearby.map(c => (
-                <Link key={c.slug} href={`/steden/${c.slug}`} className={styles.nearbyCard} id={`nearby-${c.slug}`}>
-                  <span>{c.city}</span>
-                  <span className={styles.nearbyTime}>{c.travelTime}</span>
-                </Link>
-              ))}
-            </div>
+            <h2>Waar Komen Wij voor Sleutel Bijmaken in {city.city}?</h2>
+            <p className={styles.seoIntro}>
+              Wij zijn mobiel actief in regio {city.region} en omstreken. Binnen gemiddeld {city.travelTime} staan wij voor u klaar in:
+            </p>
+            <ul className={styles.seoList}>
+              {city.subAreas.length > 0 ? (
+                city.subAreas.map(area => (
+                  <li key={area}>
+                    <strong>{city.city} {area}</strong> — Mobiele service ter plaatse
+                  </li>
+                ))
+              ) : (
+                nearby.map(c => (
+                  <li key={c.slug}>
+                    <Link href={`/steden/${c.slug}`}>
+                      <strong>{c.city}</strong> — Autosleutel bijmaken binnen {c.travelTime}
+                    </Link>
+                  </li>
+                ))
+              )}
+            </ul>
           </div>
         </section>
 

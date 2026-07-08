@@ -11,6 +11,106 @@
 .btnPhone { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--orange-500); color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: background 0.15s; min-height: 46px; }
 .btnPhone:hover { background: var(--orange-600); color: #fff; text-decoration: none; }
 .btnWa { display: inline-flex; align-items: center; background: #25d366; color: #fff; padding: 0.75rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: background 0.15s; min-height: 46px; }
+/* ---- SEO LISTS ---- */
+.seoIntro {
+  color: var(--gray-600);
+  margin-bottom: 1.5rem;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+.seoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .seoList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.seoList li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: var(--gray-700);
+}
+
+.seoList li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #10b981; /* Green checkmark */
+  font-weight: bold;
+}
+
+.seoList li a {
+  color: var(--gray-700);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.seoList li a:hover {
+  color: var(--navy-900);
+  text-decoration: underline;
+}
+
+/* ---- COMPARISON TABLE ---- */
+.tableTitle {
+  margin-bottom: 0.5rem;
+}
+
+.tableDesc {
+  color: var(--gray-600);
+  margin-bottom: 2rem;
+  max-width: 640px;
+}
+
+.comparisonWrapper {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--gray-200);
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.comparisonTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.comparisonTable th,
+.comparisonTable td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.comparisonTable th {
+  background: var(--gray-50);
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.comparisonTable tr:last-child td {
+  border-bottom: none;
+}
+
+.comparisonTable .tableHighlight {
+  background: #f0fdf4; /* Light green background */
+  color: #166534;
+  font-weight: 600;
+}
+
+.comparisonTable th.tableHighlight {
+  background: #22c55e;
+  color: white;
+}
 .btnWa:hover { background: #1fba57; color: #fff; text-decoration: none; }
 .heroStats { display: flex; gap: 2rem; flex-wrap: wrap; }
 .stat { display: flex; flex-direction: column; }
