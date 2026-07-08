@@ -352,6 +352,48 @@ export default function HomePage() {
                 <span className={styles.brandModelsText}> — Corsa, Astra, Mokka, Vivaro (ID46 / ID48 transponder &amp; keyless)</span>
               </div>
             </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/volvo-autosleutel-bijmaken" className={styles.brandLinkOrange}>Volvo</Link>
+                <span className={styles.brandModelsText}> — V40, V60, V90, XC40, XC60, XC90 (CEM slot modules &amp; keyless go)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/skoda-autosleutel-bijmaken" className={styles.brandLinkOrange}>Skoda</Link>
+                <span className={styles.brandModelsText}> — Octavia, Fabia, Superb, Kodiaq, Karoq (MQB &amp; Immo IV/V systemen)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/nissan-autosleutel-bijmaken" className={styles.brandLinkOrange}>Nissan</Link>
+                <span className={styles.brandModelsText}> — Qashqai, Juke, Micra, Leaf, X-Trail (NATS &amp; Smart Key systemen)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/honda-autosleutel-bijmaken" className={styles.brandLinkOrange}>Honda</Link>
+                <span className={styles.brandModelsText}> — Civic, Jazz, CR-V, HR-V, Accord (Honda Smart Key &amp; ID46 transponder)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/porsche-autosleutel-bijmaken" className={styles.brandLinkOrange}>Porsche</Link>
+                <span className={styles.brandModelsText}> — 911, Cayenne, Macan, Panamera, Taycan (BCM &amp; Kessy transponders)</span>
+              </div>
+            </div>
+            <div className={styles.brandsCheckItem}>
+              <span className={styles.brandCheckIcon}>✓</span>
+              <div>
+                <Link href="/merken/smart-autosleutel-bijmaken" className={styles.brandLinkOrange}>Smart</Link>
+                <span className={styles.brandModelsText}> — ForTwo, ForFour, #1, #3 (SAM unit &amp; sleutel inleren)</span>
+              </div>
+            </div>
           </div>
           <Link href="/merken" className={styles.brandsAllLink}>
             Bekijk alle merken die wij bedienen →
