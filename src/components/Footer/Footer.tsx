@@ -38,23 +38,6 @@ export default function Footer() {
   const year = new Date().getFullYear();
   return (
     <>
-      {/* Pre-footer CTA */}
-      <section className={styles.ctaBand}>
-        <div className={styles.ctaBandInner}>
-          <div>
-            <h3>Autosleutel Probleem? Wij Helpen Direct</h3>
-            <p>24/7 mobiele service. Gemiddeld {SITE_CONFIG.responseTime} bij u ter plaatse.</p>
-          </div>
-          <div className={styles.ctaBtns}>
-            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.ctaPhoneBtn} id="footer-phone">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-              {SITE_CONFIG.phone}
-            </a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.ctaWaBtn} id="footer-wa">WhatsApp</a>
-          </div>
-        </div>
-      </section>
-
       <footer className={styles.footer}>
         <div className={styles.footerGrid}>
           {/* Brand column */}
