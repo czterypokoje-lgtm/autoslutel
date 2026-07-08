@@ -1,45 +1,34 @@
 .showcaseWrapper {
   width: 100%;
   margin: 1.5rem 0;
-  overflow: hidden;
+  position: relative;
 }
 
 .sliderViewport {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  padding-bottom: 1rem;
+}
+
+.sliderViewport::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .sliderTrack {
   display: flex;
-  width: 100%;
-  transition: transform 0.55s cubic-bezier(0.25, 1, 0.5, 1);
-  will-change: transform;
-}
-
-.slidePage {
-  width: 100%;
-  flex: 0 0 100%;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
-}
-
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
+  width: max-content;
+  padding: 0 1rem;
 }
 
 .card {
+  scroll-snap-align: start;
+  width: 320px;
+  flex-shrink: 0;
   position: relative;
   border-radius: 16px;
   overflow: hidden;
@@ -47,6 +36,12 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+@media (max-width: 640px) {
+  .card {
+    width: 280px;
+  }
 }
 
 .card:hover {
@@ -59,61 +54,31 @@
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: #0f172a;
 }
 
-/* SLIDER NAVIGATION */
 .sliderNav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 2.2rem;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .arrowBtn {
-  background: rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(15, 23, 42, 0.15);
-  color: #0f172a;
-  width: 44px;
-  height: 44px;
+  background: #e2e8f0;
+  border: none;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  font-size: 1.2rem;
-  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #0f172a;
+  font-size: 1.25rem;
   transition: all 0.2s ease;
 }
 
 .arrowBtn:hover {
-  background: #f97316;
-  border-color: #f97316;
-  color: #ffffff;
-  transform: scale(1.08);
-}
-
-.dots {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(15, 23, 42, 0.25);
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0;
-}
-
-.dotActive {
-  width: 28px;
-  border-radius: 999px;
-  background: #f97316;
+  background: #cbd5e1;
 }

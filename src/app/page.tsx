@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 import FaqSection from '@/components/FaqSection/FaqSection';
+import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
 
 const InstantServiceMap = dynamic(() => import('@/components/InstantServiceMap'), { ssr: true });
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
@@ -526,24 +527,10 @@ export default function HomePage() {
               <div className="stars">★★★★★</div>
               <span style={{fontSize: '0.8rem', color: 'var(--gray-500)'}}>247 Google beoordelingen</span>
             </div>
-          </div>
+          <h2 className="text-center" style={{ marginBottom: '1rem' }}>Ervaringen</h2>
           <div className={styles.reviewGrid}>
-            {[
-              { text: 'Alle BMW sleutels kwijt. Dealer: 2 weken en €1.400. Autosleutel24: zelfde dag, €580. Aanrader.', name: 'Mark V.', city: 'Utrecht', car: 'BMW X5' },
-              { text: 'Golf 8 SFD probleem. Geen enkele andere specialist kon het oplossen. Binnen 3 uur gereed.', name: 'Peter D.', city: 'Tilburg', car: 'VW Golf 8' },
-              { text: 'Mercedes Sprinter vloot — vaste prijsafspraken, prioriteit service. Perfecte B2B partner.', name: 'R. Jacobs', city: 'Breda', car: 'Mercedes Sprinter' },
-            ].map((r, i) => (
-              <div key={i} className={styles.reviewCard}>
-                <div className="stars">★★★★★</div>
-                <p className={styles.reviewText}>&quot;{r.text}&quot;</p>
-                <div className={styles.reviewMeta}>
-                  <div className={styles.reviewAvatar}>{r.name[0]}</div>
-                  <div>
-                    <strong>{r.name}</strong>
-                    <span>{r.city} — {r.car}</span>
-                  </div>
-                </div>
-              </div>
+            {SHARED_GOOGLE_REVIEWS.map((r, i) => (
+              <GoogleReviewCard key={i} review={r} />
             ))}
           </div>
         </div>

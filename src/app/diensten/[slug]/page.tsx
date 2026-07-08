@@ -5,6 +5,7 @@ import Script from 'next/script';
 import { DIENSTEN } from '@/config/diensten';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import styles from './page.module.css';
@@ -47,53 +48,6 @@ function getStableHash(str: string): number {
   return Math.abs(hash);
 }
 
-function generateServiceReviews(serviceTitle: string, slug: string) {
-  const hash = getStableHash(slug);
-  const titleLower = serviceTitle.toLowerCase();
-  const templates = [
-    {
-      text: `Geweldige ervaring met ${titleLower}! De monteur was binnen 20 minuten ter plaatse in Utrecht en loste het professioneel en volledig schadevrij op. Stukken goedkoper dan de officiële dealer.`,
-      name: 'Johan de Boer',
-      city: 'Utrecht',
-      car: 'Volkswagen Golf'
-    },
-    {
-      text: `Onze reserve autosleutel reageerde niet meer. Autosleutel24 heeft ter plekke de service ${titleLower} uitgevoerd. Snelle, eerlijke en transparante communicatie vooraf. Zeer aan te bevelen!`,
-      name: 'Marieke van Leeuwen',
-      city: 'Amersfoort',
-      car: 'Ford Fiesta'
-    },
-    {
-      text: `Buitengewoon tevreden over de snelle hulp bij ${titleLower}. De monteur kwam direct naar mijn werkplek en pakt het grondig aan. Helemaal top en netjes inclusief 12 maanden schriftelijke garantie!`,
-      name: 'Sven Peters',
-      city: 'Hilversum',
-      car: 'BMW 3 Serie'
-    },
-    {
-      text: `Zeer deskundige slotenmaker die direct ter plaatse was voor ${titleLower}. Netjes vooraf een vaste prijs afgesproken en achteraf direct een officiële factuur ontvangen voor mijn verzekering.`,
-      name: 'Annelies Bakker',
-      city: 'Almere',
-      car: 'Opel Corsa'
-    },
-    {
-      text: `Sleutelprobleem vakkundig en zonder schade opgelost via ${titleLower}. Erg handig dat hun mobiele servicebus direct naar je toe komt, dat scheelt een hoop wachttijd én dure sleepkosten naar de garage.`,
-      name: 'Daan van Dijk',
-      car: 'Peugeot 208',
-      city: 'Nieuwegein'
-    }
-  ];
-
-  const idx1 = hash % templates.length;
-  const idx2 = (hash + 1) % templates.length;
-  const idx3 = (hash + 2) % templates.length;
-
-  return [
-    templates[idx1],
-    templates[idx2],
-    templates[idx3]
-  ];
-}
-
 export default async function DienstPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const service = DIENSTEN.find(s => s.slug === slug);
@@ -101,7 +55,6 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
 
   const p1Cities = CITIES.filter(c => c.priority === 'P1').slice(0, 8);
   const popularBrands = BRANDS.filter(b => b.priority === 'P1').slice(0, 8);
-  const serviceReviews = generateServiceReviews(service.title, slug);
 
   const isOpening = ['autodeur-openen', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto'].includes(slug);
   const isKey = ['sleutel-bijmaken', 'autosleutel-kwijt', 'alle-sleutels-kwijt-auto', 'reserve-autosleutel', 'transponder-programmeren', 'smart-key-programmeren'].includes(slug);
@@ -517,18 +470,8 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 </div>
               </div>
               <div className={styles.reviewGrid}>
-                {serviceReviews.map((r, i) => (
-                  <div key={i} className={styles.reviewCardSection}>
-                    <div className={styles.ratingStarsReview}>★★★★★</div>
-                    <p className={styles.reviewText}>&quot;{r.text}&quot;</p>
-                    <div className={styles.reviewMetaSection}>
-                      <div className={styles.reviewAvatar}>{r.name[0]}</div>
-                      <div>
-                        <strong style={{ display: 'block', color: '#0f172a', fontSize: '0.9rem' }}>{r.name}</strong>
-                        <span style={{ color: '#64748b', fontSize: '0.8rem' }}>{r.city} — {r.car}</span>
-                      </div>
-                    </div>
-                  </div>
+                {SHARED_GOOGLE_REVIEWS.map((review, i) => (
+                  <GoogleReviewCard key={i} review={review} />
                 ))}
               </div>
             </section>
