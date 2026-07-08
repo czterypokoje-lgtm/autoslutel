@@ -159,6 +159,7 @@ export default function HomePage() {
           alt="Autosleutel specialist Utrecht en Amsterdam mobiele service - Sleutel bijmaken en auto openen op locatie"
           fill
           priority
+          fetchPriority="high"
           quality={82}
           className={styles.heroBackground}
           sizes="100vw"
