@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
 import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer/Footer';
@@ -7,13 +6,6 @@ import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
 import UrgencyBanner from '@/components/UrgencyBanner/UrgencyBanner';
 import StickyCallBar from '@/components/StickyCallBar/StickyCallBar';
 import { SITE_CONFIG } from '@/config/site.config';
-
-const ibmPlexSans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  variable: '--font-ibm',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.domain),
@@ -73,13 +65,16 @@ const websiteSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl" className={ibmPlexSans.variable}>
+    <html lang="nl">
       <head>
         <meta name="theme-color" content="#0d2137" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <script id="schema-organization" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         <script id="schema-website" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
       </head>
-      <body style={{ fontFamily: 'var(--font-ibm, IBM Plex Sans, sans-serif)' }}>
+      <body style={{ fontFamily: "'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
         <UrgencyBanner />
         <Navigation />
         {children}

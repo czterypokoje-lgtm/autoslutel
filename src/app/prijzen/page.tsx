@@ -168,7 +168,7 @@ export default function PrijzenPage() {
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/autosleutel_programmeren_op_locatie_utrecht_amsterdam.webp"
-                  alt="Autosleutel programmeren en inleren op locatie Utrecht en Amsterdam - werkplaats in mobiele servicebus"
+                  alt="Autosleutel programmeren en inleren op locatie in Utrecht en Amsterdam - werkplaats in mobiele servicebus (GPS Utrecht & Amsterdam)"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImg}
