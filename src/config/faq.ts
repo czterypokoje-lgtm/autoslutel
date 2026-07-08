@@ -129,6 +129,54 @@ export const FAQ_GLOBAL: FaqItem[] = [
     q: 'Geven jullie garantie op uw werk?',
     a: 'Ja, wij geven 12 maanden garantie op alle sleutels en programmeerwerkzaamheden. Als uw sleutel binnen een jaar niet meer werkt door een fout van ons, lossen we het gratis op.',
   },
+  {
+    q: 'Autosleutel bijmaken kosten vergelijken in Nederland',
+    a: 'Wanneer u de kosten voor het bijmaken van een autosleutel vergelijkt in Nederland, ziet u grote verschillen. Autodealers rekenen vaak tussen de €250 en €600 inclusief programmeerkosten en wachttijden. Onafhankelijke mobiele specialisten zoals Autosleutel24 bieden dezelfde OEM-kwaliteit sleutels aan vanaf €89 tot €350 (voor smart keys), inclusief frezen en inleren op uw locatie. U bespaart hierdoor tot wel 50%.',
+  },
+  {
+    q: 'Waar kan ik snel een autosleutel bijmaken in mijn buurt?',
+    a: 'Voor de snelste service in uw buurt hoeft u de deur niet uit. Autosleutel24 opereert als een volledig mobiele werkplaats in regio Midden-Nederland (Utrecht, Amsterdam, Amersfoort, Almere). Wij komen direct naar uw auto toe, thuis of op het werk, en maken ter plekke binnen 30 minuten een nieuwe sleutel.',
+  },
+  {
+    q: 'Welke bedrijven bieden autosleutel bijmaken met spoed aan?',
+    a: 'Autosleutel24 is gespecialiseerd in spoedservices voor autosleutels. Wij zijn 24 uur per dag, 7 dagen per week bereikbaar via 06 11 75 12 31. Bij noodgevallen (zoals buitensluiting of alle sleutels kwijt) zijn wij in de regio Utrecht vaak al binnen 30 minuten ter plaatse om u direct weer op weg te helpen.',
+  },
+  {
+    q: 'Hoe werkt het proces van een autosleutel bijmaken bij een dealer versus specialist?',
+    a: 'Bij een dealer moet u een afspraak maken, de auto brengen, en soms 2 weken wachten op een fabriekssleutel, waarna u hoge programmeerkosten betaalt. Bij een mobiele specialist zoals Autosleutel24 komen wij naar uw locatie, decoderen wij het slot of de boordcomputer, frezen we de sleutel in onze bus met een CNC-machine, en programmeren we de transponder direct in via OBD2. Dit kost slechts 30 tot 60 minuten.',
+  },
+  {
+    q: 'Is het mogelijk om een autosleutel bij te maken zonder originele sleutel?',
+    a: 'Ja, dit heet de All Keys Lost (AKL) procedure. Wij kunnen een compleet nieuwe sleutel maken zonder origineel. Met speciale software lezen we de beveiligingscode (pincode) uit de ECU van uw auto. Vervolgens snijden we een nieuwe sleutelbaard op maat en leren we de nieuwe transponder in. De verloren sleutels worden tevens digitaal geblokkeerd.',
+  },
+  {
+    q: 'Welke garantie krijg ik bij het bijmaken van een autosleutel?',
+    a: 'Bij Autosleutel24 krijgt u standaard 12 maanden garantie op zowel de fysieke sleutel (hardware en batterij) als op de programmering (software). Omdat wij werken met hoogwaardige OEM-kwaliteit sleutels en geavanceerde programmeerapparatuur, garanderen wij dat de sleutel perfect functioneert. Wij gaan pas weg als u de sleutel succesvol heeft getest.',
+  },
+  {
+    q: 'Kan ik een autosleutel bijmaken die ook startonderbreker ondersteunt?',
+    a: 'Ja. Vrijwel alle auto\'s gebouwd na 1995 hebben een ingebouwde startonderbreker (immobilizer). Elke sleutel die wij leveren bevat de juiste transponderchip (zoals ID46, ID48, of Megamos Crypto). Wij programmeren deze chip direct in de startonderbreker-module van uw voertuig, zodat de auto veilig start.',
+  },
+  {
+    q: 'Wat zijn de beste winkels voor autosleutel bijmaken met afstandsbediening?',
+    a: 'Voor een autosleutel met afstandsbediening kunt u het beste terecht bij een gespecialiseerde automotive slotenmaker zoals Autosleutel24 in plaats van een standaard schoenmaker. Wij hebben de specifieke uitleesapparatuur om de afstandsbediening en centrale deurvergrendeling digitaal te synchroniseren met het CAN-bus of LIN-bus systeem van uw auto.',
+  },
+  {
+    q: 'Wat heb ik nodig om een autosleutel bij te maken bij een gespecialiseerde service?',
+    a: 'Om veiligheidsredenen en ter preventie van diefstal vragen wij u altijd om twee documenten: 1) Een geldig legitimatiebewijs (paspoort, ID-kaart of rijbewijs). 2) Het kentekenbewijs (Deel 1B of de kentekencard) dat aantoont dat u de rechtmatige eigenaar van het voertuig bent. Zonder deze documenten maken wij geen sleutels bij.',
+  },
+  {
+    q: 'Zijn er mobiele diensten die autosleutels bijmaken aan huis?',
+    a: 'Ja, Autosleutel24 is een 100% mobiele autosleutelservice. Onze bedrijfswagens zijn uitgerust met laser-freesmachines, stroomvoorziening en alle nodige OBD-diagnosesoftware. Hierdoor kunnen wij uw nieuwe autosleutel volledig aan huis, op uw werk of langs de snelweg frezen en inleren.',
+  },
+  {
+    q: 'Zelf autosleutel programmeren handleiding, is dat mogelijk?',
+    a: 'Bij oudere auto\'s (voor 2005) is er soms een handmatige inleerprocedure voor de afstandsbediening, zoals het meerdere keren omdraaien van het contactslot. Echter, de transponderchip (voor de startonderbreker) kan uitsluitend worden geprogrammeerd met professionele OBD-apparatuur en beveiligde pincodes. Zelf programmeren van moderne sleutels is onmogelijk zonder deze dure apparatuur. Schakel hiervoor Autosleutel24 in.',
+  },
+  {
+    q: 'Welke types autosleutels kunnen tegenwoordig worden bijgemaakt?',
+    a: 'Autosleutel24 kan alle typen sleutels bijmaken: 1) Traditionele mechanische sleutels. 2) Transpondersleutels (met startonderbreker). 3) Klapsleutels met afstandsbediening (centrale vergrendeling). 4) Smart Keys / Keyless Entry fobs voor push-to-start systemen. 5) Insteeksleutels (zoals voor Volkswagen Passat of Audi).',
+  },
 ];
 
 // ── SERVICE-SPECIFIC FAQs ──
