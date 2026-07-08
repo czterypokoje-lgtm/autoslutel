@@ -8,8 +8,8 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 import FaqSection from '@/components/FaqSection/FaqSection';
 import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
+import InstantServiceMap from '@/components/InstantServiceMap';
 
-const InstantServiceMap = dynamic(() => import('@/components/InstantServiceMap'), { ssr: true });
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
 export const metadata: Metadata = {
