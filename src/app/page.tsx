@@ -457,14 +457,15 @@ export default function HomePage() {
               <p className={styles.serviceAreaSub}>
                 Dankzij onze geavanceerde GPS-gestuurde routeplanning zijn onze monteurs meestal binnen <strong>20 tot 60 minuten</strong> ter plaatse. Geen wegsleepkosten naar de dealer en altijd 100% schadevrij geopend en geprogrammeerd. Klik op uw regio voor lokale tarieven en aankomsttijden:
               </p>
-              <div className={styles.serviceAreaPills}>
+              <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', marginTop: '1.5rem', marginBottom: '1.5rem', lineHeight: '1.8', color: 'var(--gray-700)' }}>
                 {serviceAreaCities.map((city) => (
-                  <Link key={city.slug} href={`/steden/${city.slug}`} className={styles.cityPill}>
-                    <span>📍 {city.name}</span>
-                    <span className={styles.cityPillTime}>{city.time}</span>
-                  </Link>
+                  <li key={city.slug} style={{ marginBottom: '0.25rem' }}>
+                    <Link href={`/steden/${city.slug}`} style={{ color: 'var(--navy-600)', textDecoration: 'underline', fontWeight: 500 }}>
+                      {city.name}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
               <div style={{ marginTop: '0.75rem' }}>
                 <Link href="/steden" className="btn btn-navy">Bekijk alle 45+ steden in ons werkgebied</Link>
               </div>
