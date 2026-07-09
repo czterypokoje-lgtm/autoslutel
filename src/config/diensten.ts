@@ -221,7 +221,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Wat is het verschil tussen FBS3 en FBS4 bij Mercedes?', a: 'FBS3 is de oudere generatie (inleersleutels via infrarood). FBS4 is de nieuwste generatie (2014+). Wij hebben speciale hardware (zoals G-Box 3 en AVDI) om ook complexe FBS3-systemen en specifieke FBS4-sleutels succesvol te programmeren.' },
       { q: 'Kan een verloren Keyless sleutel worden misbruikt?', a: 'Nee. Bij het inleren van de nieuwe smart key wissen wij de verloren of gestolen sleutel direct uit het geheugen van het voertuig. De verloren sleutel kan de auto dan niet meer openen of starten.' }
     ],
-    relatedSlugs: ['sleutel-bijmaken', 'transponder-programmeren', 'afstandsbediening-bijmaken', 'ghost-immobiliser']
+    relatedSlugs: ['sleutel-bijmaken', 'transponder-programmeren', 'afstandsbediening-bijmaken']
   },
   {
     slug: 'reservesleutel-maken',
@@ -464,74 +464,4 @@ export const DIENSTEN: Service[] = [
       { q: 'Moet ik na contactslot-reparatie een andere sleutel gebruiken?', a: 'Nee. Wij bouwen het nieuwe mechanische slot zo om dat het perfect past op de code van uw huidige deursleutels. U behoudt dus gewoon één sleutel voor de hele auto.' }
     ],
     relatedSlugs: ['autosleutels-repareren', 'sleutel-afgebroken-in-slot', 'transponder-programmeren', 'alle-sleutels-kwijt-auto']
-  },
-
-  // ── 6. AUTO BEVEILIGING ───────────────────────────────────
-  {
-    slug: 'auto-beveiliging',
-    title: 'Auto Beveiliging',
-    metaTitle: 'Auto Beveiliging | Autoalarm & Ghost Immobiliser Utrecht',
-    metaDesc: 'Beveilig uw auto tegen relay attacks en sleutelklonen. Wij installeren autoalarmen en Ghost Immobilisers op locatie. 12 mnd garantie. Bel direct!',
-    h1: 'Auto Beveiliging — Bescherm Uw Auto Tegen Moderne Diefstal',
-    intro: 'Moderne autodieven maken gebruik van signaalversterkers (relay attacks) en OBD-keyprogrammers om auto\'s binnen enkele seconden geluidloos mee te nemen. Wij beveiligen uw auto met gecertificeerde CAN-bus startonderbrekers (zoals de Ghost Immobiliser) en alarmsystemen, zodat uw voertuig maximaal beschermd is.',
-    system: 'Autowatch Ghost II CAN-bus, SCM goedgekeurde klasse 3/4/5 alarmen',
-    priceFrom: 'Vanaf €299',
-    duration: '60–180 minuten',
-    steps: [
-      'Analyse van de kwetsbaarheden van uw specifieke autotype',
-      'Professionele en onzichtbare inbouw van het beveiligingssysteem',
-      'Programmering van de CAN-bus software en PIN-codes',
-      'Demonstratie van het systeem aan de klant'
-    ],
-    faq: [
-      { q: 'Wat is een relay attack?', a: 'Bij een relay attack vangen dieven het signaal van uw keyless sleutel op (bijvoorbeeld terwijl deze in uw gang ligt) en sturen dit door naar een ontvanger bij uw auto. De auto denkt dat de sleutel dichtbij is, opent en start. Een extra startbeveiliging voorkomt dit.' },
-      { q: 'Is auto beveiliging op locatie in te bouwen?', a: 'Ja. Onze monteurs bouwen alarmsystemen en startonderbrekers professioneel in bij u op de oprit of in uw garage.' }
-    ],
-    relatedSlugs: ['ghost-immobiliser', 'autoalarm-programmeren', 'smart-key-programmeren']
-  },
-  {
-    slug: 'autoalarm-programmeren',
-    title: 'Autoalarm Programmeren',
-    metaTitle: 'Autoalarm Programmeren | Alarm Storing Oplossen Utrecht',
-    metaDesc: 'Autoalarm storing of programmeren? Wij lezen uw alarmmodule uit en deactiveren of configureren alarmsystemen op locatie. 24/7 storingsdienst.',
-    h1: 'Autoalarm Programmeren & Storingshulp op Locatie',
-    intro: 'Heeft u last van een alarmstoring waarbij de sirene continu loeit, of wilt u een fabrieksalarm (SCM klasse 3/4) programmeren of uitschakelen? Wij kunnen via OBD-diagnose uw alarmmodule uitlezen, foutcodes wissen of alarmsystemen correct configureren.',
-    system: 'SCM Klasse 3/4/5, Clifford, Defa, Cobra alarmen, OBD diagnostic scanners',
-    priceFrom: 'Vanaf €120',
-    duration: '30–90 minuten',
-    steps: [
-      'Uitlezen van de alarmfouten via de boordcomputer (OBD)',
-      'Opsporen van defecte sensoren of kabelbreuken',
-      'Herprogrammeren of tijdelijk deactiveren van de alarmmodule',
-      'Testen van de hellingshoek-, interieur- en deursensoren'
-    ],
-    faq: [
-      { q: 'Kan een af fabriek alarm tijdelijk worden uitgeschakeld?', a: 'Ja. Als het alarm door een storing blijft afgaan, kunnen wij de module elektronisch deactiveren via de software, zodat u in ieder geval rustig kunt rijden en slapen.' },
-      { q: 'Ondersteunt u aftermarket alarmen?', a: 'Ja, wij kunnen storingen diagnosticeren in zowel originele fabriekssystemen als naderhand ingebouwde systemen (Cobra, Clifford, Defa).' }
-    ],
-    relatedSlugs: ['auto-beveiliging', 'ghost-immobiliser', 'smart-key-programmeren']
-  },
-  {
-    slug: 'ghost-immobiliser',
-    title: 'Ghost Immobiliser',
-    metaTitle: 'Ghost Immobiliser Installeren | CAN-Bus Startonderbreker',
-    metaDesc: 'Laat een Ghost Immobiliser installeren. Ultieme onzichtbare startbeveiliging via CAN-bus. Beveiligd tegen keyless-cloning. Bel voor info!',
-    h1: 'Ghost Immobiliser Installatie — De Ultieme Onzichtbare Startbeveiliging',
-    intro: 'De Autowatch Ghost Immobiliser is de meest effectieve beveiliging tegen moderne autodiefstal. Het is een minuscuul apparaatje dat onzichtbaar in de bekabeling van uw auto wordt weggewerkt. Het startonderbrekingssysteem werkt via het CAN-bus netwerk: de auto start pas nadat u een persoonlijke PIN-code invoert via de bestaande knoppen op uw stuur of dashboard (bijv. volumeknoppen of cruisecontrol).',
-    system: 'Autowatch Ghost II CAN-bus Protection system',
-    priceFrom: 'Vanaf €499 inclusief montage',
-    duration: '90–150 minuten',
-    steps: [
-      'Het systeem wordt onzichtbaar ingebouwd in het CAN-bus netwerk van de auto',
-      'We programmeren de door u gewenste unieke knoppencombinatie (PIN-code)',
-      'We leggen uit hoe de Service/Valet-modus werkt (voor garagebezoeken)',
-      'U ontvangt de unieke noodcodekaart'
-    ],
-    faq: [
-      { q: 'Kan een dief de Ghost Immobiliser vinden of omzeilen?', a: 'Nee. Omdat het apparaatje geen radiosignalen (zoals RF of Bluetooth) uitzendt en geen klikgeluiden maakt, is het onvindbaar voor signaalscanners. Zelfs als een dief uw sleutel heeft gekloond of de OBD-poort hackt, zal de motor weigeren te starten.' },
-      { q: 'Behoud ik mijn fabrieksgarantie na installatie?', a: 'Ja. De Ghost Immobiliser maakt geen fysieke wijzigingen in de originele software van het voertuig en er worden geen draden doorgeknipt. Het luistert en communiceert uitsluitend via het CAN-bus netwerk.' },
-      { q: 'Hoeveel knoppen kan de PIN-code bevatten?', a: 'De PIN-code kan bestaan uit een combinatie van 4 tot 20 knoppen, waardoor het kraken van de code statistisch onmogelijk is.' }
-    ],
-    relatedSlugs: ['auto-beveiliging', 'autoalarm-programmeren', 'smart-key-programmeren']
-  }
 ];

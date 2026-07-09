@@ -49,14 +49,6 @@ const DienstenStructure = [
       { href: '/diensten/contactslot-reparatie', label: 'Contactslot Reparatie' },
     ]
   },
-  {
-    title: 'Auto Beveiliging',
-    href: '/diensten/auto-beveiliging',
-    subs: [
-      { href: '/diensten/autoalarm-programmeren', label: 'Autoalarm Programmeren' },
-      { href: '/diensten/ghost-immobiliser', label: 'Ghost Immobiliser' },
-    ]
-  }
 ];
 
 const MerkenLinks = [

@@ -117,18 +117,6 @@ export const SERVICES: Service[] = [
     color: '#7c3aed',
     excerpt: 'Waterschade, ongeval, gebruikte modules — wij redden uw auto waar dealers stoppen. ISN extractie, ECU klonen, CP verwijdering.',
   },
-  {
-    slug: 'ghost-immobiliser-installeren',
-    title: 'Ghost Immobiliser Installatie',
-    shortTitle: 'Ghost',
-    icon: '👻',
-    price: 'Vanaf €399',
-    metaTitle: 'Ghost Immobiliser Installeren Utrecht | CAN Bus Beveiliging',
-    metaDescription: 'Ghost immobiliser installatie in Utrecht. CAN bus bescherming tegen sleutel klonen & relay attacks. BMW, Mercedes, Audi, VW, Toyota. Verzekering goedgekeurd.',
-    keywords: ['ghost immobiliser utrecht', 'CAN bus immobilizer', 'relay attack bescherming', 'auto beveiliging utrecht'],
-    h1: 'Ghost Immobiliser Installatie — Ultieme CAN Bus Bescherming',
-    color: '#059669',
-    excerpt: 'TASSA gecertificeerd, ondetecteerbaar voor dieven, verzekering goedgekeurd. De beste anti-diefstal oplossing voor uw auto.',
   },
   {
     slug: 'bedrijfswagen-sleutel-beheer',
@@ -386,24 +374,6 @@ export function getRelatedBlogPosts(serviceSlug: string) {
       'autosleutel-kwijt-wat-nu-stappenplan',
       'verzekering-dekt-autosleutel-vervangen',
       'dealer-vs-mobiele-sleutelmaker',
-    ],
-    // used as tag in the auto-slotenmaker page.tsx
-    'auto-beveiliging': [
-      'auto-slotenmaker-ultieme-gids-snel-hulp',
-      'auto-openen-zonder-sleutel-schadevrij',
-      'autosleutel-kwijt-wat-nu-stappenplan',
-      'ghost-immobiliser-utrecht',
-      'faraday-pouch-bescherming-relay-attack',
-    ],
-    // ── Ghost immobiliser ─────────────────────────────────────────
-    'ghost-immobiliser': [
-      'ghost-immobiliser-utrecht',
-      'faraday-pouch-bescherming-relay-attack',
-    ],
-    'ghost-immobiliser-installeren': [
-      'ghost-immobiliser-utrecht',
-      'faraday-pouch-bescherming-relay-attack',
-      'autosleutel-gestolen-wat-te-doen',
     ],
     // ── Autosleutels repareren ────────────────────────────────────
     'autosleutels-repareren': [

@@ -102,7 +102,6 @@ export default function Footer() {
             <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Blog &amp; Advies</h4>
             <ul className={styles.linkList}>
               <li><Link href="/blog/autosleutel-batterij-vervangen-stappenplan">Batterij Vervangen</Link></li>
-              <li><Link href="/blog/ghost-immobiliser-utrecht">Ghost Immobiliser</Link></li>
               <li><Link href="/blog/autosleutel-gestolen-wat-te-doen">Sleutel Gestolen?</Link></li>
             </ul>
           </div>

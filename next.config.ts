@@ -54,6 +54,37 @@ const nextConfig: NextConfig = {
         destination: '/diensten/auto-openen-zonder-sleutel',
         permanent: true,
       },
+      // ── Verwijderde beveiliging pagina's → auto slotenmaker ──────
+      {
+        source: '/diensten/auto-beveiliging',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/diensten/autoalarm-programmeren',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/diensten/ghost-immobiliser',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/steden/:citySlug/auto-beveiliging',
+        destination: '/steden/:citySlug',
+        permanent: true,
+      },
+      {
+        source: '/steden/:citySlug/autoalarm-programmeren',
+        destination: '/steden/:citySlug',
+        permanent: true,
+      },
+      {
+        source: '/steden/:citySlug/ghost-immobiliser',
+        destination: '/steden/:citySlug',
+        permanent: true,
+      },
     ];
   },
 };

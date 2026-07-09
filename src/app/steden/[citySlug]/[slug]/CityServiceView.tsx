@@ -309,13 +309,6 @@ const PILLAR_DETAILS: Record<string, PillarDetail> = {
     method: 'ultrasone reiniging van printplaten bij waterschade en microsolderen van defecte contacten, knoppen en transponderspoelen onder de microscoop.',
     keywords: ['autosleutel reparatie', 'sleutelbehuizing vervangen', 'knoppen repareren autosleutel', 'contactslot repareren', 'Mercedes EIS ELV reparatie'],
   },
-  'auto-beveiliging': {
-    name: 'Auto Beveiliging',
-    chips: 'CAN-bus data encryptie en SCM klasse 3/4/5 protocollen',
-    equipment: 'Autowatch Ghost II CAN-bus startonderbreker, SCM goedgekeurde alarmen en CAN-scanners',
-    method: 'onzichtbare integratie in de originele CAN-bus bekabeling van het voertuig zonder fysieke draden door te knippen.',
-    keywords: ['auto beveiliging', 'Ghost Immobiliser installeren', 'CAN-bus startonderbreker', 'autoalarm programmeren', 'relay attack beveiliging'],
-  },
 };
 
 function getPillarKey(serviceSlug: string): string {
@@ -333,9 +326,6 @@ function getPillarKey(serviceSlug: string): string {
   }
   if (['autosleutels-repareren', 'behuizing-vervangen', 'knoppen-repareren', 'contactslot-reparatie'].includes(serviceSlug)) {
     return 'autosleutels-repareren';
-  }
-  if (['auto-beveiliging', 'autoalarm-programmeren', 'ghost-immobiliser'].includes(serviceSlug)) {
-    return 'auto-beveiliging';
   }
   return 'sleutel-bijmaken'; // default
 }
@@ -576,14 +566,6 @@ function generateSteps(service: Service, city: City) {
       { title: 'Wij komen naar uw locatie', text: `Onze monteur komt met een mobiele werkplaats naar u toe in ${city.city} (gemiddeld binnen ${city.travelTime}).` },
       { title: 'Microsolderen & Testen', text: `We repareren printplaten, vervangen behuizingen of drukknoppen en meten de sleutel door.` },
       { title: 'Garantie & Oplevering', text: `U test uw herstelde sleutel. Wij leveren deze op met 12 maanden garantie en een factuur.` }
-    ];
-  }
-  if (pKey === 'auto-beveiliging') {
-    return [
-      { title: 'Vrijblijvend advies', text: `Neem contact op om de beste beveiliging (bijv. Ghost of alarm) voor uw automodel te bespreken.` },
-      { title: 'Inbouw op uw locatie', text: `Wij bouwen het beveiligingssysteem onzichtbaar in bij u voor de deur in ${city.city}.` },
-      { title: 'Software configuratie', text: `We configureren de CAN-bus startonderbreking en stellen samen uw persoonlijke pincode in.` },
-      { title: 'Uitleg & Certificaat', text: `U krijgt een demonstratie en ontvangt de unieke noodcodekaart en de handleiding.` }
     ];
   }
   return [
