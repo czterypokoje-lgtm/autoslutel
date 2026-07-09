@@ -46,111 +46,165 @@ export default function MerkenPage() {
       </section>
 
       {/* Main Content Area */}
-      <div className="container" style={{ padding: '3.5rem 2rem', maxWidth: '800px', margin: '0 auto' }}>
+      <div className="container" style={{ padding: '3.5rem 2rem', maxWidth: '1000px', margin: '0 auto' }}>
         
-        {/* Intro copy for E-E-A-T & local context */}
-        <div style={{ marginBottom: '3rem', fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--gray-800)' }}>
-          <p>
-            Als gecertificeerde autosleutelspecialisten kunnen wij sleutels programmeren en dupliceren voor <strong>meer dan 38 automerken</strong>. Dankzij onze volledig uitgeruste mobiele servicebussen beschikken we over exact dezelfde programmeerapparatuur en databasecodes als de officiële dealers in Utrecht en omgeving.
+        {/* Webmaster-style Services & SEO block */}
+        <div style={{
+          background: '#fff',
+          border: '1px solid var(--gray-200)',
+          borderRadius: '8px',
+          padding: '2rem',
+          marginBottom: '3.5rem',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '1rem', borderBottom: '1px solid var(--gray-200)', paddingBottom: '0.5rem' }}>
+            Onze Sleutelservices &amp; Programmering
+          </h2>
+          <p style={{ fontSize: '0.92rem', color: 'var(--gray-700)', lineHeight: 1.55, marginBottom: '1.5rem' }}>
+            Als mobiele autosleutelspecialist leveren wij een breed scala aan diensten ter plaatse. Wij programmeren uw transpondersleutel, dupliceren uw smart key of openen uw voertuig schadevrij bij buitensluiting. Onze gecertificeerde specialisten werken snel en vakkundig.
           </p>
-          <p style={{ marginTop: '0.75rem' }}>
-            Hieronder vindt u ons volledige service-overzicht per merk. Klik op een van de onderstaande links om direct de tarieven, ondersteunde modellen en technische specificaties voor uw merk te bekijken.
-          </p>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+            gap: '1rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Autosleutel bijmaken</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Reservesleutels frezen en inleren voor alle merken.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Transponder programmeren</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Immobilizer chips coderen en synchroniseren.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Smart key inleren</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Keyless entry en comfortsleutels aanmelden op de ECU.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Schadevrij auto openen</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Lishi lockpicking bij buitensluiting of sleutel in auto.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Sleutelbehuizing reparatie</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Micro-switches solderen en knoopcelbatterijen vervangen.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Contactslot diagnose</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Defecte sloten uitlezen, repareren of deactiveren.</div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* 1. MEEST GEVRAAGD (P1 DETAILED HTML STYLE LIST) */}
-        <div style={{ marginBottom: '4rem' }}>
+        {/* 1. MEEST GEVRAAGD (GRID STYLE WITH CHECKMARKS & ORANGE LINKS) */}
+        <div style={{ marginBottom: '3.5rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
-            Meest Gevraagde Automerken (Mobiel Programmeren)
+            Meest Gevraagde Automerken (Mobiel Coderen)
           </h2>
           
-          {p1Brands.map(b => (
-            <div key={b.slug} style={{ marginBottom: '2.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--gray-200)' }}>
-              <h3 style={{ fontSize: '1.05rem', margin: '0 0 0.5rem 0' }}>
-                <Link 
-                  href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} 
-                  id={`merk-${b.slug}`}
-                  style={{ color: '#1a56db', textDecoration: 'underline', fontWeight: 700 }}
-                >
-                  {b.name} Autosleutel Bijmaken &amp; Coderen
-                </Link>
-                <span style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 'normal', marginLeft: '0.5rem' }}>
-                  — 12 maanden garantie
-                </span>
-              </h3>
-              <p style={{ margin: '0 0 0.75rem 0', color: 'var(--gray-700)', fontSize: '0.9rem', lineHeight: 1.55 }}>
-                {b.excerpt || `Volledige mobiele service voor alle ${b.name} autosleutels, afstandsbedieningen en smart keys direct ter plaatse.`}
-              </p>
-              <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', margin: 0, fontSize: '0.85rem', color: 'var(--gray-600)', lineHeight: 1.6 }}>
-                <li><strong>Systemen:</strong> {b.system}</li>
-                {b.models && b.models.length > 0 && (
-                  <li>
-                    <strong>Ondersteunde Modellen:</strong> {b.models.map(m => m.name).slice(0, 8).join(', ')}...
-                  </li>
-                )}
-              </ul>
-              <p style={{ marginTop: '0.75rem', marginBottom: 0 }}>
-                <Link 
-                  href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}
-                  style={{ color: 'var(--orange-500)', fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none' }}
-                >
-                  Bekijk tarieven &amp; modellen voor {b.name} &rarr;
-                </Link>
-              </p>
-            </div>
-          ))}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+            gap: '1.5rem 1rem'
+          }}>
+            {p1Brands.map(b => (
+              <div key={b.slug} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem', lineHeight: '1.2' }}>✓</span>
+                <div>
+                  <Link 
+                    href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} 
+                    id={`merk-${b.slug}`}
+                    style={{ color: 'var(--orange-500)', textDecoration: 'underline', fontWeight: 700, fontSize: '0.95rem' }}
+                  >
+                    {b.name}
+                  </Link>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--gray-500)', marginTop: '0.15rem', lineHeight: 1.35 }}>
+                    {b.name} autosleutel bijmaken • {b.system}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* 2. POPULAIRE MERKEN (P2 LIST STYLE) */}
-        <div style={{ marginBottom: '4rem' }}>
+        {/* 2. POPULAIRE MERKEN (GRID STYLE WITH CHECKMARKS & ORANGE LINKS) */}
+        <div style={{ marginBottom: '3.5rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
             Populaire Automerken
           </h2>
-          <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', margin: 0, fontSize: '0.9rem', color: 'var(--gray-700)', lineHeight: 1.8 }}>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+            gap: '1.5rem 1rem'
+          }}>
             {p2Brands.map(b => (
-              <li key={b.slug} style={{ marginBottom: '0.75rem' }}>
-                <Link 
-                  href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}
-                  id={`merk-${b.slug}`}
-                  style={{ color: '#1a56db', textDecoration: 'underline', fontWeight: 700 }}
-                >
-                  {b.name}
-                </Link>
-                {' '} — Systeem: <strong>{b.system}</strong>.
-                {b.models && b.models.length > 0 && (
-                  <span style={{ color: 'var(--gray-500)', fontSize: '0.8rem' }}>
-                    {' '} (Modellen: {b.models.map(m => m.name).slice(0, 5).join(', ')}...)
-                  </span>
-                )}
-              </li>
+              <div key={b.slug} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem', lineHeight: '1.2' }}>✓</span>
+                <div>
+                  <Link 
+                    href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} 
+                    id={`merk-${b.slug}`}
+                    style={{ color: 'var(--orange-500)', textDecoration: 'underline', fontWeight: 700, fontSize: '0.95rem' }}
+                  >
+                    {b.name}
+                  </Link>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--gray-500)', marginTop: '0.15rem', lineHeight: 1.35 }}>
+                    {b.name} autosleutel programmeren • {b.system}
+                  </div>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
 
-        {/* 3. OVERIGE MERKEN (P3 LIST STYLE) */}
+        {/* 3. OVERIGE MERKEN (GRID STYLE WITH CHECKMARKS & ORANGE LINKS) */}
         <div style={{ marginBottom: '3rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
             Overige Automerken
           </h2>
-          <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', margin: 0, fontSize: '0.9rem', color: 'var(--gray-700)', lineHeight: 1.8 }}>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+            gap: '1.5rem 1rem'
+          }}>
             {p3Brands.map(b => (
-              <li key={b.slug} style={{ marginBottom: '0.75rem' }}>
-                <Link 
-                  href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}
-                  id={`merk-${b.slug}`}
-                  style={{ color: '#1a56db', textDecoration: 'underline', fontWeight: 700 }}
-                >
-                  {b.name}
-                </Link>
-                {' '} — Systeem: <strong>{b.system}</strong>.
-                {b.models && b.models.length > 0 && (
-                  <span style={{ color: 'var(--gray-500)', fontSize: '0.8rem' }}>
-                    {' '} (Modellen: {b.models.map(m => m.name).slice(0, 5).join(', ')}...)
-                  </span>
-                )}
-              </li>
+              <div key={b.slug} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem', lineHeight: '1.2' }}>✓</span>
+                <div>
+                  <Link 
+                    href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} 
+                    id={`merk-${b.slug}`}
+                    style={{ color: 'var(--orange-500)', textDecoration: 'underline', fontWeight: 700, fontSize: '0.95rem' }}
+                  >
+                    {b.name}
+                  </Link>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--gray-500)', marginTop: '0.15rem', lineHeight: 1.35 }}>
+                    {b.name} sleutel inleren • {b.system}
+                  </div>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
 
       </div>
