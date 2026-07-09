@@ -303,6 +303,24 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                     </div>
+                  ) : slug === 'contactslot-reparatie' ? (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(2, 1fr)',
+                      gap: '1rem',
+                      margin: '1.25rem 0'
+                    }}>
+                      <img 
+                        src="/images/seo/contactslot-reparatie-werkplaats-utrecht.webp" 
+                        alt="Contactslot reparatie Utrecht - demonteren en herstellen van defecte mechanische cilinder cilinderslot" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                      <img 
+                        src="/images/seo/contactslot-reparatie-mobiel-amsterdam.webp" 
+                        alt="Contactslot reparatie Amsterdam - mobiele slotenmaker repareert vastgelopen contactslot op locatie" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                    </div>
                   ) : (
                     <img 
                       src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
