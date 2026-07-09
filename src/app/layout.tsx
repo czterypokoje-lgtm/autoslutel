@@ -204,7 +204,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="classification" content="Autosleutelspecialist, Slotenmaker, Auto Locksmith" />
         <meta name="category" content="Automotive, Locksmith Services, Mobile Car Key Programming" />
         <meta name="coverage" content="Utrecht, Amsterdam, Almere, Amersfoort, Nederland" />
-        {/* distribution, rating, revisit-after removed — not recognised by Google, add noise to head */
+        {/* distribution, rating, revisit-after removed — not recognised by Google, add noise to head */}
 
         {/* ── GOOGLE BUSINESS PROFILE LINK ── */}
         <link rel="me" href={SITE_CONFIG.social.google} />
