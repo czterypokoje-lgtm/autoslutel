@@ -48,10 +48,10 @@ const CORE_IMAGES = [
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/autosleutel_merken_bmw_mercedes_volkswagen_audi_toyota_ford_volvo_skoda_honda_nissan_smart_porsche.webp',
-    title: 'Autosleutel Alle Merken — BMW Mercedes VW Audi Toyota',
-    caption: 'Autosleutel24 maakt sleutels voor alle automerken: BMW, Mercedes, VW, Audi, Toyota, Ford, Volvo',
-    geo_location: 'Utrecht, Nederland',
+    url: '/autosleutel-merken-bijmaken-utrecht-amsterdam.webp',
+    title: 'Autosleutel Merken Bijmaken Utrecht en Amsterdam',
+    caption: 'Autosleutel24 maakt sleutels voor alle 38 automerken waaronder BMW, Mercedes, VW, Audi, Toyota, Ford en Volvo in Utrecht en Amsterdam',
+    geo_location: 'Utrecht en Amsterdam, Nederland',
   },
   {
     url: '/images/seo/autosleutel_programmeren_op_locatie_utrecht_amsterdam.webp',
