@@ -111,6 +111,28 @@ export default function AutoSlotenmakerPage() {
       }
     }))
   };
+  const steps = [
+    {
+      num: 1,
+      title: 'Neem contact op',
+      desc: 'Bel of stuur een WhatsApp-bericht. Geef uw automerk, model en exacte locatie door. U ontvangt direct een vaste all-in prijsopgave.'
+    },
+    {
+      num: 2,
+      title: 'Monteur onderweg',
+      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Binnen 30-45 minuten is de bus bij u ter plaatse.'
+    },
+    {
+      num: 3,
+      title: 'Schadevrije opening',
+      desc: 'Met behulp van Lishi lockpicks en specialistisch gereedschap openen we de autodeur of kofferbak 100% schadevrij.'
+    },
+    {
+      num: 4,
+      title: 'Direct weer op weg',
+      desc: 'Indien nodig repareren we uw slot of programmeren we direct een nieuwe sleutel. U betaalt veilig per pin of contant.'
+    }
+  ];
 
   return (
     <>
