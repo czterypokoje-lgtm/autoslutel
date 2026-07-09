@@ -929,8 +929,19 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <h3>Drie soorten autosleutels en hun prijskaartje</h3>
-      
-        De modernste sleutels die u in uw broekzak kunt houden om de auto te openen en te starten. Deze bevatten complexe cryptografische technologie (zoals bij BMW's FEM/BDC systemen of Mercedes FBS3). Het bijmaken en veilig inleren van een Smart Key is precisiewerk. Bij Autosleutel24 kost dit, afhankelijk van het model, tussen de €180 en €350. Ter vergelijking: bij de dealer betaalt u hier vaak tussen de €400 en €650 voor!
+      <h4>1. Standaard Transpondersleutel (Vanaf €149)</h4>
+      <p>
+        Een basis autosleutel, uitgerust met een transponder chip maar zonder knoppen. Voldoende om de deuren handmatig te openen en de motor te starten. Vaak gekozen als noodsleutel.
+      </p>
+
+      <h4>2. Klapsleutel met Afstandsbediening (Vanaf €199 - €349)</h4>
+      <p>
+        De meest voorkomende sleutel voor auto's vanaf ongeveer 2005. Voorzien van een inklapbare baard en drukknoppen voor de centrale vergrendeling. We programmeren zowel de startonderbreker als de afstandsbediening.
+      </p>
+
+      <h4>3. Smart Key / Keyless Entry (Vanaf €299 - €499)</h4>
+      <p>
+        De modernste sleutels die u in uw broekzak kunt houden om de auto te openen en te starten. Deze bevatten complexe cryptografische technologie (zoals bij BMW's FEM/BDC systemen of Mercedes FBS3). Het bijmaken en veilig inleren van een Smart Key is precisiewerk. Bij Autosleutel24 kost dit, afhankelijk van het model, tussen de €299 en €499. Ter vergelijking: bij de dealer betaalt u hier vaak tussen de €400 en €650 voor!
       </p>
 
       <h3>Waarom is Autosleutel24 goedkoper dan de dealer?</h3>
