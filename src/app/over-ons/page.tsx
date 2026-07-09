@@ -102,6 +102,7 @@ export default function OverOnsPage() {
               height: 90,
               borderRadius: '50%',
               objectFit: 'cover',
+              objectPosition: 'top',
               flexShrink: 0,
               border: '3px solid rgba(255,255,255,0.2)',
             }}
@@ -149,8 +150,7 @@ export default function OverOnsPage() {
               style={{
                 width: '100%',
                 borderRadius: '12px',
-                aspectRatio: '3/4',
-                objectFit: 'cover',
+                height: 'auto',
                 marginBottom: '1.5rem',
                 boxShadow: 'var(--shadow-sm)'
               }}

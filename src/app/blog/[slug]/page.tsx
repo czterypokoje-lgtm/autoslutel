@@ -217,6 +217,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 height: 40,
                 borderRadius: '50%',
                 objectFit: 'cover',
+                objectPosition: 'top',
                 flexShrink: 0,
               }}
             />

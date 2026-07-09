@@ -487,13 +487,12 @@ export default function HomePage() {
                 alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24 Utrecht"
                 style={{
                   width: '100%',
-                  maxWidth: '450px',
+                  maxWidth: '380px',
                   borderRadius: '16px',
                   boxShadow: 'var(--shadow-md)',
-                  aspectRatio: '3/4',
-                  objectFit: 'cover',
-                  margin: '0 auto',
-                  display: 'block'
+                  height: 'auto',
+                  display: 'block',
+                  margin: '0 auto'
                 }}
               />
             </div>
