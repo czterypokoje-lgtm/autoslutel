@@ -81,7 +81,12 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
     telephone: SITE_CONFIG.phoneTel,
     address: { '@type': 'PostalAddress', addressLocality: city.city, addressRegion: city.region, addressCountry: city.country },
     geo: { '@type': 'GeoCoordinates', latitude: city.geo.lat, longitude: city.geo.lng },
-    aggregateRating: { '@type': 'AggregateRating', ratingValue: SITE_CONFIG.rating, reviewCount: SITE_CONFIG.reviewCount, bestRating: '5' },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: parseFloat(SITE_CONFIG.rating),
+      reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
+      bestRating: 5,
+    },
     areaServed: {
       '@type': 'GeoCircle',
       geoMidpoint: {

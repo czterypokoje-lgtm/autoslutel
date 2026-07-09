@@ -720,9 +720,9 @@ export function CityServiceView({
     ],
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: SITE_CONFIG.rating,
-      reviewCount: SITE_CONFIG.reviewCount,
-      bestRating: '5',
+      ratingValue: parseFloat(SITE_CONFIG.rating),
+      reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
+      bestRating: 5,
     },
     areaServed: {
       '@type': 'GeoCircle',

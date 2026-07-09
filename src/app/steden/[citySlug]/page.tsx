@@ -121,7 +121,12 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     address: { '@type': 'PostalAddress', addressLocality: city.city, addressRegion: city.region, addressCountry: city.country },
     geo: { '@type': 'GeoCoordinates', latitude: city.geo.lat, longitude: city.geo.lng },
     openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '00:00', closes: '23:59' }],
-    aggregateRating: { '@type': 'AggregateRating', ratingValue: SITE_CONFIG.rating, reviewCount: SITE_CONFIG.reviewCount, bestRating: '5' },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: parseFloat(SITE_CONFIG.rating),
+      reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
+      bestRating: 5,
+    },
     areaServed: {
       '@type': 'GeoCircle',
       geoMidpoint: {
