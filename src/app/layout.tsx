@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   description: `Autosleutel kwijt of defect? Professionele mobiele autosleutelspecialist in Utrecht, Amsterdam, Almere & heel Nederland. Alle merken. Zelfde dag service. Goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
   keywords: [
-    'autosleutelbijmaken', 'autosleutel24', 'autosleutejkwijt', 'autosleutel kwijt',
+    'autosleutelbijmaken', 'autosleutel24', 'autosleutelkwijt', 'autosleutel kwijt',
     'autosleutel bijmaken', 'autosleutel programmeren', 'reservesleutel auto bijmaken',
     'mobiele autoslotenmaker', 'autosleutel bijmaken utrecht', 'transponder sleutel programmeren',
     'BMW autosleutel bijmaken', 'Mercedes sleutel programmeren', 'Volkswagen autosleutel bijmaken',
@@ -64,9 +64,8 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
     },
   },
-  verification: {
-    google: 'YOUR_GOOGLE_SEARCH_CONSOLE_ID', // Replace after verifying in GSC
-  },
+  // Google Search Console: verify via the HTML-tag method in GSC (Settings → Ownership verification → HTML tag)
+  // Paste the <meta name="google-site-verification" content="..."> tag directly in this <head> block
 };
 
 // ── LocalBusiness Schema (replaces Organization — critical for Local Pack) ──
@@ -103,6 +102,8 @@ const localBusinessSchema = {
   hasMap: `https://maps.google.com/?q=${SITE_CONFIG.geo.lat},${SITE_CONFIG.geo.lng}`,
   openingHoursSpecification: [
     {
+      // Google recognises 24/7 when opens=00:00 + closes=23:59 on all 7 days
+      // Using two specs (00:00-12:00 & 12:00-23:59) avoids any midnight ambiguity
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
       opens: '00:00',
@@ -137,10 +138,10 @@ const localBusinessSchema = {
   currenciesAccepted: 'EUR',
   aggregateRating: {
     '@type': 'AggregateRating',
-    ratingValue: SITE_CONFIG.rating,
-    reviewCount: SITE_CONFIG.reviewCount,
-    bestRating: '5',
-    worstRating: '1',
+    ratingValue: parseFloat(SITE_CONFIG.rating),
+    reviewCount: parseInt(SITE_CONFIG.reviewCount, 10), // Must be number type per schema.org spec
+    bestRating: 5,
+    worstRating: 1,
   },
   sameAs: [
     SITE_CONFIG.social.facebook,
@@ -168,11 +169,7 @@ const websiteSchema = {
   description: 'Mobiele autosleutelspecialist — alle merken — 24/7',
   inLanguage: 'nl-NL',
   publisher: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: `${SITE_CONFIG.domain}/?s={search_term_string}`,
-    'query-input': 'required name=search_term_string',
-  },
+  // SearchAction removed — Next.js has no ?s= endpoint; prevents schema error in GSC
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -207,9 +204,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="classification" content="Autosleutelspecialist, Slotenmaker, Auto Locksmith" />
         <meta name="category" content="Automotive, Locksmith Services, Mobile Car Key Programming" />
         <meta name="coverage" content="Utrecht, Amsterdam, Almere, Amersfoort, Nederland" />
-        <meta name="distribution" content="Local" />
-        <meta name="rating" content="4.9/5 — 247 Google Reviews" />
-        <meta name="revisit-after" content="3 days" />
+        {/* distribution, rating, revisit-after removed — not recognised by Google, add noise to head */
 
         {/* ── GOOGLE BUSINESS PROFILE LINK ── */}
         <link rel="me" href={SITE_CONFIG.social.google} />

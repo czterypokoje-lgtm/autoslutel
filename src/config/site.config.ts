@@ -40,7 +40,7 @@ export const SITE_CONFIG = {
   social: {
     facebook: 'https://www.facebook.com/autosleutel24utrecht',
     instagram: 'https://www.instagram.com/autosleutel24',
-    google: 'https://g.page/r/CNX3_review/review',
+    google: 'https://g.page/r/CNX3_review',  // Base GBP URL (no /review suffix — that redirects to review form)
   },
 } as const;
 

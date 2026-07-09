@@ -180,7 +180,7 @@ export default function HomePage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ImageObject",
-            "contentUrl": "https://autosleutel24.nl/autosleutel-utrecht-specialist-mobiel.webp",
+            "contentUrl": "https://www.autosleutel24.nl/autosleutel-utrecht-specialist-mobiel.webp",
             "name": "Mobiele autosleutel specialist Utrecht",
             "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht en omgeving door Autosleutel24.",
             "contentLocation": {
@@ -521,7 +521,7 @@ export default function HomePage() {
               <span style={{fontSize: '0.8rem', color: 'var(--gray-500)'}}>247 Google beoordelingen</span>
             </div>
           </div>
-          <h2 className="text-center" style={{ marginBottom: '1rem' }}>Ervaringen</h2>
+          <h3 className="text-center" style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Ervaringen van klanten</h3>
           <div className={styles.reviewGrid}>
             {SHARED_GOOGLE_REVIEWS.map((r, i) => (
               <GoogleReviewCard key={i} review={r} />
@@ -535,7 +535,7 @@ export default function HomePage() {
       <section className={styles.sectionAlt}>
         <div className="container">
           <p style={{ fontSize: '0.85rem', color: 'var(--gray-500)', textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
-            Klanten vonden ons ook via: <strong>autosleutelbijmaken utrecht</strong>, <strong>autosleutel24</strong>, <strong>autosleutejkwijt</strong>, autosleutel bijmaken kosten, autosleutel programmeren op locatie. Wij zijn de mobiele autoslotenmaker voor heel Nederland.
+            Klanten vonden ons ook via: <strong>autosleutelbijmaken utrecht</strong>, <strong>autosleutel24</strong>, <strong>autosleutelkwijt</strong>, autosleutel bijmaken kosten, autosleutel programmeren op locatie. Wij zijn de mobiele autoslotenmaker voor heel Nederland.
           </p>
         </div>
       </section>
