@@ -306,6 +306,14 @@ export const BLOG_POSTS = [
     publishDate: '2026-07-12',
     readTime: '5 min',
   },
+  {
+    slug: 'auto-slotenmaker-ultieme-gids-snel-hulp',
+    title: 'Auto Slotenmaker: De Ultieme Gids voor Snel Hulp',
+    excerpt: 'Hulp nodig bij een buitensluiting, verloren sleutel of defect autoslot? Lees hier alles over de auto slotenmaker, wat de kosten zijn en hoe u betrouwbare hulp kiest.',
+    keywords: ['auto slotenmaker', 'autoslotenmaker', 'goedkope auto slotenmaker', 'slotenmaker auto openen'],
+    publishDate: '2026-07-13',
+    readTime: '6 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {

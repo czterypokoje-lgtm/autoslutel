@@ -1004,5 +1004,71 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </div>
     </>
   ),
+  'auto-slotenmaker-ultieme-gids-snel-hulp': (
+    <>
+      <h2>Auto Slotenmaker: De Ultieme Gids voor Snel Hulp op Locatie</h2>
+      <p>
+        Als u ooit in een benarde situatie heeft gezeten met uw voertuig — zoals een dichte deur met de sleutels er nog in — weet u hoe cruciaal een betrouwbare <strong>auto slotenmaker</strong> is. In deze complete gids leest u alles over wat een gespecialiseerde slotenmaker voor uw auto doet, met welke kosten u rekening moet houden, en hoe u voorkomt dat u wordt opgelicht door malafide slotenmakers.
+      </p>
+
+      <h3>Wat is een auto slotenmaker?</h3>
+      <p>
+        Een <strong>auto slotenmaker</strong> is een gespecialiseerde professional die zich richt op het schadevrij openen, repareren en vervangen van autosloten en autosleutels. Moderne auto's maken gebruik van uiterst complexe beveiligingssystemen met transponders, cryptografische sleutelcodes en startonderbrekers. Waar een reguliere slotenmaker huissloten opent, beschikt een gespecialiseerde autoslotenmaker over hoogwaardige OBD2-diagnosecomputers en Lishi-decoders om auto-elektronica te programmeren en sloten schadevrij te decoderen.
+      </p>
+      <p>
+        Bij Autosleutel24 zijn onze mobiele bussen ingericht als rijdende werkplaatsen. Wij komen rechtstreeks naar u toe om uw autosleutel bij te maken, defecte micro-switches te solderen of uw deurslot direct ter plekke te herstellen.
+      </p>
+
+      <h3>Veelvoorkomende situaties waarin u een auto slotenmaker nodig heeft</h3>
+      <ul>
+        <li><strong>Buitengesloten (Sleutel in auto):</strong> De deuren vallen in het slot terwijl uw sleutel nog op de stoel of in het contactslot ligt. Wij openen uw deur 100% schadevrij zonder schade aan uw lak of deurrubbers.</li>
+        <li><strong>Autosleutel verloren of gestolen:</strong> Als u al uw sleutels kwijt bent, kunnen wij ter plaatse een nieuwe sleutel slijpen en programmeren. Tevens wissen we de oude, verloren sleutels direct uit het geheugen van de startonderbreker om diefstal te voorkomen.</li>
+        <li><strong>Afgebroken sleutel in het slot:</strong> Een afgebroken sleutelbaard in het portier- of contactslot verwijderen wij vakkundig met speciale extractie-tools, waarna we ter plekke een nieuwe sleutel frezen.</li>
+      </ul>
+
+      <h3>Hoe kiest u de juiste auto slotenmaker?</h3>
+      <p>
+        Het kiezen van een betrouwbare slotenmaker is essentieel, vooral in noodsituaties waarin u snel geholpen wilt worden. Let altijd op de volgende criteria:
+      </p>
+      <ul>
+        <li><strong>Autosleutel-specialisatie:</strong> Zorg ervoor dat de slotenmaker over de juiste diagnoseapparatuur beschikt voor uw specifieke automerk en bouwjaar.</li>
+        <li><strong>Reputatie en recensies:</strong> Controleer onafhankelijke reviews (zoals Google Reviews) om de betrouwbaarheid en klanttevredenheid te verifiëren.</li>
+        <li><strong>Transparante tarieven:</strong> Vraag vooraf altijd om een vaste, all-in prijsopgave (inclusief btw en reiskosten) om verrassingen achteraf te voorkomen. Beloofde starttarieven van €15 tot €29 zijn in 99% van de gevallen een indicatie van malafide praktijken.</li>
+      </ul>
+
+      <h3>Kosten van een auto slotenmaker: Wat kunt u verwachten?</h3>
+      <p>
+        De kosten van een autoslotenmaker hangen af van de benodigde dienst en het type sleutel (mechanisch versus smart key met keyless entry):
+      </p>
+      <ul>
+        <li><strong>Autodeur schadevrij openen:</strong> Gemiddeld tussen de €95 en €150.</li>
+        <li><strong>Autosleutel bijmaken (met werkend origineel):</strong> Vanaf €95 tot €220.</li>
+        <li><strong>Alle autosleutels verloren (All Keys Lost):</strong> Vanaf €190 tot €350, aangezien de slotenmaker het slot handmatig moet decoderen en de startonderbreker via EEPROM of OBD2 moet programmeren.</li>
+      </ul>
+
+      <h3>De rol van geavanceerde technologie</h3>
+      <p>
+        Moderne autosleutels zijn feitelijk kleine computers. Het programmeren van een nieuwe sleutel vereist dat de autoslotenmaker verbinding maakt met het interne netwerk (de CAN-bus) van uw auto om de unieke startcode in te leren. Bij Autosleutel24 maken wij gebruik van de nieuwste CNC-lasersnijmachines en OBD-programmeerapparatuur, waardoor we zelfs de meest beveiligde voertuigen (zoals het MQB-platform van Volkswagen of FBS4 van Mercedes) direct ter plekke kunnen voorzien van een nieuwe sleutel.
+      </p>
+
+      <h3>Veelgestelde vragen over auto slotenmakers</h3>
+      <details style={{ padding: '1rem', border: '1px solid var(--gray-200)', borderRadius: '4px', marginBottom: '0.75rem' }}>
+        <summary style={{ fontWeight: 'bold', cursor: 'pointer', outline: 'none' }}>Hoe lang duurt het voordat een autoslotenmaker ter plaatse is?</summary>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--gray-600)' }}>
+          Gemiddeld is onze mobiele autosleutelservice binnen 30 tot 45 minuten ter plaatse in regio Utrecht, Amsterdam en Midden-Nederland.
+        </p>
+      </details>
+      <details style={{ padding: '1rem', border: '1px solid var(--gray-200)', borderRadius: '4px', marginBottom: '0.75rem' }}>
+        <summary style={{ fontWeight: 'bold', cursor: 'pointer', outline: 'none' }}>Kan een slotenmaker een elektronische autosleutel zonder origineel maken?</summary>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--gray-600)' }}>
+          Ja. Door de deurslotcilinder mechanisch te decoderen kunnen we de insnijding bepalen. Vervolgens programmeren we een nieuwe transponderchip rechtstreeks in de boordcomputer van het voertuig.
+        </p>
+      </details>
+
+      <div style={{ background: '#fff8f1', borderLeft: '4px solid #f97316', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
+        <strong>Heeft u direct hulp nodig van een professionele auto slotenmaker?</strong> Onze mobiele spoedservice is 24/7 bereikbaar in heel Nederland. Bel ons direct op <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: '#ea580c', fontWeight: 'bold', textDecoration: 'underline' }}>{SITE_CONFIG.phone}</a> of stuur een WhatsApp-bericht voor een vaste prijsopgave vooraf.
+      </div>
+    </>
+  ),
 };
 
