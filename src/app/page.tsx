@@ -472,6 +472,66 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== E-E-A-T MEET THE OWNER ===== */}
+      <section style={{ padding: '4rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+        <div className="container">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+            gap: '3rem',
+            alignItems: 'center'
+          }}>
+            <div>
+              <img
+                src="/images/team/berkan-acarol.jpeg"
+                alt="Berkan Acarol — Eigenaar &amp; Hoofdtechnicus van Autosleutel24"
+                style={{
+                  width: '100%',
+                  maxWidth: '450px',
+                  borderRadius: '16px',
+                  boxShadow: 'var(--shadow-md)',
+                  aspectRatio: '3/4',
+                  objectFit: 'cover',
+                  margin: '0 auto',
+                  display: 'block'
+                }}
+              />
+            </div>
+            <div>
+              <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>LOKALE EXPERTISE &amp; VERTROUWEN</p>
+              <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '1rem', marginTop: '0.25rem' }}>
+                Ontmoet Berkan Acarol
+              </h2>
+              <p style={{ fontWeight: 600, color: 'var(--orange-500)', fontSize: '1rem', marginBottom: '1.25rem' }}>
+                Eigenaar &amp; Gecertificeerd Hoofdtechnicus van Autosleutel24
+              </p>
+              <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+                Wanneer u belt voor een autosleutelprobleem, krijgt u direct te maken met een specialist. Als eigenaar en hoofdtechnicus sta ik, Berkan Acarol, persoonlijk garant voor de kwaliteit van onze service. Met ruim 10 jaar actieve ervaring in de automotive slotenmakerij en gecertificeerd door marktleiders zoals Autel, programmeren wij elke sleutel snel, veilig en ter plaatse.
+              </p>
+              <ul style={{ listStyleType: 'none', padding: 0, margin: '0 0 2rem 0', fontSize: '0.9rem', color: 'var(--gray-700)', lineHeight: '1.8' }}>
+                <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>✅</span> <span><strong>Gecertificeerd Expert:</strong> Specialist in Autel IM608 Pro II &amp; AVDI Abrites.</span>
+                </li>
+                <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>✅</span> <span><strong>Ruime Ervaring:</strong> Meer dan 10+ jaar ervaring met alle automerken en systemen.</span>
+                </li>
+                <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span>✅</span> <span><strong>Betrouwbaar &amp; Lokaal:</strong> Eerlijke, vooraf gecommuniceerde vaste prijzen zonder verrassingen.</span>
+                </li>
+              </ul>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id="meet-owner-phone">
+                  📞 Bel Direct: {SITE_CONFIG.phone}
+                </a>
+                <Link href="/over-ons" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                  Lees meer over ons →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ===== COMPARE ===== */}
       <section className={styles.compare}>
         <div className="container">
