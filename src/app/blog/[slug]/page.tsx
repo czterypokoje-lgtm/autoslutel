@@ -210,8 +210,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             border: '1px solid rgba(255,255,255,0.1)',
           }}>
             <img
-              src="/images/team/berkan-acarol.jpeg"
-              alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist"
+              src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+              alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24 Utrecht"
               style={{
                 width: 40,
                 height: 40,

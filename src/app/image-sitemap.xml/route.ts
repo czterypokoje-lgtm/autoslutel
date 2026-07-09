@@ -107,6 +107,12 @@ const CORE_IMAGES = [
     caption: 'Grote sleutelvoorraad van de slotenmaker in Utrecht',
     geo_location: 'Utrecht, Nederland',
   },
+  {
+    url: '/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp',
+    title: 'Berkan Acarol — Autosleutelspecialist Utrecht',
+    caption: 'Berkan Acarol, eigenaar en hoofdtechnicus van Autosleutel24 Utrecht',
+    geo_location: 'Utrecht, Nederland',
+  },
 ];
 
 // ── Blog post images ──
@@ -149,13 +155,13 @@ const PAGE_ENTRIES = [
     loc: `${BASE}/`,
     images: [
       CORE_IMAGES[0], CORE_IMAGES[2], CORE_IMAGES[7],
-      CORE_IMAGES[4], CORE_IMAGES[3],
+      CORE_IMAGES[4], CORE_IMAGES[3], CORE_IMAGES[17],
     ],
   },
   {
     loc: `${BASE}/over-ons`,
     images: [
-      CORE_IMAGES[5], CORE_IMAGES[11], CORE_IMAGES[14],
+      CORE_IMAGES[5], CORE_IMAGES[11], CORE_IMAGES[14], CORE_IMAGES[17],
     ],
   },
   {

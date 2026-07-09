@@ -95,8 +95,8 @@ export default function OverOnsPage() {
           flexWrap: 'wrap',
         }}>
           <img
-            src="/images/team/berkan-acarol.jpeg"
-            alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24"
+            src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+            alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24 Utrecht"
             style={{
               width: 90,
               height: 90,
@@ -144,8 +144,8 @@ export default function OverOnsPage() {
 
           <div style={{ background: 'var(--color-bg-alt)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
             <img
-              src="/images/team/berkan-acarol.jpeg"
-              alt="Berkan Acarol — Eigenaar en Hoofdtechnicus van Autosleutel24"
+              src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+              alt="Berkan Acarol — Eigenaar en Hoofdtechnicus van Autosleutel24 Utrecht"
               style={{
                 width: '100%',
                 borderRadius: '12px',
