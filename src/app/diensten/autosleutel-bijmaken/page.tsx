@@ -204,21 +204,41 @@ export default function SleutelBijmakenPage() {
                   </div>
                 </div>
 
-                {/* Section 2.5: Onze Professionele Werkplaats */}
+                {/* Section 2.5: Onze Service Galerij */}
                 <div>
-                  <h2>Professionele Autosleutel Werkplaats in Utrecht</h2>
+                  <h2>Onze Service in Utrecht, Amsterdam, Almere &amp; Amersfoort — Galerij</h2>
                   <p>
-                    Naast onze mobiele servicebussen beschikt Autosleutel24 over een volledig uitgeruste, fysieke werkplaats in Utrecht. Hier voeren wij complexe elektronische reparaties uit, zoals het solderen van microcomponenten op printplaten, het programmeren van startonderbrekers (transponders) en het herstellen van contactsloten.
+                    Of u nu op onze werkplaats in Utrecht langskomt of dat we onze mobiele bussen naar u toe sturen in Amsterdam, Almere of Amersfoort; wij garanderen een vakkundige service. Bekijk hier een impressie van onze werkplaats, apparatuur en recent voltooide opdrachten.
                   </p>
-                  <div style={{ margin: '1.5rem 0' }}>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: '1rem',
+                    margin: '1.5rem 0'
+                  }}>
                     <img 
-                      src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
-                      alt="Autosleutel24 professionele werkplaats in Utrecht uitgerust met CNC sleutel-freesmachines, soldeerstations en programmeerapparatuur" 
-                      style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }} 
+                      src="/images/seo/autosleutel-bijmaken-porsche.webp" 
+                      alt="Autosleutel bijmaken Porsche in Almere - professionele reservesleutel programmering op locatie" 
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                    />
+                    <img 
+                      src="/images/seo/autosleutel-bijmaken-bmw.webp" 
+                      alt="Autosleutel bijmaken BMW in Amersfoort - smart key inleren en contactslot reparatie" 
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                    />
+                    <img 
+                      src="/images/seo/autosleutel-bijmaken-workshop.webp" 
+                      alt="Autosleutel bijmaken werkplaats in Utrecht - uitgerust met CNC-freesmachines en soldeerapparatuur" 
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                    />
+                    <img 
+                      src="/images/seo/autosleutel-bijmaken-equipment.webp" 
+                      alt="Autosleutel bijmaken apparatuur in Amsterdam - OBD2 programmeercomputers en transponder tools" 
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                   </div>
                   <p>
-                    Dankzij onze eigen fysieke werkplaats kunnen we een hoge mate van betrouwbaarheid en snelheid garanderen. U bent van harte welkom voor service op afspraak, of we sturen onze bus naar uw locatie voor directe service ter plaatse.
+                    Dankzij onze geavanceerde apparatuur en eigen fysieke werkplaats kunnen we reservesleutels maken voor meer dan 95% van de voertuigen in Nederland. Wij zijn 24/7 bereikbaar voor mobiele service op locatie.
                   </p>
                 </div>
 
