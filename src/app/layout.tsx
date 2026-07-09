@@ -179,6 +179,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="nl">
       <head>
+        {/* ── iubenda Cookie Solution & Privacy Controls — MUST be first in <head> ── */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          type="text/javascript"
+          src="https://embeds.iubenda.com/widgets/c53c352b-ed07-4c5b-b461-8b542ddd3aaf.js"
+        />
+
         <meta name="theme-color" content="#0d2137" />
 
         {/* ── GEO META TAGS — Local SEO signals for Google & Bing ── */}
