@@ -166,6 +166,7 @@
   display: flex;
   flex-direction: column;
   gap: 3rem;
+  min-width: 0;
 }
 
 .mainContent h2 {
@@ -292,7 +293,10 @@
 
 /* Tables */
 .tableWrapper {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   margin-bottom: 1.5rem;
