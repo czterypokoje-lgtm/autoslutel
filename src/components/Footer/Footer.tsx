@@ -29,8 +29,7 @@ const steden = [
 
 const spoed = [
   ['Autosleutel Kwijt', '/autosleutel-kwijt'],
-  ['Auto Op Slot', '/auto-op-slot'],
-  ['Auto Openen Zonder Sleutel', '/auto-openen-zonder-sleutel'],
+  ['Auto Openen Zonder Sleutel', '/diensten/auto-openen-zonder-sleutel'],
   ['24/7 Spoedhulp', '/spoedhulp-autosleutel'],
 ];
 

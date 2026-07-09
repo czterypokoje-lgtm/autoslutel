@@ -38,6 +38,22 @@ const nextConfig: NextConfig = {
         destination: "/blog/:blogSlug-utrecht",
         permanent: true,
       },
+      // ── Autodeur openen → Auto openen zonder sleutel (rename) ────
+      {
+        source: '/diensten/autodeur-openen',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      {
+        source: '/auto-op-slot',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      {
+        source: '/auto-openen-zonder-sleutel',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
     ];
   },
 };

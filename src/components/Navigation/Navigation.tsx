@@ -9,7 +9,7 @@ const DienstenStructure = [
     title: 'Auto Slotenmaker',
     href: '/diensten/auto-slotenmaker',
     subs: [
-      { href: '/auto-op-slot', label: 'Autodeur Openen' },
+      { href: '/diensten/auto-openen-zonder-sleutel', label: 'Auto Openen Zonder Sleutel' },
       { href: '/diensten/sleutel-in-auto', label: 'Sleutel in Auto' },
       { href: '/diensten/deur-dichtgevallen', label: 'Deur Dichtgevallen' },
       { href: '/diensten/kofferbak-openen', label: 'Kofferbak Openen' },
@@ -72,9 +72,8 @@ const MerkenLinks = [
 
 const ProblemenLinks = [
   { href: '/autosleutel-kwijt', label: 'Autosleutel Kwijt' },
-  { href: '/auto-op-slot', label: 'Auto Op Slot' },
+  { href: '/diensten/auto-openen-zonder-sleutel', label: 'Auto Openen Zonder Sleutel' },
   { href: '/spoedhulp-autosleutel', label: '24/7 Spoedhulp' },
-  { href: '/auto-openen-zonder-sleutel', label: 'Auto Openen Zonder Sleutel' },
 ];
 
 export default function Navigation() {
