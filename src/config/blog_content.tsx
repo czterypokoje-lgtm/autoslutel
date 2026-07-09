@@ -342,10 +342,10 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         De kosten voor het bijmaken van een sleutel bij verlies van alle sleutels (All Keys Lost) liggen logischerwijs hoger dan wanneer u een reservesleutel laat kopiëren op basis van een werkend origineel. Dit komt door de benodigde noodopening en het decodeerwerk. Gemiddeld kunt u uitgaan van de volgende tarieven:
       </p>
       <ul>
-        <li><strong>Standaard autosleutel met transponder (zonder afstandsbediening):</strong> Vanaf €120 tot €160. Ideaal als goedkope noodoplossing.</li>
-        <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €149 tot €220 voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
-        <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €199 tot €299 voor premium merken (BMW, Audi, Toyota, Volvo).</li>
-        <li><strong>Complexe immobilizers (o.a. Mercedes FBS4 of nieuwe VAG MQB48):</strong> Vanaf €250 tot €399 vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren.</li>
+        <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €149 tot €249. Ideaal als goedkope noodoplossing.</li>
+        <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €199 tot €349 voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
+        <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €299 tot €499 voor premium merken (BMW, Audi, Toyota, Volvo).</li>
+        <li><strong>Complexe immobilizers (o.a. Mercedes FBS4 of nieuwe VAG MQB48):</strong> Vanaf €299 tot €599 vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren.</li>
       </ul>
 
       <h3>Welke documenten heeft u nodig?</h3>
@@ -361,7 +361,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <details style={{ borderBottom: '1px solid #e2e8f0', padding: '1rem 0' }}>
         <summary style={{ fontWeight: 700, cursor: 'pointer' }}>Wat kost een autosleutel bijmaken zonder origineel?</summary>
         <p style={{ marginTop: '0.5rem', color: '#475569' }}>
-          De tarieven starten vanaf €120 voor oudere auto&apos;s en eenvoudige sleutels. Voor moderne smart keys met afstandsbediening ligt de prijs gemiddeld tussen de €180 en €290. Dit is inclusief de noodopening ter plaatse, het decoderen van het slot en het inleren van de chip.
+          De tarieven starten vanaf €149 voor oudere auto&apos;s en eenvoudige sleutels. Voor moderne smart keys ligt de prijs gemiddeld tussen de €299 en €499. Dit is inclusief de noodopening ter plaatse, het decoderen van het slot en het inleren van de chip.
         </p>
       </details>
 
@@ -405,7 +405,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
                 "name": "Wat kost een autosleutel bijmaken zonder origineel?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "De kosten beginnen vanaf €120 voor eenvoudige sleutels en liggen gemiddeld tussen de €180 en €290 voor smart keys. Dit is inclusief noodopening en programmering ter plaatse."
+                  "text": "De kosten beginnen vanaf €149 voor eenvoudige sleutels en liggen gemiddeld tussen de €299 en €499 voor smart keys. Dit is inclusief noodopening en programmering ter plaatse."
                 }
               },
               {
@@ -930,18 +930,6 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Drie soorten autosleutels en hun prijskaartje</h3>
       
-      <h4>1. Standaard Transpondersleutel (Vanaf €89)</h4>
-      <p>
-        Dit is een basis sleutel met een ingebouwde chip (transponder) die de startonderbreker deactiveert, maar zonder knopjes voor centrale deurvergrendeling. Dit type sleutel komt veel voor bij auto's van voor 2010 of als reserve "noodsleutel". De kosten voor het frezen en inleren beginnen meestal rond de €89.
-      </p>
-
-      <h4>2. Klapsleutel met Afstandsbediening (Vanaf €130 - €180)</h4>
-      <p>
-        De welbekende sleutel die inklapt en voorzien is van knopjes (open, dicht, kofferbak). Omdat deze sleutel zowel een mechanisch deel, een transponderchip als een afstandsbedieningscircuit bevat, liggen de kosten iets hoger. Afhankelijk van het merk variëren de kosten bij ons tussen de €130 en €180 inclusief programmering.
-      </p>
-
-      <h4>3. Smart Key / Keyless Entry (Vanaf €180 - €350)</h4>
-      <p>
         De modernste sleutels die u in uw broekzak kunt houden om de auto te openen en te starten. Deze bevatten complexe cryptografische technologie (zoals bij BMW's FEM/BDC systemen of Mercedes FBS3). Het bijmaken en veilig inleren van een Smart Key is precisiewerk. Bij Autosleutel24 kost dit, afhankelijk van het model, tussen de €180 en €350. Ter vergelijking: bij de dealer betaalt u hier vaak tussen de €400 en €650 voor!
       </p>
 

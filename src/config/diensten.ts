@@ -141,7 +141,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Autosleutel Bijmaken & Programmeren — Mobiele Service op Locatie',
     intro: 'Wilt u een reservesleutel laten maken om te voorkomen dat u ooit buitengesloten raakt? Wij maken en programmeren reservesleutels voor alle merken en modellen direct aan huis of op uw werk. U krijgt standaard 12 maanden garantie op de elektronica en de transponder chip.',
     system: 'AVDI, Lonsdor K518, VVDI, Autel IM608 Pro',
-    priceFrom: 'Vanaf €95',
+    priceFrom: 'Vanaf €149',
     duration: '30–60 minuten',
     steps: [
       'Geef uw merk, model en bouwjaar door via telefoon of WhatsApp',
@@ -151,7 +151,7 @@ export const DIENSTEN: Service[] = [
       'Volledige test van alle functies (deuren, kofferbak, motor starten)'
     ],
     faq: [
-      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een reserve transpondersleutel begint bij €95. Een sleutel met afstandsbediening kost gemiddeld €120 tot €250, afhankelijk van het model. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
+      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een standaard transpondersleutel begint bij €149. Een klapsleutel met afstandsbediening kost gemiddeld €199 tot €349. Een Smart Key is beschikbaar vanaf €299. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
       { q: 'Krijg ik garantie op de nieuwe autosleutel?', a: 'Ja, u ontvangt 12 maanden volledige garantie op de programmering en de elektronische componenten van de sleutel.' },
       { q: 'Moet ik met de auto langskomen?', a: 'Nee. Onze specialist komt met een volledig uitgeruste mobiele werkplaats naar u toe in Utrecht of Amsterdam.' }
     ],

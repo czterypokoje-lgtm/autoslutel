@@ -17,19 +17,39 @@ export const metadata: Metadata = {
   },
 };
 
-// All rows: service | from | up to | notes
-const priceRows = [
-  { service: 'Autosleutel bijmaken (reserve)', from: '€ 95', to: '€ 250', note: 'Afhankelijk van chip type & merk' },
-  { service: 'Alle sleutels kwijt (AKL)', from: '€ 180', to: '€ 650', note: 'BMW/Porsche/Tesla bovenaan de range' },
-  { service: 'Smart key / keyless entry', from: '€ 180', to: '€ 450', note: 'Proximity fob incl. programmering' },
-  { service: 'Transponder klonen', from: '€ 75',  to: '€ 180', note: 'ID46, Hitag2, PCF7936/53' },
-  { service: 'Contactslot reparatie / EIS', from: '€ 120', to: '€ 400', note: 'Mercedes EIS/ELV apart aanvullend' },
-  { service: 'Sleutelbehuizing vervangen', from: '€ 45',  to: '€ 120', note: 'Excl. programmering' },
-  { service: 'Afstandsbediening reparatie', from: '€ 35',  to: '€ 95',  note: 'Knop, circuit of chip' },
-  { service: 'Ghost immobilizer installatie', from: '€ 349', to: '€ 499', note: 'TASSA gecertificeerd' },
-  { service: 'ECU klonen / CP verwijdering', from: '€ 195', to: '€ 595', note: 'Diagnose vereist' },
-  { service: 'Autoalarm programmeren', from: '€ 75',  to: '€ 250', note: 'Fabriek of aftermarket' },
-  { service: 'Bedrijfswagen / fleet klus', from: '€ 90',  to: '€ 350', note: 'Per voertuig, volumekorting mogelijk' },
+type PriceItem = 
+  | { category: string; service?: never; from?: never; to?: never; note?: never }
+  | { category?: never; service: string; from: string; to: string; note: string };
+
+const priceRows: PriceItem[] = [
+  { category: 'Autosleutel Bijmaken (Reserve)' },
+  { service: 'Standaard transpondersleutel', from: '€ 80', to: '€ 175', note: 'Meeste oudere modellen' },
+  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 250', to: '€ 349', note: 'VW, Audi, Seat, Skoda, Ford' },
+  { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 399', note: 'BMW, Mercedes, Toyota, Mazda' },
+  { service: 'Proximity key met start-stop', from: '€ 299', to: '€ 449', note: 'Premium merken' },
+  
+  { category: 'Autosleutel Kwijt (Alle sleutels verloren)' },
+  { service: 'Standaard transpondersleutel', from: '€ 250', to: '€ 349', note: 'Inclusief programmeren' },
+  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 249', to: '€ 349', note: 'Inclusief code uitlezen' },
+  { service: 'Smart key / Keyless entry', from: '€ 349', to: '€ 499', note: 'Inclusief noodprocedure' },
+  { service: 'Proximity key met start-stop', from: '€ 399', to: '€ 549', note: 'Premium systemen' },
+  
+  { category: 'Auto Openen (Buitengesloten)' },
+  { service: 'Standaard auto openen', from: '€ 150', to: '€ 200', note: 'Schadevrij, 5-15 minuten' },
+  { service: 'Auto openen + sleutel maken', from: '€ 199', to: '€ 349', note: 'Combinatiekorting' },
+  { service: 'Noodopening (keyless systeem)', from: '€ 175', to: '€ 250', note: 'Speciale techniek vereist' },
+  
+  { category: 'Reparatie & Onderhoud (Sleutel kapot)' },
+  { service: 'Behuizing vervangen', from: '€ 45', to: '€ 89', note: 'Nieuw ombouw-setje' },
+  { service: 'Batterij vervangen', from: '€ 15', to: '€ 35', note: 'Inclusief test' },
+  { service: 'Afstandsbediening herprogrammeren', from: '€ 49', to: '€ 99', note: 'Werkt niet meer' },
+  { service: 'Transponder chip vervangen', from: '€ 89', to: '€ 149', note: 'Chip defect' },
+  
+  { category: 'Contactslot & Stuurslot (Mechanische problemen)' },
+  { service: 'Contactslot vervangen (standaard)', from: '€ 249', to: '€ 399', note: 'VW, Audi, Seat, Skoda' },
+  { service: 'Contactslot vervangen (premium)', from: '€ 399', to: '€ 599', note: 'Mercedes, BMW' },
+  { service: 'Stuurslot reparatie/vervanging', from: '€ 199', to: '€ 349', note: 'ELV/ESL systemen' },
+  { service: 'Immobilizer reset', from: '€ 149', to: '€ 299', note: 'Software herstel' }
 ];
 
 const surcharges = [
@@ -105,12 +125,18 @@ export default function PrijzenPage() {
             </thead>
             <tbody>
               {priceRows.map((row, i) => (
-                <tr key={i}>
-                  <td className={styles.serviceCell}>{row.service}</td>
-                  <td className={styles.priceCell}>{row.from}</td>
-                  <td className={styles.priceCell}>{row.to}</td>
-                  <td className={styles.noteCell}>{row.note}</td>
-                </tr>
+                row.category ? (
+                  <tr key={i} className={styles.categoryRow}>
+                    <td colSpan={4}><strong>{row.category}</strong></td>
+                  </tr>
+                ) : (
+                  <tr key={i}>
+                    <td className={styles.serviceCell}>{row.service}</td>
+                    <td className={styles.priceCell}>{row.from}</td>
+                    <td className={styles.priceCell}>{row.to}</td>
+                    <td className={styles.noteCell}>{row.note}</td>
+                  </tr>
+                )
               ))}
             </tbody>
           </table>

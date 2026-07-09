@@ -121,3 +121,14 @@
 @media (max-width: 640px) {
   .trustGrid { grid-template-columns: 1fr; }
 }
+
+.categoryRow td {
+  background: var(--gray-100);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--navy-900);
+  padding: 1.25rem 1.5rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--gray-300) !important;
+}

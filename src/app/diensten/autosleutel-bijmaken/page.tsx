@@ -172,28 +172,22 @@ export default function SleutelBijmakenPage() {
                       </thead>
                       <tbody>
                         <tr>
-                          <td>Standaard sleutel (zonder chip)</td>
-                          <td>Oudere modellen tot 1995</td>
-                          <td><strong>Vanaf €95</strong></td>
+                          <td>Standaard sleutel (met transponder chip)</td>
+                          <td>Oudere auto's, basis modellen</td>
+                          <td><strong>€149 - €249</strong></td>
                           <td>15 min</td>
                         </tr>
                         <tr>
-                          <td>Transponder sleutel</td>
-                          <td>Volkswagen, Opel, Ford, Peugeot</td>
-                          <td><strong>Vanaf €149</strong></td>
+                          <td>Klapsleutel / Flip Key</td>
+                          <td>VW, Toyota, Ford, Opel, etc.</td>
+                          <td><strong>€199 - €349</strong></td>
                           <td>20-30 min</td>
                         </tr>
                         <tr>
-                          <td>Smart key / Keyless entry</td>
-                          <td>BMW, Mercedes, Audi, Toyota</td>
-                          <td><strong>Vanaf €199</strong></td>
+                          <td>Smart Key / Keyless</td>
+                          <td>Proximity sleutel, Push-to-start</td>
+                          <td><strong>€299 - €499</strong></td>
                           <td>30-45 min</td>
-                        </tr>
-                        <tr>
-                          <td>Smart key + programming</td>
-                          <td>Mercedes FBS4, BMW G-series</td>
-                          <td><strong>Vanaf €249</strong></td>
-                          <td>45-60 min</td>
                         </tr>
                         <tr>
                           <td>Extra reserve sleutel (2e, 3e, 4e)</td>

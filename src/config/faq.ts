@@ -11,7 +11,7 @@ export type FaqItem = { q: string; a: string };
 export const FAQ_GLOBAL: FaqItem[] = [
   {
     q: 'Wat kost het gemiddeld om een autosleutel bij te laten maken in Nederland?',
-    a: 'Gemiddeld kost het bijmaken van een autosleutel in Nederland tussen de €89 en €350. De exacte prijs is afhankelijk van uw merk, bouwjaar en type sleutel (gewone transpondersleutel, klapsleutel of smart key). Omdat wij als mobiele sleutelmaker geen dure showroom hebben, zijn we vaak tot wel 50% goedkoper dan uw merkdealer. U krijgt bij Autosleutel24 altijd vooraf een vaste prijsopgave zonder verborgen kosten.',
+    a: 'De exacte kosten voor het bijmaken van een autosleutel hangen sterk af van het merk, het model, het bouwjaar en het type sleutel (standaard sleutel, klapsleutel of geavanceerde keyless entry smart key). Bij de officiële autodealer betaalt u al snel tussen de €300 en €900, exclusief torenhoge wegsleepkosten als u al uw sleutels kwijt bent. Bij Autosleutel24 bent u gegarandeerd stukken voordeliger uit. Een standaard transpondersleutel bijmaken begint bij ons rond de €149 tot €249, terwijl een volledig ingeleerde smart key (inclusief behuizing en transponder programmeren op locatie) gemiddeld tussen de €299 en €499 kost, afhankelijk van de complexiteit van de startonderbreker. Doordat wij geen duur pand of showrooms hebben en direct op locatie werken, profiteert u van groothandelsprijzen met dealer-niveau kwaliteit. Neem telefonisch of via WhatsApp contact met ons op voor een exacte en vrijblijvende prijsopgave voor uw specifieke voertuig.',
   },
   {
     q: 'Hoe snel kunt u bij mij zijn?',
@@ -131,7 +131,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Autosleutel bijmaken kosten vergelijken in Nederland',
-    a: 'Wanneer u de kosten voor het bijmaken van een autosleutel vergelijkt in Nederland, ziet u grote verschillen. Autodealers rekenen vaak tussen de €250 en €600 inclusief programmeerkosten en wachttijden. Onafhankelijke mobiele specialisten zoals Autosleutel24 bieden dezelfde OEM-kwaliteit sleutels aan vanaf €89 tot €350 (voor smart keys), inclusief frezen en inleren op uw locatie. U bespaart hierdoor tot wel 50%.',
+    a: 'Wanneer u de kosten voor het bijmaken van een autosleutel vergelijkt in Nederland, ziet u grote verschillen. Autodealers rekenen vaak tussen de €250 en €600 inclusief programmeerkosten en wachttijden. Onafhankelijke mobiele specialisten zoals Autosleutel24 bieden dezelfde OEM-kwaliteit sleutels aan vanaf €149 tot €499 (voor smart keys), inclusief frezen en inleren op uw locatie. U bespaart hierdoor tot wel 50%.',
   },
   {
     q: 'Waar kan ik snel een autosleutel bijmaken in mijn buurt?',
@@ -263,7 +263,7 @@ export const FAQ_AUTOSLEUTEL_BIJMAKEN: FaqItem[] = [
   },
   {
     q: 'Hoe duur is een reservesleutel laten bijmaken?',
-    a: 'Prijzen starten vanaf €89 voor eenvoudige transponder sleutels. Smart keys en keyless sleutels kosten €149–€299. Een vaste prijs wordt altijd vooraf gecommuniceerd. Bel voor een gratis offerte: 06 11 75 12 31.',
+    a: 'Prijzen starten vanaf €149 voor eenvoudige transponder sleutels. Smart keys en keyless sleutels kosten €299–€499. Een vaste prijs wordt altijd vooraf gecommuniceerd. Bel voor een gratis offerte: 06 11 75 12 31.',
   },
 ];
 
@@ -336,7 +336,7 @@ export function getFaqForCity(cityName: string): FaqItem[] {
     },
     {
       q: `Wat zijn de kosten voor autosleutel service in ${cityName}?`,
-      a: `De prijzen zijn gelijk voor heel Nederland. Transponder sleutels vanaf €89, smart keys vanaf €149, auto openen vanaf €95. U ontvangt altijd een vaste prijs vooraf. Geen reiskosten of bijkomende kosten.`,
+      a: `De prijzen zijn gelijk voor heel Nederland. Transponder sleutels vanaf €149, smart keys vanaf €299, auto openen vanaf €95. U ontvangt altijd een vaste prijs vooraf. Geen reiskosten of bijkomende kosten.`,
     },
     {
       q: `Werken jullie ook \'s nachts in ${cityName}?`,

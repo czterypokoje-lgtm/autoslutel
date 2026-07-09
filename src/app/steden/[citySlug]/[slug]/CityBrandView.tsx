@@ -150,10 +150,10 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
 
   const pricingHeaders = ['Sleuteltype / Dienst', 'Specificaties', `Onze Prijs (${city.city})`, `${brand.name} Dealer Prijs`];
   const pricingRows = [
-    [`${brand.name} mechanische sleutel`, 'Sleutelblad frezen + transponder chip inleren', 'Vanaf € 89,-', '€ 150,- t/m € 190,-'],
-    [`${brand.name} sleutel met afstandsbediening`, 'Originele kwaliteit, incl. slijpen en programmeren', 'Vanaf € 135,-', '€ 240,- t/m € 350,-'],
-    [`${brand.name} Smart Key / Keyless Go`, 'Volledig ingeleerd op contactslot & ECU', 'Vanaf € 175,-', '€ 360,- t/m € 490,-'],
-    [`${brand.name} behuizing of batterij vervangen`, 'Nieuw knoppenhoesje, micro-switches of knoopcel', 'Vanaf € 35,-', 'Vaak hele sleutel (€ 200+)'],
+    [`${brand.name} standaard sleutel (met chip)`, 'Sleutelblad frezen + transponder chip inleren', '€ 149,-', '€ 249,-'],
+    [`${brand.name} Klapsleutel / Flip Key`, 'Originele kwaliteit, incl. slijpen en programmeren', '€ 199,-', '€ 349,-'],
+    [`${brand.name} Smart Key / Keyless Go`, 'Volledig ingeleerd op contactslot & ECU', '€ 299,-', '€ 499,-'],
+    [`${brand.name} behuizing of batterij vervangen`, 'Nieuw knoppenhoesje, micro-switches of knoopcel', '€ 35,-', 'Vaak hele sleutel (€ 200+)'],
     [`All Keys Lost (Alle sleutels kwijt)`, 'Spoedprogrammering ter plaatse zonder sleepkosten', 'Op aanvraag', '€ 800,-+ (incl. slepen)']
   ];
 

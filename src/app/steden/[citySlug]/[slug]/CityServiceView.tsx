@@ -529,10 +529,9 @@ function generatePricingTable(service: Service) {
   return {
     headers: ['Sleutel Type', 'Merk / Model', 'Prijs', 'Tijdsduur'],
     rows: [
-      ['Standaard sleutel (zonder chip)', 'Oudere modellen tot 1995', 'Vanaf €95', '15 min'],
-      ['Transponder sleutel', 'Volkswagen, Opel, Ford, Peugeot', 'Vanaf €149', '20-30 min'],
-      ['Smart key / Keyless entry', 'BMW, Mercedes, Audi, Toyota', 'Vanaf €199', '30-45 min'],
-      ['Smart key + programming', 'Mercedes FBS4, BMW G-series', 'Vanaf €249', '45-60 min'],
+      ['Standaard sleutel (met transponder chip)', 'Oudere auto\'s, basis modellen', '€149 - €249', '15 min'],
+      ['Klapsleutel / Flip Key', 'VW, Toyota, Ford, Opel, etc.', '€199 - €349', '20-30 min'],
+      ['Smart Key / Keyless', 'Proximity sleutel, Push-to-start', '€299 - €499', '30-45 min'],
       ['Extra reserve sleutel (2e, 3e)', 'Alle merken', '€75 per stuk', '10 min per sleutel']
     ]
   };
