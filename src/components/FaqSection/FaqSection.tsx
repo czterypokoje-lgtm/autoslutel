@@ -25,11 +25,14 @@ const faqs = [
 ];
 
 export default function FaqSection() {
+  // ── FAQPage schema — enables Google FAQ rich results ──
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({
+    '@id': 'https://www.autosleutel24.nl/#faqpage',
+    mainEntity: faqs.map((f, i) => ({
       '@type': 'Question',
+      '@id': `https://www.autosleutel24.nl/#faq-${i}`,
       name: f.question,
       acceptedAnswer: {
         '@type': 'Answer',
@@ -38,11 +41,28 @@ export default function FaqSection() {
     })),
   };
 
+  // ── Speakable schema — marks answers for voice search + AI Overview citations ──
+  // Google, Perplexity, and AI assistants read speakable content aloud / cite it verbatim
+  const speakableSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': 'https://www.autosleutel24.nl/#webpage',
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      // CSS selectors pointing to the FAQ question+answer pairs
+      cssSelector: faqs.map((_, i) => `[data-speakable="faq-${i}"]`),
+    },
+  };
+
   return (
-    <section className={styles.faqSection}>
+    <section className={styles.faqSection} id="faq">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableSchema) }}
       />
       <div className="container">
         <div className={styles.faqHeader}>
@@ -55,7 +75,12 @@ export default function FaqSection() {
 
         <div className={styles.faqList}>
           {faqs.map((faq, index) => (
-            <details key={index} className={styles.faqItem} name="home-faq">
+            <details
+              key={index}
+              className={styles.faqItem}
+              name="home-faq"
+              data-speakable={`faq-${index}`}
+            >
               <summary className={styles.faqQuestion}>
                 {faq.question}
                 <span className={styles.faqIcon}></span>

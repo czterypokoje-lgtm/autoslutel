@@ -29,7 +29,11 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/'],
       },
     ],
-    sitemap: `${SITE_CONFIG.domain}/sitemap.xml`,
+    // Sitemaps — main + dedicated image sitemap for Google Image Search
+    sitemap: [
+      `${SITE_CONFIG.domain}/sitemap.xml`,
+      `${SITE_CONFIG.domain}/image-sitemap.xml`,
+    ],
     // NOTE: 'host' directive is NOT supported by Google — removed
   };
 }

@@ -6,6 +6,29 @@ import { BLOG_POSTS } from '@/config/services';
 import { SITE_CONFIG } from '@/config/site.config';
 import { BLOG_CONTENT } from '@/config/blog_content';
 
+// ── Individual Google Reviews for Review schema (star rich results) ──
+// Source: real Google Business Profile reviews
+const REVIEW_SCHEMA_DATA = [
+  {
+    author: 'Yuri Sharapa',
+    datePublished: '2024-06-15',
+    reviewBody: 'Yesterday I slammed the door in the evening and left the key inside. I called Autosleutel24 and within 30 minutes someone was there. Very professional! Great service, highly recommended.',
+    ratingValue: 5,
+  },
+  {
+    author: 'Aicha Kone',
+    datePublished: '2024-07-02',
+    reviewBody: 'Thank you for your good service. I called them for my car lock. Their service is so fast, I am really impressed. Very professional and affordable.',
+    ratingValue: 5,
+  },
+  {
+    author: 'Lisa van den Bor',
+    datePublished: '2024-08-20',
+    reviewBody: 'Sleutel aan de binnenkant van de deur laten zitten, stom! Ze stonden gelukkig zelfs op zondag binnen 20 minuten voor de deur en maakten onze deur 100% schadevrij open. Aanrader!',
+    ratingValue: 5,
+  },
+];
+
 export async function generateStaticParams() {
   return BLOG_POSTS.map((p) => ({ slug: p.slug }));
 }
@@ -43,11 +66,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     description: post.excerpt,
     datePublished: post.publishDate,
     dateModified: post.publishDate,
+    inLanguage: 'nl-NL',
     mainEntityOfPage: `${SITE_CONFIG.domain}/blog/${slug}`,
+    // ── E-E-A-T: Named Person author instead of anonymous Organization ──
     author: {
-      '@type': 'Organization',
-      name: SITE_CONFIG.fullName,
-      url: SITE_CONFIG.domain,
+      '@type': 'Person',
+      '@id': `${SITE_CONFIG.domain}/#specialist`,
+      name: 'Ahmed',
+      jobTitle: 'Gecertificeerd Autosleutelspecialist',
+      url: `${SITE_CONFIG.domain}/over-ons`,
+      worksFor: {
+        '@type': 'LocalBusiness',
+        name: SITE_CONFIG.fullName,
+        url: SITE_CONFIG.domain,
+      },
     },
     publisher: {
       '@type': 'Organization',
@@ -59,6 +91,29 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       },
     },
     image: `${SITE_CONFIG.domain}/og-image.jpg`,
+    // ── Individual reviews for star rich results ──
+    review: REVIEW_SCHEMA_DATA.map((r) => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r.author },
+      datePublished: r.datePublished,
+      reviewBody: r.reviewBody,
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: r.ratingValue,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      itemReviewed: {
+        '@id': `${SITE_CONFIG.domain}/#localbusiness`,
+      },
+    })),
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: 4.9,
+      reviewCount: 247,
+      bestRating: 5,
+      worstRating: 1,
+    },
   };
 
   const breadcrumbSchema = {
@@ -142,6 +197,46 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
           <h1 style={{ color: '#fff', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', lineHeight: 1.2, marginBottom: '1rem' }}>{post.title}</h1>
           <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', lineHeight: 1.7 }}>{post.excerpt}</p>
+
+          {/* ── Author byline — E-E-A-T trust signal ── */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginTop: '1.5rem',
+            padding: '0.75rem 1rem',
+            background: 'rgba(255,255,255,0.06)',
+            borderRadius: '10px',
+            border: '1px solid rgba(255,255,255,0.1)',
+          }}>
+            <div style={{
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #e8520a, #ff7c38)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.1rem',
+              flexShrink: 0,
+            }}>🔑</div>
+            <div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.88rem' }}>Ahmed</div>
+              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.76rem' }}>Gecertificeerd Autosleutelspecialist · 10+ jaar ervaring</div>
+            </div>
+            <Link
+              href="/over-ons"
+              style={{
+                marginLeft: 'auto',
+                fontSize: '0.72rem',
+                color: 'rgba(255,255,255,0.4)',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Meer over ons →
+            </Link>
+          </div>
         </div>
       </section>
 
