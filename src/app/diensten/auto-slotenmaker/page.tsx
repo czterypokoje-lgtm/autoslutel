@@ -367,7 +367,7 @@ export default function AutoSlotenmakerPage() {
 
         {/* ── RELATED BLOGS SECTION ────────────────────────────────── */}
         {(() => {
-          const relatedPosts = getRelatedBlogPosts('auto-beveiliging');
+          const relatedPosts = getRelatedBlogPosts('auto-slotenmaker');
           if (!relatedPosts || relatedPosts.length === 0) return null;
           return (
             <section className={styles.relatedBlogsSection}>

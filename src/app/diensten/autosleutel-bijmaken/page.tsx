@@ -420,7 +420,7 @@ export default function SleutelBijmakenPage() {
 
         {/* ── RELATED BLOGS SECTION ────────────────────────────────── */}
         {(() => {
-          const relatedPosts = getRelatedBlogPosts('sleutel-bijmaken');
+          const relatedPosts = getRelatedBlogPosts('autosleutel-bijmaken');
           if (!relatedPosts || relatedPosts.length === 0) return null;
           return (
             <section className={styles.relatedBlogsSection}>

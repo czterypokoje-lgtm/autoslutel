@@ -318,65 +318,140 @@ export const BLOG_POSTS = [
 
 export function getRelatedBlogPosts(serviceSlug: string) {
   const mapping: Record<string, string[]> = {
+    // ── Autosleutel bijmaken service page ──────────────────────────
     'autosleutel-bijmaken': [
+      'autosleutel-bijmaken-tips-snel-veilig',
+      'autosleutel-bijmaken-kosten-prijslijst',
+      'sleutel-bijmaken-auto-mobiele-service',
+      'autosleutel-bijmaken-zonder-origineel',
+      'dealer-vs-mobiele-sleutelmaker',
+      'autosleutel-kosten-per-merk-2026',
+    ],
+    // ── Reservesleutel maken ──────────────────────────────────────
+    'reservesleutel-maken': [
+      'autosleutel-bijmaken-tips-snel-veilig',
+      'autosleutel-bijmaken-kosten-prijslijst',
+      'sleutel-bijmaken-auto-mobiele-service',
+      'autosleutel-bijmaken-zonder-origineel',
+      'dealer-vs-mobiele-sleutelmaker',
+    ],
+    // ── Afstandsbediening bijmaken ────────────────────────────────
+    'afstandsbediening-bijmaken': [
+      'autosleutel-bijmaken-tips-snel-veilig',
       'autosleutel-kosten-per-merk-2026',
       'dealer-vs-mobiele-sleutelmaker',
       'autosleutel-bijmaken-zonder-origineel',
-      'dealer-vs-slotenmaker-kostenverschil'
     ],
-    'reservesleutel-maken': [
-      'autosleutel-kosten-per-merk-2026',
-      'dealer-vs-mobiele-sleutelmaker',
-      'autosleutel-bijmaken-zonder-origineel'
-    ],
-    'afstandsbediening-bijmaken': [
-      'autosleutel-kosten-per-merk-2026',
-      'dealer-vs-mobiele-sleutelmaker',
-      'autosleutel-bijmaken-zonder-origineel'
-    ],
+    // ── Transponder programmeren ──────────────────────────────────
     'transponder-programmeren': [
       'autosleutel-kosten-per-merk-2026',
       'sfd-lock-vw-golf-8-uitleg',
-      'bmw-bdc2-sleutel-bijmaken-2026'
+      'bmw-bdc2-sleutel-bijmaken-2026',
+      'autosleutel-bijmaken-kosten-prijslijst',
     ],
+    // ── Smart key programmeren ────────────────────────────────────
     'smart-key-programmeren': [
       'autosleutel-kosten-per-merk-2026',
       'bmw-bdc2-sleutel-bijmaken-2026',
-      'toyota-hybride-sleutel-vervangen'
+      'toyota-hybride-sleutel-vervangen',
+      'dealer-vs-mobiele-sleutelmaker',
     ],
+    // ── Autosleutel kwijt service page ───────────────────────────
     'autosleutel-kwijt': [
+      'autosleutel-kwijt-wat-nu-stappenplan',
       'alle-sleutels-kwijt-wat-nu-utrecht',
       'sleutel-kwijt-utrecht-stappenplan',
       'autosleutel-bijmaken-zonder-origineel',
-      'autosleutel-gestolen-wat-te-doen'
+      'autosleutel-gestolen-wat-te-doen',
     ],
+    // ── Alle sleutels kwijt ───────────────────────────────────────
     'alle-sleutels-kwijt-auto': [
+      'autosleutel-kwijt-wat-nu-stappenplan',
       'alle-sleutels-kwijt-wat-nu-utrecht',
       'sleutel-kwijt-utrecht-stappenplan',
       'autosleutel-bijmaken-zonder-origineel',
-      'case-study-bmw-besparing'
+      'case-study-bmw-besparing',
     ],
+    // ── Autodeur openen ───────────────────────────────────────────
+    'autodeur-openen': [
+      'auto-openen-zonder-sleutel-schadevrij',
+      'auto-slotenmaker-ultieme-gids-snel-hulp',
+      'autosleutel-kwijt-wat-nu-stappenplan',
+      'verzekering-dekt-autosleutel-vervangen',
+    ],
+    // ── Auto slotenmaker (static page) ───────────────────────────
+    'auto-slotenmaker': [
+      'auto-slotenmaker-ultieme-gids-snel-hulp',
+      'auto-openen-zonder-sleutel-schadevrij',
+      'autosleutel-kwijt-wat-nu-stappenplan',
+      'verzekering-dekt-autosleutel-vervangen',
+      'dealer-vs-mobiele-sleutelmaker',
+    ],
+    // used as tag in the auto-slotenmaker page.tsx
+    'auto-beveiliging': [
+      'auto-slotenmaker-ultieme-gids-snel-hulp',
+      'auto-openen-zonder-sleutel-schadevrij',
+      'autosleutel-kwijt-wat-nu-stappenplan',
+      'ghost-immobiliser-utrecht',
+      'faraday-pouch-bescherming-relay-attack',
+    ],
+    // ── Ghost immobiliser ─────────────────────────────────────────
     'ghost-immobiliser': [
       'ghost-immobiliser-utrecht',
-      'faraday-pouch-bescherming-relay-attack'
+      'faraday-pouch-bescherming-relay-attack',
     ],
-    'auto-beveiliging': [
+    'ghost-immobiliser-installeren': [
       'ghost-immobiliser-utrecht',
-      'faraday-pouch-bescherming-relay-attack'
+      'faraday-pouch-bescherming-relay-attack',
+      'autosleutel-gestolen-wat-te-doen',
     ],
-    'batterij-vervangen': [
-      'autosleutel-batterij-vervangen-stappenplan'
-    ],
+    // ── Autosleutels repareren ────────────────────────────────────
     'autosleutels-repareren': [
       'autosleutel-batterij-vervangen-stappenplan',
-      'verzekering-dekt-autosleutel-vervangen'
+      'verzekering-dekt-autosleutel-vervangen',
+      'autosleutel-bijmaken-tips-snel-veilig',
     ],
+    // ── Contactslot reparatie ─────────────────────────────────────
+    'contactslot-reparatie': [
+      'auto-slotenmaker-ultieme-gids-snel-hulp',
+      'auto-openen-zonder-sleutel-schadevrij',
+      'verzekering-dekt-autosleutel-vervangen',
+    ],
+    // ── Batterij vervangen ────────────────────────────────────────
+    'batterij-vervangen': [
+      'autosleutel-batterij-vervangen-stappenplan',
+    ],
+    // ── Behuizing / knoppen repareren ────────────────────────────
     'behuizing-vervangen': [
-      'autosleutel-batterij-vervangen-stappenplan'
+      'autosleutel-batterij-vervangen-stappenplan',
     ],
     'knoppen-repareren': [
-      'autosleutel-batterij-vervangen-stappenplan'
-    ]
+      'autosleutel-batterij-vervangen-stappenplan',
+    ],
+    // ── BMW specialist ────────────────────────────────────────────
+    'bmw-sleutel-bijmaken-utrecht': [
+      'bmw-bdc2-sleutel-bijmaken-2026',
+      'case-study-bmw-besparing',
+      'autosleutel-kosten-per-merk-2026',
+      'dealer-vs-mobiele-sleutelmaker',
+    ],
+    // ── VW/Audi specialist ────────────────────────────────────────
+    'vw-audi-sleutel-bijmaken-utrecht': [
+      'sfd-lock-vw-golf-8-uitleg',
+      'autosleutel-kosten-per-merk-2026',
+      'dealer-vs-mobiele-sleutelmaker',
+    ],
+    // ── Toyota/Lexus specialist ───────────────────────────────────
+    'toyota-sleutel-vervangen-utrecht': [
+      'toyota-hybride-sleutel-vervangen',
+      'autosleutel-kosten-per-merk-2026',
+      'dealer-vs-mobiele-sleutelmaker',
+    ],
+    // ── Verzekering ──────────────────────────────────────────────
+    'verzekering': [
+      'verzekering-dekt-autosleutel-vervangen',
+      'autosleutel-gestolen-wat-te-doen',
+    ],
   };
 
   const slugs = mapping[serviceSlug];
@@ -384,8 +459,13 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     return BLOG_POSTS.filter(post => slugs.includes(post.slug));
   }
 
-  // Fallback to general helpful articles
+  // Fallback: general helpful articles shown when no specific mapping matches
   return BLOG_POSTS.filter(post => 
-    ['autosleutel-kosten-per-merk-2026', 'dealer-vs-mobiele-sleutelmaker', 'verzekering-dekt-autosleutel-vervangen'].includes(post.slug)
+    [
+      'autosleutel-bijmaken-tips-snel-veilig',
+      'dealer-vs-mobiele-sleutelmaker',
+      'verzekering-dekt-autosleutel-vervangen',
+      'autosleutel-kosten-per-merk-2026',
+    ].includes(post.slug)
   );
 }
