@@ -62,6 +62,23 @@ export default function Footer() {
               <span>4.9 ★ Google</span>
               <span>Verzekerd</span>
             </div>
+            <div style={{ marginTop: '1rem', marginBottom: '1.25rem' }}>
+              <a
+                href={SITE_CONFIG.social.marktplaats}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+              >
+                <img
+                  src="/images/seo/marktplaats-autosleutel24-verifieerd.webp"
+                  alt="Autosleutel24 op Marktplaats - Geverifieerde verkoper"
+                  style={{ height: '24px', width: 'auto', display: 'block', borderRadius: '4px' }}
+                />
+                <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)', padding: '0.2rem 0.5rem', borderRadius: '2px', background: 'rgba(255,255,255,0.03)' }}>
+                  ★ Geverifieerd
+                </span>
+              </a>
+            </div>
             <div className={styles.footerContact}>
               <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a>
               <a href={`mailto:${SITE_CONFIG.email}`}>{SITE_CONFIG.email}</a>

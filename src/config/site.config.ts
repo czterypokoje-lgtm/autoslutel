@@ -41,6 +41,7 @@ export const SITE_CONFIG = {
     facebook: 'https://www.facebook.com/autosleutel24utrecht',
     instagram: 'https://www.instagram.com/autosleutel24',
     google: 'https://g.page/r/CNX3_review',  // Base GBP URL (no /review suffix — that redirects to review form)
+    marktplaats: 'https://www.marktplaats.nl/u/autosleutel24/60076348/',
   },
 } as const;
 

@@ -113,6 +113,12 @@ const CORE_IMAGES = [
     caption: 'Berkan Acarol, eigenaar en hoofdtechnicus van Autosleutel24 Utrecht',
     geo_location: 'Utrecht, Nederland',
   },
+  {
+    url: '/images/seo/marktplaats-autosleutel24-verifieerd.webp',
+    title: 'Autosleutel24 Marktplaats Geverifieerd',
+    caption: 'Geverifieerd Marktplaats profiel van Autosleutel24 voor extra betrouwbaarheid en reviews',
+    geo_location: 'Utrecht, Nederland',
+  },
 ];
 
 // ── Blog post images ──
@@ -155,13 +161,13 @@ const PAGE_ENTRIES = [
     loc: `${BASE}/`,
     images: [
       CORE_IMAGES[0], CORE_IMAGES[2], CORE_IMAGES[7],
-      CORE_IMAGES[4], CORE_IMAGES[3], CORE_IMAGES[17],
+      CORE_IMAGES[4], CORE_IMAGES[3], CORE_IMAGES[17], CORE_IMAGES[18],
     ],
   },
   {
     loc: `${BASE}/over-ons`,
     images: [
-      CORE_IMAGES[5], CORE_IMAGES[11], CORE_IMAGES[14], CORE_IMAGES[17],
+      CORE_IMAGES[5], CORE_IMAGES[11], CORE_IMAGES[14], CORE_IMAGES[17], CORE_IMAGES[18],
     ],
   },
   {
