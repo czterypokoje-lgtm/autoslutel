@@ -17,8 +17,13 @@ const groups = [
 ];
 
 export default function MerkenPage() {
+  const p1Brands = BRANDS.filter(b => b.priority === 'P1');
+  const p2Brands = BRANDS.filter(b => b.priority === 'P2');
+  const p3Brands = BRANDS.filter(b => b.priority === 'P3');
+
   return (
     <main>
+      {/* Hero */}
       <section style={{ background: 'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding: '4rem 2rem 5rem', textAlign: 'center', overflow: 'hidden', position: 'relative' }}>
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--orange-400)', marginBottom: '0.75rem' }}>MERKEN</p>
@@ -40,27 +45,114 @@ export default function MerkenPage() {
         </div>
       </section>
 
-      <div className="container" style={{ padding: '3.5rem 2rem' }}>
-        {groups.map(g => (
-          <div key={g.title} style={{ marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, paddingBottom: '0.75rem', marginBottom: '1rem', borderBottom: '2px solid var(--gray-200)', color: 'var(--gray-900)' }}>{g.title}</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: '0.75rem' }}>
-              {g.brands.map(b => (
-                <Link key={b.slug} href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} id={`merk-${b.slug}`}
-                  style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', padding: '1rem 1.25rem', background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '4px', textDecoration: 'none', transition: 'all 0.15s' }}>
-                  <strong style={{ fontSize: '0.95rem', color: 'var(--gray-900)' }}>{b.name}</strong>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--gray-400)' }}>{b.system}</span>
-                  {b.models && b.models.length > 0 && (
-                    <span style={{ fontSize: '0.72rem', color: 'var(--navy-400)', marginTop: '0.1rem' }}>
-                      {b.models.map(m => m.name).slice(0, 4).join(' · ')}...
-                    </span>
-                  )}
-                  <span style={{ fontSize: '0.78rem', color: 'var(--orange-500)', fontWeight: 600, marginTop: '0.25rem' }}>Bekijk →</span>
+      {/* Main Content Area */}
+      <div className="container" style={{ padding: '3.5rem 2rem', maxWidth: '800px', margin: '0 auto' }}>
+        
+        {/* Intro copy for E-E-A-T & local context */}
+        <div style={{ marginBottom: '3rem', fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--gray-800)' }}>
+          <p>
+            Als gecertificeerde autosleutelspecialisten kunnen wij sleutels programmeren en dupliceren voor <strong>meer dan 38 automerken</strong>. Dankzij onze volledig uitgeruste mobiele servicebussen beschikken we over exact dezelfde programmeerapparatuur en databasecodes als de officiële dealers in Utrecht en omgeving.
+          </p>
+          <p style={{ marginTop: '0.75rem' }}>
+            Hieronder vindt u ons volledige service-overzicht per merk. Klik op een van de onderstaande links om direct de tarieven, ondersteunde modellen en technische specificaties voor uw merk te bekijken.
+          </p>
+        </div>
+
+        {/* 1. MEEST GEVRAAGD (P1 DETAILED HTML STYLE LIST) */}
+        <div style={{ marginBottom: '4rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
+            Meest Gevraagde Automerken (Mobiel Programmeren)
+          </h2>
+          
+          {p1Brands.map(b => (
+            <div key={b.slug} style={{ marginBottom: '2.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--gray-200)' }}>
+              <h3 style={{ fontSize: '1.05rem', margin: '0 0 0.5rem 0' }}>
+                <Link 
+                  href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} 
+                  id={`merk-${b.slug}`}
+                  style={{ color: '#1a56db', textDecoration: 'underline', fontWeight: 700 }}
+                >
+                  {b.name} Autosleutel Bijmaken &amp; Coderen
                 </Link>
-              ))}
+                <span style={{ fontSize: '0.85rem', color: 'var(--gray-500)', fontWeight: 'normal', marginLeft: '0.5rem' }}>
+                  — 12 maanden garantie
+                </span>
+              </h3>
+              <p style={{ margin: '0 0 0.75rem 0', color: 'var(--gray-700)', fontSize: '0.9rem', lineHeight: 1.55 }}>
+                {b.excerpt || `Volledige mobiele service voor alle ${b.name} autosleutels, afstandsbedieningen en smart keys direct ter plaatse.`}
+              </p>
+              <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', margin: 0, fontSize: '0.85rem', color: 'var(--gray-600)', lineHeight: 1.6 }}>
+                <li><strong>Systemen:</strong> {b.system}</li>
+                {b.models && b.models.length > 0 && (
+                  <li>
+                    <strong>Ondersteunde Modellen:</strong> {b.models.map(m => m.name).slice(0, 8).join(', ')}...
+                  </li>
+                )}
+              </ul>
+              <p style={{ marginTop: '0.75rem', marginBottom: 0 }}>
+                <Link 
+                  href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}
+                  style={{ color: 'var(--orange-500)', fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none' }}
+                >
+                  Bekijk tarieven &amp; modellen voor {b.name} &rarr;
+                </Link>
+              </p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* 2. POPULAIRE MERKEN (P2 LIST STYLE) */}
+        <div style={{ marginBottom: '4rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
+            Populaire Automerken
+          </h2>
+          <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', margin: 0, fontSize: '0.9rem', color: 'var(--gray-700)', lineHeight: 1.8 }}>
+            {p2Brands.map(b => (
+              <li key={b.slug} style={{ marginBottom: '0.75rem' }}>
+                <Link 
+                  href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}
+                  id={`merk-${b.slug}`}
+                  style={{ color: '#1a56db', textDecoration: 'underline', fontWeight: 700 }}
+                >
+                  {b.name}
+                </Link>
+                {' '} — Systeem: <strong>{b.system}</strong>.
+                {b.models && b.models.length > 0 && (
+                  <span style={{ color: 'var(--gray-500)', fontSize: '0.8rem' }}>
+                    {' '} (Modellen: {b.models.map(m => m.name).slice(0, 5).join(', ')}...)
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* 3. OVERIGE MERKEN (P3 LIST STYLE) */}
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
+            Overige Automerken
+          </h2>
+          <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', margin: 0, fontSize: '0.9rem', color: 'var(--gray-700)', lineHeight: 1.8 }}>
+            {p3Brands.map(b => (
+              <li key={b.slug} style={{ marginBottom: '0.75rem' }}>
+                <Link 
+                  href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}
+                  id={`merk-${b.slug}`}
+                  style={{ color: '#1a56db', textDecoration: 'underline', fontWeight: 700 }}
+                >
+                  {b.name}
+                </Link>
+                {' '} — Systeem: <strong>{b.system}</strong>.
+                {b.models && b.models.length > 0 && (
+                  <span style={{ color: 'var(--gray-500)', fontSize: '0.8rem' }}>
+                    {' '} (Modellen: {b.models.map(m => m.name).slice(0, 5).join(', ')}...)
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+
       </div>
     </main>
   );
