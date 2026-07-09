@@ -9,7 +9,7 @@
 .ctaWaBtn:hover { background: #1fba57; color: #fff; text-decoration: none; }
 
 .footer { background: var(--navy-900); }
-.footerGrid { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2.5rem; }
+.footerGrid { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; gap: 2rem; }
 
 .footerBrand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
 .footerLogo { width: 40px; height: 40px; flex-shrink: 0; }

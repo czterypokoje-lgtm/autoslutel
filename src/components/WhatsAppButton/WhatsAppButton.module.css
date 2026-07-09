@@ -32,8 +32,8 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 640px) {
-  .btn { bottom: var(--sp-4); right: var(--sp-4); }
-  .btn span { display: none; }
-  .btn { padding: var(--sp-3); border-radius: 50%; width: 52px; height: 52px; justify-content: center; }
+@media (max-width: 767px) {
+  .btn {
+    display: none !important;
+  }
 }

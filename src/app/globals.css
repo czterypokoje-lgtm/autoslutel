@@ -13,6 +13,8 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* ---- DESIGN TOKENS ---- */
@@ -530,4 +532,15 @@ details[open] summary { color: var(--orange-500); }
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Hide iubenda floating privacy preferences keyhole button (blocks mobile CTA) */
+.iubenda-tp-btn,
+.iubenda-cs-preferences-link,
+#iubenda-cs-banner .iubenda-cs-preferences-link,
+#iubenda-tp-btn-container {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }

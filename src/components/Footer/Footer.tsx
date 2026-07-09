@@ -62,21 +62,18 @@ export default function Footer() {
               <span>4.9 ★ Google</span>
               <span>Verzekerd</span>
             </div>
-            <div style={{ marginTop: '1rem', marginBottom: '1.25rem' }}>
+            <div style={{ marginTop: '1.25rem', marginBottom: '1.5rem' }}>
               <a
                 href={SITE_CONFIG.social.marktplaats}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+                style={{ display: 'inline-block', textDecoration: 'none' }}
               >
                 <img
                   src="/images/seo/marktplaats-autosleutel24-verifieerd.webp"
                   alt="Autosleutel24 op Marktplaats - Geverifieerde verkoper"
-                  style={{ height: '24px', width: 'auto', display: 'block', borderRadius: '4px' }}
+                  style={{ height: '60px', width: 'auto', display: 'block', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.12)' }}
                 />
-                <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)', padding: '0.2rem 0.5rem', borderRadius: '2px', background: 'rgba(255,255,255,0.03)' }}>
-                  ★ Geverifieerd
-                </span>
               </a>
             </div>
             <div className={styles.footerContact}>
@@ -122,6 +119,30 @@ export default function Footer() {
               {spoed.map(([label, href]) => <li key={href}><Link href={href} style={{color:'#f87171'}}>{label}</Link></li>)}
             </ul>
           </div>
+
+          {/* Openingstijden */}
+          <div>
+            <h4 className={styles.colTitle}>Openingstijden</h4>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', color: 'rgba(255,255,255,0.65)' }}>
+              <tbody>
+                {[
+                  ['Maandag', '24 uur geopend'],
+                  ['Dinsdag', '24 uur geopend'],
+                  ['Woensdag', '24 uur geopend'],
+                  ['Donderdag', '24 uur geopend'],
+                  ['Vrijdag', '24 uur geopend'],
+                  ['Zaterdag', '24 uur geopend'],
+                  ['Zondag', '24 uur geopend'],
+                ].map(([dag, tijd]) => (
+                  <tr key={dag} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                    <td style={{ padding: '0.35rem 0', fontWeight: 500 }}>{dag}</td>
+                    <td style={{ padding: '0.35rem 0', textAlign: 'right', color: 'var(--orange-400)', fontWeight: 600 }}>{tijd}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
         </div>
 
         <div className={styles.bottomBar}>
