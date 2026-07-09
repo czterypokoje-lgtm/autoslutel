@@ -83,49 +83,7 @@ export default function OverOnsPage() {
       </section>
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
-        {/* ── E-E-A-T SPECIALIST CARD — Named expert = Google trust ── */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '2rem',
-          background: 'linear-gradient(135deg, #0d2137 0%, #1a3a5c 100%)',
-          borderRadius: '20px',
-          padding: '2rem 2.5rem',
-          marginBottom: '3rem',
-          flexWrap: 'wrap',
-        }}>
-          <img
-            src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
-            alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24 Utrecht"
-            style={{
-              width: 90,
-              height: 90,
-              borderRadius: '50%',
-              objectFit: 'cover',
-              objectPosition: 'top',
-              flexShrink: 0,
-              border: '3px solid rgba(255,255,255,0.2)',
-            }}
-          />
-          <div style={{ flex: 1, minWidth: 200 }}>
-            <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>Uw Specialist</div>
-            <div style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.25rem' }}>Berkan Acarol</div>
-            <div style={{ color: '#e8520a', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.75rem' }}>Eigenaar &amp; Autosleutelspecialist • 10+ jaar ervaring</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {['Autel Gecertificeerd', 'AVDI Gecertificeerd', 'KVK Geregistreerd', 'Volledig Verzekerd', '24/7 Bereikbaar'].map(badge => (
-                <span key={badge} style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  color: 'rgba(255,255,255,0.85)',
-                  padding: '0.25rem 0.75rem',
-                  borderRadius: '999px',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                }}>{badge}</span>
-              ))}
-            </div>
-          </div>
-        </div>
+
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'start' }}>
           <div>
