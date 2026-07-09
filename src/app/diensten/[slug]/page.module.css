@@ -798,5 +798,9 @@
   .relatedBlogsContainer {
     padding: 0 1rem;
   }
+  .pricingTable {
+    display: table !important;
+    min-width: 550px !important;
+  }
 }
 

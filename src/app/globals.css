@@ -544,3 +544,10 @@ details[open] summary { color: var(--orange-500); }
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* Ensure bottom-most content is never hidden behind the sticky bottom CTA bar on mobile */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 75px !important;
+  }
+}
