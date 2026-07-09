@@ -253,23 +253,23 @@ export default function AutoSlotenmakerPage() {
                     margin: '1.5rem 0'
                   }}>
                     <img 
-                      src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
-                      alt="Auto slotenmaker Utrecht - schadevrij openen van autodeur bij buitensluiting" 
+                      src="/images/seo/auto-slotenmaker-werkplaats-utrecht.webp" 
+                      alt="Auto slotenmaker werkplaats Utrecht - professioneel solderen van microswitches en inleren van transponderchips" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
-                      src="/images/seo/contactslot-reparatie-mobiel-amsterdam.webp" 
-                      alt="Auto slotenmaker Amsterdam - mobiele revisie en herstel van vastgelopen contactslot" 
+                      src="/images/seo/auto-slotenmaker-bmw-openen-amsterdam.webp" 
+                      alt="Auto slotenmaker Amsterdam - schadevrij openen van BMW autodeur bij buitensluiting" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
-                      src="/images/seo/autosleutels-repareren-werkplaats-utrecht.webp" 
-                      alt="Auto slotenmaker werkplaats Utrecht - elektronische printplaat reparaties en transponder programmeren" 
+                      src="/images/seo/auto-slotenmaker-volkswagen-golf-almere.webp" 
+                      alt="Auto slotenmaker Almere - programmeren en slijpen van een reserve klapsleutel voor Volkswagen Golf" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
-                      src="/images/seo/autosleutel-bijmaken-porsche.webp" 
-                      alt="Auto slotenmaker Almere - inleren van nieuwe smart key voor Porsche ter plaatse" 
+                      src="/images/seo/auto-slotenmaker-audi-inleren-amersfoort.webp" 
+                      alt="Auto slotenmaker Amersfoort - smart key inleren en transponder programmeren voor Audi" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                   </div>
