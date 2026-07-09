@@ -275,6 +275,34 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                       alt="Auto deur schadevrij openen door professionele mobiele slotenmaker in Utrecht - 24/7 service" 
                       style={{ width: '100%', borderRadius: '12px', margin: '1.25rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', objectFit: 'cover', aspectRatio: '16/9' }}
                     />
+                  ) : slug === 'autosleutels-repareren' ? (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(2, 1fr)',
+                      gap: '1rem',
+                      margin: '1.25rem 0'
+                    }}>
+                      <img 
+                        src="/images/seo/autosleutels-repareren-werkplaats-utrecht.webp" 
+                        alt="Autosleutels repareren werkplaats in Utrecht - SMD-solderen van microswitches en knoppen onder microscoop" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                      <img 
+                        src="/images/seo/autosleutels-repareren-inventaris-amsterdam.webp" 
+                        alt="Autosleutel reparatie inventaris in Amsterdam - OEM behuizingen en reservesleutel onderdelen op voorraad" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                      <img 
+                        src="/images/seo/autosleutels-repareren-onderdelen-almere.webp" 
+                        alt="Autosleutel repareren onderdelen in Almere - reservesleutel printplaten, transponders en spoelen" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                      <img 
+                        src="/images/seo/autosleutels-repareren-service-amersfoort.webp" 
+                        alt="Autosleutels repareren service in Amersfoort - mobiele sleutelmaker repareert sleutels ter plaatse" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                    </div>
                   ) : (
                     <img 
                       src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
