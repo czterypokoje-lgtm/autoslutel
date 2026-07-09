@@ -135,11 +135,11 @@ export default function OverOnsPage() {
             <p>Onze focus: eerlijke prijzen, snelle reactie, en technisch excellent werk. Geen vage verhalen — gewoon het probleem oplossen.</p>
 
             <h3>Onze Waarden</h3>
-            <ul>
-              <li>✅ <strong>Transparantie</strong> — Vaste prijs afspreken voor start</li>
-              <li>✅ <strong>Betrouwbaarheid</strong> — KVK geregistreerd, verzekerd</li>
-              <li>✅ <strong>Kwaliteit</strong> — Professionele tools, geen goedkope alternatieven</li>
-              <li>✅ <strong>Bereikbaarheid</strong> — 24/7, ook weekend en feestdagen</li>
+            <ul style={{ listStyleType: 'none', padding: 0 }}>
+              <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Transparantie</strong> — Vaste prijs afspreken voor start</span></li>
+              <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaarheid</strong> — KVK geregistreerd, verzekerd</span></li>
+              <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Kwaliteit</strong> — Professionele tools, geen goedkope alternatieven</span></li>
+              <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Bereikbaarheid</strong> — 24/7, ook weekend en feestdagen</span></li>
             </ul>
           </div>
 
@@ -157,11 +157,11 @@ export default function OverOnsPage() {
             />
             <h3 style={{ marginBottom: '0.25rem' }}>Berkan Acarol</h3>
             <p style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '1rem' }}>Eigenaar &amp; Hoofdtechnicus</p>
-            <ul style={{ paddingLeft: '1.25rem', margin: 0, fontSize: '0.875rem', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
-              <li style={{ marginBottom: '0.5rem' }}>🔒 Specialist in geavanceerde transponderprogrammering &amp; ECU-clonering</li>
-              <li style={{ marginBottom: '0.5rem' }}>🛠️ Ruim 10 jaar actieve ervaring in autodiagnose &amp; slotenmakerij</li>
-              <li style={{ marginBottom: '0.5rem' }}>🎓 Volledig gecertificeerd voor Autel IM608 Pro II, AVDI Abrites &amp; Lonsdor</li>
-              <li style={{ marginBottom: '0.5rem' }}>🇳🇱 Persoonlijk werkzaam in Utrecht, Amsterdam, Almere en heel Midden-Nederland</li>
+            <ul style={{ paddingLeft: '1.25rem', margin: 0, fontSize: '0.875rem', color: 'var(--color-text-muted)', lineHeight: 1.6, listStyleType: 'square' }}>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Specialist:</strong> Geavanceerde transponderprogrammering &amp; ECU-clonering</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Ervaring:</strong> Ruim 10 jaar actieve ervaring in autodiagnose &amp; slotenmakerij</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Certificering:</strong> Volledig gecertificeerd voor Autel IM608 Pro II, AVDI Abrites &amp; Lonsdor</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Werkgebied:</strong> Persoonlijk werkzaam in Utrecht, Amsterdam, Almere en heel Midden-Nederland</li>
             </ul>
           </div>
         </div>
