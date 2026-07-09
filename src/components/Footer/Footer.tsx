@@ -143,7 +143,6 @@ export default function Footer() {
             </table>
           </div>
         </div>
-        </div>
 
         <div className={styles.bottomBar}>
           <div className={styles.bottomInner}>
