@@ -531,14 +531,7 @@ export default function HomePage() {
       </section>
 
 
-      {/* ===== SEO KEYWORDS (Natural Text) ===== */}
-      <section className={styles.sectionAlt}>
-        <div className="container">
-          <p style={{ fontSize: '0.85rem', color: 'var(--gray-500)', textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
-            Klanten vonden ons ook via: <strong>autosleutelbijmaken utrecht</strong>, <strong>autosleutel24</strong>, <strong>autosleutelkwijt</strong>, autosleutel bijmaken kosten, autosleutel programmeren op locatie. Wij zijn de mobiele autoslotenmaker voor heel Nederland.
-          </p>
-        </div>
-      </section>
+
 
       {/* ===== FAQ ===== */}
       <FaqSection />
