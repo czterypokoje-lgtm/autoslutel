@@ -167,8 +167,8 @@ export default function HomePage() {
       {/* ===== HERO ===== */}
       <section className={styles.hero}>
         <Image
-          src="/autosleutel-utrecht-specialist-mobiel.webp"
-          alt="Mobiele autosleutel specialist Utrecht - Sleutel ter plaatse bijmaken"
+          src="/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp"
+          alt="Autosleutel bijmaken Utrecht &amp; Amsterdam mobiele specialist — Autosleutel24"
           fill
           priority
           fetchPriority="high"
@@ -180,12 +180,12 @@ export default function HomePage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ImageObject",
-            "contentUrl": "https://www.autosleutel24.nl/autosleutel-utrecht-specialist-mobiel.webp",
-            "name": "Mobiele autosleutel specialist Utrecht",
-            "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht en omgeving door Autosleutel24.",
+            "contentUrl": "https://www.autosleutel24.nl/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp",
+            "name": "Autosleutel bijmaken Utrecht & Amsterdam mobiele specialist",
+            "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht, Amsterdam en Midden-Nederland door Autosleutel24.",
             "contentLocation": {
               "@type": "Place",
-              "name": "Utrecht",
+              "name": "Utrecht, Amsterdam",
               "geo": {
                 "@type": "GeoCoordinates",
                 "latitude": 52.0907,

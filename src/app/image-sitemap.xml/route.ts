@@ -6,10 +6,10 @@ const BASE = 'https://www.autosleutel24.nl';
 // ── Core SEO images with descriptive alt/title metadata ──
 const CORE_IMAGES = [
   {
-    url: '/autosleutel-utrecht-specialist-mobiel.webp',
-    title: 'Mobiele Autosleutel Specialist Utrecht',
-    caption: 'Autosleutel24 — mobiele autosleutelspecialist in Utrecht voor alle merken',
-    geo_location: 'Utrecht, Nederland',
+    url: '/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp',
+    title: 'Autosleutel Bijmaken Utrecht en Amsterdam',
+    caption: 'Autosleutel24 — mobiele autosleutelspecialist in Utrecht, Amsterdam en Midden-Nederland',
+    geo_location: 'Utrecht en Amsterdam, Nederland',
   },
   {
     url: '/autosleutel24-sleutelbijmaken-utrecht.webp',
