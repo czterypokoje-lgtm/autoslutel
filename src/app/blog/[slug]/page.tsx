@@ -72,8 +72,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     author: {
       '@type': 'Person',
       '@id': `${SITE_CONFIG.domain}/#specialist`,
-      name: 'Ahmed',
-      jobTitle: 'Gecertificeerd Autosleutelspecialist',
+      name: 'Berkan Acarol',
+      jobTitle: 'Eigenaar & Autosleutelspecialist',
       url: `${SITE_CONFIG.domain}/over-ons`,
       worksFor: {
         '@type': 'LocalBusiness',
@@ -209,20 +209,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             borderRadius: '10px',
             border: '1px solid rgba(255,255,255,0.1)',
           }}>
-            <div style={{
-              width: 40,
-              height: 40,
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #e8520a, #ff7c38)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.1rem',
-              flexShrink: 0,
-            }}>🔑</div>
+            <img
+              src="/images/team/berkan-acarol.jpeg"
+              alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist"
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                objectFit: 'cover',
+                flexShrink: 0,
+              }}
+            />
             <div>
-              <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.88rem' }}>Ahmed</div>
-              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.76rem' }}>Gecertificeerd Autosleutelspecialist · 10+ jaar ervaring</div>
+              <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.88rem' }}>Berkan Acarol</div>
+              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.76rem' }}>Eigenaar &amp; Autosleutelspecialist · 10+ jaar ervaring</div>
             </div>
             <Link
               href="/over-ons"

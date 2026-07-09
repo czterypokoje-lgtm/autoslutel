@@ -4,8 +4,8 @@ import Script from 'next/script';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Over Ons — Ahmed, Autosleutelspecialist Utrecht | ${SITE_CONFIG.name}`,
-  description: `Ontmoet Ahmed, gecertificeerd autosleutelspecialist met 10+ jaar ervaring. Autosleutel24 Utrecht — dealer-niveau programmering, alle merken. KVK geregistreerd, verzekerd, 24/7 beschikbaar.`,
+  title: `Over Ons — Berkan Acarol, Autosleutelspecialist Utrecht | ${SITE_CONFIG.name}`,
+  description: `Ontmoet Berkan Acarol, gecertificeerd autosleutelspecialist en eigenaar. Autosleutel24 Utrecht — dealer-niveau programmering, alle merken. KVK geregistreerd, verzekerd, 24/7 beschikbaar.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/over-ons`,
     languages: {
@@ -31,9 +31,9 @@ const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   '@id': `${SITE_CONFIG.domain}/#specialist`,
-  name: 'Ahmed',
-  jobTitle: 'Gecertificeerd Autosleutelspecialist',
-  description: 'Gecertificeerd autosleutelspecialist met meer dan 10 jaar ervaring in voertuigbeveiliging en autosleutelcodering. Specialist in transponder programmering, smart key systemen en contactslot reparatie voor alle automerken.',
+  name: 'Berkan Acarol',
+  jobTitle: 'Eigenaar & Autosleutelspecialist',
+  description: 'Gecertificeerd autosleutelspecialist en eigenaar met meer dan 10 jaar ervaring in voertuigbeveiliging en autosleutelcodering. Specialist in transponder programmering, smart key systemen en contactslot reparatie voor alle automerken.',
   worksFor: {
     '@id': `${SITE_CONFIG.domain}/#localbusiness`,
   },
@@ -94,22 +94,22 @@ export default function OverOnsPage() {
           marginBottom: '3rem',
           flexWrap: 'wrap',
         }}>
-          <div style={{
-            width: 90,
-            height: 90,
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #e8520a, #ff7c38)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '2.5rem',
-            flexShrink: 0,
-            border: '3px solid rgba(255,255,255,0.2)',
-          }}>🔑</div>
+          <img
+            src="/images/team/berkan-acarol.jpeg"
+            alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24"
+            style={{
+              width: 90,
+              height: 90,
+              borderRadius: '50%',
+              objectFit: 'cover',
+              flexShrink: 0,
+              border: '3px solid rgba(255,255,255,0.2)',
+            }}
+          />
           <div style={{ flex: 1, minWidth: 200 }}>
             <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>Uw Specialist</div>
-            <div style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.25rem' }}>Ahmed</div>
-            <div style={{ color: '#e8520a', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.75rem' }}>Gecertificeerd Autosleutelspecialist • 10+ jaar ervaring</div>
+            <div style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.25rem' }}>Berkan Acarol</div>
+            <div style={{ color: '#e8520a', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.75rem' }}>Eigenaar &amp; Autosleutelspecialist • 10+ jaar ervaring</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
               {['Autel Gecertificeerd', 'AVDI Gecertificeerd', 'KVK Geregistreerd', 'Volledig Verzekerd', '24/7 Bereikbaar'].map(badge => (
                 <span key={badge} style={{
@@ -129,7 +129,7 @@ export default function OverOnsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'start' }}>
           <div>
             <h2>Wie Zijn Wij?</h2>
-            <p>Autosleutel24 Utrecht is opgericht door Ahmed, een gecertificeerd autosleutelspecialist met meer dan 10 jaar ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
+            <p>Autosleutel24 Utrecht is opgericht door Berkan Acarol, een gecertificeerd autosleutelspecialist en ondernemer met meer dan 10 jaar ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
             <p>Wij zijn een mobiele dienst gespecialiseerd in autosleutelprogrammering voor alle merken en modellen. Wij komen naar u toe — of u nu thuis bent, op het werk, of gestrand langs de weg.</p>
             <p>Onze focus: eerlijke prijzen, snelle reactie, en technisch excellent werk. Geen vage verhalen — gewoon het probleem oplossen.</p>
 
@@ -142,16 +142,27 @@ export default function OverOnsPage() {
             </ul>
           </div>
 
-          <div style={{ background: 'var(--color-bg-alt)', padding: '2rem', borderRadius: '16px' }}>
-            <h3>Gecertificeerde Tools</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)', marginBottom: '1.5rem' }}>Wij investeren in de beste apparatuur voor dealer-niveau programmering:</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {tools.map((tool) => (
-                <span key={tool} style={{ background: 'var(--color-primary-bg)', color: 'var(--color-primary)', padding: '0.35rem 0.75rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 600, border: '1px solid rgba(26, 86, 219, 0.2)' }}>
-                  {tool}
-                </span>
-              ))}
-            </div>
+          <div style={{ background: 'var(--color-bg-alt)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
+            <img
+              src="/images/team/berkan-acarol.jpeg"
+              alt="Berkan Acarol — Eigenaar en Hoofdtechnicus van Autosleutel24"
+              style={{
+                width: '100%',
+                borderRadius: '12px',
+                aspectRatio: '3/4',
+                objectFit: 'cover',
+                marginBottom: '1.5rem',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            />
+            <h3 style={{ marginBottom: '0.25rem' }}>Berkan Acarol</h3>
+            <p style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '1rem' }}>Eigenaar &amp; Hoofdtechnicus</p>
+            <ul style={{ paddingLeft: '1.25rem', margin: 0, fontSize: '0.875rem', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
+              <li style={{ marginBottom: '0.5rem' }}>🔒 Specialist in geavanceerde transponderprogrammering &amp; ECU-clonering</li>
+              <li style={{ marginBottom: '0.5rem' }}>🛠️ Ruim 10 jaar actieve ervaring in autodiagnose &amp; slotenmakerij</li>
+              <li style={{ marginBottom: '0.5rem' }}>🎓 Volledig gecertificeerd voor Autel IM608 Pro II, AVDI Abrites &amp; Lonsdor</li>
+              <li style={{ marginBottom: '0.5rem' }}>🇳🇱 Persoonlijk werkzaam in Utrecht, Amsterdam, Almere en heel Midden-Nederland</li>
+            </ul>
           </div>
         </div>
 
