@@ -8,7 +8,7 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
-  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Vaste prijzen vanaf €75. Bel nu 24/7.',
+  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Vaste prijzen vanaf €95. Bel nu 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-slotenmaker` },
 };
 
@@ -94,7 +94,7 @@ export default function AutoSlotenmakerPage() {
       a: 'In veel gevallen wel. Indien u WA+ (Beperkt Casco) of All-risk verzekerd bent en er sprake is van diefstal of inbraakschade aan uw autosloten, vergoeden verzekeraars de kosten. U ontvangt van ons altijd een officiële factuur met btw en specificatie voor uw verzekeringsmaatschappij.'
     },
     {
-      q: 'Wat is het verschil tussen Autosleutel24 en de autodealer?',
+      q: 'What is het verschil tussen Autosleutel24 en de autodealer?',
       a: 'De autodealer vereist dat u uw auto laat wegslepen naar hun werkplaats en hanteert vaak leertijden van enkele dagen tot weken voor een nieuwe sleutel. Autosleutel24 komt naar u toe en regelt alles direct ter plaatse binnen 30-45 minuten, tegen een tarief dat tot wel 50% lager ligt dan bij de merkdealer.'
     }
   ];
@@ -111,31 +111,6 @@ export default function AutoSlotenmakerPage() {
       }
     }))
   };
-
-  const steps = [
-    {
-      num: 1,
-      title: 'Neem contact op',
-      desc: 'Bel of stuur een WhatsApp-bericht. Geef uw automerk, model en exacte locatie door. U ontvangt direct een vaste all-in prijsopgave.'
-    },
-    {
-      num: 2,
-      title: 'Monteur onderweg',
-      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Binnen 30-45 minuten is de bus bij u ter plaatse.'
-    },
-    {
-      num: 3,
-      title: 'Schadevrije opening',
-      desc: 'Met behulp van Lishi lockpicks en specialistisch gereedschap openen we de autodeur of kofferbak 100% schadevrij.'
-    },
-    {
-      num: 4,
-      title: 'Direct weer op weg',
-      desc: 'Indien nodig repareren we uw slot of programmeren we direct een nieuwe sleutel. U betaalt veilig per pin of contant.'
-    }
-  ];
-
-  const relatedPosts = getRelatedBlogPosts('auto-beveiliging');
 
   return (
     <>
@@ -190,7 +165,7 @@ export default function AutoSlotenmakerPage() {
                     Een buitensluiting of defect autoslot komt altijd ongelegen. Gelukkig hoeft u uw auto niet te laten wegslepen. Onze gespecialiseerde automotive slotenmaker komt direct naar u toe voor de volgende problemen:
                   </p>
                   <ul className={styles.bulletList}>
-                    <li><strong>Sleutel in dichte auto vergeten:</strong> Uw deuren zijn in het slot gevallen terwijl de sleutel nog in het contact of de kofferbak ligt. Wij openen uw auto volledig schadevrij.</li>
+                    <li><strong>Sleutel in dichte auto vergeten:</strong> Uw deuren zijn in het slot fallen terwijl de sleutel nog in het contact of de kofferbak ligt. Wij openen uw auto volledig schadevrij.</li>
                     <li><strong>Autosleutel kwijt of gestolen:</strong> Als u al uw sleutels verloren bent, maken en programmeren wij ter plekke een nieuwe werkende sleutel. De oude sleutel programmeren we direct uit de startonderbreker.</li>
                     <li><strong>Afgebroken autosleutel:</strong> Uw sleutelbaard is afgebroken in de deur of het contactslot. Wij verwijderen het fragment en slijpen ter plekke een nieuwe sleutel.</li>
                     <li><strong>Vastgelopen of defect contactslot:</strong> De sleutel draait niet meer om in het contactslot. Wij demonteren en reviseren uw contactslot direct op locatie.</li>
@@ -280,18 +255,18 @@ export default function AutoSlotenmakerPage() {
 
                 {/* Section 3 */}
                 <div>
-                  <h2>Hoe Werkt Onze Auto Slotenmakers Spoedservice?</h2>
-                  <div className={styles.stepsWrapper}>
+                  <h2>Hoe Werkt het Auto Slotenmaker Proces?</h2>
+                  <ol className={styles.stepList}>
                     {steps.map((step, idx) => (
-                      <div key={idx} className={styles.stepCard}>
-                        <div className={styles.stepHeader}>
-                          <span className={styles.stepBadge}>{step.num}</span>
-                          <h3>{step.title}</h3>
+                      <li key={idx} className={styles.stepItem}>
+                        <span className={styles.stepNum}>{step.num}</span>
+                        <div className={styles.stepText}>
+                          <strong>{step.title}</strong>
+                          {step.desc}
                         </div>
-                        <p>{step.desc}</p>
-                      </div>
+                      </li>
                     ))}
-                  </div>
+                  </ol>
                 </div>
 
                 {/* Section 4 */}
@@ -309,88 +284,129 @@ export default function AutoSlotenmakerPage() {
                 </div>
 
                 {/* FAQ Section */}
-                <div className={styles.faqSection}>
+                <div>
                   <h2>Veelgestelde Vragen over de Auto Slotenmaker</h2>
-                  <div className={styles.faqContainer}>
-                    {faqItems.map((item, idx) => (
-                      <details key={idx} className={styles.faqDetails}>
-                        <summary className={styles.faqSummary}>{item.q}</summary>
-                        <p className={styles.faqAnswer}>{item.a}</p>
-                      </details>
-                    ))}
-                  </div>
+                  {faqItems.map((item, idx) => (
+                    <details key={idx} className={styles.faqItem}>
+                      <summary className={styles.faqQuestion}>
+                        {item.q}
+                        <span className={styles.faqChevron}>+</span>
+                      </summary>
+                      <p className={styles.faqAnswer}>{item.a}</p>
+                    </details>
+                  ))}
                 </div>
 
               </div>
 
               {/* Sidebar */}
               <aside className={styles.sidebar}>
-                <div className={styles.sidebarBox}>
-                  <h3>Spoed Auto Slotenmaker</h3>
-                  <p>Direct contact met onze monteur op locatie:</p>
-                  <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.sidebarBtnCall} id="asm-sidebar-phone">
+                <div className={styles.sideCard}>
+                  <h3>Direct Hulp Nodig?</h3>
+                  <p>Bel of WhatsApp ons. Wij zijn 24/7 bereikbaar en gemiddeld binnen 30 minuten bij u.</p>
+                  <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.sidePhone} id="asm-sidebar-phone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
                     Bel: {SITE_CONFIG.phone}
                   </a>
-                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.sidebarBtnWa} id="asm-sidebar-wa">
-                    WhatsApp Sturen
-                  </a>
-                </div>
-
-                <div className={styles.sidebarBox}>
-                  <h3>Garanties &amp; Zekerheden</h3>
-                  <ul className={styles.sidebarList}>
-                    <li>✓ 24/7 Bereikbaar</li>
-                    <li>✓ Geen Sleepkosten</li>
-                    <li>✓ 12 Maanden Garantie</li>
-                    <li>✓ Vaste Prijsvooraf</li>
-                    <li>✓ PIN/Tikkie Betaling</li>
-                  </ul>
-                </div>
-
-                {/* Real Google Reviews */}
-                <div className={styles.sidebarBox}>
-                  <h3>Wat Klanten Zeggen</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {SHARED_GOOGLE_REVIEWS.slice(0, 2).map((rev, idx) => (
-                      <GoogleReviewCard key={idx} {...rev} />
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.sideWa} id="asm-sidebar-wa">WhatsApp Direct</a>
+                  <div className={styles.sideList}>
+                    {['Geen sleepkosten', 'Vaste prijs vooraf', 'Verzekeringsklare factuur', '12 maanden garantie', '24/7 beschikbaar'].map(item => (
+                      <div key={item} className={styles.sideListItem}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{color:'#22c55e',flexShrink:0}} aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>{item}</span>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Related Blog Posts */}
-                {relatedPosts.length > 0 && (
-                  <div className={styles.sidebarBox}>
-                    <h3>Gerelateerde Artikelen</h3>
-                    <ul className={styles.relatedPostsList}>
-                      {relatedPosts.slice(0, 3).map((post, idx) => (
-                        <li key={idx}>
-                          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <div className={styles.ratingCard}>
+                  <div className={styles.ratingStars}>★★★★★</div>
+                  <p className={styles.ratingText}>&ldquo;Mijn sleutels lagen nog in de kofferbak en de auto zat op slot. Autosleutel24 was binnen 30 min ter plaatse en opende de kofferbak 100% schadevrij. Super betrouwbare auto slotenmaker!&rdquo;</p>
+                  <span className={styles.ratingMeta}>Daan K. — Volkswagen Golf, Utrecht</span>
+                  <span className={styles.ratingCount}>{SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5</span>
+                </div>
               </aside>
 
             </div>
+
+            {/* Bottom CTA block */}
+            <div className={styles.ctaBlock}>
+              <h2>Auto Slotenmaker Nodig? Bel Direct</h2>
+              <p>Onze mobiele specialist staat binnen 30 min bij u ter plaatse. Vaste prijs, geen verrassingen.</p>
+              <div className={styles.ctaBtnsGrid}>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary} id="asm-bottom-phone">Bel: {SITE_CONFIG.phone}</a>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWhatsapp} id="asm-bottom-wa">WhatsApp Direct</a>
+              </div>
+              <span className={styles.microText}>24/7 beschikbaar — ook &apos;s nachts en in het weekend</span>
+            </div>
+
           </div>
         </section>
 
-        {/* Bottom Call Strip */}
-        <section className={styles.bottomStrip}>
-          <div className={styles.bottomStripInner}>
-            <h2>Buitengesloten of Autosleutel Kwijt? Wij Helpen Direct!</h2>
-            <p>Geen verborgen toeslagen, 100% betrouwbare en gecertificeerde service.</p>
-            <div className={styles.bottomCtas}>
-              <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="asm-bottom-phone">
-                Bel Spoedhulp
-              </a>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWa} id="asm-bottom-wa">
-                WhatsApp Direct
-              </a>
+        {/* ── RELATED BLOGS SECTION ────────────────────────────────── */}
+        {(() => {
+          const relatedPosts = getRelatedBlogPosts('auto-beveiliging');
+          if (!relatedPosts || relatedPosts.length === 0) return null;
+          return (
+            <section className={styles.relatedBlogsSection}>
+              <div className={styles.relatedBlogsContainer}>
+                <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+                  GERELATEERDE KENNIS &amp; ADVIES
+                </p>
+                <h2 className={styles.relatedBlogsTitle}>
+                  Handige artikelen over Auto Slotenmaker &amp; Beveiliging
+                </h2>
+                <div className={styles.relatedBlogsGrid}>
+                  {relatedPosts.map((post) => (
+                    <Link
+                      key={post.slug}
+                      href={`/blog/${post.slug}`}
+                      className={styles.blogPostCard}
+                      id={`asm-related-blog-${post.slug}`}
+                    >
+                      <div className={styles.blogPostMeta}>
+                        <span className={styles.blogPostReadTime}>{post.readTime} lezen</span>
+                        <span className={styles.blogPostDate}>
+                          {new Date(post.publishDate).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </span>
+                      </div>
+                      <h3 className={styles.blogPostTitle}>{post.title}</h3>
+                      <p className={styles.blogPostExcerpt}>{post.excerpt}</p>
+                      <span className={styles.blogPostLink}>Lees artikel →</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        })()}
+
+        {/* ── REVIEWS SECTION ────────────────────────────────────── */}
+        <section className={styles.reviews}>
+          <div className={styles.container}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+              KLANTBEOORDELINGEN
+            </p>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
+              Wat Klanten Zeggen over de Auto Slotenmaker
+            </h2>
+            <div className={styles.ratingBig}>
+              <span className={styles.ratingNum}>4.9</span>
+              <div>
+                <div className={styles.ratingStarsReview}>★★★★★</div>
+                <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
+                  {SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5
+                </span>
+              </div>
+            </div>
+            <div className={styles.reviewGrid}>
+              {SHARED_GOOGLE_REVIEWS.map((review, i) => (
+                <GoogleReviewCard key={i} review={review} />
+              ))}
             </div>
           </div>
         </section>
+
       </main>
     </>
   );
