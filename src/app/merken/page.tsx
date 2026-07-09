@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 import { BRANDS } from '@/config/brands';
 import { SITE_CONFIG } from '@/config/site.config';
 
