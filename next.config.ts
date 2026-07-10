@@ -85,6 +85,36 @@ const nextConfig: NextConfig = {
         destination: '/steden/:citySlug',
         permanent: true,
       },
+      {
+        source: '/steden/:citySlug/ghost-immobiliser-installeren',
+        destination: '/steden/:citySlug',
+        permanent: true,
+      },
+      {
+        source: '/diensten/ghost-immobiliser-installeren',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/blog/ghost-immobiliser-utrecht',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/auto-beveiliging',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/autoalarm-programmeren',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/ghost-immobiliser',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
     ];
   },
 };
