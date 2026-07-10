@@ -20,21 +20,21 @@ export async function generateStaticParams() {
   const params: { citySlug: string; slug: string }[] = [];
 
   for (const city of CITIES) {
-    // Brand combos
-    for (const brand of BRANDS) {
-      const eligible =
-        (city.priority === 'P1' && (brand.priority === 'P1' || brand.priority === 'P2')) ||
-        (city.priority === 'P2' && brand.priority === 'P1') ||
-        (city.priority === 'P3' && brand.priority === 'P1');
-      if (eligible) {
-        params.push({ citySlug: city.slug, slug: `${brand.nameSlug}-autosleutel-bijmaken` });
+    // Brand combos — only for P1 core regional hubs
+    if (city.priority === 'P1') {
+      for (const brand of BRANDS) {
+        if (brand.priority === 'P1' || brand.priority === 'P2') {
+          params.push({ citySlug: city.slug, slug: `${brand.nameSlug}-autosleutel-bijmaken` });
+        }
       }
     }
-    // Service combos — all services for all P1+P2 cities; core 5 for P3
+
+    // Service combos — all services for P1 hubs; core services for P2 towns
     const coreSlugs = ['alle-sleutels-kwijt-auto', 'sleutel-bijmaken', 'transponder-programmeren', 'smart-key-programmeren', 'contactslot-reparatie'];
-    const services = city.priority === 'P3'
-      ? DIENSTEN.filter(s => coreSlugs.includes(s.slug))
-      : DIENSTEN;
+    const services = city.priority === 'P1'
+      ? DIENSTEN
+      : DIENSTEN.filter(s => coreSlugs.includes(s.slug));
+
     for (const service of services) {
       params.push({ citySlug: city.slug, slug: service.slug });
     }
