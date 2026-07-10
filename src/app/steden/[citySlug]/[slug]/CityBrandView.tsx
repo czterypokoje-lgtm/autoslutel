@@ -133,8 +133,17 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
     ? `Onze mobiele bus is actief in heel ${city.city}, inclusief omliggende wijken en gebieden zoals ${city.subAreas.slice(0, 3).join(', ')}.`
     : `Onze mobiele bus bedient de gehele regio van ${city.city} direct aan huis of op het werk.`;
 
-  const relatedBrands = BRANDS.filter(b => b.priority === 'P1' && b.slug !== brand.slug).slice(0, 5);
-  const relatedCities = CITIES.filter(c => c.country === city.country && c.slug !== citySlug && c.priority !== 'P3').slice(0, 5);
+  const relatedBrands = BRANDS.filter(b => b.slug !== brand.slug).slice(0, 24);
+  const relatedCities = CITIES.filter(c => c.slug !== citySlug).slice(0, 16);
+  const relatedServices = [
+    { slug: 'autodeur-openen', name: 'Autodeur Openen' },
+    { slug: 'autosleutel-kwijt', name: 'Autosleutel Kwijt (AKL)' },
+    { slug: 'batterij-vervangen', name: 'Batterij Vervangen' },
+    { slug: 'autosleutels-repareren', name: 'Autosleutels Repareren' },
+    { slug: 'smart-key-programmeren', name: 'Smart Key / Keyless Entry' },
+    { slug: 'reservesleutel-maken', name: 'Reservesleutel Laten Maken' },
+  ];
+
 
   const trustItems = [
     '24/7 Mobiele Service',
@@ -289,6 +298,17 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
                   </p>
                 </div>
 
+                {/* Section 2.6: Lokale Wijkdekking & Mobiele Service in {city.city} */}
+                <div>
+                  <h2>Mobiele {brand.name} Autosleutel Service in Heel {city.city} en Omgeving</h2>
+                  <p>
+                    Staat u met uw {brand.name} in het centrum van {city.city}, in een omliggende woonwijk of bij een bedrijventerrein in de provincie {city.region}? Onze mobiele autoslotenmakers rijden dagelijks door heel {city.city} en zijn gemiddeld binnen <strong>{city.travelTime}</strong> ter plaatse. Omdat wij niet werken met dure vaste werkplaatsen maar met volledig ingerichte servicebussen, kunnen wij u direct op locatie helpen met het frezen en programmeren van een nieuwe autosleutel.
+                  </p>
+                  <p>
+                    Of het nu gaat om een reguliere transpondersleutel, een klapsleutel met afstandsbediening of een geavanceerde Smart Key / Keyless Go sleutel: wij hebben altijd de juiste chip en sleutelbaard op voorraad voor uw {brand.name}. Ook wanneer u alle sleutels kwijt bent (All Keys Lost), openen wij uw auto 100% schadevrij en maken wij ter plekke een compleet nieuwe sleutellijn aan via de OBD2-poort van uw auto. U bespaart hierdoor tot wel 50% op de kosten én u voorkomt onnodige wegsleepkosten naar de officiële merkdealer in {city.city}.
+                  </p>
+                </div>
+
                 {/* Section 3: Hoe Werkt Het */}
                 <div>
                   <h2>Hoe Werkt Onze {brand.name} Sleutelservice in {city.city}?</h2>
@@ -339,25 +359,35 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
                   ))}
                 </div>
 
-                {/* Section 6: Related Internal Links */}
-                <div style={{ marginTop: '3rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1.5rem' }}>
+                {/* Section 6: Comprehensive Internal Linking Network */}
+                <div style={{ marginTop: '3rem', padding: '1.75rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '2rem' }}>
                     <div>
-                      <h3 style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Andere Merken in {city.city}</h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        {relatedBrands.map(b => (
-                          <Link key={b.slug} href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`} style={{ fontSize: '0.875rem', color: 'var(--navy-600)', textDecoration: 'none' }}>
-                            {`${b.name} Autosleutel Bijmaken ${city.city} →`}
+                      <h3 style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Andere Merken in {city.city}</h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                        {relatedBrands.slice(0, 15).map(b => (
+                          <Link key={b.slug} href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`} style={{ fontSize: '0.85rem', color: 'var(--navy-700)', textDecoration: 'none' }}>
+                            {`${b.name} Sleutel Bijmaken ${city.city} →`}
                           </Link>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <h3 style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{brand.name} in Andere Steden</h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <h3 style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Onze Diensten in {city.city}</h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                        {relatedServices.map(s => (
+                          <Link key={s.slug} href={`/steden/${citySlug}/${s.slug}`} style={{ fontSize: '0.85rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 600 }}>
+                            {`${s.name} ${city.city} →`}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{brand.name} in Andere Steden</h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
                         {relatedCities.map(c => (
-                          <Link key={c.slug} href={`/steden/${c.slug}/${brandSlug}`} style={{ fontSize: '0.875rem', color: 'var(--navy-600)', textDecoration: 'none' }}>
-                            {`${brand.name} Autosleutel Bijmaken ${c.city} →`}
+                          <Link key={c.slug} href={`/steden/${c.slug}/${brandSlug}`} style={{ fontSize: '0.85rem', color: 'var(--navy-700)', textDecoration: 'none' }}>
+                            {`${brand.name} Bijmaken ${c.city} →`}
                           </Link>
                         ))}
                       </div>

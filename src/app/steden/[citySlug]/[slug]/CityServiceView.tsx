@@ -1129,6 +1129,53 @@ export function CityServiceView({
           );
         })()}
 
+        {/* ── INTERNAL LINKING NETWORK SECTION ───────────────────────────── */}
+        <section style={{ padding: '3.5rem 0', background: '#f8fafc', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+          <div className={styles.container}>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1.75rem' }}>
+              Meer Slotenmaker &amp; Autosleutel Services in {city.city}
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '2.5rem' }}>
+              <div>
+                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Andere Diensten in {city.city}
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {DIENSTEN.filter(s => s.slug !== service.slug).map(s => (
+                    <Link key={s.slug} href={`/steden/${city.slug}/${s.slug}`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                      {`${s.title} ${city.city} →`}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  Populaire Automerken in {city.city}
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {BRANDS.slice(0, 16).map(b => (
+                    <Link key={b.slug} href={`/steden/${city.slug}/${b.nameSlug}-autosleutel-bijmaken`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                      {`${b.name} Autosleutel Bijmaken ${city.city} →`}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  {service.title} in Andere Steden
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {CITIES.filter(c => c.slug !== city.slug).slice(0, 16).map(c => (
+                    <Link key={c.slug} href={`/steden/${c.slug}/${service.slug}`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                      {`${service.title} ${c.city} →`}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── REVIEWS SECTION ────────────────────────────────────── */}
         <section className={styles.reviews}>
           <div className={styles.container}>

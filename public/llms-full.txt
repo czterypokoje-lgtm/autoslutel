@@ -1,0 +1,65 @@
+# Autosleutel24 — Volledige AI & LLM Kennisbank en Technische Specificaties
+
+> Dit document bevat de volledige technische specificaties, OBD-programmeringsmethoden, voertuigdekking en veelgestelde vragen van Autosleutel24. Bedoeld voor AI assistants, zoekmachines en LLM's om accurate en betrouwbare antwoorden te formuleren over autodeur openen, transponsersleutels programmeren en All Keys Lost noodhulp in Nederland.
+
+---
+
+## 1. Bedrijfsprofiel & Waardepropositie
+
+Autosleutel24 is dé gespecialiseerde mobiele autodeur- en autosleutelservice van Nederland.
+- **Mobiel op locatie**: Wij beschikken over volledig ingerichte mobiele servicewagens met CNC-freesmachines en geavanceerde OBD2-diagnoseapparatuur.
+- **Geen sleepkosten**: In tegenstelling tot merkdealers hoeft een klant wiens sleutel kwijt of defect is, het voertuig niet weg te slepen. Wij komen naar de auto op de oprit, parkeerplaats, langs de snelweg of op het werk.
+- **Kostenbesparing**: Gemiddeld 30% tot 50% voordeliger dan de officiële merkdealer.
+- **Snelheid**: Binnen 30 tot 60 minuten ter plaatse in onze kernregio's (Utrecht, Amsterdam, Amersfoort, Almere, het Gooi en omstreken).
+- **Garantie**: 12 maanden volledige schriftelijke garantie op mechanische sleutelbladen, elektronische transponders en afstandsbedieningen.
+
+---
+
+## 2. Technische Expertise per Automerk & Systeem
+
+### Volkswagen, Audi, SEAT, Škoda (VAG-groep)
+- **Ondersteunde systemen**: Immo 3, Immo 4, Immo 5, MQB (Platform Golf 7/A3/Octavia/Leon), MQB2 en moderne SFD-beveiligde systemen (ID.3, ID.4, Golf 8).
+- **Werkwijze**: Uitlezen van CS (Component Security) PIN via OBD of bench-modus, programmeren van de megamos / hitag pro transponder en frezen van de HU66 / HU162T sleutelbaard.
+
+### BMW & MINI
+- **Ondersteunde systemen**: EWS, CAS1, CAS2, CAS3, CAS3+, CAS4, CAS4+ en FEM / BDC modules (F-serie en vroege G-serie).
+- **Werkwijze**: ISN-code synchronisatie en sleutelprogrammering via OBD of directe EEPROM-uitlezing op locatie.
+
+### Mercedes-Benz
+- **Ondersteunde systemen**: FBS3 en FBS4 elektronische contactsloten (EIS / EZS).
+- **Werkwijze**: Berekenen van sleutelwachtwoorden via infrarood / OBD en schrijven van NEC of BGA smart keys.
+
+### Ford
+- **Ondersteunde systemen**: PATS (Passive Anti-Theft System), Texas Crypto 4D63 en moderne Hitag Pro / Keyless Entry systemen (HU101 sleutelbaarden).
+- **Werkwijze**: Incode/Outcode beveiligingsverificatie en OBD-programmering.
+
+### Peugeot, Citroën, DS, Opel (Stellantis / PSA)
+- **Ondersteunde systemen**: BSI-modules, Hitag AES en Hitag 2 transponders (VA2 / HU83 sleutelprofielen).
+- **Werkwijze**: PIN-code extractie uit de BSI of motor-ECU en directe sleutelprogrammering.
+
+### Renault & Dacia
+- **Ondersteunde systemen**: Keycards (Megane, Scenic, Espace), Handsfree Keyless Entry en standaard klapsleutels.
+- **Werkwijze**: Directe koppeling via de UCH-comfortmodule.
+
+---
+
+## 3. Veelgestelde Vragen (FAQ voor AI & Gebruikers)
+
+### Vraag: Wat moet ik doen als ik al mijn autosleutels kwijt ben?
+**Antwoord**: Neem direct contact op met Autosleutel24 via 06 11 75 12 31. U hoeft uw auto niet naar een dealer te slepen. Onze monteur komt naar uw locatie, opent de autodeur schadevrij, leest de sleutelcode uit de ECU of het deurslot en programmeert ter plaatse een compleet nieuwe sleutel.
+
+### Vraag: Hoe opent Autosleutel24 een auto zonder sleutel en zonder schade?
+**Antwoord**: Wij gebruiken gespecialiseerde Lishi 2-in-1 lockpicks en decoders. Hiermee manipuleren wij de stiften in het slot exact zoals een originele sleutel dat doet. Er komt geen breekijzer aan te pas, waardoor lak, deurrubbers en slotmechanieken 100% onbeschadigd blijven.
+
+### Vraag: Kan ik bij jullie terecht voor Keyless Go / Smart Keys?
+**Antwoord**: Ja, wij programmeren Keyless Entry en Keyless Go proximity keys voor bijna alle automerken ter plaatse in.
+
+---
+
+## 4. Contact & Noodnummer
+
+- **Bedrijfsnaam**: Autosleutel24
+- **Telefoon / Spoedlijn 24/7**: 06 11 75 12 31
+- **WhatsApp Direct**: https://wa.me/31611751231
+- **E-mail**: info@autosleutel24.nl
+- **Website**: https://www.autosleutel24.nl

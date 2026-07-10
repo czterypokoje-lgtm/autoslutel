@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import { SITE_CONFIG } from '@/config/site.config';
+import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { FAQ_GLOBAL, FAQ_AUTOSLEUTEL_BIJMAKEN, FAQ_TRANSPONDER, FAQ_SMART_KEY, FAQ_AUTO_OP_SLOT, FAQ_AKL } from '@/config/faq';
 
 export const metadata: Metadata = {
@@ -132,7 +132,7 @@ export default function FAQPage() {
               <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--orange-600)', padding: '0.875rem 1.75rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', fontSize: '1rem' }}>
                 📞 {SITE_CONFIG.phone}
               </a>
-              <a href={`https://wa.me/${SITE_CONFIG.whatsapp}`} style={{ background: '#25D366', color: '#fff', padding: '0.875rem 1.75rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', fontSize: '1rem' }}>
+              <a href={WHATSAPP_URL} style={{ background: '#25D366', color: '#fff', padding: '0.875rem 1.75rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', fontSize: '1rem' }}>
                 💬 WhatsApp
               </a>
             </div>

@@ -45,4 +45,4 @@ export const SITE_CONFIG = {
   },
 } as const;
 
-export const WHATSAPP_URL = `https://wa.me/${SITE_CONFIG.whatsapp}?text=Hallo%2C%20ik%20heb%20hulp%20nodig%20met%20mijn%20autosleutel.%20Automerk%20en%20model%3A%20`;
+export const WHATSAPP_URL = '/whatsapp';
