@@ -111,9 +111,7 @@ export default function SleutelBijmakenPage() {
             </nav>
             <h1>Autosleutel Bijmaken — Mobiel Ter Plaatse in de Randstad</h1>
             <p className={styles.heroLead}>
-              Uw autosleutel bijmaken zonder naar de dealer te hoeven? Autosleutel24 komt naar u toe — thuis, op het werk, 
-              of waar u ook gestrand bent. Wij maken en programmeren reserve sleutels voor vrijwel elk merk en model, 
-              terwijl u wacht. Geen sleepkosten. Geen afspraak bij de dealer. Geen dagen wachten.
+              Wilt u direct een nieuwe <strong>autosleutel bijmaken met afstandsbediening</strong> of een moderne <strong>autosleutel met keyless entry</strong> zonder naar de dure dealer te hoeven? Autosleutel24 komt 24/7 naar u toe — thuis, op het werk of langs de weg. U kunt bij ons snel een professionele <strong>extra autosleutel</strong> of reservesleutel <strong>laten bijmaken</strong> en direct op locatie <strong>laten maken</strong>. Wij frezen en programmeren alle soorten <strong>autosleutels met afstandsbediening</strong> klaar terwijl u wacht, zonder sleepkosten of lange wachttijden.
             </p>
             <div className={styles.heroCtas}>
               <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="sb-hero-phone">
@@ -146,22 +144,25 @@ export default function SleutelBijmakenPage() {
                 
                 {/* Section 1 */}
                 <div>
-                  <h2>Wanneer Heeft U een Reserve Sleutel Nodig?</h2>
+                  <h2>Wanneer Heeft U een Extra Autosleutel of Reservesleutel Nodig?</h2>
                   <p>
-                    Een reserve sleutel is geen luxe — het is voorkomen van een crisis. Wij maken reserve sleutels voor:
+                    Een professioneel geteste <strong>extra autosleutel</strong> is geen overbodige luxe — het voorkomt dure noodsituaties. Veel bestuurders kiezen ervoor om tijdig een tweede sleutel te <strong>laten bijmaken</strong> of een complete <strong>autosleutel bijmaken met afstandsbediening</strong> in de volgende situaties:
                   </p>
                   <ul className={styles.bulletList}>
-                    <li><strong>Preventie:</strong> U heeft één sleutel en wilt een reserve voordat de eerste kwijt raakt of stuk gaat.</li>
-                    <li><strong>Autosleutel kwijt:</strong> Uw enige sleutel is verloren. Wij maken een nieuwe op basis van het slot of het immobilizer systeem.</li>
-                    <li><strong>Sleutel afgebroken:</strong> De sleutel is gebroken in het contactslot of de deur. Wij extraheren het fragment en maken een vervanger.</li>
-                    <li><strong>Sleutel gestolen:</strong> Wij maken een nieuwe sleutel en wissen de oude uit het systeem zodat de gestolen sleutel niet meer werkt.</li>
-                    <li><strong>Reserve voor partner/kind:</strong> Twee sleutels zijn het minimum. Wij maken een tweede, third of fourth sleutel tegen een gereduceerd tarief.</li>
+                    <li><strong>Preventie &amp; Gemak:</strong> U heeft momenteel slechts één sleutel en wilt preventief een extra exemplaar <strong>laten maken</strong> voordat u hem verliest of beschadigt.</li>
+                    <li><strong>Autosleutel kwijt:</strong> Uw enige sleutel is verloren. Wij kunnen direct op locatie een gloednieuwe <strong>autosleutel met keyless entry</strong> of reguliere transpondersleutel programmeren.</li>
+                    <li><strong>Versleten knoppen of behuizing:</strong> Wanneer oudere <strong>autosleutels met afstandsbediening</strong> haperen, is het vaak slimmer om direct een nieuwe klapsleutel te <strong>laten bijmaken</strong> met garantie.</li>
+                    <li><strong>Sleutel gestolen:</strong> Wij leveren een nieuwe sleutel en wissen de oude sleutels direct uit de autocomputer (ECU) voor maximale diefstalbeveiliging.</li>
+                    <li><strong>Meerdere bestuurders:</strong> Deelt u de auto met uw partner of gezin? Wij kunnen meerdere <strong>autosleutels met afstandsbediening</strong> voordelig op locatie inleren.</li>
                   </ul>
                 </div>
 
                 {/* Section 2 */}
                 <div>
                   <h2>Wat Kost een Autosleutel Bijmaken? — Transparante Prijzen</h2>
+                  <p>
+                    Wilt u vooraf exact weten wat de tarieven zijn om een <strong>extra autosleutel</strong> te <strong>laten maken</strong>? Of u nu een standaard transpondersleutel, een klapsleutel of een luxe <strong>autosleutel met keyless entry</strong> wilt <strong>laten bijmaken</strong>, wij hanteren transparante all-in tarieven inclusief slijpen en inleren:
+                  </p>
                   <div className={styles.tableWrapper}>
                     <table className={styles.pricingTable}>
                       <thead>
@@ -201,8 +202,7 @@ export default function SleutelBijmakenPage() {
                     </table>
                   </div>
                   <div className={styles.callout}>
-                    <strong>Dealer prijsvergelijking:</strong> Een Mercedes dealer rekent €350-€500 voor een nieuwe sleutel plus €150 inleerkosten. 
-                    Wij doen dit ter plaatse voor €249, inclusief programmering.
+                    <strong>Dealer vs. Slotenmaker:</strong> Bij de merkdealer betaalt u vaak €350 tot €550 om moderne <strong>autosleutels met afstandsbediening</strong> te bestellen. Bij Autosleutel24 kunt u dezelfde dag nog een originele kwaliteit <strong>autosleutel bijmaken met afstandsbediening</strong> vanaf €149 tot €249, inclusief programmering aan huis.
                   </div>
                 </div>
 
@@ -371,6 +371,26 @@ export default function SleutelBijmakenPage() {
                     </summary>
                     <p className={styles.faqAnswer}>
                       Ja, 12 maanden garantie op alle sleutels en programmering. Daarnaast ontvangt u een verzekeringsklare factuur.
+                    </p>
+                  </details>
+
+                  <details className={styles.faqItem}>
+                    <summary className={styles.faqQuestion}>
+                      Kan ik op locatie een autosleutel bijmaken met afstandsbediening?
+                      <span className={styles.faqChevron}>+</span>
+                    </summary>
+                    <p className={styles.faqAnswer}>
+                      Zeker! Wij komen met onze volledig uitgeruste mobiele servicewagen naar uw locatie om een complete <strong>autosleutel bijmaken met afstandsbediening</strong> uit te voeren. Of u nu een extra exemplaar wilt <strong>laten bijmaken</strong> of direct een reservesleutel wilt <strong>laten maken</strong>, wij programmeren alle <strong>autosleutels met afstandsbediening</strong> vakkundig via de OBD2-poort terwijl u wacht.
+                    </p>
+                  </details>
+
+                  <details className={styles.faqItem}>
+                    <summary className={styles.faqQuestion}>
+                      Programmeren jullie ook een autosleutel met keyless entry?
+                      <span className={styles.faqChevron}>+</span>
+                    </summary>
+                    <p className={styles.faqAnswer}>
+                      Ja, wij zijn gespecialiseerd in het inleren van moderne smart keys en elk type <strong>autosleutel met keyless entry</strong> (proximity start). U hoeft uw auto niet weg te slepen; wij kunnen ter plaatse een <strong>extra autosleutel</strong> of keyless fob programmeren met behoud van uw fabrieksgarantie.
                     </p>
                   </details>
                 </div>
