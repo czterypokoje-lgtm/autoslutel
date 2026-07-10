@@ -10,17 +10,17 @@
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Firefox */
-  padding-bottom: 1rem;
+  scrollbar-width: none;
+  padding-bottom: 0.75rem;
 }
 
 .sliderViewport::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
 .sliderTrack {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.25rem;
   width: max-content;
   padding: 0 1rem;
 }
@@ -30,24 +30,16 @@
   width: 320px;
   flex-shrink: 0;
   position: relative;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid #1e293b;
 }
 
 @media (max-width: 640px) {
   .card {
     width: 280px;
   }
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 35px rgba(249, 115, 22, 0.18);
-  border-color: rgba(249, 115, 22, 0.4);
 }
 
 .imageContainer {
@@ -65,10 +57,10 @@
 }
 
 .arrowBtn {
-  background: #e2e8f0;
-  border: none;
-  width: 40px;
-  height: 40px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -76,9 +68,8 @@
   justify-content: center;
   color: #0f172a;
   font-size: 1.25rem;
-  transition: all 0.2s ease;
 }
 
 .arrowBtn:hover {
-  background: #cbd5e1;
+  background: #e2e8f0;
 }

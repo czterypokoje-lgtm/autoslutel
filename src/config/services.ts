@@ -117,7 +117,6 @@ export const SERVICES: Service[] = [
     color: '#7c3aed',
     excerpt: 'Waterschade, ongeval, gebruikte modules — wij redden uw auto waar dealers stoppen. ISN extractie, ECU klonen, CP verwijdering.',
   },
-  },
   {
     slug: 'bedrijfswagen-sleutel-beheer',
     title: 'Bedrijfswagen Sleutel Beheer',

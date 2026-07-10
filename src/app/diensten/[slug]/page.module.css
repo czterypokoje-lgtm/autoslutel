@@ -256,12 +256,10 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stepItem:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.03);
+  border-color: #cbd5e1;
 }
 
 .stepNum {
@@ -744,12 +742,8 @@
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   text-decoration: none;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
 }
 .blogPostCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
   border-color: #f97316;
 }
 .blogPostMeta {

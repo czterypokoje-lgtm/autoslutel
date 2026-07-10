@@ -464,4 +464,5 @@ export const DIENSTEN: Service[] = [
       { q: 'Moet ik na contactslot-reparatie een andere sleutel gebruiken?', a: 'Nee. Wij bouwen het nieuwe mechanische slot zo om dat het perfect past op de code van uw huidige deursleutels. U behoudt dus gewoon één sleutel voor de hele auto.' }
     ],
     relatedSlugs: ['autosleutels-repareren', 'sleutel-afgebroken-in-slot', 'transponder-programmeren', 'alle-sleutels-kwijt-auto']
+  }
 ];

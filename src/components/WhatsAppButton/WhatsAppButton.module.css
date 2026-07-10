@@ -13,16 +13,12 @@
   font-weight: 700;
   font-size: 0.95rem;
   text-decoration: none;
-  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.5);
-  transition: all var(--t-fast);
-  animation: fadeUp 0.5s ease 1s both;
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 .btn:hover {
   background: #1fba57;
   color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(37, 211, 102, 0.6);
   text-decoration: none;
 }
 

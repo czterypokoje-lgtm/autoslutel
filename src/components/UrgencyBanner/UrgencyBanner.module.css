@@ -19,7 +19,6 @@
   width: 7px; height: 7px;
   background: #fff;
   border-radius: 50%;
-  animation: pulse 1.8s infinite;
   flex-shrink: 0;
 }
 .text { color: rgba(255,255,255,0.95); }
