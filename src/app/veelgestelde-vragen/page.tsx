@@ -4,7 +4,9 @@ import { SITE_CONFIG } from '@/config/site.config';
 import { FAQ_GLOBAL, FAQ_AUTOSLEUTEL_BIJMAKEN, FAQ_TRANSPONDER, FAQ_SMART_KEY, FAQ_AUTO_OP_SLOT, FAQ_AKL } from '@/config/faq';
 
 export const metadata: Metadata = {
-  title: `Veelgestelde Vragen Autosleutel Bijmaken | Kosten, Tijdsduur & Merken | ${SITE_CONFIG.name}`,
+  title: {
+    absolute: 'Veelgestelde Vragen Autosleutel | FAQ | Autosleutel24',
+  },
   description: `Antwoorden op alle vragen over autosleutel bijmaken, kosten, transponder programmeren, smart key en auto openen. Bel direct: ${SITE_CONFIG.phone}`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/veelgestelde-vragen`,

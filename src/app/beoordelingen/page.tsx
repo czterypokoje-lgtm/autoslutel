@@ -4,7 +4,9 @@ import { SITE_CONFIG } from '@/config/site.config';
 import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
 
 export const metadata: Metadata = {
-  title: `Beoordelingen | ${SITE_CONFIG.name}`,
+  title: {
+    absolute: 'Klantbeoordelingen (4.9★) | Autosleutel24',
+  },
   description: `Klantbeoordelingen van ${SITE_CONFIG.fullName}. 4.9/5 sterren op Google. 127 tevreden klanten.`,
   alternates: { canonical: `${SITE_CONFIG.domain}/beoordelingen` },
 };

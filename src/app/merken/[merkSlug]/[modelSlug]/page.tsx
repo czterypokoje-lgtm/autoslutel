@@ -32,7 +32,9 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
   const model = brand?.models?.find(m => m.slug.toLowerCase() === decodedModel);
   if (!brand || !model) return {};
 
-  const title = `${brand.name} ${model.name} Autosleutel Bijmaken | Autosleutel Specialist | Bouwjaren: ${model.years} | ${SITE_CONFIG.name}`;
+  const title = {
+    absolute: `${brand.name} ${model.name} Sleutel Bijmaken | Autosleutel24`,
+  };
   const desc = `${brand.name} ${model.name} autosleutel bijmaken of programmeren. Autosleutel Specialist — bouwjaren ${model.years}. Mobiel aan huis, 24/7 bereikbaar. Goedkoper dan de dealer.`;
 
   return {

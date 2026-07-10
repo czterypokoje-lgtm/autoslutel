@@ -6,7 +6,9 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: `Prijzen Autosleutel Programmeren | Indicatie & Tarieven | ${SITE_CONFIG.name}`,
+  title: {
+    absolute: 'Prijzen Autosleutel Bijmaken & Programmeren | Autosleutel24',
+  },
   description: 'Indicatieve prijzen voor autosleutel bijmaken en programmeren. Exacte prijs altijd vooraf afgesproken. Bespaar 30–50% vs dealer. Bel voor offerte.',
   alternates: {
     canonical: `${SITE_CONFIG.domain}/prijzen`,

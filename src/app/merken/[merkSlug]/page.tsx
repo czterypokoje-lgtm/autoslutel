@@ -23,7 +23,9 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
   if (!brand) return {};
   const pageUrl = `${SITE_CONFIG.domain}/merken/${merkSlug}`;
   return {
-    title: `${brand.name} Autosleutel Bijmaken & Programmeren | Bel 06 11 75 12 31`,
+    title: {
+      absolute: `${brand.name} Autosleutel Bijmaken | 24/7 Mobiel | Autosleutel24`,
+    },
     description: `${brand.name} autosleutel bijmaken & programmeren. ${brand.system}. Alle modellen. Autosleutel Specialist — tot 50% goedkoper dan ${brand.name} dealer. Mobiel aan huis. Bel: ${SITE_CONFIG.phone}`,
     alternates: {
       canonical: pageUrl,

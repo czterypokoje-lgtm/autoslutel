@@ -5,7 +5,9 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '@/config/brands';
 
 export const metadata: Metadata = {
-  title: 'Autosleutel Kwijt? | Direct Hulp | 24/7 Mobiele Service | Bel Nu',
+  title: {
+    absolute: 'Autosleutel Kwijt? | 24/7 Mobiele Service | Autosleutel24',
+  },
   description: `Autosleutel kwijt? Wij helpen direct. Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel: ${SITE_CONFIG.phone}`,
   keywords: ['autosleutel kwijt','alle sleutels kwijt auto','auto autosleutel kwijt wat te doen','nieuwe autosleutel laten maken','autosleutel kwijt autoslotenmaker'],
   alternates: {

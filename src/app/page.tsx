@@ -13,7 +13,9 @@ import InstantServiceMap from '@/components/InstantServiceMap';
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
 export const metadata: Metadata = {
-  title: 'Autosleutel Bijmaken & Programmeren Utrecht | Mobiele Sleutelmaker 24/7',
+  title: {
+    absolute: 'Autosleutel Bijmaken Utrecht | 24/7 Service | Autosleutel24',
+  },
   description: `Autosleutel kwijt of defect? Mobiele autosleutelspecialist in Utrecht, Amsterdam & Almere. Alle merken. Zelfde dag ter plaatse. Goedkoper dan dealer. ⭐ 4.9/5. Bel direct: ${SITE_CONFIG.phone}`,
   alternates: {
     canonical: SITE_CONFIG.domain,

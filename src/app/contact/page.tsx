@@ -3,7 +3,9 @@ import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Contact | ${SITE_CONFIG.name}`,
+  title: {
+    absolute: 'Contact & 24/7 Spoedhulp | Autosleutel24',
+  },
   description: `Neem contact op met ${SITE_CONFIG.fullName}. Bel, WhatsApp, of stuur een bericht. 24/7 bereikbaar. Reactietijd: ${SITE_CONFIG.responseTime}.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/contact`,

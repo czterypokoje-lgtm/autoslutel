@@ -5,7 +5,9 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: `Alle Autosleutel Diensten | ${SITE_CONFIG.name}`,
+  title: {
+    absolute: 'Alle Autosleutel Diensten 24/7 | Autosleutel24',
+  },
   description: 'Overzicht van al onze autosleutel diensten: bijmaken, programmeren, reparatie en beveiliging. Mobiele service aan huis.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten` },
 };

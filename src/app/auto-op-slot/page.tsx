@@ -4,7 +4,9 @@ import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: 'Auto Op Slot? Sleutel Vergeten? | Schadevrij Openen | 24/7 Mobiel',
+  title: {
+    absolute: 'Auto op Slot? Sleutel Vergeten? | 24/7 | Autosleutel24',
+  },
   description: `Auto op slot en sleutels erin vergeten? Wij openen uw auto schadevrij. 24/7 mobiel. Reactietijd ${SITE_CONFIG.responseTime}. Bel: ${SITE_CONFIG.phone}`,
   keywords: ['auto op slot', 'sleutel vergeten in auto', 'auto openen sleutels erin', 'autoslotenmaker schadevrij', 'auto openen 24 uur'],
   alternates: {

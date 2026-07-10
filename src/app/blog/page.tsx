@@ -4,7 +4,9 @@ import { BLOG_POSTS } from '@/config/services';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Blog & Tips | ${SITE_CONFIG.name}`,
+  title: {
+    absolute: 'Autosleutel Blog & Tips | 24/7 Expert | Autosleutel24',
+  },
   description: 'Tips, uitleg en cases over autosleutels. Alle sleutels kwijt, kosten per merk, BMW BDC2, SFD unlock, Ghost immobiliser en meer.',
   alternates: { canonical: `${SITE_CONFIG.domain}/blog` },
 };

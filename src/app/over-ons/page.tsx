@@ -4,7 +4,9 @@ import Script from 'next/script';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Over Ons — Berkan Acarol, Autosleutelspecialist Utrecht | ${SITE_CONFIG.name}`,
+  title: {
+    absolute: 'Over Ons | Berkan Acarol Slotenmaker | Autosleutel24',
+  },
   description: `Ontmoet Berkan Acarol, gecertificeerd autosleutelspecialist en eigenaar. Autosleutel24 Utrecht — dealer-niveau programmering, alle merken. KVK geregistreerd, verzekerd, 24/7 beschikbaar.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/over-ons`,

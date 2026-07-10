@@ -7,9 +7,11 @@ import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleRevi
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Autosleutel Bijmaken Ter Plaatse — Vaste Prijs | Autosleutel24',
+  title: {
+    absolute: 'Autosleutel Bijmaken op Locatie | Vaste Prijs | Autosleutel24',
+  },
   description: 'Autosleutel bijmaken door onze mobiele specialist. Reserve sleutel + programmering ter plaatse. Vaste prijs vanaf €95. 24/7. Bel 06 11 75 12 31.',
-  alternates: { canonical: `${SITE_CONFIG.domain}/diensten/sleutel-bijmaken` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` },
 };
 
 export default function SleutelBijmakenPage() {

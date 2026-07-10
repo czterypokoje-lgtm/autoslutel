@@ -43,9 +43,9 @@ export default function Footer() {
           <div>
             <div className={styles.footerBrand}>
               <img
-                src="/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp"
-                alt="Autosleutel24.nl Logo — 24/7 Mobiele Autosleutel Slotenmaker Utrecht [GPS: 52.0907° N, 5.1214° E]"
-                style={{ height: '38px', width: 'auto', display: 'block' }}
+                src="/images/logo/autosleutel24-logo-footer-wit-utrecht.webp"
+                alt="Autosleutel24.nl Wit Logo — 24/7 Mobiele Autosleutel Slotenmaker Utrecht [GPS: 52.0907° N, 5.1214° E]"
+                style={{ height: '42px', width: 'auto', display: 'block' }}
               />
             </div>
             <p className={styles.footerDesc}>Professionele mobiele autosleutelprogrammering voor alle merken. Hoofdlocatie Utrecht, direct actief in Amsterdam-Zuid, Amersfoort, Almere, &apos;t Gooi (Hilversum, Bussum, Naarden) en heel Nederland.</p>

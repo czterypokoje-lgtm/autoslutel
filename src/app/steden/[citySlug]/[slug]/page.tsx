@@ -51,7 +51,9 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const brand = getBrandFromSlug(slug);
   if (brand) {
     return {
-      title: `${brand.name} Autosleutel Bijmaken ${city.city} | Autosleutel Specialist | ${SITE_CONFIG.name}`,
+      title: {
+        absolute: `${brand.name} Sleutel Bijmaken ${city.city} | Autosleutel24`,
+      },
       description: `${brand.name} autosleutel bijmaken & programmeren in ${city.city}. Autosleutel Specialist — ${brand.system.split('/')[0]}. Mobiel ter plaatse. ${city.travelTime} reactietijd. Tot 50% goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
       alternates: { canonical: `${SITE_CONFIG.domain}/steden/${citySlug}/${slug}` },
     };
@@ -60,7 +62,9 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const service = getServiceFromSlug(slug);
   if (service) {
     return {
-      title: `${service.title} ${city.city} | 24/7 Mobiel | ${SITE_CONFIG.name}`,
+      title: {
+        absolute: `${service.title} ${city.city} | Autosleutel24`,
+      },
       description: `${service.title} in ${city.city}. Mobiel aan huis. ${city.travelTime} reactietijd. ${service.metaDesc}`,
       alternates: { canonical: `${SITE_CONFIG.domain}/steden/${citySlug}/${slug}` },
     };

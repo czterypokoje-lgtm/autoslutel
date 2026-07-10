@@ -20,7 +20,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!service) return {};
   const pageUrl = `${SITE_CONFIG.domain}/diensten/${slug}`;
   return {
-    title: `${service.title} | Mobiel & 100% Schadevrij | Bel 06 11 75 12 31`,
+    title: {
+      absolute: `${service.title} | 24/7 Mobiel | Autosleutel24`,
+    },
     description: service.metaDesc,
     alternates: {
       canonical: pageUrl,

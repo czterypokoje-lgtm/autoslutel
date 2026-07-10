@@ -7,7 +7,9 @@ import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleRevi
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Auto Openen Zonder Sleutel | 100% Schadevrij & 24/7 Mobiel | Autosleutel24',
+  title: {
+    absolute: 'Auto Openen Zonder Sleutel | 24/7 Schadevrij | Autosleutel24',
+  },
   description: 'Auto openen zonder sleutel nodig? Onze mobiele locksmith opent uw auto 100% schadevrij binnen 30 min. Vaste prijs vanaf €95. Actief in Utrecht, Amsterdam, Almere & Amersfoort. Bel 24/7!',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
   keywords: [

@@ -7,7 +7,9 @@ import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleRevi
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
+  title: {
+    absolute: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
+  },
   description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Vaste prijzen vanaf €95. Bel nu 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-slotenmaker` },
 };

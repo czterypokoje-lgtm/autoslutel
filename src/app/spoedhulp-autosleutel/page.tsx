@@ -4,7 +4,9 @@ import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: '24/7 Spoedhulp Autosleutel | Direct Mobiel | Alle Merken | Bel Nu',
+  title: {
+    absolute: '24/7 Spoedhulp Autosleutel | Mobiel & Snel | Autosleutel24',
+  },
   description: `Autosleutel spoed? 24/7 mobiele hulp aan huis. Alle merken. Gemiddeld ${SITE_CONFIG.responseTime} reactietijd. Bel: ${SITE_CONFIG.phone}`,
   keywords: ['spoedhulp autosleutel', '24 uur slotenmaker auto', 'autoslotenmaker spoed', 'nacht slotenmaker auto', 'weekend autosleutel'],
   alternates: {

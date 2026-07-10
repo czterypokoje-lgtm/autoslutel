@@ -6,7 +6,9 @@ import { BRANDS } from '@/config/brands';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Alle 38 Automerken | Sleutelprogrammering | ${SITE_CONFIG.name}`,
+  title: {
+    absolute: 'Alle 38 Automerken | Sleutelprogrammering | Autosleutel24',
+  },
   description: 'Autosleutel programmering voor alle 38 merken. BMW, Mercedes, VW, Audi, Toyota, Ford, Volvo, Renault, Peugeot, Tesla en meer. Mobiel, 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/merken` },
 };

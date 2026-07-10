@@ -18,8 +18,8 @@ import { SITE_CONFIG } from '@/config/site.config';
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.domain),
   title: {
-    default: 'Autosleutel Bijmaken & Programmeren Utrecht | Mobiele Sleutelmaker 24/7',
-    template: `%s | ${SITE_CONFIG.name} | Bel 06 11 75 12 31`,
+    default: 'Autosleutel Bijmaken Utrecht | 24/7 Service | Autosleutel24',
+    template: '%s | Autosleutel24',
   },
   description: `Autosleutel kwijt of defect? Professionele mobiele autosleutelspecialist in Utrecht, Amsterdam, Almere & heel Nederland. Alle merken. Zelfde dag service. Goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
   keywords: [
