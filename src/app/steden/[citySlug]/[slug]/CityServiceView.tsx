@@ -1184,7 +1184,7 @@ export function CityServiceView({
               <div>
                 <div className="seo-hub-title">{service.title} in Andere Steden</div>
                 <div className="seo-hub-col">
-                  {CITIES.filter(c => c.slug !== city.slug).slice(0, 24).map(c => (
+                  {CITIES.filter(c => c.slug !== city.slug).map(c => (
                     <Link key={c.slug} href={`/steden/${c.slug}/${service.slug}`} className="seo-hub-link">
                       {`${service.title} ${c.city} →`}
                     </Link>

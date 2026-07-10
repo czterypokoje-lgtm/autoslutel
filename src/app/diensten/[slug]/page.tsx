@@ -540,7 +540,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <div className="seo-hub-title">Automerken voor {service.title}</div>
                   <div className="seo-hub-col">
-                    {BRANDS.slice(0, 15).map(b => (
+                    {BRANDS.map(b => (
                       <Link key={b.slug} href={`/steden/utrecht/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                         {`${b.name} Autosleutel Bijmaken →`}
                       </Link>
@@ -550,7 +550,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <div className="seo-hub-title">{service.title} per Stad</div>
                   <div className="seo-hub-col">
-                    {CITIES.slice(0, 16).map(c => (
+                    {CITIES.map(c => (
                       <Link key={c.slug} href={`/steden/${c.slug}/${service.slug}`} className="seo-hub-link">
                         {`${service.title} ${c.city} →`}
                       </Link>
