@@ -155,9 +155,9 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)' }}>
           <div className="container">
             <h3>Wij komen naar u toe in heel Nederland</h3>
-            <p style={{ marginBottom: '1.5rem' }}>Populaire locaties voor {brand.name} sleutel service:</p>
+            <p style={{ marginBottom: '1.5rem' }}>Alle steden &amp; regio&apos;s voor {brand.name} autosleutel service:</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-              {p1Cities.map(c => (
+              {CITIES.map(c => (
                 <Link key={c.slug} href={`/steden/${c.slug}/${merkSlug}`} 
                   style={{ padding: '0.5rem 1rem', background: '#fff', border: '1px solid var(--gray-200)', borderRadius: '20px', fontSize: '0.85rem', color: 'var(--gray-700)', textDecoration: 'none' }}>
                   {brand.name} in {c.city}

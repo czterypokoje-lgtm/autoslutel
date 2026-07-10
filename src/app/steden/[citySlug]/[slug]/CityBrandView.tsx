@@ -388,7 +388,7 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
                     <div>
                       <div className="seo-hub-title">Andere Merken in {city.city}</div>
                       <div className="seo-hub-col">
-                        {relatedBrands.slice(0, 15).map(b => (
+                        {relatedBrands.map(b => (
                           <Link key={b.slug} href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                             {`${b.name} Sleutel Bijmaken ${city.city} →`}
                           </Link>
@@ -408,7 +408,7 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
                     <div>
                       <div className="seo-hub-title">{brand.name} in Andere Steden</div>
                       <div className="seo-hub-col">
-                        {relatedCities.map(c => (
+                        {CITIES.filter(c => c.slug !== citySlug).slice(0, 24).map(c => (
                           <Link key={c.slug} href={`/steden/${c.slug}/${brandSlug}`} className="seo-hub-link">
                             {`${brand.name} Bijmaken ${c.city} →`}
                           </Link>

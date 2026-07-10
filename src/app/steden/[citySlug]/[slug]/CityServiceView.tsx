@@ -1174,7 +1174,7 @@ export function CityServiceView({
               <div>
                 <div className="seo-hub-title">Populaire Automerken in {city.city}</div>
                 <div className="seo-hub-col">
-                  {BRANDS.slice(0, 16).map(b => (
+                  {BRANDS.map(b => (
                     <Link key={b.slug} href={`/steden/${city.slug}/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                       {`${b.name} Autosleutel Bijmaken ${city.city} →`}
                     </Link>
@@ -1184,7 +1184,7 @@ export function CityServiceView({
               <div>
                 <div className="seo-hub-title">{service.title} in Andere Steden</div>
                 <div className="seo-hub-col">
-                  {CITIES.filter(c => c.slug !== city.slug).slice(0, 16).map(c => (
+                  {CITIES.filter(c => c.slug !== city.slug).slice(0, 24).map(c => (
                     <Link key={c.slug} href={`/steden/${c.slug}/${service.slug}`} className="seo-hub-link">
                       {`${service.title} ${c.city} →`}
                     </Link>

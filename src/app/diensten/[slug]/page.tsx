@@ -382,7 +382,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                     Met onze centrale ligging en meerdere mobiele service-eenheden bedienen wij dagelijks een groot werkgebied in Nederland. Wij zijn razendsnel ter plaatse in onder meer:
                   </p>
                   <ul className={styles.bulletList}>
-                    {p1Cities.map((c) => (
+                    {CITIES.map((c) => (
                       <li key={c.slug}>
                         <Link href={`/steden/${c.slug}/${slug}`}>
                           {c.city}
@@ -523,6 +523,42 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 ))}
               </div>
             </section>
+
+            {/* ── INTERNAL LINKING NETWORK SECTION ── */}
+            <div className="seo-hub-box" style={{ marginTop: '4rem' }}>
+              <div className="seo-hub-grid">
+                <div>
+                  <div className="seo-hub-title">Andere Diensten</div>
+                  <div className="seo-hub-col">
+                    {DIENSTEN.filter(s => s.slug !== service.slug).map(s => (
+                      <Link key={s.slug} href={`/diensten/${s.slug}`} className="seo-hub-link">
+                        {`${s.title} →`}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="seo-hub-title">Automerken voor {service.title}</div>
+                  <div className="seo-hub-col">
+                    {BRANDS.slice(0, 15).map(b => (
+                      <Link key={b.slug} href={`/steden/utrecht/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
+                        {`${b.name} Autosleutel Bijmaken →`}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="seo-hub-title">{service.title} per Stad</div>
+                  <div className="seo-hub-col">
+                    {CITIES.slice(0, 16).map(c => (
+                      <Link key={c.slug} href={`/steden/${c.slug}/${service.slug}`} className="seo-hub-link">
+                        {`${service.title} ${c.city} →`}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
 
           </div>
         </section>
