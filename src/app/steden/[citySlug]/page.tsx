@@ -475,6 +475,26 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
+        {/* ── COMPREHENSIVE LOCAL SEO GUIDE FOR THIS CITY ── */}
+        <section className={styles.section} style={{ background: '#f8fafc', padding: '3.5rem 0' }}>
+          <div className="container">
+            <div className="seo-article-block" style={{ background: '#ffffff', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--gray-200)' }}>
+              <h2>Uw Gecertificeerde Autosleutelspecialist en Slotenmaker in {city.city}</h2>
+              <p>
+                Bent u woonachtig of onderweg in <strong>{city.city}</strong> en heeft u direct hulp nodig omdat u uw autosleutel bent kwijtgeraakt, de afstandsbediening defect is of uw sleutel in het contactslot is afgebroken? Bij <strong>{SITE_CONFIG.name}</strong> bent u verzekerd van snelle en professionele hulp op locatie. Waar u bij een traditionele autodealer in {city.city} vaak weken moet wachten op een nieuwe fabriekssleutel en uw auto bovendien per takelwagen moet laten afslepen, komen onze volledig uitgeruste mobiele servicewagens rechtstreeks naar u toe.
+              </p>
+              <h3>Mobiele Diagnose, CNC Slijpen en Programmeren in {city.city}</h3>
+              <p>
+                Onze servicewagens zijn ingericht als hightech mobiele werkplaatsen. Wij beschikken over OEM-gecertificeerde uitleesapparatuur en computergestuurde CNC-sleutelfreesmachines. Ter plaatse in {city.city} — of u nu thuis op de oprit staat, op een bedrijventerrein geparkeerd bent of langs de weg staat — kunnen wij uw autodeur 100% schadevrij openen met Lishi lockdecoders, de mechanische sleutelcode uitlezen, een nieuwe sleutelbaard op maat slijpen en de transponderchip direct in de startonderbreker inleren.
+              </p>
+              <h3>Transparante All-in Tarieven, Verzekering en 12 Maanden Garantie</h3>
+              <p>
+                Wij hanteren eerlijke en vooraf vastgestelde tarieven in heel regio {city.city}, waardoor u gemiddeld 30% tot 50% voordeliger uit bent dan bij de merkdealer. Op elke nieuwe sleutel en reparatie ontvangt u standaard 12 maanden schriftelijke garantie. In veel gevallen van verlies of diefstal wordt onze service daarnaast volledig gedekt door uw WA Extra of Allrisk autoverzekering.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className={styles.cta}>
           <div className="container">

@@ -540,6 +540,22 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               </div>
             </section>
 
+            {/* ── COMPREHENSIVE SERVICE TECHNICAL SEO GUIDE ── */}
+            <div className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem', background: '#ffffff', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--gray-200)' }}>
+              <h2>Alles over {service.title} door Onze Gecertificeerde Slotenmakers</h2>
+              <p>
+                Het vakkundig uitvoeren van <strong>{service.title.toLowerCase()}</strong> vereist nauwkeurigheid, gespecialiseerde gereedschappen en actuele kennis van voertuigelektronica. Bij moderne personenauto&apos;s en bedrijfswagens is elk onderdeel — van het contactslot en het portierslot tot de afstandsbediening en transponderchip — naadloos verbonden met de centrale boordcomputer (ECU, BSI of CAS module). Waar conventionele garages of algemene pechhulpdiensten vaak niet over de juiste specialistische apparatuur beschikken, is <strong>{SITE_CONFIG.name}</strong> uitgerust om direct op locatie in te grijpen.
+              </p>
+              <h3>Waarom professionele mobiele hulp essentieel is</h3>
+              <p>
+                Wanneer u te maken heeft met een buitensluiting, een kapotte sleutel of een storing in uw startonderbreker, wilt u voorkomen dat er schade ontstaat aan uw autolak, portier of elektronica. Onze monteurs werken met schadevrije Lishi 2-in-1 lockdecoders, OEM-gecertificeerde diagnosecomputers en hightech CNC lasermachines. Wij lossen het probleem direct bij u voor de deur op — of u nu thuis bent, op het werk staat of onderweg langs de weg.
+              </p>
+              <h3>Transparante All-In Prijzen, Verzekering en 12 Maanden Garantie</h3>
+              <p>
+                Wij hanteren vooraf altijd een vaste en heldere prijsafspraak, zodat u nooit wordt geconfronteerd met onverwachte kosten of hoge sleepkosten naar een dealer. Bovendien ontvangt u op al onze geleverde sleutels, onderdelen en reparaties standaard 12 maanden schriftelijke garantie. Veel verzekeringsmaatschappijen vergoeden onze factuur onder uw WA Extra of Allrisk autoverzekering.
+              </p>
+            </div>
+
             {/* ── INTERNAL LINKING NETWORK SECTION ── */}
             <div className="seo-hub-box" style={{ marginTop: '4rem' }}>
               <div className="seo-hub-grid">

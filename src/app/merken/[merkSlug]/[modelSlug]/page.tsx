@@ -376,7 +376,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
               <div>
                 <div className="seo-hub-title">{brand.name} Service in Populaire Steden</div>
                 <div className="seo-hub-col">
-                  {CITIES.slice(0, 16).map(c => (
+                  {CITIES.map(c => (
                     <Link key={c.slug} href={`/steden/${c.slug}/${brand.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                       {`${brand.name} Bijmaken ${c.city} →`}
                     </Link>
@@ -386,13 +386,33 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
               <div>
                 <div className="seo-hub-title">Overige Automerken</div>
                 <div className="seo-hub-col">
-                  {BRANDS.filter(b => b.slug !== brand.slug).slice(0, 14).map(b => (
+                  {BRANDS.filter(b => b.slug !== brand.slug).map(b => (
                     <Link key={b.slug} href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                       {`${b.name} Autosleutel Bijmaken →`}
                     </Link>
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── COMPREHENSIVE MODEL TECHNICAL SEO GUIDE ── */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <div className="seo-article-block" style={{ marginTop: 0 }}>
+              <h2>Alles over het Slijpen en Inleren van een {brand.name} {model.name} Autosleutel</h2>
+              <p>
+                Het elektronische beveiligingssysteem van de <strong>{brand.name} {model.name}</strong> behoort tot de meest betrouwbare en geavanceerde systemen binnen de auto-industrie. Zonder een correct geprogrammeerde transponderchip die de startonderbreker deblokkeert, weigert de motor van uw {model.name} te starten. Waar reguliere universele garages vaak niet beschikken over de benodigde OEM merksoftware of licentietokens, is <strong>{SITE_CONFIG.name}</strong> uitgerust met fabrieksspecificatie diagnoseapparatuur.
+              </p>
+              <h3>Wat te doen als uw {brand.name} {model.name} sleutel kwijt, defect of gestolen is?</h3>
+              <p>
+                Bent u onderweg gestrand omdat u bent buitengesloten of omdat uw sleutel niet meer wordt herkend in het contactslot? Onze mobiele monteurs openen uw {brand.name} {model.name} 100% schadevrij met professionele Lishi decoders. Ter plaatse frezen wij een nieuw sleutelblad met onze computergestuurde CNC-machine en programmeren we via de OBD2-poort direct een nieuwe transpondersleutel of smart key. Verloren sleutels worden onmiddellijk uit de boordcomputer gewist.
+              </p>
+              <h3>Transparante All-in Prijzen met 12 Maanden Garantie</h3>
+              <p>
+                Door onze efficiënte mobiele werkwijze bespaart u bij ons tot 50% op de kosten ten opzichte van de officiële merkdealer en vermijdt u dure takel- en sleepkosten. Op elke {brand.name} {model.name} sleutel die wij leveren en inleren, ontvangt u standaard 12 maanden schriftelijke garantie.
+              </p>
             </div>
           </div>
         </section>
