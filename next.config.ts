@@ -54,6 +54,22 @@ const nextConfig: NextConfig = {
         destination: '/diensten/auto-openen-zonder-sleutel',
         permanent: true,
       },
+      // ── Legacy / Crawled service slug redirects ──────────────────
+      {
+        source: '/diensten/transponder-sleutel-programmeren',
+        destination: '/diensten/transponder-programmeren',
+        permanent: true,
+      },
+      {
+        source: '/diensten/contact-reparatie',
+        destination: '/diensten/contactslot-reparatie',
+        permanent: true,
+      },
+      {
+        source: '/diensten/alarm-programmeren',
+        destination: '/diensten/autosleutels-repareren',
+        permanent: true,
+      },
       // ── Verwijderde beveiliging pagina's → auto slotenmaker ──────
       {
         source: '/diensten/auto-beveiliging',

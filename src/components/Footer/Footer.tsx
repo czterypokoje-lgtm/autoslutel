@@ -5,11 +5,11 @@ import { BRANDS } from '../../config/brands';
 
 const diensten = [
   ['Autosleutel Bijmaken', '/diensten/autosleutel-bijmaken'],
-  ['Transponder Sleutel', '/diensten/transponder-sleutel-programmeren'],
+  ['Transponder Sleutel', '/diensten/transponder-programmeren'],
   ['Smart Key / Keyless', '/diensten/smart-key-programmeren'],
-  ['Contact Reparatie', '/diensten/contact-reparatie'],
+  ['Contactslot Reparatie', '/diensten/contactslot-reparatie'],
   ['Reservesleutel Maken', '/diensten/reservesleutel-maken'],
-  ['Alarm Programmeren', '/diensten/alarm-programmeren'],
+  ['Autosleutels Repareren', '/diensten/autosleutels-repareren'],
   ['Alle diensten →', '/diensten'],
 ];
 

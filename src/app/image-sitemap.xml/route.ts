@@ -175,7 +175,7 @@ const PAGE_ENTRIES = [
     images: [CORE_IMAGES[4], CORE_IMAGES[13], CORE_IMAGES[9]],
   },
   {
-    loc: `${BASE}/diensten/transponder-sleutel-programmeren`,
+    loc: `${BASE}/diensten/transponder-programmeren`,
     images: [CORE_IMAGES[13], CORE_IMAGES[8]],
   },
   {
@@ -183,7 +183,7 @@ const PAGE_ENTRIES = [
     images: [CORE_IMAGES[8], CORE_IMAGES[1]],
   },
   {
-    loc: `${BASE}/diensten/contact-reparatie`,
+    loc: `${BASE}/diensten/contactslot-reparatie`,
     images: [CORE_IMAGES[10], CORE_IMAGES[11]],
   },
   {

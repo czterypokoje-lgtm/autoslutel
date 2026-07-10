@@ -22,9 +22,9 @@ const urgentServices = [
   { title: 'Autosleutel Kwijt', desc: 'Nieuwe sleutel programmeren, ook alle sleutels kwijt (AKL).', href: '/autosleutel-kwijt' },
   { title: 'Auto Op Slot', desc: 'Sleutels vergeten in de auto? Schadevrij openen.', href: '/auto-op-slot' },
   { title: 'Sleutel Gestolen', desc: 'Gestolen sleutel uitschakelen, nieuwe sleutel programmeren.', href: '/autosleutel-kwijt' },
-  { title: 'Contactslot Defect', desc: 'Auto start niet? Contact gerepareerd ter plaatse.', href: '/diensten/contact-reparatie' },
-  { title: 'Alarm Gaat Niet Uit', desc: 'Autoalarm uitschakelen en reprogrammeren.', href: '/diensten/alarm-programmeren' },
-  { title: 'Sleutel Niet Herkend', desc: 'Auto herkent sleutel niet? Immo probleem opgelost.', href: '/diensten/transponder-sleutel-programmeren' },
+  { title: 'Contactslot Defect', desc: 'Auto start niet? Contactslot gerepareerd ter plaatse.', href: '/diensten/contactslot-reparatie' },
+  { title: 'Autosleutel Defect', desc: 'Afstandsbediening of behuizing kapot? Direct hersteld.', href: '/diensten/autosleutels-repareren' },
+  { title: 'Sleutel Niet Herkend', desc: 'Auto herkent sleutel niet? Immo probleem opgelost.', href: '/diensten/transponder-programmeren' },
 ];
 
 const schema = {

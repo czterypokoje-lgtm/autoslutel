@@ -103,7 +103,7 @@ const services = [
   { 
     title: 'Transponder Programmeren', 
     desc: 'Moderne personenauto\'s en bedrijfswagens zijn uitgerust met geavanceerde startonderbrekers en cryptografische transponders die communiceren met de ECU en immobilizer van uw voertuig. Wanneer uw transponderchip defect is, de sleutel niet meer wordt herkend of na een lege batterij de synchronisatie kwijt is, start uw motor niet meer. Met onze professionele dealer-niveau diagnose-apparatuur programmeren en herstellen wij transpondersleutels van alle merken ter plaatse op locatie. Wij uitlezen foutcodes, resetten de startblokkering en synchroniseren nieuwe crypto-transponders vakkundig en veilig. U bespaart tot wel honderden euro\'s vergeleken met officiële dealers en behoudt uw fabrieksbeveiliging.', 
-    href: '/diensten/transponder-sleutel-programmeren',
+    href: '/diensten/transponder-programmeren',
     src: '/images/seo/reserve_autosleutel_transponder_programmeren_utrecht.webp',
     alt: 'Transponder sleutel programmeren en chip inleren voor alle automerken op locatie in Utrecht'
   },
