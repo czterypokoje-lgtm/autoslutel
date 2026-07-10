@@ -359,34 +359,57 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
                   ))}
                 </div>
 
-                {/* Section 6: Comprehensive Internal Linking Network */}
-                <div style={{ marginTop: '3rem', padding: '1.75rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '2rem' }}>
+                {/* Section 6: Comprehensive Deep-Dive Guide (High Text-to-HTML Ratio) */}
+                <div className="seo-article-block">
+                  <h2>Uitgebreide Handleiding: {brand.name} Autosleutel Bijmaken &amp; Programmeren in {city.city}</h2>
+                  <p>
+                    Het verliezen of beschadigen van een {brand.name} autosleutel brengt vaak onverwachte stress met zich mee. Veel automobilisten in {city.city} denken direct dat zij verplicht zijn om naar de officiële merkdealer te gaan. Een dealervervanging gaat echter gepaard met lange wachttijden (vaak 1 tot 2 weken), verplichte sleepposten naar de garage en hoge rekeningen voor het inleren via de fabrieksmodule. Bij <strong>{SITE_CONFIG.name}</strong> pakken wij dit compleet anders aan via onze gespecialiseerde mobiele sleutelservice op locatie.
+                  </p>
+                  <h3>Technologie achter {brand.name} sleutels ({brand.system})</h3>
+                  <p>
+                    Moderne {brand.name} modellen maken gebruik van geavanceerde startonderbrekers en transpondersystemen, zoals <strong>{brand.system}</strong>. De chip in uw sleutel zendt een unieke cryptografische code uit naar de ECU en immobiliser van uw auto. Zonder correcte autorisatie geeft het motorregelsysteem geen brandstof vrij en zal de auto niet starten. Onze servicewagens zijn uitgerust met officiële diagnoseapparatuur waarmee wij rechtstreeks via de OBD2-poort of bench-modus communiceren met de boordcomputer van uw {brand.name}.
+                  </p>
+                  <h3>Stappenplan: Hoe wij op locatie in {city.city} werken</h3>
+                  <ul>
+                    <li><strong>Stap 1 — Legitimatie &amp; Eigendomscontrole:</strong> Voordat wij een {brand.name} sleutel inleren of een autodeur openen, controleren wij uw legitimatiebewijs en het kentekenbewijs om diefstal uit te sluiten.</li>
+                    <li><strong>Stap 2 — Schadevrij Openen (indien afgesloten):</strong> Ligt uw sleutel in de auto of bent u alle sleutels kwijt? Met precisie Lishi-slotenmakersgereedschap openen wij het portierslot van uw {brand.name} 100% schadevrij zonder de lak of rubbers te beschadigen.</li>
+                    <li><strong>Stap 3 — CNC-Frezen van de Noodsleutel:</strong> Via de mechanische sleutelcode of directe optische decodering slijpen wij met onze mobiele CNC-freesmachine direct een exact passende sleutelbaard.</li>
+                    <li><strong>Stap 4 — OBD Transponder &amp; Afstandsbediening Inleren:</strong> Wij programmeren de nieuwe transponderchip en koppelen de afstandsbediening of Keyless Go smart key aan de comfortmodule van uw {brand.name}.</li>
+                  </ul>
+                  <h3>Zekerheid, Garantie &amp; Vergoeding door Verzekering</h3>
+                  <p>
+                    Op elke sleutel die wij leveren in {city.city} en omgeving ontvangt u standaard <strong>12 maanden volledige schriftelijke garantie</strong> op zowel de elektronica als de behuizing. Bent u uw sleutel verloren door diefstal of beroving? In veel gevallen vergoedt uw autoverzekering (Beperkt Casco of Allrisk) de kosten voor het vervangen en herprogrammeren van de sleutels. U ontvangt van ons altijd een officiële gespecificeerde factuur voor uw verzekeraar.
+                  </p>
+                </div>
+
+                {/* Section 7: Lean Internal Linking Network */}
+                <div className="seo-hub-box">
+                  <div className="seo-hub-grid">
                     <div>
-                      <h3 style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Andere Merken in {city.city}</h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                      <div className="seo-hub-title">Andere Merken in {city.city}</div>
+                      <div className="seo-hub-col">
                         {relatedBrands.slice(0, 15).map(b => (
-                          <Link key={b.slug} href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`} style={{ fontSize: '0.85rem', color: 'var(--navy-700)', textDecoration: 'none' }}>
+                          <Link key={b.slug} href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                             {`${b.name} Sleutel Bijmaken ${city.city} →`}
                           </Link>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <h3 style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Onze Diensten in {city.city}</h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                      <div className="seo-hub-title">Onze Diensten in {city.city}</div>
+                      <div className="seo-hub-col">
                         {relatedServices.map(s => (
-                          <Link key={s.slug} href={`/steden/${citySlug}/${s.slug}`} style={{ fontSize: '0.85rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 600 }}>
+                          <Link key={s.slug} href={`/steden/${citySlug}/${s.slug}`} className="seo-hub-link">
                             {`${s.name} ${city.city} →`}
                           </Link>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <h3 style={{ fontSize: '0.82rem', fontWeight: 700, marginBottom: '0.75rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{brand.name} in Andere Steden</h3>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                      <div className="seo-hub-title">{brand.name} in Andere Steden</div>
+                      <div className="seo-hub-col">
                         {relatedCities.map(c => (
-                          <Link key={c.slug} href={`/steden/${c.slug}/${brandSlug}`} style={{ fontSize: '0.85rem', color: 'var(--navy-700)', textDecoration: 'none' }}>
+                          <Link key={c.slug} href={`/steden/${c.slug}/${brandSlug}`} className="seo-hub-link">
                             {`${brand.name} Bijmaken ${c.city} →`}
                           </Link>
                         ))}

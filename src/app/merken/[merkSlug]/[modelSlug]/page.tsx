@@ -331,44 +331,63 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
           </div>
         </section>
 
-        {/* Internal Linking Network Section */}
+        {/* Comprehensive SEO Guide Article Block (High Text-to-HTML Ratio) */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container" style={{ maxWidth: 1000, margin: '0 auto' }}>
+            <div className="seo-article-block" style={{ marginTop: 0 }}>
+              <h2>Alles over {brand.name} {model.name} Autosleutels (Bouwjaren {model.years})</h2>
+              <p>
+                De {brand.name} {model.name} is uitgerust met geavanceerde voertuigbeveiliging. Afhankelijk van het bouwjaar ({model.years}) maakt dit model gebruik van het <strong>{brand.system}</strong> immobilisersysteem. Wanneer u een extra reservesleutel wilt laten maken of geconfronteerd wordt met een verloren sleutel, is het cruciaal dat de transponderchip exact wordt geprogrammeerd volgens de fabrieksspecificaties van {brand.name}.
+              </p>
+              <h3>Waarom kiezen voor mobiele {brand.name} {model.name} sleutelservice?</h3>
+              <p>
+                Bij een traditionele garage of merkdealer bent u verplicht om uw {brand.name} {model.name} te laten wegslepen als u geen werkende sleutel meer heeft. Bovendien wachten dealers vaak wekenlang op een voorgeschreven fabriekssleutel uit het buitenland. <strong>{SITE_CONFIG.name}</strong> beschikt over mobiele CNC-freesmachines en originele diagnosecomputers waarmee wij direct naar uw auto toe komen in heel Nederland.
+              </p>
+              <ul>
+                <li><strong>Sleutelbaard op Code Frezen:</strong> Wij frezen de sleutelbaard voor uw {brand.name} {model.name} met micrometer-precisie op basis van het slotnummer of door optische decodering van uw bestaande sleutel.</li>
+                <li><strong>OBD2 &amp; EEPROM Inleren:</strong> Wij coderen de transponder en synchroniseren de afstandsbediening direct met de comfortmodule van uw auto.</li>
+                <li><strong>30% tot 50% Goedkoper:</strong> U betaalt geen wegsleepkosten en geen dure dealer-overhead.</li>
+              </ul>
+              <h3>12 Maanden Garantie &amp; Verzekeringsfactuur</h3>
+              <p>
+                U ontvangt op elke geleverde {brand.name} {model.name} sleutel 12 maanden schriftelijke garantie. Bent u uw sleutels verloren door diefstal? Wij verstrekken altijd een gespecificeerde factuur die u direct kunt indienen bij uw autoverzekering.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Internal Linking Network Section (Lean HTML) */}
         <section style={{ padding: '3.5rem 0', background: 'var(--gray-50)', borderTop: '1px solid var(--gray-200)' }}>
           <div className="container" style={{ maxWidth: 1000, margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.5rem', color: 'var(--navy-900)', marginBottom: '1.75rem' }}>
               Gerelateerde {brand.name} &amp; Autosleutel Services
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '2.5rem' }}>
+            <div className="seo-hub-grid">
               <div>
-                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Andere {brand.name} Modellen
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                <div className="seo-hub-title">Andere {brand.name} Modellen</div>
+                <div className="seo-hub-col">
                   {brand.models?.filter(m => m.slug !== model.slug).map(m => (
-                    <Link key={m.slug} href={`/merken/${merkSlug}/${m.slug}`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link key={m.slug} href={`/merken/${merkSlug}/${m.slug}`} className="seo-hub-link">
                       {`${brand.name} ${m.name} Sleutel Bijmaken →`}
                     </Link>
                   ))}
                 </div>
               </div>
               <div>
-                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  {brand.name} Service in Populaire Steden
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                <div className="seo-hub-title">{brand.name} Service in Populaire Steden</div>
+                <div className="seo-hub-col">
                   {CITIES.slice(0, 16).map(c => (
-                    <Link key={c.slug} href={`/steden/${c.slug}/${brand.nameSlug}-autosleutel-bijmaken`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link key={c.slug} href={`/steden/${c.slug}/${brand.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                       {`${brand.name} Bijmaken ${c.city} →`}
                     </Link>
                   ))}
                 </div>
               </div>
               <div>
-                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Overige Automerken
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                <div className="seo-hub-title">Overige Automerken</div>
+                <div className="seo-hub-col">
                   {BRANDS.filter(b => b.slug !== brand.slug).slice(0, 14).map(b => (
-                    <Link key={b.slug} href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link key={b.slug} href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                       {`${b.name} Autosleutel Bijmaken →`}
                     </Link>
                   ))}

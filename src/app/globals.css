@@ -546,3 +546,71 @@ details[open] summary { color: var(--orange-500); }
     padding-bottom: 75px !important;
   }
 }
+
+/* ── SEO LEAN LINK HUB & CONTENT UTILITIES (High Text-to-HTML Ratio) ── */
+.seo-hub-box {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+.seo-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 2rem;
+}
+.seo-hub-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.seo-hub-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.seo-hub-link {
+  font-size: 0.88rem;
+  color: var(--navy-700);
+  text-decoration: none;
+  line-height: 1.4;
+}
+.seo-hub-link:hover {
+  text-decoration: underline;
+  color: var(--orange-500);
+}
+.seo-article-block {
+  margin-top: 2.5rem;
+  padding: 2rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  line-height: 1.8;
+  color: #334155;
+}
+.seo-article-block h2 {
+  font-size: 1.4rem;
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+.seo-article-block h3 {
+  font-size: 1.15rem;
+  color: #1e293b;
+  margin: 1.25rem 0 0.5rem;
+}
+.seo-article-block p {
+  margin-bottom: 1rem;
+  font-size: 0.98rem;
+}
+.seo-article-block ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.seo-article-block li {
+  margin-bottom: 0.5rem;
+  font-size: 0.96rem;
+}

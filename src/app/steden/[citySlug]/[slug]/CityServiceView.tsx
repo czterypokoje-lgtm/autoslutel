@@ -1129,44 +1129,63 @@ export function CityServiceView({
           );
         })()}
 
-        {/* ── INTERNAL LINKING NETWORK SECTION ───────────────────────────── */}
+        {/* ── COMPREHENSIVE SEO GUIDE ARTICLE BLOCK (High Text-to-HTML Ratio) ── */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className={styles.container}>
+            <div className="seo-article-block" style={{ marginTop: 0 }}>
+              <h2>Alles over {service.title} in {city.city} en Omstreken</h2>
+              <p>
+                Wanneer u te maken krijgt met een defecte autosleutel, een afgebroken sleutelbaard in het portierslot, of als u buitengesloten bent van uw voertuig in {city.city}, telt elke minuut. Veel traditionele autogarages en officiële merkdealers vereisen dat uw auto naar hun werkplaats wordt gesleept. Dit kost niet alleen kostbare tijd, maar brengt ook aanzienlijke takel- en sleepkosten met zich mee. <strong>{SITE_CONFIG.name}</strong> biedt als erkend mobiele autosleutelspecialist een direct alternatief: wij komen 24 uur per dag, 7 dagen per week naar uw locatie in {city.city} toe.
+              </p>
+              <h3>Hoe werkt onze mobiele {service.title.toLowerCase()} service in {city.city}?</h3>
+              <p>
+                Dankzij onze volledig ingerichte servicebussen beschikken onze monteurs over exact dezelfde hightech apparatuur als de officiële dealer. Of uw auto nu geparkeerd staat in het centrum van {city.city}, langs de snelweg, of op uw oprit thuis; wij voeren de werkzaamheden direct ter plekke uit.
+              </p>
+              <ul>
+                <li><strong>Diagnose &amp; Identificatie:</strong> Onze monteur start met een grondige diagnose van het slotmechanisme en leest via de OBD2-diagnosepoort de startonderbreker (immobiliser) uit.</li>
+                <li><strong>100% Schadevrije Opening &amp; Bewerking:</strong> Met gespecialiseerd Lishi-precisiegereedschap openen of decoderen wij autodeuren zonder enige sporen of krassen achter te laten.</li>
+                <li><strong>Ter Plaatse Frezen &amp; Programmeren:</strong> Nieuwe transponderchips en afstandsbedieningen worden direct gesynchroniseerd met de boordcomputer van uw voertuig.</li>
+              </ul>
+              <h3>Voordeliger dan de dealer met 12 Maanden Garantie</h3>
+              <p>
+                Doordat wij efficiënt op locatie werken zonder dure showrooms, bent u bij ons gemiddeld <strong>30% tot 50% voordeliger uit</strong> dan bij de officiële merkdealer in {city.city}. Bovendien krijgt u op al onze sleutels, smart keys en reparaties standaard 12 maanden schriftelijke garantie. Veel verzekeraars vergoeden onze facturen volledig onder uw Beperkt Casco of Allrisk autoverzekering.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── INTERNAL LINKING NETWORK SECTION (Lean HTML) ── */}
         <section style={{ padding: '3.5rem 0', background: '#f8fafc', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
           <div className={styles.container}>
             <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1.75rem' }}>
               Meer Slotenmaker &amp; Autosleutel Services in {city.city}
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '2.5rem' }}>
+            <div className="seo-hub-grid">
               <div>
-                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Andere Diensten in {city.city}
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div className="seo-hub-title">Andere Diensten in {city.city}</div>
+                <div className="seo-hub-col">
                   {DIENSTEN.filter(s => s.slug !== service.slug).map(s => (
-                    <Link key={s.slug} href={`/steden/${city.slug}/${s.slug}`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link key={s.slug} href={`/steden/${city.slug}/${s.slug}`} className="seo-hub-link">
                       {`${s.title} ${city.city} →`}
                     </Link>
                   ))}
                 </div>
               </div>
               <div>
-                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  Populaire Automerken in {city.city}
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div className="seo-hub-title">Populaire Automerken in {city.city}</div>
+                <div className="seo-hub-col">
                   {BRANDS.slice(0, 16).map(b => (
-                    <Link key={b.slug} href={`/steden/${city.slug}/${b.nameSlug}-autosleutel-bijmaken`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link key={b.slug} href={`/steden/${city.slug}/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
                       {`${b.name} Autosleutel Bijmaken ${city.city} →`}
                     </Link>
                   ))}
                 </div>
               </div>
               <div>
-                <h3 style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '1rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  {service.title} in Andere Steden
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div className="seo-hub-title">{service.title} in Andere Steden</div>
+                <div className="seo-hub-col">
                   {CITIES.filter(c => c.slug !== city.slug).slice(0, 16).map(c => (
-                    <Link key={c.slug} href={`/steden/${c.slug}/${service.slug}`} style={{ fontSize: '0.9rem', color: 'var(--navy-700)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link key={c.slug} href={`/steden/${c.slug}/${service.slug}`} className="seo-hub-link">
                       {`${service.title} ${c.city} →`}
                     </Link>
                   ))}
