@@ -184,6 +184,30 @@ export default function AutosleutelKwijt() {
           </div>
         </section>
 
+        {/* ── COMPREHENSIVE AKL SEO GUIDE ARTICLE ── */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <div className="seo-article-block" style={{ marginTop: 0 }}>
+              <h2>Alle Autosleutels Kwijt (All Keys Lost): Hoe Wij U Direct Helpen Zonder Wegslepen</h2>
+              <p>
+                Het verliezen van uw enige of laatste autosleutel is een stressvolle situatie. Bij de meeste autodealers betekent dit dat u uw auto per takelwagen moet laten wegslepen naar de garage, waarna u dagen tot weken moet wachten op nieuwe sleutels uit de fabriek. Bovendien worden er vaak complete slotensets en ECU-modules vervangen tegen kosten die kunnen oplopen tot boven de duizend euro. <strong>{SITE_CONFIG.name}</strong> lost dit probleem volledig mobiel en op uw locatie op.
+              </p>
+              <h3>100% Schadevrije Deuropening &amp; Mechanische Decodering</h3>
+              <p>
+                Onze monteurs openen uw afgesloten auto zonder enige schade aan uw lak of slotmechanisme via professioneel Lishi-gereedschap. Vervolgens lezen wij de pinnen in het portierslot uit om de exacte snijcode van uw sleutelbaard te bepalen. Met onze computergestuurde CNC-lasersnijmachine frezen wij direct ter plaatse een perfect passende mechanische sleutel.
+              </p>
+              <h3>Startonderbreker Inleren en Verloren Sleutels Wissen</h3>
+              <p>
+                Via de OBD2-diagnosepoort koppelen wij ons diagnosestation aan de boordcomputer (ECU, BSI of immobiliser module) van uw auto. Wij programmeren de nieuwe transponderchip en eventuele Keyless Go afstandsbediening direct in. Cruciaal voor uw veiligheid: wij wissen onmiddellijk alle verloren sleutels uit het geheugen van de auto. Mocht iemand uw verloren sleutel vinden, dan kan diegene uw auto niet meer starten of openen.
+              </p>
+              <h3>Verzekering, Garantie en Dekking in Heel Nederland</h3>
+              <p>
+                Onze All Keys Lost service wordt door heel Nederland aangeboden. U ontvangt standaard 12 maanden schriftelijke garantie en een officiële factuur. In veel gevallen vergoedt uw autoverzekering (onder Beperkt Casco of Allrisk dekking) de vervanging van verloren of gestolen autosleutels.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Bottom emergency CTA */}
         <section style={{ background:'var(--color-danger)', padding:'3rem 2rem', textAlign:'center' }}>
           <h2 style={{ color:'#fff', marginBottom:'0.5rem' }}>Autosleutel Kwijt? Bel Direct</h2>

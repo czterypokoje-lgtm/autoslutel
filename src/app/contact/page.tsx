@@ -119,6 +119,19 @@ export default function ContactPage() {
             </form>
           </div>
         </div>
+
+        {/* ── COMPREHENSIVE CONTACT & SPOEDHULP SEO GUIDE ARTICLE ── */}
+        <div className="seo-article-block" style={{ marginTop: '4rem', marginBottom: '3rem' }}>
+          <h2>Contact en 24/7 Mobiele Slotenmaker Service in Heel Nederland</h2>
+          <p>
+            Heeft u met spoed een autosleutelspecialist nodig, bent u buitengesloten of wilt u een reservesleutel laten programmeren? Neem dan telefonisch of via WhatsApp contact met ons op. Onze centrale servicecoördinatie stuurt direct de dichtstbijzijnde volledig ingerichte servicebus naar uw locatie toe in heel Nederland — van regio Utrecht en Amsterdam tot Rotterdam, Den Haag en Flevoland.
+          </p>
+          <h3>Welke gegevens hebben wij van u nodig voor een snelle prijsopgave?</h3>
+          <p>
+            Om u direct een exacte, vaste prijs te kunnen geven en de juiste transponderchip of smart key mee te nemen, vragen wij u om uw automerk, model, bouwjaar en uw huidige locatie of woonplaats door te geven. Heeft u nog een werkende sleutel of bent u alle sleutels kwijt (All Keys Lost)? Wij hebben voor 99% van alle voertuigen de juiste onderdelen en software direct op voorraad.
+          </p>
+        </div>
+
       </div>
     </main>
     </>

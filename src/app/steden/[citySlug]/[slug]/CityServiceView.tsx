@@ -1144,11 +1144,19 @@ export function CityServiceView({
               <ul>
                 <li><strong>Diagnose &amp; Identificatie:</strong> Onze monteur start met een grondige diagnose van het slotmechanisme en leest via de OBD2-diagnosepoort de startonderbreker (immobiliser) uit.</li>
                 <li><strong>100% Schadevrije Opening &amp; Bewerking:</strong> Met gespecialiseerd Lishi-precisiegereedschap openen of decoderen wij autodeuren zonder enige sporen of krassen achter te laten.</li>
-                <li><strong>Ter Plaatse Frezen &amp; Programmeren:</strong> Nieuwe transponderchips en afstandsbedieningen worden direct gesynchroniseerd met de boordcomputer van uw voertuig.</li>
+                <li><strong>Ter Plaatse Frezen &amp; CNC-slijpen:</strong> Nieuwe transponderchips en afstandsbedieningen worden direct gesynchroniseerd met de boordcomputer van uw voertuig via beveiligde OEM-tokens.</li>
               </ul>
-              <h3>Voordeliger dan de dealer met 12 Maanden Garantie</h3>
+              <h3>Veiligheid, Startonderbrekers en OBD2-inkoppelingsgarantie</h3>
               <p>
-                Doordat wij efficiënt op locatie werken zonder dure showrooms, bent u bij ons gemiddeld <strong>30% tot 50% voordeliger uit</strong> dan bij de officiële merkdealer in {city.city}. Bovendien krijgt u op al onze sleutels, smart keys en reparaties standaard 12 maanden schriftelijke garantie. Veel verzekeraars vergoeden onze facturen volledig onder uw Beperkt Casco of Allrisk autoverzekering.
+                Moderne voertuigen zijn uitgerust met geavanceerde elektronische beveiligingssystemen, waaronder versleutelde transponders (zoals Hitag, Megamos Crypto of Texas Crypto) en smart keyless go modules. Bij verlies of diefstal is het cruciaal dat oude, verloren sleutels direct worden gewist uit het geheugen (ECU/BSI/CAS) van uw auto. Onze monteurs wissen in {city.city} onmiddellijk alle ontbrekende sleutelcodes, zodat onbevoegden uw auto nooit meer kunnen starten of openen.
+              </p>
+              <h3>Vergoeding via de Autoverzekering &amp; 12 Maanden Garantie</h3>
+              <p>
+                Doordat wij efficiënt op locatie werken zonder dure showrooms, bent u bij ons gemiddeld <strong>30% tot 50% voordeliger uit</strong> dan bij de officiële merkdealer in {city.city}. Bovendien krijgt u op al onze sleutels, smart keys en reparaties standaard 12 maanden schriftelijke garantie. In veel gevallen valt schade door verlies of diefstal onder uw WA Extra (Beperkt Casco) of Allrisk autoverzekering. U ontvangt van onze monteur altijd direct een gespecificeerde en verzekeringsklare factuur met KVK-gegevens.
+              </p>
+              <h3>Stappenplan bij spoed in {city.city}: wat moet u doen?</h3>
+              <p>
+                Staat u gestrand in {city.city} en heeft u direct hulp nodig bij {service.title.toLowerCase()}? Volg dit eenvoudige stappenplan: neem direct telefonisch of via WhatsApp contact met ons op, geef uw automerk, model, bouwjaar en exacte locatie in {city.city} door, en onze dichtstbijzijnde servicebus rijdt onmiddellijk naar u toe. Binnen gemiddeld {city.travelTime} bent u weer veilig en zorgeloos onderweg!
               </p>
             </div>
           </div>

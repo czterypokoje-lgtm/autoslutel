@@ -54,6 +54,28 @@ export default function DienstenOverviewPage() {
           </table>
         </div>
 
+        {/* ── COMPREHENSIVE DIENSTEN SEO GUIDE ARTICLE ── */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="seo-article-block" style={{ marginTop: 0 }}>
+            <h2>Compleet Overzicht van Onze Mobiele Autosleutel &amp; Slotenmaker Diensten</h2>
+            <p>
+              Als gespecialiseerd auto slotenmaker biedt <strong>{SITE_CONFIG.name}</strong> een totaaloplossing voor elk type autosleutelprobleem. Of u nu uw sleutel in de auto heeft laten liggen, te maken heeft met een afgebroken sleutelbaard, een defect contactslot of een lege batterij van uw smart key: onze mobiele monteurs staan 24/7 voor u klaar om u ter plaatse te helpen.
+            </p>
+            <h3>1. Schadevrij Autodeur Openen &amp; Noodopeningen</h3>
+            <p>
+              Is uw autodeur dichtgevallen met de sleutel nog op het contact of op de stoel? Wij openen uw auto 100% schadevrij met geavanceerde Lishi lock decoders. In tegenstelling tot traditionele openbreekmethodes blijft uw fabrieksslot volledig intact.
+            </p>
+            <h3>2. Autosleutel Bijmaken &amp; Programmeren op Locatie</h3>
+            <p>
+              Wij snijden mechanische sleutelbladen direct met onze mobiele CNC-lasersnijders en lezen uw startonderbreker (immobiliser) uit via de OBD2-diagnosepoort. Wij leveren en programmeren originele transponderchips en keyless go sleutels voor meer dan 38 automerken.
+            </p>
+            <h3>3. All Keys Lost (AKL) — Alle Sleutels Kwijt</h3>
+            <p>
+              Bent u al uw autosleutels verloren? Geen paniek. Waar een dealer u verplicht om uw auto te laten wegslepen en vaak complete slotensets vervangt, genereren wij ter plaatse een compleet nieuwe sleutel en wissen wij de oude, verloren sleutels uit het geheugen van uw boordcomputer.
+            </p>
+          </div>
+        </section>
+
         <div className={styles.cta}>
           <h2>Direct Hulp Nodig?</h2>
           <p>Bel of WhatsApp voor een prijsindicatie en planning.</p>

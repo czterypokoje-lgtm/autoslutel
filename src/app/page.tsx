@@ -595,6 +595,26 @@ export default function HomePage() {
 
 
 
+      {/* ── COMPREHENSIVE HOMEPAGE SEO GUIDE ARTICLE ── */}
+      <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+        <div className="container">
+          <div className="seo-article-block" style={{ marginTop: 0 }}>
+            <h2>Gecertificeerde Mobiele Autosleutelspecialist voor Midden-Nederland</h2>
+            <p>
+              Als onafhankelijk en erkend autosleutelspecialist biedt <strong>{SITE_CONFIG.name}</strong> 24 uur per dag, 7 dagen per week professionele hulp op locatie. Of u nu bent buitengesloten in Utrecht, een nieuwe sleutel met afstandsbediening wilt laten inleren in Amsterdam, of al uw autosleutels kwijt bent (All Keys Lost) in regio Midden-Nederland: onze volledig uitgeruste mobiele werkplaatsen komen naar u toe.
+            </p>
+            <h3>Diagnoseapparatuur, Lishi Lockpicking en Transpondertechniek</h3>
+            <p>
+              Onze monteurs werken met geautoriseerde fabriekssoftware en OEM-tokens voor alle 38 automerken. Wij openen autodeuren 100% schadevrij met Lishi 2-in-1 lock decoders en frezen sleutelbaarden op de millimeter nauwkeurig met computergestuurde CNC-machines. Via de OBD2-diagnosepoort koppelen wij transponderchips en Keyless Go smart keys rechtstreeks aan de startonderbreker van uw voertuig.
+            </p>
+            <h3>Bespaar op Sleepkosten en Dealerservice met 12 Maanden Garantie</h3>
+            <p>
+              Doordat wij direct bij u op locatie werken zonder dure showrooms of wachttijden, bespaart u bij ons gemiddeld <strong>30% tot 50%</strong> ten opzichte van de merkdealer. U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels, smart keys en reparaties. Veel autoverzekeraars vergoeden onze facturen onder uw Beperkt Casco of Allrisk polis.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ===== FAQ ===== */}
       <FaqSection />
 

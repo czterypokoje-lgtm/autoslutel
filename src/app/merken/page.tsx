@@ -232,6 +232,22 @@ export default function MerkenPage() {
           </div>
         </div>
 
+        {/* ── COMPREHENSIVE MERKEN SEO GUIDE ARTICLE ── */}
+        <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
+          <h2>Autosleutels Programmeren en Bijmaken voor Alle 38 Automerken in Nederland</h2>
+          <p>
+            Moderne auto&apos;s zijn uitgerust met complexe elektronische antidiefstalsystemen. Elke autofabrikant hanteert eigen beveiligingsprotocollen, startonderbrekers en transpondersystemen — van BMW CAS4/FEM en Volkswagen MQB tot Mercedes-Benz FBS3/FBS4 en Renault Keycards. Waar reguliere garages vaak vastlopen op merk-specifieke softwarebeveiliging of u doorsturen naar een dure merkdealer, is <strong>{SITE_CONFIG.name}</strong> gespecialiseerd in het sleutelbeheer van álle 38 gangbare automerken.
+          </p>
+          <h3>Geautoriseerde OEM-Diagnose en CNC-Sleutelfrezen</h3>
+          <p>
+            Onze servicebussen zijn uitgerust met professionele diagnosecomputers en officiële OEM-licenties. Hierdoor kunnen wij rechtstreeks communiceren met de immobiliser, ECU of BSI van uw voertuig via de OBD2-poort. Wij slijpen mechanische sleutelbladen met uiterste precisie op onze computergestuurde CNC-frezen op basis van uw chassisnummer (VIN) of de sleutelcode.
+          </p>
+          <h3>Smart Keys, Keyless Go en All Keys Lost per Merk</h3>
+          <p>
+            Of u nu een gloednieuwe elektrische auto rijdt met Keyless Entry of een klassieke personenwagen: wij programmeren transponderchips, afstandsbedieningen en proximity keys op locatie. Ook wanneer u alle sleutels kwijt bent (All Keys Lost), openen wij uw voertuig 100% schadevrij met Lishi tools en genereren wij direct een nieuwe sleutelset met 12 maanden garantie.
+          </p>
+        </div>
+
       </div>
     </main>
   );

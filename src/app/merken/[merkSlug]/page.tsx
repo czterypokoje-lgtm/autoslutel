@@ -151,6 +151,30 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
           </div>
         </section>
 
+        {/* ── COMPREHENSIVE BRAND SEO GUIDE ARTICLE ── */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <div className="seo-article-block" style={{ marginTop: 0 }}>
+              <h2>Alles over {brand.name} Autosleutels Bijmaken, Inleren en Vervangen</h2>
+              <p>
+                Het verliezen of beschadigen van uw {brand.name} autosleutel kan voor aanzienlijk ongemak zorgen. Of u nu rijdt in een compacte stadsauto, een hybride of een volledig elektrisch model, moderne {brand.name} voertuigen maken gebruik van geavanceerde elektronische beveiligingssystemen. Waar u bij een officiële {brand.name} merkdealer vaak dagen tot weken moet wachten en verplicht bent uw auto te laten wegslepen, biedt <strong>{SITE_CONFIG.name}</strong> een snelle, mobiele oplossing op locatie in heel Nederland.
+              </p>
+              <h3>Hoe programmeren wij uw {brand.name} sleutel ter plaatse?</h3>
+              <p>
+                Onze mobiele monteurs beschikken over geautoriseerde dealerapparatuur waarmee wij rechtstreeks verbinding maken met het diagnose- en beveiligingssysteem van uw voertuig (zoals <strong>{brand.system}</strong>). Via de OBD2-poort lezen wij de startonderbreker uit, programmeren we de transponderchip en synchroniseren we de centrale deurvergrendeling of Keyless Entry afstandsbediening.
+              </p>
+              <h3>Wat als u alle {brand.name} sleutels kwijt bent (All Keys Lost)?</h3>
+              <p>
+                Zelfs wanneer u al uw {brand.name} sleutels kwijt bent, kunnen wij u direct helpen. Wij openen uw auto 100% schadevrij met speciaal Lishi-gereedschap, decoderen het mechanische sleutelnummer en frezen direct een nieuwe noodsleutel met onze mobiele CNC-snijmachine. Vervolgens wissen wij alle verloren sleutels uit het geheugen van de auto, zodat uw voertuig optimaal beveiligd blijft tegen diefstal.
+              </p>
+              <h3>Garantie, Verzekering en Kostenvoordeel</h3>
+              <p>
+                Dankzij onze efficiënte mobiele werkwijze bespaart u bij ons gemiddeld <strong>30% tot 50%</strong> ten opzichte van de merkdealer. U ontvangt standaard 12 maanden volledige schriftelijke garantie op de geleverde {brand.name} sleutel en elektronica. Bovendien accepteren vrijwel alle autoverzekeraars (Beperkt Casco en Allrisk) onze officiële gespecificeerde facturen voor vergoeding na diefstal of verlies.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Local presence / City links */}
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)' }}>
           <div className="container">

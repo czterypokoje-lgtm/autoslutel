@@ -60,6 +60,22 @@ export default function Steden() {
             </div>
           );
         })}
+
+        {/* ── COMPREHENSIVE STEDEN SEO GUIDE ARTICLE ── */}
+        <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
+          <h2>Mobiele Autosleutel Service in Heel Nederland: Binnen 30-45 Minuten Ter Plaatse</h2>
+          <p>
+            Vanuit onze centrale uitvalspunten in regio Utrecht en Amsterdam bedient <strong>{SITE_CONFIG.name}</strong> meer dan 45 steden en gemeenten door heel Nederland. Of u nu bent buitengesloten in het centrum van Amsterdam, met een kapotte autosleutel staat in Utrecht, of met spoed een nieuwe sleutel wilt laten inleren in Hilversum, Amstelveen of Almere: onze volledig ingerichte mobiele werkplaatsen komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw locatie.
+          </p>
+          <h3>Geen Takel- of Sleepkosten Meer</h3>
+          <p>
+            Traditionele merkdealers vereisen bij verlies van al uw autosleutels (All Keys Lost) dat uw voertuig per takelwagen naar de garage wordt vervoerd. Dit kost honderden euro&apos;s aan sleepkosten en brengt dagenlange wachttijden met zich mee. Wij voeren alle werkzaamheden — van het 100% schadevrij openen van autodeuren met Lishi tools tot het CNC-frezen en OBD2-programmeren van transponderchips — direct ter plaatse uit.
+          </p>
+          <h3>12 Maanden Garantie en Verzekeringsvergoeding per Stad</h3>
+          <p>
+            In welke stad u zich ook bevindt: u betaalt vooraf altijd een vaste, transparante prijs zonder verrassingen achteraf. Op al onze geleverde sleutels, smart keys en reparaties verlenen wij standaard 12 maanden schriftelijke garantie. Veel verzekeringsmaatschappijen vergoeden onze werkzaamheden onder uw Beperkt Casco of Allrisk autoverzekering.
+          </p>
+        </div>
       </div>
     </main>
   );

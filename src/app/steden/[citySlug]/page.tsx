@@ -425,6 +425,30 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
+        {/* ── COMPREHENSIVE CITY SEO GUIDE ARTICLE ── */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <div className="seo-article-block" style={{ marginTop: 0 }}>
+              <h2>Volledige Slotenmaker &amp; Autosleutel Service in {city.city}</h2>
+              <p>
+                Woonachtig in of onderweg door {city.city} en geconfronteerd met een kapotte, gestolen of kwijtgeraakte autosleutel? Dan bent u bij <strong>{SITE_CONFIG.name}</strong> aan het juiste adres. In tegenstelling tot traditionele garages die vaak lange wachttijden hanteren en wegsleepkosten rekenen, komen wij met onze mobiele werkplaats direct naar u toe in {city.city} en regio {city.region}. Binnen gemiddeld {city.travelTime} staan wij naast uw voertuig om het probleem ter plaatse op te lossen.
+              </p>
+              <h3>Waarom kiezen voor mobiele autosleutelprogrammering in {city.city}?</h3>
+              <p>
+                Modern autobeheer vereist gespecialiseerde kennis van auto-elektronica, CAN-bus communicatie en immobilisersysteemsleeptabellen. Onze monteurs werken dagelijks met fabrieksspecifieke apparatuur en officiële OEM-tokens voor meer dan 38 automerken. Hierdoor kunnen wij niet alleen mechanische sleutelbladen CNC-frezen op locatie in {city.city}, maar ook direct transponderchips en smart keyless go modules inleren op de boordcomputer (ECU, BSI, FEM of CAS).
+              </p>
+              <h3>100% Schadevrij Openen via Lishi Lock Decoders</h3>
+              <p>
+                Is uw autodeur dichtgevallen of liggen de sleutels nog op de stoel of in de kofferbak? Ga nooit zelf aan de slag met kledinghangers of schroevendraaiers; dit veroorzaakt onherstelbare schade aan uw lak en rubberafdichtingen. Wij gebruiken in {city.city} uitsluitend Lishi 2-in-1 lock decoders. Hiermee picken en decoderen wij rechtstreeks het portierslot op mechanische wijze, 100% schadevrij met behoud van uw fabrieksslot.
+              </p>
+              <h3>Garantie, Transparantie en Verzekeringsvergoeding in {city.city}</h3>
+              <p>
+                U ontvangt van ons altijd vooraf een heldere, vaste prijs. Na afronding van de werkzaamheden krijgt u standaard 12 maanden schriftelijke garantie op de geleverde sleutel en elektronica. Veel verzekeraars vergoeden de kosten voor het vervangen van autosleutels onder de dekking van uw Beperkt Casco of Allrisk polis; wij leveren een officiële, gespecificeerde factuur die direct geschikt is voor uw verzekeraar.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* ── REVIEWS SECTION ────────────────────────────────────── */}
         <section className={styles.reviews}>
           <div className="container">

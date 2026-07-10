@@ -396,6 +396,22 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   </p>
                 </div>
 
+                {/* Section 5.5: Comprehensive Dutch SEO Guide */}
+                <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
+                  <h2>Alles over {service.title}: Mobiele Service, Techniek en Verzekering</h2>
+                  <p>
+                    Wanneer u hulp nodig heeft met <strong>{service.title.toLowerCase()}</strong>, wilt u niet afhankelijk zijn van lange wachttijden of dure wegsleepservices van traditionele garages. Onze gecertificeerde mobiele slotenmakers komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw auto toe in heel Nederland. Of u nu thuis op de oprit staat, op uw werk, of langs de weg bent gestrand: binnen gemiddeld 30 minuten zijn wij ter plaatse.
+                  </p>
+                  <h3>Geavanceerde Apparatuur &amp; 100% Schadevrije Garantie</h3>
+                  <p>
+                    Wij werken uitsluitend met hightech diagnoseapparatuur en originele dealer-tokens. Voor het openen van autodeuren gebruiken wij speciale Lishi 2-in-1 lock decoders waarmee we het slot schadevrij openen via de cilinder. Moet er een nieuwe sleutel worden ingeleerd? Via de OBD2-diagnosepoort koppelen wij de nieuwe transponderchip of Keyless Go smart key rechtstreeks aan de startonderbreker van uw auto.
+                  </p>
+                  <h3>Kosten Besparen t.o.v. de Dealer &amp; 12 Maanden Garantie</h3>
+                  <p>
+                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>30% tot 50% voordeliger uit</strong> dan bij de officiële merkdealer. Bovendien vergoeden veel verzekeraars (onder Beperkt Casco of Allrisk) onze factuur na diefstal of verlies. U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
+                  </p>
+                </div>
+
                 {/* Section 6: FAQ Accordion */}
                 <div>
                   <h2>Veelgestelde Vragen over {service.title}</h2>

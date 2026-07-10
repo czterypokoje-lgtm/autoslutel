@@ -185,6 +185,18 @@ export default function OverOnsPage() {
           ))}
         </div>
 
+        {/* ── COMPREHENSIVE OVER ONS SEO GUIDE ARTICLE ── */}
+        <div className="seo-article-block" style={{ marginTop: '2rem', marginBottom: '3.5rem' }}>
+          <h2>Waarom Onze Slotenmakers en Mobiele Service Koploper in Nederland Zijn</h2>
+          <p>
+            Bij <strong>{SITE_CONFIG.name}</strong> geloven we in vakmanschap, eerlijke communicatie en snelle hulp. Berkan Acarol en zijn team werken continu met de modernste sleutel- en diagnosesoftware op de markt. Waar veel garages stoppen bij het leveren van standaard mechanische sleutels, zijn wij gespecialiseerd in complexe voertuigelektronica, EEPROM-lezen, CAN-bus beveiligingen en het inleren van transponderchips op fabrieksniveau.
+          </p>
+          <h3>Geen Tussenpersonen of Callcenters</h3>
+          <p>
+            Wanneer u ons belt op ons noodnummer, krijgt u direct een deskundige monteur aan de lijn. U hoeft niet te onderhandelen via tussenpersonen of dure callcenters. Wij schatten direct uw situatie in, geven u vooraf een duidelijke all-in prijsopgave en plannen de dichtstbijzijnde mobiele monteur in om binnen 30 tot 45 minuten bij u te zijn.
+          </p>
+        </div>
+
         <div style={{ textAlign: 'center' }}>
           <Link href="/contact" className="btn btn-primary btn-lg" id="over-ons-contact-cta">
             📞 Neem Contact Op

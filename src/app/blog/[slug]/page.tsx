@@ -248,14 +248,46 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           postContent
         ) : (
           <>
-            <h2>Wat U Moet Weten</h2>
-            <p>{post.excerpt} In dit artikel gaan wij dieper in op dit onderwerp en geven wij u praktische tips.</p>
+            <h2>Alles Over {post.title}</h2>
+            <p className="lead" style={{ fontSize: '1.15rem', lineHeight: 1.7, fontWeight: 500, color: 'var(--navy-800)', marginBottom: '1.5rem' }}>
+              {post.excerpt}
+            </p>
+            <h3>1. De Technische Uitdaging bij Moderne Autosleutels</h3>
+            <p>
+              Moderne autodeuren en contactsloten zijn lang niet meer puur mechanisch beveiligd. Sinds eind jaren negentig is elke autosleutel uitgerust met een RFID-transponderchip die versleutelde gegevens uitwisselt met de startonderbreker (immobiliser) in de auto. Zonder een cryptografisch goedgekeurde code weigert de motorstuurinrichting (ECU) de brandstofpomp en ontsteking te activeren. Wanneer u uw sleutel wilt bijmaken, moet niet alleen de sleutelbaard nauwkeurig worden geslepen, maar moet de transponderchip ook worden geïntegreerd in het beveiligingssysteem van uw auto.
+            </p>
+            <h3>2. OBD2-Diagnose en Inleren op Fabrieksniveau</h3>
+            <p>
+              Waar conventionele garages of schoenmakers vaak steken laten vallen bij complexe sleutelcoderingen — zoals BMW CAS4/FEM, Volkswagen MQB, Mercedes FBS3 of Renault Keycard systemen — werkt <strong>{SITE_CONFIG.name}</strong> met professionele diagnoseapparatuur en originele OEM-licenties. Via de OBD2-poort in uw auto communiceren wij rechtstreeks met de boordcomputer om nieuwe sleutelcodes toe te voegen.
+            </p>
+            <h3>3. Wat te doen bij All Keys Lost (Alle Sleutels Kwijt)?</h3>
+            <p>
+              Bent u alle sleutels kwijtgeraakt? Bij een merkdealer moet uw auto dan vaak per takelwagen worden weggesleept naar de werkplaats, wat gepaard gaat met hoge sleepkosten en lange wachttijden. Onze mobiele slotenmakers komen 24/7 direct naar uw locatie. Wij openen uw auto 100% schadevrij met speciaal Lishi-gereedschap, decoderen het slotmechanisme om de sleutelsnede te bepalen, frezen een nieuwe sleutelbaard met onze computergestuurde CNC-machine én wissen de verloren sleutels uit het autogeheugen voor uw veiligheid.
+            </p>
+            <h3>4. Transparante Kosten, Garantie en Verzekering</h3>
+            <p>
+              Dankzij onze efficiënte mobiele werkwijze bespaart u gemiddeld 30% tot 50% ten opzichte van officiële merkdealers. U ontvangt vooraf altijd een vaste all-in prijsopgave zonder verrassingen achteraf en standaard 12 maanden schriftelijke garantie op al onze geleverde sleutels en reparaties. In veel gevallen wordt het vervangen of bijmaken van een verloren autosleutel bovendien gedekt door uw WA Extra of Allrisk autoverzekering.
+            </p>
           </>
         )}
 
+        {/* ── COMPREHENSIVE E-E-A-T TECHNICAL FOOTER GUIDE ── */}
+        <div className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '2.5rem', padding: '2rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+          <h3>Veelgestelde Vragen over Autosleutel Service op Locatie</h3>
+          <p>
+            <strong>Hoe snel zijn jullie ter plaatse?</strong> In regio Utrecht, Amsterdam en Midden-Nederland zijn onze mobiele monteurs gemiddeld binnen 30 tot 45 minuten bij uw voertuig.
+          </p>
+          <p>
+            <strong>Wordt mijn auto schadevrij geopend?</strong> Ja, wij maken uitsluitend gebruik van professionele Lishi 2-in-1 lockdecoders. Er komt geen koevoet of breekijzer aan te pas, waardoor uw lak en portierslot 100% intact blijven.
+          </p>
+          <p>
+            <strong>Krijg ik garantie op een nieuwe autosleutel?</strong> Ja, u ontvangt standaard 12 maanden garantie op de elektronica, transponderchip, batterij en behuizing van elke door ons geleverde en geprogrammeerde sleutel.
+          </p>
+        </div>
+
         <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
-          <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Hulp Nodig?</h3>
-          <p style={{ color: 'rgba(255,255,255,0.8)', marginBottom: '1.5rem' }}>Onze specialisten staan 24/7 voor u klaar.</p>
+          <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Een Autosleutel Laten Bijmaken of Programmeren?</h3>
+          <p style={{ color: 'rgba(255,255,255,0.8)', marginBottom: '1.5rem' }}>Onze gecertificeerde autosleutelspecialisten staan 24/7 voor u klaar.</p>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>
             📞 {SITE_CONFIG.phone}
           </a>

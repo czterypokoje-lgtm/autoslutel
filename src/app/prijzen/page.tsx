@@ -263,6 +263,22 @@ export default function PrijzenPage() {
           </div>
         </div>
 
+        {/* ── COMPREHENSIVE PRIJZEN SEO GUIDE ARTICLE ── */}
+        <div className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem' }}>
+          <h2>Transparante Tarieven voor Autosleutels en Slotenmaker Service op Locatie</h2>
+          <p>
+            Bij het bijmaken of vervangen van een autosleutel spelen verschillende technische factoren een rol in de prijsopbouw. Waar een eenvoudige reservesleutel zonder afstandsbediening relatief goedkoop is, vereist een moderne Keyless Entry of Keyless Go sleutel (smart key) geavanceerde elektronica en gecertificeerde programmeersoftware. <strong>{SITE_CONFIG.name}</strong> garandeert u altijd vooraf een vaste en transparante all-in prijs, zodat u nooit wordt geconfronteerd met onverwachte kosten.
+          </p>
+          <h3>Waarom zijn wij 30% tot 50% goedkoper dan de officiële merkdealer?</h3>
+          <p>
+            Officiële merkdealers berekenen vaak hoge uurtarieven, logistieke bestel- en administratiekosten én verplichte takel- of wegsleepkosten naar hun showroom. Onze gecertificeerde mobiele slotenmakers komen met een compleet uitgeruste servicebus direct naar uw voertuig toe. Wij snijden de sleutelbaard met CNC-gestuurde snijmachines ter plaatse en leren de transponderchip in via de OBD2-diagnosepoort.
+          </p>
+          <h3>Vergoeding via uw Autoverzekering &amp; 12 Maanden Garantie</h3>
+          <p>
+            Wanneer u uw autosleutel bent verloren of als deze is gestolen, valt het vervangen van uw sleutelset en het wissen van de oude sleutelcodes vaak onder de dekking van uw WA Extra (Beperkt Casco) of Allrisk autoverzekering. U ontvangt van ons altijd een officiële en gespecificeerde KVK-factuur die u direct kunt indienen bij uw verzekeraar. Bovendien krijgt u op alle geleverde autosleutels 12 maanden schriftelijke garantie.
+          </p>
+        </div>
+
         {/* CTA */}
         <div className={styles.cta}>
           <h2>Exacte Prijs Weten?</h2>

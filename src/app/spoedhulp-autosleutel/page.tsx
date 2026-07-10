@@ -129,6 +129,22 @@ export default function SpoedhulpPage() {
           </div>
         </section>
 
+        {/* ── COMPREHENSIVE SPOEDHULP SEO GUIDE ARTICLE ── */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <div className="seo-article-block" style={{ marginTop: 0 }}>
+              <h2>24/7 Noodhulp bij Autosleutels en Sloten in Midden-Nederland</h2>
+              <p>
+                Niets is zo frustrerend als midden in de nacht, tijdens een regenbuis of vlak voor een belangrijke afspraak voor een afgesloten auto te staan. Of u nu de autosleutel per ongeluk in de kofferbak heeft laten liggen, de sleutel is afgebroken in het contactslot, of u het slachtoffer bent geworden van diefstal: <strong>{SITE_CONFIG.name}</strong> biedt 24 uur per dag en 365 dagen per jaar directe spoedhulp.
+              </p>
+              <h3>Snelste Reactietijd in Regio Utrecht &amp; Amsterdam</h3>
+              <p>
+                Dankzij onze centrale ligging en meerdere mobiele servicebussen zijn wij gemiddeld binnen 30 minuten bij u op locatie in Utrecht, Amsterdam, Amersfoort, Hilversum en Almere. Onze bussen beschikken over autonome stroomvoorziening, hightech sleutelmachines en diagnosecomputers om direct ter plekke te frezen, te openen en te inleren.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Bottom CTA */}
         <section style={{ background: 'var(--color-danger)', padding: '3rem 2rem', textAlign: 'center' }}>
           <h2 style={{ color: '#fff', marginBottom: '0.5rem' }}>Spoed? Bel Direct — 24/7</h2>
