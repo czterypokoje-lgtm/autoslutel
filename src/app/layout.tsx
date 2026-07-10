@@ -79,9 +79,9 @@ const localBusinessSchema = {
   url: SITE_CONFIG.domain,
   logo: {
     '@type': 'ImageObject',
-    url: `${SITE_CONFIG.domain}/logo.png`,
-    width: 200,
-    height: 60,
+    url: `${SITE_CONFIG.domain}/images/logo/autosleutel24-logo-slotenmaker-utrecht.png`,
+    width: 1024,
+    height: 304,
   },
   image: `${SITE_CONFIG.domain}/og-image.png`,
   telephone: SITE_CONFIG.phoneTel,

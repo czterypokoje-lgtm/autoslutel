@@ -85,89 +85,85 @@ export default function OverOnsPage() {
       <div className="container" style={{ padding: '4rem 2rem' }}>
 
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
           <div>
-            <h2>Wie Zijn Wij?</h2>
-            <p>Autosleutel24 Utrecht is opgericht door Berkan Acarol, een gecertificeerd autosleutelspecialist en ondernemer met meer dan 10 jaar ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
-            <p>Wij zijn een mobiele dienst gespecialiseerd in autosleutelprogrammering voor alle merken en modellen. Wij komen naar u toe — of u nu thuis bent, op het werk, of gestrand langs de weg.</p>
-            <p>Onze focus: eerlijke prijzen, snelle reactie, en technisch excellent werk. Geen vage verhalen — gewoon het probleem oplossen.</p>
+            <h2 style={{ fontSize: '1.6rem', fontWeight: 700, marginBottom: '0.75rem' }}>Wie Zijn Wij?</h2>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Autosleutel24 Utrecht is opgericht door Berkan Acarol, een gecertificeerd autosleutelspecialist en ondernemer met meer dan 10 jaar ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Wij zijn een mobiele dienst gespecialiseerd in autosleutelprogrammering voor alle merken en modellen. Wij komen naar u toe — of u nu thuis bent, op het werk, of gestrand langs de weg.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1rem' }}>Onze focus: eerlijke prijzen, snelle reactie, en technisch excellent werk. Geen vage verhalen — gewoon het probleem oplossen.</p>
 
-            <h3>Onze Waarden</h3>
-            <ul style={{ listStyleType: 'none', padding: 0 }}>
-              <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Transparantie</strong> — Vaste prijs afspreken voor start</span></li>
-              <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaarheid</strong> — KVK geregistreerd, verzekerd</span></li>
-              <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Kwaliteit</strong> — Professionele tools, geen goedkope alternatieven</span></li>
-              <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Bereikbaarheid</strong> — 24/7, ook weekend en feestdagen</span></li>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Onze Waarden</h3>
+            <ul style={{ listStyleType: 'none', padding: 0, margin: 0, fontSize: '0.88rem', color: 'var(--gray-700)', lineHeight: '1.7' }}>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Transparantie</strong> — Vaste prijs afspreken voor start</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaarheid</strong> — KVK geregistreerd, verzekerd</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Kwaliteit</strong> — Professionele tools, geen goedkope alternatieven</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Bereikbaarheid</strong> — 24/7, ook weekend en feestdagen</span></li>
             </ul>
           </div>
 
-          <div style={{ background: 'var(--color-bg-alt)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
+          <div>
             <img
               src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
               alt="Berkan Acarol — Eigenaar en Hoofdtechnicus van Autosleutel24 Utrecht"
               style={{
                 width: '100%',
-                borderRadius: '12px',
-                height: 'auto',
-                marginBottom: '1.5rem',
-                boxShadow: 'var(--shadow-sm)'
+                maxWidth: '340px',
+                height: '220px',
+                objectFit: 'cover',
+                objectPosition: 'top',
+                borderRadius: '4px',
+                border: '1px solid #cbd5e1',
+                display: 'block',
+                marginBottom: '0.75rem'
               }}
             />
-            <h3 style={{ marginBottom: '0.25rem' }}>Berkan Acarol</h3>
-            <p style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '1rem' }}>Eigenaar &amp; Hoofdtechnicus</p>
-            <ul style={{ paddingLeft: '1.25rem', margin: 0, fontSize: '0.875rem', color: 'var(--color-text-muted)', lineHeight: 1.6, listStyleType: 'square' }}>
-              <li style={{ marginBottom: '0.5rem' }}><strong>Specialist:</strong> Geavanceerde transponderprogrammering &amp; ECU-clonering</li>
-              <li style={{ marginBottom: '0.5rem' }}><strong>Ervaring:</strong> Ruim 10 jaar actieve ervaring in autodiagnose &amp; slotenmakerij</li>
-              <li style={{ marginBottom: '0.5rem' }}><strong>Certificering:</strong> Volledig gecertificeerd voor Autel IM608 Pro II, AVDI Abrites &amp; Lonsdor</li>
-              <li style={{ marginBottom: '0.5rem' }}><strong>Werkgebied:</strong> Persoonlijk werkzaam in Utrecht, Amsterdam, Almere en heel Midden-Nederland</li>
-            </ul>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.2rem' }}>Berkan Acarol</h3>
+            <p style={{ color: 'var(--orange-500)', fontWeight: 600, fontSize: '0.85rem', margin: 0 }}>Eigenaar &amp; Hoofdtechnicus</p>
           </div>
         </div>
 
         {/* Workshop Image Section */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
+          <div>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Onze Professionele Werkplaats</h2>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Bij Autosleutel24 Utrecht geloven we in het leveren van topkwaliteit. Daarom beschikken we naast onze mobiele bussen over een eigen, fysieke werkplaats in Utrecht. Deze is speciaal uitgerust met CNC-gestuurde sleutel-freesmachines, soldeerstations voor fijnmicro-solderen en geavanceerde programmeerapparaten.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Of het nu gaat om het dupliceren van een reservesleutel, het inlezen van een transponder of het herstellen van een defect printplaatje; in onze werkplaats voeren we alle handelingen met uiterste precisie uit.</p>
+          </div>
           <div>
             <img 
               src="/images/seo/auto_sleutel_utrecht_24uur_workshop.webp" 
               alt="Professionele autosleutel werkplaats en gereedschap in Utrecht voor 24 uur service" 
-              style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
+              style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
-          </div>
-          <div>
-            <h2>Onze Professionele Werkplaats</h2>
-            <p>Bij Autosleutel24 Utrecht geloven we in het leveren van topkwaliteit. Daarom beschikken we naast onze mobiele bussen over een eigen, fysieke werkplaats in Utrecht. Deze is speciaal uitgerust met CNC-gestuurde sleutel-freesmachines, soldeerstations voor fijnmicro-solderen en geavanceerde programmeerapparaten.</p>
-            <p>Of het nu gaat om het dupliceren van een reservesleutel, het inlezen van een transponder of het herstellen van een defect printplaatje; in onze werkplaats voeren we alle handelingen met uiterste precisie uit.</p>
           </div>
         </div>
 
-
-
         {/* Mobile Work & Inventory Section */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
-          <div style={{ order: 2 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
+          <div>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Service Op Locatie &amp; 24/7 Bereikbaar</h2>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Problemen met uw autosleutel gebeuren vaak op de meest ongelegen momenten. Met onze volledig uitgeruste mobiele servicebussen komen we direct naar u toe, waar u zich ook bevindt in de regio Utrecht. U hoeft uw auto niet te slepen naar de dealer, wij fixen het op locatie!</p>
+          </div>
+          <div>
             <img 
               src="/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.webp" 
               alt="Slotenmaker in Utrecht werkzaamheden op locatie 24 uur service" 
-              style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
+              style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
-          </div>
-          <div style={{ order: 1 }}>
-            <h2>Service Op Locatie & 24/7 Bereikbaar</h2>
-            <p>Problemen met uw autosleutel gebeuren vaak op de meest ongelegen momenten. Met onze volledig uitgeruste mobiele servicebussen komen we direct naar u toe, waar u zich ook bevindt in de regio Utrecht. U hoeft uw auto niet te slepen naar de dealer, wij fixen het op locatie!</p>
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '4rem', marginBottom: '4rem', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
+          <div>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Grote Voorraad Originele Sleutels</h2>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Om u zo snel mogelijk weer op weg te helpen, beschikken wij over een enorme voorraad aan originele en aftermarket autosleutels. Van moderne smart keys (keyless go) tot traditionele transpondersleutels, wij hebben de juiste sleutel voor 99% van alle automerken direct op voorraad.</p>
+          </div>
           <div>
             <img 
               src="/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp" 
               alt="Grote voorraad autosleutels slotenmaker Utrecht" 
-              style={{ width: '100%', borderRadius: '16px', boxShadow: 'var(--shadow-md)', objectFit: 'cover', aspectRatio: '4/3' }} 
+              style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
-          </div>
-          <div>
-            <h2>Grote Voorraad Originele Sleutels</h2>
-            <p>Om u zo snel mogelijk weer op weg te helpen, beschikken wij over een enorme voorraad aan originele en aftermarket autosleutels. Van moderne smart keys (keyless go) tot traditionele transpondersleutels, wij hebben de juiste sleutel voor 99% van alle automerken direct op voorraad.</p>
           </div>
         </div>
 

@@ -87,18 +87,12 @@ export default function Navigation() {
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
         {/* Logo */}
-        <Link href="/" className={styles.logo} aria-label="Autosleutel24 — naar homepage">
-          <svg className={styles.logoIcon} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect width="40" height="40" rx="4" fill="#0d2137"/>
-            <path d="M22 14a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" fill="#e8520a"/>
-            <rect x="8" y="19" width="10" height="2" rx="1" fill="white"/>
-            <rect x="10" y="23" width="3" height="2" rx="1" fill="white"/>
-            <rect x="15" y="23" width="3" height="2" rx="1" fill="white"/>
-          </svg>
-          <div className={styles.logoText}>
-            <span className={styles.logoMain}>Autosleutel24</span>
-            <span className={styles.logoSub}>Utrecht · 24/7</span>
-          </div>
+        <Link href="/" className={styles.logo} aria-label="Autosleutel24.nl — 24/7 Autosleutelspecialist Utrecht homepage">
+          <img
+            src="/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp"
+            alt="Autosleutel24.nl Logo — 24/7 Mobiele Autosleutel Slotenmaker Utrecht [GPS: 52.0907° N, 5.1214° E]"
+            style={{ height: '38px', width: 'auto', display: 'block' }}
+          />
         </Link>
 
         {/* Desktop Nav */}

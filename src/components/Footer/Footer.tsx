@@ -42,17 +42,11 @@ export default function Footer() {
           {/* Brand column */}
           <div>
             <div className={styles.footerBrand}>
-              <svg viewBox="0 0 40 40" fill="none" className={styles.footerLogo} aria-hidden="true">
-                <rect width="40" height="40" rx="4" fill="#e8520a"/>
-                <path d="M22 14a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" fill="white"/>
-                <rect x="8" y="19" width="10" height="2" rx="1" fill="white"/>
-                <rect x="10" y="23" width="3" height="2" rx="1" fill="white"/>
-                <rect x="15" y="23" width="3" height="2" rx="1" fill="white"/>
-              </svg>
-              <div>
-                <div className={styles.footerBrandName}>Autosleutel24</div>
-                <div className={styles.footerBrandSub}>Utrecht · 24/7</div>
-              </div>
+              <img
+                src="/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp"
+                alt="Autosleutel24.nl Logo — 24/7 Mobiele Autosleutel Slotenmaker Utrecht [GPS: 52.0907° N, 5.1214° E]"
+                style={{ height: '38px', width: 'auto', display: 'block' }}
+              />
             </div>
             <p className={styles.footerDesc}>Professionele mobiele autosleutelprogrammering voor alle merken. Hoofdlocatie Utrecht, direct actief in Amsterdam-Zuid, Amersfoort, Almere, &apos;t Gooi (Hilversum, Bussum, Naarden) en heel Nederland.</p>
             <div className={styles.footerBadges}>

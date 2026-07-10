@@ -477,44 +477,29 @@ export default function HomePage() {
         <div className="container">
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
-            gap: '3rem',
-            alignItems: 'center'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
+            gap: '2.5rem',
+            alignItems: 'start'
           }}>
             <div>
-              <img
-                src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
-                alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24 Utrecht"
-                style={{
-                  width: '100%',
-                  maxWidth: '380px',
-                  borderRadius: '16px',
-                  boxShadow: 'var(--shadow-md)',
-                  height: 'auto',
-                  display: 'block',
-                  margin: '0 auto'
-                }}
-              />
-            </div>
-            <div>
               <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>LOKALE EXPERTISE &amp; VERTROUWEN</p>
-              <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '1rem', marginTop: '0.25rem' }}>
+              <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.75rem', marginTop: '0.25rem' }}>
                 Ontmoet Berkan Acarol
               </h2>
-              <p style={{ fontWeight: 600, color: 'var(--orange-500)', fontSize: '1rem', marginBottom: '1.25rem' }}>
+              <p style={{ fontWeight: 600, color: 'var(--orange-500)', fontSize: '0.95rem', marginBottom: '1rem' }}>
                 Eigenaar &amp; Gecertificeerd Hoofdtechnicus van Autosleutel24
               </p>
-              <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+              <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1.25rem', fontSize: '0.92rem' }}>
                 Wanneer u belt voor een autosleutelprobleem, krijgt u direct te maken met een specialist. Als eigenaar en hoofdtechnicus sta ik, Berkan Acarol, persoonlijk garant voor de kwaliteit van onze service. Met ruim 10 jaar actieve ervaring in de automotive slotenmakerij en gecertificeerd door marktleiders zoals Autel, programmeren wij elke sleutel snel, veilig en ter plaatse.
               </p>
-              <ul style={{ listStyleType: 'none', padding: 0, margin: '0 0 2rem 0', fontSize: '0.9rem', color: 'var(--gray-700)', lineHeight: '1.8' }}>
-                <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <ul style={{ listStyleType: 'none', padding: 0, margin: '0 0 1.5rem 0', fontSize: '0.88rem', color: 'var(--gray-700)', lineHeight: '1.7' }}>
+                <li style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Gecertificeerd Expert:</strong> Specialist in Autel IM608 Pro II &amp; AVDI Abrites.</span>
                 </li>
-                <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <li style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Ruime Ervaring:</strong> Meer dan 10+ jaar ervaring met alle automerken en systemen.</span>
                 </li>
-                <li style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <li style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaar &amp; Lokaal:</strong> Eerlijke, vooraf gecommuniceerde vaste prijzen zonder verrassingen.</span>
                 </li>
               </ul>
@@ -526,6 +511,22 @@ export default function HomePage() {
                   Lees meer over ons →
                 </Link>
               </div>
+            </div>
+            <div>
+              <img
+                src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+                alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24 Utrecht"
+                style={{
+                  width: '100%',
+                  maxWidth: '340px',
+                  height: '220px',
+                  objectFit: 'cover',
+                  objectPosition: 'top',
+                  borderRadius: '4px',
+                  border: '1px solid #cbd5e1',
+                  display: 'block'
+                }}
+              />
             </div>
           </div>
         </div>
