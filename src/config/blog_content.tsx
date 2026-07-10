@@ -1070,5 +1070,163 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </div>
     </>
   ),
+
+  'autosleutel-repareren-tips-kosten-besparen': (
+    <>
+      <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <strong style={{ color: '#166534', display: 'block', fontSize: '1.05rem' }}>✓ Specialistisch Advies — Autosleutel24</strong>
+          <span style={{ fontSize: '0.85rem', color: '#15803d' }}>Geschreven en gecontroleerd door Berkan Acarol (Mobiele Autosleutel Specialist • 4.9★ Google Reviews)</span>
+        </div>
+        <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#16a34a', color: '#fff', padding: '0.6rem 1.1rem', borderRadius: '6px', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}>
+          Direct Advies: {SITE_CONFIG.phone}
+        </a>
+      </div>
+
+      <h2>Inleiding tot autosleutel reparatie</h2>
+      <p>
+        Een kapotte autosleutel kan een bron van grote frustratie zijn, vooral als je haast hebt of ver weg van huis bent. Autosleutels zijn tegenwoordig veel meer dan simpele metalen sleutels; ze bevatten geavanceerde technologieën zoals transponders en elektronische chips die communiceren met de startonderbreker van je auto. Wanneer deze sleutels niet meer werken, denken veel mensen direct aan hoge kosten bij de merkdealer. Gelukkig zijn er veel manieren om zelf eenvoudige reparaties uit te voeren of slim te kiezen voor een specialist om zo flink geld te besparen.
+      </p>
+      <p>
+        Het <Link href="/diensten/autosleutels-repareren" style={{ color: '#f97316', textDecoration: 'underline' }}>repareren van een autosleutel</Link> kan variëren van het simpelweg <Link href="/diensten/batterij-vervangen" style={{ color: '#f97316', textDecoration: 'underline' }}>vervangen van een knoopcelbatterij</Link> tot het vernieuwen van de behuizing of het professioneel herstellen van microschakelaars op de printplaat. Veel van deze kleine taken vereisen geen diepe technische kennis, maar wel een beetje geduld en precisie.
+      </p>
+
+      <h2>Veelvoorkomende problemen met autosleutels</h2>
+      <p>
+        Voordat je aan de slag gaat, is het belangrijk om vast te stellen wat het defect precies veroorzaakt:
+      </p>
+      <ul>
+        <li>
+          <strong>Lege of zwakke batterij:</strong> De afstandsbediening reageert pas op korte afstand of het controlelampje op de sleutel brandt niet of zwak. Dit is het eenvoudigste probleem om zelf op te lossen.
+        </li>
+        <li>
+          <strong>Fysieke schade aan behuizing of sleutelblad:</strong> Door vallen of slijtage kan de plastic <Link href="/diensten/behuizing-vervangen" style={{ color: '#f97316', textDecoration: 'underline' }}>behuizing barsten</Link> of de rubberen drukknoppen verslijten. Ook kan een metalen sleutelbaard buigen of afbreken.
+        </li>
+        <li>
+          <strong>Elektronische storingen (printplaat of transponder):</strong> Werkt de centrale deurvergrendeling wel, maar start de auto niet en verschijnt er een melding zoals <em>&quot;Sleutel niet herkend&quot;</em>? Dan is er vaak een storing in de interne transponderchip.
+        </li>
+      </ul>
+
+      <h2>Gereedschap en materialen voor autosleutel reparatie</h2>
+      <p>
+        Voor een veilige en geslaagde doe-het-zelf reparatie heb je de volgende basisbenodigdheden nodig:
+      </p>
+      <ul>
+        <li><strong>Precisie schroevendraaierset:</strong> Veel autosleutels gebruiken hele kleine kruiskop-, platte of Torx-schroefjes.</li>
+        <li><strong>Kunststof spatel of opening tool:</strong> Voorkomt dat je het plastic van de sleutelbehuizing beschadigt bij het openklikken.</li>
+        <li><strong>Juiste knoopcelbatterij:</strong> Controleer het type (bijvoorbeeld CR2032, CR2025 of CR1620) op de oude batterij of in het instructieboekje van uw auto.</li>
+        <li><strong>Vervangende behuizing:</strong> Let erop dat u een behuizing koopt die exact overeenkomt met uw huidige model (aantal knoppen en type sleutelblad).</li>
+      </ul>
+
+      <h2>Stappen voor het zelf repareren van een autosleutel</h2>
+      <h3>Stap 1: De batterij veilig vervangen</h3>
+      <p>
+        Open de sleutelbehuizing voorzichtig met een kleine schroevendraaier of kunststof spatel. Verwijder de oude batterij en plaats de nieuwe met de plus- en minpool exact in dezelfde richting. Sluit de behuizing en test direct of het LED-lampje en de portiervergrendeling weer reageren.
+      </p>
+
+      <h3>Stap 2: De behuizing of knoppen vernieuwen</h3>
+      <p>
+        Als het plastic versleten is, kunt u de interne elektronische printplaat en de losse transponderchip zorgvuldig overzetten naar een nieuwe behuizing. <strong>Let op:</strong> Vergeet bij oudere sleutels (zoals Volkswagen, Peugeot of Opel) niet om de kleine zwarte of glazen transponderchip mee over te zetten! Zonder deze chip zal de auto niet starten.
+      </p>
+
+      <h2>Wanneer moet u een professional inschakelen?</h2>
+      <p>
+        Hoewel batterij- en behuizingwissels uitstekend zelf te doen zijn, zijn er situaties waarin een specialist essentieel is:
+      </p>
+      <ul>
+        <li><strong>Beschadigde printplaat of losgeschoten SMD-knoppen:</strong> Solderen aan microscopische sleutelprintplaten vereist fijne precisieapparatuur.</li>
+        <li><strong>Sleutel kwijt of niet meer herkend door de auto:</strong> Het inleren en <Link href="/diensten/autosleutel-bijmaken" style={{ color: '#f97316', textDecoration: 'underline' }}>programmeren van een nieuwe autosleutel</Link> vereist gespecialiseerde OBD2- en transponderapparatuur.</li>
+        <li><strong>Afgebroken sleutelbaard in het contactslot:</strong> Probeer afgebroken metaal nooit zelf met kracht uit het slot te peuteren om verdere cilinder- of contactslotshave te voorkomen.</li>
+      </ul>
+
+      <h2>Kosten van autosleutel reparatie: Zelf doen vs. Specialist vs. Dealer</h2>
+      <p>
+        Onderstaande tabel geeft u direct inzicht in de gemiddelde kosten en besparingen:
+      </p>
+      <div style={{ overflowX: 'auto', margin: '1.5rem 0' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.92rem' }}>
+          <thead>
+            <tr style={{ background: '#f8fafc', borderBottom: '2px solid #cbd5e1', textAlign: 'left' }}>
+              <th style={{ padding: '0.75rem' }}>Type Reparatie</th>
+              <th style={{ padding: '0.75rem' }}>Zelf doen</th>
+              <th style={{ padding: '0.75rem' }}>Autosleutel24 Specialist</th>
+              <th style={{ padding: '0.75rem' }}>Merkdealer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+              <td style={{ padding: '0.75rem' }}>Batterij vervangen</td>
+              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>€3 – €5</td>
+              <td style={{ padding: '0.75rem' }}>€15 – €25</td>
+              <td style={{ padding: '0.75rem' }}>€25 – €45</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+              <td style={{ padding: '0.75rem' }}>Behuizing / knoppen vernieuwen</td>
+              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>€10 – €20</td>
+              <td style={{ padding: '0.75rem' }}>€35 – €65</td>
+              <td style={{ padding: '0.75rem' }}>€150+ (complete sleutel)</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
+              <td style={{ padding: '0.75rem' }}>Printplaat solderen / transponder herstel</td>
+              <td style={{ padding: '0.75rem' }}>Niet aanbevolen</td>
+              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>€45 – €85</td>
+              <td style={{ padding: '0.75rem' }}>€200 – €350 (vervanging)</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '0.75rem' }}>Complete nieuwe sleutel inleren op locatie</td>
+              <td style={{ padding: '0.75rem' }}>Niet mogelijk</td>
+              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>Vanaf €125</td>
+              <td style={{ padding: '0.75rem' }}>€280 – €450 (+ wegsleepkosten)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Preventieve maatregelen om autosleutelproblemen te voorkomen</h2>
+      <p>
+        Met een paar simpele voorzorgsmaatregelen voorkomt u onnodige kosten:
+      </p>
+      <ol>
+        <li><strong>Gebruik een siliconen of lederen beschermhoes:</strong> Dit vangt schokken op bij een val en beschermt tegen regen of vocht.</li>
+        <li><strong>Zorg altijd voor een goed werkende reservesleutel:</strong> Heeft u momenteel maar één sleutel? Laat dan tijdig een <Link href="/diensten/autosleutel-bijmaken" style={{ color: '#f97316', textDecoration: 'underline' }}>reserve autosleutel bijmaken</Link> voordat u alles kwijtraakt.</li>
+        <li><strong>Vervang de batterij bij de eerste symptomen:</strong> Wacht niet tot de sleutel volledig stopt met werken.</li>
+      </ol>
+
+      <h2>Veelgestelde vragen over autosleutel reparatie</h2>
+      <details style={{ padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '6px', marginBottom: '0.75rem' }}>
+        <summary style={{ fontWeight: 'bold', cursor: 'pointer' }}>Hoe weet ik of de batterij van mijn autosleutel leeg is?</summary>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#475569' }}>
+          Veel moderne auto&apos;s tonen een melding op het dashboard (&quot;Batterij sleutel bijna leeg&quot;). Ook als het rode LED-lampje op de sleutel niet meer knippert bij het indrukken van een knop of als het bereik drastisch afneemt, is de batterij aan vervanging toe.
+        </p>
+      </details>
+      <details style={{ padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '6px', marginBottom: '0.75rem' }}>
+        <summary style={{ fontWeight: 'bold', cursor: 'pointer' }}>Kan ik mijn autosleutel zelf opnieuw programmeren?</summary>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#475569' }}>
+          Bij sommige oudere auto&apos;s (jaren &apos;90 en begin 2000) kunt u de afstandsbediening synchroniseren via een procedure in het contactslot. Voor moderne transponders en smart keys is echter altijd professionele diagnose- en programmeerapparatuur nodig.
+        </p>
+      </details>
+      <details style={{ padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '6px', marginBottom: '1.25rem' }}>
+        <summary style={{ fontWeight: 'bold', cursor: 'pointer' }}>Wat moet ik doen als mijn autosleutel in het slot is gebroken?</summary>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#475569' }}>
+          Ga niet met een tang, paperclip of lijm poken; dit kan het cilinderslot permanent beschadigen. Onze mobiele slotenmakers beschikken over speciale sleutel-extractors om het afgebroken stuk schadevrij te verwijderen en direct een nieuw sleutelblad te slijpen.
+        </p>
+      </details>
+
+      <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderLeft: '4px solid #f97316', padding: '1.25rem', borderRadius: '6px', marginTop: '2rem' }}>
+        <h3 style={{ margin: '0 0 0.5rem 0', color: '#9a3412' }}>Direct hulp of advies van onze mobiele sleutelspecialist?</h3>
+        <p style={{ margin: '0 0 1rem 0', color: '#7c2d12', fontSize: '0.95rem' }}>
+          Is uw autosleutel defect, defecte transponder of bent u al uw sleutels kwijt? Wij komen 24/7 naar uw locatie in heel Nederland en repareren of programmeren direct ter plekke.
+        </p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#f97316', color: '#fff', padding: '0.65rem 1.2rem', borderRadius: '6px', textDecoration: 'none', fontWeight: 600 }}>
+            📞 Bel Direct: {SITE_CONFIG.phone}
+          </a>
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ background: '#22c55e', color: '#fff', padding: '0.65rem 1.2rem', borderRadius: '6px', textDecoration: 'none', fontWeight: 600 }}>
+            💬 WhatsApp Foto Sleutel
+          </a>
+        </div>
+      </div>
+    </>
+  ),
 };
 

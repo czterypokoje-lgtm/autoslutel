@@ -301,6 +301,14 @@ export const BLOG_POSTS = [
     publishDate: '2026-07-13',
     readTime: '6 min',
   },
+  {
+    slug: 'autosleutel-repareren-tips-kosten-besparen',
+    title: 'Autosleutel Repareren: Tips voor Zelf doen en Kosten Besparen',
+    excerpt: 'Een kapotte autosleutel hoeft niet duur te zijn. Ontdek praktische tips om zelf je batterij of behuizing te repareren, en bespaar flink op de kosten!',
+    keywords: ['autosleutel repareren', 'zelf autosleutel repareren', 'autosleutel behuizing vervangen', 'autosleutel batterij vervangen', 'autosleutel repareren kosten'],
+    publishDate: '2026-07-14',
+    readTime: '6 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {
@@ -376,25 +384,30 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
     // ── Autosleutels repareren ────────────────────────────────────
     'autosleutels-repareren': [
+      'autosleutel-repareren-tips-kosten-besparen',
       'autosleutel-batterij-vervangen-stappenplan',
       'verzekering-dekt-autosleutel-vervangen',
       'autosleutel-bijmaken-tips-snel-veilig',
     ],
     // ── Contactslot reparatie ─────────────────────────────────────
     'contactslot-reparatie': [
+      'autosleutel-repareren-tips-kosten-besparen',
       'auto-slotenmaker-ultieme-gids-snel-hulp',
       'auto-openen-zonder-sleutel-schadevrij',
       'verzekering-dekt-autosleutel-vervangen',
     ],
     // ── Batterij vervangen ────────────────────────────────────────
     'batterij-vervangen': [
+      'autosleutel-repareren-tips-kosten-besparen',
       'autosleutel-batterij-vervangen-stappenplan',
     ],
     // ── Behuizing / knoppen repareren ────────────────────────────
     'behuizing-vervangen': [
+      'autosleutel-repareren-tips-kosten-besparen',
       'autosleutel-batterij-vervangen-stappenplan',
     ],
     'knoppen-repareren': [
+      'autosleutel-repareren-tips-kosten-besparen',
       'autosleutel-batterij-vervangen-stappenplan',
     ],
     // ── BMW specialist ────────────────────────────────────────────
