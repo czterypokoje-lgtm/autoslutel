@@ -328,88 +328,6 @@ export const BRANDS: Brand[] = [
     ],
   },
   {
-    slug: 'dacia', name: 'Dacia', nameSlug: 'dacia', priority: 'P3',
-    system: 'Renault/Dacia UCH',
-    excerpt: 'Dacia sleutel specialist. Logan, Sandero, Duster.',
-    models: [
-      { slug: 'duster', name: 'Duster', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'iveco', name: 'Iveco', nameSlug: 'iveco', priority: 'P3',
-    system: 'Iveco Code 2 / BCM',
-    excerpt: 'Iveco bedrijfswagen sleutel specialist. Daily specialist.',
-    models: [
-      { slug: 'daily', name: 'Daily', years: '1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'daf', name: 'DAF', nameSlug: 'daf', priority: 'P3',
-    system: 'DAF Immobiliser',
-    excerpt: 'DAF truck sleutel specialist. XF, CF, LF.',
-    models: [
-      { slug: 'xf', name: 'XF', years: '2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'scania', name: 'Scania', nameSlug: 'scania', priority: 'P3',
-    system: 'Scania Immobiliser / Coordinator',
-    excerpt: 'Scania truck sleutel specialist. R-Serie, G-Serie, P-Serie. Coordinator programmering.',
-    models: [
-      { slug: 'r-serie', name: 'R-Serie', years: '2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'man', name: 'MAN', nameSlug: 'man', priority: 'P3',
-    system: 'MAN Immobiliser / FFR',
-    excerpt: 'MAN truck sleutel specialist. TGX, TGS, TGL. FFR en PTM specialist.',
-    models: [
-      { slug: 'tgx', name: 'TGX', years: '2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'jeep', name: 'Jeep', nameSlug: 'jeep', priority: 'P3',
-    system: 'Jeep / Chrysler FOBIK / Proximity',
-    excerpt: 'Jeep sleutel specialist. Grand Cherokee, Wrangler, Renegade.',
-    models: [
-      { slug: 'grand-cherokee', name: 'Grand Cherokee', years: '2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-      { slug: 'wrangler', name: 'Wrangler', years: '2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'alfa-romeo', name: 'Alfa Romeo', nameSlug: 'alfa-romeo', priority: 'P3',
-    system: 'Alfa Code 2 / Marelli / BCM',
-    excerpt: 'Alfa Romeo sleutel specialist. Giulietta, Giulia, Stelvio.',
-    models: [
-      { slug: 'giulietta', name: 'Giulietta', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'giulia', name: 'Giulia', years: '2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'mitsubishi', name: 'Mitsubishi', nameSlug: 'mitsubishi', priority: 'P3',
-    system: 'Mitsubishi Immobiliser / KOS',
-    excerpt: 'Mitsubishi sleutel specialist. Outlander, ASX, Space Star.',
-    models: [
-      { slug: 'outlander', name: 'Outlander', years: '2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'suzuki', name: 'Suzuki', nameSlug: 'suzuki', priority: 'P3',
-    system: 'Suzuki Immobiliser / Smart Key',
-    excerpt: 'Suzuki sleutel specialist. Swift, Vitara, Jimny.',
-    models: [
-      { slug: 'swift', name: 'Swift', years: '2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'smart', name: 'Smart', nameSlug: 'smart', priority: 'P3',
-    system: 'Mercedes/Smart Immobiliser',
-    excerpt: 'Smart sleutel specialist. Fortwo, Forfour.',
-    models: [
-      { slug: 'fortwo', name: 'Fortwo', years: '1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
     slug: 'citroen', name: 'Citroën', nameSlug: 'citroen', priority: 'P2',
     system: 'PSA BSI / CAN Bus',
     excerpt: 'Citroën sleutel specialist. C1, C3, C4, Berlingo.',
@@ -420,14 +338,6 @@ export const BRANDS: Brand[] = [
       { slug: 'c1', name: 'C1', years: '2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021' },
       { slug: 'c5-aircross', name: 'C5 Aircross', years: '2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'jumper', name: 'Jumper', years: '2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
-    ],
-  },
-  {
-    slug: 'ds', name: 'DS Automobiles', nameSlug: 'ds', priority: 'P3',
-    system: 'PSA BSI / Keyless',
-    excerpt: 'DS sleutel specialist. DS3, DS4, DS7.',
-    models: [
-      { slug: 'ds3', name: 'DS3', years: '2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019' },
     ],
   },
 ];
