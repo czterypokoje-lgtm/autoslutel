@@ -97,6 +97,7 @@ export default function Footer() {
             <ul className={styles.linkList}>
               <li><Link href="/blog/autosleutel-batterij-vervangen-stappenplan">Batterij Vervangen</Link></li>
               <li><Link href="/blog/autosleutel-gestolen-wat-te-doen">Sleutel Gestolen?</Link></li>
+              <li><Link href="/kennisbank" style={{ color: 'var(--orange-400)', fontWeight: 600 }}>Technische Kennisbank →</Link></li>
             </ul>
           </div>
 
@@ -134,25 +135,6 @@ export default function Footer() {
               </tbody>
             </table>
           </div>
-        </div>
-
-        {/* Contextuele link naar onze Kennisbank Pillar Guide */}
-        <div style={{
-          borderTop: '1px solid rgba(255,255,255,0.08)',
-          padding: '1.5rem 0',
-          marginTop: '2.5rem',
-          fontSize: '0.9rem',
-          color: 'rgba(255,255,255,0.75)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '1rem'
-        }}>
-          <span>📚 Meer weten over transponderprogrammering, startonderbrekers of All-Keys-Lost procedures?</span>
-          <Link href="/kennisbank" style={{ color: 'var(--orange-400)', fontWeight: 600, textDecoration: 'none' }}>
-            Lees onze uitgebreide Technische Kennisbank &amp; Gids →
-          </Link>
         </div>
 
         <div className={styles.bottomBar}>
