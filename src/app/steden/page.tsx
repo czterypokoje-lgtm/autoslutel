@@ -71,6 +71,14 @@ export default function Steden() {
           <p>
             Traditionele merkdealers vereisen bij verlies van al uw autosleutels (All Keys Lost) dat uw voertuig per takelwagen naar de garage wordt vervoerd. Dit kost honderden euro&apos;s aan sleepkosten en brengt dagenlange wachttijden met zich mee. Wij voeren alle werkzaamheden — van het 100% schadevrij openen van autodeuren met Lishi tools tot het CNC-frezen en OBD2-programmeren van transponderchips — direct ter plaatse uit.
           </p>
+          <h3>Dekking in Utrecht, Noord-Holland, Flevoland, Zuid-Holland en Gelderland</h3>
+          <p>
+            Onze monteurs zijn strategisch gestationeerd langs belangrijke snelwegen (A1, A2, A12, A27 en A28). Hierdoor kunnen wij razendsnel schakelen bij noodgevallen in onder andere Amersfoort, Bussum, Naarden, Huizen, Zeist, Houten, Nieuwegein, Diemen en Weesp. Staat uw stad niet direct in het overzicht hierboven? Bel dan direct onze 24/7 noodlijn om te controleren hoe snel onze monteur bij u kan zijn.
+          </p>
+          <h3>Wat doen wij bij All Keys Lost (Alle Autosleutels Kwijt) op locatie?</h3>
+          <p>
+            Wanneer u geen enkele werkende autosleutel meer bezit, lezen wij op locatie de mechanische slotcode van uw deurslot uit of demonteren wij indien nodig het slot om de sleutelcode te decoderen. Vervolgens slijpt onze automatische CNC-machine een nieuwe mechanische sleutelbaard op honderdste millimeters nauwkeurig. Via geavanceerde diagnose-apparatuur coderen wij de transponderchip en afstandsbediening rechtstreeks in de immobilizer (startonderbreker).
+          </p>
           <h3>12 Maanden Garantie en Verzekeringsvergoeding per Stad</h3>
           <p>
             In welke stad u zich ook bevindt: u betaalt vooraf altijd een vaste, transparante prijs zonder verrassingen achteraf. Op al onze geleverde sleutels, smart keys en reparaties verlenen wij standaard 12 maanden schriftelijke garantie. Veel verzekeringsmaatschappijen vergoeden onze werkzaamheden onder uw Beperkt Casco of Allrisk autoverzekering.

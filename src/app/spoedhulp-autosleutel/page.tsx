@@ -141,6 +141,18 @@ export default function SpoedhulpPage() {
               <p>
                 Dankzij onze centrale ligging en meerdere mobiele servicebussen zijn wij gemiddeld binnen 30 minuten bij u op locatie in Utrecht, Amsterdam, Amersfoort, Hilversum en Almere. Onze bussen beschikken over autonome stroomvoorziening, hightech sleutelmachines en diagnosecomputers om direct ter plekke te frezen, te openen en te inleren.
               </p>
+              <h3>100% Schadevrij Auto Openen bij Buitensluiting</h3>
+              <p>
+                Wanneer uw sleutel nog in de auto ligt of in het contactslot steekt terwijl de deuren in het slot zijn gevallen, openen wij uw autodeur gegarandeerd 100% schadevrij. Wij gebruiken gespecialiseerde Lishi-lockpicks waarmee wij het cilinderslot via de sleutelgatpinnen manipuleren en openen. Hierbij wordt geen druk op uw raamrubbers of lak uitgeoefend, en blijft uw slotmechanisme in originele topstaat.
+              </p>
+              <h3>Wat gebeurt er als uw autosleutel is gestolen?</h3>
+              <p>
+                Bij diefstal of verlies van uw autosleutel is snel handelen cruciaal voor de veiligheid van uw voertuig. Onze specialist wist via de OBD2-diagnosepoort direct de verloren of gestolen sleutelcode uit de immobilizer (startonderbreker) en de BCM-module. Hierdoor kan een eventuele vinder of dief de auto niet meer starten. Vervolgens leren wij direct één of meerdere nieuwe sleutels met een nieuwe beveiligingscode in.
+              </p>
+              <h3>Garantie, Tarieven en Vergoeding door Verzekeraars</h3>
+              <p>
+                Al onze spoedreparaties en nieuwe transpondersleutels worden geleverd met 100% werkinggarantie en 12 maanden schriftelijke garantie op de elektronica en behuizing. U ontvangt ter plaatse een officiële BTW-factuur waarmee u, afhankelijk van uw autoverzekering (beperkt casco of allrisk) of pechhulpverzekering, de gemaakte kosten voor sleutelvervanging of noodopening kunt declareren.
+              </p>
             </div>
           </div>
         </section>

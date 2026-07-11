@@ -273,6 +273,14 @@ export default function PrijzenPage() {
           <p>
             Officiële merkdealers berekenen vaak hoge uurtarieven, logistieke bestel- en administratiekosten én verplichte takel- of wegsleepkosten naar hun showroom. Onze gecertificeerde mobiele slotenmakers komen met een compleet uitgeruste servicebus direct naar uw voertuig toe. Wij snijden de sleutelbaard met CNC-gestuurde snijmachines ter plaatse en leren de transponderchip in via de OBD2-diagnosepoort.
           </p>
+          <h3>Verschil in Prijs tussen Mechanische Sleutels, Klapsleutels en Smart Keys</h3>
+          <p>
+            Een mechanische reservesleutel met transponderchip start uw auto en opent uw deuren handmatig; dit is de voordeligste optie (vanaf €125). Een klapsleutel met afstandsbediening heeft extra RF-elektronica om uw centrale deurvergrendeling op afstand te bedienen (vanaf €150). Keyless Entry en Keyless Go smart keys (zoals bij BMW, Mercedes en Volkswagen) vereisen cryptografische Eeprom- of Bench-programmering en liggen in het luxere segment (vanaf €195).
+          </p>
+          <h3>Kosten bij All Keys Lost (Alle Sleutels Kwijt) ten opzichte van Reservesleutel</h3>
+          <p>
+            Wanneer u nog minstens één werkende sleutel heeft, kunnen wij de cryptografische sleuteldata direct klonen of via de OBD2-poort een tweede sleutel toevoegen. Bent u echter alle sleutels kwijt? Dan moeten wij de sleutelcode via het deurslot decoderen en de startonderbreker compleet resetten en opnieuw beveiligen met nieuwe transpondercodes. Hierdoor liggen All Keys Lost tarieven iets hoger dan het bijmaken van een enkele reservesleutel.
+          </p>
           <h3>Vergoeding via uw Autoverzekering &amp; 12 Maanden Garantie</h3>
           <p>
             Wanneer u uw autosleutel bent verloren of als deze is gestolen, valt het vervangen van uw sleutelset en het wissen van de oude sleutelcodes vaak onder de dekking van uw WA Extra (Beperkt Casco) of Allrisk autoverzekering. U ontvangt van ons altijd een officiële en gespecificeerde KVK-factuur die u direct kunt indienen bij uw verzekeraar. Bovendien krijgt u op alle geleverde autosleutels 12 maanden schriftelijke garantie.

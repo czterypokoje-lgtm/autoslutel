@@ -121,14 +121,26 @@ export default function ContactPage() {
         </div>
 
         {/* ── COMPREHENSIVE CONTACT & SPOEDHULP SEO GUIDE ARTICLE ── */}
-        <div className="seo-article-block" style={{ marginTop: '4rem', marginBottom: '3rem' }}>
+        <div className="seo-article-block" style={{ marginTop: '4.5rem', marginBottom: '3rem' }}>
           <h2>Contact en 24/7 Mobiele Slotenmaker Service in Heel Nederland</h2>
           <p>
-            Heeft u met spoed een autosleutelspecialist nodig, bent u buitengesloten of wilt u een reservesleutel laten programmeren? Neem dan telefonisch of via WhatsApp contact met ons op. Onze centrale servicecoördinatie stuurt direct de dichtstbijzijnde volledig ingerichte servicebus naar uw locatie toe in heel Nederland — van regio Utrecht en Amsterdam tot Rotterdam, Den Haag en Flevoland.
+            Heeft u met spoed een autosleutelspecialist nodig, bent u buitengesloten of wilt u een reservesleutel laten programmeren? Neem dan telefonisch of via WhatsApp contact met ons op. Onze centrale servicecoördinatie stuurt direct de dichtstbijzijnde volledig ingerichte servicebus naar uw locatie toe in heel Nederland — van regio Utrecht en Amsterdam tot Almere, Amersfoort, Hilversum en Het Gooi.
           </p>
           <h3>Welke gegevens hebben wij van u nodig voor een snelle prijsopgave?</h3>
           <p>
             Om u direct een exacte, vaste prijs te kunnen geven en de juiste transponderchip of smart key mee te nemen, vragen wij u om uw automerk, model, bouwjaar en uw huidige locatie of woonplaats door te geven. Heeft u nog een werkende sleutel of bent u alle sleutels kwijt (All Keys Lost)? Wij hebben voor 99% van alle voertuigen de juiste onderdelen en software direct op voorraad.
+          </p>
+          <h3>Hoe werkt onze mobiele noodservice op locatie?</h3>
+          <p>
+            Wanneer u belt met onze spoedlijn, schatten wij direct in hoe snel onze monteur bij u kan zijn — gemiddeld binnen 15 tot 30 minuten in regio Midden-Nederland. Onze monteurs beschikken in de servicewagen over CNC-sleutelfreesmachines en professionele OBD2-diagnoseapparatuur om uw nieuwe autosleutel direct ter plaatse te slijpen en digitaal in te leren op de startonderbreker van uw voertuig.
+          </p>
+          <h3>Betalingsmogelijkheden en Verzekeringsfactuur</h3>
+          <p>
+            U betaalt pas nadat de nieuwe sleutel volledig is getest op het openen van de deuren en het starten van de motor. U kunt bij onze monteur veilig en contactloos betalen via PIN, iDEAL, creditcard of contant. U ontvangt direct per e-mail of digitaal een officiële gespecificeerde BTW-factuur met 12 maanden schriftelijke garantie. Deze factuur kunt u bovendien indienen bij uw autoverzekering of pechhulpverzekeraar wanneer u gedekt bent voor sleutelverlies of diefstal.
+          </p>
+          <h3>Zakelijke Klanten, Wagenparkbeheerders en Garagebedrijven</h3>
+          <p>
+            Bent u autodealer, garagehouder of wagenparkbeheerder en heeft u regelmatig nieuwe transpondersleutels, klapsleutels of keyless smart keys nodig voor uw occasions of bedrijfswagens? Neem dan contact met ons op voor onze zakelijke samenwerkingsvoorwaarden en staffeltarieven op locatie.
           </p>
         </div>
 
