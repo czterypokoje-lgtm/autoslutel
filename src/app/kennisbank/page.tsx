@@ -53,7 +53,7 @@ export default function KennisbankPage() {
             <div style={{ display: 'inline-block', background: 'rgba(249,115,22,0.15)', border: '1px solid rgba(249,115,22,0.35)', color: '#fdba74', padding: '0.35rem 0.85rem', borderRadius: '20px', fontSize: '0.82rem', fontWeight: 600, marginBottom: '1rem' }}>
               📚 Technische Pillar Guide • Autosleutels &amp; Autobeveiliging
             </div>
-            <h1 style={{ fontSize: 'clamp(2rem, 4.5vw, 3rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: '1.25rem' }}>
+            <h1 style={{ color: '#ffffff', fontSize: 'clamp(2rem, 4.5vw, 3rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: '1.25rem' }}>
               Uitgebreide Kennisbank: Autosleutel Programmering &amp; Transpondertechnologie
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.82)', fontSize: '1.15rem', lineHeight: 1.7, maxWidth: 820 }}>
