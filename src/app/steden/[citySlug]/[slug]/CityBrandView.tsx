@@ -332,11 +332,11 @@ export function CityBrandView({ citySlug, brandSlug, city, brand }: { citySlug: 
                     <p>{t.modelsSub}</p>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))', gap: '1rem', marginTop: '1rem' }}>
                       {brand.models.map(m => (
-                        <Link key={m.slug} href={`/merken/${brand.nameSlug}/${m.slug}`} id={`cb-model-${m.slug}`}
+                        <Link key={m.slug} href={`/merken/${brand.nameSlug}-autosleutel-bijmaken#modellen`} id={`cb-model-${m.slug}`}
                           style={{ padding: '1rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', textDecoration: 'none', transition: 'all 0.15s' }}>
                           <strong style={{ fontSize: '0.95rem', color: '#0f172a', display: 'block' }}>{brand.name} {m.name}</strong>
                           <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{t.years} {m.years}</span>
-                          <span style={{ fontSize: '0.8rem', color: '#f97316', fontWeight: 600, display: 'block', marginTop: '0.35rem' }}>{t.details}</span>
+                          <span style={{ fontSize: '0.8rem', color: '#f97316', fontWeight: 600, display: 'block', marginTop: '0.35rem' }}>Bekijk A–Z Modellen →</span>
                         </Link>
                       ))}
                     </div>
