@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // 1. Core Pages
   const corePages = [
-    '', '/diensten', '/steden', '/merken', '/prijzen', '/blog',
+    '', '/diensten', '/steden', '/merken', '/prijzen', '/blog', '/kennisbank',
     '/over-ons', '/galerij', '/beoordelingen', '/veelgestelde-vragen',
     '/contact', '/privacybeleid', '/auto-op-slot', '/spoedhulp-autosleutel',
     '/autosleutel-kwijt'
