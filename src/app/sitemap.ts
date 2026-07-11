@@ -47,20 +47,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
-  // 5. Model Pages (Year SEO)
-  const modelPages: MetadataRoute.Sitemap = [];
-  BRANDS.forEach(b => {
-    if (b.models) {
-      b.models.forEach(m => {
-        modelPages.push({
-          url: `${base}/merken/${b.nameSlug}-autosleutel-bijmaken/${m.slug}`,
-          lastModified: now,
-          changeFrequency: 'monthly' as const,
-          priority: 0.8,
-        });
-      });
-    }
-  });
 
   // 6. Combo Pages (City x Brand)
   const comboPages: MetadataRoute.Sitemap = [];
@@ -109,7 +95,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...servicePages,
     ...cityPages,
     ...brandPages,
-    ...modelPages,
     ...comboPages,
     ...cityServicePages,
     ...blogPages
