@@ -65,29 +65,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 6. Combo Pages (City x Brand)
   const comboPages: MetadataRoute.Sitemap = [];
   CITIES.forEach(city => {
-    BRANDS.forEach(brand => {
-      if (
-        (city.priority === 'P1' && (brand.priority === 'P1' || brand.priority === 'P2')) ||
-        (city.priority === 'P2' && brand.priority === 'P1') ||
-        (city.priority === 'P3' && brand.priority === 'P1')
-      ) {
-        comboPages.push({
-          url: `${base}/steden/${city.slug}/${brand.nameSlug}-autosleutel-bijmaken`,
-          lastModified: now,
-          changeFrequency: 'monthly' as const,
-          priority: 0.7,
-        });
-      }
-    });
+    if (city.priority === 'P1') {
+      BRANDS.forEach(brand => {
+        if (brand.priority === 'P1' || brand.priority === 'P2') {
+          comboPages.push({
+            url: `${base}/steden/${city.slug}/${brand.nameSlug}-autosleutel-bijmaken`,
+            lastModified: now,
+            changeFrequency: 'monthly' as const,
+            priority: 0.7,
+          });
+        }
+      });
+    }
   });
 
   // 7. Combo Pages (City x Service)
   const cityServicePages: MetadataRoute.Sitemap = [];
   CITIES.forEach(city => {
     const coreSlugs = ['alle-sleutels-kwijt-auto', 'sleutel-bijmaken', 'transponder-programmeren', 'smart-key-programmeren', 'contactslot-reparatie'];
-    const services = city.priority === 'P3'
-      ? DIENSTEN.filter(s => coreSlugs.includes(s.slug))
-      : DIENSTEN;
+    const services = city.priority === 'P1'
+      ? DIENSTEN
+      : DIENSTEN.filter(s => coreSlugs.includes(s.slug));
     services.forEach(service => {
       cityServicePages.push({
         url: `${base}/steden/${city.slug}/${service.slug}`,
