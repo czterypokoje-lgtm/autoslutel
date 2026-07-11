@@ -222,6 +222,78 @@ export default function Footer() {
                   Autosleutel24 is een erkend en volledig gecertificeerd slotenmakersbedrijf. Na afloop van onze werkzaamheden ontvangt u direct een gedetailleerde, officiële BTW-factuur en een digitaal rapport van de herprogrammering. Deze documenten kunt u rechtstreeks indienen bij uw verzekeringsmaatschappij voor een snelle en vlekkeloze schadeafhandeling.
                 </p>
               </div>
+
+              <div>
+                <h4 style={{ fontSize: '0.98rem', fontWeight: 600, color: 'var(--orange-400)', marginBottom: '0.5rem' }}>
+                  7. OBD2 Diagnose, Eeprom Programmering &amp; Bench Flash Technieken
+                </h4>
+                <p style={{ marginBottom: '0.85rem' }}>
+                  Voor het programmeren van autosleutels maken wij gebruik van de meest geavanceerde diagnose- en programmeertools op de markt, zoals Autel MaxiIM IM608 Pro II, Xhorse VVDI Key Tool Plus, Abrites AVDI en OBDStar X300 DP Plus. In 90% van de gevallen kunnen wij nieuwe sleutels direct via de standaard OBD2-diagnosepoort onder het dashboard inleren. Hierbij communiceren wij op fabrieksniveau met de Engine Control Unit (ECU), Body Control Module (BCM) of Instrumentenpaneel om de beveiligingscodes en pincodes veilig uit te lezen.
+                </p>
+                <p>
+                  Bij bepaalde voertuigen waarbij de fabrikant de OBD2-poort heeft beveiligd met een Security Gateway (SGW) of waarbij sprake is van een complexe All-Keys-Lost situatie (zoals bij oudere Volvo CEM-modules of specifieke BMW CAS4+ systemen), passen wij specialistische Eeprom- of Bench-programmering toe. Hierbij lezen wij de geheugenchip van de startonderbrekermodule rechtstreeks uit in onze mobiele werkplaats zonder dat er regelapparaten beschadigd raken.
+                </p>
+              </div>
+
+              <div>
+                <h4 style={{ fontSize: '0.98rem', fontWeight: 600, color: 'var(--orange-400)', marginBottom: '0.5rem' }}>
+                  8. Slijpen en CNC-Frezen van Noodsleutels (Laser Cut &amp; High Security Sleutelbaarden)
+                </h4>
+                <p style={{ marginBottom: '0.85rem' }}>
+                  Een autosleutel bestaat niet alleen uit elektronica; het mechanische sleutelblad blijft cruciaal om het contactslot te draaien of om bij een lege autoaccu het portierslot handmatig te openen. Onze mobiele servicewagens zijn uitgerust met computergestuurde CNC-sleutel- en lasermachines van topkwaliteit (zoals de Xhorse Condor XC-Mini en Dolphin II).
+                </p>
+                <p>
+                  Dankzij onze digitale database met fabriekscodes kunnen wij sleutelbaarden frezen met microscopische precisie op basis van het sleutelnummer of door het decoderen van uw bestaande slotcilinder. Of het nu gaat om een conventionele kartelsleutel, een binnenbaansleutel (laser cut key) of een High Security HU66/HU162T profiel voor de VAG-groep: het mechanische snijwerk is altijd inbegrepen en past honderd procent soepel in uw sloten.
+                </p>
+              </div>
+
+              <div>
+                <h4 style={{ fontSize: '0.98rem', fontWeight: 600, color: 'var(--orange-400)', marginBottom: '0.5rem' }}>
+                  9. Veelvoorkomende Foutcodes in de Startonderbreker (Immobiliser DTC&apos;s &amp; Oplossingen)
+                </h4>
+                <p style={{ marginBottom: '0.85rem' }}>
+                  Wanneer uw auto niet start en het sleutelsymbool op uw dashboard snel knippert of blijft branden, wijst dit op een storing in de immobiliser. Veelvoorkomende foutcodes die wij dagelijks op locatie diagnosticeren en verhelpen zijn onder meer P1570 (Engine Control Module Disabled door Immobilizer bij Volkswagen/Audi), B1000/B1001 (Elektronisch stuurslot ELV/ESL storing bij Mercedes-Benz) en P1610/P1612 (Lock Mode of NATS communicatiefout bij Nissan en Renault).
+                </p>
+                <p>
+                  Onze monteurs voeren eerst een volledige systeemdiagnose uit om te bepalen of het probleem in de transponderchip van uw sleutel zit, in de leesspoel (ringantenne) rond het contactslot, of in de synchronisatie tussen de sleutel en de motorcomputer. Wij resetten de startblokkering en synchroniseren de rolling codes direct ter plaatse.
+                </p>
+              </div>
+
+              <div>
+                <h4 style={{ fontSize: '0.98rem', fontWeight: 600, color: 'var(--orange-400)', marginBottom: '0.5rem' }}>
+                  10. Keyless Entry &amp; Keyless Go Beveiliging: Relay Attack Voorkomen
+                </h4>
+                <p style={{ marginBottom: '0.85rem' }}>
+                  Auto&apos;s met een Keyless Entry of Keyless Go systeem bieden maximaal comfort omdat u de sleutel in uw broekzak of tas kunt houden om de deuren te ontgrendelen en de motor te starten. Helaas zijn deze systemen zonder de juiste maatregelen gevoeliger voor zogenaamde &apos;Relay Attacks&apos;, waarbij autodieven het signaal van uw sleutel binnenshuis opvangen en versterken naar uw auto op de oprit.
+                </p>
+                <p>
+                  Wanneer wij een nieuwe Smart Key voor uw voertuig inleren, leveren wij uitsluitend sleutels met moderne motion-sensor technologie (sleep mode chip) die na 60 seconden stilstand automatisch stopt met het uitzenden van signalen. Bovendien adviseren wij onze klanten en kunnen wij optioneel extra elektronische beveiligingen of OBD-lockers installeren om ongeautoriseerd uitlezen te blokkeren.
+                </p>
+              </div>
+
+              <div>
+                <h4 style={{ fontSize: '0.98rem', fontWeight: 600, color: 'var(--orange-400)', marginBottom: '0.5rem' }}>
+                  11. Bedrijfswagen, Bestelbus &amp; Fleet Sleutelservice op Locatie
+                </h4>
+                <p style={{ marginBottom: '0.85rem' }}>
+                  Voor ondernemers, koeriers en wagenparkbeheerders is stilstand van een bedrijfswagen funest voor de dagelijkse bedrijfsvoering. Bent u de sleutel kwijt van uw Mercedes-Benz Sprinter, Volkswagen Transporter, Ford Transit, Renault Master, Opel Vivaro of Peugeot Boxer? Wij begrijpen dat u geen weken kunt wachten op een merkdealer.
+                </p>
+                <p>
+                  Autosleutel24 biedt een speciale zakelijke prioriteitsservice. Wij komen direct naar uw bouwplaats, distributiecentrum of kantoorpand om extra reservesleutels bij te maken of een verloren sleutel te vervangen. Wij leveren robuuste sleutels die bestand zijn tegen intensief commercieel gebruik en kunnen desgewenst meerdere voertuigen binnen één afspraak voorzien van reservesleutels.
+                </p>
+              </div>
+
+              <div>
+                <h4 style={{ fontSize: '0.98rem', fontWeight: 600, color: 'var(--orange-400)', marginBottom: '0.5rem' }}>
+                  12. Kwaliteitsgarantie, CE-Gecertificeerde Transponders &amp; Milieubewustzijn
+                </h4>
+                <p style={{ marginBottom: '0.85rem' }}>
+                  Wij concessies nooit aan kwaliteit. Al onze sleutelbehuizingen, transponderchips, afstandsbedieningsprintplaten en knoopcelbatterijen voldoen strikt aan de Europese CE- en RoHS-richtlijnen en zijn kwalitatief gelijkwaardig aan of beter dan de originele fabrieksonderdelen. U ontvangt standaard 12 maanden volledige schriftelijke garantie op zowel het mechanische sleutelblad als de elektronische werking van de chip en zender.
+                </p>
+                <p>
+                  Daarnaast werken wij milieubewust: oude en defecte sleutels die wij vervangen worden niet weggegooid, maar vakkundig gerecycled waarbij hoogwaardige edelmetalen en lithiumbatterijen op een verantwoorde manier worden verwerkt via gecertificeerde recyclingpartners in Nederland.
+                </p>
+              </div>
             </div>
           </div>
         </section>

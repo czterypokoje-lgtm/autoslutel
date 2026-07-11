@@ -238,6 +238,18 @@ export default function MerkenPage() {
           <p>
             Moderne auto&apos;s zijn uitgerust met complexe elektronische antidiefstalsystemen. Elke autofabrikant hanteert eigen beveiligingsprotocollen, startonderbrekers en transpondersystemen — van BMW CAS4/FEM en Volkswagen MQB tot Mercedes-Benz FBS3/FBS4 en Renault Keycards. Waar reguliere garages vaak vastlopen op merk-specifieke softwarebeveiliging of u doorsturen naar een dure merkdealer, is <strong>{SITE_CONFIG.name}</strong> gespecialiseerd in het sleutelbeheer van álle 38 gangbare automerken.
           </p>
+          <h3>1. Europese Automerken: VAG Group, BMW Group &amp; Mercedes-Benz</h3>
+          <p>
+            Duitse autofabrikanten lopen wereldwijd voorop als het gaat om complexe cryptografische voertuigbeveiliging. Binnen de Volkswagen Groep (Volkswagen, Audi, Seat, Skoda en Porsche) wordt gewerkt met onder andere de 4e en 5e generatie immobilisers en de moderne MQB- en MLB-platforms met Security Gateway (SFD). Bij BMW en Mini maken wij verbinding met EWS, CAS (1 t/m 4+), FEM en BDC modules. Voor Mercedes-Benz en Smart programmeren wij infrarood sleutels (Chromen sleutels) op de Electronic Ignition Switch (EIS/EZS) systemen binnen FBS3 en FBS4 protocollen.
+          </p>
+          <h3>2. Franse &amp; Italiaanse Automerken: PSA, Renault &amp; Stellantis</h3>
+          <p>
+            Franse en Italiaanse merken zoals Peugeot, Citroën, DS Automobiles, Fiat, Alfa Romeo en Renault maken gebruik van BSI (Body Systems Interface) en UCH (Unité de Contrôle Habitacle) modules. Vooral Renault en Dacia staan bekend om hun Keycard Handsfree systemen. Wij lezen de beveiligingspincodes direct uit de BSI of UCH en leren binnen enkele minuten een nieuwe afstandsbediening of sleutelkaart in, zelfs bij volledige sleutelverlies situaties.
+          </p>
+          <h3>3. Aziatische &amp; Amerikaanse Merken: Toyota, Ford, Kia &amp; Hyundai</h3>
+          <p>
+            Aziatische autofabrikanten zoals Toyota, Lexus, Kia, Hyundai, Nissan, Honda en Mazda werken met G-chip, H-chip en Smart Key proximity systemen die vaak beveiligd zijn met ID4D, ID46, ID47 of ID8A transponders. Voor Amerikaanse merken zoals Ford en Jeep programmeren wij PATS (Passive Anti-Theft System) transponders en FOBIK sleutels.
+          </p>
           <h3>Geautoriseerde OEM-Diagnose en CNC-Sleutelfrezen</h3>
           <p>
             Onze servicebussen zijn uitgerust met professionele diagnosecomputers en officiële OEM-licenties. Hierdoor kunnen wij rechtstreeks communiceren met de immobiliser, ECU of BSI van uw voertuig via de OBD2-poort. Wij slijpen mechanische sleutelbladen met uiterste precisie op onze computergestuurde CNC-frezen op basis van uw chassisnummer (VIN) of de sleutelcode.
