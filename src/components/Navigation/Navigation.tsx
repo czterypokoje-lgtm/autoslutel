@@ -191,52 +191,54 @@ export default function Navigation() {
 
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div className={styles.mobileOverlay} onClick={() => setMobileOpen(false)} aria-hidden="true" />
-      )}
-      <div className={`${styles.mobileDrawer} ${mobileOpen ? styles.mobileDrawerOpen : ''}`} role="dialog" aria-modal="true" aria-label="Navigatiemenu">
-        <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.mobilePhone} onClick={() => setMobileOpen(false)}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" aria-hidden="true">
-            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
-          </svg>
-          Bel Nu: {SITE_CONFIG.phone}
-        </a>
+        <>
+          <div className={styles.mobileOverlay} onClick={() => setMobileOpen(false)} aria-hidden="true" />
+          <div className={`${styles.mobileDrawer} ${styles.mobileDrawerOpen}`} role="dialog" aria-modal="true" aria-label="Navigatiemenu">
+            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.mobilePhone} onClick={() => setMobileOpen(false)}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+              </svg>
+              Bel Nu: {SITE_CONFIG.phone}
+            </a>
 
-        <div className={styles.mobileSection}>
-          <div className={styles.mobileSectionTitle}>Spoedhulp</div>
-          {ProblemenLinks.map(l => <Link key={l.href} href={l.href} className={`${styles.mobileLink} ${styles.mobileLinkUrgent}`} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
-        </div>
+            <div className={styles.mobileSection}>
+              <div className={styles.mobileSectionTitle}>Spoedhulp</div>
+              {ProblemenLinks.map(l => <Link key={l.href} href={l.href} className={`${styles.mobileLink} ${styles.mobileLinkUrgent}`} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
+            </div>
 
-        <div className={styles.mobileSection}>
-          <div className={styles.mobileSectionTitle}>Diensten</div>
-          <div className={styles.mobileDienstenGroup}>
-            {DienstenStructure.map(pillar => (
-              <div key={pillar.title} className={styles.mobilePillarBlock}>
-                <Link href={pillar.href} className={styles.mobilePillarLink} onClick={() => setMobileOpen(false)}>
-                  {pillar.title} {pillar.price ? ` (${pillar.price})` : ''}
-                </Link>
-                {pillar.subs.map(sub => (
-                  <Link key={sub.href} href={sub.href} className={styles.mobileSubLink} onClick={() => setMobileOpen(false)}>
-                    {sub.label}
-                  </Link>
+            <div className={styles.mobileSection}>
+              <div className={styles.mobileSectionTitle}>Diensten</div>
+              <div className={styles.mobileDienstenGroup}>
+                {DienstenStructure.map(pillar => (
+                  <div key={pillar.title} className={styles.mobilePillarBlock}>
+                    <Link href={pillar.href} className={styles.mobilePillarLink} onClick={() => setMobileOpen(false)}>
+                      {pillar.title} {pillar.price ? ` (${pillar.price})` : ''}
+                    </Link>
+                    {pillar.subs.map(sub => (
+                      <Link key={sub.href} href={sub.href} className={styles.mobileSubLink} onClick={() => setMobileOpen(false)}>
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
                 ))}
               </div>
-            ))}
+            </div>
+
+            <div className={styles.mobileSection}>
+              <div className={styles.mobileSectionTitle}>Merken</div>
+              {MerkenLinks.map(l => <Link key={l.href} href={l.href} className={styles.mobileLink} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
+              <Link href="/merken" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Alle 38 merken →</Link>
+            </div>
+
+            <div className={styles.mobileDivider} />
+            <Link href="/steden" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Steden</Link>
+            <Link href="/prijzen" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Prijzen</Link>
+            <Link href="/blog" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Blog &amp; Advies</Link>
+            <Link href="/over-ons" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Over Ons</Link>
+            <Link href="/contact" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Contact</Link>
           </div>
-        </div>
-
-        <div className={styles.mobileSection}>
-          <div className={styles.mobileSectionTitle}>Merken</div>
-          {MerkenLinks.map(l => <Link key={l.href} href={l.href} className={styles.mobileLink} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
-          <Link href="/merken" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Alle 38 merken →</Link>
-        </div>
-
-        <div className={styles.mobileDivider} />
-        <Link href="/steden" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Steden</Link>
-        <Link href="/prijzen" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Prijzen</Link>
-        <Link href="/blog" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Blog &amp; Advies</Link>
-        <Link href="/over-ons" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Over Ons</Link>
-        <Link href="/contact" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Contact</Link>
-      </div>
+        </>
+      )}
     </header>
   );
 }
