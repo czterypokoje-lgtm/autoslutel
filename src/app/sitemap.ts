@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const corePages = [
     '', '/diensten', '/steden', '/merken', '/prijzen', '/blog', '/kennisbank',
     '/over-ons', '/galerij', '/beoordelingen', '/veelgestelde-vragen',
-    '/contact', '/privacybeleid', '/auto-op-slot', '/spoedhulp-autosleutel',
+    '/contact', '/privacybeleid', '/auto-op-slot',
     '/autosleutel-kwijt'
   ].map(p => ({
     url: `${base}${p}`,

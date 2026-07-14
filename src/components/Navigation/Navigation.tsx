@@ -63,11 +63,7 @@ const MerkenLinks = [
   { href: '/merken/opel-autosleutel-bijmaken', label: 'Opel' },
 ];
 
-const ProblemenLinks = [
-  { href: '/autosleutel-kwijt', label: 'Autosleutel Kwijt' },
-  { href: '/diensten/auto-openen-zonder-sleutel', label: 'Auto Openen Zonder Sleutel' },
-  { href: '/spoedhulp-autosleutel', label: '24/7 Spoedhulp' },
-];
+
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -147,19 +143,7 @@ export default function Navigation() {
             </div>
           </div>
 
-          {/* Spoed dropdown */}
-          <div className={styles.dropdown}>
-            <button className={`${styles.navBtn} ${styles.navBtnUrgent}`} aria-haspopup="true">
-              Spoedhulp
-              <svg className={styles.chevron} viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>
-            </button>
-            <div className={styles.dropMenu}>
-              <div className={styles.dropHeader} style={{color:'#c0392b'}}>Spoed &amp; Problemen</div>
-              {ProblemenLinks.map(l => (
-                <Link key={l.href} href={l.href} className={`${styles.dropItem} ${styles.dropItemUrgent}`}>{l.label}</Link>
-              ))}
-            </div>
-          </div>
+
 
           <Link href="/steden" className={styles.navLink}>Steden</Link>
           <Link href="/prijzen" className={styles.navLink}>Prijzen</Link>
@@ -204,10 +188,7 @@ export default function Navigation() {
               Bel Nu: {SITE_CONFIG.phone}
             </a>
 
-            <div className={styles.mobileSection}>
-              <div className={styles.mobileSectionTitle}>Spoedhulp</div>
-              {ProblemenLinks.map(l => <Link key={l.href} href={l.href} className={`${styles.mobileLink} ${styles.mobileLinkUrgent}`} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
-            </div>
+
 
             <div className={styles.mobileSection}>
               <div className={styles.mobileSectionTitle}>Diensten</div>
