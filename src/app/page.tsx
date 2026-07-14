@@ -115,15 +115,15 @@ const services = [
       </>
     ),
     href: '/diensten/autosleutels-repareren',
-    src: '/images/seo/autosleutels-repareren-werkplaats-utrecht.webp',
-    alt: 'Autosleutel repareren Utrecht – kapotte behuizing, knoppen of transponder herstellen door Autosleutel24 mobiel'
+    src: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp',
+    alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
   },
   { 
     title: 'Contact Reparatie', 
     desc: 'Draait uw autosleutel niet meer soepel rond in het contactslot, zit het stuurwielslot muurvast of start uw auto niet door elektronische ontstekingsproblemen? Mechanische slijtage aan de interne slotplaatjes of storingen in elektronische contactsloten zoals Mercedes EIS (Elektronisch Ontstekingsslot) en ELV (Elektronisch Stuurslot) kunnen uw auto compleet blokkeren. Wij komen direct met onze servicewagen naar uw pechlocatie om uw kapotte contactslot vakkundig te repareren, reviseren of compleet te vervangen. Daarbij passen wij het nieuwe slot aan op uw bestaande sleutelcode, zodat u gewoon één sleutel blijft gebruiken voor alle portieren en het contactslot.', 
     href: '/diensten/contactslot-reparatie',
-    src: '/images/seo/contactslot-reparatie-werkplaats-utrecht.webp',
-    alt: 'Contactslot reparatie Utrecht – defect vastgelopen contactslot repareren of vervangen door Autosleutel24 mobiel'
+    src: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
+    alt: 'Contactslot reparatie en vervangen voor alle merken auto\'s ter plaatse in Utrecht zonder sleepkosten'
   },
   { 
     title: 'Auto Slotenmaker', 
@@ -140,8 +140,8 @@ const services = [
     title: 'Smart Key / Keyless', 
     desc: 'Heeft u problemen met uw keyless entry of keyless go autosleutel, of wordt uw proximity smart key niet meer gedetecteerd door de sensoren van uw auto? Moderne draadloze smart keys en comfort access sleutels vereisen uiterst gespecialiseerde programmering en beveiligde encryptiesleutels om naadloos te communiceren met het boordnet van uw wagen. Wij leveren, inleren en synchroniseren originele en hoogwaardige aftermarket smart keys voor onder andere BMW, Mercedes, Volkswagen, Audi, Ford en Renault direct bij u thuis of op locatie. Met geavanceerde cryptografische codering garanderen wij dat uw auto optimaal beveiligd blijft tegen elektronische diefstal en relay-attacks.', 
     href: '/diensten/smart-key-programmeren',
-    src: '/images/seo/smart-key-keyless-programmeren-autosleutel24-utrecht.webp',
-    alt: 'Smart key en keyless-go start-stop knop programmeren en inleren door Autosleutel24 mobiele specialist Utrecht'
+    src: '/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp',
+    alt: 'Smart key en keyless entry autosleutels inleren en programmeren met mobiele apparatuur in Utrecht'
   },
 ];
 
