@@ -158,7 +158,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             <div style={{ maxWidth: 900, marginBottom: '2.5rem' }}>
               <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--orange-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>A–Z Modellenoverzicht</span>
               <h2 style={{ fontSize: '1.9rem', fontWeight: 800, color: '#0f172a', marginTop: '0.35rem', marginBottom: '0.85rem' }}>
-                Alle Ondersteunde {brand.name} Modellen &amp; Bouwjaren
+                Alle Ondersteunde {brand.name}{' '}Modellen &amp; Bouwjaren
               </h2>
               <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7 }}>
                 Staat uw voertuig hieronder vermeld? Dan kunnen wij direct op locatie een nieuwe reservesleutel frezen en inleren, of een verloren sleutel wissen uit de startonderbreker. Wij ondersteunen alle bouwjaren, generaties en sleuteltypen (klapsleutel, transponder en Keyless Go).
@@ -205,7 +205,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               </div>
             ) : (
               <div style={{ background: '#fff', padding: '2.5rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#0f172a' }}>Alle {brand.name} Modellen &amp; Bouwjaren Ondersteund</h3>
+                <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#0f172a' }}>Alle {brand.name}{' '}Modellen &amp; Bouwjaren Ondersteund</h3>
                 <p style={{ color: '#475569', lineHeight: 1.7 }}>
                   Staat uw specifieke {brand.name} model hier niet tussen? Geen zorgen! Wij leveren, frezen en programmeren autosleutels voor <strong>vrijwel elk type {brand.name}</strong> uit de bouwjaren 1998 tot en met 2024. Neem direct contact op via telefoon of WhatsApp en geef uw kenteken of model door voor een directe prijsopgave.
                 </p>
