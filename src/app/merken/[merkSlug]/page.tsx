@@ -97,9 +97,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <Link href="/merken" style={{ color: 'rgba(255,255,255,0.55)' }}>Merken</Link> /
               <span style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>{brand.name}</span>
             </nav>
-            <div style={{ display: 'inline-block', background: 'rgba(249,115,22,0.15)', border: '1px solid rgba(249,115,22,0.35)', color: '#fdba74', padding: '0.35rem 0.85rem', borderRadius: '20px', fontSize: '0.82rem', fontWeight: 600, marginBottom: '1rem' }}>
-              ⚡ Gecertificeerde {brand.name} Specialist • {brand.system}
-            </div>
+
             <h1 style={{ color: '#fff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: '1.2rem' }}>
               {brand.name} Autosleutel Bijmaken &amp; Programmeren <br />
               <span style={{ color: 'var(--orange-400)' }}>Alle Modellen &amp; Bouwjaren • Mobiel Ter Plaatse</span>
