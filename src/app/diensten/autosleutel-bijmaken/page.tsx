@@ -220,22 +220,22 @@ export default function SleutelBijmakenPage() {
                   }}>
                     <img 
                       src="/images/seo/autosleutel-bijmaken-porsche.webp" 
-                      alt="Autosleutel bijmaken Porsche in Almere - professionele reservesleutel programmering op locatie" 
+                      alt="Professionele reservesleutel programmering op locatie" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
                       src="/images/seo/autosleutel-bijmaken-bmw.webp" 
-                      alt="Autosleutel bijmaken BMW in Amersfoort - smart key inleren en contactslot reparatie" 
+                      alt="Smart key inleren en contactslot reparatie" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
                       src="/images/seo/autosleutel-bijmaken-workshop.webp" 
-                      alt="Autosleutel bijmaken werkplaats in Utrecht - uitgerust met CNC-freesmachines en soldeerapparatuur" 
+                      alt="Werkplaats uitgerust met CNC-freesmachines en soldeerapparatuur" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
                       src="/images/seo/autosleutel-bijmaken-equipment.webp" 
-                      alt="Autosleutel bijmaken apparatuur in Amsterdam - OBD2 programmeercomputers en transponder tools" 
+                      alt="OBD2 programmeercomputers en transponder tools" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                   </div>

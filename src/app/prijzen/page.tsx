@@ -180,7 +180,7 @@ export default function PrijzenPage() {
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp"
-                  alt="Autosleutel reparatie en behuizing vervangen op locatie in Utrecht en Amsterdam door gecertificeerde mobiele slotenmaker (GPS Utrecht &amp; Amsterdam)"
+                  alt="Monteur repareert de behuizing van een autosleutel op locatie"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImg}
@@ -196,7 +196,7 @@ export default function PrijzenPage() {
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/autosleutel_programmeren_op_locatie_utrecht_amsterdam.webp"
-                  alt="Autosleutel programmeren en inleren op locatie in Utrecht en Amsterdam - werkplaats in mobiele servicebus (GPS Utrecht & Amsterdam)"
+                  alt="Programmeren en inleren van een nieuwe autosleutel in een mobiele servicebus"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImgTop}
@@ -212,7 +212,7 @@ export default function PrijzenPage() {
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/autosleutel_voorraad_alle_merken_utrecht_amsterdam.webp"
-                  alt="Ruime voorraad originele autosleutels en transponders voor alle merken in Utrecht en Amsterdam servicegebied"
+                  alt="Voorraad van originele autosleutels en transponders voor diverse automerken"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImg}
@@ -228,7 +228,7 @@ export default function PrijzenPage() {
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/professionele_diagnose_apparatuur_utrecht_amsterdam.webp"
-                  alt="Dealer-niveau diagnose apparatuur Autel IM608 Pro en AVDI voor autosleutel programmering in Utrecht en Amsterdam"
+                  alt="Professionele diagnose apparatuur (Autel IM608 Pro) voor autosleutel programmering"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImg}

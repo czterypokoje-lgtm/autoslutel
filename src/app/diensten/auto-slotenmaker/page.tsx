@@ -256,22 +256,22 @@ export default function AutoSlotenmakerPage() {
                   }}>
                     <img 
                       src="/images/seo/auto-slotenmaker-werkplaats-utrecht.webp" 
-                      alt="Auto slotenmaker werkplaats Utrecht - professioneel solderen van microswitches en inleren van transponderchips" 
+                      alt="Professioneel solderen van microswitches en inleren van transponderchips" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
                       src="/images/seo/auto-slotenmaker-bmw-openen-amsterdam.webp" 
-                      alt="Auto slotenmaker Amsterdam - schadevrij openen van BMW autodeur bij buitensluiting" 
+                      alt="Schadevrij openen van autodeur bij buitensluiting" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
                       src="/images/seo/auto-slotenmaker-volkswagen-golf-almere.webp" 
-                      alt="Auto slotenmaker Almere - programmeren en slijpen van een reserve klapsleutel voor Volkswagen Golf" 
+                      alt="Programmeren en slijpen van een reserve klapsleutel" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                     <img 
                       src="/images/seo/auto-slotenmaker-audi-inleren-amersfoort.webp" 
-                      alt="Auto slotenmaker Amersfoort - smart key inleren en transponder programmeren voor Audi" 
+                      alt="Smart key inleren en transponder programmeren" 
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                     />
                   </div>

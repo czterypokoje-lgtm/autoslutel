@@ -170,7 +170,7 @@ export default function HomePage() {
       <section className={styles.hero}>
         <Image
           src="/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp"
-          alt="Autosleutel bijmaken Utrecht &amp; Amsterdam mobiele specialist — Autosleutel24"
+          alt="Autosleutel bijmaken door mobiele specialist"
           fill
           priority
           fetchPriority="high"
@@ -511,7 +511,7 @@ export default function HomePage() {
             <div>
               <img
                 src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
-                alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24 Utrecht"
+                alt="Berkan Acarol — Eigenaar Autosleutel24"
                 style={{
                   width: '100%',
                   maxWidth: '340px',

@@ -30,7 +30,7 @@ export default function MerkenPage() {
       <section style={{ background: 'var(--navy-900)', padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden', position: 'relative' }}>
         <Image
           src="/autosleutel-merken-bijmaken-utrecht-amsterdam.webp"
-          alt="Autosleutel merken bijmaken Utrecht &amp; Amsterdam — Autosleutel24 mobiele specialist"
+          alt="Autosleutel bijmaken voor diverse merken"
           fill
           priority
           fetchPriority="high"

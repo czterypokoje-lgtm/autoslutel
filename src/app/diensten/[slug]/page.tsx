@@ -301,7 +301,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   {slug === 'autodeur-openen' ? (
                     <img 
                       src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
-                      alt="Auto deur schadevrij openen door professionele mobiele slotenmaker in Utrecht - 24/7 service" 
+                      alt="Autodeur schadevrij openen door monteur" 
                       style={{ width: '100%', borderRadius: '12px', margin: '1.25rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', objectFit: 'cover', aspectRatio: '16/9' }}
                     />
                   ) : slug === 'autosleutels-repareren' ? (
@@ -313,22 +313,22 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                     }}>
                       <img 
                         src="/images/seo/autosleutels-repareren-werkplaats-utrecht.webp" 
-                        alt="Autosleutels repareren werkplaats in Utrecht - SMD-solderen van microswitches en knoppen onder microscoop" 
+                        alt="SMD-solderen van microswitches en knoppen onder microscoop" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
                         src="/images/seo/autosleutels-repareren-inventaris-amsterdam.webp" 
-                        alt="Autosleutel reparatie inventaris in Amsterdam - OEM behuizingen en reservesleutel onderdelen op voorraad" 
+                        alt="Voorraad van OEM behuizingen en reservesleutel onderdelen" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
                         src="/images/seo/autosleutels-repareren-onderdelen-almere.webp" 
-                        alt="Autosleutel repareren onderdelen in Almere - reservesleutel printplaten, transponders en spoelen" 
+                        alt="Reservesleutel printplaten, transponders en spoelen" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
                         src="/images/seo/autosleutels-repareren-service-amersfoort.webp" 
-                        alt="Autosleutels repareren service in Amersfoort - mobiele sleutelmaker repareert sleutels ter plaatse" 
+                        alt="Monteur repareert sleutels ter plaatse" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                     </div>
@@ -341,12 +341,12 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                     }}>
                       <img 
                         src="/images/seo/contactslot-reparatie-werkplaats-utrecht.webp" 
-                        alt="Contactslot reparatie Utrecht - demonteren en herstellen van defecte mechanische cilinder cilinderslot" 
+                        alt="Demonteren en herstellen van defecte mechanische cilinder" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
                         src="/images/seo/contactslot-reparatie-mobiel-amsterdam.webp" 
-                        alt="Contactslot reparatie Amsterdam - mobiele slotenmaker repareert vastgelopen contactslot op locatie" 
+                        alt="Vastgelopen contactslot gerepareerd op locatie" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                     </div>

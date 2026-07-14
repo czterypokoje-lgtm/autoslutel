@@ -33,7 +33,7 @@ export default function GalerijPage() {
             <div>
               <img 
                 src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
-                alt="Autosleutel24 professionele sleutelmaker werkplaats in Utrecht met transponder programmeertools en soldeerbouten" 
+                alt="Sleutelmaker werkplaats met soldeerbouten en gereedschap" 
                 style={{ width: '100%', borderRadius: '12px', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }} 
               />
             </div>

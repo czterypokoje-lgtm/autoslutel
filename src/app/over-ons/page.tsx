@@ -106,7 +106,7 @@ export default function OverOnsPage() {
           <div>
             <img
               src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
-              alt="Berkan Acarol — Eigenaar en Hoofdtechnicus van Autosleutel24 Utrecht"
+              alt="Berkan Acarol — Eigenaar en Hoofdtechnicus"
               style={{
                 width: '100%',
                 maxWidth: '340px',
@@ -134,7 +134,7 @@ export default function OverOnsPage() {
           <div>
             <img 
               src="/images/seo/auto_sleutel_utrecht_24uur_workshop.webp" 
-              alt="Professionele autosleutel werkplaats en gereedschap in Utrecht voor 24 uur service" 
+              alt="Professionele autosleutel werkplaats en gereedschap" 
               style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
           </div>
@@ -149,7 +149,7 @@ export default function OverOnsPage() {
           <div>
             <img 
               src="/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.webp" 
-              alt="Slotenmaker in Utrecht werkzaamheden op locatie 24 uur service" 
+              alt="Werkzaamheden op locatie door monteur" 
               style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', objectPosition: 'top', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
           </div>
@@ -163,7 +163,7 @@ export default function OverOnsPage() {
           <div>
             <img 
               src="/images/seo/envanter.jpeg" 
-              alt="Grote voorraad originele autosleutels en transponders bij Autosleutel24 Utrecht" 
+              alt="Voorraad originele autosleutels en transponders" 
               style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
           </div>

@@ -348,7 +348,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden', borderRadius: 'var(--radius-md)' }}>
                     <Image
                       src={`/images/cities/${citySlug}/autosleutel-bijmaken-${citySlug}-${i + 1}.webp`}
-                      alt={`Autosleutel bijmaken en inleren op locatie in ${city.city} - Foto ${i + 1}`}
+                      alt={`Autosleutel bijmaken op locatie - Foto ${i + 1}`}
                       fill
                       unoptimized={true}
                       loading="lazy"

@@ -380,22 +380,22 @@ export default function AutoOpenenZonderSleutelPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', margin: '1.5rem 0' }}>
                     <img
                       src="/images/seo/auto-slotenmaker-bmw-openen-amsterdam.webp"
-                      alt="Auto openen zonder sleutel Amsterdam - schadevrij openen BMW autodeur bij buitensluiting"
+                      alt="Schadevrij openen van een autodeur bij buitensluiting"
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
                     />
                     <img
                       src="/images/seo/auto-slotenmaker-werkplaats-utrecht.webp"
-                      alt="Auto openen zonder sleutel Utrecht - Lishi decoder professioneel gebruikt door gecertificeerde locksmith"
+                      alt="Lishi decoder gebruikt door gecertificeerde monteur"
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
                     />
                     <img
                       src="/images/seo/auto-slotenmaker-volkswagen-golf-almere.webp"
-                      alt="Auto openen zonder sleutel Almere - Volkswagen Golf schadevrij geopend na buitensluiting"
+                      alt="Autodeur schadevrij geopend na buitensluiting"
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
                     />
                     <img
                       src="/images/seo/auto-slotenmaker-audi-inleren-amersfoort.webp"
-                      alt="Auto openen zonder sleutel Amersfoort - Audi buitensluiting opgelost en reservesleutel geprogrammeerd"
+                      alt="Buitensluiting opgelost en reservesleutel geprogrammeerd"
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
                     />
                   </div>

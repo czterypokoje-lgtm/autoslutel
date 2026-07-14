@@ -663,7 +663,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/autosleutel_bijmaken_specialist_utrecht.png" 
-          alt="Professionele autosleutelmaker in Utrecht bezig met het programmeren en frezen van een nieuwe transpondersleutel in een mobiele servicebus" 
+          alt="Programmeren en frezen van een nieuwe transpondersleutel" 
           fill 
           style={{ objectFit: 'cover' }}
           unoptimized={true}
@@ -704,7 +704,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/smart_key_programmeren_utrecht_auto.png" 
-          alt="Moderne keyless entry smart key geprogrammeerd voor een premium auto op het dashboard, mobiele service Utrecht" 
+          alt="Geprogrammeerde smart key" 
           fill 
           style={{ objectFit: 'cover' }}
           unoptimized={true}
@@ -756,7 +756,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/auto_openen_zonder_sleutel_schadevrij.png" 
-          alt="Professionele slotenmaker gebruikt een Lishi pick en air wedge om een autodeur schadevrij te openen" 
+          alt="Autodeur schadevrij openen met luchtwig (air wedge)" 
           fill 
           style={{ objectFit: 'cover' }}
           unoptimized={true}
@@ -795,7 +795,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/autosleutel_kwijt_wat_nu_stappenplan.png" 
-          alt="Opgeluchte bestuurder krijgt een nieuwe autosleutel van een mobiele slotenmaker na het kwijtraken van alle sleutels" 
+          alt="Klant ontvangt nieuwe autosleutel" 
           fill 
           style={{ objectFit: 'cover' }}
           unoptimized={true}
@@ -918,7 +918,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/autosleutel_bijmaken_kosten_prijslijst.png" 
-          alt="Moderne autosleutel op een tablet met een transparante prijslijst en factuur, betrouwbare slotenmaker service" 
+          alt="Autosleutel met prijslijst op tablet" 
           fill 
           style={{ objectFit: 'cover' }}
           unoptimized={true}
@@ -963,7 +963,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/sleutel_bijmaken_auto_mobiele_service.png" 
-          alt="Geavanceerde CNC sleutelfreesmachine in actie in een mobiele slotenmaker servicebus voor het frezen van een nieuwe autosleutel" 
+          alt="Frezen van autosleutel met CNC machine" 
           fill 
           style={{ objectFit: 'cover' }}
           unoptimized={true}
