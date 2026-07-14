@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import Script from 'next/script';
 import fs from 'fs';
 import path from 'path';
@@ -24,7 +24,9 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
   });
 
   if (!brand) return {};
-  const pageUrl = `${SITE_CONFIG.domain}/merken/${merkSlug}`;
+  
+  // Always use the long SEO slug for the canonical URL
+  const pageUrl = `${SITE_CONFIG.domain}/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken`;
   return {
     title: {
       absolute: `${brand.name} Autosleutel Bijmaken | Alle Modellen & Bouwjaren | Autosleutel24`,
@@ -57,6 +59,11 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
   });
 
   if (!brand) notFound();
+
+  // Redirect short slugs (e.g. /merken/audi) to the long SEO slug (e.g. /merken/audi-autosleutel-bijmaken)
+  if (decodedSlug === brand.nameSlug.toLowerCase()) {
+    permanentRedirect(`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken`);
+  }
 
   // Load recent work images
   const imagesDir = path.join(process.cwd(), 'public', 'images', 'merken');
