@@ -115,8 +115,8 @@ const services = [
       </>
     ),
     href: '/diensten/autosleutels-repareren',
-    src: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp',
-    alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
+    src: '/images/seo/autosleutels-repareren-werkplaats-utrecht.webp',
+    alt: 'Autosleutel repareren Utrecht – kapotte behuizing, knoppen of transponder herstellen door Autosleutel24 mobiel'
   },
   { 
     title: 'Contact Reparatie', 
