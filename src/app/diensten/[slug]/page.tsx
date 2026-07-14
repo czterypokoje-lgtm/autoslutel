@@ -578,7 +578,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 </div>
               </div>
               <div className={styles.reviewGrid}>
-                {generateContextualReviews(dienst.title, 'service').map((review, i) => (
+                {generateContextualReviews(service.title, 'service').map((review, i) => (
                   <GoogleReviewCard key={i} review={review} />
                 ))}
               </div>

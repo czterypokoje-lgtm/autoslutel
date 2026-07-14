@@ -186,10 +186,7 @@ const PAGE_ENTRIES = [
     loc: `${BASE}/diensten/contactslot-reparatie`,
     images: [CORE_IMAGES[10], CORE_IMAGES[11]],
   },
-  {
-    loc: `${BASE}/spoedhulp-autosleutel`,
-    images: [CORE_IMAGES[3], CORE_IMAGES[12]],
-  },
+
   ...BLOG_POSTS.map((post) => ({
     loc: `${BASE}/blog/${post.slug}`,
     images: [BLOG_IMAGES[0]],

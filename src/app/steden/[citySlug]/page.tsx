@@ -469,7 +469,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </div>
             </div>
             <div className={styles.reviewGrid}>
-              {generateContextualReviews(city.name, 'city').map((review, i) => (
+              {generateContextualReviews(city.city, 'city').map((review, i) => (
                 <GoogleReviewCard key={i} review={review} />
               ))}
             </div>
