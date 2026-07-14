@@ -70,12 +70,12 @@
 
 .heroWaBtn {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  background: #25d366; color: #fff;
+  background: #128c7e; color: #fff;
   padding: 0.75rem 1.25rem; border-radius: var(--radius-md);
   font-weight: 600; font-size: 0.95rem; text-decoration: none;
   transition: background 0.15s; min-height: 48px;
 }
-.heroWaBtn:hover { background: #1fba57; color: #fff; text-decoration: none; }
+.heroWaBtn:hover { background: #0d6b5e; color: #fff; text-decoration: none; }
 
 .heroUrgentBtn {
   display: inline-flex; align-items: center;
@@ -267,13 +267,13 @@
   flex-shrink: 0;
 }
 .brandLinkOrange {
-  color: var(--orange-500);
+  color: var(--orange-700);
   font-weight: 700;
   text-decoration: none;
   transition: all 0.15s ease;
 }
 .brandLinkOrange:hover {
-  color: var(--orange-600);
+  color: var(--orange-700);
   text-decoration: underline;
 }
 .brandModelsText {
@@ -435,13 +435,13 @@
 .finalCtaBtns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
 .waBtn {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  background: #25d366; color: #fff;
+  background: #128c7e; color: #fff;
   padding: 0.85rem 2rem; border-radius: var(--radius-md);
   font-weight: 700; font-size: 1rem;
   text-decoration: none; min-height: 52px;
   transition: background 0.15s;
 }
-.waBtn:hover { background: #1fba57; color: #fff; text-decoration: none; }
+.waBtn:hover { background: #0d6b5e; color: #fff; text-decoration: none; }
 
 /* ---- RESPONSIVE ---- */
 @media (max-width: 1024px) {

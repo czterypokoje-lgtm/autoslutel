@@ -450,7 +450,7 @@ export default function HomePage() {
               <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', marginTop: '1.5rem', marginBottom: '1.5rem', lineHeight: '1.8', color: 'var(--gray-700)' }}>
                 {serviceAreaCities.map((city) => (
                   <li key={city.slug} style={{ marginBottom: '0.25rem' }}>
-                    <Link href={`/steden/${city.slug}`} style={{ color: 'var(--orange-500)', textDecoration: 'underline', fontWeight: 600 }}>
+                    <Link href={`/steden/${city.slug}`} style={{ color: 'var(--orange-700)', textDecoration: 'underline', fontWeight: 600 }}>
                       {city.name}
                     </Link>
                   </li>
@@ -482,7 +482,7 @@ export default function HomePage() {
               <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.75rem', marginTop: '0.25rem' }}>
                 Ontmoet Berkan Acarol
               </h2>
-              <p style={{ fontWeight: 600, color: 'var(--orange-500)', fontSize: '0.95rem', marginBottom: '1rem' }}>
+              <p style={{ fontWeight: 600, color: 'var(--orange-700)', fontSize: '0.95rem', marginBottom: '1rem' }}>
                 Eigenaar &amp; Gecertificeerd Hoofdtechnicus van Autosleutel24
               </p>
               <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1.25rem', fontSize: '0.92rem' }}>

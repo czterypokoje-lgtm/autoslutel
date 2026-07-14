@@ -179,7 +179,7 @@ export default function Footer() {
                   padding: 0,
                   cursor: 'pointer',
                   fontSize: '0.75rem',
-                  color: 'rgba(255,255,255,0.3)',
+                  color: 'rgba(255,255,255,0.55)',
                   fontFamily: 'inherit',
                 }}
               >

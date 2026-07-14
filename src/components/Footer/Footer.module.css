@@ -5,8 +5,8 @@
 .ctaBtns { display: flex; gap: 0.75rem; flex-shrink: 0; flex-wrap: wrap; }
 .ctaPhoneBtn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--orange-500); color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 700; text-decoration: none; transition: background 0.15s; white-space: nowrap; }
 .ctaPhoneBtn:hover { background: var(--orange-600); color: #fff; text-decoration: none; }
-.ctaWaBtn { display: inline-flex; align-items: center; background: #25d366; color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 700; text-decoration: none; transition: background 0.15s; }
-.ctaWaBtn:hover { background: #1fba57; color: #fff; text-decoration: none; }
+.ctaWaBtn { display: inline-flex; align-items: center; background: #128c7e; color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 700; text-decoration: none; transition: background 0.15s; }
+.ctaWaBtn:hover { background: #0d6b5e; color: #fff; text-decoration: none; }
 
 .footer { background: var(--navy-900); }
 .footerGrid { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; gap: 2rem; }
@@ -23,7 +23,7 @@
 .footerContact a:hover { color: var(--orange-400); }
 .hours { font-size: 0.78rem; color: var(--orange-400); font-weight: 600; }
 
-.colTitle { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); margin-bottom: 0.75rem; }
+.colTitle { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.5); margin-bottom: 0.75rem; }
 .linkList { list-style: none; padding: 0; margin: 0; }
 .linkList li { margin-bottom: 0.35rem; }
 .linkList a { font-size: 0.82rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.12s; }
@@ -33,8 +33,8 @@
 .bottomInner { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 .bottomInner p { font-size: 0.75rem; color: rgba(255,255,255,0.3); margin: 0; }
 .bottomLinks { display: flex; gap: 1.5rem; }
-.bottomLinks a { font-size: 0.75rem; color: rgba(255,255,255,0.3); text-decoration: none; }
-.bottomLinks a:hover { color: rgba(255,255,255,0.7); }
+.bottomLinks a { font-size: 0.75rem; color: rgba(255,255,255,0.55); text-decoration: none; }
+.bottomLinks a:hover { color: rgba(255,255,255,0.9); }
 
 @media (max-width: 1024px) { .footerGrid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) {

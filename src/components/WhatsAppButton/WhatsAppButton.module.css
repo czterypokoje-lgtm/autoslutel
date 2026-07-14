@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   gap: var(--sp-2);
-  background: #25d366;
+  background: #128c7e;
   color: #fff;
   padding: var(--sp-3) var(--sp-5);
   border-radius: var(--radius-full);
@@ -17,7 +17,7 @@
 }
 
 .btn:hover {
-  background: #1fba57;
+  background: #0d6b5e;
   color: #fff;
   text-decoration: none;
 }

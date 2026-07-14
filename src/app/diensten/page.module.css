@@ -30,7 +30,7 @@
 .cta p { color: rgba(255,255,255,0.65); margin-bottom: 1.75rem; font-size: 0.9rem; }
 .ctaBtns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
 .btnPhone { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--orange-500); color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 700; font-size: 1rem; text-decoration: none; min-height: 48px; }
-.btnWa { display: inline-flex; align-items: center; background: #25d366; color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; font-size: 1rem; text-decoration: none; min-height: 48px; }
+.btnWa { display: inline-flex; align-items: center; background: #128c7e; color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; font-size: 1rem; text-decoration: none; min-height: 48px; }
 
 @media (max-width: 640px) {
   .descCell { display: none; }
