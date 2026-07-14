@@ -233,7 +233,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <ul className={styles.seoList}>
               {BRANDS.map(b => (
                 <li key={b.slug}>
-                  <Link href={`/steden/${citySlug}/${b.nameSlug}-autosleutel-bijmaken`}>
+                  <Link href={`/merken/${b.slug}`}>
                     <strong>{b.name}</strong> — Autosleutel bijmaken in {city.city} ({b.system.split('/')[0].trim()})
                   </Link>
                 </li>
@@ -252,8 +252,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <ul className={styles.seoList}>
               {DIENSTEN.map(s => (
                 <li key={s.slug}>
-                  <Link href={`/steden/${citySlug}/${s.slug}`}>
-                    <strong>{s.title} {city.city}</strong> — {s.priceFrom || '24/7 beschikbaar'}
+                  <Link href={`/diensten/${s.slug}`}>
+                    <strong>{s.title} in {city.city}</strong> — {s.priceFrom || '24/7 beschikbaar'}
                   </Link>
                 </li>
               ))}
