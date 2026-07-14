@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './Footer.module.css';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../../config/brands';
@@ -42,9 +43,11 @@ export default function Footer() {
           {/* Brand column */}
           <div>
             <div className={styles.footerBrand}>
-              <img
+              <Image
                 src="/images/logo/autosleutel24-logo-footer-wit-utrecht.webp"
                 alt="Autosleutel24 Logo (Wit)"
+                width={160}
+                height={42}
                 style={{ height: '42px', width: 'auto', display: 'block' }}
               />
             </div>
@@ -62,9 +65,11 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 style={{ display: 'inline-block', textDecoration: 'none' }}
               >
-                <img
+                <Image
                   src="/images/seo/marktplaats-autosleutel24-verifieerd.webp"
                   alt="Autosleutel24 op Marktplaats - Geverifieerde verkoper"
+                  width={200}
+                  height={60}
                   style={{ height: '60px', width: 'auto', display: 'block', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.12)' }}
                 />
               </a>
