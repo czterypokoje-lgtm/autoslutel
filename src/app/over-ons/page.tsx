@@ -5,9 +5,9 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Over Ons | Mobiele Autosleutelspecialist | Autosleutel24',
+    absolute: 'Over Ons | Berkan Acarol Slotenmaker | Autosleutel24',
   },
-  description: `Autosleutel24 Utrecht — uw gecertificeerde autosleutelspecialist voor dealer-niveau programmering, alle merken. KVK geregistreerd, verzekerd, 24/7 beschikbaar.`,
+  description: `Ontmoet Berkan Acarol, gecertificeerd autosleutelspecialist. Autosleutel24 Utrecht — dealer-niveau programmering, alle merken. KVK geregistreerd, verzekerd, 24/7 beschikbaar.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/over-ons`,
     languages: {
@@ -28,7 +28,46 @@ const breadcrumbSchema = {
   ],
 };
 
+// E-E-A-T: Named specialist schema — critical for Google trust signals
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${SITE_CONFIG.domain}/#specialist`,
+  name: 'Berkan Acarol',
+  jobTitle: 'Hoofdtechnicus & Autosleutelspecialist',
+  description: 'Gecertificeerd autosleutelspecialist met jarenlange ervaring in voertuigbeveiliging en autosleutelcodering. Specialist in transponder programmering, smart key systemen en contactslot reparatie voor alle automerken.',
+  worksFor: {
+    '@id': `${SITE_CONFIG.domain}/#localbusiness`,
+  },
+  knowsAbout: [
+    'Autosleutel programmering',
+    'Transponder sleutels',
+    'Smart Key systemen',
+    'Immobilizer bypass',
+    'Contactslot reparatie',
+    'OBD2 diagnose',
+    'Voertuigbeveiliging',
+  ],
+  hasCredential: [
+    {
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'Certificering',
+      name: 'Autel IM608 Pro II Gecertificeerd',
+    },
+    {
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'Certificering',
+      name: 'AVDI Abrites Gecertificeerd Technicus',
+    },
+  ],
+  url: `${SITE_CONFIG.domain}/over-ons`,
+};
+
+export default function OverOnsPage() {
+  return (
+    <>
       <Script id="over-ons-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="over-ons-person-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       <main>
       <section style={{ 
         background: 'linear-gradient(135deg, rgba(7,14,26,0.85) 0%, rgba(10,22,40,0.95) 100%), url("/images/seo/auto_sleutel_utrecht_achtergrond_service.webp")',
@@ -51,7 +90,7 @@ const breadcrumbSchema = {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
           <div>
             <h2 style={{ fontSize: '1.6rem', fontWeight: 700, marginBottom: '0.75rem' }}>Wie Zijn Wij?</h2>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Autosleutel24 Utrecht is een gecertificeerde autosleutelspecialist met jarenlange ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Autosleutel24 Utrecht wordt geleid door Berkan Acarol, een gecertificeerd autosleutelspecialist met jarenlange ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
             <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Wij zijn een mobiele dienst gespecialiseerd in autosleutelprogrammering voor alle merken en modellen. Wij komen naar u toe — of u nu thuis bent, op het werk, of gestrand langs de weg.</p>
             <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1rem' }}>Onze focus: eerlijke prijzen, snelle reactie, en technisch excellent werk. Geen vage verhalen — gewoon het probleem oplossen.</p>
 
@@ -62,6 +101,26 @@ const breadcrumbSchema = {
               <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Kwaliteit</strong> — Professionele tools, geen goedkope alternatieven</span></li>
               <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Bereikbaarheid</strong> — 24/7, ook weekend en feestdagen</span></li>
             </ul>
+          </div>
+
+          <div>
+            <img
+              src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+              alt="Berkan Acarol — Hoofdtechnicus"
+              style={{
+                width: '100%',
+                maxWidth: '340px',
+                height: '220px',
+                objectFit: 'cover',
+                objectPosition: 'top',
+                borderRadius: '4px',
+                border: '1px solid #cbd5e1',
+                display: 'block',
+                marginBottom: '0.75rem'
+              }}
+            />
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.2rem' }}>Berkan Acarol</h3>
+            <p style={{ color: 'var(--orange-500)', fontWeight: 600, fontSize: '0.85rem', margin: 0 }}>Hoofdtechnicus</p>
           </div>
         </div>
 
@@ -130,7 +189,7 @@ const breadcrumbSchema = {
         <div className="seo-article-block" style={{ marginTop: '2rem', marginBottom: '3.5rem' }}>
           <h2>Waarom Onze Slotenmakers en Mobiele Service Koploper in Nederland Zijn</h2>
           <p>
-            Bij <strong>{SITE_CONFIG.name}</strong> geloven we in vakmanschap, eerlijke communicatie en snelle hulp. Ons team werkt continu met de modernste sleutel- en diagnosesoftware op de markt. Waar veel garages stoppen bij het leveren van standaard mechanische sleutels, zijn wij gespecialiseerd in complexe voertuigelektronica, EEPROM-lezen, CAN-bus beveiligingen en het inleren van transponderchips op fabrieksniveau.
+            Bij <strong>{SITE_CONFIG.name}</strong> geloven we in vakmanschap, eerlijke communicatie en snelle hulp. Berkan Acarol en zijn team werken continu met de modernste sleutel- en diagnosesoftware op de markt. Waar veel garages stoppen bij het leveren van standaard mechanische sleutels, zijn wij gespecialiseerd in complexe voertuigelektronica, EEPROM-lezen, CAN-bus beveiligingen en het inleren van transponderchips op fabrieksniveau.
           </p>
           <h3>Geen Tussenpersonen of Callcenters</h3>
           <p>
