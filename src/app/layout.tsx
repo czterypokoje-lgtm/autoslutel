@@ -182,11 +182,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="nl">
       <head>
-        {/* ── iubenda Cookie Solution & Privacy Controls ── */}
-        <Script
-          strategy="afterInteractive"
-          src="https://embeds.iubenda.com/widgets/c53c352b-ed07-4c5b-b461-8b542ddd3aaf.js"
-        />
 
         <meta name="theme-color" content="#0d2137" />
 
@@ -235,6 +230,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <WhatsAppButton />
         <StickyCallBar />
+        {/* ── iubenda Cookie Solution & Privacy Controls ── */}
+        <Script
+          strategy="lazyOnload"
+          src="https://embeds.iubenda.com/widgets/c53c352b-ed07-4c5b-b461-8b542ddd3aaf.js"
+        />
       </body>
     </html>
   );
