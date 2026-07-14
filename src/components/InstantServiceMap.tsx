@@ -48,12 +48,12 @@ export default function InstantServiceMap() {
 
       {/* Google My Maps embed — no negative margin hack that breaks in modern browsers */}
       <iframe
-        src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4&ehbc=2E312F&noprof=1"
+        src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4"
         width="100%"
         height="480"
-        style={{ border: 0, display: 'block' }}
+        style={{ border: 0, display: 'block', background: '#fff' }}
         allowFullScreen
-        loading="eager"
+        loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
         title="Autosleutel24 Servicegebied"
         onLoad={() => setLoaded(true)}
