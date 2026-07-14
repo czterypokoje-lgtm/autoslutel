@@ -8,8 +8,8 @@ export async function GET() {
   
   const payload = {
     host: "www.autosleutel24.nl",
-    key: "9b74c8e1a53f47d89e2c6a0b1f3d5c8e",
-    keyLocation: "https://www.autosleutel24.nl/9b74c8e1a53f47d89e2c6a0b1f3d5c8e.txt",
+    key: "3afd2ed80ce14931a7e74761f40741d6",
+    keyLocation: "https://www.autosleutel24.nl/3afd2ed80ce14931a7e74761f40741d6.txt",
     urlList: urls
   };
   
