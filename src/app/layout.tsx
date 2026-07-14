@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
-
+import Script from 'next/script';
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -182,10 +182,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="nl">
       <head>
-        {/* ── iubenda Cookie Solution & Privacy Controls — MUST be first in <head> ── */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          type="text/javascript"
+        {/* ── iubenda Cookie Solution & Privacy Controls ── */}
+        <Script
+          strategy="afterInteractive"
           src="https://embeds.iubenda.com/widgets/c53c352b-ed07-4c5b-b461-8b542ddd3aaf.js"
         />
 

@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import styles from './Navigation.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
@@ -88,9 +89,11 @@ export default function Navigation() {
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="Autosleutel24.nl — 24/7 Autosleutelspecialist Utrecht homepage">
-          <img
+          <Image
             src="/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp"
             alt="Autosleutel24 Logo"
+            width={128}
+            height={38}
             style={{ height: '38px', width: 'auto', display: 'block' }}
           />
         </Link>
