@@ -298,23 +298,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <h2>Professionele Mobiele Service — Direct Ter Plaatse</h2>
                   
-                  {serviceImages.length > 0 ? (
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                      gap: '1rem',
-                      margin: '1.25rem 0'
-                    }}>
-                      {serviceImages.map((src, i) => (
-                        <img 
-                          key={i}
-                          src={src} 
-                          alt={`${service.title} door Autosleutel24 mobiele service - impressie`} 
-                          style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
-                        />
-                      ))}
-                    </div>
-                  ) : slug === 'autodeur-openen' ? (
+                  {slug === 'autodeur-openen' ? (
                     <img 
                       src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
                       alt="Auto deur schadevrij openen door professionele mobiele slotenmaker in Utrecht - 24/7 service" 
@@ -365,6 +349,22 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                         alt="Contactslot reparatie Amsterdam - mobiele slotenmaker repareert vastgelopen contactslot op locatie" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
+                    </div>
+                  ) : serviceImages.length > 0 ? (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                      gap: '1rem',
+                      margin: '1.25rem 0'
+                    }}>
+                      {serviceImages.map((src, i) => (
+                        <img 
+                          key={i}
+                          src={src} 
+                          alt={`${service.title} door Autosleutel24 mobiele service - impressie`} 
+                          style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                        />
+                      ))}
                     </div>
                   ) : (
                     <img 
