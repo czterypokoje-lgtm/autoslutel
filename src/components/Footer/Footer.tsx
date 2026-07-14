@@ -112,10 +112,6 @@ export default function Footer() {
             <ul className={styles.linkList}>
               {steden.map(([label, href]) => <li key={href}><Link href={href}>{label}</Link></li>)}
             </ul>
-            <h4 className={styles.colTitle} style={{marginTop:'1.5rem'}}>Spoedhulp</h4>
-            <ul className={styles.linkList}>
-              {spoed.map(([label, href]) => <li key={href}><Link href={href} style={{color:'#f87171'}}>{label}</Link></li>)}
-            </ul>
           </div>
 
           {/* Openingstijden */}
