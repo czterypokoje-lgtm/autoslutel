@@ -208,6 +208,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
 
         <meta name="theme-color" content="#0d2137" />
+        <meta name="yandex-verification" content="94f695ae8808f677" />
 
         {/* ── GEO META TAGS — Local SEO signals for Google & Bing ── */}
         <meta name="geo.region" content="NL-UT" />
