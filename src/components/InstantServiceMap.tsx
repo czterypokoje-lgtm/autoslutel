@@ -21,7 +21,8 @@ export default function InstantServiceMap() {
         style={{
           border: 'none',
           width: '100%',
-          height: '100%',
+          height: 'calc(100% + 65px)',
+          marginTop: '-65px',
           display: 'block',
         }}
         allowFullScreen
