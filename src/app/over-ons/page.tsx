@@ -150,7 +150,7 @@ export default function OverOnsPage() {
             <img 
               src="/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.webp" 
               alt="Slotenmaker in Utrecht werkzaamheden op locatie 24 uur service" 
-              style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
+              style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', objectPosition: 'top', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
           </div>
         </div>
