@@ -5,9 +5,9 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Over Ons | Berkan Acarol Slotenmaker | Autosleutel24',
+    absolute: 'Over Ons | Mobiele Autosleutelspecialist | Autosleutel24',
   },
-  description: `Ontmoet Berkan Acarol, gecertificeerd autosleutelspecialist. Autosleutel24 Utrecht — dealer-niveau programmering, alle merken. KVK geregistreerd, verzekerd, 24/7 beschikbaar.`,
+  description: `Ontmoet ons team van gecertificeerde autosleutelspecialisten. Autosleutel24 Utrecht — dealer-niveau programmering, alle merken. KVK geregistreerd, verzekerd, 24/7 beschikbaar.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/over-ons`,
     languages: {
