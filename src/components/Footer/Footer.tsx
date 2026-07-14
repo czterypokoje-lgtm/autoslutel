@@ -139,6 +139,21 @@ export default function Footer() {
 
         <div className={styles.bottomBar}>
           <div className={styles.bottomInner}>
+            <div className={styles.footerSeoText} style={{ marginBottom: '2rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <h4 style={{ color: '#fff', fontSize: '1rem', marginBottom: '1rem' }}>Dé Landelijke Autosleutelspecialist</h4>
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', lineHeight: '1.6', marginBottom: '1rem' }}>
+                Autosleutel24 is dé betrouwbare en mobiele autosleutelspecialist van Nederland. Waar u bij een traditionele merkdealer vaak weken moet wachten op een vervangende sleutel en te maken krijgt met hoge wegsleepkosten, komen wij direct naar uw locatie. Onze volledig uitgeruste mobiele werkplaatsen zijn voorzien van de nieuwste OEM-diagnoseapparatuur en CNC-sleutelfreesmachines. Of u nu langs de snelweg staat, op uw werk bent of thuis op de oprit staat, wij programmeren en frezen ter plaatse een nieuwe sleutel voor u. Dit bespaart u niet alleen aanzienlijk veel tijd, maar is in vrijwel alle gevallen ook nog eens 30% tot 50% voordeliger dan de dealer.
+              </p>
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', lineHeight: '1.6', marginBottom: '1rem' }}>
+                Heeft u een <strong>Smart Key</strong>, een klassieke <strong>transpondersleutel</strong> of bent u <strong>alle autosleutels kwijt</strong> (All Keys Lost)? Onze gecertificeerde monteurs lossen het voor u op. Wij zijn gespecialiseerd in het 100% schadevrij openen van autodeuren met behulp van Lishi-lockdecoders. Zodra we toegang hebben, wissen we indien gewenst verloren sleutels uit de boordcomputer (ECU/BSI) voor uw veiligheid en leren we direct de nieuwe sleutel in. U krijgt bij ons altijd vooraf een vaste prijsopgave, zodat u achteraf nooit voor verrassingen komt te staan.
+              </p>
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', lineHeight: '1.6', marginBottom: '1rem' }}>
+                Kwaliteit en betrouwbaarheid staan bij Autosleutel24 voorop. Daarom ontvangt u op elke nieuwe of gerepareerde autosleutel standaard 12 maanden schriftelijke garantie. Onze diensten worden in veel gevallen vergoed door uw verzekering (afhankelijk van uw polis). Bel of WhatsApp ons 24/7 voor spoedhulp, we zijn gemiddeld binnen 30 tot 60 minuten ter plaatse in regio Utrecht, Amsterdam, Almere, Amersfoort en de rest van Midden-Nederland.
+              </p>
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', lineHeight: '1.6' }}>
+                Wij ondersteunen vrijwel alle Europese, Aziatische en Amerikaanse automerken. Of u nu rijdt in een Volkswagen, BMW, Audi, Mercedes-Benz, Peugeot, Renault, Ford of Toyota; onze mobiele apparatuur is merk-specifiek en up-to-date. Zelfs voor complexe systemen zoals BMW CAS4/FEM, Mercedes FBS3/FBS4 of VAG MQB bent u bij ons aan het juiste adres. Ontdek het gemak van een professionele auto slotenmaker die 24 uur per dag, 7 dagen per week voor u klaarstaat met de beste service, eerlijke prijzen en 100% klanttevredenheid.
+              </p>
+            </div>
             <p>© {year} {SITE_CONFIG.fullName}. Alle rechten voorbehouden.</p>
             <div className={styles.bottomLinks}>
               {/* iubenda Privacy Policy embedded link */}
