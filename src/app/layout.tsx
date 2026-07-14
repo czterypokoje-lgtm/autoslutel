@@ -182,6 +182,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="nl">
       <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-C4WR7TYCTV"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-C4WR7TYCTV');
+          `}
+        </Script>
 
         <meta name="theme-color" content="#0d2137" />
 
