@@ -9,6 +9,8 @@ import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleRevi
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import styles from './page.module.css';
+import fs from 'fs';
+import path from 'path';
 
 export async function generateStaticParams() {
   return DIENSTEN.map(s => ({ slug: s.slug }));
@@ -58,8 +60,32 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
   const p1Cities = CITIES.filter(c => c.priority === 'P1').slice(0, 8);
   const popularBrands = BRANDS.filter(b => b.priority === 'P1').slice(0, 8);
 
-  const isOpening = ['autodeur-openen', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto'].includes(slug);
-  const isKey = ['sleutel-bijmaken', 'autosleutel-kwijt', 'alle-sleutels-kwijt-auto', 'reserve-autosleutel', 'transponder-programmeren', 'smart-key-programmeren'].includes(slug);
+  const isOpening = ['autodeur-openen', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto', 'auto-openen-zonder-sleutel'].includes(slug);
+  const isKey = ['sleutel-bijmaken', 'autosleutel-kwijt', 'alle-sleutels-kwijt-auto', 'reserve-autosleutel', 'transponder-programmeren', 'smart-key-programmeren', 'autosleutel-bijmaken'].includes(slug);
+
+  // Load recent work images for this service
+  const imagesDirMerken = path.join(process.cwd(), 'public', 'images', 'merken');
+  const imagesDirDiensten = path.join(process.cwd(), 'public', 'images', 'diensten');
+  let serviceImages: string[] = [];
+  try {
+    if (fs.existsSync(imagesDirMerken)) {
+      const files = fs.readdirSync(imagesDirMerken);
+      const matched = files.filter(f => {
+        if (isOpening && f.includes('auto-openen-zonder-sleutel')) return true;
+        if (isKey && f.includes('autosleutel-bijmaken')) return true;
+        return false;
+      });
+      // Mix up the array to get a variety
+      const shuffled = matched.sort(() => 0.5 - Math.random());
+      serviceImages.push(...shuffled.slice(0, 4).map(f => `/images/merken/${f}`));
+    }
+    
+    // Fallback/fill with general equipment if needed
+    if (fs.existsSync(imagesDirDiensten) && serviceImages.length < 4) {
+      const equipFiles = fs.readdirSync(imagesDirDiensten);
+      serviceImages.push(...equipFiles.slice(0, 4 - serviceImages.length).map(f => `/images/diensten/${f}`));
+    }
+  } catch (e) {}
 
   const trustItems = [
     '24/7 Mobiele Service',
@@ -271,7 +297,24 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 {/* Section 2.5: SEO Image & Expert Description */}
                 <div>
                   <h2>Professionele Mobiele Service — Direct Ter Plaatse</h2>
-                  {slug === 'autodeur-openen' ? (
+                  
+                  {serviceImages.length > 0 ? (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                      gap: '1rem',
+                      margin: '1.25rem 0'
+                    }}>
+                      {serviceImages.map((src, i) => (
+                        <img 
+                          key={i}
+                          src={src} 
+                          alt={`${service.title} door Autosleutel24 mobiele service - impressie`} 
+                          style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                        />
+                      ))}
+                    </div>
+                  ) : slug === 'autodeur-openen' ? (
                     <img 
                       src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
                       alt="Auto deur schadevrij openen door professionele mobiele slotenmaker in Utrecht - 24/7 service" 

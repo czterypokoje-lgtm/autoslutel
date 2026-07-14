@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
+import fs from 'fs';
+import path from 'path';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
@@ -55,6 +57,16 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
   });
 
   if (!brand) notFound();
+
+  // Load recent work images
+  const imagesDir = path.join(process.cwd(), 'public', 'images', 'merken');
+  let recentWorkImages: string[] = [];
+  try {
+    const files = fs.readdirSync(imagesDir);
+    recentWorkImages = files.filter(f => f.toLowerCase().startsWith(brand.nameSlug.toLowerCase() + '-'));
+  } catch (e) {
+    // ignore
+  }
 
   // Group models alphabetically (A-Z or 0-9)
   const modelsSorted = [...(brand.models || [])].sort((a, b) => a.name.localeCompare(b.name, 'nl'));
@@ -117,6 +129,28 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             </div>
           </div>
         </section>
+
+        {/* ── RECENT WERK GALLERY ── */}
+        {recentWorkImages.length > 0 && (
+          <section style={{ padding: '4.5rem 0', background: '#ffffff' }}>
+            <div className="container">
+              <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--orange-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Recente Projecten</span>
+                <h2 style={{ fontSize: '1.9rem', fontWeight: 800, color: '#0f172a', marginTop: '0.35rem' }}>
+                  Recent Werk: {brand.name} Autosleutels
+                </h2>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
+                {recentWorkImages.map((img, idx) => (
+                  <div key={idx} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`/images/merken/${img}`} alt={`${brand.name} sleutel bijmaken`} style={{ width: '100%', height: '220px', objectFit: 'cover', display: 'block' }} loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── A–Z COMPLETE MODEL CATALOG & YEAR GUIDE ── */}
         <section id="modellen" style={{ padding: '4.5rem 0', background: '#f8fafc' }}>
