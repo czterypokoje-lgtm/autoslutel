@@ -406,7 +406,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   <ul className={styles.bulletList}>
                     {popularBrands.map(b => (
                       <li key={b.slug}>
-                        <Link href={`/steden/utrecht/${b.nameSlug}-autosleutel-bijmaken`}>
+                        <Link href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken`}>
                           {b.name}
                         </Link>
                         {' '}— Systeem: {b.system}
@@ -427,7 +427,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   <ul className={styles.bulletList}>
                     {CITIES.map((c) => (
                       <li key={c.slug}>
-                        <Link href={`/steden/${c.slug}/${slug}`}>
+                        <Link href={`/steden/${c.slug}`}>
                           {c.city}
                         </Link>
                         {` — Directe mobiele noodservice ter plaatse binnen ${c.travelTime}`}
@@ -616,7 +616,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   <div className="seo-hub-title">Automerken voor {service.title}</div>
                   <div className="seo-hub-col">
                     {BRANDS.map(b => (
-                      <Link key={b.slug} href={`/steden/utrecht/${b.nameSlug}-autosleutel-bijmaken`} className="seo-hub-link">
+                      <Link key={b.slug} href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken`} className="seo-hub-link">
                         {`${b.name} Autosleutel Bijmaken →`}
                       </Link>
                     ))}
@@ -626,7 +626,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   <div className="seo-hub-title">{service.title} per Stad</div>
                   <div className="seo-hub-col">
                     {CITIES.map(c => (
-                      <Link key={c.slug} href={`/steden/${c.slug}/${service.slug}`} className="seo-hub-link">
+                      <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
                         {`${service.title} ${c.city} →`}
                       </Link>
                     ))}

@@ -410,13 +410,7 @@ export default function HomePage() {
                 <span className={styles.brandModelsText}> — 911, Cayenne, Macan, Panamera, Taycan (BCM &amp; Kessy transponders)</span>
               </div>
             </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/smart-autosleutel-bijmaken" className={styles.brandLinkOrange}>Smart</Link>
-                <span className={styles.brandModelsText}> — ForTwo, ForFour, #1, #3 (SAM unit &amp; sleutel inleren)</span>
-              </div>
-            </div>
+
           </div>
           <Link href="/merken" className={styles.brandsAllLink}>
             Bekijk alle merken die wij bedienen →
