@@ -15,7 +15,7 @@ export const SITE_CONFIG = {
   email: 'info@autosleutel24.nl',
 
   address: {
-    street: 'Stationsplein 11', // Example central Utrecht address for HQ
+    street: 'Stationsplein 11',
     city: 'Utrecht',
     region: 'Utrecht',
     postal: '3511 ED',
