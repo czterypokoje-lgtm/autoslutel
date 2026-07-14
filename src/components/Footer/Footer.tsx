@@ -31,7 +31,7 @@ const steden = [
 const spoed = [
   ['Autosleutel Kwijt', '/autosleutel-kwijt'],
   ['Auto Openen Zonder Sleutel', '/diensten/auto-openen-zonder-sleutel'],
-  ['24/7 Spoedhulp', '/spoedhulp-autosleutel'],
+  ['24/7 Spoedhulp', '/diensten/auto-slotenmaker'],
 ];
 
 export default function Footer() {

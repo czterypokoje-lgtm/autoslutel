@@ -150,7 +150,7 @@ export default function AutoOpSlot() {
 
         <section style={{ padding: '2rem 0', textAlign: 'center' }}>
           <div className="container">
-            <p>Meer problemen oplossen: <Link href="/autosleutel-kwijt">Autosleutel Kwijt</Link> · <Link href="/spoedhulp-autosleutel">24/7 Spoedhulp</Link> · <Link href="/auto-openen-zonder-sleutel">Auto Openen Zonder Sleutel</Link></p>
+            <p>Meer problemen oplossen: <Link href="/autosleutel-kwijt">Autosleutel Kwijt</Link> · <Link href="/diensten/auto-slotenmaker">24/7 Spoedhulp</Link> · <Link href="/diensten/auto-openen-zonder-sleutel">Auto Openen Zonder Sleutel</Link></p>
           </div>
         </section>
       </main>
