@@ -44,7 +44,7 @@ export default function Footer() {
             <div className={styles.footerBrand}>
               <img
                 src="/images/logo/autosleutel24-logo-footer-wit-utrecht.webp"
-                alt="Autosleutel24.nl Wit Logo — 24/7 Mobiele Autosleutel Slotenmaker Utrecht [GPS: 52.0907° N, 5.1214° E]"
+                alt="Autosleutel24 Logo (Wit)"
                 style={{ height: '42px', width: 'auto', display: 'block' }}
               />
             </div>

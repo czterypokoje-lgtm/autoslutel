@@ -90,7 +90,7 @@ export default function Navigation() {
         <Link href="/" className={styles.logo} aria-label="Autosleutel24.nl — 24/7 Autosleutelspecialist Utrecht homepage">
           <img
             src="/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp"
-            alt="Autosleutel24.nl Logo — 24/7 Mobiele Autosleutel Slotenmaker Utrecht [GPS: 52.0907° N, 5.1214° E]"
+            alt="Autosleutel24 Logo"
             style={{ height: '38px', width: 'auto', display: 'block' }}
           />
         </Link>
