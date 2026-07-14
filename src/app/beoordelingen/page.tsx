@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
-import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
+import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
+import { generateContextualReviews } from '@/utils/reviews';
 
 export const metadata: Metadata = {
   title: {
@@ -27,18 +28,12 @@ export default function BeoordelingenPage() {
       </section>
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))',
-          gap: '1.5rem',
-          marginBottom: '3rem'
-        }}>
-          {SHARED_GOOGLE_REVIEWS.map((r, i) => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
+          {generateContextualReviews('autosleutel', 'general').map((r, i) => (
             <GoogleReviewCard key={i} review={r} />
           ))}
-          {/* We duplicate them for the sake of the page layout, simulating 6 reviews */}
-          {SHARED_GOOGLE_REVIEWS.map((r, i) => (
-            <GoogleReviewCard key={`dup-${i}`} review={{...r, name: r.name + ' (2)'}} />
+          {generateContextualReviews('Utrecht', 'city').map((r, i) => (
+            <GoogleReviewCard key={i + 10} review={r} />
           ))}
         </div>
 

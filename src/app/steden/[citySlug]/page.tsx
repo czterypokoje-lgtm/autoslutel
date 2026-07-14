@@ -7,7 +7,8 @@ import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import { DIENSTEN } from '@/config/diensten';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
+import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
+import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 import UtrechtSeo from '@/content/seo/utrecht';
 import AmsterdamSeo from '@/content/seo/amsterdam';
@@ -468,7 +469,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </div>
             </div>
             <div className={styles.reviewGrid}>
-              {SHARED_GOOGLE_REVIEWS.map((review, i) => (
+              {generateContextualReviews(city.name, 'city').map((review, i) => (
                 <GoogleReviewCard key={i} review={review} />
               ))}
             </div>

@@ -7,7 +7,8 @@ import path from 'path';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
+import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
+import { generateContextualReviews } from '@/utils/reviews';
 
 export async function generateStaticParams() {
   return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
@@ -298,7 +299,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             <h2 className="text-center" style={{ marginBottom: '0.5rem' }}>Wat Klanten Zeggen over Onze {brand.name} Service</h2>
             <p className="text-center" style={{ color: 'var(--gray-600)', marginBottom: '2.5rem' }}>Beoordeeld met 4.9 / 5.0 op basis van honderden tevreden automobilisten</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
-              {SHARED_GOOGLE_REVIEWS.slice(0, 3).map((r, idx) => (
+              {generateContextualReviews(brand.name, 'brand').map((r, idx) => (
                 <GoogleReviewCard key={idx} review={r} />
               ))}
             </div>

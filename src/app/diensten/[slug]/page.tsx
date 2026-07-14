@@ -5,7 +5,8 @@ import Script from 'next/script';
 import { DIENSTEN } from '@/config/diensten';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
+import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
+import { generateContextualReviews } from '@/utils/reviews';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import styles from './page.module.css';
@@ -577,7 +578,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 </div>
               </div>
               <div className={styles.reviewGrid}>
-                {SHARED_GOOGLE_REVIEWS.map((review, i) => (
+                {generateContextualReviews(dienst.title, 'service').map((review, i) => (
                   <GoogleReviewCard key={i} review={review} />
                 ))}
               </div>

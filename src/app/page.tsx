@@ -7,7 +7,8 @@ import dynamic from 'next/dynamic';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 import FaqSection from '@/components/FaqSection/FaqSection';
-import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
+import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
+import { generateContextualReviews } from '@/utils/reviews';
 import InstantServiceMap from '@/components/InstantServiceMap';
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
@@ -579,7 +580,7 @@ export default function HomePage() {
           </div>
           <h3 className="text-center" style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Ervaringen van klanten</h3>
           <div className={styles.reviewGrid}>
-            {SHARED_GOOGLE_REVIEWS.map((r, i) => (
+            {generateContextualReviews('autosleutel', 'general').map((r, i) => (
               <GoogleReviewCard key={i} review={r} />
             ))}
           </div>

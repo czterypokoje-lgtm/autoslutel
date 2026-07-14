@@ -12,30 +12,7 @@ export interface GoogleReview {
   snippet?: string; // For "lees verder" truncation
 }
 
-export const SHARED_GOOGLE_REVIEWS: GoogleReview[] = [
-  {
-    name: 'Yuri Sharapa',
-    avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=YuriSharapa',
-    date: '2 jaar geleden',
-    rating: 5,
-    text: 'Hi!\n\nYesterday I slammed the door in the evening and left the key inside. I called Autosleutel24 and within 30 minutes someone was there. Very professional!'
-  },
-  {
-    name: 'Aicha Kone',
-    avatarLetter: 'A',
-    avatarColor: '#e81c62',
-    date: '2 jaar geleden',
-    rating: 5,
-    text: 'Thank you for your good service. I call their for my car lock. their service is soo fast, I am really impressed.'
-  },
-  {
-    name: 'Lisa van den Bor',
-    avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=LisaBor',
-    date: '2 jaar geleden',
-    rating: 5,
-    text: 'Sleutel aan de binnenkant van de deur laten zitten, stom! Ze stonden gelukkig zelfs op zondag binnen 20 minuten voor de deur en Jeffrey maakte onze deur 100% schadevrij open.'
-  }
-];
+
 
 export default function GoogleReviewCard({ review }: { review: GoogleReview }) {
   return (

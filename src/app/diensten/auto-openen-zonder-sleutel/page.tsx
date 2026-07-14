@@ -3,7 +3,8 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard, { SHARED_GOOGLE_REVIEWS } from '@/components/GoogleReviewCard/GoogleReviewCard';
+import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
+import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -562,7 +563,7 @@ export default function AutoOpenenZonderSleutelPage() {
               </div>
             </div>
             <div className={styles.reviewGrid}>
-              {SHARED_GOOGLE_REVIEWS.map((review, i) => (
+              {generateContextualReviews('auto openen', 'service').map((review, i) => (
                 <GoogleReviewCard key={i} review={review} />
               ))}
             </div>
