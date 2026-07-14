@@ -63,6 +63,7 @@ export default function InstantServiceMap() {
         height=100% fills the 480px parent container.
       */}
       <iframe
+        data-cmp-ab="1"
         src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4&ehbc=2E312F"
         style={{
           border: 'none',
