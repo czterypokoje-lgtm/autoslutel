@@ -162,8 +162,8 @@ export default function OverOnsPage() {
           </div>
           <div>
             <img 
-              src="/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp" 
-              alt="Grote voorraad autosleutels slotenmaker Utrecht" 
+              src="/images/seo/auto-autoslotenmaker-werkplaats-hilversum-autosleutel24.jpg" 
+              alt="Grote voorraad autosleutels slotenmaker Hilversum" 
               style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
           </div>
