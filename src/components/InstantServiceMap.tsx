@@ -1,52 +1,31 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function InstantServiceMap() {
-  const [visible, setVisible] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [showSpinner, setShowSpinner] = useState(true);
 
-  // Only start loading the iframe once this div is actually in the viewport
+  // Hide the spinner after 3.5 seconds no matter what
+  // This guarantees the iframe is always visible even if onLoad never fires
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  // Failsafe: after 6 seconds force-show whatever is loaded
-  useEffect(() => {
-    if (!visible) return;
-    const t = setTimeout(() => setLoaded(true), 6000);
+    const t = setTimeout(() => setShowSpinner(false), 3500);
     return () => clearTimeout(t);
-  }, [visible]);
+  }, []);
 
   return (
     <div
-      ref={ref}
       style={{
         width: '100%',
         height: '480px',
         borderRadius: '16px',
         overflow: 'hidden',
         boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
-        background: '#e8eaf0',
         position: 'relative',
+        background: '#e8eaf0',
       }}
     >
-      {/* Loading spinner shown until the iframe fires onLoad */}
-      {!loaded && (
+      {/* Spinner overlay — disappears after 3.5s or when iframe loads */}
+      {showSpinner && (
         <div
           style={{
             position: 'absolute',
@@ -58,6 +37,7 @@ export default function InstantServiceMap() {
             gap: '12px',
             background: '#f1f3f5',
             zIndex: 2,
+            pointerEvents: 'none',
           }}
         >
           <div
@@ -77,20 +57,24 @@ export default function InstantServiceMap() {
         </div>
       )}
 
-      {/* Only render the iframe once it is visible in viewport */}
-      {visible && (
-        <iframe
-          src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4"
-          width="100%"
-          height="100%"
-          style={{ border: 0, display: 'block', width: '100%', height: '100%' }}
-          allowFullScreen
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Autosleutel24 Servicegebied"
-          onLoad={() => setLoaded(true)}
-          onError={() => setLoaded(true)}
-        />
-      )}
+      {/* 
+        The iframe is ALWAYS rendered immediately — no conditional rendering.
+        We use the standard Google My Maps embed URL (no extra params).
+        height=100% fills the 480px parent container.
+      */}
+      <iframe
+        src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4"
+        style={{
+          border: 'none',
+          width: '100%',
+          height: '100%',
+          display: 'block',
+        }}
+        allowFullScreen
+        referrerPolicy="no-referrer-when-downgrade"
+        title="Autosleutel24 Servicegebied Utrecht en omstreken"
+        onLoad={() => setShowSpinner(false)}
+      />
     </div>
   );
 }
