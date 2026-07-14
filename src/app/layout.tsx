@@ -70,6 +70,9 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
     },
   },
+  verification: {
+    yandex: '94f695ae8808f677',
+  },
   // Google Search Console: verify via the HTML-tag method in GSC (Settings → Ownership verification → HTML tag)
   // Paste the <meta name="google-site-verification" content="..."> tag directly in this <head> block
 };
@@ -208,7 +211,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
 
         <meta name="theme-color" content="#0d2137" />
-        <meta name="yandex-verification" content="94f695ae8808f677" />
 
         {/* ── GEO META TAGS — Local SEO signals for Google & Bing ── */}
         <meta name="geo.region" content="NL-UT" />
