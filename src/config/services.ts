@@ -349,6 +349,14 @@ export const BLOG_POSTS = [
     publishDate: '2026-08-05',
     readTime: '6 min',
   },
+  {
+    slug: 'sleutel-in-auto-laten-liggen-oplossingen',
+    title: 'Sleutel in Auto Laten Liggen: Oplossingen & Preventietips',
+    excerpt: 'Laat je autosleutel in de auto liggen niet langer voor stress zorgen. Lees onze gids voor directe oplossingen, praktische tips en preventieve maatregelen om buitensluiting te voorkomen. Wat te doen als je sleutels verliest?',
+    keywords: ['sleutel in auto laten liggen', 'autosleutel in auto', 'auto op slot sleutel erin', 'buitengesloten auto', 'sleutels in de auto laten liggen'],
+    publishDate: '2026-08-05',
+    readTime: '6 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {
