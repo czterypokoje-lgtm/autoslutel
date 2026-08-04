@@ -1868,6 +1868,10 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
         <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
+            📞 {SITE_CONFIG.phone}
+          </a>
         </div>
       </div>
     </>
