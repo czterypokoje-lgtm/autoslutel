@@ -327,8 +327,8 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'autosleutel-bestellen-op-kenteken',
-    title: 'Autosleutels op kenteken: Zo werkt het',
-    excerpt: 'Het bestellen van een autosleutel op kenteken is een handige oplossing voor autobezitters. Dit proces maakt gebruik van het kenteken om de juiste sleutel te identificeren.',
+    title: 'Autosleutel Bestellen op Kenteken: Handleiding & Kosten',
+    excerpt: 'Het bestellen van een autosleutel op kenteken is een handige oplossing voor autobezitters. Dit proces maakt gebruik van het kenteken om de juiste sleutel te identificeren. Hierdoor wordt het eenvoudiger om snel een vervangende sleutel te verkrijgen.',
     keywords: ['autosleutel bestellen op kenteken', 'autosleutel bijmaken op kenteken', 'nieuwe autosleutel op kenteken'],
     publishDate: '2026-08-05',
     readTime: '5 min',
