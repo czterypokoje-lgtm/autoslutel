@@ -341,6 +341,14 @@ export const BLOG_POSTS = [
     publishDate: '2026-08-05',
     readTime: '7 min',
   },
+  {
+    slug: 'sleutel-kwijt-auto-vind-snel-oplossingen',
+    title: 'Sleutel Kwijt Auto? Vind Snel Oplossingen & Tips.',
+    excerpt: 'Ben je je sleutel kwijt van je auto en heb je geen reservesleutel? Lees onze gids voor het snel vinden van je autosleutels en ontdek wat te doen bij autosleutel kwijt zonder reserve!',
+    keywords: ['sleutel kwijt auto', 'autosleutel verloren', 'autosleutel kwijt geen reserve', 'reservesleutel auto kwijt', 'autosleutel kwijt zonder reserve'],
+    publishDate: '2026-08-05',
+    readTime: '6 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {
