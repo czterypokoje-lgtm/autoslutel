@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-
+import ContactForm from '@/components/ContactForm/ContactForm';
 export const metadata: Metadata = {
   title: {
     absolute: 'Contact & 24/7 Spoedhulp | Autosleutel24',
@@ -80,43 +80,7 @@ export default function ContactPage() {
           {/* Contact Form */}
           <div style={{ background: '#fff', padding: '2rem', borderRadius: '16px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-md)' }}>
             <h2 style={{ marginBottom: '1.5rem' }}>Offerte Aanvragen</h2>
-            <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} id="contact-form">
-              {[
-                { id: 'name', label: 'Naam', type: 'text', placeholder: 'Uw naam' },
-                { id: 'phone', label: 'Telefoonnummer', type: 'tel', placeholder: '06-XXXXXXXX' },
-                { id: 'car', label: 'Automerk & Model', type: 'text', placeholder: 'bijv. BMW 3-serie 2019' },
-                { id: 'email', label: 'E-mailadres', type: 'email', placeholder: 'uw@email.nl' },
-              ].map((field) => (
-                <div key={field.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                  <label htmlFor={field.id} style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>{field.label}</label>
-                  <input
-                    id={field.id}
-                    name={field.id}
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    required
-                    style={{ padding: '0.75rem 1rem', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '0.95rem', outline: 'none' }}
-                  />
-                </div>
-              ))}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                <label htmlFor="message" style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>Bericht / Situatie</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  placeholder="Beschrijf uw situatie..."
-                  style={{ padding: '0.75rem 1rem', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '0.95rem', resize: 'vertical', outline: 'none' }}
-                />
-              </div>
-              <button
-                type="submit"
-                id="contact-submit"
-                style={{ background: 'var(--color-primary)', color: '#fff', padding: '1rem', borderRadius: '8px', fontWeight: 700, fontSize: '1rem', border: 'none', cursor: 'pointer', marginTop: '0.5rem' }}
-              >
-                📋 Offerte Aanvragen
-              </button>
-            </form>
+            <ContactForm />
           </div>
         </div>
 

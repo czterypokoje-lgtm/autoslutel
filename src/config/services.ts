@@ -215,17 +215,17 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'autosleutel-batterij-vervangen-stappenplan',
-    title: 'Autosleutel Batterij Vervangen: Welke Batterij en Hoe Vervang Je Die?',
-    excerpt: 'Is de batterij van uw autosleutel leeg? Lees hier welk type batterij u nodig heeft per model en hoe u deze schadevrij vervangt zonder signaalverlies.',
-    keywords: ['autosleutel batterij vervangen', 'CR2032 batterij sleutel', 'sleutelbatterij leeg'],
+    title: 'Autosleutel Batterij Vervangen: Complete Gids',
+    excerpt: 'Ontdek hoe je eenvoudig een autosleutel batterij kunt vervangen, inclusief model-specifieke instructies voor VW, BMW, Mercedes en Tesla.',
+    keywords: ['autosleutel batterij vervangen', 'CR2032 batterij sleutel', 'sleutelbatterij leeg', 'vw sleutel batterij', 'bmw sleutel batterij', 'mercedes sleutel batterij', 'tesla sleutel batterij'],
     publishDate: '2026-03-26',
     readTime: '5 min',
   },
   {
     slug: 'autosleutel-gestolen-wat-te-doen',
     title: 'Autosleutel Gestolen of Auto Gestolen? Direct Actie Stappenplan',
-    excerpt: 'Is uw autosleutel gestolen of heeft u het vermoeden van autodiefstal? Lees hier welke stappen u direct moet ondernemen om uw auto te beveiligen en de verzekeringsdekking te garanderen.',
-    keywords: ['autosleutel gestolen', 'auto gestolen met sleutel', 'autosleutel deprogrammeren', 'verzekering autosleutel diefstal'],
+    excerpt: 'Is uw autosleutel gestolen of heeft u het vermoeden van autodiefstal? Auto gestolen wat nu? Lees hier welke stappen u direct moet ondernemen om uw auto te beveiligen en de verzekeringsdekking te garanderen.',
+    keywords: ['autosleutel gestolen', 'auto gestolen met sleutel', 'autosleutel deprogrammeren', 'verzekering autosleutel diefstal', 'auto gestolen wat nu'],
     publishDate: '2026-04-02',
     readTime: '6 min',
   },
@@ -317,6 +317,30 @@ export const BLOG_POSTS = [
     publishDate: '2026-07-14',
     readTime: '6 min',
   },
+  {
+    slug: 'sleutel-kwijt-auto-hulp-oplossingen',
+    title: 'Sleutel Kwijt Auto: Snel Hulp & Oplossingen',
+    excerpt: 'Ontdek wat te doen als u uw autosleutel kwijt bent, van snelle oplossingen tot kosten en verzekering. Leer hoe u stressvrij weer op weg komt!',
+    keywords: ['sleutel kwijt auto', 'autosleutel kwijt', 'autosleutel verloren', 'nieuwe autosleutel kosten', 'sleutel bijmaken zonder reserve'],
+    publishDate: '2026-08-04',
+    readTime: '6 min',
+  },
+  {
+    slug: 'autosleutel-bestellen-op-kenteken',
+    title: 'Autosleutels op kenteken: Zo werkt het',
+    excerpt: 'Het bestellen van een autosleutel op kenteken is een handige oplossing voor autobezitters. Dit proces maakt gebruik van het kenteken om de juiste sleutel te identificeren.',
+    keywords: ['autosleutel bestellen op kenteken', 'autosleutel bijmaken op kenteken', 'nieuwe autosleutel op kenteken'],
+    publishDate: '2026-08-05',
+    readTime: '5 min',
+  },
+  {
+    slug: 'auto-openen-zonder-sleutel-tips-hulp',
+    title: 'Auto Openen zonder Sleutel: Tips & Hulp voor Buitensluiting',
+    excerpt: 'Ontdek slimme methoden om je auto te openen zonder sleutel, van professionele hulp tot doe-het-zelf oplossingen. Voorkom buitensluiting met onze tips!',
+    keywords: ['auto openen zonder sleutel', 'auto openmaken zonder sleutel', 'buitengesloten auto', 'sleutel in auto laten liggen'],
+    publishDate: '2026-08-05',
+    readTime: '7 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {
@@ -361,6 +385,7 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
     // ── Autosleutel kwijt service page ───────────────────────────
     'autosleutel-kwijt': [
+      'sleutel-kwijt-auto-hulp-oplossingen',
       'autosleutel-kwijt-wat-nu-stappenplan',
       'alle-sleutels-kwijt-wat-nu-utrecht',
       'sleutel-kwijt-utrecht-stappenplan',

@@ -8,7 +8,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
     <>
       <h2>Hoe Vervang je de Batterij van je Autosleutel? (Model-per-Model Gids)</h2>
       <p>
-        Is uw <strong>batterij autosleutel leeg en start de auto niet</strong>? Of reageert de centrale vergrendeling pas als u heel dichtbij staat en geeft uw auto een waarschuwing op het dashboard? Dan is de <strong>autosleutel batterij</strong> aan vervanging toe. Dit is een eenvoudige klus die u in veel gevallen zelf kunt doen, mits u de juiste methode en de juiste batterij gebruikt. Als uw <strong>auto niet open gaat met de afstandsbediening</strong>, kunt u ook altijd de fysieke noodsleutel gebruiken om toegang te krijgen.
+        Is uw batterij autosleutel leeg en start de auto niet? Of reageert de centrale vergrendeling pas als u heel dichtbij staat en geeft uw auto een waarschuwing op het dashboard? Dan is de autosleutel batterij aan vervanging toe. Dit is een eenvoudige klus die u in veel gevallen zelf kunt doen, mits u de juiste methode en de juiste batterij gebruikt. Als uw auto niet open gaat met de afstandsbediening, kunt u ook altijd de fysieke noodsleutel gebruiken om toegang te krijgen.
       </p>
 
       <h3>Welke batterij voor uw autosleutel heeft u nodig?</h3>
@@ -16,7 +16,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Elk automerk maakt gebruik van specifieke lithium knoopcelbatterijen (3V). Het is cruciaal om een kwalitatieve A-merk batterij (zoals Duracell, Varta of Panasonic) te gebruiken. Goedkope batterijen verliezen snel hun spanning en kunnen gaan lekken, waardoor uw kostbare printplaat beschadigd raakt.
       </p>
       <ul>
-        <li><strong>Volkswagen, Seat & Skoda:</strong> Meestal een CR2032 knoopcel. Dit geldt voor zowel klapsleutels als de nieuwere smart keys. Voor de nieuwste MQB48 sleutels kan een CR2025 nodig zijn (bijv. <strong>vw sleutel batterij vervangen</strong> of <strong>skoda sleutel batterij vervangen</strong>).</li>
+        <li><strong>Volkswagen, Seat & Skoda:</strong> Meestal een CR2032 knoopcel. Dit geldt voor zowel klapsleutels als de nieuwere smart keys. Voor de nieuwste MQB48 sleutels kan een CR2025 nodig zijn.</li>
         <li><strong>BMW:</strong> E-chassis klapsleutels hebben een gesoldeerde oplaadbare accu (LIR2025). F- en G-serie smart fobs gebruiken respectievelijk de CR2032 en de extra dikke CR2450.</li>
         <li><strong>Mercedes-Benz:</strong> Vrijwel alle chromen sleutels (FBS3 & FBS4) gebruiken één of twee CR2025 batterijen.</li>
         <li><strong>Tesla:</strong> Model S en X key fobs gebruiken een CR2032 batterij. Model 3 en Y maken primair gebruik van keycards (RFID), maar als u de optionele key fob gebruikt, zit hier ook een CR2032 in.</li>
@@ -26,7 +26,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       
       <h4>1. VW & Skoda sleutel batterij vervangen</h4>
       <p>
-        Bij een <strong>vw sleutel batterij vervangen</strong> of <strong>skoda sleutel batterij vervangen</strong> klapt u eerst de sleutelbaard uit. Zoek de naad aan de zijkant van de behuizing en wip het achterklepje voorzichtig omhoog met een schroevendraaier of muntje. Verwijder de oude CR2032 en plaats de nieuwe met de pluspool (+) naar boven gericht. Druk het klepje weer stevig aan.
+        Bij een VW of Skoda sleutel klapt u eerst de sleutelbaard uit. Zoek de naad aan de zijkant van de behuizing en wip het achterklepje voorzichtig omhoog met een schroevendraaier of muntje. Verwijder de oude CR2032 en plaats de nieuwe met de pluspool (+) naar boven gericht. Druk het klepje weer stevig aan.
       </p>
 
       <h4>2. BMW F- & G-serie smart key batterij vervangen</h4>
@@ -46,12 +46,43 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Wat te doen als de sleutel nog steeds niet werkt?</h3>
       <p>
-        Heeft u de <strong>auto sleutel batterij vervangen</strong> maar reageert het voertuig nog steeds niet? Dan kan het zijn dat de sleutel zijn synchronisatie is verloren of dat de <strong>autosleutel kapot</strong> is. 
+        Heeft u de auto sleutel batterij vervangen maar reageert het voertuig nog steeds niet? Dan kan het zijn dat de sleutel zijn synchronisatie is verloren of dat de autosleutel kapot is.
       </p>
       <ul>
         <li><strong>Keyless auto starten met sleutel (noodprocedure):</strong> Houd de afstandsbediening direct tegen de stuurkolom (waar vaak een sleutel-icoontje staat) of druk de startknop in met de sleutel zelf. Hierdoor leest de auto de passieve transponderchip uit, zelfs als de afstandsbediening niet zendt.</li>
-        <li><strong>Sleutelbehuizing of knopjes kapot:</strong> Soms is de <strong>behuizing van de autosleutel kapot</strong> (<strong>behuizing autosleutel kapot</strong>) en maken de knopjes geen contact meer met de printplaat. Dan is een <strong>autosleutel behuizing vervangen</strong> of het solderen van nieuwe micro-switches de oplossing.</li>
+        <li><strong>Sleutelbehuizing of knopjes kapot:</strong> Soms is de behuizing van de autosleutel kapot en maken de knopjes geen contact meer met de printplaat. Dan is een autosleutel behuizing vervangen of het solderen van nieuwe micro-switches de oplossing.</li>
       </ul>
+
+      <div className="author-bio" style={{ marginTop: '3rem', padding: '1.5rem', backgroundColor: '#f9fafb', borderRadius: '8px', borderLeft: '4px solid var(--primary)' }}>
+        <h3 style={{ marginTop: 0 }}>Eigenaar & Gecertificeerd Hoofdtechnicus Autosleutel24 (10+ jaar ervaring)</h3>
+        <p style={{ marginBottom: 0 }}>
+          Berkan Acarol is de oprichter en hoofdtechnicus van Autosleutel24. Als specialist in voertuigelektronica en transponderbeveiliging is hij officieel gecertificeerd in Autel IM608 Pro II en AVDI Abrites diagnose- en programmeersystemen. Hij voert dagelijks complexe OBD2-inleerprocedures, EEPROM-reparaties en schadevrije auto-ontsluitingen uit in heel Midden-Nederland.
+        </p>
+      </div>
+
+      <div className="faq-section" style={{ marginTop: '3rem' }}>
+        <h3>Veelgestelde Vragen over Autosleutel Service op Locatie</h3>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <strong>Hoe snel zijn jullie ter plaatse?</strong>
+          <p>In regio Utrecht, Amsterdam en Midden-Nederland zijn onze mobiele monteurs gemiddeld binnen 30 tot 45 minuten bij uw voertuig.</p>
+        </div>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <strong>Wordt mijn auto schadevrij geopend?</strong>
+          <p>Ja, wij maken uitsluitend gebruik van professionele Lishi 2-in-1 lockdecoders. Er komt geen koevoet of breekijzer aan te pas, waardoor uw lak en portierslot 100% intact blijven.</p>
+        </div>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <strong>Krijg ik garantie op een nieuwe autosleutel?</strong>
+          <p>Ja, u ontvangt standaard 12 maanden garantie op de elektronica, transponderchip, batterij en behuizing van elke door ons geleverde en geprogrammeerde sleutel.</p>
+        </div>
+      </div>
+
+      <div className="cta-section" style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#eef2ff', borderRadius: '8px', textAlign: 'center' }}>
+        <h3 style={{ marginTop: 0, color: 'var(--primary-dark)' }}>Direct Een Autosleutel Laten Bijmaken of Programmeren?</h3>
+        <p>Onze gecertificeerde autosleutelspecialisten staan 24/7 voor u klaar.</p>
+        <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'inline-block', padding: '12px 24px', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem' }}>
+          📞 {SITE_CONFIG.phone}
+        </a>
+      </div>
     </>
   ),
   'ghost-immobiliser-utrecht': (
@@ -264,12 +295,12 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
     <>
       <h2>Autosleutel Gestolen of Auto Gestolen? Direct Actie Stappenplan</h2>
       <p>
-        Het is schrikken: u komt erachter dat uw autosleutel is gestolen, bijvoorbeeld na een woninginbraak, zakkenrollerij, of verlies in een openbare ruimte. Omdat moderne autosleutels zenders zijn waarmee uw auto direct geopend en gestart kan worden, is de diefstal van een autosleutel een direct risico voor uw complete voertuig. Met dit stappenplan weet u precies wat u moet doen om autodiefstal te voorkomen en uw verzekeringsrechten veilig te stellen.
+        Het is schrikken: u komt erachter dat uw autosleutel is gestolen, bijvoorbeeld na een woninginbraak, zakkenrollerij, of verlies in een openbare ruimte. Omdat moderne autosleutels zenders zijn waarmee uw auto direct geopend en gestart kan worden, is de diefstal van een autosleutel een direct risico voor uw complete voertuig. Met dit stappenplan weet u precies wat u moet doen om autodiefstal te voorkomen en uw verzekeringsrechten veilig te stellen. Is uw <strong>auto gestolen wat nu?</strong> <strong>Bel zo snel mogelijk</strong> en neem direct de juiste stappen om de kans dat u uw <strong>auto terug</strong> krijgt te vergroten.
       </p>
 
       <h3>Stap 1: Beveilig uw voertuig fysiek</h3>
       <p>
-        Staat de auto nog op de oprit of parkeerplaats? Zorg dat de auto direct buiten bereik van de gestolen sleutel is.
+        Staat de auto nog op de oprit of parkeerplaats? Zorg dat de <strong>auto binnen</strong> een veilige omgeving staat of in ieder geval direct buiten bereik van de gestolen sleutel is.
       </p>
       <ul>
         <li>Plaats de auto (indien mogelijk) direct in een afgesloten garage.</li>
@@ -277,17 +308,17 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         <li>Gebruik een mechanisch stuurslot of wielklem als tijdelijke barrière. Dit schrikt dieven af die snel met de gestolen sleutel willen wegrijden.</li>
       </ul>
 
-      <h3>Stap 2: Doe direct aangifte bij de politie</h3>
+      <h3>Stap 2: Doe direct aangifte bij de politie en het VbV</h3>
       <p>
-        Aangifte doen van diefstal van uw autosleutel is wettelijk verplicht en cruciaal voor uw verzekering. Vraag om een kopie van het proces-verbaal. Zonder dit bewijs zal uw verzekeraar de kosten voor nieuwe sleutels en eventuele diefstal van het voertuig niet dekken.
+        Aangifte doen van diefstal van uw autosleutel is wettelijk verplicht en cruciaal voor uw verzekering. Meld het direct bij het <strong>Landelijk Aangifteloket Gestolen Voertuigen</strong> (te bereiken via 088 - 66 28 288). U kunt ook <strong>telefonisch aangifte</strong> doen bij de politie. Zorg dat u uw <strong>rijbewijs en kentekenbewijs bij de hand</strong> houdt tijdens het gesprek. Heeft u de diefstal pas in de avond ontdekt? Geen probleem, u kunt bij het <strong>aangifteloket gestolen voertuigen via</strong> de telefoon tot na <strong>23.00 uur</strong> terecht. Vraag altijd om een kopie van het proces-verbaal.
       </p>
 
       <h3>Stap 3: Laat de gestolen sleutel direct deprogrammeren</h3>
       <p>
-        Dit is de belangrijkste stap om diefstal te voorkomen. Neem direct contact op met <strong>Autosleutel24</strong>. Onze mobiele technicus komt met spoed naar u toe op locatie. 
+        Dit is de belangrijkste stap om diefstal te voorkomen. <strong>Neem contact</strong> op met <strong>Autosleutel24</strong>. Onze mobiele technicus komt met spoed naar u toe op locatie. 
       </p>
       <p>
-        Via de OBD2-diagnosepoort loggen we in op de boardcomputer van uw auto. We kunnen de startmodule zo programmeren dat we de **gestolen autosleutel definitief wissen uit het geheugen**. De dief kan de auto dan met de gestolen afstandsbediening niet meer elektronisch openen en de motor weigert te starten. Tegelijkertijd programmeren en leveren we een nieuwe reservesleutel voor u.
+        Via de OBD2-diagnosepoort loggen we in op de boardcomputer van uw auto. We kunnen de startmodule zo programmeren dat we de gestolen autosleutel definitief wissen uit het geheugen. De dief kan de auto dan met de gestolen afstandsbediening niet meer elektronisch openen en de motor weigert te starten, zodat uw <strong>auto weer</strong> veilig is. Tegelijkertijd programmeren en leveren we een nieuwe reservesleutel voor u.
       </p>
 
       <h3>Stap 4: Mechanische sloten aanpassen of hercoderen</h3>
@@ -297,13 +328,14 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Stap 5: Informeer uw verzekeringsmaatschappij</h3>
       <p>
-        Meld de diefstal zo snel mogelijk bij uw autoverzekering. 
+        Meld de diefstal zo snel mogelijk bij uw autoverzekering, zodat u er zeker van bent dat u goed <strong>verzekerd bent</strong>. 
       </p>
       <ul>
-        <li><strong>WA Beperkt Casco (WA+) & All-Risk:</strong> Dekt diefstal van sleutels en het herprogrammeren/vervangen van de sloten vaak volledig, mits er aantoonbaar aangifte is gedaan.</li>
-        <li><strong>Sleuteloverdracht bij voertuigdiefstal:</strong> Let op dat de verzekeraar bij diefstal van de auto altijd zal vragen om alle originele sleutels te overhandigen om fraude uit te sluiten. Als u een sleutel mist door diefstal, moet u de factuur van de slotenmaker en het proces-verbaal kunnen overleggen.</li>
+        <li><strong>Volledig casco</strong> (All-Risk) of <strong>WA Beperkt Casco (WA+)</strong> dekt diefstal van sleutels en het herprogrammeren/vervangen van de sloten vaak volledig, mits er aantoonbaar aangifte is gedaan. Met alleen een <strong>WA verzekering</strong> bent u hiervoor helaas niet gedekt.</li>
+        <li><strong>Sleuteloverdracht bij voertuigdiefstal:</strong> Let op dat de verzekeraar bij diefstal van de auto altijd zal vragen om alle originele sleutels te overhandigen om fraude uit te sluiten. Als u een sleutel mist door diefstal, moet u de factuur van de slotenmaker en het proces-verbaal kunnen overleggen. Veel verzekeraars hanteren bovendien een wachttijd van <strong>30 dagen</strong> voordat zij definitief uitkeren, in de hoop dat de auto nog wordt teruggevonden.</li>
       </ul>
     </>
+
   ),
   'autosleutel-bijmaken-zonder-origineel': (
     <>
@@ -1367,6 +1399,478 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           </a>
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ background: '#25d366', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             💬 WhatsApp Direct
+          </a>
+        </div>
+      </div>
+    </>
+  ),
+  'sleutel-kwijt-auto-hulp-oplossingen': (
+    <>
+      <h2>Sleutel Kwijt Auto: Snel Hulp & Oplossingen</h2>
+      <p>
+        Het overkomt de besten: u zoekt overal, maar uw autosleutel kwijt is een vaststaand feit. U kunt nergens heen en de paniek slaat langzaam toe. Of u nu één autosleutel verloren heeft of in de uiterst vervelende situatie zit dat u alle autosleutels kwijt bent, het zorgt altijd voor flinke stress. Gelukkig zijn er diverse professionele oplossingen om u snel weer op weg te helpen. In dit artikel ontdekt u precies wat u kunt doen als u uw autosleutel kwijt bent, welke stappen u direct moet ondernemen, hoe het zit met de complexe techniek en wat de verwachte kosten zijn.
+      </p>
+
+      <h3>Eerste stappen wanneer u een sleutel mist</h3>
+      <p>
+        Wanneer u ontdekt dat u uw autosleutels nergens kunt vinden, is kalm blijven stap één. Voordat u meteen de hulplijnen belt, is het aan te raden eerst systematisch te zoeken. Controleer lades, jaszakken en plekken waar u recent bent geweest. Heeft u enkel uw reservesleutel kwijtgeraakt? Dan kunt u gelukkig nog gewoon rijden met uw hoofdsleutel. Wel is het in dit scenario enorm verstandig om direct een reserve autosleutel te laten bijmaken. Zo voorkomt u dat u in de toekomst met compleet lege handen staat.
+      </p>
+      <p>
+        Soms lijkt de sleutel weg te zijn, maar is er eigenlijk sprake van een defect. Werkt uw draadloze afstandsbediening plotseling niet meer? Probeer dan eerst de batterij van uw afstandsbediening te vervangen. Mocht de auto daarna nog steeds niet reageren, dan kunt u bijna altijd de mechanische noodsleutel in uw klapsleutel of smartkey gebruiken om in ieder geval de autodeur handmatig te ontgrendelen. Ligt de sleutel nog in de vergrendelde wagen en is uw andere sleutel onbereikbaar? Overweeg dan pechhulp in te schakelen voor het openen van uw autodeur. Een professional kan met speciaal gereedschap het portier vaak schadevrij voor u openen, zodat u direct weer bij uw sleutelbos kunt.
+      </p>
+
+      <h3>Volledig zonder sleutels: Wat nu?</h3>
+      <p>
+        De situatie wordt aanzienlijk complexer wanneer u beide autosleutels kwijt bent. Als u helemaal geen reservesleutel meer heeft, kan het voertuig niet zomaar meer gestart worden. Zonder een werkende, correct ingeleerde chip wordt de startonderbreker van de auto niet vrijgegeven. De startonderbreker deactiveren zonder sleutel is bewust nagenoeg onmogelijk gemaakt, omdat dit systeem juist ontworpen is om diefstal van uw voertuig effectief te voorkomen.
+      </p>
+      <p>
+        Als u zich in deze vervelende situatie bevindt, heeft u hulp van een specialist nodig. Een zeer efficiënte optie is het inschakelen van een mobiele autoslotenmaker op locatie. Deze experts komen direct naar uw oprit of parkeerplaats, kunnen ter plekke de autodeur openen, een nieuwe sleutel uitslijpen en deze direct inleren op uw boordcomputer.
+      </p>
+      <p>
+        Als alternatief kunt u een extra autosleutel aanvragen via de officiële dealer, hoewel de auto dan vaak door een bergingsbedrijf naar de garage gesleept moet worden. Bovendien kan de levertijd bij een dealer soms enkele werkdagen bedragen. In beide gevallen is het overigens essentieel dat u uw kentekenbewijs en een geldig legitimatiebewijs overhandigt om aan te tonen dat u de rechtmatige eigenaar bent. Vervolgens zal de gekozen specialist of merkdealer het chassisnummer gebruiken om de juiste fysieke sleutelbaard te kunnen produceren.
+      </p>
+
+      <h3>Wat zijn de kosten voor een nieuwe autosleutel?</h3>
+      <p>
+        Een veelgestelde vraag is uiteraard: wat kost een nieuwe autosleutel inclusief inleren? De prijzen lopen flink uiteen, afhankelijk van het type sleutel, de benodigde reistijd en uw specifieke automerk. De kosten voor het maken van een sleutel wanneer u alles kwijt bent vallen doorgaans flink hoger uit dan wanneer u slechts een kopie van een nog werkende sleutel laat maken. Bij nul resterende sleutels moet er namelijk speciale codeerapparatuur worden aangesloten en moet in sommige gevallen het slot fysiek worden uitgelezen.
+      </p>
+      <p>
+        Wanneer we specifiek kijken naar de kosten voor het vervangen van alle autosleutels, moet u al snel denken aan een bedrag tussen de 150 en 450 euro. Hierbij speelt het verschil tussen originele en universele autosleutels eveneens een belangrijke rol. Een originele merk-sleutel is vaak aanzienlijk duurder dan een universeel vervangend exemplaar, al leveren hoogwaardige aftermarket sleutels in de praktijk doorgaans exact dezelfde functionaliteit en betrouwbaarheid.
+      </p>
+
+      <h3>Autosleutel gestolen of verzekeringswerk?</h3>
+      <p>
+        Het komt ook voor dat uw sleutel niet onopgemerkt uit uw broekzak is gegleden, maar dat deze is gestolen. In het geval van diefstal is snelle actie vereist. Volg daarom altijd dit praktische stappenplan:
+      </p>
+      <ul>
+        <li><strong>Doe direct aangifte bij de politie:</strong> Zonder een officiële aangifte is het achteraf verhalen van de schade vrijwel onmogelijk.</li>
+        <li><strong>Neem contact op met uw autoverzekeraar:</strong> Informeer goed naar de voorwaarden van uw polis. De dekking verschilt namelijk sterk per autoverzekering. Soms vergoedt de verzekeraar het volledig vervangen van alle sloten om te garanderen dat de dief er niet alsnog vandoor gaat met uw auto.</li>
+        <li><strong>Laat oude sleutels blokkeren:</strong> Een mobiele slotenmaker of dealer kan de gestolen sleutelcodes uit het systeem van uw voertuig wissen, zodat de dief de motor niet meer kan starten.</li>
+      </ul>
+
+      <h3>De techniek achter de autosleutel</h3>
+      <p>
+        Moderne auto's zijn zeer geavanceerd beveiligd. Veel bestuurders vragen zich af hoe een transponder in een autosleutel eigenlijk werkt. Kort samengevat is een transponder een piepkleine elektronische chip in de behuizing. Wanneer u de sleutel in het contact omdraait (of op de startknop drukt), verstuurt de auto een zwak elektronisch signaal. De chip stuurt direct een unieke, versleutelde radiocode terug. Pas als de boordcomputer deze code accepteert, krijgt de motor brandstof en kan deze daadwerkelijk starten. Daarom is enkel het bezitten van de mechanische ijzeren sleutel niet meer voldoende; de inprogrammering is doorslaggevend.
+      </p>
+
+      <h3>Conclusie</h3>
+      <p>
+        Een ontbrekende autosleutel is een behoorlijke belemmering voor uw mobiliteit, maar het is zeker geen onoplosbaar probleem. Of u nu te maken heeft met diefstal of pure onoplettendheid, via een lokale dealer of een mobiele vakman bent u vaak dezelfde dag nog geholpen. Wacht echter niet tot u in een noodgeval zit. Heeft u nu nog één functionele sleutel liggen? Laat vandaag nog een reserve-exemplaar inleren en bespaar uzelf een hoop toekomstige hoofdpijn, logistieke problemen en torenhoge noodkosten.
+      </p>
+      
+      <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
+        <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
+            📞 {SITE_CONFIG.phone}
+          </a>
+        </div>
+      </div>
+    </>
+  ),
+  'autosleutel-bestellen-op-kenteken': (
+    <>
+      <h2>Wat betekent autosleutel bestellen op kenteken?</h2>
+      <p>
+        Het bestellen van een autosleutel op kenteken houdt in dat de sleutel wordt gemaakt op basis van de voertuigregistratie. Dit systeem zorgt voor een nauwkeurige match met uw auto. Het is vooral nuttig bij het verlies of beschadiging van uw huidige sleutel.
+      </p>
+      <p>
+        Bij dit proces levert u het kenteken van uw voertuig aan. De specialist of dealer gebruikt deze informatie om de specifieke sleutelcode op te vragen. Deze code is essentieel voor het programmeren en slijpen van de nieuwe sleutel.
+      </p>
+
+      <div style={{ margin: '2rem 0' }}>
+        <Image
+          src="/images/blog/autosleutel-kenteken-1.jpg"
+          alt="Autosleutels met kentekenbewijs op bureau"
+          width={800}
+          height={500}
+          style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
+        />
+      </div>
+
+      <h3>Waarom kiezen voor bestellen op kenteken?</h3>
+      <p>
+        Het bestellen van een autosleutel op kenteken biedt diverse voordelen. Het is vaak sneller en directer dan andere methodes. U hoeft niet te zoeken naar sleutelcodes of andere complexe technische specificaties.
+      </p>
+      <p>
+        Daarnaast zorgt het gebruik van het kenteken voor een hoge mate van nauwkeurigheid. De sleutel is speciaal afgestemd op de elektronische systemen van uw voertuig. Dit minimaliseert de kans op functionele problemen.
+      </p>
+      <p>
+        Veel autobezitters waarderen het gemak van dit proces. Het bespaart tijd en vermindert de stress die vaak gepaard gaat met het verlies van autosleutels. Zorg er wel voor dat u met een betrouwbare partij samenwerkt.
+      </p>
+
+      <h3>De voordelen van een nieuwe sleutel op kenteken</h3>
+      <ul>
+        <li><strong>Gemak:</strong> U hoeft slechts uw kenteken op te geven, en het proces wordt in gang gezet. Dit is aanzienlijk eenvoudiger dan het handmatig opzoeken van codes.</li>
+        <li><strong>Nauwkeurigheid:</strong> Doordat de sleutel direct aan uw voertuigregistratie is gekoppeld, is de kans op fouten minimaal. De nieuwe sleutel werkt naadloos met de elektronica en de sloten van uw auto.</li>
+        <li><strong>Snelheid:</strong> In veel gevallen kan een nieuwe sleutel sneller worden geleverd. De specialist heeft sneller toegang tot de benodigde gegevens, wat het hele proces versnelt.</li>
+      </ul>
+
+      <h2>Kosten en Tijd</h2>
+      <h3>Wat kost een nieuwe autosleutel op kenteken?</h3>
+      <p>
+        De kosten voor een nieuwe autosleutel op kenteken lopen uiteen. Een standaard sleutel is doorgaans voordeliger dan een geavanceerde smart key met afstandsbediening. Ook het automerk en model beïnvloeden de prijs. Gemiddeld liggen de kosten tussen de 150 en 400 euro. Deze prijs is vaak inclusief het programmeren van de sleutel. Vraag altijd vooraf een offerte aan, zodat u niet voor verrassingen komt te staan.
+      </p>
+      <p>
+        Vergelijk ook de prijzen van verschillende aanbieders. Lokale specialisten kunnen soms scherpere tarieven bieden dan officiële dealers. Let hierbij wel op de geboden kwaliteit en garantie.
+      </p>
+
+      <h3>Hoe lang duurt het proces?</h3>
+      <p>
+        De duur van het proces is afhankelijk van het type sleutel en de beschikbaarheid van de specialist. In sommige gevallen kan een nieuwe sleutel binnen enkele uren klaar zijn. Dit is vooral het geval bij standaard modellen.
+      </p>
+      <p>
+        Voor complexere sleutels of minder gangbare merken kan het enkele dagen duren. Het is aan te raden dit vooraf te bespreken. Zo weet u precies waar u aan toe bent.
+      </p>
+
+      <h2>Stappenplan voor het bestellen</h2>
+      <h3>Documenten voorbereiden</h3>
+      <p>
+        Voordat u begint, moet u enkele documenten verzamelen. U heeft uw kentekenbewijs (deel IA en IB) of de kentekencard nodig. Deze documenten bewijzen dat u de eigenaar bent van het voertuig.
+      </p>
+      <p>
+        Daarnaast is een geldig legitimatiebewijs vereist. Specialisten zijn verplicht dit te controleren om fraude te voorkomen. Zorg dat u een paspoort, ID-kaart of rijbewijs bij de hand heeft. Zonder deze documenten kan het proces niet in gang worden gezet.
+      </p>
+
+      <div style={{ margin: '2rem 0' }}>
+        <Image
+          src="/images/blog/autosleutel-kenteken-2.jpg"
+          alt="Monteur programmeert autosleutel met laptop"
+          width={800}
+          height={500}
+          style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
+        />
+      </div>
+
+      <h3>De juiste specialist kiezen</h3>
+      <p>
+        De keuze van de juiste specialist is cruciaal voor een goed resultaat. Zoek naar een aanbieder met een goede reputatie en aantoonbare ervaring. Lees reviews of vraag naar ervaringen in uw omgeving.
+      </p>
+      <p>
+        Controleer of de specialist beschikt over de juiste apparatuur om uw specifieke autosleutel te programmeren. Niet alle aanbieders hebben de middelen voor de nieuwste smart keys.
+      </p>
+      <p>
+        Vraag ook naar de geboden garantie op de sleutel en het programmeerwerk. Een betrouwbare specialist zal achter zijn werk staan en garantie bieden op zowel de hardware als de software.
+      </p>
+
+      <h2>Verschillen per Automerk</h2>
+      <h3>Populaire merken en hun procedures</h3>
+      <p>
+        De procedure voor het bestellen van een autosleutel op kenteken kan per merk verschillen. Populaire merken zoals Volkswagen, Opel en Ford hebben vaak gestroomlijnde systemen. Dit betekent dat het proces over het algemeen snel verloopt.
+      </p>
+      <p>
+        Bij deze merken is de informatie via het kenteken meestal eenvoudig toegankelijk. Specialisten kunnen de benodigde gegevens snel opvragen. Dit draagt bij aan een efficiënte afhandeling. Toch blijft het belangrijk om bij uw specifieke model te informeren.
+      </p>
+
+      <h3>Uitzonderingen en specifieke eisen</h3>
+      <p>
+        Sommige automerken hanteren strengere procedures. Dit geldt vaak voor premium merken of voertuigen met zeer geavanceerde beveiligingssystemen. In deze gevallen kan aanvullende autorisatie nodig zijn.
+      </p>
+      <p>
+        Daarnaast kunnen sommige oudere modellen problemen opleveren. Bij auto’s van voor het digitale tijdperk is het soms niet mogelijk om een sleutel puur op kenteken te bestellen. Hier kan het nodig zijn om een sleutelcode of het slot zelf te gebruiken.
+      </p>
+
+      <h2>Zelf doen of uitbesteden?</h2>
+      <h3>Risico’s van zelf programmeren</h3>
+      <p>
+        Het zelf programmeren van een autosleutel wordt over het algemeen afgeraden. De technologie in moderne sleutels is complex en vereist specifieke apparatuur. Zonder deze middelen is de kans op succes zeer klein.
+      </p>
+      <p>
+        Fouten bij het programmeren kunnen leiden tot schade aan de elektronische systemen van uw auto. Dit kan resulteren in hoge reparatiekosten. Daarnaast bestaat het risico dat de startonderbreker de auto permanent blokkeert.
+      </p>
+
+      <h3>Wanneer is professionele hulp nodig?</h3>
+      <p>
+        Professionele hulp is eigenlijk altijd aan te raden bij het bestellen en inleren van een nieuwe autosleutel. De specialist heeft de kennis en apparatuur om het proces veilig en correct uit te voeren. Vooral bij moderne smart keys is de hulp van een expert onmisbaar. Deze sleutels communiceren met de auto via complexe encryptie. Het vereist gespecialiseerde software om dit te programmeren.
+      </p>
+
+      <h2>Veelgestelde Vragen</h2>
+      <h3>Kan het bij een verloren sleutel?</h3>
+      <p>
+        Ja, het bestellen van een autosleutel op kenteken is een uitstekende oplossing bij een verloren sleutel. Het systeem is juist ontworpen om in dergelijke situaties uitkomst te bieden. De specialist kan op basis van het kenteken de juiste sleutelcode opvragen.
+      </p>
+      <p>
+        Houd er rekening mee dat bij verlies van alle sleutels het proces soms iets langer kan duren. Ook kunnen de kosten hoger uitvallen, omdat de auto soms moet worden geopend of er extra werkzaamheden nodig zijn.
+      </p>
+
+      <h3>Zijn er alternatieven?</h3>
+      <p>
+        Er zijn alternatieven voor het bestellen op kenteken. Als u nog een reservesleutel heeft, kan deze worden gekopieerd of uitgelezen. Dit is vaak een snellere en soms goedkopere methode.
+      </p>
+      <p>
+        Een andere optie is het bestellen van een sleutel via het chassisnummer (VIN) van de auto. Dit is vergelijkbaar met het proces via het kenteken, maar gebruikt een andere identificatiemethode.
+      </p>
+
+      <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
+        <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
+            📞 {SITE_CONFIG.phone}
+          </a>
+        </div>
+      </div>
+    </>
+  ),
+  'auto-openen-zonder-sleutel-tips-hulp': (
+    <>
+      <h2>Slimme manieren om je auto te openen</h2>
+      <p>
+        Buitengesloten zijn van je auto kan een stressvolle ervaring zijn. Het overkomt de besten van ons. Gelukkig zijn er slimme manieren om je auto te openen zonder sleutel. Of je nu je sleutels kwijt bent of ze per ongeluk in de auto hebt laten liggen, er zijn oplossingen. Van het inschakelen van een slotenmaker tot doe-het-zelf-methoden, de opties zijn divers.
+      </p>
+      <p>
+        Een slotenmaker kan snel en veilig je autodeur openen. Ze hebben de juiste tools en ervaring. Maar wat als je geen slotenmaker kunt bereiken? Er zijn ook methoden die je zelf kunt proberen. Denk aan het gebruik van een wig en een lange staaf. Deze technieken vereisen wel enige voorzichtigheid.
+      </p>
+      <p>
+        Moderne auto's hebben vaak geavanceerde beveiligingssystemen. Dit maakt het openen zonder sleutel uitdagender. Toch zijn er manieren om deze systemen te omzeilen. Het is belangrijk om kalm te blijven en je opties te overwegen. Overhaaste beslissingen kunnen leiden tot schade aan je auto. In dit artikel bespreken we verschillende methoden en geven we tips om buitensluiting te voorkomen. Zo ben je goed voorbereid als het je overkomt.
+      </p>
+
+      <h3>Wat te doen als je buitengesloten bent van je auto?</h3>
+      <p>
+        Kalm blijven is de eerste stap wanneer je buitengesloten bent van je auto. Paniek kan leiden tot overhaaste beslissingen die je duur kunnen komen te staan. Analyseer eerst je situatie voordat je actie onderneemt.
+      </p>
+      <p>
+        Controleer of alle deuren en ramen echt op slot zijn. Soms is er toch een deur niet goed gesloten. Vergeet niet de kofferbak; deze kan soms toegang bieden tot het interieur van de auto. Denk aan de mogelijkheid van een reservesleutel. Misschien heb je deze bij een vriend of familielid achtergelaten. Als dat niet het geval is, overweeg een noodnummer van een slotenmaker die je kan helpen.
+      </p>
+      <p>Hier zijn enkele stappen om te overwegen:</p>
+      <ul>
+        <li>Controleer alle deuren en ramen.</li>
+        <li>Zoek naar een reservesleutel.</li>
+        <li>Neem contact op met een slotenmaker.</li>
+        <li>Vraag om hulp van de ANWB als je lid bent.</li>
+      </ul>
+      <p>
+        In sommige auto's vind je een noodsleutel in de sleutelbos. Het controleren hiervan kan waardevolle tijd en stress besparen. Zorg altijd dat je voorbereid bent voor noodgevallen en houd contactgegevens van professionals bij de hand.
+      </p>
+
+      <h3>Professionele hulp: Slotenmaker en ANWB</h3>
+      <p>
+        Wanneer je buitengesloten bent, kan professionele hulp een verstandige keuze zijn. Slotenmakers hebben de juiste kennis en middelen om je snel weer op weg te helpen. Het inschakelen van een slotenmaker kan vaak voorkomen dat je auto beschadigd raakt bij het openen.
+      </p>
+      <p>
+        Veel slotenmakers bieden 24/7 diensten aan. Dit betekent dat je ook 's nachts of in het weekend hulp kunt krijgen. Het is slim om een betrouwbaar noodnummer van een slotenmaker in je telefoon te hebben opgeslagen.
+      </p>
+      <p>
+        De ANWB biedt ook hulp bij auto's die op slot zijn geraakt. Als je lid bent, is dit vaak de snelste en voordeligste optie. Zij kunnen in de meeste gevallen snel ter plaatse zijn.
+      </p>
+      <p>Hier zijn enkele voordelen van professionele hulp:</p>
+      <ul>
+        <li>Snelle service op locatie.</li>
+        <li>Minder risico op beschadiging aan je auto.</li>
+        <li>Deskundig advies over sloten en sleutels.</li>
+      </ul>
+
+      <div style={{ margin: '2rem 0' }}>
+        <Image
+          src="/images/blog/auto-openen-1.jpg"
+          alt="Gefrustreerde persoon naast een afgesloten auto"
+          width={800}
+          height={500}
+          style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
+        />
+      </div>
+
+      <p>
+        Je verzekering kan in sommige gevallen de kosten dekken voor hulp van een slotenmaker. Het is verstandig dit vooraf te controleren. Professionele hulp inschakelen kan zorgen voor gemoedsrust en voorkomt dat je zelf risico’s moet nemen die mogelijk tot schade leiden. Zorg ervoor dat je de juiste stappen volgt om veilig en efficiënt weer toegang tot je auto te krijgen.
+      </p>
+
+      <h2>Doe-het-zelf-methoden om je auto te openen zonder sleutel</h2>
+      <p>
+        Als je je sleutels bent kwijtgeraakt, zijn er enkele doe-het-zelf-methoden om je auto te openen. Deze methoden zijn niet altijd even veilig, dus wees voorzichtig.
+      </p>
+      
+      <h3>Gebruik van een wig en een lange staaf</h3>
+      <p>
+        Een veelgebruikte techniek is het gebruik van een wig om ruimte tussen de deur en het frame te creëren. Daarna kun je een lange staaf gebruiken om het slot te openen.
+      </p>
+      <p>Benodigdheden:</p>
+      <ul>
+        <li>Een wig, zoals een rubber of opblaasbare wig.</li>
+        <li>Een stevige, lange staaf.</li>
+      </ul>
+      <p>Stap voor stap:</p>
+      <ol>
+        <li>Plaats de wig voorzichtig tussen de deur en het frame.</li>
+        <li>Zorg voor een kleine opening.</li>
+        <li>Gebruik de staaf om het slot te ontgrendelen.</li>
+      </ol>
+
+      <h3>Gebruik van een kledinghanger of metalen staaf</h3>
+      <p>
+        Een andere techniek is het gebruik van een kledinghanger. Dit werkt voornamelijk bij oudere auto's.
+      </p>
+      <p>Stap voor stap:</p>
+      <ol>
+        <li>Buig de kledinghanger zodat je een haak hebt.</li>
+        <li>Steek de haak tussen de raamrubber.</li>
+        <li>Probeer de vergrendeling te bereiken en te ontgrendelen.</li>
+      </ol>
+
+      <h3>Let op de risico's</h3>
+      <p>
+        Hoewel zelf dingen proberen verleidelijk kan zijn, is er altijd het risico van schade. Let altijd op het materiaal van de auto en mogelijke krassen of deuken.
+      </p>
+      <ul>
+        <li>Kans op beschadiging van slot of lak.</li>
+        <li>Sommige methoden kunnen het alarm activeren.</li>
+      </ul>
+
+      <h3>Gebruik van een plastic strip</h3>
+      <p>
+        Een plastic strip kan ook worden gebruikt om het slot te openen. Dit is echter een moeilijke techniek en niet voor iedereen weggelegd.
+      </p>
+
+      <div style={{ margin: '2rem 0' }}>
+        <Image
+          src="/images/blog/auto-openen-2.jpg"
+          alt="Monteur maakt autodeur open met specialistisch gereedschap"
+          width={800}
+          height={500}
+          style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
+        />
+      </div>
+
+      <h3>Noodsleutel gebruiken</h3>
+      <p>
+        Sommige auto's hebben een noodsleutel in de sleutelbos. Controleer of jouw auto deze functie heeft. Het kan je eenvoudig uit de problemen helpen zonder schade aan te richten.
+      </p>
+
+      <h3>Zie af van destructieve methoden</h3>
+      <p>
+        Denk twee keer na voordat je meer destructieve methoden probeert, zoals het breken van een raampje. De kosten van het repareren van schade kunnen hoog oplopen en het is bovendien gevaarlijk. Doe-het-zelf-methoden kunnen nuttig zijn, maar wegen bijna nooit op tegen de hulp van een professional.
+      </p>
+
+      <h2>Moderne auto’s en beveiliging: wat werkt wel en niet?</h2>
+      <p>
+        Moderne auto's zijn uitgerust met geavanceerde veiligheidssystemen, die het openmaken zonder sleutel bemoeilijken. Sleutelloze toegangsvoorzieningen en elektronische sloten zijn wijdverspreid. Hoewel deze technologieën het comfort verhogen, compliceren ze het proces voor wie buitengesloten raakt. Velen vragen zich af welke methoden nog steeds effectief zijn.
+      </p>
+      <p>Wat werkt mogelijk:</p>
+      <ul>
+        <li>Smartphone-apps: Sommige auto's bieden de mogelijkheid om via een app de deuren te ontgrendelen.</li>
+        <li>Noodsleutels: Veel auto's hebben nog steeds een fysieke noodsleutel in de sleutelbos.</li>
+        <li>Slotenmakers: Gespecialiseerde slotenmakers kunnen auto's professioneel en voorzichtig openen.</li>
+      </ul>
+
+      <div style={{ margin: '2rem 0' }}>
+        <Image
+          src="/images/blog/auto-openen-3.jpg"
+          alt="Smart key op een tafel"
+          width={800}
+          height={500}
+          style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
+        />
+      </div>
+
+      <p>Wat niet werkt:</p>
+      <p>
+        Verouderde technieken, zoals het gebruik van een kledinghanger, zijn meestal nutteloos bij moderne auto’s. Bovendien zijn methoden zoals het uitoefenen van druk op het slot met een tennisbal eerder een mythe dan werkelijkheid. Het is cruciaal om een betrouwbare aanpak te kiezen om schade of alarmactivering te voorkomen.
+      </p>
+      <p>
+        Deze beveiligingsmaatregelen, hoewel bedoeld voor bescherming, vragen om bewustzijn bij automobilisten. Het kennen van de technologieën en hun beperkingen kan een essentiële rol spelen in het effectief aanpakken van buitensluiting zonder schade of dure reparaties.
+      </p>
+
+      <h2>Veelvoorkomende mythes en fabels over auto openen zonder sleutel</h2>
+      <p>
+        Er zijn veel verhalen over trucjes om een auto zonder sleutel te openen. Veel van deze verhalen hebben echter weinig waarheid. Hoewel sommige methoden in het verleden werkten, zijn moderne auto's sterk beveiligd tegen deze technieken. Het is belangrijk om fictie te scheiden van feiten om schade of teleurstelling te voorkomen.
+      </p>
+      <p>Mythes die niet werken:</p>
+      <ul>
+        <li>Tennisbal over het slot plaatsen: Dit idee komt vaak naar voren, maar is niet effectief.</li>
+        <li>Kledinghanger gebruiken: Voor moderne auto's werkt deze methode zelden.</li>
+        <li>Creditcard tussen de deur steken: Een dure, maar inefficiënte mythe.</li>
+      </ul>
+      <p>
+        Het vertrouwen op goedbedoelde, maar onjuiste informatie kan leiden tot beschadiging van uw auto. Het is effectiever om te vertrouwen op bewezen methoden of professionele hulp in te schakelen wanneer u buitengesloten bent.
+      </p>
+
+      <h2>Risico’s en nadelen van zelf je auto openmaken</h2>
+      <p>
+        Het openen van je auto zonder sleutel kan verleidelijk lijken, vooral in een noodsituatie. Toch brengt deze doe-het-zelf-aanpak risico's met zich mee. Zonder de juiste kennis kan je onbedoeld meer kwaad dan goed doen. Autosloten en elektrische systemen zijn namelijk kwetsbaar.
+      </p>
+      <p>Potentiële nadelen:</p>
+      <ul>
+        <li>Schade aan de lak: Gereedschappen kunnen de lak beschadigen.</li>
+        <li>Kapotte sloten: Onjuiste technieken kunnen de sloten permanent beschadigen.</li>
+        <li>Elektrische problemen: Moderne auto's hebben gevoelige elektronica die makkelijk beschadigd kan raken.</li>
+      </ul>
+      <p>
+        Naast fysieke schade, kunnen deze pogingen ook leiden tot extra kosten voor reparatie. In plaats van zelf te proberen, is het vaak verstandiger om een professional in te schakelen. Een slotenmaker kan snel en veilig helpen zonder extra schade aan te richten.
+      </p>
+
+      <h2>Kosten en verzekering: wat wordt vergoed?</h2>
+      <p>
+        De kosten voor het openen van een auto zonder sleutel kunnen sterk variëren. Als je een slotenmaker inschakelt, reken dan op een tarief dat afhankelijk is van het tijdstip en de complexiteit. Avonden of weekenden brengen vaak hogere tarieven met zich mee. Bovendien kunnen moderne auto's met complexe beveiligingssystemen hogere kosten betekenen.
+      </p>
+      <p>
+        Veel autobezitters zijn niet op de hoogte dat hun autoverzekering mogelijk dekking biedt voor slotenmakersdiensten. Controleer je polis om te zien wat wordt vergoed. Het kan verrassend zijn dat bepaalde verzekeringspakketten de kosten deels of volledig dekken. Hier zijn enkele elementen om op te letten bij je verzekering:
+      </p>
+      <ul>
+        <li>Dienstdekking: Vergoedt je polis slotenmakerskosten?</li>
+        <li>Eigen risico: Welk bedrag moet je zelf betalen?</li>
+        <li>Voorwaarden: Zijn er specifieke eisen of beperkingen?</li>
+      </ul>
+      <p>
+        Door je verzekering goed te kennen, kan je onverwachte kosten en onaangename verrassingen voorkomen.
+      </p>
+
+      <h2>Preventietips: Voorkom buitensluiting van je auto</h2>
+      <p>
+        Voorkomen is altijd beter dan genezen. Om te voorkomen dat je buitengesloten raakt, zijn er eenvoudige maar effectieve tips die je kunt volgen. Door een paar eenvoudige gewoonten te ontwikkelen, kun je veel ellende besparen.
+      </p>
+      <p>
+        Een van de beste manieren om buitensluiting te voorkomen is het gebruik van een routine. Controleer altijd of je je sleutels bij je hebt voordat je de auto verlaat. Hier zijn enkele handige gewoonten die je kunt aannemen:
+      </p>
+      <ul>
+        <li>Routinecontrole: Telkens wanneer je uitstapt, voel dan of je sleutels in je zak zitten.</li>
+        <li>Visuele controle: Kijk naar je sleutel voordat je de deur dichttrekt.</li>
+      </ul>
+      <p>
+        Een andere effectieve oplossing is om een reservesleutel op een veilige plek te bewaren. Overweeg om een sleutel bij een vertrouwd persoon achter te laten. Dit kan je enorm helpen in noodsituaties. Nog enkele tips om te overwegen:
+      </p>
+      <ul>
+        <li>Veilige opslag: Bewaar een sleutel in een thuis-kluisje.</li>
+        <li>Vriend of familielid: Geef een reservesleutel aan iemand die je vertrouwt.</li>
+      </ul>
+      <p>
+        Buiten deze praktische tips zijn er ook technische oplossingen. Het installeren van een keyless entry systeem kan voorkomen dat je ooit nog buitengesloten wordt. Door deze preventieve maatregelen toe te passen, kun je jezelf veel stress en kosten besparen.
+      </p>
+
+      <h2>Veelgestelde vragen over auto openen zonder sleutel</h2>
+      <p>
+        Veel mensen hebben vragen over het openen van hun auto zonder sleutel. We hebben de meest gestelde vragen hieronder beantwoord om je te helpen voorbereid te zijn.
+      </p>
+
+      <h3>Wat moet ik doen als ik mijn autosleutel kwijt ben?</h3>
+      <p>
+        Allereerst, blijf kalm. Controleer of er een reservesleutel beschikbaar is. Zo niet, overweeg om een slotenmaker te bellen.
+      </p>
+
+      <h3>Kan ik een auto zelf openen zonder sleutel?</h3>
+      <p>
+        Ja, maar het is riskant. Hier zijn enkele dingen om te overwegen:
+      </p>
+      <ul>
+        <li>Risico's van schade: Zelf proberen kan de auto beschadigen.</li>
+        <li>Professionele hulp: Een slotenmaker kan efficiënter en veiliger helpen.</li>
+      </ul>
+
+      <h3>Wordt hulp bij buitensluiting door mijn verzekering gedekt?</h3>
+      <p>
+        Sommige verzekeringen bieden dekking voor slotenmakersdiensten. Check je polis voor details over dekkingsopties. Hiermee voorkom je onverwachte kosten en weet je precies wat je kunt verwachten.
+      </p>
+
+      <h2>Conclusie: De beste aanpak bij buitensluiting</h2>
+      <p>
+        Buitengesloten raken is frustrerend, maar er zijn oplossingen. Blijf kalm en overweeg al je opties. Een slotenmaker biedt de snelste en veiligste service. Denk ook aan preventieve maatregelen, zoals een extra sleutel. Zo voorkom je toekomstige problemen. Je auto openen zonder sleutel is mogelijk, maar zorg dat je voorbereid bent.
+      </p>
+
+      <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
+        <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
+            📞 {SITE_CONFIG.phone}
           </a>
         </div>
       </div>
