@@ -365,6 +365,14 @@ export const BLOG_POSTS = [
     publishDate: '2026-08-05',
     readTime: '6 min',
   },
+  {
+    slug: 'volkswagen-sleutel-bijmaken-kosten-opties-tips',
+    title: 'Volkswagen Sleutel Bijmaken: Kosten, Opties en Tips',
+    excerpt: 'Ontdek alles over het laten bijmaken van een sleutel voor je Volkswagen, inclusief kosten en opties tussen dealer en specialist. Zorg dat je altijd voorbereid bent met een vervangende sleutel volkswagen.',
+    keywords: ['volkswagen sleutel bijmaken', 'volkswagen autosleutel kwijt', 'nieuwe sleutel vw', 'autosleutel specialist versus officiële dealer', 'volkswagen sleutel inleren kosten'],
+    publishDate: '2026-08-05',
+    readTime: '8 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {
