@@ -6,7 +6,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   'autosleutel-batterij-vervangen-stappenplan': (
     <>
-      <h2>Hoe Vervang je de Batterij van je Autosleutel? (Model-per-Model Gids)</h2>
+      <h2>Hoe kan ik een autosleutel batterij vervangen? (Model-per-Model Gids)</h2>
       <p>
         Is uw batterij autosleutel leeg en start de auto niet? Of reageert de centrale vergrendeling pas als u heel dichtbij staat en geeft uw auto een waarschuwing op het dashboard? Dan is de autosleutel batterij aan vervanging toe. Dit is een eenvoudige klus die u in veel gevallen zelf kunt doen, mits u de juiste methode en de juiste batterij gebruikt. Als uw auto niet open gaat met de afstandsbediening, kunt u ook altijd de fysieke noodsleutel gebruiken om toegang te krijgen.
       </p>
@@ -22,7 +22,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         <li><strong>Tesla:</strong> Model S en X key fobs gebruiken een CR2032 batterij. Model 3 en Y maken primair gebruik van keycards (RFID), maar als u de optionele key fob gebruikt, zit hier ook een CR2032 in.</li>
       </ul>
 
-      <h3>Model-specifieke instructies voor batterij vervangen</h3>
+      <h3>Zelf de batterij vervangen van autosleutel: Instructies per model</h3>
       
       <h4>1. VW & Skoda sleutel batterij vervangen</h4>
       <p>
@@ -339,7 +339,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   ),
   'autosleutel-bijmaken-zonder-origineel': (
     <>
-      <h2>Kan ik een autosleutel bijmaken zonder origineel?</h2>
+      <h2>Kan je een autosleutel bijmaken zonder originele sleutel?</h2>
       <p>
         Ja, het is absoluut mogelijk om een autosleutel te laten bijmaken zonder dat u de originele sleutel nog heeft. Wanneer u alle autosleutels kwijt bent (ook wel &apos;All Keys Lost&apos; genoemd), kan een professionele mobiele autosleutelspecialist een nieuwe werkende sleutel voor u maken. Dit gebeurt door de auto schadevrij te openen, de unieke mechanische code uit de slotcilinder te lezen en de elektronische startcode rechtstreeks op de startonderbreker (immobilizer) van uw boordcomputer te programmeren. U hoeft de auto dus niet te laten wegslepen naar de dealer. Dit artikel legt uit hoe dit in zijn werk gaat, wat de kosten zijn en beantwoordt de meest gestelde vragen.
       </p>
