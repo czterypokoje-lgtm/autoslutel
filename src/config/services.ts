@@ -357,6 +357,14 @@ export const BLOG_POSTS = [
     publishDate: '2026-08-05',
     readTime: '6 min',
   },
+  {
+    slug: 'auto-herkent-sleutel-niet-meer-oorzaken-oplossingen',
+    title: 'Auto Herkent Sleutel Niet Meer: Oorzaken & Oplossingen',
+    excerpt: 'Ervaar je stress omdat je auto sleutel niet meer herkent? Ontdek hier snelle oplossingen en veelvoorkomende oorzaken voor een auto die niet reageert op je sleutel.',
+    keywords: ['auto herkent sleutel niet meer', 'auto reageert niet op sleutel', 'autosleutel weigert dienst', 'startonderbreker herkent sleutel niet'],
+    publishDate: '2026-08-05',
+    readTime: '6 min',
+  },
 ];
 
 export function getRelatedBlogPosts(serviceSlug: string) {

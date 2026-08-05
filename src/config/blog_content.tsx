@@ -2155,5 +2155,83 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </div>
     </>
   ),
-};
+  'auto-herkent-sleutel-niet-meer-oorzaken-oplossingen': (
+    <>
+      <p>
+        Je stapt &apos;s ochtends gehaast de deur uit. Je drukt op de knop van je sleutel, maar de auto blijft op slot. Geen reactie. Als je auto herkent sleutel niet meer, levert dat direct stress op. Moderne auto&apos;s leunen sterk op elektronica. Bij een storing staar je al snel naar het dashboard. Waarom weigert je wagen dienst? Dat kan komen door een lege batterij, signaalstoring of schade aan sleutel, contactslot of elektronica. In dit artikel lees je de meest voorkomende oorzaken, simpele oplossingen en handige noodstappen.
+      </p>
 
+      <h2>Samenvatting</h2>
+      <p>
+        Dit artikel helpt je snel de oorzaak te vinden als je auto niet reageert op sleutel of als de afstandsbediening van je autosleutel niet meer werkt. Veelvoorkomende problemen zijn een lege sleutelbatterij, signaalstoring en schade aan sleutel, contactslot of elektronica. Test eerst de reservesleutel. Vervang daarna de batterij of ga weg van storingsbronnen. Met de juiste noodstappen kun je vaak snel verder rijden.
+      </p>
+
+      <h2>Veelvoorkomende oorzaken van een auto die niet reageert</h2>
+      <h3>Lege of zwakke batterij</h3>
+      <p>
+        In de meeste gevallen is de muntbatterij leeg. Muntbatterijen in autosleutels gaan vaak één tot twee jaar mee. Soms merk je al dat het bereik kleiner wordt. Negeer je dat, dan denk je al snel: de autosleutel doet het niet meer. In de winter daalt de spanning sneller door de kou. Twijfel je over de oorzaak? Probeer dan eerst de reservesleutel. Werkt die wel, dan is de batterij waarschijnlijk de schuldige.
+      </p>
+
+      <h3>Storing door andere signalen</h3>
+      <p>
+        Soms is er niets stuk aan de sleutel. Dan speelt tijdelijke signaalstoring. Die komt voor bij zendmasten, militaire locaties of hoogspanningskabels. Ook een smartphone kan het signaal blokkeren als hij strak tegen de sleutel zit in je broekzak of tas. Haal sleutel en telefoon uit elkaar, loop een paar stappen bij de auto vandaan en probeer het nog een keer. Dan herkent de startonderbreker je sleutel soms niet goed.
+      </p>
+
+      <h3>Schade aan contactslot of sleutel</h3>
+      <p>
+        Soms gaan de deuren wel open, maar wil de motor niet starten. Dan kun je denken aan een versleten contactslot of een kapotte sleutel. Een oud contactslot kan de draaiing niet goed lezen. De sleutel kan ook interne schade hebben door een val of door waterschade. Test daarom altijd met de reservesleutel. Werkt die wel, dan zit het probleem vaak in de eerste sleutel.
+      </p>
+
+      <h2>Begrijp de techniek achter jouw autosleutel</h2>
+      <p>
+        Om goed te snappen waarom je auto je sleutel niet meer herkent, helpt het om te weten hoe het systeem werkt. De afstandsbediening stuurt een radiosignaal. De startonderbreker leest dat signaal en laat de auto pas starten als alles klopt. Gaat daar iets mis, dan reageert de auto niet op sleutel.
+      </p>
+
+      <h2>Snelle aanpak</h2>
+      <ul>
+        <li>Probeer de reservesleutel.</li>
+        <li>Houd sleutel en smartphone uit elkaar.</li>
+        <li>Loop een paar stappen van de auto weg.</li>
+        <li>Vervang de muntbatterij als de reservesleutel wel werkt.</li>
+        <li>Raadpleeg de handleiding of noodprocedure als het probleem blijft.</li>
+      </ul>
+
+      <h2>Veelgestelde vragen</h2>
+
+      <h3>Mijn auto reageert niet op de sleutel. Wat test ik als eerste?</h3>
+      <p>
+        Begin rustig en stap voor stap. Probeer eerst de reservesleutel. Zo zie je snel of het aan de batterij of aan de sleutel ligt. Houd sleutel en smartphone uit elkaar en ga een paar stappen bij de auto vandaan. Werkt de reservesleutel wel, vervang dan de muntbatterij van de eerste sleutel. Lukt het dan nog steeds niet, kijk in de noodprocedure en handleiding van je auto.
+      </p>
+
+      <h3>Hoe herken ik een lege of zwakke sleutelbatterij en wat is de oplossing?</h3>
+      <p>
+        Signalen zijn minder bereik en soms pas ontgrendelen als je dicht bij de auto staat. Muntbatterijen in autosleutels gaan gemiddeld één tot twee jaar mee en in de winter zakt de spanning sneller. De oplossing is simpel: test eerst de reservesleutel en vervang daarna de batterij als die sleutel wel werkt.
+      </p>
+
+      <h3>Kan externe storing mijn sleutel blokkeren? Waar moet ik op letten?</h3>
+      <p>
+        Ja. Signaalstoring kan optreden bij grote zendmasten, militaire locaties of hoogspanningskabels. Ook een smartphone die strak tegen de sleutel zit, kan het signaal blokkeren. Haal sleutel en telefoon uit elkaar, loop een stukje van de auto weg en probeer opnieuw.
+      </p>
+
+      <h3>De deuren gaan open, maar de motor start niet. Is het het contactslot of de sleutel?</h3>
+      <p>
+        Beide zijn mogelijk. Een versleten contactslot, vooral bij oudere en veelgereden wagens, kan de draaiing niet goed lezen. Een sleutel kan intern beschadigen door een val of onzichtbare waterschade. Test met de reservesleutel. Start de auto daarmee wel, dan is de eerste sleutel waarschijnlijk de oorzaak. Start hij met geen van beide, dan ligt het eerder aan contactslot of elektronica.
+      </p>
+
+      <h3>Waarom speelt dit probleem vaker op in de winter en wat kan ik doen?</h3>
+      <p>
+        Kou verlaagt de spanning van muntbatterijen. Daardoor neemt het bereik snel af en reageert de sleutel soms helemaal niet meer. Vervang de batterij op tijd, zeker als je merkt dat het bereik kleiner wordt. Houd ook rekening met snellere leegloop bij lage temperaturen.
+      </p>
+
+      <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
+        <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
+            📞 {SITE_CONFIG.phone}
+          </a>
+        </div>
+      </div>
+    </>
+  ),
+};
