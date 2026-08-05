@@ -417,7 +417,7 @@ export function getRelatedBlogPosts(serviceSlug: string) {
       'case-study-bmw-besparing',
     ],
     // ── Autodeur openen ───────────────────────────────────────────
-    'autodeur-openen': [
+    'auto-openen-zonder-sleutel': [
       'auto-openen-zonder-sleutel-schadevrij',
       'auto-slotenmaker-ultieme-gids-snel-hulp',
       'autosleutel-kwijt-wat-nu-stappenplan',

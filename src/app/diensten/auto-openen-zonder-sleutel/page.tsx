@@ -508,7 +508,7 @@ export default function AutoOpenenZonderSleutelPage() {
 
         {/* ── RELATED BLOGS ────────────────────────────────────────── */}
         {(() => {
-          const relatedPosts = getRelatedBlogPosts('autodeur-openen');
+          const relatedPosts = getRelatedBlogPosts('auto-openen-zonder-sleutel');
           if (!relatedPosts || relatedPosts.length === 0) return null;
           return (
             <section className={styles.relatedBlogsSection}>

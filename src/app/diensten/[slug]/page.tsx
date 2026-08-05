@@ -61,7 +61,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
   const p1Cities = CITIES.filter(c => c.priority === 'P1').slice(0, 8);
   const popularBrands = BRANDS.filter(b => b.priority === 'P1').slice(0, 8);
 
-  const isOpening = ['autodeur-openen', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto', 'auto-openen-zonder-sleutel'].includes(slug);
+  const isOpening = ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto', 'auto-openen-zonder-sleutel'].includes(slug);
   const isKey = ['sleutel-bijmaken', 'autosleutel-kwijt', 'alle-sleutels-kwijt-auto', 'reserve-autosleutel', 'transponder-programmeren', 'smart-key-programmeren', 'autosleutel-bijmaken'].includes(slug);
 
   // Load recent work images for this service
@@ -299,7 +299,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <h2>Professionele Mobiele Service — Direct Ter Plaatse</h2>
                   
-                  {slug === 'autodeur-openen' ? (
+                  {slug === 'auto-openen-zonder-sleutel' ? (
                     <img 
                       src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
                       alt="Autodeur schadevrij openen door monteur" 

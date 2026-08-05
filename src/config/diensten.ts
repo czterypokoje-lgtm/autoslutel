@@ -19,7 +19,7 @@ export type Service = {
 export const DIENSTEN: Service[] = [
   // ── 1. AUTODEUR OPENEN ─────────────────────────────────────
   {
-    slug: 'autodeur-openen',
+    slug: 'auto-openen-zonder-sleutel',
     title: 'Autodeur Openen',
     metaTitle: 'Autodeur Openen Zonder Sleutel | Schadevrij & 24/7 Mobiel',
     metaDesc: 'Autodeur openen zonder sleutel? Wij openen uw auto 100% schadevrij op locatie. Gemiddeld binnen 30 min ter plaatse in Utrecht & Amsterdam. Bel direct!',
@@ -62,7 +62,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Hoe opent u een auto met de sleutel er nog in?', a: 'Wij maken gebruik van mechanische decoders (Lishi) die de slotplaatjes in de cilinder één voor één uitlijnen, alsof de originele sleutel wordt omgedraaid. Dit voorkomt dat we ramen hoeven in te slaan of deurrubbers beschadigen.' },
       { q: 'Werkt dit ook als de accu van de auto leeg is?', a: 'Ja. Zelfs bij een lege accu kunnen wij de auto mechanisch openen via de noodcilinder in de handgreep.' }
     ],
-    relatedSlugs: ['autodeur-openen', 'deur-dichtgevallen', 'kofferbak-openen', 'noodopening-auto']
+    relatedSlugs: ['auto-openen-zonder-sleutel', 'deur-dichtgevallen', 'kofferbak-openen', 'noodopening-auto']
   },
   {
     slug: 'deur-dichtgevallen',
@@ -84,7 +84,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Waarom gaat een auto zomaar op slot als de deur dichtvalt?', a: 'Veel moderne auto\'s hebben een automatische vergrendelingsfunctie (auto-relock) die geactiveerd wordt na een bepaalde tijd of als de sleutel buiten het bereik van de startonderbreker-antenne ligt.' },
       { q: 'Moet ik mijn deurslot achteraf vervangen?', a: 'Nee, onze technieken laten het deurslot en de elektronica volledig intact. U kunt uw bestaande sleutels gewoon blijven gebruiken.' }
     ],
-    relatedSlugs: ['autodeur-openen', 'sleutel-in-auto', 'kofferbak-openen', 'sleutel-afgebroken-in-slot']
+    relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'kofferbak-openen', 'sleutel-afgebroken-in-slot']
   },
   {
     slug: 'kofferbak-openen',
@@ -106,7 +106,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Waarom is een kofferbak openen moeilijker dan een portier?', a: 'Bij veel auto\'s (vooral sedans en premium merken zoals BMW of Audi) schakelt de centrale vergrendelingsknop op het dashboard uit als de auto op slot zit. Hierdoor moeten we de kofferbak mechanisch manipuleren of de module direct via de OBD-poort triggeren.' },
       { q: 'Kan de kofferbak open zonder schade aan de lak of het slot?', a: 'Ja, 100% gegarandeerd. We gebruiken laser lockpicks die de lak en cilinder absoluut niet beschadigen.' }
     ],
-    relatedSlugs: ['autodeur-openen', 'sleutel-in-auto', 'deur-dichtgevallen', 'sleutel-afgebroken-in-slot']
+    relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'sleutel-afgebroken-in-slot']
   },
   {
     slug: 'sleutel-afgebroken-in-slot',
@@ -129,7 +129,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Kan een afgebroken sleutel altijd uit het contactslot worden gehaald?', a: 'Ja, in 99% van de gevallen kunnen we het afgebroken deel met speciale extractiesleutels en micro-haken verwijderen zonder het complete contactslot te hoeven vervangen.' },
       { q: 'Krijg ik direct een nieuwe sleutel?', a: 'Ja. Onze mobiele bus is uitgerust met een computergestuurde CNC-sleutelmachine waarmee we de sleutelbaard ter plaatse nauwkeurig namaken.' }
     ],
-    relatedSlugs: ['autodeur-openen', 'sleutel-bijmaken', 'contactslot-reparatie', 'autosleutels-repareren']
+    relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-bijmaken', 'contactslot-reparatie', 'autosleutels-repareren']
   },
 
   // ── 2. AUTOSLEUTEL BIJMAKEN ───────────────────────────────
@@ -290,7 +290,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Autosleutel laten programmeren na verlies?', a: 'Autosleutel laten programmeren na verlies gebeurt direct op uw locatie. De monteur genereert een nieuwe transpondercode, schrijft deze via OBD2-diagnose-apparatuur in het geheugen van de startonderbreker, en synchroniseert de afstandsbediening.' },
       { q: 'Autosleutel kwijt, wat kost het vervangen door een universele sleutel?', a: 'Het vervangen van uw verloren sleutel door een universele OEM-kwaliteit sleutel kost bij Autosleutel24 gemiddeld tussen de €95 en €175, inclusief het slijpen van de sleutelbaard en het programmeren van de transponder. Dit is de meest voordelige en snelle oplossing.' }
     ],
-    relatedSlugs: ['noodopening-auto', 'alle-sleutels-kwijt-auto', 'autodeur-openen', 'sleutel-bijmaken']
+    relatedSlugs: ['noodopening-auto', 'alle-sleutels-kwijt-auto', 'auto-openen-zonder-sleutel', 'sleutel-bijmaken']
   },
   {
     slug: 'noodopening-auto',
@@ -312,7 +312,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Kunnen jullie ook auto\'s openen die op "deadlock" staan?', a: 'Ja. Deadlock betekent dat de deurgrepen aan de binnenkant elektronisch zijn uitgeschakeld. Wij openen deze voertuigen via de mechanische slotcilinder met Lishi decoders, waardoor de auto denkt dat de originele sleutel wordt gebruikt.' },
       { q: 'Hoe snel bent u bij mij bij een noodgeval?', a: 'Bij noodgevallen (zoals een kind of dier in de auto) geven wij absolute prioriteit en zijn we meestal binnen 15 tot 20 minuten op locatie.' }
     ],
-    relatedSlugs: ['autodeur-openen', 'sleutel-in-auto', 'deur-dichtgevallen', 'autosleutel-kwijt']
+    relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'autosleutel-kwijt']
   },
   {
     slug: 'alle-sleutels-kwijt-auto',
