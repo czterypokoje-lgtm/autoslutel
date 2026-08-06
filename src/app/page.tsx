@@ -490,7 +490,7 @@ export default function HomePage() {
           <div className={styles.serviceAreaGrid}>
             <div className={styles.serviceAreaText}>
               <p className={styles.serviceAreaLead}>
-                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied vanuit onze hoofdlocatie in <strong>Utrecht</strong>. Of u nu uw autosleutel bent verloren in <strong>Utrecht</strong> of <strong>Amsterdam-Zuid</strong>, met een defect contactslot staat in <strong>Amersfoort</strong> of <strong>Almere</strong>, of met spoed een transpondersleutel wilt laten inleren in &apos;t Gooi (<strong>Hilversum</strong>, <strong>Bussum</strong>, <strong>Naarden</strong>) of <strong>Amstelveen</strong> — wij komen direct naar uw thuis- of strandinglocatie.
+                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied vanuit onze hoofdlocatie in <strong>Utrecht</strong>. Of u nu uw autosleutel bent verloren in <strong>Utrecht</strong>, <strong>Rotterdam</strong> of <strong>Den Haag</strong>, met een defect contactslot staat in <strong>Amersfoort</strong> of <strong>Almere</strong>, of met spoed een transpondersleutel wilt laten inleren in &apos;t Gooi (<strong>Hilversum</strong>, <strong>Bussum</strong>, <strong>Naarden</strong>) of <strong>Amsterdam</strong> — wij komen direct naar uw thuis- of strandinglocatie.
               </p>
               <p className={styles.serviceAreaSub}>
                 Dankzij onze geavanceerde GPS-gestuurde routeplanning zijn onze monteurs meestal binnen <strong>20 tot 60 minuten</strong> ter plaatse. Geen wegsleepkosten naar de dealer en altijd 100% schadevrij geopend en geprogrammeerd. Klik op uw regio voor lokale tarieven en aankomsttijden:
