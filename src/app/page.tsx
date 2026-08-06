@@ -95,24 +95,47 @@ const breadcrumbSchema = {
 
 const services = [
   { 
-    title: 'Autosleutel Bijmaken', 
-    desc: 'Heeft u slechts één autosleutel of wilt u direct een professionele reservesleutel laten bijmaken en programmeren zonder lange wachttijden of hoge dealerprijzen? Onze gecertificeerde mobiele slotenmakers komen 24/7 naar uw locatie in heel Nederland, inclusief regio Utrecht, Amsterdam en Midden-Nederland. Wij snijden en slijpen mechanische sleutelbladen met uiterste precisie en leren transponderchips, afstandsbedieningen en moderne smart keys ter plaatse in via uw OBD2-poort. Zo voorkomt u dure wegsleepkosten naar de merkdealer en bent u binnen 30 tot 60 minuten weer veilig onderweg met een volledig werkende, geteste reservesleutel inclusief garantie.', 
+    title: 'Autosleutel Bijmaken & Reservesleutel', 
+    desc: (
+      <>
+        Wilt u een professionele reservesleutel laten bijmaken en programmeren zonder lange wachttijden of hoge dealerprijzen? Onze mobiele slotenmakers komen 24/7 naar u toe voor een autosleutel bijmaken prijs die tot 50% voordeliger is. Wij frezen mechanische sleutelbladen en leren smart keys direct in via de OBD2-poort.<br/><br/>
+        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
+          • Klaar in 30 tot 60 minuten op locatie<br/>
+          • Geen dure wegsleepkosten naar de merkdealer<br/>
+          • Geteste reservesleutel inclusief 12 maanden garantie
+        </span>
+      </>
+    ), 
     href: '/diensten/autosleutel-bijmaken',
     src: '/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp',
     alt: 'Autosleutel bijmaken en programmeren in Utrecht en heel Nederland - klaar terwijl u wacht op locatie'
   },
   { 
-    title: 'Transponder Programmeren', 
-    desc: 'Moderne personenauto\'s en bedrijfswagens zijn uitgerust met geavanceerde startonderbrekers en cryptografische transponders die communiceren met de ECU en immobilizer van uw voertuig. Wanneer uw transponderchip defect is, de sleutel niet meer wordt herkend, u uw transponder sleutel kwijt bent, of na een lege batterij de synchronisatie kwijt is, start uw motor niet meer. Met onze professionele dealer-niveau diagnose-apparatuur programmeren en herstellen wij transpondersleutels van alle merken ter plaatse op locatie. Wij kunnen direct uw autosleutel bijmaken met transponder, foutcodes uitlezen, de startblokkering resetten en synchroniseren nieuwe crypto-transponders vakkundig en veilig. U bespaart tot wel honderden euro\'s vergeleken met officiële dealers en behoudt uw fabrieksbeveiliging.', 
+    title: 'Transponder Programmeren & Startonderbreking', 
+    desc: (
+      <>
+        Start uw motor niet meer doordat de transponderchip defect is of niet wordt herkend? Wij lossen storingen in de ECU en startonderbreker direct ter plaatse op. Met onze dealer-niveau apparatuur kunnen wij uw transpondersleutel programmeren, foutcodes uitlezen en de startblokkering resetten.<br/><br/>
+        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
+          • Veilig synchroniseren van nieuwe crypto-transponders<br/>
+          • Volledig behoud van de fabrieksbeveiliging<br/>
+          • Direct geholpen bij startproblemen door elektronica
+        </span>
+      </>
+    ), 
     href: '/diensten/transponder-programmeren',
     src: '/images/seo/reserve_autosleutel_transponder_programmeren_utrecht.webp',
     alt: 'Transponder sleutel programmeren en chip inleren voor alle automerken op locatie in Utrecht'
   },
   { 
-    title: 'Autosleutels Repareren', 
+    title: 'Autosleutels Repareren & Behuizing Vervangen', 
     desc: (
       <>
-        Is de behuizing van uw sleutel gescheurd, zijn de drukknoppen lam of werkt het klapmechanisme niet meer? In plaats van direct een dure nieuwe autosleutel aan te schaffen, kunnen onze specialisten in 90% van de gevallen uw huidige <strong style={{color: 'var(--navy-900)'}}>autosleutels repareren</strong>. Wij vervangen versleten behuizingen, solderen met uiterste precisie nieuwe micro-switches op de printplaat en plaatsen hoogwaardige Varta of Panasonic batterijen. Doordat wij mobiel werken, komen we naar u toe om uw autosleutel en afstandsbediening ter plekke te herstellen. Dit is aanzienlijk sneller en goedkoper dan via de officiële autodealer. Klaar terwijl u wacht, inclusief garantie!
+        Is de behuizing van uw autosleutel gescheurd, zijn de knoppen lam of werkt de afstandsbediening niet meer? In 90% van de gevallen hoeft u geen dure nieuwe autosleutel te kopen. Onze specialisten kunnen uw autosleutel repareren terwijl u wacht.<br/><br/>
+        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
+          • Vervangen van versleten sleutelbehuizingen<br/>
+          • Precisie-solderen van micro-switches op de printplaat<br/>
+          • Inclusief nieuwe Varta of Panasonic batterij
+        </span>
       </>
     ),
     href: '/diensten/autosleutels-repareren',
@@ -120,17 +143,31 @@ const services = [
     alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
   },
   { 
-    title: 'Contact Reparatie', 
-    desc: 'Draait uw autosleutel niet meer soepel rond in het contactslot, zit het stuurwielslot muurvast of start uw auto niet door elektronische ontstekingsproblemen? Mechanische slijtage aan de interne slotplaatjes of storingen in elektronische contactsloten zoals Mercedes EIS (Elektronisch Ontstekingsslot) en ELV (Elektronisch Stuurslot) kunnen uw auto compleet blokkeren. Wij komen direct met onze servicewagen naar uw pechlocatie om uw kapotte contactslot vakkundig te repareren, reviseren of compleet te vervangen. Daarbij passen wij het nieuwe slot aan op uw bestaande sleutelcode, zodat u gewoon één sleutel blijft gebruiken voor alle portieren en het contactslot.', 
+    title: 'Contactslot Reparatie & Vervanging', 
+    desc: (
+      <>
+        Draait uw sleutel niet meer soepel rond in het contactslot of is uw stuurwielslot muurvast? Mechanische slijtage of elektronische storingen in systemen zoals Mercedes EIS en ELV blokkeren uw auto volledig. Wij reviseren en vervangen kapotte contactsloten op locatie.<br/><br/>
+        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
+          • Aangepast op uw bestaande sleutelcode<br/>
+          • Eén sleutel behouden voor alle portieren en het contact<br/>
+          • Vakkundige revisie bij ontstekingsproblemen
+        </span>
+      </>
+    ), 
     href: '/diensten/contactslot-reparatie',
     src: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
     alt: 'Contactslot reparatie en vervangen voor alle merken auto\'s ter plaatse in Utrecht zonder sleepkosten'
   },
   { 
-    title: 'Auto Slotenmaker', 
+    title: 'Auto Slotenmaker & Schadevrij Openen', 
     desc: (
       <>
-        Zoekt u met spoed een betrouwbare en erkende <strong style={{color: 'var(--navy-900)'}}>auto slotenmaker in de buurt</strong>? Of u nu uw complete sleutelbos kwijt bent, de sleutels nog in de kofferbak liggen (autodeur openen), of uw deurslot geforceerd is na een inbraakpoging: onze 24-uurs mobiele auto slotenmaker lost het direct op. Wij openen deuren van alle automerken 100% schadevrij met behulp van geavanceerde lockpick en Lishi-instrumenten. Daarnaast frezen en programmeren we direct op locatie een nieuwe chip of smart key in. Ervaar de snelste service van Nederland, zonder verborgen kosten of onnodige sleepdiensten naar een garage.
+        Heeft u uzelf buitengesloten, de sleutel in de kofferbak laten liggen, of is uw auto op slot gegaan? Onze 24-uurs auto slotenmaker lost het direct op. Wij kunnen elke autodeur 100% schadevrij openen met geavanceerde Lishi-lockpick instrumenten.<br/><br/>
+        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
+          • 24/7 spoedhulp bij buitensluiting of verloren sleutel<br/>
+          • Geen enkele schade aan lak of portierrubbers<br/>
+          • Direct op locatie een nieuwe chip of smart key inleren
+        </span>
       </>
     ),
     href: '/diensten/auto-slotenmaker',
@@ -138,8 +175,17 @@ const services = [
     alt: 'Auto schadevrij openen bij sleutels in auto vergeten of autodeur op slot in Utrecht en omgeving'
   },
   { 
-    title: 'Smart Key / Keyless', 
-    desc: 'Heeft u problemen met uw keyless entry of keyless go autosleutel, of wordt uw proximity smart key niet meer gedetecteerd door de sensoren van uw auto? Moderne draadloze smart keys en comfort access sleutels vereisen uiterst gespecialiseerde programmering en beveiligde encryptiesleutels om naadloos te communiceren met het boordnet van uw wagen. Wij leveren, inleren en synchroniseren originele en hoogwaardige aftermarket smart keys voor onder andere BMW, Mercedes, Volkswagen, Audi, Ford en Renault direct bij u thuis of op locatie. Met geavanceerde cryptografische codering garanderen wij dat uw auto optimaal beveiligd blijft tegen elektronische diefstal en relay-attacks.', 
+    title: 'Smart Key / Keyless Go Systeem', 
+    desc: (
+      <>
+        Heeft u problemen met uw keyless entry sleutel of wordt uw smart key niet meer gedetecteerd? Moderne draadloze systemen vereisen specialistische encryptie en programmering om communicatieproblemen met het boordnet te verhelpen.<br/><br/>
+        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
+          • Inleren van originele en aftermarket smart keys<br/>
+          • Ondersteuning voor o.a. BMW, Mercedes, Audi, VW en Ford<br/>
+          • Optimale bescherming tegen relay-attacks en diefstal
+        </span>
+      </>
+    ), 
     href: '/diensten/smart-key-programmeren',
     src: '/images/seo/smart-key-keyless-programmeren-autosleutel24-utrecht.webp',
     alt: 'Smart key en keyless-go start-stop knop programmeren en inleren door Autosleutel24 mobiele specialist Utrecht'
@@ -199,14 +245,13 @@ export default function HomePage() {
         }} />
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Heel Nederland</p>
+            <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Randstad & Midden-Nederland</p>
             <h1 className={styles.heroTitle}>
-              Autosleutel Kwijt of Defect?<br />
-              <span className={styles.heroOrange}>Wij Zijn Er Binnen 30–60 Minuten</span>
+              Autosleutel Kwijt of Bijmaken?<br />
+              <span className={styles.heroOrange}>Wij Helpen Direct op Locatie!</span>
             </h1>
             <p className={styles.heroLead}>
-              Professionele sleutelprogrammering voor alle merken. Geen sleepkosten. 
-              Goedkoper dan de dealer. Dealer-niveau apparatuur. 24/7 bereikbaar.
+              Staat u buitengesloten of is uw autosleutel defect? Geen paniek. Autosleutel24 komt met een volledig uitgeruste servicebus naar u toe. Geen wegsleepkosten, goedkoper dan de dealer en vaak binnen 30 tot 60 minuten weer op weg!
             </p>
             <div className={styles.heroCtas}>
               <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.heroPhoneBtn}>
@@ -253,8 +298,8 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.sectionHead}>
             <p className="section-eyebrow">ONZE DIENSTEN</p>
-            <h2 className="section-title">Alles voor Uw Autosleutel</h2>
-            <p className="section-lead">Ter plaatse geprogrammeerd in onze volledig uitgeruste bus. Geen verborgen kosten.</p>
+            <h2 className="section-title">Alles voor Uw Autosleutel — Snel & Betrouwbaar</h2>
+            <p className="section-lead">Direct ter plaatse geprogrammeerd in onze mobiele werkplaats. Geen verborgen kosten en altijd vooraf een vaste prijs.</p>
           </div>
           <div className={styles.servicesGrid}>
             {services.map((s, i) => (
