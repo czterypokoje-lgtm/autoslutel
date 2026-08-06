@@ -358,7 +358,7 @@ export const BLOG_POSTS = [
     readTime: '6 min',
   },
   {
-    slug: 'auto-herkent-sleutel-niet-meer-oorzaken-oplossingen',
+    slug: 'auto-herkent-sleutel-niet-meer',
     title: 'Auto Herkent Sleutel Niet Meer: Oorzaken & Oplossingen',
     excerpt: 'Ervaar je stress omdat je auto sleutel niet meer herkent? Ontdek hier snelle oplossingen en veelvoorkomende oorzaken voor een auto die niet reageert op je sleutel.',
     keywords: ['auto herkent sleutel niet meer', 'auto reageert niet op sleutel', 'autosleutel weigert dienst', 'startonderbreker herkent sleutel niet'],
@@ -366,7 +366,7 @@ export const BLOG_POSTS = [
     readTime: '6 min',
   },
   {
-    slug: 'volkswagen-sleutel-bijmaken-kosten-opties-tips',
+    slug: 'volkswagen-sleutel-bijmaken',
     title: 'Volkswagen Sleutel Bijmaken: Kosten, Opties en Tips',
     excerpt: 'Ontdek alles over het laten bijmaken van een sleutel voor je Volkswagen, inclusief kosten en opties tussen dealer en specialist. Zorg dat je altijd voorbereid bent met een vervangende sleutel volkswagen.',
     keywords: ['volkswagen sleutel bijmaken', 'volkswagen autosleutel kwijt', 'nieuwe sleutel vw', 'autosleutel specialist versus officiële dealer', 'volkswagen sleutel inleren kosten'],

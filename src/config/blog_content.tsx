@@ -2155,7 +2155,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </div>
     </>
   ),
-  'auto-herkent-sleutel-niet-meer-oorzaken-oplossingen': (
+  'auto-herkent-sleutel-niet-meer': (
     <>
       <p>
         Je stapt &apos;s ochtends gehaast de deur uit. Je drukt op de knop van je sleutel, maar de auto blijft op slot. Geen reactie. Als je auto herkent sleutel niet meer, levert dat direct stress op. Moderne auto&apos;s leunen sterk op elektronica. Bij een storing staar je al snel naar het dashboard. Waarom weigert je wagen dienst? Dat kan komen door een lege batterij, signaalstoring of schade aan sleutel, contactslot of elektronica. In dit artikel lees je de meest voorkomende oorzaken, simpele oplossingen en handige noodstappen.
@@ -2234,7 +2234,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </div>
     </>
   ),
-  'volkswagen-sleutel-bijmaken-kosten-opties-tips': (
+  'volkswagen-sleutel-bijmaken': (
     <>
       <p>
         Het overkomt de beste automobilisten: je loopt naar je auto en kunt de sleutel nergens vinden. Misschien is hij onopgemerkt uit je jaszak of tas gegleden, in het water gevallen, of gestolen. Wat te doen bij Volkswagen autosleutel kwijt? Allereerst is het ontzettend belangrijk om rustig te blijven. Paniek lost in deze situaties niets op, maar doelgericht handelen is simpelweg noodzakelijk. Of je nu met spoed op zoek bent naar een volkswagen nieuwe sleutel ter directe vervanging, of slim wilt anticiperen door preventief een sleutel volkswagen bijmaken als extra reserve voor in de kast te hebben; je staat voor een paar essentiële keuzes.
