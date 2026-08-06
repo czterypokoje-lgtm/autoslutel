@@ -213,7 +213,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           }}>
             <img
               src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
-              alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24 Utrecht"
+              alt="Berkan Acarol — Eigenaar &amp; Autosleutelspecialist Autosleutel24"
               style={{
                 width: 40,
                 height: 40,

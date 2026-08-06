@@ -69,7 +69,7 @@ const CORE_IMAGES = [
   {
     url: '/images/seo/autosleutel_voorraad_alle_merken_utrecht_amsterdam.webp',
     title: 'Autosleutel Voorraad Alle Merken',
-    caption: 'Grote voorraad originele autosleutels voor alle merken bij Autosleutel24 Utrecht',
+    caption: 'Grote voorraad originele autosleutels voor alle merken bij Autosleutel24',
     geo_location: 'Utrecht, Nederland',
   },
   {
@@ -111,7 +111,7 @@ const CORE_IMAGES = [
   {
     url: '/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp',
     title: 'Berkan Acarol — Autosleutelspecialist Utrecht',
-    caption: 'Berkan Acarol, eigenaar en hoofdtechnicus van Autosleutel24 Utrecht',
+    caption: 'Berkan Acarol, eigenaar en hoofdtechnicus van Autosleutel24',
     geo_location: 'Utrecht, Nederland',
   },
   {
@@ -127,7 +127,7 @@ const BLOG_IMAGES = [
   {
     url: '/images/blog/auto_openen_zonder_sleutel_schadevrij.png',
     title: 'Auto Openen Zonder Sleutel Schadevrij',
-    caption: 'Schadevrij auto openen zonder sleutel door Autosleutel24 Utrecht',
+    caption: 'Schadevrij auto openen zonder sleutel door Autosleutel24',
   },
   {
     url: '/images/blog/autosleutel_bijmaken_kosten_prijslijst.png',

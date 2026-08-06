@@ -5,7 +5,7 @@
 
 export const SITE_CONFIG = {
   name: 'Autosleutel24',
-  fullName: 'Autosleutel24 Utrecht',
+  fullName: 'Autosleutel24',
   tagline: 'Mobiele Sleutelprogrammering — Alle Merken',
   domain: 'https://www.autosleutel24.nl', // primary
 
@@ -32,8 +32,8 @@ export const SITE_CONFIG = {
   hoursShort: '24/7 Beschikbaar',
   responseTime: '30–60 minuten',
 
-  kvk: '81726354',
-  btw: 'NL817263540B01',
+  kvk: '42123555',
+  btw: 'NL42123555B01',
   rating: '4.9',
   reviewCount: '247',
 

@@ -59,9 +59,7 @@ export default function ContactPage() {
             <div style={{ background: 'var(--color-bg-alt)', padding: '1.5rem', borderRadius: '12px' }}>
               <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>Bedrijfsgegevens</h3>
               <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>{SITE_CONFIG.fullName}</strong></p>
-              <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>{SITE_CONFIG.address.city}, {SITE_CONFIG.address.region}</p>
               <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>KVK: {SITE_CONFIG.kvk}</p>
-              <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>BTW: {SITE_CONFIG.btw}</p>
               <p style={{ fontSize: '0.9rem', color: 'var(--color-success)', fontWeight: 600 }}>🕐 {SITE_CONFIG.hoursShort}</p>
             </div>
 

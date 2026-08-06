@@ -124,7 +124,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <ol>
         <li><strong>Geen paniek:</strong> Controleer nogmaals grondig al uw zakken, tassen en plekken waar de sleutel kan liggen.</li>
         <li><strong>Identificeer uw voertuig:</strong> Houd het kenteken, merk, model, bouwjaar en eventueel het chassisnummer (VIN) bij de hand.</li>
-        <li><strong>Bel Autosleutel24 Utrecht:</strong> Onze spoedservice is stand-by. Wij sturen direct een mobiele technicus naar uw locatie in Utrecht of omstreken.</li>
+        <li><strong>Bel Autosleutel24:</strong> Onze spoedservice is stand-by. Wij sturen direct een mobiele technicus naar uw locatie in Utrecht of omstreken.</li>
         <li><strong>Schadevrij openen:</strong> Onze monteur opent uw portier schadevrij met speciaal gereedschap (zoals Lishi picks).</li>
         <li><strong>Sleutel frezen & programmeren:</strong> In onze bus frezen we een nieuwe sleutelbaard en programmeren we een nieuwe transponder chip via de OBD-diagnosepoort. De verloren sleutels worden direct uit het geheugen gewist.</li>
       </ol>
@@ -211,7 +211,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         <li><strong>All Risk Verzekering:</strong> Dekt zowel diefstal als verlies van sleutels. Let wel op uw eigen risico en eventuele gevolgen voor uw schadevrije jaren (no-claim korting).</li>
       </ul>
       <p>
-        Autosleutel24 Utrecht levert altijd een officiële, gespecificeerde factuur die u direct kunt indienen bij uw verzekeraar voor een snelle afhandeling.
+        Autosleutel24 levert altijd een officiële, gespecificeerde factuur die u direct kunt indienen bij uw verzekeraar voor een snelle afhandeling.
       </p>
     </>
   ),

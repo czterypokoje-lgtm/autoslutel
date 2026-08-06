@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Autosleutel Bijmaken & Programmeren | Autosleutel24 Utrecht',
+    title: 'Autosleutel Bijmaken & Programmeren | Autosleutel24',
     description: 'Mobiele autosleutelspecialist voor alle merken. 24/7 service. Bel 06 11 75 12 31',
     images: ['/og-image.png'],
   },
@@ -83,7 +83,7 @@ const localBusinessSchema = {
   '@type': ['LocalBusiness', 'AutomotiveBusiness', 'Locksmith'],
   '@id': `${SITE_CONFIG.domain}/#localbusiness`,
   name: SITE_CONFIG.name,
-  alternateName: 'Autosleutel24 Utrecht',
+  alternateName: 'Autosleutel24',
   description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Werkzaam in Utrecht, Amsterdam, Almere, Amersfoort en heel Nederland.',
   url: SITE_CONFIG.domain,
   logo: {
