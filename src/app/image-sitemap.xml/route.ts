@@ -1,5 +1,6 @@
 import { SITE_CONFIG } from '@/config/site.config';
 import { BLOG_POSTS } from '@/config/services';
+import { CITIES } from '@/config/cities';
 
 const BASE = 'https://www.autosleutel24.nl';
 
@@ -190,6 +191,17 @@ const PAGE_ENTRIES = [
   ...BLOG_POSTS.map((post) => ({
     loc: `${BASE}/blog/${post.slug}`,
     images: [BLOG_IMAGES[0]],
+  })),
+
+  // Dynamically add all 8 gallery images for each city
+  ...CITIES.map((city) => ({
+    loc: `${BASE}/steden/${city.slug}`,
+    images: Array.from({ length: 8 }).map((_, i) => ({
+      url: `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i + 1}.webp`,
+      title: `Autosleutel Bijmaken ${city.city} - Foto ${i + 1}`,
+      caption: `Professioneel autosleutel bijmaken en programmeren in ${city.city}`,
+      geo_location: `${city.city}, ${city.region}, Nederland`,
+    })),
   })),
 ];
 

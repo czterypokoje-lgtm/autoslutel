@@ -25,7 +25,7 @@ export const SITE_CONFIG = {
   serviceArea: {
     lat: '52.0907',
     lng: '5.1214',
-    radiusMeters: '50000', // 50km serving area around Utrecht HQ
+    radiusMeters: '75000', // 75km serving area around Utrecht HQ (includes Den Haag/Rotterdam)
   },
 
   hours: 'Maandag t/m Zondag 00:00–24:00',
