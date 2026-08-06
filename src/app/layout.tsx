@@ -18,7 +18,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.domain),
   title: 'Autosleutel Bijmaken of Kwijt? 24/7 Mobiele Service | Autosleutel24',
-  description: `Autosleutel kwijt of defect? Professionele mobiele autosleutelspecialist in Utrecht, Amsterdam, Almere & heel Nederland. Alle merken. Zelfde dag service. Goedkoper dan dealer. Bel: ${SITE_CONFIG.phone}`,
+  description: `Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!`,
   keywords: [
     'autosleutelbijmaken', 'autosleutel24', 'autosleutelkwijt', 'autosleutel kwijt',
     'autosleutel bijmaken', 'autosleutel programmeren', 'reservesleutel auto bijmaken',
