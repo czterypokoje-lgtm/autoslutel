@@ -205,6 +205,8 @@ const serviceAreaCities = [
   { name: 'Zeist', slug: 'zeist', time: '18-22 min' },
   { name: 'Huizen', slug: 'huizen', time: '35-45 min' },
   { name: 'Diemen', slug: 'diemen', time: '35-45 min' },
+  { name: 'Rotterdam', slug: 'rotterdam', time: '45-60 min' },
+  { name: 'Den Haag', slug: 'den-haag', time: '45-60 min' },
 ];
 
 export default function HomePage() {

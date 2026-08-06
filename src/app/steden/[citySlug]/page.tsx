@@ -12,11 +12,15 @@ import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 import UtrechtSeo from '@/content/seo/utrecht';
 import AmsterdamSeo from '@/content/seo/amsterdam';
+import DenHaagSeo from '@/content/seo/den-haag';
+import RotterdamSeo from '@/content/seo/rotterdam';
 import { getFaqForCity } from '@/config/faq';
 
 const SeoComponents: Record<string, React.FC> = {
   utrecht: UtrechtSeo,
   amsterdam: AmsterdamSeo,
+  'den-haag': DenHaagSeo,
+  rotterdam: RotterdamSeo,
 };
 
 // Helper for stable hashing
