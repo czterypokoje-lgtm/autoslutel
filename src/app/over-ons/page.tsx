@@ -5,9 +5,9 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Over Ons | Mobiele Autosleutelspecialist | Autosleutel24',
+    absolute: 'Over Ons | Autosleutel24: Gecertificeerd Autosleutel Specialist',
   },
-  description: `Ontmoet ons team van gecertificeerde autosleutelspecialisten. Autosleutel24 Utrecht — dealer-niveau programmering, alle merken. KVK geregistreerd, verzekerd, 24/7 beschikbaar.`,
+  description: `Maak kennis met Autosleutel24. Onder leiding van Berkan Acarol bieden wij professionele, mobiele autosleutelservice in de gehele Randstad en Midden-Nederland.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/over-ons`,
     languages: {
@@ -77,9 +77,9 @@ export default function OverOnsPage() {
       }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <span className="section-label">OVER ONS</span>
-          <h1 style={{ color: '#fff', marginBottom: '1rem' }}>De Autosleutel Specialist van Utrecht</h1>
+          <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Over Autosleutel24: Uw Mobiele Autosleutelspecialist</h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '1.1rem', lineHeight: 1.7 }}>
-            Wij zijn een mobiele autosleutel specialist gevestigd in Utrecht. Met state-of-the-art apparatuur en jarenlange ervaring lossen wij elk sleutelprobleem op — ter plaatse, 24/7, eerlijk geprijsd.
+            Wij zijn uw betrouwbare, mobiele autosleutelspecialist. Met geavanceerde apparatuur en jarenlange ervaring lossen wij elk autosleutelprobleem op. Wij doen dit direct ter plaatse, 24/7 en voor een eerlijke, vaste prijs.
           </p>
         </div>
       </section>
@@ -90,16 +90,16 @@ export default function OverOnsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
           <div>
             <h2 style={{ fontSize: '1.6rem', fontWeight: 700, marginBottom: '0.75rem' }}>Wie Zijn Wij?</h2>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Autosleutel24 Utrecht wordt geleid door Berkan Acarol, een gecertificeerd autosleutelspecialist met jarenlange ervaring in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks autobezitters, wagenparkbeheerders en autobedrijven in heel Midden-Nederland.</p>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Wij zijn een mobiele dienst gespecialiseerd in autosleutelprogrammering voor alle merken en modellen. Wij komen naar u toe — of u nu thuis bent, op het werk, of gestrand langs de weg.</p>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1rem' }}>Onze focus: eerlijke prijzen, snelle reactie, en technisch excellent werk. Geen vage verhalen — gewoon het probleem oplossen.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Autosleutel24 wordt geleid door Berkan Acarol. Hij is een gecertificeerd expert in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks particulieren, wagenparkbeheerders en garagebedrijven.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Wij komen altijd naar u toe. Of u nu thuis bent, op het werk, of gestrand langs de snelweg.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1rem' }}>Onze focus is simpel: Eerlijke prijzen, snelle reactietijden en technisch perfect werk. Geen vage verhalen, gewoon direct uw probleem oplossen.</p>
 
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Onze Waarden</h3>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Onze Kernwaarden</h3>
             <ul style={{ listStyleType: 'none', padding: 0, margin: 0, fontSize: '0.88rem', color: 'var(--gray-700)', lineHeight: '1.7' }}>
-              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Transparantie</strong> — Vaste prijs afspreken voor start</span></li>
-              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaarheid</strong> — KVK geregistreerd, verzekerd</span></li>
-              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Kwaliteit</strong> — Professionele tools, geen goedkope alternatieven</span></li>
-              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Bereikbaarheid</strong> — 24/7, ook weekend en feestdagen</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Transparantie:</strong> U krijgt altijd vooraf een vaste prijs. Geen verrassingen achteraf.</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaarheid:</strong> Wij zijn KvK-geregistreerd, volledig verzekerd en leveren werk met standaard 12 maanden garantie.</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Kwaliteit:</strong> Wij gebruiken uitsluitend professionele (OEM) apparatuur, geen goedkope imitatie.</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Bereikbaarheid:</strong> Wij staan 24 uur per dag, 7 dagen per week voor u klaar, ook in het weekend en op feestdagen.</span></li>
             </ul>
           </div>
 
@@ -127,9 +127,9 @@ export default function OverOnsPage() {
         {/* Workshop Image Section */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Onze Professionele Werkplaats</h2>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Bij Autosleutel24 Utrecht geloven we in het leveren van topkwaliteit. Daarom beschikken we naast onze mobiele bussen over een eigen, fysieke werkplaats in Utrecht. Deze is speciaal uitgerust met CNC-gestuurde sleutel-freesmachines, soldeerstations voor fijnmicro-solderen en geavanceerde programmeerapparaten.</p>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Of het nu gaat om het dupliceren van een reservesleutel, het inlezen van een transponder of het herstellen van een defect printplaatje; in onze werkplaats voeren we alle handelingen met uiterste precisie uit.</p>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Onze Werkplaats &amp; Mobiele Service<br/>📍 Hoofdkantoor in Utrecht, Actief in de Hele Randstad</h2>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Onze fysieke werkplaats en het magazijn zijn gevestigd in Utrecht. Vanuit deze centrale locatie sturen wij onze mobiele servicebussen aan.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Wij rijden dagelijks uit naar klanten in de hele Randstad en Midden-Nederland. Zo helpen wij snel en op locatie in onder andere Amsterdam, Rotterdam, Den Haag, Amersfoort, Almere en het Gooi.</p>
           </div>
           <div>
             <img 
@@ -143,8 +143,8 @@ export default function OverOnsPage() {
         {/* Mobile Work & Inventory Section */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Service Op Locatie &amp; 24/7 Bereikbaar</h2>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Problemen met uw autosleutel gebeuren vaak op de meest ongelegen momenten. Met onze volledig uitgeruste mobiele servicebussen komen we direct naar u toe, waar u zich ook bevindt in de regio Utrecht. U hoeft uw auto niet te slepen naar de dealer, wij fixen het op locatie!</p>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>🚐 Volledig Uitgeruste Servicebussen</h2>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Problemen met autosleutels gebeuren vaak op ongelegen momenten. Daarom hebben wij onze bussen ingericht als rijdende werkplaatsen. Wij frezen sleutels direct op locatie met CNC-gestuurde machines en hebben soldeerstations voor precisiewerk bij ons. U hoeft uw auto dus nooit duur te laten wegslepen naar een dealer.</p>
           </div>
           <div>
             <img 
@@ -157,8 +157,8 @@ export default function OverOnsPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Grote Voorraad Originele Sleutels</h2>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Om u zo snel mogelijk weer op weg te helpen, beschikken wij over een enorme voorraad aan originele en aftermarket autosleutels. Van moderne smart keys (keyless go) tot traditionele transpondersleutels, wij hebben de juiste sleutel voor 99% van alle automerken direct op voorraad.</p>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>🔑 Grote Voorraad Originele Sleutels</h2>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Om u zo snel mogelijk weer op weg te helpen, hebben wij een enorme voorraad originele en aftermarket autosleutels. Van moderne Keyless Go smart keys tot traditionele sleutels met een transponder; voor 99% van alle automerken hebben wij direct de juiste oplossing op voorraad.</p>
           </div>
           <div>
             <img 
@@ -172,10 +172,9 @@ export default function OverOnsPage() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
           {[
-            { num: '127+', label: 'Tevreden klanten', sub: 'Google beoordeeld' },
-            { num: '4.9★', label: 'Google score', sub: 'Gemiddeld' },
-            { num: '34 min', label: 'Reactietijd', sub: 'In Utrecht' },
-            { num: '24/7', label: 'Bereikbaar', sub: 'Altijd' },
+            { num: '4.9★', label: 'Google Score', sub: 'Meer dan 247 klantbeoordelingen' },
+            { num: '34 min', label: 'Gemiddelde reactietijd', sub: 'Op locatie' },
+            { num: '24/7', label: 'Bereikbaar', sub: 'Voor spoedgevallen in de gehele regio' },
           ].map((s) => (
             <div key={s.label} style={{ textAlign: 'center', padding: '2rem', background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px' }}>
               <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '0.25rem' }}>{s.num}</div>
@@ -187,14 +186,20 @@ export default function OverOnsPage() {
 
         {/* ── COMPREHENSIVE OVER ONS SEO GUIDE ARTICLE ── */}
         <div className="seo-article-block" style={{ marginTop: '2rem', marginBottom: '3.5rem' }}>
-          <h2>Waarom Onze Slotenmakers en Mobiele Service Koploper in Nederland Zijn</h2>
+          <h2>Waarom Kiezen Voor Autosleutel24?</h2>
+          <h3>Echte Expertise, Geen Standaard Garage</h3>
           <p>
-            Bij <strong>{SITE_CONFIG.name}</strong> geloven we in vakmanschap, eerlijke communicatie en snelle hulp. Berkan Acarol en zijn team werken continu met de modernste sleutel- en diagnosesoftware op de markt. Waar veel garages stoppen bij het leveren van standaard mechanische sleutels, zijn wij gespecialiseerd in complexe voertuigelektronica, EEPROM-lezen, CAN-bus beveiligingen en het inleren van transponderchips op fabrieksniveau.
+            Berkan Acarol en zijn team werken altijd met de nieuwste software voor sleutel- en voertuigdiagnose. Waar een standaard garage stopt, gaan wij verder. Wij zijn gespecialiseerd in complexe voertuigelektronica, het lezen van EEPROM, CAN-bus beveiliging en het inleren van transponderchips op fabrieksniveau.
           </p>
-          <h3>Geen Tussenpersonen of Callcenters</h3>
+          <h3>Geen Tussenpersonen of Dure Callcenters</h3>
           <p>
-            Wanneer u ons belt op ons noodnummer, krijgt u direct een deskundige monteur aan de lijn. U hoeft niet te onderhandelen via tussenpersonen of dure callcenters. Wij schatten direct uw situatie in, geven u vooraf een duidelijke all-in prijsopgave en plannen de dichtstbijzijnde mobiele monteur in om binnen 30 tot 45 minuten bij u te zijn.
+            Wanneer u ons noodnummer belt, krijgt u geen callcenter aan de lijn, maar direct een deskundige monteur.
           </p>
+          <ul style={{ listStyleType: 'none', padding: 0, margin: 0, marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <li><strong>Direct Contact:</strong> Wij schatten uw situatie direct aan de telefoon in.</li>
+            <li><strong>Heldere Prijs:</strong> U krijgt vooraf een duidelijke all-in prijsopgave.</li>
+            <li><strong>Snel Ter Plaatse:</strong> Wij plannen de dichtstbijzijnde monteur in. Vaak zijn we al binnen 30 tot 45 minuten bij u op locatie.</li>
+          </ul>
         </div>
 
         <div style={{ textAlign: 'center' }}>
