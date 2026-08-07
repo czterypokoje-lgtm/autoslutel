@@ -36,7 +36,7 @@ export default function KentekenForm() {
       alert("Vul alstublieft minimaal uw kenteken in om een exacte prijs te ontvangen.");
       return;
     }
-    window.open(whatsappUrl, '_blank');
+    window.location.href = whatsappUrl;
   };
 
   return (
