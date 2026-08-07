@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
+import KentekenForm from '@/components/KentekenForm/KentekenForm';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -92,6 +93,8 @@ export default function KentekenBestellenPage() {
           <div className={styles.container}>
             <div className={styles.contentGrid}>
               <div className={styles.mainContent}>
+
+                <KentekenForm />
                 
                 {/* Section 1 - How it works */}
                 <div>
