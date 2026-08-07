@@ -237,7 +237,7 @@ export default function KentekenBestellenPage() {
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
                     Bel: {SITE_CONFIG.phone}
                   </a>
-                  <a href={customWhatsAppUrl} target="_blank" rel="noopener noreferrer" className={styles.sideWa} id="kb-side-wa">WhatsApp Direct</a>
+                  <a href="#offerte-form" className={styles.sideWa} id="kb-side-wa">WhatsApp Direct</a>
                   <div className={styles.sideList}>
                     {['Geen sleepkosten', 'Vaste prijs vooraf', 'Geen NAW gegevens nodig', '12 maanden garantie', 'Direct antwoord'].map(item => (
                       <div key={item} className={styles.sideListItem}>
@@ -263,7 +263,7 @@ export default function KentekenBestellenPage() {
               <p>Stuur simpelweg uw kenteken via WhatsApp en wij zoeken direct in onze database de exacte prijs op voor een nieuwe sleutel.</p>
               <div className={styles.ctaBtnsGrid}>
                 <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary} id="kb-bottom-phone">Bel: {SITE_CONFIG.phone}</a>
-                <a href={customWhatsAppUrl} target="_blank" rel="noopener noreferrer" className={styles.btnWhatsapp} id="kb-bottom-wa">Stuur Kenteken via WhatsApp</a>
+                <a href="#offerte-form" className={styles.btnWhatsapp} id="kb-bottom-wa">Stuur Kenteken via WhatsApp</a>
               </div>
               <span className={styles.microText}>Binnen 5 tot 10 minuten reactie (tijdens openingstijden)</span>
             </div>
