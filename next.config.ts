@@ -111,11 +111,7 @@ const nextConfig: NextConfig = {
         destination: '/diensten/auto-slotenmaker',
         permanent: true,
       },
-      {
-        source: '/blog/ghost-immobiliser-utrecht',
-        destination: '/diensten/auto-slotenmaker',
-        permanent: true,
-      },
+
       {
         source: '/auto-beveiliging',
         destination: '/diensten/auto-slotenmaker',
