@@ -12,6 +12,8 @@ export type Brand = {
   system: string;   // ECU/immobilizer system
   excerpt: string;
   models?: BrandModel[];
+  customH1?: string;
+  customMetaTitle?: string;
 };
 
 export type BrandModel = {

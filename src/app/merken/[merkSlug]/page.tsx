@@ -30,7 +30,7 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
   const pageUrl = `${SITE_CONFIG.domain}/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken`;
   return {
     title: {
-      absolute: `${brand.name} Autosleutel Bijmaken | Alle Modellen & Bouwjaren | Autosleutel24`,
+      absolute: brand.customMetaTitle || `${brand.name} Autosleutel Bijmaken | Alle Modellen & Bouwjaren | Autosleutel24`,
     },
     description: `${brand.name} autosleutel bijmaken & programmeren op locatie. Volledig A–Z modellenoverzicht (${brand.system}). Tot 50% goedkoper dan de ${brand.name} dealer. Bel direct: ${SITE_CONFIG.phone}`,
     alternates: {
@@ -119,7 +119,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             </nav>
 
             <h1 style={{ color: '#fff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: '1.2rem' }}>
-              {brand.name} Autosleutel Bijmaken &amp; Programmeren <br />
+              {brand.customH1 || <>{brand.name} Autosleutel Bijmaken &amp; Programmeren</>} <br />
               <span style={{ color: 'var(--orange-400)' }}>Alle Modellen &amp; Bouwjaren • Mobiel Ter Plaatse</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.8)', maxWidth: 760, fontSize: '1.08rem', lineHeight: 1.7, marginBottom: '2.2rem' }}>
@@ -226,9 +226,9 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
         <section style={{ padding: '4.5rem 0', background: '#ffffff' }}>
           <div className="container">
             <div className="seo-article-block" style={{ marginTop: 0 }}>
-              <h2>Uitgebreide Technische Specificaties: {brand.name} Autosleutels &amp; Startonderbreker ({brand.system})</h2>
+              <h2>{brand.name} Sleutel Bijmaken en Inleren ({brand.system})</h2>
               <p>
-                Het merk <strong>{brand.name}</strong> staat bekend om zijn betrouwbare engineering en geavanceerde voertuigbeveiliging. Moderne {brand.name} modellen maken gebruik van complexe elektronische startonderbrekers en cryptografische transpondersystemen (zoals <strong>{brand.system}</strong>). Waar traditionele sleutelmakers vaak niet verder komen dan het mechanisch kopiëren van een sleutelbaard, beschikken onze gecertificeerde monteurs over officiële fabriekssoftware en hightech diagnosetools om de sleutel direct in de centrale boordcomputer te programmeren.
+                Wilt u een <strong>{brand.name} sleutel laten maken</strong>? Dat regelen wij graag voor u! Moderne auto&apos;s zoals de {brand.name} hebben een slimme beveiliging met een transponderchip (zoals <strong>{brand.system}</strong>). U kunt de auto alleen starten met een officieel ingeleerde sleutel. Wij kunnen direct een nieuwe <strong>{brand.name} sleutel bijmaken</strong> en deze veilig in de computer van uw auto inleren. Zo kunt u weer met een gerust hart de weg op. U kunt bij ons ook uw kapotte sleutel laten repareren.
               </p>
 
               <h3>1. Hoe werkt het inleren van een {brand.name} transponder of Smart Key?</h3>
