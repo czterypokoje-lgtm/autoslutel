@@ -3,6 +3,9 @@ export type City = {
   lang: 'NL' | 'FR' | 'VL'; travelTime: string; keyword: string; nlSearches: number; priority: 'P1'|'P2'|'P3';
   subAreas: string[]; reviewQuote: string; reviewAuthor: string; reviewCar: string;
   geo: { lat: string; lng: string };
+  customH1?: string;
+  customMetaTitle?: string;
+  customMetaDesc?: string;
 };
 
 export const CITIES: City[] = [
@@ -10,7 +13,11 @@ export const CITIES: City[] = [
   { slug:"bussum", city:"Bussum", region:"Noord-Holland", country:"NL", lang:"NL", travelTime:"10-20 min", keyword:"autosleutel programmeren Bussum", nlSearches:210, priority:"P1", subAreas:['Bussum Centrum', 'Spiegel', 'Brediuskwartier', 'Eng', 'Zuid'], reviewQuote:"Bussum centrum autosleutel bijgemaakt ter plaatse. Topservice!", reviewAuthor:"K. van Leeuwen", reviewCar:"BMW 3 Serie", geo:{"lat":"52.2740","lng":"5.1611"} },
   { slug:"utrecht", city:"Utrecht", region:"Utrecht", country:"NL", lang:"NL", travelTime:"15-20 min", keyword:"autosleutel programmeren Utrecht", nlSearches:480, priority:"P1", subAreas:['Utrecht Centrum', 'Leidsche Rijn', 'Overvecht', 'Kanaleneiland', 'Lunetten', 'Vleuten-De Meern', 'Oost', 'West', 'Zuid'], reviewQuote:"Audi Q5 keyless entry defect. Gerepareerd in 45 minuten. Indrukwekkend.", reviewAuthor:"H. Janssen", reviewCar:"Audi Q5", geo:{"lat":"52.0907","lng":"5.1214"} },
   { slug:"hilversum", city:"Hilversum", region:"Noord-Holland", country:"NL", lang:"NL", travelTime:"15-25 min", keyword:"autosleutel programmeren Hilversum", nlSearches:185, priority:"P1", subAreas:['Centrum', 'Noord', 'Oost', 'Zuid', 'Media Park', 'Kerkelanden'], reviewQuote:"Snelle service in Hilversum, nieuwe reservesleutel voor mijn Ford.", reviewAuthor:"T. Bos", reviewCar:"Ford Fiesta", geo:{"lat":"52.2292","lng":"5.1669"} },
-  { slug:"amsterdam", city:"Amsterdam", region:"Noord-Holland", country:"NL", lang:"NL", travelTime:"25-35 min", keyword:"autosleutel programmeren Amsterdam", nlSearches:1320, priority:"P1", subAreas:['Amsterdam Centrum', 'Amsterdam Zuid', 'Amsterdam West', 'Amsterdam Oost', 'Amsterdam Noord', 'Zuidoost', 'Nieuw-West'], reviewQuote:"Porsche Cayenne autosleutel kwijt in Amsterdam. Came all the way, fixed in 2 hours. Worth it.", reviewAuthor:"T. Bakker", reviewCar:"Porsche Cayenne", geo:{"lat":"52.3676","lng":"4.9041"} },
+  { slug:"amsterdam", city:"Amsterdam", region:"Noord-Holland", country:"NL", lang:"NL", travelTime:"25-35 min", keyword:"autosleutel programmeren Amsterdam", nlSearches:1320, priority:"P1", subAreas:['Amsterdam Centrum', 'Amsterdam Zuid', 'Amsterdam West', 'Amsterdam Oost', 'Amsterdam Noord', 'Zuidoost', 'Nieuw-West'], reviewQuote:"Porsche Cayenne autosleutel kwijt in Amsterdam. Came all the way, fixed in 2 hours. Worth it.", reviewAuthor:"T. Bakker", reviewCar:"Porsche Cayenne", geo:{"lat":"52.3676","lng":"4.9041"},
+    customH1: "Autosleutel Bijmaken Amsterdam Noord, Zuid & Centrum — Autosleutel Reparatie Amsterdam",
+    customMetaTitle: "Autosleutel Bijmaken Amsterdam Noord & Reparatie | Autosleutel24",
+    customMetaDesc: "Autosleutel bijmaken Amsterdam Noord, Zuid of Centrum? Snel, goedkoper dan de dealer. Autosleutel reparatie Amsterdam op locatie. Bel direct!"
+  },
   { slug:"rotterdam", city:"Rotterdam", region:"Zuid-Holland", country:"NL", lang:"NL", travelTime:"45-60 min", keyword:"autosleutel programmeren Rotterdam", nlSearches:900, priority:"P1", subAreas:['Rotterdam Centrum', 'Kop van Zuid', 'Kralingen', 'Delfshaven', 'Overschie', 'IJsselmonde', 'Zuid'], reviewQuote:"Snelle service in Rotterdam voor mijn BMW.", reviewAuthor:"S. de Jong", reviewCar:"BMW 3 Serie", geo:{"lat":"51.9225","lng":"4.4791"} },
   { slug:"den-haag", city:"Den Haag", region:"Zuid-Holland", country:"NL", lang:"NL", travelTime:"45-60 min", keyword:"autosleutel programmeren Den Haag", nlSearches:850, priority:"P1", subAreas:['Centrum', 'Scheveningen', 'Kijkduin', 'Loosduinen', 'Segbroek', 'Escamp'], reviewQuote:"Binnen een uur in Den Haag. Top service!", reviewAuthor:"M. Visser", reviewCar:"Audi A4", geo:{"lat":"52.0705","lng":"4.3007"} },
   { slug:"amersfoort", city:"Amersfoort", region:"Utrecht", country:"NL", lang:"NL", travelTime:"25-30 min", keyword:"autosleutel programmeren Amersfoort", nlSearches:245, priority:"P1", subAreas:['Vathorst', 'Kattenbroek', 'Nieuwland', 'Schothorst', 'Liendert', 'Hoogland', 'Randenbroek'], reviewQuote:"Kia Sportage autosleutel kwijt. Snel en professioneel.", reviewAuthor:"D. Meijer", reviewCar:"Kia Sportage", geo:{"lat":"52.1561","lng":"5.3878"} },

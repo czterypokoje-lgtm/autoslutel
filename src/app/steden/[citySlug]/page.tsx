@@ -91,9 +91,9 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
   return {
     title: {
-      absolute: `Autosleutel Bijmaken ${city.city} | 24/7 | Autosleutel24`,
+      absolute: city.customMetaTitle || `Autosleutel Bijmaken ${city.city} | 24/7 | Autosleutel24`,
     },
-    description: `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen ${city.travelTime} ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
+    description: city.customMetaDesc || `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen ${city.travelTime} ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
     keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `autosleutel kwijt ${city.city.toLowerCase()}`, `reservesleutel auto ${city.city.toLowerCase()}`],
     alternates: {
       canonical: pageUrl,
@@ -187,7 +187,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <Link href="/">Home</Link> <span>/</span> <Link href="/steden">Steden</Link> <span>/</span> <span>{city.city}</span>
             </nav>
             <div className={styles.heroLabel}>NL — {city.region}</div>
-            <h1>Autosleutel Bijmaken {city.city} — Dé Sleutelspecialist</h1>
+            <h1>{city.customH1 || `Autosleutel Bijmaken ${city.city} — Dé Sleutelspecialist`}</h1>
             <p className={styles.heroLead}>
               Vanuit Utrecht bereiken wij {city.city} in gemiddeld <strong>{city.travelTime}</strong>.
               Alle merken, ter plaatse geprogrammeerd.

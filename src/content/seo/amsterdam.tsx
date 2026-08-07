@@ -4,75 +4,81 @@ import styles from '@/app/steden/[citySlug]/page.module.css';
 export default function AmsterdamSeoContent() {
   return (
     <div className={styles.seoContent}>
-      <h2>De Autosleutel Expert voor Amsterdam en Omgeving</h2>
+      <h2>Autosleutel Bijmaken Amsterdam Noord, Zuid en Centrum</h2>
       <p>
-        Autosleutel kwijt in Amsterdam? Dat is ontzettend vervelend, zeker in een stad waar parkeren al 
-        een uitdaging op zich is. Of uw auto nu geparkeerd staat aan de grachten in Amsterdam Centrum, 
-        in de drukke straten van De Pijp, op de Zuidas in Amsterdam Zuid, of in de buitenwijken zoals 
-        Noord en Nieuw-West, AutoSleutel24 biedt de snelste en meest betrouwbare mobiele service. 
-        U hoeft uw auto niet te laten wegslepen door een takelbedrijf door de smalle straten van de 
-        binnenstad. Onze mobiele monteurs komen razendsnel naar uw exacte locatie toe en lossen het 
-        probleem ter plekke voor u op, zodat u uw rit zonder grote vertraging kunt voortzetten.
+        Bent u uw autosleutel kwijt in Amsterdam? Of heeft u een <strong>nieuwe autosleutel</strong> nodig
+        omdat de oude kapot is? Wij kunnen u snel helpen. In de <strong>meeste gevallen</strong> zijn wij
+        binnen 25 tot 35 minuten bij u ter plaatse — of u nu in <strong>Amsterdam Noord</strong>,
+        Amsterdam Zuid, of in het centrum staat.
+      </p>
+      <p>
+        U hoeft niets zelf te regelen. Wij komen naar uw locatie toe. Geen sleepkosten, geen wachttijden
+        bij de dealer, en in <strong>bijna alle</strong> gevallen is alles dezelfde dag nog opgelost.
       </p>
 
-      <h3>Snel een Autosleutel Bijmaken in Amsterdam</h3>
+      <h3>Autosleutel bij Laten Maken in Amsterdam</h3>
       <p>
-        Het bijmaken van een autosleutel in Amsterdam was nog nooit zo eenvoudig. Een reservesleutel 
-        kan veel stress en torenhoge kosten voorkomen in het geval u uw laatste sleutel verliest. 
-        Onze experts programmeren dagelijks nieuwe transpondersleutels en smart keys voor vrijwel 
-        alle Europese, Aziatische en Amerikaanse automerken. Van de populaire stadsauto's zoals de 
-        Volkswagen Polo en Fiat 500, tot luxe zakelijke wagens zoals de Audi A6, BMW 5-serie of 
-        Tesla's in Amsterdam Zuid. Wij beschikken over de allernieuwste apparatuur om de sleutels in 
-        te leren op de startonderbreker van uw auto, volledig schadevrij en volgens de fabrieksspecificaties.
+        Wilt u een <strong>autosleutel bij laten maken</strong> in Amsterdam? Dat is eenvoudiger dan u denkt.
+        Stuur ons een WhatsApp met uw kenteken, en wij geven u direct een vaste prijs. Onze monteur
+        rijdt vervolgens naar uw adres toe met de juiste apparatuur. Wij slijpen de nieuwe sleutel,
+        programmeren de transponderchip, en testen alles ter plekke. Zo heeft u zo snel mogelijk
+        uw <strong>extra autosleutel</strong> of reserve in handen.
+      </p>
+      <p>
+        Wij maken sleutels voor vrijwel alle merken: van een Volkswagen Polo in Noord tot een Tesla in
+        Amsterdam Zuid of een BMW op de Zuidas. Ook transpondersleutels, klapsleutels en smart keys
+        (keyless go) kunnen wij dezelfde dag nog <strong>laten bijmaken</strong> in Amsterdam.
       </p>
 
-      <h3>Sleutels Verloren en Gestrand? Onze 24/7 Nooddienst Helpt!</h3>
+      <h3>Autosleutel Reparatie Amsterdam</h3>
       <p>
-        Heeft u een gezellig avondje gehad in het Leidseplein of Rembrandtplein en komt u er bij 
-        terugkomst bij uw auto achter dat u alle autosleutels kwijt bent? Geen zorgen! AutoSleutel24 
-        heeft een gespecialiseerde nooddienst die 24 uur per dag, 7 dagen per week beschikbaar is 
-        in de hele regio Amsterdam. Wij begrijpen dat u na een lange dag of midden in de nacht 
-        gewoon naar huis wilt. Onze auto slotenmaker is gemiddeld binnen 45 tot 60 minuten bij u in 
-        Amsterdam. We maken uw portier vakkundig open zonder enige lakschade, lezen de pin-codes van 
-        het slot en de boordcomputer uit, en slijpen direct een nieuwe sleutel op locatie.
+        Hoeft u niet per se een nieuwe sleutel? Dan kijken wij eerst of uw bestaande sleutel te
+        repareren is. <strong>Autosleutel reparatie Amsterdam</strong> is vaak veel goedkoper dan een
+        volledige vervanging. Wij kunnen:
       </p>
-
-      <h3>Geprogrammeerde Smart Keys en Transponders</h3>
-      <p>
-        Tegenwoordig is een autosleutel een geavanceerd stukje technologie. Waar men vroeger simpelweg 
-        een stuk metaal kon kopiëren bij de lokale schoenmaker, bevatten moderne sleutels complexe 
-        transponderchips (zoals ID48, Megamos, of Hitag chips) die communiceren met de ECU (Engine 
-        Control Unit) van uw auto. Als deze chip niet correct is geprogrammeerd, zal de motor domweg 
-        weigeren te starten. In Amsterdam komen we vaak smart keys (Keyless Entry systemen) tegen. 
-        Onze monteurs programmeren deze geavanceerde sleutels veilig. Bovendien kunnen we indien nodig 
-        verloren of gestolen sleutels direct uit het geheugen van de auto wissen, wat een vereiste 
-        is van de meeste autoverzekeringen in de grote stad.
-      </p>
-
-      <h3>Reparatie van Defecte Sleutels en Contactsloten in Amsterdam</h3>
-      <p>
-        Heeft u uw sleutel laten vallen op het Leidseplein en is de behuizing kapot gegaan? Of merkt 
-        u dat het contactslot steeds stroever draait, een veelvoorkomend probleem bij bijvoorbeeld 
-        bestelbusjes die veel ingezet worden door pakketbezorgers in de stad? Wij bieden ook reparatiediensten. 
-        Het vernieuwen van een sleutelbehuizing, het solderen van defecte knoppen, het vervangen van een 
-        batterij, of het reviseren van een stroef contactslot behoort allemaal tot onze dagelijkse 
-        werkzaamheden. Een reparatie is vaak aanzienlijk voordeliger dan het volledig vernieuwen 
-        van het systeem bij een merkdealer in Amsterdam.
-      </p>
-
-      <h3>Waarom Kiest Amsterdam voor AutoSleutel24?</h3>
       <ul>
-        <li><strong>Mobiele Werkplaats:</strong> Wij hebben onze busjes uitgerust als complete mobiele werkplaatsen. We slijpen en programmeren alles ter plaatse.</li>
-        <li><strong>Geen Sleepkosten:</strong> Bespaar honderden euro's aan sleepdiensten in de krappe grachtengordel.</li>
-        <li><strong>Transparante Prijzen:</strong> U weet vooraf precies waar u aan toe bent. Geen verborgen kosten, en we zijn gegarandeerd goedkoper dan uw lokale autodealer.</li>
-        <li><strong>Expertise:</strong> Jarenlange ervaring met complexe immobilizer systemen van alle grote automerken.</li>
+        <li><strong>Gebroken behuizing</strong> vervangen (de binnenkant blijft gewoon werken)</li>
+        <li><strong>Defecte knoppen</strong> solderen of vervangen</li>
+        <li><strong>Sleutel laten repareren</strong> na een val of waterSchade</li>
+        <li><strong>Afgebroken sleutelbaard</strong> verwijderen uit deurslot of contactslot</li>
+        <li>Stroef contactslot reviseren of vervangen</li>
       </ul>
-      
       <p>
-        Woont of werkt u in Amsterdam Centrum, Noord, Oost, Zuid, of in de omliggende plaatsen zoals 
-        Amstelveen, Diemen of Zaandam? Wij bestrijken het hele grootstedelijke gebied. Neem vandaag nog 
-        contact met ons op voor een vrijblijvende prijsopgave of spoedhulp. Bel of stuur een bericht via WhatsApp 
-        en u heeft binnen no-time weer toegang tot uw voertuig!
+        Is de sleutel niet meer te redden? Dan maken wij direct een nieuwe voor u. Alles op locatie,
+        in Amsterdam Noord, Zuid, Oost, West of het centrum.
+      </p>
+
+      <h3>Autosleutel Bijmaken Amsterdam Noord</h3>
+      <p>
+        <strong>Autosleutel bijmaken Amsterdam Noord</strong> is een van onze meest gevraagde diensten.
+        Noord groeit snel, en meer bewoners betekent meer auto's en meer sleutelproblemen. Of u nu
+        in de Buiksloterham woont, bij de NDSM-werf staat, of ergens langs de Meeuwenlaan — wij
+        rijden direct naar u toe. Onze monteur helpt u zo snel mogelijk verder.
+      </p>
+
+      <h3>Sleutels Verloren? 24/7 Nooddienst</h3>
+      <p>
+        Alle sleutels kwijt? Dat is een noodsituatie. Wij hebben een spoeddienst die dag en nacht
+        beschikbaar is, zeven dagen per week. Wij openen uw auto 100% schadevrij, zonder krassen op
+        het lak of schade aan het slot. Daarna slijpen en programmeren wij ter plekke een nieuwe
+        sleutel. De oude, verloren sleutels wissen wij tegelijkertijd uit het systeem, zodat niemand
+        anders uw auto nog kan starten.
+      </p>
+
+      <h3>Waarom Kiezen voor Autosleutel24 in Amsterdam?</h3>
+      <ul>
+        <li><strong>Mobiele service:</strong> Wij komen naar u toe, u hoeft niets te slepen.</li>
+        <li><strong>Vaste prijs vooraf:</strong> Geen verrassingen op de factuur.</li>
+        <li><strong>Zo snel mogelijk ter plaatse:</strong> Gemiddeld 25–35 minuten in Amsterdam.</li>
+        <li><strong>Alle merken:</strong> Van Fiat tot Porsche, in bijna alle gevallen op voorraad.</li>
+        <li><strong>12 maanden garantie:</strong> Op elke nieuwe sleutel en programmering.</li>
+        <li><strong>Goedkoper dan de dealer:</strong> Tot 50% voordeliger, gegarandeerd.</li>
+      </ul>
+
+      <p>
+        Woont of werkt u in Amsterdam Centrum, Noord, Oost, Zuid, Nieuw-West of Zuidoost? Of in de
+        buurgemeenten Amstelveen, Diemen of Zaandam? Wij zijn er voor u. Bel ons of stuur een
+        WhatsApp, en wij zorgen dat u zo snel mogelijk weer op weg kunt.
       </p>
     </div>
   );
