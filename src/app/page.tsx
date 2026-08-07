@@ -641,17 +641,43 @@ export default function HomePage() {
       <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
         <div className="container">
           <div className="seo-article-block" style={{ marginTop: 0 }}>
-            <h2>Gecertificeerde Mobiele Autosleutelspecialist voor Midden-Nederland</h2>
+            <h2>Autosleutelservice op Locatie — Sleutel Bijmaken in Utrecht en Omgeving</h2>
             <p>
-              Als onafhankelijk en erkend autosleutelspecialist biedt <strong>{SITE_CONFIG.name}</strong> 24 uur per dag, 7 dagen per week professionele hulp op locatie. Of u nu bent buitengesloten in Utrecht, een nieuwe sleutel met afstandsbediening wilt laten inleren in Amsterdam, of al uw autosleutels kwijt bent (All Keys Lost) in regio Midden-Nederland: onze volledig uitgeruste mobiele werkplaatsen komen naar u toe. Bent u uw autosleutel kwijt Utrecht of zoekt u een betrouwbare plek om een autosleutel te laten maken zonder sleutel? Wij bieden direct een passende oplossing.
+              Heeft u een nieuwe autosleutel nodig? Of wilt u een <strong>extra sleutel</strong> laten bijmaken zodat u altijd een reserve heeft?
+              Bij <strong>{SITE_CONFIG.name}</strong> kunt u terecht voor een complete <strong>autosleutelservice</strong>.
+              <strong>Wij maken</strong> sleutels voor <strong>vrijwel alle</strong> automerken en modellen —
+              van een eenvoudige transpondersleutel tot een moderne smart key met afstandsbediening.
             </p>
-            <h3>Diagnoseapparatuur, Lishi Lockpicking en Transpondertechniek</h3>
             <p>
-              Onze monteurs werken met geautoriseerde fabriekssoftware en OEM-tokens voor alle 38 automerken. Wij openen autodeuren 100% schadevrij met Lishi 2-in-1 lock decoders en frezen sleutelbaarden op de millimeter nauwkeurig met computergestuurde CNC-machines. Via de OBD2-diagnosepoort koppelen wij transponderchips en Keyless Go smart keys rechtstreeks aan de startonderbreker van uw voertuig.
+              Ons werkgebied is groot. Wij zijn actief in Utrecht, Amsterdam, Almere, Amersfoort
+              <strong> en omgeving</strong>. Wilt u een autosleutel <strong>bijmaken in Utrecht</strong>?
+              Dan zijn wij er gemiddeld binnen 15 tot 20 minuten. Staat u ergens anders geparkeerd? Geen probleem.
+              Wij komen direct naar uw locatie toe.
             </p>
-            <h3>Bespaar op Sleepkosten en Dealerservice met 12 Maanden Garantie</h3>
+
+            <h3>Autosleutels met Afstandsbediening Laten Bijmaken</h3>
             <p>
-              Doordat wij direct bij u op locatie werken zonder dure showrooms of wachttijden, bespaart u bij ons gemiddeld <strong>30% tot 50%</strong> ten opzichte van de merkdealer. U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels, smart keys en reparaties. Veel autoverzekeraars vergoeden onze facturen onder uw Beperkt Casco of Allrisk polis.
+              Moderne auto&apos;s rijden niet meer met een gewone metalen sleutel. Ze hebben
+              <strong> autosleutels met afstandsbediening</strong> nodig — ook wel klapsleutels, smart keys
+              of keyless go sleutels genoemd. Wij leveren en programmeren <strong>gecertificeerde sleutels</strong>
+              die exact werken zoals de originele fabriekssleutel. U hoeft niet naar de dealer.
+              Wij doen alles ter plekke, bij u thuis of op het werk.
+            </p>
+
+            <h3>Autosleutels Gestolen? Wij Lossen Het Op</h3>
+            <p>
+              Zijn uw <strong>autosleutels gestolen</strong>? Dan moet u snel handelen.
+              Een gestolen sleutel is een veiligheidsrisico. Wij wissen de gestolen sleutel uit het
+              geheugen van uw auto en maken direct een nieuwe aan. Zo kan niemand anders meer met uw
+              voertuig rijden. Dit is een spoedklus die wij 24 uur per dag, 7 dagen per week uitvoeren.
+            </p>
+
+            <h3>Goedkoper dan de Dealer, met 12 Maanden Garantie</h3>
+            <p>
+              Doordat wij direct bij u op locatie werken, bespaart u gemiddeld <strong>30% tot 50%</strong>
+              ten opzichte van de merkdealer. U betaalt geen sleepkosten en geen dure showroomtarieven.
+              Op elke nieuwe sleutel en reparatie geven wij standaard 12 maanden schriftelijke garantie.
+              Veel verzekeraars vergoeden onze factuur onder uw Beperkt Casco of Allrisk polis.
             </p>
           </div>
         </div>
