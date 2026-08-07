@@ -143,7 +143,7 @@ const services = [
     alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
   },
   { 
-    title: 'Contactslot Auto Vervangen & Vervanging', 
+    title: 'Contactslot Auto Vervangen & Reparatie', 
     desc: (
       <>
         Draait uw sleutel niet meer soepel rond in het contactslot of is uw stuurwielslot muurvast? Mechanische slijtage of elektronische storingen in systemen zoals Mercedes EIS en ELV blokkeren uw auto volledig. Wij reviseren en vervangen kapotte contactsloten op locatie.<br/><br/>
