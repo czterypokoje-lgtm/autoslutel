@@ -181,6 +181,8 @@ const websiteSchema = {
   // SearchAction removed — Next.js has no ?s= endpoint; prevents schema error in GSC
 };
 
+import PhoneConversionTracker from '@/components/PhoneConversionTracker';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="nl">
@@ -207,6 +209,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-C4WR7TYCTV');
+          `}
+        </Script>
+        {/* Google Ads Click to call conversion snippet */}
+        <Script id="google-ads-conversion" strategy="afterInteractive">
+          {`
+            window.gtag_report_conversion = function(url) {
+              var callback = function () {
+                if (typeof(url) != 'undefined') {
+                  window.location = url;
+                }
+              };
+              gtag('event', 'conversion', {
+                  'send_to': 'AW-18315813515/qKjlCPGp_d0cEIvF1J1E',
+                  'event_callback': callback
+              });
+              return false;
+            };
           `}
         </Script>
 
@@ -251,6 +270,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={ibmPlexSans.className}>
+        <PhoneConversionTracker />
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
