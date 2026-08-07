@@ -15,9 +15,9 @@ const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowca
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bijmaken Utrecht | 24/7 Service | Autosleutel24',
+    absolute: 'Autosleutel Bijmaken of Kwijt? 24/7 Mobiele Service | Autosleutel24',
   },
-  description: `Autosleutel kwijt of defect? Mobiele autosleutelspecialist in Utrecht, Amsterdam & Almere. Alle merken. Zelfde dag ter plaatse. Goedkoper dan dealer. ⭐ 4.9/5. Bel direct: ${SITE_CONFIG.phone}`,
+  description: `Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!`,
   alternates: {
     canonical: SITE_CONFIG.domain,
     languages: {
@@ -27,9 +27,9 @@ export const metadata: Metadata = {
   },
   openGraph: {
     url: SITE_CONFIG.domain,
-    title: 'Autosleutel Bijmaken & Programmeren Utrecht | 24/7 Mobiel',
-    description: 'Autosleutel kwijt? Mobiele specialist, alle merken, zelfde dag. Goedkoper dan dealer. ⭐ 4.9/5 Google. Bel 06 11 75 12 31',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel bijmaken Utrecht — Autosleutel24 mobiele specialist' }],
+    title: 'Autosleutel Bijmaken of Kwijt? 24/7 Mobiele Service | Autosleutel24',
+    description: 'Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel24 mobiele autosleutelspecialist' }],
   },
 };
 
