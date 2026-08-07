@@ -285,6 +285,42 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </p>
         </div>
 
+        {/* ── RELATED ARTICLES: Fixes 'only one incoming internal link' SEO warning ── */}
+        <div style={{ marginTop: '3rem', borderTop: '1px solid #e2e8f0', paddingTop: '2rem' }}>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--navy-900)' }}>Gerelateerde Artikelen</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            {BLOG_POSTS
+              .filter(p => p.slug !== slug)
+              .slice(0, 3)
+              .map(related => (
+                <Link 
+                  key={related.slug} 
+                  href={`/blog/${related.slug}`}
+                  style={{ 
+                    display: 'block', 
+                    padding: '1.5rem', 
+                    background: '#fff', 
+                    borderRadius: '8px', 
+                    border: '1px solid #e2e8f0',
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                  }}
+                >
+                  <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-800)', marginBottom: '0.5rem', lineHeight: 1.4 }}>
+                    {related.title}
+                  </h3>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--slate-600)', margin: 0, lineHeight: 1.5 }}>
+                    {related.excerpt.substring(0, 80)}...
+                  </p>
+                  <span style={{ display: 'inline-block', marginTop: '1rem', fontSize: '0.85rem', color: 'var(--color-primary)', fontWeight: 600 }}>
+                    Lees verder →
+                  </span>
+                </Link>
+            ))}
+          </div>
+        </div>
+
         <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
           <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Een Autosleutel Laten Bijmaken of Programmeren?</h3>
           <p style={{ color: 'rgba(255,255,255,0.8)', marginBottom: '1.5rem' }}>Onze gecertificeerde autosleutelspecialisten staan 24/7 voor u klaar.</p>
