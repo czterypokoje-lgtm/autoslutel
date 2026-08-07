@@ -289,6 +289,12 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   </tbody>
                 </table>
               </div>
+              {brand.customSeoBlurb && (
+                <>
+                  <h3>Populaire {brand.name} Modellen die Wij Bedienen</h3>
+                  <p>{brand.customSeoBlurb}</p>
+                </>
+              )}
             </div>
           </div>
         </section>

@@ -14,6 +14,7 @@ export type Brand = {
   models?: BrandModel[];
   customH1?: string;
   customMetaTitle?: string;
+  customSeoBlurb?: string; // model-specific SEO paragraph for long-tail keywords
 };
 
 export type BrandModel = {
@@ -27,7 +28,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'bmw', name: 'BMW', nameSlug: 'bmw', priority: 'P1',
     system: 'CAS2 / CAS3+ / CAS4+ / FEM / BDC',
-    excerpt: 'BMW sleutel programmering voor alle series. CAS, FEM en BDC systemen. 1/3/5/7 Serie, X1–X7, M-series, i-series.',
+    excerpt: 'BMW sleutel programmering voor alle series. CAS, FEM en BDC systemen. 1/3/5/7 Serie, X1–X7, M-series, i-series.'
+    customSeoBlurb: 'Wij helpen u met de BMW X1 sleutel bijmaken, BMW X2 sleutel bij laten maken en BMW sleutel bijmaken kosten transparant berekenen. De BMW X1 (E84, F48) en X2 (F39) gebruiken het BDC-systeem. Ook de 1 Serie, 3 Serie, X3 en X5 sleutels leren wij in op locatie. De BMW sleutel bijmaken kosten liggen bij ons tot 50% lager dan bij de BMW-dealer.',
     models: [
       { slug: '1-serie', name: '1 Serie', generations: 'E81, E87, F20, F40', years: '2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: '2-serie', name: '2 Serie', generations: 'F22, F44, G42', years: '2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -44,7 +46,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'mercedes', name: 'Mercedes-Benz', nameSlug: 'mercedes', priority: 'P1',
     system: 'IR / HFM / NEC / EIS / ESL',
-    excerpt: 'Mercedes sleutel programmering. W204, W205, W213, Sprinter, Vito. EIS/ESL bench programmering.',
+    excerpt: 'Mercedes sleutel programmering. W204, W205, W213, Sprinter, Vito. EIS/ESL bench programmering.'
+    customSeoBlurb: 'Heeft u een Mercedes Benz CLK sleutel bijmaken nodig, of wilt u de Mercedes Benz ML autosleutel bijmaken of de Mercedes Benz SL Klasse autosleutel bijmaken? Ook de Mercedes Benz CL Klasse autosleutel bij laten maken behoort tot ons dagelijks werk. Wij werken met EIS/ESL bench-programmering voor alle modellen, van de A-Klasse tot de S-Klasse, CLA, GLA en GLC.',
     models: [
       { slug: 'a-klasse', name: 'A-Klasse', generations: 'W168, W169, W176, W177', years: '1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'c-klasse', name: 'C-Klasse', generations: 'W203, W204, W205, W206', years: '2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -66,7 +69,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'volkswagen', name: 'Volkswagen', nameSlug: 'volkswagen', priority: 'P1',
     system: 'MQB / MLB / PQ35 / SFD',
-    excerpt: 'VW sleutel programmering. Golf 7/8, Tiguan, Polo, Passat. SFD ontgrendeling specialist.',
+    excerpt: 'VW sleutel programmering. Golf 7/8, Tiguan, Polo, Passat. SFD ontgrendeling specialist.'
+    customSeoBlurb: 'Populaire zoekopdrachten bij ons: Volkswagen Eos sleutel bij laten maken, Volkswagen Jetta sleutel bij laten maken en Volkswagen Transporter sleutel bij laten maken. De VW Eos (2006-2015) en VW Jetta (2005-2018) gebruiken het PQ35-platform. De Transporter T5/T6 werkt met MQB. Wij leren alle VW sleutels in op locatie.',
     models: [
       { slug: 'polo', name: 'Polo', generations: '6R, AW', years: '2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'golf', name: 'Golf', generations: '5, 6, 7, 8', years: '2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -89,7 +93,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'audi', name: 'Audi', nameSlug: 'audi', priority: 'P1',
     system: 'MMI / MIB / VW Group',
-    excerpt: 'Audi sleutel programmering. A3, A4, A6, Q3, Q5, Q7. VW Group platform specialist.',
+    excerpt: 'Audi sleutel programmering. A3, A4, A6, Q3, Q5, Q7. VW Group platform specialist.'
+    customSeoBlurb: 'Veel klanten vragen ons voor Audi A6 sleutel bij laten maken en Audi S3 sleutel bij laten maken. De Audi A6 autosleutel bijmaken (C6, C7, C8) vereist MLB-platform programmering. De Audi S3 sleutel bijmaken werkt met hetzelfde platform als de A3. Altijd op locatie, met 12 maanden garantie.',
     models: [
       { slug: 'a1', name: 'A1', generations: '8X, GB', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'a3', name: 'A3', generations: '8P, 8V, 8Y', years: '2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -151,7 +156,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'opel', name: 'Opel', nameSlug: 'opel', priority: 'P1',
     system: 'Opel Immobiliser I / II / III',
-    excerpt: 'Opel sleutel programmering specialist. Corsa, Astra, Insignia, Vivaro. PIN-code extractie.',
+    excerpt: 'Opel sleutel programmering specialist. Corsa, Astra, Insignia, Vivaro. PIN-code extractie.'
+    customSeoBlurb: 'Wij verzorgen regelmatig Opel Crossland autosleutel bijmaken en Opel Vivaro autosleutel bijmaken. De Opel Crossland (2017+) gebruikt het PSA-platform met PIN-code extractie. De Opel Vivaro is een populaire bestelwagen waarvoor wij de sleutel op locatie bijmaken. Autosleutel bijmaken Opel Corsa, Astra, Insignia en Mokka is ook ons standaard aanbod.',
     models: [
       { slug: 'corsa', name: 'Corsa', years: '2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'astra', name: 'Astra', years: '1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -168,7 +174,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'renault', name: 'Renault', nameSlug: 'renault', priority: 'P2',
     system: 'Renault Card Key / UCH',
-    excerpt: 'Renault kaart sleutel specialist. Clio, Captur, Megane, Scenic, Trafic. Kaart programmering.',
+    excerpt: 'Renault kaart sleutel specialist. Clio, Captur, Megane, Scenic, Trafic. Kaart programmering.'
+    customSeoBlurb: 'Een veelgevraagde dienst is de Renault Laguna autosleutel bijmaken. De Renault Laguna II en III (1994-2015) werkt met de bekende kaartsleutel en UCH-module. Wij lezen de pincode uit en programmeren direct een nieuwe kaartsleutel op locatie. Ook voor de Clio, Megane, Trafic en Captur kunt u bij ons terecht.',
     models: [
       { slug: 'clio', name: 'Clio', years: '1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'megane', name: 'Megane', years: '2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -183,7 +190,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'peugeot', name: 'Peugeot', nameSlug: 'peugeot', priority: 'P2',
     system: 'PSA BSI / PIN extractie',
-    excerpt: 'Peugeot sleutel programmering specialist. 208, 308, 508, Partner. BSI programmering.',
+    excerpt: 'Peugeot sleutel programmering specialist. 208, 308, 508, Partner. BSI programmering.'
+    customSeoBlurb: 'Wij verzorgen regelmatig Peugeot 607 sleutel bij laten maken, Peugeot 5008 autosleutel bijmaken, Peugeot 406 autosleutel bijmaken en Peugeot Expert sleutel bij laten maken. De Peugeot 607 (1999-2010) en 406 (1995-2004) zijn oudere modellen. De Peugeot 5008 en Expert gebruiken het BSI-systeem. Wij lezen de pin-code uit en programmeren de sleutel op uw locatie.',
     models: [
       { slug: '208', name: '208', years: '2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: '308', name: '308', years: '2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -213,7 +221,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'seat', name: 'Seat', nameSlug: 'seat', priority: 'P2',
     system: 'VAG Immobiliser / MQB',
-    excerpt: 'Seat sleutel programmering specialist. Ibiza, Leon, Ateca. VAG Groep platform.',
+    excerpt: 'Seat sleutel programmering specialist. Ibiza, Leon, Ateca. VAG Groep platform.'
+    customSeoBlurb: 'Populaire aanvragen zijn Seat Alhambra sleutel bij laten maken en Seat Arosa sleutel bij laten maken. De Seat Alhambra (1996-2020) is een gezinsauto op het VAG-platform. De Seat Arosa (1997-2004) is een compacte auto waarvoor wij nog altijd sleutels bijmaken. Wij programmeren Ibiza, Leon, Arona, Ateca en Tarraco via OBD2.',
     models: [
       { slug: 'ibiza', name: 'Ibiza', years: '2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'leon', name: 'Leon', years: '2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -241,7 +250,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'mazda', name: 'Mazda', nameSlug: 'mazda', priority: 'P2',
     system: 'Mazda PATS / Mitsubishi System',
-    excerpt: 'Mazda sleutel programmering specialist. Mazda 2, 3, 6, CX-5. Smart key specialist.',
+    excerpt: 'Mazda sleutel programmering specialist. Mazda 2, 3, 6, CX-5. Smart key specialist.'
+    customSeoBlurb: 'Wij ontvangen veel aanvragen voor Mazda 3 autosleutel bij laten maken, Mazda CX-3 autosleutel bij laten maken en Mazda 2 autosleutel bij laten maken. De Mazda 3 is een van de populairste modellen in Nederland. De CX-3 en Mazda 2 gebruiken het PATS-systeem. Wij programmeren alle Mazda sleutels direct op locatie.',
     models: [
       { slug: 'mazda-3', name: '3', years: '2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'cx-5', name: 'CX-5', years: '2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -267,7 +277,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'hyundai', name: 'Hyundai', nameSlug: 'hyundai', priority: 'P2',
     system: 'Hyundai/Kia Smart Key',
-    excerpt: 'Hyundai sleutel programmering specialist. i10, i20, i30, Tucson, Kona.',
+    excerpt: 'Hyundai sleutel programmering specialist. i10, i20, i30, Tucson, Kona.'
+    customSeoBlurb: 'Veelgevraagd zijn: Hyundai Santamo autosleutel bij laten maken, Hyundai Getz autosleutel bijmaken, Hyundai Atos Prime autosleutel bij laten maken en Hyundai Excel sleutel bijmaken. De Santamo (1996-2003) en Excel (1985-1999) zijn oudere modellen waarvoor wij nog sleutels maken. De Getz en Atos Prime programmeren wij dagelijks. Ook voor de i10, i20, i30, Tucson en Kona kunt u bij ons terecht.',
     models: [
       { slug: 'i10', name: 'i10', years: '2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'tucson', name: 'Tucson', years: '2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -284,7 +295,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'nissan', name: 'Nissan', nameSlug: 'nissan', priority: 'P2',
     system: 'Nissan NATS / BCM',
-    excerpt: 'Nissan sleutel programmering specialist. Micra, Qashqai, Juke, Leaf.',
+    excerpt: 'Nissan sleutel programmering specialist. Micra, Qashqai, Juke, Leaf.'
+    customSeoBlurb: 'Wij verzorgen dagelijks Nissan Primastar autosleutel bijmaken, Nissan Qashqai autosleutel bij laten maken, Nissan Juke autosleutel bij laten maken, Nissan sleutel bijmaken, Nissan 350Z autosleutel bij laten maken, Nissan Maxima autosleutel bijmaken en Nissan Sentra autosleutel bij laten maken. De Nissan Primastar (2001-2014) deelt het Renault Trafic-platform. De 350Z, Maxima en Sentra hebben NATS-beveiliging. Wij programmeren ook sleutel met transponder direct op locatie.',
     models: [
       { slug: 'micra', name: 'Micra', years: '2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'qashqai', name: 'Qashqai', years: '2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
@@ -311,7 +323,8 @@ export const BRANDS: Brand[] = [
   {
     slug: 'land-rover', name: 'Land Rover', nameSlug: 'land-rover', priority: 'P3',
     system: 'JLR KVM / RFA / BCM',
-    excerpt: 'Land Rover sleutel specialist. Range Rover, Discovery, Evoque. KVM module specialist.',
+    excerpt: 'Land Rover sleutel specialist. Range Rover, Discovery, Evoque. KVM module specialist.'
+    customSeoBlurb: 'Wij ontvangen regelmatig aanvragen voor Land Rover Freelander sleutel bijmaken en Range Rover Sport autosleutel bij laten maken. De Freelander (1997-2014) heeft een KVM-systeem dat directe OBD-programmering vereist. De Range Rover Sport (2005+) gebruikt een modern RFA-module systeem. Wij werken met JLR-software voor alle Land Rover modellen.',
     models: [
       { slug: 'range-rover', name: 'Range Rover', years: '2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
       { slug: 'evoque', name: 'Evoque', years: '2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024' },
