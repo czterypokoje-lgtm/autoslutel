@@ -9,9 +9,9 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bijmaken op Locatie | Vaste Prijs | Autosleutel24',
+    absolute: 'Reservesleutel Auto Laten Maken? Autosleutel Bijmaken Prijs & Service | Autosleutel24',
   },
-  description: 'Autosleutel bijmaken door onze mobiele specialist. Reserve sleutel + programmering ter plaatse. Vaste prijs vanaf €95. 24/7. Bel 06 11 75 12 31.',
+  description: 'Wat kost een sleutel bijmaken? Reservesleutel auto laten maken of reserve sleutel auto maken? Mobiel op locatie. Vasta prijs, goedkoper dan dealer. 24/7 beschikbaar.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` },
 };
 
@@ -110,7 +110,7 @@ export default function SleutelBijmakenPage() {
             <nav className={styles.breadcrumb} aria-label="Breadcrumb">
               <Link href="/">Home</Link> <span>/</span> <Link href="/diensten">Diensten</Link> <span>/</span> <span>Autosleutel Bijmaken</span>
             </nav>
-            <h1>Autosleutel Bijmaken — Mobiel Ter Plaatse in de Randstad</h1>
+            <h1>Reservesleutel Auto Laten Maken — Autosleutel Bijmaken Prijs & Direct op Locatie</h1>
             <p className={styles.heroLead}>
               Wilt u direct een nieuwe <strong>autosleutel bijmaken met afstandsbediening</strong> of een moderne <strong>autosleutel met keyless entry</strong> zonder naar de dure dealer te hoeven? Autosleutel24 komt 24/7 naar u toe — thuis, op het werk of langs de weg. U kunt bij ons snel een professionele <strong>extra autosleutel</strong> of reservesleutel <strong>laten bijmaken</strong> en direct op locatie <strong>laten maken</strong>. Wij frezen en programmeren alle soorten <strong>autosleutels met afstandsbediening</strong> klaar terwijl u wacht, zonder sleepkosten of lange wachttijden.
             </p>
@@ -150,8 +150,9 @@ export default function SleutelBijmakenPage() {
                     Een professioneel geteste <strong>extra autosleutel</strong> is geen overbodige luxe — het voorkomt dure noodsituaties. Veel bestuurders kiezen ervoor om tijdig een tweede sleutel te <strong>laten bijmaken</strong> of een complete <strong>autosleutel bijmaken met afstandsbediening</strong> in de volgende situaties:
                   </p>
                   <ul className={styles.bulletList}>
-                    <li><strong>Preventie &amp; Gemak:</strong> U heeft momenteel slechts één sleutel en wilt preventief een extra exemplaar <strong>laten maken</strong> voordat u hem verliest of beschadigt.</li>
-                    <li><strong>Autosleutel kwijt:</strong> Uw enige sleutel is verloren. Wij kunnen direct op locatie een gloednieuwe <strong>autosleutel met keyless entry</strong> of reguliere transpondersleutel programmeren.</li>
+                    <li><strong>Preventie &amp; Gemak:</strong> U heeft momenteel slechts één sleutel en wilt preventief een <strong>extra sleutel</strong> laten bijmaken voordat u hem verliest of beschadigt.</li>
+                    <li><strong>Autosleutel kwijt bent:</strong> Als u uw enige sleutel <strong>kwijt bent</strong>, kunnen wij direct op locatie een gloednieuwe <strong>autosleutel met keyless entry</strong> of reguliere transpondersleutel programmeren.</li>
+                    <li><strong>Reservesleutel auto laten maken:</strong> Wilt u een <strong>reserve sleutel auto maken</strong> voordat u er een kwijtraakt? Dat is een slimme keuze. Wij maken een complete reservesleutel op locatie.</li>
                     <li><strong>Versleten knoppen of behuizing:</strong> Wanneer oudere <strong>autosleutels met afstandsbediening</strong> haperen, is het vaak slimmer om direct een nieuwe klapsleutel te <strong>laten bijmaken</strong> met garantie.</li>
                     <li><strong>Sleutel gestolen:</strong> Wij leveren een nieuwe sleutel en wissen de oude sleutels direct uit de autocomputer (ECU) voor maximale diefstalbeveiliging.</li>
                     <li><strong>Meerdere bestuurders:</strong> Deelt u de auto met uw partner of gezin? Wij kunnen meerdere <strong>autosleutels met afstandsbediening</strong> voordelig op locatie inleren.</li>
@@ -203,6 +204,9 @@ export default function SleutelBijmakenPage() {
                     </table>
                   </div>
                   <div className={styles.callout}>
+                    <strong>Wat kost een sleutel bijmaken?</strong> Dat hangt af van het type sleutel dat u <strong>nodig hebt</strong>. Een standaard sleutel met transponder begint bij €149. Een smart key of keyless sleutel kost meer. Maar in elk geval betaalt u bij ons tot 50% minder dan bij de dealer. U ontvangt altijd <strong>gecertificeerde sleutels</strong> met 12 maanden garantie.
+                  </div>
+                  <div className={styles.callout} style={{ marginTop: '1rem' }}>
                     <strong>Dealer vs. Slotenmaker:</strong> Bij de merkdealer betaalt u vaak €350 tot €550 om moderne <strong>autosleutels met afstandsbediening</strong> te bestellen. Bij Autosleutel24 kunt u dezelfde dag nog een originele kwaliteit <strong>autosleutel bijmaken met afstandsbediening</strong> vanaf €149 tot €249, inclusief programmering aan huis.
                   </div>
                 </div>
