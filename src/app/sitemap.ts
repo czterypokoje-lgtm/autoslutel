@@ -14,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '', '/diensten', '/steden', '/merken', '/prijzen', '/blog', '/kennisbank',
     '/over-ons', '/galerij', '/beoordelingen', '/veelgestelde-vragen',
     '/contact', '/privacybeleid',
-    '/autosleutel-kwijt'
+    '/autosleutel-kwijt', '/autosleutel-bestellen-op-kenteken'
   ].map(p => ({
     url: `${base}${p}`,
     lastModified: now,
