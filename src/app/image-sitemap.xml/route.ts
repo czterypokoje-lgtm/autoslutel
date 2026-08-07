@@ -74,7 +74,7 @@ const CORE_IMAGES = [
   },
   {
     url: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
-    title: 'Contactslot Reparatie Utrecht',
+    title: 'Contactslot Auto Vervangen Utrecht',
     caption: 'Professioneel contactslot repareren en vervangen in Utrecht door slotenmaker',
     geo_location: 'Utrecht, Nederland',
   },
@@ -184,7 +184,7 @@ const PAGE_ENTRIES = [
     images: [CORE_IMAGES[8], CORE_IMAGES[1]],
   },
   {
-    loc: `${BASE}/diensten/contactslot-reparatie`,
+    loc: `${BASE}/diensten/contactslot-auto-vervangen`,
     images: [CORE_IMAGES[10], CORE_IMAGES[11]],
   },
 

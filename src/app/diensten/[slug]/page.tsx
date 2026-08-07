@@ -333,7 +333,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                     </div>
-                  ) : slug === 'contactslot-reparatie' ? (
+                  ) : slug === 'contactslot-auto-vervangen' ? (
                     <div style={{
                       display: 'grid',
                       gridTemplateColumns: 'repeat(2, 1fr)',
@@ -341,12 +341,12 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                       margin: '1.25rem 0'
                     }}>
                       <img 
-                        src="/images/seo/contactslot-reparatie-werkplaats-utrecht.webp" 
+                        src="/images/seo/contactslot-auto-vervangen-werkplaats-utrecht.webp" 
                         alt="Demonteren en herstellen van defecte mechanische cilinder" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
-                        src="/images/seo/contactslot-reparatie-mobiel-amsterdam.webp" 
+                        src="/images/seo/contactslot-auto-vervangen-mobiel-amsterdam.webp" 
                         alt="Vastgelopen contactslot gerepareerd op locatie" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />

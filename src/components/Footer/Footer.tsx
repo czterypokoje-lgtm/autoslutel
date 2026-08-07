@@ -8,7 +8,7 @@ const diensten = [
   ['Autosleutel Bijmaken', '/diensten/autosleutel-bijmaken'],
   ['Transponder Sleutel', '/diensten/transponder-programmeren'],
   ['Smart Key / Keyless', '/diensten/smart-key-programmeren'],
-  ['Contactslot Reparatie', '/diensten/contactslot-reparatie'],
+  ['Contactslot Auto Vervangen', '/diensten/contactslot-auto-vervangen'],
   ['Reservesleutel Maken', '/diensten/reservesleutel-maken'],
   ['Autosleutels Repareren', '/diensten/autosleutels-repareren'],
   ['Alle diensten →', '/diensten'],

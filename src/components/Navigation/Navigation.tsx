@@ -47,7 +47,7 @@ const DienstenStructure = [
     subs: [
       { href: '/diensten/behuizing-vervangen', label: 'Behuizing Vervangen' },
       { href: '/diensten/knoppen-repareren', label: 'Knoppen Repareren' },
-      { href: '/diensten/contactslot-reparatie', label: 'Contactslot Reparatie' },
+      { href: '/diensten/contactslot-auto-vervangen', label: 'Contactslot Auto Vervangen' },
     ]
   },
 ];

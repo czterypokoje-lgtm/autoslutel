@@ -143,7 +143,7 @@ const services = [
     alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
   },
   { 
-    title: 'Contactslot Reparatie & Vervanging', 
+    title: 'Contactslot Auto Vervangen & Vervanging', 
     desc: (
       <>
         Draait uw sleutel niet meer soepel rond in het contactslot of is uw stuurwielslot muurvast? Mechanische slijtage of elektronische storingen in systemen zoals Mercedes EIS en ELV blokkeren uw auto volledig. Wij reviseren en vervangen kapotte contactsloten op locatie.<br/><br/>
@@ -154,7 +154,7 @@ const services = [
         </span>
       </>
     ), 
-    href: '/diensten/contactslot-reparatie',
+    href: '/diensten/contactslot-auto-vervangen',
     src: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
     alt: 'Contactslot reparatie en vervangen voor alle merken auto\'s ter plaatse in Utrecht zonder sleepkosten'
   },

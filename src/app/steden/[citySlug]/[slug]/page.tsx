@@ -17,7 +17,7 @@ export default async function LegacyCombinatorialRedirect(props: { params: Promi
     permanentRedirect(`/merken/${brandMatch.nameSlug.toLowerCase()}-autosleutel-bijmaken`);
   }
 
-  // 2. Is it a service? (e.g. contactslot-reparatie)
+  // 2. Is it a service? (e.g. contactslot-auto-vervangen)
   const serviceMatch = DIENSTEN.find(s => s.slug.toLowerCase() === decodedSlug);
   
   if (serviceMatch) {

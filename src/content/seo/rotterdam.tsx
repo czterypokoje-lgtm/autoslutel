@@ -24,7 +24,7 @@ export default function RotterdamSeoContent() {
         De moderne auto vertrouwt sterk op complexe elektronica. Smart keys en Keyless Entry systemen zijn de standaard geworden, maar vereisen wel specialistische kennis. Een foutief ingeleerde chip betekent dat uw motor domweg niet start. Onze monteurs in Rotterdam zijn getraind in het veilig programmeren en synchroniseren van deze hightech systemen, zodat uw voertuig optimaal beveiligd blijft.
       </p>
 
-      <h3>Autosleutel of Contactslot Reparatie in Rotterdam</h3>
+      <h3>Autosleutel of Contactslot Auto Vervangen in Rotterdam</h3>
       <p>
         Heeft uw autosleutel valschade opgelopen op de Coolsingel, of draait uw contactslot plotseling stroef? Dat is een veelvoorkomend probleem, vooral bij intensief gebruikte bedrijfswagens. Vaak is een dure vervanging bij de dealer onnodig. Wij repareren kapotte behuizingen, solderen haperende micro-switches en reviseren versleten contactsloten direct op locatie, wat u aanzienlijk in de kosten scheelt.
       </p>

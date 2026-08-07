@@ -455,7 +455,7 @@ export function getRelatedBlogPosts(serviceSlug: string) {
       'autosleutel-bijmaken-tips-snel-veilig',
     ],
     // ── Contactslot reparatie ─────────────────────────────────────
-    'contactslot-reparatie': [
+    'contactslot-auto-vervangen': [
       'autosleutel-repareren-tips-kosten-besparen',
       'auto-slotenmaker-ultieme-gids-snel-hulp',
       'auto-openen-zonder-sleutel-schadevrij',

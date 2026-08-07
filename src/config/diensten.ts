@@ -129,7 +129,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Kan een afgebroken sleutel altijd uit het contactslot worden gehaald?', a: 'Ja, in 99% van de gevallen kunnen we het afgebroken deel met speciale extractiesleutels en micro-haken verwijderen zonder het complete contactslot te hoeven vervangen.' },
       { q: 'Krijg ik direct een nieuwe sleutel?', a: 'Ja. Onze mobiele bus is uitgerust met een computergestuurde CNC-sleutelmachine waarmee we de sleutelbaard ter plaatse nauwkeurig namaken.' }
     ],
-    relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-bijmaken', 'contactslot-reparatie', 'autosleutels-repareren']
+    relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-bijmaken', 'contactslot-auto-vervangen', 'autosleutels-repareren']
   },
 
   // ── 2. AUTOSLEUTEL BIJMAKEN ───────────────────────────────
@@ -177,7 +177,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Kan een defecte transponder chip worden vervangen?', a: 'Ja. Als uw auto de sleutel niet meer herkent (vaak knippert er dan een sleutellampje op het dashboard), kunnen wij de oude chip deprogrammeren en een nieuwe transponder inlezen.' },
       { q: 'Welke transponder chips ondersteunt u?', a: 'Wij ondersteunen alle gangbare chips waaronder de Megamos ID48 (Audi/VW), NXP Hitag Pro (BMW/Opel), Texas Instruments DST-AES (Toyota) en de PCF7936.' }
     ],
-    relatedSlugs: ['sleutel-bijmaken', 'smart-key-programmeren', 'afstandsbediening-bijmaken', 'contactslot-reparatie']
+    relatedSlugs: ['sleutel-bijmaken', 'smart-key-programmeren', 'afstandsbediening-bijmaken', 'contactslot-auto-vervangen']
   },
   {
     slug: 'afstandsbediening-bijmaken',
@@ -336,7 +336,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Moet de auto worden weggesleept als ik alle sleutels kwijt ben?', a: 'Nee. In tegenstelling tot de dealer (die vaak de auto in hun werkplaats wil hebben) doen wij alles op de plek waar de auto geparkeerd staat. Dit bespaart u dure sleepkosten.' },
       { q: 'Kan dit voor elk automerk?', a: 'Wij kunnen reservesleutels maken bij verlies van alle sleutels voor 98% van de merken op de weg, inclusief complexe VAG MQB48 (VW Golf 8, Audi A3 8Y) en Mercedes FBS3 systemen.' }
     ],
-    relatedSlugs: ['autosleutel-kwijt', 'sleutel-bijmaken', 'smart-key-programmeren', 'contactslot-reparatie']
+    relatedSlugs: ['autosleutel-kwijt', 'sleutel-bijmaken', 'smart-key-programmeren', 'contactslot-auto-vervangen']
   },
 
   // ── 4. BATTERIJ VERVANGEN ─────────────────────────────────
@@ -395,7 +395,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Autosleutel batterij vervangen instructies.', a: 'Voor het vervangen van uw autosleutel batterij schuift u de mechanische noodsleutel eruit (indien aanwezig), wrikt u de behuizing voorzichtig open langs de naad met een kunststof tool, en vervangt u de oude batterij door een nieuwe van het type CR2032 of CR2016. Let hierbij goed op de plus- (+) en minpool.' },
       { q: 'Waar vind ik een autosleutel reparatieservice bij mij in de buurt?', a: 'U vindt een professionele mobiele autosleutel reparatieservice bij Autosleutel24. Wij zijn actief in heel Utrecht, Amsterdam, Almere, Amersfoort en de gehele Randstad. Onze monteurs komen met een mobiele werkplaats direct naar uw huis of werklocatie toe om uw sleutel ter plekke te repareren of te dupliceren.' }
     ],
-    relatedSlugs: ['behuizing-vervangen', 'knoppen-repareren', 'contactslot-reparatie', 'batterij-vervangen']
+    relatedSlugs: ['behuizing-vervangen', 'knoppen-repareren', 'contactslot-auto-vervangen', 'batterij-vervangen']
   },
   {
     slug: 'behuizing-vervangen',
@@ -443,7 +443,7 @@ export const DIENSTEN: Service[] = [
     relatedSlugs: ['autosleutels-repareren', 'behuizing-vervangen', 'batterij-vervangen', 'afstandsbediening-bijmaken']
   },
   {
-    slug: 'contactslot-reparatie',
+    slug: 'contactslot-auto-vervangen',
     title: 'Auto Contactslot Vervangen',
     metaTitle: 'Auto Contactslot Vervangen of Repareren op Locatie | Autosleutel24',
     metaDesc: 'Auto contactslot defect of sleutel draait niet meer? Blijft uw sleutel zitten in het slot? Wij kunnen uw auto contactslot vervangen of repareren ter plaatse.',
@@ -461,7 +461,7 @@ export const DIENSTEN: Service[] = [
     ],
     faq: [
       { q: 'Mijn Mercedes sleutel klikt niet en stuurslot ontgrendelt niet, wat nu?', a: 'Dit is een bekend probleem bij Mercedes (W204, W212, etc.) en duidt bijna altijd op een defect ELV (elektronisch stuurslot) of EIS module. Dealers vervangen de hele stuurkolom voor ca. €1.200. Wij repareren de module ter plaatse of programmeren een emulator voor een fractie van die prijs.' },
-      { q: 'Moet ik na contactslot-reparatie een andere sleutel gebruiken?', a: 'Nee. Wij bouwen het nieuwe mechanische slot zo om dat het perfect past op de code van uw huidige deursleutels. U behoudt dus gewoon één sleutel voor de hele auto.' }
+      { q: 'Moet ik na contactslot-auto-vervangen een andere sleutel gebruiken?', a: 'Nee. Wij bouwen het nieuwe mechanische slot zo om dat het perfect past op de code van uw huidige deursleutels. U behoudt dus gewoon één sleutel voor de hele auto.' }
     ],
     relatedSlugs: ['autosleutels-repareren', 'sleutel-afgebroken-in-slot', 'transponder-programmeren', 'alle-sleutels-kwijt-auto']
   }
