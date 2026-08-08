@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
 
@@ -15,7 +16,7 @@ export default function GalerijPage() {
         <span className="section-label">GALERIJ & PROJECTEN</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Ons Werk in Beelden</h1>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, margin: '0 auto' }}>
-          Bekijk onze 26 recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in Utrecht, Amsterdam, Almere en heel Nederland.
+          Bekijk onze 26 recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/rotterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Rotterdam</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link> en heel Nederland.
         </p>
       </section>
 

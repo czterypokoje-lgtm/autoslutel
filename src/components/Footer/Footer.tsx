@@ -53,7 +53,7 @@ export default function Footer() {
                 style={{ height: '42px', width: 'auto', display: 'block' }}
               />
             </div>
-            <p className={styles.footerDesc}>Professionele mobiele autosleutelprogrammering voor alle merken. Hoofdlocatie Utrecht, direct actief in Rotterdam, Den Haag, Amsterdam-Zuid, Amersfoort, Almere, &apos;t Gooi (Hilversum, Bussum, Naarden) en heel Nederland.</p>
+            <p className={styles.footerDesc}>Professionele mobiele autosleutelprogrammering voor alle merken. Hoofdlocatie Utrecht, direct actief in <Link href="/steden/rotterdam" style={{textDecoration: 'underline'}}>Rotterdam</Link>, <Link href="/steden/den-haag" style={{textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/amsterdam" style={{textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/amersfoort" style={{textDecoration: 'underline'}}>Amersfoort</Link>, <Link href="/steden/almere" style={{textDecoration: 'underline'}}>Almere</Link>, 't Gooi (<Link href="/steden/hilversum" style={{textDecoration: 'underline'}}>Hilversum</Link>, <Link href="/steden/bussum" style={{textDecoration: 'underline'}}>Bussum</Link>, <Link href="/steden/naarden" style={{textDecoration: 'underline'}}>Naarden</Link>) en heel Nederland.</p>
             <div className={styles.footerBadges}>
               <span>KVK: {SITE_CONFIG.kvk}</span>
               <span>BTW: {SITE_CONFIG.btw}</span>
@@ -144,7 +144,7 @@ export default function Footer() {
           <div className={styles.bottomInner}>
             <div className={styles.footerSeoText} style={{ marginBottom: '2rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', lineHeight: '1.6', marginBottom: '1rem' }}>
-                Autosleutel24 is uw betrouwbare, mobiele autosleutelspecialist in Nederland. Met onze geavanceerde diagnoseapparatuur en CNC-freesmachines openen wij schadevrij deuren, programmeren wij smart keys en lossen wij 'All Keys Lost' situaties op locatie op. 24/7 bereikbaar in regio Utrecht, Amsterdam, Rotterdam, Den Haag, Almere, Amersfoort en de rest van de Randstad met standaard 12 maanden garantie.
+                Autosleutel24 is uw betrouwbare, mobiele autosleutelspecialist in Nederland. Met onze geavanceerde diagnoseapparatuur en CNC-freesmachines openen wij schadevrij deuren, programmeren wij smart keys en lossen wij 'All Keys Lost' situaties op locatie op. 24/7 bereikbaar in regio <Link href="/steden/utrecht" style={{textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/rotterdam" style={{textDecoration: 'underline'}}>Rotterdam</Link>, <Link href="/steden/den-haag" style={{textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{textDecoration: 'underline'}}>Almere</Link>, <Link href="/steden/amersfoort" style={{textDecoration: 'underline'}}>Amersfoort</Link> en de rest van de Randstad met standaard 12 maanden garantie.
               </p>
             </div>
             <p>© {year} {SITE_CONFIG.fullName}. Alle rechten voorbehouden.</p>
