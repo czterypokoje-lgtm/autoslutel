@@ -3,6 +3,8 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import { CITIES } from '@/config/cities';
+import { BRANDS } from '@/config/brands';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
@@ -213,9 +215,9 @@ export default function SleutelBijmakenPage() {
 
                 {/* Section 2.5: Onze Service Galerij */}
                 <div>
-                  <h2>Onze Service in Utrecht, Amsterdam, Almere &amp; Amersfoort — Galerij</h2>
+                  <h2>Onze Service in Heel Nederland — Galerij</h2>
                   <p>
-                    Of u nu op onze werkplaats in Utrecht langskomt of dat we onze mobiele bussen naar u toe sturen in Amsterdam, Almere of Amersfoort; wij garanderen een vakkundige service. Bekijk hier een impressie van onze werkplaats, apparatuur en recent voltooide opdrachten.
+                    Of u nu op onze werkplaats in Utrecht langskomt of dat we onze mobiele bussen naar u toe sturen op locatie in heel Nederland; wij garanderen een vakkundige service. Bekijk hier een impressie van onze werkplaats, apparatuur en recent voltooide opdrachten.
                   </p>
                   <div style={{
                     display: 'grid',
@@ -290,13 +292,14 @@ export default function SleutelBijmakenPage() {
                   <p>
                     Wij maken en programmeren sleutels voor alle gangbare merken. Onze apparatuur ondersteunt:
                   </p>
-                  <ul className={styles.bulletList}>
-                    <li><Link href="/merken/volkswagen-autosleutel-bijmaken">Volkswagen</Link> — Golf, Polo, Tiguan, Transporter (MQB platform)</li>
-                    <li><Link href="/merken/bmw-autosleutel-bijmaken">BMW</Link> — 1-serie, 3-serie, 5-serie, X3, X5 (CAS3/CAS4/FEM/BDC)</li>
-                    <li><Link href="/merken/mercedes-autosleutel-bijmaken">Mercedes-Benz</Link> — A-Klasse, C-Klasse, E-Klasse, Sprinter (EIS/ESL, FBS3/FBS4)</li>
-                    <li><Link href="/merken/audi-autosleutel-bijmaken">Audi</Link> — A3, A4, A6, Q5, Q7 (MLB platform)</li>
-                    <li><Link href="/merken/ford-autosleutel-bijmaken">Ford</Link> — Focus, Fiesta, Transit, Kuga (PAT2/PAT3/PAT4)</li>
-                    <li><Link href="/merken/toyota-autosleutel-bijmaken">Toyota</Link> — Corolla, Yaris, RAV4, Land Cruiser (G-chip/H-chip)</li>
+                  <ul className={styles.bulletList} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.5rem' }}>
+                    {BRANDS.map(brand => (
+                      <li key={brand.slug}>
+                        <Link href={`/merken/${brand.slug}`}>
+                          {brand.name}
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                   <p>
                     <Link href="/merken" style={{ fontWeight: 700, color: '#f97316' }}>Bekijk alle merken die wij bedienen →</Link>
@@ -307,14 +310,14 @@ export default function SleutelBijmakenPage() {
                 <div>
                   <h2>Waar Komen Wij voor Autosleutel Bijmaken?</h2>
                   <p>
-                    Wij zijn mobiel actief in de regio Utrecht en omliggende steden. Populaire locaties:
+                    Wij zijn mobiel actief in de regio Utrecht en in heel Nederland. Ontdek onze service in de volgende steden:
                   </p>
-                  <ul className={styles.bulletList}>
-                    <li><Link href="/steden/utrecht">Utrecht</Link> — Centrum, Oudwijk, Wittevrouwen, Vleuten, De Meern (15-25 min)</li>
-                    <li><Link href="/steden/amersfoort">Amersfoort</Link> — Centrum, Leusden, Soest (30-35 min)</li>
-                    <li><Link href="/steden/utrecht">Zeist</Link> — Villawijken, winkelcentrum (20-25 min)</li>
-                    <li><Link href="/steden/hilversum">Hilversum</Link> — Media Park, zakelijke lease (35-40 min)</li>
-                    <li><Link href="/steden/utrecht">Nieuwegein</Link> — City Plaza, woonwijken (15-20 min)</li>
+                  <ul className={styles.bulletList} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.5rem' }}>
+                    {CITIES.map(city => (
+                      <li key={city.slug}>
+                        <Link href={`/steden/${city.slug}`}>{city.city}</Link>
+                      </li>
+                    ))}
                   </ul>
                   <p>
                     <Link href="/steden" style={{ fontWeight: 700, color: '#f97316' }}>Bekijk ons volledige werkgebied →</Link>
