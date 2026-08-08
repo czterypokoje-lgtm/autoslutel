@@ -798,7 +798,11 @@
   }
   .pricingTable {
     display: table !important;
-    min-width: 550px !important;
+    min-width: 100% !important;
+    font-size: 0.8rem;
+  }
+  .pricingTable th, .pricingTable td {
+    padding: 0.5rem 0.4rem !important;
   }
 }
 
