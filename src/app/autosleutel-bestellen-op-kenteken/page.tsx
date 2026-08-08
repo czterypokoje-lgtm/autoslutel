@@ -205,9 +205,9 @@ export default function KentekenBestellenPage() {
 
                 <div style={{ marginTop: '3rem', marginBottom: '3rem', textAlign: 'center' }}>
                   <img 
-                    src="/autosleutel_kenteken_1_1785882845475.jpg" 
+                    src="/images/autosleutel-bestellen-op-kenteken.jpg" 
                     alt="Autosleutel bestellen op kenteken via WhatsApp - direct prijs" 
-                    style={{ borderRadius: '12px', width: '100%', height: 'auto' }}
+                    style={{ borderRadius: '12px', width: '100%', height: 'auto', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
                   />
                 </div>
 
