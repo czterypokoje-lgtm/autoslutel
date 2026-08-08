@@ -198,6 +198,9 @@ const serviceAreaCities = [
   { name: 'Amsterdam-Zuid', slug: 'amsterdam-zuid', time: '35-45 min' },
   { name: 'Almere', slug: 'almere', time: '35-45 min' },
   { name: 'Amersfoort', slug: 'amersfoort', time: '25-35 min' },
+  { name: 'Arnhem', slug: 'arnhem', time: '45-55 min' },
+  { name: 'Nijmegen', slug: 'nijmegen', time: '55-65 min' },
+  { name: 'Apeldoorn', slug: 'apeldoorn', time: '40-50 min' },
   { name: 'Hilversum', slug: 'hilversum', time: '30-40 min' },
   { name: 'Bussum', slug: 'bussum', time: '30-40 min' },
   { name: 'Naarden', slug: 'naarden', time: '30-40 min' },
@@ -205,7 +208,6 @@ const serviceAreaCities = [
   { name: 'Zeist', slug: 'zeist', time: '18-22 min' },
   { name: 'Huizen', slug: 'huizen', time: '35-45 min' },
   { name: 'Diemen', slug: 'diemen', time: '35-45 min' },
-  { name: 'Rotterdam', slug: 'rotterdam', time: '45-60 min' },
   { name: 'Den Haag', slug: 'den-haag', time: '45-60 min' },
 ];
 
@@ -491,7 +493,7 @@ export default function HomePage() {
           <div className={styles.serviceAreaGrid}>
             <div className={styles.serviceAreaText}>
               <p className={styles.serviceAreaLead}>
-                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied vanuit onze hoofdlocatie in <strong>Utrecht</strong>. Of u nu uw autosleutel bent verloren in <strong>Utrecht</strong>, <strong>Rotterdam</strong> of <strong>Den Haag</strong>, met een defect contactslot staat in <strong>Amersfoort</strong> of <strong>Almere</strong>, of met spoed een transpondersleutel wilt laten inleren in &apos;t Gooi (<strong>Hilversum</strong>, <strong>Bussum</strong>, <strong>Naarden</strong>) of <strong>Amsterdam</strong> — wij komen direct naar uw thuis- of strandinglocatie.
+                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied vanuit onze hoofdlocatie in <strong>Utrecht</strong>. Of u nu uw autosleutel bent verloren in <strong>Utrecht</strong>, <strong>Arnhem</strong> of <strong>Nijmegen</strong>, met een defect contactslot staat in <strong>Amersfoort</strong> of <strong>Apeldoorn</strong>, of met spoed een transpondersleutel wilt laten inleren in &apos;t Gooi (<strong>Hilversum</strong>, <strong>Bussum</strong>, <strong>Naarden</strong>) of <strong>Amsterdam</strong> — wij komen direct naar uw thuis- of strandinglocatie.
               </p>
               <p className={styles.serviceAreaSub}>
                 Dankzij onze geavanceerde GPS-gestuurde routeplanning zijn onze monteurs meestal binnen <strong>20 tot 60 minuten</strong> ter plaatse. Geen wegsleepkosten naar de dealer en altijd 100% schadevrij geopend en geprogrammeerd. Klik op uw regio voor lokale tarieven en aankomsttijden:
