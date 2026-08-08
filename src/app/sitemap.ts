@@ -37,6 +37,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.85,
+    images: Array.from({ length: 8 }).map((_, i) => `${base}/images/cities/${c.slug}/autosleutel-bijmaken-${c.slug}-${i + 1}.webp`),
   }));
 
   // 4. Brand Pages
