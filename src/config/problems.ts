@@ -13,15 +13,6 @@ export const PROBLEMS: Problem[] = [
     metaDesc: 'Autosleutel kwijt? Wij helpen direct! Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel nu: 06 11 75 12 31',
     h1: 'Autosleutel Kwijt? Direct Hulp – 24/7 Mobiele Service',
     nlSearches: 2400, beSearches: 880, cpc: 4.20, intent: 'critical', conversionRate: '8–12%',
-  },
-  {
-    slug: 'auto-op-slot',
-    title: 'Auto Op Slot / Sleutel Vergeten',
-    metaTitle: 'Auto Op Slot? Sleutels Vergeten? | Direct Hulp | Schadevrij Openen',
-    metaDesc: 'Auto op slot en sleutels erin vergeten? Wij openen uw auto schadevrij. 24/7. Reactietijd 30-60 min. Bel: 06 11 75 12 31',
-    h1: 'Auto Op Slot? Sleutel Vergeten? Wij Openen Schadevrij – 24/7',
-    nlSearches: 1900, beSearches: 720, cpc: 5.10, intent: 'critical', conversionRate: '9–14%',
-  },
   {
     slug: 'auto-openen-zonder-sleutel',
     title: 'Auto Openen Zonder Sleutel',

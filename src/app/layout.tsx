@@ -17,17 +17,11 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.domain),
-  title: 'Autosleutel Bijmaken of Kwijt? 24/7 Mobiele Service | Autosleutel24',
+  title: {
+    template: '%s | Autosleutel24',
+    default: 'Autosleutel Bijmaken of Kwijt? 24/7 Mobiele Service | Autosleutel24',
+  },
   description: `Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!`,
-  keywords: [
-    'autosleutelbijmaken', 'autosleutel24', 'autosleutelkwijt', 'autosleutel kwijt',
-    'autosleutel bijmaken', 'autosleutel programmeren', 'reservesleutel auto bijmaken',
-    'mobiele autoslotenmaker', 'autosleutel bijmaken utrecht', 'transponder sleutel programmeren',
-    'BMW autosleutel bijmaken', 'Mercedes sleutel programmeren', 'Volkswagen autosleutel bijmaken',
-    'autosleutel bijmaken kosten', 'autosleutel bijmaken amsterdam', 'sleutelmaker 24 uur',
-    'autosleutel laten bijmaken', 'autosleutel specialist utrecht', 'klapsleutel bijmaken',
-    'smart key programmeren', 'autosleutel bijmaken almere', 'autosleutel bijmaken amersfoort',
-  ],
   alternates: {
     canonical: SITE_CONFIG.domain,
     languages: {
@@ -77,96 +71,7 @@ export const metadata: Metadata = {
   // Paste the <meta name="google-site-verification" content="..."> tag directly in this <head> block
 };
 
-// ── LocalBusiness Schema (replaces Organization — critical for Local Pack) ──
-const localBusinessSchema = {
-  '@context': 'https://schema.org',
-  '@type': ['LocalBusiness', 'AutomotiveBusiness', 'Locksmith'],
-  '@id': `${SITE_CONFIG.domain}/#localbusiness`,
-  name: SITE_CONFIG.name,
-  alternateName: 'Autosleutel24',
-  description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Werkzaam in Utrecht, Amsterdam, Almere, Amersfoort en heel Nederland.',
-  url: SITE_CONFIG.domain,
-  logo: {
-    '@type': 'ImageObject',
-    url: `${SITE_CONFIG.domain}/images/logo/autosleutel24-logo-slotenmaker-utrecht.png`,
-    width: 1024,
-    height: 304,
-  },
-  image: `${SITE_CONFIG.domain}/og-image.png`,
-  telephone: SITE_CONFIG.phoneTel,
-  email: SITE_CONFIG.email,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: SITE_CONFIG.address.street,
-    addressLocality: SITE_CONFIG.address.city,
-    addressRegion: SITE_CONFIG.address.region,
-    postalCode: SITE_CONFIG.address.postal,
-    addressCountry: SITE_CONFIG.address.country,
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: parseFloat(SITE_CONFIG.geo.lat),
-    longitude: parseFloat(SITE_CONFIG.geo.lng),
-  },
-  hasMap: `https://maps.google.com/?q=${SITE_CONFIG.geo.lat},${SITE_CONFIG.geo.lng}`,
-  openingHoursSpecification: [
-    {
-      // Google recognises 24/7 when opens=00:00 + closes=23:59 on all 7 days
-      // Using two specs (00:00-12:00 & 12:00-23:59) avoids any midnight ambiguity
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      opens: '00:00',
-      closes: '23:59',
-    },
-  ],
-  areaServed: [
-    { '@type': 'City', 'name': 'Utrecht', 'sameAs': 'https://en.wikipedia.org/wiki/Utrecht' },
-    { '@type': 'City', 'name': 'Amsterdam', 'sameAs': 'https://en.wikipedia.org/wiki/Amsterdam' },
-    { '@type': 'City', 'name': 'Almere' },
-    { '@type': 'City', 'name': 'Amersfoort' },
-    { '@type': 'City', 'name': 'Hilversum' },
-    { '@type': 'City', 'name': 'Bussum' },
-    { '@type': 'City', 'name': 'Nieuwegein' },
-    { '@type': 'City', 'name': 'Houten' },
-    { '@type': 'City', 'name': 'Zeist' },
-    { '@type': 'City', 'name': 'Maarssen' },
-    { '@type': 'City', 'name': 'Amstelveen' },
-    { '@type': 'City', 'name': 'Diemen' },
-    { '@type': 'City', 'name': 'Naarden' },
-    { '@type': 'City', 'name': 'Weesp' },
-    { '@type': 'City', 'name': 'Leusden' },
-    { '@type': 'City', 'name': 'Baarn' },
-    { '@type': 'City', 'name': 'Soest' },
-    { '@type': 'City', 'name': 'IJsselstein' },
-    { '@type': 'City', 'name': 'Vianen' },
-    { '@type': 'City', 'name': 'Woerden' },
-    { '@type': 'City', 'name': 'Alphen aan den Rijn' },
-  ],
-  priceRange: '€€',
-  paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'iDEAL', 'Pin'],
-  currenciesAccepted: 'EUR',
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: parseFloat(SITE_CONFIG.rating),
-    reviewCount: parseInt(SITE_CONFIG.reviewCount, 10), // Must be number type per schema.org spec
-    bestRating: 5,
-    worstRating: 1,
-  },
-  sameAs: [
-    SITE_CONFIG.social.facebook,
-    SITE_CONFIG.social.instagram,
-    SITE_CONFIG.social.google,
-    `https://www.kvk.nl/zoeken/?source=all&q=${SITE_CONFIG.kvk}`,
-  ],
-  foundingDate: '2020',
-  vatID: SITE_CONFIG.btw,
-  legalName: SITE_CONFIG.fullName,
-  identifier: {
-    '@type': 'PropertyValue',
-    name: 'KVK',
-    value: SITE_CONFIG.kvk,
-  },
-};
+// LocalBusiness schema removed. Now handled dynamically in page components.
 
 // ── WebSite Schema (enables Google Sitelinks Searchbox) ──
 const websiteSchema = {
@@ -258,11 +163,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ── FONTS ── */}
         {/* Font loading moved to next/font/google */}
         {/* ── STRUCTURED DATA ── */}
-        <script
-          id="schema-localbusiness"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-        />
         <script
           id="schema-website"
           type="application/ld+json"

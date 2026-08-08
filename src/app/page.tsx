@@ -10,6 +10,7 @@ import FaqSection from '@/components/FaqSection/FaqSection';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
 import InstantServiceMap from '@/components/InstantServiceMap';
+import LocalBusinessSchema from '@/components/Schema/LocalBusinessSchema';
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
@@ -33,52 +34,6 @@ export const metadata: Metadata = {
   },
 };
 
-const locksmithSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Locksmith',
-  '@id': `${SITE_CONFIG.domain}/#locksmith`,
-  name: SITE_CONFIG.fullName,
-  url: SITE_CONFIG.domain,
-  telephone: SITE_CONFIG.phoneTel,
-  email: SITE_CONFIG.email,
-  priceRange: '€€',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Mobiele Service',
-    addressLocality: SITE_CONFIG.address.city,
-    addressRegion: SITE_CONFIG.address.region,
-    postalCode: SITE_CONFIG.address.postal,
-    addressCountry: SITE_CONFIG.address.country,
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: SITE_CONFIG.geo.lat,
-    longitude: SITE_CONFIG.geo.lng,
-  },
-  areaServed: {
-    '@type': 'GeoCircle',
-    geoMidpoint: {
-      '@type': 'GeoCoordinates',
-      latitude: SITE_CONFIG.serviceArea.lat,
-      longitude: SITE_CONFIG.serviceArea.lng,
-    },
-    geoRadius: SITE_CONFIG.serviceArea.radiusMeters,
-  },
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-      opens: '00:00',
-      closes: '23:59',
-    },
-  ],
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: parseFloat(SITE_CONFIG.rating),
-    reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
-    bestRating: 5,
-  },
-};
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -214,7 +169,7 @@ const serviceAreaCities = [
 export default function HomePage() {
   return (
     <>
-      <Script id="home-locksmith-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(locksmithSchema) }} />
+      <LocalBusinessSchema />
       <Script id="home-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
       {/* ===== HERO ===== */}

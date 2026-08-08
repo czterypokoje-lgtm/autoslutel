@@ -42,7 +42,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       absolute: `${post.title} | ${SITE_CONFIG.name}`,
     },
     description: post.excerpt,
-    keywords: post.keywords,
     alternates: {
       canonical: `${SITE_CONFIG.domain}/blog/${slug}`,
       languages: {
