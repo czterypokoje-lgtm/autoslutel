@@ -289,18 +289,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <div style={{ marginTop: '3rem', borderTop: '1px solid #e2e8f0', paddingTop: '2rem' }}>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--navy-900)' }}>Gerelateerde Artikelen</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-            {BLOG_POSTS
-              .filter(p => p.slug !== slug)
-              .slice(0, 3)
-              .map(related => (
-                <Link 
-                  key={related.slug} 
+            {(() => {
+              // Deterministic rotation based on slug — every post gets a unique set of related articles
+              const others = BLOG_POSTS.filter(p => p.slug !== slug);
+              const seed = slug.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+              const start = seed % others.length;
+              const rotated = [...others.slice(start), ...others.slice(0, start)];
+              return rotated.slice(0, 3).map(related => (
+                <Link
+                  key={related.slug}
                   href={`/blog/${related.slug}`}
-                  style={{ 
-                    display: 'block', 
-                    padding: '1.5rem', 
-                    background: '#fff', 
-                    borderRadius: '8px', 
+                  style={{
+                    display: 'block',
+                    padding: '1.5rem',
+                    background: '#fff',
+                    borderRadius: '8px',
                     border: '1px solid #e2e8f0',
                     textDecoration: 'none',
                     color: 'inherit',
@@ -317,7 +320,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     Lees verder →
                   </span>
                 </Link>
-            ))}
+              ));
+            })()}
           </div>
         </div>
 
