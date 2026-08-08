@@ -344,7 +344,8 @@ export default function HomePage() {
               </article>
             ))}
           </div>
-          <div className={styles.servicesCta}>
+          <div className={styles.servicesCta} style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/autosleutel-bestellen-op-kenteken" className="btn btn-green">Autosleutel Bestellen op Kenteken</Link>
             <Link href="/diensten" className="btn btn-navy">Alle diensten bekijken</Link>
           </div>
         </div>

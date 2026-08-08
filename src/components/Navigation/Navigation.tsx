@@ -25,6 +25,7 @@ const DienstenStructure = [
       { href: '/diensten/afstandsbediening-bijmaken', label: 'Afstandsbediening Bijmaken' },
       { href: '/diensten/smart-key-programmeren', label: 'Smart Key / Keyless' },
       { href: '/diensten/reservesleutel-maken', label: 'Reservesleutel Maken' },
+      { href: '/autosleutel-bestellen-op-kenteken', label: 'Bestellen op Kenteken' },
     ]
   },
   {
