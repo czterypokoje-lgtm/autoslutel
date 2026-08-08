@@ -13,6 +13,7 @@ export const PROBLEMS: Problem[] = [
     metaDesc: 'Autosleutel kwijt? Wij helpen direct! Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel nu: 06 11 75 12 31',
     h1: 'Autosleutel Kwijt? Direct Hulp – 24/7 Mobiele Service',
     nlSearches: 2400, beSearches: 880, cpc: 4.20, intent: 'critical', conversionRate: '8–12%',
+  },
   {
     slug: 'auto-openen-zonder-sleutel',
     title: 'Auto Openen Zonder Sleutel',
