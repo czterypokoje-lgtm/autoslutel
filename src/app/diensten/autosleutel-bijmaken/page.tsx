@@ -12,9 +12,9 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Reservesleutel Auto Laten Maken? Autosleutel Bijmaken Prijs & Service | Autosleutel24',
+    absolute: 'Autosleutel Bijmaken – Prijs & Reservesleutel Op Locatie | Autosleutel24',
   },
-  description: 'Wat kost een sleutel bijmaken? Reservesleutel auto laten maken of reserve sleutel auto maken? Mobiel op locatie. Vasta prijs, goedkoper dan dealer. 24/7 beschikbaar.',
+  description: `Autosleutel bijmaken nodig? Wij komen 24/7 op locatie voor uw reservesleutel of extra autosleutel. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}, goedkoper dan de dealer. Bel direct!`,
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` },
 };
 
@@ -113,7 +113,7 @@ export default function SleutelBijmakenPage() {
             <nav className={styles.breadcrumb} aria-label="Breadcrumb">
               <Link href="/">Home</Link> <span>/</span> <Link href="/diensten">Diensten</Link> <span>/</span> <span>Autosleutel Bijmaken</span>
             </nav>
-            <h1>Reservesleutel Auto Laten Maken — Autosleutel Bijmaken Prijs & Direct op Locatie</h1>
+            <h1>Autosleutel Bijmaken — Reservesleutel Auto Laten Maken Op Locatie</h1>
             <p className={styles.heroLead}>
               Wilt u direct een nieuwe <strong>autosleutel bijmaken met afstandsbediening</strong> of een moderne <strong>autosleutel met keyless entry</strong> zonder naar de dure dealer te hoeven? Autosleutel24 komt 24/7 naar u toe — thuis, op het werk of langs de weg. U kunt bij ons snel een professionele <strong>extra autosleutel</strong> of reservesleutel <strong>laten bijmaken</strong> en direct op locatie <strong>laten maken</strong>. Wij frezen en programmeren alle soorten <strong>autosleutels met afstandsbediening</strong> klaar terwijl u wacht, zonder sleepkosten of lange wachttijden.
             </p>
