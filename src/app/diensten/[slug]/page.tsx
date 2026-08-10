@@ -176,7 +176,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
             <p className={styles.heroLead}>{service.intro}</p>
 
             <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm />
+              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
             </div>
           </div>
         </section>

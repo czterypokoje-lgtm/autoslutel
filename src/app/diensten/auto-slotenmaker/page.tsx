@@ -156,7 +156,7 @@ export default function AutoSlotenmakerPage() {
               Onze mobiele servicebussen rijden direct uit in regio Utrecht, Amsterdam, Almere, Amersfoort en Hilversum.
             </p>
             <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm />
+              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
             </div>
           </div>
         </section>

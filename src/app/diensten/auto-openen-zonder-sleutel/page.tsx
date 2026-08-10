@@ -191,7 +191,7 @@ export default function AutoOpenenZonderSleutelPage() {
               Utrecht, Amsterdam, Almere en Amersfoort.
             </p>
             <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm />
+              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
             </div>
           </div>
         </section>

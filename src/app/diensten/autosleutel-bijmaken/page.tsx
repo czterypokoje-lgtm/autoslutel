@@ -118,7 +118,7 @@ export default function SleutelBijmakenPage() {
               Wilt u direct een nieuwe <strong>autosleutel bijmaken met afstandsbediening</strong> of een moderne <strong>autosleutel met keyless entry</strong> zonder naar de dure dealer te hoeven? Autosleutel24 komt 24/7 naar u toe — thuis, op het werk of langs de weg. U kunt bij ons snel een professionele <strong>extra autosleutel</strong> of reservesleutel <strong>laten bijmaken</strong> en direct op locatie <strong>laten maken</strong>. Wij frezen en programmeren alle soorten <strong>autosleutels met afstandsbediening</strong> klaar terwijl u wacht, zonder sleepkosten of lange wachttijden.
             </p>
             <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm />
+              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
             </div>
           </div>
         </section>
