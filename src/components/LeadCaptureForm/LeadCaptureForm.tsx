@@ -5,15 +5,16 @@ import { SITE_CONFIG } from "@/config/site.config";
 import styles from "./LeadCaptureForm.module.css";
 
 interface Props {
-  city: string;
+  city?: string;
   phone: string;
 }
 
-export default function LeadCaptureForm({ city, phone }: Props) {
+export default function LeadCaptureForm({ city = "", phone }: Props) {
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
   const [service, setService] = useState("");
+  const [location, setLocation] = useState(city);
   const [submitted, setSubmitted] = useState(false);
 
   const models = useMemo(() => {
@@ -32,7 +33,7 @@ export default function LeadCaptureForm({ city, phone }: Props) {
       model ? `Model: ${model}` : null,
       year ? `Bouwjaar: ${year}` : null,
       service ? `Service: ${service}` : null,
-      `Locatie: ${city}`,
+      `Locatie: ${location || "Niet ingevuld"}`,
       "",
       "Kunt u mij zo snel mogelijk helpen? Graag hoor ik de prijs en aankomsttijd.",
     ].filter(p => p !== null).join("\n");
@@ -116,14 +117,16 @@ export default function LeadCaptureForm({ city, phone }: Props) {
           </select>
         </div>
 
-        {/* Location (pre-filled, readonly) */}
+        {/* Location */}
         <div className={styles.field}>
           <span className={styles.fieldIcon} aria-hidden>📍</span>
           <input
             className={styles.select}
             type="text"
-            value={city}
-            readOnly
+            value={location}
+            onChange={e => setLocation(e.target.value)}
+            readOnly={!!city}
+            placeholder="Uw woonplaats"
             aria-label="Locatie"
           />
         </div>
