@@ -9,6 +9,7 @@ import { DIENSTEN } from '@/config/diensten';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
+import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import styles from './page.module.css';
 import UtrechtSeo from '@/content/seo/utrecht';
 import AmsterdamSeo from '@/content/seo/amsterdam';
@@ -192,19 +193,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
               Alle merken, ter plaatse geprogrammeerd.
             </p>
-            <div className={styles.heroCtas}>
-              <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id={`city-${citySlug}-phone`}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-                Bel Nu: {SITE_CONFIG.phone}
-              </a>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWa} id={`city-${citySlug}-wa`}>WhatsApp</a>
-            </div>
-            <div className={styles.heroStats}>
-              <div className={styles.stat}><strong>{city.travelTime}</strong><span>Reactietijd</span></div>
-              <div className={styles.stat}><strong>24/7</strong><span>Beschikbaar</span></div>
-              <div className={styles.stat}><strong>38 merken</strong><span>Alle systemen</span></div>
-              <div className={styles.stat}><strong>{SITE_CONFIG.rating}&#9733;</strong><span>Google score</span></div>
-            </div>
+            <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
           </div>
         </section>
 
