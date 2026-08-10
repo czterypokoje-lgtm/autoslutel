@@ -27,6 +27,15 @@ export const SITE_CONFIG = {
     lng: '5.1611',
     radiusMeters: '75000', // 75km serving area around Bussum HQ
   },
+  serviceAreaString: 'Utrecht, Amsterdam en Midden-Nederland',
+
+  prices: {
+    unlock: '125',
+    transponder: '159',
+    smartKey: '349',
+    allKeysLost: '260',
+    exVatDisclaimer: 'excl. btw',
+  },
 
   hours: 'Maandag t/m Zondag 00:00–24:00',
   hoursShort: '24/7 Beschikbaar',

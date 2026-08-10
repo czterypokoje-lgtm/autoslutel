@@ -26,7 +26,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Autodeur Openen Zonder Sleutel — Mobiel & Schadevrij ter Plaatse',
     intro: 'Heeft u uw autosleutels in de auto laten liggen of is de deur dichtgevallen? Wij openen uw autodeur 100% schadevrij. Met onze mobiele service zijn we gemiddeld binnen 30 minuten op uw locatie in de regio Utrecht en Amsterdam.',
     system: 'Lishi Lock Decoders / Over-the-shoulder tools',
-    priceFrom: 'Vanaf €95',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '15–30 minuten',
     steps: [
       'U neemt contact op via telefoon of WhatsApp en geeft uw locatie en automodel door',
@@ -50,7 +50,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Sleutel in Auto Laten Liggen? — Wij Openen Uw Auto Schadevrij',
     intro: 'Het overkomt de beste: u stapt uit, de deuren vallen in het slot, en uw autosleutel ligt nog op de stoel of in het contactslot. Geen paniek. Onze specialisten openen uw auto ter plaatse zonder enige vorm van schade.',
     system: 'Lishi HU66, HU92, HU101, HU162T Decoders',
-    priceFrom: 'Vanaf €95',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '15–30 minuten',
     steps: [
       'Bel direct en leg de situatie uit',
@@ -72,7 +72,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Autodeur Dichtgevallen met Sleutel erin? — Direct Geopend',
     intro: 'Als uw autodeur is dichtgevallen met de sleutel erin en de auto automatisch op slot is gegaan, wilt u snel weer toegang. Onze mobiele slotenmakers zijn 24 uur per dag stand-by om uw autodeur schadevrij te openen.',
     system: 'Professional Locksmith Bypass Tools',
-    priceFrom: 'Vanaf €95',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '15–30 minuten',
     steps: [
       'Bel ons storingsnummer voor directe hulp',
@@ -94,7 +94,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Kofferbak Openen Zonder Sleutel — Snel & Schadevrij ter Plaatse',
     intro: 'Sleutel in de kofferbak laten liggen en zit de auto op slot? Kofferbakken hebben vaak een complexer mechanisme met een dubbele vergrendeling (deadlock). Wij beschikken over de juiste tools om uw kofferbak schadevrij te openen via de slotcilinder of door de boardcomputer elektronisch aan te sturen.',
     system: 'Lishi Laser Picks & OBD electronic triggers',
-    priceFrom: 'Vanaf €95',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '20–45 minuten',
     steps: [
       'U belt ons en meldt dat de sleutel in de kofferbak ligt',
@@ -141,7 +141,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Autosleutel Bijmaken & Programmeren — Mobiele Service op Locatie',
     intro: 'Wilt u een reservesleutel laten maken om te voorkomen dat u ooit buitengesloten raakt? Wij maken en programmeren reservesleutels voor alle merken en modellen direct aan huis of op uw werk. U krijgt standaard 12 maanden garantie op de elektronica en de transponder chip.',
     system: 'AVDI, Lonsdor K518, VVDI, Autel IM608 Pro',
-    priceFrom: 'Vanaf €149',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.transponder}`,
     duration: '30–60 minuten',
     steps: [
       'Geef uw merk, model en bouwjaar door via telefoon of WhatsApp',
@@ -165,7 +165,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Transponder Sleutel Programmeren — Immo & Chip Inleren',
     intro: 'De transponder is een kleine microchip in uw autosleutel die communiceert met de startonderbreker (immobilizer) van uw auto. Zonder correcte transponder start de motor niet. Wij programmeren en schrijven transponderchips rechtstreeks in de boordcomputer van uw voertuig.',
     system: 'Megamos ID48, NXP PCF7935 / PCF7936 / PCF7945 / PCF7953, Hitag 2 / 3 / Pro, DST40 / DST80 / DST-AES',
-    priceFrom: 'Vanaf €95',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '30–60 minuten',
     steps: [
       'We lezen het startonderbreker-systeem uit met OBD-diagnosetools',
@@ -231,7 +231,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Reservesleutel Auto Laten Maken — Voorkom Hoge Sleepkosten',
     intro: 'Als u nog maar één autosleutel heeft, loopt u een groot risico. Bij verlies van uw laatste sleutel (All Keys Lost) zijn de kosten voor opening en programmering vele malen hoger. Laat daarom tijdig een reservesleutel maken. Wij komen bij u op locatie in Utrecht of Amsterdam, zodat u geen tijd verliest.',
     system: 'Transponder Cloners / OBD programming tools',
-    priceFrom: 'Vanaf €95',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '30–60 minuten',
     steps: [
       'U kiest of u een eenvoudige reservesleutel (zonder knoppen) of een afstandsbediening wilt',
@@ -255,7 +255,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Autosleutel Kwijt of Verloren? — Wij Helpen U Direct Weer op Weg',
     intro: 'Bent u uw autosleutel verloren, is deze gestolen of in het water gevallen? Onze mobiele autosleutelservice helpt u direct ter plaatse. Wij openen uw auto schadevrij, wissen de oude sleutels uit het geheugen (tegen diefstal) en programmeren direct een nieuwe set sleutels.',
     system: 'EEPROM / MCU programmering & OBD software keys',
-    priceFrom: 'Vanaf €190',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
     duration: '45–120 minuten',
     steps: [
       'Bel direct en vermeld uw locatie en het automodel',
@@ -300,7 +300,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Noodopening Auto — Snel & Schadevrij Binnen 30 Minuten',
     intro: 'Zit uw huisdier of kind in de auto en zijn de deuren dichtgevallen? Of heeft u met spoed toegang nodig tot uw voertuig omdat de sleutels binnen liggen? Wij voeren direct een noodopening uit. We zijn 24/7 bereikbaar en garanderen een 100% schadevrije opening.',
     system: 'Deadlock bypass tools & Laser Decoders',
-    priceFrom: 'Vanaf €95',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '15–30 minuten',
     steps: [
       'U belt onze spoedlijn (directe prioriteit)',

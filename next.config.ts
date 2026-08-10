@@ -19,6 +19,31 @@ const nextConfig: NextConfig = {
     return [
       ...brandRedirects,
       {
+        source: "/blog/sleutel-kwijt-utrecht-stappenplan",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/alle-sleutels-kwijt-wat-nu-utrecht",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/sleutel-kwijt-auto-hulp-oplossingen",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/sleutel-kwijt-auto-vind-snel-oplossingen",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
         source: "/blog/volkswagen-sleutel-bijmaken-kosten-opties-tips",
         destination: "/blog/volkswagen-sleutel-bijmaken",
         permanent: true,
