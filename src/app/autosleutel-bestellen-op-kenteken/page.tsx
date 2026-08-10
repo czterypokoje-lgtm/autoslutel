@@ -43,7 +43,7 @@ export default function KentekenBestellenPage() {
     'Gemiddelde beoordeling 4.9/5',
     '100% Mobiele Service',
     '12 Maanden Garantie',
-    'KVK Geregistreerd',
+    `KVK ${SITE_CONFIG.kvk}`,
     'Verzekerd & Gecertificeerd'
   ];
 

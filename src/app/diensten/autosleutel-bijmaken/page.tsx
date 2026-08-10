@@ -77,7 +77,7 @@ export default function SleutelBijmakenPage() {
     'Binnen 30 min in Utrecht',
     'Vaste prijs vanaf €95',
     '12 maanden garantie',
-    'KVK Geregistreerd',
+    `KVK ${SITE_CONFIG.kvk}`,
     'Verzekerd & Gecertificeerd'
   ];
 

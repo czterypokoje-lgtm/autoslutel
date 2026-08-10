@@ -205,7 +205,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               `Binnen ${city.travelTime} in ${city.city}`,
               'Vaste prijs vooraf',
               '12 Maanden Garantie',
-              'KVK Geregistreerd',
+              `KVK ${SITE_CONFIG.kvk}`,
               'Verzekerd & Gecertificeerd'
             ].map((item, idx) => (
               <div key={idx} className={styles.trustItem}>

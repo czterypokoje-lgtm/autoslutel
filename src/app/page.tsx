@@ -220,8 +220,8 @@ export default function HomePage() {
             
             <Link href="/autosleutel-kwijt" className={styles.heroUrgentBtn}>Alle Sleutels Kwijt? →</Link>
             <div className={styles.heroTrust} style={{marginTop: '1.5rem'}}>
-              <span className={styles.trustPill}>✓ KVK Geregistreerd</span>
-              <span className={styles.trustPill}>✓ 4.9 / 5 Google (247 reviews)</span>
+              <span className={styles.trustPill}>✓ KVK {SITE_CONFIG.kvk}</span>
+              <span className={styles.trustPill}>✓ {SITE_CONFIG.rating} / 5 Google ({SITE_CONFIG.reviewCount} reviews)</span>
               <span className={styles.trustPill}>✓ Verzekerd & Gecertificeerd</span>
               <span className={styles.trustPill}>✓ 24/7 Bereikbaar</span>
             </div>
@@ -576,7 +576,7 @@ export default function HomePage() {
             <span className={styles.ratingNum}>4.9</span>
             <div>
               <div className="stars">★★★★★</div>
-              <span style={{fontSize: '0.8rem', color: 'var(--gray-500)'}}>247 Google beoordelingen</span>
+              <span style={{fontSize: '0.8rem', color: 'var(--gray-500)'}}>{SITE_CONFIG.reviewCount} Google beoordelingen</span>
             </div>
           </div>
           <h3 className="text-center" style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Ervaringen van klanten</h3>

@@ -94,7 +94,7 @@ const faqItems = [
   },
   {
     q: "Welke installatiebedrijven voor auto openen zonder sleutel zijn actief in Nederland?",
-    a: "In Nederland zijn meerdere mobiele locksmith-bedrijven actief, maar de kwaliteit verschilt sterk. Let op gecertificeerde vakmannen die werken met professioneel Lishi-gereedschap en vaste transparante tarieven communiceren vóór aankomst. Autosleutel24 is actief in de regio Utrecht, Amsterdam, Almere en Amersfoort en staat bekendom schadevrij openen en eerlijke all-in prijzen — controleerbaar via 247 Google reviews met een 4.9-sterren beoordeling."
+    a: `In Nederland zijn meerdere mobiele locksmith-bedrijven actief, maar de kwaliteit verschilt sterk. Let op gecertificeerde vakmannen die werken met professioneel Lishi-gereedschap en vaste transparante tarieven communiceren vóór aankomst. Autosleutel24 is actief in de regio Utrecht, Amsterdam, Almere en Amersfoort en staat bekendom schadevrij openen en eerlijke all-in prijzen — controleerbaar via ${SITE_CONFIG.reviewCount} Google reviews met een ${SITE_CONFIG.rating}-sterren beoordeling.`
   },
   {
     q: "Wordt auto openen zonder sleutel vergoed door mijn verzekering?",
