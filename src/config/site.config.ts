@@ -15,17 +15,17 @@ export const SITE_CONFIG = {
   email: 'info@autosleutel24.nl',
 
   address: {
-    street: 'Stationsplein 11',
-    city: 'Utrecht',
-    region: 'Utrecht',
-    postal: '3511 ED',
+    street: 'Kapelstraat 9C',
+    city: 'Bussum',
+    region: 'Noord-Holland',
+    postal: '1404 HT',
     country: 'NL',
   },
-  geo: { lat: '52.0907', lng: '5.1214' },
+  geo: { lat: '52.2740', lng: '5.1611' },
   serviceArea: {
-    lat: '52.0907',
-    lng: '5.1214',
-    radiusMeters: '75000', // 75km serving area around Utrecht HQ (includes Den Haag/Rotterdam)
+    lat: '52.2740',
+    lng: '5.1611',
+    radiusMeters: '75000', // 75km serving area around Bussum HQ
   },
 
   hours: 'Maandag t/m Zondag 00:00–24:00',
