@@ -74,9 +74,10 @@
 
 /* Submit button */
 .submitBtn {
-  flex: 0 0 auto;
+  flex: 1 1 140px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   background: var(--color-primary);
   color: #fff;
