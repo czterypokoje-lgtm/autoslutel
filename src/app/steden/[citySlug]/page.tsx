@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
   return {
     title: {
-      absolute: city.customMetaTitle || `Autosleutel Bijmaken ${city.city} | 24/7 | Autosleutel24`,
+      absolute: city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
     },
     description: city.customMetaDesc || `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen ${city.travelTime} ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
     keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `autosleutel kwijt ${city.city.toLowerCase()}`, `reservesleutel auto ${city.city.toLowerCase()}`],
@@ -187,7 +187,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <Link href="/">Home</Link> <span>/</span> <Link href="/steden">Steden</Link> <span>/</span> <span>{city.city}</span>
             </nav>
             <div className={styles.heroLabel}>NL — {city.region}</div>
-            <h1>{city.customH1 || `Autosleutel Bijmaken ${city.city} — Dé Sleutelspecialist`}</h1>
+            <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
             <p className={styles.heroLead}>
               Vanuit Utrecht bereiken wij {city.city} in gemiddeld <strong>{city.travelTime}</strong>.
               Alle merken, ter plaatse geprogrammeerd.
@@ -235,15 +235,14 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               Wij maken en programmeren autosleutels voor alle gangbare automerken direct ter plaatse in {city.city}. 
               Onze mobiele dealer-niveau apparatuur ondersteunt:
             </p>
-            <ul className={styles.seoList}>
+            <div className={styles.brandGrid}>
               {BRANDS.map(b => (
-                <li key={b.slug}>
-                  <Link href={`/merken/${b.slug}`}>
-                    <strong>{b.name}</strong> — Autosleutel bijmaken in {city.city} ({b.system.split('/')[0].trim()})
-                  </Link>
-                </li>
+                <Link key={b.slug} href={`/merken/${b.slug}`} className={styles.brandCard}>
+                  <strong>{b.name}</strong>
+                  <span>Programmeren & Openen</span>
+                </Link>
               ))}
-            </ul>
+            </div>
           </div>
         </section>
 
@@ -254,15 +253,14 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <p className={styles.seoIntro}>
               Heeft u met spoed een autosleutel nodig of bent u uw sleutels kwijt in {city.city}? Wij bieden de volgende diensten op locatie:
             </p>
-            <ul className={styles.seoList}>
+            <div className={styles.nearbyGrid}>
               {DIENSTEN.map(s => (
-                <li key={s.slug}>
-                  <Link href={`/diensten/${s.slug}`}>
-                    <strong>{s.title} in {city.city}</strong> — {s.priceFrom || '24/7 beschikbaar'}
-                  </Link>
-                </li>
+                <Link key={s.slug} href={`/diensten/${s.slug}`} className={styles.nearbyCard}>
+                  <span>{s.title} in {city.city}</span>
+                  <span className={styles.nearbyTime}>{s.priceFrom || '24/7 Actief'}</span>
+                </Link>
               ))}
-            </ul>
+            </div>
           </div>
         </section>
 
