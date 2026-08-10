@@ -188,6 +188,16 @@ const nextConfig: NextConfig = {
         destination: '/diensten/autosleutel-bijmaken',
         permanent: true,
       },
+      {
+        source: '/blog/alle-sleutels-kwijt-wat-nu-utrecht',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
+      {
+        source: '/blog/sleutel-kwijt-utrecht-stappenplan',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
     ];
   },
 };

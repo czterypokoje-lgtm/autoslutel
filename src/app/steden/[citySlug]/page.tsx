@@ -189,7 +189,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <div className={styles.heroLabel}>NL — {city.region}</div>
             <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
             <p className={styles.heroLead}>
-              Vanuit Utrecht bereiken wij {city.city} in gemiddeld <strong>{city.travelTime}</strong>.
+              Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
               Alle merken, ter plaatse geprogrammeerd.
             </p>
             <div className={styles.heroCtas}>
@@ -226,6 +226,48 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             ))}
           </div>
         </div>
+
+
+        {/* ── LOKALE ERVARING — Unique content per city ─────────────── */}
+        {(city.localFact || city.popularBrands || city.commonJob) && (
+          <section className={styles.sectionAlt} style={{ padding: '2.5rem 0' }}>
+            <div className="container">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.5rem', alignItems: 'start' }}>
+
+                {city.localFact && (
+                  <div style={{ background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1.5rem' }}>
+                    <div style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>📍</div>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--gray-800)' }}>Lokale Ervaring in {city.city}</h3>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', lineHeight: 1.6, margin: 0 }}>{city.localFact}</p>
+                  </div>
+                )}
+
+                {city.popularBrands && (
+                  <div style={{ background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1.5rem' }}>
+                    <div style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>🚗</div>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--gray-800)' }}>Meest gevraagde merken in {city.city}</h3>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {city.popularBrands.map(brand => (
+                        <span key={brand} style={{ background: 'var(--color-primary)', color: '#fff', borderRadius: '999px', padding: '0.25rem 0.75rem', fontSize: '0.82rem', fontWeight: 600 }}>{brand}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {city.commonJob && (
+                  <div style={{ background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1.5rem' }}>
+                    <div style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>🔑</div>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--gray-800)' }}>Meest voorkomende opdracht</h3>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', lineHeight: 1.6, margin: 0 }}>{city.commonJob}</p>
+                    {city.avgJobDuration && (
+                      <p style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--color-primary)', fontWeight: 600, margin: '0.5rem 0 0' }}>⏱ Gemiddelde werktijd: {city.avgJobDuration}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Top brands in this city (SEO List) */}
         <section className={styles.section}>
