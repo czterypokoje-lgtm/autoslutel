@@ -138,7 +138,7 @@
 
 .callBtn {
   background: rgba(230,81,0,0.15);
-  color: var(--color-primary);
+  color: var(--color-accent);
   border: 1.5px solid rgba(230,81,0,0.4);
 }
 
