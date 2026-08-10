@@ -148,7 +148,7 @@ const services = [
 ];
 
 const serviceAreaCities = [
-  { name: 'Utrecht (Hoofdlocatie)', slug: 'utrecht', time: '15-20 min' },
+  { name: 'Utrecht', slug: 'utrecht', time: '15-20 min' },
   { name: 'Amsterdam', slug: 'amsterdam', time: '40-55 min' },
   { name: 'Amsterdam-Zuid', slug: 'amsterdam-zuid', time: '35-45 min' },
   { name: 'Almere', slug: 'almere', time: '35-45 min' },
@@ -448,7 +448,7 @@ export default function HomePage() {
           <div className={styles.serviceAreaGrid}>
             <div className={styles.serviceAreaText}>
               <p className={styles.serviceAreaLead}>
-                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied vanuit onze hoofdlocatie in <strong>Utrecht</strong>. Of u nu uw autosleutel bent verloren in <strong>Utrecht</strong>, <strong>Arnhem</strong> of <strong>Nijmegen</strong>, met een defect contactslot staat in <strong>Amersfoort</strong> of <strong>Apeldoorn</strong>, of met spoed een transpondersleutel wilt laten inleren in &apos;t Gooi (<strong>Hilversum</strong>, <strong>Bussum</strong>, <strong>Naarden</strong>) of <strong>Amsterdam</strong> — wij komen direct naar uw thuis- of strandinglocatie.
+                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied in Midden-Nederland en de Randstad. Of u nu uw autosleutel bent verloren in <strong>Utrecht</strong>, <strong>Arnhem</strong> of <strong>Nijmegen</strong>, met een defect contactslot staat in <strong>Amersfoort</strong> of <strong>Apeldoorn</strong>, of met spoed een transpondersleutel wilt laten inleren in &apos;t Gooi (<strong>Hilversum</strong>, <strong>Bussum</strong>, <strong>Naarden</strong>) of <strong>Amsterdam</strong> — wij komen direct naar uw thuis- of strandinglocatie.
               </p>
               <p className={styles.serviceAreaSub}>
                 Dankzij onze geavanceerde GPS-gestuurde routeplanning zijn onze monteurs meestal binnen <strong>20 tot 60 minuten</strong> ter plaatse. Geen wegsleepkosten naar de dealer en altijd 100% schadevrij geopend en geprogrammeerd. Klik op uw regio voor lokale tarieven en aankomsttijden:
