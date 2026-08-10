@@ -1,6 +1,7 @@
 // ============================================================
 // DIENSTEN CONFIG — Service pages
 // ============================================================
+import { SITE_CONFIG } from '@/config/site.config';
 export type Service = {
   slug: string;
   title: string;

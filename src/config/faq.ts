@@ -5,6 +5,8 @@
 // autosleutel kwijt, transponder programmeren, smart key, etc.
 // ============================================================
 
+import { SITE_CONFIG } from '@/config/site.config';
+
 export type FaqItem = { q: string; a: string };
 
 // ── GLOBAL FAQs (used on homepage, FAQ page, and as fallback) ──
