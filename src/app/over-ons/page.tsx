@@ -172,12 +172,13 @@ export default function OverOnsPage() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
           {[
-            { num: '4.9★', label: 'Google Score', sub: 'Meer dan 247 klantbeoordelingen' },
+            { num: `${SITE_CONFIG.rating}★`, label: 'Google Score', sub: `Meer dan ${SITE_CONFIG.reviewCount} klantbeoordelingen` },
             { num: '34 min', label: 'Gemiddelde reactietijd', sub: 'Op locatie' },
             { num: '24/7', label: 'Bereikbaar', sub: 'Voor spoedgevallen in de gehele regio' },
+            { num: `KVK ${SITE_CONFIG.kvk}`, label: 'Geregistreerd', sub: 'Kamer van Koophandel Nederland' },
           ].map((s) => (
             <div key={s.label} style={{ textAlign: 'center', padding: '2rem', background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px' }}>
-              <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '0.25rem' }}>{s.num}</div>
+              <div style={{ fontSize: s.label === 'Geregistreerd' ? '1.1rem' : '2rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '0.25rem' }}>{s.num}</div>
               <div style={{ fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.9rem' }}>{s.label}</div>
               <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>{s.sub}</div>
             </div>
@@ -202,10 +203,20 @@ export default function OverOnsPage() {
           </ul>
         </div>
 
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link href="/contact" className="btn btn-primary btn-lg" id="over-ons-contact-cta">
             📞 Neem Contact Op
           </Link>
+          <a
+            href={`https://search.google.com/local/writereview?placeid=ChIJdd4hrwug2EcRmSRUsedYDNk`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-lg"
+            id="over-ons-review-cta"
+            style={{ background: '#fff', border: '2px solid var(--color-border)', color: 'var(--gray-800)', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            ⭐ Schrijf een Google Review
+          </a>
         </div>
       </div>
     </main>

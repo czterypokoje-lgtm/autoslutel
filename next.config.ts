@@ -152,6 +152,42 @@ const nextConfig: NextConfig = {
         destination: '/diensten/auto-slotenmaker',
         permanent: true,
       },
+      // ── Blog duplicate / thin content → canonical service pages ──
+      {
+        source: '/blog/sleutel-kwijt-auto-hulp-oplossingen',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
+      {
+        source: '/blog/sleutel-kwijt-auto-vind-snel-oplossingen',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
+      {
+        source: '/blog/autosleutel-kwijt-wat-nu-stappenplan',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
+      {
+        source: '/blog/auto-openen-zonder-sleutel-tips-hulp',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      {
+        source: '/blog/auto-openen-zonder-sleutel-schadevrij',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      {
+        source: '/blog/autosleutel-bijmaken-tips-snel-veilig',
+        destination: '/diensten/autosleutel-bijmaken',
+        permanent: true,
+      },
+      {
+        source: '/blog/sleutel-bijmaken-auto-mobiele-service',
+        destination: '/diensten/autosleutel-bijmaken',
+        permanent: true,
+      },
     ];
   },
 };

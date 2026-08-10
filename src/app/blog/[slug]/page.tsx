@@ -110,8 +110,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     })),
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: 4.9,
-      reviewCount: 247,
+      ratingValue: parseFloat(SITE_CONFIG.rating),
+      reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
       bestRating: 5,
       worstRating: 1,
     },
