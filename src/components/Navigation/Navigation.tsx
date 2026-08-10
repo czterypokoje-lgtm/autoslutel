@@ -30,7 +30,7 @@ const DienstenStructure = [
   },
   {
     title: 'Autosleutel Kwijt',
-    href: '/diensten/autosleutel-kwijt',
+    href: '/autosleutel-kwijt',
     subs: [
       { href: '/diensten/noodopening-auto', label: 'Noodopening' },
       { href: '/diensten/alle-sleutels-kwijt-auto', label: 'Alle Sleutels Kwijt (AKL)' },

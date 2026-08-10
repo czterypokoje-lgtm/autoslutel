@@ -1,8 +1,33 @@
 import type { NextConfig } from "next";
 
+const brands = [
+  'volkswagen', 'bmw', 'mercedes', 'audi', 'toyota', 'peugeot', 'ford', 'renault', 
+  'opel', 'volvo', 'skoda', 'nissan', 'kia', 'hyundai', 'honda', 'fiat', 'citroen', 
+  'seat', 'mazda', 'suzuki', 'mitsubishi', 'mini', 'dacia', 'land-rover', 'porsche', 
+  'lexus', 'jaguar', 'alfa-romeo', 'smart', 'jeep', 'chevrolet', 'subaru', 'lancia', 
+  'ds', 'chrysler', 'saab', 'dodge', 'ssangyong'
+];
+
+const brandRedirects = brands.map(brand => ({
+  source: `/merken/${brand}`,
+  destination: `/merken/${brand}-autosleutel-bijmaken`,
+  permanent: true,
+}));
+
 const nextConfig: NextConfig = {
   async redirects() {
     return [
+      ...brandRedirects,
+      {
+        source: "/blog/volkswagen-sleutel-bijmaken-kosten-opties-tips",
+        destination: "/blog/volkswagen-sleutel-bijmaken",
+        permanent: true,
+      },
+      {
+        source: "/blog/auto-herkent-sleutel-niet-meer-oorzaken-oplossingen",
+        destination: "/blog/auto-herkent-sleutel-niet-meer",
+        permanent: true,
+      },
       {
         source: "/locaties",
         destination: "/steden",

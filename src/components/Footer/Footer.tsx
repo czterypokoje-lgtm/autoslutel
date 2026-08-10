@@ -83,9 +83,13 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Diensten */}
+          {/* Diensten & Spoed */}
           <div>
-            <h4 className={styles.colTitle}>Diensten</h4>
+            <h4 className={styles.colTitle}>Spoedhulp</h4>
+            <ul className={styles.linkList}>
+              {spoed.map(([label, href]) => <li key={href}><Link href={href} style={{ color: 'var(--orange-400)' }}>{label}</Link></li>)}
+            </ul>
+            <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Diensten</h4>
             <ul className={styles.linkList}>
               {diensten.map(([label, href]) => <li key={href}><Link href={href}>{label}</Link></li>)}
             </ul>
@@ -108,11 +112,17 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Steden + Spoed */}
+          {/* Steden & Over Ons */}
           <div>
             <h4 className={styles.colTitle}>Steden</h4>
             <ul className={styles.linkList}>
               {steden.map(([label, href]) => <li key={href}><Link href={href}>{label}</Link></li>)}
+            </ul>
+            <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Over Ons</h4>
+            <ul className={styles.linkList}>
+              <li><Link href="/beoordelingen">Klantbeoordelingen</Link></li>
+              <li><Link href="/galerij">Onze Galerij</Link></li>
+              <li><Link href="/over-ons">Over Ons</Link></li>
             </ul>
           </div>
 
