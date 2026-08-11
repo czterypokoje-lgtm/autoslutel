@@ -118,7 +118,6 @@ export default function KentekenBestellenPage() {
                       💬 Stuur direct uw kenteken via WhatsApp
                     </a>
                   </div>
-                </div>
 
                 {/* Section 2 - Dealer vs Autosleutel24 */}
                 <div>
