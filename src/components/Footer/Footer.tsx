@@ -17,8 +17,6 @@ const diensten = [
 const steden = [
   ['Utrecht', '/steden/utrecht'],
   ['Amsterdam', '/steden/amsterdam'],
-  ['Rotterdam', '/steden/rotterdam'],
-  ['Den Haag', '/steden/den-haag'],
   ['Amsterdam-Zuid', '/steden/amsterdam-zuid'],
   ['Almere', '/steden/almere'],
   ['Amersfoort', '/steden/amersfoort'],
@@ -112,7 +110,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Steden & Over Ons */}
+          {/* Steden */}
           <div>
             <h4 className={styles.colTitle}>Steden</h4>
             <ul className={styles.linkList}>
@@ -124,16 +122,17 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-            <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Over Ons</h4>
-            <ul className={styles.linkList}>
+          </div>
+
+          {/* Over Ons & Openingstijden */}
+          <div>
+            <h4 className={styles.colTitle}>Over Ons</h4>
+            <ul className={styles.linkList} style={{ marginBottom: '1.5rem' }}>
               <li><Link href="/beoordelingen">Klantbeoordelingen</Link></li>
               <li><Link href="/galerij">Onze Galerij</Link></li>
               <li><Link href="/over-ons">Over Ons</Link></li>
             </ul>
-          </div>
 
-          {/* Openingstijden */}
-          <div>
             <h4 className={styles.colTitle}>Openingstijden</h4>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', color: 'rgba(255,255,255,0.65)' }}>
               <tbody>
