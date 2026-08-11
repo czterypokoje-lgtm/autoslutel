@@ -387,7 +387,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                       <li key={idx} className={styles.stepItem}>
                         <span className={styles.stepNum}>{idx + 1}</span>
                         <div className={styles.stepText}>
-                          <strong>Stap {idx + 1}: {idx === 0 ? 'Neem Direct Contact Op' : idx === 1 ? 'Monteur Snel Onderweg' : idx === 2 ? 'Schadevrije Uitvoering' : 'Garantiestelling & Factuur'}</strong>
+                          <strong>Stap {idx + 1}: {idx === 0 ? 'Neem Direct Contact Op' : idx === 1 ? 'Monteur Snel Onderweg' : idx === service.steps.length - 1 ? 'Garantiestelling & Factuur' : idx === 2 ? 'Diagnose & Uitvoering' : 'Programmatie & Testen'}</strong>
                           {stepText}
                         </div>
                       </li>
