@@ -3,6 +3,7 @@ import Script from 'next/script';
 import Link from 'next/link';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import ContactForm from '@/components/ContactForm/ContactForm';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
 
 export const metadata: Metadata = {
   title: {
@@ -73,7 +74,7 @@ export default async function ContactPage(props: Props) {
         {/* ── HERO & SUBHEADLINE ─────────────────────────────────────── */}
         <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 1.5rem', textAlign: 'center', color: '#fff' }}>
           <div className="container" style={{ maxWidth: '900px', margin: '0 auto' }}>
-            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.1 }}>
+            <h1 style={{ color: '#fff', fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.1 }}>
               {h1Text}
             </h1>
             <p style={{ fontSize: '1.25rem', color: 'rgba(255,255,255,0.85)', marginBottom: '2.5rem', lineHeight: 1.5, maxWidth: '700px', margin: '0 auto 2.5rem' }}>
@@ -102,6 +103,13 @@ export default async function ContactPage(props: Props) {
           </div>
         </section>
 
+        {/* 3 steps HowTo (Full Width) */}
+        <div style={{ padding: '3.5rem 0', background: '#ffffff', borderBottom: '1px solid var(--color-border)' }}>
+          <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem' }}>
+            <HowItWorks variant="default" />
+          </div>
+        </div>
+
         <div className="container" style={{ maxWidth: '1100px', padding: '4rem 1.5rem' }}>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '4rem', alignItems: 'start' }}>
@@ -109,21 +117,6 @@ export default async function ContactPage(props: Props) {
             {/* ── LEFT COLUMN: SOCIAL PROOF, PRICING, HOW IT WORKS ── */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
               
-              {/* Short 'How it Works' */}
-              <div style={{ background: 'var(--color-bg-alt)', padding: '2rem', borderRadius: '12px' }}>
-                <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', borderBottom: '2px solid var(--color-border)', paddingBottom: '0.75rem' }}>Zo werkt het</h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {steps.map(step => (
-                    <div key={step.num} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'var(--navy-900)', flexShrink: 0, boxShadow: 'var(--shadow-sm)', fontSize: '1.25rem' }}>
-                        {step.icon}
-                      </div>
-                      <span style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>{step.num}. {step.title}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* Pricing Table */}
               <div>
                 <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Tarieven</h2>
