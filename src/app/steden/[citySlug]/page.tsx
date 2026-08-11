@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import { DIENSTEN } from '@/config/diensten';
+import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
@@ -264,23 +265,15 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         )}
 
         {/* Top brands in this city (SEO List) */}
-        <section className={styles.section}>
-          <div className="container">
-            <h2>Welke Merken Bedienen Wij in {city.city}?</h2>
-            <p className={styles.seoIntro}>
-              Wij maken en programmeren autosleutels voor alle gangbare automerken direct ter plaatse in {city.city}. 
+        <BrandsLogoGrid
+          title={<h2>Welke Merken Bedienen Wij in {city.city}?</h2>}
+          subtitle={
+            <>
+              Wij maken en programmeren autosleutels voor alle gangbare automerken direct ter plaatse in {city.city}.{' '}
               Onze mobiele dealer-niveau apparatuur ondersteunt:
-            </p>
-            <div className={styles.brandGrid}>
-              {BRANDS.map(b => (
-                <Link key={b.slug} href={`/merken/${b.slug}`} className={styles.brandCard}>
-                  <strong>{b.name}</strong>
-                  <span>Programmeren & Openen</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+            </>
+          }
+        />
 
         {/* All services in this city */}
         <section className={styles.sectionAlt}>

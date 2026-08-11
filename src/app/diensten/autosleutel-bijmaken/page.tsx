@@ -5,6 +5,7 @@ import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
+import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
@@ -291,23 +292,15 @@ export default function SleutelBijmakenPage() {
                 </div>
 
                 {/* Section 4 */}
-                <div>
-                  <h2>Welke Merken Bedienen Wij?</h2>
-                  <p>
-                    Wij maken en programmeren sleutels voor alle gangbare merken. Onze apparatuur ondersteunt:
-                  </p>
-                  <ul className={styles.bulletList} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.5rem' }}>
-                    {BRANDS.map(brand => (
-                      <li key={brand.slug}>
-                        <Link href={`/merken/${brand.slug}`}>
-                          {brand.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                  <p>
-                    <Link href="/merken" style={{ fontWeight: 700, color: '#f97316' }}>Bekijk alle merken die wij bedienen →</Link>
-                  </p>
+                <div style={{ margin: '3rem 0' }}>
+                  <BrandsLogoGrid
+                    title={<h2>Welke Merken Bedienen Wij?</h2>}
+                    subtitle={
+                      <>
+                        Wij maken en programmeren sleutels voor alle gangbare merken. Onze apparatuur ondersteunt:
+                      </>
+                    }
+                  />
                 </div>
 
                 {/* Section 5 */}

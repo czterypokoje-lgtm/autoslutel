@@ -8,6 +8,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import { generateContextualReviews } from '@/utils/reviews';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
@@ -396,24 +397,15 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
 
 
                 {/* Section 4: Welke Merken Bedienen Wij */}
-                <div>
-                  <h2>Voor Welke Merken Bieden Wij {service.title}?</h2>
-                  <p>
-                    Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:
-                  </p>
-                  <ul className={styles.bulletList}>
-                    {popularBrands.map(b => (
-                      <li key={b.slug}>
-                        <Link href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken`}>
-                          {b.name}
-                        </Link>
-                        {' '}— Systeem: {b.system}
-                      </li>
-                    ))}
-                  </ul>
-                  <p>
-                    <Link href="/merken" style={{ fontWeight: 700, color: '#f97316' }}>Bekijk alle automerken en modellen die wij bedienen →</Link>
-                  </p>
+                <div style={{ margin: '3rem 0' }}>
+                  <BrandsLogoGrid
+                    title={<h2>Voor Welke Merken Bieden Wij {service.title}?</h2>}
+                    subtitle={
+                      <>
+                        Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:
+                      </>
+                    }
+                  />
                 </div>
 
                 {/* Section 5: Waar Komen Wij */}

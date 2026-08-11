@@ -1,0 +1,91 @@
+.brandsSection {
+  padding: 4rem 0;
+  background: var(--navy-900);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.brandsSeoHeader {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.brandsHeading {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.02em;
+}
+.brandsLead {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+}
+.brandsLogoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.brandLogoCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.75rem 1rem 1.25rem;
+  background: rgba(10,22,40,0.85);
+  text-decoration: none;
+  transition: background 0.18s ease, transform 0.18s ease;
+  cursor: pointer;
+  min-height: 130px;
+}
+.brandLogoCard:hover {
+  background: rgba(249,115,22,0.12);
+  transform: translateY(-2px);
+}
+.brandLogoImg {
+  width: 80px;
+  height: 48px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(2) opacity(0.7);
+  transition: all 0.2s ease;
+}
+.brandLogoCard:hover .brandLogoImg {
+  filter: grayscale(0) brightness(1) opacity(1);
+}
+.brandLogoName {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  line-height: 1.3;
+  transition: color 0.18s ease;
+}
+.brandLogoCard:hover .brandLogoName {
+  color: var(--orange-400);
+}
+.brandSeoHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+.brandsAllLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--orange-400);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.brandsAllLink:hover {
+  opacity: 0.8;
+}
