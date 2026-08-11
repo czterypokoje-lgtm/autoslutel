@@ -11,13 +11,13 @@
 .brandsHeading {
   font-size: 1.85rem;
   font-weight: 800;
-  color: #fff;
+  color: #ffffff !important;
   margin-bottom: 0.6rem;
   letter-spacing: -0.02em;
 }
 .brandsLead {
   font-size: 1.05rem;
-  color: rgba(255,255,255,0.65);
+  color: rgba(255,255,255,0.7) !important;
   line-height: 1.6;
 }
 .brandsLogoGrid {
