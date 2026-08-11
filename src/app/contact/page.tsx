@@ -3,7 +3,6 @@ import Script from 'next/script';
 import Link from 'next/link';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import ContactForm from '@/components/ContactForm/ContactForm';
-import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
@@ -72,7 +71,7 @@ export default async function ContactPage(props: Props) {
       <main>
         
         {/* ── HERO & SUBHEADLINE ─────────────────────────────────────── */}
-        <section className={styles.heroSection} style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 1.5rem', textAlign: 'center', color: '#fff' }}>
+        <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 1.5rem', textAlign: 'center', color: '#fff' }}>
           <div className="container" style={{ maxWidth: '900px', margin: '0 auto' }}>
             <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.1 }}>
               {h1Text}
