@@ -57,7 +57,7 @@ export default function Footer() {
             <div className={styles.footerBadges}>
               <span>KVK: {SITE_CONFIG.kvk}</span>
               <span>BTW: {SITE_CONFIG.btw}</span>
-              <span>4.9 ★ Google</span>
+              <span>{SITE_CONFIG.rating} ★ Google</span>
               <span>Verzekerd</span>
             </div>
             <div style={{ marginTop: '1.25rem', marginBottom: '1.5rem' }}>

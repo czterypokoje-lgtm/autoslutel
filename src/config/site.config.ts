@@ -15,10 +15,10 @@ export const SITE_CONFIG = {
   email: 'info@autosleutel24.nl',
 
   address: {
-    street: 'Kapelstraat 9C',
+    street: '', // Mobile service - no physical location displayed
     city: 'Bussum',
     region: 'Noord-Holland',
-    postal: '1404 HT',
+    postal: '',
     country: 'NL',
   },
   geo: { lat: '52.2740', lng: '5.1611' },
@@ -46,8 +46,8 @@ export const SITE_CONFIG = {
 
   kvk: '42123555',
   btw: 'NL42123555B01',
-  rating: '4.9',
-  reviewCount: '247',
+  rating: '5.0',
+  reviewCount: '11',
 
   social: {
     facebook: 'https://www.facebook.com/autosleutel24utrecht',
