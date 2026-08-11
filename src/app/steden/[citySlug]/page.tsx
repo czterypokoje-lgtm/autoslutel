@@ -266,13 +266,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
         {/* Top brands in this city (SEO List) */}
         <BrandsLogoGrid
-          title={<h2>Welke Merken Bedienen Wij in {city.city}?</h2>}
-          subtitle={
-            <>
-              Wij maken en programmeren autosleutels voor alle gangbare automerken direct ter plaatse in {city.city}.{' '}
-              Onze mobiele dealer-niveau apparatuur ondersteunt:
-            </>
-          }
+          title={`Welke Merken Bedienen Wij in ${city.city}?`}
+          subtitle={`Wij maken en programmeren autosleutels voor alle gangbare automerken direct ter plaatse in ${city.city}. Onze mobiele dealer-niveau apparatuur ondersteunt:`}
         />
 
         {/* All services in this city */}

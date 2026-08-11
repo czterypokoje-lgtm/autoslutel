@@ -399,12 +399,8 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 {/* Section 4: Welke Merken Bedienen Wij */}
                 <div style={{ margin: '3rem 0' }}>
                   <BrandsLogoGrid
-                    title={<h2>Voor Welke Merken Bieden Wij {service.title}?</h2>}
-                    subtitle={
-                      <>
-                        Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:
-                      </>
-                    }
+                    title={`Voor Welke Merken Bieden Wij ${service.title}?`}
+                    subtitle="Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:"
                   />
                 </div>
 

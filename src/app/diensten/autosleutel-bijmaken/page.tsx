@@ -294,12 +294,8 @@ export default function SleutelBijmakenPage() {
                 {/* Section 4 */}
                 <div style={{ margin: '3rem 0' }}>
                   <BrandsLogoGrid
-                    title={<h2>Welke Merken Bedienen Wij?</h2>}
-                    subtitle={
-                      <>
-                        Wij maken en programmeren sleutels voor alle gangbare merken. Onze apparatuur ondersteunt:
-                      </>
-                    }
+                    title="Welke Merken Bedienen Wij?"
+                    subtitle="Wij maken en programmeren sleutels voor alle gangbare merken. Onze apparatuur ondersteunt:"
                   />
                 </div>
 
