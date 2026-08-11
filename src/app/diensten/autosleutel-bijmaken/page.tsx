@@ -7,6 +7,7 @@ import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 
@@ -134,6 +135,9 @@ export default function SleutelBijmakenPage() {
             ))}
           </div>
         </div>
+
+        {/* How It Works Section */}
+        <HowItWorks />
 
         {/* Content Section */}
         <section className={styles.section}>
