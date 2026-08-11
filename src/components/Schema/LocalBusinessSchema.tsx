@@ -7,7 +7,7 @@ export default function LocalBusinessSchema() {
     '@id': `${SITE_CONFIG.domain}/#localbusiness`,
     name: SITE_CONFIG.name,
     alternateName: 'Autosleutel24',
-    description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Werkzaam in Utrecht, Amsterdam, Almere, Amersfoort en heel Nederland.',
+    description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Werkzaam in Midden-Nederland en de Randstad.',
     url: SITE_CONFIG.domain,
     logo: {
       '@type': 'ImageObject',
@@ -46,7 +46,6 @@ export default function LocalBusinessSchema() {
       { '@type': 'City', 'name': 'Almere' },
       { '@type': 'City', 'name': 'Amersfoort' },
       { '@type': 'City', 'name': 'Hilversum' },
-      { '@type': 'City', 'name': 'Bussum' },
       { '@type': 'City', 'name': 'Nieuwegein' },
       { '@type': 'City', 'name': 'Houten' },
       { '@type': 'City', 'name': 'Zeist' },

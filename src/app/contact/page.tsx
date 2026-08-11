@@ -52,17 +52,17 @@ export default async function ContactPage(props: Props) {
   const searchParams = await props.searchParams;
   const q = typeof searchParams?.q === 'string' ? searchParams.q : null;
   
-  const defaultH1 = "Autosleutel Bijmaken? Wij Zijn Binnen 30 Minuten Bij U";
+  const defaultH1 = `Autosleutel Bijmaken? Gemiddeld Binnen ${SITE_CONFIG.responseTime} Bij U`;
   let h1Text = defaultH1;
   if (q) {
     // Capitalize each word from the query to make it look like a natural Title
     const formattedQuery = q.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    h1Text = `${formattedQuery}? Wij Zijn Binnen 30 Minuten Bij U`;
+    h1Text = `${formattedQuery}? Gemiddeld Binnen ${SITE_CONFIG.responseTime} Bij U`;
   }
 
   const steps = [
     { num: "1", title: "Bel of vul in", icon: "📞" },
-    { num: "2", title: "Monteur onderweg (gem. 30 min)", icon: "🚐" },
+    { num: "2", title: `Monteur onderweg (gem. ${SITE_CONFIG.responseTime})`, icon: "🚐" },
     { num: "3", title: "Sleutel gemaakt op locatie", icon: "🔑" },
     { num: "4", title: "Testen + garantie", icon: "✅" },
   ];
@@ -100,7 +100,7 @@ export default async function ContactPage(props: Props) {
             {/* ── Trust Strip ── */}
             <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap', fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> 24/7 Beschikbaar</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> Vaste prijs vanaf €95</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> Vaste prijs vanaf €{SITE_CONFIG.prices.unlock}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> 12 mnd garantie</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> KVK {SITE_CONFIG.kvk}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> Verzekerd</span>
@@ -139,7 +139,7 @@ export default async function ContactPage(props: Props) {
                       <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                         <td style={{ padding: '1rem' }}>Standaard sleutel</td>
                         <td style={{ padding: '1rem', color: '#64748b', textDecoration: 'line-through' }}>€250 - €350</td>
-                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €149</td>
+                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €{SITE_CONFIG.prices.unlock}</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                         <td style={{ padding: '1rem' }}>Klapsleutel / Flip Key</td>

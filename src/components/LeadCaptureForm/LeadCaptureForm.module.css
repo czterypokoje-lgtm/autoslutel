@@ -219,18 +219,20 @@
 }
 
 .light .callBtn {
-  background: rgba(230,81,0,0.08);
+  background: rgba(230,81,0,0.15);
+  border-color: rgba(230,81,0,0.5);
 }
 
 .light .callBtn:hover {
-  background: rgba(230,81,0,0.15);
+  background: rgba(230,81,0,0.25);
 }
 
 .light .waBtn {
-  background: rgba(37,211,102,0.08);
+  background: rgba(37,211,102,0.15);
+  border-color: rgba(37,211,102,0.5);
 }
 
 .light .waBtn:hover {
-  background: rgba(37,211,102,0.15);
+  background: rgba(37,211,102,0.25);
 }
 

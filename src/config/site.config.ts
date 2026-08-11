@@ -16,8 +16,8 @@ export const SITE_CONFIG = {
 
   address: {
     street: '', // Mobile service - no physical location displayed
-    city: 'Bussum',
-    region: 'Noord-Holland',
+    city: 'Utrecht',
+    region: 'Utrecht',
     postal: '',
     country: 'NL',
   },
@@ -30,8 +30,8 @@ export const SITE_CONFIG = {
   serviceAreaString: 'Utrecht, Amsterdam en Midden-Nederland',
 
   prices: {
-    unlock: '125',
-    transponder: '159',
+    unlock: '149',
+    transponder: '149',
     remote: '220',
     smartKey: '349',
     allKeysLost: '260',

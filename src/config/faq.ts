@@ -125,7 +125,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Zijn jullie ook beschikbaar buiten Utrecht?',
-    a: 'Ja, wij bedienen heel Nederland. Vaste servicegebieden: Utrecht, Amsterdam, Almere, Amersfoort, Hilversum, Bussum, Naarden, Zeist, Houten, Nieuwegein, Woerden, Amstelveen en meer dan 40 andere steden.',
+    a: 'Ja, wij bedienen Midden-Nederland en de Randstad. Vaste servicegebieden: Utrecht, Amsterdam, Almere, Amersfoort, Hilversum, Bussum, Naarden, Zeist, Houten, Nieuwegein, Woerden, Amstelveen en meer dan 40 andere steden.',
   },
   {
     q: 'Geven jullie garantie op uw werk?',
@@ -338,7 +338,7 @@ export function getFaqForCity(cityName: string): FaqItem[] {
     },
     {
       q: `Wat zijn de kosten voor autosleutel service in ${cityName}?`,
-      a: `De prijzen zijn gelijk voor heel Nederland. Transponder sleutels vanaf €${SITE_CONFIG.prices.transponder}, smart keys vanaf €${SITE_CONFIG.prices.smartKey}, auto openen vanaf €${SITE_CONFIG.prices.unlock}. U ontvangt altijd een vaste prijs vooraf. Geen reiskosten of bijkomende kosten.`,
+      a: `De prijzen zijn gelijk voor Midden-Nederland en de Randstad. Transponder sleutels vanaf €${SITE_CONFIG.prices.transponder}, smart keys vanaf €${SITE_CONFIG.prices.smartKey}, auto openen vanaf €${SITE_CONFIG.prices.unlock}. U ontvangt altijd een vaste prijs vooraf. Geen reiskosten of bijkomende kosten.`,
     },
     {
       q: `Werken jullie ook \'s nachts in ${cityName}?`,

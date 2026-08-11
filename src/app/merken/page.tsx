@@ -147,7 +147,7 @@ export default function MerkenPage() {
           
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
             gap: '1.5rem 1rem'
           }}>
             {p1Brands.map(b => (
@@ -178,7 +178,7 @@ export default function MerkenPage() {
           
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
             gap: '1.5rem 1rem'
           }}>
             {p2Brands.map(b => (
@@ -209,7 +209,7 @@ export default function MerkenPage() {
           
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
             gap: '1.5rem 1rem'
           }}>
             {p3Brands.map(b => (

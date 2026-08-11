@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: `Autosleutel Bijmaken in ${CITIES.length} Steden | Heel Nederland`,
     description: `Mobiele autosleutelspecialist in ${CITIES.length} steden. Zelfde dag service. Bel ${SITE_CONFIG.phone}`,
-    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Autosleutel24 — Mobiele autosleutelspecialist in heel Nederland' }],
+    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Autosleutel24 — Mobiele autosleutelspecialist in Midden-Nederland en de Randstad' }],
   },
 };
 
@@ -38,7 +38,7 @@ export default function Steden() {
         <p style={{ fontSize:'0.72rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', color:'var(--orange-400)', marginBottom:'0.75rem' }}>SERVICEDEKKING</p>
         <h1 style={{ color:'#fff', marginBottom:'1rem' }}>Alle Steden — {CITIES.length} Locaties</h1>
         <p style={{ color:'rgba(255,255,255,0.7)', fontSize:'1rem', maxWidth:580, margin:'0 auto' }}>
-          Mobiele autosleutel service door heel Nederland. Klik op uw stad voor reactietijden en specifieke info.
+          Mobiele autosleutel service in Midden-Nederland en de Randstad. Klik op uw stad voor reactietijden en specifieke info.
         </p>
       </section>
 
@@ -67,7 +67,7 @@ export default function Steden() {
         <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
           <h2>Mobiele Autosleutel Service in Heel Nederland: Binnen 30-45 Minuten Ter Plaatse</h2>
           <p>
-            Vanuit onze centrale uitvalspunten in regio Utrecht en Amsterdam bedient <strong>{SITE_CONFIG.name}</strong> meer dan 45 steden en gemeenten door heel Nederland. Of u nu bent buitengesloten in het centrum van Amsterdam, met een kapotte autosleutel staat in Utrecht, of met spoed een nieuwe sleutel wilt laten inleren in Hilversum, Amstelveen of Almere: onze volledig ingerichte mobiele werkplaatsen komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw locatie.
+            Vanuit onze centrale uitvalspunten in regio Utrecht en Amsterdam bedient <strong>{SITE_CONFIG.name}</strong> meer dan 45 steden en gemeenten in Midden-Nederland en de Randstad. Of u nu bent buitengesloten in het centrum van Amsterdam, met een kapotte autosleutel staat in Utrecht, of met spoed een nieuwe sleutel wilt laten inleren in Hilversum, Amstelveen of Almere: onze volledig ingerichte mobiele werkplaatsen komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw locatie.
           </p>
           <h3>Geen Takel- of Sleepkosten Meer</h3>
           <p>
