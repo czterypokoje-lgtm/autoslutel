@@ -186,20 +186,49 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
       <Script id={`city-faq-schema-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <main>
         {/* Hero */}
-        <section className={styles.hero}>
-          <div className={styles.heroInner}>
-            <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-              <Link href="/">Home</Link> <span>/</span> <Link href="/steden">Steden</Link> <span>/</span> <span>{city.city}</span>
-            </nav>
-            <div className={styles.heroLabel}>NL — {city.region}</div>
-            <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
-            <p className={styles.heroLead}>
-              Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
-              Alle merken, ter plaatse geprogrammeerd.
-            </p>
-            <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
-          </div>
-        </section>
+        {city.slug === 'utrecht' ? (
+          <section className={styles.heroUtrecht}>
+            <div className={styles.heroUtrechtInner}>
+              <div className={styles.heroUtrechtText}>
+                <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+                  <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/steden" style={{ color: 'var(--gray-500)' }}>Steden</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
+                </nav>
+                <div className={styles.heroLabel} style={{ color: 'var(--orange-600)' }}>NL — {city.region}</div>
+                <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
+                <p className={styles.heroUtrechtLead}>
+                  Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
+                  Alle merken, ter plaatse geprogrammeerd.
+                </p>
+                <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
+              </div>
+              <div className={styles.heroUtrechtImage}>
+                <Image 
+                  src="/images/utrecht-hero.jpg"
+                  alt="Autosleutel bijmaken Utrecht monteur service bus"
+                  width={800}
+                  height={450}
+                  style={{ width: '100%', height: 'auto', borderRadius: '12px' }}
+                  priority
+                />
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section className={styles.hero}>
+            <div className={styles.heroInner}>
+              <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+                <Link href="/">Home</Link> <span>/</span> <Link href="/steden">Steden</Link> <span>/</span> <span>{city.city}</span>
+              </nav>
+              <div className={styles.heroLabel}>NL — {city.region}</div>
+              <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
+              <p className={styles.heroLead}>
+                Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
+                Alle merken, ter plaatse geprogrammeerd.
+              </p>
+              <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
+            </div>
+          </section>
+        )}
 
         {/* ── TRUST BAR ───────────────────────────────────────────── */}
         <div className={styles.trustBar}>

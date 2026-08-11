@@ -11,6 +11,50 @@
 .btnPhone { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--orange-500); color: #fff; padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: background 0.15s; min-height: 46px; }
 .btnPhone:hover { background: var(--orange-600); color: #fff; text-decoration: none; }
 .btnWa { display: inline-flex; align-items: center; background: #128c7e; color: #fff; padding: 0.75rem 1.25rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: background 0.15s; min-height: 46px; }
+
+/* ---- UTRECHT SPECIFIC HERO ---- */
+.heroUtrecht {
+  background: #ffffff;
+  padding: 4rem 2rem 3rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+.heroUtrechtInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 3rem;
+  align-items: center;
+}
+@media (min-width: 992px) {
+  .heroUtrechtInner {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+.heroUtrechtText {
+  flex: 1;
+}
+.heroUtrechtImage {
+  flex: 1;
+  width: 100%;
+}
+.heroUtrecht h1 {
+  color: var(--navy-900);
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  margin-bottom: 1rem;
+}
+.heroUtrechtLead {
+  color: var(--gray-700);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  max-width: 620px;
+}
+.heroUtrechtLead strong {
+  color: var(--navy-900);
+}
+
 /* ---- SEO LISTS ---- */
 .seoIntro {
   color: var(--gray-600);
