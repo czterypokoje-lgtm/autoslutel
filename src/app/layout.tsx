@@ -1,13 +1,6 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
-const ibmPlexSans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  variable: '--font-ibm-plex-sans',
-});
 import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
@@ -161,7 +154,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="me" href={SITE_CONFIG.social.google} />
 
         {/* ── FONTS ── */}
-        {/* Font loading moved to next/font/google */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
         {/* ── STRUCTURED DATA ── */}
         <script
           id="schema-website"
@@ -169,7 +164,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
-      <body className={ibmPlexSans.className}>
+      <body>
         <PhoneConversionTracker />
         {/* Google Tag Manager (noscript) */}
         <noscript>
