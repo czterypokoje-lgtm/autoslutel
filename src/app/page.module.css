@@ -225,12 +225,6 @@
 .serviceCardBtn:hover .serviceArrow { color: var(--orange-500); transform: translateX(4px); }
 .servicesCta { text-align: center; margin-top: 2.5rem; }
 
-  transition: color 0.15s ease;
-}
-.brandsAllLink:hover {
-  color: var(--orange-300);
-  text-decoration: underline;
-}
 
 /* ---- SERVICE AREA & MAP PREVIEW ---- */
 .serviceAreaSection {
