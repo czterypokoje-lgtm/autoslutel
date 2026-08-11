@@ -100,7 +100,7 @@ export default function Footer() {
             <h4 className={styles.colTitle}>Merken</h4>
             <ul className={styles.linkList}>
               {BRANDS.filter(b => b.priority === 'P1').map(b => (
-                <li key={b.slug}><Link href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}>{b.name}</Link></li>
+                <li key={b.slug}><Link href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}>{b.name} sleutel bijmaken</Link></li>
               ))}
               <li><Link href="/merken">Alle 38 merken →</Link></li>
             </ul>
@@ -116,7 +116,13 @@ export default function Footer() {
           <div>
             <h4 className={styles.colTitle}>Steden</h4>
             <ul className={styles.linkList}>
-              {steden.map(([label, href]) => <li key={href}><Link href={href}>{label}</Link></li>)}
+              {steden.map(([label, href]) => (
+                <li key={href}>
+                  <Link href={href}>
+                    {label.includes('Alle') ? label : `${label} autosleutel bijmaken`}
+                  </Link>
+                </li>
+              ))}
             </ul>
             <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Over Ons</h4>
             <ul className={styles.linkList}>
