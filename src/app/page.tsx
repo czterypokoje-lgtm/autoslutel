@@ -342,7 +342,7 @@ export default function HomePage() {
               { name: 'Mazda', slug: 'mazda-autosleutel-bijmaken', models: 'Mazda2, Mazda3, CX-5, MX-5', svg: '/brands/mazda-autosleutel-bijmaken.svg' },
               { name: 'Land Rover', slug: 'land-rover-autosleutel-bijmaken', models: 'Range Rover, Discovery, Evoque', svg: '/brands/land-rover-autosleutel-bijmaken.png' },
               { name: 'Porsche', slug: 'porsche-autosleutel-bijmaken', models: 'Cayenne, Macan, 911, Panamera', svg: '/brands/porsche-autosleutel-bijmaken.png' },
-              { name: 'Mini', slug: 'mini-autosleutel-bijmaken', models: 'Cooper, One, Countryman', svg: 'https://upload.wikimedia.org/wikipedia/commons/b/b3/MINI_logo.svg' },
+              { name: 'Mini', slug: 'mini-autosleutel-bijmaken', models: 'Cooper, One, Countryman', svg: '/brands/mini-autosleutel-bijmaken.png' },
             ].map((brand) => (
               <Link
                 key={brand.slug}
