@@ -17,8 +17,10 @@ export const metadata: Metadata = {
   },
   openGraph: {
     url: `${SITE_CONFIG.domain}/veelgestelde-vragen`,
+    type: 'website',
     title: 'Veelgestelde Vragen Autosleutel Bijmaken | Autosleutel24',
     description: `Alles wat u wilt weten over autosleutels bijmaken, kosten en onze service. Bel ${SITE_CONFIG.phone}`,
+    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Veelgestelde Vragen over Autosleutel Bijmaken — Autosleutel24' }],
   },
 };
 

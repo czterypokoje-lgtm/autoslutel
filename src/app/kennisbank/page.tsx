@@ -14,8 +14,10 @@ export const metadata: Metadata = {
   },
   openGraph: {
     url: `${SITE_CONFIG.domain}/kennisbank`,
+    type: 'website',
     title: 'Autosleutel Kennisbank & Technische Gids | Autosleutel24',
     description: 'Alles over het inleren, programmeren en frezen van autosleutels en transponderchips.',
+    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Autosleutel Kennisbank — Transpondertechnologie & Programmeren | Autosleutel24' }],
   },
 };
 

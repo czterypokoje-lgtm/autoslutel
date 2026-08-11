@@ -18,8 +18,10 @@ export const metadata: Metadata = {
   },
   openGraph: {
     url: `${SITE_CONFIG.domain}/steden`,
+    type: 'website',
     title: `Autosleutel Bijmaken in ${CITIES.length} Steden | Heel Nederland`,
     description: `Mobiele autosleutelspecialist in ${CITIES.length} steden. Zelfde dag service. Bel ${SITE_CONFIG.phone}`,
+    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Autosleutel24 — Mobiele autosleutelspecialist in heel Nederland' }],
   },
 };
 
