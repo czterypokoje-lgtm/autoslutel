@@ -10,6 +10,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import styles from './page.module.css';
 import UtrechtSeo from '@/content/seo/utrecht';
 import AmsterdamSeo from '@/content/seo/amsterdam';
@@ -216,6 +217,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </div>
 
+        {/* ── HOW IT WORKS ──────────────────────────────────────────── */}
+        <HowItWorks cityName={city.city} />
 
         {/* ── LOKALE ERVARING — Unique content per city ─────────────── */}
         {(city.localFact || city.popularBrands || city.commonJob) && (
