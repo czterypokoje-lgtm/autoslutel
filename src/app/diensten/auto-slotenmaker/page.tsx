@@ -5,6 +5,7 @@ import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 
@@ -173,6 +174,13 @@ export default function AutoSlotenmakerPage() {
           </div>
         </div>
 
+        {/* 3 steps HowTo */}
+        <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <HowItWorks variant="lockout" />
+          </div>
+        </div>
+
         {/* Content Section */}
         <section className={styles.section}>
           <div className={styles.container}>
@@ -274,21 +282,7 @@ export default function AutoSlotenmakerPage() {
                   </div>
                 </div>
 
-                {/* Section 3 */}
-                <div>
-                  <h2>Hoe Werkt het Auto Slotenmaker Proces?</h2>
-                  <ol className={styles.stepList}>
-                    {steps.map((step, idx) => (
-                      <li key={idx} className={styles.stepItem}>
-                        <span className={styles.stepNum}>{step.num}</span>
-                        <div className={styles.stepText}>
-                          <strong>{step.title}</strong>
-                          {step.desc}
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
+
 
                 {/* Section 4 */}
                 <div>

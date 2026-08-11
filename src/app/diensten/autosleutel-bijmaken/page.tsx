@@ -136,8 +136,12 @@ export default function SleutelBijmakenPage() {
           </div>
         </div>
 
-        {/* How It Works Section */}
-        <HowItWorks />
+        {/* 3 steps HowTo */}
+        <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <HowItWorks />
+          </div>
+        </div>
 
         {/* Content Section */}
         <section className={styles.section}>
