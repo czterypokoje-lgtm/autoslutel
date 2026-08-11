@@ -20,10 +20,10 @@ export default function LocalBusinessSchema() {
     email: SITE_CONFIG.email,
     address: {
       '@type': 'PostalAddress',
-      ...(SITE_CONFIG.address.street && { streetAddress: SITE_CONFIG.address.street }),
+      ...(SITE_CONFIG.address.street ? { streetAddress: SITE_CONFIG.address.street } : {}),
       addressLocality: SITE_CONFIG.address.city,
       addressRegion: SITE_CONFIG.address.region,
-      ...(SITE_CONFIG.address.postal && { postalCode: SITE_CONFIG.address.postal }),
+      ...(SITE_CONFIG.address.postal ? { postalCode: SITE_CONFIG.address.postal } : {}),
       addressCountry: SITE_CONFIG.address.country,
     },
     geo: {
