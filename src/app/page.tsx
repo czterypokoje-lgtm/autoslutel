@@ -309,119 +309,68 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== BRANDS (SEO CHECKMARK LIST) ===== */}
+      {/* ===== BRANDS (VISUAL LOGO GRID) ===== */}
       <section className={styles.brandsSection}>
         <div className="container">
           <div className={styles.brandsSeoHeader}>
-            <h2 className={styles.brandsHeading}>Welke Merken Bedienen Wij?</h2>
+            <h2 className={styles.brandsHeading}>Autosleutel Bijmaken — Alle Merken</h2>
             <p className={styles.brandsLead}>
-              Wij maken en programmeren autosleutels voor alle gangbare merken direct ter plaatse. Onze mobiele apparatuur ondersteunt:
+              Wij maken en programmeren autosleutels voor alle gangbare merken direct ter plaatse. Selecteer uw merk:
             </p>
           </div>
-          <div className={styles.brandsCheckList}>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/volkswagen-autosleutel-bijmaken" className={styles.brandLinkOrange}>Volkswagen</Link>
-                <span className={styles.brandModelsText}> — Golf, Polo, Tiguan, Transporter, Passat, Caddy (MQB &amp; PQ35 platform)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/bmw-autosleutel-bijmaken" className={styles.brandLinkOrange}>BMW</Link>
-                <span className={styles.brandModelsText}> — 1-serie, 3-serie, 5-serie, X1, X3, X5 (CAS3 / CAS4 / FEM / BDC systemen)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/mercedes-autosleutel-bijmaken" className={styles.brandLinkOrange}>Mercedes-Benz</Link>
-                <span className={styles.brandModelsText}> — A-Klasse, C-Klasse, E-Klasse, Sprinter, Vito (EIS / ESL / FBS3 / FBS4)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/audi-autosleutel-bijmaken" className={styles.brandLinkOrange}>Audi</Link>
-                <span className={styles.brandModelsText}> — A1, A3, A4, A6, Q3, Q5, Q7 (MLB &amp; MQB platform)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/ford-autosleutel-bijmaken" className={styles.brandLinkOrange}>Ford</Link>
-                <span className={styles.brandModelsText}> — Focus, Fiesta, Transit, Kuga, Puma (PAT2 / PAT3 / PAT4 smartkey)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/toyota-autosleutel-bijmaken" className={styles.brandLinkOrange}>Toyota</Link>
-                <span className={styles.brandModelsText}> — Aygo, Yaris, Corolla, RAV4, C-HR (G-chip / H-chip / Smart Entry)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/peugeot-autosleutel-bijmaken" className={styles.brandLinkOrange}>Peugeot</Link>
-                <span className={styles.brandModelsText}> — 208, 308, 2008, 3008, Partner, Boxer (BSI &amp; PIN-code uitlezen)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/renault-autosleutel-bijmaken" className={styles.brandLinkOrange}>Renault</Link>
-                <span className={styles.brandModelsText}> — Clio, Captur, Megane, Trafic, Master (Keycard &amp; Smartkey systemen)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/opel-autosleutel-bijmaken" className={styles.brandLinkOrange}>Opel</Link>
-                <span className={styles.brandModelsText}> — Corsa, Astra, Mokka, Vivaro (ID46 / ID48 transponder &amp; keyless)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/volvo-autosleutel-bijmaken" className={styles.brandLinkOrange}>Volvo</Link>
-                <span className={styles.brandModelsText}> — V40, V60, V90, XC40, XC60, XC90 (CEM slot modules &amp; keyless go)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/skoda-autosleutel-bijmaken" className={styles.brandLinkOrange}>Skoda</Link>
-                <span className={styles.brandModelsText}> — Octavia, Fabia, Superb, Kodiaq, Karoq (MQB &amp; Immo IV/V systemen)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/nissan-autosleutel-bijmaken" className={styles.brandLinkOrange}>Nissan</Link>
-                <span className={styles.brandModelsText}> — Qashqai, Juke, Micra, Leaf, X-Trail (NATS &amp; Smart Key systemen)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/honda-autosleutel-bijmaken" className={styles.brandLinkOrange}>Honda</Link>
-                <span className={styles.brandModelsText}> — Civic, Jazz, CR-V, HR-V, Accord (Honda Smart Key &amp; ID46 transponder)</span>
-              </div>
-            </div>
-            <div className={styles.brandsCheckItem}>
-              <span className={styles.brandCheckIcon}>✓</span>
-              <div>
-                <Link href="/merken/porsche-autosleutel-bijmaken" className={styles.brandLinkOrange}>Porsche</Link>
-                <span className={styles.brandModelsText}> — 911, Cayenne, Macan, Panamera, Taycan (BCM &amp; Kessy transponders)</span>
-              </div>
-            </div>
 
+          <div className={styles.brandsLogoGrid}>
+            {[
+              { name: 'Volkswagen', slug: 'volkswagen-autosleutel-bijmaken', models: 'Golf, Polo, Tiguan, Passat', svg: 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg' },
+              { name: 'BMW', slug: 'bmw-autosleutel-bijmaken', models: '1-, 3-, 5-Serie, X1, X3, X5', svg: 'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg' },
+              { name: 'Mercedes-Benz', slug: 'mercedes-autosleutel-bijmaken', models: 'A/C/E-Klasse, Sprinter, Vito', svg: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg' },
+              { name: 'Audi', slug: 'audi-autosleutel-bijmaken', models: 'A1, A3, A4, A6, Q3, Q5, Q7', svg: 'https://upload.wikimedia.org/wikipedia/commons/7/7f/Audi_logo_detail.svg' },
+              { name: 'Opel', slug: 'opel-autosleutel-bijmaken', models: 'Corsa, Astra, Mokka, Vivaro', svg: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Opel_logo.svg' },
+              { name: 'Ford', slug: 'ford-autosleutel-bijmaken', models: 'Focus, Fiesta, Transit, Kuga', svg: 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Ford_logo_flat.svg' },
+              { name: 'Renault', slug: 'renault-autosleutel-bijmaken', models: 'Clio, Captur, Megane, Trafic', svg: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg' },
+              { name: 'Peugeot', slug: 'peugeot-autosleutel-bijmaken', models: '208, 308, 2008, 3008, Partner', svg: 'https://upload.wikimedia.org/wikipedia/commons/4/43/Peugeot_2021_Logo.svg' },
+              { name: 'Toyota', slug: 'toyota-autosleutel-bijmaken', models: 'Aygo, Yaris, Corolla, RAV4', svg: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/Toyota_logo_%28Red%29.svg' },
+              { name: 'Seat', slug: 'seat-autosleutel-bijmaken', models: 'Ibiza, Leon, Arona, Ateca', svg: 'https://upload.wikimedia.org/wikipedia/commons/3/38/SEAT_Logo.svg' },
+              { name: 'Skoda', slug: 'skoda-autosleutel-bijmaken', models: 'Fabia, Octavia, Superb, Kodiaq', svg: 'https://upload.wikimedia.org/wikipedia/commons/7/77/%C5%A0koda_logo.svg' },
+              { name: 'Volvo', slug: 'volvo-autosleutel-bijmaken', models: 'V40, V60, XC40, XC60, XC90', svg: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/Volvo_logo_2021.svg' },
+              { name: 'Nissan', slug: 'nissan-autosleutel-bijmaken', models: 'Micra, Qashqai, Juke, Leaf', svg: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Nissan_2020_logo.svg' },
+              { name: 'Hyundai', slug: 'hyundai-autosleutel-bijmaken', models: 'i10, i20, i30, Tucson, Kona', svg: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Hyundai_Motor_Company_logo.svg' },
+              { name: 'Kia', slug: 'kia-autosleutel-bijmaken', models: 'Picanto, Rio, Ceed, Sportage', svg: 'https://upload.wikimedia.org/wikipedia/commons/1/13/Kia-logo.svg' },
+              { name: 'Citroën', slug: 'citroen-autosleutel-bijmaken', models: 'C1, C3, C4, Berlingo, Jumper', svg: 'https://upload.wikimedia.org/wikipedia/commons/4/40/Citro%C3%ABn_2022_logo.svg' },
+              { name: 'Fiat', slug: 'fiat-autosleutel-bijmaken', models: '500, Panda, Ducato, Tipo', svg: 'https://upload.wikimedia.org/wikipedia/commons/f/f6/FIAT_logo_%282020%29.svg' },
+              { name: 'Honda', slug: 'honda-autosleutel-bijmaken', models: 'Civic, Jazz, CR-V, HR-V', svg: 'https://upload.wikimedia.org/wikipedia/commons/7/76/Honda_Logo.svg' },
+              { name: 'Mazda', slug: 'mazda-autosleutel-bijmaken', models: 'Mazda2, Mazda3, CX-5, MX-5', svg: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Mazda_logo.svg' },
+              { name: 'Land Rover', slug: 'land-rover-autosleutel-bijmaken', models: 'Range Rover, Discovery, Evoque', svg: 'https://upload.wikimedia.org/wikipedia/commons/3/38/Land_Rover_logo.svg' },
+              { name: 'Porsche', slug: 'porsche-autosleutel-bijmaken', models: 'Cayenne, Macan, 911, Panamera', svg: 'https://upload.wikimedia.org/wikipedia/de/e/e3/Porsche_Logo.svg' },
+              { name: 'Mini', slug: 'mini-autosleutel-bijmaken', models: 'Cooper, One, Countryman', svg: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Mini_logo_2018.svg' },
+            ].map((brand) => (
+              <Link
+                key={brand.slug}
+                href={`/merken/${brand.slug}`}
+                className={styles.brandLogoCard}
+                title={`${brand.name} autosleutel bijmaken — ${brand.models}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={brand.svg}
+                  alt={`${brand.name} logo`}
+                  className={styles.brandLogoImg}
+                  loading="lazy"
+                  width={80}
+                  height={48}
+                />
+                <span className={styles.brandLogoName}>{brand.name} sleutel bijmaken</span>
+                {/* Hidden SEO text for crawlers */}
+                <span className={styles.brandSeoHidden}>{brand.models}</span>
+              </Link>
+            ))}
           </div>
-          <Link href="/merken" className={styles.brandsAllLink}>
-            Bekijk alle merken die wij bedienen →
-          </Link>
+
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <Link href="/merken" className={styles.brandsAllLink}>
+              Bekijk alle {BRANDS.length} merken die wij bedienen &rarr;
+            </Link>
+          </div>
         </div>
       </section>
 
