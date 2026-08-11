@@ -3,6 +3,7 @@ import Script from 'next/script';
 import Link from 'next/link';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import ContactForm from '@/components/ContactForm/ContactForm';
+import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 
 export const metadata: Metadata = {
@@ -81,6 +82,10 @@ export default async function ContactPage(props: Props) {
               Reservesleutel, sleutel kwijt of contactslot defect — onze monteur komt 24/7 naar u toe. 
               <strong> Vaste prijs vooraf, geen sleepkosten.</strong>
             </p>
+
+            <div style={{ marginBottom: '3rem' }}>
+              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
+            </div>
 
             {/* ── CTAs Side by Side ── */}
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>
@@ -225,8 +230,8 @@ export default async function ContactPage(props: Props) {
         {/* ── FINAL CTA BLOCK ────────────────────────────────────────── */}
         <section style={{ background: 'var(--navy-900)', padding: '4rem 1.5rem', textAlign: 'center', color: '#fff' }}>
           <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, marginBottom: '1rem' }}>Nog Steeds Zonder Sleutel? Wij Staan Al Klaar.</h2>
-            <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', marginBottom: '2.5rem' }}>
+            <h2 style={{ color: '#fff', fontSize: '2.25rem', fontWeight: 800, marginBottom: '1rem' }}>Nog Steeds Zonder Sleutel? Wij Staan Al Klaar.</h2>
+            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
               24/7 bereikbaar — ook nu. Neem direct contact op voor een vaste prijsopgave en ETA.
             </p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
