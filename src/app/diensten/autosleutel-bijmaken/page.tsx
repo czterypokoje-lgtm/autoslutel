@@ -256,40 +256,7 @@ export default function SleutelBijmakenPage() {
                   </p>
                 </div>
 
-                {/* Section 3 */}
-                <div>
-                  <h2>Hoe Werkt het Autosleutel Bijmaken bij Autosleutel24?</h2>
-                  <ol className={styles.stepList}>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>1</span>
-                      <div className={styles.stepText}>
-                        <strong>Bel of WhatsApp ons</strong>
-                        Geef merk, model, bouwjaar en probleem door. Wij geven direct een prijsindicatie.
-                      </div>
-                    </li>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>2</span>
-                      <div className={styles.stepText}>
-                        <strong>Monteur komt naar u toe</strong>
-                        Binnen 30 min in Utrecht, 45 min in Amersfoort, 60 min in Hilversum.
-                      </div>
-                    </li>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>3</span>
-                      <div className={styles.stepText}>
-                        <strong>Sleutel maken ter plaatse</strong>
-                        Wij frezen de sleutel, programmeren de transponder, en testen het contactslot.
-                      </div>
-                    </li>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>4</span>
-                      <div className={styles.stepText}>
-                        <strong>Testen en garantie</strong>
-                        U test de nieuwe sleutel. Wij geven 12 maanden garantie en een verzekeringsklare factuur.
-                      </div>
-                    </li>
-                  </ol>
-                </div>
+
 
                 {/* Section 4 */}
                 <div style={{ margin: '3rem 0' }}>

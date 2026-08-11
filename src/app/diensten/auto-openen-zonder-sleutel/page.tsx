@@ -237,39 +237,7 @@ export default function AutoOpenenZonderSleutelPage() {
                   </ul>
                 </div>
 
-                {/* Section 2: Hoe werkt het */}
-                <div>
-                  <h2>Hoe Werkt Auto Openen Zonder Sleutel? — De Techniek Uitgelegd</h2>
-                  <p>
-                    Veel mensen denken dat een auto openen zonder sleutel altijd schade veroorzaakt. Dit is een hardnekkig misverstand. Een gecertificeerde locksmith gebruikt gespecialiseerde Lishi-tools:
-                  </p>
-                  <ol className={styles.stepList}>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>1</span>
-                      <div className={styles.stepText}>
-                        <strong>Decodering via sleutelgat</strong>
-                        De Lishi decoder wordt in het sleutelgat ingebracht en voelt de exacte positie van alle inwendige pennen (wafers) af.
-                      </div>
-                    </li>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>2</span>
-                      <div className={styles.stepText}>
-                        <strong>Mechanisch uitlijnen</strong>
-                        De specialist lijnt de pennen stuk voor stuk uit totdat de cilinder in de open stand staat — identiek aan wat uw originele sleutel doet.
-                      </div>
-                    </li>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>3</span>
-                      <div className={styles.stepText}>
-                        <strong>Elektronisch ontgrendelen</strong>
-                        Bij modernere auto's met centrale vergrendeling (CAN-bus) wordt via de OBD-poort of een specifieke bypass-tool het elektronische slot geopend.
-                      </div>
-                    </li>
-                  </ol>
-                  <div className={styles.callout}>
-                    <strong>Waarom nooit een kleerhanger gebruiken?</strong> Klassieke &quot;slim-jim&quot; methodes beschadigen de deurrubbers, de deurpanelen of de kabelgeleiders van uw raam — schade die honderden euro&apos;s kost om te repareren. Professionele Lishi-tools laten nul schade achter.
-                  </div>
-                </div>
+
 
                 {/* Section 3: Systemen vergelijken */}
                 <div>

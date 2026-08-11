@@ -97,38 +97,7 @@ export default function KentekenBestellenPage() {
                 <KentekenForm />
                 
                 {/* Section 1 - How it works */}
-                <div>
-                  <h2>📱 Hoe Werkt Het? (Snel & Zonder Gedoe)</h2>
-                  <ol className={styles.stepList}>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>1</span>
-                      <div className={styles.stepText}>
-                        <strong>Nummer opslaan of klikken</strong>
-                        Sla ons nummer op of klik op de WhatsApp knop: <strong>{SITE_CONFIG.phone}</strong>
-                      </div>
-                    </li>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>2</span>
-                      <div className={styles.stepText}>
-                        <strong>Stuur een appje</strong>
-                        Stuur een appje met uw kenteken (en eventueel een foto van uw huidige sleutel).
-                      </div>
-                    </li>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>3</span>
-                      <div className={styles.stepText}>
-                        <strong>Direct vaste prijsopgave</strong>
-                        Wij kijken in onze database en sturen u direct een vaste, scherpe prijsopgave. Geen verborgen kosten!
-                      </div>
-                    </li>
-                    <li className={styles.stepItem}>
-                      <span className={styles.stepNum}>4</span>
-                      <div className={styles.stepText}>
-                        <strong>Wij komen naar u toe</strong>
-                        Akkoord? Wij komen met onze mobiele servicebus naar uw locatie om de sleutel direct te frezen en in te leren.
-                      </div>
-                    </li>
-                  </ol>
+
                   
                   <div style={{ marginTop: '2rem', marginBottom: '3rem' }}>
                     <a href={customWhatsAppUrl} target="_blank" rel="noopener noreferrer" style={{
