@@ -32,8 +32,11 @@ export const SITE_CONFIG = {
   prices: {
     unlock: '125',
     transponder: '159',
+    remote: '220',
     smartKey: '349',
     allKeysLost: '260',
+    casing: '35',
+    ignition: '350',
     exVatDisclaimer: 'excl. btw',
   },
 

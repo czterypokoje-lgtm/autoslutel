@@ -118,13 +118,14 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
     { strong: 'Slijtage aan sleutelblad of sleutelbaard:', text: 'Door jarenlang gebruik is het metaal afgesleten waardoor de sleutel hakt of blijft hangen.' }
   ];
 
-  const pricingHeaders = ['Dienst / Sleuteltype', 'Kenmerken', 'Onze Tarieven', 'Dealer Prijs'];
+  const pricingHeaders = ['Dienst / Sleuteltype', 'Kenmerken', 'Onze Tarieven (excl. btw)', 'Dealer Prijs'];
   const pricingRows = [
     ['Standaard autosleutel (mechanisch)', 'Zonder afstandsbediening, incl. transponder chip', `Vanaf € ${SITE_CONFIG.prices.transponder},-`, '€ 140,- t/m € 180,-'],
-    ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € 220,-`, '€ 220,- t/m € 320,-'],
+    ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € ${SITE_CONFIG.prices.remote},-`, '€ 220,- t/m € 320,-'],
     ['Smart Key / Keyless Entry', 'Proximity start, volledig geprogrammeerd', `Vanaf € ${SITE_CONFIG.prices.smartKey},-`, '€ 350,- t/m € 480,-'],
-    ['Sleutel behuizing / batterij vervangen', 'Nieuwe behuizing, micro-switches & batterij', 'Vanaf € 35,-', 'Vaak hele sleutel (€ 200+)'],
-    ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, '€ 800,-+ (incl. wegsleepkosten)']
+    ['Sleutel behuizing / batterij vervangen', 'Nieuwe behuizing, micro-switches & batterij', `Vanaf € ${SITE_CONFIG.prices.casing},-`, 'Vaak hele sleutel (€ 200+)'],
+    ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, '€ 800,-+ (incl. wegsleepkosten)'],
+    ['Contactslot reparatie / vervanging', 'Reviseren of nieuw slot incl. sleutels', `Vanaf € ${SITE_CONFIG.prices.ignition},-`, 'Vaak hele stuurkolom (€ 600+)']
   ];
 
   const howToSchema = {
