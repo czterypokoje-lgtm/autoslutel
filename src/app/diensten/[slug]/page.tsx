@@ -205,6 +205,9 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
           </div>
         </div>
 
+        {/* ── HOW IT WORKS (Full width under hero) ── */}
+        <HowItWorks variant={howItWorksVariant} />
+
         {/* ── CONTENT SECTION ─────────────────────────────────────── */}
         <section className={styles.section}>
           <div className={styles.container}>
@@ -390,10 +393,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   </p>
                 </div>
 
-                {/* Section 3: Hoe Werkt Het */}
-                <div style={{ margin: '3rem 0' }}>
-                  <HowItWorks variant={howItWorksVariant} />
-                </div>
+
 
                 {/* Section 4: Welke Merken Bedienen Wij */}
                 <div>
