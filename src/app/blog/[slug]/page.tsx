@@ -49,6 +49,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         'x-default': `${SITE_CONFIG.domain}/blog/${slug}`,
       },
     },
+    openGraph: {
+      type: 'article',
+      url: `${SITE_CONFIG.domain}/blog/${slug}`,
+      title: `${post.title} | ${SITE_CONFIG.name}`,
+      description: post.excerpt,
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: post.title }],
+    },
   };
 }
 

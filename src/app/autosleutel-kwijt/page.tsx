@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '@/config/brands';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
 
 export const metadata: Metadata = {
   title: {
@@ -16,6 +17,13 @@ export const metadata: Metadata = {
       'nl-NL': `${SITE_CONFIG.domain}/autosleutel-kwijt`,
       'x-default': `${SITE_CONFIG.domain}/autosleutel-kwijt`,
     },
+  },
+  openGraph: {
+    type: 'website',
+    url: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
+    title: 'Autosleutel Kwijt? | 24/7 Mobiele Service | Autosleutel24',
+    description: `Autosleutel kwijt? Wij helpen direct. Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel: ${SITE_CONFIG.phone}`,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel Kwijt — Autosleutel24' }],
   },
 };
 
@@ -122,28 +130,12 @@ export default function AutosleutelKwijt() {
           </div>
         </section>
 
-        {/* 5 steps HowTo */}
-        <section style={{ padding:'3.5rem 0' }}>
+        {/* 3 steps HowTo */}
+        <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
           <div className="container">
-            <h2>Wat Te Doen Als Je Autosleutel Kwijt Is (5 Stappen)</h2>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap:'1rem', marginTop:'1.5rem' }}>
-              {steps.map(s => (
-                <div key={s.n} style={{ display:'flex', gap:'1rem', padding:'1.25rem', background:'#fff', border:'1px solid var(--gray-200)', borderRadius:'6px', alignItems:'flex-start' }}>
-                  <div style={{ width:36, height:36, borderRadius:'50%', background:s.n==='3'?'var(--color-danger)':'var(--navy-800)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'1rem', flexShrink:0 }}>{s.n}</div>
-                  <div>
-                    <strong style={{ display:'block', fontSize:'0.95rem', marginBottom:'0.25rem', color:'var(--gray-900)' }}>{s.title}</strong>
-                    <span style={{ fontSize:'0.85rem', color:'var(--gray-500)', lineHeight:1.55 }}>{s.desc}</span>
-                    {s.n === '3' && (
-                      <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display:'inline-block', marginTop:'0.5rem', background:'var(--color-danger)', color:'#fff', padding:'0.4rem 0.875rem', borderRadius:'3px', fontWeight:700, fontSize:'0.85rem', textDecoration:'none' }} id="akl-step3-phone">
-                        Bel Nu: {SITE_CONFIG.phone}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <HowItWorks variant="akl" />
           </div>
-        </section>
+        </div>
 
         {/* Pricing by brand */}
         <section style={{ padding:'3.5rem 0', background:'var(--gray-50)' }}>

@@ -29,6 +29,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
+    type: 'website',
     url: SITE_CONFIG.domain,
     title: 'Autosleutel Bijmaken of Kwijt? 24/7 Mobiele Service | Autosleutel24',
     description: 'Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!',

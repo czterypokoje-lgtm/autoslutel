@@ -41,6 +41,7 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
       },
     },
     openGraph: {
+      type: 'website',
       url: pageUrl,
       title: `${brand.name} Autosleutel Bijmaken & Programmeren | Alle Modellen & Bouwjaren`,
       description: `${brand.name} autosleutel bijmaken & inleren op locatie. Goedkoper dan de dealer. Zelfde dag klaar met 12 maanden garantie. Bel direct!`,

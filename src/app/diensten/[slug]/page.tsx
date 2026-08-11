@@ -7,6 +7,7 @@ import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import { generateContextualReviews } from '@/utils/reviews';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       },
     },
     openGraph: {
+      type: 'website',
       url: pageUrl,
       title: `${service.title} | Mobiel & Schadevrij ter Plaatse`,
       description: service.metaDesc,
@@ -64,6 +66,15 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
 
   const isOpening = ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto', 'auto-openen-zonder-sleutel'].includes(slug);
   const isKey = ['sleutel-bijmaken', 'autosleutel-kwijt', 'alle-sleutels-kwijt-auto', 'reserve-autosleutel', 'transponder-programmeren', 'smart-key-programmeren', 'autosleutel-bijmaken'].includes(slug);
+
+  let howItWorksVariant: 'default' | 'akl' | 'ignition' | 'lockout' = 'default';
+  if (['autosleutel-kwijt', 'alle-sleutels-kwijt-auto'].includes(slug)) {
+    howItWorksVariant = 'akl';
+  } else if (['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'noodopening-auto', 'auto-slotenmaker'].includes(slug)) {
+    howItWorksVariant = 'lockout';
+  } else if (['contactslot-auto-vervangen', 'sleutel-afgebroken-in-slot', 'contactslot-vervangen'].includes(slug)) {
+    howItWorksVariant = 'ignition';
+  }
 
   // Load recent work images for this service
   const imagesDirMerken = path.join(process.cwd(), 'public', 'images', 'merken');
@@ -380,19 +391,8 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 </div>
 
                 {/* Section 3: Hoe Werkt Het */}
-                <div>
-                  <h2>Hoe Werkt {service.title} bij Autosleutel24?</h2>
-                  <ol className={styles.stepList}>
-                    {service.steps.map((stepText, idx) => (
-                      <li key={idx} className={styles.stepItem}>
-                        <span className={styles.stepNum}>{idx + 1}</span>
-                        <div className={styles.stepText}>
-                          <strong>Stap {idx + 1}: {idx === 0 ? 'Neem Direct Contact Op' : idx === 1 ? 'Monteur Snel Onderweg' : idx === service.steps.length - 1 ? 'Garantiestelling & Factuur' : idx === 2 ? 'Diagnose & Uitvoering' : 'Programmatie & Testen'}</strong>
-                          {stepText}
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
+                <div style={{ margin: '3rem 0' }}>
+                  <HowItWorks variant={howItWorksVariant} />
                 </div>
 
                 {/* Section 4: Welke Merken Bedienen Wij */}

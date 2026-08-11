@@ -11,6 +11,7 @@ import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import CitySeoText from '@/components/CitySeoText/CitySeoText';
 import styles from './page.module.css';
 import UtrechtSeo from '@/content/seo/utrecht';
 import AmsterdamSeo from '@/content/seo/amsterdam';
@@ -105,6 +106,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
       },
     },
     openGraph: {
+      type: 'website',
       url: pageUrl,
       title: `Autosleutel Bijmaken ${city.city} | Mobiel Programmeren 24/7`,
       description: `Autosleutel kwijt of reserve bijmaken in ${city.city}? Wij zijn er binnen ${city.travelTime} ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
@@ -465,24 +467,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {/* ── COMPREHENSIVE CITY SEO GUIDE ARTICLE ── */}
         <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
           <div className="container">
-            <div className="seo-article-block" style={{ marginTop: 0 }}>
-              <h2>Volledige Slotenmaker &amp; Autosleutel Service in {city.city}</h2>
-              <p>
-                Woonachtig in of onderweg door {city.city} en geconfronteerd met een kapotte, gestolen of kwijtgeraakte autosleutel? Dan bent u bij <strong>{SITE_CONFIG.name}</strong> aan het juiste adres. In tegenstelling tot traditionele garages die vaak lange wachttijden hanteren en wegsleepkosten rekenen, komen wij met onze mobiele werkplaats direct naar u toe in {city.city} en regio {city.region}. Binnen gemiddeld {city.travelTime} staan wij naast uw voertuig om het probleem ter plaatse op te lossen.
-              </p>
-              <h3>Waarom kiezen voor mobiele autosleutelprogrammering in {city.city}?</h3>
-              <p>
-                Modern autobeheer vereist gespecialiseerde kennis van auto-elektronica, CAN-bus communicatie en immobilisersysteemsleeptabellen. Onze monteurs werken dagelijks met fabrieksspecifieke apparatuur en officiële OEM-tokens voor meer dan 38 automerken. Hierdoor kunnen wij niet alleen mechanische sleutelbladen CNC-frezen op locatie in {city.city}, maar ook direct transponderchips en smart keyless go modules inleren op de boordcomputer (ECU, BSI, FEM of CAS).
-              </p>
-              <h3>100% Schadevrij Openen via Lishi Lock Decoders</h3>
-              <p>
-                Is uw autodeur dichtgevallen of liggen de sleutels nog op de stoel of in de kofferbak? Ga nooit zelf aan de slag met kledinghangers of schroevendraaiers; dit veroorzaakt onherstelbare schade aan uw lak en rubberafdichtingen. Wij gebruiken in {city.city} uitsluitend Lishi 2-in-1 lock decoders. Hiermee picken en decoderen wij rechtstreeks het portierslot op mechanische wijze, 100% schadevrij met behoud van uw fabrieksslot.
-              </p>
-              <h3>Garantie, Transparantie en Verzekeringsvergoeding in {city.city}</h3>
-              <p>
-                U ontvangt van ons altijd vooraf een heldere, vaste prijs. Na afronding van de werkzaamheden krijgt u standaard 12 maanden schriftelijke garantie op de geleverde sleutel en elektronica. Veel verzekeraars vergoeden de kosten voor het vervangen van autosleutels onder de dekking van uw Beperkt Casco of Allrisk polis; wij leveren een officiële, gespecificeerde factuur die direct geschikt is voor uw verzekeraar.
-              </p>
-            </div>
+            <CitySeoText cityName={city.city} travelTime={city.travelTime} />
           </div>
         </section>
 
@@ -512,25 +497,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
-        {/* ── COMPREHENSIVE LOCAL SEO GUIDE FOR THIS CITY ── */}
-        <section className={styles.section} style={{ background: '#f8fafc', padding: '3.5rem 0' }}>
-          <div className="container">
-            <div className="seo-article-block" style={{ background: '#ffffff', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--gray-200)' }}>
-              <h2>Uw Gecertificeerde Autosleutelspecialist en Slotenmaker in {city.city}</h2>
-              <p>
-                Bent u woonachtig of onderweg in <strong>{city.city}</strong> en heeft u direct hulp nodig omdat u uw autosleutel bent kwijtgeraakt, de afstandsbediening defect is of uw sleutel in het contactslot is afgebroken? Bij <strong>{SITE_CONFIG.name}</strong> bent u verzekerd van snelle en professionele hulp op locatie. Waar u bij een traditionele autodealer in {city.city} vaak weken moet wachten op een nieuwe fabriekssleutel en uw auto bovendien per takelwagen moet laten afslepen, komen onze volledig uitgeruste mobiele servicewagens rechtstreeks naar u toe.
-              </p>
-              <h3>Mobiele Diagnose, CNC Slijpen en Programmeren in {city.city}</h3>
-              <p>
-                Onze servicewagens zijn ingericht als hightech mobiele werkplaatsen. Wij beschikken over OEM-gecertificeerde uitleesapparatuur en computergestuurde CNC-sleutelfreesmachines. Ter plaatse in {city.city} — of u nu thuis op de oprit staat, op een bedrijventerrein geparkeerd bent of langs de weg staat — kunnen wij uw autodeur 100% schadevrij openen met Lishi lockdecoders, de mechanische sleutelcode uitlezen, een nieuwe sleutelbaard op maat slijpen en de transponderchip direct in de startonderbreker inleren.
-              </p>
-              <h3>Transparante All-in Tarieven, Verzekering en 12 Maanden Garantie</h3>
-              <p>
-                Wij hanteren eerlijke en vooraf vastgestelde tarieven in heel regio {city.city}, waardoor u gemiddeld 30% tot 50% voordeliger uit bent dan bij de merkdealer. Op elke nieuwe sleutel en reparatie ontvangt u standaard 12 maanden schriftelijke garantie. In veel gevallen van verlies of diefstal wordt onze service daarnaast volledig gedekt door uw WA Extra of Allrisk autoverzekering.
-              </p>
-            </div>
-          </div>
-        </section>
+
 
         {/* CTA */}
         <section className={styles.cta}>

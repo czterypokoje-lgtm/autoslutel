@@ -219,6 +219,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/diensten/autosleutel-kwijt',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
+      {
         source: '/blog/sleutel-kwijt-utrecht-stappenplan',
         destination: '/autosleutel-kwijt',
         permanent: true,
