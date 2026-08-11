@@ -181,3 +181,56 @@
     flex-direction: column;
   }
 }
+
+/* --- LIGHT THEME OVERRIDES --- */
+.light .form {
+  background: rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.light .field {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.15);
+}
+
+.light .field:focus-within {
+  background: #fff;
+  border-color: var(--navy-400);
+  box-shadow: 0 0 0 3px rgba(36,96,160,0.15);
+}
+
+.light .select {
+  color: var(--navy-900);
+}
+
+.light .select::placeholder {
+  color: rgba(0,0,0,0.5);
+}
+
+.light .select option {
+  background: #fff;
+  color: var(--navy-900);
+}
+
+.light .urgency {
+  color: rgba(0,0,0,0.65);
+}
+
+.light .callBtn {
+  background: rgba(230,81,0,0.08);
+}
+
+.light .callBtn:hover {
+  background: rgba(230,81,0,0.15);
+}
+
+.light .waBtn {
+  background: rgba(37,211,102,0.08);
+}
+
+.light .waBtn:hover {
+  background: rgba(37,211,102,0.15);
+}
+

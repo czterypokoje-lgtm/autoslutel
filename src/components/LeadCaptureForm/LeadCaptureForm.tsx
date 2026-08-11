@@ -7,9 +7,10 @@ import styles from "./LeadCaptureForm.module.css";
 interface Props {
   city?: string;
   phone: string;
+  theme?: 'dark' | 'light';
 }
 
-export default function LeadCaptureForm({ city = "", phone }: Props) {
+export default function LeadCaptureForm({ city = "", phone, theme = 'dark' }: Props) {
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
@@ -50,7 +51,7 @@ export default function LeadCaptureForm({ city = "", phone }: Props) {
   }
 
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${theme === 'light' ? styles.light : ''}`}>
       <form className={styles.form} onSubmit={handleSubmit} id="city-lead-form">
         {/* Brand */}
         <div className={styles.field}>

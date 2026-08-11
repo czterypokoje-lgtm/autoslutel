@@ -199,7 +199,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
                   Alle merken, ter plaatse geprogrammeerd.
                 </p>
-                <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
+                <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} theme="light" />
               </div>
               <div className={styles.heroUtrechtImage}>
                 <Image 
