@@ -12,6 +12,7 @@ import { generateContextualReviews } from '@/utils/reviews';
 import InstantServiceMap from '@/components/InstantServiceMap';
 import LocalBusinessSchema from '@/components/Schema/LocalBusinessSchema';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
@@ -247,6 +248,9 @@ export default function HomePage() {
           <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.emergencyPhone}>{SITE_CONFIG.phone}</a>
         </div>
       </section>
+
+      {/* ===== HOW IT WORKS ===== */}
+      <HowItWorks />
 
       {/* ===== SERVICES ===== */}
       <section className={styles.services}>
