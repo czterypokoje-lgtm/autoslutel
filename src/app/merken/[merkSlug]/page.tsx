@@ -77,16 +77,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
     // ignore
   }
 
-  // Group models alphabetically (A-Z or 0-9)
-  const modelsSorted = [...(brand.models || [])].sort((a, b) => a.name.localeCompare(b.name, 'nl'));
-  const alphabetGroups: Record<string, typeof modelsSorted> = {};
-  
-  modelsSorted.forEach(m => {
-    const firstChar = m.name.charAt(0).toUpperCase();
-    const groupKey = /[A-Z]/.test(firstChar) ? firstChar : '0–9';
-    if (!alphabetGroups[groupKey]) alphabetGroups[groupKey] = [];
-    alphabetGroups[groupKey].push(m);
-  });
+  // alphabetGroups logic removed because it is no longer used in the new UI layout.
 
   const schema = {
     '@context': 'https://schema.org', '@type': 'Service',
@@ -245,7 +236,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                           'nissan': 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Nissan_logo.png'
                         };
 
-                        let logoUrl = null;
+                        let logoUrl: string | null = null;
                         const exts = ['.webp', '.svg', '.png', '.jpg', '.jpeg'];
                         
                         // Check local files first
