@@ -4,6 +4,8 @@ import { DIENSTEN } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import { BLOG_POSTS } from '@/config/services';
+import fs from 'fs';
+import path from 'path';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_CONFIG.domain;
@@ -32,13 +34,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // 3. City Pages
-  const cityPages = CITIES.map(c => ({
-    url: `${base}/steden/${c.slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly' as const,
-    priority: 0.85,
-    images: Array.from({ length: 8 }).map((_, i) => `${base}/images/cities/${c.slug}/autosleutel-bijmaken-${c.slug}-${i + 1}.webp`),
-  }));
+  const cityPages = CITIES.map(c => {
+    const images = [];
+    if (fs.existsSync(path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${c.slug}.webp`))) {
+      images.push(`${base}/images/autosleutel-bijmaken-${c.slug}.webp`);
+    }
+    return {
+      url: `${base}/steden/${c.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.85,
+      images,
+    };
+  });
 
   // 4. Brand Pages
   const brandPages = BRANDS.map(b => ({

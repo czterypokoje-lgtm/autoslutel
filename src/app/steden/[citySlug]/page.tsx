@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import fs from 'fs';
+import path from 'path';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
@@ -169,13 +171,16 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const cityFaqs = getFaqForCity(city.city);
   const mappedFaqs = cityFaqs.map(f => ({ question: f.q, answer: f.a }));
 
+  const imagePath = path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${citySlug}.webp`);
+  const hasHeroImage = fs.existsSync(imagePath);
+
   return (
     <>
       <Script id={`city-schema-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script id={`city-breadcrumb-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* Hero */}
-        {city.slug === 'utrecht' ? (
+        {hasHeroImage ? (
           <section className={styles.heroUtrecht}>
             <div className={styles.heroUtrechtInner}>
               <div className={styles.heroUtrechtText}>
@@ -192,8 +197,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </div>
               <div className={styles.heroUtrechtImage}>
                 <Image 
-                  src="/images/autosleutel-bijmaken-utrecht.webp"
-                  alt="Autosleutel bijmaken Utrecht - 24/7 service op locatie bij Oudegracht met Domtoren"
+                  src={`/images/autosleutel-bijmaken-${city.slug}.webp`}
+                  alt={`Autosleutel bijmaken ${city.city} - 24/7 service op locatie`}
                   width={800}
                   height={450}
                   style={{ width: '100%', height: 'auto', borderRadius: '12px' }}
