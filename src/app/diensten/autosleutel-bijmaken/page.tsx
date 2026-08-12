@@ -205,6 +205,12 @@ export default function SleutelBijmakenPage() {
                           <td>30-45 min</td>
                         </tr>
                         <tr>
+                          <td>Alle sleutels kwijt (geen werkende sleutel)</td>
+                          <td>Auto openen & sleutel inleren</td>
+                          <td><strong>Vanaf €299</strong></td>
+                          <td>45-60 min</td>
+                        </tr>
+                        <tr>
                           <td>Extra reserve sleutel (2e, 3e, 4e)</td>
                           <td>Alle merken</td>
                           <td><strong>€75 per stuk</strong></td>
