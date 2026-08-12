@@ -34,7 +34,7 @@ export const SITE_CONFIG = {
     transponder: '149',
     remote: '220',
     smartKey: '249',
-    allKeysLost: '259',
+    allKeysLost: '249',
     casing: '35',
     ignition: '299',
     exVatDisclaimer: 'excl. btw',

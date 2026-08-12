@@ -227,13 +227,13 @@ export default function AutoSlotenmakerPage() {
                         <tr>
                           <td>Nieuwe reservesleutel maken</td>
                           <td>Inclusief programmeren transponder</td>
-                          <td><strong>€149</strong></td>
+                          <td><strong>€149 - €299</strong></td>
                           <td>20-30 min</td>
                         </tr>
                         <tr>
                           <td>Alle sleutels kwijt (All Keys Lost)</td>
                           <td>Genereren van een nieuwe sleutelbaard</td>
-                          <td><strong>€259</strong></td>
+                          <td><strong>€249 - €500</strong></td>
                           <td>30-45 min</td>
                         </tr>
                         <tr>
@@ -246,7 +246,9 @@ export default function AutoSlotenmakerPage() {
                     </table>
                   </div>
                   <div className={styles.callout}>
-                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken en achteraf honderden euro's rekenen, krijgt u bij ons vooraf telefonisch of via WhatsApp een vaste all-in prijsopgave exclusief btw.
+                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken, krijgt u bij ons vooraf een vaste prijsopgave exclusief btw. 
+                    <br/><br/>
+                    <strong>Goed om te weten:</strong> Officiële autodealers zijn vaak <strong>50% duurder</strong>. Daarnaast bespaart u bij ons op dure wegsleepkosten, want <strong>wij rekenen geen sleepkosten</strong> en helpen u direct ter plaatse!
                   </div>
                 </div>
 

@@ -27,14 +27,14 @@ const priceRows: PriceItem[] = [
   { category: 'Autosleutel Bijmaken (Reserve)' },
   { service: 'Standaard transpondersleutel', from: '€ 149', to: '€ 199', note: 'Meeste oudere modellen' },
   { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 199', to: '€ 249', note: 'VW, Audi, Seat, Skoda, Ford' },
-  { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 349', note: 'BMW, Mercedes, Toyota, Mazda' },
-  { service: 'Proximity key met start-stop', from: '€ 299', to: '€ 399', note: 'Premium merken' },
+  { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 299', note: 'BMW, Mercedes, Toyota, Mazda' },
+  { service: 'Proximity key met start-stop', from: '€ 279', to: '€ 299', note: 'Premium merken' },
   
   { category: 'Autosleutel Kwijt (Alle sleutels verloren)' },
-  { service: 'Standaard transpondersleutel', from: '€ 259', to: '€ 349', note: 'Inclusief programmeren' },
-  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 259', to: '€ 349', note: 'Inclusief code uitlezen' },
-  { service: 'Smart key / Keyless entry', from: '€ 349', to: '€ 499', note: 'Inclusief noodprocedure' },
-  { service: 'Proximity key met start-stop', from: '€ 399', to: '€ 549', note: 'Premium systemen' },
+  { service: 'Standaard transpondersleutel', from: '€ 249', to: '€ 349', note: 'Inclusief programmeren' },
+  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 299', to: '€ 399', note: 'Inclusief code uitlezen' },
+  { service: 'Smart key / Keyless entry', from: '€ 349', to: '€ 449', note: 'Inclusief noodprocedure' },
+  { service: 'Proximity key met start-stop', from: '€ 399', to: '€ 500', note: 'Premium systemen' },
   
   { category: 'Auto Openen (Buitengesloten)' },
   { service: 'Standaard auto openen', from: '€ 150', to: '€ 200', note: 'Schadevrij, 5-15 minuten' },
@@ -82,8 +82,8 @@ export default function PrijzenPage() {
           <p className={styles.label}>TARIEVEN</p>
           <h1>Prijsoverzicht — Indicatieve Tarieven</h1>
           <p className={styles.heroSub}>
-            Exacte prijs wordt altijd <strong>vóór aanvang</strong> van de werkzaamheden afgesproken. Geen verrassingen achteraf.
-            Bespaar gemiddeld 30–50% ten opzichte van de dealer.
+            Exacte prijs wordt altijd <strong>vóór aanvang</strong> van de werkzaamheden afgesproken. 
+            Bij de officiële autodealer bent u vaak <strong>50% duurder</strong> uit. Bovendien betaalt u bij ons <strong>géén wegsleepkosten</strong> omdat wij naar u toe komen!
           </p>
           <div className={styles.heroCtas}>
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="prijzen-hero-phone">
@@ -109,6 +109,7 @@ export default function PrijzenPage() {
               <li>Tarieven gelden voor <strong>maandag t/m vrijdag 08:00–16:00</strong>. Buiten deze tijden gelden toeslagen (zie tabel hieronder).</li>
               <li>Alle prijzen zijn exclusief btw.</li>
               <li>De definitieve prijs wordt <strong>altijd vooraf telefonisch afgesproken</strong> — nooit verrassingen achteraf.</li>
+              <li>De merkdealer is vaak <strong>50% duurder</strong>, en u bespaart bij ons op dure wegsleepkosten (wij werken 100% op uw locatie).</li>
             </ul>
           </div>
         </div>
