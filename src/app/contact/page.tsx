@@ -150,15 +150,10 @@ export default async function ContactPage(props: Props) {
                         <td style={{ padding: '1rem', color: '#64748b', textDecoration: 'line-through' }}>€450 - €700</td>
                         <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €299</td>
                       </tr>
-                      <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                      <tr>
                         <td style={{ padding: '1rem' }}>Alle sleutels kwijt (geen werkende sleutel)</td>
                         <td style={{ padding: '1rem', color: '#64748b', textDecoration: 'line-through' }}>€600+</td>
                         <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €299</td>
-                      </tr>
-                      <tr>
-                        <td style={{ padding: '1rem' }}>Extra reserve (2e, 3e)</td>
-                        <td style={{ padding: '1rem', color: '#64748b', textDecoration: 'line-through' }}>€200+</td>
-                        <td style={{ padding: '1rem', fontWeight: 700 }}>€75 per stuk</td>
                       </tr>
                     </tbody>
                   </table>
