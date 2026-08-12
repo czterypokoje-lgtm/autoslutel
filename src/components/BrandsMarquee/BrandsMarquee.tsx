@@ -17,29 +17,12 @@ const marqueeBrands = [
   { name: 'Peugeot', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Peugeot_Logo.svg' }
 ];
 
-// We create a robust infinite scroll by rendering two identical tracks that translate -100%
-const trackItems = [...marqueeBrands, ...marqueeBrands];
-
 export default function BrandsMarquee() {
   return (
     <div className={styles.marqueeContainer}>
       <div className={styles.marqueeTrack}>
-        {trackItems.map((brand, i) => (
-          <div key={`track1-${brand.name}-${i}`} className={styles.marqueeItem}>
-            <Image 
-              src={brand.logo} 
-              alt={`${brand.name} autosleutel bijmaken`} 
-              width={70} 
-              height={40} 
-              style={{ objectFit: 'contain' }}
-              loading="lazy"
-            />
-          </div>
-        ))}
-      </div>
-      <div className={styles.marqueeTrack} aria-hidden="true">
-        {trackItems.map((brand, i) => (
-          <div key={`track2-${brand.name}-${i}`} className={styles.marqueeItem}>
+        {marqueeBrands.map((brand, i) => (
+          <div key={`${brand.name}-${i}`} className={styles.marqueeItem}>
             <Image 
               src={brand.logo} 
               alt={`${brand.name} autosleutel bijmaken`} 
