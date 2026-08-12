@@ -161,65 +161,126 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
           </section>
         )}
 
-        {/* ── A–Z COMPLETE MODEL CATALOG & YEAR GUIDE ── */}
+        {/* ── CLEAN 3-COLUMN MODEL LIST (NEW DESIGN) ── */}
         <section id="modellen" style={{ padding: '4.5rem 0', background: '#f8fafc' }}>
-          <div className="container">
-            <div style={{ maxWidth: 900, marginBottom: '2.5rem' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--orange-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>A–Z Modellenoverzicht</span>
-              <h2 style={{ fontSize: '1.9rem', fontWeight: 800, color: '#0f172a', marginTop: '0.35rem', marginBottom: '0.85rem' }}>
-                Alle Ondersteunde {brand.name}{' '}Modellen &amp; Bouwjaren
+          <div className="container" style={{ maxWidth: 1000 }}>
+            
+            <div style={{ textAlign: 'center', marginBottom: '2.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {brand.name} SLEUTELS DIE WIJ BIJMAKEN
               </h2>
-              <p style={{ color: '#475569', fontSize: '1.02rem', lineHeight: 1.7 }}>
-                Staat uw voertuig hieronder vermeld? Dan kunnen wij direct op locatie een nieuwe reservesleutel frezen en inleren, of een verloren sleutel wissen uit de startonderbreker. Wij ondersteunen alle bouwjaren, generaties en sleuteltypen (klapsleutel, transponder en Keyless Go).
-              </p>
             </div>
 
-            {Object.keys(alphabetGroups).length > 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-                {Object.keys(alphabetGroups).sort().map(letter => (
-                  <div key={letter} style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                    <div style={{ background: '#0f172a', color: '#fff', padding: '0.75rem 1.5rem', fontWeight: 800, fontSize: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span>{brand.name} — Groep {letter}</span>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 500, color: '#94a3b8' }}>{alphabetGroups[letter].length} modellen</span>
+            <div style={{ background: '#ffffff', borderRadius: '12px', padding: '3rem', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+              
+              <style dangerouslySetInnerHTML={{__html: `
+                .modelsFlexWrap {
+                  display: flex;
+                  gap: 4rem;
+                  align-items: flex-start;
+                }
+                .modelsListCol {
+                  flex: 1;
+                  column-count: 3;
+                  column-gap: 2.5rem;
+                  color: #64748b;
+                  font-size: 0.95rem;
+                  line-height: 2;
+                }
+                .brandLogoArea {
+                  flex: 0 0 200px;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                }
+                .brandActionButtons {
+                  display: flex;
+                  gap: 1rem;
+                  border-top: 1px solid #f1f5f9;
+                  padding-top: 2rem;
+                }
+                @media (max-width: 768px) {
+                  .modelsFlexWrap {
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 2rem;
+                  }
+                  .modelsListCol {
+                    column-count: 2;
+                    text-align: center;
+                  }
+                  .brandActionButtons {
+                    flex-direction: column;
+                  }
+                }
+                @media (max-width: 480px) {
+                  .modelsListCol {
+                    column-count: 1;
+                  }
+                }
+              `}} />
+
+              <div className="modelsFlexWrap">
+                {/* Left: Logo Area */}
+                <div className="brandLogoArea">
+                  <div style={{ position: 'relative', display: 'inline-block' }}>
+                    <div style={{ position: 'absolute', top: -15, left: -15, background: '#fff', borderRadius: '50%', padding: '4px', border: '2px solid #22c55e', zIndex: 2 }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                     </div>
-                    <div style={{ padding: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.25rem' }}>
-                      {alphabetGroups[letter].map(m => (
-                        <div key={m.slug} style={{ padding: '1.25rem', borderRadius: '10px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                          <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
-                              <strong style={{ fontSize: '1.12rem', color: '#0f172a' }}>{brand.name} {m.name}</strong>
-                              <span style={{ background: '#e2e8f0', color: '#334155', fontSize: '0.72rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '4px' }}>OEM</span>
-                            </div>
-                            {m.generations && (
-                              <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '0 0 0.35rem 0' }}>
-                                <strong>Generaties:</strong> {m.generations}
-                              </p>
-                            )}
-                            <p style={{ fontSize: '0.85rem', color: '#475569', margin: '0 0 0.8rem 0' }}>
-                              <strong>Bouwjaren:</strong> {m.years}
-                            </p>
-                          </div>
-                          <div style={{ paddingTop: '0.75rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.8rem', color: '#059669', fontWeight: 600 }}>✓ Klapsleutel &amp; Smart Key</span>
-                            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" 
-                              style={{ fontSize: '0.82rem', fontWeight: 700, color: '#ea580c', textDecoration: 'none' }}>
-                              Prijs aanvragen →
-                            </a>
-                          </div>
-                        </div>
-                      ))}
+                    <div style={{ width: 120, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', borderRadius: '16px', overflow: 'hidden' }}>
+                      {(() => {
+                        let logoUrl = null;
+                        const exts = ['.webp', '.svg', '.png'];
+                        for (const ext of exts) {
+                          if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.slug}_sleutel_bijmaken${ext}`))) {
+                            logoUrl = `/brands/${brand.slug}_sleutel_bijmaken${ext}`; break;
+                          }
+                          if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.slug}-autosleutel-bijmaken${ext}`))) {
+                            logoUrl = `/brands/${brand.slug}-autosleutel-bijmaken${ext}`; break;
+                          }
+                        }
+                        // Add hardcoded fallback for Renault since it's the user's example
+                        if (!logoUrl && brand.slug === 'renault') {
+                          logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg';
+                        }
+                        
+                        if (logoUrl) {
+                          // eslint-disable-next-line @next/next/no-img-element
+                          return <img src={logoUrl} alt={`${brand.name} logo`} style={{ width: '80%', height: '80%', objectFit: 'contain' }} loading="lazy" />;
+                        }
+                        return <span style={{ fontSize: '3.5rem', fontWeight: 900, color: '#cbd5e1' }}>{brand.name.charAt(0)}</span>;
+                      })()}
                     </div>
                   </div>
-                ))}
+                  <h3 style={{ marginTop: '1.5rem', fontSize: '1.5rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    {brand.name}
+                  </h3>
+                </div>
+
+                {/* Right: Models List */}
+                <div className="modelsListCol">
+                  {brand.models?.map(m => (
+                    <div key={m.slug} style={{ breakInside: 'avoid' }}>
+                      {m.name}
+                    </div>
+                  ))}
+                  {(!brand.models || brand.models.length === 0) && (
+                    <p>Alle modellen ondersteund.</p>
+                  )}
+                </div>
               </div>
-            ) : (
-              <div style={{ background: '#fff', padding: '2.5rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: '#0f172a' }}>Alle {brand.name}{' '}Modellen &amp; Bouwjaren Ondersteund</h3>
-                <p style={{ color: '#475569', lineHeight: 1.7 }}>
-                  Staat uw specifieke {brand.name} model hier niet tussen? Geen zorgen! Wij leveren, frezen en programmeren autosleutels voor <strong>vrijwel elk type {brand.name}</strong> uit de bouwjaren 1998 tot en met 2024. Neem direct contact op via telefoon of WhatsApp en geef uw kenteken of model door voor een directe prijsopgave.
-                </p>
+
+              {/* Bottom: Action Buttons */}
+              <div className="brandActionButtons">
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ flex: 1, textAlign: 'center', background: '#34d399', color: '#fff', padding: '1.1rem', borderRadius: '4px', fontWeight: 700, textDecoration: 'none', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Vraag Offerte Aan
+                </a>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ flex: 1, textAlign: 'center', background: '#10b981', color: '#fff', padding: '1.1rem', borderRadius: '4px', fontWeight: 700, textDecoration: 'none', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Maak Terugbelafspraak
+                </a>
               </div>
-            )}
+
+            </div>
           </div>
         </section>
 
