@@ -328,12 +328,18 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               Heeft u met spoed een autosleutel nodig of bent u uw sleutels kwijt in {city.city}? Wij bieden de volgende diensten op locatie:
             </p>
             <div className={styles.nearbyGrid}>
-              {DIENSTEN.filter(s => ['autosleutel-bijmaken', 'autosleutel-kwijt', 'auto-openen-zonder-sleutel'].includes(s.slug)).map(s => (
-                <Link key={s.slug} href={`/diensten/${s.slug}`} className={styles.nearbyCard}>
-                  <span>{s.title} in {city.city}</span>
-                  <span className={styles.nearbyTime}>{s.priceFrom || '24/7 Actief'}</span>
-                </Link>
-              ))}
+              <Link href={`/diensten/autosleutel-bijmaken`} className={styles.nearbyCard}>
+                <span>Autosleutel Bijmaken in {city.city}</span>
+                <span className={styles.nearbyTime}>Vanaf €149</span>
+              </Link>
+              <Link href={`/diensten/alle-sleutels-kwijt-auto`} className={styles.nearbyCard}>
+                <span>Autosleutels Kwijt in {city.city}</span>
+                <span className={styles.nearbyTime}>Vanaf €249</span>
+              </Link>
+              <Link href={`/diensten/auto-openen-zonder-sleutel`} className={styles.nearbyCard}>
+                <span>Autodeur Openen in {city.city}</span>
+                <span className={styles.nearbyTime}>Vanaf €75</span>
+              </Link>
             </div>
           </div>
         </section>
