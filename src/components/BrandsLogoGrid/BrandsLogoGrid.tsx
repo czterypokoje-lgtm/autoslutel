@@ -84,7 +84,7 @@ export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false 
 
         <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
           <Link href="/merken" className={styles.brandsAllLink}>
-            Bekijk alle {BRANDS_WITH_LOGOS.length} merken die wij bedienen &rarr;
+            {"Bekijk alle " + BRANDS_WITH_LOGOS.length + " merken die wij bedienen \u2192"}
           </Link>
         </div>
       </div>

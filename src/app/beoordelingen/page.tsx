@@ -6,9 +6,9 @@ import { generateContextualReviews } from '@/utils/reviews';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Klantbeoordelingen (4.9★) | Autosleutel24',
+    absolute: 'Klantbeoordelingen (5.0★) | Autosleutel24',
   },
-  description: `Klantbeoordelingen van ${SITE_CONFIG.fullName}. 4.9/5 sterren op Google. 127 tevreden klanten.`,
+  description: `Klantbeoordelingen van ${SITE_CONFIG.fullName}. 5.0/5 sterren op Google. 127 tevreden klanten.`,
   alternates: { canonical: `${SITE_CONFIG.domain}/beoordelingen` },
 };
 
@@ -19,7 +19,7 @@ export default function BeoordelingenPage() {
         <span className="section-label">BEOORDELINGEN</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Klantbeoordelingen</h1>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
-          <span style={{ fontSize: '3.5rem', fontWeight: 700, color: '#f59e0b' }}>4.9</span>
+          <span style={{ fontSize: '3.5rem', fontWeight: 700, color: '#f59e0b' }}>{SITE_CONFIG.rating}</span>
           <div>
             <div style={{ color: '#f59e0b', fontSize: '1.5rem', letterSpacing: '4px' }}>★★★★★</div>
             <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem' }}>{SITE_CONFIG.reviewCount} beoordelingen</div>

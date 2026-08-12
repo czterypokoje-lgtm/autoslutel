@@ -909,8 +909,8 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         De kosten van een autoslotenmaker hangen af van de benodigde dienst en het type sleutel (mechanisch versus smart key met keyless entry):
       </p>
       <ul>
-        <li><strong>Autodeur schadevrij openen:</strong> Gemiddeld tussen de €95 en €150.</li>
-        <li><strong>Autosleutel bijmaken (met werkend origineel):</strong> Vanaf €95 tot €220.</li>
+        <li><strong>Autodeur schadevrij openen:</strong> Vanaf €149.</li>
+        <li><strong>Autosleutel bijmaken (met werkend origineel):</strong> Vanaf €149.</li>
         <li><strong>Alle autosleutels verloren (All Keys Lost):</strong> Vanaf €190 tot €350, aangezien de slotenmaker het slot handmatig moet decoderen en de startonderbreker via EEPROM of OBD2 moet programmeren.</li>
       </ul>
 
@@ -944,7 +944,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <strong style={{ color: '#166534', display: 'block', fontSize: '1.05rem' }}>✓ Specialistisch Advies — Autosleutel24</strong>
-          <span style={{ fontSize: '0.85rem', color: '#15803d' }}>Geschreven en gecontroleerd door Berkan Acarol (Mobiele Autosleutel Specialist • 4.9★ Google Reviews)</span>
+          <span style={{ fontSize: '0.85rem', color: '#15803d' }}>Geschreven en gecontroleerd door Berkan Acarol (Mobiele Autosleutel Specialist • 5.0★ Google Reviews)</span>
         </div>
         <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#16a34a', color: '#fff', padding: '0.6rem 1.1rem', borderRadius: '6px', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem' }}>
           Direct Advies: {SITE_CONFIG.phone}
@@ -1953,7 +1953,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <p>
-        Als we in de basis puur kijken naar de kosten reservesleutel bij laten maken, dan is een conventionele mechanische sleutel met transponderchip (maar dus volledig zonder afstandsbediening voor de deuren) veruit de voordeligste keuze. Hier betaal je gemiddeld genomen tussen de €60 en €95 voor. Het is een perfecte, no-nonsense optie voor een extra reservesleutel in de la thuis.
+        Als we in de basis puur kijken naar de kosten reservesleutel bij laten maken, dan is een conventionele mechanische sleutel met transponderchip (maar dus volledig zonder afstandsbediening voor de deuren) veruit de voordeligste keuze. Hier betaal je rond de €149 voor. Het is een perfecte, no-nonsense optie voor een extra reservesleutel in de la thuis.
       </p>
 
       <p>

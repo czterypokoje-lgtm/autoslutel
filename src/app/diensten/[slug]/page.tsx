@@ -557,7 +557,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 Wat Onze Klanten Zeggen over {service.title}
               </h2>
               <div className={styles.ratingBig}>
-                <span className={styles.ratingNum}>4.9</span>
+                <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
                 <div>
                   <div className={styles.ratingStarsReview}>★★★★★</div>
                   <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>

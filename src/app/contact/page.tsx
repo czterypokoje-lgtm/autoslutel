@@ -170,7 +170,7 @@ export default async function ContactPage(props: Props) {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
                   <div style={{ fontSize: '1.25rem', color: '#fbbf24' }}>★★★★★</div>
-                  <span style={{ fontWeight: 700 }}>4.9/5</span>
+                  <span style={{ fontWeight: 700 }}>{SITE_CONFIG.rating}/5</span>
                   <span style={{ color: 'var(--color-text-muted)' }}>({SITE_CONFIG.reviewCount} Google reviews)</span>
                 </div>
                 

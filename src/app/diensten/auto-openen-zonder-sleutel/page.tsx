@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Auto Openen Zonder Sleutel | 24/7 Schadevrij | Autosleutel24',
   },
-  description: 'Auto openen zonder sleutel nodig? Onze mobiele locksmith opent uw auto 100% schadevrij binnen 30 min. Vaste prijs vanaf €95. Actief in Utrecht, Amsterdam, Almere & Amersfoort. Bel 24/7!',
+  description: 'Auto openen zonder sleutel nodig? Onze mobiele locksmith opent uw auto 100% schadevrij binnen 30 min. Vaste prijs vanaf €149. Actief in Utrecht, Amsterdam, Almere & Amersfoort. Bel 24/7!',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
   keywords: [
     'auto openen zonder sleutel',
@@ -53,7 +53,7 @@ const schema = {
   "serviceType": "Auto openen zonder sleutel, schadevrij buitensluiting, kofferbak openen",
   "offers": {
     "@type": "Offer",
-    "price": "95",
+    "price": "149",
     "priceCurrency": "EUR",
     "priceSpecification": {
       "@type": "PriceSpecification",
@@ -77,7 +77,7 @@ const faqItems = [
   },
   {
     q: "Wat zijn de kosten voor het openen van mijn auto (buitensluiting)?",
-    a: "Bij Autosleutel24 betaalt u een vaste all-in prijs van €95 (inclusief btw en voorrijkosten) voor het schadevrij openen van uw autodeur bij een buitensluiting overdag. Het tarief voor 's nachts (22:00–07:00) of weekenddienst is €115. U ontvangt de prijsopgave altijd vóór wij uitrijden — geen verborgen kosten achteraf."
+    a: "Bij Autosleutel24 betaalt u een vaste all-in prijs vanaf €149 voor het schadevrij openen van uw autodeur bij een buitensluiting. U ontvangt de prijsopgave altijd vóór wij uitrijden — geen verborgen kosten achteraf."
   },
   {
     q: "Welke auto merken kunnen worden geopend zonder sleutel?",
@@ -259,7 +259,7 @@ export default function AutoOpenenZonderSleutelPage() {
                           <td><strong>Lishi Decoder (professioneel)</strong></td>
                           <td>❌ Geen</td>
                           <td>✅ 10–20 min</td>
-                          <td>€95–€115</td>
+                          <td>€149–€199</td>
                           <td>✅ Ja</td>
                         </tr>
                         <tr>
@@ -312,7 +312,7 @@ export default function AutoOpenenZonderSleutelPage() {
                         <tr>
                           <td>Autodeur / kofferbak schadevrij openen</td>
                           <td>Overdag (07:00–22:00)</td>
-                          <td><strong>€95</strong></td>
+                          <td><strong>€149</strong></td>
                           <td>10–20 min</td>
                         </tr>
                         <tr>
@@ -507,7 +507,7 @@ export default function AutoOpenenZonderSleutelPage() {
               Wat Klanten Zeggen over Auto Openen Zonder Sleutel
             </h2>
             <div className={styles.ratingBig}>
-              <span className={styles.ratingNum}>4.9</span>
+              <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>

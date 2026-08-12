@@ -41,7 +41,7 @@ export default function KentekenBestellenPage() {
 
   const trustItems = [
     '24/7 Beschikbaar',
-    'Gemiddelde beoordeling 4.9/5',
+    'Gemiddelde beoordeling 5.0/5',
     '100% Mobiele Service',
     '12 Maanden Garantie',
     `KVK ${SITE_CONFIG.kvk}`,
@@ -252,7 +252,7 @@ export default function KentekenBestellenPage() {
               Wat Klanten Zeggen Over Onze Service
             </h2>
             <div className={styles.ratingBig}>
-              <span className={styles.ratingNum}>4.9</span>
+              <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>

@@ -144,7 +144,7 @@ export default function Navigation() {
                 ))}
               </div>
               <div className={styles.dropDivider} />
-              <Link href="/merken" className={styles.dropAll}>Alle 38 merken →</Link>
+              <Link href="/merken" className={styles.dropAll}>Alle 35 merken →</Link>
             </div>
           </div>
 
@@ -216,7 +216,7 @@ export default function Navigation() {
             <div className={styles.mobileSection}>
               <div className={styles.mobileSectionTitle}>Merken</div>
               {MerkenLinks.map(l => <Link key={l.href} href={l.href} className={styles.mobileLink} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
-              <Link href="/merken" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Alle 38 merken →</Link>
+              <Link href="/merken" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Alle 35 merken →</Link>
             </div>
 
             <div className={styles.mobileDivider} />

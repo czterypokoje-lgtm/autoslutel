@@ -49,7 +49,7 @@ export default function SleutelBijmakenPage() {
             "name": "Standaard Autosleutel Bijmaken",
             "description": "Reserve sleutel voor oudere modellen zonder chip"
           },
-          "price": "95",
+          "price": "149",
           "priceCurrency": "EUR"
         },
         {
@@ -79,7 +79,7 @@ export default function SleutelBijmakenPage() {
   const trustItems = [
     '24/7 Beschikbaar',
     'Binnen 30 min in Utrecht',
-    'Vaste prijs vanaf €95',
+    'Vaste prijs vanaf €149',
     '12 maanden garantie',
     `KVK ${SITE_CONFIG.kvk}`,
     'Verzekerd & Gecertificeerd'
@@ -326,7 +326,7 @@ export default function SleutelBijmakenPage() {
                     </summary>
                     <p className={styles.faqAnswer}>
                       Ja, aanzienlijk. Een dealer rekent €250-€500 voor een reserve sleutel plus €100-€150 inleerkosten. 
-                      Wij maken en programmeren ter plaatse voor €95-€249, inclusief alle kosten.
+                      Wij maken en programmeren ter plaatse voor €149-€449, inclusief alle kosten.
                     </p>
                   </details>
 
@@ -465,7 +465,7 @@ export default function SleutelBijmakenPage() {
               Wat Klanten Zeggen over Autosleutel Bijmaken
             </h2>
             <div className={styles.ratingBig}>
-              <span className={styles.ratingNum}>4.9</span>
+              <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>

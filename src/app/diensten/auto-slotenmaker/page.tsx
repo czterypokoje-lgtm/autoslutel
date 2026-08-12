@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
   },
-  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Vaste prijzen vanaf €95. Bel nu 24/7.',
+  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Vaste prijzen vanaf €149. Bel nu 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-slotenmaker` },
 };
 
@@ -46,7 +46,7 @@ export default function AutoSlotenmakerPage() {
             "name": "Autodeur Schadevrij Openen",
             "description": "Auto openen zonder sleutel bij buitensluiting"
           },
-          "price": "95",
+          "price": "149",
           "priceCurrency": "EUR"
         },
         {
@@ -89,7 +89,7 @@ export default function AutoSlotenmakerPage() {
     },
     {
       q: 'Wat kost een auto slotenmaker voor het openen van mijn auto?',
-      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting gemiddeld tussen de €95 en €125 (inclusief btw en voorrijkosten). Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
+      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting vanaf €149 (inclusief btw en voorrijkosten). Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
     },
     {
       q: 'Kan een auto slotenmaker ook een nieuwe sleutel maken als ik alles kwijt ben?',
@@ -221,7 +221,7 @@ export default function AutoSlotenmakerPage() {
                         <tr>
                           <td>Autodeur schadevrij openen</td>
                           <td>Bij buitensluiting, sleutel in auto</td>
-                          <td><strong>€95</strong></td>
+                          <td><strong>€149</strong></td>
                           <td>10-15 min</td>
                         </tr>
                         <tr>
@@ -409,7 +409,7 @@ export default function AutoSlotenmakerPage() {
               Wat Klanten Zeggen over de Auto Slotenmaker
             </h2>
             <div className={styles.ratingBig}>
-              <span className={styles.ratingNum}>4.9</span>
+              <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>

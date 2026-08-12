@@ -480,7 +480,7 @@ export default function HomePage() {
           <p className="section-eyebrow">KLANTBEOORDELINGEN</p>
           <h2 className="section-title">Wat Onze Klanten Zeggen</h2>
           <div className={styles.ratingBig}>
-            <span className={styles.ratingNum}>4.9</span>
+            <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
             <div>
               <div className="stars">★★★★★</div>
               <span style={{fontSize: '0.8rem', color: 'var(--gray-500)'}}>{SITE_CONFIG.reviewCount} Google beoordelingen</span>
