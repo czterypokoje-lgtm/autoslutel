@@ -11,14 +11,24 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import { generateContextualReviews } from '@/utils/reviews';
+import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bijmaken – Prijs & Reservesleutel Op Locatie | Autosleutel24',
+    absolute: 'Autosleutel Bijmaken vanaf €149 | Autosleutel24',
   },
-  description: `Autosleutel bijmaken nodig? Wij komen 24/7 op locatie voor uw reservesleutel of extra autosleutel. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}, goedkoper dan de dealer. Bel direct!`,
+  description: 'Autosleutel bijmaken nodig? 24/7 op locatie, vaste prijs vanaf €149 — goedkoper dan de dealer. Binnen 30 min ter plaatse. Bel of WhatsApp nu!',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` },
+  openGraph: {
+    title: 'Autosleutel Bijmaken vanaf €149 | Autosleutel24',
+    url: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken`,
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Autosleutel Bijmaken vanaf €149 | Autosleutel24',
+  },
 };
 
 export default function SleutelBijmakenPage() {
@@ -26,18 +36,9 @@ export default function SleutelBijmakenPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Autosleutel Bijmaken",
-    "provider": {
-      "@type": "Locksmith",
-      "name": "Autosleutel24",
-      "telephone": SITE_CONFIG.phoneTel,
-      "url": SITE_CONFIG.domain
-    },
-    "areaServed": {
-      "@type": "State",
-      "name": "Utrecht"
-    },
+    "provider": getBaseLocalBusinessSchema(),
     "serviceType": "Autosleutel bijmaken, transponder programmeren, smart key inleren",
-    "priceRange": "€€",
+    "priceRange": "€149 - €500",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "Autosleutel Bijmaken Diensten",
@@ -76,6 +77,58 @@ export default function SleutelBijmakenPage() {
     }
   };
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Kan ik een autosleutel bijmaken als ik alle sleutels kwijt ben?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja. Wij hebben apparatuur om een nieuwe sleutel te genereren op basis van het contactslot of het immobilizer systeem. Dit geldt voor de meeste merken vanaf bouwjaar 1995. Voor sommige nieuwe modellen (2020+) is een originele sleutel vereist." }
+      },
+      {
+        "@type": "Question",
+        "name": "Hoe lang duurt het om een autosleutel bij te maken?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Een standaard transponder sleutel duurt 20-30 minuten. Een smart key met keyless entry duurt 30-45 minuten. Een Mercedes FBS4 sleutel met online component protection duurt 45-60 minuten." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is het goedkoper dan bij de dealer?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €149 tot €299. Bij \"alle sleutels kwijt\" rekenen we €249 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!)." }
+      },
+      {
+        "@type": "Question",
+        "name": "Wat als mijn sleutel is gestolen?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Wij maken een nieuwe sleutel en wissen de gestolen sleutel uit het voertuig systeem. De gestolen sleutel kan de auto niet meer starten of openen." }
+      },
+      {
+        "@type": "Question",
+        "name": "Krijg ik garantie op de nieuwe sleutel?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja, 12 maanden garantie op alle sleutels en programmering. Daarnaast ontvangt u een verzekeringsklare factuur." }
+      },
+      {
+        "@type": "Question",
+        "name": "Kan ik op locatie een autosleutel bijmaken met afstandsbediening?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Zeker! Wij komen met onze volledig uitgeruste mobiele servicewagen naar uw locatie om een complete autosleutel bijmaken met afstandsbediening uit te voeren. Of u nu een extra exemplaar wilt laten bijmaken of direct een reservesleutel wilt laten maken, wij programmeren alle autosleutels met afstandsbediening vakkundig via de OBD2-poort terwijl u wacht." }
+      },
+      {
+        "@type": "Question",
+        "name": "Programmeren jullie ook een autosleutel met keyless entry?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja, wij zijn gespecialiseerd in het inleren van moderne smart keys en elk type autosleutel met keyless entry (proximity start). U hoeft uw auto niet weg te slepen; wij kunnen ter plaatse een extra autosleutel of keyless fob programmeren met behoud van uw fabrieksgarantie." }
+      }
+    ]
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_CONFIG.domain },
+      { "@type": "ListItem", "position": 2, "name": "Diensten", "item": `${SITE_CONFIG.domain}/diensten` },
+      { "@type": "ListItem", "position": 3, "name": "Autosleutel Bijmaken", "item": `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` }
+    ]
+  };
+
   const trustItems = [
     '24/7 Beschikbaar',
     'Binnen 30 min in Utrecht',
@@ -109,6 +162,8 @@ export default function SleutelBijmakenPage() {
   return (
     <>
       <Script id="sleutel-bijmaken-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <Script id="sleutel-bijmaken-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <Script id="sleutel-bijmaken-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* Hero */}
         <section className={styles.hero}>
@@ -118,7 +173,7 @@ export default function SleutelBijmakenPage() {
             </nav>
             <h1>Autosleutel Bijmaken — Reservesleutel Auto Laten Maken Op Locatie</h1>
             <p className={styles.heroLead}>
-              Wilt u direct een nieuwe <strong>autosleutel bijmaken met afstandsbediening</strong> of een moderne <strong>autosleutel met keyless entry</strong> zonder naar de dure dealer te hoeven? Autosleutel24 komt 24/7 naar u toe — thuis, op het werk of langs de weg. U kunt bij ons snel een professionele <strong>extra autosleutel</strong> of reservesleutel <strong>laten bijmaken</strong> en direct op locatie <strong>laten maken</strong>. Wij frezen en programmeren alle soorten <strong>autosleutels met afstandsbediening</strong> klaar terwijl u wacht, zonder sleepkosten of lange wachttijden.
+              Wilt u een <strong>autosleutel bijmaken</strong> zonder naar de dure dealer te hoeven? Autosleutel24 komt 24/7 naar u toe — thuis, op het werk of langs de weg — en programmeert uw nieuwe autosleutel, reservesleutel of afstandsbediening direct op locatie. Van een eenvoudige transpondersleutel tot een moderne autosleutel met keyless entry: wij frezen en programmeren alles terwijl u wacht, zonder sleepkosten of lange wachttijden.
             </p>
             <div style={{ marginTop: '2rem' }}>
               <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
@@ -219,12 +274,14 @@ export default function SleutelBijmakenPage() {
                       </tbody>
                     </table>
                   </div>
-                  <div className={styles.callout}>
-                    <strong>Wat kost een sleutel bijmaken?</strong> Dat hangt af van het type sleutel dat u <strong>nodig hebt</strong>. Een standaard sleutel met transponder begint bij €149. Een smart key of keyless sleutel kost meer. Maar in elk geval betaalt u bij ons tot 50% minder dan bij de dealer. U ontvangt altijd <strong>gecertificeerde sleutels</strong> met 12 maanden garantie.
-                  </div>
-                  <div className={styles.callout} style={{ marginTop: '1rem' }}>
-                    <strong>Dealer vs. Slotenmaker:</strong> Bij de merkdealer betaalt u vaak €350 tot €550 om moderne <strong>autosleutels met afstandsbediening</strong> te bestellen. Bij Autosleutel24 kunt u dezelfde dag nog een originele kwaliteit <strong>autosleutel bijmaken met afstandsbediening</strong> vanaf €149 tot €249, inclusief programmering aan huis.
-                  </div>
+                  <ul className={styles.bulletList}>
+                    <li>
+                      <strong>Wat kost een sleutel bijmaken?</strong> Een nieuwe reservesleutel kost bij ons tussen de €149 en €299, afhankelijk van het merk en of het een smart key is. Bent u alle sleutels kwijt? Dan liggen de kosten tussen de €249 en €500. Dit is altijd inclusief programmeren op locatie!
+                    </li>
+                    <li>
+                      <strong>Dealer vs. Slotenmaker:</strong> De dealer is gemiddeld 50% duurder dan Autosleutel24 voor exact dezelfde sleutel. Bovendien bespaart u bij ons op wegsleepkosten, want wij komen naar u toe (geen wegsleepkosten!). U ontvangt altijd <strong>gecertificeerde sleutels</strong> met 12 maanden garantie.
+                    </li>
+                  </ul>
                 </div>
 
                 {/* Section 2.5: Onze Service Galerij */}
@@ -325,8 +382,7 @@ export default function SleutelBijmakenPage() {
                       <span className={styles.faqChevron}>+</span>
                     </summary>
                     <p className={styles.faqAnswer}>
-                      Ja, aanzienlijk. Een dealer rekent €250-€500 voor een reserve sleutel plus €100-€150 inleerkosten. 
-                      Wij maken en programmeren ter plaatse voor €149-€449, inclusief alle kosten.
+                      Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €149 tot €299. Bij "alle sleutels kwijt" rekenen we €249 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!).
                     </p>
                   </details>
 

@@ -32,6 +32,8 @@ const SeoComponents: Record<string, React.FC> = {
   rotterdam: RotterdamSeo,
 };
 
+import { getBaseLocalBusinessSchema } from '@/utils/schema';
+
 // Helper for stable hashing
 function getStableHash(str: string): number {
   let hash = 0;
@@ -130,34 +132,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const cityReviews = generateCityReviews(city);
 
   const schema = {
-    '@context': 'https://schema.org', '@type': 'Locksmith',
+    ...getBaseLocalBusinessSchema(),
     '@id': `${SITE_CONFIG.domain}/steden/${citySlug}#locksmith`,
-    name: `${SITE_CONFIG.fullName} — ${city.city}`,
     url: `${SITE_CONFIG.domain}/steden/${citySlug}`,
-    telephone: SITE_CONFIG.phoneTel,
-    address: { '@type': 'PostalAddress', addressLocality: city.city, addressRegion: city.region, addressCountry: city.country },
-    geo: { '@type': 'GeoCoordinates', latitude: city.geo.lat, longitude: city.geo.lng },
-    openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '00:00', closes: '23:59' }],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: parseFloat(SITE_CONFIG.rating),
-      reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
-      bestRating: 5,
-    },
-    areaServed: {
-      '@type': 'GeoCircle',
-      geoMidpoint: {
-        '@type': 'GeoCoordinates',
-        latitude: SITE_CONFIG.serviceArea.lat,
-        longitude: SITE_CONFIG.serviceArea.lng,
-      },
-      geoRadius: SITE_CONFIG.serviceArea.radiusMeters,
-    },
-    parentOrganization: {
-      '@type': 'Organization',
-      name: SITE_CONFIG.fullName,
-      url: SITE_CONFIG.domain,
-    },
   };
 
   const breadcrumbSchema = {
@@ -312,7 +289,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               Heeft u met spoed een autosleutel nodig of bent u uw sleutels kwijt in {city.city}? Wij bieden de volgende diensten op locatie:
             </p>
             <div className={styles.nearbyGrid}>
-              {DIENSTEN.map(s => (
+              {DIENSTEN.filter(s => ['autosleutel-bijmaken', 'autosleutel-kwijt', 'auto-openen-zonder-sleutel'].includes(s.slug)).map(s => (
                 <Link key={s.slug} href={`/diensten/${s.slug}`} className={styles.nearbyCard}>
                   <span>{s.title} in {city.city}</span>
                   <span className={styles.nearbyTime}>{s.priceFrom || '24/7 Actief'}</span>

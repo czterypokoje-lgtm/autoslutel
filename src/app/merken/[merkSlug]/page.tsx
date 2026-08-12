@@ -11,6 +11,7 @@ import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
 import FaqSection from '@/components/FaqSection/FaqSection';
 import { getFaqForBrand } from '@/config/faq';
+import { getBaseLocalBusinessSchema } from '@/utils/schema';
 
 export async function generateStaticParams() {
   return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
@@ -85,7 +86,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
     '@context': 'https://schema.org', '@type': 'Service',
     name: `${brand.name} Autosleutel Bijmaken — Autosleutel Specialist`,
     description: `Professionele autosleutel bijmaken & programmeren voor alle ${brand.name} modellen (${brand.system}). Autosleutel Specialist mobiele service op locatie.`,
-    provider: { '@type': 'Locksmith', name: SITE_CONFIG.fullName, telephone: SITE_CONFIG.phoneTel },
+    provider: getBaseLocalBusinessSchema(),
   };
 
   const breadcrumbSchema = {

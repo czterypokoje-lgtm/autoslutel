@@ -70,7 +70,7 @@ export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false 
             >
               <Image
                 src={brand.svg}
-                alt={`${brand.name} sleutel bijmaken logo`}
+                alt={`${brand.name} logo`}
                 className={styles.brandLogoImg}
                 width={80}
                 height={48}

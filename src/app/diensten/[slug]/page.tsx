@@ -13,6 +13,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import { generateContextualReviews } from '@/utils/reviews';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
+import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
 import fs from 'fs';
 import path from 'path';
@@ -153,8 +154,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
   const serviceSchema = {
     '@context': 'https://schema.org', '@type': 'Service',
     name: service.title,
-    provider: { '@type': 'Locksmith', name: SITE_CONFIG.fullName, telephone: SITE_CONFIG.phoneTel, url: SITE_CONFIG.domain },
-    areaServed: [{ '@type': 'Country', name: 'NL' }, { '@type': 'Country', name: 'BE' }],
+    provider: getBaseLocalBusinessSchema(),
     description: service.metaDesc,
     ...(service.priceFrom && { offers: { '@type': 'Offer', priceCurrency: 'EUR', description: service.priceFrom } }),
   };
@@ -438,9 +438,9 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   <p>
                     Wij werken uitsluitend met hightech diagnoseapparatuur en originele dealer-tokens. Voor het openen van autodeuren gebruiken wij speciale Lishi 2-in-1 lock decoders waarmee we het slot schadevrij openen via de cilinder. Moet er een nieuwe sleutel worden ingeleerd? Via de OBD2-diagnosepoort koppelen wij de nieuwe transponderchip of Keyless Go smart key rechtstreeks aan de startonderbreker van uw auto.
                   </p>
-                  <h3>Kosten Besparen t.o.v. de Dealer &amp; 12 Maanden Garantie</h3>
+                  <h3>Kosten Besparen t.o.v. de Dealer & 12 Maanden Garantie</h3>
                   <p>
-                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>30% tot 50% voordeliger uit</strong> dan bij de officiële merkdealer. Bovendien vergoeden veel verzekeraars (onder Beperkt Casco of Allrisk) onze factuur na diefstal of verlies. U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
+                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €149 tot €299. Bij "alle sleutels kwijt" betaalt u €249 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
                   </p>
                 </div>
 
@@ -612,9 +612,12 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   </div>
                 </div>
                 <div>
-                  <div className="seo-hub-title">{service.title} per Stad</div>
+                  <div className="seo-hub-title">{service.title} in de Regio</div>
                   <div className="seo-hub-col">
-                    {CITIES.map(c => (
+                    <Link href="/steden" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
+                      Bekijk alle steden →
+                    </Link>
+                    {p1Cities.map(c => (
                       <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
                         {`${service.title} ${c.city} →`}
                       </Link>
