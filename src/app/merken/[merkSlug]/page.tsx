@@ -176,7 +176,10 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   column-gap: 2.5rem;
                   color: #64748b;
                   font-size: 0.95rem;
-                  line-height: 2;
+                  line-height: 1.6;
+                }
+                .modelsListCol div {
+                  margin-bottom: 0.4rem;
                 }
                 .brandLogoArea {
                   flex: 0 0 200px;
@@ -194,7 +197,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   .modelsFlexWrap {
                     flex-direction: column;
                     align-items: center;
-                    gap: 2rem;
+                    gap: 1.5rem;
                   }
                   .modelsListCol {
                     column-count: 2;
@@ -207,6 +210,11 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 @media (max-width: 480px) {
                   .modelsListCol {
                     column-count: 1;
+                    font-size: 1.05rem;
+                    line-height: 1.4;
+                  }
+                  .modelsListCol div {
+                    margin-bottom: 0.15rem;
                   }
                 }
               `}} />
