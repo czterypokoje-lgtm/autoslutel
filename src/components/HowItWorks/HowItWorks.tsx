@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import styles from './HowItWorks.module.css';
+import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 interface HowItWorksProps {
   cityName?: string;
@@ -129,6 +130,15 @@ export default function HowItWorks({ cityName, variant = 'default' }: HowItWorks
             <p className={styles.cardDesc}>{step.desc}</p>
           </div>
         ))}
+      </div>
+      
+      <div className={styles.ctaWrapper}>
+        <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg">
+          Bel Direct: {SITE_CONFIG.phone}
+        </a>
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.waBtn}>
+          WhatsApp Ons
+        </a>
       </div>
     </section>
   );
