@@ -265,12 +265,6 @@ export default function SleutelBijmakenPage() {
                           <td><strong>Vanaf €299</strong></td>
                           <td>45-60 min</td>
                         </tr>
-                        <tr>
-                          <td>Extra reserve sleutel (2e, 3e, 4e)</td>
-                          <td>Alle merken</td>
-                          <td><strong>€75 per stuk</strong></td>
-                          <td>10 min per sleutel</td>
-                        </tr>
                       </tbody>
                     </table>
                   </div>
