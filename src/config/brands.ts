@@ -782,4 +782,16 @@ export const BRANDS: Brand[] = [
       { slug: 'acadia', name: 'Acadia', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
     ],
   }
+,
+  {
+    slug: 'bentley', name: 'Bentley', nameSlug: 'bentley', priority: 'P3',
+    system: 'VW Group / KESSY',
+    excerpt: 'Bentley autosleutel programmering op locatie. Continental GT, Bentayga, Flying Spur.',
+    customSeoBlurb: 'Heeft u een nieuwe Bentley autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Bentley. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Continental GT; wij bieden dealer-kwaliteit voor een lagere prijs.',
+    models: [
+      { slug: 'continental-gt', name: 'Continental GT', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
+      { slug: 'bentayga', name: 'Bentayga', years: '2016, 2017, 2018, 2019, 2020, 2021, 2022' },
+      { slug: 'flying-spur', name: 'Flying Spur', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
+    ],
+  }
 ];
