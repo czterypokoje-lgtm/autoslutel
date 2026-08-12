@@ -217,8 +217,6 @@ export default function AutoOpenenZonderSleutelPage() {
           </div>
         </div>
 
-        <BrandsMarquee />
-
         {/* ── MAIN CONTENT ─────────────────────────────────────────── */}
         <section className={styles.section}>
           <div className={styles.container}>

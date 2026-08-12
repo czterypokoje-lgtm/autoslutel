@@ -195,6 +195,8 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
           </div>
         </section>
 
+        <BrandsMarquee />
+
         {/* ── TRUST BAR ───────────────────────────────────────────── */}
         <div className={styles.trustBar}>
           <div className={styles.trustBarInner}>
@@ -209,8 +211,6 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
 
         {/* ── HOW IT WORKS (Full width under hero) ── */}
         <HowItWorks variant={howItWorksVariant} />
-
-        <BrandsMarquee />
 
         {/* ── CONTENT SECTION ─────────────────────────────────────── */}
         <section className={styles.section}>

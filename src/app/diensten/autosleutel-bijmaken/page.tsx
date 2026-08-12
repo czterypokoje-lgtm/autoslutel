@@ -126,6 +126,8 @@ export default function SleutelBijmakenPage() {
           </div>
         </section>
 
+        <BrandsMarquee />
+
         {/* Trust Bar */}
         <div className={styles.trustBar}>
           <div className={styles.trustBarInner}>
@@ -144,8 +146,6 @@ export default function SleutelBijmakenPage() {
             <HowItWorks />
           </div>
         </div>
-
-        <BrandsMarquee />
 
         {/* Content Section */}
         <section className={styles.section}>

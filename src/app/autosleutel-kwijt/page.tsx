@@ -131,14 +131,14 @@ export default function AutosleutelKwijt() {
           </div>
         </section>
 
+        <BrandsMarquee />
+
         {/* 3 steps HowTo */}
         <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
           <div className="container">
             <HowItWorks variant="akl" />
           </div>
         </div>
-
-        <BrandsMarquee />
 
         {/* Pricing by brand */}
         <section style={{ padding:'3.5rem 0', background:'var(--gray-50)' }}>

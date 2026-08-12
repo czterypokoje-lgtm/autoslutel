@@ -163,6 +163,8 @@ export default function AutoSlotenmakerPage() {
           </div>
         </section>
 
+        <BrandsMarquee />
+
         {/* Trust Bar */}
         <div className={styles.trustBar}>
           <div className={styles.trustBarInner}>
@@ -181,8 +183,6 @@ export default function AutoSlotenmakerPage() {
             <HowItWorks variant="lockout" />
           </div>
         </div>
-
-        <BrandsMarquee />
 
         {/* Content Section */}
         <section className={styles.section}>

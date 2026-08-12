@@ -77,6 +77,8 @@ export default function KentekenBestellenPage() {
           </div>
         </section>
 
+        <BrandsMarquee />
+
         {/* Trust Bar */}
         <div className={styles.trustBar}>
           <div className={styles.trustBarInner}>
@@ -88,8 +90,6 @@ export default function KentekenBestellenPage() {
             ))}
           </div>
         </div>
-
-        <BrandsMarquee />
 
         {/* Content Section */}
         <section className={styles.section}>
