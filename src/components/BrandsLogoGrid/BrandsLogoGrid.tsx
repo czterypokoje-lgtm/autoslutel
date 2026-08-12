@@ -31,7 +31,6 @@ export const BRANDS_WITH_LOGOS = [
   { name: 'Land Rover', slug: 'land-rover-autosleutel-bijmaken', models: 'Range Rover, Discovery, Evoque', svg: '/brands/land-rover-autosleutel-bijmaken.png' },
   { name: 'Porsche', slug: 'porsche-autosleutel-bijmaken', models: 'Cayenne, Macan, 911, Panamera', svg: '/brands/porsche-autosleutel-bijmaken.png' },
   { name: 'Mini', slug: 'mini-autosleutel-bijmaken', models: 'Cooper, One, Countryman', svg: '/brands/mini-autosleutel-bijmaken.png' },
-,
   { name: 'Alfa Romeo', slug: 'alfa-romeo-autosleutel-bijmaken', models: 'Giulia, Stelvio, Giulietta, MiTo', svg: 'https://logo.clearbit.com/alfaromeo.com' },
   { name: 'Buick', slug: 'buick-autosleutel-bijmaken', models: 'Encore, Envision, Regal', svg: 'https://logo.clearbit.com/buick.com' },
   { name: 'Cadillac', slug: 'cadillac-autosleutel-bijmaken', models: 'Escalade, CTS, XT5, ATS', svg: 'https://logo.clearbit.com/cadillac.com' },
