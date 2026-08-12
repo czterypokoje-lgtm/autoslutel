@@ -1,0 +1,94 @@
+.seoSection {
+  padding: 4rem 0;
+  background-color: #ffffff;
+  border-top: 1px solid #eaeaea;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.textContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  color: #ff6a00;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2.5rem;
+  line-height: 1.2;
+}
+
+.citiesList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
+}
+
+.cityItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.cityItem:hover {
+  color: #ff6a00;
+}
+
+.pinIcon {
+  color: #ff6a00;
+  flex-shrink: 0;
+}
+
+.imageContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.seoImage {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .imageWrapper {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .citiesList {
+    grid-template-columns: 1fr;
+  }
+}

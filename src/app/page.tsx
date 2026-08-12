@@ -16,6 +16,7 @@ import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
+import SeoCitiesList from '@/components/SeoCitiesList/SeoCitiesList';
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
@@ -376,6 +377,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ===== SEO CITIES LIST ===== */}
+      <SeoCitiesList />
 
       {/* ===== E-E-A-T MEET THE OWNER ===== */}
       <section style={{ padding: '4rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
