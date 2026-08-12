@@ -15,6 +15,14 @@ const brandRedirects = brands.map(brand => ({
 }));
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+    ],
+  },
   async redirects() {
     return [
       ...brandRedirects,
