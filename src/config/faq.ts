@@ -329,20 +329,28 @@ export const FAQ_AKL: FaqItem[] = [
 export function getFaqForCity(cityName: string): FaqItem[] {
   return [
     {
-      q: `Hoe snel bent u in ${cityName}?`,
-      a: `In ${cityName} zijn wij gemiddeld binnen 30–60 minuten ter plaatse, 24 uur per dag, 7 dagen per week. Bel 06 11 75 12 31 voor de exacte wachttijd op dit moment.`,
+      q: `Wat zijn de kosten voor een autosleutel bijmaken in ${cityName}?`,
+      a: `De kosten voor het bijmaken van een autosleutel in ${cityName} starten vanaf €${SITE_CONFIG.prices.transponder} voor een standaard transpondersleutel. Omdat Autosleutel24 een volledig mobiele service is en geen duur dealerkantoor heeft, bent u vaak tot wel 50% goedkoper uit. U ontvangt vooraf altijd een vaste, transparante prijs.`,
     },
     {
-      q: `Maken jullie ook autosleutels bij in ${cityName}?`,
-      a: `Ja, wij bieden onze volledige service in ${cityName}: autosleutel bijmaken, transponder programmeren, smart key bijmaken, auto openen en contactslot repareren. Dit alles op uw locatie — wij komen naar u toe.`,
+      q: `Alle autosleutels kwijt in ${cityName}, wat nu?`,
+      a: `Geen paniek. U hoeft uw voertuig niet weg te laten slepen naar een garage. Onze mobiele monteurs komen direct naar u in ${cityName}. Wij openen uw auto schadevrij, frezen ter plekke een nieuw sleutelblad en programmeren de startonderbreker (AKL-service). Oude verloren sleutels worden direct uit het geheugen gewist voor uw veiligheid.`,
     },
     {
-      q: `Wat zijn de kosten voor autosleutel service in ${cityName}?`,
-      a: `De prijzen zijn gelijk voor Midden-Nederland en de Randstad. Transponder sleutels vanaf €${SITE_CONFIG.prices.transponder}, smart keys vanaf €${SITE_CONFIG.prices.smartKey}, auto openen vanaf €${SITE_CONFIG.prices.unlock}. U ontvangt altijd een vaste prijs vooraf. Geen reiskosten of bijkomende kosten.`,
+      q: `Hoe snel kan er een autosleutelmaker in ${cityName} ter plaatse zijn?`,
+      a: `In ${cityName} en omstreken zijn wij met onze mobiele servicebussen gemiddeld binnen 30 tot 60 minuten ter plaatse. Wij zijn 24 uur per dag, 7 dagen per week beschikbaar voor spoedgevallen, ook in het weekend en op feestdagen.`,
     },
     {
-      q: `Werken jullie ook \'s nachts in ${cityName}?`,
-      a: `Ja, ook in ${cityName} zijn wij 24/7 beschikbaar. Spoedopdrachten \'s nachts of in het weekend worden behandeld met dezelfde snelheid en tarief als overdag.`,
+      q: `Autosleutel kwijt: moet mijn auto naar de dealer in ${cityName}?`,
+      a: `Nee, dit is niet nodig. Als u uw auto naar een merkdealer in ${cityName} brengt, heeft u vaak te maken met hoge wegsleepkosten en levertijden van 1 tot 2 weken. Autosleutel24 snijdt en programmeert direct op uw eigen oprit, werklocatie of langs de weg een nieuwe dealer-kwaliteit sleutel.`,
+    },
+    {
+      q: `Sleutel in auto laten liggen in ${cityName}, kunnen jullie schadevrij openen?`,
+      a: `Ja, absoluut. Heeft u uzelf buitengesloten in ${cityName}? Wij gebruiken gespecialiseerd gereedschap (zoals Lishi decoders en luchtkussentjes) om uw autodeur 100% kras- en schadevrij te openen. Sla nooit zelf een ruit in; onze professionele noodopening is altijd voordeliger (vanaf €${SITE_CONFIG.prices.unlock}).`,
+    },
+    {
+      q: `Maken jullie ook keyless entry en smart keys bij in ${cityName}?`,
+      a: `Ja, wij programmeren moderne keyless entry fobs en smart keys voor vrijwel alle automerken in ${cityName}. Dankzij onze geavanceerde OBD2-diagnoseapparatuur leren wij de smart key direct veilig in op de boordcomputer (ECU) van uw voertuig. De kosten hiervoor starten vanaf €${SITE_CONFIG.prices.smartKey}.`,
     },
   ];
 }

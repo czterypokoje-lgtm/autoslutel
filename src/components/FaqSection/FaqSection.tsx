@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './FaqSection.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
 
-const faqs = [
+const defaultFaqs = [
   {
     question: 'Wat moet ik doen als ik mijn autosleutel kwijt ben?',
     answer: 'Als u uw autosleutel kwijt bent, controleer dan eerst of er nog ergens een reservesleutel ligt. Is dit niet het geval, neem dan direct contact op met Autosleutel24 via 06 11 75 12 31. Wij komen met onze mobiele servicebussen binnen 30 tot 60 minuten naar uw locatie toe, openen de auto 100% schadevrij en programmeren direct een nieuwe sleutel ter plaatse. De verloren autosleutels worden bovendien direct uit het geheugen van de boordcomputer (ECU) gewist om diefstal te voorkomen.'
@@ -29,13 +29,19 @@ const faqs = [
   }
 ];
 
-export default function FaqSection() {
+interface FaqSectionProps {
+  customFaqs?: { question: string; answer: string }[];
+  cityName?: string;
+}
+
+export default function FaqSection({ customFaqs, cityName }: FaqSectionProps = {}) {
+  const displayFaqs = customFaqs && customFaqs.length > 0 ? customFaqs : defaultFaqs;
   // ── FAQPage schema — enables Google FAQ rich results ──
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     '@id': 'https://www.autosleutel24.nl/#faqpage',
-    mainEntity: faqs.map((f, i) => ({
+    mainEntity: displayFaqs.map((f, i) => ({
       '@type': 'Question',
       '@id': `https://www.autosleutel24.nl/#faq-${i}`,
       name: f.question,
@@ -55,7 +61,7 @@ export default function FaqSection() {
     speakable: {
       '@type': 'SpeakableSpecification',
       // CSS selectors pointing to the FAQ question+answer pairs
-      cssSelector: faqs.map((_, i) => `[data-speakable="faq-${i}"]`),
+      cssSelector: displayFaqs.map((_, i) => `[data-speakable="faq-${i}"]`),
     },
   };
 
@@ -72,14 +78,14 @@ export default function FaqSection() {
       <div className="container">
         <div className={styles.faqHeader}>
           <p className="section-eyebrow">VEELGESTELDE VRAGEN</p>
-          <h2 className="section-title">Alles over Autosleutels &amp; Sloten</h2>
+          <h2 className="section-title">{cityName ? `Veelgestelde Vragen in ${cityName}` : 'Alles over Autosleutels & Sloten'}</h2>
           <p className="section-lead">
-            Heeft u vragen over kosten, levertijden of reparaties? Bekijk onze meest gestelde vragen.
+            {cityName ? `Lees hier de meest gestelde vragen over onze service in ${cityName}.` : 'Heeft u vragen over kosten, levertijden of reparaties? Bekijk onze meest gestelde vragen.'}
           </p>
         </div>
 
         <div className={styles.faqList}>
-          {faqs.map((faq, index) => (
+          {displayFaqs.map((faq, index) => (
             <details
               key={index}
               className={styles.faqItem}

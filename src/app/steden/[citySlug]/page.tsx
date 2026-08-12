@@ -19,6 +19,7 @@ import AmsterdamSeo from '@/content/seo/amsterdam';
 import DenHaagSeo from '@/content/seo/den-haag';
 import RotterdamSeo from '@/content/seo/rotterdam';
 import { getFaqForCity } from '@/config/faq';
+import FaqSection from '@/components/FaqSection/FaqSection';
 
 const SeoComponents: Record<string, React.FC> = {
   utrecht: UtrechtSeo,
@@ -166,24 +167,12 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   };
 
   const cityFaqs = getFaqForCity(city.city);
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: cityFaqs.map(f => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: f.a,
-      },
-    })),
-  };
+  const mappedFaqs = cityFaqs.map(f => ({ question: f.q, answer: f.a }));
 
   return (
     <>
       <Script id={`city-schema-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script id={`city-breadcrumb-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Script id={`city-faq-schema-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <main>
         {/* Hero */}
         {city.slug === 'utrecht' ? (
@@ -515,6 +504,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         </section>
 
 
+
+        {/* FAQ SECTION */}
+        <FaqSection customFaqs={mappedFaqs} cityName={city.city} />
 
         {/* CTA */}
         <section className={styles.cta}>
