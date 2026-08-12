@@ -102,7 +102,6 @@ export default async function ContactPage(props: Props) {
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> 24/7 Beschikbaar</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> Vaste prijs vanaf €{SITE_CONFIG.prices.unlock}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> 12 mnd garantie</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> KVK {SITE_CONFIG.kvk}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> Verzekerd</span>
             </div>
           </div>

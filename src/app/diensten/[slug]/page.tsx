@@ -108,7 +108,6 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
     `Binnen ${SITE_CONFIG.responseTime} ter plaatse`,
     isOpening ? '100% Schadevrij Openen' : (service.priceFrom ? service.priceFrom : 'Vaste prijs vooraf'),
     '12 Maanden Garantie',
-    `KVK ${SITE_CONFIG.kvk}`,
     'Verzekerd & Gecertificeerd'
   ];
 

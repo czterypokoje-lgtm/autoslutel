@@ -175,10 +175,9 @@ export default function OverOnsPage() {
             { num: `${SITE_CONFIG.rating}★`, label: 'Google Score', sub: `Meer dan ${SITE_CONFIG.reviewCount} klantbeoordelingen` },
             { num: '34 min', label: 'Gemiddelde reactietijd', sub: 'Op locatie' },
             { num: '24/7', label: 'Bereikbaar', sub: 'Voor spoedgevallen in de gehele regio' },
-            { num: `KVK ${SITE_CONFIG.kvk}`, label: 'Geregistreerd', sub: 'Kamer van Koophandel Nederland' },
           ].map((s) => (
             <div key={s.label} style={{ textAlign: 'center', padding: '2rem', background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px' }}>
-              <div style={{ fontSize: s.label === 'Geregistreerd' ? '1.1rem' : '2rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '0.25rem' }}>{s.num}</div>
+              <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '0.25rem' }}>{s.num}</div>
               <div style={{ fontWeight: 700, marginBottom: '0.25rem', fontSize: '0.9rem' }}>{s.label}</div>
               <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>{s.sub}</div>
             </div>

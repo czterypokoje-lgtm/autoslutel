@@ -225,8 +225,8 @@ export default function HomePage() {
             
             <Link href="/autosleutel-kwijt" className={styles.heroUrgentBtn}>Alle Sleutels Kwijt? →</Link>
             <div className={styles.heroTrust} style={{marginTop: '1.5rem'}}>
-              <span className={styles.trustPill}>✓ KVK {SITE_CONFIG.kvk}</span>
               <span className={styles.trustPill}>✓ {SITE_CONFIG.rating} / 5 Google ({SITE_CONFIG.reviewCount} reviews)</span>
+              <span className={styles.trustPill}>✓ 12 Maanden Garantie</span>
               <span className={styles.trustPill}>✓ Verzekerd & Gecertificeerd</span>
               <span className={styles.trustPill}>✓ 24/7 Bereikbaar</span>
             </div>
