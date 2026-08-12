@@ -20,27 +20,22 @@ const nextConfig: NextConfig = {
       ...brandRedirects,
       {
         source: "/blog/sleutel-kwijt-utrecht-stappenplan",
-        destination: "/autosleutel-kwijt",
+        destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
         permanent: true,
       },
       {
         source: "/blog/alle-sleutels-kwijt-wat-nu-utrecht",
-        destination: "/autosleutel-kwijt",
+        destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
         permanent: true,
       },
       {
         source: "/blog/sleutel-kwijt-auto-hulp-oplossingen",
-        destination: "/autosleutel-kwijt",
+        destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
         permanent: true,
       },
       {
         source: "/blog/sleutel-kwijt-auto-vind-snel-oplossingen",
-        destination: "/autosleutel-kwijt",
-        permanent: true,
-      },
-      {
-        source: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
-        destination: "/autosleutel-kwijt",
+        destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
         permanent: true,
       },
       {
@@ -177,22 +172,7 @@ const nextConfig: NextConfig = {
         destination: '/diensten/auto-slotenmaker',
         permanent: true,
       },
-      // ── Blog duplicate / thin content → canonical service pages ──
-      {
-        source: '/blog/sleutel-kwijt-auto-hulp-oplossingen',
-        destination: '/autosleutel-kwijt',
-        permanent: true,
-      },
-      {
-        source: '/blog/sleutel-kwijt-auto-vind-snel-oplossingen',
-        destination: '/autosleutel-kwijt',
-        permanent: true,
-      },
-      {
-        source: '/blog/autosleutel-kwijt-wat-nu-stappenplan',
-        destination: '/autosleutel-kwijt',
-        permanent: true,
-      },
+      // ── Blog duplicate / thin content → canonical hub ──
       {
         source: '/blog/auto-openen-zonder-sleutel-tips-hulp',
         destination: '/diensten/auto-openen-zonder-sleutel',
@@ -213,18 +193,9 @@ const nextConfig: NextConfig = {
         destination: '/diensten/autosleutel-bijmaken',
         permanent: true,
       },
-      {
-        source: '/blog/alle-sleutels-kwijt-wat-nu-utrecht',
-        destination: '/autosleutel-kwijt',
-        permanent: true,
-      },
+
       {
         source: '/diensten/autosleutel-kwijt',
-        destination: '/autosleutel-kwijt',
-        permanent: true,
-      },
-      {
-        source: '/blog/sleutel-kwijt-utrecht-stappenplan',
         destination: '/autosleutel-kwijt',
         permanent: true,
       },

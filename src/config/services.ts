@@ -134,14 +134,6 @@ export const SERVICES: Service[] = [
 
 export const BLOG_POSTS = [
   {
-    slug: 'alle-sleutels-kwijt-wat-nu-utrecht',
-    title: 'Wat te Doen als U Alle Autosleutels Kwijt Bent in Utrecht',
-    excerpt: 'Paniek hoeft niet. Volg deze stappen en u rijdt binnen 60 minuten weer.',
-    keywords: ['alle sleutels kwijt utrecht', 'autosleutel kwijt wat doen'],
-    publishDate: '2026-01-15',
-    readTime: '5 min',
-  },
-  {
     slug: 'autosleutel-kosten-per-merk-2026',
     title: 'Autosleutel Vervangingskosten per Merk 2026',
     excerpt: 'BMW, Mercedes, Audi, VW, Toyota — wat kost een nieuwe autosleutel echt?',
@@ -254,14 +246,6 @@ export const BLOG_POSTS = [
     readTime: '8 min',
   },
   {
-    slug: 'sleutel-kwijt-utrecht-stappenplan',
-    title: 'Autosleutel Kwijt in Utrecht: 5 Stappen Directe Hulp',
-    excerpt: 'Bent u uw autosleutel verloren in Utrecht? Volg dit directe 5-stappenplan om snel, schadevrij en zonder sleepkosten weer op weg te zijn.',
-    keywords: ['autosleutel kwijt utrecht', 'autosleutel kwijt utrecht', 'spoed autosleutel utrecht'],
-    publishDate: '2026-04-23',
-    readTime: '5 min',
-  },
-  {
     slug: 'autosleutel-bijmaken-tips-snel-veilig',
     title: 'Autosleutel Bijmaken: Tips voor Snel en Veilig Resultaat',
     excerpt: 'Verlies je vaak je autosleutel? Geen paniek! Ontdek handige tips voor het snel en veilig bijmaken van je autosleutel bij Autosleutel24, zodat je altijd mobiel blijft.',
@@ -318,14 +302,6 @@ export const BLOG_POSTS = [
     readTime: '6 min',
   },
   {
-    slug: 'sleutel-kwijt-auto-hulp-oplossingen',
-    title: 'Sleutel Kwijt Auto: Snel Hulp & Oplossingen',
-    excerpt: 'Ontdek wat te doen als u uw autosleutel kwijt bent, van snelle oplossingen tot kosten en verzekering. Leer hoe u stressvrij weer op weg komt!',
-    keywords: ['sleutel kwijt auto', 'autosleutel kwijt', 'autosleutel verloren', 'nieuwe autosleutel kosten', 'sleutel bijmaken zonder reserve'],
-    publishDate: '2026-08-04',
-    readTime: '6 min',
-  },
-  {
     slug: 'autosleutel-bestellen-op-kenteken',
     title: 'Autosleutel Bestellen op Kenteken: Handleiding & Kosten',
     excerpt: 'Het bestellen van een autosleutel op kenteken is een handige oplossing voor autobezitters. Dit proces maakt gebruik van het kenteken om de juiste sleutel te identificeren. Hierdoor wordt het eenvoudiger om snel een vervangende sleutel te verkrijgen.',
@@ -340,14 +316,6 @@ export const BLOG_POSTS = [
     keywords: ['auto openen zonder sleutel', 'auto openmaken zonder sleutel', 'buitengesloten auto', 'sleutel in auto laten liggen'],
     publishDate: '2026-08-05',
     readTime: '7 min',
-  },
-  {
-    slug: 'sleutel-kwijt-auto-vind-snel-oplossingen',
-    title: 'Sleutel Kwijt Auto? Vind Snel Oplossingen & Tips.',
-    excerpt: 'Ben je je sleutel kwijt van je auto en heb je geen reservesleutel? Lees onze gids voor het snel vinden van je autosleutels en ontdek wat te doen bij autosleutel kwijt zonder reserve!',
-    keywords: ['sleutel kwijt auto', 'autosleutel verloren', 'autosleutel kwijt geen reserve', 'reservesleutel auto kwijt', 'autosleutel kwijt zonder reserve'],
-    publishDate: '2026-08-05',
-    readTime: '6 min',
   },
   {
     slug: 'sleutel-in-auto-laten-liggen-oplossingen',
@@ -417,18 +385,13 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
     // ── Autosleutel kwijt service page ───────────────────────────
     'autosleutel-kwijt': [
-      'sleutel-kwijt-auto-hulp-oplossingen',
       'autosleutel-kwijt-wat-nu-stappenplan',
-      'alle-sleutels-kwijt-wat-nu-utrecht',
-      'sleutel-kwijt-utrecht-stappenplan',
       'autosleutel-bijmaken-zonder-origineel',
       'autosleutel-gestolen-wat-te-doen',
     ],
     // ── Alle sleutels kwijt ───────────────────────────────────────
     'alle-sleutels-kwijt-auto': [
       'autosleutel-kwijt-wat-nu-stappenplan',
-      'alle-sleutels-kwijt-wat-nu-utrecht',
-      'sleutel-kwijt-utrecht-stappenplan',
       'autosleutel-bijmaken-zonder-origineel',
       'case-study-bmw-besparing',
     ],
