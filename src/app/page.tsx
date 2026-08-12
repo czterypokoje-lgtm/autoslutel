@@ -16,7 +16,6 @@ import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
-import SeoCitiesList from '@/components/SeoCitiesList/SeoCitiesList';
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
@@ -361,7 +360,7 @@ export default function HomePage() {
                 {serviceAreaCities.map((city) => (
                   <li key={city.slug} style={{ marginBottom: '0.25rem' }}>
                     <Link href={`/steden/${city.slug}`} style={{ color: 'var(--orange-700)', textDecoration: 'underline', fontWeight: 600 }}>
-                      {city.name}
+                      Autosleutel bijmaken {city.name}
                     </Link>
                   </li>
                 ))}
@@ -377,9 +376,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ===== SEO CITIES LIST ===== */}
-      <SeoCitiesList />
 
       {/* ===== E-E-A-T MEET THE OWNER ===== */}
       <section style={{ padding: '4rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
