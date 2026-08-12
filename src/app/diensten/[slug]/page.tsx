@@ -9,6 +9,7 @@ import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import { generateContextualReviews } from '@/utils/reviews';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
@@ -208,6 +209,8 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
 
         {/* ── HOW IT WORKS (Full width under hero) ── */}
         <HowItWorks variant={howItWorksVariant} />
+
+        <BrandsMarquee />
 
         {/* ── CONTENT SECTION ─────────────────────────────────────── */}
         <section className={styles.section}>

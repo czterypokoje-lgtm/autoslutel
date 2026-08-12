@@ -5,6 +5,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
 import KentekenForm from '@/components/KentekenForm/KentekenForm';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -87,6 +88,8 @@ export default function KentekenBestellenPage() {
             ))}
           </div>
         </div>
+
+        <BrandsMarquee />
 
         {/* Content Section */}
         <section className={styles.section}>

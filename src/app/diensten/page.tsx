@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { DIENSTEN } from '@/config/diensten';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -24,6 +25,8 @@ export default function DienstenOverviewPage() {
           </p>
         </div>
       </section>
+
+      <BrandsMarquee />
 
       <div className="container" style={{ padding: '3rem 2rem', maxWidth: 1000, margin: '0 auto' }}>
         <h2 className={styles.tableTitle}>Diensten Overzicht</h2>

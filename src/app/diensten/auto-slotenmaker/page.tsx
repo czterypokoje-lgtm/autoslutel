@@ -6,6 +6,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 
@@ -180,6 +181,8 @@ export default function AutoSlotenmakerPage() {
             <HowItWorks variant="lockout" />
           </div>
         </div>
+
+        <BrandsMarquee />
 
         {/* Content Section */}
         <section className={styles.section}>

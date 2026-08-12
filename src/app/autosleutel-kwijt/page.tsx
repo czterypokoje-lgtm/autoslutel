@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '@/config/brands';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 
 export const metadata: Metadata = {
   title: {
@@ -136,6 +137,8 @@ export default function AutosleutelKwijt() {
             <HowItWorks variant="akl" />
           </div>
         </div>
+
+        <BrandsMarquee />
 
         {/* Pricing by brand */}
         <section style={{ padding:'3.5rem 0', background:'var(--gray-50)' }}>
