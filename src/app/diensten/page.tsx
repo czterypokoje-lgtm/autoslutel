@@ -70,7 +70,7 @@ export default function DienstenOverviewPage() {
             </p>
             <h3>2. Autosleutel Bijmaken &amp; Programmeren op Locatie</h3>
             <p>
-              Wij snijden mechanische sleutelbladen direct met onze mobiele CNC-lasersnijders en lezen uw startonderbreker (immobiliser) uit via de OBD2-diagnosepoort. Wij leveren en programmeren originele transponderchips en keyless go sleutels voor meer dan 38 automerken.
+              Wij snijden mechanische sleutelbladen direct met onze mobiele CNC-lasersnijders en lezen uw startonderbreker (immobiliser) uit via de OBD2-diagnosepoort. Wij leveren en programmeren originele transponderchips en keyless go sleutels voor meer dan 59 automerken.
             </p>
             <h3>3. All Keys Lost (AKL) — Alle Sleutels Kwijt</h3>
             <p>

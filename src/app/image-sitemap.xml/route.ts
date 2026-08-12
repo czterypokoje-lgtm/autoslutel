@@ -51,7 +51,7 @@ const CORE_IMAGES = [
   {
     url: '/autosleutel-merken-bijmaken-utrecht-amsterdam.webp',
     title: 'Autosleutel Merken Bijmaken Utrecht en Amsterdam',
-    caption: 'Autosleutel24 maakt sleutels voor alle 38 automerken waaronder BMW, Mercedes, VW, Audi, Toyota, Ford en Volvo in Utrecht en Amsterdam',
+    caption: 'Autosleutel24 maakt sleutels voor alle 59 automerken waaronder BMW, Mercedes, VW, Audi, Toyota, Ford en Volvo in Utrecht en Amsterdam',
     geo_location: 'Utrecht en Amsterdam, Nederland',
   },
   {

@@ -116,7 +116,7 @@ export default function KennisbankPage() {
                   Wanneer u via een officiële merkdealer een nieuwe autosleutel aanvraagt, wordt u vaak geconfronteerd met lange wachttijden van twee tot drie weken omdat de sleutel op chassisnummer (VIN) besteld moet worden vanuit een centraal magazijn in Duitsland of Frankrijk. Bovendien liggen de totale tarieven bij merkdealers gemiddeld tussen de €350,- en €650,-, nog exclusief eventuele wegsleepkosten als u geen werkende sleutel meer heeft.
                 </p>
                 <p>
-                  Bij Autosleutel24 bespaart u tot wel 50% op de totale kosten. Wij hebben sleutels voor meer dan 38 automerken standaard op voorraad in onze servicewagens. Wij slijpen het sleutelblad ter plaatse op maat en leren de transponder en afstandsbediening direct in. U betaalt een eerlijk, vooraf vastgesteld all-in tarief zonder verborgen kosten, inclusief montage, programmering en 12 maanden schriftelijke garantie.
+                  Bij Autosleutel24 bespaart u tot wel 50% op de totale kosten. Wij hebben sleutels voor meer dan 59 automerken standaard op voorraad in onze servicewagens. Wij slijpen het sleutelblad ter plaatse op maat en leren de transponder en afstandsbediening direct in. U betaalt een eerlijk, vooraf vastgesteld all-in tarief zonder verborgen kosten, inclusief montage, programmering en 12 maanden schriftelijke garantie.
                 </p>
               </section>
 

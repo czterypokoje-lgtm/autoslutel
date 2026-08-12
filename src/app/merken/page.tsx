@@ -7,9 +7,9 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Alle 35 Automerken | Sleutelprogrammering | Autosleutel24',
+    absolute: 'Alle 59 Automerken | Sleutelprogrammering | Autosleutel24',
   },
-  description: 'Autosleutel programmering voor alle 35 merken. BMW, Mercedes, VW, Audi, Toyota, Ford, Volvo, Renault, Peugeot, Tesla en meer. Mobiel, 24/7.',
+  description: 'Autosleutel programmering voor alle 59 merken. BMW, Mercedes, VW, Audi, Toyota, Ford, Volvo, Renault, Peugeot, Tesla en meer. Mobiel, 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/merken` },
 };
 
@@ -47,7 +47,7 @@ export default function MerkenPage() {
             "@type": "ImageObject",
             "contentUrl": "https://www.autosleutel24.nl/autosleutel-merken-bijmaken-utrecht-amsterdam.webp",
             "name": "Autosleutel merken bijmaken Utrecht & Amsterdam",
-            "description": "Volledig overzicht van de 38 automerken waarvoor Autosleutel24 autosleutels programmeert en bijmaakt in Utrecht en Amsterdam.",
+            "description": "Volledig overzicht van de 59 automerken waarvoor Autosleutel24 autosleutels programmeert en bijmaakt in Utrecht en Amsterdam.",
             "contentLocation": {
               "@type": "Place",
               "name": "Utrecht, Amsterdam",
@@ -62,7 +62,7 @@ export default function MerkenPage() {
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--orange-400)', marginBottom: '0.75rem' }}>MERKEN</p>
-          <h1 style={{ color: '#fff', marginBottom: '1rem' }}>38 Automerken — Alle Sleutelsystemen</h1>
+          <h1 style={{ color: '#fff', marginBottom: '1rem' }}>59 Automerken — Alle Sleutelsystemen</h1>
           <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: 650, margin: '0 auto 2.5rem', fontSize: '1.05rem', lineHeight: '1.6' }}>
             Van BMW CAS4+ tot VW MQB SFD en Toyota G-chip. Dealer-niveau tools voor elk merk. Mobiel aan huis.
           </p>
@@ -234,9 +234,9 @@ export default function MerkenPage() {
 
         {/* ── COMPREHENSIVE MERKEN SEO GUIDE ARTICLE ── */}
         <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
-          <h2>Autosleutels Programmeren en Bijmaken voor Alle 38 Automerken in Nederland</h2>
+          <h2>Autosleutels Programmeren en Bijmaken voor Alle 59 Automerken in Nederland</h2>
           <p>
-            Moderne auto&apos;s zijn uitgerust met complexe elektronische antidiefstalsystemen. Elke autofabrikant hanteert eigen beveiligingsprotocollen, startonderbrekers en transpondersystemen — van BMW CAS4/FEM en Volkswagen MQB tot Mercedes-Benz FBS3/FBS4 en Renault Keycards. Waar reguliere garages vaak vastlopen op merk-specifieke softwarebeveiliging of u doorsturen naar een dure merkdealer, is <strong>{SITE_CONFIG.name}</strong> gespecialiseerd in het sleutelbeheer van álle 38 gangbare automerken.
+            Moderne auto&apos;s zijn uitgerust met complexe elektronische antidiefstalsystemen. Elke autofabrikant hanteert eigen beveiligingsprotocollen, startonderbrekers en transpondersystemen — van BMW CAS4/FEM en Volkswagen MQB tot Mercedes-Benz FBS3/FBS4 en Renault Keycards. Waar reguliere garages vaak vastlopen op merk-specifieke softwarebeveiliging of u doorsturen naar een dure merkdealer, is <strong>{SITE_CONFIG.name}</strong> gespecialiseerd in het sleutelbeheer van álle 59 gangbare automerken.
           </p>
           <h3>1. Europese Automerken: VAG Group, BMW Group &amp; Mercedes-Benz</h3>
           <p>

@@ -1,5 +1,5 @@
 // ============================================================
-// BRANDS CONFIG — 38 Car Brands
+// BRANDS CONFIG — 59 Car Brands
 // Each brand: slug, name, priority, system, models
 // Expanded with Year Ranges for SEO
 // ============================================================
