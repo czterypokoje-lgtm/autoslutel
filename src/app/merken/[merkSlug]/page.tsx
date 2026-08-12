@@ -229,8 +229,26 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                     </div>
                     <div style={{ width: 120, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', borderRadius: '16px', overflow: 'hidden' }}>
                       {(() => {
+                        const FALLBACK_LOGOS: Record<string, string> = {
+                          'renault': 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg',
+                          'ford': 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Ford_Motor_Company_Logo.svg',
+                          'hyundai': 'https://upload.wikimedia.org/wikipedia/commons/4/44/Hyundai_Motor_Company_logo.svg',
+                          'volkswagen': 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg',
+                          'bmw': 'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg',
+                          'audi': 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg',
+                          'mercedes-benz': 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg',
+                          'toyota': 'https://upload.wikimedia.org/wikipedia/commons/e/ee/Toyota_logo_%28Red%29.svg',
+                          'peugeot': 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Peugeot_Logo.svg',
+                          'opel': 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Opel_2020_logo.svg',
+                          'citroen': 'https://upload.wikimedia.org/wikipedia/commons/4/48/Citro%C3%ABn_2021_logo.svg',
+                          'kia': 'https://upload.wikimedia.org/wikipedia/commons/4/47/KIA_logo2.svg',
+                          'nissan': 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Nissan_logo.png'
+                        };
+
                         let logoUrl = null;
-                        const exts = ['.webp', '.svg', '.png'];
+                        const exts = ['.webp', '.svg', '.png', '.jpg', '.jpeg'];
+                        
+                        // Check local files first
                         for (const ext of exts) {
                           if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.slug}_sleutel_bijmaken${ext}`))) {
                             logoUrl = `/brands/${brand.slug}_sleutel_bijmaken${ext}`; break;
@@ -238,10 +256,18 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                           if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.slug}-autosleutel-bijmaken${ext}`))) {
                             logoUrl = `/brands/${brand.slug}-autosleutel-bijmaken${ext}`; break;
                           }
+                          // Since I copied raw files from desktop, let's also check for exact slug
+                          if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.slug}${ext}`))) {
+                            logoUrl = `/brands/${brand.slug}${ext}`; break;
+                          }
+                          if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.name}${ext}`))) {
+                            logoUrl = `/brands/${brand.name}${ext}`; break;
+                          }
                         }
-                        // Add hardcoded fallback for Renault since it's the user's example
-                        if (!logoUrl && brand.slug === 'renault') {
-                          logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg';
+                        
+                        // Fallback to static mapping
+                        if (!logoUrl && FALLBACK_LOGOS[brand.slug]) {
+                          logoUrl = FALLBACK_LOGOS[brand.slug];
                         }
                         
                         if (logoUrl) {
