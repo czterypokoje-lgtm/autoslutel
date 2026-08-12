@@ -134,10 +134,10 @@ export default function HowItWorks({ cityName, variant = 'default' }: HowItWorks
       
       <div className={styles.ctaWrapper}>
         <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg">
-          Bel Direct: {SITE_CONFIG.phone}
+          Direct Hulp Bellen
         </a>
         <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.waBtn}>
-          WhatsApp Ons
+          WhatsApp voor Direct Hulp
         </a>
       </div>
     </section>

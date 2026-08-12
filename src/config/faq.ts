@@ -329,28 +329,28 @@ export const FAQ_AKL: FaqItem[] = [
 export function getFaqForCity(cityName: string): FaqItem[] {
   return [
     {
-      q: `Wat zijn de kosten voor een autosleutel bijmaken in ${cityName}?`,
-      a: `De kosten voor het bijmaken van een autosleutel in ${cityName} starten vanaf €${SITE_CONFIG.prices.transponder} voor een standaard transpondersleutel. Omdat Autosleutel24 een volledig mobiele service is en geen duur dealerkantoor heeft, bent u vaak tot wel 50% goedkoper uit. U ontvangt vooraf altijd een vaste, transparante prijs.`,
+      q: `Autosleutel bijmaken in ${cityName}: wat zijn de exacte kosten?`,
+      a: `De kosten voor een autosleutel bijmaken in ${cityName} bedragen vanaf €${SITE_CONFIG.prices.transponder} voor een standaard transpondersleutel. Voor een autosleutel met afstandsbediening of smart key (keyless entry) starten de tarieven vanaf €${SITE_CONFIG.prices.smartKey}. Onze prijzen zijn altijd inclusief het frezen van de sleutelbaard en het inleren of programmeren van de transponder op locatie in ${cityName}. Omdat wij een mobiele autosleutelmaker zijn, betaalt u geen sleepkosten en bent u tot 50% goedkoper uit dan bij de officiële merkdealer.`,
     },
     {
-      q: `Alle autosleutels kwijt in ${cityName}, wat nu?`,
-      a: `Geen paniek. U hoeft uw voertuig niet weg te laten slepen naar een garage. Onze mobiele monteurs komen direct naar u in ${cityName}. Wij openen uw auto schadevrij, frezen ter plekke een nieuw sleutelblad en programmeren de startonderbreker (AKL-service). Oude verloren sleutels worden direct uit het geheugen gewist voor uw veiligheid.`,
+      q: `Autosleutel kwijt in ${cityName}, wat is de snelste oplossing?`,
+      a: `Bent u uw autosleutel kwijt in ${cityName} en heeft u geen reservesleutel meer? De snelste oplossing is het inschakelen van de mobiele service van Autosleutel24. Wij komen direct naar uw locatie in ${cityName}, openen uw auto 100% schadevrij, frezen een nieuwe sleutel op basis van uw slotcilinder en programmeren deze ter plekke in de ECU (boordcomputer). Deze "All Keys Lost" (AKL) procedure zorgt ervoor dat u direct weer kunt rijden, zonder dat wegslepen naar een garage nodig is.`,
     },
     {
-      q: `Hoe snel kan er een autosleutelmaker in ${cityName} ter plaatse zijn?`,
-      a: `In ${cityName} en omstreken zijn wij met onze mobiele servicebussen gemiddeld binnen 30 tot 60 minuten ter plaatse. Wij zijn 24 uur per dag, 7 dagen per week beschikbaar voor spoedgevallen, ook in het weekend en op feestdagen.`,
+      q: `Hoe lang duurt het inleren en programmeren van een autosleutel in ${cityName}?`,
+      a: `Het frezen, inleren en programmeren van een nieuwe autosleutel in ${cityName} duurt gemiddeld 20 tot 45 minuten. Onze ervaren monteurs gebruiken geavanceerde OBD2-diagnoseapparatuur om de nieuwe chip of smart key veilig te synchroniseren met het anti-diefstal systeem (startonderbreker) van uw auto. Oude, verloren sleutels worden direct elektronisch geblokkeerd uit het systeem.`,
     },
     {
-      q: `Autosleutel kwijt: moet mijn auto naar de dealer in ${cityName}?`,
-      a: `Nee, dit is niet nodig. Als u uw auto naar een merkdealer in ${cityName} brengt, heeft u vaak te maken met hoge wegsleepkosten en levertijden van 1 tot 2 weken. Autosleutel24 snijdt en programmeert direct op uw eigen oprit, werklocatie of langs de weg een nieuwe dealer-kwaliteit sleutel.`,
+      q: `Autodeur openen in ${cityName} (sleutel in auto laten liggen), kunnen jullie helpen?`,
+      a: `Ja, als u uw sleutel in de auto heeft laten liggen in ${cityName} (buitengesloten), openen wij uw autodeur gegarandeerd zonder schade. Onze monteurs in ${cityName} maken gebruik van specialistisch Lishi-lockpick gereedschap om het deurslot vakkundig te manipuleren, zonder krassen op de lak of schade aan de rubbers. Wij zijn 24/7 bereikbaar voor deze spoedservice.`,
     },
     {
-      q: `Sleutel in auto laten liggen in ${cityName}, kunnen jullie schadevrij openen?`,
-      a: `Ja, absoluut. Heeft u uzelf buitengesloten in ${cityName}? Wij gebruiken gespecialiseerd gereedschap (zoals Lishi decoders en luchtkussentjes) om uw autodeur 100% kras- en schadevrij te openen. Sla nooit zelf een ruit in; onze professionele noodopening is altijd voordeliger (vanaf €${SITE_CONFIG.prices.unlock}).`,
+      q: `Maken jullie ook autosleutels bij voor alle automerken in ${cityName}?`,
+      a: `Ja, wij repareren en maken autosleutels bij in ${cityName} voor vrijwel alle automerken, waaronder Volkswagen (VW), BMW, Audi, Mercedes-Benz, Peugeot, Renault, Ford, Opel, Toyota, Fiat en Seat. Of het nu gaat om een traditionele sleutel, een klapsleutel of een geavanceerde keyless smart key, wij hebben de juiste OEM-kwaliteit sleutels op voorraad in onze servicebus.`,
     },
     {
-      q: `Maken jullie ook keyless entry en smart keys bij in ${cityName}?`,
-      a: `Ja, wij programmeren moderne keyless entry fobs en smart keys voor vrijwel alle automerken in ${cityName}. Dankzij onze geavanceerde OBD2-diagnoseapparatuur leren wij de smart key direct veilig in op de boordcomputer (ECU) van uw voertuig. De kosten hiervoor starten vanaf €${SITE_CONFIG.prices.smartKey}.`,
+      q: `Hoe snel is de mobiele autosleutelmaker ter plaatse in ${cityName}?`,
+      a: `Bij noodgevallen in ${cityName}, zoals alle autosleutels kwijt of buitengesloten, is onze mobiele autosleutelmaker gemiddeld binnen 30 tot 60 minuten op uw locatie aanwezig. Autosleutel24 opereert 24 uur per dag, 7 dagen per week in de regio ${cityName}, zodat u direct weer op weg geholpen wordt.`,
     },
   ];
 }
