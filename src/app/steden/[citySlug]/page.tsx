@@ -279,13 +279,32 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   </div>
                 )}
 
-                {/* E-E-A-T Local Stats Card */}
-                <div style={{ background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1.5rem', gridColumn: '1 / -1', marginTop: '0.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                    <div style={{ fontSize: '1.5rem' }}>📊</div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, color: 'var(--navy-900)' }}>Actuele Lokale Responstijden {city.city}</h3>
+                {/* E-E-A-T Local Stats Card (Styled like Zo Werkt cards) */}
+                <div style={{ 
+                  background: '#fff', 
+                  border: '1px solid #e2e8f0', 
+                  borderRadius: '12px', 
+                  padding: '2.5rem 1.5rem', 
+                  gridColumn: '1 / -1', 
+                  marginTop: '1.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ width: '100%', maxWidth: '500px', height: '240px', position: 'relative', marginBottom: '2rem' }}>
+                    <Image 
+                      src="/images/responstijden-visual.png" 
+                      alt={`Lokale responstijden ${city.city}`} 
+                      fill 
+                      style={{ objectFit: 'contain' }} 
+                    />
                   </div>
-                  <p style={{ fontSize: '0.95rem', color: 'var(--gray-700)', lineHeight: 1.6, margin: 0 }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: '0 0 1rem 0', color: 'var(--navy-900)' }}>
+                    Actuele Lokale Responstijden {city.city}
+                  </h3>
+                  <p style={{ fontSize: '1rem', color: 'var(--gray-700)', lineHeight: 1.6, margin: 0, maxWidth: '800px' }}>
                     Gebaseerd op <strong>{jobsCount} afgeronde opdrachten</strong> dit jaar in en rond {city.city}, is onze gemiddelde responstijd in <strong>{area1}</strong> momenteel <strong>{time1} minuten</strong>. Voor aanvragen vanuit <strong>{area2}</strong> is de aanrijdtijd circa <strong>{time2} minuten</strong>. Wij rijden als lokale mobiele slotenmaker direct naar uw locatie om u zonder vertraging weer op weg te helpen.
                   </p>
                 </div>
