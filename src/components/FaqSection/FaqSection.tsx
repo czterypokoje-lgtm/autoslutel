@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './FaqSection.module.css';
+import { SITE_CONFIG } from '@/config/site.config';
 
 const faqs = [
   {
