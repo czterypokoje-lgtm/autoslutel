@@ -56,7 +56,7 @@ export default function AutoSlotenmakerPage() {
             "name": "Autoslot Reparatie",
             "description": "Deurslot of contactslot repareren na inbraakschade of slijtage"
           },
-          "price": "120",
+          "price": "299",
           "priceCurrency": "EUR"
         },
         {
@@ -89,7 +89,7 @@ export default function AutoSlotenmakerPage() {
     },
     {
       q: 'Wat kost een auto slotenmaker voor het openen van mijn auto?',
-      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting vanaf €149 (inclusief btw en voorrijkosten). Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
+      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting vanaf €149 (exclusief btw). Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
     },
     {
       q: 'Kan een auto slotenmaker ook een nieuwe sleutel maken als ik alles kwijt ben?',
@@ -233,20 +233,20 @@ export default function AutoSlotenmakerPage() {
                         <tr>
                           <td>Alle sleutels kwijt (All Keys Lost)</td>
                           <td>Genereren van een nieuwe sleutelbaard</td>
-                          <td><strong>€190</strong></td>
+                          <td><strong>€259</strong></td>
                           <td>30-45 min</td>
                         </tr>
                         <tr>
                           <td>Contactslot / Deurslot reparatie</td>
                           <td>Demonteren, reviseren en reinigen</td>
-                          <td><strong>€120</strong></td>
+                          <td><strong>€299</strong></td>
                           <td>45 min</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                   <div className={styles.callout}>
-                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken en achteraf honderden euro's rekenen, krijgt u bij ons vooraf telefonisch of via WhatsApp een vaste all-in prijsopgave inclusief btw en voorrijkosten.
+                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken en achteraf honderden euro's rekenen, krijgt u bij ons vooraf telefonisch of via WhatsApp een vaste all-in prijsopgave exclusief btw.
                   </div>
                 </div>
 

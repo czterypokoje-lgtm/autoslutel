@@ -33,10 +33,10 @@ export const SITE_CONFIG = {
     unlock: '149',
     transponder: '149',
     remote: '220',
-    smartKey: '349',
-    allKeysLost: '260',
+    smartKey: '249',
+    allKeysLost: '259',
     casing: '35',
-    ignition: '350',
+    ignition: '299',
     exVatDisclaimer: 'excl. btw',
   },
 

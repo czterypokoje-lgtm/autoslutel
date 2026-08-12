@@ -25,14 +25,14 @@ type PriceItem =
 
 const priceRows: PriceItem[] = [
   { category: 'Autosleutel Bijmaken (Reserve)' },
-  { service: 'Standaard transpondersleutel', from: '€ 80', to: '€ 175', note: 'Meeste oudere modellen' },
-  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 250', to: '€ 349', note: 'VW, Audi, Seat, Skoda, Ford' },
-  { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 399', note: 'BMW, Mercedes, Toyota, Mazda' },
-  { service: 'Proximity key met start-stop', from: '€ 299', to: '€ 449', note: 'Premium merken' },
+  { service: 'Standaard transpondersleutel', from: '€ 149', to: '€ 199', note: 'Meeste oudere modellen' },
+  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 199', to: '€ 249', note: 'VW, Audi, Seat, Skoda, Ford' },
+  { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 349', note: 'BMW, Mercedes, Toyota, Mazda' },
+  { service: 'Proximity key met start-stop', from: '€ 299', to: '€ 399', note: 'Premium merken' },
   
   { category: 'Autosleutel Kwijt (Alle sleutels verloren)' },
-  { service: 'Standaard transpondersleutel', from: '€ 250', to: '€ 349', note: 'Inclusief programmeren' },
-  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 249', to: '€ 349', note: 'Inclusief code uitlezen' },
+  { service: 'Standaard transpondersleutel', from: '€ 259', to: '€ 349', note: 'Inclusief programmeren' },
+  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 259', to: '€ 349', note: 'Inclusief code uitlezen' },
   { service: 'Smart key / Keyless entry', from: '€ 349', to: '€ 499', note: 'Inclusief noodprocedure' },
   { service: 'Proximity key met start-stop', from: '€ 399', to: '€ 549', note: 'Premium systemen' },
   
@@ -48,7 +48,7 @@ const priceRows: PriceItem[] = [
   { service: 'Transponder chip vervangen', from: '€ 89', to: '€ 149', note: 'Chip defect' },
   
   { category: 'Contactslot & Stuurslot (Mechanische problemen)' },
-  { service: 'Contactslot vervangen (standaard)', from: '€ 249', to: '€ 399', note: 'VW, Audi, Seat, Skoda' },
+  { service: 'Contactslot vervangen (standaard)', from: '€ 299', to: '€ 399', note: 'VW, Audi, Seat, Skoda' },
   { service: 'Contactslot vervangen (premium)', from: '€ 399', to: '€ 599', note: 'Mercedes, BMW' },
   { service: 'Stuurslot reparatie/vervanging', from: '€ 199', to: '€ 349', note: 'ELV/ESL systemen' },
   { service: 'Immobilizer reset', from: '€ 149', to: '€ 299', note: 'Software herstel' }

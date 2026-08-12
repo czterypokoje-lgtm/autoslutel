@@ -57,7 +57,7 @@ const schema = {
     "priceCurrency": "EUR",
     "priceSpecification": {
       "@type": "PriceSpecification",
-      "description": "All-in prijs inclusief btw en voorrijkosten"
+      "description": "All-in prijs exclusief btw"
     }
   }
 };

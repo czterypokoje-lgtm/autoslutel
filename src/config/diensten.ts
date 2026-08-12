@@ -277,7 +277,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Alle Autosleutels Kwijt? — Mobiele Sleutelmaker ter Plaatse',
     intro: 'Het is de ultieme nachtmerrie: u bent alle sleutels van uw auto kwijt (All Keys Lost). De dealer vraagt hoofdprijzen en u moet vaak weken wachten op een sleutel uit de fabriek. Wij lossen dit vandaag nog op locatie op. Onze bussen bevatten alle benodigde EEPROM-programmeertools en sleutel-CNC-machines om uw auto ter plaatse te programmeren.',
     system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
-    priceFrom: 'Vanaf €250',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
     duration: '60–180 minuten',
     steps: [
       'We verifiëren uw identiteit en eigendomspapieren',
@@ -405,7 +405,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Auto Contactslot Vervangen & Reparatie — Direct ter Plaatse',
     intro: 'Als de sleutel draait in het niets, of helemaal niet meer wil draaien, heeft u een probleem. Soms blijft de sleutel zitten en krijgt u deze er met geen mogelijkheid uit. Een defect slot (mechanisch of elektronisch) legt uw auto volledig stil. Geen zorgen: wij komen naar u toe en kunnen direct uw auto contactslot vervangen of repareren. We zijn tevens gespecialiseerd in Mercedes EIS (Elektronisch Ontstekingsslot) en ELV (Elektronisch Stuurslot) reparatie.',
     system: 'Mercedes EIS / ELV / ESL systemen, BMW CAS/Immo synchronisatie, mechanical ignition locks',
-    priceFrom: 'Vanaf €150',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.ignition}`,
     duration: '45–120 minuten',
     steps: [
       'Mechanische en elektrische diagnose van het contactslot',

@@ -821,7 +821,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <div style={{ background: '#f8fafc', borderLeft: '4px solid #10b981', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
-        <strong>Wilt u de exacte prijs voor uw auto weten?</strong> Bij ons krijgt u vooraf altijd een vaste, transparante all-in prijs (inclusief frezen, programmeren en BTW). Bel of app ons op <a href={WHATSAPP_URL} style={{ color: '#10b981', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a> met uw merk, model en bouwjaar, en wij geven u direct de prijs!
+        <strong>Wilt u de exacte prijs voor uw auto weten?</strong> Bij ons krijgt u vooraf altijd een vaste, transparante all-in prijs (inclusief frezen en programmeren, exclusief BTW). Bel of app ons op <a href={WHATSAPP_URL} style={{ color: '#10b981', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a> met uw merk, model en bouwjaar, en wij geven u direct de prijs!
       </div>
     </>
   ),
@@ -901,7 +901,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <ul>
         <li><strong>Autosleutel-specialisatie:</strong> Zorg ervoor dat de slotenmaker over de juiste diagnoseapparatuur beschikt voor uw specifieke automerk en bouwjaar.</li>
         <li><strong>Reputatie en recensies:</strong> Controleer onafhankelijke reviews (zoals Google Reviews) om de betrouwbaarheid en klanttevredenheid te verifiëren.</li>
-        <li><strong>Transparante tarieven:</strong> Vraag vooraf altijd om een vaste, all-in prijsopgave (inclusief btw en reiskosten) om verrassingen achteraf te voorkomen. Beloofde starttarieven van €15 tot €29 zijn in 99% van de gevallen een indicatie van malafide praktijken.</li>
+        <li><strong>Transparante tarieven:</strong> Vraag vooraf altijd om een vaste, all-in prijsopgave (exclusief btw) om verrassingen achteraf te voorkomen. Beloofde starttarieven van €15 tot €29 zijn in 99% van de gevallen een indicatie van malafide praktijken.</li>
       </ul>
 
       <h3>Kosten van een auto slotenmaker: Wat kunt u verwachten?</h3>
