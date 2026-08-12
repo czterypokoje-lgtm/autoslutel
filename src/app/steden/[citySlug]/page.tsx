@@ -192,8 +192,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </div>
               <div className={styles.heroUtrechtImage}>
                 <Image 
-                  src="/images/utrecht-hero.jpg"
-                  alt="Autosleutel bijmaken Utrecht monteur service bus"
+                  src="/images/autosleutel-bijmaken-utrecht.jpg"
+                  alt="Autosleutel bijmaken Utrecht - 24/7 service op locatie bij Oudegracht met Domtoren"
                   width={800}
                   height={450}
                   style={{ width: '100%', height: 'auto', borderRadius: '12px' }}
