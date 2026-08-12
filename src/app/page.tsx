@@ -15,6 +15,7 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
@@ -228,6 +229,10 @@ export default function HomePage() {
               <span className={styles.trustPill}>✓ {SITE_CONFIG.rating} / 5 Google ({SITE_CONFIG.reviewCount} reviews)</span>
               <span className={styles.trustPill}>✓ Verzekerd & Gecertificeerd</span>
               <span className={styles.trustPill}>✓ 24/7 Bereikbaar</span>
+            </div>
+            
+            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+              <HeroGoogleBadge />
             </div>
           </div>
         </div>
