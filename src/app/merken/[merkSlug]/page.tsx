@@ -9,6 +9,8 @@ import { CITIES } from '@/config/cities';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
+import FaqSection from '@/components/FaqSection/FaqSection';
+import { getFaqForBrand } from '@/config/faq';
 
 export async function generateStaticParams() {
   return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
@@ -384,6 +386,9 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             </div>
           </div>
         </section>
+
+        {/* ── FAQ SECTION (SEO & AI OPTIMIZED) ── */}
+        <FaqSection customFaqs={getFaqForBrand(brand.name)} brandName={brand.name} />
 
         {/* ── GOOGLE KLANTENBEOORDELINGEN ── */}
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)' }}>

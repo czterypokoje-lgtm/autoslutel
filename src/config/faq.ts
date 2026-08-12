@@ -354,3 +354,33 @@ export function getFaqForCity(cityName: string): FaqItem[] {
     },
   ];
 }
+
+// ── BRAND-SPECIFIC FAQs (dynamisch gegenereerd op merkpage) ──
+export function getFaqForBrand(brandName: string): FaqItem[] {
+  return [
+    {
+      q: `Wat kost een nieuwe ${brandName} autosleutel bijmaken?`,
+      a: `De kosten voor het bijmaken van een ${brandName} autosleutel variëren per model en type sleutel. Een standaard ${brandName} transpondersleutel begint bij Autosleutel24 vanaf €${SITE_CONFIG.prices.transponder}. Heeft u een ${brandName} klapsleutel of smart key (keyless entry) nodig? Dan starten de prijzen vanaf €${SITE_CONFIG.prices.smartKey}. Wij zijn hiermee tot 50% goedkoper dan de officiële ${brandName} dealer, zonder extra wegsleepkosten. U krijgt altijd vooraf een vaste en transparante prijs.`,
+    },
+    {
+      q: `Mijn ${brandName} autosleutel kwijt, wat moet ik doen?`,
+      a: `Bent u alle sleutels van uw ${brandName} kwijt? Blijf rustig en bel Autosleutel24. Wij bieden een mobiele 'All Keys Lost' (AKL) service en komen direct naar uw locatie. We openen uw ${brandName} 100% schadevrij, lezen de pincode uit de ECU/boordcomputer via de OBD2-poort en snijden ter plaatse een compleet nieuwe sleutel. De verloren ${brandName} sleutels worden direct uit het systeem gewist om diefstal te voorkomen.`,
+    },
+    {
+      q: `Hoe lang duurt het inleren van een ${brandName} sleutel?`,
+      a: `Het frezen en inleren van een nieuwe ${brandName} autosleutel duurt gemiddeld 30 tot 45 minuten. Onze specialisten gebruiken geavanceerde diagnoseapparatuur die specifiek geschikt is voor de beveiligingssystemen van ${brandName}. U hoeft uw auto dus niet dagenlang bij de dealer achter te laten; wij regelen alles direct bij u op de stoep, op het werk of langs de weg.`,
+    },
+    {
+      q: `Kan Autosleutel24 een ${brandName} sleutel repareren (behuizing of batterij)?`,
+      a: `Ja, als de elektronica (printplaat) van uw ${brandName} sleutel nog intact is, kunnen wij deze vaak voordelig repareren. We vervangen defecte drukknoppen, vernieuwen de batterij en zetten de printplaat over in een gloednieuwe ${brandName} sleutelbehuizing. Dit is een snelle en zeer kostenbesparende oplossing ten opzichte van een compleet nieuwe sleutel kopen.`,
+    },
+    {
+      q: `Werkt de nieuwe ${brandName} sleutel exact hetzelfde als het origineel?`,
+      a: `Absoluut. Wij leveren hoogwaardige aftermarket en OEM-kwaliteit autosleutels voor ${brandName}. De nieuwe sleutel werkt precies zoals u gewend bent: inclusief de afstandsbediening (centrale deurvergrendeling), de juiste startonderbreker-chip (transponder) en eventuele keyless-go of smart key functies die specifiek zijn voor uw ${brandName} model. Bovendien krijgt u bij ons standaard 12 maanden garantie op de sleutel en het inleren.`,
+    },
+    {
+      q: `Moet mijn ${brandName} naar de dealer gesleept worden voor een nieuwe sleutel?`,
+      a: `Nee, dat is juist het grote voordeel van Autosleutel24. Wij zijn een 100% mobiele autosleutel specialist. U hoeft geen dure sleepdienst in te schakelen om uw ${brandName} naar de garage te brengen. Onze volledig uitgeruste servicebussen komen naar uw strandinglocatie toe, ongeacht waar u staat in Nederland, en we programmeren de nieuwe ${brandName} sleutel direct ter plaatse.`,
+    }
+  ];
+}

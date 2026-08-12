@@ -32,9 +32,10 @@ const defaultFaqs = [
 interface FaqSectionProps {
   customFaqs?: { question: string; answer: string }[];
   cityName?: string;
+  brandName?: string;
 }
 
-export default function FaqSection({ customFaqs, cityName }: FaqSectionProps = {}) {
+export default function FaqSection({ customFaqs, cityName, brandName }: FaqSectionProps = {}) {
   const displayFaqs = customFaqs && customFaqs.length > 0 ? customFaqs : defaultFaqs;
   // ── FAQPage schema — enables Google FAQ rich results ──
   const faqSchema = {
@@ -78,9 +79,11 @@ export default function FaqSection({ customFaqs, cityName }: FaqSectionProps = {
       <div className="container">
         <div className={styles.faqHeader}>
           <p className="section-eyebrow">VEELGESTELDE VRAGEN</p>
-          <h2 className="section-title">{cityName ? `Veelgestelde Vragen in ${cityName}` : 'Alles over Autosleutels & Sloten'}</h2>
+          <h2 className="section-title">
+            {cityName ? `Veelgestelde Vragen in ${cityName}` : brandName ? `Veelgestelde Vragen over ${brandName} Autosleutels` : 'Alles over Autosleutels & Sloten'}
+          </h2>
           <p className="section-lead">
-            {cityName ? `Lees hier de meest gestelde vragen over onze service in ${cityName}.` : 'Heeft u vragen over kosten, levertijden of reparaties? Bekijk onze meest gestelde vragen.'}
+            {cityName ? `Lees hier de meest gestelde vragen over onze service in ${cityName}.` : brandName ? `Heeft u vragen over het bijmaken of inleren van een ${brandName} sleutel? Lees hier de meest gestelde vragen.` : 'Heeft u vragen over kosten, levertijden of reparaties? Bekijk onze meest gestelde vragen.'}
           </p>
         </div>
 
