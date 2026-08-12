@@ -14,6 +14,7 @@ import LocalBusinessSchema from '@/components/Schema/LocalBusinessSchema';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
@@ -250,6 +251,9 @@ export default function HomePage() {
           <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.emergencyPhone}>{SITE_CONFIG.phone}</a>
         </div>
       </section>
+
+      {/* ── BRANDS MARQUEE ──────────────────────────────────────── */}
+      <BrandsMarquee />
 
       {/* ===== HOW IT WORKS ===== */}
       <HowItWorks />

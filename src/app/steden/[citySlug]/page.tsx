@@ -9,6 +9,7 @@ import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import { DIENSTEN } from '@/config/diensten';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
@@ -242,6 +243,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             ))}
           </div>
         </div>
+        
+        {/* ── BRANDS MARQUEE ──────────────────────────────────────── */}
+        <BrandsMarquee />
 
         {/* ── HOW IT WORKS ──────────────────────────────────────────── */}
         <HowItWorks cityName={city.city} />
