@@ -385,13 +385,18 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
     // ── Autosleutel kwijt service page ───────────────────────────
     'autosleutel-kwijt': [
+      'sleutel-kwijt-auto-hulp-oplossingen',
       'autosleutel-kwijt-wat-nu-stappenplan',
+      'alle-sleutels-kwijt-wat-nu-utrecht',
+      'sleutel-kwijt-utrecht-stappenplan',
       'autosleutel-bijmaken-zonder-origineel',
       'autosleutel-gestolen-wat-te-doen',
     ],
     // ── Alle sleutels kwijt ───────────────────────────────────────
     'alle-sleutels-kwijt-auto': [
       'autosleutel-kwijt-wat-nu-stappenplan',
+      'alle-sleutels-kwijt-wat-nu-utrecht',
+      'sleutel-kwijt-utrecht-stappenplan',
       'autosleutel-bijmaken-zonder-origineel',
       'case-study-bmw-besparing',
     ],
