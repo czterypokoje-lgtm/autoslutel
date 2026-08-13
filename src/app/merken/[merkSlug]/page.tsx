@@ -311,6 +311,51 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
           </div>
         </section>
 
+        {/* ── AUTOSLEUTEL VOORBEELDEN (ANTI-THIN CONTENT) ── */}
+        <section style={{ padding: '3.5rem 0 1.5rem', background: '#ffffff' }}>
+          <div className="container" style={{ maxWidth: 1000 }}>
+            {(() => {
+              const key1Path = path.join(process.cwd(), 'public', 'images', 'keys', `${brand.slug}-autosleutel-bijmaken-1.webp`);
+              const key2Path = path.join(process.cwd(), 'public', 'images', 'keys', `${brand.slug}-autosleutel-bijmaken-2.webp`);
+              
+              const hasKey1 = fs.existsSync(key1Path);
+              const hasKey2 = fs.existsSync(key2Path);
+
+              if (!hasKey1 && !hasKey2) return null;
+
+              return (
+                <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div style={{ flex: '1 1 400px' }}>
+                    <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>
+                      Voorbeeld {brand.name} Autosleutels
+                    </h2>
+                    <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
+                      Om u een goed beeld te geven van de kwaliteit die wij leveren, ziet u hiernaast voorbeelden van originele {brand.name} sleutels die wij recent hebben bijgemaakt. Wij leveren altijd sleutels van de hoogste kwaliteit, inclusief alle benodigde elektronica (zoals de transponderchip voor de startonderbreker en de afstandsbediening voor de centrale deurvergrendeling).
+                    </p>
+                    <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7 }}>
+                      Elke sleutel wordt op locatie mechanisch gefreesd en direct elektronisch ingeleerd in de boordcomputer van uw {brand.name}. Zo bent u verzekerd van een perfect werkende reservesleutel of nieuwe hoofdsleutel met 12 maanden volledige garantie.
+                    </p>
+                  </div>
+                  <div style={{ flex: '1 1 350px', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                    {hasKey1 && (
+                      <div style={{ flex: 1, background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`/images/keys/${brand.slug}-autosleutel-bijmaken-1.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 1`} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
+                      </div>
+                    )}
+                    {hasKey2 && (
+                      <div style={{ flex: 1, background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`/images/keys/${brand.slug}-autosleutel-bijmaken-2.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 2`} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </section>
+
         {/* ── TECHNICAL & SYSTEM DEEP DIVE (SEO RICH TEXT) ── */}
         <section style={{ padding: '4.5rem 0', background: '#ffffff' }}>
           <div className="container">
