@@ -8,10 +8,11 @@ interface Props {
   city?: string;
   phone: string;
   theme?: 'dark' | 'light';
+  initialBrand?: string;
 }
 
-export default function LeadCaptureForm({ city = "", phone, theme = 'dark' }: Props) {
-  const [brand, setBrand] = useState("");
+export default function LeadCaptureForm({ city = "", phone, theme = 'dark', initialBrand = "" }: Props) {
+  const [brand, setBrand] = useState(initialBrand);
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
   const [service, setService] = useState("");
