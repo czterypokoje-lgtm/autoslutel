@@ -74,6 +74,7 @@ export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false 
                 className={styles.brandLogoImg}
                 width={80}
                 height={48}
+                unoptimized={true}
               />
               <span className={styles.brandLogoName}>{brand.name} sleutel bijmaken</span>
               {/* Hidden SEO text for crawlers */}
