@@ -125,14 +125,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 Wij komen met onze volledig uitgeruste mobiele werkplaats naar u toe en programmeren direct een originele dealer-sleutel in de boordcomputer.
                 <strong> 30% tot 50% goedkoper dan de {brand.name}-dealer</strong>, zonder wegsleepkosten!
               </p>
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg" style={{ padding: '0.95rem 2rem', fontSize: '1.05rem', fontWeight: 700 }} id={`brand-hero-${brand.slug}-phone`}>
-                  📞 Direct Belcontact: {SITE_CONFIG.phone}
-                </a>
-                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="wa-btn" style={{ background:'#25d366', color:'#fff', padding:'0.95rem 2rem', borderRadius:'8px', fontWeight:700, textDecoration:'none', display:'inline-flex', alignItems:'center', gap:'0.6rem' }} id={`brand-hero-${brand.slug}-wa`}>
-                  💬 WhatsApp uw {brand.name} Kenteken
-                </a>
-              </div>
+
             </div>
             <div style={{ flex: '1 1 400px', maxWidth: '450px', width: '100%', margin: '0 auto' }}>
               <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" initialBrand={brand.name} />
