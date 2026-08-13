@@ -240,60 +240,7 @@ export default function AutoOpenenZonderSleutelPage() {
 
 
 
-                {/* Section 3: Systemen vergelijken */}
-                <div>
-                  <h2>Auto Openen Zonder Sleutel Systemen Vergelijken</h2>
-                  <div className={styles.tableWrapper}>
-                    <table className={styles.pricingTable}>
-                      <thead>
-                        <tr>
-                          <th>Methode</th>
-                          <th>Schade</th>
-                          <th>Snelheid</th>
-                          <th>Kosten</th>
-                          <th>Aanbevolen?</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><strong>Lishi Decoder (professioneel)</strong></td>
-                          <td>❌ Geen</td>
-                          <td>✅ 10–20 min</td>
-                          <td>€149–€199</td>
-                          <td>✅ Ja</td>
-                        </tr>
-                        <tr>
-                          <td>Fabrieksapp (Tesla/BMW/Mercedes)</td>
-                          <td>❌ Geen</td>
-                          <td>✅ Direct</td>
-                          <td>€0 (mits actief)</td>
-                          <td>✅ Als beschikbaar</td>
-                        </tr>
-                        <tr>
-                          <td>ANWB / Pechhulp</td>
-                          <td>❌ Geen</td>
-                          <td>⏱ 45–90 min</td>
-                          <td>€0 (mits lid)</td>
-                          <td>✅ Als lid</td>
-                        </tr>
-                        <tr>
-                          <td>Slim-Jim / Kleerhanger</td>
-                          <td>⚠️ Hoog risico</td>
-                          <td>❌ Onbetrouwbaar</td>
-                          <td>DIY</td>
-                          <td>❌ Nee</td>
-                        </tr>
-                        <tr>
-                          <td>Ruit Inslaan</td>
-                          <td>🔴 Zeer hoog</td>
-                          <td>✅ Direct</td>
-                          <td>€200–€600 reparatie</td>
-                          <td>❌ Noodsituatie enkel</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+
 
                 {/* Section 4: Tarieven */}
                 <div>
