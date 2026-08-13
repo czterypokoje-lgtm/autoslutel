@@ -324,22 +324,42 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {/* All services in this city */}
         <section className={styles.sectionAlt}>
           <div className="container">
-            <h2>Onze Diensten in {city.city}</h2>
-            <p className={styles.seoIntro}>
-              Heeft u met spoed een autosleutel nodig of bent u uw sleutels kwijt in {city.city}? Wij bieden de volgende diensten op locatie:
-            </p>
-            <div className={styles.nearbyGrid}>
-              <Link href={`/diensten/autosleutel-bijmaken`} className={styles.nearbyCard}>
-                <span>Autosleutel Bijmaken in {city.city}</span>
-                <span className={styles.nearbyTime}>Vanaf €149</span>
+            <h2 style={{ textAlign: 'center', marginBottom: '3rem' }}>Onze Diensten in {city.city}</h2>
+            <div className={styles.serviceCardsGrid}>
+              <Link href={`/diensten/autosleutel-bijmaken`} className={styles.serviceCardBig}>
+                <div className={styles.serviceCardImg}>
+                  <Image src="/images/service_bijmaken.png" alt={`Autosleutel Bijmaken in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                </div>
+                <h3>Autosleutel Bijmaken in {city.city}</h3>
+                <p>Heeft u een extra autosleutel nodig? Wij maken een nieuwe sleutel op locatie, vaak de helft goedkoper dan de dealer.</p>
+                <div className={styles.serviceCardFooter}>
+                  <span className={styles.serviceCardPrice}>Vanaf €149</span>
+                  <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
+                </div>
               </Link>
-              <Link href={`/diensten/alle-sleutels-kwijt-auto`} className={styles.nearbyCard}>
-                <span>Autosleutels Kwijt in {city.city}</span>
-                <span className={styles.nearbyTime}>Vanaf €249</span>
+
+              <Link href={`/diensten/alle-sleutels-kwijt-auto`} className={styles.serviceCardBig}>
+                <div className={styles.serviceCardImg}>
+                  <Image src="/images/service_kwijt.png" alt={`Autosleutels Kwijt in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                </div>
+                <h3>Autosleutels Kwijt in {city.city}</h3>
+                <p>Geen enkele sleutel meer? Wij komen direct naar u toe, openen de auto, frezen een nieuwe sleutel en leren hem in.</p>
+                <div className={styles.serviceCardFooter}>
+                  <span className={styles.serviceCardPrice}>Vanaf €249</span>
+                  <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
+                </div>
               </Link>
-              <Link href={`/diensten/auto-openen-zonder-sleutel`} className={styles.nearbyCard}>
-                <span>Autodeur Openen in {city.city}</span>
-                <span className={styles.nearbyTime}>Vanaf €75</span>
+
+              <Link href={`/diensten/auto-openen-zonder-sleutel`} className={styles.serviceCardBig}>
+                <div className={styles.serviceCardImg}>
+                  <Image src="/images/service_openen.png" alt={`Autodeur Openen in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                </div>
+                <h3>Autodeur Openen in {city.city}</h3>
+                <p>Sleutel in de auto laten liggen? Wij openen uw auto 100% schadevrij met speciaal gereedschap, zonder krassen.</p>
+                <div className={styles.serviceCardFooter}>
+                  <span className={styles.serviceCardPrice}>Vanaf €75</span>
+                  <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
+                </div>
               </Link>
             </div>
           </div>
