@@ -333,7 +333,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h3>Autosleutel Bijmaken in {city.city}</h3>
                 <p>Heeft u een extra autosleutel nodig? Wij maken een nieuwe sleutel op locatie, vaak de helft goedkoper dan de dealer.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €149</span>
+                  <span className={styles.serviceCardPrice}>Vanaf €149,- ex</span>
                   <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -345,7 +345,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h3>Autosleutels Kwijt in {city.city}</h3>
                 <p>Geen enkele sleutel meer? Wij komen direct naar u toe, openen de auto, frezen een nieuwe sleutel en leren hem in.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €249</span>
+                  <span className={styles.serviceCardPrice}>Vanaf €249,- ex</span>
                   <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -357,7 +357,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h3>Autodeur Openen in {city.city}</h3>
                 <p>Sleutel in de auto laten liggen? Wij openen uw auto 100% schadevrij met speciaal gereedschap, zonder krassen.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €75</span>
+                  <span className={styles.serviceCardPrice}>Vanaf €149,- ex</span>
                   <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
