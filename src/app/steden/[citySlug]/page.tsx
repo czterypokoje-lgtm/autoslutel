@@ -193,6 +193,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   height={450}
                   style={{ width: '100%', height: 'auto', borderRadius: '12px' }}
                   priority
+                  unoptimized={true}
+                  fetchPriority="high"
                 />
               </div>
             </div>
