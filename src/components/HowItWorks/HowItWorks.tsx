@@ -4,15 +4,17 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 interface HowItWorksProps {
   cityName?: string;
+  brandName?: string;
   variant?: 'default' | 'akl' | 'ignition' | 'lockout';
 }
 
-export default function HowItWorks({ cityName, variant = 'default' }: HowItWorksProps = {}) {
+export default function HowItWorks({ cityName, brandName, variant = 'default' }: HowItWorksProps = {}) {
   const cityText = cityName ? ` in ${cityName}` : '';
   const cityTextLoc = cityName ? ` op locatie in ${cityName}` : ' op locatie';
+  const brandText = brandName ? ` ${brandName}` : '';
   
   let steps = [];
-  let sectionTitle = `Zo werkt Autosleutel24${cityText} - in 3 stappen`;
+  let sectionTitle = `Zo werkt Autosleutel24${brandText}${cityText} - in 3 stappen`;
 
   if (variant === 'akl') {
     sectionTitle = `Direct hulp bij verloren sleutels${cityText} - in 3 stappen`;
@@ -94,24 +96,24 @@ export default function HowItWorks({ cityName, variant = 'default' }: HowItWorks
     steps = [
       {
         imgSrc: '/images/steps/step_1_contact_1786407570135.jpg',
-        alt: `Neem contact op met Autosleutel24${cityText}`,
+        alt: `Neem contact op met Autosleutel24${brandText}${cityText}`,
         step: 'Stap 1',
         title: `Voertuiggegevens doorgeven & afspraak maken`,
-        desc: `Geef uw automerk, model, bouwjaar en locatie${cityText} door via WhatsApp of telefoon. Wij vertellen u direct wat het kost en wanneer we er zijn.`,
+        desc: `Geef uw automodel (${brandName || 'merk'}), bouwjaar en locatie${cityText} door via WhatsApp of telefoon. Wij vertellen u direct wat het kost en wanneer we er zijn.`,
       },
       {
         imgSrc: '/images/steps/step_2_mechanic_1786407578137.jpg',
         alt: `Monteur komt naar u toe${cityTextLoc}`,
         step: 'Stap 2',
         title: `Monteur komt direct naar u toe${cityTextLoc}`,
-        desc: `Onze mobiele monteur komt naar uw opgegeven locatie${cityText}. U hoeft uw auto niet te slepen naar een dealer of garage. Wij komen naar u.`,
+        desc: `Onze mobiele monteur komt met een nieuwe ${brandName ? brandName + ' ' : ''}sleutel naar uw locatie${cityText}. U hoeft uw auto niet te slepen.`,
       },
       {
         imgSrc: '/images/steps/step_3_payment_1786407585732.jpg',
-        alt: `Direct een nieuwe sleutel en veilig betalen${cityText}`,
+        alt: `Direct een nieuwe ${brandName || 'auto'}sleutel en veilig betalen${cityText}`,
         step: 'Stap 3',
         title: `Direct een nieuwe sleutel & veilig betalen`,
-        desc: `We frezen en programmeren uw nieuwe sleutel direct. U betaalt pas als alles perfect werkt, veilig${cityTextLoc} via pin of contant.`,
+        desc: `We frezen en programmeren uw nieuwe ${brandName || 'auto'}sleutel direct in de boordcomputer. U betaalt pas als alles perfect werkt, veilig${cityTextLoc} via pin of contant.`,
       },
     ];
   }

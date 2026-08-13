@@ -141,7 +141,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
         </section>
 
         {/* ── HOW IT WORKS ── */}
-        <HowItWorks />
+        <HowItWorks brandName={brand.name} />
 
         {/* ── RECENT WERK GALLERY ── */}
         {recentWorkImages.length > 0 && (
