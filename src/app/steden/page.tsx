@@ -44,7 +44,7 @@ export default function Steden() {
 
       <div className="container" style={{ padding:'3.5rem 2rem' }}>
         {groups.map(g => {
-          const cities = CITIES.filter(g.filter);
+          const cities = CITIES.filter(g.filter).sort((a, b) => a.city.localeCompare(b.city));
           if (!cities.length) return null;
           return (
             <div key={g.title} style={{ marginBottom:'3rem' }}>
