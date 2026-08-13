@@ -11,6 +11,7 @@ import { DIENSTEN } from '@/config/diensten';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
+import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
@@ -158,8 +159,23 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const area1 = city.subAreas && city.subAreas.length > 0 ? city.subAreas[0] : `${city.city} Centrum`;
   const area2 = city.subAreas && city.subAreas.length > 1 ? city.subAreas[1] : `omgeving ${city.city}`;
 
-  const imagePath = path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${citySlug}.webp`);
-  const hasHeroImage = fs.existsSync(imagePath);
+  const imagePathWebp = path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${citySlug}.webp`);
+  const imagePathPng = path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${citySlug}.png`);
+  const imagePathJpg = path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${citySlug}.jpg`);
+  
+  let hasHeroImage = false;
+  let heroImageExt = '.webp';
+  
+  if (fs.existsSync(imagePathWebp)) {
+    hasHeroImage = true;
+    heroImageExt = '.webp';
+  } else if (fs.existsSync(imagePathPng)) {
+    hasHeroImage = true;
+    heroImageExt = '.png';
+  } else if (fs.existsSync(imagePathJpg)) {
+    hasHeroImage = true;
+    heroImageExt = '.jpg';
+  }
 
   return (
     <>
@@ -187,7 +203,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </div>
               <div className={styles.heroUtrechtImage}>
                 <Image 
-                  src={`/images/autosleutel-bijmaken-${city.slug}.webp`}
+                  src={`/images/autosleutel-bijmaken-${city.slug}${heroImageExt}`}
                   alt={`Autosleutel bijmaken ${city.city} - 24/7 service op locatie`}
                   width={800}
                   height={450}
@@ -314,6 +330,19 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             </div>
           </section>
         )}
+
+        {/* SEO Gallery */}
+        <section style={{ padding: '4rem 0', background: 'var(--gray-50)', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
+          <div className="container">
+            <h2 style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '1rem', color: 'var(--navy-900)' }}>
+              Service in {city.city} &mdash; Galerij
+            </h2>
+            <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
+              Een impressie van ons dagelijks werk: van sleutels inleren op locatie tot schadevrij openen van portieren in {city.city}.
+            </p>
+            <RealGalleryShowcase />
+          </div>
+        </section>
 
         {/* Top brands in this city (SEO List) */}
         <BrandsLogoGrid
@@ -442,47 +471,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
-        {/* SEO Gallery */}
-        <section className="gallery-section">
-          <div className="container">
-            <h2>Service in {city.city} &mdash; Galerij</h2>
-            <div className="gallery-grid">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="gallery-item">
-                  <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden', borderRadius: 'var(--radius-md)' }}>
-                    <Image
-                      src={`/images/cities/${citySlug}/autosleutel-bijmaken-${citySlug}-${i + 1}.webp`}
-                      alt={`Autosleutel bijmaken op locatie - Foto ${i + 1}`}
-                      fill
-                      unoptimized={true}
-                      loading="lazy"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      style={{ objectFit: 'cover' }}
-                    />
-                    <Script id={`gallery-gps-${citySlug}-${i}`} type="application/ld+json" dangerouslySetInnerHTML={{
-                      __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "ImageObject",
-                        "contentUrl": `https://autosleutel24.nl/images/cities/${citySlug}/autosleutel-bijmaken-${citySlug}-${i + 1}.webp`,
-                        "name": `Autosleutel bijmaken ${city.city} - Foto ${i + 1}`,
-                        "description": `Autosleutel bijmaken, inleren en programmeren op locatie in ${city.city}.`,
-                        "contentLocation": {
-                          "@type": "Place",
-                          "name": city.city,
-                          "geo": {
-                            "@type": "GeoCoordinates",
-                            "latitude": parseFloat(city.geo.lat),
-                            "longitude": parseFloat(city.geo.lng)
-                          }
-                        }
-                      })
-                    }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+
 
         {/* SEO Content Section */}
         {SeoComponents[citySlug] && (

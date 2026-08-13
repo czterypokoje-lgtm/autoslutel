@@ -229,19 +229,19 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                     <div style={{ width: 120, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', borderRadius: '16px', overflow: 'hidden' }}>
                       {(() => {
                         const FALLBACK_LOGOS: Record<string, string> = {
-                          'renault': 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Renault_2021_Text.svg',
-                          'ford': 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Ford_Motor_Company_Logo.svg',
-                          'hyundai': 'https://upload.wikimedia.org/wikipedia/commons/4/44/Hyundai_Motor_Company_logo.svg',
-                          'volkswagen': 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Volkswagen_logo_2019.svg',
-                          'bmw': 'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg',
-                          'audi': 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg',
-                          'mercedes-benz': 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg',
-                          'toyota': 'https://upload.wikimedia.org/wikipedia/commons/e/ee/Toyota_logo_%28Red%29.svg',
-                          'peugeot': 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Peugeot_Logo.svg',
-                          'opel': 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Opel_2020_logo.svg',
-                          'citroen': 'https://upload.wikimedia.org/wikipedia/commons/4/48/Citro%C3%ABn_2021_logo.svg',
-                          'kia': 'https://upload.wikimedia.org/wikipedia/commons/4/47/KIA_logo2.svg',
-                          'nissan': 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Nissan_logo.png'
+                          'renault': 'https://cdn.simpleicons.org/renault/001E50',
+                          'ford': 'https://cdn.simpleicons.org/ford/001E50',
+                          'hyundai': 'https://cdn.simpleicons.org/hyundai/001E50',
+                          'volkswagen': 'https://cdn.simpleicons.org/volkswagen/001E50',
+                          'bmw': 'https://cdn.simpleicons.org/bmw/001E50',
+                          'audi': 'https://cdn.simpleicons.org/audi/001E50',
+                          'mercedes-benz': 'https://cdn.simpleicons.org/mercedes/001E50',
+                          'toyota': 'https://cdn.simpleicons.org/toyota/001E50',
+                          'peugeot': 'https://cdn.simpleicons.org/peugeot/001E50',
+                          'opel': 'https://cdn.simpleicons.org/opel/001E50',
+                          'citroen': 'https://cdn.simpleicons.org/citroen/001E50',
+                          'kia': 'https://cdn.simpleicons.org/kia/001E50',
+                          'nissan': 'https://cdn.simpleicons.org/nissan/001E50'
                         };
 
                         let logoUrl: string | null = null;
