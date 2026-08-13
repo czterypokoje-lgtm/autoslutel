@@ -12,7 +12,7 @@ const marqueeBrands = [
   { name: 'Volkswagen', logo: 'https://cdn.simpleicons.org/volkswagen/001E50' },
   { name: 'BMW', logo: 'https://cdn.simpleicons.org/bmw/001E50' },
   { name: 'Audi', logo: 'https://cdn.simpleicons.org/audi/001E50' },
-  { name: 'Mercedes-Benz', logo: 'https://cdn.simpleicons.org/mercedes/001E50' },
+  { name: 'Mercedes-Benz', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg' },
   { name: 'Toyota', logo: 'https://cdn.simpleicons.org/toyota/001E50' },
   { name: 'Peugeot', logo: 'https://cdn.simpleicons.org/peugeot/001E50' }
 ];

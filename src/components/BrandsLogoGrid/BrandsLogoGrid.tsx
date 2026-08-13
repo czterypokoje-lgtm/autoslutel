@@ -12,7 +12,7 @@ interface BrandsLogoGridProps {
 export const BRANDS_WITH_LOGOS = [
   { name: 'Volkswagen', slug: 'volkswagen-autosleutel-bijmaken', models: 'Golf, Polo, Tiguan, Passat', svg: 'https://cdn.simpleicons.org/volkswagen/001E50' },
   { name: 'BMW', slug: 'bmw-autosleutel-bijmaken', models: '1-, 3-, 5-Serie, X1, X3, X5', svg: 'https://cdn.simpleicons.org/bmw/001E50' },
-  { name: 'Mercedes-Benz', slug: 'mercedes-autosleutel-bijmaken', models: 'A/C/E-Klasse, Sprinter, Vito', svg: 'https://cdn.simpleicons.org/mercedes/001E50' },
+  { name: 'Mercedes-Benz', slug: 'mercedes-autosleutel-bijmaken', models: 'A-Klasse, C-Klasse, E-Klasse, Sprinter', svg: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg' },
   { name: 'Audi', slug: 'audi-autosleutel-bijmaken', models: 'A1, A3, A4, A6, Q3, Q5, Q7', svg: 'https://cdn.simpleicons.org/audi/001E50' },
   { name: 'Opel', slug: 'opel-autosleutel-bijmaken', models: 'Corsa, Astra, Mokka, Vivaro', svg: '/brands/opel_sleutel_bijmaken.webp' },
   { name: 'Ford', slug: 'ford-autosleutel-bijmaken', models: 'Focus, Fiesta, Transit, Kuga', svg: 'https://cdn.simpleicons.org/ford/001E50' },
