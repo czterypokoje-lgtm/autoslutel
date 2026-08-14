@@ -211,7 +211,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   {brand.name} contactslot defect of beschadigd? Wij vervangen het contactslot en programmeren de nieuwe sleutel direct ter plaatse, zonder uw auto naar de garage te slepen.
                 </p>
                 <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €199,- ex</span>
+                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €299,- ex</span>
                   <span style={{ color: 'var(--navy-700)', fontWeight: 600, fontSize: '0.9rem' }}>Lees meer &rarr;</span>
                 </div>
               </Link>
