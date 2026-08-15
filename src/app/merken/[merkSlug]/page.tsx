@@ -117,6 +117,8 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               fill
               style={{ objectFit: 'cover', objectPosition: 'center' }}
               priority
+              quality={60}
+              unoptimized
             />
           </div>
           {/* Gradient Overlay for Text Readability */}
