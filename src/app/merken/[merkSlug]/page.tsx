@@ -108,8 +108,21 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
       <Script id={`brand-breadcrumb-${brand.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* ── HERO SECTION ── */}
-        <section style={{ background: 'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding: '4rem 2rem 3.5rem' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <section style={{ position: 'relative', padding: '4rem 2rem 3.5rem', overflow: 'hidden' }}>
+          {/* SEO Optimized Background Image */}
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -2 }}>
+            <Image
+              src={`/images/merken-hero/${brand.slug}-autosleutel-bijmaken.webp`}
+              alt={`${brand.name} autosleutel bijmaken en programmeren`}
+              fill
+              style={{ objectFit: 'cover', objectPosition: 'center' }}
+              priority
+            />
+          </div>
+          {/* Gradient Overlay for Text Readability */}
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1, background: 'linear-gradient(160deg, rgba(15,23,42,0.65), rgba(15,23,42,0.85))' }} />
+          
+          <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <div style={{ flex: '1 1 500px' }}>
               <nav style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginBottom: '1.25rem', display: 'flex', gap: '0.5rem' }}>
                 <Link href="/" style={{ color: 'rgba(255,255,255,0.55)' }}>Home</Link> /
