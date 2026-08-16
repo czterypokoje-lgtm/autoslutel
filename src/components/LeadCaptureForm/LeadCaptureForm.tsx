@@ -9,11 +9,12 @@ interface Props {
   phone: string;
   theme?: 'dark' | 'light';
   initialBrand?: string;
+  initialModel?: string;
 }
 
-export default function LeadCaptureForm({ city = "", phone, theme = 'dark', initialBrand = "" }: Props) {
+export default function LeadCaptureForm({ city = "", phone, theme = 'dark', initialBrand = "", initialModel = "" }: Props) {
   const [brand, setBrand] = useState(initialBrand);
-  const [model, setModel] = useState("");
+  const [model, setModel] = useState(initialModel);
   const [year, setYear] = useState("");
   const [service, setService] = useState("");
   const [location, setLocation] = useState(city);
@@ -25,7 +26,10 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
     return CAR_MODELS[brand] || CAR_MODELS[key] || [];
   }, [brand]);
 
-  useEffect(() => { setModel(""); }, [brand]);
+  const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setBrand(e.target.value);
+    setModel("");
+  };
 
   function buildWhatsAppUrl() {
     const parts = [
@@ -60,7 +64,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
           <select
             className={styles.select}
             value={brand}
-            onChange={e => setBrand(e.target.value)}
+            onChange={handleBrandChange}
             aria-label="Automerk"
           >
             <option value="">Merk</option>

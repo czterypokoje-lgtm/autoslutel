@@ -194,9 +194,12 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
                 Wij kunnen ter plaatse een originele sleutel inlezen, programmeren of uw {targetName} repareren.
                 <strong> Tot 50% goedkoper dan de dealer</strong>, zonder wegsleepkosten!
               </p>
+              <Link href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken`} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#fb923c', textDecoration: 'none', fontWeight: 600, fontSize: '1.05rem' }}>
+                &larr; Bekijk alle {brand.name} modellen
+              </Link>
             </div>
             <div style={{ flex: '1 1 400px', maxWidth: '450px', width: '100%', margin: '0 auto' }}>
-              <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" initialBrand={`${brand.name} ${targetName}`} />
+              <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" initialBrand={brand.name} initialModel={targetName} />
             </div>
           </div>
         </section>
