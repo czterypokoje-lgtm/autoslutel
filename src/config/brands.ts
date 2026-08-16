@@ -15,6 +15,7 @@ export type Brand = {
   customH1?: string;
   customMetaTitle?: string;
   customSeoBlurb?: string; // model-specific SEO paragraph for long-tail keywords
+  specialIntents?: { slug: string; name: string; type: string }[];
 };
 
 export type BrandModel = {
@@ -64,6 +65,7 @@ export const BRANDS: Brand[] = [
       { slug: 'm6', name: 'M6', years: 'Alle bouwjaren' },
       { slug: 'm8', name: 'M8', years: 'Alle bouwjaren' },
     ],
+    specialIntents: [{ slug: 'display-key-inleren', name: 'Display Key', type: 'programming' }],
   },
   {
     slug: 'mercedes', name: 'Mercedes-Benz', nameSlug: 'mercedes', priority: 'P1',
@@ -103,6 +105,7 @@ export const BRANDS: Brand[] = [
       { slug: 'eqa', name: 'EQA', years: 'Alle bouwjaren' },
       { slug: 'eqb', name: 'EQB', years: 'Alle bouwjaren' },
     ],
+    specialIntents: [{ slug: 'contactslot-eis-reparatie', name: 'Contactslot / EIS', type: 'repair' }],
   },
   {
     slug: 'volkswagen', name: 'Volkswagen', nameSlug: 'volkswagen', priority: 'P1',
@@ -118,9 +121,15 @@ export const BRANDS: Brand[] = [
       { slug: 'euro-van', name: 'Euro Van', years: 'Alle bouwjaren' },
       { slug: 'fox', name: 'Fox', years: 'Alle bouwjaren' },
       { slug: 'golf', name: 'Golf', years: 'Alle bouwjaren' },
+      { slug: 'golf-5', name: 'Golf 5', years: 'Alle bouwjaren' },
+      { slug: 'golf-6', name: 'Golf 6', years: 'Alle bouwjaren' },
+      { slug: 'golf-7', name: 'Golf 7', years: 'Alle bouwjaren' },
+      { slug: 'golf-8', name: 'Golf 8', years: 'Alle bouwjaren' },
       { slug: 'golf-cabrio', name: 'Golf Cabrio', years: 'Alle bouwjaren' },
       { slug: 'golf-gti', name: 'Golf Gti', years: 'Alle bouwjaren' },
       { slug: 'golf-plus', name: 'Golf Plus', years: 'Alle bouwjaren' },
+      { slug: 'id3', name: 'ID.3', years: 'Alle bouwjaren' },
+      { slug: 'id4', name: 'ID.4', years: 'Alle bouwjaren' },
       { slug: 'jetta', name: 'Jetta', years: 'Alle bouwjaren' },
       { slug: 'kombi', name: 'Kombi', years: 'Alle bouwjaren' },
       { slug: 'lavida', name: 'Lavida', years: 'Alle bouwjaren' },
@@ -134,6 +143,7 @@ export const BRANDS: Brand[] = [
       { slug: 'passat', name: 'Passat', years: 'Alle bouwjaren' },
       { slug: 'passat-w8', name: 'Passat W8', years: 'Alle bouwjaren' },
       { slug: 'polo', name: 'Polo', years: 'Alle bouwjaren' },
+      { slug: 'polo-6r', name: 'Polo 6R', years: 'Alle bouwjaren' },
       { slug: 'rabbit', name: 'Rabbit', years: 'Alle bouwjaren' },
       { slug: 'routan', name: 'Routan', years: 'Alle bouwjaren' },
       { slug: 'sagitar', name: 'Sagitar', years: 'Alle bouwjaren' },
@@ -244,6 +254,7 @@ export const BRANDS: Brand[] = [
       { slug: 'yaris-cross', name: 'Yaris Cross', years: 'Alle bouwjaren' },
       { slug: 'bz4x', name: 'bZ4X', years: 'Alle bouwjaren' },
     ],
+    specialIntents: [{ slug: 'hybride-sleutel-vervangen', name: 'Hybride Sleutel', type: 'repair' }],
   },
   {
     slug: 'ford', name: 'Ford', nameSlug: 'ford', priority: 'P1',
@@ -353,6 +364,7 @@ export const BRANDS: Brand[] = [
       { slug: 'twizy', name: 'Twizy', years: 'Alle bouwjaren' },
       { slug: 'zoe', name: 'Zoe', years: 'Alle bouwjaren' },
     ],
+    specialIntents: [{ slug: 'keycard-reparatie-vervangen', name: 'Keycard', type: 'repair' }],
   },
   {
     slug: 'peugeot', name: 'Peugeot', nameSlug: 'peugeot', priority: 'P2',
@@ -364,9 +376,12 @@ export const BRANDS: Brand[] = [
       { slug: '107', name: '107', years: 'Alle bouwjaren' },
       { slug: '108', name: '108', years: 'Alle bouwjaren' },
       { slug: '206', name: '206', years: 'Alle bouwjaren' },
+      { slug: '206-plus', name: '206+', years: 'Alle bouwjaren' },
       { slug: '206-cabrio', name: '206 Cabrio', years: 'Alle bouwjaren' },
       { slug: '207', name: '207', years: 'Alle bouwjaren' },
+      { slug: '208', name: '208', years: 'Alle bouwjaren' },
       { slug: '301', name: '301', years: 'Alle bouwjaren' },
+      { slug: '306', name: '306', years: 'Alle bouwjaren' },
       { slug: '306-sb', name: '306 SB', years: 'Alle bouwjaren' },
       { slug: '306-sc', name: '306 SC', years: 'Alle bouwjaren' },
       { slug: '307', name: '307', years: 'Alle bouwjaren' },
@@ -382,9 +397,11 @@ export const BRANDS: Brand[] = [
       { slug: '806-sc', name: '806 SC', years: 'Alle bouwjaren' },
       { slug: '807', name: '807', years: 'Alle bouwjaren' },
       { slug: '1007', name: '1007', years: 'Alle bouwjaren' },
+      { slug: '2008', name: '2008', years: 'Alle bouwjaren' },
       { slug: '3008', name: '3008', years: 'Alle bouwjaren' },
       { slug: '4007', name: '4007', years: 'Alle bouwjaren' },
       { slug: '5008', name: '5008', years: 'Alle bouwjaren' },
+      { slug: '508', name: '508', years: 'Alle bouwjaren' },
       { slug: 'bipper', name: 'Bipper', years: 'Alle bouwjaren' },
       { slug: 'boxer', name: 'Boxer', years: 'Alle bouwjaren' },
       { slug: 'expert', name: 'Expert', years: 'Alle bouwjaren' },
