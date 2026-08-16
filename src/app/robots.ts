@@ -29,10 +29,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/'],
       },
     ],
-    // Sitemaps — main + dedicated image sitemap for Google Image Search
+    // Sitemaps — main sitemap (which now includes all dynamic images)
     sitemap: [
       `${SITE_CONFIG.domain}/sitemap.xml`,
-      `${SITE_CONFIG.domain}/image-sitemap.xml`,
     ],
     // NOTE: 'host' directive is NOT supported by Google — removed
   };
