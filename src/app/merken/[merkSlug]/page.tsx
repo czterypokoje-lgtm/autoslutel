@@ -322,6 +322,10 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                     margin-bottom: 0.15rem;
                   }
                 }
+                .model-link:hover {
+                  text-decoration: underline !important;
+                  color: var(--orange-600) !important;
+                }
               `}} />
 
               <div className="modelsFlexWrap">
@@ -388,7 +392,24 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 <div className="modelsListCol">
                   {brand.models?.map(m => (
                     <div key={m.slug} style={{ breakInside: 'avoid' }}>
-                      {m.name}
+                      <Link 
+                        href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${m.slug}-sleutel-bijmaken`}
+                        style={{ color: '#475569', textDecoration: 'none', fontWeight: 500 }}
+                        className="model-link"
+                      >
+                        {m.name}
+                      </Link>
+                    </div>
+                  ))}
+                  {brand.specialIntents?.map(intent => (
+                    <div key={intent.slug} style={{ breakInside: 'avoid', marginTop: '0.5rem' }}>
+                      <Link 
+                        href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${intent.slug}`}
+                        style={{ color: 'var(--navy-700)', textDecoration: 'underline', fontWeight: 600 }}
+                        className="model-link"
+                      >
+                        {intent.name}
+                      </Link>
                     </div>
                   ))}
                   {(!brand.models || brand.models.length === 0) && (
