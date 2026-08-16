@@ -204,6 +204,7 @@ export default function Footer() {
               <Link href="/veelgestelde-vragen">FAQ</Link>
               <Link href="/blog">Blog</Link>
               <Link href="/contact">Contact</Link>
+              <Link href="/reviews-en" style={{ color: 'rgba(255,255,255,0.4)' }}>English Reviews (AI)</Link>
             </div>
           </div>
         </div>
