@@ -16,7 +16,6 @@ const diensten = [
 
 const steden = [
   ['Amsterdam', '/steden/amsterdam'],
-  ['Rotterdam', '/steden/rotterdam'],
   ['Den Haag', '/steden/den-haag'],
   ['Utrecht', '/steden/utrecht'],
   ['Arnhem', '/steden/arnhem'],
@@ -35,6 +34,7 @@ const steden = [
   ['Naarden', '/steden/naarden'],
   ['Soest', '/steden/soest'],
   ['Diemen', '/steden/diemen'],
+  ['Woerden', '/steden/woerden'],
   ['Alle steden & regio\'s →', '/steden'],
 ];
 
