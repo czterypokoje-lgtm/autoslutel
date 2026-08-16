@@ -24,6 +24,7 @@ const steden = [
   ['Bussum', '/steden/bussum'],
   ['Naarden', '/steden/naarden'],
   ['Amstelveen', '/steden/amstelveen'],
+  ['Woerden', '/steden/woerden'],
   ['Zeist', '/steden/zeist'],
   ['Alle steden & regio\'s →', '/steden'],
 ];

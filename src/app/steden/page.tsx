@@ -67,7 +67,7 @@ export default function Steden() {
         <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
           <h2>Mobiele Autosleutel Service in Heel Nederland: Binnen 30-45 Minuten Ter Plaatse</h2>
           <p>
-            Vanuit onze centrale uitvalspunten in regio Utrecht en Amsterdam bedient <strong>{SITE_CONFIG.name}</strong> meer dan 45 steden en gemeenten in Midden-Nederland en de Randstad. Of u nu bent buitengesloten in het centrum van Amsterdam, met een kapotte autosleutel staat in Utrecht, of met spoed een nieuwe sleutel wilt laten inleren in Hilversum, Amstelveen of Almere: onze volledig ingerichte mobiele werkplaatsen komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw locatie.
+            Vanuit onze centrale uitvalspunten in regio Utrecht en Amsterdam bedient <strong>{SITE_CONFIG.name}</strong> meer dan {CITIES.length} steden en gemeenten in Midden-Nederland en de Randstad. Of u nu bent buitengesloten in het centrum van Amsterdam, met een kapotte autosleutel staat in Utrecht, of met spoed een nieuwe sleutel wilt laten inleren in Hilversum, Amstelveen of Almere: onze volledig ingerichte mobiele werkplaatsen komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw locatie.
           </p>
           <h3>Geen Takel- of Sleepkosten Meer</h3>
           <p>
