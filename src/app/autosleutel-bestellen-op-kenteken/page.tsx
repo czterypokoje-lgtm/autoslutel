@@ -12,7 +12,8 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Autosleutel Bestellen op Kenteken? | Direct Prijs & Hulp op Locatie',
   },
-  description: 'Geen technisch gedoe! App uw kenteken naar Autosleutel24 en ontvang direct een vaste prijs. Wij komen op locatie in de Randstad. Inclusief 12 maanden garantie.',
+  description: 'Wilt u een autosleutel bestellen op kenteken? Geen technisch gedoe! App uw kenteken naar Autosleutel24 en ontvang direct een vaste prijs. Wij komen op locatie in de Randstad.',
+  keywords: ['autosleutel bestellen op kenteken', 'type sleutel', 'sleutel nodig', 'laten maken', 'laten bijmaken', 'kwijt bent', 'keyless entry', 'standaard sleutel', 'auto s'],
   alternates: { canonical: `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken` },
 };
 
@@ -39,6 +40,20 @@ export default function KentekenBestellenPage() {
     ],
   };
 
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "Locksmith",
+    "name": SITE_CONFIG.name,
+    "url": `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken`,
+    "telephone": SITE_CONFIG.phone,
+    "image": `${SITE_CONFIG.domain}/images/autosleutel-bestellen-op-kenteken.jpg`,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": SITE_CONFIG.rating,
+      "reviewCount": SITE_CONFIG.reviewCount
+    }
+  };
+
   const trustItems = [
     '24/7 Beschikbaar',
     'Gemiddelde beoordeling 5.0/5',
@@ -54,6 +69,7 @@ export default function KentekenBestellenPage() {
     <>
       <Script id="kenteken-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script id="kenteken-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="kenteken-business-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
       <main>
         {/* Hero */}
         <section className={styles.hero}>
@@ -63,7 +79,7 @@ export default function KentekenBestellenPage() {
             </nav>
             <h1>Autosleutel Bestellen op Kenteken: Binnen 1 Minuut de Exacte Prijs</h1>
             <p className={styles.heroLead}>
-              Heeft u een nieuwe autosleutel, reservesleutel of smart key nodig, maar weet u niet precies welk type transponder, frequentie of sleutelprofiel uw auto gebruikt? Geen enkel probleem. Bij {SITE_CONFIG.name} maken we het u graag makkelijk. U kunt bij ons eenvoudig uw autosleutel bestellen op kenteken. Aan de hand van uw kenteken kunnen wij in onze dealerkaliber database exact zien welke sleutel bij uw voertuig hoort. U hoeft niets uit te zoeken, wij regelen alles en komen direct naar uw locatie!
+              Heeft u met spoed een nieuwe autosleutel nodig, of wilt u een extra sleutel laten maken, maar weet u niet precies welk type sleutel, frequentie of sleutelprofiel uw auto s gebruiken? Geen enkel probleem. Bij {SITE_CONFIG.name} kunt u eenvoudig uw autosleutel bestellen op kenteken. Of u nu een standaard sleutel of een geavanceerd keyless entry systeem zoekt, aan de hand van uw kenteken kunnen wij in onze dealerkaliber database exact zien welke sleutel bij uw voertuig hoort. Of u uw enige sleutel kwijt bent of gewoon eentje wilt laten bijmaken, u hoeft niets zelf uit te zoeken. Wij regelen alles en komen direct naar uw locatie!
             </p>
             <div className={styles.heroCtas}>
               <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="kb-hero-phone">
