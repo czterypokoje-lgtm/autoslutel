@@ -45,6 +45,23 @@ function getStableHash(str: string): number {
   return Math.abs(hash);
 }
 
+// Haversine distance formula
+function deg2rad(deg: number) {
+  return deg * (Math.PI / 180);
+}
+
+function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371;
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 function generateCityReviews(city: typeof CITIES[0]) {
   const hash = getStableHash(city.slug);
   const cityName = city.city;
@@ -129,7 +146,19 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const city = CITIES.find(c => c.slug === citySlug);
   if (!city) notFound();
 
-  const nearby = CITIES.filter(c => c.slug !== citySlug).slice(0, 6);
+  // Find 3 geographically closest cities
+  const closestCities = CITIES
+    .filter(c => c.slug !== citySlug && c.geo && city.geo)
+    .map(c => ({
+      ...c,
+      distance: getDistanceFromLatLonInKm(
+        parseFloat(city.geo.lat), parseFloat(city.geo.lng),
+        parseFloat(c.geo.lat), parseFloat(c.geo.lng)
+      )
+    }))
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 3);
+
   const cityReviews = generateCityReviews(city);
 
   const schema = {
@@ -515,7 +544,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   );
                 })
               ) : (
-                nearby.map(c => (
+                closestCities.map(c => (
                   <li key={c.slug}>
                     <Link href={`/steden/${c.slug}`}>
                       <strong>{c.city}</strong>
@@ -524,6 +553,46 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 ))
               )}
             </ul>
+          </div>
+        </section>
+
+        {/* ── INTERNAL LINKS BLOCK ── */}
+        <section style={{ padding: '2rem 0', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
+          <div className="container">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'space-between' }}>
+              <div style={{ flex: '1 1 300px' }}>
+                <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>Nabijgelegen steden</h3>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {closestCities.map(c => (
+                    <li key={c.slug}>
+                      <Link href={`/steden/${c.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                        Autosleutel bijmaken {c.city} &rarr;
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div style={{ flex: '1 1 300px' }}>
+                <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>Gerelateerde diensten in {city.city}</h3>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <li>
+                    <Link href="/diensten/autosleutel-bijmaken" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                      Sleutel bijmaken & programmeren &rarr;
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/diensten/alle-sleutels-kwijt-auto" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                      Alle autosleutels kwijt? &rarr;
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/diensten/auto-openen-zonder-sleutel" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                      Schadevrij autodeur openen &rarr;
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </section>
 
