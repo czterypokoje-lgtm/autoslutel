@@ -6,28 +6,6 @@ import { BLOG_POSTS } from '@/config/services';
 import { SITE_CONFIG } from '@/config/site.config';
 import { BLOG_CONTENT } from '@/config/blog_content';
 
-// ── Individual Google Reviews for Review schema (star rich results) ──
-// Source: real Google Business Profile reviews
-const REVIEW_SCHEMA_DATA = [
-  {
-    author: 'Yuri Sharapa',
-    datePublished: '2024-06-15',
-    reviewBody: 'Yesterday I slammed the door in the evening and left the key inside. I called Autosleutel24 and within 30 minutes someone was there. Very professional! Great service, highly recommended.',
-    ratingValue: 5,
-  },
-  {
-    author: 'Aicha Kone',
-    datePublished: '2024-07-02',
-    reviewBody: 'Thank you for your good service. I called them for my car lock. Their service is so fast, I am really impressed. Very professional and affordable.',
-    ratingValue: 5,
-  },
-  {
-    author: 'Lisa van den Bor',
-    datePublished: '2024-08-20',
-    reviewBody: 'Sleutel aan de binnenkant van de deur laten zitten, stom! Ze stonden gelukkig zelfs op zondag binnen 20 minuten voor de deur en maakten onze deur 100% schadevrij open. Aanrader!',
-    ratingValue: 5,
-  },
-];
 
 export async function generateStaticParams() {
   return BLOG_POSTS.map((p) => ({ slug: p.slug }));
@@ -99,29 +77,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       },
     },
     image: `${SITE_CONFIG.domain}/og-image.jpg`,
-    // ── Individual reviews for star rich results ──
-    review: REVIEW_SCHEMA_DATA.map((r) => ({
-      '@type': 'Review',
-      author: { '@type': 'Person', name: r.author },
-      datePublished: r.datePublished,
-      reviewBody: r.reviewBody,
-      reviewRating: {
-        '@type': 'Rating',
-        ratingValue: r.ratingValue,
-        bestRating: 5,
-        worstRating: 1,
-      },
-      itemReviewed: {
-        '@id': `${SITE_CONFIG.domain}/#localbusiness`,
-      },
-    })),
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: parseFloat(SITE_CONFIG.rating),
-      reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
-      bestRating: 5,
-      worstRating: 1,
-    },
   };
 
   const breadcrumbSchema = {
