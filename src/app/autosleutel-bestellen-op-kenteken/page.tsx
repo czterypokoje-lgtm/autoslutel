@@ -56,6 +56,33 @@ export default function KentekenBestellenPage() {
     }
   };
 
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Hoe bestel ik een autosleutel op kenteken?",
+    "description": "Ontvang binnen 1 minuut de exacte prijs voor uw autosleutel via WhatsApp door deze 3 simpele stappen te volgen.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Stap 1: Wat is uw kenteken?",
+        "text": "Vul uw kenteken in. Hiermee zoeken we de exacte technische gegevens van uw auto op in onze database.",
+        "url": `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken#offerte-form`
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Stap 2: Wat is de situatie?",
+        "text": "Geef aan of u een extra reservesleutel wilt of dat u al uw autosleutels kwijt bent.",
+        "url": `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken#offerte-form`
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Stap 3: Waar staat de auto?",
+        "text": "Vul in waar uw auto momenteel staat en vraag direct de offerte aan via WhatsApp.",
+        "url": `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken#offerte-form`
+      }
+    ]
+  };
+
   const trustItems = [
     '24/7 Beschikbaar',
     'Gemiddelde beoordeling 5.0/5',
@@ -72,6 +99,7 @@ export default function KentekenBestellenPage() {
       <Script id="kenteken-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script id="kenteken-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="kenteken-business-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+      <Script id="kenteken-howto-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <main>
         {/* Hero */}
         <section className={styles.hero}>
