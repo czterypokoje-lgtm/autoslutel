@@ -44,9 +44,11 @@ export default function KentekenBestellenPage() {
     "@context": "https://schema.org",
     "@type": "AutomotiveBusiness",
     "name": SITE_CONFIG.name,
+    "description": "Specialist in autosleutels bijmaken, car key duplication en programmeren op locatie.",
     "url": `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken`,
     "telephone": SITE_CONFIG.phone,
     "image": `${SITE_CONFIG.domain}/images/autosleutel-bestellen-op-kenteken.jpg`,
+    "knowsAbout": ["Autosleutel bijmaken", "Car key duplication", "Autosleutel programmeren", "Sleutel kwijt"],
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": SITE_CONFIG.rating,
