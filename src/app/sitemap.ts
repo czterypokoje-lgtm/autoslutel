@@ -56,9 +56,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
-
-
-
+  // 5. Model Pages (e.g., /merken/audi-autosleutel-bijmaken/a3)
+  const modelPages = BRANDS.flatMap(b => 
+    (b.models || []).map(m => {
+      const modelSlug = m.name.toLowerCase().replace(/[\s/]+/g, '-');
+      return {
+        url: `${base}/merken/${b.nameSlug}-autosleutel-bijmaken/${modelSlug}`,
+        lastModified: now,
+        changeFrequency: 'monthly' as const,
+        priority: 0.75,
+      };
+    })
+  );
   // 8. Blog Pages
   const blogPages = BLOG_POSTS.map(b => ({
     url: `${base}/blog/${b.slug}`,
@@ -72,6 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...servicePages,
     ...cityPages,
     ...brandPages,
+    ...modelPages,
     ...blogPages
   ];
 }
