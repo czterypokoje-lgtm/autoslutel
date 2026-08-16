@@ -42,7 +42,7 @@ export default function KentekenBestellenPage() {
 
   const localBusinessSchema = {
     "@context": "https://schema.org",
-    "@type": "Locksmith",
+    "@type": "AutomotiveBusiness",
     "name": SITE_CONFIG.name,
     "url": `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken`,
     "telephone": SITE_CONFIG.phone,
