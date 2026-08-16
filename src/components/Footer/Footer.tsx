@@ -15,19 +15,26 @@ const diensten = [
 ];
 
 const steden = [
-  ['Utrecht', '/steden/utrecht'],
   ['Amsterdam', '/steden/amsterdam'],
-  ['Amsterdam-Zuid', '/steden/amsterdam-zuid'],
+  ['Rotterdam', '/steden/rotterdam'],
+  ['Den Haag', '/steden/den-haag'],
+  ['Utrecht', '/steden/utrecht'],
+  ['Arnhem', '/steden/arnhem'],
+  ['Nijmegen', '/steden/nijmegen'],
+  ['Apeldoorn', '/steden/apeldoorn'],
   ['Almere', '/steden/almere'],
   ['Amersfoort', '/steden/amersfoort'],
+  ['Ede', '/steden/ede'],
   ['Hilversum', '/steden/hilversum'],
   ['Bussum', '/steden/bussum'],
-  ['Naarden', '/steden/naarden'],
-  ['Amstelveen', '/steden/amstelveen'],
-  ['Woerden', '/steden/woerden'],
   ['Zeist', '/steden/zeist'],
   ['Nieuwegein', '/steden/nieuwegein'],
-  ['Ede', '/steden/ede'],
+  ['Houten', '/steden/houten'],
+  ['Amstelveen', '/steden/amstelveen'],
+  ['Breukelen', '/steden/breukelen'],
+  ['Naarden', '/steden/naarden'],
+  ['Soest', '/steden/soest'],
+  ['Diemen', '/steden/diemen'],
   ['Alle steden & regio\'s →', '/steden'],
 ];
 
