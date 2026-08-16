@@ -136,6 +136,15 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     ...getBaseLocalBusinessSchema(),
     '@id': `${SITE_CONFIG.domain}/steden/${citySlug}#locksmith`,
     url: `${SITE_CONFIG.domain}/steden/${citySlug}`,
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: city.geo.lat,
+      longitude: city.geo.lng,
+    },
+    areaServed: {
+      '@type': 'City',
+      name: city.city,
+    },
   };
 
   const breadcrumbSchema = {
