@@ -268,6 +268,41 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
           </div>
         </section>
 
+        {/* ── MEER MODELLEN (INTERNE LINKS VOOR SEO) ── */}
+        {brand.models && brand.models.length > 1 && (
+          <section style={{ padding: '4rem 0', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
+            <div className="container">
+              <h2 style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>
+                Andere {brand.name} Modellen
+              </h2>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
+                {brand.models
+                  .filter(m => m.slug !== baseModelSlug)
+                  .map(m => (
+                  <Link 
+                    key={m.slug} 
+                    href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${m.slug}-sleutel-bijmaken`}
+                    style={{
+                      background: '#fff',
+                      padding: '0.6rem 1.2rem',
+                      borderRadius: '99px',
+                      textDecoration: 'none',
+                      color: '#475569',
+                      fontWeight: 600,
+                      fontSize: '0.9rem',
+                      border: '1px solid #cbd5e1',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                      transition: 'border-color 0.2s'
+                    }}
+                  >
+                    {m.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* ── FAQ SECTION (SEO & AI OPTIMIZED) ── */}
         <FaqSection 
           customFaqs={getFaqForBrand(brand.name).map(f => ({ question: f.q.replace(brand.name, `${brand.name} ${targetName}`), answer: f.a.replace(brand.name, `${brand.name} ${targetName}`) }))} 
