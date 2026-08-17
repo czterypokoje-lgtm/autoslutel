@@ -165,7 +165,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         <a
           href={buildWhatsAppUrl()}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer nofollow"
           className={styles.waBtn}
           id="city-lead-whatsapp"
         >

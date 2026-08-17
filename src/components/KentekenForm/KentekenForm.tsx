@@ -110,7 +110,7 @@ export default function KentekenForm() {
             href={`https://wa.me/${SITE_CONFIG.whatsapp}`}
             onClick={handleSubmit}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className={styles.btnSubmit}
             id="kenteken-form-whatsapp-btn"
           >
