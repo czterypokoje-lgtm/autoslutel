@@ -558,7 +558,10 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
 
         {/* ── FAQ SECTION (SEO & AI OPTIMIZED) ── */}
         <FaqSection 
-          customFaqs={getFaqForBrand(brand.name).map(f => ({ question: f.q, answer: f.a }))} 
+          customFaqs={[
+            ...(brand.customFaqs || []).map(f => ({ question: f.q, answer: f.a })),
+            ...getFaqForBrand(brand.name).map(f => ({ question: f.q, answer: f.a }))
+          ]}
           brandName={brand.name} 
         />
 

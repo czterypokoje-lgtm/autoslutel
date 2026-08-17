@@ -15,6 +15,7 @@ export type Brand = {
   customH1?: string;
   customMetaTitle?: string;
   customSeoBlurb?: string; // model-specific SEO paragraph for long-tail keywords
+  customFaqs?: { q: string; a: string }[];
   specialIntents?: { slug: string; name: string; type: string }[];
 };
 
@@ -370,7 +371,25 @@ export const BRANDS: Brand[] = [
     slug: 'peugeot', name: 'Peugeot', nameSlug: 'peugeot', priority: 'P2',
     system: 'PSA BSI / PIN extractie',
     excerpt: 'Peugeot sleutel programmering specialist. 208, 308, 508, Partner. BSI programmering.',
-    customSeoBlurb: 'Wij verzorgen regelmatig Peugeot 607 sleutel bij laten maken, Peugeot 5008 autosleutel bijmaken, Peugeot 406 autosleutel bijmaken en Peugeot Expert sleutel bij laten maken. De Peugeot 607 (1999-2010) en 406 (1995-2004) zijn oudere modellen. De Peugeot 5008 en Expert gebruiken het BSI-systeem. Wij lezen de pin-code uit en programmeren de sleutel op uw locatie.',
+    customSeoBlurb: 'Heeft u een extra sleutel nodig? Wij verzorgen regelmatig een Peugeot 607 sleutel bij laten maken, Peugeot 5008 autosleutel bijmaken, Peugeot 406 autosleutel bijmaken en Peugeot Expert sleutels. De Peugeot 607 (1999-2010) en 406 (1995-2004) zijn oudere modellen. De Peugeot 5008 en Expert gebruiken het modernere BSI-systeem. Wij lezen de pin-code uit en programmeren de sleutel op uw locatie. Ook voor de Peugeot 206 sleutel bijmaken kosten kunt u direct bij ons terecht voor een scherpe all-in prijs.',
+    customFaqs: [
+      {
+        q: 'Wat zijn de Peugeot 206 sleutel bijmaken kosten?',
+        a: 'De Peugeot 206 sleutel bijmaken kosten vallen bij ons aanzienlijk lager uit dan bij de dealer. Voor een standaard mechanische transpondersleutel bent u bij ons al vanaf €120,- klaar. Een klapsleutel met afstandsbediening is iets duurder, maar nog steeds tot wel 50% goedkoper dan de dealerprijs. Neem contact op voor een vaste prijsopgave.'
+      },
+      {
+        q: 'Kan ik een Peugeot 406 autosleutel bijmaken als ik alle sleutels kwijt ben?',
+        a: 'Ja, wij kunnen zonder problemen een Peugeot 406 autosleutel bijmaken, zelfs in een All Keys Lost (AKL) situatie. Onze monteurs komen naar uw locatie, decoderen het portierslot om de nieuwe sleutel te frezen, en lezen de beveiligingscode uit de computer om de nieuwe transponder te programmeren.'
+      },
+      {
+        q: 'Ondersteunen jullie ook een Peugeot 5008 autosleutel bijmaken op locatie?',
+        a: 'Zeker. Voor een Peugeot 5008 autosleutel bijmaken – ongeacht of het om een standaard transponder, een klapsleutel of een moderne Smart Key gaat – komen wij met onze servicebus naar u toe. Wij programmeren de sleutel rechtstreeks via de OBD2-poort in het BSI-systeem van de auto.'
+      },
+      {
+        q: 'Wat is de werkwijze om een Peugeot 607 sleutel bij laten maken?',
+        a: 'Wilt u een reserve Peugeot 607 sleutel bij laten maken? Onze specialist komt naar uw auto, leest de chipgegevens uit en freest de sleutelbaard nauwkeurig met een CNC-machine. Binnen 30 minuten is uw nieuwe Peugeot 607 sleutel volledig geprogrammeerd en klaar voor gebruik.'
+      }
+    ],
     models: [
       { slug: '106', name: '106', years: 'Alle bouwjaren' },
       { slug: '107', name: '107', years: 'Alle bouwjaren' },
