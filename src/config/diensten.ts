@@ -183,22 +183,22 @@ export const DIENSTEN: Service[] = [
   {
     slug: 'afstandsbediening-bijmaken',
     title: 'Afstandsbediening Bijmaken',
-    metaTitle: 'Autosleutel met Afstandsbediening Bijmaken | OEM Kwaliteit | 24/7',
-    metaDesc: 'Nieuwe afstandsbediening voor uw auto nodig? Wij programmeren afstandsbedieningen op locatie. Centrale vergrendeling, OEM chips, 12 mnd garantie.',
-    h1: 'Autosleutel met Afstandsbediening Bijmaken & Synchroniseren',
-    intro: 'Wilt u een sleutel met werkende knoppen voor centrale vergrendeling? Wij programmeren autosleutels met afstandsbediening voor vrijwel alle merken. We gebruiken uitsluitend hoogwaardige OEM-kwaliteit printplaten en chips met ASK of FSK modulatie.',
+    metaTitle: 'Prijs Autosleutel Bijmaken met Afstandsbediening | Vanaf €120',
+    metaDesc: 'Wat is de prijs autosleutel bijmaken met afstandsbediening? Bekijk onze tarieven. Wij programmeren elk type autosleutel op locatie. 12 mnd garantie.',
+    h1: 'Wat is de Prijs Autosleutel Bijmaken met Afstandsbediening?',
+    intro: 'Wilt u een extra sleutel laten bijmaken met werkende knoppen? Ontdek direct de prijs autosleutel bijmaken met afstandsbediening voor uw voertuig. Bij de officiële dealer betaal je vaak de hoofdprijs, maar bij ons vallen de autosleutels bijmaken kosten een stuk lager uit. Of u nu een geavanceerde smart key zoekt, of simpelweg mechanische sleutels als reserve nodig heeft, wij helpen u verder. Wij leveren elk type autosleutel met hoogwaardige onderdelen, zodat uw centrale vergrendeling altijd soepel werkt.',
     system: 'ASK / FSK Rolling Code, NXP PCF7946 / PCF7961, Hitag2, 315MHz / 433MHz / 868MHz',
     priceFrom: 'Vanaf €120',
     duration: '30–60 minuten',
     steps: [
-      'Sleutelbaard mechanisch slijpen op basis van uw slot',
-      'De printplaat van de afstandsbediening synchroniseren met de BCM (Body Control Module)',
-      'Centrale vergrendeling en eventuele kofferbak/alarm-knoppen configureren',
-      'Signaalsterkte en rolling code beveiliging testen'
+      'U vraagt de prijs op voor uw specifieke type autosleutel',
+      'Wij snijden de sleutelbaard (mechanische sleutels) op maat',
+      'De afstandsbediening wordt gesynchroniseerd met de boordcomputer (BCM)',
+      'Centrale vergrendeling en eventuele knoppen worden geconfigureerd en getest'
     ],
     faq: [
-      { q: 'Waarom werkt de afstandsbediening soms niet na het vervangen van de batterij?', a: 'Sommige autosleutels verliezen hun synchronisatie als de batterij te lang leeg is geweest. Wij kunnen de afstandsbediening via een speciale procedure opnieuw inleren op uw auto.' },
-      { q: 'Zijn de afstandsbedieningen die u levert origineel?', a: 'Wij leveren zowel originele OEM-sleutels als kwalitatieve aftermarket alternatieven die identiek functioneren. U heeft altijd de keuze en krijgt 12 maanden garantie.' }
+      { q: 'Waarom werkt de afstandsbediening soms niet na het vervangen van de batterij?', a: 'Soms verliest een sleutel de synchronisatie als de batterij te lang leeg is geweest. Wij kunnen deze snel weer inleren op uw auto.' },
+      { q: 'Zijn de afstandsbedieningen die u levert origineel?', a: 'Wij leveren zowel originele OEM-sleutels als hoge kwaliteit aftermarket alternatieven. U heeft de keuze en krijgt altijd 12 maanden garantie.' }
     ],
     relatedSlugs: ['sleutel-bijmaken', 'smart-key-programmeren', 'transponder-programmeren', 'batterij-vervangen']
   },
