@@ -5,7 +5,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Kennisbank | Transpondertechnologie & Programmeren | Autosleutel24',
+    absolute: 'Autosleutel Kennisbank | Transpondertechnologie & Programmeren',
   },
   description:
     'Dé complete kennisbank over autosleutel programmering, transponderchips (Hitag, Megamos), OBD2 diagnose, Eeprom bench flashing en All-Keys-Lost procedures.',

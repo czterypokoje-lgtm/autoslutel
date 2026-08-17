@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return {};
   return {
     title: {
-      absolute: `${post.title} | ${SITE_CONFIG.name}`,
+      absolute: post.title,
     },
     description: post.excerpt,
     alternates: {

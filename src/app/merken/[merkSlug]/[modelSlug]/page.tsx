@@ -69,11 +69,11 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
 
   if (model) {
     targetName = model.name;
-    metaTitle = `${brand.name} ${targetName} Sleutel Bijmaken & Programmeren | Autosleutel24`;
+    metaTitle = `${brand.name} ${targetName} Sleutel Bijmaken & Programmeren`;
     metaDesc = `${brand.name} ${targetName} autosleutel bijmaken of repareren op locatie. Sleutel kwijt of afgebroken? Wij maken direct een nieuwe ${brand.name} ${targetName} sleutel. Bel nu: ${SITE_CONFIG.phone}`;
   } else if (intent) {
     targetName = intent.name;
-    metaTitle = `${brand.name} ${targetName} Repareren & Vervangen | Autosleutel24`;
+    metaTitle = `${brand.name} ${targetName} Repareren & Vervangen`;
     metaDesc = `Problemen met uw ${brand.name} ${targetName}? Wij verzorgen professionele reparatie en vervanging van ${brand.name} ${targetName} op locatie. Vaste prijs, direct geholpen.`;
   } else {
     return {};
