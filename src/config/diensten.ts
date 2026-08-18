@@ -132,6 +132,31 @@ export const DIENSTEN: Service[] = [
     ],
     relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-bijmaken', 'contactslot-auto-vervangen', 'autosleutels-repareren']
   },
+  {
+    slug: 'alle-sleutels-kwijt-auto',
+    title: 'Autosleutel Kwijt',
+    metaTitle: 'Alle Autosleutels Kwijt? | AKL Specialist op Locatie | 24/7',
+    metaDesc: 'Alle autosleutels kwijt? Laat uw auto niet wegslepen naar de dealer! Wij maken nieuwe sleutels ter plaatse op locatie. Inclusief programmering. Bel nu!',
+    h1: 'Alle Autosleutels Kwijt? — Mobiele Sleutelmaker ter Plaatse',
+    intro: 'Het is de ultieme nachtmerrie: u bent alle sleutels van uw auto kwijt (All Keys Lost). De dealer vraagt hoofdprijzen en u moet vaak weken wachten op een sleutel uit de fabriek. Wij lossen dit vandaag nog op locatie op. Onze bussen bevatten alle benodigde EEPROM-programmeertools en sleutel-CNC-machines om uw auto ter plaatse te programmeren.',
+    system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
+    duration: '60–180 minuten',
+    steps: [
+      'We verifiëren uw identiteit en eigendomspapieren',
+      'De auto wordt schadevrij geopend',
+      'De mechanische sleutelcode wordt uitgesleuteld of gelezen uit de slotcilinder',
+      'De ECU of startmodule (zoals BMW BDC of Mercedes EIS) wordt uitgelezen',
+      'Nieuwe transpondersleutels worden direct in het geheugen geschreven',
+      'De verloren sleutels worden definitief geblokkeerd'
+    ],
+    faq: [
+      { q: 'Moet de auto worden weggesleept als ik alle sleutels kwijt ben?', a: 'Nee. In tegenstelling tot de dealer (die vaak de auto in hun werkplaats wil hebben) doen wij alles op de plek waar de auto geparkeerd staat. Dit bespaart u dure sleepkosten.' },
+      { q: 'Kan dit voor elk automerk?', a: 'Wij kunnen reservesleutels maken bij verlies van alle sleutels voor 98% van de merken op de weg, inclusief complexe VAG MQB48 (VW Golf 8, Audi A3 8Y) en Mercedes FBS3 systemen.' }
+    ],
+    relatedSlugs: ['autosleutel-kwijt', 'sleutel-bijmaken', 'smart-key-programmeren', 'contactslot-auto-vervangen']
+  },
+
 
   // ── 2. AUTOSLEUTEL BIJMAKEN ───────────────────────────────
   {
@@ -268,30 +293,6 @@ export const DIENSTEN: Service[] = [
       { q: 'Hoe snel bent u bij mij bij een noodgeval?', a: 'Bij noodgevallen (zoals een kind of dier in de auto) geven wij absolute prioriteit en zijn we meestal binnen 15 tot 20 minuten op locatie.' }
     ],
     relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'autosleutel-kwijt']
-  },
-  {
-    slug: 'alle-sleutels-kwijt-auto',
-    title: 'Alle Sleutels Kwijt (AKL)',
-    metaTitle: 'Alle Autosleutels Kwijt? | AKL Specialist op Locatie | 24/7',
-    metaDesc: 'Alle autosleutels kwijt? Laat uw auto niet wegslepen naar de dealer! Wij maken nieuwe sleutels ter plaatse op locatie. Inclusief programmering. Bel nu!',
-    h1: 'Alle Autosleutels Kwijt? — Mobiele Sleutelmaker ter Plaatse',
-    intro: 'Het is de ultieme nachtmerrie: u bent alle sleutels van uw auto kwijt (All Keys Lost). De dealer vraagt hoofdprijzen en u moet vaak weken wachten op een sleutel uit de fabriek. Wij lossen dit vandaag nog op locatie op. Onze bussen bevatten alle benodigde EEPROM-programmeertools en sleutel-CNC-machines om uw auto ter plaatse te programmeren.',
-    system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
-    duration: '60–180 minuten',
-    steps: [
-      'We verifiëren uw identiteit en eigendomspapieren',
-      'De auto wordt schadevrij geopend',
-      'De mechanische sleutelcode wordt uitgesleuteld of gelezen uit de slotcilinder',
-      'De ECU of startmodule (zoals BMW BDC of Mercedes EIS) wordt uitgelezen',
-      'Nieuwe transpondersleutels worden direct in het geheugen geschreven',
-      'De verloren sleutels worden definitief geblokkeerd'
-    ],
-    faq: [
-      { q: 'Moet de auto worden weggesleept als ik alle sleutels kwijt ben?', a: 'Nee. In tegenstelling tot de dealer (die vaak de auto in hun werkplaats wil hebben) doen wij alles op de plek waar de auto geparkeerd staat. Dit bespaart u dure sleepkosten.' },
-      { q: 'Kan dit voor elk automerk?', a: 'Wij kunnen reservesleutels maken bij verlies van alle sleutels voor 98% van de merken op de weg, inclusief complexe VAG MQB48 (VW Golf 8, Audi A3 8Y) en Mercedes FBS3 systemen.' }
-    ],
-    relatedSlugs: ['autosleutel-kwijt', 'sleutel-bijmaken', 'smart-key-programmeren', 'contactslot-auto-vervangen']
   },
 
   // ── 4. BATTERIJ VERVANGEN ─────────────────────────────────

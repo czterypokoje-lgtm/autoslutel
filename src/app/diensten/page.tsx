@@ -41,18 +41,21 @@ export default function DienstenOverviewPage() {
               </tr>
             </thead>
             <tbody>
-              {DIENSTEN.map((s, i) => (
-                <tr key={i}>
-                  <td className={styles.serviceCell}>
-                    <Link href={`/diensten/${s.slug}`} className={styles.serviceLink}>{s.title}</Link>
-                  </td>
-                  <td className={styles.descCell}>{s.intro.split('.')[0]}.</td>
-                  <td className={styles.timeCell}>{s.duration || '30–60 min'}</td>
-                  <td className={styles.actionCell}>
-                    <Link href={`/diensten/${s.slug}`} className={styles.moreBtn}>Details →</Link>
-                  </td>
-                </tr>
-              ))}
+              {DIENSTEN.map((s, i) => {
+                const href = s.slug === 'alle-sleutels-kwijt-auto' ? '/autosleutel-kwijt' : `/diensten/${s.slug}`;
+                return (
+                  <tr key={i}>
+                    <td className={styles.serviceCell}>
+                      <Link href={href} className={styles.serviceLink}>{s.title}</Link>
+                    </td>
+                    <td className={styles.descCell}>{s.intro.split('.')[0]}.</td>
+                    <td className={styles.timeCell}>{s.duration || '30–60 min'}</td>
+                    <td className={styles.actionCell}>
+                      <Link href={href} className={styles.moreBtn}>Details →</Link>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
