@@ -64,7 +64,7 @@ export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false 
           {BRANDS_WITH_LOGOS.map((brand) => (
             <Link
               key={brand.slug}
-              href={`/merken/${brand.slug}-autosleutel-bijmaken`}
+              href={`/merken/${brand.slug}`}
               className={styles.brandLogoCard}
               title={`${brand.name} autosleutel bijmaken — ${brand.models}`}
             >
