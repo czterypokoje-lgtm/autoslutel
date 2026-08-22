@@ -133,11 +133,11 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
 
   const pricingHeaders = ['Dienst / Sleuteltype', 'Kenmerken', 'Onze Tarieven (excl. btw)', 'Dealer Prijs'];
   const pricingRows = [
-    ['Standaard autosleutel (mechanisch)', 'Zonder afstandsbediening, incl. transponder chip', `Vanaf € ${SITE_CONFIG.prices.transponder},-`, 'Vanaf € 500,- ex. (1-2 wk levertijd)'],
-    ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € ${SITE_CONFIG.prices.remote},-`, 'Vanaf € 600,- ex. (1-2 wk levertijd)'],
-    ['Smart Key / Keyless Entry', 'Proximity start, volledig geprogrammeerd', `Vanaf € ${SITE_CONFIG.prices.smartKey},-`, 'Vanaf € 700,- ex. (1-2 wk levertijd)'],
+    ['Standaard autosleutel (mechanisch)', 'Zonder afstandsbediening, incl. transponder chip', `Vanaf € ${SITE_CONFIG.prices.transponder},-`, '€ 400 - € 800 (1-2 wk levertijd)'],
+    ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € ${SITE_CONFIG.prices.remote},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
+    ['Smart Key / Keyless Entry', 'Proximity start, volledig geprogrammeerd', `Vanaf € ${SITE_CONFIG.prices.smartKey},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
     ['Sleutel behuizing / batterij vervangen', 'Nieuwe behuizing, micro-switches & batterij', `Vanaf € ${SITE_CONFIG.prices.casing},-`, 'Vaak hele sleutel (€ 200+)'],
-    ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, 'Vanaf € 900,- ex. (1-2 wk levertijd)'],
+    ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
     ['Contactslot reparatie / vervanging', 'Reviseren of nieuw slot incl. sleutels', `Vanaf € ${SITE_CONFIG.prices.ignition},-`, 'Vaak hele stuurkolom (€ 600+)']
   ];
 
