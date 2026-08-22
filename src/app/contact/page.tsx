@@ -137,22 +137,22 @@ export default async function ContactPage(props: Props) {
                     <tbody>
                       <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                         <td style={{ padding: '1rem' }}>Standaard sleutel</td>
-                        <td style={{ padding: '1rem', color: '#64748b', textDecoration: 'line-through' }}>€250 - €350</td>
+                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>Vanaf €500 ex. btw</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
                         <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €{SITE_CONFIG.prices.unlock}</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                         <td style={{ padding: '1rem' }}>Klapsleutel / Flip Key</td>
-                        <td style={{ padding: '1rem', color: '#64748b', textDecoration: 'line-through' }}>€350 - €450</td>
+                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>Vanaf €600 ex. btw</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
                         <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €199</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                         <td style={{ padding: '1rem' }}>Smart Key / Keyless</td>
-                        <td style={{ padding: '1rem', color: '#64748b', textDecoration: 'line-through' }}>€450 - €700</td>
+                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>Vanaf €700 ex. btw</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
                         <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €299</td>
                       </tr>
                       <tr>
                         <td style={{ padding: '1rem' }}>Alle sleutels kwijt (geen werkende sleutel)</td>
-                        <td style={{ padding: '1rem', color: '#64748b', textDecoration: 'line-through' }}>€600+</td>
+                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>Vanaf €900 ex. btw</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
                         <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €299</td>
                       </tr>
                     </tbody>
