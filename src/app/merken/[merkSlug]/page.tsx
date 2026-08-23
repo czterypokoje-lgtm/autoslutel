@@ -194,7 +194,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               {/* Card 2: Kwijt */}
               <Link href="/diensten/alle-sleutels-kwijt-auto" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-kwijt-${brand.slug}`}>
                 <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
-                  <Image src="/images/service_kwijt.webp" alt={`${brand.name} autosleutels kwijt`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_kwijt_illustration.webp" alt={`${brand.name} autosleutels kwijt`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
                   {brand.name} Autosleutels Kwijt

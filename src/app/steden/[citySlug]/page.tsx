@@ -374,7 +374,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
               <Link href={`/diensten/alle-sleutels-kwijt-auto`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_kwijt.webp" alt={`Autosleutels Kwijt in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_kwijt_illustration.webp" alt={`Autosleutels Kwijt in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autosleutels Kwijt in {city.city}</h3>
                 <p>Geen enkele sleutel meer? Wij komen direct naar u toe, openen de auto, frezen een nieuwe sleutel en leren hem in.</p>
