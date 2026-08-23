@@ -17,6 +17,7 @@ import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
@@ -136,6 +137,7 @@ export default function HomePage() {
         <div className={styles.heroSplitInner}>
           
           <div className={styles.heroTopContent}>
+            <HeroTrustBadge />
             <h1>
               Autosleutel Kwijt of Bijmaken?<br />
               <span style={{ color: 'var(--orange-500)' }}>Wij Helpen Direct op Locatie!</span>

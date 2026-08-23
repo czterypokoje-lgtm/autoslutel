@@ -1,0 +1,85 @@
+.badgeContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.avatarPile {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+  margin-left: -12px;
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.avatar:first-child {
+  margin-left: 0;
+  z-index: 4;
+}
+.avatar:nth-child(2) { z-index: 3; }
+.avatar:nth-child(3) { z-index: 2; }
+.avatar:nth-child(4) { z-index: 1; }
+
+.ratingInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.scoreRow {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.score {
+  font-weight: 800;
+  color: var(--navy-900, #0a192f);
+  font-size: 1.25rem;
+  line-height: 1.1;
+}
+
+.star {
+  color: #ffc107;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: var(--gray-600, #4b5563);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .badgeContainer {
+    margin-bottom: 1rem;
+    padding: 0.4rem 0.75rem 0.4rem 0.4rem;
+  }
+  .avatar {
+    width: 32px;
+    height: 32px;
+    margin-left: -8px;
+  }
+  .score {
+    font-size: 1.1rem;
+  }
+  .label {
+    font-size: 0.65rem;
+  }
+}
