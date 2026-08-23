@@ -48,45 +48,70 @@ export const BRANDS_WITH_LOGOS = [
 ];
 
 export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false }: BrandsLogoGridProps) {
+  // Build-time check for localization safety (prevent German/English leaks on Dutch pages)
+  if (process.env.NODE_ENV !== 'production') {
+    const textToCheck = `${title || ''} ${subtitle || ''}`;
+    if (textToCheck && (textToCheck.includes('Welche') || textToCheck.includes('Marken') || textToCheck.includes('What') || textToCheck.includes('brands'))) {
+      console.warn('BrandsLogoGrid: Possible language leak detected. Component text appears to be non-Dutch.');
+    }
+  }
+
   return (
     <section className={styles.brandsSection}>
-      <div className="container">
-        {!hideSeoHeader && (
-          <div className={styles.brandsSeoHeader}>
-            <h2 className={styles.brandsHeading}>{title || 'Autosleutel Bijmaken — Alle Merken'}</h2>
-            <p className={styles.brandsLead}>
-              {subtitle || 'Wij maken en programmeren autosleutels voor alle gangbare merken direct ter plaatse. Selecteer uw merk:'}
-            </p>
-          </div>
-        )}
+      <div className={`container ${styles.brandsLayout}`}>
+        
+        {/* Left Side: Technician Hero */}
+        <div className={styles.brandsHero}>
+          <Image 
+            src="/images/technician_pointing.jpg"
+            alt="Autosleutel specialist wijst naar merken"
+            width={500}
+            height={600}
+            priority
+            className={styles.heroImg}
+          />
+        </div>
 
-        <div className={styles.brandsLogoGrid}>
-          {BRANDS_WITH_LOGOS.map((brand) => (
-            <Link
-              key={brand.slug}
-              href={`/merken/${brand.slug}`}
-              className={styles.brandLogoCard}
-              title={`${brand.name} autosleutel bijmaken — ${brand.models}`}
-            >
-              <Image
-                src={brand.svg}
-                alt={`${brand.name} logo`}
-                className={styles.brandLogoImg}
-                width={80}
-                height={48}
-              />
-              <span className={styles.brandLogoName}>{brand.name} sleutel bijmaken</span>
-              {/* Hidden SEO text for crawlers */}
-              <span className={styles.brandSeoHidden}>{brand.models}</span>
+        {/* Right Side: Content and Grid */}
+        <div className={styles.brandsContent}>
+          {!hideSeoHeader && (
+            <div className={styles.brandsSeoHeader}>
+              <h2 className={styles.brandsHeading}>{title || 'Autosleutel Bijmaken — Alle Merken'}</h2>
+              <p className={styles.brandsLead}>
+                {subtitle || 'Wij maken en programmeren autosleutels voor alle gangbare merken direct ter plaatse. Selecteer uw merk:'}
+              </p>
+            </div>
+          )}
+
+          <ul className={styles.brandsLogoGrid}>
+            {BRANDS_WITH_LOGOS.map((brand) => (
+              <li key={brand.slug} className={styles.brandLogoItem}>
+                <Link
+                  href={`/merken/${brand.slug}`}
+                  className={styles.brandLogoCard}
+                  title={`${brand.name} autosleutel bijmaken — ${brand.models}`}
+                >
+                  <Image
+                    src={brand.svg}
+                    alt={`${brand.name} logo — autosleutel bijmaken`}
+                    className={styles.brandLogoImg}
+                    width={80}
+                    height={48}
+                    loading="lazy"
+                  />
+                  <span className={styles.brandLogoName}>{brand.name} sleutel bijmaken</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <Link href="/merken" className={styles.brandsAllLink}>
+              Bekijk alle {BRANDS_WITH_LOGOS.length} merken die wij bedienen &rarr;
             </Link>
-          ))}
+          </div>
         </div>
-
-        <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-          <Link href="/merken" className={styles.brandsAllLink}>
-            Bekijk alle 59 merken die wij bedienen &rarr;
-          </Link>
-        </div>
+        
       </div>
     </section>
   );
