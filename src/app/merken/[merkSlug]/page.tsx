@@ -86,9 +86,16 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
   // alphabetGroups logic removed because it is no longer used in the new UI layout.
 
   // Check if a specific car photo exists for this brand
-  const carPhotoPathLocal = path.join(process.cwd(), 'public', 'images', 'cars', `${brand.slug}.jpg`);
-  const hasCarPhoto = fs.existsSync(carPhotoPathLocal);
-  const carPhotoSrc = hasCarPhoto ? `/images/cars/${brand.slug}.jpg` : `/images/merken/bmw_car_placeholder.jpg`;
+  const extensions = ['.jpg', '.avif', '.webp', '.png', '.jpeg'];
+  let carPhotoSrc = `/images/merken/bmw_car_placeholder.jpg`;
+  
+  for (const ext of extensions) {
+    const carPhotoPathLocal = path.join(process.cwd(), 'public', 'images', 'cars', `${brand.slug}${ext}`);
+    if (fs.existsSync(carPhotoPathLocal)) {
+      carPhotoSrc = `/images/cars/${brand.slug}${ext}`;
+      break;
+    }
+  }
 
   const schema = {
     '@context': 'https://schema.org', '@type': 'Service',
