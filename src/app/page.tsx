@@ -136,9 +136,6 @@ export default function HomePage() {
         <div className={styles.heroSplitInner}>
           
           <div className={styles.heroTopContent}>
-            <div style={{ marginBottom: '1.5rem' }}>
-              <HeroGoogleBadge />
-            </div>
             <div className={styles.heroSplitLabel}>NL — 24/7 Mobiele Service</div>
             <h1>
               Autosleutel Kwijt of Bijmaken?<br />
@@ -182,6 +179,9 @@ export default function HomePage() {
 
           <div className={styles.heroBottomContent}>
             <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
+            <div style={{ marginTop: '1.5rem' }}>
+              <HeroGoogleBadge />
+            </div>
           </div>
 
         </div>
