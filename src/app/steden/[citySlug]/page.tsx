@@ -14,6 +14,7 @@ import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
 import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import { generateContextualReviews } from '@/utils/reviews';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
@@ -229,7 +230,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <nav className={styles.breadcrumb} aria-label="Breadcrumb">
                   <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/steden" style={{ color: 'var(--gray-500)' }}>Steden</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
                 </nav>
-                <div className={styles.heroLabel} style={{ color: 'var(--orange-600)' }}>NL — {city.region}</div>
+                <div style={{ marginBottom: '1.25rem', marginTop: '1rem' }}>
+                  <HeroTrustBadge />
+                </div>
                 <h1>
                   {city.customH1 ? (
                     city.customH1
@@ -269,7 +272,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <nav className={styles.breadcrumb} aria-label="Breadcrumb">
                 <Link href="/">Home</Link> <span>/</span> <Link href="/steden">Steden</Link> <span>/</span> <span>{city.city}</span>
               </nav>
-              <div className={styles.heroLabel}>NL — {city.region}</div>
+              <div style={{ marginBottom: '1.25rem', marginTop: '1rem' }}>
+                <HeroTrustBadge />
+              </div>
               <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
               <p className={styles.heroLead}>
                 Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
