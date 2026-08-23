@@ -225,7 +225,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {hasHeroImage ? (
           <section className={styles.heroUtrecht}>
             <div className={styles.heroUtrechtInner}>
-              <div className={styles.heroUtrechtText}>
+              <div className={styles.heroTopContent}>
                 <nav className={styles.breadcrumb} aria-label="Breadcrumb">
                   <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/steden" style={{ color: 'var(--gray-500)' }}>Steden</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
                 </nav>
@@ -241,12 +241,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
                   Alle merken, ter plaatse geprogrammeerd.
                 </p>
-                <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} theme="light" />
-                <div style={{ marginTop: '1.5rem' }}>
-                  <HeroGoogleBadge />
-                </div>
               </div>
-              <div className={styles.heroUtrechtImage}>
+
+              <div className={styles.heroImageContent}>
                 <Image 
                   src={`/images/autosleutel-bijmaken-${city.slug}${heroImageExt}`}
                   alt={`Autosleutel bijmaken ${city.city} - 24/7 service op locatie`}
@@ -256,6 +253,13 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   priority
                   fetchPriority="high"
                 />
+              </div>
+
+              <div className={styles.heroBottomContent}>
+                <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} theme="light" />
+                <div style={{ marginTop: '1.5rem' }}>
+                  <HeroGoogleBadge />
+                </div>
               </div>
             </div>
           </section>
