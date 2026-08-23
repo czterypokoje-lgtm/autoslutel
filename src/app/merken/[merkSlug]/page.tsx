@@ -329,6 +329,10 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 .models-list {
                   column-count: 1;
                 }
+                .timpson-image-wrap {
+                  flex: none !important;
+                  width: 100%;
+                }
               }
             `}} />
 
@@ -366,7 +370,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 </ul>
               </div>
 
-              <div style={{ flex: '1 1 450px', position: 'relative', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
+              <div className="timpson-image-wrap" style={{ flex: '1 1 0%', width: '100%', position: 'relative', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', backgroundColor: '#fff' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={carPhotoSrc} alt={`${brand.name} car`} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
               </div>
