@@ -198,7 +198,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               </div>
               <div className={styles.heroSplitImage}>
                 <Image 
-                  src="/images/service_kwijt.jpg" 
+                  src="/images/service_kwijt.webp" 
                   alt="Alle autosleutels kwijt, we maken een nieuwe sleutel op locatie"
                   width={800}
                   height={450}
@@ -213,7 +213,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
           <section 
             className={styles.hero}
             style={slug === 'autosleutel-reparatie' ? {
-              backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%), url('/images/seo/autosleutel_reparatie_hero.jpg')`,
+              backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%), url('/images/seo/autosleutel_reparatie_hero.webp')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             } : undefined}
@@ -253,7 +253,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
           features={[
               {
                 id: 'feature-1',
-                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Autosleutel Kwijt? Direct Hulp',
                 description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
                 linkText: 'Meer over mobiele service',
@@ -261,7 +261,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               },
               {
                 id: 'feature-2',
-                icon: <Image src="/images/icon_map.jpg" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_map.webp" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Auto Op Slot? Schadevrij openen',
                 description: `Binnen ${SITE_CONFIG.responseTime} minuten ter plaatse. Onze lokale monteur is altijd in de buurt.`,
                 linkText: 'Vind een monteur',
@@ -269,7 +269,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               },
               {
                 id: 'feature-3',
-                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Vaste prijs vooraf',
                 description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
                 linkText: 'Bekijk onze tarieven',
@@ -277,7 +277,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               },
               {
                 id: 'feature-4',
-                icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '12 Maanden Garantie',
                 description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
                 linkText: 'Bekijk waar wij service verlenen',
@@ -285,7 +285,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               },
               {
                 id: 'feature-5',
-                icon: <Image src="/images/icon_insurance.jpg" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '24/7 Spoedhulp Bel Nu',
                 description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
                 linkText: 'Bel direct',

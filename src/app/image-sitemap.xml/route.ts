@@ -125,32 +125,32 @@ const CORE_IMAGES = [
 // ── Blog post images ──
 const BLOG_IMAGES = [
   {
-    url: '/images/blog/auto_openen_zonder_sleutel_schadevrij.png',
+    url: '/images/blog/auto_openen_zonder_sleutel_schadevrij.webp',
     title: 'Auto Openen Zonder Sleutel Schadevrij',
     caption: 'Schadevrij auto openen zonder sleutel door Autosleutel24',
   },
   {
-    url: '/images/blog/autosleutel_bijmaken_kosten_prijslijst.png',
+    url: '/images/blog/autosleutel_bijmaken_kosten_prijslijst.webp',
     title: 'Autosleutel Bijmaken Kosten Prijslijst 2026',
     caption: 'Kostenoverzicht autosleutel bijmaken per merk — 2026 prijslijst',
   },
   {
-    url: '/images/blog/autosleutel_bijmaken_specialist_utrecht.png',
+    url: '/images/blog/autosleutel_bijmaken_specialist_utrecht.webp',
     title: 'Autosleutel Bijmaken Specialist Utrecht',
     caption: 'Gecertificeerde autosleutelspecialist aan het werk in Utrecht',
   },
   {
-    url: '/images/blog/autosleutel_kwijt_wat_nu_stappenplan.png',
+    url: '/images/blog/autosleutel_kwijt_wat_nu_stappenplan.webp',
     title: 'Autosleutel Kwijt — Stappenplan Utrecht',
     caption: 'Stappenplan: wat te doen als u uw autosleutel kwijt bent in Utrecht',
   },
   {
-    url: '/images/blog/sleutel_bijmaken_auto_mobiele_service.png',
+    url: '/images/blog/sleutel_bijmaken_auto_mobiele_service.webp',
     title: 'Autosleutel Bijmaken Mobiele Service',
     caption: 'Mobiele autosleutel bijmaken service — Autosleutel24 bij u thuis of op kantoor',
   },
   {
-    url: '/images/blog/smart_key_programmeren_utrecht_auto.png',
+    url: '/images/blog/smart_key_programmeren_utrecht_auto.webp',
     title: 'Smart Key Programmeren Utrecht',
     caption: 'Smart key en keyless entry sleutel programmeren in Utrecht',
   },

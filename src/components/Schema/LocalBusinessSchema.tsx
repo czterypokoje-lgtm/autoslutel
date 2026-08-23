@@ -11,7 +11,7 @@ export default function LocalBusinessSchema() {
     url: SITE_CONFIG.domain,
     logo: {
       '@type': 'ImageObject',
-      url: `${SITE_CONFIG.domain}/images/logo/autosleutel24-logo-slotenmaker-utrecht.png`,
+      url: `${SITE_CONFIG.domain}/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp`,
       width: 1024,
       height: 304,
     },

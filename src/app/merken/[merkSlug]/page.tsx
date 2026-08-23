@@ -87,7 +87,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
 
   // Check if a specific car photo exists for this brand
   const extensions = ['.jpg', '.avif', '.webp', '.png', '.jpeg'];
-  let carPhotoSrc = `/images/merken/bmw_car_placeholder.jpg`;
+  let carPhotoSrc = `/images/merken/bmw_car_placeholder.webp`;
   
   for (const ext of extensions) {
     const carPhotoPathLocal = path.join(process.cwd(), 'public', 'images', 'cars', `${brand.slug}${ext}`);
@@ -177,7 +177,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               {/* Card 1: Bijmaken */}
               <Link href="/diensten/autosleutel-bijmaken" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-bijmaken-${brand.slug}`}>
                 <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
-                  <Image src="/images/service_bijmaken.png" alt={`${brand.name} autosleutel bijmaken`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_bijmaken.webp" alt={`${brand.name} autosleutel bijmaken`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
                   {brand.name} Autosleutel Bijmaken
@@ -194,7 +194,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               {/* Card 2: Kwijt */}
               <Link href="/diensten/alle-sleutels-kwijt-auto" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-kwijt-${brand.slug}`}>
                 <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
-                  <Image src="/images/service_kwijt.png" alt={`${brand.name} autosleutels kwijt`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_kwijt.webp" alt={`${brand.name} autosleutels kwijt`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
                   {brand.name} Autosleutels Kwijt
@@ -211,7 +211,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               {/* Card 3: Openen */}
               <Link href="/diensten/auto-openen-zonder-sleutel" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-openen-${brand.slug}`}>
                 <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
-                  <Image src="/images/service_openen.png" alt={`${brand.name} autodeur openen`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_openen.webp" alt={`${brand.name} autodeur openen`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
                   {brand.name} Autodeur Openen
@@ -228,7 +228,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               {/* Card 4: Contactslot Vervangen */}
               <Link href="/diensten" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-contactslot-${brand.slug}`}>
                 <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
-                  <Image src="/images/service_contactslot.png" alt={`${brand.name} contactslot vervangen`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_contactslot.webp" alt={`${brand.name} contactslot vervangen`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
                   {brand.name} Contactslot Vervangen
@@ -405,7 +405,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                 <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_1.jpg" alt="Betaalbaar pinapparaat" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <img src="/images/why_choose_us_1.webp" alt="Betaalbaar pinapparaat" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Betaalbaar</h3>
                 <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
@@ -417,7 +417,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                 <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_2.png" alt="Sleutel programmeren op locatie" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <img src="/images/why_choose_us_2.webp" alt="Sleutel programmeren op locatie" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Gemakkelijk</h3>
                 <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
@@ -429,7 +429,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                 <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_3.png" alt="Sleutel werkplaats" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <img src="/images/why_choose_us_3.webp" alt="Sleutel werkplaats" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Kwaliteit</h3>
                 <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>

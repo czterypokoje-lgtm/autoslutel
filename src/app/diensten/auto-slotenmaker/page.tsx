@@ -176,7 +176,7 @@ export default function AutoSlotenmakerPage() {
           features={[
               {
                 id: 'feature-1',
-                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Autosleutel Kwijt? Direct Hulp',
                 description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
                 linkText: 'Meer over mobiele service',
@@ -184,7 +184,7 @@ export default function AutoSlotenmakerPage() {
               },
               {
                 id: 'feature-2',
-                icon: <Image src="/images/icon_map.jpg" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_map.webp" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Auto Op Slot? Schadevrij openen',
                 description: `Binnen ${SITE_CONFIG.responseTime} minuten ter plaatse. Onze lokale monteur is altijd in de buurt.`,
                 linkText: 'Vind een monteur',
@@ -192,7 +192,7 @@ export default function AutoSlotenmakerPage() {
               },
               {
                 id: 'feature-3',
-                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Vaste prijs vooraf',
                 description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
                 linkText: 'Bekijk onze tarieven',
@@ -200,7 +200,7 @@ export default function AutoSlotenmakerPage() {
               },
               {
                 id: 'feature-4',
-                icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '12 Maanden Garantie',
                 description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
                 linkText: 'Bekijk waar wij service verlenen',
@@ -208,7 +208,7 @@ export default function AutoSlotenmakerPage() {
               },
               {
                 id: 'feature-5',
-                icon: <Image src="/images/icon_insurance.jpg" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '24/7 Spoedhulp Bel Nu',
                 description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
                 linkText: 'Bel direct',

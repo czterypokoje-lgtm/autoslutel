@@ -211,7 +211,7 @@ export default function AutoOpenenZonderSleutelPage() {
           features={[
               {
                 id: 'feature-1',
-                icon: <Image src="/images/icon_map.jpg" alt="Snel op locatie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_map.webp" alt="Snel op locatie" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Binnen 30-60 min Ter Plaatse',
                 description: `Buitengesloten? Wij zijn direct naar u onderweg. Onze monteur is altijd in de buurt.`,
                 linkText: 'Vind een monteur',
@@ -219,7 +219,7 @@ export default function AutoOpenenZonderSleutelPage() {
               },
               {
                 id: 'feature-2',
-                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Zonder Sleepwagen',
                 description: 'We openen uw deuren direct op uw locatie. Uw auto hoeft niet weggesleept te worden.',
                 linkText: 'Meer over mobiele service',
@@ -227,7 +227,7 @@ export default function AutoOpenenZonderSleutelPage() {
               },
               {
                 id: 'feature-3',
-                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Vaste prijs vooraf',
                 description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen met openen.',
                 linkText: 'Bekijk onze tarieven',
@@ -235,7 +235,7 @@ export default function AutoOpenenZonderSleutelPage() {
               },
               {
                 id: 'feature-4',
-                icon: <Image src="/images/icon_car_check.jpg" alt="Schadevrij" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_car_check.webp" alt="Schadevrij" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '100% Schadevrij Garantie',
                 description: 'Wij garanderen dat wij uw auto openen zónder de ruit in te slaan of het slot te beschadigen.',
                 linkText: 'Lees meer over garantie',

@@ -592,7 +592,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <h2>Wat is het proces van autosleutel bijmaken?</h2>
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
-          src="/images/blog/autosleutel_bijmaken_specialist_utrecht.png" 
+          src="/images/blog/autosleutel_bijmaken_specialist_utrecht.webp" 
           alt="Programmeren en frezen van een nieuwe transpondersleutel" 
           fill 
           style={{ objectFit: 'cover' }}
@@ -632,7 +632,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
-          src="/images/blog/smart_key_programmeren_utrecht_auto.png" 
+          src="/images/blog/smart_key_programmeren_utrecht_auto.webp" 
           alt="Geprogrammeerde smart key" 
           fill 
           style={{ objectFit: 'cover' }}
@@ -683,7 +683,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <h2>Auto openen zonder sleutel: Doe het veilig en 100% schadevrij</h2>
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
-          src="/images/blog/auto_openen_zonder_sleutel_schadevrij.png" 
+          src="/images/blog/auto_openen_zonder_sleutel_schadevrij.webp" 
           alt="Autodeur schadevrij openen met luchtwig (air wedge)" 
           fill 
           style={{ objectFit: 'cover' }}
@@ -726,7 +726,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ margin: '2rem 0', position: 'relative', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
-          src="/images/blog/lost_key_process_illustration.jpg" 
+          src="/images/blog/lost_key_process_illustration.webp" 
           alt="Het proces van een autosleutel bijmaken op locatie: van probleem naar oplossing" 
           width={800}
           height={800}
@@ -781,7 +781,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <h2>Wat zijn de kosten van een autosleutel bijmaken? Een transparant overzicht</h2>
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
-          src="/images/blog/autosleutel_bijmaken_kosten_prijslijst.png" 
+          src="/images/blog/autosleutel_bijmaken_kosten_prijslijst.webp" 
           alt="Autosleutel met prijslijst op tablet" 
           fill 
           style={{ objectFit: 'cover' }}
@@ -825,7 +825,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <h2>Autosleutel bijmaken auto: De kracht van de mobiele service</h2>
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
-          src="/images/blog/sleutel_bijmaken_auto_mobiele_service.png" 
+          src="/images/blog/sleutel_bijmaken_auto_mobiele_service.webp" 
           alt="Frezen van autosleutel met CNC machine" 
           fill 
           style={{ objectFit: 'cover' }}
@@ -1246,7 +1246,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ margin: '2rem 0' }}>
         <Image
-          src="/images/blog/autosleutel-kenteken-1.jpg"
+          src="/images/blog/autosleutel-kenteken-1.webp"
           alt="Autosleutels met kentekenbewijs op bureau"
           width={800}
           height={500}
@@ -1300,7 +1300,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ margin: '2rem 0' }}>
         <Image
-          src="/images/blog/autosleutel-kenteken-2.jpg"
+          src="/images/blog/autosleutel-kenteken-2.webp"
           alt="Monteur programmeert autosleutel met laptop"
           width={800}
           height={500}
@@ -1428,7 +1428,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ margin: '2rem 0' }}>
         <Image
-          src="/images/blog/auto-openen-1.jpg"
+          src="/images/blog/auto-openen-1.webp"
           alt="Gefrustreerde persoon naast een afgesloten auto"
           width={800}
           height={500}
@@ -1488,7 +1488,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ margin: '2rem 0' }}>
         <Image
-          src="/images/blog/auto-openen-2.jpg"
+          src="/images/blog/auto-openen-2.webp"
           alt="Monteur maakt autodeur open met specialistisch gereedschap"
           width={800}
           height={500}
@@ -1519,7 +1519,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ margin: '2rem 0' }}>
         <Image
-          src="/images/blog/auto-openen-3.jpg"
+          src="/images/blog/auto-openen-3.webp"
           alt="Smart key op een tafel"
           width={800}
           height={500}

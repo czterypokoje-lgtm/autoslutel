@@ -287,7 +287,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             features={[
               {
                 id: 'feature-1',
-                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '24/7 Mobiele Slotenmaker',
                 description: `Wij rijden als lokale mobiele slotenmaker direct naar uw locatie in ${city.city} om u zonder vertraging weer op weg te helpen.`,
                 linkText: 'Meer over mobiele service',
@@ -295,7 +295,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               },
               {
                 id: 'feature-2',
-                icon: <Image src="/images/icon_map.jpg" alt="Actuele Responstijden" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_map.webp" alt="Actuele Responstijden" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: `Snel ter plaatse in ${city.city}`,
                 description: `Onze gemiddelde responstijd in ${area1} is momenteel ${time1} min. Vanuit ${area2} is de aanrijdtijd circa ${time2} min.`,
                 linkText: 'Vind een monteur',
@@ -303,7 +303,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               },
               {
                 id: 'feature-3',
-                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Ervaren & Vaste Prijs',
                 description: `Gebaseerd op ${jobsCount} afgeronde opdrachten dit jaar in en rond ${city.city}, garanderen wij vakkundige service met een vaste prijs vooraf.`,
                 linkText: 'Bekijk onze tarieven',
@@ -311,7 +311,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               },
               {
                 id: 'feature-4',
-                icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '12 Maanden Garantie',
                 description: 'Wij bieden standaard 12 maanden volledige garantie op al onze geleverde sleutels en het programmeren daarvan.',
                 linkText: 'Bekijk waar wij service verlenen',
@@ -319,7 +319,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               },
               {
                 id: 'feature-5',
-                icon: <Image src="/images/icon_insurance.jpg" alt="Verzekerd" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_insurance.webp" alt="Verzekerd" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Verzekerd & Gecertificeerd',
                 description: 'U bent 100% verzekerd. We werken samen met alle grote verzekeraars.',
                 linkText: 'Lees meer over verzekering',
@@ -362,7 +362,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <div className={styles.serviceCardsGrid}>
               <Link href={`/diensten/autosleutel-bijmaken`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_bijmaken.png" alt={`Autosleutel Bijmaken in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_bijmaken.webp" alt={`Autosleutel Bijmaken in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autosleutel Bijmaken in {city.city}</h3>
                 <p>Heeft u een extra autosleutel nodig? Wij maken een nieuwe sleutel op locatie, vaak de helft goedkoper dan de dealer.</p>
@@ -374,7 +374,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
               <Link href={`/diensten/alle-sleutels-kwijt-auto`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_kwijt.png" alt={`Autosleutels Kwijt in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_kwijt.webp" alt={`Autosleutels Kwijt in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autosleutels Kwijt in {city.city}</h3>
                 <p>Geen enkele sleutel meer? Wij komen direct naar u toe, openen de auto, frezen een nieuwe sleutel en leren hem in.</p>
@@ -386,7 +386,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
               <Link href={`/diensten/auto-openen-zonder-sleutel`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_openen.png" alt={`Autodeur Openen in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_openen.webp" alt={`Autodeur Openen in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autodeur Openen in {city.city}</h3>
                 <p>Sleutel in de auto laten liggen? Wij openen uw auto 100% schadevrij met speciaal gereedschap, zonder krassen.</p>

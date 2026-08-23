@@ -36,7 +36,7 @@ export default function ArticleSchema({
       name: SITE_CONFIG.name,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_CONFIG.domain}/images/logo/autosleutel24-logo-slotenmaker-utrecht.png`,
+        url: `${SITE_CONFIG.domain}/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp`,
       },
     },
   };

@@ -162,7 +162,7 @@ export default function OverOnsPage() {
           </div>
           <div>
             <img 
-              src="/images/seo/envanter.jpeg" 
+              src="/images/seo/envanter.webp" 
               alt="Voorraad originele autosleutels en transponders" 
               style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />

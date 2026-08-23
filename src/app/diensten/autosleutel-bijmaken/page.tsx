@@ -193,7 +193,7 @@ export default function SleutelBijmakenPage() {
           features={[
               {
                 id: 'feature-1',
-                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Mobiele Service',
                 description: 'Waarom naar de dealer slepen? Wij komen naar u toe en maken uw sleutel direct ter plaatse.',
                 linkText: 'Meer over mobiele service',
@@ -201,7 +201,7 @@ export default function SleutelBijmakenPage() {
               },
               {
                 id: 'feature-2',
-                icon: <Image src="/images/icon_map.jpg" alt="Alle Merken" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_map.webp" alt="Alle Merken" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Inclusief Programmeren',
                 description: 'Elke nieuwe sleutel wordt direct ingeleerd in het systeem van uw auto. Startklaar!',
                 linkText: 'Vind een monteur',
@@ -209,7 +209,7 @@ export default function SleutelBijmakenPage() {
               },
               {
                 id: 'feature-3',
-                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Vaste prijs vooraf',
                 description: 'Onze tarieven zijn gemiddeld 30-50% goedkoper dan de officiële merkdealer.',
                 linkText: 'Bekijk onze tarieven',
@@ -217,7 +217,7 @@ export default function SleutelBijmakenPage() {
               },
               {
                 id: 'feature-4',
-                icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '12 Maanden Garantie',
                 description: 'Wij bieden standaard 12 maanden volledige garantie op de hardware en het inleren van uw nieuwe sleutels.',
                 linkText: 'Bekijk waar wij service verlenen',
@@ -225,7 +225,7 @@ export default function SleutelBijmakenPage() {
               },
               {
                 id: 'feature-5',
-                icon: <Image src="/images/icon_insurance.jpg" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '24/7 Spoedhulp Bel Nu',
                 description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
                 linkText: 'Bel direct',

@@ -69,7 +69,7 @@ const services = [
     title: 'Alle Autosleutels Kwijt', 
     desc: 'Bent u al uw autosleutels kwijt of zijn deze gestolen? Wij komen naar uw locatie, openen de auto schadevrij, frezen een nieuwe sleutel en wissen oude sleutels uit het systeem.',
     href: '/diensten/alle-sleutels-kwijt-auto',
-    src: '/images/service_kwijt.jpg',
+    src: '/images/service_kwijt.webp',
     alt: 'Monteur programmeert autosleutel via OBD diagnostiek in de auto op locatie',
     btnText: 'Direct hulp bij kwijt'
   },
@@ -77,7 +77,7 @@ const services = [
     title: 'Autosleutels Repareren & Behuizing Vervangen', 
     desc: 'Is de behuizing van uw autosleutel gescheurd, zijn de knoppen lam of werkt de afstandsbediening niet meer? Onze specialisten kunnen uw autosleutel repareren terwijl u wacht.',
     href: '/diensten/autosleutel-reparatie',
-    src: '/images/seo/autosleutel_reparatie_hero.jpg',
+    src: '/images/seo/autosleutel_reparatie_hero.webp',
     alt: 'Autosleutel behuizing vervangen en knoppen repareren op locatie',
     btnText: 'Meer over reparaties'
   },
@@ -192,7 +192,7 @@ export default function HomePage() {
           features={[
             {
               id: 'feature-1',
-              icon: <Image src="/images/icon_van.jpg" alt="Autosleutel Kwijt? Direct Hulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              icon: <Image src="/images/icon_van.webp" alt="Autosleutel Kwijt? Direct Hulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
               title: 'Autosleutel Kwijt? Direct Hulp',
               description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
               linkText: 'Meer over mobiele service',
@@ -200,7 +200,7 @@ export default function HomePage() {
             },
             {
               id: 'feature-2',
-              icon: <Image src="/images/icon_map.jpg" alt="Auto Op Slot? Schadevrij openen" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              icon: <Image src="/images/icon_map.webp" alt="Auto Op Slot? Schadevrij openen" width={90} height={90} style={{ borderRadius: '12px' }} />,
               title: 'Auto Op Slot? Schadevrij openen',
               description: `Binnen ${SITE_CONFIG.responseTime} ter plaatse. Onze lokale monteur is altijd in de buurt.`,
               linkText: 'Vind een monteur',
@@ -208,7 +208,7 @@ export default function HomePage() {
             },
             {
               id: 'feature-3',
-              icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
               title: 'Vaste prijs vooraf',
               description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
               linkText: 'Bekijk onze tarieven',
@@ -216,7 +216,7 @@ export default function HomePage() {
             },
             {
               id: 'feature-4',
-              icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
               title: '12 Maanden Garantie',
               description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
               linkText: 'Bekijk waar wij service verlenen',
@@ -224,7 +224,7 @@ export default function HomePage() {
             },
             {
               id: 'feature-5',
-              icon: <Image src="/images/icon_insurance.jpg" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
               title: '24/7 Spoedhulp Bel Nu',
               description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
               linkText: 'Bel direct',
