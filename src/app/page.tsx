@@ -17,8 +17,7 @@ import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
-import BlogPreview from '@/components/BlogPreview/BlogPreview';
-import BrandModelsList from '@/components/BrandModelsList/BrandModelsList';
+
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 

@@ -1,0 +1,23 @@
+
+> autosleutel-specialist-nl@0.1.0 build
+> next build
+
+▲ Next.js 16.2.4 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 10.5s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/page.tsx:20:25
+Type error: Cannot find module '@/components/BlogPreview/BlogPreview' or its corresponding type declarations.
+
+  [90m18 |[0m [36mimport[0m [33mHeroGoogleBadge[0m [36mfrom[0m [32m'@/components/HeroGoogleBadge/HeroGoogleBadge'[0m;
+  [90m19 |[0m [36mimport[0m [33mFeatureCards[0m [36mfrom[0m [32m'@/components/FeatureCards/FeatureCards'[0m;
+[31m[1m>[0m [90m20 |[0m [36mimport[0m [33mBlogPreview[0m [36mfrom[0m [32m'@/components/BlogPreview/BlogPreview'[0m;
+  [90m   |[0m                         [31m[1m^[0m
+  [90m21 |[0m [36mimport[0m [33mBrandModelsList[0m [36mfrom[0m [32m'@/components/BrandModelsList/BrandModelsList'[0m;
+  [90m22 |[0m
+  [90m23 |[0m [36mconst[0m [33mRealGalleryShowcase[0m = dynamic(() => [36mimport[0m([32m'@/components/RealGalleryShowcase/RealGal...[0m
+Next.js build worker exited with code: 1 and signal: null
