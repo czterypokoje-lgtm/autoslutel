@@ -15,9 +15,8 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
-import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
 
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
@@ -180,9 +179,6 @@ export default function HomePage() {
 
           <div className={styles.heroBottomContent}>
             <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
-            <div style={{ marginTop: '1.5rem' }}>
-              <HeroGoogleBadge />
-            </div>
           </div>
 
         </div>

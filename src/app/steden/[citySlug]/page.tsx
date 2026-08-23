@@ -10,7 +10,6 @@ import { BRANDS } from '@/config/brands';
 import { DIENSTEN } from '@/config/diensten';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
 import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
@@ -260,9 +259,6 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
               <div className={styles.heroBottomContent}>
                 <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} theme="light" />
-                <div style={{ marginTop: '1.5rem' }}>
-                  <HeroGoogleBadge />
-                </div>
               </div>
             </div>
           </section>
@@ -281,9 +277,6 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 Alle merken, ter plaatse geprogrammeerd.
               </p>
               <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
-              <div style={{ marginTop: '1.5rem' }}>
-                <HeroGoogleBadge />
-              </div>
             </div>
           </section>
         )}
