@@ -267,10 +267,15 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 </h2>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
-                {recentWorkImages.map((img, idx) => (
-                  <div key={idx} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/images/merken/${img}`} alt={`${brand.name} sleutel bijmaken`} style={{ width: '100%', height: '220px', objectFit: 'cover', display: 'block' }} loading="lazy" />
+                {recentWorkImages.slice(0, 3).map((img, idx) => (
+                  <div key={idx} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', position: 'relative', height: '220px' }}>
+                    <Image 
+                      src={`/images/merken/${img}`} 
+                      alt={`${brand.name} autosleutel bijmaken`} 
+                      fill 
+                      style={{ objectFit: 'cover' }} 
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
                   </div>
                 ))}
               </div>
