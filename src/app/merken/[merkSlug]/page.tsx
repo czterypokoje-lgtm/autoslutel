@@ -85,6 +85,11 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
 
   // alphabetGroups logic removed because it is no longer used in the new UI layout.
 
+  // Check if a specific car photo exists for this brand
+  const carPhotoPathLocal = path.join(process.cwd(), 'public', 'images', 'cars', `${brand.slug}.jpg`);
+  const hasCarPhoto = fs.existsSync(carPhotoPathLocal);
+  const carPhotoSrc = hasCarPhoto ? `/images/cars/${brand.slug}.jpg` : `/images/merken/bmw_car_placeholder.jpg`;
+
   const schema = {
     '@context': 'https://schema.org', '@type': 'Service',
     name: `${brand.name} Autosleutel Bijmaken — Autosleutel Specialist`,
@@ -401,7 +406,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
 
               <div style={{ flex: '1 1 450px', position: 'relative', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/merken/bmw_car_placeholder.jpg" alt={`${brand.name} car`} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
+                <img src={carPhotoSrc} alt={`${brand.name} car`} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
               </div>
             </div>
 
