@@ -60,7 +60,9 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       <form className={styles.form} onSubmit={handleSubmit} id="city-lead-form">
         {/* Brand */}
         <div className={styles.field}>
-          <span className={styles.fieldIcon} aria-hidden>🚗</span>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 00-.84-.99L16 11l-2.7-3.6a2 2 0 00-1.6-.8H9.3a2 2 0 00-1.6.8L5 11l-5.16.86a1 1 0 00-.84.99V16h3m12 0a2 2 0 100 4 2 2 0 000-4zm-14 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          </span>
           <select
             className={styles.select}
             value={brand}
@@ -76,7 +78,9 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
 
         {/* Model */}
         <div className={styles.field}>
-          <span className={styles.fieldIcon} aria-hidden>🔧</span>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </span>
           <select
             className={styles.select}
             value={model}
@@ -93,7 +97,9 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
 
         {/* Year */}
         <div className={styles.field}>
-          <span className={styles.fieldIcon} aria-hidden>📅</span>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
           <select
             className={styles.select}
             value={year}
@@ -109,7 +115,9 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
 
         {/* Service */}
         <div className={styles.field}>
-          <span className={styles.fieldIcon} aria-hidden>🔑</span>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          </span>
           <select
             className={styles.select}
             value={service}
@@ -125,7 +133,9 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
 
         {/* Location */}
         <div className={styles.field}>
-          <span className={styles.fieldIcon} aria-hidden>📍</span>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
           <input
             className={styles.select}
             type="text"
@@ -144,7 +154,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
           id="city-lead-submit"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          {submitted ? "Openen..." : "Direct Hulp"}
+          {submitted ? "Verzenden..." : "Ontvang prijs & aankomsttijd"}
         </button>
       </form>
 
@@ -165,7 +175,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         <a
           href={buildWhatsAppUrl()}
           target="_blank"
-          rel="noopener noreferrer nofollow"
+          rel="noopener noreferrer"
           className={styles.waBtn}
           id="city-lead-whatsapp"
         >

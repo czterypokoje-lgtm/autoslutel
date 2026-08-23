@@ -170,7 +170,6 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
               style={{ objectFit: 'cover', objectPosition: 'center' }}
               priority
               quality={60}
-              unoptimized
             />
           </div>
           {/* Gradient Overlay */}

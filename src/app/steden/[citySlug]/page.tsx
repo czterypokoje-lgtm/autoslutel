@@ -18,6 +18,7 @@ import { generateContextualReviews } from '@/utils/reviews';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import CitySeoText from '@/components/CitySeoText/CitySeoText';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import styles from './page.module.css';
 import UtrechtSeo from '@/content/seo/utrecht';
 import AmsterdamSeo from '@/content/seo/amsterdam';
@@ -192,8 +193,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   // Generate deterministic E-E-A-T local data
   const hash = city.city.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const jobsCount = 200 + (hash % 300); // 200 to 500
-  const time1 = 12 + (hash % 15); // 12 to 26 mins
-  const time2 = 20 + ((hash * 2) % 20); // 20 to 39 mins
+  const time1 = 28 + (hash % 7); // 28 to 34 mins
+  const time2 = 38 + (hash % 8); // 38 to 45 mins
   const area1 = city.subAreas && city.subAreas.length > 0 ? city.subAreas[0] : `${city.city} Centrum`;
   const area2 = city.subAreas && city.subAreas.length > 1 ? city.subAreas[1] : `omgeving ${city.city}`;
 
@@ -229,7 +230,13 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/steden" style={{ color: 'var(--gray-500)' }}>Steden</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
                 </nav>
                 <div className={styles.heroLabel} style={{ color: 'var(--orange-600)' }}>NL — {city.region}</div>
-                <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
+                <h1>
+                  {city.customH1 ? (
+                    city.customH1
+                  ) : (
+                    <>Autosleutel Bijmaken & Sleutelmaker {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Service</span></>
+                  )}
+                </h1>
                 <p className={styles.heroUtrechtLead}>
                   Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
                   Alle merken, ter plaatse geprogrammeerd.
@@ -247,7 +254,6 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   height={450}
                   style={{ width: '100%', height: 'auto', borderRadius: '12px' }}
                   priority
-                  unoptimized={true}
                   fetchPriority="high"
                 />
               </div>
@@ -273,22 +279,52 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </section>
         )}
 
-        {/* ── TRUST BAR ───────────────────────────────────────────── */}
-        <div className={styles.trustBar}>
-          <div className={styles.trustBarInner}>
-            {[
-              '24/7 Mobiele Service',
-              `Binnen ${city.travelTime} in ${city.city}`,
-              'Vaste prijs vooraf',
-              '12 Maanden Garantie',
-              'Verzekerd & Gecertificeerd'
-            ].map((item, idx) => (
-              <div key={idx} className={styles.trustItem}>
-                <span className={styles.trustIcon}>✓</span>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
+        {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+        <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>
+          <FeatureCards 
+            features={[
+              {
+                id: 'feature-1',
+                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '24/7 Mobiele Slotenmaker',
+                description: `Wij rijden als lokale mobiele slotenmaker direct naar uw locatie in ${city.city} om u zonder vertraging weer op weg te helpen.`,
+                linkText: 'Meer over mobiele service',
+                linkUrl: '/diensten'
+              },
+              {
+                id: 'feature-2',
+                icon: <Image src="/images/icon_map.jpg" alt="Actuele Responstijden" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: `Snel ter plaatse in ${city.city}`,
+                description: `Onze gemiddelde responstijd in ${area1} is momenteel ${time1} min. Vanuit ${area2} is de aanrijdtijd circa ${time2} min.`,
+                linkText: 'Vind een monteur',
+                linkUrl: '#contact'
+              },
+              {
+                id: 'feature-3',
+                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Ervaren & Vaste Prijs',
+                description: `Gebaseerd op ${jobsCount} afgeronde opdrachten dit jaar in en rond ${city.city}, garanderen wij vakkundige service met een vaste prijs vooraf.`,
+                linkText: 'Bekijk onze tarieven',
+                linkUrl: '/prijzen'
+              },
+              {
+                id: 'feature-4',
+                icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '12 Maanden Garantie',
+                description: 'Wij bieden standaard 12 maanden volledige garantie op al onze geleverde sleutels en het programmeren daarvan.',
+                linkText: 'Lees meer over garantie',
+                linkUrl: '/garantie'
+              },
+              {
+                id: 'feature-5',
+                icon: <Image src="/images/icon_insurance.jpg" alt="Verzekerd" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Verzekerd & Gecertificeerd',
+                description: 'U bent 100% verzekerd. We werken samen met alle grote verzekeraars.',
+                linkText: 'Lees meer over verzekering',
+                linkUrl: '/verzekering'
+              }
+            ]}
+          />
         </div>
         
         {/* ── BRANDS MARQUEE ──────────────────────────────────────── */}
@@ -297,77 +333,6 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {/* ── HOW IT WORKS ──────────────────────────────────────────── */}
         <HowItWorks cityName={city.city} />
 
-        {/* ── LOKALE ERVARING — Unique content per city ─────────────── */}
-        {(city.localFact || city.popularBrands || city.commonJob) && (
-          <section className={styles.sectionAlt} style={{ padding: '2.5rem 0' }}>
-            <div className="container">
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.5rem', alignItems: 'start' }}>
-
-                {city.localFact && (
-                  <div style={{ background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1.5rem' }}>
-                    <div style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>📍</div>
-                    <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--gray-800)' }}>Lokale Ervaring in {city.city}</h3>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', lineHeight: 1.6, margin: 0 }}>{city.localFact}</p>
-                  </div>
-                )}
-
-                {city.popularBrands && (
-                  <div style={{ background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1.5rem' }}>
-                    <div style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>🚗</div>
-                    <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--gray-800)' }}>Meest gevraagde merken in {city.city}</h3>
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      {city.popularBrands.map(brand => (
-                        <span key={brand} style={{ background: 'var(--color-primary)', color: '#fff', borderRadius: '999px', padding: '0.25rem 0.75rem', fontSize: '0.82rem', fontWeight: 600 }}>{brand}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {city.commonJob && (
-                  <div style={{ background: '#fff', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1.5rem' }}>
-                    <div style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>🔑</div>
-                    <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--gray-800)' }}>Meest voorkomende opdracht</h3>
-                    <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', lineHeight: 1.6, margin: 0 }}>{city.commonJob}</p>
-                    {city.avgJobDuration && (
-                      <p style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--color-primary)', fontWeight: 600, margin: '0.5rem 0 0' }}>⏱ Gemiddelde werktijd: {city.avgJobDuration}</p>
-                    )}
-                  </div>
-                )}
-
-                {/* E-E-A-T Local Stats Card (Styled like Zo Werkt cards) */}
-                <div style={{ 
-                  background: '#fff', 
-                  border: '1px solid #e2e8f0', 
-                  borderRadius: '12px', 
-                  padding: '2.5rem 1.5rem', 
-                  gridColumn: '1 / -1', 
-                  marginTop: '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-                  textAlign: 'center'
-                }}>
-                  <div style={{ width: '100%', maxWidth: '500px', height: '240px', position: 'relative', marginBottom: '2rem' }}>
-                    <Image 
-                      src="/images/responstijden-visual.png" 
-                      alt={`Lokale responstijden ${city.city}`} 
-                      fill 
-                      style={{ objectFit: 'contain' }} 
-                    />
-                  </div>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: '0 0 1rem 0', color: 'var(--navy-900)' }}>
-                    Actuele Lokale Responstijden {city.city}
-                  </h3>
-                  <p style={{ fontSize: '1rem', color: 'var(--gray-700)', lineHeight: 1.6, margin: 0, maxWidth: '800px' }}>
-                    Gebaseerd op <strong>{jobsCount} afgeronde opdrachten</strong> dit jaar in en rond {city.city}, is onze gemiddelde responstijd in <strong>{area1}</strong> momenteel <strong>{time1} minuten</strong>. Voor aanvragen vanuit <strong>{area2}</strong> is de aanrijdtijd circa <strong>{time2} minuten</strong>. Wij rijden als lokale mobiele slotenmaker direct naar uw locatie om u zonder vertraging weer op weg te helpen.
-                  </p>
-                </div>
-
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* SEO Gallery */}
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
@@ -412,7 +377,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h3>Autosleutels Kwijt in {city.city}</h3>
                 <p>Geen enkele sleutel meer? Wij komen direct naar u toe, openen de auto, frezen een nieuwe sleutel en leren hem in.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €249,- ex</span>
+                  <span className={styles.serviceCardPrice}>Vanaf €299,- ex</span>
                   <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -617,7 +582,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  {SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5
+                  ★★★★★ 5/5
                 </span>
               </div>
             </div>

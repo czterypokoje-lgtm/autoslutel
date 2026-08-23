@@ -88,7 +88,8 @@
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   box-shadow: 0 4px 14px rgba(230,81,0,0.4);
 }
@@ -109,10 +110,12 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.78rem;
-  color: rgba(255,255,255,0.55);
+  color: var(--orange-400, #fb923c);
   text-align: center;
   justify-content: center;
   margin: 0.65rem 0 0.75rem;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 
 /* Phone + WhatsApp row */
@@ -173,8 +176,8 @@
 
   .submitBtn {
     justify-content: center;
-    padding: 1rem;
-    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
   }
 
   .directBtns {
@@ -215,7 +218,9 @@
 }
 
 .light .urgency {
-  color: rgba(0,0,0,0.65);
+  color: rgba(0,0,0,0.75);
+  font-weight: 500;
+  text-shadow: none;
 }
 
 .light .callBtn {

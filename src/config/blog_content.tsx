@@ -596,7 +596,6 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           alt="Programmeren en frezen van een nieuwe transpondersleutel" 
           fill 
           style={{ objectFit: 'cover' }}
-          unoptimized={true}
         />
       </div>
       <p>
@@ -637,7 +636,6 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           alt="Geprogrammeerde smart key" 
           fill 
           style={{ objectFit: 'cover' }}
-          unoptimized={true}
         />
       </div>
 
@@ -689,7 +687,6 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           alt="Autodeur schadevrij openen met luchtwig (air wedge)" 
           fill 
           style={{ objectFit: 'cover' }}
-          unoptimized={true}
         />
       </div>
       <p>
@@ -734,7 +731,6 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           width={800}
           height={800}
           style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-          unoptimized={true}
         />
       </div>
 
@@ -789,7 +785,6 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           alt="Autosleutel met prijslijst op tablet" 
           fill 
           style={{ objectFit: 'cover' }}
-          unoptimized={true}
         />
       </div>
       <p>
@@ -834,7 +829,6 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           alt="Frezen van autosleutel met CNC machine" 
           fill 
           style={{ objectFit: 'cover' }}
-          unoptimized={true}
         />
       </div>
       <p>

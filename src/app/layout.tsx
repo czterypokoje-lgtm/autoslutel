@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
-import Navigation from '@/components/Navigation/Navigation';
+import HeaderSwitcher from '@/components/Navigation/HeaderSwitcher';
 import Footer from '@/components/Footer/Footer';
+import WebshopFooter from '@/components/webshop/WebshopFooter';
+import FooterSwitcher from '@/components/Footer/FooterSwitcher';
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
 import UrgencyBanner from '@/components/UrgencyBanner/UrgencyBanner';
 import StickyCallBar from '@/components/StickyCallBar/StickyCallBar';
@@ -86,7 +88,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="nl">
       <head>
         {/* Google Tag Manager */}
-        <script
+        <Script
+          id="gtm-script"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -157,6 +161,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        {/* ── GOOGLE PREFERRED SOURCES ── */}
+        <Script async src="https://news.google.com/swg/js/v1/publisher.js" strategy="afterInteractive" />
         {/* ── STRUCTURED DATA ── */}
         <script
           id="schema-website"
@@ -176,10 +182,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
-        <UrgencyBanner />
-        <Navigation />
+        <HeaderSwitcher />
         {children}
-        <Footer />
+        <FooterSwitcher 
+          mainFooter={<Footer />} 
+          webshopFooter={<WebshopFooter />} 
+        />
         <WhatsAppButton />
         <StickyCallBar />
         {/* ── iubenda Cookie Solution & Privacy Controls ── */}

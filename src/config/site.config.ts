@@ -15,12 +15,13 @@ export const SITE_CONFIG = {
   email: 'info@autosleutel24.nl',
 
   address: {
-    street: '', // Mobile service - no physical location displayed
-    city: 'Utrecht',
+    street: '', // Mobile service-area business — no storefront shown
+    city: 'Midden-Nederland',
     region: 'Utrecht',
     postal: '',
     country: 'NL',
   },
+  // Service area: 75km radius centred on Bussum/Gooi HQ
   geo: { lat: '52.2740', lng: '5.1611' },
   serviceArea: {
     lat: '52.2740',
@@ -34,7 +35,7 @@ export const SITE_CONFIG = {
     transponder: '149',
     remote: '220',
     smartKey: '249',
-    allKeysLost: '249',
+    allKeysLost: '299',
     casing: '35',
     ignition: '299',
     exVatDisclaimer: 'excl. btw',
@@ -42,12 +43,12 @@ export const SITE_CONFIG = {
 
   hours: 'Maandag t/m Zondag 00:00–24:00',
   hoursShort: '24/7 Beschikbaar',
-  responseTime: '30–60 minuten',
+  responseTime: '30-60 minuten',
 
   kvk: '42123555',
   btw: 'NL42123555B01',
   rating: '5.0',
-  reviewCount: '11',
+  reviewCount: '8', // actual Google review count — update as it grows
 
   social: {
     facebook: 'https://www.facebook.com/autosleutel24utrecht',

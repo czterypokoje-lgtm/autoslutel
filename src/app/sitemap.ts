@@ -80,6 +80,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: 'weekly' as const,
     priority: 0.75,
+    images: [`${base}/og-image.png`],
   }));
 
   return [

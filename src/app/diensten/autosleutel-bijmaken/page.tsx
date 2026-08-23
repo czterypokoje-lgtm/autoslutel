@@ -10,6 +10,8 @@ import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import Image from 'next/image';
 import { generateContextualReviews } from '@/utils/reviews';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
@@ -89,12 +91,12 @@ export default function SleutelBijmakenPage() {
       {
         "@type": "Question",
         "name": "Hoe lang duurt het om een autosleutel bij te maken?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Een standaard transponder sleutel duurt 20-30 minuten. Een smart key met keyless entry duurt 30-45 minuten. Een Mercedes FBS4 sleutel met online component protection duurt 45-60 minuten." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Een standaard transponder sleutel duurt 20-30 minuten. Een smart key met keyless entry duurt 30-60 minuten. Een Mercedes FBS4 sleutel met online component protection duurt 45-60 minuten." }
       },
       {
         "@type": "Question",
         "name": "Is het goedkoper dan bij de dealer?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €149 tot €299. Bij \"alle sleutels kwijt\" rekenen we €249 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!)." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €149 tot €299. Bij \"alle sleutels kwijt\" rekenen we €299 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!)." }
       },
       {
         "@type": "Question",
@@ -182,17 +184,47 @@ export default function SleutelBijmakenPage() {
 
         <BrandsMarquee />
 
-        {/* Trust Bar */}
-        <div className={styles.trustBar}>
-          <div className={styles.trustBarInner}>
-            {trustItems.map((item, idx) => (
-              <div key={idx} className={styles.trustItem}>
-                <span className={styles.trustIcon}>✓</span>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+
+
+        {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+        <FeatureCards 
+          title="Nieuwe Autosleutel Laten Maken."
+          subtitle={<>Goedkoper en sneller dan de autodealer, <span style={{ color: '#f97316' }}>direct op locatie.</span></>}
+          features={[
+              {
+                id: 'feature-1',
+                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Mobiele Service',
+                description: 'Waarom naar de dealer slepen? Wij komen naar u toe en maken uw sleutel direct ter plaatse.',
+                linkText: 'Meer over mobiele service',
+                linkUrl: '/diensten'
+              },
+              {
+                id: 'feature-2',
+                icon: <Image src="/images/icon_map.jpg" alt="Alle Merken" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Inclusief Programmeren',
+                description: 'Elke nieuwe sleutel wordt direct ingeleerd in het systeem van uw auto. Startklaar!',
+                linkText: 'Vind een monteur',
+                linkUrl: '#contact'
+              },
+              {
+                id: 'feature-3',
+                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Vaste prijs vooraf',
+                description: 'Onze tarieven zijn gemiddeld 30-50% goedkoper dan de officiële merkdealer.',
+                linkText: 'Bekijk onze tarieven',
+                linkUrl: '/prijzen'
+              },
+              {
+                id: 'feature-4',
+                icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '12 Maanden Garantie',
+                description: 'Wij bieden standaard 12 maanden volledige garantie op de hardware en het inleren van uw nieuwe sleutels.',
+                linkText: 'Lees meer over garantie',
+                linkUrl: '/garantie'
+              }
+            ]}
+          />
 
         {/* 3 steps HowTo */}
         <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
@@ -256,7 +288,7 @@ export default function SleutelBijmakenPage() {
                           <td>Smart Key / Keyless</td>
                           <td>Proximity sleutel, Push-to-start</td>
                           <td><strong>€299 - €499</strong></td>
-                          <td>30-45 min</td>
+                          <td>30-60 min</td>
                         </tr>
                         <tr>
                           <td>Alle sleutels kwijt (geen werkende sleutel)</td>
@@ -269,7 +301,7 @@ export default function SleutelBijmakenPage() {
                   </div>
                   <ul className={styles.bulletList}>
                     <li>
-                      <strong>Wat kost een sleutel bijmaken?</strong> Een nieuwe reservesleutel kost bij ons tussen de €149 en €299, afhankelijk van het merk en of het een smart key is. Bent u alle sleutels kwijt? Dan liggen de kosten tussen de €249 en €500. Dit is altijd inclusief programmeren op locatie!
+                      <strong>Wat kost een sleutel bijmaken?</strong> Een nieuwe reservesleutel kost bij ons tussen de €149 en €299, afhankelijk van het merk en of het een smart key is. Bent u alle sleutels kwijt? Dan liggen de kosten tussen de €299 en €500. Dit is altijd inclusief programmeren op locatie!
                     </li>
                     <li>
                       <strong>Dealer vs. Slotenmaker:</strong> De dealer is gemiddeld 50% duurder dan Autosleutel24 voor exact dezelfde sleutel. Bovendien bespaart u bij ons op wegsleepkosten, want wij komen naar u toe (geen wegsleepkosten!). U ontvangt altijd <strong>gecertificeerde sleutels</strong> met 12 maanden garantie.
@@ -364,7 +396,7 @@ export default function SleutelBijmakenPage() {
                       <span className={styles.faqChevron}>+</span>
                     </summary>
                     <p className={styles.faqAnswer}>
-                      Een standaard transponder sleutel duurt 20-30 minuten. Een smart key met keyless entry duurt 30-45 minuten. 
+                      Een standaard transponder sleutel duurt 20-30 minuten. Een smart key met keyless entry duurt 30-60 minuten. 
                       Een Mercedes FBS4 sleutel met online component protection duurt 45-60 minuten.
                     </p>
                   </details>
@@ -375,7 +407,7 @@ export default function SleutelBijmakenPage() {
                       <span className={styles.faqChevron}>+</span>
                     </summary>
                     <p className={styles.faqAnswer}>
-                      Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €149 tot €299. Bij "alle sleutels kwijt" rekenen we €249 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!).
+                      Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €149 tot €299. Bij "alle sleutels kwijt" rekenen we €299 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!).
                     </p>
                   </details>
 
@@ -447,7 +479,7 @@ export default function SleutelBijmakenPage() {
                   <div className={styles.ratingStars}>★★★★★</div>
                   <p className={styles.ratingText}>&ldquo;Sleutel van mijn Audi A4 kwijt. Dealer wachttijd 8 dagen. Autosleutel24 was binnen 40 min ter plaatse en de nieuwe sleutel werkte direct. Topservice!&rdquo;</p>
                   <span className={styles.ratingMeta}>Mark D. — Audi A4, Utrecht</span>
-                  <span className={styles.ratingCount}>{SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5</span>
+                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
                 </div>
               </aside>
             </div>
@@ -518,7 +550,7 @@ export default function SleutelBijmakenPage() {
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  {SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5
+                  ★★★★★ 5/5
                 </span>
               </div>
             </div>

@@ -7,6 +7,8 @@ import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import Image from 'next/image';
 import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 
@@ -97,7 +99,7 @@ const faqItems = [
   },
   {
     q: "Welke installatiebedrijven voor auto openen zonder sleutel zijn actief in Nederland?",
-    a: `In Nederland zijn meerdere mobiele locksmith-bedrijven actief, maar de kwaliteit verschilt sterk. Let op gecertificeerde vakmannen die werken met professioneel Lishi-gereedschap en vaste transparante tarieven communiceren vóór aankomst. Autosleutel24 is actief in de regio Utrecht, Amsterdam, Almere en Amersfoort en staat bekendom schadevrij openen en eerlijke all-in prijzen — controleerbaar via ${SITE_CONFIG.reviewCount} Google reviews met een ${SITE_CONFIG.rating}-sterren beoordeling.`
+    a: `In Nederland zijn meerdere mobiele locksmith-bedrijven actief, maar de kwaliteit verschilt sterk. Let op gecertificeerde vakmannen die werken met professioneel Lishi-gereedschap en vaste transparante tarieven communiceren vóór aankomst. Autosleutel24 is actief in de regio Utrecht, Amsterdam, Almere en Amersfoort en staat bekendom schadevrij openen en eerlijke all-in prijzen — aantoonbaar via een ${SITE_CONFIG.rating}-sterren beoordeling op Google.`
   },
   {
     q: "Wordt auto openen zonder sleutel vergoed door mijn verzekering?",
@@ -198,17 +200,49 @@ export default function AutoOpenenZonderSleutelPage() {
           </div>
         </section>
 
-        {/* ── TRUST BAR ────────────────────────────────────────────── */}
-        <div className={styles.trustBar}>
-          <div className={styles.trustBarInner}>
-            {trustItems.map((item, idx) => (
-              <div key={idx} className={styles.trustItem}>
-                <span className={styles.trustIcon}>✓</span>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <BrandsMarquee />
+
+
+
+        {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+        <FeatureCards 
+          title="Schadevrij Auto Openen."
+          subtitle={<>Buitengesloten? <span style={{ color: '#f97316' }}>AutoSleutel24</span> opent uw auto zonder enige schade.</>}
+          features={[
+              {
+                id: 'feature-1',
+                icon: <Image src="/images/icon_map.jpg" alt="Snel op locatie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Binnen 30-60 min Ter Plaatse',
+                description: `Buitengesloten? Wij zijn direct naar u onderweg. Onze monteur is altijd in de buurt.`,
+                linkText: 'Vind een monteur',
+                linkUrl: '#contact'
+              },
+              {
+                id: 'feature-2',
+                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Zonder Sleepwagen',
+                description: 'We openen uw deuren direct op uw locatie. Uw auto hoeft niet weggesleept te worden.',
+                linkText: 'Meer over mobiele service',
+                linkUrl: '/diensten'
+              },
+              {
+                id: 'feature-3',
+                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Vaste prijs vooraf',
+                description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen met openen.',
+                linkText: 'Bekijk onze tarieven',
+                linkUrl: '/prijzen'
+              },
+              {
+                id: 'feature-4',
+                icon: <Image src="/images/icon_car_check.jpg" alt="Schadevrij" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '100% Schadevrij Garantie',
+                description: 'Wij garanderen dat wij uw auto openen zónder de ruit in te slaan of het slot te beschadigen.',
+                linkText: 'Lees meer over garantie',
+                linkUrl: '/garantie'
+              }
+            ]}
+          />
 
         {/* 3 steps HowTo */}
         <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
@@ -272,7 +306,7 @@ export default function AutoOpenenZonderSleutelPage() {
                           <td>Openen + nieuwe reservesleutel programmeren</td>
                           <td>Alle tijden</td>
                           <td><strong>€199</strong></td>
-                          <td>30–45 min</td>
+                          <td>30-60 min</td>
                         </tr>
                         <tr>
                           <td>Openen bij deadlock systeem (BMW, Audi, VW)</td>
@@ -374,7 +408,7 @@ export default function AutoOpenenZonderSleutelPage() {
                   <div className={styles.ratingStars}>★★★★★</div>
                   <p className={styles.ratingText}>&ldquo;Sleutel in mijn VW Golf achtergelaten. Belde Autosleutel24 en ze waren binnen 25 minuten ter plaatse. Auto open zonder één krasje. Geweldig!&rdquo;</p>
                   <span className={styles.ratingMeta}>Lars V. — Volkswagen Golf, Utrecht</span>
-                  <span className={styles.ratingCount}>{SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5</span>
+                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
                 </div>
 
                 <div className={styles.sideCard} style={{ background: '#f0fdf4', borderColor: '#bbf7d0' }}>
@@ -458,7 +492,7 @@ export default function AutoOpenenZonderSleutelPage() {
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  {SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5
+                  ★★★★★ 5/5
                 </span>
               </div>
             </div>

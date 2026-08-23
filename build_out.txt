@@ -1,0 +1,78 @@
+
+> autosleutel-specialist-nl@0.1.0 build
+> next build
+
+▲ Next.js 16.2.4 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 21.9s
+  Running TypeScript ...
+  Finished TypeScript in 41s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/838) ...
+  Generating static pages using 3 workers (209/838) 
+  Generating static pages using 3 workers (418/838) 
+  Generating static pages using 3 workers (628/838) 
+✓ Generating static pages using 3 workers (838/838) in 55s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/indexnow
+├ ○ /apple-icon.png
+├ ○ /autosleutel-bestellen-op-kenteken
+├ ○ /autosleutel-kwijt
+├ ○ /beoordelingen
+├ ○ /blog
+├ ● /blog/[slug]
+│ ├ /blog/autosleutel-kosten-per-merk-2026
+│ ├ /blog/dealer-vs-slotenmaker-kostenverschil
+│ ├ /blog/verzekering-dekt-autosleutel-vervangen
+│ └ [+23 more paths]
+├ ƒ /contact
+├ ○ /diensten
+├ ● /diensten/[slug]
+│ ├ /diensten/auto-openen-zonder-sleutel
+│ ├ /diensten/sleutel-in-auto
+│ ├ /diensten/deur-dichtgevallen
+│ └ [+14 more paths]
+├ ○ /diensten/auto-openen-zonder-sleutel
+├ ○ /diensten/auto-slotenmaker
+├ ○ /diensten/autosleutel-bijmaken
+├ ○ /galerij
+├ ○ /icon.png
+├ ƒ /image-sitemap.xml
+├ ○ /kennisbank
+├ ○ /merken
+├ ● /merken/[merkSlug]
+│ ├ /merken/bmw-autosleutel-bijmaken
+│ ├ /merken/mercedes-autosleutel-bijmaken
+│ ├ /merken/volkswagen-autosleutel-bijmaken
+│ └ [+56 more paths]
+├ ● /merken/[merkSlug]/[modelSlug]
+│ ├ /merken/bmw-autosleutel-bijmaken/1-serie-sleutel-bijmaken
+│ ├ /merken/bmw-autosleutel-bijmaken/2-serie-sleutel-bijmaken
+│ ├ /merken/bmw-autosleutel-bijmaken/3-serie-sleutel-bijmaken
+│ └ [+663 more paths]
+├ ○ /over-ons
+├ ○ /prijzen
+├ ○ /privacybeleid
+├ ○ /reviews-en
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+├ ○ /steden
+├ ● /steden/[citySlug]
+│ ├ /steden/bussum
+│ ├ /steden/utrecht
+│ ├ /steden/hilversum
+│ └ [+39 more paths]
+├ ƒ /steden/[citySlug]/[slug]
+├ ○ /veelgestelde-vragen
+└ ○ /whatsapp
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

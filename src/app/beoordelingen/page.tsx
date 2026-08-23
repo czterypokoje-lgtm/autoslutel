@@ -22,7 +22,7 @@ export default function BeoordelingenPage() {
           <span style={{ fontSize: '3.5rem', fontWeight: 700, color: '#f59e0b' }}>{SITE_CONFIG.rating}</span>
           <div>
             <div style={{ color: '#f59e0b', fontSize: '1.5rem', letterSpacing: '4px' }}>★★★★★</div>
-            <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem' }}>{SITE_CONFIG.reviewCount} beoordelingen</div>
+            
           </div>
         </div>
       </section>

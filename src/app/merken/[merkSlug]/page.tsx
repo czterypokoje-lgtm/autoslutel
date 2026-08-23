@@ -118,7 +118,6 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               style={{ objectFit: 'cover', objectPosition: 'center' }}
               priority
               quality={60}
-              unoptimized
             />
           </div>
           {/* Gradient Overlay for Text Readability */}
@@ -192,7 +191,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   Alle {brand.name} sleutels kwijt? Wij komen direct naar u toe, openen de auto schadevrij, frezen een nieuwe sleutel en leren hem in de {brand.name} boordcomputer.
                 </p>
                 <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €249,- ex</span>
+                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €299,- ex</span>
                   <span style={{ color: 'var(--navy-700)', fontWeight: 600, fontSize: '0.9rem' }}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -231,6 +230,23 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 </div>
               </Link>
 
+              {/* Card 5: Webshop (HIDDEN FOR NOW) */}
+              {/* <Link href={`/webshop/merk/${brand.slug}`} style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-webshop-${brand.slug}`}>
+                <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem', background: '#f8fafc', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '3rem' }}>🛒</span>
+                </div>
+                <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
+                  {brand.name} Webshop
+                </h3>
+                <p style={{ color: '#64748b', fontSize: '0.92rem', lineHeight: 1.6, flex: 1 }}>
+                  Op zoek naar losse {brand.name} batterijen, lege behuizingen of accessoires? Bestel ze direct en voordelig in onze webshop.
+                </p>
+                <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €4,95</span>
+                  <span style={{ color: 'var(--navy-700)', fontWeight: 600, fontSize: '0.9rem' }}>Shop Nu &rarr;</span>
+                </div>
+              </Link> */}
+
             </div>
           </div>
         </section>
@@ -257,180 +273,150 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
           </section>
         )}
 
-        {/* ── CLEAN 3-COLUMN MODEL LIST (NEW DESIGN) ── */}
-        <section id="modellen" style={{ padding: '4.5rem 0', background: '#f8fafc' }}>
-          <div className="container" style={{ maxWidth: 1000 }}>
+        {/* ── TIMPSON STYLE 'WHY CHOOSE US' SECTION ── */}
+        <section style={{ padding: '4.5rem 0', background: '#ffffff' }}>
+          <div className="container" style={{ maxWidth: 1200 }}>
             
-            <div style={{ textAlign: 'center', marginBottom: '2.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                {brand.name} SLEUTELS DIE WIJ BIJMAKEN
-              </h2>
+            <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', fontWeight: 800, color: '#0f172a', marginBottom: '3.5rem', textAlign: 'center' }}>
+              Waarom kiezen voor onze {brand.name} autosleutel service?
+            </h2>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem' }}>
+              
+              {/* Column 1: Affordable */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/why_choose_us_1.jpg" alt="Betaalbaar pinapparaat" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Betaalbaar</h3>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
+                  Onze {brand.name} reservesleutels zijn tot 50% goedkoper dan bij de officiële merkdealers.
+                </p>
+              </div>
+
+              {/* Column 2: Convenient */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/why_choose_us_2.png" alt="Sleutel programmeren op locatie" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Gemakkelijk</h3>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
+                  Krijg snel en eenvoudig uw nieuwe {brand.name} autosleutel op locatie door heel Nederland.
+                </p>
+              </div>
+
+              {/* Column 3: Quality */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/why_choose_us_3.png" alt="Sleutel werkplaats" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Kwaliteit</h3>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
+                  Onze monteurs frezen nauwkeurige {brand.name} sleutels en leren deze vakkundig in op uw voertuig.
+                </p>
+              </div>
+
             </div>
 
-            <div style={{ background: '#ffffff', borderRadius: '12px', padding: '3rem', boxShadow: '0 4px 20px rgba(0,0,0,0.03)', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-              
-              <style dangerouslySetInnerHTML={{__html: `
-                .modelsFlexWrap {
-                  display: flex;
-                  gap: 4rem;
-                  align-items: flex-start;
-                }
-                .modelsListCol {
-                  flex: 1;
-                  column-count: 3;
-                  column-gap: 2.5rem;
-                  color: #64748b;
-                  font-size: 0.95rem;
-                  line-height: 1.6;
-                }
-                .modelsListCol div {
-                  margin-bottom: 0.4rem;
-                }
-                .brandLogoArea {
-                  flex: 0 0 200px;
-                  display: flex;
+          </div>
+        </section>
+
+        {/* ── TIMPSON STYLE MODELS SECTION (BRANDED COLORS & ALL MODELS) ── */}
+        <section id="modellen" style={{ padding: '4.5rem 0', background: '#f8fafc' }}>
+          <div className="container" style={{ maxWidth: 1200 }}>
+            
+            <style dangerouslySetInnerHTML={{__html: `
+              .timpson-section-wrap {
+                display: flex;
+                gap: 4rem;
+                align-items: center;
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 3.5rem;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+              }
+              .model-link-hover:hover {
+                text-decoration: underline !important;
+                color: var(--orange-500) !important;
+              }
+              .models-list {
+                color: #475569;
+                font-size: 1.05rem;
+                line-height: 2;
+                padding-left: 1.5rem;
+                margin-bottom: 1.5rem;
+                font-weight: 600;
+                list-style-type: disc;
+                column-count: 2;
+                column-gap: 2rem;
+              }
+              @media (max-width: 900px) {
+                .timpson-section-wrap {
                   flex-direction: column;
-                  align-items: center;
+                  padding: 2rem;
+                  gap: 2rem;
                 }
-                .brandActionButtons {
-                  display: flex;
-                  gap: 1rem;
-                  border-top: 1px solid #f1f5f9;
-                  padding-top: 2rem;
+                .models-list {
+                  column-count: 1;
                 }
-                @media (max-width: 768px) {
-                  .modelsFlexWrap {
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 1.5rem;
-                  }
-                  .modelsListCol {
-                    column-count: 2;
-                    text-align: center;
-                  }
-                  .brandActionButtons {
-                    flex-direction: column;
-                  }
-                }
-                @media (max-width: 480px) {
-                  .modelsListCol {
-                    column-count: 1;
-                    font-size: 1.05rem;
-                    line-height: 1.4;
-                  }
-                  .modelsListCol div {
-                    margin-bottom: 0.15rem;
-                  }
-                }
-                .model-link:hover {
-                  text-decoration: underline !important;
-                  color: var(--orange-600) !important;
-                }
-              `}} />
+              }
+            `}} />
 
-              <div className="modelsFlexWrap">
-                {/* Left: Logo Area */}
-                <div className="brandLogoArea">
-                  <div style={{ position: 'relative', display: 'inline-block' }}>
-                    <div style={{ width: 120, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', borderRadius: '16px', overflow: 'hidden' }}>
-                      {(() => {
-                        const FALLBACK_LOGOS: Record<string, string> = {
-                          'renault': 'https://cdn.simpleicons.org/renault/001E50',
-                          'ford': 'https://cdn.simpleicons.org/ford/001E50',
-                          'hyundai': 'https://cdn.simpleicons.org/hyundai/001E50',
-                          'volkswagen': 'https://cdn.simpleicons.org/volkswagen/001E50',
-                          'bmw': 'https://cdn.simpleicons.org/bmw/001E50',
-                          'audi': 'https://cdn.simpleicons.org/audi/001E50',
-                          'mercedes-benz': 'https://cdn.simpleicons.org/mercedes/001E50',
-                          'toyota': 'https://cdn.simpleicons.org/toyota/001E50',
-                          'peugeot': 'https://cdn.simpleicons.org/peugeot/001E50',
-                          'opel': 'https://cdn.simpleicons.org/opel/001E50',
-                          'citroen': 'https://cdn.simpleicons.org/citroen/001E50',
-                          'kia': 'https://cdn.simpleicons.org/kia/001E50',
-                          'nissan': 'https://cdn.simpleicons.org/nissan/001E50'
-                        };
+            <div className="timpson-section-wrap">
+              <div style={{ flex: '1 1 500px' }}>
+                <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.2rem)', fontWeight: 800, color: '#0f172a', marginBottom: '1.5rem', lineHeight: 1.2 }}>
+                  Nieuwe {brand.name} sleutels voor de populairste modellen
+                </h2>
+                
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+                  Het vervangen van uw {brand.name} sleutel gaat altijd snel en eenvoudig bij Autosleutel24. Onze ervaren monteurs kunnen {brand.name} sleutels frezen, inleren en repareren op locatie door heel Nederland.
+                </p>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+                  Wij leveren snelle en betaalbare {brand.name} reservesleutels voor alle modellen, waaronder:
+                </p>
 
-                        let logoUrl: string | null = null;
-                        const exts = ['.webp', '.svg', '.png', '.jpg', '.jpeg'];
-                        
-                        // Check local files first
-                        for (const ext of exts) {
-                          if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.slug}_sleutel_bijmaken${ext}`))) {
-                            logoUrl = `/brands/${brand.slug}_sleutel_bijmaken${ext}`; break;
-                          }
-                          if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.slug}-autosleutel-bijmaken${ext}`))) {
-                            logoUrl = `/brands/${brand.slug}-autosleutel-bijmaken${ext}`; break;
-                          }
-                          // Since I copied raw files from desktop, let's also check for exact slug
-                          if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.slug}${ext}`))) {
-                            logoUrl = `/brands/${brand.slug}${ext}`; break;
-                          }
-                          if (fs.existsSync(path.join(process.cwd(), 'public', 'brands', `${brand.name}${ext}`))) {
-                            logoUrl = `/brands/${brand.name}${ext}`; break;
-                          }
-                        }
-                        
-                        // Fallback to static mapping
-                        if (!logoUrl && FALLBACK_LOGOS[brand.slug]) {
-                          logoUrl = FALLBACK_LOGOS[brand.slug];
-                        }
-                        
-                        if (logoUrl) {
-                          // eslint-disable-next-line @next/next/no-img-element
-                          return <img src={logoUrl} alt={`${brand.name} logo`} style={{ width: '80%', height: '80%', objectFit: 'contain' }} loading="lazy" />;
-                        }
-                        return <span style={{ fontSize: '3.5rem', fontWeight: 900, color: '#cbd5e1' }}>{brand.name.charAt(0)}</span>;
-                      })()}
-                    </div>
-                  </div>
-                  <h3 style={{ marginTop: '1.5rem', fontSize: '1.5rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    {brand.name}
-                  </h3>
-                </div>
-
-                {/* Right: Models List */}
-                <div className="modelsListCol">
+                <ul className="models-list">
                   {brand.models?.map(m => (
-                    <div key={m.slug} style={{ breakInside: 'avoid' }}>
-                      <Link 
-                        href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${m.slug}-sleutel-bijmaken`}
-                        style={{ color: '#475569', textDecoration: 'none', fontWeight: 500 }}
-                        className="model-link"
-                      >
-                        {m.name}
+                    <li key={m.slug} style={{ breakInside: 'avoid' }}>
+                      <Link href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${m.slug}-sleutel-bijmaken`} style={{ color: '#1e293b', textDecoration: 'none' }} className="model-link-hover">
+                        {brand.name} {m.name} sleutels
                       </Link>
-                    </div>
+                    </li>
                   ))}
                   {brand.specialIntents?.map(intent => (
-                    <div key={intent.slug} style={{ breakInside: 'avoid', marginTop: '0.5rem' }}>
-                      <Link 
-                        href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${intent.slug}`}
-                        style={{ color: 'var(--navy-700)', textDecoration: 'underline', fontWeight: 600 }}
-                        className="model-link"
-                      >
+                    <li key={intent.slug} style={{ breakInside: 'avoid' }}>
+                      <Link href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${intent.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none' }} className="model-link-hover">
                         {intent.name}
                       </Link>
-                    </div>
+                    </li>
                   ))}
                   {(!brand.models || brand.models.length === 0) && (
-                    <p>Alle modellen ondersteund.</p>
+                    <li>Alle {brand.name} modellen ondersteund</li>
                   )}
-                </div>
+                </ul>
               </div>
 
-              {/* Bottom: Action Buttons */}
-              <div className="brandActionButtons">
-                <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#fff7ed', border: '2px solid #fb923c', color: '#ea580c', padding: '1rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', fontSize: '1.1rem' }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                  Bel Nu: {SITE_CONFIG.phone}
-                </a>
-                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#f0fdf4', border: '2px solid #6ee7b7', color: '#16a34a', padding: '1rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', fontSize: '1.1rem' }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                  WhatsApp
-                </a>
+              <div style={{ flex: '1 1 450px', position: 'relative', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/merken/bmw_car_placeholder.jpg" alt={`${brand.name} car`} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
               </div>
-
             </div>
+
+            {/* Bottom: Action Buttons */}
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '2.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#fff7ed', border: '2px solid #fb923c', color: '#ea580c', padding: '1rem 2rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', fontSize: '1.1rem', minWidth: '250px' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                Bel Nu: {SITE_CONFIG.phone}
+              </a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#f0fdf4', border: '2px solid #6ee7b7', color: '#16a34a', padding: '1rem 2rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', fontSize: '1.1rem', minWidth: '250px' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                WhatsApp
+              </a>
+            </div>
+
           </div>
         </section>
 

@@ -30,7 +30,6 @@ export default function BrandsMarquee() {
               height={40} 
               style={{ objectFit: 'contain' }}
               loading="lazy"
-              unoptimized={true}
             />
           </div>
         ))}

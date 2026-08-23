@@ -52,7 +52,7 @@ const faqItems = [
   { q: 'Advies bij verlies van autosleutel met startonderbreker?', a: 'Bij verlies van een sleutel met startonderbreker is het belangrijk om de verloren sleutel direct uit de autocomputer te laten programmeren. Onze monteurs kunnen dit direct op locatie voor u doen, zodat de verloren sleutel de auto niet meer kan starten.' },
   { q: 'Kan ik een autosleutel online bestellen en laten programmeren?', a: 'Ja, u kunt online een universele sleutel kopen, maar veel onafhankelijke sleutelmakers kunnen deze niet programmeren vanwege compatibiliteitsproblemen met de transponderchips. Het is veiliger en sneller om direct een complete sleutel inclusief programmering bij Autosleutel24 af te nemen.' },
   { q: 'Autosleutel laten programmeren na verlies?', a: 'Autosleutel laten programmeren na verlies gebeurt direct op uw locatie. De monteur genereert een nieuwe transpondercode, schrijft deze via OBD2-diagnose-apparatuur in het geheugen van de startonderbreker, en synchroniseert de afstandsbediening.' },
-  { q: 'Autosleutel kwijt, wat kost het vervangen door een universele sleutel?', a: 'Het vervangen van uw verloren sleutel door een universele OEM-kwaliteit sleutel kost bij Autosleutel24 gemiddeld tussen de €149 en €249, inclusief het slijpen van de sleutelbaard en het programmeren van de transponder. Dit is de meest voordelige en snelle oplossing.' }
+  { q: 'Autosleutel kwijt, wat kost het vervangen door een universele sleutel?', a: 'Het vervangen van uw verloren sleutel door een universele OEM-kwaliteit sleutel kost bij Autosleutel24 gemiddeld tussen de €149 en €299, inclusief het slijpen van de sleutelbaard en het programmeren van de transponder. Dit is de meest voordelige en snelle oplossing.' }
 ];
 
 const steps = [

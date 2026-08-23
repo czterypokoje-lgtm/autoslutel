@@ -83,6 +83,9 @@ export default function Footer() {
                   style={{ height: '60px', width: 'auto', display: 'block', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.12)' }}
                 />
               </a>
+              <div style={{ marginTop: '0.75rem', display: 'inline-block', maxWidth: '280px', width: '100%' }}>
+                <div {...{ 'google-add-preferred-source-btn': 'true' }} data-theme="dark" data-lang="nl" style={{ width: '100%' }}></div>
+              </div>
             </div>
             <div className={styles.footerContact}>
               <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a>

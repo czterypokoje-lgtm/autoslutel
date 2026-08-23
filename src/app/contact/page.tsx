@@ -142,13 +142,13 @@ export default async function ContactPage(props: Props) {
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                         <td style={{ padding: '1rem' }}>Klapsleutel / Flip Key</td>
-                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>€500 - €1500</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
-                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €199</td>
+                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>€400 - €800</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
+                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €149</td>
                       </tr>
                       <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                         <td style={{ padding: '1rem' }}>Smart Key / Keyless</td>
-                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>€500 - €1500</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
-                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €299</td>
+                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>€400 - €800</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
+                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €199</td>
                       </tr>
                       <tr>
                         <td style={{ padding: '1rem' }}>Alle sleutels kwijt (geen werkende sleutel)</td>
@@ -165,7 +165,7 @@ export default async function ContactPage(props: Props) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
                   <div style={{ fontSize: '1.25rem', color: '#fbbf24' }}>★★★★★</div>
                   <span style={{ fontWeight: 700 }}>{SITE_CONFIG.rating}/5</span>
-                  <span style={{ color: 'var(--color-text-muted)' }}>({SITE_CONFIG.reviewCount} Google reviews)</span>
+                  
                 </div>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

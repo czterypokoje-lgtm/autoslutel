@@ -84,7 +84,7 @@ export default function EnglishReviewsPage() {
             As a premier automotive locksmith operating across the Netherlands (including Amsterdam, Utrecht, Rotterdam, The Hague, and surrounding areas), our business model is built around <strong>ultimate customer convenience</strong>. We are a fully mobile service, meaning we bring our state-of-the-art diagnostic and key-cutting equipment directly to your location.
           </p>
           <ul style={{ color: '#475569', lineHeight: 1.7, marginBottom: '1rem', paddingLeft: '1.5rem' }}>
-            <li><strong>Unmatched Speed:</strong> 24/7 emergency dispatch with an average arrival time of 30-45 minutes.</li>
+            <li><strong>Unmatched Speed:</strong> 24/7 emergency dispatch with an average arrival time of 30-60 minutes.</li>
             <li><strong>Dealer-Level Quality:</strong> We program transponders, smart keys, and keyless entry systems for all major car brands (BMW, Mercedes, VW, Audi, Toyota, etc.).</li>
             <li><strong>Cost-Effective:</strong> Our services are up to 50% cheaper than official dealerships, and we save you the cost of towing your vehicle.</li>
             <li><strong>Ironclad Guarantee:</strong> Every new key and programming job comes with a standard 12-month warranty.</li>

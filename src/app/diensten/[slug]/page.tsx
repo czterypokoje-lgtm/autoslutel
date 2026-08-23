@@ -7,6 +7,8 @@ import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import Image from 'next/image';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
@@ -103,14 +105,6 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
     }
   } catch (e) {}
 
-  const trustItems = [
-    '24/7 Mobiele Service',
-    `Binnen ${SITE_CONFIG.responseTime} ter plaatse`,
-    isOpening ? '100% Schadevrij Openen' : (service.priceFrom ? service.priceFrom : 'Vaste prijs vooraf'),
-    '12 Maanden Garantie',
-    'Verzekerd & Gecertificeerd'
-  ];
-
   // Dynamic scenarios for better SEO & human tone
   const bulletItems = isOpening ? [
     { strong: 'Sleutel op de autostoel of in het contact laten liggen:', text: 'U stapt even uit en de centrale deurvergrendeling springt automatisch dicht terwijl de sleutel nog binnen ligt.' },
@@ -176,37 +170,121 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
       <Script id={`bc-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* ── HERO ─────────────────────────────────────────────────── */}
-        <section className={styles.hero}>
-          <div className={styles.heroInner}>
-            <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-              <Link href="/">Home</Link> <span>/</span>
-              <Link href="/diensten">Diensten</Link> <span>/</span>
-              <span>{service.title}</span>
-            </nav>
+        {slug === 'alle-sleutels-kwijt-auto' ? (
+          <section className={styles.heroSplit}>
+            <div className={styles.heroSplitInner}>
+              <div className={styles.heroSplitText}>
+                <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+                  <Link href="/">Home</Link> <span>/</span>
+                  <Link href="/diensten">Diensten</Link> <span>/</span>
+                  <span>{service.title}</span>
+                </nav>
 
-            <h1>{service.h1}</h1>
+                <h1>
+                  {service.h1.includes('—') ? (
+                    <>
+                      {service.h1.split('—')[0]} — <span style={{ color: 'var(--orange-500)' }}>{service.h1.split('—').slice(1).join('—')}</span>
+                    </>
+                  ) : (
+                    service.h1
+                  )}
+                </h1>
 
-            <p className={styles.heroLead}>{service.intro}</p>
+                <p className={styles.heroSplitLead}>{service.intro}</p>
 
-            <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
+                <div style={{ marginTop: '2rem' }}>
+                  <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
+                </div>
+              </div>
+              <div className={styles.heroSplitImage}>
+                <Image 
+                  src="/images/service_kwijt.jpg" 
+                  alt="Alle autosleutels kwijt, we maken een nieuwe sleutel op locatie"
+                  width={800}
+                  height={450}
+                  style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
+                  priority
+                  quality={80}
+                />
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        ) : (
+          <section 
+            className={styles.hero}
+            style={slug === 'autosleutel-reparatie' ? {
+              backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%), url('/images/seo/autosleutel_reparatie_hero.jpg')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            } : undefined}
+          >
+            <div className={styles.heroInner}>
+              <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+                <Link href="/">Home</Link> <span>/</span>
+                <Link href="/diensten">Diensten</Link> <span>/</span>
+                <span>{service.title}</span>
+              </nav>
+
+              <h1>
+                {service.h1.includes('—') ? (
+                  <>
+                    {service.h1.split('—')[0]} — <span style={{ color: 'var(--orange-500)' }}>{service.h1.split('—').slice(1).join('—')}</span>
+                  </>
+                ) : (
+                  service.h1
+                )}
+              </h1>
+
+              <p className={styles.heroLead}>{service.intro}</p>
+
+              <div style={{ marginTop: '2rem' }}>
+                <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
+              </div>
+            </div>
+          </section>
+        )}
 
         <BrandsMarquee />
 
-        {/* ── TRUST BAR ───────────────────────────────────────────── */}
-        <div className={styles.trustBar}>
-          <div className={styles.trustBarInner}>
-            {trustItems.map((item, idx) => (
-              <div key={idx} className={styles.trustItem}>
-                <span className={styles.trustIcon}>✓</span>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+        <FeatureCards 
+          title={`Specialist in ${service.title}`}
+          subtitle={<><span style={{ color: '#f97316' }}>AutoSleutel24</span> lost het snel voor u op, direct op locatie.</>}
+          features={[
+              {
+                id: 'feature-1',
+                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Autosleutel Kwijt? Direct Hulp',
+                description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
+                linkText: 'Meer over mobiele service',
+                linkUrl: '/diensten'
+              },
+              {
+                id: 'feature-2',
+                icon: <Image src="/images/icon_map.jpg" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Auto Op Slot? Schadevrij openen',
+                description: `Binnen ${SITE_CONFIG.responseTime} minuten ter plaatse. Onze lokale monteur is altijd in de buurt.`,
+                linkText: 'Vind een monteur',
+                linkUrl: '#contact'
+              },
+              {
+                id: 'feature-3',
+                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Vaste prijs vooraf',
+                description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
+                linkText: 'Bekijk onze tarieven',
+                linkUrl: '/prijzen'
+              },
+              {
+                id: 'feature-4',
+                icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '12 Maanden Garantie',
+                description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
+                linkText: 'Lees meer over garantie',
+                linkUrl: '/garantie'
+              }
+            ]}
+          />
 
         {/* ── HOW IT WORKS (Full width under hero) ── */}
         <HowItWorks variant={howItWorksVariant} />
@@ -439,7 +517,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   </p>
                   <h3>Kosten Besparen t.o.v. de Dealer & 12 Maanden Garantie</h3>
                   <p>
-                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €149 tot €299. Bij "alle sleutels kwijt" betaalt u €249 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
+                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €149 tot €299. Bij "alle sleutels kwijt" betaalt u €299 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
                   </p>
                 </div>
 
@@ -485,7 +563,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   <div className={styles.ratingStars}>★★★★★</div>
                   <p className={styles.ratingText}>&ldquo;Razendsnel geholpen! Binnen 25 minuten stond de monteur er en de deur was in 3 minuten schadevrij open.&rdquo;</p>
                   <span className={styles.ratingMeta}>Mark van den Berg — BMW 5 Serie, Utrecht</span>
-                  <span className={styles.ratingCount}>{SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5</span>
+                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
                 </div>
               </aside>
 
@@ -560,7 +638,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <div className={styles.ratingStarsReview}>★★★★★</div>
                   <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>
-                    {SITE_CONFIG.reviewCount} Geverifieerde Google beoordelingen · {SITE_CONFIG.rating}/5
+                    ★★★★★ 5/5
                   </span>
                 </div>
               </div>

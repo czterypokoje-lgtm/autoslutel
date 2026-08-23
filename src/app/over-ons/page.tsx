@@ -172,7 +172,7 @@ export default function OverOnsPage() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
           {[
-            { num: `${SITE_CONFIG.rating}★`, label: 'Google Score', sub: `Meer dan ${SITE_CONFIG.reviewCount} klantbeoordelingen` },
+            { num: `${SITE_CONFIG.rating}★`, label: 'Google Score', sub: 'Top beoordeeld op Google' },
             { num: '34 min', label: 'Gemiddelde reactietijd', sub: 'Op locatie' },
             { num: '24/7', label: 'Bereikbaar', sub: 'Voor spoedgevallen in de gehele regio' },
           ].map((s) => (

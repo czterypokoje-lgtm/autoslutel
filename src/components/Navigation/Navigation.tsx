@@ -149,7 +149,6 @@ export default function Navigation() {
           </div>
 
 
-
           <Link href="/steden" className={styles.navLink}>Steden</Link>
           <Link href="/prijzen" className={styles.navLink}>Prijzen</Link>
           <Link href="/blog" className={styles.navLink}>Blog &amp; Advies</Link>

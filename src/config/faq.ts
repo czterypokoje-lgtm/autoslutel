@@ -298,7 +298,7 @@ export const FAQ_SMART_KEY: FaqItem[] = [
 export const FAQ_AUTO_OP_SLOT: FaqItem[] = [
   {
     q: 'Hoe snel kan mijn auto geopend worden?',
-    a: 'Wij zijn in Utrecht gemiddeld binnen 20 minuten ter plaatse. In Amsterdam 30–45 minuten. Het openen van de auto zelf duurt 5–20 minuten, afhankelijk van het model.',
+    a: 'Wij zijn in Utrecht gemiddeld binnen 20 minuten ter plaatse. In Amsterdam 30-60 minuten. Het openen van de auto zelf duurt 5–20 minuten, afhankelijk van het model.',
   },
   {
     q: 'Kunt u mijn auto openen zonder schade?',

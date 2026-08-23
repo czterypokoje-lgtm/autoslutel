@@ -7,6 +7,8 @@ import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import Image from 'next/image';
 import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 
@@ -101,7 +103,7 @@ export default function AutoSlotenmakerPage() {
     },
     {
       q: 'What is het verschil tussen Autosleutel24 en de autodealer?',
-      a: 'De autodealer vereist dat u uw auto laat wegslepen naar hun werkplaats en hanteert vaak leertijden van enkele dagen tot weken voor een nieuwe sleutel. Autosleutel24 komt naar u toe en regelt alles direct ter plaatse binnen 30-45 minuten, tegen een tarief dat tot wel 50% lager ligt dan bij de merkdealer.'
+      a: 'De autodealer vereist dat u uw auto laat wegslepen naar hun werkplaats en hanteert vaak leertijden van enkele dagen tot weken voor een nieuwe sleutel. Autosleutel24 komt naar u toe en regelt alles direct ter plaatse binnen 30-60 minuten, tegen een tarief dat tot wel 50% lager ligt dan bij de merkdealer.'
     }
   ];
 
@@ -126,7 +128,7 @@ export default function AutoSlotenmakerPage() {
     {
       num: 2,
       title: 'Monteur onderweg',
-      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Binnen 30-45 minuten is de bus bij u ter plaatse.'
+      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Binnen 30-60 minuten is de bus bij u ter plaatse.'
     },
     {
       num: 3,
@@ -165,17 +167,47 @@ export default function AutoSlotenmakerPage() {
 
         <BrandsMarquee />
 
-        {/* Trust Bar */}
-        <div className={styles.trustBar}>
-          <div className={styles.trustBarInner}>
-            {trustItems.map((item, idx) => (
-              <div key={idx} className={styles.trustItem}>
-                <span className={styles.trustIcon}>✓</span>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+
+
+        {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+        <FeatureCards 
+          title="Auto Slotenmaker Nodig?"
+          subtitle={<><span style={{ color: '#f97316' }}>AutoSleutel24</span> is uw betrouwbare partner, 24/7 op locatie.</>}
+          features={[
+              {
+                id: 'feature-1',
+                icon: <Image src="/images/icon_van.jpg" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Autosleutel Kwijt? Direct Hulp',
+                description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
+                linkText: 'Meer over mobiele service',
+                linkUrl: '/diensten'
+              },
+              {
+                id: 'feature-2',
+                icon: <Image src="/images/icon_map.jpg" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Auto Op Slot? Schadevrij openen',
+                description: `Binnen ${SITE_CONFIG.responseTime} minuten ter plaatse. Onze lokale monteur is altijd in de buurt.`,
+                linkText: 'Vind een monteur',
+                linkUrl: '#contact'
+              },
+              {
+                id: 'feature-3',
+                icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Vaste prijs vooraf',
+                description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
+                linkText: 'Bekijk onze tarieven',
+                linkUrl: '/prijzen'
+              },
+              {
+                id: 'feature-4',
+                icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '12 Maanden Garantie',
+                description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
+                linkText: 'Lees meer over garantie',
+                linkUrl: '/garantie'
+              }
+            ]}
+          />
 
         {/* 3 steps HowTo */}
         <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
@@ -233,8 +265,8 @@ export default function AutoSlotenmakerPage() {
                         <tr>
                           <td>Alle sleutels kwijt (All Keys Lost)</td>
                           <td>Genereren van een nieuwe sleutelbaard</td>
-                          <td><strong>€249 - €500</strong></td>
-                          <td>30-45 min</td>
+                          <td><strong>€299 - €500</strong></td>
+                          <td>30-60 min</td>
                         </tr>
                         <tr>
                           <td>Contactslot / Deurslot reparatie</td>
@@ -299,7 +331,7 @@ export default function AutoSlotenmakerPage() {
                     <li><strong>100% Mobiele Service:</strong> U hoeft uw auto niet te laten wegslepen naar een dealer. Wij komen met onze mobiele bus naar uw huis, werk, of langs de snelweg.</li>
                     <li><strong>Schadevrij Openen:</strong> Dankzij geavanceerd Lishi lockpick-gereedschap manipuleren wij het deurslot via de cilinder. Dit laat geen enkele kras of schade achter op uw lak of de rubbers.</li>
                     <li><strong>Direct Nieuwe Sleutels Slijpen:</strong> Onze servicebussen zijn uitgerust met computergestuurde CNC-lasersleutelmachines en inleersoftware om direct een nieuwe sleutel te programmeren.</li>
-                    <li><strong>Beschikbaar in Heel Midden-Nederland:</strong> Wij rijden snel uit in Utrecht, Amsterdam, Almere, Amersfoort en Hilversum. Gemiddeld zijn we binnen 30-45 minuten ter plaatse.</li>
+                    <li><strong>Beschikbaar in Heel Midden-Nederland:</strong> Wij rijden snel uit in Utrecht, Amsterdam, Almere, Amersfoort en Hilversum. Gemiddeld zijn we binnen 30-60 minuten ter plaatse.</li>
                   </ul>
                 </div>
 
@@ -343,7 +375,7 @@ export default function AutoSlotenmakerPage() {
                   <div className={styles.ratingStars}>★★★★★</div>
                   <p className={styles.ratingText}>&ldquo;Mijn sleutels lagen nog in de kofferbak en de auto zat op slot. Autosleutel24 was binnen 30 min ter plaatse en opende de kofferbak 100% schadevrij. Super betrouwbare auto slotenmaker!&rdquo;</p>
                   <span className={styles.ratingMeta}>Daan K. — Volkswagen Golf, Utrecht</span>
-                  <span className={styles.ratingCount}>{SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5</span>
+                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
                 </div>
               </aside>
 
@@ -415,7 +447,7 @@ export default function AutoSlotenmakerPage() {
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  {SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5
+                  ★★★★★ 5/5
                 </span>
               </div>
             </div>

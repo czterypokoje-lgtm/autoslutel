@@ -4,7 +4,7 @@ import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import { generateContextualReviews } from '@/utils/reviews';
-import KentekenForm from '@/components/KentekenForm/KentekenForm';
+import HorizontalKentekenForm from '@/components/KentekenForm/HorizontalKentekenForm';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import styles from './page.module.css';
 
@@ -101,23 +101,29 @@ export default function KentekenBestellenPage() {
       <Script id="kenteken-business-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
       <Script id="kenteken-howto-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <main>
-        {/* Hero */}
-        <section className={styles.hero}>
-          <div className={styles.heroInner}>
-            <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-              <Link href="/">Home</Link> <span>/</span> <span>Autosleutel Bestellen op Kenteken</span>
+        {/* ── TIMPSON STYLE HERO ── */}
+        <section style={{ backgroundColor: '#2563eb', padding: '4rem 2rem 5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            <nav className={styles.breadcrumb} aria-label="Breadcrumb" style={{ marginBottom: '2rem', color: '#fff', opacity: 0.9 }}>
+              <Link href="/" style={{ color: '#fff', textDecoration: 'none' }}>Home</Link> 
+              <span style={{ margin: '0 0.5rem' }}>/</span> 
+              <span style={{ fontWeight: 600 }}>Autosleutel Bestellen op Kenteken</span>
             </nav>
-            <h1>Autosleutel Bestellen op Kenteken: Binnen 1 Minuut de Exacte Prijs</h1>
-            <p className={styles.heroLead}>
-              Heeft u met spoed een nieuwe autosleutel nodig, of wilt u een extra sleutel laten maken, maar weet u niet precies welk type sleutel, frequentie of sleutelprofiel uw auto s gebruiken? Geen enkel probleem. Bij {SITE_CONFIG.name} kunt u eenvoudig uw autosleutel bestellen op kenteken. Of u nu een standaard sleutel of een geavanceerd keyless entry systeem zoekt, aan de hand van uw kenteken kunnen wij in onze dealerkaliber database exact zien welke sleutel bij uw voertuig hoort. Of u uw enige sleutel kwijt bent of gewoon eentje wilt laten bijmaken, u hoeft niets zelf uit te zoeken. Wij regelen alles en komen direct naar uw locatie!
+            <h1 style={{ color: '#fff', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '1rem', lineHeight: 1.1 }}>
+              Autosleutel Bestellen op Kenteken
+            </h1>
+            <p style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '1.25rem', marginBottom: '2.5rem', fontWeight: 500 }}>
+              Binnen 1 minuut de exacte prijs. Geen technisch gedoe!
             </p>
-            <div className={styles.heroCtas}>
-              <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="kb-hero-phone">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-                Bel: {SITE_CONFIG.phone}
-              </a>
-              <a href={customWhatsAppUrl} target="_blank" rel="noopener noreferrer nofollow" className={styles.btnWa} id="kb-hero-wa">WhatsApp Kenteken</a>
-              <Link href="/contact" className={styles.btnOutline} id="kb-hero-form">Direct Offerte</Link>
+
+            <HorizontalKentekenForm />
+
+            <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#fff', fontSize: '0.95rem', fontWeight: 600 }}>
+              <span style={{ fontSize: '1.1rem' }}>Uitstekend</span>
+              <div style={{ display: 'flex', gap: '2px', backgroundColor: '#00b67a', padding: '2px 4px', borderRadius: '2px' }}>
+                <span style={{ color: '#fff' }}>★</span><span style={{ color: '#fff' }}>★</span><span style={{ color: '#fff' }}>★</span><span style={{ color: '#fff' }}>★</span><span style={{ color: '#fff' }}>★</span>
+              </div>
+              <span>4.9/5 gebaseerd op 150+ reviews via Google</span>
             </div>
           </div>
         </section>
@@ -141,9 +147,11 @@ export default function KentekenBestellenPage() {
           <div className={styles.container}>
             <div className={styles.contentGrid}>
               <div className={styles.mainContent}>
-
-                <KentekenForm />
                 
+                {/* Intro Text moved here */}
+                <p style={{ fontSize: '1.1rem', color: '#475569', lineHeight: 1.7, marginBottom: '2rem' }}>
+                  Heeft u met spoed een nieuwe autosleutel nodig, of wilt u een extra sleutel laten maken, maar weet u niet precies welk type sleutel, frequentie of sleutelprofiel uw auto gebruikt? Geen enkel probleem. Bij {SITE_CONFIG.name} kunt u eenvoudig uw autosleutel bestellen op kenteken. Wij regelen alles en komen direct naar uw locatie!
+                </p>
                 {/* Section 1 - How it works */}
 
                   
@@ -268,7 +276,7 @@ export default function KentekenBestellenPage() {
                   <div className={styles.ratingStars}>★★★★★</div>
                   <p className={styles.ratingText}>&ldquo;Super handig dit! Kenteken ge-appt, direct een prijs gekregen. De volgende ochtend stonden ze al voor de deur om de sleutel te programmeren. Aanrader!&rdquo;</p>
                   <span className={styles.ratingMeta}>Bas V. — Volkswagen Golf</span>
-                  <span className={styles.ratingCount}>{SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5</span>
+                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
                 </div>
               </aside>
             </div>
@@ -301,7 +309,7 @@ export default function KentekenBestellenPage() {
               <div>
                 <div className={styles.ratingStarsReview}>★★★★★</div>
                 <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  {SITE_CONFIG.reviewCount} Google beoordelingen · {SITE_CONFIG.rating}/5
+                  ★★★★★ 5/5
                 </span>
               </div>
             </div>

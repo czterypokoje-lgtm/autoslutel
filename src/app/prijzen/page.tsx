@@ -31,14 +31,14 @@ const priceRows: PriceItem[] = [
   { service: 'Proximity key met start-stop', from: '€ 279', to: '€ 299', note: 'Premium merken' },
   
   { category: 'Autosleutel Kwijt (Alle sleutels verloren)' },
-  { service: 'Standaard transpondersleutel', from: '€ 249', to: '€ 349', note: 'Inclusief programmeren' },
+  { service: 'Standaard transpondersleutel', from: '€ 299', to: '€ 399', note: 'Inclusief programmeren' },
   { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 299', to: '€ 399', note: 'Inclusief code uitlezen' },
   { service: 'Smart key / Keyless entry', from: '€ 349', to: '€ 449', note: 'Inclusief noodprocedure' },
   { service: 'Proximity key met start-stop', from: '€ 399', to: '€ 500', note: 'Premium systemen' },
   
   { category: 'Auto Openen (Buitengesloten)' },
   { service: 'Standaard auto openen', from: '€ 150', to: '€ 200', note: 'Schadevrij, 5-15 minuten' },
-  { service: 'Auto openen + sleutel maken', from: '€ 199', to: '€ 349', note: 'Combinatiekorting' },
+
   { service: 'Noodopening (keyless systeem)', from: '€ 175', to: '€ 250', note: 'Speciale techniek vereist' },
   
   { category: 'Reparatie & Onderhoud (Sleutel kapot)' },
@@ -106,7 +106,6 @@ export default function PrijzenPage() {
             <strong>Belangrijke informatie over onze tarieven</strong>
             <ul className={styles.disclaimerList}>
               <li>Onderstaande prijzen zijn <strong>indicatieve startprijzen</strong> — de exacte prijs hangt af van uw merk, model, bouwjaar en type sleutelsysteem.</li>
-              <li>Tarieven gelden voor <strong>maandag t/m vrijdag 08:00–16:00</strong>. Buiten deze tijden gelden toeslagen (zie tabel hieronder).</li>
               <li>Alle prijzen zijn exclusief btw.</li>
               <li>De definitieve prijs wordt <strong>altijd vooraf telefonisch afgesproken</strong> — nooit verrassingen achteraf.</li>
               <li>De merkdealer is vaak <strong>50% duurder</strong>, en u bespaart bij ons op dure wegsleepkosten (wij werken 100% op uw locatie).</li>

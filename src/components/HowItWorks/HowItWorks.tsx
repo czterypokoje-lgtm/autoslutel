@@ -127,9 +127,11 @@ export default function HowItWorks({ cityName, brandName, variant = 'default' }:
             <div className={styles.imageWrapper}>
               <Image src={step.imgSrc} alt={step.alt} fill />
             </div>
-            <div className={styles.stepNum}>{step.step}</div>
-            <h3 className={styles.cardTitle}>{step.title}</h3>
-            <p className={styles.cardDesc}>{step.desc}</p>
+            <div className={styles.textWrapper}>
+              <div className={styles.stepNum}>{step.step}</div>
+              <h3 className={styles.cardTitle}>{step.title}</h3>
+              <p className={styles.cardDesc}>{step.desc}</p>
+            </div>
           </div>
         ))}
       </div>

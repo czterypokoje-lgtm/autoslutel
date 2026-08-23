@@ -16,6 +16,9 @@ import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroGoogleBadge from '@/components/HeroGoogleBadge/HeroGoogleBadge';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import BlogPreview from '@/components/BlogPreview/BlogPreview';
+import BrandModelsList from '@/components/BrandModelsList/BrandModelsList';
 
 const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
 
@@ -57,100 +60,52 @@ const breadcrumbSchema = {
 const services = [
   { 
     title: 'Autosleutel Bijmaken & Reservesleutel', 
-    desc: (
-      <>
-        Wilt u een professionele reservesleutel laten bijmaken en programmeren zonder lange wachttijden of hoge dealerprijzen? Onze mobiele slotenmakers komen 24/7 naar u toe voor een autosleutel bijmaken prijs die tot 50% voordeliger is. Wij frezen mechanische sleutelbladen en leren smart keys direct in via de OBD2-poort.<br/><br/>
-        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
-          • Klaar in 30 tot 60 minuten op locatie<br/>
-          • Geen dure wegsleepkosten naar de merkdealer<br/>
-          • Geteste reservesleutel inclusief 12 maanden garantie
-        </span>
-      </>
-    ), 
+    desc: 'Wilt u een professionele reservesleutel laten bijmaken en programmeren zonder lange wachttijden of hoge dealerprijzen? Onze mobiele slotenmakers komen 24/7 naar u toe voor een voordelige prijs.',
     href: '/diensten/autosleutel-bijmaken',
     src: '/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp',
-    alt: 'Autosleutel bijmaken en programmeren in Utrecht en Midden-Nederland - klaar terwijl u wacht op locatie'
+    alt: 'Autosleutel bijmaken en programmeren in Utrecht en Midden-Nederland - klaar terwijl u wacht op locatie',
+    btnText: 'Vind uw sleutel'
   },
   { 
-    title: 'Transponder Programmeren & Startonderbreking', 
-    desc: (
-      <>
-        Start uw motor niet meer doordat de transponderchip defect is of niet wordt herkend? Wij lossen storingen in de ECU en startonderbreker direct ter plaatse op. Met onze dealer-niveau apparatuur kunnen wij uw transpondersleutel programmeren, foutcodes uitlezen en de startblokkering resetten.<br/><br/>
-        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
-          • Veilig synchroniseren van nieuwe crypto-transponders<br/>
-          • Volledig behoud van de fabrieksbeveiliging<br/>
-          • Direct geholpen bij startproblemen door elektronica
-        </span>
-      </>
-    ), 
-    href: '/diensten/transponder-programmeren',
-    src: '/images/seo/reserve_autosleutel_transponder_programmeren_utrecht.webp',
-    alt: 'Transponder sleutel programmeren en chip inleren voor alle automerken op locatie in Utrecht'
+    title: 'Alle Autosleutels Kwijt', 
+    desc: 'Bent u al uw autosleutels kwijt of zijn deze gestolen? Wij komen naar uw locatie, openen de auto schadevrij, frezen een nieuwe sleutel en wissen oude sleutels uit het systeem.',
+    href: '/diensten/alle-sleutels-kwijt-auto',
+    src: '/images/service_kwijt.jpg',
+    alt: 'Monteur programmeert autosleutel via OBD diagnostiek in de auto op locatie',
+    btnText: 'Direct hulp bij kwijt'
   },
   { 
     title: 'Autosleutels Repareren & Behuizing Vervangen', 
-    desc: (
-      <>
-        Is de behuizing van uw autosleutel gescheurd, zijn de knoppen lam of werkt de afstandsbediening niet meer? In 90% van de gevallen hoeft u geen dure nieuwe autosleutel te kopen. Onze specialisten kunnen uw autosleutel repareren terwijl u wacht.<br/><br/>
-        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
-          • Vervangen van versleten sleutelbehuizingen<br/>
-          • Precisie-solderen van micro-switches op de printplaat<br/>
-          • Inclusief nieuwe Varta of Panasonic batterij
-        </span>
-      </>
-    ),
-    href: '/diensten/autosleutels-repareren',
-    src: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp',
-    alt: 'Autosleutel reparatie behuizing drukknoppen en transponder herstellen in Utrecht en Amsterdam mobiele service'
+    desc: 'Is de behuizing van uw autosleutel gescheurd, zijn de knoppen lam of werkt de afstandsbediening niet meer? Onze specialisten kunnen uw autosleutel repareren terwijl u wacht.',
+    href: '/diensten/autosleutel-reparatie',
+    src: '/images/seo/autosleutel_reparatie_hero.jpg',
+    alt: 'Autosleutel behuizing vervangen en knoppen repareren op locatie',
+    btnText: 'Meer over reparaties'
   },
   { 
-    title: 'Contactslot Auto Vervangen & Reparatie', 
-    desc: (
-      <>
-        Draait uw sleutel niet meer soepel rond in het contactslot of is uw stuurwielslot muurvast? Mechanische slijtage of elektronische storingen in systemen zoals Mercedes EIS en ELV blokkeren uw auto volledig. Wij reviseren en vervangen kapotte contactsloten op locatie.<br/><br/>
-        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
-          • Aangepast op uw bestaande sleutelcode<br/>
-          • Eén sleutel behouden voor alle portieren en het contact<br/>
-          • Vakkundige revisie bij ontstekingsproblemen
-        </span>
-      </>
-    ), 
-    href: '/diensten/contactslot-auto-vervangen',
+    title: 'Contactslot Auto Vervangen & Repareren', 
+    desc: 'Draait uw autosleutel niet meer in het contactslot of zit deze vast? Een defect contactslot komt vaak voor. Wij reviseren of vervangen uw contactslot direct bij u op de oprit.',
+    href: '/diensten/contactslot-vervangen-reparatie',
     src: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
-    alt: 'Contactslot reparatie en vervangen voor alle merken auto\'s ter plaatse in Utrecht zonder sleepkosten'
+    alt: 'Defect contactslot auto vervangen en repareren door monteur in Utrecht',
+    btnText: 'Contactslot herstellen'
   },
   { 
     title: 'Auto Slotenmaker & Schadevrij Openen', 
-    desc: (
-      <>
-        Heeft u uzelf buitengesloten, de sleutel in de kofferbak laten liggen, of is uw auto op slot gegaan? Onze 24-uurs auto slotenmaker lost het direct op. Wij kunnen elke autodeur 100% schadevrij openen met geavanceerde Lishi-lockpick instrumenten.<br/><br/>
-        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
-          • 24/7 spoedhulp bij buitensluiting of verloren sleutel<br/>
-          • Geen enkele schade aan lak of portierrubbers<br/>
-          • Direct op locatie een nieuwe chip of smart key inleren
-        </span>
-      </>
-    ),
-    href: '/diensten/auto-slotenmaker',
+    desc: 'Bent u buitengesloten omdat de sleutels nog in de auto liggen of de accu leeg is? Wij openen uw autodeur 100% schadevrij met speciaal gereedschap.',
+    href: '/diensten/auto-openen-zonder-sleutel',
     src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp',
-    alt: 'Auto schadevrij openen bij sleutels in auto vergeten of autodeur op slot in Utrecht en omgeving'
+    alt: 'Buitengesloten auto openen zonder sleutel, 100% schadevrij',
+    btnText: 'Snel auto openen'
   },
   { 
-    title: 'Smart Key / Keyless Go Systeem', 
-    desc: (
-      <>
-        Heeft u problemen met uw keyless entry sleutel of wordt uw smart key niet meer gedetecteerd? Moderne draadloze systemen vereisen specialistische encryptie en programmering om communicatieproblemen met het boordnet te verhelpen.<br/><br/>
-        <span style={{display: 'block', paddingLeft: '0.5rem', color: 'var(--navy-900)'}}>
-          • Inleren van originele en aftermarket smart keys<br/>
-          • Ondersteuning voor o.a. BMW, Mercedes, Audi, VW en Ford<br/>
-          • Optimale bescherming tegen relay-attacks en diefstal
-        </span>
-      </>
-    ), 
+    title: 'Smart Key / Keyless', 
+    desc: 'Heeft u problemen met uw keyless entry of keyless go autosleutel, of wordt uw proximity smart key niet meer gedetecteerd door de sensoren van uw auto? Wij leveren, inleren en synchroniseren originele smart keys met geavanceerde codering direct op locatie.', 
     href: '/diensten/smart-key-programmeren',
     src: '/images/seo/smart-key-keyless-programmeren-autosleutel24-utrecht.webp',
-    alt: 'Smart key en keyless-go start-stop knop programmeren en inleren door Autosleutel24 mobiele specialist Utrecht'
-  },
+    alt: 'Smart key en keyless entry autosleutels inleren en programmeren op locatie',
+    btnText: 'Smart Key oplossingen'
+  }
 ];
 
 const serviceAreaCities = [
@@ -178,87 +133,105 @@ export default function HomePage() {
       <LocalBusinessSchema />
       <Script id="home-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
-      {/* ===== HERO ===== */}
-      <section className={styles.hero}>
-        <Image
-          src="/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp"
-          alt="Autosleutel bijmaken door mobiele specialist"
-          fill
-          priority
-          fetchPriority="high"
-          quality={70}
-          className={styles.heroBackground}
-          sizes="100vw"
-        />
-        <Script id="hero-image-gps" type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ImageObject",
-            "contentUrl": "https://www.autosleutel24.nl/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp",
-            "name": "Autosleutel bijmaken Utrecht & Amsterdam mobiele specialist",
-            "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht, Amsterdam en Midden-Nederland door Autosleutel24.",
-            "contentLocation": {
-              "@type": "Place",
-              "name": "Utrecht, Amsterdam",
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": 52.0907,
-                "longitude": 5.1214
-              }
-            }
-          })
-        }} />
-        <div className={styles.heroInner}>
-          <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>Dé Mobiele Autosleutelspecialist — Randstad & Midden-Nederland</p>
-            <h1 className={styles.heroTitle}>
+      <section className={styles.heroSplit}>
+        <div className={styles.heroSplitInner}>
+          <div className={styles.heroSplitText}>
+            <div className={styles.heroSplitLabel}>NL — 24/7 Mobiele Service</div>
+            <h1>
               Autosleutel Kwijt of Bijmaken?<br />
-              <span className={styles.heroOrange}>Wij Helpen Direct op Locatie!</span>
+              <span style={{ color: 'var(--orange-500)' }}>Wij Helpen Direct op Locatie!</span>
             </h1>
-            <p className={styles.heroLead}>
-              Staat u buitengesloten of is uw autosleutel defect? Geen paniek. Autosleutel24 komt met een volledig uitgeruste servicebus naar u toe. Geen wegsleepkosten, goedkoper dan de dealer en vaak binnen 30 tot 60 minuten weer op weg!
+            <p className={styles.heroSplitLead}>
+              Staat u buitengesloten of is uw autosleutel defect? Geen paniek. Autosleutel24 komt met een volledig uitgeruste servicebus naar u toe. Geen wegsleepkosten, goedkoper dan de dealer en vaak binnen <strong>30 tot 60 minuten</strong> weer op weg!
             </p>
-            {/* Interactive Lead Capture Form */}
-            <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm phone={SITE_CONFIG.phone} />
-            </div>
-            
-            <Link href="/autosleutel-kwijt" className={styles.heroUrgentBtn}>Alle Sleutels Kwijt? →</Link>
-            <div className={styles.heroTrust} style={{marginTop: '1.5rem'}}>
-              <span className={styles.trustPill}>✓ {SITE_CONFIG.rating} / 5 Google ({SITE_CONFIG.reviewCount} reviews)</span>
-              <span className={styles.trustPill}>✓ 12 Maanden Garantie</span>
-              <span className={styles.trustPill}>✓ Verzekerd & Gecertificeerd</span>
-              <span className={styles.trustPill}>✓ 24/7 Bereikbaar</span>
-            </div>
-            
-            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+            <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
+            <div style={{ marginTop: '1.5rem' }}>
               <HeroGoogleBadge />
             </div>
           </div>
+          <div className={styles.heroSplitImage}>
+            <Image 
+              src="/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp" 
+              alt="Autosleutel bijmaken door mobiele specialist"
+              width={800}
+              height={450}
+              style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
+              priority
+              quality={80}
+              sizes="(max-width: 992px) 100vw, 50vw"
+            />
+            <Script id="hero-image-gps" type="application/ld+json" dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ImageObject",
+                "contentUrl": "https://www.autosleutel24.nl/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp",
+                "name": "Autosleutel bijmaken Utrecht & Amsterdam mobiele specialist",
+                "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht, Amsterdam en Midden-Nederland door Autosleutel24.",
+                "contentLocation": {
+                  "@type": "Place",
+                  "name": "Utrecht, Amsterdam",
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 52.0907,
+                    "longitude": 5.1214
+                  }
+                }
+              })
+            }} />
+          </div>
         </div>
       </section>
 
-      {/* ===== EMERGENCY STRIP ===== */}
-      <section className={styles.emergencyStrip}>
-        <div className={styles.emergencyInner}>
-          <div className={styles.emergencyItem}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <span><strong>Autosleutel Kwijt?</strong> Direct hulp</span>
-          </div>
-          <div className={styles.emergencyItem}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            <span><strong>Auto Op Slot?</strong> Schadevrij openen</span>
-          </div>
-          <div className={styles.emergencyItem}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span><strong>24/7 Spoedhulp</strong> Bel nu</span>
-          </div>
-          <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.emergencyPhone}>{SITE_CONFIG.phone}</a>
-        </div>
-      </section>
+      {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+      <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>
+        <FeatureCards 
+          title="Reparatie. Vervanging. Programmeren."
+          subtitle={<><span style={{ color: 'var(--orange-500)' }}>AutoSleutel24</span> doet het allemaal, waar u maar wilt.</>}
+          features={[
+            {
+              id: 'feature-1',
+              icon: <Image src="/images/icon_van.jpg" alt="Autosleutel Kwijt? Direct Hulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: 'Autosleutel Kwijt? Direct Hulp',
+              description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
+              linkText: 'Meer over mobiele service',
+              linkUrl: '/diensten'
+            },
+            {
+              id: 'feature-2',
+              icon: <Image src="/images/icon_map.jpg" alt="Auto Op Slot? Schadevrij openen" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: 'Auto Op Slot? Schadevrij openen',
+              description: `Binnen ${SITE_CONFIG.responseTime} ter plaatse. Onze lokale monteur is altijd in de buurt.`,
+              linkText: 'Vind een monteur',
+              linkUrl: '#contact'
+            },
+            {
+              id: 'feature-3',
+              icon: <Image src="/images/icon_price.jpg" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: 'Vaste prijs vooraf',
+              description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
+              linkText: 'Bekijk onze tarieven',
+              linkUrl: '/prijzen'
+            },
+            {
+              id: 'feature-4',
+              icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: '12 Maanden Garantie',
+              description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
+              linkText: 'Lees meer over garantie',
+              linkUrl: '/garantie'
+            },
+            {
+              id: 'feature-5',
+              icon: <Image src="/images/icon_insurance.jpg" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: '24/7 Spoedhulp Bel Nu',
+              description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
+              linkText: 'Bel direct',
+              linkUrl: `tel:${SITE_CONFIG.phoneTel}`
+            }
+          ]}
+        />
+      </div>
 
-      {/* ── BRANDS MARQUEE ──────────────────────────────────────── */}
-      <BrandsMarquee />
 
       {/* ===== HOW IT WORKS ===== */}
       <HowItWorks />
@@ -286,28 +259,13 @@ export default function HomePage() {
                   </div>
                 </Link>
                 <div className={styles.serviceBody}>
-                  <div className={styles.serviceTitleRow}>
-                    <div className={styles.serviceIconBox}>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
-                        {i === 0 && <><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></>}
-                        {i === 1 && <><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></>}
-                        {i === 2 && <><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></>}
-                        {i === 3 && <><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></>}
-                        {i === 4 && <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></>}
-                        {i === 5 && <><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></>}
-                      </svg>
-                    </div>
-                    <h3 className={styles.serviceTitle}>
-                      <Link href={s.href} className={styles.serviceTitleLink}>{s.title}</Link>
-                    </h3>
-                  </div>
+                  <h3 className={styles.serviceTitle}>
+                    <Link href={s.href} className={styles.serviceTitleLink}>{s.title}</Link>
+                  </h3>
                   <p className={styles.serviceDesc}>{s.desc}</p>
-                  <div className={styles.serviceFooter}>
-                    <Link href={s.href} className={styles.serviceCardBtn}>
-                      <span>Bekijk dienst &amp; tarieven</span>
-                      <span className={styles.serviceArrow}>→</span>
-                    </Link>
-                  </div>
+                  <Link href={s.href} className={styles.serviceActionBtn}>
+                    {s.btnText}
+                  </Link>
                 </div>
               </article>
             ))}
@@ -483,7 +441,7 @@ export default function HomePage() {
             <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
             <div>
               <div className="stars">★★★★★</div>
-              <span style={{fontSize: '0.8rem', color: 'var(--gray-500)'}}>{SITE_CONFIG.reviewCount} Google beoordelingen</span>
+              
             </div>
           </div>
           <h3 className="text-center" style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Ervaringen van klanten</h3>

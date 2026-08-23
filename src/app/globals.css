@@ -155,7 +155,13 @@ a {
 a:hover { color: var(--color-accent); }
 
 ul, ol { padding-left: var(--sp-5); margin-bottom: var(--sp-4); }
+ul { list-style-type: disc; }
+ol { list-style-type: decimal; }
 li { color: var(--color-text-secondary); line-height: 1.65; margin-bottom: var(--sp-1); }
+
+.prose ul { list-style-type: disc; padding-left: 1.5rem; }
+.prose ol { list-style-type: decimal; padding-left: 1.5rem; }
+.prose li { display: list-item; }
 
 img { max-width: 100%; height: auto; display: block; }
 button { font-family: inherit; cursor: pointer; }
@@ -613,4 +619,207 @@ details[open] summary { color: var(--orange-500); }
 .seo-article-block li {
   margin-bottom: 0.5rem;
   font-size: 0.96rem;
+}
+
+/* ── WEBSHOP BACK MARKET AESTHETIC ── */
+:root {
+  --webshop-lime: #def760;
+  --webshop-lime-light: #e8fa86;
+  --webshop-dark: #121212;
+  --webshop-bg: #f9fafb;
+}
+
+.webshop-hero {
+  background-color: var(--webshop-lime);
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+@media (min-width: 768px) {
+  .webshop-hero {
+    padding: 6rem 4rem;
+    min-height: 480px;
+  }
+}
+
+.webshop-hero-content {
+  max-width: 600px;
+  z-index: 2;
+}
+
+.webshop-hero-title {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; /* Sophisticated serif */
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--webshop-dark);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.webshop-hero-subtitle {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--webshop-dark);
+  margin-bottom: 2.5rem;
+  font-weight: 500;
+}
+
+.webshop-btn-dark {
+  background-color: var(--webshop-dark);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.875rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  text-decoration: none;
+}
+.webshop-btn-dark:hover {
+  opacity: 0.9;
+  color: #fff;
+}
+
+.webshop-trust-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem 3rem;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  margin-top: -2rem;
+  position: relative;
+  z-index: 10;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.webshop-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--webshop-dark);
+}
+
+.snap-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+}
+.snap-carousel::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+.snap-carousel-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.category-card {
+  background-color: var(--webshop-lime);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  transition: transform 0.2s;
+  width: 220px;
+  height: 220px;
+}
+.category-card:hover {
+  transform: translateY(-4px);
+}
+.category-card-img-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.category-card-title {
+  font-weight: 600;
+  color: var(--webshop-dark);
+  font-size: 1.05rem;
+  margin-top: 1rem;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  width: 260px;
+  border: 1px solid #f1f5f9;
+  transition: box-shadow 0.2s;
+}
+.product-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+}
+.product-card-title {
+  font-weight: 700;
+  color: var(--webshop-dark);
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+.product-card-price {
+  font-weight: 700;
+  color: var(--webshop-dark);
+  font-size: 1.25rem;
+}
+.product-card-price-old {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-decoration: line-through;
+  margin-left: 0.5rem;
+}
+
+/* ── TAILWIND SHIMS ── */
+.hidden { display: none !important; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .md\:flex { display: flex !important; }
+  .md\:block { display: block !important; }
+  .md\:order-1 { order: 1 !important; }
+  .md\:order-2 { order: 2 !important; }
+}
+
+@media (min-width: 1024px) {
+  .lg-grid-60-40 { grid-template-columns: 55% 45% !important; }
+}
+
+/* ── COMPRESSED PRODUCT DESCRIPTION ── */
+.product-desc-cleaned p {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+.product-desc-cleaned ul {
+  margin-bottom: 1rem;
+  padding-left: 1.25rem;
+}
+.product-desc-cleaned li {
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+.product-desc-cleaned div {
+  margin-bottom: 0.5rem;
 }

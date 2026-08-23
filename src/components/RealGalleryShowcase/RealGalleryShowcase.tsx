@@ -92,7 +92,6 @@ export default function RealGalleryShowcase() {
                   src={project.src}
                   alt={project.alt}
                   fill
-                  unoptimized={true}
                   sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 340px"
                   loading={idx < 4 ? "eager" : "lazy"}
                   style={{ objectFit: 'cover' }}
