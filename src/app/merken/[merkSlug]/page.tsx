@@ -268,12 +268,12 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
                 {recentWorkImages.slice(0, 3).map((img, idx) => (
-                  <div key={idx} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', position: 'relative', height: '220px' }}>
+                  <div key={idx} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', position: 'relative', aspectRatio: '4/3', backgroundColor: '#f1f5f9' }}>
                     <Image 
                       src={`/images/merken/${img}`} 
                       alt={`${brand.name} autosleutel bijmaken`} 
                       fill 
-                      style={{ objectFit: 'cover' }} 
+                      style={{ objectFit: 'contain' }} 
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </div>
