@@ -222,6 +222,14 @@ export default function SleutelBijmakenPage() {
                 description: 'Wij bieden standaard 12 maanden volledige garantie op de hardware en het inleren van uw nieuwe sleutels.',
                 linkText: 'Bekijk waar wij service verlenen',
                 linkUrl: '/steden'
+              },
+              {
+                id: 'feature-5',
+                icon: <Image src="/images/icon_insurance.jpg" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '24/7 Spoedhulp Bel Nu',
+                description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
+                linkText: 'Bel direct',
+                linkUrl: `tel:${SITE_CONFIG.phoneTel}`
               }
             ]}
           />
