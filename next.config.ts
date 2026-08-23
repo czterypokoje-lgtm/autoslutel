@@ -122,7 +122,17 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/diensten/contact-reparatie',
-        destination: '/diensten/contactslot-reparatie',
+        destination: '/diensten/contactslot-auto-vervangen',
+        permanent: true,
+      },
+      {
+        source: '/diensten/contactslot-reparatie',
+        destination: '/diensten/contactslot-auto-vervangen',
+        permanent: true,
+      },
+      {
+        source: '/diensten/contactslot-vervangen-reparatie',
+        destination: '/diensten/contactslot-auto-vervangen',
         permanent: true,
       },
       {
