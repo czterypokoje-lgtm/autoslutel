@@ -4,7 +4,7 @@
 /* ---- HERO SPLIT LAYOUT ---- */
 .heroSplit {
   background: #ffffff;
-  padding: 4rem 2rem 3rem;
+  padding: 3rem 2rem 3rem;
   border-bottom: 1px solid var(--gray-200);
 }
 .heroSplitInner {
@@ -392,6 +392,7 @@
   /* No changes for 768px as 1024px handles the 2-col switch */
 }
 @media (max-width: 640px) {
+  .heroSplit { padding: 1.5rem 1.25rem 2.5rem; }
   .hero { padding: 0; min-height: auto; flex-direction: column; align-items: stretch; }
   .hero::before { display: none; }
   .heroBackground { position: relative !important; height: 280px !important; }
