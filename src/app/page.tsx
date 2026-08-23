@@ -190,7 +190,7 @@ export default function HomePage() {
       {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
       <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>
         <FeatureCards 
-          title="Reparatie. Vervanging. Programmeren."
+          title="Bijmaken. Vervanging. Programmeren."
           subtitle={<><span style={{ color: 'var(--orange-500)' }}>AutoSleutel24</span> doet het allemaal, waar u maar wilt.</>}
           features={[
             {
