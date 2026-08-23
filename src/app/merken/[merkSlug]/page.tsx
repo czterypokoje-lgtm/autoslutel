@@ -283,56 +283,6 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
           </section>
         )}
 
-        {/* ── TIMPSON STYLE 'WHY CHOOSE US' SECTION ── */}
-        <section style={{ padding: '4.5rem 0', background: '#ffffff' }}>
-          <div className="container" style={{ maxWidth: 1200 }}>
-            
-            <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', fontWeight: 800, color: '#0f172a', marginBottom: '3.5rem', textAlign: 'center' }}>
-              Waarom kiezen voor onze {brand.name} autosleutel service?
-            </h2>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem' }}>
-              
-              {/* Column 1: Affordable */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_1.jpg" alt="Betaalbaar pinapparaat" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Betaalbaar</h3>
-                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
-                  Onze {brand.name} reservesleutels zijn tot 50% goedkoper dan bij de officiële merkdealers.
-                </p>
-              </div>
-
-              {/* Column 2: Convenient */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_2.png" alt="Sleutel programmeren op locatie" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Gemakkelijk</h3>
-                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
-                  Krijg snel en eenvoudig uw nieuwe {brand.name} autosleutel op locatie door heel Nederland.
-                </p>
-              </div>
-
-              {/* Column 3: Quality */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_3.png" alt="Sleutel werkplaats" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                </div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Kwaliteit</h3>
-                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
-                  Onze monteurs frezen nauwkeurige {brand.name} sleutels en leren deze vakkundig in op uw voertuig.
-                </p>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
 
         {/* ── TIMPSON STYLE MODELS SECTION (BRANDED COLORS & ALL MODELS) ── */}
         <section id="modellen" style={{ padding: '4.5rem 0', background: '#f8fafc' }}>
@@ -425,6 +375,57 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                 WhatsApp
               </a>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ── TIMPSON STYLE 'WHY CHOOSE US' SECTION ── */}
+        <section style={{ padding: '4.5rem 0', background: '#ffffff' }}>
+          <div className="container" style={{ maxWidth: 1200 }}>
+            
+            <h2 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', fontWeight: 800, color: '#0f172a', marginBottom: '3.5rem', textAlign: 'center' }}>
+              Waarom kiezen voor onze {brand.name} autosleutel service?
+            </h2>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem' }}>
+              
+              {/* Column 1: Affordable */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/why_choose_us_1.jpg" alt="Betaalbaar pinapparaat" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Betaalbaar</h3>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
+                  Onze {brand.name} reservesleutels zijn tot 50% goedkoper dan bij de officiële merkdealers.
+                </p>
+              </div>
+
+              {/* Column 2: Convenient */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/why_choose_us_2.png" alt="Sleutel programmeren op locatie" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Gemakkelijk</h3>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
+                  Krijg snel en eenvoudig uw nieuwe {brand.name} autosleutel op locatie door heel Nederland.
+                </p>
+              </div>
+
+              {/* Column 3: Quality */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/why_choose_us_3.png" alt="Sleutel werkplaats" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Kwaliteit</h3>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
+                  Onze monteurs frezen nauwkeurige {brand.name} sleutels en leren deze vakkundig in op uw voertuig.
+                </p>
+              </div>
+
             </div>
 
           </div>
