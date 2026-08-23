@@ -101,16 +101,16 @@
   font-size: 1.125rem;
   font-weight: 700;
   border-radius: 9999px;
-  background-color: #25D366;
+  background-color: #1f8245;
   color: white;
   text-decoration: none;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(31, 130, 69, 0.2);
 }
 
 .waBtn:hover {
-  background-color: #1eb956;
+  background-color: #175e33;
   transform: translateY(-2px);
-  box-shadow: 0 6px 8px -1px rgba(37, 211, 102, 0.3);
+  box-shadow: 0 6px 8px -1px rgba(23, 94, 51, 0.3);
   color: white;
 }
