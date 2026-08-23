@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
-import HeaderSwitcher from '@/components/Navigation/HeaderSwitcher';
+import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer/Footer';
-import WebshopFooter from '@/components/webshop/WebshopFooter';
-import FooterSwitcher from '@/components/Footer/FooterSwitcher';
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
 import UrgencyBanner from '@/components/UrgencyBanner/UrgencyBanner';
 import StickyCallBar from '@/components/StickyCallBar/StickyCallBar';
@@ -182,12 +180,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
-        <HeaderSwitcher />
+        <Navigation />
         {children}
-        <FooterSwitcher 
-          mainFooter={<Footer />} 
-          webshopFooter={<WebshopFooter />} 
-        />
+        <Footer />
         <WhatsAppButton />
         <StickyCallBar />
         {/* ── iubenda Cookie Solution & Privacy Controls ── */}
