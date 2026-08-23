@@ -136,7 +136,6 @@ export default function HomePage() {
         <div className={styles.heroSplitInner}>
           
           <div className={styles.heroTopContent}>
-            <div className={styles.heroSplitLabel}>NL — 24/7 Mobiele Service</div>
             <h1>
               Autosleutel Kwijt of Bijmaken?<br />
               <span style={{ color: 'var(--orange-500)' }}>Wij Helpen Direct op Locatie!</span>
