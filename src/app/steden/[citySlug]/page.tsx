@@ -316,8 +316,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 icon: <Image src="/images/icon_car_check.jpg" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '12 Maanden Garantie',
                 description: 'Wij bieden standaard 12 maanden volledige garantie op al onze geleverde sleutels en het programmeren daarvan.',
-                linkText: 'Lees meer over garantie',
-                linkUrl: '/garantie'
+                linkText: 'Bekijk waar wij service verlenen',
+                linkUrl: '/steden'
               },
               {
                 id: 'feature-5',
