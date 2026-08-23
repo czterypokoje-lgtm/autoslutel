@@ -230,7 +230,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <nav className={styles.breadcrumb} aria-label="Breadcrumb">
                   <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/steden" style={{ color: 'var(--gray-500)' }}>Steden</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
                 </nav>
-                <div style={{ marginBottom: '1.25rem', marginTop: '1rem' }}>
+                <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                   <HeroTrustBadge />
                 </div>
                 <h1>
@@ -272,7 +272,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <nav className={styles.breadcrumb} aria-label="Breadcrumb">
                 <Link href="/">Home</Link> <span>/</span> <Link href="/steden">Steden</Link> <span>/</span> <span>{city.city}</span>
               </nav>
-              <div style={{ marginBottom: '1.25rem', marginTop: '1rem' }}>
+              <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                 <HeroTrustBadge />
               </div>
               <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
