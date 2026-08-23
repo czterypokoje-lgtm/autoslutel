@@ -76,7 +76,7 @@ const services = [
   { 
     title: 'Autosleutels Repareren & Behuizing Vervangen', 
     desc: 'Is de behuizing van uw autosleutel gescheurd, zijn de knoppen lam of werkt de afstandsbediening niet meer? Onze specialisten kunnen uw autosleutel repareren terwijl u wacht.',
-    href: '/diensten/autosleutel-reparatie',
+    href: '/diensten/autosleutels-repareren',
     src: '/images/seo/autosleutel_reparatie_hero.webp',
     alt: 'Autosleutel behuizing vervangen en knoppen repareren op locatie',
     btnText: 'Meer over reparaties'

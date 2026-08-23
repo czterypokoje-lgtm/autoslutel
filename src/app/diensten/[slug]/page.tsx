@@ -212,7 +212,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
         ) : (
           <section 
             className={styles.hero}
-            style={slug === 'autosleutel-reparatie' ? {
+            style={slug === 'autosleutels-repareren' ? {
               backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%), url('/images/seo/autosleutel_reparatie_hero.webp')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
