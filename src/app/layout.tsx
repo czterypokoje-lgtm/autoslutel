@@ -180,6 +180,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
+        <UrgencyBanner />
         <Navigation />
         {children}
         <Footer />
