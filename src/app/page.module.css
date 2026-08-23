@@ -11,22 +11,49 @@
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  flex-direction: column-reverse;
-  gap: 3rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: stretch;
 }
+
+.heroTopContent {
+  order: 1;
+}
+
+.heroImageContent {
+  order: 2;
+  width: 100%;
+}
+
+.heroBottomContent {
+  order: 3;
+}
+
 @media (min-width: 992px) {
   .heroSplitInner {
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+      "top image"
+      "bottom image";
+    gap: 2rem 3rem;
+    align-items: center;
   }
-}
-.heroSplitText {
-  flex: 1;
-}
-.heroSplitImage {
-  flex: 1;
-  width: 100%;
+  .heroTopContent { 
+    grid-area: top; 
+    order: initial;
+    align-self: end;
+  }
+  .heroImageContent { 
+    grid-area: image; 
+    order: initial;
+    align-self: center;
+  }
+  .heroBottomContent { 
+    grid-area: bottom; 
+    order: initial;
+    align-self: start;
+  }
 }
 .heroSplitLabel {
   font-size: 0.72rem;

@@ -134,7 +134,11 @@ export default function HomePage() {
       <main>
       <section className={styles.heroSplit}>
         <div className={styles.heroSplitInner}>
-          <div className={styles.heroSplitText}>
+          
+          <div className={styles.heroTopContent}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <HeroGoogleBadge />
+            </div>
             <div className={styles.heroSplitLabel}>NL — 24/7 Mobiele Service</div>
             <h1>
               Autosleutel Kwijt of Bijmaken?<br />
@@ -143,12 +147,9 @@ export default function HomePage() {
             <p className={styles.heroSplitLead}>
               Staat u buitengesloten of is uw autosleutel defect? Geen paniek. Autosleutel24 komt met een volledig uitgeruste servicebus naar u toe. Geen wegsleepkosten, goedkoper dan de dealer en vaak binnen <strong>30 tot 60 minuten</strong> weer op weg!
             </p>
-            <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
-            <div style={{ marginTop: '1.5rem' }}>
-              <HeroGoogleBadge />
-            </div>
           </div>
-          <div className={styles.heroSplitImage}>
+
+          <div className={styles.heroImageContent}>
             <Image 
               src="/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp" 
               alt="Autosleutel bijmaken door mobiele specialist"
@@ -178,6 +179,11 @@ export default function HomePage() {
               })
             }} />
           </div>
+
+          <div className={styles.heroBottomContent}>
+            <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
+          </div>
+
         </div>
       </section>
 
