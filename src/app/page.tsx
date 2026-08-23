@@ -85,7 +85,7 @@ const services = [
   { 
     title: 'Contactslot Auto Vervangen & Repareren', 
     desc: 'Draait uw autosleutel niet meer in het contactslot of zit deze vast? Een defect contactslot komt vaak voor. Wij reviseren of vervangen uw contactslot direct bij u op de oprit.',
-    href: '/diensten/contactslot-vervangen-reparatie',
+    href: '/diensten/contactslot-auto-vervangen',
     src: '/images/seo/contactslot_reparatie_vervangen_utrecht_slotenmaker.webp',
     alt: 'Defect contactslot auto vervangen en repareren door monteur in Utrecht',
     btnText: 'Contactslot herstellen'
