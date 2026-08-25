@@ -323,7 +323,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 title: 'Verzekerd & Gecertificeerd',
                 description: 'U bent 100% verzekerd. We werken samen met alle grote verzekeraars.',
                 linkText: 'Lees meer over verzekering',
-                linkUrl: '/verzekering'
+                linkUrl: '/blog/verzekering-dekt-autosleutel-vervangen'
               }
             ]}
           />
