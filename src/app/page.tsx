@@ -191,6 +191,14 @@ export default function HomePage() {
           subtitle={<><span style={{ color: 'var(--orange-500)' }}>AutoSleutel24</span> doet het allemaal, waar u maar wilt.</>}
           features={[
             {
+              id: 'feature-0',
+              icon: <Image src="/images/icon_car_check.webp" alt="Autosleutel Bijmaken" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: 'Autosleutel Bijmaken',
+              description: 'Direct een nieuwe autosleutel bijmaken op locatie. Snel, vakkundig en inclusief programmeren.',
+              linkText: 'Meer over sleutel bijmaken',
+              linkUrl: '/diensten/autosleutel-bijmaken'
+            },
+            {
               id: 'feature-1',
               icon: <Image src="/images/icon_van.webp" alt="Autosleutel Kwijt? Direct Hulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
               title: 'Autosleutel Kwijt? Direct Hulp',
