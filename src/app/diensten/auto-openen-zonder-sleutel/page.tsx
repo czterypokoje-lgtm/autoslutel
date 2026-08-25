@@ -238,8 +238,8 @@ export default function AutoOpenenZonderSleutelPage() {
                 icon: <Image src="/images/icon_car_check.webp" alt="Schadevrij" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '100% Schadevrij Garantie',
                 description: 'Wij garanderen dat wij uw auto openen zónder de ruit in te slaan of het slot te beschadigen.',
-                linkText: 'Lees meer over garantie',
-                linkUrl: '/garantie'
+                linkText: 'Lees meer over ons',
+                linkUrl: '/over-ons'
               }
             ]}
           />
