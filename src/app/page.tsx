@@ -192,7 +192,7 @@ export default function HomePage() {
           features={[
             {
               id: 'feature-0',
-              icon: <Image src="/images/icon_car_check.webp" alt="Autosleutel Bijmaken" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              icon: <Image src="/images/icon_key_red.jpg" alt="Autosleutel Bijmaken" width={90} height={90} style={{ borderRadius: '12px' }} />,
               title: 'Autosleutel Bijmaken',
               description: 'Direct een nieuwe autosleutel bijmaken op locatie. Snel, vakkundig en inclusief programmeren.',
               linkText: 'Meer over sleutel bijmaken',
