@@ -69,6 +69,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       year ? `Bouwjaar: ${year}` : null,
       service ? `Service: ${service}` : null,
       `Locatie: ${location || "Niet ingevuld"}`,
+      photoUrl ? `Foto bijlage: ${photoUrl.replace("https://omqnxprotjfbyqqq.public.blob.vercel-storage.com", typeof window !== "undefined" ? window.location.origin + "/f" : "")}` : null,
       "",
       "Kunt u mij zo snel mogelijk helpen? Graag hoor ik de prijs en aankomsttijd.",
     ].filter(p => p !== null).join("\n");

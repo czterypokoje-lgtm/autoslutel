@@ -259,6 +259,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/f/:filename*',
+        destination: 'https://omqnxprotjfbyqqq.public.blob.vercel-storage.com/:filename*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
