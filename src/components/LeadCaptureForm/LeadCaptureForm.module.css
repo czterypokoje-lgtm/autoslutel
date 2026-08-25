@@ -316,3 +316,16 @@
   background: rgba(37,211,102,0.25);
 }
 
+.light .fileUploadLabel {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.15);
+}
+
+.light .fileUploadLabel:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: var(--navy-400);
+}
+
+.light .fileUploadText {
+  color: var(--navy-900);
+}
