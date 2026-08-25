@@ -76,29 +76,29 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
     return `https://wa.me/${SITE_CONFIG.phoneTel.replace(/\D/g,"")}?text=${encodeURIComponent(parts)}`;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitted(true);
     
-    try {
-      await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          brand,
-          model,
-          year,
-          service,
-          location,
-          photoUrl
-        })
-      });
-    } catch (err) {
-      console.error("Error saving lead", err);
-    }
+    // Fire and forget the database save
+    fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        brand,
+        model,
+        year,
+        service,
+        location,
+        photoUrl
+      }),
+      keepalive: true
+    }).catch(err => console.error("Error saving lead", err));
 
-    window.open(buildWhatsAppUrl(), "_blank", "noopener,noreferrer");
-    setSubmitted(false);
+    setTimeout(() => {
+      window.open(buildWhatsAppUrl(), "_blank", "noopener,noreferrer");
+      setSubmitted(false);
+    }, 200);
   }
 
   return (
