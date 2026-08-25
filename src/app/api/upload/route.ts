@@ -15,6 +15,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const blob = await put(filename, request.body as ReadableStream, {
       access: 'public',
+      token: process.env.Auto_READ_WRITE_TOKEN,
     });
     return NextResponse.json(blob);
   } catch (error) {
