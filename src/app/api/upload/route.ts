@@ -15,13 +15,13 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const blob = await put(filename, request.body as ReadableStream, {
       access: 'public',
-      token: process.env.Auto_READ_WRITE_TOKEN,
+      token: process.env.bbauto_READ_WRITE_TOKEN,
     });
     return NextResponse.json(blob);
   } catch (error) {
     console.error('Error uploading file to Vercel Blob:', error);
     return NextResponse.json(
-      { error: 'Error uploading file' },
+      { error: error instanceof Error ? error.message : 'Error uploading file' },
       { status: 500 }
     );
   }
