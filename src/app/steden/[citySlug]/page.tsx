@@ -123,7 +123,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     title: {
       absolute: city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
     },
-    description: city.customMetaDesc || `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen ${city.travelTime} ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
+    description: city.customMetaDesc || `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen 30-60 min ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
     keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `autosleutel kwijt ${city.city.toLowerCase()}`, `reservesleutel auto ${city.city.toLowerCase()}`],
     alternates: {
       canonical: pageUrl,
@@ -136,7 +136,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
       type: 'website',
       url: pageUrl,
       title: `Autosleutel Bijmaken ${city.city} | Mobiel Programmeren 24/7`,
-      description: `Autosleutel kwijt of reserve bijmaken in ${city.city}? Wij zijn er binnen ${city.travelTime} ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
+      description: `Autosleutel kwijt of reserve bijmaken in ${city.city}? Wij zijn er binnen 30-60 min ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
   };
