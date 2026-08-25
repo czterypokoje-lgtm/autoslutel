@@ -72,6 +72,81 @@
   cursor: not-allowed;
 }
 
+/* File Upload */
+.fileUploadWrapper {
+  flex: 1 1 140px;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fileUploadLabel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px dashed rgba(255,255,255,0.25);
+  border-radius: 10px;
+  padding: 0 0.75rem;
+  min-height: 44px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fileUploadLabel:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: var(--color-primary);
+}
+
+.fileUploadLabel.success {
+  border-color: #10b981;
+  border-style: solid;
+  background: rgba(16,185,129,0.1);
+}
+
+.fileUploadText {
+  color: #fff;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fileInput {
+  display: none;
+}
+
+.previewContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0,0,0,0.2);
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.imagePreview {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.removePhotoBtn {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.8rem;
+}
+
 /* Submit button */
 .submitBtn {
   flex: 1 1 140px;
