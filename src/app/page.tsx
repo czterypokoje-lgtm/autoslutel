@@ -337,7 +337,7 @@ export default function HomePage() {
                 ))}
               </ul>
               <div style={{ marginTop: '0.75rem' }}>
-                <Link href="/steden" className="btn btn-navy">Bekijk alle 45+ steden in ons werkgebied</Link>
+                <Link href="/steden" className="btn btn-navy">Bekijk alle 49+ steden in ons werkgebied</Link>
               </div>
             </div>
 
