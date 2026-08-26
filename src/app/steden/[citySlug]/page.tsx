@@ -323,7 +323,13 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 p.alt.toLowerCase().includes(city.city.toLowerCase()) ||
                 p.src.toLowerCase().includes(citySlug)
               );
-              const pool = citySpecific.length > 0 ? citySpecific : REAL_GALLERY_PROJECTS;
+              // Fallback for cities without a dedicated photo: only use images
+              // that don't name any city at all, so we never caption a photo
+              // with a different city's name on this page.
+              const namesAnyCity = (p: (typeof REAL_GALLERY_PROJECTS)[number]) =>
+                CITIES.some(c => p.alt.toLowerCase().includes(c.city.toLowerCase()));
+              const genericPool = REAL_GALLERY_PROJECTS.filter(p => !namesAnyCity(p));
+              const pool = citySpecific.length > 0 ? citySpecific : genericPool;
               return (
                 <GallerySlider
                   images={pool.slice(0, 3).map(p => ({ src: p.src, caption: p.alt }))}

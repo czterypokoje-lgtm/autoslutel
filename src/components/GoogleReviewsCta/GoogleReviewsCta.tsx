@@ -18,7 +18,6 @@ interface GoogleReviewsCtaProps {
  * unless they come from the live profile.
  */
 export default function GoogleReviewsCta({ title, intro }: GoogleReviewsCtaProps) {
-  const reviewCount = parseInt(SITE_CONFIG.reviewCount, 10);
   const profileUrl = SITE_CONFIG.social.google;
 
   return (
@@ -42,9 +41,7 @@ export default function GoogleReviewsCta({ title, intro }: GoogleReviewsCtaProps
               ))}
             </div>
           </div>
-          <span className={styles.countLabel}>
-            {reviewCount} {reviewCount === 1 ? 'Google-review' : 'Google-reviews'}
-          </span>
+          <span className={styles.countLabel}>Google-reviews</span>
         </div>
       </div>
 

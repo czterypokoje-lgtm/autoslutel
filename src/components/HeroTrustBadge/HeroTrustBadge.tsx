@@ -9,8 +9,6 @@ import styles from './HeroTrustBadge.module.css';
  * previous version used stock photos as if they were customers.
  */
 export default function HeroTrustBadge() {
-  const reviewCount = parseInt(SITE_CONFIG.reviewCount, 10);
-
   return (
     <a
       className={styles.badgeContainer}
@@ -37,7 +35,7 @@ export default function HeroTrustBadge() {
           </div>
         </div>
         <span className={styles.label}>
-          {reviewCount} {reviewCount === 1 ? 'Google-review' : 'Google-reviews'} — bekijk op Google
+          Google-reviews — bekijk op Google
         </span>
       </div>
     </a>

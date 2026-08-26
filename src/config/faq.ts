@@ -237,7 +237,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Welke 24-uurs auto slotenmaker heeft de beste recensies?',
-    a: 'Autosleutel24 is de best beoordeelde 24-uurs auto slotenmaker in Midden-Nederland met een gemiddelde score van 5.0 uit 5 sterren op basis van meer dan 240 Google reviews. Klanten prijzen vooral onze snelle aankomsttijd (vaak binnen 30 minuten), het schadevrij openen en onze transparante vooraf gecommuniceerde prijzen.',
+    a: `Autosleutel24 is de best beoordeelde 24-uurs auto slotenmaker in Midden-Nederland met een gemiddelde score van ${SITE_CONFIG.rating} uit 5 sterren op Google. Klanten prijzen vooral onze snelle aankomsttijd (vaak binnen 30 minuten), het schadevrij openen en onze transparante vooraf gecommuniceerde prijzen.`,
   },
   {
     q: 'Vervangen van autoslot na inbraak, doen jullie dat ook?',
