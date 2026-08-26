@@ -330,7 +330,11 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               const namesAnyCity = (p: (typeof REAL_GALLERY_PROJECTS)[number]) =>
                 CITIES.some(c => p.alt.toLowerCase().includes(c.city.toLowerCase()));
               const genericPool = REAL_GALLERY_PROJECTS.filter(p => !namesAnyCity(p));
-              const pool = citySpecific.length > 0 ? citySpecific : genericPool;
+              // Always show at least 3 images: use the city-specific ones first,
+              // then pad out with neutral (no-city-named) photos if there aren't enough.
+              const pool = citySpecific.length >= 3
+                ? citySpecific
+                : [...citySpecific, ...genericPool];
               return (
                 <GallerySlider
                   images={pool.slice(0, 3).map(p => ({ src: p.src, caption: p.alt }))}
