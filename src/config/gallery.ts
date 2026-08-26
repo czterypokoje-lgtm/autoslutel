@@ -7,18 +7,28 @@ export interface GalleryProject {
 export const REAL_GALLERY_PROJECTS: GalleryProject[] = [
   {
     id: 100,
-    src: '/images/gallery/autosleutel_ford_mondeo_zeist.webp',
-    alt: 'Ford autosleutel bijmaken en inleren op locatie in Zeist'
+    src: '/images/autosleutel-bijmaken-breda.webp',
+    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Breda'
   },
   {
     id: 101,
-    src: '/images/gallery/autosleutel_ford_focus_arnhem.webp',
-    alt: 'Ford autosleutel bijmaken en inleren op locatie in Arnhem'
+    src: '/images/autosleutel-bijmaken-gouda.webp',
+    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Gouda'
   },
   {
     id: 102,
-    src: '/images/gallery/autosleutel_hyundai_tucson_naarden.webp',
-    alt: 'Hyundai autosleutel bijmaken en inleren op locatie in Naarden'
+    src: '/images/autosleutel-bijmaken-haarlem.webp',
+    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Haarlem'
+  },
+  {
+    id: 103,
+    src: '/images/autosleutel-bijmaken-lelystad.webp',
+    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Lelystad'
+  },
+  {
+    id: 104,
+    src: '/images/autosleutel-bijmaken-nieuwegein.webp',
+    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Nieuwegein'
   },
   {
     id: 1,
