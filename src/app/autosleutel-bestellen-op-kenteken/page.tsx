@@ -12,7 +12,6 @@ export const metadata: Metadata = {
     absolute: 'Autosleutel Bestellen op Kenteken? | Direct Prijs & Hulp op Locatie',
   },
   description: 'Wilt u een autosleutel bestellen op kenteken? Geen technisch gedoe! App uw kenteken naar Autosleutel24 en ontvang direct een vaste prijs. Wij komen op locatie in de Randstad.',
-  keywords: ['autosleutel bestellen op kenteken', 'type sleutel', 'sleutel nodig', 'laten maken', 'laten bijmaken', 'kwijt bent', 'keyless entry', 'standaard sleutel', 'auto s'],
   alternates: { canonical: `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken` },
 };
 

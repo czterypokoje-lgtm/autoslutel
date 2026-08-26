@@ -130,13 +130,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
 
         <meta name="theme-color" content="#0d2137" />
-
-        {/* ── GEO META TAGS — Local SEO signals for Google & Bing ── */}
-        <meta name="geo.region" content="NL-UT" />
-        <meta name="geo.placename" content="Utrecht, Nederland" />
-        <meta name="geo.position" content="52.0907;5.1214" />
-        <meta name="ICBM" content="52.0907, 5.1214" />
-
         {/* ── BUSINESS META TAGS — Open Graph extensions ── */}
         <meta property="business:contact_data:street_address" content={SITE_CONFIG.address.street} />
         <meta property="business:contact_data:locality" content={SITE_CONFIG.address.city} />

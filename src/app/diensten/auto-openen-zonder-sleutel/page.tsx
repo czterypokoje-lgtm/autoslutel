@@ -17,16 +17,6 @@ export const metadata: Metadata = {
   },
   description: 'Auto openen zonder sleutel nodig? Onze mobiele locksmith opent uw auto 100% schadevrij binnen 30 min. Vaste prijs vanaf €149. Actief in Utrecht, Amsterdam, Almere & Amersfoort. Bel 24/7!',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
-  keywords: [
-    'auto openen zonder sleutel',
-    'sleutel in auto vergeten',
-    'autodeur openen schadevrij',
-    'auto openen locksmith',
-    'buitensluiting auto',
-    'auto openen zonder sleutel kosten',
-    'auto openen zonder sleutel utrecht',
-    'auto openen amsterdam'
-  ]
 };
 
 const schema = {

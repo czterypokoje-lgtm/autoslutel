@@ -11,7 +11,6 @@ export const metadata: Metadata = {
     absolute: 'Autosleutel Kwijt? | 24/7 Mobiele Service | Autosleutel24',
   },
   description: `Autosleutel kwijt? Wij helpen direct. Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel: ${SITE_CONFIG.phone}`,
-  keywords: ['autosleutel kwijt','alle sleutels kwijt auto','auto autosleutel kwijt wat te doen','nieuwe autosleutel laten maken','autosleutel kwijt autoslotenmaker'],
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
     languages: {

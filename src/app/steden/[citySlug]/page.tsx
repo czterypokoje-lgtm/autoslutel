@@ -2,15 +2,16 @@ import type { Metadata } from 'next';
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
 import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import { DIENSTEN } from '@/config/diensten';
-import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
+const BrandsLogoGrid = dynamic(() => import('@/components/BrandsLogoGrid/BrandsLogoGrid'));
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import GallerySlider from '@/components/GallerySlider/GallerySlider';
+const GallerySlider = dynamic(() => import('@/components/GallerySlider/GallerySlider'));
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
@@ -67,7 +68,6 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
       absolute: city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
     },
     description: city.customMetaDesc || `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen 30-60 min ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
-    keywords: [city.keyword, `autosleutel ${city.city.toLowerCase()}`, `slotenmaker auto ${city.city.toLowerCase()}`, `autosleutel kwijt ${city.city.toLowerCase()}`, `reservesleutel auto ${city.city.toLowerCase()}`],
     alternates: {
       canonical: pageUrl,
       languages: {
@@ -81,6 +81,12 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
       title: `Autosleutel Bijmaken ${city.city} | Mobiel Programmeren 24/7`,
       description: `Autosleutel kwijt of reserve bijmaken in ${city.city}? Wij zijn er binnen 30-60 min ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
+    },
+    other: {
+      'geo.region': 'NL',
+      'geo.placename': `${city.city}, Nederland`,
+      'geo.position': `${city.geo.lat};${city.geo.lng}`,
+      'ICBM': `${city.geo.lat}, ${city.geo.lng}`,
     },
   };
 }
@@ -273,7 +279,36 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         <HowItWorks cityName={city.city} />
 
 
-        {/* SEO Gallery */}
+        {/* Technician trust card — placed high for mobile conversions */}
+        <section style={{ padding: '2.5rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+          <div className="container">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '2rem', alignItems: 'center' }}>
+              <div>
+                <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>UW MONTEUR IN {city.city.toUpperCase()}</p>
+                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>Berkan Acarol — Gecertificeerd Hoofdtechnicus</h2>
+                <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1rem', fontSize: '0.9rem' }}>
+                  Uw sleutelprobleem in {city.city} wordt persoonlijk opgelost door Berkan. Gecertificeerd op Autel IM608 Pro&nbsp;II en AVDI Abrites — dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.
+                </p>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.25rem', fontSize: '0.875rem', color: 'var(--gray-700)', lineHeight: 1.7 }}>
+                  <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Autel IM608 Pro II &amp; AVDI Abrites</strong> — dealer-niveau apparatuur</span></li>
+                  <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Schadevrij werken</strong> — 12 maanden garantie op elk onderdeel</span></li>
+                  <li style={{ display: 'flex', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Vaste prijs vooraf</strong> — nooit een verrassingsrekening</span></li>
+                </ul>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id={`city-berkan-phone-${city.slug}`}>📞 Bel Berkan: {SITE_CONFIG.phone}</a>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <img
+                  src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+                  alt={`Berkan Acarol — Autosleutelspecialist ${city.city}`}
+                  loading="lazy"
+                  style={{ width: '100%', maxWidth: '300px', height: '200px', objectFit: 'cover', objectPosition: 'top', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SEO Gallery — max 3 city-relevant images */}
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
           <div className="container">
             <h2 style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '1rem', color: 'var(--navy-900)' }}>
@@ -282,10 +317,19 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
               Een impressie van ons dagelijks werk: van sleutels inleren op locatie tot schadevrij openen van portieren in {city.city}.
             </p>
-            <GallerySlider 
-              images={REAL_GALLERY_PROJECTS.map(p => ({ src: p.src, caption: p.alt }))} 
-              title="" 
-            />
+            {(() => {
+              const citySpecific = REAL_GALLERY_PROJECTS.filter(p =>
+                p.alt.toLowerCase().includes(city.city.toLowerCase()) ||
+                p.src.toLowerCase().includes(citySlug)
+              );
+              const pool = citySpecific.length > 0 ? citySpecific : REAL_GALLERY_PROJECTS;
+              return (
+                <GallerySlider
+                  images={pool.slice(0, 3).map(p => ({ src: p.src, caption: p.alt }))}
+                  title=""
+                />
+              );
+            })()}
           </div>
         </section>
 
