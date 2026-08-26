@@ -7,6 +7,14 @@ export default function PhoneConversionTracker() {
       const target = (e.target as Element).closest('a');
       if (target && target.href && target.href.startsWith('tel:')) {
         const win = window as any;
+        
+        // Push event to GTM dataLayer
+        win.dataLayer = win.dataLayer || [];
+        win.dataLayer.push({
+          'event': 'click_to_call',
+          'link_url': target.href,
+        });
+
         if (typeof win !== 'undefined' && win.gtag_report_conversion) {
           e.preventDefault();
           win.gtag_report_conversion(target.href);
