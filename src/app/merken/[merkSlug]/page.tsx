@@ -67,6 +67,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
   });
 
   if (!brand) notFound();
+  const pageUrl = `${SITE_CONFIG.domain}/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken`;
 
   // Redirect short slugs (e.g. /merken/audi) to the long SEO slug (e.g. /merken/audi-autosleutel-bijmaken)
   if (decodedSlug === brand.nameSlug.toLowerCase()) {
@@ -578,7 +579,8 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             ...(brand.customFaqs || []).map(f => ({ question: f.q, answer: f.a })),
             ...getFaqForBrand(brand.name).map(f => ({ question: f.q, answer: f.a }))
           ]}
-          brandName={brand.name} 
+          brandName={brand.name}
+          pageUrl={pageUrl}
         />
 
         {/* ── GOOGLE KLANTENBEOORDELINGEN ── */}

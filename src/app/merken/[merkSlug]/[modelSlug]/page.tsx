@@ -125,6 +125,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
 
   if (!model && !intent) notFound();
 
+  const pageUrl = `${SITE_CONFIG.domain}/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${decodedModelSlug}`;
   const targetName = model ? model.name : intent!.name;
   const h1Text = model 
     ? `${brand.name} ${targetName} Autosleutel Bijmaken of Repareren`
@@ -304,7 +305,8 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
         {/* ── FAQ SECTION (SEO & AI OPTIMIZED) ── */}
         <FaqSection 
           customFaqs={getFaqForBrand(brand.name).map(f => ({ question: f.q.replaceAll(brand.name, `${brand.name} ${targetName}`), answer: f.a.replaceAll(brand.name, `${brand.name} ${targetName}`) }))}
-          brandName={`${brand.name} ${targetName}`} 
+          brandName={`${brand.name} ${targetName}`}
+          pageUrl={pageUrl}
         />
 
         {/* ── GOOGLE KLANTENBEOORDELINGEN ── */}

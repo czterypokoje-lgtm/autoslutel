@@ -33,18 +33,20 @@ interface FaqSectionProps {
   customFaqs?: { question: string; answer: string }[];
   cityName?: string;
   brandName?: string;
+  /** Canonical URL of the page this FAQ is rendered on, used to scope the JSON-LD @id. Defaults to the homepage. */
+  pageUrl?: string;
 }
 
-export default function FaqSection({ customFaqs, cityName, brandName }: FaqSectionProps = {}) {
+export default function FaqSection({ customFaqs, cityName, brandName, pageUrl = SITE_CONFIG.domain }: FaqSectionProps = {}) {
   const displayFaqs = customFaqs && customFaqs.length > 0 ? customFaqs : defaultFaqs;
   // ── FAQPage schema — enables Google FAQ rich results ──
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    '@id': 'https://www.autosleutel24.nl/#faqpage',
+    '@id': `${pageUrl}#faqpage`,
     mainEntity: displayFaqs.map((f, i) => ({
       '@type': 'Question',
-      '@id': `https://www.autosleutel24.nl/#faq-${i}`,
+      '@id': `${pageUrl}#faq-${i}`,
       name: f.question,
       acceptedAnswer: {
         '@type': 'Answer',
@@ -58,7 +60,7 @@ export default function FaqSection({ customFaqs, cityName, brandName }: FaqSecti
   const speakableSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    '@id': 'https://www.autosleutel24.nl/#webpage',
+    '@id': `${pageUrl}#webpage`,
     speakable: {
       '@type': 'SpeakableSpecification',
       // CSS selectors pointing to the FAQ question+answer pairs

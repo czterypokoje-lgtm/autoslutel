@@ -19,9 +19,38 @@ export type Service = {
 
 export const DIENSTEN: Service[] = [
   // ── 1. AUTODEUR OPENEN ─────────────────────────────────────
-  // NOTE: 'auto-openen-zonder-sleutel' is intentionally NOT listed here.
-  // It is served by the static route src/app/diensten/auto-openen-zonder-sleutel/page.tsx,
-  // which Next.js resolves in preference to this dynamic [slug] route for the same path.
+  {
+    // NOTE: the actual page at /diensten/auto-openen-zonder-sleutel is served by the
+    // static route src/app/diensten/auto-openen-zonder-sleutel/page.tsx, which Next.js
+    // resolves in preference to the dynamic [slug] route below for the same path.
+    // Only `slug`, `title` and `metaDesc` from this entry are ever read (by sitemap.ts,
+    // the /diensten index, the homepage services grid, and internal-link sections) —
+    // the other fields here are never rendered. Keep them in sync with the static page
+    // anyway so this entry stays a faithful reference, but know that editing them will
+    // NOT change the live page; edit the static route file instead.
+    slug: 'auto-openen-zonder-sleutel',
+    title: 'Autodeur Openen',
+    metaTitle: 'Autodeur Openen Zonder Sleutel | Schadevrij & 24/7 Mobiel',
+    metaDesc: 'Autodeur openen zonder sleutel? Wij openen uw auto 100% schadevrij op locatie. Gemiddeld binnen 30 min ter plaatse in Utrecht & Amsterdam. Bel direct!',
+    h1: 'Autodeur Openen Zonder Sleutel — Mobiel & Schadevrij ter Plaatse',
+    intro: 'Heeft u uw autosleutels in de auto laten liggen of is de deur dichtgevallen? Wij openen uw autodeur 100% schadevrij. Met onze mobiele service zijn we gemiddeld binnen 30 minuten op uw locatie in de regio Utrecht en Amsterdam.',
+    system: 'Lishi Lock Decoders / Over-the-shoulder tools',
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
+    duration: '15–30 minuten',
+    steps: [
+      'U neemt contact op via telefoon of WhatsApp en geeft uw locatie en automodel door',
+      'Onze mobiele specialist rijdt direct naar uw locatie',
+      'Identiteitscontrole: we controleren of u de rechtmatige eigenaar bent',
+      'De autodeur wordt schadevrij geopend met speciaal locksmith gereedschap',
+      'U ontvangt direct een officiële, verzekeringsklare factuur'
+    ],
+    faq: [
+      { q: 'Beschadigt u mijn auto bij het openen?', a: 'Nee. Wij gebruiken uitsluitend professioneel lockpick- en decoderegereedschap (zoals Lishi tools) dat speciaal voor uw autotype is ontworpen. Hierdoor openen we uw deur 100% schadevrij, zonder krassen of deuken.' },
+      { q: 'Hoe snel kunt u mijn autodeur openen?', a: 'Onze mobiele bussen rijden door de hele regio Utrecht en Amsterdam. We zijn gemiddeld binnen 30 minuten ter plaatse.' },
+      { q: 'Kan elke auto schadevrij worden geopend?', a: 'Ja, wij kunnen vrijwel alle automerken en modellen schadevrij openen, inclusief auto\'s met dubbele vergrendeling (deadlock systemen) zoals BMW, Audi en Volkswagen.' }
+    ],
+    relatedSlugs: ['sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot']
+  },
   {
     slug: 'sleutel-in-auto',
     title: 'Sleutel in Auto',

@@ -95,6 +95,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const { citySlug } = await params;
   const city = CITIES.find(c => c.slug === citySlug);
   if (!city) notFound();
+  const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
 
   // Find 3 geographically closest cities
   const closestCities = CITIES
@@ -570,7 +571,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
 
         {/* FAQ SECTION */}
-        <FaqSection customFaqs={mappedFaqs} cityName={city.city} />
+        <FaqSection customFaqs={mappedFaqs} cityName={city.city} pageUrl={pageUrl} />
 
         {/* CTA */}
         <section className={styles.cta}>
