@@ -51,16 +51,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-// Helper for stable hashing
-function getStableHash(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
 export default async function DienstPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const service = DIENSTEN.find(s => s.slug === slug);

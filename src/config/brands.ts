@@ -278,7 +278,7 @@ export const BRANDS: Brand[] = [
       { slug: 'galaxy', name: 'Galaxy', years: 'Alle bouwjaren' },
       { slug: 'grand-c-max', name: 'Grand C-Max', years: 'Alle bouwjaren' },
       { slug: 'ka', name: 'KA', years: 'Alle bouwjaren' },
-      { slug: 'ka', name: 'KA+', years: 'Alle bouwjaren' },
+      { slug: 'ka-plus', name: 'KA+', years: 'Alle bouwjaren' },
       { slug: 'kuga', name: 'Kuga', years: 'Alle bouwjaren' },
       { slug: 'mondeo', name: 'Mondeo', years: 'Alle bouwjaren' },
       { slug: 'mustang', name: 'Mustang', years: 'Alle bouwjaren' },

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { SITE_CONFIG } from "./src/config/site.config";
 
 const brands = [
   'volkswagen', 'bmw', 'mercedes', 'audi', 'toyota', 'peugeot', 'ford', 'renault', 
@@ -263,7 +264,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/f/:filename*',
-        destination: 'https://omqnxprotjfbyqqq.public.blob.vercel-storage.com/:filename*',
+        destination: `${SITE_CONFIG.blobStorageDomain}/:filename*`,
       },
     ];
   },

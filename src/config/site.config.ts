@@ -56,6 +56,9 @@ export const SITE_CONFIG = {
     google: 'https://share.google/mpottPPXn3SbSYThD', // Linked to official GBP
     marktplaats: 'https://www.marktplaats.nl/u/autosleutel24/60076348/',
   },
+
+  // Vercel Blob storage domain for uploaded lead photos (see /f/:filename* rewrite in next.config.ts)
+  blobStorageDomain: 'https://omqnxprotjfbyqqq.public.blob.vercel-storage.com',
 } as const;
 
 export const WHATSAPP_URL = '/whatsapp';

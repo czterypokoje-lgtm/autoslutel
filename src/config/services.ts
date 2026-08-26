@@ -1,137 +1,3 @@
-export interface Service {
-  slug: string;
-  title: string;
-  shortTitle: string;
-  icon: string;
-  price: string;
-  metaTitle: string;
-  metaDescription: string;
-  keywords: string[];
-  h1: string;
-  color: string;
-  excerpt: string;
-}
-
-export const SERVICES: Service[] = [
-  {
-    slug: 'autosleutel-bijmaken-utrecht',
-    title: 'Autosleutel Bijmaken',
-    shortTitle: 'Bijmaken',
-    icon: '🗝️',
-    price: 'Vanaf €180',
-    metaTitle: 'Autosleutel Bijmaken Utrecht | Alle Merken | Mobiel & Ter Plaatse',
-    metaDescription: 'Professioneel autosleutel bijmaken in Utrecht. Alle merken, alle modellen. Transponder sleutels, smart keys, keyless entry. Wij komen naar u toe. 30-60 min.',
-    keywords: ['autosleutel bijmaken utrecht', 'autosleutel vervangen', 'reserve autosleutel', 'transponder sleutel programmeren'],
-    h1: 'Autosleutel Bijmaken Utrecht — Mobiel & Ter Plaatse',
-    color: '#0f62fe',
-    excerpt: 'Reserve autosleutel nodig of autosleutel kwijt? Wij programmeren alle sleuteltypes ter plaatse — geen sleepkosten.',
-  },
-  {
-    slug: 'alle-sleutels-kwijt-auto',
-    title: 'Alle Sleutels Kwijt',
-    shortTitle: 'AKL Spoed',
-    icon: '🚨',
-    price: 'Spoed AKL',
-    metaTitle: 'Alle Sleutels Kwijt? | Spoed Autosleutel Service Utrecht | 24/7',
-    metaDescription: 'Alle autosleutels kwijt? Spoed mobiele service in Utrecht. BMW, Mercedes, Audi, VW, Toyota. Geen sleepkosten nodig. Wij maken sleutels ter plaatse. 30 min. 24/7.',
-    keywords: ['alle sleutels kwijt auto', 'autosleutel kwijt utrecht', 'spoed autosleutel', 'geen reserve sleutel auto'],
-    h1: 'Alle Sleutels Kwijt? Wij Komen naar U Toe — Spoed Service',
-    color: '#da1e28',
-    excerpt: '24/7 spoed service bij verlies van alle autosleutels. BMW, Mercedes, VW, Toyota — alle merken opgelost.',
-  },
-  {
-    slug: 'bmw-sleutel-bijmaken-utrecht',
-    title: 'BMW Sleutel Specialist',
-    shortTitle: 'BMW',
-    icon: '🔵',
-    price: 'Vanaf €220',
-    metaTitle: 'BMW Autosleutel Bijmaken Utrecht | FEM/BDC/CAS | ECU-Niveau',
-    metaDescription: 'BMW sleutel programmering specialist in Utrecht. E/F/G chassis, CAS3/4, FEM/BDC, BDC2. Dealer alternatief. Bench EEPROM, ISN extractie. Service op dezelfde dag.',
-    keywords: ['BMW autosleutel bijmaken utrecht', 'BMW FEM sleutel', 'BMW BDC sleutel', 'BMW CAS4 sleutel', 'BMW alle sleutels kwijt'],
-    h1: 'BMW Autosleutel Bijmaken Utrecht — FEM/BDC/CAS Specialist',
-    color: '#1d4ed8',
-    excerpt: 'Specialist in BMW E/F/G chassis sleutelprogrammering. CAS3, CAS4, FEM/BDC — dealer-niveau zonder dealer-prijs.',
-  },
-  {
-    slug: 'mercedes-sleutel-vervangen-utrecht',
-    title: 'Mercedes Sleutel Specialist',
-    shortTitle: 'Mercedes',
-    icon: '⭐',
-    price: 'Vanaf €250',
-    metaTitle: 'Mercedes Sleutel Vervangen Utrecht | FBS3/FBS4 | Mobiel',
-    metaDescription: 'Mercedes sleutel vervangen in Utrecht. FBS3 AKL, FBS4 oplossingen, EIS/ELV reparatie. G-Box 3, AVDI. Telefoon-als-sleutel tijdelijk. Mobiele service.',
-    keywords: ['Mercedes sleutel vervangen utrecht', 'Mercedes FBS3 sleutel', 'Mercedes EIS reparatie', 'Mercedes autosleutel kwijt'],
-    h1: 'Mercedes Sleutel Vervangen Utrecht — FBS3/FBS4 Specialist',
-    color: '#4b5563',
-    excerpt: 'FBS3 wachtwoord berekening, EIS/ELV reparatie, FBS4 oplossingen. De Mercedes specialist die dealers niet kunnen evenaren.',
-  },
-  {
-    slug: 'vw-audi-sleutel-bijmaken-utrecht',
-    title: 'VW & Audi Sleutel Specialist',
-    shortTitle: 'VW/Audi',
-    icon: '🔧',
-    price: 'Vanaf €180',
-    metaTitle: 'VW/Audi Autosleutel Bijmaken Utrecht | MQB/SFD/MLB Unlock',
-    metaDescription: 'VW/Audi sleutel programmering in Utrecht. MQB/MQB48, SFD unlock, MLB platform. Golf 8, ID.3, A3, A4, Q5, Porsche. Dealer-niveau zonder dealer wachtrij.',
-    keywords: ['VW autosleutel bijmaken utrecht', 'Audi sleutel programmeren', 'VW Golf 8 sleutel', 'SFD unlock', 'MQB48 sleutel'],
-    h1: 'VW/Audi Autosleutel Bijmaken — MQB48, SFD, MLB Specialist',
-    color: '#1565c0',
-    excerpt: 'MQB48, SFD unlock, MLB platform — de meest complexe VAG systemen zijn geen probleem voor ons team.',
-  },
-  {
-    slug: 'toyota-sleutel-vervangen-utrecht',
-    title: 'Toyota & Lexus Sleutel Specialist',
-    shortTitle: 'Toyota/Lexus',
-    icon: '🔴',
-    price: 'Vanaf €200',
-    metaTitle: 'Toyota/Lexus Sleutel Vervangen Utrecht | Hybride AKL | Bypass',
-    metaDescription: 'Toyota/Lexus sleutel vervangen in Utrecht. 2019+ AKL bypass kabel, hybride systemen, smart key. Lonsdor K518 specialist. Mobiele service op dezelfde dag.',
-    keywords: ['Toyota sleutel vervangen utrecht', 'Lexus sleutel vervangen', 'Toyota hybride sleutel', 'Toyota AKL bypass'],
-    h1: 'Toyota & Lexus Sleutel Vervangen — 2019+ AKL Specialist',
-    color: '#dc2626',
-    excerpt: '2019+ Toyota vereist speciale 30-PIN bypass kabel. Wij hebben de tools en kennis voor hybride sleutelprogrammering.',
-  },
-  {
-    slug: 'volvo-sleutel-programmeren-utrecht',
-    title: 'Volvo Sleutel Specialist',
-    shortTitle: 'Volvo',
-    icon: '🛡️',
-    price: 'Vanaf €220',
-    metaTitle: 'Volvo Sleutel Programmeren Utrecht | SPA/CMA Platform | Mobiel',
-    metaDescription: 'Volvo sleutel programmeren in Utrecht. P2/P3/SPA/CMA platform. Lonsdor veilige methode. XC60, XC90, V40, S60, V60. Service op dezelfde dag. Bel nu.',
-    keywords: ['Volvo sleutel programmeren utrecht', 'Volvo autosleutel bijmaken', 'Volvo SPA sleutel', 'Volvo XC60 sleutel'],
-    h1: 'Volvo Sleutel Programmeren Utrecht — SPA/CMA Specialist',
-    color: '#1e3a5f',
-    excerpt: 'P2, P3, SPA en CMA platform — veilige Lonsdor methode zonder brick-risico voor uw Volvo.',
-  },
-  {
-    slug: 'ecu-clonen-component-protection',
-    title: 'ECU Clonen & CP Verwijdering',
-    shortTitle: 'ECU/CP',
-    icon: '💻',
-    price: 'Vanaf €200',
-    metaTitle: 'ECU Clonen & Component Protection Verwijderen | Hersenchirurg Niveau',
-    metaDescription: 'Gebruikte ECU/BCM adaptatie, component protection verwijdering, ISN extractie. BMW, Mercedes, VW/Audi. Wat dealers niet kunnen, wij wel. Utrecht & regio.',
-    keywords: ['ECU clonen utrecht', 'component protection verwijderen', 'ISN extractie BMW', 'CP verwijderen VW'],
-    h1: 'ECU Clonen & Component Protection Verwijderen — Elite Service',
-    color: '#7c3aed',
-    excerpt: 'Waterschade, ongeval, gebruikte modules — wij redden uw auto waar dealers stoppen. ISN extractie, ECU klonen, CP verwijdering.',
-  },
-  {
-    slug: 'bedrijfswagen-sleutel-beheer',
-    title: 'Bedrijfswagen Sleutel Beheer',
-    shortTitle: 'B2B/Fleet',
-    icon: '🚐',
-    price: 'Vanaf €90/klus',
-    metaTitle: 'Bedrijfswagen Sleutel Beheer | B2B Auto Sleutel Service | Utrecht',
-    metaDescription: 'Bedrijfswagen sleutel beheer voor bedrijven in Utrecht & omgeving. Prioriteit service, digitale sleutels, bulk prijzen. Fleet contracten. Vraag offerte aan.',
-    keywords: ['bedrijfswagen sleutel beheer', 'zakelijk auto sleutel service', 'fleet sleutel vervanging', 'car sharing sleutel beheer'],
-    h1: 'Bedrijfswagen Sleutel Beheer — Verminder Downtime, Bespaar Kosten',
-    color: '#0891b2',
-    excerpt: 'Prioriteit service, reserve sleutel programma, digitale sleutels via MoboKey. B2B oplossingen voor fleets van alle groottes.',
-  },
-];
-
 export const BLOG_POSTS = [
   {
     slug: 'autosleutel-kosten-per-merk-2026',
@@ -385,18 +251,14 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
     // ── Autosleutel kwijt service page ───────────────────────────
     'autosleutel-kwijt': [
-      'sleutel-kwijt-auto-hulp-oplossingen',
       'autosleutel-kwijt-wat-nu-stappenplan',
-      'alle-sleutels-kwijt-wat-nu-utrecht',
-      'sleutel-kwijt-utrecht-stappenplan',
+      'sleutel-in-auto-laten-liggen-oplossingen',
       'autosleutel-bijmaken-zonder-origineel',
       'autosleutel-gestolen-wat-te-doen',
     ],
     // ── Alle sleutels kwijt ───────────────────────────────────────
     'alle-sleutels-kwijt-auto': [
       'autosleutel-kwijt-wat-nu-stappenplan',
-      'alle-sleutels-kwijt-wat-nu-utrecht',
-      'sleutel-kwijt-utrecht-stappenplan',
       'autosleutel-bijmaken-zonder-origineel',
       'case-study-bmw-besparing',
     ],

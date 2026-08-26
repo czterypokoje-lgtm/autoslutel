@@ -371,8 +371,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               </div>
 
               <div className="timpson-image-wrap" style={{ flex: '1 1 0%', width: '100%', position: 'relative', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', backgroundColor: '#fff' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={carPhotoSrc} alt={`${brand.name} car`} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
+                <Image src={carPhotoSrc} alt={`${brand.name} car`} width={800} height={600} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }} />
               </div>
             </div>
 
@@ -404,8 +403,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               {/* Column 1: Affordable */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                 <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_1.webp" alt="Betaalbaar pinapparaat" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <Image src="/images/why_choose_us_1.webp" alt="Betaalbaar pinapparaat" width={500} height={400} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Betaalbaar</h3>
                 <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
@@ -416,8 +414,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               {/* Column 2: Convenient */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                 <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_2.webp" alt="Sleutel programmeren op locatie" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <Image src="/images/why_choose_us_2.webp" alt="Sleutel programmeren op locatie" width={500} height={400} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Gemakkelijk</h3>
                 <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
@@ -428,8 +425,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               {/* Column 3: Quality */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                 <div style={{ width: '100%', aspectRatio: '5/4', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid #f1f5f9', marginBottom: '1.5rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/why_choose_us_3.webp" alt="Sleutel werkplaats" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <Image src="/images/why_choose_us_3.webp" alt="Sleutel werkplaats" width={500} height={400} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Kwaliteit</h3>
                 <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
@@ -482,12 +478,12 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                         {hasKey1 && (
                           <div style={{ flex: 1, background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <img src={`/images/keys/${brand.slug}-autosleutel-bijmaken-1.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 1`} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
+                            <Image src={`/images/keys/${brand.slug}-autosleutel-bijmaken-1.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 1`} width={400} height={300} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
                           </div>
                         )}
                         {hasKey2 && (
                           <div style={{ flex: 1, background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <img src={`/images/keys/${brand.slug}-autosleutel-bijmaken-2.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 2`} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
+                            <Image src={`/images/keys/${brand.slug}-autosleutel-bijmaken-2.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 2`} width={400} height={300} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
                           </div>
                         )}
                       </div>

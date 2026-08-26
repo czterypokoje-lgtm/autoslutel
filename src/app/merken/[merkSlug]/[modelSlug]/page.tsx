@@ -303,7 +303,7 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
 
         {/* ── FAQ SECTION (SEO & AI OPTIMIZED) ── */}
         <FaqSection 
-          customFaqs={getFaqForBrand(brand.name).map(f => ({ question: f.q.replace(brand.name, `${brand.name} ${targetName}`), answer: f.a.replace(brand.name, `${brand.name} ${targetName}`) }))} 
+          customFaqs={getFaqForBrand(brand.name).map(f => ({ question: f.q.replaceAll(brand.name, `${brand.name} ${targetName}`), answer: f.a.replaceAll(brand.name, `${brand.name} ${targetName}`) }))}
           brandName={`${brand.name} ${targetName}`} 
         />
 

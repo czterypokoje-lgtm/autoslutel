@@ -297,10 +297,11 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id={`city-berkan-phone-${city.slug}`}>📞 Bel Berkan: {SITE_CONFIG.phone}</a>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <img
+                <Image
                   src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
                   alt={`Berkan Acarol — Autosleutelspecialist ${city.city}`}
-                  loading="lazy"
+                  width={300}
+                  height={200}
                   style={{ width: '100%', maxWidth: '300px', height: '200px', objectFit: 'cover', objectPosition: 'top', borderRadius: '8px', border: '1px solid #cbd5e1' }}
                 />
               </div>
@@ -434,7 +435,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h2>Waarom Onze Autosleutelspecialist in {city.city}?</h2>
                 <ul className={styles.checkList}>
                   {[
-                    `${city.travelTime} reactietijd vanuit Utrecht`,
+                    `${city.travelTime} reactietijd in ${city.city}`,
                     'Geen sleepkosten — volledig mobiel',
                     'Zelfde dag service, ook weekend',
                     `Goedkoper dan ${city.city} dealer — gegarandeerd`,
