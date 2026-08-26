@@ -153,3 +153,7 @@
 .dotActive {
   background: var(--primary-color, #f97316);
 }
+
+.centeredSlider {
+  justify-content: center;
+}

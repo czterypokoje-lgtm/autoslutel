@@ -33,16 +33,20 @@ export default function GallerySlider({ images, title = "Onze service in de hele
 
   if (!images || images.length === 0) return null;
 
+  const isFewImages = images.length <= 4;
+
   return (
     <div className={styles.container}>
       {title && <h2 className={styles.title}>{title}</h2>}
       
       <div className={styles.sliderWrapper}>
-        <button onClick={scrollLeft} className={`${styles.arrowButton} ${styles.prevButton}`} aria-label="Vorige foto">
-          &#8592;
-        </button>
+        {!isFewImages && (
+          <button onClick={scrollLeft} className={`${styles.arrowButton} ${styles.prevButton}`} aria-label="Vorige foto">
+            &#8592;
+          </button>
+        )}
 
-        <div className={styles.slider} ref={sliderRef}>
+        <div className={`${styles.slider} ${isFewImages ? styles.centeredSlider : ''}`} ref={sliderRef}>
           {images.map((img, index) => (
             <div key={index} className={styles.slide}>
               <Image 
@@ -59,9 +63,11 @@ export default function GallerySlider({ images, title = "Onze service in de hele
           ))}
         </div>
 
-        <button onClick={scrollRight} className={`${styles.arrowButton} ${styles.nextButton}`} aria-label="Volgende foto">
-          &#8594;
-        </button>
+        {!isFewImages && (
+          <button onClick={scrollRight} className={`${styles.arrowButton} ${styles.nextButton}`} aria-label="Volgende foto">
+            &#8594;
+          </button>
+        )}
       </div>
     </div>
   );
