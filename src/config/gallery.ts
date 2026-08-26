@@ -6,6 +6,21 @@ export interface GalleryProject {
 
 export const REAL_GALLERY_PROJECTS: GalleryProject[] = [
   {
+    id: 100,
+    src: '/images/gallery/autosleutel_ford_mondeo_zeist.webp',
+    alt: 'Ford autosleutel bijmaken en inleren op locatie in Zeist'
+  },
+  {
+    id: 101,
+    src: '/images/gallery/autosleutel_ford_focus_arnhem.webp',
+    alt: 'Ford autosleutel bijmaken en inleren op locatie in Arnhem'
+  },
+  {
+    id: 102,
+    src: '/images/gallery/autosleutel_hyundai_tucson_naarden.webp',
+    alt: 'Hyundai autosleutel bijmaken en inleren op locatie in Naarden'
+  },
+  {
     id: 1,
     src: '/images/gallery/autosleutel_ford_reservesleutel_bijmaken_utrecht_centrum.webp',
     alt: 'Ford autosleutel reservesleutel bijmaken en programmeren op locatie in Utrecht Centrum'
