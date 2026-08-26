@@ -1,14 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG } from '@/config/site.config';
-import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
-import { generateContextualReviews } from '@/utils/reviews';
 
 export const metadata: Metadata = {
   title: {
     absolute: 'Klantbeoordelingen (5.0★) | Autosleutel24',
   },
-  description: `Klantbeoordelingen van ${SITE_CONFIG.fullName}. 5.0/5 sterren op Google. 127 tevreden klanten.`,
+  description: `Klantbeoordelingen van ${SITE_CONFIG.fullName}. Lees onze reviews rechtstreeks op ons Google-bedrijfsprofiel.`,
   alternates: { canonical: `${SITE_CONFIG.domain}/beoordelingen` },
 };
 
@@ -28,14 +27,7 @@ export default function BeoordelingenPage() {
       </section>
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
-          {generateContextualReviews('autosleutel', 'general').map((r, i) => (
-            <GoogleReviewCard key={i} review={r} />
-          ))}
-          {generateContextualReviews('Utrecht', 'city').map((r, i) => (
-            <GoogleReviewCard key={i + 10} review={r} />
-          ))}
-        </div>
+        <GoogleReviewsCta />
 
         <div style={{ textAlign: 'center', marginTop: '3rem' }}>
           <a href={SITE_CONFIG.social.google} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-lg" id="all-google-reviews">

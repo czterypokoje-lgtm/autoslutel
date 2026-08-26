@@ -4,11 +4,10 @@ import Image from 'next/image';
 import Script from 'next/script';
 import styles from './page.module.css';
 import dynamic from 'next/dynamic';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 import FaqSection from '@/components/FaqSection/FaqSection';
-import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
-import { generateContextualReviews } from '@/utils/reviews';
 import InstantServiceMap from '@/components/InstantServiceMap';
 import LocalBusinessSchema from '@/components/Schema/LocalBusinessSchema';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
@@ -302,7 +301,7 @@ export default function HomePage() {
           <p className="section-eyebrow">GALERIJ</p>
           <h2 className="section-title">Ons Werk in Beelden</h2>
           <p className="section-lead" style={{ maxWidth: 880, margin: '0 auto 2.5rem', lineHeight: '1.75', fontSize: '0.98rem', color: 'var(--gray-600)' }}>
-            Bekijk hieronder een selectie van onze afgeronde praktijkprojecten en tevreden klanten in Midden-Nederland en de Randstad. Als erkend autosleutel specialist zijn wij dagelijks actief met onze volledig uitgeruste mobiele servicebus in onder andere <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link>, <Link href="/steden/amersfoort" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amersfoort</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/nijmegen" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Nijmegen</Link>, <Link href="/steden/apeldoorn" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Apeldoorn</Link> en omstreken. Of het nu gaat om het bijmaken van een reservesleutel, het vakkundig inleren van keyless entry smart keys, of spoedreparaties bij een verloren of defecte autosleutel ter plaatse: wij garanderen schadevrij werk met originele OEM-diagnoseapparatuur. Dankzij onze transparante tarieven, snelle responstijden en jarenlange expertise bespaart u onnodige wegsleepkosten en lange wachttijden bij de officiële merkdealer. Blader door onze recente klussen en ontdek direct waarom duizenden automobilisten vertrouwen op onze mobiele sleutelservice.
+            Bekijk hieronder een selectie van onze afgeronde praktijkprojecten en tevreden klanten in Midden-Nederland en de Randstad. Als erkend autosleutel specialist zijn wij dagelijks actief met onze volledig uitgeruste mobiele servicebus in onder andere <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link>, <Link href="/steden/amersfoort" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amersfoort</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/nijmegen" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Nijmegen</Link>, <Link href="/steden/apeldoorn" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Apeldoorn</Link> en omstreken. Of het nu gaat om het bijmaken van een reservesleutel, het vakkundig inleren van keyless entry smart keys, of spoedreparaties bij een verloren of defecte autosleutel ter plaatse: wij garanderen schadevrij werk met originele OEM-diagnoseapparatuur. Dankzij onze transparante tarieven, snelle responstijden en jarenlange expertise bespaart u onnodige wegsleepkosten en lange wachttijden bij de officiële merkdealer. Blader door onze recente klussen en ontdek wat onze mobiele sleutelservice voor u kan betekenen.
           </p>
           <GallerySlider 
             images={REAL_GALLERY_PROJECTS.map(p => ({ src: p.src, caption: p.alt }))} 
@@ -450,19 +449,7 @@ export default function HomePage() {
         <div className="container">
           <p className="section-eyebrow">KLANTBEOORDELINGEN</p>
           <h2 className="section-title">Wat Onze Klanten Zeggen</h2>
-          <div className={styles.ratingBig}>
-            <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
-            <div>
-              <div className="stars">★★★★★</div>
-              
-            </div>
-          </div>
-          <h3 className="text-center" style={{ marginBottom: '1rem', fontSize: '1.1rem', fontWeight: 600, color: 'var(--gray-600)' }}>Ervaringen van klanten</h3>
-          <div className={styles.reviewGrid}>
-            {generateContextualReviews('autosleutel', 'general').map((r, i) => (
-              <GoogleReviewCard key={i} review={r} />
-            ))}
-          </div>
+          <GoogleReviewsCta />
         </div>
       </section>
 

@@ -13,9 +13,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
-import { generateContextualReviews } from '@/utils/reviews';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import CitySeoText from '@/components/CitySeoText/CitySeoText';
@@ -35,17 +33,8 @@ const SeoComponents: Record<string, React.FC> = {
   rotterdam: RotterdamSeo,
 };
 
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
-
-// Helper for stable hashing
-function getStableHash(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
 
 // Haversine distance formula
 function deg2rad(deg: number) {
@@ -62,53 +51,6 @@ function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
-}
-
-function generateCityReviews(city: typeof CITIES[0]) {
-  const hash = getStableHash(city.slug);
-  const cityName = city.city;
-  const templates = [
-    {
-      text: `Super snelle service in ${cityName}! Binnen 25 minuten was de monteur ter plaatse om mijn autosleutel te repareren. Heel vriendelijk en transparant over de kosten vooraf.`,
-      name: 'Peter de Jong',
-      car: 'Volkswagen Golf'
-    },
-    {
-      text: `Ik was mijn reservesleutel kwijt en wilde er eentje laten bijmaken in ${cityName}. Autosleutel24 kwam naar mijn werk en heeft hem direct ingeleerd. Goedkoper dan de dealer en super handig!`,
-      name: 'Linda van Dijk',
-      car: 'Peugeot 308'
-    },
-    {
-      text: `Sleutel in de kofferbak laten liggen en de auto zat op slot bij het winkelcentrum in ${cityName}. Gelukkig kon de monteur de deur 100% schadevrij openen. Top service!`,
-      name: 'Guido Bakker',
-      car: 'Ford Focus'
-    },
-    {
-      text: `Echt een aanrader voor ${cityName}. Onze Mercedes sleutel reageerde niet meer. Ter plekke gerepareerd en een nieuwe behuizing gekregen. Werkt weer perfect!`,
-      name: 'Robert Visser',
-      car: 'Mercedes C-Klasse'
-    },
-    {
-      text: `Sleutels verloren tijdens het uitgaan in ${cityName}. Gelukkig kon de spoedservice ons snel helpen en heeft ter plekke een nieuwe sleutel ingeleerd en de oude sleutel geblokkeerd.`,
-      name: 'Kimberly Smit',
-      car: 'Opel Corsa'
-    },
-    {
-      text: `Heel vakkundig geholpen in ${cityName} met het bijmaken van een smart key voor mijn BMW. Fijne communicatie en netjes 12 maanden garantie gekregen op de elektronica.`,
-      name: 'Jeffrey Hendriks',
-      car: 'BMW 3-Serie'
-    }
-  ];
-
-  const idx1 = hash % templates.length;
-  const idx2 = (hash + 1) % templates.length;
-  const idx3 = (hash + 2) % templates.length;
-
-  return [
-    templates[idx1],
-    templates[idx2],
-    templates[idx3]
-  ];
 }
 
 export async function generateStaticParams() {
@@ -161,8 +103,6 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     .sort((a, b) => a.distance - b.distance)
     .slice(0, 3);
 
-  const cityReviews = generateCityReviews(city);
-
   const schema = {
     ...getBaseLocalBusinessSchema(),
     '@id': `${SITE_CONFIG.domain}/steden/${citySlug}#locksmith`,
@@ -192,10 +132,6 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const mappedFaqs = cityFaqs.map(f => ({ question: f.q, answer: f.a }));
 
   // Generate deterministic E-E-A-T local data
-  const hash = city.city.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const jobsCount = 200 + (hash % 300); // 200 to 500
-  const time1 = 28 + (hash % 7); // 28 to 34 mins
-  const time2 = 38 + (hash % 8); // 38 to 45 mins
   const area1 = city.subAreas && city.subAreas.length > 0 ? city.subAreas[0] : `${city.city} Centrum`;
   const area2 = city.subAreas && city.subAreas.length > 1 ? city.subAreas[1] : `omgeving ${city.city}`;
 
@@ -296,9 +232,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               },
               {
                 id: 'feature-2',
-                icon: <Image src="/images/icon_map.webp" alt="Actuele Responstijden" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                icon: <Image src="/images/icon_map.webp" alt="Werkgebied" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: `Snel ter plaatse in ${city.city}`,
-                description: `Onze gemiddelde responstijd in ${area1} is momenteel ${time1} min. Vanuit ${area2} is de aanrijdtijd circa ${time2} min.`,
+                description: `Wij werken dagelijks in ${area1}, ${area2} en de rest van ${city.city}. Bel ons en u hoort meteen hoe snel een monteur bij u kan zijn.`,
                 linkText: 'Vind een monteur',
                 linkUrl: '#contact'
               },
@@ -306,7 +242,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 id: 'feature-3',
                 icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: 'Ervaren & Vaste Prijs',
-                description: `Gebaseerd op ${jobsCount} afgeronde opdrachten dit jaar in en rond ${city.city}, garanderen wij vakkundige service met een vaste prijs vooraf.`,
+                description: `U krijgt vooraf een vaste prijs voor de klus in ${city.city}, zodat u nooit voor verrassingen komt te staan. Geen voorrijkosten, geen meerwerk achteraf.`,
                 linkText: 'Bekijk onze tarieven',
                 linkUrl: '/prijzen'
               },
@@ -469,14 +405,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   ))}
                 </ul>
               </div>
-              <div className={styles.reviewCard}>
-                <div className="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <blockquote className={styles.quote}>&ldquo;{city.reviewQuote}&rdquo;</blockquote>
-                <div className={styles.reviewMeta}>
-                  <strong>{city.reviewAuthor}</strong> &mdash; {city.city}, {city.reviewCar}
-                </div>
               </div>
-            </div>
           </div>
         </section>
 
@@ -583,20 +512,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
               Wat Klanten Zeggen over Autosleutel24 in {city.city}
             </h2>
-            <div className={styles.ratingBig}>
-              <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
-              <div>
-                <div className={styles.ratingStarsReview}>★★★★★</div>
-                <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  ★★★★★ 5/5
-                </span>
-              </div>
-            </div>
-            <div className={styles.reviewGrid}>
-              {generateContextualReviews(city.city, 'city').map((review, i) => (
-                <GoogleReviewCard key={i} review={review} />
-              ))}
-            </div>
+            <GoogleReviewsCta />
           </div>
         </section>
 

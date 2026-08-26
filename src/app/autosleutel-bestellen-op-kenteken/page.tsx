@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
-import { generateContextualReviews } from '@/utils/reviews';
 import HorizontalKentekenForm from '@/components/KentekenForm/HorizontalKentekenForm';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import styles from './page.module.css';
@@ -48,12 +47,7 @@ export default function KentekenBestellenPage() {
     "url": `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken`,
     "telephone": SITE_CONFIG.phone,
     "image": `${SITE_CONFIG.domain}/images/autosleutel-bestellen-op-kenteken.webp`,
-    "knowsAbout": ["Autosleutel bijmaken", "Car key duplication", "Autosleutel programmeren", "Sleutel kwijt"],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": SITE_CONFIG.rating,
-      "reviewCount": SITE_CONFIG.reviewCount
-    }
+    "knowsAbout": ["Autosleutel bijmaken", "Car key duplication", "Autosleutel programmeren", "Sleutel kwijt"]
   };
 
   const howToSchema = {
@@ -271,13 +265,6 @@ export default function KentekenBestellenPage() {
                     ))}
                   </div>
                 </div>
-
-                <div className={styles.ratingCard}>
-                  <div className={styles.ratingStars}>★★★★★</div>
-                  <p className={styles.ratingText}>&ldquo;Super handig dit! Kenteken ge-appt, direct een prijs gekregen. De volgende ochtend stonden ze al voor de deur om de sleutel te programmeren. Aanrader!&rdquo;</p>
-                  <span className={styles.ratingMeta}>Bas V. — Volkswagen Golf</span>
-                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
-                </div>
               </aside>
             </div>
 
@@ -304,20 +291,7 @@ export default function KentekenBestellenPage() {
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
               Wat Klanten Zeggen Over Onze Service
             </h2>
-            <div className={styles.ratingBig}>
-              <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
-              <div>
-                <div className={styles.ratingStarsReview}>★★★★★</div>
-                <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  ★★★★★ 5/5
-                </span>
-              </div>
-            </div>
-            <div className={styles.reviewGrid}>
-              {generateContextualReviews('autosleutel', 'service').map((review, i) => (
-                <GoogleReviewCard key={i} review={review} />
-              ))}
-            </div>
+            <GoogleReviewsCta />
           </div>
         </section>
 

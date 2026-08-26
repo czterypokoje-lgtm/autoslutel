@@ -2,17 +2,16 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import { getRelatedBlogPosts } from '@/config/services';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
-import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import Image from 'next/image';
-import { generateContextualReviews } from '@/utils/reviews';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
 
@@ -138,29 +137,7 @@ export default function SleutelBijmakenPage() {
     'Vaste prijs vooraf',
     'Verzekerd & Gecertificeerd'
   ];
-
-  const reviews = [
-    {
-      text: "Geweldige service! Ik had binnen een half uur een nieuwe reservesleutel voor mijn Volkswagen Polo. De monteur was erg vriendelijk en kwam gewoon bij mij thuis in Utrecht langs.",
-      name: "Marc van den Berg",
-      city: "Utrecht",
-      car: "Volkswagen Polo"
-    },
-    {
-      text: "Een stuk goedkoper dan de dealer! Mijn sleutel was in het water fallen en deed niks meer. Autosleutel24 heeft ter plekke een nieuwe smart key ingeleerd. Zeer tevreden.",
-      name: "Esther de Vries",
-      city: "Hilversum",
-      car: "BMW 1 Serie"
-    },
-    {
-      text: "Snel, vakkundig en transparant. Geen sleepkosten en ik kon direct weer de weg op. De monteur had alle benodigde apparatuur bij zich in zijn mobiele werkplaats. Top!",
-      name: "Koen Hendriks",
-      city: "Amersfoort",
-      car: "Ford Focus"
-    }
-  ];
-
-  return (
+return (
     <>
       <Script id="sleutel-bijmaken-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Script id="sleutel-bijmaken-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
@@ -482,13 +459,6 @@ export default function SleutelBijmakenPage() {
                     ))}
                   </div>
                 </div>
-
-                <div className={styles.ratingCard}>
-                  <div className={styles.ratingStars}>★★★★★</div>
-                  <p className={styles.ratingText}>&ldquo;Sleutel van mijn Audi A4 kwijt. Dealer wachttijd 8 dagen. Autosleutel24 was binnen 40 min ter plaatse en de nieuwe sleutel werkte direct. Topservice!&rdquo;</p>
-                  <span className={styles.ratingMeta}>Mark D. — Audi A4, Utrecht</span>
-                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
-                </div>
               </aside>
             </div>
 
@@ -553,20 +523,7 @@ export default function SleutelBijmakenPage() {
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
               Wat Klanten Zeggen over Autosleutel Bijmaken
             </h2>
-            <div className={styles.ratingBig}>
-              <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
-              <div>
-                <div className={styles.ratingStarsReview}>★★★★★</div>
-                <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  ★★★★★ 5/5
-                </span>
-              </div>
-            </div>
-            <div className={styles.reviewGrid}>
-              {generateContextualReviews('autosleutel', 'service').map((review, i) => (
-                <GoogleReviewCard key={i} review={review} />
-              ))}
-            </div>
+            <GoogleReviewsCta />
           </div>
         </section>
 

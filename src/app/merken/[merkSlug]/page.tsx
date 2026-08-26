@@ -8,11 +8,10 @@ import path from 'path';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
-import { generateContextualReviews } from '@/utils/reviews';
 import FaqSection from '@/components/FaqSection/FaqSection';
 import { getFaqForBrand } from '@/config/faq';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
@@ -590,11 +589,9 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)' }}>
           <div className="container">
             <h2 className="text-center" style={{ marginBottom: '0.5rem' }}>Wat Klanten Zeggen over Onze {brand.name} Service</h2>
-            <p className="text-center" style={{ color: 'var(--gray-600)', marginBottom: '2.5rem' }}>Beoordeeld met {SITE_CONFIG.rating} / 5.0 op basis van honderden tevreden automobilisten</p>
+            <p className="text-center" style={{ color: 'var(--gray-600)', marginBottom: '2.5rem' }}>Onze beoordelingen staan ongefilterd op ons Google-bedrijfsprofiel</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
-              {generateContextualReviews(brand.name, 'brand').map((r, idx) => (
-                <GoogleReviewCard key={idx} review={r} />
-              ))}
+              <GoogleReviewsCta />
             </div>
           </div>
         </section>

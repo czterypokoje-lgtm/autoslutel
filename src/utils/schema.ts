@@ -5,6 +5,12 @@ import { CITIES } from '@/config/cities';
  * Returns a standardized Locksmith (LocalBusiness) schema object.
  * This guarantees consistent NAP data (Utrecht) and a full areaServed list
  * across all pages (City, Service, and Brand pages).
+ *
+ * Deliberately carries NO aggregateRating. This schema is embedded on ~800
+ * city/brand/model/service pages, where a rating would assert a per-page or
+ * per-city score that does not exist. The single aggregateRating for the
+ * business lives in LocalBusinessSchema on the homepage, and must always
+ * match the live Google Business Profile.
  */
 export function getBaseLocalBusinessSchema() {
   return {
@@ -47,11 +53,6 @@ export function getBaseLocalBusinessSchema() {
       '@type': 'City',
       name: c.city,
     })),
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: parseFloat(SITE_CONFIG.rating),
-      reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
-      bestRating: 5,
-    },
   };
 }
+

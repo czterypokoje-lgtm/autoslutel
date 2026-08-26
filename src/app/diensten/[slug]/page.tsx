@@ -5,7 +5,6 @@ import Script from 'next/script';
 import { DIENSTEN } from '@/config/diensten';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
@@ -13,9 +12,9 @@ import Image from 'next/image';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import { generateContextualReviews } from '@/utils/reviews';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
 import fs from 'fs';
@@ -563,13 +562,6 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                     ))}
                   </div>
                 </div>
-
-                <div className={styles.ratingCard}>
-                  <div className={styles.ratingStars}>★★★★★</div>
-                  <p className={styles.ratingText}>&ldquo;Razendsnel geholpen! Binnen 25 minuten stond de monteur er en de deur was in 3 minuten schadevrij open.&rdquo;</p>
-                  <span className={styles.ratingMeta}>Mark van den Berg — BMW 5 Serie, Utrecht</span>
-                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
-                </div>
               </aside>
 
             </div>
@@ -638,20 +630,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2rem 0', textAlign: 'center' }}>
                 Wat Onze Klanten Zeggen over {service.title}
               </h2>
-              <div className={styles.ratingBig}>
-                <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
-                <div>
-                  <div className={styles.ratingStarsReview}>★★★★★</div>
-                  <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>
-                    ★★★★★ 5/5
-                  </span>
-                </div>
-              </div>
-              <div className={styles.reviewGrid}>
-                {generateContextualReviews(service.title, 'service').map((review, i) => (
-                  <GoogleReviewCard key={i} review={review} />
-                ))}
-              </div>
+              <GoogleReviewsCta />
             </section>
 
             {/* ── COMPREHENSIVE SERVICE TECHNICAL SEO GUIDE ── */}

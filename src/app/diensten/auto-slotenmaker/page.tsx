@@ -2,14 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import { getRelatedBlogPosts } from '@/config/services';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
-import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import Image from 'next/image';
-import { generateContextualReviews } from '@/utils/reviews';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -378,13 +377,6 @@ export default function AutoSlotenmakerPage() {
                     ))}
                   </div>
                 </div>
-
-                <div className={styles.ratingCard}>
-                  <div className={styles.ratingStars}>★★★★★</div>
-                  <p className={styles.ratingText}>&ldquo;Mijn sleutels lagen nog in de kofferbak en de auto zat op slot. Autosleutel24 was binnen 30 min ter plaatse en opende de kofferbak 100% schadevrij. Super betrouwbare auto slotenmaker!&rdquo;</p>
-                  <span className={styles.ratingMeta}>Daan K. — Volkswagen Golf, Utrecht</span>
-                  <span className={styles.ratingCount}>★★★★★ 5/5</span>
-                </div>
               </aside>
 
             </div>
@@ -450,20 +442,7 @@ export default function AutoSlotenmakerPage() {
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
               Wat Klanten Zeggen over de Auto Slotenmaker
             </h2>
-            <div className={styles.ratingBig}>
-              <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
-              <div>
-                <div className={styles.ratingStarsReview}>★★★★★</div>
-                <span style={{ fontSize: '0.82rem', color: '#64748b' }}>
-                  ★★★★★ 5/5
-                </span>
-              </div>
-            </div>
-            <div className={styles.reviewGrid}>
-              {generateContextualReviews('autosleutel', 'service').map((review, i) => (
-                <GoogleReviewCard key={i} review={review} />
-              ))}
-            </div>
+            <GoogleReviewsCta />
           </div>
         </section>
 
