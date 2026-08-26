@@ -7,6 +7,7 @@ import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import Image from 'next/image';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
@@ -452,21 +453,17 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                       />
                     </div>
                   ) : serviceImages.length > 0 ? (
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                      gap: '1rem',
-                      margin: '1.25rem 0'
-                    }}>
-                      {serviceImages.map((src, i) => (
-                        <img 
-                          key={i}
-                          src={src} 
-                          alt={`${service.title} door Autosleutel24 mobiele service - impressie`} 
-                          style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
-                        />
-                      ))}
-                    </div>
+                    <GallerySlider 
+                      images={serviceImages.map(src => {
+                        const parts = src.split('/');
+                        const filename = parts[parts.length - 1].replace('.webp', '').replace('.jpg', '').replace(/-/g, ' ');
+                        return {
+                          src,
+                          caption: filename.replace(/\b\w/g, c => c.toUpperCase())
+                        };
+                      })}
+                      title="Onze service in de hele regio — Galerij"
+                    />
                   ) : (
                     <img 
                       src="/autosleutel24-sleutelbijmaken-utrecht.webp" 

@@ -10,7 +10,8 @@ import { BRANDS } from '@/config/brands';
 import { DIENSTEN } from '@/config/diensten';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
+import GallerySlider from '@/components/GallerySlider/GallerySlider';
+import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import GoogleReviewCard from '@/components/GoogleReviewCard/GoogleReviewCard';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
@@ -345,7 +346,10 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
               Een impressie van ons dagelijks werk: van sleutels inleren op locatie tot schadevrij openen van portieren in {city.city}.
             </p>
-            <RealGalleryShowcase />
+            <GallerySlider 
+              images={REAL_GALLERY_PROJECTS.map(p => ({ src: p.src, caption: p.alt }))} 
+              title="" 
+            />
           </div>
         </section>
 

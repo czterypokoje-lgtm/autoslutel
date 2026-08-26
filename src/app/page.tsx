@@ -19,7 +19,8 @@ import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
 
 
-const RealGalleryShowcase = dynamic(() => import('@/components/RealGalleryShowcase/RealGalleryShowcase'), { ssr: true });
+import GallerySlider from '@/components/GallerySlider/GallerySlider';
+import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 
 export const metadata: Metadata = {
   title: {
@@ -303,8 +304,10 @@ export default function HomePage() {
           <p className="section-lead" style={{ maxWidth: 880, margin: '0 auto 2.5rem', lineHeight: '1.75', fontSize: '0.98rem', color: 'var(--gray-600)' }}>
             Bekijk hieronder een selectie van onze afgeronde praktijkprojecten en tevreden klanten in Midden-Nederland en de Randstad. Als erkend autosleutel specialist zijn wij dagelijks actief met onze volledig uitgeruste mobiele servicebus in onder andere <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link>, <Link href="/steden/amersfoort" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amersfoort</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/nijmegen" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Nijmegen</Link>, <Link href="/steden/apeldoorn" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Apeldoorn</Link> en omstreken. Of het nu gaat om het bijmaken van een reservesleutel, het vakkundig inleren van keyless entry smart keys, of spoedreparaties bij een verloren of defecte autosleutel ter plaatse: wij garanderen schadevrij werk met originele OEM-diagnoseapparatuur. Dankzij onze transparante tarieven, snelle responstijden en jarenlange expertise bespaart u onnodige wegsleepkosten en lange wachttijden bij de officiële merkdealer. Blader door onze recente klussen en ontdek direct waarom duizenden automobilisten vertrouwen op onze mobiele sleutelservice.
           </p>
-          <RealGalleryShowcase />
-        </div>
+          <GallerySlider 
+            images={REAL_GALLERY_PROJECTS.map(p => ({ src: p.src, caption: p.alt }))} 
+            title="" 
+          />        </div>
       </section>
 
       {/* ===== SERVICE AREA & MAP PREVIEW (SEO) ===== */}

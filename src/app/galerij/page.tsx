@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
-import RealGalleryShowcase from '@/components/RealGalleryShowcase/RealGalleryShowcase';
+import GallerySlider from '@/components/GallerySlider/GallerySlider';
+import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 
 export const metadata: Metadata = {
   title: `Galerij | ${SITE_CONFIG.name}`,
@@ -47,7 +48,10 @@ export default function GalerijPage() {
           <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)', marginBottom: '2rem' }}>
             Bekijk alle praktijkprojecten uit Utrecht, Amsterdam, Almere, Amersfoort en heel Nederland.
           </p>
-          <RealGalleryShowcase />
+          <GallerySlider 
+            images={REAL_GALLERY_PROJECTS.map(p => ({ src: p.src, caption: p.alt }))} 
+            title="" 
+          />
         </div>
       </div>
     </main>
