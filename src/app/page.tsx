@@ -8,7 +8,7 @@ import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 import FaqSection from '@/components/FaqSection/FaqSection';
-import InstantServiceMap from '@/components/InstantServiceMap';
+import ServiceAreaMap from '@/components/ServiceAreaMap/ServiceAreaMap';
 import LocalBusinessSchema from '@/components/Schema/LocalBusinessSchema';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
@@ -105,24 +105,6 @@ const services = [
   }
 ];
 
-const serviceAreaCities = [
-  { name: 'Utrecht', slug: 'utrecht', time: '15-20 min' },
-  { name: 'Amsterdam', slug: 'amsterdam', time: '40-55 min' },
-  { name: 'Amsterdam-Zuid', slug: 'amsterdam-zuid', time: '35-45 min' },
-  { name: 'Almere', slug: 'almere', time: '35-45 min' },
-  { name: 'Amersfoort', slug: 'amersfoort', time: '25-35 min' },
-  { name: 'Arnhem', slug: 'arnhem', time: '45-55 min' },
-  { name: 'Nijmegen', slug: 'nijmegen', time: '55-65 min' },
-  { name: 'Apeldoorn', slug: 'apeldoorn', time: '40-50 min' },
-  { name: 'Hilversum', slug: 'hilversum', time: '30-40 min' },
-  { name: 'Bussum', slug: 'bussum', time: '30-40 min' },
-  { name: 'Naarden', slug: 'naarden', time: '30-40 min' },
-  { name: 'Amstelveen', slug: 'amstelveen', time: '35-45 min' },
-  { name: 'Zeist', slug: 'zeist', time: '18-22 min' },
-  { name: 'Huizen', slug: 'huizen', time: '35-45 min' },
-  { name: 'Diemen', slug: 'diemen', time: '35-45 min' },
-  { name: 'Den Haag', slug: 'den-haag', time: '45-60 min' },
-];
 
 export default function HomePage() {
   return (
@@ -366,41 +348,15 @@ export default function HomePage() {
           />        </div>
       </section>
 
-      {/* ===== SERVICE AREA & MAP PREVIEW (SEO) ===== */}
+      {/* ===== SERVICE AREA — Interactive SVG Map ===== */}
       <section className={styles.serviceAreaSection}>
         <div className="container">
           <div className="text-center" style={{ marginBottom: '2rem' }}>
-            <p className="section-eyebrow">MOBIELE SERVICE WERKGEBIED</p>
-            <h2 className="section-title">Direct Op Locatie in Uw Regio</h2>
-            <p className="section-lead">Onze mobiele bussen patrouilleren dagelijks in Midden-Nederland en de Randstad.</p>
+            <p className="section-eyebrow">WERKGEBIED</p>
+            <h2 className="section-title">Waar Wij Naartoe Komen</h2>
+            <p className="section-lead">Klik op een provincie op de kaart voor directe links naar uw stad.</p>
           </div>
-          
-          <div className={styles.serviceAreaGrid}>
-            <div className={styles.serviceAreaText}>
-              <p className={styles.serviceAreaLead}>
-                <strong>Autosleutel24</strong> bedient een uitgebreid servicegebied in Midden-Nederland en de Randstad. Of u nu uw autosleutel bent verloren in <strong>Utrecht</strong>, <strong>Arnhem</strong> of <strong>Nijmegen</strong>, met een defect contactslot staat in <strong>Amersfoort</strong> of <strong>Apeldoorn</strong>, of met spoed een transpondersleutel wilt laten inleren in &apos;t Gooi (<strong>Hilversum</strong>, <strong>Bussum</strong>, <strong>Naarden</strong>) of <strong>Amsterdam</strong> — wij komen direct naar uw thuis- of strandinglocatie.
-              </p>
-              <p className={styles.serviceAreaSub}>
-                Dankzij onze geavanceerde GPS-gestuurde routeplanning zijn onze monteurs meestal binnen <strong>20 tot 60 minuten</strong> ter plaatse. Geen wegsleepkosten naar de dealer en altijd 100% schadevrij geopend en geprogrammeerd. Klik op uw regio voor lokale tarieven en aankomsttijden:
-              </p>
-              <ul style={{ listStyleType: 'disc', paddingLeft: '1.25rem', marginTop: '1.5rem', marginBottom: '1.5rem', lineHeight: '1.8', color: 'var(--gray-700)' }}>
-                {serviceAreaCities.map((city) => (
-                  <li key={city.slug} style={{ marginBottom: '0.25rem' }}>
-                    <Link href={`/steden/${city.slug}`} style={{ color: 'var(--orange-700)', textDecoration: 'underline', fontWeight: 600 }}>
-                      Autosleutel bijmaken {city.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <div style={{ marginTop: '0.75rem' }}>
-                <Link href="/steden" className="btn btn-navy">Bekijk alle 49+ steden in ons werkgebied</Link>
-              </div>
-            </div>
-
-            <div className={styles.mapContainerWrap}>
-              <InstantServiceMap />
-            </div>
-          </div>
+          <ServiceAreaMap />
         </div>
       </section>
 

@@ -1,0 +1,230 @@
+.wrapper {
+  width: 100%;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .inner {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+}
+
+/* ── MAP COLUMN ── */
+.mapCol {
+  width: 100%;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  max-width: 560px;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.08));
+}
+
+.regionPath {
+  transition: fill 0.2s ease, transform 0.1s ease;
+}
+
+.regionPath:hover {
+  transform-origin: center;
+}
+
+.regionLabel {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  letter-spacing: 0.01em;
+  user-select: none;
+}
+
+.mapHint {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* ── LIST COLUMN ── */
+.listCol {
+  width: 100%;
+}
+
+/* Default panel (no region selected) */
+.defaultPanel {
+  background: #f8fafd;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+
+.defaultEyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f97316;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.defaultTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 0 0 0.75rem;
+}
+
+.defaultText {
+  font-size: 0.88rem;
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.regionQuickList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.regionBtn {
+  background: transparent;
+  border: 1.5px solid;
+  border-radius: 999px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.regionBtn:hover {
+  background: currentColor;
+  color: #ffffff !important;
+}
+
+/* Active city panel */
+.cityPanel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: #ffffff;
+}
+
+.panelIcon {
+  font-size: 1.1rem;
+}
+
+.panelTitle {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.panelClose {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.panelClose:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+.cityList {
+  list-style: none;
+  padding: 0.75rem 0;
+  margin: 0;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.cityList li {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cityList li:last-child {
+  border-bottom: none;
+}
+
+.cityLink {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e3a5f;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.cityLink:hover {
+  background: #f0f6ff;
+  color: #f97316;
+}
+
+.cityArrow {
+  font-size: 0.75rem;
+  color: #f97316;
+  transition: transform 0.15s ease;
+}
+
+.cityLink:hover .cityArrow {
+  transform: translateX(3px);
+}
+
+/* Shared CTA */
+.allCitiesBtn {
+  display: block;
+  text-align: center;
+  background: #1e3a5f;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  border-radius: 0 0 12px 12px;
+  margin-top: 0.5rem;
+}
+
+.defaultPanel .allCitiesBtn {
+  border-radius: 8px;
+}
+
+.allCitiesBtn:hover {
+  background: #f97316;
+}
