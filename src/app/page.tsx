@@ -140,7 +140,7 @@ export default function HomePage() {
               <span style={{ color: 'var(--orange-500)' }}>Wij Helpen Direct op Locatie!</span>
             </h1>
             <p className={styles.heroSplitLead}>
-              Staat u buitengesloten of is uw autosleutel defect? Geen paniek. Autosleutel24 komt met een volledig uitgeruste servicebus naar u toe. Geen wegsleepkosten, goedkoper dan de dealer en vaak binnen <strong>30 tot 60 minuten</strong> weer op weg!
+              Buitengesloten of sleutel kwijt? <strong>Binnen 30–60 min</strong> ter plaatse — goedkoper dan de dealer, geen wegsleepkosten.
             </p>
           </div>
 

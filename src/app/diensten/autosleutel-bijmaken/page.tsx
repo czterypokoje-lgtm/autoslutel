@@ -151,7 +151,7 @@ return (
             </nav>
             <h1>Autosleutel Bijmaken — Reservesleutel Auto Laten Maken Op Locatie</h1>
             <p className={styles.heroLead}>
-              Wilt u een <strong>autosleutel bijmaken</strong> zonder naar de dure dealer te hoeven? Autosleutel24 komt 24/7 naar u toe — thuis, op het werk of langs de weg — en programmeert uw nieuwe autosleutel, reservesleutel of afstandsbediening direct op locatie. Van een eenvoudige transpondersleutel tot een moderne autosleutel met keyless entry: wij frezen en programmeren alles terwijl u wacht, zonder sleepkosten of lange wachttijden.
+              Nieuwe sleutel nodig? Wij komen <strong>24/7 naar u toe</strong> en programmeren ter plaatse — goedkoper dan de dealer, zonder wachttijd.
             </p>
             <div style={{ marginTop: '2rem' }}>
               <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />

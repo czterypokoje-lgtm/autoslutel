@@ -154,9 +154,7 @@ export default function AutoSlotenmakerPage() {
             </nav>
             <h1>24/7 Mobiele Auto Slotenmaker — Snel &amp; Schadevrij op Locatie</h1>
             <p className={styles.heroLead}>
-              Bent u buitengesloten van uw auto, sleutel in de auto laten liggen, of heeft u inbraakschade aan uw deurslot? 
-              Als gecertificeerde auto slotenmaker openen wij uw auto 100% schadevrij en programmeren we direct ter plaatse nieuwe reservesleutels. 
-              Onze mobiele servicebussen rijden direct uit in regio Utrecht, Amsterdam, Almere, Amersfoort en Hilversum.
+              Buitengesloten of slot defect? <strong>Schadevrij geopend binnen 30 min</strong> — direct nieuwe sleutel ter plaatse.
             </p>
             <div style={{ marginTop: '2rem' }}>
               <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />

@@ -178,10 +178,7 @@ export default function AutoOpenenZonderSleutelPage() {
             </nav>
             <h1>Auto Openen Zonder Sleutel — 100% Schadevrij &amp; 24/7 Mobiel</h1>
             <p className={styles.heroLead}>
-              Sleutel in de auto laten liggen? Deur dichtgevallen? Buitengesloten van uw auto?
-              Als gecertificeerde mobiele locksmith openen wij uw auto 100% schadevrij — zonder ruit intrappen,
-              zonder sleepwagen. Wij zijn gemiddeld binnen 30 minuten bij u ter plaatse in
-              Utrecht, Amsterdam, Almere en Amersfoort.
+              Buitengesloten? Wij openen uw auto <strong>100% schadevrij</strong>, gemiddeld binnen 30 min ter plaatse.
             </p>
             <div style={{ marginTop: '2rem' }}>
               <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
