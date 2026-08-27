@@ -1,178 +1,214 @@
-.wrapper {
+.root {
   width: 100%;
 }
 
-.inner {
+/* ── Main layout ── */
+.layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: start;
 }
 
 @media (min-width: 768px) {
-  .inner {
-    grid-template-columns: 1.2fr 1fr;
-    gap: 3rem;
+  .layout {
+    grid-template-columns: 1.35fr 1fr;
+    gap: 2.5rem;
     align-items: center;
   }
 }
 
-/* ── MAP COLUMN ── */
-.mapCol {
+/* ── SVG column ── */
+.svgCol {
   width: 100%;
+  position: relative;
 }
 
 .svg {
   width: 100%;
   height: auto;
-  max-width: 560px;
+  max-width: 540px;
   display: block;
   margin: 0 auto;
-  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.08));
+  border-radius: 12px;
+  box-shadow:
+    0 2px 8px rgba(30, 58, 95, 0.10),
+    0 8px 32px rgba(30, 58, 95, 0.12);
+  border: 1px solid #b8d0e8;
 }
 
-.regionPath {
-  transition: fill 0.2s ease, transform 0.1s ease;
-}
-
-.regionPath:hover {
-  transform-origin: center;
-}
-
-.regionLabel {
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  letter-spacing: 0.01em;
-  user-select: none;
-}
-
-.mapHint {
-  text-align: center;
-  font-size: 0.8rem;
-  color: #6b7280;
-  margin-top: 0.5rem;
-  font-style: italic;
-}
-
-/* ── LIST COLUMN ── */
-.listCol {
+/* ── Panel column ── */
+.panelCol {
   width: 100%;
 }
 
-/* Default panel (no region selected) */
+/* ── Default panel (no selection) ── */
 .defaultPanel {
-  background: #f8fafd;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1.75rem;
+  background: #ffffff;
+  border: 1px solid #dce8f5;
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 4px 16px rgba(30, 58, 95, 0.08);
 }
 
-.defaultEyebrow {
+.eyebrow {
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: #f97316;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: #f97316;
   margin: 0 0 0.5rem;
 }
 
 .defaultTitle {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.35rem;
+  font-weight: 800;
   color: #1e3a5f;
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.6rem;
+  line-height: 1.3;
 }
 
-.defaultText {
+.defaultDesc {
   font-size: 0.88rem;
   color: #4b5563;
-  line-height: 1.6;
+  line-height: 1.65;
+  margin: 0 0 1.25rem;
+}
+
+/* Province quick-select pills */
+.provincePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
   margin-bottom: 1.25rem;
 }
 
-.regionQuickList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.regionBtn {
-  background: transparent;
-  border: 1.5px solid;
+.provincePill {
+  background: #f0f6ff;
+  border: 1.5px solid #1e3a5f30;
+  color: #1e3a5f;
   border-radius: 999px;
-  padding: 0.3rem 0.9rem;
-  font-size: 0.82rem;
+  padding: 0.28rem 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.18s ease;
   white-space: nowrap;
 }
 
-.regionBtn:hover {
-  background: currentColor;
-  color: #ffffff !important;
+.provincePill:hover {
+  background: #1e3a5f;
+  border-color: #1e3a5f;
+  color: #ffffff;
 }
 
-/* Active city panel */
+/* Stats row */
+.statsRow {
+  display: flex;
+  gap: 0;
+  border: 1px solid #e2eaf5;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0.5rem;
+  background: #f8fafd;
+  border-right: 1px solid #e2eaf5;
+  text-align: center;
+}
+
+.stat:last-child {
+  border-right: none;
+}
+
+.stat strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1e3a5f;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.stat span {
+  font-size: 0.72rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* ── City panel (province selected) ── */
 .cityPanel {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border: 1px solid #dce8f5;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(30, 58, 95, 0.12);
 }
 
 .panelHeader {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
   padding: 1rem 1.25rem;
-  color: #ffffff;
+  background: linear-gradient(135deg, #1e3a5f, #2a6dbf);
 }
 
-.panelIcon {
-  font-size: 1.1rem;
+.panelHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.panelPin {
+  font-size: 1rem;
 }
 
 .panelTitle {
-  flex: 1;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
-  margin: 0;
   color: #ffffff;
+  margin: 0;
 }
 
-.panelClose {
-  background: rgba(255,255,255,0.2);
-  border: none;
+.closeBtn {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
   color: #ffffff;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 0.15s ease;
+  flex-shrink: 0;
 }
 
-.panelClose:hover {
+.closeBtn:hover {
   background: rgba(255,255,255,0.35);
 }
 
+/* City list */
 .cityList {
   list-style: none;
-  padding: 0.75rem 0;
+  padding: 0.5rem 0;
   margin: 0;
-  max-height: 280px;
+  max-height: 260px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #dce8f5 transparent;
 }
 
 .cityList li {
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f0f6ff;
 }
 
 .cityList li:last-child {
@@ -183,12 +219,12 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.65rem 1.25rem;
+  padding: 0.6rem 1.25rem;
   font-size: 0.875rem;
   font-weight: 500;
   color: #1e3a5f;
   text-decoration: none;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.14s ease, color 0.14s ease;
 }
 
 .cityLink:hover {
@@ -199,32 +235,36 @@
 .cityArrow {
   font-size: 0.75rem;
   color: #f97316;
-  transition: transform 0.15s ease;
+  transition: transform 0.14s ease;
+  flex-shrink: 0;
 }
 
 .cityLink:hover .cityArrow {
   transform: translateX(3px);
 }
 
-/* Shared CTA */
-.allCitiesBtn {
+/* Panel footer */
+.panelFooter {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #f0f4fa;
+}
+
+/* ── Shared CTA button ── */
+.ctaBtn {
   display: block;
   text-align: center;
-  background: #1e3a5f;
+  background: linear-gradient(135deg, #1e3a5f, #2a6dbf);
   color: #ffffff;
   font-size: 0.875rem;
-  font-weight: 600;
-  padding: 0.75rem 1rem;
-  text-decoration: none;
-  transition: background 0.2s ease;
-  border-radius: 0 0 12px 12px;
-  margin-top: 0.5rem;
-}
-
-.defaultPanel .allCitiesBtn {
+  font-weight: 700;
+  padding: 0.75rem 1.25rem;
   border-radius: 8px;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  letter-spacing: 0.01em;
 }
 
-.allCitiesBtn:hover {
-  background: #f97316;
+.ctaBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
