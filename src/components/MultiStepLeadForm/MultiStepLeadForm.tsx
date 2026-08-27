@@ -5,12 +5,12 @@ import styles from './MultiStepLeadForm.module.css';
 import { BRANDS_LIST, CAR_MODELS, YEARS_LIST } from '@/data/carModels';
 
 const STEPS = [
-  { id: 1, label: 'Car & Key' },
-  { id: 2, label: 'Service Location' },
-  { id: 3, label: 'Scheduling' },
-  { id: 4, label: 'Contact Info' },
-  { id: 5, label: 'Service Summary' },
-  { id: 6, label: 'Checkout' },
+  { id: 1, label: 'Auto & Sleutel' },
+  { id: 2, label: 'Uw Locatie' },
+  { id: 3, label: 'Afspraak' },
+  { id: 4, label: 'Gegevens' },
+  { id: 5, label: 'Overzicht' },
+  { id: 6, label: 'Bevestiging' },
 ];
 
 export default function MultiStepLeadForm() {
@@ -19,9 +19,8 @@ export default function MultiStepLeadForm() {
     make: '',
     model: '',
     year: '',
-    color: 'Black',
     startType: 'Push Button',
-    remoteStart: 'Yes',
+    remoteStart: 'Ja',
   });
 
   const availableModels = useMemo(() => {
@@ -84,15 +83,15 @@ export default function MultiStepLeadForm() {
         {step === 1 && (
           <button className={styles.backButton}>
             <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            Back to Services
+            Terug naar Diensten
           </button>
         )}
       </div>
 
       {/* Header */}
       <div className={styles.header}>
-        <h1 className={styles.title}>Copy Your Car Key</h1>
-        <p className={styles.subtitle}>100% Satisfaction Guaranteed!</p>
+        <h1 className={styles.title}>Autosleutel Bijmaken</h1>
+        <p className={styles.subtitle}>100% Tevredenheidsgarantie!</p>
       </div>
 
       <div className={styles.divider}></div>
@@ -106,8 +105,8 @@ export default function MultiStepLeadForm() {
           <circle cx="20" cy="40" r="4" fill="#4B5563"/>
           <circle cx="44" cy="40" r="4" fill="#4B5563"/>
         </svg>
-        <h2 className={styles.sectionTitle}>Car & Key</h2>
-        <p className={styles.sectionSubtitle}>Please provide your car and key info.</p>
+        <h2 className={styles.sectionTitle}>Auto & Sleutel</h2>
+        <p className={styles.sectionSubtitle}>Vul de gegevens in van uw auto en sleutel.</p>
       </div>
 
       {/* Form Body */}
@@ -117,12 +116,12 @@ export default function MultiStepLeadForm() {
             
             {/* Make Model Year */}
             <div className={styles.questionGroup}>
-              <label className={styles.questionLabel}>What type of car do you have? *</label>
+              <label className={styles.questionLabel}>Welk type auto heeft u? *</label>
               <div className={styles.inputRow3}>
                 <div className={styles.selectWrapper}>
-                  <label className={styles.floatingLabel}>Make *</label>
+                  <label className={styles.floatingLabel}>Merk *</label>
                   <select name="make" value={formData.make} onChange={handleChange} className={styles.selectInput}>
-                    <option value="" disabled>Select Make</option>
+                    <option value="" disabled>Selecteer Merk</option>
                     {BRANDS_LIST.map(brand => (
                       <option key={brand} value={brand}>{brand}</option>
                     ))}
@@ -132,7 +131,7 @@ export default function MultiStepLeadForm() {
                 <div className={styles.selectWrapper}>
                   <label className={styles.floatingLabel}>Model *</label>
                   <select name="model" value={formData.model} onChange={handleChange} className={styles.selectInput} disabled={!formData.make}>
-                    <option value="" disabled>Select Model</option>
+                    <option value="" disabled>Selecteer Model</option>
                     {availableModels.map(mod => (
                       <option key={mod} value={mod}>{mod}</option>
                     ))}
@@ -140,9 +139,9 @@ export default function MultiStepLeadForm() {
                   <ArrowDownIcon />
                 </div>
                 <div className={styles.selectWrapper}>
-                  <label className={styles.floatingLabel}>Year *</label>
+                  <label className={styles.floatingLabel}>Bouwjaar *</label>
                   <select name="year" value={formData.year} onChange={handleChange} className={styles.selectInput}>
-                    <option value="" disabled>Select Year</option>
+                    <option value="" disabled>Selecteer Bouwjaar</option>
                     {YEARS_LIST.map(y => (
                       <option key={y} value={y}>{y}</option>
                     ))}
@@ -152,30 +151,9 @@ export default function MultiStepLeadForm() {
               </div>
             </div>
 
-            {/* Color */}
-            <div className={styles.questionGroup}>
-              <label className={styles.questionLabel}>What color is your car? *</label>
-              <div className={styles.inputRow1}>
-                <div className={styles.selectWrapper}>
-                  <label className={styles.floatingLabel}>Color *</label>
-                  <select name="color" value={formData.color} onChange={handleChange} className={styles.selectInput}>
-                    <option value="Black">Black</option>
-                    <option value="White">White</option>
-                    <option value="Silver">Silver</option>
-                    <option value="Grey">Grey</option>
-                    <option value="Blue">Blue</option>
-                    <option value="Red">Red</option>
-                    <option value="Green">Green</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <ArrowDownIcon />
-                </div>
-              </div>
-            </div>
-
             {/* Start Type (The animated cards) */}
             <div className={styles.questionGroup}>
-              <label className={styles.questionLabel}>How do you start your car? *</label>
+              <label className={styles.questionLabel}>Hoe start u de auto? *</label>
               <div className={styles.imageRadioGroup}>
                 <label className={`${styles.imageRadioLabel} ${formData.startType === 'Push Button' ? styles.selected : ''}`}>
                   <input type="radio" name="startType" value="Push Button" checked={formData.startType === 'Push Button'} onChange={handleChange} className={styles.imageRadioInput} />
@@ -188,7 +166,7 @@ export default function MultiStepLeadForm() {
                       <text x="50" y="58" fill="white" fontSize="12" fontWeight="bold" textAnchor="middle">START</text>
                     </svg>
                   </div>
-                  <span className={styles.radioText}>Push Button</span>
+                  <span className={styles.radioText}>Startknop (Keyless)</span>
                   <div className={styles.checkIconWrapper}>
                     <CheckIcon />
                   </div>
@@ -210,7 +188,7 @@ export default function MultiStepLeadForm() {
                       </g>
                     </svg>
                   </div>
-                  <span className={styles.radioText}>Turn Key</span>
+                  <span className={styles.radioText}>Draaisleutel</span>
                   <div className={styles.checkIconWrapper}>
                     <CheckIcon />
                   </div>
@@ -220,15 +198,15 @@ export default function MultiStepLeadForm() {
 
             {/* Remote Start */}
             <div className={styles.questionGroup}>
-              <label className={styles.questionLabel}>Does your car have remote start? *</label>
+              <label className={styles.questionLabel}>Heeft uw auto keyless entry/start? *</label>
               <div className={styles.radioGroup}>
                 <label className={styles.radioLabel}>
-                  <input type="radio" name="remoteStart" value="Yes" checked={formData.remoteStart === 'Yes'} onChange={handleChange} className={styles.radioInput} />
-                  Yes
+                  <input type="radio" name="remoteStart" value="Ja" checked={formData.remoteStart === 'Ja'} onChange={handleChange} className={styles.radioInput} />
+                  Ja
                 </label>
                 <label className={styles.radioLabel}>
-                  <input type="radio" name="remoteStart" value="No" checked={formData.remoteStart === 'No'} onChange={handleChange} className={styles.radioInput} />
-                  No
+                  <input type="radio" name="remoteStart" value="Nee" checked={formData.remoteStart === 'Nee'} onChange={handleChange} className={styles.radioInput} />
+                  Nee
                 </label>
               </div>
             </div>
@@ -238,7 +216,7 @@ export default function MultiStepLeadForm() {
 
         <div className={styles.actions}>
           <button type="button" onClick={handleNext} className={styles.nextBtn}>
-            Next: Service Location
+            Volgende: Uw Locatie
           </button>
         </div>
       </div>
@@ -246,7 +224,7 @@ export default function MultiStepLeadForm() {
       {/* Help Button (Fixed) */}
       <button className={styles.helpBtn}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-        Help
+        Hulp
       </button>
     </div>
   );
