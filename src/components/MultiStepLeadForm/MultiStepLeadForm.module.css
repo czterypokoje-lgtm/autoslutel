@@ -12,7 +12,7 @@
 
 /* ── Progress Bar Top ── */
 .progressContainer {
-  background: #cbf4f9; /* Light cyan from screenshot */
+  background: #cbf4f9; 
   padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -56,7 +56,7 @@
 }
 
 .stepIcon.completed {
-  background: #16a34a; /* Green check */
+  background: #16a34a; 
 }
 
 .stepIcon.completed svg {
@@ -260,7 +260,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   padding: 1rem;
   border: 1px solid #6b7280;
   border-radius: 16px;
@@ -271,7 +271,7 @@
 }
 
 .imageRadioLabel.selected {
-  background: #147987; /* Specific teal from screenshot */
+  background: #147987; 
   border-color: #147987;
 }
 
@@ -280,28 +280,59 @@
 }
 
 .radioImageWrapper {
-  width: 60px;
-  height: 60px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
+  background: #1f2937;
   overflow: hidden;
   flex-shrink: 0;
   border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease;
 }
 
 .imageRadioLabel.selected .radioImageWrapper {
   border-color: #ffffff;
 }
 
-.radioImage {
+.animatedSvg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
 }
+
+/* SVG Animations */
+.pulseButton {
+  animation: pulseBtn 1.5s infinite;
+  transform-origin: center;
+}
+
+@keyframes pulseBtn {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(0.92); filter: brightness(1.4); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.turnKey {
+  animation: turnAction 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 50px 50px;
+}
+
+@keyframes turnAction {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(65deg); }
+  50% { transform: rotate(65deg); }
+  75% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* End SVG Animations */
 
 .radioText {
   font-weight: 500;
   color: #111827;
-  font-size: 0.95rem;
+  font-size: 1rem;
   transition: color 0.3s ease;
 }
 
@@ -311,8 +342,8 @@
 
 .checkIconWrapper {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 16px;
+  right: 16px;
   width: 28px;
   height: 28px;
   background: #ffffff;
@@ -323,6 +354,7 @@
   transform: scale(0);
   opacity: 0;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .imageRadioLabel.selected .checkIconWrapper {
@@ -390,10 +422,10 @@
 }
 
 .nextBtn {
-  background: #ffc107; /* Exact yellow */
+  background: #ffc107; 
   color: #000000;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 0.875rem 2rem;
   border: none;
   border-radius: 4px;

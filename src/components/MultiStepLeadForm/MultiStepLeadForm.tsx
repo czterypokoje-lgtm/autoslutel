@@ -158,7 +158,13 @@ export default function MultiStepLeadForm() {
                 <label className={`${styles.imageRadioLabel} ${formData.startType === 'Push Button' ? styles.selected : ''}`}>
                   <input type="radio" name="startType" value="Push Button" checked={formData.startType === 'Push Button'} onChange={handleChange} className={styles.imageRadioInput} />
                   <div className={styles.radioImageWrapper}>
-                    <img src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=100&h=100&fit=crop" alt="Push Button" className={styles.radioImage} />
+                    <svg viewBox="0 0 100 100" className={styles.animatedSvg}>
+                      <circle cx="50" cy="50" r="45" fill="#374151" />
+                      <circle cx="50" cy="50" r="38" fill="#111827" />
+                      <circle cx="50" cy="50" r="30" fill="#dc2626" className={styles.pulseButton} />
+                      <text x="50" y="48" fill="white" fontSize="10" fontWeight="bold" textAnchor="middle">ENGINE</text>
+                      <text x="50" y="58" fill="white" fontSize="12" fontWeight="bold" textAnchor="middle">START</text>
+                    </svg>
                   </div>
                   <span className={styles.radioText}>Push Button</span>
                   <div className={styles.checkIconWrapper}>
@@ -169,7 +175,18 @@ export default function MultiStepLeadForm() {
                 <label className={`${styles.imageRadioLabel} ${formData.startType === 'Turn Key' ? styles.selected : ''}`}>
                   <input type="radio" name="startType" value="Turn Key" checked={formData.startType === 'Turn Key'} onChange={handleChange} className={styles.imageRadioInput} />
                   <div className={styles.radioImageWrapper}>
-                    <img src="https://images.unsplash.com/photo-1605270635417-380d3ce3df83?w=100&h=100&fit=crop" alt="Turn Key" className={styles.radioImage} />
+                    <svg viewBox="0 0 100 100" className={styles.animatedSvg}>
+                      {/* Keyhole */}
+                      <circle cx="50" cy="50" r="40" fill="#374151" />
+                      <circle cx="50" cy="50" r="30" fill="#111827" />
+                      <rect x="46" y="40" width="8" height="20" fill="#000" />
+                      
+                      {/* Animated Key */}
+                      <g className={styles.turnKey}>
+                        <path d="M45,50 L45,20 L35,20 C30,20 30,10 35,10 L65,10 C70,10 70,20 65,20 L55,20 L55,50 Z" fill="#9ca3af" />
+                        <circle cx="50" cy="15" r="3" fill="#111827" />
+                      </g>
+                    </svg>
                   </div>
                   <span className={styles.radioText}>Turn Key</span>
                   <div className={styles.checkIconWrapper}>
