@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './MultiStepLeadForm.module.css';
+import { BRANDS_LIST, CAR_MODELS, YEARS_LIST } from '@/data/carModels';
 
 const STEPS = [
   { id: 1, label: 'Car & Key' },
@@ -15,17 +16,26 @@ const STEPS = [
 export default function MultiStepLeadForm() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    make: 'Bmw',
-    model: '128i',
-    year: '2026',
+    make: '',
+    model: '',
+    year: '',
     color: 'Black',
     startType: 'Push Button',
     remoteStart: 'Yes',
   });
 
+  const availableModels = useMemo(() => {
+    if (!formData.make) return [];
+    return CAR_MODELS[formData.make] || [];
+  }, [formData.make]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'make') {
+      setFormData(prev => ({ ...prev, make: value, model: '' }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleNext = () => {
@@ -112,24 +122,30 @@ export default function MultiStepLeadForm() {
                 <div className={styles.selectWrapper}>
                   <label className={styles.floatingLabel}>Make *</label>
                   <select name="make" value={formData.make} onChange={handleChange} className={styles.selectInput}>
-                    <option value="Bmw">Bmw</option>
-                    <option value="Audi">Audi</option>
+                    <option value="" disabled>Select Make</option>
+                    {BRANDS_LIST.map(brand => (
+                      <option key={brand} value={brand}>{brand}</option>
+                    ))}
                   </select>
                   <ArrowDownIcon />
                 </div>
                 <div className={styles.selectWrapper}>
                   <label className={styles.floatingLabel}>Model *</label>
-                  <select name="model" value={formData.model} onChange={handleChange} className={styles.selectInput}>
-                    <option value="128i">128i</option>
-                    <option value="320i">320i</option>
+                  <select name="model" value={formData.model} onChange={handleChange} className={styles.selectInput} disabled={!formData.make}>
+                    <option value="" disabled>Select Model</option>
+                    {availableModels.map(mod => (
+                      <option key={mod} value={mod}>{mod}</option>
+                    ))}
                   </select>
                   <ArrowDownIcon />
                 </div>
                 <div className={styles.selectWrapper}>
                   <label className={styles.floatingLabel}>Year *</label>
                   <select name="year" value={formData.year} onChange={handleChange} className={styles.selectInput}>
-                    <option value="2026">2026</option>
-                    <option value="2025">2025</option>
+                    <option value="" disabled>Select Year</option>
+                    {YEARS_LIST.map(y => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
                   </select>
                   <ArrowDownIcon />
                 </div>
@@ -145,6 +161,12 @@ export default function MultiStepLeadForm() {
                   <select name="color" value={formData.color} onChange={handleChange} className={styles.selectInput}>
                     <option value="Black">Black</option>
                     <option value="White">White</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Grey">Grey</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Red">Red</option>
+                    <option value="Green">Green</option>
+                    <option value="Other">Other</option>
                   </select>
                   <ArrowDownIcon />
                 </div>
