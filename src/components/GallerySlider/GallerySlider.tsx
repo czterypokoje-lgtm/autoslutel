@@ -35,40 +35,47 @@ export default function GallerySlider({ images, title = "Onze service in de hele
 
   const isFewImages = images.length <= 4;
 
+  const renderImageCard = (img: GalleryImage, index: number) => (
+    <div key={index} className={isFewImages ? '' : styles.slide}>
+      <div className={styles.imageCard}>
+        <Image 
+          src={img.src} 
+          alt={img.caption} 
+          fill
+          className={styles.image}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+        <div className={styles.overlay}>
+          {/* Using a p tag instead of h3 to avoid global heading style conflicts */}
+          <p className={styles.caption}>{img.caption}</p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className={styles.container}>
       {title && <h2 className={styles.title}>{title}</h2>}
       
-      <div className={styles.sliderWrapper}>
-        {!isFewImages && (
+      {isFewImages ? (
+        <div className={styles.grid}>
+          {images.map((img, index) => renderImageCard(img, index))}
+        </div>
+      ) : (
+        <div className={styles.sliderWrapper}>
           <button onClick={scrollLeft} className={`${styles.arrowButton} ${styles.prevButton}`} aria-label="Vorige foto">
             &#8592;
           </button>
-        )}
 
-        <div className={`${styles.slider} ${isFewImages ? styles.centeredSlider : ''}`} ref={sliderRef}>
-          {images.map((img, index) => (
-            <div key={index} className={styles.slide}>
-              <Image 
-                src={img.src} 
-                alt={img.caption} 
-                fill
-                className={styles.image}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              />
-              <div className={styles.overlay}>
-                <h3 className={styles.caption}>{img.caption}</h3>
-              </div>
-            </div>
-          ))}
-        </div>
+          <div className={styles.slider} ref={sliderRef}>
+            {images.map((img, index) => renderImageCard(img, index))}
+          </div>
 
-        {!isFewImages && (
           <button onClick={scrollRight} className={`${styles.arrowButton} ${styles.nextButton}`} aria-label="Volgende foto">
             &#8594;
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
