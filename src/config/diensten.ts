@@ -185,7 +185,7 @@ export const DIENSTEN: Service[] = [
       'Volledige test van alle functies (deuren, kofferbak, motor starten)'
     ],
     faq: [
-      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een standaard transpondersleutel begint bij €149. Een klapsleutel met afstandsbediening kost gemiddeld €199 tot €349. Een Smart Key is beschikbaar vanaf €299. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
+      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een standaard transpondersleutel begint bij €149. Een klapsleutel met afstandsbediening kost gemiddeld €199 tot €349. Een Smart Key is beschikbaar vanaf €249. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
       { q: 'Krijg ik garantie op de nieuwe autosleutel?', a: 'Ja, u ontvangt 12 maanden volledige garantie op de programmering en de elektronische componenten van de sleutel.' },
       { q: 'Moet ik met de auto langskomen?', a: 'Nee. Onze specialist komt met een volledig uitgeruste mobiele werkplaats naar u toe in Utrecht of Amsterdam.' }
     ],

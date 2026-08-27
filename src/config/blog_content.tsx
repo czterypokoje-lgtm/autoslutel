@@ -359,7 +359,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <ul>
         <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €149 tot €249. Ideaal als goedkope noodoplossing.</li>
         <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €199 tot €349 voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
-        <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €299 tot €499 voor premium merken (BMW, Audi, Toyota, Volvo).</li>
+        <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €249 tot €349 voor premium merken (BMW, Audi, Toyota, Volvo).</li>
         <li><strong>Complexe immobilizers (o.a. Mercedes FBS4 of nieuwe VAG MQB48):</strong> Vanaf €299 tot €599 vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren.</li>
       </ul>
 
@@ -802,9 +802,9 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         De meest voorkomende sleutel voor auto's vanaf ongeveer 2005. Voorzien van een inklapbare baard en drukknoppen voor de centrale vergrendeling. We programmeren zowel de startonderbreker als de afstandsbediening.
       </p>
 
-      <h4>3. Smart Key / Keyless Entry (Vanaf €299 - €499)</h4>
+      <h4>3. Smart Key / Keyless Entry (Vanaf €249 - €349)</h4>
       <p>
-        De modernste sleutels die u in uw broekzak kunt houden om de auto te openen en te starten. Deze bevatten complexe cryptografische technologie (zoals bij BMW's FEM/BDC systemen of Mercedes FBS3). Het bijmaken en veilig inleren van een Smart Key is precisiewerk. Bij Autosleutel24 kost dit, afhankelijk van het model, tussen de €299 en €499. Ter vergelijking: bij de dealer betaalt u hier vaak tussen de €400 en €650 voor!
+        De modernste sleutels die u in uw broekzak kunt houden om de auto te openen en te starten. Deze bevatten complexe cryptografische technologie (zoals bij BMW's FEM/BDC systemen of Mercedes FBS3). Het bijmaken en veilig inleren van een Smart Key is precisiewerk. Bij Autosleutel24 kost dit, afhankelijk van het model, tussen de €249 en €349. Ter vergelijking: bij de dealer betaalt u hier vaak tussen de €400 en €650 voor!
       </p>
 
       <h3>Waarom is Autosleutel24 goedkoper dan de dealer?</h3>

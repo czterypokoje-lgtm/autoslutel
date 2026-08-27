@@ -287,7 +287,7 @@ export const FAQ_TRANSPONDER: FaqItem[] = [
 export const FAQ_SMART_KEY: FaqItem[] = [
   {
     q: 'Wat kost een Smart Key bijmaken?',
-    a: 'Smart keys kosten meer dan gewone sleutels vanwege de complexere electronica en de programmeerprocessen. Prijzen: €149–€299 afhankelijk van merk en model. BMW Smart Keys zijn gemiddeld €199, Mercedes €229, VW/Audi €179.',
+    a: 'Smart keys kosten meer dan gewone sleutels vanwege de complexere electronica en de programmeerprocessen. Prijzen: €249–€349 afhankelijk van merk en model. BMW Smart Keys zijn gemiddeld €249, Mercedes €279, VW/Audi €249.',
   },
   {
     q: 'Hoe lang is de batterij van een Smart Key?',

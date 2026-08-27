@@ -27,8 +27,8 @@ const priceRows: PriceItem[] = [
   { category: 'Autosleutel Bijmaken (Reserve)' },
   { service: 'Standaard transpondersleutel', from: '€ 149', to: '€ 199', note: 'Meeste oudere modellen' },
   { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 199', to: '€ 249', note: 'VW, Audi, Seat, Skoda, Ford' },
-  { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 299', note: 'BMW, Mercedes, Toyota, Mazda' },
-  { service: 'Proximity key met start-stop', from: '€ 279', to: '€ 299', note: 'Premium merken' },
+  { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 349', note: 'BMW, Mercedes, Toyota, Mazda' },
+  { service: 'Proximity key met start-stop', from: '€ 249', to: '€ 349', note: 'Premium merken' },
   
   { category: 'Autosleutel Kwijt (Alle sleutels verloren)' },
   { service: 'Standaard transpondersleutel', from: '€ 299', to: '€ 399', note: 'Inclusief programmeren' },

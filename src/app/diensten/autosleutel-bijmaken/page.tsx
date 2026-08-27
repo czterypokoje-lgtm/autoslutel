@@ -272,7 +272,7 @@ return (
                         <tr>
                           <td>Smart Key / Keyless</td>
                           <td>Proximity sleutel, Push-to-start</td>
-                          <td><strong>€299 - €499</strong></td>
+                          <td><strong>€249 - €349</strong></td>
                           <td>30-60 min</td>
                         </tr>
                         <tr>
