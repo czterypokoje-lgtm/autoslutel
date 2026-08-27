@@ -45,7 +45,7 @@
   position: relative;
   width: 100%;
   max-width: 500px;
-  aspect-ratio: 3/4; /* Natural ratio of the map */
+  aspect-ratio: 720 / 859; /* Natural ratio of the orange map */
 }
 
 .mapImage {

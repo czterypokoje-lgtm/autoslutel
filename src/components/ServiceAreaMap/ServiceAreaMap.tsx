@@ -92,7 +92,7 @@ export default function ServiceAreaMap() {
         <div className={styles.imageCol}>
           <div className={styles.imageWrapper}>
             <Image 
-              src="/images/nl-map-colorful.png" 
+              src="/images/nl-map-orange.png" 
               alt="Kaart werkgebied Autosleutel24 Nederland" 
               fill
               className={styles.mapImage}
