@@ -2,57 +2,126 @@
   width: 100%;
 }
 
-/* ── Main layout ── */
 .layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(30, 58, 95, 0.06);
+  border: 1px solid #eef2f6;
+  overflow: hidden;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .layout {
-    grid-template-columns: 1.35fr 1fr;
-    gap: 2.5rem;
-    align-items: center;
+    flex-direction: row;
+    align-items: stretch;
   }
 }
 
-/* ── SVG column ── */
-.svgCol {
+/* ── IMAGE COLUMN ── */
+.imageCol {
   width: 100%;
+  position: relative;
+  background: #fbfbfc; /* Slightly off-white to contrast the map */
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #eef2f6;
+}
+
+@media (min-width: 900px) {
+  .imageCol {
+    width: 55%;
+    border-bottom: none;
+    border-right: 1px solid #eef2f6;
+    padding: 3rem;
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 3/4; /* Natural ratio of the map */
+}
+
+.mapImage {
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+  transition: transform 0.3s ease;
+}
+
+.mapImage:hover {
+  transform: scale(1.02);
+}
+
+/* Trust Badge Overlay */
+.mapBadge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  background: #ffffff;
+  padding: 0.6rem 1rem;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  font-size: 0.85rem;
+  color: #1e3a5f;
+  z-index: 10;
+  border: 1px solid #f0f4f8;
+}
+
+.badgePulse {
+  width: 10px;
+  height: 10px;
+  background-color: #10b981; /* Green success */
+  border-radius: 50%;
   position: relative;
 }
 
-.svg {
-  width: 100%;
-  height: auto;
-  max-width: 540px;
-  display: block;
-  margin: 0 auto;
-  border-radius: 12px;
-  box-shadow:
-    0 2px 8px rgba(30, 58, 95, 0.10),
-    0 8px 32px rgba(30, 58, 95, 0.12);
-  border: 1px solid #b8d0e8;
+.badgePulse::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background-color: rgba(16, 185, 129, 0.4);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
 }
 
-/* ── Panel column ── */
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ── ACCORDION PANEL ── */
 .panelCol {
   width: 100%;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ── Default panel (no selection) ── */
-.defaultPanel {
-  background: #ffffff;
-  border: 1px solid #dce8f5;
-  border-radius: 16px;
-  padding: 1.75rem 1.5rem;
-  box-shadow: 0 4px 16px rgba(30, 58, 95, 0.08);
+@media (min-width: 900px) {
+  .panelCol {
+    width: 45%;
+    padding: 3rem 2.5rem;
+  }
+}
+
+.panelHeader {
+  margin-bottom: 2rem;
 }
 
 .eyebrow {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -60,155 +129,90 @@
   margin: 0 0 0.5rem;
 }
 
-.defaultTitle {
-  font-size: 1.35rem;
+.title {
+  font-size: 1.6rem;
   font-weight: 800;
   color: #1e3a5f;
-  margin: 0 0 0.6rem;
-  line-height: 1.3;
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
 }
 
-.defaultDesc {
-  font-size: 0.88rem;
+.desc {
+  font-size: 0.95rem;
   color: #4b5563;
-  line-height: 1.65;
-  margin: 0 0 1.25rem;
+  line-height: 1.6;
+  margin: 0;
 }
 
-/* Province quick-select pills */
-.provincePills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1.25rem;
-}
-
-.provincePill {
-  background: #f0f6ff;
-  border: 1.5px solid #1e3a5f30;
-  color: #1e3a5f;
-  border-radius: 999px;
-  padding: 0.28rem 0.8rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  white-space: nowrap;
-}
-
-.provincePill:hover {
-  background: #1e3a5f;
-  border-color: #1e3a5f;
-  color: #ffffff;
-}
-
-/* Stats row */
-.statsRow {
-  display: flex;
-  gap: 0;
-  border: 1px solid #e2eaf5;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 1.25rem;
-}
-
-.stat {
-  flex: 1;
+/* Accordion Group */
+.accordionGroup {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 0.5rem;
-  background: #f8fafd;
-  border-right: 1px solid #e2eaf5;
-  text-align: center;
+  gap: 0.75rem;
+  flex: 1;
 }
 
-.stat:last-child {
-  border-right: none;
-}
-
-.stat strong {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #1e3a5f;
-  line-height: 1;
-  margin-bottom: 0.2rem;
-}
-
-.stat span {
-  font-size: 0.72rem;
-  color: #6b7280;
-  font-weight: 500;
-}
-
-/* ── City panel (province selected) ── */
-.cityPanel {
+.accordionItem {
+  border: 1px solid #eef2f6;
+  border-radius: 12px;
   background: #ffffff;
-  border: 1px solid #dce8f5;
-  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(30, 58, 95, 0.12);
+  transition: all 0.2s ease;
 }
 
-.panelHeader {
+.accordionItem.active {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.04);
+}
+
+.accordionHeader {
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, #1e3a5f, #2a6dbf);
-}
-
-.panelHeaderLeft {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.panelPin {
-  font-size: 1rem;
-}
-
-.panelTitle {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
-}
-
-.closeBtn {
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: #ffffff;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s ease;
-  flex-shrink: 0;
+  color: #1e3a5f;
+  transition: background 0.2s ease;
 }
 
-.closeBtn:hover {
-  background: rgba(255,255,255,0.35);
+.accordionHeader:hover {
+  background: #f8fafc;
 }
 
-/* City list */
+.accordionItem.active .accordionHeader {
+  background: #f0f6ff;
+  color: #0f172a;
+}
+
+.accordionTitle {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.accordionIcon {
+  font-size: 1.25rem;
+  color: #f97316;
+  font-weight: 400;
+  transition: transform 0.2s ease;
+}
+
+.accordionContent {
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
 .cityList {
   list-style: none;
-  padding: 0.5rem 0;
+  padding: 0;
   margin: 0;
-  max-height: 260px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #dce8f5 transparent;
+  border-top: 1px solid #eef2f6;
 }
 
 .cityList li {
-  border-bottom: 1px solid #f0f6ff;
+  border-bottom: 1px solid #f8fafc;
 }
 
 .cityList li:last-child {
@@ -218,53 +222,52 @@
 .cityLink {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 1.25rem;
-  font-size: 0.875rem;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  color: #1e3a5f;
+  color: #334155;
   text-decoration: none;
-  transition: background 0.14s ease, color 0.14s ease;
+  transition: all 0.2s ease;
+  background: #ffffff;
 }
 
 .cityLink:hover {
-  background: #f0f6ff;
+  background: #f8fafc;
   color: #f97316;
+  padding-left: 1.5rem;
 }
 
 .cityArrow {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #f97316;
-  transition: transform 0.14s ease;
-  flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
 .cityLink:hover .cityArrow {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
-/* Panel footer */
+/* Footer CTA */
 .panelFooter {
-  padding: 0.75rem 1rem;
-  border-top: 1px solid #f0f4fa;
+  margin-top: 2rem;
 }
 
-/* ── Shared CTA button ── */
 .ctaBtn {
   display: block;
   text-align: center;
   background: linear-gradient(135deg, #1e3a5f, #2a6dbf);
   color: #ffffff;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 700;
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
+  padding: 1rem;
+  border-radius: 12px;
   text-decoration: none;
   transition: opacity 0.2s ease, transform 0.15s ease;
-  letter-spacing: 0.01em;
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
 }
 
 .ctaBtn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  opacity: 0.95;
+  transform: translateY(-2px);
 }
