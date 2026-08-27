@@ -21,6 +21,9 @@ export default function MultiStepLeadForm() {
     year: '',
     startType: 'Push Button',
     remoteStart: 'Ja',
+    address: '',
+    city: '',
+    zip: '',
   });
 
   const availableModels = useMemo(() => {
@@ -52,6 +55,12 @@ export default function MultiStepLeadForm() {
     </svg>
   );
 
+  const MapPinIcon = () => (
+    <svg className={styles.mapPinIcon} viewBox="0 0 24 24" fill="#FBBF24">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+    </svg>
+  );
+
   const ArrowDownIcon = () => (
     <svg className={styles.selectArrow} viewBox="0 0 20 20">
       <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
@@ -80,33 +89,49 @@ export default function MultiStepLeadForm() {
       </div>
 
       <div className={styles.backButtonContainer}>
-        {step === 1 && (
-          <button className={styles.backButton}>
-            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            Terug naar Diensten
+        {step > 1 && (
+          <button className={styles.backButton} onClick={handleBack}>
+            <div className={styles.backIconWrapper}>
+              <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+            </div>
+            {STEPS[step - 2].label}
           </button>
         )}
       </div>
 
-      {/* Header */}
-      <div className={styles.header}>
-        <h1 className={styles.title}>Autosleutel Bijmaken</h1>
-        <p className={styles.subtitle}>100% Tevredenheidsgarantie!</p>
-      </div>
-
-      <div className={styles.divider}></div>
+      {/* Header (Only on step 1) */}
+      {step === 1 && (
+        <>
+          <div className={styles.header}>
+            <h1 className={styles.title}>Autosleutel Bijmaken</h1>
+            <p className={styles.subtitle}>100% Tevredenheidsgarantie!</p>
+          </div>
+          <div className={styles.divider}></div>
+        </>
+      )}
 
       {/* Section Title */}
-      <div className={styles.sectionHeader}>
-        <svg className={styles.carIcon} viewBox="0 0 64 64" fill="none">
-          <path d="M12 40h40v8H12v-8z" fill="#FBBF24"/>
-          <path d="M16 28l4-12h24l4 12H16z" fill="#FBBF24"/>
-          <path d="M22 20h20v6H22v-6z" fill="#FFFFFF" opacity="0.5"/>
-          <circle cx="20" cy="40" r="4" fill="#4B5563"/>
-          <circle cx="44" cy="40" r="4" fill="#4B5563"/>
-        </svg>
-        <h2 className={styles.sectionTitle}>Auto & Sleutel</h2>
-        <p className={styles.sectionSubtitle}>Vul de gegevens in van uw auto en sleutel.</p>
+      <div className={styles.sectionHeader} style={{ marginTop: step > 1 ? '2rem' : '0' }}>
+        {step === 1 && (
+          <>
+            <svg className={styles.carIcon} viewBox="0 0 64 64" fill="none">
+              <path d="M12 40h40v8H12v-8z" fill="#FBBF24"/>
+              <path d="M16 28l4-12h24l4 12H16z" fill="#FBBF24"/>
+              <path d="M22 20h20v6H22v-6z" fill="#FFFFFF" opacity="0.5"/>
+              <circle cx="20" cy="40" r="4" fill="#4B5563"/>
+              <circle cx="44" cy="40" r="4" fill="#4B5563"/>
+            </svg>
+            <h2 className={styles.sectionTitle}>Auto & Sleutel</h2>
+            <p className={styles.sectionSubtitle}>Vul de gegevens in van uw auto en sleutel.</p>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <MapPinIcon />
+            <h2 className={styles.sectionTitle}>Uw Locatie</h2>
+            <p className={styles.sectionSubtitle}>Waar mogen wij u helpen met uw nieuwe autosleutel?</p>
+          </>
+        )}
       </div>
 
       {/* Form Body */}
@@ -116,7 +141,6 @@ export default function MultiStepLeadForm() {
             
             {/* Make Model Year */}
             <div className={styles.questionGroup}>
-              <label className={styles.questionLabel}>Welk type auto heeft u? *</label>
               <div className={styles.inputRow3}>
                 <div className={styles.selectWrapper}>
                   <label className={styles.floatingLabel}>Merk *</label>
@@ -214,9 +238,70 @@ export default function MultiStepLeadForm() {
           </div>
         )}
 
+        {step === 2 && (
+          <div className={styles.stepContent}>
+            
+            <div className={styles.summaryBox}>
+              <span className={styles.summaryLabel}>Uw auto:</span>
+              <span className={styles.summaryValue}>
+                {formData.make || 'Geen merk'} {formData.model} {formData.year}
+              </span>
+            </div>
+
+            <div className={styles.questionGroup}>
+              <div className={styles.inputRow1}>
+                <div className={styles.selectWrapper}>
+                  <label className={styles.floatingLabel}>Adres *</label>
+                  <input 
+                    type="text" 
+                    name="address" 
+                    value={formData.address} 
+                    onChange={handleChange} 
+                    className={styles.formInput} 
+                    placeholder="Straat en huisnummer"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.questionGroup}>
+              <div className={styles.inputRow2}>
+                <div className={styles.selectWrapper}>
+                  <label className={styles.floatingLabel}>Plaats / Stad *</label>
+                  <input 
+                    type="text" 
+                    name="city" 
+                    value={formData.city} 
+                    onChange={handleChange} 
+                    className={styles.formInput} 
+                    placeholder="Bijv. Amsterdam"
+                  />
+                </div>
+                <div className={styles.selectWrapper}>
+                  <label className={styles.floatingLabel}>Postcode *</label>
+                  <input 
+                    type="text" 
+                    name="zip" 
+                    value={formData.zip} 
+                    onChange={handleChange} 
+                    className={styles.formInput} 
+                    placeholder="1234 AB"
+                  />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
+
         <div className={styles.actions}>
-          <button type="button" onClick={handleNext} className={styles.nextBtn}>
-            Volgende: Uw Locatie
+          <button 
+            type="button" 
+            onClick={handleNext} 
+            className={styles.nextBtn}
+            disabled={step === 1 && (!formData.make || !formData.model || !formData.year)}
+          >
+            {step === 1 ? 'Volgende: Uw Locatie' : 'Volgende: Afspraak'}
           </button>
         </div>
       </div>
