@@ -1,0 +1,256 @@
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  overflow: hidden;
+  font-family: var(--font-main), sans-serif;
+}
+
+/* ── Progress Bar ── */
+.progressContainer {
+  background: #e0f2fe; /* light blue */
+  padding: 1.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.progressContainer::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: #bae6fd;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.progressStep {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #94a3b8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.stepNumber.active, .stepNumber.completed {
+  background: #0284c7; /* deep blue */
+}
+
+.stepLabel {
+  font-size: 0.75rem;
+  color: #475569;
+  font-weight: 600;
+  text-align: center;
+}
+
+.stepLabel.active {
+  color: #0284c7;
+}
+
+/* ── Form Body ── */
+.formBody {
+  padding: 2rem 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .formBody {
+    padding: 3rem;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #10b981; /* Success green */
+  font-weight: 600;
+}
+
+/* ── Step Content ── */
+.stepContent {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.questionGroup {
+  margin-bottom: 2rem;
+}
+
+.questionLabel {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+/* Row of inputs */
+.inputRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .inputRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.selectInput, .textInput {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #334155;
+  background: #ffffff;
+  transition: border-color 0.2s ease;
+  appearance: none;
+}
+
+.selectInput:focus, .textInput:focus {
+  outline: none;
+  border-color: #0284c7;
+}
+
+/* Image Radio Buttons (Push Button vs Turn Key) */
+.imageRadioGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.imageRadioLabel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.imageRadioLabel:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.imageRadioLabel.selected {
+  border-color: #f97316; /* Orange active state */
+  background: #fff7ed;
+}
+
+.imageRadioInput {
+  display: none; /* Hide default radio */
+}
+
+.radioIcon {
+  font-size: 2rem;
+}
+
+.radioText {
+  font-weight: 600;
+  color: #334155;
+  font-size: 1rem;
+}
+
+/* Standard Radio */
+.radioGroup {
+  display: flex;
+  gap: 2rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+}
+
+.radioInput {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: #f97316;
+}
+
+/* ── Footer / Actions ── */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 3rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1.5rem;
+}
+
+.nextBtn {
+  background: #fbbf24; /* Yellow/Orange similar to the screenshot */
+  color: #000000;
+  font-size: 1.125rem;
+  font-weight: 700;
+  padding: 1rem 3rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .nextBtn {
+    width: auto;
+  }
+}
+
+.nextBtn:hover {
+  background: #f59e0b;
+}
+
+.nextBtn:active {
+  transform: translateY(2px);
+}
+
+.nextBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
