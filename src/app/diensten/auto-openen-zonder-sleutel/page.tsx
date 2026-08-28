@@ -8,6 +8,7 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import Image from 'next/image';
 import styles from './page.module.css';
 
@@ -176,6 +177,9 @@ export default function AutoOpenenZonderSleutelPage() {
               <Link href="/diensten">Diensten</Link> <span>/</span>
               <span>Auto Openen Zonder Sleutel</span>
             </nav>
+            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+              <HeroTrustBadge />
+            </div>
             <h1>Auto Openen Zonder Sleutel — 100% Schadevrij &amp; 24/7 Mobiel</h1>
             <p className={styles.heroLead}>
               Buitengesloten? Wij openen uw auto <strong>100% schadevrij</strong>, gemiddeld binnen 30 min ter plaatse.

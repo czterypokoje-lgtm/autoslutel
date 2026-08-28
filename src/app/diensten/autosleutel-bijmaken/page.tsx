@@ -11,6 +11,7 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import Image from 'next/image';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
@@ -149,6 +150,9 @@ return (
             <nav className={styles.breadcrumb} aria-label="Breadcrumb">
               <Link href="/">Home</Link> <span>/</span> <Link href="/diensten">Diensten</Link> <span>/</span> <span>Autosleutel Bijmaken</span>
             </nav>
+            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+              <HeroTrustBadge />
+            </div>
             <h1>Autosleutel Bijmaken — Reservesleutel Auto Laten Maken Op Locatie</h1>
             <p className={styles.heroLead}>
               Nieuwe sleutel nodig? Wij komen <strong>24/7 naar u toe</strong> en programmeren ter plaatse — goedkoper dan de dealer, zonder wachttijd.

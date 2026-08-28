@@ -15,6 +15,7 @@ import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 
 export async function generateStaticParams() {
   return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
@@ -144,6 +145,9 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 <span style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>{brand.name}</span>
               </nav>
 
+              <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+                <HeroTrustBadge />
+              </div>
               <h1 style={{ color: '#fff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: '1.2rem' }}>
                 {brand.customH1 || <>{brand.name} Autosleutel Bijmaken &amp; Programmeren</>} <br />
                 <span style={{ color: 'var(--orange-400)' }}>Alle Modellen &amp; Bouwjaren • Mobiel Ter Plaatse</span>

@@ -15,6 +15,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
 import fs from 'fs';
@@ -170,6 +171,9 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   <span>{service.title}</span>
                 </nav>
 
+                <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+                  <HeroTrustBadge />
+                </div>
                 <h1>
                   {service.h1.includes('—') ? (
                     <>
@@ -214,6 +218,10 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <Link href="/diensten">Diensten</Link> <span>/</span>
                 <span>{service.title}</span>
               </nav>
+
+              <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+                <HeroTrustBadge />
+              </div>
 
               <h1>
                 {service.h1.includes('—') ? (

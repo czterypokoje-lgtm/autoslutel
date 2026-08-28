@@ -5,6 +5,7 @@ import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import HorizontalKentekenForm from '@/components/KentekenForm/HorizontalKentekenForm';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -102,6 +103,9 @@ export default function KentekenBestellenPage() {
               <span style={{ margin: '0 0.5rem' }}>/</span> 
               <span style={{ fontWeight: 600 }}>Autosleutel Bestellen op Kenteken</span>
             </nav>
+            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+              <HeroTrustBadge />
+            </div>
             <h1 style={{ color: '#fff', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '1rem', lineHeight: 1.1 }}>
               Autosleutel Bestellen op Kenteken
             </h1>

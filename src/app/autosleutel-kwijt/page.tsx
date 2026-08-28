@@ -5,6 +5,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '@/config/brands';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 
 export const metadata: Metadata = {
   title: {
@@ -116,6 +117,9 @@ export default function AutosleutelKwijt() {
         {/* Hero */}
         <section style={{ background:'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding:'3rem 2rem' }}>
           <div style={{ maxWidth:1000, margin:'0 auto' }}>
+            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+              <HeroTrustBadge />
+            </div>
             <h1 style={{ color:'#fff', fontSize:'clamp(1.6rem, 3.5vw, 2.4rem)', marginBottom:'1rem' }}>
               Autosleutel Kwijt? Direct Hulp — 24/7 Mobiele Service
             </h1>

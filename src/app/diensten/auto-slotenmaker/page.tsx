@@ -8,6 +8,7 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import Image from 'next/image';
 import styles from './page.module.css';
 
@@ -152,6 +153,9 @@ export default function AutoSlotenmakerPage() {
             <nav className={styles.breadcrumb} aria-label="Breadcrumb">
               <Link href="/">Home</Link> <span>/</span> <Link href="/diensten">Diensten</Link> <span>/</span> <span>Auto Slotenmaker</span>
             </nav>
+            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+              <HeroTrustBadge />
+            </div>
             <h1>24/7 Mobiele Auto Slotenmaker — Snel &amp; Schadevrij op Locatie</h1>
             <p className={styles.heroLead}>
               Buitengesloten of slot defect? <strong>Schadevrij geopend binnen 30 min</strong> — direct nieuwe sleutel ter plaatse.
