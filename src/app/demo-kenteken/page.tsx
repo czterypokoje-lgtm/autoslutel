@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { SITE_CONFIG } from '@/config/site.config';
 import styles from './page.module.css';
 
 interface VehicleData {
@@ -57,13 +58,46 @@ export default function DemoKentekenPage() {
     }
   };
 
-  const handleFinalSubmit = (e: React.FormEvent) => {
+  const buildWhatsappUrl = () => {
+    let msg = `Hallo, ik wil graag een prijsopgave voor een autosleutel.\n\n`;
+    msg += `*Kenteken:* ${kenteken}\n`;
+    msg += `*Auto:* ${vehicle?.merk} ${vehicle?.model} (${vehicle?.bouwjaar})\n`;
+    if (postcode) msg += `*Locatie/Postcode:* ${postcode}\n`;
+    if (phone) msg += `*Telefoon:* ${phone}\n`;
+    return `https://wa.me/${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
+  };
+
+  const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    setTimeout(() => {
-      alert(`Opgeslagen!\nKenteken: ${kenteken}\nAuto: ${vehicle?.merk} ${vehicle?.model} (${vehicle?.bouwjaar})\nPostcode: ${postcode}\nTelefoon: ${phone}`);
+    
+    try {
+      // 1. Save to Supabase
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brand: 'KENTEKEN DEMO',
+          model: `${kenteken} - ${vehicle?.merk} ${vehicle?.model}`,
+          year: vehicle?.bouwjaar || 'N/A',
+          service: 'Demo Kenteken Check',
+          location: `${postcode} (Tel: ${phone})`,
+          photoUrl: ''
+        }),
+      });
+
+      // 2. Alert user it worked
+      alert(`✅ Succes! De test data is nu opgeslagen in Supabase.\n\nU wordt nu doorgestuurd naar WhatsApp.`);
+      
+      // 3. Open WhatsApp in new tab
+      window.open(buildWhatsappUrl(), '_blank');
+      
+    } catch (err) {
+      console.error(err);
+      alert('Er ging iets mis bij het opslaan.');
+    } finally {
       setSubmitted(false);
-    }, 500);
+    }
   };
 
   return (
