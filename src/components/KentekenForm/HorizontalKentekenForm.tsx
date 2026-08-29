@@ -8,7 +8,8 @@ export default function HorizontalKentekenForm() {
   const [kenteken, setKenteken] = useState('');
   const [postcode, setPostcode] = useState('');
   const [phone, setPhone] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [vehicle, setVehicle] = useState<any>(null);
+  const [isFetching, setIsFetching] = useState(false);
 
   const formatKenteken = (value: string) => {
     return value.replace(/[^A-Za-z0-9-]/g, '').toUpperCase();
@@ -16,11 +17,39 @@ export default function HorizontalKentekenForm() {
 
   const handleKentekenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKenteken(formatKenteken(e.target.value));
+    setVehicle(null); // Reset vehicle if they change it
+  };
+
+  const fetchVehicleData = async (k: string) => {
+    const cleanK = k.replace(/-/g, '');
+    if (cleanK.length < 4) return;
+    
+    setIsFetching(true);
+    try {
+      const res = await fetch(`/api/kenteken?q=${cleanK}`);
+      const data = await res.json();
+      if (data.success && data.data) {
+        setVehicle(data.data);
+      }
+    } catch (err) {
+      console.error("RDW fetch error", err);
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  const handleKentekenBlur = () => {
+    if (kenteken && !vehicle) {
+      fetchVehicleData(kenteken);
+    }
   };
 
   const buildWhatsappUrl = () => {
     let msg = `Hallo, ik wil graag een prijsopgave voor een autosleutel.\n\n`;
     msg += `*Kenteken:* ${kenteken || 'Niet ingevuld'}\n`;
+    if (vehicle) {
+      msg += `*Auto:* ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar})\n`;
+    }
     if (postcode) msg += `*Locatie/Postcode:* ${postcode}\n`;
     if (phone) msg += `*Telefoon:* ${phone}\n`;
     return `https://wa.me/${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
@@ -44,9 +73,9 @@ export default function HorizontalKentekenForm() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        brand: 'KENTEKEN AANVRAAG',
-        model: kenteken,
-        year: 'N/A',
+        brand: vehicle ? vehicle.merk : 'KENTEKEN AANVRAAG',
+        model: vehicle ? `${kenteken} - ${vehicle.model}` : kenteken,
+        year: vehicle ? vehicle.bouwjaar : 'N/A',
         service: 'Prijsopgave via kenteken',
         location: `${postcode} (Tel: ${phone})`,
         photoUrl: '',
@@ -66,7 +95,10 @@ export default function HorizontalKentekenForm() {
         
         {/* Kenteken */}
         <div className={styles.inputGroup}>
-          <label className={styles.label}>Uw kenteken</label>
+          <label className={styles.label}>
+            Uw kenteken {isFetching && <span style={{fontSize:'0.75rem', color:'#64748b'}}>(zoeken...)</span>}
+            {vehicle && <span style={{fontSize:'0.75rem', color:'#10b981', marginLeft: '4px'}}>✓ {vehicle.merk}</span>}
+          </label>
           <div className={styles.kentekenWrapper}>
             <div className={styles.euStrip}>
               <span className={styles.euStars}>★</span>
@@ -78,6 +110,7 @@ export default function HorizontalKentekenForm() {
               placeholder="XX-XXX-X"
               value={kenteken}
               onChange={handleKentekenChange}
+              onBlur={handleKentekenBlur}
               maxLength={10}
               aria-label="Kenteken"
               autoCapitalize="characters"
