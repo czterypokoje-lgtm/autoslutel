@@ -1,63 +1,110 @@
 .card {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 24px 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
+  position: relative;
+  z-index: 10;
 }
 
 .inputsRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(240px, 1.2fr) 1fr 1fr auto;
+  gap: 20px;
   align-items: flex-end;
-  gap: 1.5rem;
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
+  gap: 8px;
+  position: relative;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 20px;
 }
 
 .label {
+  font-size: 0.85rem;
   font-weight: 700;
-  color: #1e293b;
-  font-size: 0.9rem;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
 }
 
-/* Kenteken Box */
+.vehicleFound {
+  background: #10b981;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fetchingText {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* KENTEKEN PLATE STYLING - WORLD CLASS */
 .kentekenWrapper {
   display: flex;
   align-items: stretch;
-  border: 2px solid #1a1a1a;
+  border: 3px solid #1a1a1a;
   border-radius: 8px;
   overflow: hidden;
-  height: 50px;
-  background-color: #facc15;
+  height: 56px;
+  background-color: #ffcc00; /* Authentic Dutch plate yellow */
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.1);
 }
 
 .euStrip {
-  background-color: #1d4ed8;
-  color: #fff;
-  min-width: 36px;
+  background-color: #003399; /* Authentic EU blue */
+  color: #ffffff;
+  min-width: 44px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 0.65rem;
   border-right: 2px solid #1a1a1a;
+  padding-top: 4px;
 }
 
 .euStars {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  line-height: 1;
   margin-bottom: 2px;
+  color: #ffcc00;
 }
 
 .nlText {
-  letter-spacing: 1px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  line-height: 1;
 }
 
 .kentekenInput {
@@ -65,91 +112,139 @@
   background-color: transparent;
   border: none;
   text-align: center;
-  font-size: 1.4rem;
-  font-weight: 800;
-  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.8rem;
+  font-weight: 900;
   color: #1a1a1a;
   outline: none;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
   width: 100%;
 }
 
 .kentekenInput::placeholder {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(26, 26, 26, 0.3);
+  font-weight: 700;
 }
 
-/* Postcode Box */
-.postcodeWrapper {
+/* STANDARD INPUTS */
+.standardWrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  height: 50px;
-  background-color: #fff;
-  padding-right: 0.75rem;
-  overflow: hidden;
-  position: relative;
 }
 
-.postcodeInput {
-  flex: 1;
-  height: 100%;
-  border: none;
-  padding: 0 1rem;
+.iconLeft {
+  position: absolute;
+  left: 16px;
+  color: #94a3b8;
+  display: flex;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.standardInput {
+  width: 100%;
+  height: 56px;
+  padding: 0 16px 0 48px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
   font-size: 1rem;
+  font-weight: 600;
   color: #0f172a;
+  transition: all 0.2s;
   outline: none;
 }
 
-.locationIcon {
-  color: #3b82f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.standardInput::placeholder {
+  color: #94a3b8;
+  font-weight: 500;
 }
 
-/* Action Group */
+.standardInput:focus {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.standardInput:focus + .iconLeft {
+  color: #3b82f6;
+}
+
+/* SUBMIT BUTTON */
 .actionGroup {
-  display: flex;
-  align-items: stretch;
-  height: 50px;
+  height: 56px;
 }
 
 .btnSubmit {
-  background: #15803d;
-  color: #fff;
-  border: none;
+  height: 100%;
+  padding: 0 32px;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.1rem;
   border-radius: 8px;
-  padding: 0 2rem;
-  font-size: 1.05rem;
-  font-weight: 700;
+  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   text-decoration: none;
-  transition: background 0.2s ease;
-  height: 100%;
+  transition: all 0.2s ease;
   white-space: nowrap;
+  box-shadow: 0 8px 20px -6px rgba(234, 88, 12, 0.6);
+}
+
+.btnSubmit svg {
+  transition: transform 0.2s ease;
 }
 
 .btnSubmit:hover {
-  background: #166534;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(234, 88, 12, 0.8);
+  background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
 }
 
-@media (max-width: 768px) {
+.btnSubmit:hover svg {
+  transform: translateX(4px);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 992px) {
   .inputsRow {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.25rem;
+    grid-template-columns: 1fr 1fr;
   }
-  
   .actionGroup {
-    height: 54px;
+    grid-column: span 2;
   }
-  
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 20px;
+    border-radius: 12px;
+  }
+  .inputsRow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .actionGroup {
+    grid-column: span 1;
+    margin-top: 8px;
+  }
+  .kentekenWrapper {
+    height: 64px; /* Slightly taller on mobile for easy tapping */
+  }
+  .kentekenInput {
+    font-size: 2rem;
+  }
+  .standardInput {
+    height: 56px;
+  }
   .btnSubmit {
-    width: 100%;
+    height: 64px;
+    font-size: 1.2rem;
   }
 }
