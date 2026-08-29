@@ -33,6 +33,12 @@ export default function HorizontalKentekenForm() {
       return;
     }
     
+    // Read ad parameters from cookies
+    const getCookie = (name: string) => {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    };
+    
     // Save to Supabase (fire and forget)
     fetch('/api/leads', {
       method: 'POST',
@@ -43,7 +49,10 @@ export default function HorizontalKentekenForm() {
         year: 'N/A',
         service: 'Prijsopgave via kenteken',
         location: `${postcode} (Tel: ${phone})`,
-        photoUrl: ''
+        photoUrl: '',
+        gclid: getCookie('gclid'),
+        wbraid: getCookie('wbraid'),
+        gbraid: getCookie('gbraid')
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));

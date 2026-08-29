@@ -71,6 +71,12 @@ export default function DemoKentekenPage() {
     e.preventDefault();
     setSubmitted(true);
     
+    // Read ad parameters from cookies
+    const getCookie = (name: string) => {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    };
+    
     try {
       // 1. Save to Supabase
       await fetch('/api/leads', {
@@ -82,7 +88,10 @@ export default function DemoKentekenPage() {
           year: vehicle?.bouwjaar || 'N/A',
           service: 'Demo Kenteken Check',
           location: `${postcode} (Tel: ${phone})`,
-          photoUrl: ''
+          photoUrl: '',
+          gclid: getCookie('gclid'),
+          wbraid: getCookie('wbraid'),
+          gbraid: getCookie('gbraid')
         }),
       });
 

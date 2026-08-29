@@ -80,6 +80,7 @@ const websiteSchema = {
 };
 
 import PhoneConversionTracker from '@/components/PhoneConversionTracker';
+import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -172,6 +173,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <AdParameterTracker />
         <PhoneConversionTracker />
         {/* Google Tag Manager (noscript) */}
         <noscript>

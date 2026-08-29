@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
     const body = await request.json();
-    const { brand, model, year, service, location, photoUrl } = body;
+    const { brand, model, year, service, location, photoUrl, gclid, wbraid, gbraid } = body;
 
     const { data, error } = await supabase
       .from('leads')
@@ -25,6 +25,9 @@ export async function POST(request: Request) {
           service,
           location,
           photo_url: photoUrl,
+          gclid: gclid || null,
+          wbraid: wbraid || null,
+          gbraid: gbraid || null,
         },
       ]);
 

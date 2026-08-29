@@ -82,6 +82,12 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
     e.preventDefault();
     setSubmitted(true);
     
+    // Read ad parameters from cookies
+    const getCookie = (name: string) => {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    };
+    
     // Fire and forget the database save
     fetch('/api/leads', {
       method: 'POST',
@@ -92,7 +98,10 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         year,
         service,
         location: phoneState ? `${location} (Tel: ${phoneState})` : location,
-        photoUrl
+        photoUrl,
+        gclid: getCookie('gclid'),
+        wbraid: getCookie('wbraid'),
+        gbraid: getCookie('gbraid')
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));
