@@ -77,6 +77,7 @@ export function writeConsent(choice: { statistics: boolean; marketing: boolean }
     // Storage unavailable — the choice still applies for this page view.
   }
   applyConsent(state);
+  notifyConsentChanged();
   return state;
 }
 
@@ -136,4 +137,50 @@ export const OPEN_PREFERENCES_EVENT = 'as24:open-consent';
 
 export function openConsentPreferences(): void {
   window.dispatchEvent(new CustomEvent(OPEN_PREFERENCES_EVENT));
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   External store
+   ──────────────────────────────────────────────────────────────────────────
+   The stored choice lives in localStorage, which does not exist during SSR.
+   Reading it in an effect and calling setState causes a cascading render
+   (react-hooks/set-state-in-effect), so it is exposed as an external store
+   for useSyncExternalStore instead.
+
+   getSnapshot must return a stable reference or React re-renders forever,
+   hence the cache — it is refreshed only when the choice actually changes.
+   ────────────────────────────────────────────────────────────────────────── */
+
+const CONSENT_CHANGED_EVENT = 'as24:consent-changed';
+
+let snapshot: ConsentState | null = null;
+let snapshotLoaded = false;
+
+function refreshSnapshot(): void {
+  snapshot = readConsent();
+  snapshotLoaded = true;
+}
+
+export function subscribeConsent(onChange: () => void): () => void {
+  const handler = () => {
+    refreshSnapshot();
+    onChange();
+  };
+  window.addEventListener(CONSENT_CHANGED_EVENT, handler);
+  return () => window.removeEventListener(CONSENT_CHANGED_EVENT, handler);
+}
+
+export function getConsentSnapshot(): ConsentState | null {
+  if (!snapshotLoaded) refreshSnapshot();
+  return snapshot;
+}
+
+/** Server render has no stored choice, so the banner is never in the SSR HTML. */
+export function getConsentServerSnapshot(): ConsentState | null {
+  return null;
+}
+
+function notifyConsentChanged(): void {
+  refreshSnapshot();
+  window.dispatchEvent(new CustomEvent(CONSENT_CHANGED_EVENT));
 }

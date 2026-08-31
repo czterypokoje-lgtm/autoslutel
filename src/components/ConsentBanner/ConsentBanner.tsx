@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import styles from './ConsentBanner.module.css';
 import {
-  readConsent,
   writeConsent,
   applyConsent,
   OPEN_PREFERENCES_EVENT,
+  subscribeConsent,
+  getConsentSnapshot,
+  getConsentServerSnapshot,
 } from '@/lib/consent';
 
 /**
@@ -24,37 +26,43 @@ import {
  * is not loaded at all until statistics are accepted.
  */
 export default function ConsentBanner() {
-  const [open, setOpen] = useState(false);
+  // localStorage does not exist during SSR, so the stored choice is read
+  // through an external store rather than an effect + setState.
+  const stored = useSyncExternalStore(
+    subscribeConsent,
+    getConsentSnapshot,
+    getConsentServerSnapshot
+  );
+
+  // Shown when the visitor has not decided yet, or reopened from the footer.
+  const [reopened, setReopened] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [statistics, setStatistics] = useState(false);
   const [marketing, setMarketing] = useState(false);
 
+  // Re-assert the stored choice on every page load: Consent Mode resets to the
+  // denied defaults on each fresh document.
   useEffect(() => {
-    const existing = readConsent();
-    if (existing) {
-      // Re-assert the stored choice on every page load; Consent Mode defaults
-      // to denied on each fresh document.
-      applyConsent(existing);
-      setStatistics(existing.statistics);
-      setMarketing(existing.marketing);
-    } else {
-      setOpen(true);
-    }
+    if (stored) applyConsent(stored);
+  }, [stored]);
 
+  useEffect(() => {
     const reopen = () => {
-      const current = readConsent();
-      setStatistics(current?.statistics ?? false);
-      setMarketing(current?.marketing ?? false);
+      setStatistics(stored?.statistics ?? false);
+      setMarketing(stored?.marketing ?? false);
       setShowOptions(true);
-      setOpen(true);
+      setReopened(true);
     };
     window.addEventListener(OPEN_PREFERENCES_EVENT, reopen);
     return () => window.removeEventListener(OPEN_PREFERENCES_EVENT, reopen);
-  }, []);
+  }, [stored]);
+
+  const open = reopened || stored === null;
 
   const save = useCallback((choice: { statistics: boolean; marketing: boolean }) => {
+    // writeConsent notifies the store, which flips `stored` away from null.
     writeConsent(choice);
-    setOpen(false);
+    setReopened(false);
     setShowOptions(false);
   }, []);
 
