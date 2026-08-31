@@ -13,7 +13,6 @@ import { isAuthorized, adminAuthConfigured } from '@/lib/adminAuth';
  */
 const PROTECTED = [
   '/offline-conversions',
-  '/account',
   '/demo-form',
   '/demo-kenteken',
   '/api/export-conversions',
@@ -49,7 +48,6 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     '/offline-conversions/:path*',
-    '/account/:path*',
     '/demo-form/:path*',
     '/demo-kenteken/:path*',
     '/api/export-conversions/:path*',
