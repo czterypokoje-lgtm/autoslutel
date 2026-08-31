@@ -535,17 +535,6 @@ details[open] summary { color: var(--orange-500); }
   }
 }
 
-/* Hide iubenda floating privacy preferences keyhole button (blocks mobile CTA) */
-.iubenda-tp-btn,
-.iubenda-cs-preferences-link,
-#iubenda-cs-banner .iubenda-cs-preferences-link,
-#iubenda-tp-btn-container {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
 /* Ensure bottom-most content is never hidden behind the sticky bottom CTA bar on mobile */
 @media (max-width: 767px) {
   body {

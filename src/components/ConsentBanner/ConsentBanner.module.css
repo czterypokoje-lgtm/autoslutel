@@ -1,0 +1,173 @@
+/* Sits above the sticky call bar on mobile so "Bel Nu" and WhatsApp stay
+   visible and tappable while the visitor decides. The old iubenda banner was
+   position:fixed with height:100vh and covered both. */
+.wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000; /* above StickyCallBar (9999), below nothing else */
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .wrap {
+    /* 54px call bar + notch */
+    bottom: calc(54px + env(safe-area-inset-bottom, 0px));
+    padding: 0.5rem;
+  }
+}
+
+.panel {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 880px;
+  background: #ffffff;
+  color: #23303a;
+  border: 1px solid #d9e0e6;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(13, 33, 55, 0.1), 0 16px 40px -12px rgba(13, 33, 55, 0.28);
+  padding: 1rem 1.15rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin: 0 0 0.3rem;
+  color: #0d2137;
+}
+
+.text {
+  margin: 0 0 0.85rem;
+}
+
+.text a {
+  color: #0d5f70;
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Accept and reject are deliberately the same size and weight — the AVG
+   requires refusing to be as easy as accepting. */
+.btn {
+  flex: 1 1 0;
+  min-width: 130px;
+  min-height: 44px;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.accept {
+  background: #e2620f;
+  color: #ffffff;
+}
+
+.accept:hover {
+  background: #c8550c;
+}
+
+.reject {
+  background: #ffffff;
+  color: #0d2137;
+  border-color: #b9c4cc;
+}
+
+.reject:hover {
+  background: #f1f4f6;
+}
+
+.link {
+  flex: 0 0 auto;
+  min-height: 44px;
+  background: none;
+  border: none;
+  padding: 0.6rem 0.5rem;
+  color: #4a5b66;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #0d2137;
+}
+
+/* ── granular settings ── */
+.options {
+  margin: 0.25rem 0 0.9rem;
+  border-top: 1px solid #e4e9ed;
+}
+
+.option {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid #e4e9ed;
+}
+
+.option input {
+  width: 20px;
+  height: 20px;
+  margin-top: 0.15rem;
+  flex: 0 0 auto;
+  accent-color: #e2620f;
+}
+
+.optionBody {
+  min-width: 0;
+}
+
+.optionName {
+  font-weight: 700;
+  display: block;
+  color: #0d2137;
+}
+
+.optionDesc {
+  display: block;
+  color: #4a5b66;
+  font-size: 0.8125rem;
+}
+
+.always {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #146046;
+  background: #e0f1ea;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  margin-left: 0.35rem;
+  white-space: nowrap;
+}
+
+.btn:focus-visible,
+.link:focus-visible,
+.option input:focus-visible {
+  outline: 2px solid #0d5f70;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}

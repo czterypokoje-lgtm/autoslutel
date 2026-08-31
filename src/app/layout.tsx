@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
+import ConsentBanner from '@/components/ConsentBanner/ConsentBanner';
 import Navigation from '@/components/Navigation/Navigation';
 import Footer from '@/components/Footer/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
@@ -159,16 +160,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             };
           `}
         </Script>
-        {/* Microsoft Clarity */}
-        <Script id="microsoft-clarity" strategy="afterInteractive">
-          {`
-            (function(c,l,a,r,i,t,y){
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "y9gjejwp8z");
-          `}
-        </Script>
+        {/*
+          Microsoft Clarity is loaded from src/lib/consent.ts only after the
+          visitor accepts statistics cookies. It records sessions and is not
+          Consent Mode aware, so unlike the Google tags it cannot be allowed to
+          start and simply withhold storage.
+        */}
 
         <meta name="theme-color" content="#0d2137" />
         {/* ── BUSINESS META TAGS — Open Graph extensions ── */}
@@ -219,21 +216,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <WhatsAppButton />
         <StickyCallBar />
-        {/*
-          ── iubenda Cookie Solution & Privacy Controls ──
-          Loaded afterInteractive rather than lazyOnload: with Consent Mode now
-          defaulting to "denied", nothing tracks until this widget reports the
-          visitor's choice, so it must load promptly.
-
-          NOTE: the iubenda configuration itself must be switched to
-          "prior blocking / blocking mode" in the iubenda dashboard. The
-          defaults above stop Google tags, but only iubenda can stop the
-          non-Google scripts it manages.
-        */}
-        <Script
-          strategy="afterInteractive"
-          src="https://embeds.iubenda.com/widgets/c53c352b-ed07-4c5b-b461-8b542ddd3aaf.js"
-        />
+        <ConsentBanner />
       </body>
     </html>
   );

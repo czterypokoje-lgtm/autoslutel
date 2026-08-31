@@ -26,7 +26,7 @@ export default function PrivacyPage() {
           { title: '3. Waarom Verwerken Wij Uw Gegevens?', content: 'Uitvoering van de overeenkomst (dienstverlening), facturatie, wettelijke verplichtingen, en op uw verzoek voor garantieclaims.' },
           { title: '4. Hoe Lang Bewaren Wij Uw Gegevens?', content: 'Factuurgegevens: 7 jaar (wettelijke bewaarplicht). Overige klantgegevens: maximaal 2 jaar na laatste contact.' },
           { title: '5. Uw Rechten (AVG/GDPR)', content: 'U heeft het recht op inzage, correctie, verwijdering, bezwaar en dataportabiliteit. Neem contact op via ' + SITE_CONFIG.email },
-          { title: '6. Cookies', content: 'Deze website gebruikt functionele cookies (noodzakelijk voor werking) en analytische cookies (Google Analytics 4, geanonimiseerd). U kunt cookies weigeren via uw browserinstellingen.' },
+          { title: '6. Cookies', content: 'Deze website gebruikt noodzakelijke cookies (nodig om de site te laten werken) en, uitsluitend met uw toestemming, cookies voor statistieken (Google Analytics 4, Microsoft Clarity — inclusief opnames van websessies) en marketing (Google Ads, DoubleClick). Zonder uw toestemming worden deze niet geplaatst. U kunt uw keuze op elk moment wijzigen of intrekken via "Cookie-instellingen" onderaan elke pagina. Een volledig overzicht per cookie staat in ons cookiebeleid op /cookiebeleid.' },
           { title: '7. Contact & Klachten', content: `Vragen? Mail naar ${SITE_CONFIG.email}. U kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl).` },
         ].map((section) => (
           <div key={section.title} style={{ marginBottom: '2rem', paddingBottom: '2rem', borderBottom: '1px solid var(--color-border)' }}>

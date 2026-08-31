@@ -15,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const corePages = [
     '', '/diensten', '/steden', '/merken', '/prijzen', '/blog', '/kennisbank',
     '/over-ons', '/galerij', '/beoordelingen', '/veelgestelde-vragen',
-    '/contact', '/privacybeleid',
+    '/contact', '/privacybeleid', '/cookiebeleid',
     '/autosleutel-kwijt', '/autosleutel-bestellen-op-kenteken'
   ].map(p => ({
     url: `${base}${p}`,

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ConsentPreferencesButton from '@/components/ConsentBanner/ConsentPreferencesButton';
 import Image from 'next/image';
 import styles from './Footer.module.css';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
@@ -177,40 +178,12 @@ export default function Footer() {
             </div>
             <p>© {year} {SITE_CONFIG.fullName}. Alle rechten voorbehouden.</p>
             <div className={styles.bottomLinks}>
-              {/* iubenda Privacy Policy embedded link */}
-              <a
-                href="https://www.iubenda.com/privacy-policy/c53c352b-ed07-4c5b-b461-8b542ddd3aaf"
-                className="iubenda-white iubenda-noiframe iubenda-embed"
-                title="Privacy Policy"
-                rel="noopener noreferrer"
-              >
-                Privacybeleid
-              </a>
-              {/* iubenda Cookie Policy embedded link */}
-              <a
-                href="https://www.iubenda.com/privacy-policy/c53c352b-ed07-4c5b-b461-8b542ddd3aaf/cookie-policy"
-                className="iubenda-white iubenda-noiframe iubenda-embed"
-                title="Cookie Policy"
-                rel="noopener noreferrer"
-              >
-                Cookiebeleid
-              </a>
-              {/* Cookie preferences — lets users manage/withdraw consent (GDPR art. 7) */}
-              <button
-                type="button"
-                className="iubenda-cs-preferences-link"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: 0,
-                  cursor: 'pointer',
-                  fontSize: '0.75rem',
-                  color: 'rgba(255,255,255,0.55)',
-                  fontFamily: 'inherit',
-                }}
-              >
-                Cookie-instellingen
-              </button>
+              {/* Legal pages are served by the site itself. The previous
+                  iubenda-hosted URLs returned 404, so both footer links were dead. */}
+              <Link href="/privacybeleid">Privacybeleid</Link>
+              <Link href="/cookiebeleid">Cookiebeleid</Link>
+              {/* Lets visitors change or withdraw consent (AVG art. 7 lid 3) */}
+              <ConsentPreferencesButton />
               <Link href="/veelgestelde-vragen">FAQ</Link>
               <Link href="/blog">Blog</Link>
               <Link href="/contact">Contact</Link></div>
