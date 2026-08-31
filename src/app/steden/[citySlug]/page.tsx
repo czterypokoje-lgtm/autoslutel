@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { clampMeta } from '@/lib/meta';
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
@@ -66,7 +67,10 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     title: {
       absolute: city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
     },
-    description: city.customMetaDesc || `Autosleutel kwijt of defect in ${city.city}? Mobiele autosleutelspecialist binnen 30-60 min ter plaatse. Alle automerken. Goedkoper dan dealer. Bel direct!`,
+    description: clampMeta(
+      city.customMetaDesc ||
+        `Autosleutel kwijt in ${city.city}? Binnen 30–60 min ter plaatse, vanaf €${SITE_CONFIG.prices.transponder}. Alle merken, 12 maanden garantie.`
+    ),
     alternates: {
       canonical: pageUrl,
       languages: {

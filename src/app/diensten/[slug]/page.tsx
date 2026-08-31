@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { clampMeta } from '@/lib/meta';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DIENSTEN } from '@/config/diensten';
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: {
       absolute: `${service.title} | 24/7 Mobiel | Autosleutel24`,
     },
-    description: service.metaDesc,
+    description: clampMeta(service.metaDesc),
     alternates: {
       canonical: pageUrl,
       languages: {
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: 'website',
       url: pageUrl,
       title: `${service.title} | Mobiel & Schadevrij ter Plaatse`,
-      description: service.metaDesc,
+      description: clampMeta(service.metaDesc),
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `${service.title} — Autosleutel24` }],
     },
   };
@@ -185,6 +186,23 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
 
                 <p className={styles.heroSplitLead}>{service.intro}</p>
 
+                {service.directAnswer && (
+                  <p
+                    data-direct-answer
+                    style={{
+                      marginTop: '1.25rem',
+                      padding: '1rem 1.15rem',
+                      background: 'rgba(255,255,255,0.08)',
+                      borderLeft: '3px solid #e2620f',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      lineHeight: 1.65,
+                    }}
+                  >
+                    {service.directAnswer}
+                  </p>
+                )}
+
                 <div style={{ marginTop: '2rem' }}>
                   <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
                 </div>
@@ -233,6 +251,23 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               </h1>
 
               <p className={styles.heroLead}>{service.intro}</p>
+
+              {service.directAnswer && (
+                <p
+                  data-direct-answer
+                  style={{
+                  marginTop: '1.25rem',
+                  padding: '1rem 1.15rem',
+                  background: 'rgba(255,255,255,0.08)',
+                  borderLeft: '3px solid #e2620f',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  lineHeight: 1.65,
+                  }}
+                >
+                  {service.directAnswer}
+                </p>
+                )}
 
               <div style={{ marginTop: '2rem' }}>
                 <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />

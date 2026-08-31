@@ -11,8 +11,43 @@ export const metadata: Metadata = {
 };
 
 export default function GalerijPage() {
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Galerij', item: `${SITE_CONFIG.domain}/galerij` },
+    ],
+  };
+
+  // Real photographs of completed jobs — the strongest "Experience" signal we
+  // have for E-E-A-T, and eligible for Google Images once the image sitemap is
+  // announced in robots.txt.
+  const gallerySchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    '@id': `${SITE_CONFIG.domain}/galerij#gallery`,
+    name: 'Uitgevoerde autosleutel projecten',
+    description:
+      'Foto\'s van door Autosleutel24 uitgevoerde opdrachten: sleutels bijmaken, transponders programmeren en schadevrij openen op locatie.',
+    isPartOf: { '@id': `${SITE_CONFIG.domain}/#website` },
+    associatedMedia: REAL_GALLERY_PROJECTS.map((p) => ({
+      '@type': 'ImageObject',
+      contentUrl: `${SITE_CONFIG.domain}${p.src}`,
+      caption: p.alt,
+    })),
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(gallerySchema) }}
+      />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
         <span className="section-label">GALERIJ & PROJECTEN</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Ons Werk in Beelden</h1>

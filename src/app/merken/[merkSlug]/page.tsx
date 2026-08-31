@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { clampMeta } from '@/lib/meta';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound, permanentRedirect } from 'next/navigation';
@@ -38,7 +39,10 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
     title: {
       absolute: brand.customMetaTitle || `${brand.name} Autosleutel Bijmaken | Alle Modellen & Bouwjaren`,
     },
-    description: `${brand.name} autosleutel bijmaken & programmeren op locatie. Volledig A–Z modellenoverzicht (${brand.system}). Tot 50% goedkoper dan de ${brand.name} dealer. Bel direct: ${SITE_CONFIG.phone}`,
+    // Benefit first: price and speed are what earn the click in this category.
+    description: clampMeta(
+      `${brand.name} sleutel bijmaken vanaf €${SITE_CONFIG.prices.transponder} — binnen 30–60 min bij u op locatie. Alle modellen en bouwjaren, 12 maanden garantie.`
+    ),
     alternates: {
       canonical: pageUrl,
       languages: {

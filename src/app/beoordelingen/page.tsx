@@ -12,8 +12,24 @@ export const metadata: Metadata = {
 };
 
 export default function BeoordelingenPage() {
+  // NOTE: no Review/AggregateRating schema here on purpose. Marking up reviews
+  // requires the actual review text on the page, and this page only links out
+  // to the Google profile. Add the real review bodies first, then the markup.
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Beoordelingen', item: `${SITE_CONFIG.domain}/beoordelingen` },
+    ],
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
         <span className="section-label">BEOORDELINGEN</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Klantbeoordelingen</h1>

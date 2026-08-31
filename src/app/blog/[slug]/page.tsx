@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { BLOG_POSTS } from '@/config/services';
 import { SITE_CONFIG } from '@/config/site.config';
+import { clampMeta } from '@/lib/meta';
 import { BLOG_CONTENT } from '@/config/blog_content';
 
 
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: {
       absolute: post.title,
     },
-    description: post.excerpt,
+    description: clampMeta(post.excerpt),
     alternates: {
       canonical: `${SITE_CONFIG.domain}/blog/${slug}`,
       languages: {
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: 'article',
       url: `${SITE_CONFIG.domain}/blog/${slug}`,
       title: `${post.title} | ${SITE_CONFIG.name}`,
-      description: post.excerpt,
+      description: clampMeta(post.excerpt),
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: post.title }],
     },
   };

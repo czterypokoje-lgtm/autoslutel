@@ -32,6 +32,9 @@ export default function robots(): MetadataRoute.Robots {
     // Sitemaps — main sitemap (which now includes all dynamic images)
     sitemap: [
       `${SITE_CONFIG.domain}/sitemap.xml`,
+      // 423 images were being generated at /image-sitemap.xml but never
+      // announced here, so Google never discovered any of them.
+      `${SITE_CONFIG.domain}/image-sitemap.xml`,
     ],
     // NOTE: 'host' directive is NOT supported by Google — removed
   };

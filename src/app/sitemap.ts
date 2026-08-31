@@ -4,12 +4,12 @@ import { DIENSTEN } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import { BLOG_POSTS } from '@/config/services';
+import { lastModifiedFor } from '@/lib/contentDates';
 import fs from 'fs';
 import path from 'path';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_CONFIG.domain;
-  const now = new Date();
 
   // 1. Core Pages
   const corePages = [
@@ -19,7 +19,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/autosleutel-kwijt', '/autosleutel-bestellen-op-kenteken'
   ].map(p => ({
     url: `${base}${p}`,
-    lastModified: now,
+    lastModified: lastModifiedFor(
+      p || '/',
+      p === '' ? 'home'
+        : ['/privacybeleid', '/cookiebeleid'].includes(p) ? 'legal'
+        : p === '/prijzen' ? 'prijzen'
+        : p === '/kennisbank' ? 'kennisbank'
+        : p === '/blog' ? 'blog'
+        : p === '/diensten' ? 'diensten'
+        : p === '/steden' ? 'steden'
+        : p === '/merken' ? 'merken'
+        : 'static'
+    ),
     changeFrequency: 'weekly' as const,
     priority: p === '' ? 1.0 : 0.8,
     images: [`${base}/og-image.png`, `${base}/logo.png`],
@@ -37,7 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const servicePages = serviceSlugs.map(slug => ({
     url: `${base}/diensten/${slug}`,
-    lastModified: now,
+    lastModified: lastModifiedFor(`/diensten/${slug}`, 'diensten'),
     changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));
@@ -50,7 +61,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
     return {
       url: `${base}/steden/${c.slug}`,
-      lastModified: now,
+      lastModified: lastModifiedFor(`/steden/${c.slug}`, 'steden'),
       changeFrequency: 'monthly' as const,
       priority: 0.85,
       images,
@@ -60,7 +71,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 4. Brand Pages
   const brandPages = BRANDS.map(b => ({
     url: `${base}/merken/${b.nameSlug}-autosleutel-bijmaken`,
-    lastModified: now,
+    lastModified: lastModifiedFor(`/merken/${b.nameSlug}-autosleutel-bijmaken`, 'merken'),
     changeFrequency: 'monthly' as const,
     priority: 0.85,
   }));
@@ -69,14 +80,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const modelPages = BRANDS.flatMap(b => {
     const models = (b.models || []).map(m => ({
       url: `${base}/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken/${m.slug}-sleutel-bijmaken`,
-      lastModified: now,
+      lastModified: lastModifiedFor('', 'merken'),
       changeFrequency: 'monthly' as const,
       priority: 0.75,
     }));
     
     const intents = (b.specialIntents || []).map(intent => ({
       url: `${base}/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken/${intent.slug}`,
-      lastModified: now,
+      lastModified: lastModifiedFor('', 'merken'),
       changeFrequency: 'monthly' as const,
       priority: 0.75,
     }));
@@ -97,7 +108,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter(b => !REDIRECTED_BLOG_SLUGS.has(b.slug))
     .map(b => ({
       url: `${base}/blog/${b.slug}`,
-      lastModified: now,
+      lastModified: lastModifiedFor(`/blog/${b.slug}`, 'blog'),
       changeFrequency: 'weekly' as const,
       priority: 0.75,
       images: [`${base}/og-image.png`],
