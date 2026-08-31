@@ -1,0 +1,344 @@
+/* ── Vehicle booking wizard ──────────────────────────────────────────────
+   Four steps, one decision per screen. Uses the site's own navy/orange
+   tokens from globals.css so it reads as part of the page, not a widget.
+   ───────────────────────────────────────────────────────────────────── */
+
+.shell {
+  background: #fff;
+  border: 1px solid var(--navy-100, #cde0f0);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(7, 21, 37, .05), 0 18px 44px -20px rgba(7, 21, 37, .3);
+  overflow: hidden;
+  width: 100%;
+  max-width: 560px;
+}
+
+/* ── progress ── */
+.progress {
+  display: flex;
+  gap: 5px;
+  padding: 14px 20px 0;
+}
+
+.tick {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--navy-100, #cde0f0);
+  overflow: hidden;
+}
+
+.tickFill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  background: var(--color-accent, #e8520a);
+  transition: width .38s cubic-bezier(.4, 0, .2, 1);
+}
+
+.tickDone .tickFill { width: 100%; }
+
+.stepMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 20px 0;
+  font-size: 12px;
+  color: var(--navy-500, #1d4a74);
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+.back {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  margin: -4px -6px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--navy-500, #1d4a74);
+  cursor: pointer;
+  text-decoration: underline;
+  border-radius: 4px;
+}
+.back:hover { color: var(--navy-800, #0d2137); }
+
+/* ── animated step body ── */
+.body { padding: 6px 20px 20px; }
+
+.step { animation: slideIn .34s cubic-bezier(.22, .9, .3, 1) both; }
+.stepBack { animation: slideInBack .34s cubic-bezier(.22, .9, .3, 1) both; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translate3d(22px, 0, 0); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes slideInBack {
+  from { opacity: 0; transform: translate3d(-22px, 0, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+.q {
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: var(--navy-800, #0d2137);
+  margin: 14px 0 4px;
+  line-height: 1.28;
+}
+
+.hint {
+  font-size: .875rem;
+  color: var(--navy-500, #1d4a74);
+  margin: 0 0 16px;
+  line-height: 1.55;
+}
+
+/* ── Dutch licence plate ── */
+.plateWrap {
+  display: flex;
+  align-items: stretch;
+  border: 2px solid #1a1a1a;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #f7d117;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .16);
+  max-width: 330px;
+}
+
+.euBand {
+  width: 34px;
+  background: #003399;
+  color: #f7d117;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  flex: 0 0 34px;
+}
+
+.plateInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: .7rem .6rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-align: center;
+  color: #1a1a1a;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+}
+.plateInput:focus { outline: none; }
+.plateInput::placeholder { color: rgba(26, 26, 26, .34); letter-spacing: .08em; }
+.plateWrap:focus-within { box-shadow: 0 0 0 3px rgba(232, 82, 10, .35); }
+
+/* vehicle found */
+.found {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 11px 13px;
+  background: #e8f6ef;
+  border: 1px solid #9dd3ba;
+  border-radius: 9px;
+  animation: pop .3s cubic-bezier(.2, 1.2, .4, 1) both;
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+.foundIcon { flex: 0 0 auto; color: #14794f; }
+.foundText { min-width: 0; }
+.foundName { font-weight: 700; color: #0f5c3c; font-size: .95rem; }
+.foundSub { font-size: .8rem; color: #2c7355; }
+
+.lookupNote {
+  margin-top: 10px;
+  font-size: .8125rem;
+  color: var(--navy-500, #1d4a74);
+}
+.lookupErr { color: #a3320f; }
+
+/* ── option cards ── */
+.options { display: grid; gap: 10px; }
+@media (min-width: 460px) { .options { grid-template-columns: 1fr 1fr; } }
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 14px;
+  background: #fff;
+  border: 2px solid var(--navy-100, #cde0f0);
+  border-radius: 13px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  color: var(--navy-800, #0d2137);
+  transition: border-color .18s, box-shadow .18s, transform .18s;
+}
+.card:hover {
+  border-color: var(--orange-300, #f58a50);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px -10px rgba(7, 21, 37, .34);
+}
+.cardOn {
+  border-color: var(--color-accent, #e8520a);
+  box-shadow: 0 0 0 3px rgba(232, 82, 10, .17);
+}
+
+.cardArt {
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--navy-50, #eef5fb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy-700, #112b49);
+}
+.cardOn .cardArt { background: var(--orange-100, #fde8db); color: var(--orange-700, #c04a06); }
+
+.cardLabel { font-weight: 700; font-size: 1rem; display: block; }
+.cardSub { font-size: .8rem; color: var(--navy-500, #1d4a74); display: block; margin-top: 1px; }
+
+/* ── fields ── */
+.fields { display: grid; gap: 11px; }
+@media (min-width: 460px) { .row2 { grid-template-columns: 1fr 1fr; display: grid; gap: 11px; } }
+
+.field { display: block; }
+.label {
+  display: block;
+  font-size: .8125rem;
+  font-weight: 600;
+  color: var(--navy-700, #112b49);
+  margin-bottom: 4px;
+}
+.input {
+  width: 100%;
+  padding: .72rem .85rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--navy-900, #071525);
+  background: #fff;
+  border: 1.5px solid var(--navy-100, #cde0f0);
+  border-radius: 9px;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--color-accent, #e8520a);
+  box-shadow: 0 0 0 3px rgba(232, 82, 10, .16);
+}
+.input::placeholder { color: #93a6b8; }
+
+/* ── price estimate ── */
+.quote {
+  margin: 16px 0 4px;
+  padding: 15px 17px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--navy-800, #0d2137), var(--navy-600, #163656));
+  color: #fff;
+  animation: pop .32s cubic-bezier(.2, 1.2, .4, 1) both;
+}
+.quoteLabel { font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; opacity: .75; }
+.quoteAmount { font-size: 1.85rem; font-weight: 800; line-height: 1.1; margin-top: 3px; }
+.quoteNote { font-size: .8rem; opacity: .8; margin-top: 5px; line-height: 1.5; }
+
+/* ── actions ── */
+.cta {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 14px;
+  padding: .85rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-accent, #e8520a);
+  color: #fff;
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .18s;
+}
+.cta:hover:not(:disabled) { background: var(--color-accent-hover, #d85308); }
+.cta:disabled { background: #c3cedb; cursor: not-allowed; }
+
+.escape {
+  display: block;
+  width: 100%;
+  margin-top: 11px;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: .8125rem;
+  color: var(--navy-500, #1d4a74);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 6px;
+}
+.escape:hover { color: var(--navy-800, #0d2137); }
+
+/* urgent path stays above the form, always reachable */
+.urgent {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--navy-50, #eef5fb);
+  border-bottom: 1px solid var(--navy-100, #cde0f0);
+}
+.urgentBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 46px;
+  padding: .6rem .8rem;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: .92rem;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  white-space: nowrap;
+}
+.callBtn { background: #fff; color: var(--orange-700, #c04a06); border-color: var(--orange-300, #f58a50); }
+.callBtn:hover { background: var(--orange-100, #fde8db); }
+.waBtn { background: #e7f5ee; color: #12694a; border-color: #9dd3ba; }
+.waBtn:hover { background: #d8efe4; }
+
+.hp {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.card:focus-visible,
+.cta:focus-visible,
+.back:focus-visible,
+.escape:focus-visible,
+.urgentBtn:focus-visible {
+  outline: 2px solid var(--color-accent, #e8520a);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step, .stepBack, .found, .quote { animation: none; }
+  .card, .tickFill, .cta { transition: none; }
+  .card:hover { transform: none; }
+}
+
+/* the wizard is placed on dark hero sections too */
+.onDark .shell { border-color: rgba(255, 255, 255, .16); }

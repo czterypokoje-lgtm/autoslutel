@@ -10,6 +10,7 @@ import FaqSection from '@/components/FaqSection/FaqSection';
 import ServiceAreaMap from '@/components/ServiceAreaMap/ServiceAreaMap';
 import LocalBusinessSchema from '@/components/Schema/LocalBusinessSchema';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
@@ -157,7 +158,12 @@ export default function HomePage() {
           </div>
 
           <div className={styles.heroBottomContent}>
-            <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
+            {/* Kenteken-first wizard: four one-decision steps instead of six
+                fields. LeadCaptureForm stays as the fallback for anyone who
+                does not have a Dutch plate to hand. */}
+            <VehicleWizard
+              fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />}
+            />
           </div>
 
         </div>
