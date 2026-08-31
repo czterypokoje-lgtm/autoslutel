@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const metadata: Metadata = {
@@ -43,8 +42,8 @@ export default function KennisbankPage() {
 
   return (
     <>
-      <Script id="kennisbank-article-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <Script id="kennisbank-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="kennisbank-article-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script id="kennisbank-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* Hero Section */}
         <section style={{ background: 'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding: '4.5rem 2rem 4rem', color: '#fff' }}>

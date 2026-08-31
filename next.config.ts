@@ -263,8 +263,18 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/f/:filename*',
-        destination: `${SITE_CONFIG.blobStorageDomain}/:filename*`,
+        // Serves customer lead photos from our own domain.
+        // Scoped to the `leads/` prefix that /api/upload writes, so the blob
+        // store cannot be used to host arbitrary paths under autosleutel24.nl.
+        source: '/f/leads/:filename',
+        destination: `${SITE_CONFIG.blobStorageDomain}/leads/:filename`,
+      },
+      {
+        // Legacy photos uploaded before the `leads/` prefix existed, so links
+        // in already-sent WhatsApp messages keep resolving. Image extensions
+        // only — nothing new is ever written to the blob root any more.
+        source: '/f/:filename(.*\\.(?:jpg|jpeg|png|webp|heic|heif))',
+        destination: `${SITE_CONFIG.blobStorageDomain}/:filename`,
       },
     ];
   },

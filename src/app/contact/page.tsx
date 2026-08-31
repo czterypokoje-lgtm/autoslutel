@@ -6,6 +6,9 @@ import styles from './contact.module.css';
 export const metadata: Metadata = {
   title: 'Neem Contact Op | Autosleutel24',
   description: 'Neem contact op met Autosleutel24. Wij zijn 24/7 bereikbaar voor spoedhulp bij autosleutel problemen.',
+  // Without this the page inherits the root layout's canonical (the homepage),
+  // which told Google /contact was a duplicate and kept it out of the index.
+  alternates: { canonical: `${SITE_CONFIG.domain}/contact` },
 };
 
 export default function ContactPage() {

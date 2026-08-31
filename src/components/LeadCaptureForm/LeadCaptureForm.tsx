@@ -23,6 +23,9 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
   const [photoUrl, setPhotoUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  // Honeypot: hidden from people, irresistible to bots. A filled value makes
+  // the server discard the submission.
+  const [honeypot, setHoneypot] = useState("");
 
   const models = useMemo(() => {
     if (!brand) return [];
@@ -81,13 +84,13 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitted(true);
-    
+
     // Read ad parameters from cookies
     const getCookie = (name: string) => {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? match[2] : null;
     };
-    
+
     // Fire and forget the database save
     fetch('/api/leads', {
       method: 'POST',
@@ -97,8 +100,12 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         model,
         year,
         service,
-        location: phoneState ? `${location} (Tel: ${phoneState})` : location,
+        location,
+        // Sent as its own field so the lead can be deduplicated and routed.
+        phone: phoneState,
         photoUrl,
+        source: city ? 'city_form' : 'hero_form',
+        company: honeypot, // honeypot — must stay empty
         gclid: getCookie('gclid'),
         wbraid: getCookie('wbraid'),
         gbraid: getCookie('gbraid')
@@ -106,10 +113,15 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));
 
-    setTimeout(() => {
-      window.open(buildWhatsAppUrl(), "_blank", "noopener,noreferrer");
-      setSubmitted(false);
-    }, 200);
+    // Open WhatsApp synchronously, inside the click's call stack. Doing this
+    // from a setTimeout put it outside the user-gesture chain, so popup
+    // blockers (iOS Safari by default) silently swallowed the handoff.
+    const win = window.open(buildWhatsAppUrl(), "_blank", "noopener,noreferrer");
+    if (!win) {
+      // Blocked anyway — navigate in place rather than losing the customer.
+      window.location.href = buildWhatsAppUrl();
+    }
+    setSubmitted(false);
   }
 
   return (
@@ -253,6 +265,27 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         </div>
 
         {/* Submit */}
+        {/* Honeypot — visually hidden, never announced, never tab-reachable. */}
+        <input
+          type="text"
+          name="company"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: 'hidden',
+            clip: 'rect(0 0 0 0)',
+            whiteSpace: 'nowrap',
+            border: 0,
+          }}
+        />
         <button
           type="submit"
           className={styles.submitBtn}

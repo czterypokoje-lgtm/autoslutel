@@ -4,7 +4,6 @@ import path from 'path';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
-import Script from 'next/script';
 import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
@@ -162,8 +161,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
   return (
     <>
-      <Script id={`city-schema-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <Script id={`city-breadcrumb-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id={`city-schema-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script id={`city-breadcrumb-${citySlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* Hero */}
         {hasHeroImage ? (

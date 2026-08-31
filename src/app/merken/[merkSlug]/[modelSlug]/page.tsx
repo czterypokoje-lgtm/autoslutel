@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound, permanentRedirect } from 'next/navigation';
-import Script from 'next/script';
 import fs from 'fs';
 import path from 'path';
 import { BRANDS } from '@/config/brands';
@@ -156,8 +155,8 @@ export default async function ModelPage(props: { params: Promise<{ merkSlug: str
 
   return (
     <>
-      <Script id={`model-schema-${decodedModelSlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <Script id={`model-breadcrumb-${decodedModelSlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id={`model-schema-${decodedModelSlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script id={`model-breadcrumb-${decodedModelSlug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         {/* ── HERO SECTION ── */}
         <section style={{ position: 'relative', padding: '4rem 2rem 3.5rem', overflow: 'hidden' }}>

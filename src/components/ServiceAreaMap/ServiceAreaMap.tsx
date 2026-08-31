@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './ServiceAreaMap.module.css';
+import { CITIES } from '@/config/cities';
 
 type City = { name: string; slug: string };
 
@@ -13,69 +14,36 @@ type Province = {
   cities: City[];
 };
 
-const SERVICE_PROVINCES: Province[] = [
-  {
-    id: 'noord-holland', 
-    label: 'Noord-Holland',
-    cities: [
-      { name: 'Amsterdam', slug: 'amsterdam' },
-      { name: 'Haarlem', slug: 'haarlem' },
-      { name: 'Amstelveen', slug: 'amstelveen' },
-      { name: 'Almere', slug: 'almere' }, // Technically Flevoland, but grouped for SEO historically if needed, actually let's move Almere to Flevoland properly
-    ],
-  },
-  {
-    id: 'flevoland', 
-    label: 'Flevoland',
-    cities: [
-      { name: 'Lelystad', slug: 'lelystad' },
-      { name: 'Almere', slug: 'almere' },
-    ],
-  },
-  {
-    id: 'utrecht', 
-    label: 'Utrecht',
-    cities: [
-      { name: 'Utrecht', slug: 'utrecht' },
-      { name: 'Amersfoort', slug: 'amersfoort' },
-      { name: 'Woerden', slug: 'woerden' },
-      { name: 'Houten', slug: 'houten' },
-      { name: 'Zeist', slug: 'zeist' },
-      { name: 'Nieuwegein', slug: 'nieuwegein' },
-    ],
-  },
-  {
-    id: 'gelderland', 
-    label: 'Gelderland',
-    cities: [
-      { name: 'Arnhem', slug: 'arnhem' },
-      { name: 'Nijmegen', slug: 'nijmegen' },
-      { name: 'Apeldoorn', slug: 'apeldoorn' },
-      { name: 'Ede', slug: 'ede' },
-      { name: 'Culemborg', slug: 'culemborg' },
-    ],
-  },
-  {
-    id: 'zuid-holland', 
-    label: 'Zuid-Holland',
-    cities: [
-      { name: 'Den Haag', slug: 'den-haag' },
-      { name: 'Rotterdam', slug: 'rotterdam' },
-      { name: 'Gouda', slug: 'gouda' },
-      { name: 'Dordrecht', slug: 'dordrecht' },
-      { name: 'Delft', slug: 'delft' },
-    ],
-  },
-  {
-    id: 'noord-brabant', 
-    label: 'Noord-Brabant',
-    cities: [
-      { name: 'Breda', slug: 'breda' },
-      { name: 'Tilburg', slug: 'tilburg' },
-      { name: 'Eindhoven', slug: 'eindhoven' },
-    ],
-  },
+/**
+ * Provinces are derived from CITIES rather than hardcoded.
+ *
+ * This list used to be maintained by hand and had drifted out of sync: it
+ * linked to Rotterdam, Eindhoven, Tilburg, Dordrecht and Delft, none of which
+ * had a city page. Because the map renders on every page, that produced five
+ * broken links on all ~300 pages. Deriving the list makes that impossible —
+ * a city can only be linked here if it can actually be rendered.
+ */
+const PROVINCE_ORDER = [
+  'Utrecht',
+  'Noord-Holland',
+  'Zuid-Holland',
+  'Gelderland',
+  'Flevoland',
+  'Noord-Brabant',
 ];
+
+const slugifyProvince = (region: string) =>
+  region.toLowerCase().replace(/\s+/g, '-');
+
+const SERVICE_PROVINCES: Province[] = PROVINCE_ORDER.map((region) => ({
+  id: slugifyProvince(region),
+  label: region,
+  cities: CITIES.filter((c) => c.region === region)
+    // Biggest search volume first, so the most valuable pages sit at the top.
+    .sort((a, b) => b.nlSearches - a.nlSearches)
+    .map((c) => ({ name: c.city, slug: c.slug })),
+})).filter((p) => p.cities.length > 0);
+
 
 export default function ServiceAreaMap() {
   const [activeProvince, setActiveProvince] = useState<string>('utrecht');
@@ -137,7 +105,13 @@ export default function ServiceAreaMap() {
                   
                   <div 
                     className={styles.accordionContent}
-                    style={{ maxHeight: isActive ? '500px' : '0' }}
+                    // Scales with the list: Utrecht alone has 24 cities, which
+                    // a fixed 500px cap silently clipped.
+                    style={{
+                      maxHeight: isActive
+                        ? `${province.cities.length * 44 + 24}px`
+                        : '0',
+                    }}
                   >
                     <ul className={styles.cityList}>
                       {province.cities.map(city => (

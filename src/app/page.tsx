@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import Script from 'next/script';
 import styles from './page.module.css';
 import dynamic from 'next/dynamic';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
@@ -110,7 +109,7 @@ export default function HomePage() {
   return (
     <>
       <LocalBusinessSchema />
-      <Script id="home-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="home-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
       <section className={styles.heroSplit}>
         <div className={styles.heroSplitInner}>
@@ -137,7 +136,7 @@ export default function HomePage() {
               quality={80}
               sizes="(max-width: 992px) 100vw, 50vw"
             />
-            <Script id="hero-image-gps" type="application/ld+json" dangerouslySetInnerHTML={{
+            <script id="hero-image-gps" type="application/ld+json" dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "ImageObject",

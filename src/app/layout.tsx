@@ -86,6 +86,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="nl">
       <head>
+        {/*
+          ── CONSENT MODE v2 DEFAULTS ──
+          Must be a plain <script> (not next/script) and must run BEFORE the GTM
+          and gtag tags below, so no advertising or analytics storage is created
+          until the visitor actually accepts. `wait_for_update` gives the CMP
+          time to send the real choice. Required by GDPR/AVG art. 6 and the
+          Telecommunicatiewet 11.7a, and by Google's EU user consent policy —
+          defaulting to "granted" puts the Ads account at risk.
+        */}
+        <script
+          id="consent-defaults"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent','default',{
+                ad_storage:'denied',
+                ad_user_data:'denied',
+                ad_personalization:'denied',
+                analytics_storage:'denied',
+                functionality_storage:'granted',
+                security_storage:'granted',
+                personalization_storage:'denied',
+                wait_for_update: 500
+              });
+              gtag('set','ads_data_redaction', true);
+              gtag('set','url_passthrough', true);
+            `,
+          }}
+        />
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
@@ -163,8 +193,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        {/* ── GOOGLE PREFERRED SOURCES ── */}
-        <Script async src="https://news.google.com/swg/js/v1/publisher.js" strategy="afterInteractive" />
         {/* ── STRUCTURED DATA ── */}
         <script
           id="schema-website"
@@ -191,9 +219,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <WhatsAppButton />
         <StickyCallBar />
-        {/* ── iubenda Cookie Solution & Privacy Controls ── */}
+        {/*
+          ── iubenda Cookie Solution & Privacy Controls ──
+          Loaded afterInteractive rather than lazyOnload: with Consent Mode now
+          defaulting to "denied", nothing tracks until this widget reports the
+          visitor's choice, so it must load promptly.
+
+          NOTE: the iubenda configuration itself must be switched to
+          "prior blocking / blocking mode" in the iubenda dashboard. The
+          defaults above stop Google tags, but only iubenda can stop the
+          non-Google scripts it manages.
+        */}
         <Script
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           src="https://embeds.iubenda.com/widgets/c53c352b-ed07-4c5b-b461-8b542ddd3aaf.js"
         />
       </body>

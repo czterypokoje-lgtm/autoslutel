@@ -26,8 +26,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // 2. Service Pages
-  const servicePages = DIENSTEN.map(s => ({
-    url: `${base}/diensten/${s.slug}`,
+  // `auto-slotenmaker` and `autosleutel-bijmaken` are standalone route folders
+  // rather than DIENSTEN entries, so they were missing from the sitemap even
+  // though the navigation links to them from every page.
+  const STANDALONE_SERVICES = ['auto-slotenmaker', 'autosleutel-bijmaken'];
+
+  const serviceSlugs = Array.from(
+    new Set([...DIENSTEN.map(s => s.slug), ...STANDALONE_SERVICES])
+  );
+
+  const servicePages = serviceSlugs.map(slug => ({
+    url: `${base}/diensten/${slug}`,
     lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.9,
@@ -75,13 +84,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     return [...models, ...intents];
   });
   // 8. Blog Pages
-  const blogPages = BLOG_POSTS.map(b => ({
-    url: `${base}/blog/${b.slug}`,
-    lastModified: now,
-    changeFrequency: 'weekly' as const,
-    priority: 0.75,
-    images: [`${base}/og-image.png`],
-  }));
+  // These slugs are 301'd in next.config.ts. A sitemap should only list final
+  // URLs, so listing them wasted crawl budget on four guaranteed redirects.
+  const REDIRECTED_BLOG_SLUGS = new Set([
+    'auto-openen-zonder-sleutel-tips-hulp',
+    'auto-openen-zonder-sleutel-schadevrij',
+    'autosleutel-bijmaken-tips-snel-veilig',
+    'sleutel-bijmaken-auto-mobiele-service',
+  ]);
+
+  const blogPages = BLOG_POSTS
+    .filter(b => !REDIRECTED_BLOG_SLUGS.has(b.slug))
+    .map(b => ({
+      url: `${base}/blog/${b.slug}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.75,
+      images: [`${base}/og-image.png`],
+    }));
 
   return [
     ...corePages,

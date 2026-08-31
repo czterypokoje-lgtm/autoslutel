@@ -92,8 +92,13 @@ export default function HorizontalKentekenForm() {
         model: vehicle ? `${kenteken} - ${vehicle.model}` : kenteken,
         year: vehicle ? vehicle.bouwjaar : 'N/A',
         service: 'Prijsopgave via kenteken',
-        location: `${postcode} (Tel: ${phone})`,
+        // phone and postcode as their own fields: postcode is what routes a
+        // lead to the right partner, phone is what deduplicates it.
+        location: postcode,
+        postcode,
+        phone,
         photoUrl: '',
+        source: 'kenteken_form',
         gclid: getCookie('gclid'),
         wbraid: getCookie('wbraid'),
         gbraid: getCookie('gbraid')

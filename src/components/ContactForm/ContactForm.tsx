@@ -12,6 +12,31 @@ export default function ContactForm() {
     const form = e.currentTarget;
     const data = new FormData(form);
 
+    // Also record the enquiry in Supabase alongside the Formspree email, so
+    // every lead lands in one table regardless of which form produced it.
+    // Fire-and-forget: an analytics write must never block the customer.
+    const getCookie = (name: string) => {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    };
+    fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: data.get('name'),
+        phone: data.get('phone'),
+        email: data.get('email'),
+        model: data.get('car'),
+        service: 'Contactformulier',
+        location: data.get('message'),
+        source: 'contact_form',
+        gclid: getCookie('gclid'),
+        wbraid: getCookie('wbraid'),
+        gbraid: getCookie('gbraid'),
+      }),
+      keepalive: true,
+    }).catch(err => console.error('Error saving lead', err));
+
     try {
       const response = await fetch('https://formspree.io/f/mdennjae', {
         method: 'POST',
@@ -20,7 +45,7 @@ export default function ContactForm() {
           'Accept': 'application/json'
         }
       });
-      
+
       if (response.ok) {
         setStatus('succeeded');
         form.reset();
