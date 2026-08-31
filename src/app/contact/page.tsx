@@ -32,20 +32,12 @@ export default function ContactPage() {
         <div className={styles.heroImageContainer}>
           <div className={styles.heroImageWrapper}>
             <div className={styles.heroImageInner}>
-              <iframe
-                src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4&ehbc=2E312F"
-                style={{
-                  border: 'none',
-                  width: '100%',
-                  height: 'calc(100% + 65px)',
-                  marginTop: '-65px',
-                  display: 'block',
-                  objectFit: 'cover'
-                }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Autosleutel24 Servicegebied Utrecht en omstreken"
+              <Image 
+                src="/images/nl-map-orange.png" 
+                alt="Werkgebied Autosleutel24 Nederland" 
+                fill 
+                className={styles.heroImage}
+                priority
               />
             </div>
           </div>
