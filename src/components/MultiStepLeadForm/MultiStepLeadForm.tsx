@@ -21,6 +21,7 @@ export default function MultiStepLeadForm() {
     year: '',
     startType: 'Push Button',
     remoteStart: 'Ja',
+    workingKey: 'Ja',
     address: '',
     city: '',
     zip: '',
@@ -231,6 +232,21 @@ export default function MultiStepLeadForm() {
                 <label className={styles.radioLabel}>
                   <input type="radio" name="remoteStart" value="Nee" checked={formData.remoteStart === 'Nee'} onChange={handleChange} className={styles.radioInput} />
                   Nee
+                </label>
+              </div>
+            </div>
+
+            {/* Working Key */}
+            <div className={styles.questionGroup}>
+              <label className={styles.questionLabel}>Heeft u momenteel nog een werkende sleutel? *</label>
+              <div className={styles.radioGroup}>
+                <label className={styles.radioLabel} style={{flex: 1}}>
+                  <input type="radio" name="workingKey" value="Ja" checked={formData.workingKey === 'Ja'} onChange={handleChange} className={styles.radioInput} />
+                  Ja (Reserve bijmaken)
+                </label>
+                <label className={styles.radioLabel} style={{flex: 1}}>
+                  <input type="radio" name="workingKey" value="Nee" checked={formData.workingKey === 'Nee'} onChange={handleChange} className={styles.radioInput} />
+                  Nee (Sleutels kwijt)
                 </label>
               </div>
             </div>
