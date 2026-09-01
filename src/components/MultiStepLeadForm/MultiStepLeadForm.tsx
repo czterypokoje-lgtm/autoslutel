@@ -50,19 +50,19 @@ export default function MultiStepLeadForm() {
 
   // SVG components for exact replica
   const CheckIcon = () => (
-    <svg viewBox="0 0 24 24">
+    <svg width="24" height="24" viewBox="0 0 24 24">
       <polyline points="20 6 9 17 4 12"></polyline>
     </svg>
   );
 
   const MapPinIcon = () => (
-    <svg className={styles.mapPinIcon} viewBox="0 0 24 24" fill="#FBBF24">
+    <svg className={styles.mapPinIcon} width="24" height="24" viewBox="0 0 24 24" fill="#FBBF24">
       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
     </svg>
   );
 
   const ArrowDownIcon = () => (
-    <svg className={styles.selectArrow} viewBox="0 0 20 20">
+    <svg className={styles.selectArrow} width="20" height="20" viewBox="0 0 20 20">
       <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
     </svg>
   );
@@ -92,7 +92,7 @@ export default function MultiStepLeadForm() {
         {step > 1 && (
           <button className={styles.backButton} onClick={handleBack}>
             <div className={styles.backIconWrapper}>
-              <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
             </div>
             {STEPS[step - 2].label}
           </button>
@@ -114,7 +114,7 @@ export default function MultiStepLeadForm() {
       <div className={styles.sectionHeader} style={{ marginTop: step > 1 ? '2rem' : '0' }}>
         {step === 1 && (
           <>
-            <svg className={styles.carIcon} viewBox="0 0 64 64" fill="none">
+            <svg className={styles.carIcon} width="64" height="64" viewBox="0 0 64 64" fill="none">
               <path d="M12 40h40v8H12v-8z" fill="#FBBF24"/>
               <path d="M16 28l4-12h24l4 12H16z" fill="#FBBF24"/>
               <path d="M22 20h20v6H22v-6z" fill="#FFFFFF" opacity="0.5"/>
@@ -182,7 +182,7 @@ export default function MultiStepLeadForm() {
                 <label className={`${styles.imageRadioLabel} ${formData.startType === 'Push Button' ? styles.selected : ''}`}>
                   <input type="radio" name="startType" value="Push Button" checked={formData.startType === 'Push Button'} onChange={handleChange} className={styles.imageRadioInput} />
                   <div className={styles.radioImageWrapper}>
-                    <svg viewBox="0 0 100 100" className={styles.animatedSvg}>
+                    <svg width="100" height="100" viewBox="0 0 100 100" className={styles.animatedSvg}>
                       <circle cx="50" cy="50" r="45" fill="#374151" />
                       <circle cx="50" cy="50" r="38" fill="#111827" />
                       <circle cx="50" cy="50" r="30" fill="#dc2626" className={styles.pulseButton} />
@@ -199,7 +199,7 @@ export default function MultiStepLeadForm() {
                 <label className={`${styles.imageRadioLabel} ${formData.startType === 'Turn Key' ? styles.selected : ''}`}>
                   <input type="radio" name="startType" value="Turn Key" checked={formData.startType === 'Turn Key'} onChange={handleChange} className={styles.imageRadioInput} />
                   <div className={styles.radioImageWrapper}>
-                    <svg viewBox="0 0 100 100" className={styles.animatedSvg}>
+                    <svg width="100" height="100" viewBox="0 0 100 100" className={styles.animatedSvg}>
                       {/* Keyhole */}
                       <circle cx="50" cy="50" r="40" fill="#374151" />
                       <circle cx="50" cy="50" r="30" fill="#111827" />
