@@ -1,5 +1,7 @@
 'use client';
 import Link from 'next/link';
+import { readCart, CART_EVENT } from '@/lib/cart';
+import { useEffect } from 'react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { SITE_CONFIG } from '@/config/site.config';
@@ -18,6 +20,13 @@ const categoryLinks = [
 ];
 
 export default function WebshopNavigation() {
+  const [cartCount, setCartCount] = useState(0);
+  useEffect(() => {
+    const update = () => setCartCount(readCart().reduce((acc, i) => acc + i.quantity, 0));
+    update();
+    window.addEventListener(CART_EVENT, update);
+    return () => window.removeEventListener(CART_EVENT, update);
+  }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [showBrandMenu, setShowBrandMenu] = useState(false);
 
@@ -101,10 +110,10 @@ export default function WebshopNavigation() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Orders</span>
           </Link>
-          <Link href="/webshop/cart" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', textDecoration: 'none', color: '#b93c20' }}>
+          <Link href="/webshop/winkelmand" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', textDecoration: 'none', color: '#b93c20' }}>
             <div style={{ position: 'relative' }}>
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-              <span style={{ position: 'absolute', top: '-6px', right: '-8px', background: '#b93c20', color: '#fff', fontSize: '0.7rem', fontWeight: 800, borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>0</span>
+              <span style={{ position: 'absolute', top: '-6px', right: '-8px', background: '#b93c20', color: '#fff', fontSize: '0.7rem', fontWeight: 800, borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{cartCount}</span>
             </div>
             <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Cart</span>
           </Link>
