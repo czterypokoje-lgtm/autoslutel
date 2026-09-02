@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { addToCart } from '@/lib/cart';
 import { SITE_CONFIG } from '@/config/site.config';
 
-export default function ProductBuyBox({ title, price, oldPrice, description, slug }: { title: string, price: string, oldPrice: string, description?: string, slug?: string }) {
+export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category }: { title: string, price: string, oldPrice: string, description?: string, slug?: string, needsProgramming?: boolean, category?: string }) {
   const [purchaseType, setPurchaseType] = useState<'ship' | 'service'>('ship');
   const [added, setAdded] = useState(false);
 
@@ -139,6 +139,24 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
         </div>
       </div>
 
+      {/* Programming warning — only shown when shipping (not service) and the
+          product requires ECU programming after fitting. */}
+      {purchaseType === 'ship' && needsProgramming && (
+        <div style={{
+          background: '#fffbeb',
+          border: '1px solid #f59e0b',
+          borderLeft: '4px solid #d97706',
+          borderRadius: '8px',
+          padding: '0.9rem 1.1rem',
+          fontSize: '0.88rem',
+          color: '#92400e',
+          lineHeight: 1.55,
+        }}>
+          ⚠️ <strong>Let op:</strong> dit product vereist programmering na installatie.
+          Onze monteur doet dit voor + €169 aan huis.
+        </div>
+      )}
+
       {/* 6. ADD TO CART BUTTON (Crutchfield Orange) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <button style={{ 
@@ -224,8 +242,9 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
       {/* 8. EXPERT HELP SECTION */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem', background: '#fff', padding: '1rem', borderRadius: '8px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' }}>
-          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Expert Help" style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover' }} />
-          <span style={{ fontFamily: 'cursive', fontSize: '1.2rem', fontWeight: 600 }}>Mark</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp" alt="Berkan — expert autosleutels" style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover' }} />
+          <span style={{ fontFamily: 'cursive', fontSize: '1.2rem', fontWeight: 600 }}>Berkan</span>
         </div>
         <div>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: bmBlack, margin: '0 0 0.25rem 0' }}>Snel en gratis antwoord op je vragen</h3>

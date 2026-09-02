@@ -198,9 +198,61 @@ export default async function CatalogPage({
           )}
 
           {totalPages > 1 && (
-            <p style={{ marginTop: '1.5rem', fontSize: '.85rem', color: '#475569' }}>
-              Pagina {page} van {totalPages} — {results.length} producten
-            </p>
+            <div style={{ marginTop: '2rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+              {page > 1 ? (
+                <Link
+                  href={{ query: { ...sp, page: page - 1 } }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                    padding: '.6rem 1.2rem', borderRadius: 8,
+                    border: '1px solid #cbd5e1', background: '#fff',
+                    fontWeight: 600, fontSize: '.9rem', color: '#0f172a',
+                    textDecoration: 'none',
+                  }}
+                >
+                  ← Vorige
+                </Link>
+              ) : (
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                  padding: '.6rem 1.2rem', borderRadius: 8,
+                  border: '1px solid #e5e7eb', background: '#f8fafc',
+                  fontWeight: 600, fontSize: '.9rem', color: '#94a3b8',
+                  cursor: 'not-allowed',
+                }}>
+                  ← Vorige
+                </span>
+              )}
+
+              <span style={{ fontSize: '.88rem', color: '#475569' }}>
+                Pagina {page} van {totalPages} — {results.length} producten
+              </span>
+
+              {page < totalPages ? (
+                <Link
+                  href={{ query: { ...sp, page: page + 1 } }}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                    padding: '.6rem 1.2rem', borderRadius: 8,
+                    border: '1px solid #cbd5e1', background: '#fff',
+                    fontWeight: 600, fontSize: '.9rem', color: '#0f172a',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Volgende →
+                </Link>
+              ) : (
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                  padding: '.6rem 1.2rem', borderRadius: 8,
+                  border: '1px solid #e5e7eb', background: '#f8fafc',
+                  fontWeight: 600, fontSize: '.9rem', color: '#94a3b8',
+                  cursor: 'not-allowed',
+                }}>
+                  Volgende →
+                </span>
+              )}
+            </div>
           )}
         </div>
       </div>

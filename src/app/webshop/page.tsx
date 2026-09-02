@@ -6,6 +6,7 @@ import ProductCarousel from '@/components/webshop/ProductCarousel';
 import PromoBanner from '@/components/webshop/PromoBanner';
 import TrustSection from '@/components/webshop/TrustSection';
 import ArticlesSection from '@/components/webshop/ArticlesSection';
+import { getProducts } from '@/lib/catalog';
 
 export const metadata = {
   title: 'Autosleutel24 Webshop - OEM Sleutels & Behuizingen',
@@ -13,6 +14,8 @@ export const metadata = {
 };
 
 export default function WebshopPage() {
+  const featuredProducts = getProducts('public').slice(0, 8);
+
   return (
     <div>
       <WebshopHero />
@@ -32,7 +35,7 @@ export default function WebshopPage() {
           <h2 style={{ marginBottom: '2.5rem', fontSize: '1.75rem', color: 'var(--webshop-dark)' }}>
             Aanbevolen voor jou
           </h2>
-          <ProductCarousel />
+          <ProductCarousel products={featuredProducts} />
         </div>
       </section>
 
@@ -52,3 +55,4 @@ export default function WebshopPage() {
     </div>
   );
 }
+

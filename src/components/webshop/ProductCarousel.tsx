@@ -1,29 +1,28 @@
 import React from 'react';
 import ProductCard from './ProductCard';
-import { slugify } from '@/lib/utils';
-import allScrapedProducts from '@/lib/scraped_products.json';
+import { shelfPrice, formatPrice, type CatalogProduct } from '@/lib/catalog';
 
-export default function ProductCarousel() {
-  // Grab a few real products for the carousel
-  const products = allScrapedProducts.slice(0, 8);
+interface ProductCarouselProps {
+  products: CatalogProduct[];
+}
 
+export default function ProductCarousel({ products }: ProductCarouselProps) {
   return (
     <div className="snap-carousel">
-      {products.map((p: any, i: number) => {
-        const slug = slugify(p.title);
-        const price = p.price || '0.00';
-        const oldPrice = price !== '0.00' ? (parseFloat(price) * 1.3).toFixed(2) : '0.00';
-        const image = p.imageLocalPath || p.imageOriginalUrl || 'https://placehold.co/600x600/transparent/121212?text=No+Image';
+      {products.map((p, i) => {
+        const price = shelfPrice(p.costPrice);
+        const oldPrice = price ? price * 1.4 : null;
+        const image = p.image ?? 'https://placehold.co/600x600/transparent/121212?text=No+Image';
 
         return (
-          <div key={p.id || i} className="snap-carousel-item" style={{ width: '280px', flexShrink: 0 }}>
+          <div key={p.id} className="snap-carousel-item" style={{ width: '280px', flexShrink: 0 }}>
             <ProductCard
-              id={p.id}
-              slug={slug}
-              title={p.title}
-              category="OEM Kwaliteit Auto-onderdeel"
-              price={price}
-              oldPrice={oldPrice}
+              id={0}
+              slug={p.slug}
+              title={p.titleNl}
+              category={p.category ?? 'Auto-onderdeel'}
+              price={formatPrice(price)}
+              oldPrice={oldPrice ? formatPrice(oldPrice) : undefined}
               img={image}
               isBestOf={i === 0 || i === 3}
             />

@@ -15,7 +15,7 @@ interface BatteryData {
   image: string;
 }
 
-export default function ProductBundleSection({ mainProductTitle, mainProductPrice, mainProductImage, batteryData }: { mainProductTitle: string, mainProductPrice: number, mainProductImage: string, batteryData: BatteryData }) {
+export default function ProductBundleSection({ mainProductTitle, mainProductPrice, mainProductImage, batteryData }: { mainProductTitle: string, mainProductPrice: number, mainProductImage: string, batteryData: BatteryData | null }) {
   const [items, setItems] = useState<BundleItem[]>([
     { id: 'protection', name: 'Levenslange Garantie Plan', price: 6.95, selected: true },
     { id: 'batteries', name: batteryData?.title || 'Batterijen voor deze sleutel', price: batteryData?.price || 5.49, selected: true },

@@ -1,7 +1,9 @@
 'use client';
 import React from 'react';
+import type { Fitment } from '@/lib/catalog';
 
-export default function FitmentWidget() {
+export default function FitmentWidget({ fitment }: { fitment?: Fitment[] }) {
+  const count = fitment?.length ?? 0;
   const bmBlack = '#1a1a1a';
 
   return (
@@ -25,7 +27,9 @@ export default function FitmentWidget() {
           <div>
             <div style={{ fontWeight: 800, fontSize: '1.25rem', color: bmBlack, marginBottom: '0.25rem' }}>Passende onderdelen vinden</div>
             <div style={{ fontSize: '0.85rem', color: '#1a1a1a', lineHeight: 1.4 }}>
-              Voeg nu je voertuig toe om zeker te weten dat de onderdelen passen. Ontspannen kopen met gratis retourneren voor de meeste artikelen.
+              {count > 0
+                ? `Past op ${count} voertuig${count === 1 ? '' : 'en'}. Voeg je voertuig toe om zeker te weten dat dit onderdeel past.`
+                : 'Voeg nu je voertuig toe om zeker te weten dat de onderdelen passen. Ontspannen kopen met gratis retourneren voor de meeste artikelen.'}
             </div>
           </div>
         </div>

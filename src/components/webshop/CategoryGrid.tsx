@@ -1,24 +1,30 @@
 import React from 'react';
 import Link from 'next/link';
 
-export default function CategoryGrid() {
-  const categories = [
-    { name: 'Sleutelbehuizingen', slug: 'behuizingen', image: 'https://placehold.co/150x150/transparent/121212?text=Behuizing' },
-    { name: 'Batterijen', slug: 'batterijen', image: 'https://placehold.co/150x150/transparent/121212?text=Batterij' },
-    { name: 'OEM Sleutels', slug: 'oem-sleutels', image: 'https://placehold.co/150x150/transparent/121212?text=OEM+Sleutel' },
-    { name: 'Smart Keys', slug: 'smart-keys', image: 'https://placehold.co/150x150/transparent/121212?text=Smart+Key' },
-    { name: 'Accessoires', slug: 'accessoires', image: 'https://placehold.co/150x150/transparent/121212?text=Accessoires' },
-    { name: 'Universal Keys', slug: 'universal-remotes', image: 'https://placehold.co/150x150/transparent/121212?text=Universal' },
-    { name: 'Sleutelbaarden', slug: 'sleutelbaarden', image: 'https://placehold.co/150x150/transparent/121212?text=Blades' },
-    { name: 'Goede deals', slug: 'aanbiedingen', image: 'https://placehold.co/150x150/transparent/121212?text=Deals' },
-  ];
+const CATEGORIES = [
+  { name: 'Afstandsbedieningen', slug: 'afstandsbedieningen', emoji: '📡' },
+  { name: 'Smart Keys / Keyless', slug: 'smart-keys', emoji: '🔑' },
+  { name: 'Sloten & Cilinders', slug: 'sloten', emoji: '🔒' },
+  { name: 'Sleutelbaarden', slug: 'sleutelbaarden', emoji: '🗝️' },
+  { name: 'Transponders', slug: 'transponders', emoji: '📶' },
+  { name: 'Sleutelbehuizingen', slug: 'behuizingen', emoji: '🧩' },
+  { name: 'Batterijen', slug: 'batterijen', emoji: '🔋' },
+  { name: 'Gereedschap', slug: 'gereedschap', emoji: '🔧' },
+  { name: 'Accessoires', slug: 'accessoires', emoji: '🛒' },
+];
 
+export default function CategoryGrid() {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center' }}>
-      {categories.map((cat, i) => (
-        <Link href={`/webshop/categorie/${cat.slug}`} key={i} className="category-card">
-          <div className="category-card-img-wrapper">
-            <img src={cat.image} alt={cat.name} style={{ maxWidth: '120px', maxHeight: '120px', objectFit: 'contain' }} />
+      {CATEGORIES.map((cat) => (
+        <Link
+          href={`/webshop/catalogus?category=${cat.slug}`}
+          key={cat.slug}
+          className="category-card"
+          style={{ textDecoration: 'none' }}
+        >
+          <div className="category-card-img-wrapper" style={{ fontSize: '2.5rem', textAlign: 'center', padding: '1rem' }}>
+            {cat.emoji}
           </div>
           <div className="category-card-title">{cat.name}</div>
         </Link>
