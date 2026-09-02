@@ -1,5 +1,6 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import fs from 'fs';
 import path from 'path';
 import ProductBundleSection from '@/components/webshop/ProductBundleSection';

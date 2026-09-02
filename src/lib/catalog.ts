@@ -58,8 +58,8 @@ const catalog = catalogJson as unknown as {
  * public catalogue. Callers must opt in explicitly, and only behind a verified
  * business login — see the audience note in scripts/build-catalog.mjs.
  */
-export function getProducts(audience: Audience = 'public'): CatalogProduct[] {
-  return catalog.products.filter((p) => p.audience === audience);
+export function getProducts(audience: Audience | 'all' = 'public'): CatalogProduct[] {
+  return audience === 'all' ? catalog.products : catalog.products.filter((p) => p.audience === audience);
 }
 
 export function getProductBySlug(slug: string): CatalogProduct | undefined {

@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import CatalogFilters from '@/components/webshop/CatalogFilters';
 import ProductCardList from '@/components/webshop/ProductCardList';
@@ -60,11 +61,13 @@ export default async function CatalogPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
+  const cookieStore = await cookies();
+  const isB2B = cookieStore.get('b2b_session')?.value === 'true';
   const filters = parseFilters(sp);
 
   // Public catalogue only. Trade lines (lock picks, key programmers) are
   // excluded at the data layer, not hidden in the UI.
-  const all = getProducts('public');
+  const all = getProducts(isB2B ? 'all' : 'public');
   const results = filterProducts(all, filters);
   const facets = buildFacets(all, filters, FACET_ORDER);
 
@@ -80,8 +83,13 @@ export default async function CatalogPage({
         <span>Catalogus</span>
       </nav>
 
-      <h1 style={{ fontSize: '1.9rem', fontWeight: 800, color: '#0f172a', marginBottom: '.35rem' }}>
+      <h1 style={{ fontSize: '1.9rem', fontWeight: 800, color: '#0f172a', marginBottom: '.35rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
         Catalogus
+        {isB2B && (
+          <span style={{ fontSize: '0.8rem', background: '#16a34a', color: '#fff', padding: '0.2rem 0.6rem', borderRadius: 99, fontWeight: 700, verticalAlign: 'middle' }}>
+            B2B Modus Actief
+          </span>
+        )}
       </h1>
       <p style={{ color: '#475569', marginBottom: '1.75rem', maxWidth: '62ch' }}>
         Sleutelbehuizingen, afstandsbedieningen, smart keys, transponders en batterijen.
