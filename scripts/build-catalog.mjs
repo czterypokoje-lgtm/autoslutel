@@ -422,6 +422,7 @@ for (const p of raw) {
     // margin, VAT and rounding rules live in one place.
     costPrice: Number.isFinite(priceRaw) ? priceRaw : null,
     image: p.imageLocalPath || null,
+    images: p.images || (p.imageLocalPath ? [p.imageLocalPath] : []),
     fitment,
     excerpt: body.slice(0, 260),
   });

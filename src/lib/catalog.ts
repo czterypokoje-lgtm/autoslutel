@@ -32,6 +32,7 @@ export interface CatalogProduct {
   chip: string | null;
   costPrice: number | null;
   image: string | null;
+  images: string[];
   fitment: Fitment[];
   /** Original supplier text, kept for reference and search only. */
   excerpt: string;

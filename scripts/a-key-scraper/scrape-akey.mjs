@@ -49,7 +49,19 @@ const CATEGORIES = [
   '/geeignet-fuer-Volvo',
   '/geeignet-fuer-VW',
   '/Autoschluessel-Funkschluessel',
-  '/Batterien'
+  '/Batterien',
+
+  '/Boards-fuer-Funkschluessel-PCB',
+  '/Funkschluessel-Gehaeuse',
+  '/Autoschluesselblatt-Spitze',
+  '/Autoschluessel-ohne-Wegfahrsperre',
+  '/Garagenoeffner',
+  '/IEA-Universal-Fernbedienung',
+  '/Microtaster-Antenne',
+  '/Notschluessel',
+  '/Transponder',
+  '/Transponderschluessel',
+  '/Zubehoer-Werkzeug',
 ];
 
 async function delay(ms) {

@@ -68,12 +68,21 @@ async function run() {
     const dbPath = `/images/products/${localFilename}`;
     
     // Download image if available
+    let downloadedImages = [];
     if (p.images && p.images.length > 0) {
-      try {
-        await downloadImage(p.images[0], localPath);
-        process.stdout.write(`.`);
-      } catch(e) {
-        console.error(`Failed to download image for ${p.title}:`, e.message);
+      for (let j = 0; j < p.images.length; j++) {
+        const ext = path.extname(p.images[j].split('?')[0]) || '.jpg';
+        const imgName = `akey_${id}_${hash}_${j}${ext}`;
+        const localPath = path.join(IMAGES_DIR, imgName);
+        const dbPath = `/images/products/${imgName}`;
+        
+        try {
+          await downloadImage(p.images[j], localPath);
+          downloadedImages.push(dbPath);
+          process.stdout.write('.');
+        } catch (e) {
+          console.error(`Failed to download image for ${p.title}:`, e.message);
+        }
       }
     }
     
@@ -86,7 +95,8 @@ async function run() {
       price: priceStr,
       description: p.description,
       tags: tags,
-      imageLocalPath: dbPath,
+      imageLocalPath: downloadedImages[0] || null,
+      images: downloadedImages,
       imageOriginalUrl: p.images[0] || null
     });
     

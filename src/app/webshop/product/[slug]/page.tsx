@@ -7,6 +7,7 @@ import ProductBundleSection from '@/components/webshop/ProductBundleSection';
 import ProductBuyBox from '@/components/webshop/ProductBuyBox';
 import VehicleFitmentWidget from '@/components/webshop/VehicleFitmentWidget';
 import ProductAccordions from '@/components/webshop/ProductAccordions';
+import ProductGallery from '@/components/webshop/ProductGallery';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
 import { getProductBySlug, shelfPrice, formatPrice } from '@/lib/catalog';
@@ -182,14 +183,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
           {/* Left: Gallery & Bundle */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {/* Main Image */}
-            <div style={{ background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={entry.image ?? '/images/bmw-key-desktop.png'}
-                alt={entry.titleNl}
-                style={{ maxWidth: '100%', maxHeight: '400px', objectFit: 'contain' }}
-              />
-            </div>
+            <ProductGallery images={entry.images && entry.images.length > 0 ? entry.images : (entry.image ? [entry.image] : ['/images/bmw-key-desktop.png'])} />
 
             {/* Dynamic Bundle Section */}
             <ProductBundleSection
