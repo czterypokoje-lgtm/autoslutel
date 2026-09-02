@@ -4,7 +4,7 @@ import React, { useSyncExternalStore, useCallback } from 'react';
 import Link from 'next/link';
 import {
   readCart, setQuantity, removeLine, priceCart,
-  CART_EVENT, SERVICE_LABEL, SERVICE_SURCHARGE, type ServiceOption,
+  CART_EVENT, SERVICE_LABEL, type ServiceOption,
 } from '@/lib/cart';
 import { formatPrice, FREE_SHIPPING_FROM } from '@/lib/catalog';
 import type { CatalogProduct } from '@/lib/catalog';
