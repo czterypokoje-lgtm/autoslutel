@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
 import ConsentBanner from '@/components/ConsentBanner/ConsentBanner';
-import Navigation from '@/components/Navigation/Navigation';
-import Footer from '@/components/Footer/Footer';
+
+
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
-import UrgencyBanner from '@/components/UrgencyBanner/UrgencyBanner';
-import StickyCallBar from '@/components/StickyCallBar/StickyCallBar';
+
+
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
@@ -80,6 +80,7 @@ const websiteSchema = {
   // SearchAction removed — Next.js has no ?s= endpoint; prevents schema error in GSC
 };
 
+import { GlobalHeader, GlobalFooter, GlobalStickyBar } from '@/components/LayoutManager';
 import PhoneConversionTracker from '@/components/PhoneConversionTracker';
 import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 
@@ -210,12 +211,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </noscript>
         {/* End Google Tag Manager (noscript) */}
-        <UrgencyBanner />
-        <Navigation />
+        
+        <GlobalHeader />
         {children}
-        <Footer />
+        <GlobalFooter />
         <WhatsAppButton />
-        <StickyCallBar />
+        <GlobalStickyBar />
         <ConsentBanner />
       </body>
     </html>
