@@ -77,14 +77,53 @@ export function getProductBySlug(slug: string): CatalogProduct | undefined {
  * postage; anything below it is sold as part of a bundle, not on its own.
  */
 export const VAT_RATE = 0.21;
-export const MARGIN = 1.65;
-export const MIN_PRICE = 7.95;
+
+/**
+ * Margin is tiered, not flat.
+ *
+ * A flat multiplier fails at both ends. On a €0.79 blade it leaves almost no
+ * absolute margin, and a hard price floor to compensate made us five times
+ * dearer than the market: auto-sleutel.nl lists blades "zo laag als €1,55".
+ * On a €249 smart key the same multiplier produced €496, which nobody pays.
+ *
+ * Cheap parts carry a high multiplier because the money is in the order, not
+ * the line; expensive parts carry a thin one because the absolute margin is
+ * already there.
+ *
+ * These numbers are a starting point, not a recommendation — they depend on
+ * your supplier terms and exchange rate. Change them here and every price on
+ * the site, in the schema and in the Merchant Center feed follows.
+ */
+export const MARGIN_TIERS: { upTo: number; multiplier: number }[] = [
+  { upTo: 5, multiplier: 3.0 },
+  { upTo: 20, multiplier: 2.2 },
+  { upTo: 50, multiplier: 1.8 },
+  { upTo: 150, multiplier: 1.55 },
+  { upTo: Infinity, multiplier: 1.35 },
+];
+
+/** Nothing is listed below this; anything cheaper is bundle-only. */
+export const MIN_PRICE = 2.95;
+
+/**
+ * Shipping. The market reference charges €3 and ships free from €25 — worth
+ * knowing, because a higher threshold or a higher rate is a visible
+ * disadvantage on a €10 basket.
+ */
+export const SHIPPING_COST = 5.0;
+export const FREE_SHIPPING_FROM = 25.0;
+
+export function shippingFor(basketTotal: number): number {
+  return basketTotal >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
+}
 
 export function shelfPrice(costPrice: number | null): number | null {
   if (costPrice == null || !Number.isFinite(costPrice)) return null;
-  const withMargin = costPrice * MARGIN * (1 + VAT_RATE);
-  const rounded = Math.max(MIN_PRICE, Math.ceil(withMargin) - 0.05);
-  return Math.round(rounded * 100) / 100;
+  const tier = MARGIN_TIERS.find((t) => costPrice < t.upTo) ?? MARGIN_TIERS.at(-1)!;
+  const gross = costPrice * tier.multiplier * (1 + VAT_RATE);
+  // Land on a .95 ending, which is what every competitor in this category uses.
+  const rounded = Math.floor(gross) + 0.95;
+  return Math.max(MIN_PRICE, Math.round(rounded * 100) / 100);
 }
 
 export function formatPrice(value: number | null): string {
