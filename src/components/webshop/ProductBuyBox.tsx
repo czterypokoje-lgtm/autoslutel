@@ -1,5 +1,5 @@
-import { formatPrice } from '@/lib/catalog';
 'use client';
+import { formatPrice } from '@/lib/catalog';
 import React, { useState } from 'react';
 import { addToCart } from '@/lib/cart';
 import { SITE_CONFIG } from '@/config/site.config';
