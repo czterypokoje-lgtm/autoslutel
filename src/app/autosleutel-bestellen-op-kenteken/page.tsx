@@ -119,7 +119,7 @@ export default function KentekenBestellenPage() {
               <div style={{ display: 'flex', gap: '2px', backgroundColor: '#00b67a', padding: '2px 4px', borderRadius: '2px' }}>
                 <span style={{ color: '#fff' }}>★</span><span style={{ color: '#fff' }}>★</span><span style={{ color: '#fff' }}>★</span><span style={{ color: '#fff' }}>★</span><span style={{ color: '#fff' }}>★</span>
               </div>
-              <span>4.9/5 gebaseerd op 150+ reviews via Google</span>
+              
             </div>
           </div>
         </section>
