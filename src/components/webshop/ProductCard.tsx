@@ -57,11 +57,12 @@ export default function ProductCard({ id, slug, title, category, price, oldPrice
         </h3>
       </Link>
       
-      {/* Hollow Stars Mock */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#eab308', marginBottom: '0.5rem' }}>
-        <span style={{ fontSize: '0.9rem' }}>★★★★<span style={{color:'#cbd5e1'}}>★</span></span>
-        <span style={{ fontSize: '0.75rem', color: '#64748b', marginLeft: '0.2rem' }}>(59)</span>
-      </div>
+      {/*
+        No rating here on purpose. Every card used to show the same
+        "★★★★☆ (59)" regardless of product — a fabricated review count is a
+        misleidende handelspraktijk (BW 6:193c). Wire this to real, verified
+        purchase reviews and it can come back.
+      */}
 
       {/* In Stock */}
       <div style={{ color: '#16a34a', fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.75rem' }}>

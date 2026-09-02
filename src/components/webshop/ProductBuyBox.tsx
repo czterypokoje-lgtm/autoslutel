@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { SITE_CONFIG } from '@/config/site.config';
 
 export default function ProductBuyBox({ title, price, oldPrice, description }: { title: string, price: string, oldPrice: string, description?: string }) {
   const [purchaseType, setPurchaseType] = useState<'ship' | 'service'>('ship');
@@ -24,14 +25,11 @@ export default function ProductBuyBox({ title, price, oldPrice, description }: {
         <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: bmBlack, lineHeight: 1.2, marginBottom: '0.5rem' }}>
           {title}
         </h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
-          <div style={{ color: '#d97706', display: 'flex', gap: '0.1rem', letterSpacing: '1px' }}>
-            {'★★★★★'.split('').map((star, i) => <span key={i}>{star}</span>)}
-          </div>
-          <a href="#" style={{ color: '#475569', textDecoration: 'underline' }}>(142 reviews)</a>
-          <span style={{ color: '#cbd5e1' }}>|</span>
-          <a href="#" style={{ color: '#475569', textDecoration: 'underline' }}>Q&A (24)</a>
-        </div>
+        {/*
+          Removed: a five-star row with "(142 reviews)" and a "Q&A (24)" link,
+          identical on every product and backed by nothing. Restore only when
+          the counts come from real verified-purchase data.
+        */}
       </div>
 
       {/* 3. PRICING */}
@@ -221,7 +219,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description }: {
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', fontSize: '0.9rem', fontWeight: 600, color: bmBlack }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-              085-1234567
+              {SITE_CONFIG.phone}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>

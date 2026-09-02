@@ -80,11 +80,7 @@ export default function ProductCard({ id, title, category, price, oldPrice, img,
 
       {/* Right Column: Price & Action */}
       <div style={{ flex: '0 0 220px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', borderLeft: '1px solid #f1f5f9', paddingLeft: '2rem' }}>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#eab308', marginBottom: '0.5rem' }}>
-          <span style={{ fontSize: '0.9rem' }}>★★★★<span style={{color:'#cbd5e1'}}>★</span></span>
-          <span style={{ fontSize: '0.75rem', color: '#64748b', marginLeft: '0.2rem' }}>(59)</span>
-        </div>
+        {/* Fabricated rating removed — see ProductCard.tsx */}
 
         <div style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 600, marginBottom: '0.75rem' }}>
           Free shipping

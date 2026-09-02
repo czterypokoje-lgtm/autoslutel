@@ -114,47 +114,18 @@ export default function ProductAccordions({ product }: { product: any }) {
         )}
       </div>
 
-      {/* Reviews */}
-      <div style={containerStyle}>
-        <div style={accordionHeaderStyle} onClick={() => toggleSection('reviews')}>
-          <h2 style={titleStyle}>Reviews (177)</h2>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={iconStyle(openSection === 'reviews')}>
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </div>
-        {openSection === 'reviews' && (
-          <div style={{ padding: '2rem', borderTop: '1px solid #f1f5f9' }}>
-            <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, minWidth: '300px' }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Klantenbeoordelingen</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                  <span style={{ color: '#eab308', fontSize: '1.25rem' }}>★★★★★</span>
-                  <span style={{ fontWeight: 600 }}>4.8 / 5</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
-                    <div style={{ color: '#eab308', fontSize: '1rem', marginBottom: '0.25rem' }}>★★★★★</div>
-                    <div style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem' }}>Door <strong>Mark R.</strong> op 12 Mei 2026</div>
-                    <p style={{ fontSize: '0.95rem', color: '#334155' }}>Precies zoals beschreven. Snelle levering en makkelijk in te leren.</p>
-                  </div>
-                  <div style={{ borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
-                    <div style={{ color: '#eab308', fontSize: '1rem', marginBottom: '0.25rem' }}>★★★★★</div>
-                    <div style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem' }}>Door <strong>Jeroen B.</strong> op 03 Mei 2026</div>
-                    <p style={{ fontSize: '0.95rem', color: '#334155' }}>Goede kwaliteit sleutel, voelt solide aan. Zeker aan te raden.</p>
-                  </div>
-                </div>
-              </div>
-              <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '8px', textAlign: 'center', minWidth: '250px' }}>
-                <h4 style={{ fontWeight: 700, marginBottom: '0.5rem' }}>Schrijf een review</h4>
-                <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '1rem' }}>Help anderen met jouw ervaring over dit product.</p>
-                <button style={{ background: '#b93c20', color: '#fff', border: 'none', padding: '0.6rem 1.5rem', borderRadius: '6px', fontWeight: 600, cursor: 'pointer', width: '100%' }}>
-                  Beoordeel dit product
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      {/*
+        Reviews accordion removed.
+
+        It rendered "Reviews (177)", an average of "4.8 / 5" and two invented
+        testimonials signed "Mark R." and "Jeroen B." — the same on every one
+        of the 2,093 products. Invented reviews are a misleidende
+        handelspraktijk (BW 6:193c) and marking them up would risk a manual
+        action from Google.
+
+        Bring this back wired to real, verified-purchase reviews, and only
+        then add AggregateRating to the Product schema.
+      */}
 
       {/* Q&A */}
       <div style={containerStyle}>

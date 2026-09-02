@@ -1,0 +1,142 @@
+/* Faceted filter sidebar — matches the shop's existing card language. */
+
+.root {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 4px 18px 14px;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 0 10px;
+  border-bottom: 1px solid #eef1f4;
+}
+
+.count { font-size: 0.85rem; color: #475569; }
+.count strong { color: #0f172a; font-size: 1rem; }
+
+.clear {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  margin: -4px -6px;
+  font: inherit;
+  font-size: 0.8rem;
+  color: #b93c20;
+  text-decoration: underline;
+  cursor: pointer;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.clear:hover { color: #8f2d17; }
+
+/* active filter chips */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 0 4px; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #fdf0ec;
+  border: 1px solid #f0c4b6;
+  color: #8f2d17;
+  border-radius: 16px;
+  padding: 5px 11px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chip:hover { background: #fae1da; }
+.chip span { font-size: 1rem; line-height: 1; opacity: 0.7; }
+
+/* groups */
+.group { border-top: 1px solid #eef1f4; }
+
+.groupHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 15px 0 11px;
+  font: inherit;
+  cursor: pointer;
+  color: #0f172a;
+}
+
+.groupTitle { font-weight: 700; font-size: 0.95rem; }
+
+.caret {
+  font-size: 0.9rem;
+  color: #64748b;
+  transform: rotate(180deg);
+  transition: transform 0.18s ease;
+}
+.caretOpen { transform: rotate(0deg); }
+
+.list { list-style: none; margin: 0; padding: 0 0 4px; display: grid; gap: 1px; }
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  margin: 0 -8px;
+  border-radius: 7px;
+  cursor: pointer;
+  line-height: 1.35;
+}
+.opt:hover { background: #f6f8fa; }
+.optOn { background: #fdf0ec; }
+
+.opt input {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  accent-color: #b93c20;
+  cursor: pointer;
+}
+
+.optLabel { flex: 1; min-width: 0; font-size: 0.88rem; }
+.optOn .optLabel { font-weight: 600; }
+
+.optCount {
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.more {
+  background: none;
+  border: none;
+  padding: 6px 0 2px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0f172a;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.more:hover { color: #b93c20; }
+
+.opt input:focus-visible,
+.clear:focus-visible,
+.chip:focus-visible,
+.more:focus-visible,
+.groupHead:focus-visible {
+  outline: 2px solid #b93c20;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret { transition: none; }
+}
