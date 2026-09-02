@@ -42,3 +42,4 @@ yarn-error.log*
 next-env.d.ts
 _webshop_backup
 src/lib/catalog.json
+scripts/a-key-scraper/node_modules
