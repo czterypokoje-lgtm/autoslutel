@@ -52,7 +52,7 @@ export default function BrandMegaMenu() {
           </h3>
           {col.brands.map(brand => (
             <Link 
-              href={`/webshop/merk/${brand.toLowerCase().replace(/ /g, '-')}`}
+              href={`/webshop/catalogus?make=${brand.toLowerCase().replace(/ /g, '-')}`}
               key={brand}
               style={{
                 color: '#475569',

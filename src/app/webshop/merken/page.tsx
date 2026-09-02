@@ -55,7 +55,7 @@ export default function MerkenPage() {
         }}>
           {brands.map(brand => (
             <Link 
-              href={`/webshop/merk/${brand.toLowerCase()}`}
+              href={`/webshop/catalogus?make=${brand.toLowerCase()}`}
               key={brand}
               className="brand-square-card"
             >

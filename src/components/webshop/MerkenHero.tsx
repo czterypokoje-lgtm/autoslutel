@@ -198,7 +198,7 @@ export default function MerkenHero() {
                     Begin met winkelen voor uw
                   </h2>
                   <div style={{ display: 'inline-block', borderBottom: '2px solid #c2410c', paddingBottom: '0.2rem', marginBottom: '1rem' }}>
-                    <Link href={`/webshop/merk/${selectedBrand.toLowerCase()}?model=${encodeURIComponent(selectedModel)}&year=${encodeURIComponent(selectedYear)}`} style={{ textDecoration: 'none' }}>
+                    <Link href={`/webshop/catalogus?make=${selectedBrand.toLowerCase()}`} style={{ textDecoration: 'none' }}>
                       <span style={{ fontSize: '1.2rem', color: '#c2410c', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                         {selectedYear} {selectedBrand} {selectedModel}
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>

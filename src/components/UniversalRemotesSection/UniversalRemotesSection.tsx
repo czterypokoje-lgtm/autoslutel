@@ -6,22 +6,22 @@ const brands = [
   {
     name: 'KeyDiy',
     desc: 'Ontdek ons ruime aanbod KeyDiy universele afstandsbedieningen.',
-    href: '/webshop/categorie/keydiy',
+    href: '/webshop/catalogus?manufacturer=keydiy',
   },
   {
     name: 'Xhorse',
     desc: 'Hoogwaardige VVDI smart keys en super remotes van Xhorse.',
-    href: '/webshop/categorie/xhorse',
+    href: '/webshop/catalogus?manufacturer=xhorse',
   },
   {
     name: 'Autel',
     desc: 'Premium universele IKEY smart keys in diverse stijlen.',
-    href: '/webshop/categorie/autel',
+    href: '/webshop/catalogus?manufacturer=autel',
   },
   {
     name: 'Lonsdor',
     desc: 'Betrouwbare Lonsdor universele afstandsbedieningen.',
-    href: '/webshop/categorie/lonsdor',
+    href: '/webshop/catalogus?manufacturer=lonsdor',
   }
 ];
 

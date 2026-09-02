@@ -8,12 +8,12 @@ import BrandMegaMenu from '@/components/webshop/BrandMegaMenu';
 
 const categoryLinks = [
   { href: '/webshop/merken', label: 'Merken' },
-  { href: '/webshop/categorie/behuizingen', label: 'Sleutelbehuizingen' },
-  { href: '/webshop/categorie/batterijen', label: 'Batterijen' },
-  { href: '/webshop/categorie/oem-sleutels', label: 'OEM Sleutels' },
-  { href: '/webshop/categorie/smart-keys', label: 'Smart Keys' },
-  { href: '/webshop/categorie/accessoires', label: 'Accessoires' },
-  { href: '/webshop/categorie/universal-remotes', label: 'Universal Keys' },
+  { href: '/webshop/catalogus?category=behuizingen', label: 'Sleutelbehuizingen' },
+  { href: '/webshop/catalogus?category=batterijen', label: 'Batterijen' },
+  { href: '/webshop/catalogus?category=oem-sleutels', label: 'OEM Sleutels' },
+  { href: '/webshop/catalogus?category=smart-keys', label: 'Smart Keys' },
+  { href: '/webshop/catalogus?category=accessoires', label: 'Accessoires' },
+  { href: '/webshop/catalogus?category=universal-remotes', label: 'Universal Keys' },
   { href: '/webshop/aanbiedingen', label: 'Aanbiedingen' },
 ];
 
