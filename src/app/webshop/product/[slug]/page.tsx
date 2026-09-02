@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import ProductBundleSection from '@/components/webshop/ProductBundleSection';
 import ProductBuyBox from '@/components/webshop/ProductBuyBox';
-import FitmentWidget from '@/components/webshop/FitmentWidget';
+import VehicleFitmentWidget from '@/components/webshop/VehicleFitmentWidget';
 import ProductAccordions from '@/components/webshop/ProductAccordions';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
@@ -170,7 +170,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
 
       {/* Fitment Widget Header */}
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', marginBottom: '1.5rem' }}>
-        <FitmentWidget fitment={entry.fitment} />
+        <VehicleFitmentWidget fitment={entry.fitment} />
       </div>
 
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>

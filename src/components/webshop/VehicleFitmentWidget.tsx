@@ -2,14 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import { VEHICLE_DATA, FALLBACK_MODELS, getYears } from '@/lib/vehicleData';
 
+import type { Fitment } from '@/lib/catalog';
+
 export default function VehicleFitmentWidget({ 
   defaultBrand = '',
   defaultModel = '',
-  defaultYear = ''
+  defaultYear = '',
+  fitment = []
 }: { 
   defaultBrand?: string,
   defaultModel?: string,
-  defaultYear?: string
+  defaultYear?: string,
+  fitment?: Fitment[]
 }) {
   const [activeTab, setActiveTab] = useState<'kenteken' | 'handmatig'>('handmatig');
   
@@ -18,6 +22,11 @@ export default function VehicleFitmentWidget({
   const [selectedModel, setSelectedModel] = useState<string>(defaultModel || '');
   const [selectedYear, setSelectedYear] = useState<string>(defaultYear || '');
   const [selectedOrigin, setSelectedOrigin] = useState<string>('');
+
+  const [kenteken, setKenteken] = useState('');
+  const [kentekenLoading, setKentekenLoading] = useState(false);
+  const [kentekenError, setKentekenError] = useState('');
+
 
   const allBrands = Object.keys(VEHICLE_DATA).sort();
   const availableModels = selectedBrand ? (VEHICLE_DATA[selectedBrand] || FALLBACK_MODELS) : [];
@@ -44,7 +53,79 @@ export default function VehicleFitmentWidget({
     setSelectedOrigin('');
   }, [selectedBrand]);
 
+  
+  const checkKenteken = async () => {
+    if (!kenteken) return;
+    setKentekenLoading(true);
+    setKentekenError('');
+    setResult('idle');
+    try {
+      const cleanK = kenteken.replace(/[^a-zA-Z0-9]/g, '');
+      const res = await fetch(`/api/kenteken?kenteken=${cleanK}`);
+      const data = await res.json();
+      
+      if (!res.ok || data.error) {
+        setKentekenError(data.error || 'Kenteken niet gevonden');
+        setKentekenLoading(false);
+        return;
+      }
+      
+      const { merk, handelsbenaming, datum_eerste_toelating } = data.data;
+      const kBrand = (merk || '').toLowerCase();
+      const kModel = (handelsbenaming || '').toLowerCase();
+      const kYear = datum_eerste_toelating ? parseInt(datum_eerste_toelating.substring(0,4)) : 0;
+      
+      if (fitment.length === 0) {
+        setResult('success');
+        setKentekenLoading(false);
+        return;
+      }
+      
+      const isMatch = fitment.some(f => 
+        kBrand.includes(f.make.toLowerCase()) &&
+        (kModel.includes(f.model.toLowerCase()) || f.model.toLowerCase().includes(kModel)) &&
+        kYear >= f.from && kYear <= f.to
+      );
+      
+      setSelectedBrand(merk || '');
+      setSelectedModel(handelsbenaming || '');
+      setSelectedYear(kYear.toString());
+      setResult(isMatch ? 'success' : 'fail');
+    } catch (e) {
+      setKentekenError('Fout bij ophalen kenteken');
+    }
+    setKentekenLoading(false);
+  };
+
   const isComplete = selectedBrand && selectedModel && selectedYear && selectedOrigin;
+
+  const [result, setResult] = useState<'idle' | 'success' | 'fail'>('idle');
+
+  const checkFitment = () => {
+    if (!selectedBrand || !selectedModel || !selectedYear) return;
+    
+    // If no fitment data is available on the product at all, we assume it's generic
+    if (fitment.length === 0) {
+      setResult('success');
+      return;
+    }
+
+    const yearNum = parseInt(selectedYear);
+    
+    const isMatch = fitment.some(f => 
+      f.make.toLowerCase() === selectedBrand.toLowerCase() &&
+      f.model.toLowerCase() === selectedModel.toLowerCase() &&
+      yearNum >= f.from && yearNum <= f.to
+    );
+
+    setResult(isMatch ? 'success' : 'fail');
+  };
+
+  // Reset result if user changes inputs
+  useEffect(() => {
+    setResult('idle');
+  }, [selectedBrand, selectedModel, selectedYear]);
+
 
   return (
     <div style={{
@@ -95,10 +176,29 @@ export default function VehicleFitmentWidget({
 
       {/* Forms */}
       {activeTab === 'kenteken' ? (
+        <>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <input type="text" placeholder="AB-123-C" style={{ padding: '0.5rem 1rem', border: '1px solid #cbd5e1', borderRadius: '4px', textTransform: 'uppercase', flex: 1, maxWidth: '250px' }} />
-          <button style={{ background: '#cbd5e1', color: '#fff', border: 'none', padding: '0.5rem 1.5rem', borderRadius: '4px', fontWeight: 700, cursor: 'not-allowed' }}>Voertuig toevoegen</button>
+          <input 
+            type="text" 
+            placeholder="AB-123-C" 
+            value={kenteken}
+            onChange={(e) => setKenteken(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && checkKenteken()}
+            style={{ padding: '0.5rem 1rem', border: '1px solid #cbd5e1', borderRadius: '4px', textTransform: 'uppercase', flex: 1, maxWidth: '250px' }} 
+          />
+          <button 
+            onClick={checkKenteken}
+            disabled={!kenteken || kentekenLoading}
+            style={{ 
+              background: kenteken && !kentekenLoading ? '#0f172a' : '#cbd5e1', 
+              color: '#fff', border: 'none', padding: '0.5rem 1.5rem', borderRadius: '4px', fontWeight: 700, 
+              cursor: kenteken && !kentekenLoading ? 'pointer' : 'not-allowed' 
+            }}>
+            {kentekenLoading ? 'Zoeken...' : 'Controleer'}
+          </button>
         </div>
+        {kentekenError && <div style={{ color: '#dc2626', fontSize: '0.85rem', marginTop: '0.5rem' }}>{kentekenError}</div>}
+        </>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
           
@@ -150,6 +250,7 @@ export default function VehicleFitmentWidget({
           
           <button 
             disabled={!isComplete}
+            onClick={checkFitment}
             style={{ 
               background: isComplete ? '#0f172a' : '#cbd5e1', 
               color: '#fff', 
@@ -162,8 +263,21 @@ export default function VehicleFitmentWidget({
               flex: '1 1 120px',
               transition: 'background 0.2s'
             }}>
-            Voertuig toevoegen
+            Controleer
           </button>
+        </div>
+      )}
+
+      {result === 'success' && (
+        <div style={{ marginTop: '1rem', padding: '1rem', background: '#dcfce7', color: '#166534', borderRadius: '4px', display: 'flex', gap: '0.5rem', alignItems: 'center', fontWeight: 600 }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Pasvorm bevestigd! Dit onderdeel past op uw {selectedBrand} {selectedModel} ({selectedYear}).
+        </div>
+      )}
+      {result === 'fail' && (
+        <div style={{ marginTop: '1rem', padding: '1rem', background: '#fee2e2', color: '#991b1b', borderRadius: '4px', display: 'flex', gap: '0.5rem', alignItems: 'center', fontWeight: 600 }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+          Dit onderdeel past helaas niet op de geselecteerde auto.
         </div>
       )}
 
