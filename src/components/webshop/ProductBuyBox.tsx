@@ -1,3 +1,4 @@
+import { formatPrice } from '@/lib/catalog';
 'use client';
 import React, { useState } from 'react';
 import { addToCart } from '@/lib/cart';
