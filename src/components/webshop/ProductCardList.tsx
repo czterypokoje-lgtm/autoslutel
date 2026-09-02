@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { slugify } from '@/lib/utils';
 
 interface ProductCardProps {
-  id: number;
+  id: string;
+  slug: string;
   title: string;
   category: string; 
   price: string;
@@ -12,7 +13,7 @@ interface ProductCardProps {
   isBestOf?: boolean;
 }
 
-export default function ProductCard({ id, title, category, price, oldPrice, img, isBestOf }: ProductCardProps) {
+export default function ProductCard({ id, slug, title, category, price, oldPrice, img, isBestOf }: ProductCardProps) {
   return (
     <div style={{
       background: '#fff',
@@ -40,7 +41,7 @@ export default function ProductCard({ id, title, category, price, oldPrice, img,
           )}
         </div>
         
-        <Link href={`/webshop/product/${slugify(title)}`} style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '1.5rem' }}>
+        <Link href={`/webshop/product/${slug}`} style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '1.5rem' }}>
           <img 
             src={img} 
             alt={title} 
@@ -51,7 +52,7 @@ export default function ProductCard({ id, title, category, price, oldPrice, img,
 
       {/* Middle Column: Details */}
       <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Link href={`/webshop/product/${slugify(title)}`} style={{ textDecoration: 'none', color: '#0f172a' }}>
+        <Link href={`/webshop/product/${slug}`} style={{ textDecoration: 'none', color: '#0f172a' }}>
           <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.25rem' }}>{title}</h2>
           <div style={{ fontSize: '1rem', color: '#475569', marginBottom: '0.75rem' }}>High quality OEM replacement part</div>
         </Link>

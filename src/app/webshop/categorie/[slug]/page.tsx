@@ -107,6 +107,7 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
               <ProductCardList
                 key={i}
                 id={p.id}
+                slug={require("@/lib/utils").slugify(p.title)}
                 title={p.title}
                 category={categoryTitle}
                 price={p.price}

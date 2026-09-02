@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import CatalogFilters from '@/components/webshop/CatalogFilters';
+import ProductCardList from '@/components/webshop/ProductCardList';
 import {
   getProducts,
   filterProducts,
@@ -120,81 +121,22 @@ export default async function CatalogPage({
               </p>
             </div>
           ) : (
-            <ul
-              style={{
-                listStyle: 'none',
-                margin: 0,
-                padding: 0,
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                gap: '1rem',
-              }}
-            >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {pageItems.map((p) => {
                 const price = shelfPrice(p.costPrice);
-                const fitsCount = p.fitment.length;
                 return (
-                  <li
+                  <ProductCardList
                     key={p.id}
-                    style={{
-                      background: '#fff',
-                      border: '1px solid #e5e7eb',
-                      borderRadius: 12,
-                      padding: '1rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '.5rem',
-                    }}
-                  >
-                    <div
-                      style={{
-                        aspectRatio: '1',
-                        background: '#f8fafc',
-                        borderRadius: 8,
-                        overflow: 'hidden',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {p.image && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={p.image}
-                          alt={p.title}
-                          loading="lazy"
-                          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                        />
-                      )}
-                    </div>
-
-                    <div style={{ fontSize: '.7rem', letterSpacing: '.06em', textTransform: 'uppercase', color: '#64748b' }}>
-                      {p.category ? facetLabel('category', p.category) : 'Onderdeel'}
-                    </div>
-
-                    <Link
-                      href={`/webshop/product/${p.slug}`}
-                      style={{ fontWeight: 700, color: '#0f172a', textDecoration: 'none', lineHeight: 1.35 }}
-                    >
-                      {p.title}
-                    </Link>
-
-                    <div style={{ fontSize: '.78rem', color: '#475569', display: 'flex', flexWrap: 'wrap', gap: '.35rem' }}>
-                      {p.buttons && <span>{p.buttons} knoppen</span>}
-                      {p.frequency && <span>· {p.frequency}</span>}
-                      {fitsCount > 0 && <span>· past op {fitsCount} model{fitsCount === 1 ? '' : 'len'}</span>}
-                    </div>
-
-                    <div style={{ marginTop: 'auto', fontSize: '1.15rem', fontWeight: 800, color: '#0f172a' }}>
-                      {formatPrice(price)}
-                      <span style={{ fontSize: '.72rem', fontWeight: 500, color: '#64748b', marginLeft: '.35rem' }}>
-                        incl. btw
-                      </span>
-                    </div>
-                  </li>
+                    id={p.id}
+                    slug={p.slug}
+                    title={p.titleNl || p.title}
+                    category={p.category ? facetLabel('category', p.category) : 'Onderdeel'}
+                    price={price ? price.toFixed(2) : '0.00'}
+                    img={p.image || '/images/placeholder.png'}
+                  />
                 );
               })}
-            </ul>
+            </div>
           )}
 
           {totalPages > 1 && (

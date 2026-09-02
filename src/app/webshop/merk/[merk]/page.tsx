@@ -129,7 +129,8 @@ export default async function BrandShopPage(props: {
                 <ProductCardList
                   key={i}
                   id={p.id}
-                  title={p.title}
+                  slug={require("@/lib/utils").slugify(p.title)}
+                title={p.title}
                   category={`${displayBrand} Onderdeel`}
                   price={p.price}
                   oldPrice={p.oldPrice}
