@@ -1,9 +1,20 @@
 'use client';
 import React, { useState } from 'react';
+import { addToCart } from '@/lib/cart';
 import { SITE_CONFIG } from '@/config/site.config';
 
-export default function ProductBuyBox({ title, price, oldPrice, description }: { title: string, price: string, oldPrice: string, description?: string }) {
+export default function ProductBuyBox({ title, price, oldPrice, description, slug }: { title: string, price: string, oldPrice: string, description?: string, slug?: string }) {
   const [purchaseType, setPurchaseType] = useState<'ship' | 'service'>('ship');
+  const [added, setAdded] = useState(false);
+
+  // The button was inert. It now writes to the basket, mapping the two
+  // purchase choices onto the service options the cart and checkout use.
+  const handleAdd = () => {
+    if (!slug) return;
+    addToCart(slug, purchaseType === 'ship' ? 'product_only' : 'mobile_tech');
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 2200);
+  };
   const servicePrice = "169.00";
   const savings = (parseFloat(oldPrice) - parseFloat(price)).toFixed(2);
   
@@ -141,8 +152,13 @@ export default function ProductBuyBox({ title, price, oldPrice, description }: {
           cursor: 'pointer',
           flex: 1,
           boxShadow: '0 4px 6px -1px rgba(185, 60, 32, 0.2)'
-        }}>
-          {purchaseType === 'ship' ? 'In winkelmand' : 'Boek Monteur'}
+        }}
+        onClick={handleAdd}
+        type="button"
+        >
+          {added
+            ? 'Toegevoegd ✓'
+            : purchaseType === 'ship' ? 'In winkelmand' : 'Boek Monteur'}
         </button>
         
         <button style={{ 

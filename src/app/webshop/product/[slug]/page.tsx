@@ -206,7 +206,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
 
           {/* Right: Details (Crutchfield Style) */}
           <div style={{ paddingRight: '2rem' }}>
-            <ProductBuyBox 
+            <ProductBuyBox slug={resolvedParams.slug} 
               title={product.title} 
               price={price.toString()} 
               oldPrice={oldPrice ? oldPrice.toString() : ''} 
