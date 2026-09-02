@@ -147,13 +147,13 @@ export interface Filters {
 }
 
 function matches(p: CatalogProduct, f: Filters): boolean {
-  if (f.category && p.category !== f.category) return false;
-  if (f.subcategory && p.subcategory !== f.subcategory) return false;
-  if (f.make && !p.makes.includes(f.make)) return false;
-  if (f.manufacturer && p.manufacturer !== f.manufacturer) return false;
-  if (f.condition && p.condition !== f.condition) return false;
+  if (f.category && p.category?.toLowerCase() !== f.category.toLowerCase()) return false;
+  if (f.subcategory && p.subcategory?.toLowerCase() !== f.subcategory.toLowerCase()) return false;
+  if (f.make && !p.makes.some(m => m.toLowerCase() === f.make!.toLowerCase())) return false;
+  if (f.manufacturer && p.manufacturer?.toLowerCase() !== f.manufacturer.toLowerCase()) return false;
+  if (f.condition && p.condition?.toLowerCase() !== f.condition.toLowerCase()) return false;
   if (f.buttons && p.buttons !== f.buttons) return false;
-  if (f.frequency && p.frequency !== f.frequency) return false;
+  if (f.frequency && p.frequency?.toLowerCase() !== f.frequency.toLowerCase()) return false;
   if (f.maxPrice != null) {
     const price = shelfPrice(p.costPrice);
     if (price == null || price > f.maxPrice) return false;

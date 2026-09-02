@@ -104,7 +104,7 @@ export default function CatalogFilters({
       {activeCount > 0 && (
         <div className={styles.chips}>
           {Object.entries(active).map(([k, v]) => {
-            const opt = facets[k]?.find((o) => o.value === v);
+            const opt = facets[k]?.find((o) => o.value.toLowerCase() === v.toLowerCase());
             return (
               <button
                 key={k}
@@ -145,7 +145,7 @@ export default function CatalogFilters({
               <>
                 <ul className={styles.list}>
                   {visible.map((o) => {
-                    const checked = active[key] === o.value;
+                    const checked = active[key]?.toLowerCase() === o.value.toLowerCase();
                     return (
                       <li key={o.value}>
                         <label className={`${styles.opt} ${checked ? styles.optOn : ''}`}>
