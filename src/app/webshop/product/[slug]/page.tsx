@@ -204,8 +204,8 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
             <ProductBuyBox
               slug={resolvedParams.slug}
               title={entry.titleNl}
-              price={formatPrice(sellPrice)}
-              oldPrice={oldPriceNum ? formatPrice(oldPriceNum) : ''}
+              price={sellPrice}
+              oldPrice={oldPriceNum || 0}
               description={entry.descriptionNl}
               needsProgramming={needsProgramming}
               category={entry.category ?? ''}

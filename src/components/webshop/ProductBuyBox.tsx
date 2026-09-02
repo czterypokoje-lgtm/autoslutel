@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { addToCart } from '@/lib/cart';
 import { SITE_CONFIG } from '@/config/site.config';
 
-export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category }: { title: string, price: string, oldPrice: string, description?: string, slug?: string, needsProgramming?: boolean, category?: string }) {
+export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category }: { title: string, price: number, oldPrice: number, description?: string, slug?: string, needsProgramming?: boolean, category?: string }) {
   const [purchaseType, setPurchaseType] = useState<'ship' | 'service'>('ship');
   const [added, setAdded] = useState(false);
 
@@ -16,7 +16,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
     window.setTimeout(() => setAdded(false), 2200);
   };
   const servicePrice = "169.00";
-  const savings = (parseFloat(oldPrice) - parseFloat(price)).toFixed(2);
+  const savings = (oldPrice - price);
   
   // Theme Colors
   const themeOrange = '#b93c20'; // Crutchfield rust orange
@@ -47,14 +47,14 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
       <div>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.75rem', marginBottom: '0.25rem' }}>
           <span style={{ fontSize: '2rem', fontWeight: 800, color: bmBlack, lineHeight: 1 }}>
-            €{purchaseType === 'ship' ? price : servicePrice}
+            {purchaseType === 'ship' ? formatPrice(price) : formatPrice(169.00)}
           </span>
           <div style={{ paddingBottom: '0.25rem' }}>
             <span style={{ fontSize: '0.9rem', color: '#64748b', textDecoration: 'line-through', marginRight: '0.5rem' }}>
-              €{purchaseType === 'ship' ? oldPrice : "350.00"} dealer
+              {purchaseType === 'ship' ? formatPrice(oldPrice) : formatPrice(350.00)} dealer
             </span>
             <span style={{ background: '#16a34a', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>
-              Bespaar €{purchaseType === 'ship' ? savings : "181.00"}
+              Bespaar {purchaseType === 'ship' ? formatPrice(savings) : formatPrice(181.00)}
             </span>
           </div>
         </div>
@@ -114,7 +114,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
             <div style={{ position: 'absolute', top: 12, right: 12, width: 18, height: 18, borderRadius: '50%', border: purchaseType === 'ship' ? `6px solid ${themeOrange}` : '2px solid #cbd5e1' }} />
             <div style={{ fontWeight: 800, fontSize: '1rem', color: bmBlack, marginBottom: '0.25rem' }}>Stuur sleutel naar mij</div>
             <div style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '0.5rem' }}>Inclusief programmeer gids.</div>
-            <div style={{ fontWeight: 700 }}>+ €{price}</div>
+            <div style={{ fontWeight: 700 }}>+ {formatPrice(price)}</div>
           </label>
 
           {/* Option 2: Service */}
@@ -134,7 +134,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
             <div style={{ position: 'absolute', top: 12, right: 12, width: 18, height: 18, borderRadius: '50%', border: purchaseType === 'service' ? `6px solid ${themeOrange}` : '2px solid #cbd5e1' }} />
             <div style={{ fontWeight: 800, fontSize: '1rem', color: bmBlack, marginBottom: '0.25rem' }}>Mobiele Tech komt</div>
             <div style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '0.5rem' }}>Wij slijpen & programmeren.</div>
-            <div style={{ fontWeight: 700 }}>+ €{servicePrice}</div>
+            <div style={{ fontWeight: 700 }}>+ {formatPrice(169.00)}</div>
           </label>
         </div>
       </div>
@@ -153,7 +153,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
           lineHeight: 1.55,
         }}>
           ⚠️ <strong>Let op:</strong> dit product vereist programmering na installatie.
-          Onze monteur doet dit voor + €169 aan huis.
+          Onze monteur doet dit voor + {formatPrice(169.00)} aan huis.
         </div>
       )}
 
