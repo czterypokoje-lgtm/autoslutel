@@ -33,7 +33,18 @@ export interface CatalogProduct {
   costPrice: number | null;
   image: string | null;
   fitment: Fitment[];
+  /** Original supplier text, kept for reference and search only. */
   excerpt: string;
+
+  /* Dutch copy generated in scripts/build-catalog.mjs from the fields above.
+     The supplier's own text is English and identical to the text on their
+     site; Google picks one source for duplicate copy and it is rarely the
+     newer shop. */
+  titleNl: string;
+  descriptionNl: string;
+  /** Self-contained answer for featured snippets and LLM citation. */
+  directAnswer: string;
+  metaDescriptionNl: string;
 }
 
 const catalog = catalogJson as unknown as {

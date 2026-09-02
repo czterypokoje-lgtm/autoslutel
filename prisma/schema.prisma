@@ -1,0 +1,277 @@
+// Webshop data model.
+//
+// Replaces the mocked prisma.ts that returned empty arrays, and the SQLite
+// schema that shipped earlier: SQLite cannot persist on Vercel, where the
+// filesystem is ephemeral and every request may run in a fresh container.
+// This runs on the Supabase Postgres the site already uses — one database,
+// not two.
+//
+//   npx prisma migrate dev --name webshop
+//
+// DATABASE_URL  = Supabase pooler connection string (pgbouncer, port 6543)
+// DIRECT_URL    = direct connection (port 5432), needed for migrations
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Audience {
+  PUBLIC
+  TRADE // lock picks, key programmers — verified businesses only
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  DISCONTINUED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+/// How the customer wants the part delivered — the thing a pure webshop
+/// cannot offer. PRODUCT_ONLY ships the box; SEND_IN means they post their key
+/// to us and we transfer the electronics; MOBILE_TECH sends a technician.
+enum ServiceOption {
+  PRODUCT_ONLY
+  SEND_IN
+  MOBILE_TECH
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  sku           String        @unique
+  slug          String        @unique
+  titleNl       String
+  descriptionNl String
+  /// Two or three self-contained sentences, for featured snippets and LLMs.
+  directAnswer  String?
+  metaDescNl    String?
+
+  category      String?
+  subcategory   String?
+  audience      Audience      @default(PUBLIC)
+  status        ProductStatus @default(DRAFT)
+
+  buttons       Int?
+  frequency     String?
+  chip          String?
+  condition     String        @default("aftermarket")
+  manufacturer  String?
+
+  /// Supplier cost. Never rendered — the shelf price is derived from it so
+  /// margin, VAT and rounding live in exactly one place.
+  costPrice     Decimal       @db.Decimal(10, 2)
+  priceExVat    Decimal       @db.Decimal(10, 2)
+  vatRate       Decimal       @default(21.00) @db.Decimal(4, 2)
+
+  stock         Int           @default(0)
+  /// Needed for Google Shopping; absent from the supplier feed, so it has to
+  /// be requested from them.
+  gtin          String?
+
+  /// Whether the part has to be taught to the car before it will start.
+  /// Drives both the service selector and the warning on the product page.
+  requiresProgramming Boolean @default(false)
+
+  images        ProductImage[]
+  fitment       Fitment[]
+  categories    CategoryProduct[]
+  orderItems    OrderItem[]
+  reviews       Review[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([category, audience, status])
+  @@index([manufacturer])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  url       String
+  alt       String
+  position  Int     @default(0)
+  width     Int?
+  height    Int?
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, position])
+}
+
+/// Which vehicles a part fits.
+///
+/// The single most valuable table in the shop: it drives the vehicle filter,
+/// the kenteken lookup, the "past op deze modellen" block, and the fitment
+/// attributes in the Merchant Center feed. In the supplier data this lives
+/// inside prose, and roughly a third of products carry none at all.
+model Fitment {
+  id        String  @id @default(cuid())
+  productId String
+  make      String
+  model     String
+  yearFrom  Int
+  yearTo    Int
+  note      String?
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([make, model, yearFrom, yearTo])
+  @@index([productId])
+}
+
+model Category {
+  id        String            @id @default(cuid())
+  slug      String            @unique
+  nameNl    String
+  parentId  String?
+  parent    Category?         @relation("CategoryTree", fields: [parentId], references: [id])
+  children  Category[]        @relation("CategoryTree")
+  products  CategoryProduct[]
+}
+
+model CategoryProduct {
+  categoryId String
+  productId  String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, productId])
+}
+
+model Customer {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  phone     String?
+  /// Set once a KVK number has been verified; unlocks the TRADE catalogue.
+  kvkNumber String?
+  kvkVerifiedAt DateTime?
+
+  orders    Order[]
+  addresses Address[]
+  vehicles  CustomerVehicle[]
+  reviews   Review[]
+
+  createdAt DateTime  @default(now())
+}
+
+/// Saved number plates. The one account feature that genuinely pays for
+/// itself here: a returning customer gets fitment filtering for free.
+model CustomerVehicle {
+  id         String   @id @default(cuid())
+  customerId String
+  kenteken   String
+  make       String?
+  model      String?
+  year       Int?
+
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, kenteken])
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  customerId String
+  street     String
+  houseNumber String
+  postcode   String
+  city       String
+  country    String   @default("NL")
+  isDefault  Boolean  @default(false)
+
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  /// Human-readable: AS24-2026-00042. A customer cannot be given a cuid.
+  orderNumber   String      @unique
+  customerId    String?
+  status        OrderStatus @default(PENDING)
+
+  /// Mollie payment id — iDEAL is the default in the Netherlands, so Mollie
+  /// rather than Stripe.
+  molliePaymentId String?   @unique
+  paymentMethod String?
+
+  currency      String      @default("EUR")
+  totalExVat    Decimal     @db.Decimal(10, 2)
+  totalVat      Decimal     @db.Decimal(10, 2)
+  totalInc      Decimal     @db.Decimal(10, 2)
+  shippingCost  Decimal     @default(0) @db.Decimal(10, 2)
+
+  shippingAddress Json?
+  billingAddress  Json?
+  /// Set when any line was ordered with MOBILE_TECH, so the order also
+  /// becomes a job for the service side.
+  kenteken      String?
+  servicePostcode String?
+  servicePreferredAt DateTime?
+
+  items         OrderItem[]
+  customer      Customer?   @relation(fields: [customerId], references: [id])
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id            String        @id @default(cuid())
+  orderId       String
+  productId     String?
+
+  /// Snapshots. Once an order exists its lines must never change because a
+  /// product was edited later — an invoice has to stay reproducible.
+  sku           String
+  titleNl       String
+  unitPriceExVat Decimal      @db.Decimal(10, 2)
+  vatRate       Decimal       @db.Decimal(4, 2)
+  quantity      Int           @default(1)
+
+  serviceOption ServiceOption @default(PRODUCT_ONLY)
+  servicePrice  Decimal       @default(0) @db.Decimal(10, 2)
+
+  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product       Product?      @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+}
+
+/// Only ever written after a delivered order. Reviews that are not tied to a
+/// verified purchase must not exist: the shop shipped fabricated ones once,
+/// and the schema should make that hard to repeat.
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  customerId String
+  orderId    String
+  rating     Int
+  title      String?
+  body       String
+  publishedAt DateTime?
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  @@unique([productId, orderId])
+  @@index([productId, publishedAt])
+}

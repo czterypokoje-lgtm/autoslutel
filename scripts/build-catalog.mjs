@@ -156,18 +156,212 @@ const plain = (html) =>
  * nature — roughly 60% of products carry a year range at all — so anything
  * built on this has to tolerate an empty list.
  */
-function extractFitment(text) {
+function extractFitment(text, productMakes) {
   const out = [];
-  const re = /\b([A-Z][a-zA-Z-]{2,})\s+([A-Za-z0-9][\w '.-]{0,18}?)\s+((?:19|20)\d{2})\s*[-–—]\s*((?:19|20)\d{2})/g;
+  const push = (make, model, from, to) => {
+    if (!make) return;
+    const key = `${make}|${model}|${from}|${to}`;
+    if (out.some((x) => `${x.make}|${x.model}|${x.from}|${x.to}` === key)) return;
+    if (out.length < 40) out.push({ make, model: model.trim().slice(0, 28), from, to });
+  };
+
+  // "Hyundai i20 2008-2012" — make named right before the model.
+  const withMake = /\b([A-Z][a-zA-Z-]{2,})\s+([A-Za-z0-9][\w '.-]{0,18}?)\s+((?:19|20)\d{2})\s*[-–—]\s*((?:19|20)\d{2})/g;
   let m;
-  while ((m = re.exec(text)) !== null) {
-    const make = firstMatch(CAR_MAKES, m[1]);
-    if (!make) continue;
-    out.push({ make, model: m[2].trim(), from: +m[3], to: +m[4] });
-    if (out.length >= 40) break;
+  while ((m = withMake.exec(text)) !== null) {
+    push(firstMatch(CAR_MAKES, m[1]), m[2], +m[3], +m[4]);
   }
+
+  // "Fiesta 2009-2017" with no make on the line. Common once the description
+  // has already named the brand in a heading; inherit it from the product.
+  if (productMakes.length === 1) {
+    const noMake = /\b([A-Z][\w '.-]{1,20}?)\s+((?:19|20)\d{2})\s*[-–—]\s*((?:19|20)\d{2})/g;
+    while ((m = noMake.exec(text)) !== null) {
+      const model = m[1].trim();
+      // Skip when the captured word is the make itself or an obvious non-model.
+      if (firstMatch(CAR_MAKES, model)) continue;
+      if (/^(from|for|the|and|with|models?|years?|compatible|fits)$/i.test(model)) continue;
+      push(productMakes[0], model, +m[2], +m[3]);
+    }
+  }
+
+  // "Astra 2004 onwards" / "Golf 2015 >" — open-ended range.
+  if (productMakes.length === 1) {
+    const openEnded = /\b([A-Z][\w '.-]{1,20}?)\s+((?:19|20)\d{2})\s*(?:onwards?|\+|>|and later)/gi;
+    while ((m = openEnded.exec(text)) !== null) {
+      const model = m[1].trim();
+      if (firstMatch(CAR_MAKES, model)) continue;
+      push(productMakes[0], model, +m[2], new Date().getFullYear());
+    }
+  }
+
   return out;
 }
+
+/* ── Dutch copy ───────────────────────────────────────────────────────── */
+
+const TYPE_COPY = {
+  behuizingen: {
+    noun: 'sleutelbehuizing',
+    what: 'Vervang de versleten of gebarsten kast van uw autosleutel en zet de bestaande elektronica eenvoudig over.',
+    programming: false,
+  },
+  sleutelbaarden: {
+    noun: 'sleutelbaard',
+    what: 'Ongeslepen sleutelbaard om uw bestaande sleutel te vervangen of aan te vullen. Wij slijpen hem passend op uw slot.',
+    programming: false,
+  },
+  afstandsbedieningen: {
+    noun: 'afstandsbediening',
+    what: 'Afstandsbediening voor het openen en sluiten van uw auto op afstand.',
+    programming: true,
+  },
+  'smart-keys': {
+    noun: 'smart key',
+    what: 'Keyless-entry sleutel: de auto herkent de sleutel in uw zak, u hoeft hem niet in het contact te steken.',
+    programming: true,
+  },
+  transponders: {
+    noun: 'transponderchip',
+    what: 'De chip die met de startonderbreker van uw auto communiceert. Zonder een correct ingeleerde transponder start de auto niet.',
+    programming: true,
+  },
+  batterijen: {
+    noun: 'batterij',
+    what: 'Vervangingsbatterij voor uw autosleutel. Merkt u dat het bereik kleiner wordt, dan is de batterij meestal de oorzaak.',
+    programming: false,
+  },
+  sloten: {
+    noun: 'slotonderdeel',
+    what: 'Vervangend slot of cilinder. Klemt uw sleutel of draait het contact zwaar, dan zijn de lamellen meestal versleten.',
+    programming: false,
+  },
+  accessoires: {
+    noun: 'accessoire',
+    what: 'Accessoire voor uw autosleutel.',
+    programming: false,
+  },
+  gereedschap: {
+    noun: 'gereedschap',
+    what: 'Professioneel gereedschap voor autosleutelspecialisten.',
+    programming: false,
+  },
+};
+
+/** Groups fitment rows per make so the sentence reads naturally. */
+function fitmentSentence(fitment) {
+  if (!fitment.length) return null;
+  const byMake = new Map();
+  for (const f of fitment) {
+    if (!byMake.has(f.make)) byMake.set(f.make, []);
+    byMake.get(f.make).push(`${f.model} ${f.from}–${f.to}`);
+  }
+  const parts = [...byMake.entries()].map(
+    ([make, models]) => `${make} ${models.slice(0, 6).join(', ')}`
+  );
+  return parts.join(' · ');
+}
+
+/**
+ * Writes the Dutch product copy from the structured attributes.
+ *
+ * The supplier's own text is English and, with permission or not, identical to
+ * the text on their site — Google picks one source for duplicate copy and it
+ * is rarely the newer shop. Generating from attributes gives every product
+ * distinct Dutch prose and keeps it consistent with the filters, because both
+ * read the same fields.
+ */
+function dutchCopy(p) {
+  const t = TYPE_COPY[p.category] ?? TYPE_COPY.accessoires;
+  const makes = p.makes.slice(0, 3).join(', ');
+  const noun = cap(t.noun);
+
+  // The generated part alone is not unique — 1,058 of 1,112 products would end
+  // up sharing a title, which is the duplicate-title problem all over again.
+  // The supplier title carries what actually distinguishes them: part codes
+  // (NSN14, HU101, IKEYVW003AL) and chassis names (E46, Golf 7). Strip the
+  // English filler and the make names, keep the rest as the distinguishing tail.
+  const tail = p.title
+    .replace(/\b(for|with|compatible|replacement|aftermarket|genuine|oem|new|brand|button|buttons|key|keys|remote|shell|case|blade|fob|smart|universal|style|and|the|of)\b/gi, ' ')
+    .replace(new RegExp(`\\b(${p.makes.map((m) => m.split(/[\s-]/)[0]).join('|') || 'zzzz'})\\b`, 'gi'), ' ')
+    .replace(/[,()]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 42)
+    .trim();
+
+  const titleNl = [
+    noun,
+    makes || null,
+    p.buttons ? `${p.buttons} knoppen` : null,
+    tail && tail.length > 1 ? tail : null,
+  ].filter(Boolean).join(' · ');
+
+  const specs = [];
+  if (p.buttons) specs.push(`${p.buttons} knoppen`);
+  if (p.frequency) specs.push(p.frequency);
+  if (p.chip) specs.push(`chip ${p.chip}`);
+  if (p.condition === 'genuine') specs.push('origineel onderdeel');
+  else if (p.condition === 'oem') specs.push('OEM-kwaliteit');
+
+  const fits = fitmentSentence(p.fitment);
+
+  const note = t.programming
+    ? 'Let op: deze sleutel moet nog op uw auto worden ingeleerd. Zonder programmering opent hij wel, maar start de auto niet — onze monteur regelt dat op locatie of u stuurt de sleutel naar ons op.'
+    : 'Programmeren is niet nodig — u kunt dit onderdeel zelf monteren, of het door onze monteur laten doen.';
+
+  // The opening sentence names the product; `what` explains it. Repeating the
+  // noun in both reads like filler, so the opening leads with the fitment.
+  const opening = makes
+    ? `Deze ${t.noun} is geschikt voor ${makes}.`
+    : `Deze ${t.noun} past op meerdere modellen.`;
+
+  const descriptionNl = [
+    opening,
+    t.what,
+    specs.length ? `Uitvoering: ${specs.join(', ')}.` : null,
+    fits ? `Past op: ${fits}.` : null,
+    note,
+  ].filter(Boolean).join(' ');
+
+  // Two or three sentences that answer the question on their own — what LLMs
+  // and Google featured snippets quote, and what the English blurb never did.
+  const directAnswer = [
+    `${noun}${makes ? ` voor ${makes}` : ''}${p.buttons ? ` met ${p.buttons} knoppen` : ''}.`,
+    specs.length ? `Uitvoering: ${specs.join(', ')}.` : null,
+    p.fitment.length ? `Past op ${p.fitment.length} model${p.fitment.length === 1 ? '' : 'len'}.` : null,
+    t.programming
+      ? 'Inleren op uw auto is vereist; dat doen wij op locatie.'
+      : 'U kunt dit onderdeel zelf monteren.',
+  ].filter(Boolean).join(' ');
+
+  // Aim for 120–155 characters: long enough to earn the click, short enough
+  // that Google does not cut the end off.
+  // Naming the leading model keeps otherwise near-identical descriptions
+  // distinct, and it is the phrase people actually search for.
+  const leadModel = p.fitment[0]
+    ? `${p.fitment[0].make} ${p.fitment[0].model} ${p.fitment[0].from}-${p.fitment[0].to}`
+    : null;
+
+  let meta = [
+    makes ? `${noun} voor ${makes}` : noun,
+    p.buttons ? `${p.buttons} knoppen` : null,
+    leadModel ? `o.a. ${leadModel}` : null,
+    p.fitment.length > 1 ? `+${p.fitment.length - 1} modellen` : null,
+  ].filter(Boolean).join(', ');
+  meta += t.programming
+    ? '. Inclusief inleren op locatie mogelijk. 12 maanden garantie.'
+    : '. Zelf monteren of door ons laten doen. 12 maanden garantie.';
+
+  return {
+    titleNl: titleNl.slice(0, 90),
+    descriptionNl,
+    directAnswer,
+    metaDescriptionNl: meta.length > 155 ? `${meta.slice(0, 152).replace(/[ ,.]$/, '')}…` : meta,
+  };
+}
+
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /* ── build ────────────────────────────────────────────────────────────── */
 
@@ -206,7 +400,7 @@ for (const p of raw) {
   const freqMatch = hay.match(/\b(\d{3}(?:\.\d+)?)\s*MHz\b/i);
   const chipMatch = hay.match(/\b(ID\s?\d{2}|PCF\s?\d{4}|Hitag\s?\d?|4D-?\d{2}|46|48)\b/i);
 
-  const fitment = extractFitment(body);
+  const fitment = extractFitment(body, makes);
   if (fitment.length) stats.withFitment++;
 
   const priceRaw = parseFloat(String(p.price ?? '').replace(',', '.'));
@@ -231,7 +425,73 @@ for (const p of raw) {
     fitment,
     excerpt: body.slice(0, 260),
   });
+
+  // Dutch copy is derived last so it can read every attribute above.
+  const last = products[products.length - 1];
+  Object.assign(last, dutchCopy(last));
 }
+
+/* ── deduplicate ──────────────────────────────────────────────────────────
+   The supplier feed lists the same part several times — one group had the
+   identical part number 1K0905851B six times over, differing only in cost and
+   in how much fitment text each listing carried. Shipping those as separate
+   pages would recreate the duplicate-title problem the site was just cleaned
+   of, and split any ranking between near-identical URLs.
+
+   Records are grouped on the part number when the title carries one, else on
+   a normalised title. The surviving record keeps the richest fitment, the
+   lowest cost, and the union of every group member's fitment rows.
+   ─────────────────────────────────────────────────────────────────────── */
+
+function dedupeKey(p) {
+  // Manufacturer part numbers: 1K0905851B, IKEYVW003AL, 5K0837202AD…
+  const part = p.title.match(/\b[0-9A-Z]{2,}[0-9]{3,}[0-9A-Z]*\b/);
+  if (part) return `part:${part[0].toUpperCase()}`;
+  return `title:${p.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()}`;
+}
+
+function dedupe(list) {
+  const groups = new Map();
+  for (const p of list) {
+    const k = dedupeKey(p);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(p);
+  }
+
+  const merged = [];
+  let removed = 0;
+  for (const group of groups.values()) {
+    if (group.length === 1) { merged.push(group[0]); continue; }
+    removed += group.length - 1;
+
+    // Keep the listing with the most fitment detail; ties go to the cheapest.
+    const best = group.slice().sort((a, b) =>
+      b.fitment.length - a.fitment.length ||
+      (a.costPrice ?? Infinity) - (b.costPrice ?? Infinity)
+    )[0];
+
+    const seen = new Set(best.fitment.map((f) => `${f.make}|${f.model}|${f.from}|${f.to}`));
+    for (const other of group) {
+      if (other === best) continue;
+      for (const f of other.fitment) {
+        const k = `${f.make}|${f.model}|${f.from}|${f.to}`;
+        if (!seen.has(k) && best.fitment.length < 40) { seen.add(k); best.fitment.push(f); }
+      }
+      const c = other.costPrice;
+      if (c != null && (best.costPrice == null || c < best.costPrice)) best.costPrice = c;
+      for (const m of other.makes) if (!best.makes.includes(m)) best.makes.push(m);
+    }
+    merged.push(best);
+  }
+  return { merged, removed };
+}
+
+const { merged: deduped, removed: duplicatesRemoved } = dedupe(products);
+products.length = 0;
+products.push(...deduped);
+
+// Copy is regenerated after merging so it reflects the combined fitment.
+for (const p of products) Object.assign(p, dutchCopy(p));
 
 const facetCount = (key) => {
   const c = {};
@@ -259,8 +519,9 @@ const catalog = {
 };
 
 writeFileSync(OUT, JSON.stringify(catalog));
-console.log(`catalog.json written — ${products.length} products`);
-console.log(`  public ${stats.public} · trade ${stats.trade} (gated)`);
-console.log(`  uncategorised ${stats.noCategory} · with buttons ${stats.withButtons} · with fitment ${stats.withFitment}`);
+console.log(`catalog.json written — ${products.length} products (${duplicatesRemoved} duplicates merged)`);
+const pub = products.filter((p) => p.audience === 'public').length;
+console.log(`  public ${pub} · trade ${products.length - pub} (gated)`);
+console.log(`  with fitment ${products.filter((p) => p.fitment.length).length} · with buttons ${products.filter((p) => p.buttons).length}`);
 console.log('  car makes:', Object.keys(catalog.facets.makes).length);
 console.log('  categories:', Object.keys(catalog.facets.category).join(', '));
