@@ -62,15 +62,6 @@ export default function ProductCard({ id, slug, title, category, price, oldPrice
           In stock
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <div style={{ fontSize: '0.8rem', color: '#0f172a', marginBottom: '0.4rem' }}>Option: <strong>Zwart</strong></div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            {/* Mock Swatches */}
-            <div style={{ width: '36px', height: '24px', border: '2px solid #dc2626', borderRadius: '4px', background: '#1e293b' }}></div>
-            <div style={{ width: '36px', height: '24px', border: '1px solid #cbd5e1', borderRadius: '4px', background: '#94a3b8' }}></div>
-            <div style={{ width: '36px', height: '24px', border: '1px solid #cbd5e1', borderRadius: '4px', background: '#ef4444' }}></div>
-          </div>
-        </div>
 
         <ul style={{ paddingLeft: '1.2rem', margin: 0, color: '#0f172a', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', listStyleType: 'disc' }}>
           <li>Perfecte pasvorm voor originele behuizing</li>
