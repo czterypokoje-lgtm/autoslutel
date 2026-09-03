@@ -9,8 +9,12 @@ import ArticlesSection from '@/components/webshop/ArticlesSection';
 import { getShopProducts } from '@/lib/shopCatalog';
 
 export const metadata = {
-  title: 'Autosleutel24 Webshop - OEM Sleutels & Behuizingen',
-  description: 'Vind de juiste autosleutel, batterij of behuizing voor uw auto. Bestel direct online voor minder dan de dealer prijs.',
+  // Not "OEM": this catalogue is aftermarket throughout, and the title is
+  // the first place a customer is told what they are buying.
+  title: 'Autosleutel24 Webshop — autosleutels, behuizingen & printplaten',
+  description:
+    'Vind de juiste autosleutel, behuizing of printplaat voor uw auto. Filter op frequentie, ' +
+    'transponder en sleutelbaard. Bestel online voor minder dan de dealerprijs.',
 };
 
 export default async function WebshopPage() {

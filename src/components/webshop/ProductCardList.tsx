@@ -65,19 +65,9 @@ export default function ProductCard({
   const freeShipping = Number.isFinite(amount) && amount >= FREE_SHIPPING_FROM;
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        gap: '2rem',
-        background: '#fff',
-        border: '1px solid #e5e5e5',
-        borderRadius: '12px',
-        padding: '1.5rem',
-        marginBottom: '1rem',
-      }}
-    >
+    <div className="shop-list-card">
       {/* Image */}
-      <div style={{ flex: '0 0 240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="shop-list-card-media">
         <Link href={href} style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={img} alt={title} style={{ width: '100%', maxWidth: '220px', objectFit: 'contain' }} />
@@ -85,7 +75,7 @@ export default function ProductCard({
       </div>
 
       {/* Details */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <div className="shop-list-card-body">
         <Link href={href} style={{ textDecoration: 'none', color: '#0f172a' }}>
           <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem' }}>{title}</h2>
         </Link>
@@ -128,16 +118,7 @@ export default function ProductCard({
       </div>
 
       {/* Price */}
-      <div
-        style={{
-          flex: '0 0 200px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          borderLeft: '1px solid #f1f5f9',
-          paddingLeft: '1.5rem',
-        }}
-      >
+      <div className="shop-list-card-price">
         {freeShipping && (
           <div style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 600, marginBottom: '0.5rem' }}>
             Gratis verzending

@@ -103,7 +103,7 @@ export default function CheckoutForm({ products }: { products: Slim[] }) {
   };
 
   return (
-    <form onSubmit={submit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'minmax(0,1fr) minmax(0,320px)', alignItems: 'start' }}>
+    <form onSubmit={submit} className="shop-split-grid">
       <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '1.25rem', display: 'grid', gap: '.9rem' }}>
         <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>Uw gegevens</h2>
 

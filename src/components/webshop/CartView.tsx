@@ -66,7 +66,7 @@ export default function CartView({ products }: { products: Slim[] }) {
   const toGo = Math.max(0, FREE_SHIPPING_FROM - totals.subtotalInc);
 
   return (
-    <div style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'minmax(0,1fr) minmax(0,320px)', alignItems: 'start' }}>
+    <div className="shop-split-grid">
       <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: '.75rem' }}>
         {totals.lines.map((l) => (
           <li key={`${l.slug}-${l.service}`} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '1rem', display: 'flex', gap: '1rem' }}>

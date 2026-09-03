@@ -37,8 +37,8 @@ export default function WebshopNavigation() {
     <header style={{ width: '100%', fontFamily: 'var(--font-sans)', zIndex: 50, position: 'relative' }} onMouseLeave={() => setShowBrandMenu(false)}>
       
       {/* Top Orange Bar */}
-      <div style={{ background: '#b93c20', color: '#fff', padding: '0.4rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}>
-        <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="shop-topbar">
+        <div className="shop-topbar-text">
           {/* The real rule from the catalogue, not a flat promise: shipping is
               €5,00 and free from €25,00, and delivery is 2-3 working days. */}
           Gratis verzending vanaf €25 · levertijd 2 - 3 werkdagen
@@ -61,7 +61,7 @@ export default function WebshopNavigation() {
           </a>
 
           {/* Chat Pill (Red bg, White border, White text) */}
-          <div style={{ 
+          <div className="shop-topbar-chat" style={{ 
             display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer',
             border: '1.5px solid #fff', color: '#fff',
             padding: '0.2rem 0.75rem', borderRadius: '999px'
@@ -77,7 +77,7 @@ export default function WebshopNavigation() {
       </div>
 
       {/* Main White Bar */}
-      <div style={{ background: '#fff', padding: '0.5rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '2rem', borderBottom: '1px solid #e2e8f0' }}>
+      <div className="shop-header-bar">
         
         {/* Logo */}
         <Link href="/webshop" style={{ flexShrink: 0 }}>
@@ -86,7 +86,7 @@ export default function WebshopNavigation() {
             alt="Autosleutel24 Webshop"
             width={160}
             height={48}
-            style={{ height: '48px', width: 'auto', display: 'block' }}
+            style={{ height: 'clamp(34px, 9vw, 48px)', width: 'auto', display: 'block' }}
           />
         </Link>
 
@@ -95,18 +95,16 @@ export default function WebshopNavigation() {
           * query. It used to hold state and nothing else: typing an article code
           * and pressing the button did nothing at all.
           */}
-        <form
-          action="/webshop/zoeken"
-          method="get"
-          style={{ flex: 1, maxWidth: '800px', display: 'flex' }}
-        >
+        <form action="/webshop/zoeken" method="get" className="shop-header-search">
           <input 
             type="text" 
             name="q"
             placeholder="Artikelcode, merk of omschrijving" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ width: '100%', padding: '0.85rem 1rem', border: '2px solid #94a3b8', borderRadius: '4px 0 0 4px', fontSize: '1rem', outline: 'none' }}
+            /* 16px minimum: any smaller and iOS Safari zooms the page in when
+               the field takes focus, and it never zooms back out. */
+            style={{ width: '100%', minWidth: 0, padding: '0.7rem 0.9rem', border: '2px solid #94a3b8', borderRadius: '4px 0 0 4px', fontSize: '16px', outline: 'none' }}
           />
           <button type="submit" aria-label="Zoeken" style={{ background: '#b93c20', color: '#fff', border: 'none', padding: '0 1.5rem', borderRadius: '0 4px 4px 0', cursor: 'pointer' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -114,7 +112,7 @@ export default function WebshopNavigation() {
         </form>
 
         {/* Right Icons */}
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', color: '#334155' }}>
+        <div className="shop-header-actions">
           <Link href="/webshop/account" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', textDecoration: 'none', color: 'inherit' }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Account</span>
@@ -134,7 +132,7 @@ export default function WebshopNavigation() {
       </div>
 
       {/* Category Bottom Nav */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', display: 'flex', padding: '0 1.5rem', position: 'relative' }}>
+      <div className="shop-header-nav">
         {categoryLinks.map((link) => (
           <div 
             key={link.href}
@@ -154,7 +152,7 @@ export default function WebshopNavigation() {
           </div>
         ))}
         {showBrandMenu && (
-          <div onMouseLeave={() => setShowBrandMenu(false)}>
+          <div className="shop-brand-megamenu" onMouseLeave={() => setShowBrandMenu(false)}>
             <BrandMegaMenu />
           </div>
         )}

@@ -41,7 +41,8 @@ export default async function AdminLayout({
           <span className={styles.spacer} />
           <span className={styles.who}>
             {user.role && <span className={styles.role}>{user.role}</span>}
-            {user.email}
+            {/* The address is hidden on a narrow bar; the role badge stays. */}
+            <span className={styles.whoEmail}>{user.email}</span>
           </span>
           <SignOutButton />
         </header>

@@ -182,14 +182,14 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
       </div>
 
       {/* Fitment Widget Header */}
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', marginBottom: '1.5rem' }}>
+      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(1rem, 4vw, 2rem)', marginBottom: '1.5rem' }}>
         <VehicleFitmentWidget fitment={entry.fitment} />
       </div>
 
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
+      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(1rem, 4vw, 2rem)' }}>
 
         {/* Main 2-Col Layout (Left: Gallery & Bundles, Right: Buy Box) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: '3rem', alignItems: 'start' }}>
+        <div className="shop-product-grid">
 
           {/* Left: Gallery & Bundle */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -207,7 +207,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
           </div>
 
           {/* Right: Details */}
-          <div style={{ paddingRight: '2rem' }}>
+          <div>
             <ProductBuyBox
               slug={resolvedParams.slug}
               title={entry.titleNl}

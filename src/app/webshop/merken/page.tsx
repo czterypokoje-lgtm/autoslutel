@@ -54,12 +54,7 @@ export default function MerkenPage() {
         `}</style>
 
         {/* Brands Grid - 4 Columns */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(4, 1fr)', 
-          gap: '1.5rem',
-          marginTop: '2rem'
-        }}>
+        <div className="shop-brand-grid">
           {BRANDS.map(({ make, count }) => (
             <Link
               href={`/webshop/catalogus?make=${encodeURIComponent(make)}`}

@@ -327,6 +327,25 @@ button { font-family: inherit; cursor: pointer; }
   border-collapse: collapse;
   font-size: 0.875rem;
 }
+
+/*
+ * Price tables on a phone.
+ *
+ * These tables are four and five columns wide and cannot fold; at 375px they
+ * were 560px wide and the right-hand columns — the prices — were clipped off
+ * the screen with no way to reach them. A table wide enough to need it now
+ * scrolls sideways on its own, inside the article.
+ */
+@media (max-width: 720px) {
+  .blog-content .price-table,
+  .price-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+}
 .price-table th {
   background: var(--navy-800);
   color: #fff;
@@ -811,4 +830,182 @@ details[open] summary { color: var(--orange-500); }
 }
 .product-desc-cleaned div {
   margin-bottom: 0.5rem;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Webshop on a phone.
+
+   Every layout in the shop was written as inline styles with fixed column
+   counts — `55% 45%` on the product page, `minmax(0,260px) minmax(0,1fr)` on
+   the catalogue, `repeat(4, 1fr)` on the brand grid. Inline styles cannot
+   carry a media query, so all of them held their desktop shape at 375px: the
+   product gallery and the whole buy box shared 311px, and the catalogue put a
+   260px filter column next to a strip of product cards.
+
+   These classes replace those inline grids. Desktop keeps the layout it had;
+   below the breakpoint everything becomes one column.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Product page: gallery beside the buy box. */
+.shop-product-grid {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* Catalogue and search: filter rail beside the results. */
+.shop-catalog-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+
+/* Basket and checkout: lines beside the totals panel. */
+.shop-split-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Brand tiles. */
+.shop-brand-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* The two service choices in the buy box. */
+.shop-service-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* One product in a list view: photo | details | price. */
+.shop-list-card {
+  display: flex;
+  gap: 2rem;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.shop-list-card-media { flex: 0 0 240px; display: flex; align-items: center; justify-content: center; }
+.shop-list-card-body { flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.shop-list-card-price {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  border-left: 1px solid #f1f5f9;
+  padding-left: 1.5rem;
+}
+
+/* The four promises in the footer band. */
+.shop-promise-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 2rem;
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .shop-product-grid,
+  .shop-catalog-grid,
+  .shop-split-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .shop-brand-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+
+  /* Photo above the text, price under it — 240px + 200px of fixed columns
+     leave nothing for the title on a 375px screen. */
+  .shop-list-card { flex-direction: column; gap: 1rem; padding: 1rem; }
+  .shop-list-card-media { flex: none; }
+  .shop-list-card-price {
+    flex: none;
+    align-items: flex-start;
+    border-left: none;
+    border-top: 1px solid #f1f5f9;
+    padding-left: 0;
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .shop-service-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── the shop header ─────────────────────────────────────────────────────
+   The cart was the real casualty: the account, orders and cart links sat in a
+   row that ran off the right edge of the screen, so on a phone there was no
+   way to open the basket at all.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.shop-header-bar {
+  background: #fff;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+.shop-header-search { flex: 1; max-width: 800px; display: flex; }
+.shop-header-actions { display: flex; gap: 2rem; align-items: center; color: #334155; }
+
+/* The category strip scrolls sideways instead of overflowing. */
+.shop-header-nav {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  padding: 0 1.5rem;
+  position: relative;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.shop-header-nav::-webkit-scrollbar { display: none; }
+.shop-header-nav > div { flex: 0 0 auto; }
+
+.shop-topbar {
+  background: #b93c20;
+  color: #fff;
+  padding: 0.4rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+.shop-topbar-text { font-weight: 700; }
+
+@media (max-width: 900px) {
+  .shop-header-bar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+  }
+  /* Search on its own full-width row under the logo and the icons. */
+  .shop-header-search { order: 3; flex-basis: 100%; max-width: none; }
+  .shop-header-actions { gap: 1.25rem; }
+  .shop-topbar { padding: 0.4rem 1rem; font-size: 0.8rem; }
+  /* !important: the pill carries an inline `display: flex`, which a class
+     alone cannot override. */
+  .shop-topbar-chat { display: none !important; }
+}
+
+@media (max-width: 560px) {
+  .shop-topbar { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+  .shop-header-actions span { font-size: 0.7rem; }
+}
+
+/* A hover drop-down is unusable on a touch screen: below this width the
+   "Merken" item is a plain link to /webshop/merken instead. */
+@media (max-width: 900px) {
+  .shop-brand-megamenu { display: none; }
 }

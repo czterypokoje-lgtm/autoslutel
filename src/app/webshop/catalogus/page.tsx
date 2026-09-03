@@ -140,14 +140,7 @@ export default async function CatalogPage({
         })}
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 260px) minmax(0, 1fr)',
-          gap: '1.75rem',
-          alignItems: 'start',
-        }}
-      >
+      <div className="shop-catalog-grid">
         <Suspense fallback={<div />}>
           <CatalogFilters facets={facets} order={FACET_ORDER} resultCount={results.length} />
         </Suspense>

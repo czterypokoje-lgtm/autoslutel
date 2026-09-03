@@ -42,7 +42,10 @@
 @media (max-width: 640px) {
   .footerGrid { grid-template-columns: 1fr; padding: 2rem 1rem; }
   .ctaBandInner { flex-direction: column; }
-  .bottomInner { flex-direction: column; align-items: flex-start; }
+  .bottomInner { flex-direction: column; align-items: flex-start; padding: 1rem; }
+  /* The four bottom links sat in one nowrap row 413px wide inside a 375px
+     screen, so "Contact" was cut off the right edge. */
+  .bottomLinks { flex-wrap: wrap; gap: 0.5rem 1rem; }
 }
 
 .googleBtnWrapper {

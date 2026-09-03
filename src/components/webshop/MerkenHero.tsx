@@ -217,29 +217,39 @@ export default function MerkenHero() {
               )}
             </div>
 
-            {/* Horizontal Sub-Navigation */}
+            {/*
+              Sub-navigation with destinations that exist.
+
+              These four links were `#alle-merken`, `#meest-gezocht`, `#nieuw`
+              — anchors this page does not contain, so they scrolled nowhere —
+              and `/installatie-gids`, which is a 404. The row also did not
+              wrap, so the last item ran off a phone screen.
+            */}
             <div style={{
               display: 'flex',
+              flexWrap: 'wrap',
               justifyContent: 'center',
-              gap: '2.5rem',
+              gap: '0.75rem 2.5rem',
               borderTop: '1px solid #e2e8f0',
               paddingTop: '1.5rem',
               paddingBottom: '1.5rem',
               position: 'relative',
               zIndex: 2
             }}>
-              <Link href="#alle-merken" style={{ fontSize: '0.75rem', fontWeight: 700, color: '#c2410c', textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Shop op Categorie
-              </Link>
-              <Link href="#meest-gezocht" style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Meest Gezocht
-              </Link>
-              <Link href="#nieuw" style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Nieuw Binnen
-              </Link>
-              <Link href="/installatie-gids" style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Hoe te Installeren
-              </Link>
+              {[
+                { href: '/webshop/catalogus', label: 'Alle producten', accent: true },
+                { href: '/webshop/catalogus?category=afstandsbedieningen', label: 'Autosleutels' },
+                { href: '/webshop/aanbiedingen', label: 'Aanbiedingen' },
+                { href: '/blog/autosleutel-batterij-vervangen-stappenplan', label: 'Uitleg & tips' },
+              ].map(({ href, label, accent }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  style={{ fontSize: '0.75rem', fontWeight: 700, color: accent ? '#c2410c' : '#475569', textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.5px' }}
+                >
+                  {label}
+                </Link>
+              ))}
             </div>
             
           </div>

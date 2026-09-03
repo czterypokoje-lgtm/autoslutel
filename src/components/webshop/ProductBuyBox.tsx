@@ -182,7 +182,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
       {/* 5. OPTION SELECTOR (Mobile Tech vs Ship) */}
       <div style={{ marginTop: '0.5rem' }}>
         <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem', color: bmBlack }}>Kies je service:</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+        <div className="shop-service-grid">
           
           {/* Option 1: Ship */}
           <label 

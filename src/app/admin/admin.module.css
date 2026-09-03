@@ -236,3 +236,42 @@
   color: var(--crm-muted);
   font-size: 13px;
 }
+
+/*
+ * The CRM on a phone.
+ *
+ * The top bar was one non-wrapping 48px row: brand, eleven navigation links,
+ * the signed-in address and the sign-out button. On a 375px screen everything
+ * past the third link ran off the right edge and could not be reached — and
+ * the two screens a monteur actually uses, Vandaag and Mijn agenda, sit at the
+ * end of that row.
+ */
+@media (max-width: 860px) {
+  .bar {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 8px 12px;
+  }
+
+  /* The links move to their own full-width row and scroll sideways. */
+  .nav {
+    order: 3;
+    flex-basis: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .navLink { white-space: nowrap; }
+
+  .spacer { display: none; }
+  .who { font-size: 12px; margin-left: auto; }
+}
+
+@media (max-width: 480px) {
+  /* The address is the least useful thing on a narrow bar; the avatar and the
+     sign-out button stay. */
+  .whoEmail { display: none; }
+}
