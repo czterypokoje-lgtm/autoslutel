@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { VEHICLE_DATA, FALLBACK_MODELS, getYears } from '@/lib/vehicleData';
 
 import type { Fitment } from '@/lib/catalog';
@@ -17,8 +17,22 @@ export default function VehicleFitmentWidget({
 }) {
   const [activeTab, setActiveTab] = useState<'kenteken' | 'handmatig'>('handmatig');
   
+  /*
+   * The defaults are the product's own make and model, rendered on the server
+   * and unchanged for the life of this component, so they belong in the
+   * initialiser. Three effects used to copy them into state after the first
+   * paint, which React 19 rejects outright (react-hooks/set-state-in-effect)
+   * and which cost an extra render each.
+   *
+   * The third of those effects cleared model, year and origin whenever the
+   * brand changed — including the moment a kenteken lookup filled all three
+   * in, so a successful lookup wiped its own answer.
+   */
+  const brandFromDefault =
+    Object.keys(VEHICLE_DATA).find((b) => b.toLowerCase() === defaultBrand.toLowerCase()) ?? '';
+
   // States for all dropdowns
-  const [selectedBrand, setSelectedBrand] = useState<string>(defaultBrand || '');
+  const [selectedBrand, setSelectedBrand] = useState<string>(brandFromDefault);
   const [selectedModel, setSelectedModel] = useState<string>(defaultModel || '');
   const [selectedYear, setSelectedYear] = useState<string>(defaultYear || '');
   const [selectedOrigin, setSelectedOrigin] = useState<string>('');
@@ -32,26 +46,14 @@ export default function VehicleFitmentWidget({
   const availableModels = selectedBrand ? (VEHICLE_DATA[selectedBrand] || FALLBACK_MODELS) : [];
   const years = getYears();
 
-  // Auto-select brand if defaultBrand is provided (e.g. from the URL/product)
-  useEffect(() => {
-    if (defaultBrand && !selectedBrand) {
-      // Find matching brand case-insensitively
-      const match = allBrands.find(b => b.toLowerCase() === defaultBrand.toLowerCase());
-      if (match) setSelectedBrand(match);
-    }
-  }, [defaultBrand, allBrands, selectedBrand]);
-
-  useEffect(() => {
-    if (defaultModel) setSelectedModel(defaultModel);
-    if (defaultYear) setSelectedYear(defaultYear);
-  }, [defaultModel, defaultYear]);
-
-  // Reset dependent fields when brand changes
-  useEffect(() => {
+  /** Picking another make invalidates the model, year and origin below it. */
+  const chooseBrand = (brand: string) => {
+    setSelectedBrand(brand);
     setSelectedModel('');
     setSelectedYear('');
     setSelectedOrigin('');
-  }, [selectedBrand]);
+    setResult('idle');
+  };
 
   
   const checkKenteken = async () => {
@@ -121,11 +123,12 @@ export default function VehicleFitmentWidget({
     setResult(isMatch ? 'success' : 'fail');
   };
 
-  // Reset result if user changes inputs
-  useEffect(() => {
-    setResult('idle');
-  }, [selectedBrand, selectedModel, selectedYear]);
-
+  /*
+   * The outcome is cleared where the input changes, not in an effect watching
+   * the three fields. That effect also ran after a kenteken lookup — which
+   * fills brand, model and year — so it wiped the "past op uw auto" answer it
+   * had just produced.
+   */
 
   return (
     <div style={{
@@ -204,7 +207,7 @@ export default function VehicleFitmentWidget({
           
           <select 
             value={selectedBrand} 
-            onChange={(e) => setSelectedBrand(e.target.value)}
+            onChange={(e) => chooseBrand(e.target.value)}
             style={{ padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px', flex: '1 1 120px', fontSize: '0.85rem', color: selectedBrand ? '#0f172a' : '#64748b', background: '#fff' }}
           >
             <option value="">Merk</option>
@@ -215,7 +218,7 @@ export default function VehicleFitmentWidget({
 
           <select 
             value={selectedModel}
-            onChange={(e) => setSelectedModel(e.target.value)}
+            onChange={(e) => { setSelectedModel(e.target.value); setResult('idle'); }}
             disabled={!selectedBrand}
             style={{ padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px', flex: '1 1 120px', fontSize: '0.85rem', color: selectedModel ? '#0f172a' : '#64748b', background: !selectedBrand ? '#f1f5f9' : '#fff' }}
           >
@@ -227,7 +230,7 @@ export default function VehicleFitmentWidget({
 
           <select 
             value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
+            onChange={(e) => { setSelectedYear(e.target.value); setResult('idle'); }}
             disabled={!selectedModel}
             style={{ padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px', flex: '1 1 120px', fontSize: '0.85rem', color: selectedYear ? '#0f172a' : '#64748b', background: !selectedModel ? '#f1f5f9' : '#fff' }}
           >

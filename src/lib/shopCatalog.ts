@@ -138,11 +138,16 @@ function merge(product: CatalogProduct, override: OverrideRow | undefined): Shop
     metaTitle: override?.meta_title_override ?? title,
     image: override?.image_override ?? product.image,
     specs: product.specs ?? [],
-    images: Array.isArray(override?.images)
+    /*
+     * The office's photo order wins when it set one; otherwise the supplier's
+     * own gallery. This used to fall back to an empty array, so every product
+     * nobody had touched showed a single photo and no gallery at all.
+     */
+    images: Array.isArray(override?.images) && (override!.images as unknown[]).length
       ? (override!.images as unknown[]).filter(
           (u): u is string => typeof u === 'string'
         )
-      : [],
+      : product.images ?? [],
     price,
     priceIsManual: manual,
     // Untracked products are assumed available — most of this catalogue is

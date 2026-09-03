@@ -20,7 +20,19 @@ import path from 'path';
 
 const IN = path.join(process.cwd(), 'src/data/akey-products.csv');
 const SECTIONS = path.join(process.cwd(), 'src/data/akey-categories.json');
+const SPECS = path.join(process.cwd(), 'src/data/akey-specs.json');
 const OUT = path.join(process.cwd(), 'src/lib/catalog.json');
+/*
+ * A small companion file: the car makes we actually stock, with counts.
+ *
+ * The brand menu and the /webshop/merken grid are client components, so they
+ * cannot read the catalogue — they each carried a hand-written list instead,
+ * and both had drifted into brands nobody sells (Oldsmobile, Plymouth, Hummer)
+ * while missing brands we do. Importing catalog.json into the browser bundle
+ * to fix that would ship the whole catalogue to every visitor; this file is a
+ * few hundred bytes.
+ */
+const BRANDS_OUT = path.join(process.cwd(), 'src/lib/brands.json');
 
 /* ── CSV ──────────────────────────────────────────────────────────────── */
 
@@ -82,6 +94,22 @@ try {
   console.warn('  (no akey-categories.json — run scripts/scrape-akey-categories.mjs)');
 }
 
+/*
+ * The specification block off each A-Key product page, collected by
+ * scripts/scrape-akey-specs.mjs: frequency, transponder, key blade, number of
+ * buttons, colour, material.
+ *
+ * None of it is in the CSV export, and the first three are what decide whether
+ * a key fits the car at all. Reading them out of the title only works when the
+ * title happens to mention them — for RNR114 it mentions none of the four.
+ */
+let akeySpecs = {};
+try {
+  akeySpecs = JSON.parse(readFileSync(SPECS, 'utf8'));
+} catch {
+  console.warn('  (no akey-specs.json — run scripts/scrape-akey-specs.mjs)');
+}
+
 /** Most specific first. A board is a board even when it is also a Hyundai part. */
 const SECTION_RANK = [
   'printplaten', 'accessoires', 'gereedschap', 'noodsleutels', 'sleutelbaarden',
@@ -107,6 +135,23 @@ for (const [slug, entry] of Object.entries(akeySections.products ?? {})) {
   sectionsBySlug.set(flatten(slug), entry);
   const code = codeIn(slug);
   if (code && !sectionsByCode.has(code)) sectionsByCode.set(code, entry);
+}
+
+const specsBySlug = new Map();
+const specsByCode = new Map();
+for (const [slug, entry] of Object.entries(akeySpecs)) {
+  specsBySlug.set(flatten(slug), entry);
+  const code = codeIn(slug);
+  if (code && !specsByCode.has(code)) specsByCode.set(code, entry);
+}
+
+/** A-Key's published specification for one product, matched the same way. */
+function akeySpec(title) {
+  return (
+    specsBySlug.get(flatten(germanSlug(title))) ??
+    (codeIn(title) ? specsByCode.get(codeIn(title)) : null) ??
+    null
+  );
 }
 
 /** A-Key's own answer for one product, or null when they do not list it. */
@@ -265,16 +310,126 @@ function categorise(row, title) {
 }
 
 /** Everything the title states, as label/value pairs for the spec table. */
-function specsFor({ makes, buttons, frequency, chip, articleCode, manufacturer }) {
+/*
+ * The spec table shown on the product page.
+ *
+ * Order matters: frequency and transponder decide whether the key can work at
+ * all, so they come before cosmetics. A customer reads these two off their old
+ * key; everything below is confirmation.
+ */
+const COLOURS = {
+  schwarz: 'zwart', silber: 'zilver', grau: 'grijs', weiss: 'wit', weiß: 'wit',
+  blau: 'blauw', rot: 'rood', chrom: 'chroom', gold: 'goud', braun: 'bruin',
+  gelb: 'geel', grün: 'groen', orange: 'oranje', beige: 'beige',
+  transparent: 'transparant', silbergrau: 'zilvergrijs', anthrazit: 'antraciet', 'schwarz/silber': 'zwart/zilver',
+  'schwarz/chrom': 'zwart/chroom',
+};
+
+/** German material wording, word by word — the values are short and repetitive. */
+const MATERIAL_WORDS = {
+  hochwertiger: 'hoogwaardig', hochwertig: 'hoogwaardig',
+  Kunststoff: 'kunststof', Metall: 'metaal', Gummi: 'rubber',
+  Aluminium: 'aluminium', Leder: 'leer', Zink: 'zink', Stahl: 'staal',
+  Messing: 'messing', Silikon: 'silicone', Carbon: 'carbon',
+  ohne: 'zonder', mit: 'met', Emblem: 'embleem', Logo: 'logo', und: 'en',
+};
+
+/*
+ * A-Key sometimes writes two fields in one line — "Farbe: schwarz Material:
+ * hochwertiger Kunststoff/Metall, ohne Emblem" — and sometimes runs the
+ * disclaimer on behind it ("… ohne Emblem Kein Fiat-Originalschlüssel").
+ * Everything from the next label onwards belongs to another field.
+ */
+const NEXT_LABEL = /\s+(?:Material|Farbe|Transponder|Funkeinheit|Anzahl der Tasten|Schlüsselbart|Produkttyp|Kein)\b[\s\S]*$/;
+
+const cutAtLabel = (value) => {
+  const trimmed = (value ?? '').replace(NEXT_LABEL, '').replace(/[,;:\s]+$/, '').trim();
+  return trimmed || null;
+};
+
+/** The material hiding inside a run-on colour value, when there is one. */
+const materialInColour = (value) =>
+  cutAtLabel((value ?? '').match(/Material\s*:?\s*([\s\S]+)/)?.[1] ?? '');
+
+const dutchColour = (value) => {
+  const cut = cutAtLabel(value);
+  if (!cut) return null;
+  // "schwarz / silber", "schwarz/grau" — translate each part, keep the shape.
+  const translated = cut
+    .split(/\s*\/\s*/)
+    .map((part) => COLOURS[part.trim().toLowerCase()] ?? part.trim())
+    .join(' / ');
+  return translated || null;
+};
+
+/**
+ * A-Key's Produkttyp, in Dutch.
+ *
+ * The value is a short German noun phrase from a fixed vocabulary, so it is
+ * translated term by term; anything not in the list is left as it stands
+ * rather than guessed at.
+ */
+const PRODUCT_TYPES = {
+  'Funkschlüssel': 'afstandsbediening',
+  'Funkschlüssel PCB': 'printplaat afstandsbediening',
+  'Funkschlüssel - Smartkey': 'afstandsbediening / smart key',
+  'Funkschlüssel / Smartkey': 'afstandsbediening / smart key',
+  'Funkschlüssel Smartkey': 'afstandsbediening / smart key',
+  'Funkschlüssel / Klappschlüssel': 'afstandsbediening / klapsleutel',
+  'Funkfernbedienung': 'afstandsbediening',
+  'Funkeinheit': 'zendeenheid',
+  'Funkgehäuse': 'behuizing afstandsbediening',
+  'Schlüsselgehäuse': 'sleutelbehuizing',
+  'Schlüsselgehäuse Smartkeygehäuse': 'sleutelbehuizing voor smart key',
+  'Schlüsselgehäuse Smartcardgehäuse': 'behuizing voor sleutelkaart',
+  'Schlüsselgehäuse / Smartcard': 'sleutelbehuizing / sleutelkaart',
+  'Schlüsselgehäuse Umbausatz': 'sleutelbehuizing ombouwset',
+  'Schlüsselgehäuse Umbaukit': 'sleutelbehuizing ombouwset',
+  'Schlüsselgehäuse mit Licht': 'sleutelbehuizing met verlichting',
+  'Schlüsselgehäuse mit Schlüsselschaft': 'sleutelbehuizing met sleutelbaard',
+  'Schlüsselgehäuse (einfaches Clip System)': 'sleutelbehuizing (clipsysteem)',
+  'Schlüsselgehäuse UDS': 'sleutelbehuizing UDS',
+  'Schlüsselkarte': 'sleutelkaart',
+  'Notschlüssel': 'noodsleutel',
+  'Transponderschlüssel': 'transpondersleutel',
+};
+
+const dutchProductType = (value) => {
+  const cut = cutAtLabel(value);
+  return cut ? (PRODUCT_TYPES[cut] ?? cut) : null;
+};
+
+const dutchMaterial = (value) => {
+  const cut = cutAtLabel(value);
+  if (!cut) return null;
+  const translated = cut.replace(
+    /[A-Za-zÄÖÜäöüß]+/g,
+    (w) => MATERIAL_WORDS[w] ?? MATERIAL_WORDS[w.toLowerCase()] ?? w
+  );
+  // "hoch" and "hoogwaardig" on their own are a truncated value, not a material.
+  return translated.split(/\s+/).length > 1 ? translated : null;
+};
+
+function specsFor({
+  makes, buttons, frequency, chip, blade, articleCode, manufacturer,
+  colour, material, models, blank, productType,
+}) {
   const specs = [];
-  if (makes.length) specs.push(['Merk', makes.join(', ')]);
-  if (manufacturer) specs.push(['Fabrikant', manufacturer]);
-  if (buttons) specs.push(['Aantal knoppen', String(buttons)]);
+  if (articleCode) specs.push(['Artikelcode', articleCode]);
   if (frequency) specs.push(['Frequentie', frequency]);
   if (chip) specs.push(['Transponder', chip]);
-  if (articleCode) specs.push(['Artikelcode', articleCode]);
+  if (blade) specs.push(['Sleutelbaard', blade]);
+  if (buttons) specs.push(['Aantal knoppen', String(buttons)]);
+  if (productType) specs.push(['Producttype', productType]);
+  if (makes.length) specs.push(['Automerk', makes.join(', ')]);
+  if (models) specs.push(['Geschikt voor o.a.', models]);
+  if (blank) specs.push(['Sleutelrohling', blank]);
+  if (manufacturer) specs.push(['Fabrikant', manufacturer]);
+  if (colour) specs.push(['Kleur', colour]);
+  if (material) specs.push(['Materiaal', material]);
   return specs;
 }
+
 
 /* ── run ──────────────────────────────────────────────────────────────── */
 
@@ -337,14 +492,45 @@ for (const row of records) {
   if (!images.length) stats.noImage++;
 
   const manufacturer = firstMatch(MANUFACTURERS, title) ?? 'A-Key';
-  const articleCode = (title.match(/\b([A-Z]{2,6}\d{2,4}[A-Z0-9+]*)\b/) ?? [])[1] ?? null;
-  const buttons = Number((title.match(/(\d+)\s*[-\s]?(?:knops|tasten|button)/i) ?? [])[1]) || null;
-  const freq = (title.match(/(\d{3})\s*mhz/i) ?? [])[1];
-  const frequency = freq ? `${freq} MHz` : null;
+
+  /*
+   * A-Key's own specification block, where they publish one. The title is only
+   * a fallback: RNR114 is sold as "3-Tasten-Funkschlüssel … Renault - RNR114"
+   * and names neither the 433 MHz nor the PCF7947 that decide whether it fits.
+   */
+  const spec = akeySpec(title) ?? {};
+
+  const articleCode =
+    spec.articleNumber ??
+    (title.match(/\b([A-Z]{2,6}\d{2,4}[A-Z0-9+]*)\b/) ?? [])[1] ??
+    null;
+
+  const buttons =
+    Number(spec.buttons) ||
+    Number((title.match(/(\d+)\s*[-\s]?(?:knops|tasten|button)/i) ?? [])[1]) ||
+    null;
+
+  /** "868Mhz", "434 MHz." and "433 MHz" are all the same shelf. */
+  const normaliseFreq = (value) => {
+    const hit = String(value ?? '').match(/(\d{3})\s*(?:[.,]\d+)?\s*mhz/i);
+    return hit ? `${hit[1]} MHz` : null;
+  };
+  const frequency =
+    normaliseFreq(spec.frequency) ?? normaliseFreq(title);
+
+  /*
+   * Transponder. A-Key writes it several ways — "PCF7947", "PCF7941A - HITAG2
+   * - ID46", "8A" — so the first recognised part number is the filter value
+   * and the full string stays in the spec table.
+   */
+  const chipRaw = spec.transponder ?? null;
   const chip =
+    (chipRaw?.match(/\b(PCF\s?\d{4}[A-Z]*|HITAG\s?[0-9AP]+|MEGAMOS\s?\w*|ID\s?\d{2}[A-Z]?|4D-?\d{2}|8A|4A|47|46)\b/i) ?? [])[1] ??
     (title.match(/\bID\s?(\d[A-Z0-9]*)\b/i) ?? [])[1] ??
     (title.match(/\b(\d[A-Z])\s*chip\b/i) ?? [])[1] ??
     null;
+
+  const blade = spec.blade ?? null;
 
   const copy = TYPE_COPY[category] ?? { noun: 'onderdeel', what: '', programming: false };
 
@@ -363,7 +549,8 @@ for (const row of records) {
   const sentences = [copy.what];
   if (makes.length) sentences.push(`Geschikt voor ${makes.join(', ')}.`);
   if (frequency) sentences.push(`Werkt op ${frequency} — controleer of dit overeenkomt met uw huidige sleutel.`);
-  if (chip) sentences.push(`Voorzien van een ${chip.toUpperCase()}-transponder.`);
+  if (chipRaw ?? chip) sentences.push(`Transponder: ${chipRaw ?? chip.toUpperCase()}.`);
+  if (blade) sentences.push(`Sleutelbaard ${blade} — vergelijk dit met uw huidige sleutel.`);
   if (copy.programming) sentences.push('Wij programmeren hem ter plaatse op uw auto, of u laat hem elders inleren.');
 
   const descriptionNl = sentences.filter(Boolean).join(' ');
@@ -385,7 +572,8 @@ for (const row of records) {
     condition: 'aftermarket',
     buttons,
     frequency,
-    chip: chip ? chip.toUpperCase() : null,
+    chip: chip ? chip.toUpperCase().replace(/\s+/g, '') : null,
+    blade,
     costPrice,
     image:
       (row.Main_Image && onDisk(localise(row.Main_Image))
@@ -394,7 +582,23 @@ for (const row of records) {
     images,
     fitment: [],
     articleCode,
-    specs: specsFor({ makes, buttons, frequency, chip: chip?.toUpperCase(), articleCode, manufacturer }),
+    specs: specsFor({
+      makes,
+      buttons,
+      frequency,
+      // The full supplier string here — "PCF7941A - HITAG2 - ID46" tells a
+      // customer more than the single code the filter needs.
+      chip: chipRaw ?? (chip ? chip.toUpperCase() : null),
+      blade,
+      articleCode,
+      manufacturer,
+      colour: dutchColour(spec.colour),
+      // When A-Key put both on one line, the material is inside the colour.
+      material: dutchMaterial(spec.material ?? materialInColour(spec.colour)),
+      models: cutAtLabel(spec.models),
+      blank: cutAtLabel(spec.blank),
+      productType: dutchProductType(spec.productType),
+    }),
     excerpt: sentences[0] || title,
     descriptionNl,
     directAnswer: sentences[0] || '',
@@ -426,13 +630,32 @@ writeFileSync(
       condition: facetCount('condition'),
       buttons: facetCount('buttons'),
       frequency: facetCount('frequency'),
+      chip: facetCount('chip'),
+      blade: facetCount('blade'),
     },
     products,
   })
 );
 
+const makeCounts = {};
+for (const p of products) {
+  if (p.audience !== 'public') continue;
+  for (const make of p.makes) makeCounts[make] = (makeCounts[make] ?? 0) + 1;
+}
+writeFileSync(
+  BRANDS_OUT,
+  JSON.stringify(
+    Object.entries(makeCounts)
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([make, count]) => ({ make, count })),
+    null,
+    1
+  )
+);
+
 const pub = products.filter((p) => p.audience === 'public').length;
 console.log(`catalog.json written — ${products.length} A-Key products`);
+console.log(`brands.json written — ${Object.keys(makeCounts).length} car makes`);
 console.log(`  public ${pub} · trade ${products.length - pub} (gated)`);
 console.log(`  without category ${stats.noCategory} · without make ${stats.noMake} · without image ${stats.noImage}`);
 const byCategory = facetCount('category');

@@ -1,12 +1,27 @@
 'use client';
 import React, { useState } from 'react';
+import { addToCart } from '@/lib/cart';
+import { formatPrice } from '@/lib/catalog';
 
-interface BundleItem {
-  id: string;
-  name: string;
-  price: number;
-  selected: boolean;
-}
+/**
+ * "Vaak samen gekocht" — the battery that fits this key.
+ *
+ * What was here before offered three extras: a "Levenslange Garantie Plan"
+ * (€6,95), a "RVS Magnetische Sleutelhanger" (€9,95) and the battery. Two of
+ * the three are not products we sell, all three arrived pre-ticked, the yellow
+ * banner promised "Bespaar 20%" that nothing anywhere applied, and the "IN
+ * WINKELMAND" button did nothing at all.
+ *
+ * A pre-ticked box for a paid extra is prohibited outright — Richtlijn
+ * 2011/83/EU art. 22, implemented in BW 6:230j: extra payments need the
+ * customer's express consent, and consent cannot be assumed from a default.
+ * The discount claim is a misleading practice under BW 6:193c for the same
+ * reason the invented reviews and reference prices were removed.
+ *
+ * So: only the real battery, from bundle_mapping.json, unticked, at its real
+ * catalogue price — and the button now writes to the basket. With no battery
+ * mapped for this key the section renders nothing rather than inventing one.
+ */
 
 interface BatteryData {
   slug: string;
@@ -15,132 +30,91 @@ interface BatteryData {
   image: string;
 }
 
-export default function ProductBundleSection({ mainProductTitle, mainProductPrice, mainProductImage, batteryData }: { mainProductTitle: string, mainProductPrice: number, mainProductImage: string, batteryData: BatteryData | null }) {
-  const [items, setItems] = useState<BundleItem[]>([
-    { id: 'protection', name: 'Levenslange Garantie Plan', price: 6.95, selected: true },
-    { id: 'batteries', name: batteryData?.title || 'Batterijen voor deze sleutel', price: batteryData?.price || 5.49, selected: true },
-    { id: 'keychain', name: 'RVS Magnetische Sleutelhanger', price: 9.95, selected: true },
-  ]);
+export default function ProductBundleSection({
+  mainProductSlug,
+  mainProductTitle,
+  mainProductPrice,
+  mainProductImage,
+  batteryData,
+}: {
+  mainProductSlug?: string;
+  mainProductTitle: string;
+  mainProductPrice: number;
+  mainProductImage: string;
+  batteryData: BatteryData | null;
+}) {
+  const [withBattery, setWithBattery] = useState(false);
+  const [added, setAdded] = useState(false);
 
-  const toggleItem = (id: string) => {
-    setItems(items.map(item => item.id === id ? { ...item, selected: !item.selected } : item));
-  };
+  if (!batteryData) return null;
 
-  const calculateTotal = () => {
-    const bundlePrice = items.filter(i => i.selected).reduce((sum, i) => sum + parseFloat(String(i.price)), 0);
-    return (parseFloat(String(mainProductPrice)) + bundlePrice).toFixed(2);
+  const total = mainProductPrice + (withBattery ? batteryData.price : 0);
+
+  const handleAdd = () => {
+    if (mainProductSlug) addToCart(mainProductSlug);
+    if (withBattery) addToCart(batteryData.slug);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 2200);
   };
 
   return (
     <div style={{ marginTop: '3rem', fontFamily: 'Inter, sans-serif' }}>
-      
-      {/* Header Banner */}
-      <div style={{ background: '#111827', color: '#fff', textAlign: 'center', padding: '1rem', fontWeight: 700, fontSize: '1.2rem', letterSpacing: '0.5px' }}>
+      <div style={{ background: '#111827', color: '#fff', textAlign: 'center', padding: '1rem', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.5px' }}>
         VAAK SAMEN GEKOCHT
       </div>
-      <div style={{ background: '#fcd34d', color: '#78350f', textAlign: 'center', padding: '0.5rem', fontWeight: 600, fontSize: '0.9rem' }}>
-        Bespaar 20% op batterijen en garantie wanneer je beide toevoegt. <span style={{ fontStyle: 'italic', fontWeight: 400 }}>(korting verrekend in winkelmand)</span>
-      </div>
 
-      <div style={{ border: '1px solid #e2e8f0', borderTop: 'none', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        
-        {/* Visual Bundle Row */}
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-          
-          {/* Main Product */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ width: '70px', height: '70px', position: 'relative' }}>
-              <img src={mainProductImage || "/images/bmw-key-desktop.png"} alt="Main Product" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-            </div>
-          </div>
-          
+      <div style={{ border: '1px solid #e2e8f0', borderTop: 'none', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <img
+            src={mainProductImage || '/images/product-placeholder.svg'}
+            alt=""
+            style={{ width: 70, height: 70, objectFit: 'contain' }}
+          />
           <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#94a3b8' }}>+</div>
+          <img
+            src={batteryData.image || '/images/product-placeholder.svg'}
+            alt=""
+            style={{ width: 70, height: 70, objectFit: 'contain', opacity: withBattery ? 1 : 0.4 }}
+          />
 
-          {/* Protection Plan */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: items.find(i => i.id === 'protection')?.selected ? 1 : 0.4 }}>
-            <div style={{ width: '65px', height: '65px', background: '#1e3a8a', clipPath: 'polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', textAlign: 'center', fontSize: '0.6rem', fontWeight: 700, padding: '0.5rem' }}>
-              Levenslange<br/>Garantie
-            </div>
-            <div style={{ background: '#eab308', color: '#fff', padding: '0.1rem 0.4rem', fontSize: '0.65rem', fontWeight: 700, marginTop: '-8px', zIndex: 2, position: 'relative' }}>€6.95</div>
-          </div>
-
-          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#94a3b8' }}>+</div>
-
-          {/* Batteries */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: items.find(i => i.id === 'batteries')?.selected ? 1 : 0.4, width: '80px', textAlign: 'center' }}>
-            {batteryData?.image ? (
-              <img src={batteryData.image} alt="Battery" style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
-            ) : (
-              <div style={{ width: '60px', height: '60px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '2px', position: 'relative' }}>
-                <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: '2px solid #cbd5e1', background: '#f8fafc' }}></div>
-                <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: '2px solid #cbd5e1', background: '#f8fafc' }}></div>
-                <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: '2px solid #cbd5e1', background: '#f8fafc' }}></div>
-              </div>
-            )}
-            <div style={{ fontSize: '0.65rem', color: '#b93c20', fontWeight: 700, marginTop: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '80px' }}>
-              {batteryData?.title?.includes('VL') ? 'Rechargeable' : 'Batterijen'}
-            </div>
-          </div>
-
-          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#94a3b8' }}>+</div>
-
-          {/* Keychain */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: items.find(i => i.id === 'keychain')?.selected ? 1 : 0.4 }}>
-            <div style={{ width: '60px', height: '70px', border: '2px dashed #94a3b8', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-            </div>
-          </div>
-
-          {/* Total Box */}
-          <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingLeft: '1rem', borderLeft: '1px solid #e2e8f0' }}>
+          <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
             <div style={{ fontSize: '0.9rem', color: '#334155' }}>
-              Totaalprijs: <span style={{ fontWeight: 800, color: '#0f172a' }}>€{calculateTotal()}</span>
+              Totaal: <span style={{ fontWeight: 800, color: '#0f172a' }}>{formatPrice(total)}</span>
             </div>
-            <button style={{ 
-              background: '#111827', 
-              color: '#fff', 
-              border: 'none', 
-              padding: '0.5rem 1rem', 
-              fontSize: '0.8rem', 
-              fontWeight: 700, 
-              marginTop: '0.5rem',
-              cursor: 'pointer',
-              borderRadius: '2px',
-              whiteSpace: 'nowrap'
-            }}>
-              IN WINKELMAND
+            <button
+              type="button"
+              onClick={handleAdd}
+              style={{
+                background: added ? '#15803d' : '#111827',
+                color: '#fff', border: 'none', padding: '0.55rem 1.1rem',
+                fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer',
+                borderRadius: 2, whiteSpace: 'nowrap',
+              }}
+            >
+              {added ? 'TOEGEVOEGD' : 'IN WINKELMAND'}
             </button>
           </div>
-
         </div>
 
-        {/* Checkboxes List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
-          <div style={{ fontWeight: 700, color: '#475569', fontSize: '0.9rem', marginBottom: '0.25rem' }}>
-            Kies opties voor alle geselecteerde producten
-          </div>
-          
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#334155', cursor: 'pointer' }}>
-            <input type="checkbox" checked={true} readOnly style={{ width: '16px', height: '16px', accentColor: '#111827' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', borderTop: '1px solid #e2e8f0', paddingTop: '1.25rem' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#334155' }}>
+            <input type="checkbox" checked readOnly style={{ width: 16, height: 16, accentColor: '#111827' }} />
             <span><strong>Dit artikel:</strong> {mainProductTitle}</span>
-            <span style={{ color: '#64748b' }}>€{parseFloat(String(mainProductPrice)).toFixed(2)}</span>
+            <span style={{ color: '#64748b' }}>{formatPrice(mainProductPrice)}</span>
           </label>
 
-          {items.map(item => (
-            <label key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#334155', cursor: 'pointer' }}>
-              <input 
-                type="checkbox" 
-                checked={item.selected} 
-                onChange={() => toggleItem(item.id)}
-                style={{ width: '16px', height: '16px', accentColor: '#111827' }} 
-              />
-              <span style={{ textDecoration: item.selected ? 'none' : 'line-through', opacity: item.selected ? 1 : 0.6 }}>{item.name}</span>
-              <span style={{ color: '#64748b', opacity: item.selected ? 1 : 0.6 }}>€{parseFloat(String(item.price)).toFixed(2)}</span>
-            </label>
-          ))}
-          
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#334155', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={withBattery}
+              onChange={() => setWithBattery((v) => !v)}
+              style={{ width: 16, height: 16, accentColor: '#111827' }}
+            />
+            <span>{batteryData.title}</span>
+            <span style={{ color: '#64748b' }}>{formatPrice(batteryData.price)}</span>
+          </label>
         </div>
-
       </div>
     </div>
   );

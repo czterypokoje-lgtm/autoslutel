@@ -30,6 +30,8 @@ export interface CatalogProduct {
   buttons: number | null;
   frequency: string | null;
   chip: string | null;
+  /** Key blade profile, e.g. VA2 / VA6 — A-Key's "Schlüsselbart". */
+  blade: string | null;
   costPrice: number | null;
   image: string | null;
   images: string[];
@@ -147,6 +149,13 @@ export interface Filters {
   condition?: string;
   buttons?: number;
   frequency?: string;
+  /*
+   * Frequency and transponder are the two answers that decide whether a key
+   * can work at all. A customer who has read them off their old key wants to
+   * narrow to them directly, not scroll a category.
+   */
+  chip?: string;
+  blade?: string;
   maxPrice?: number;
   /** Free-text, matched against title and fitment. */
   q?: string;
@@ -160,6 +169,8 @@ function matches(p: CatalogProduct, f: Filters): boolean {
   if (f.condition && p.condition?.toLowerCase() !== f.condition.toLowerCase()) return false;
   if (f.buttons && p.buttons !== f.buttons) return false;
   if (f.frequency && p.frequency?.toLowerCase() !== f.frequency.toLowerCase()) return false;
+  if (f.chip && p.chip?.toLowerCase() !== f.chip.toLowerCase()) return false;
+  if (f.blade && p.blade?.toLowerCase() !== f.blade.toLowerCase()) return false;
   if (f.maxPrice != null) {
     const price = shelfPrice(p.costPrice);
     if (price == null || price > f.maxPrice) return false;
@@ -181,7 +192,7 @@ export function filterProducts(
 
 export type FacetKey =
   | 'category' | 'subcategory' | 'make'
-  | 'manufacturer' | 'condition' | 'buttons' | 'frequency';
+  | 'manufacturer' | 'condition' | 'buttons' | 'frequency' | 'chip' | 'blade';
 
 export interface FacetOption {
   value: string;
@@ -219,6 +230,7 @@ const LABELS: Record<string, string> = {
 
 export const facetLabel = (key: FacetKey, value: string): string => {
   if (key === 'buttons') return `${value} knoppen`;
+  if (key === 'chip' || key === 'blade') return value;
   return LABELS[value] ?? value;
 };
 

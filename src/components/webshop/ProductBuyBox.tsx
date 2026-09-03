@@ -1,10 +1,47 @@
 'use client';
-import { formatPrice } from '@/lib/catalog';
+import { formatPrice, FREE_SHIPPING_FROM } from '@/lib/catalog';
 import React, { useState } from 'react';
-import { addToCart } from '@/lib/cart';
+import { addToCart, SERVICE_SURCHARGE } from '@/lib/cart';
 import { SITE_CONFIG } from '@/config/site.config';
 
-export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category }: { title: string, price: number, oldPrice: number, description?: string, slug?: string, needsProgramming?: boolean, category?: string }) {
+/**
+ * The note under the description depends on what the product is.
+ *
+ * A single hard-coded paragraph used to tell every visitor that "dit is alleen
+ * een sleutelbehuizing en bevat geen interne elektronica, transponder of
+ * batterij" — printed underneath complete remote keys, transponders and
+ * circuit boards alike. On a complete key it is simply false, and it is the
+ * one line that decides whether someone buys the part or not.
+ */
+const CATEGORY_NOTE: Record<string, string> = {
+  behuizingen:
+    'Dit is alleen een sleutelbehuizing en bevat geen interne elektronica, transponder of ' +
+    'batterij. Zet de elektronica uit uw huidige afstandsbediening over in deze nieuwe ' +
+    'behuizing voor een snelle reparatie.',
+  printplaten:
+    'Dit is alleen de printplaat (PCB). Behuizing en sleutelbaard zitten er niet bij; de ' +
+    'plaat moet na montage op uw auto worden ingeleerd.',
+  sleutelbaarden:
+    'Dit is een ongefreesde sleutelbaard. Hij moet op uw slot worden gefreesd voordat ' +
+    'hij past.',
+  transponders:
+    'Dit is een losse transponderchip zonder behuizing of afstandsbediening. De chip moet ' +
+    'op uw auto worden ingeleerd.',
+  noodsleutels:
+    'Dit is een noodsleutel zonder elektronica: hij opent het portier, maar start de auto ' +
+    'niet.',
+  afstandsbedieningen:
+    'Complete sleutel inclusief behuizing, elektronica en transponder. De sleutelbaard ' +
+    'wordt op uw slot gefreesd en de sleutel wordt op uw auto ingeleerd.',
+  'smart-keys':
+    'Complete smart key inclusief elektronica en transponder. Moet op uw auto worden ' +
+    'ingeleerd voordat hij werkt.',
+  'universal-remotes':
+    'Universele sleutel: hij wordt met een programmeertool (KeyDIY, Xhorse, Autel of IEA) ' +
+    'op het gewenste voertuig gezet.',
+};
+
+export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category, specs }: { title: string, price: number, oldPrice: number, description?: string, slug?: string, needsProgramming?: boolean, category?: string, specs?: [string, string][] }) {
   const [purchaseType, setPurchaseType] = useState<'ship' | 'service'>('ship');
   const [added, setAdded] = useState(false);
 
@@ -16,7 +53,20 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
   };
-  const servicePrice = "169.00";
+  // One place for the call-out fee: the basket and the checkout charge
+  // SERVICE_SURCHARGE, and a different number printed here would be a price
+  // the customer never gets.
+  const serviceFee = SERVICE_SURCHARGE.mobile_tech;
+  const servicePriceTotal = price + serviceFee;
+  const note = category ? CATEGORY_NOTE[category] : undefined;
+
+  /*
+   * The three answers that decide whether this key can be made to work, right
+   * next to the price. Frequency and transponder are what a customer reads off
+   * their old key; the full table is further down the page.
+   */
+  const KEY_SPECS = ['Frequentie', 'Transponder', 'Sleutelbaard', 'Aantal knoppen', 'Artikelcode'];
+  const headline = (specs ?? []).filter(([label]) => KEY_SPECS.includes(label));
   /*
    * A crossed-out price only when there genuinely is one to point at.
    *
@@ -37,10 +87,11 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
       
       {/* 2. TITLE & REVIEWS */}
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-          <span style={{ background: '#334155', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 700 }}>Bestseller</span>
-          <a href="#" style={{ color: '#475569', textDecoration: 'underline', fontSize: '0.75rem' }}>Bekijk alle Autosleutel24</a>
-        </div>
+        {/*
+          Removed: a "Bestseller" badge and a "Bekijk alle Autosleutel24" link
+          to "#". The badge sat on all 944 products, which is a sales claim
+          nothing supports, and the link went nowhere.
+        */}
         <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: bmBlack, lineHeight: 1.2, marginBottom: '0.5rem' }}>
           {title}
         </h1>
@@ -49,13 +100,36 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
           identical on every product and backed by nothing. Restore only when
           the counts come from real verified-purchase data.
         */}
+
+        {headline.length > 0 && (
+          <dl
+            style={{
+              display: 'flex', flexWrap: 'wrap', gap: '0.4rem 0.5rem',
+              margin: '0.75rem 0 0', padding: 0,
+            }}
+          >
+            {headline.map(([label, value]) => (
+              <div
+                key={label}
+                style={{
+                  display: 'flex', gap: '0.35rem', alignItems: 'baseline',
+                  background: '#f1f5f9', borderRadius: 999,
+                  padding: '0.25rem 0.7rem', fontSize: '0.8rem',
+                }}
+              >
+                <dt style={{ color: '#64748b' }}>{label}</dt>
+                <dd style={{ margin: 0, fontWeight: 700, color: '#0f172a' }}>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </div>
 
       {/* 3. PRICING */}
       <div>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.75rem', marginBottom: '0.25rem' }}>
           <span style={{ fontSize: '2rem', fontWeight: 800, color: bmBlack, lineHeight: 1 }}>
-            {purchaseType === 'ship' ? formatPrice(price) : formatPrice(169.00)}
+            {formatPrice(purchaseType === 'ship' ? price : servicePriceTotal)}
           </span>
           {hasReference && (
             <div style={{ paddingBottom: '0.25rem' }}>
@@ -68,18 +142,21 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
             </div>
           )}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.85rem', color: '#334155', marginTop: '0.5rem' }}>
-          <span style={{ fontWeight: 800, color: '#000', background: '#ffb3c7', padding: '0 4px', borderRadius: '2px' }}>Klarna.</span>
-          <span>Betaal in 3 delen.</span>
-          <a href="#" style={{ color: '#2563eb', textDecoration: 'none' }}>Lees meer</a>
-        </div>
+        {/*
+          Removed: a Klarna "betaal in 3 delen" line with a "Lees meer" link to
+          "#". Klarna is not enabled on our Mollie account, so it advertised a
+          payment method the checkout does not offer. Put it back when it is
+          switched on and the link points at the terms.
+        */}
       </div>
 
       {/* 4. TRUST & SHIPPING BADGES (Moved ABOVE the Tech/Ship selector as requested) */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
         <div style={{ background: bmBlueLight, padding: '1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.9rem', fontWeight: 600, color: bmBlack }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-          Gratis verzending in 1 werkdag
+          {price >= FREE_SHIPPING_FROM
+            ? 'Gratis verzending — voor 16:00 besteld, morgen in huis'
+            : `Verzending €5,00 — gratis vanaf ${formatPrice(FREE_SHIPPING_FROM)}`}
         </div>
         
         <div style={{ background: bmBlueLight, padding: '1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.9rem', fontWeight: 600, color: bmBlack, cursor: 'pointer' }}>
@@ -144,7 +221,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
             <div style={{ position: 'absolute', top: 12, right: 12, width: 18, height: 18, borderRadius: '50%', border: purchaseType === 'service' ? `6px solid ${themeOrange}` : '2px solid #cbd5e1' }} />
             <div style={{ fontWeight: 800, fontSize: '1rem', color: bmBlack, marginBottom: '0.25rem' }}>Mobiele Tech komt</div>
             <div style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '0.5rem' }}>Wij slijpen & programmeren.</div>
-            <div style={{ fontWeight: 700 }}>+ {formatPrice(169.00)}</div>
+            <div style={{ fontWeight: 700 }}>+ {formatPrice(serviceFee)}</div>
           </label>
         </div>
       </div>
@@ -163,7 +240,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
           lineHeight: 1.55,
         }}>
           ⚠️ <strong>Let op:</strong> dit product vereist programmering na installatie.
-          Onze monteur doet dit voor + {formatPrice(169.00)} aan huis.
+          Onze monteur doet dit voor + {formatPrice(serviceFee)} aan huis.
         </div>
       )}
 
@@ -223,13 +300,12 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
               <p>Geen beschrijving beschikbaar voor dit product.</p>
             )}
 
-            <div style={{ fontWeight: 700, marginBottom: '0.25rem', marginTop: '1.5rem' }}>Belangrijke informatie:</div>
-            <p style={{ margin: 0 }}>
-              Dit is alleen een sleutelbehuizing en bevat geen interne elektronica, transponder of batterij. 
-              Zet de elektronica uit uw huidige afstandsbediening eenvoudig over in deze nieuwe behuizing voor een snelle reparatie.
-            </p>
-            
-            <a href="#" style={{ color: '#000', textDecoration: 'underline', fontWeight: 600, display: 'inline-block', marginTop: '1rem' }}>Meer info</a>
+            {note && (
+              <>
+                <div style={{ fontWeight: 700, marginBottom: '0.25rem', marginTop: '1.5rem' }}>Belangrijke informatie:</div>
+                <p style={{ margin: 0 }}>{note}</p>
+              </>
+            )}
           </div>
         </div>
 
@@ -259,7 +335,9 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
         <div>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: bmBlack, margin: '0 0 0.25rem 0' }}>Snel en gratis antwoord op je vragen</h3>
           <div style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '0.5rem' }}>
-            <a href="#" style={{ color: '#000', textDecoration: 'underline', fontWeight: 600 }}>Expert help</a> | Jarenlange ervaring | Gevestigd in Nederland
+            {/* Was a link to "#". Contact is the phone number and WhatsApp
+                below it, which both work. */}
+            Expert hulp | Gevestigd in Nederland
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', fontSize: '0.9rem', fontWeight: 600, color: bmBlack }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

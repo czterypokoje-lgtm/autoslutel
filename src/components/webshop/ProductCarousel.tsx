@@ -1,34 +1,32 @@
 import React from 'react';
 import ProductCard from './ProductCard';
-import { shelfPrice, formatPrice, type CatalogProduct } from '@/lib/catalog';
+import { formatPrice, facetLabel } from '@/lib/catalog';
+import type { ShopProduct } from '@/lib/shopCatalog';
 
 interface ProductCarouselProps {
-  products: CatalogProduct[];
+  products: ShopProduct[];
 }
 
 export default function ProductCarousel({ products }: ProductCarouselProps) {
   return (
     <div className="snap-carousel">
-      {products.map((p, i) => {
-        const price = shelfPrice(p.costPrice);
-        const oldPrice = price ? price * 1.4 : null;
-        const image = p.image ?? 'https://placehold.co/600x600/transparent/121212?text=No+Image';
-
-        return (
-          <div key={p.id} className="snap-carousel-item" style={{ width: '280px', flexShrink: 0 }}>
-            <ProductCard
-              id={0}
-              slug={p.slug}
-              title={p.titleNl}
-              category={p.category ?? 'Auto-onderdeel'}
-              price={formatPrice(price)}
-              oldPrice={oldPrice ? formatPrice(oldPrice) : undefined}
-              img={image}
-              isBestOf={i === 0 || i === 3}
-            />
-          </div>
-        );
-      })}
+      {products.map((p) => (
+        <div key={p.id} className="snap-carousel-item" style={{ width: '280px', flexShrink: 0 }}>
+          <ProductCard
+            slug={p.slug}
+            title={p.titleNl}
+            category={p.category ? facetLabel('category', p.category) : 'Auto-onderdeel'}
+            /*
+             * The merged price, so a price the office corrected is the price on
+             * the card. The struck-through "oldPrice" that used to sit next to
+             * it was `price * 1.4` — a reference price nobody was ever charged.
+             */
+            price={formatPrice(p.price)}
+            img={p.image ?? '/images/product-placeholder.svg'}
+            inStock={p.inStock}
+          />
+        </div>
+      ))}
     </div>
   );
 }

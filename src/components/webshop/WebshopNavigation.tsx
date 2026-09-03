@@ -15,6 +15,7 @@ const categoryLinks = [
   { href: '/webshop/catalogus?category=batterijen', label: 'Batterijen' },
   { href: '/webshop/catalogus?category=printplaten', label: 'Printplaten' },
   { href: '/webshop/catalogus?subcategory=smart+key', label: 'Smart Keys' },
+  { href: '/webshop/catalogus?category=overige-sleutels', label: 'Overige sleutels' },
   { href: '/webshop/catalogus?category=transponders', label: 'Transponders' },
   { href: '/webshop/catalogus?category=noodsleutels', label: 'Noodsleutels' },
   { href: '/webshop/catalogus?category=universal-remotes', label: 'Universal Keys' },
@@ -38,8 +39,9 @@ export default function WebshopNavigation() {
       {/* Top Orange Bar */}
       <div style={{ background: '#b93c20', color: '#fff', padding: '0.4rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' }}>
         <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          Gratis verzending in 2 dagen of minder
-          <span style={{ fontSize: '0.75rem', fontWeight: 400, opacity: 0.9 }}>Zie details</span>
+          {/* The real rule from the catalogue, not a flat promise: shipping is
+              €5,00 and free from €25,00, and delivery is 2-3 working days. */}
+          Gratis verzending vanaf €25 · levertijd 2 - 3 werkdagen
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

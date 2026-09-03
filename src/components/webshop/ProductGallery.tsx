@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 
 export default function ProductGallery({ images }: { images?: string[] }) {
-  const dummyImages = images || [
-    'https://placehold.co/400x300/f8fafc/121212?text=Thumb+1',
-    'https://placehold.co/400x300/f8fafc/121212?text=Thumb+2',
-    'https://placehold.co/400x300/f8fafc/121212?text=Thumb+3',
-  ];
+  /*
+   * A product with no photo shows our own placeholder, not three
+   * "Thumb 1 / Thumb 2 / Thumb 3" tiles fetched from placehold.co — which is
+   * an external host the page does not need and which reads as a broken shop
+   * when it is slow.
+   */
+  const photos = images && images.length > 0 ? images : ['/images/product-placeholder.svg'];
 
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -26,39 +28,21 @@ export default function ProductGallery({ images }: { images?: string[] }) {
         padding: '2rem'
       }}>
         <img 
-          src={dummyImages[activeIndex]} 
+          src={photos[activeIndex]} 
           alt="Main Product" 
           style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
         />
         
-        {/* Sticker/Badge (OEM Kwaliteit) */}
-        <div style={{
-          position: 'absolute',
-          top: '1.5rem',
-          right: '1.5rem',
-          width: '70px',
-          height: '70px',
-          background: 'var(--webshop-lime-light)',
-          borderRadius: '50%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)',
-          transform: 'rotate(15deg)'
-        }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--webshop-dark)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.15rem' }}>
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          <span style={{ fontSize: '0.55rem', fontWeight: 800, color: 'var(--webshop-dark)', textTransform: 'uppercase', lineHeight: 1.1 }}>OEM<br/>Kwaliteit</span>
-        </div>
+        {/*
+          Removed: an "OEM Kwaliteit" seal stamped on every photo. These parts
+          are aftermarket — the supplier's own listings say so — and a quality
+          seal is not something a shop awards itself.
+        */}
       </div>
 
       {/* Thumbnail Strip (Horizontal underneath, like Crutchfield) */}
       <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
-        {dummyImages.map((src, i) => (
+        {photos.length > 1 && photos.map((src, i) => (
           <div 
             key={i} 
             style={{ 

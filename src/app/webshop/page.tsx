@@ -6,15 +6,25 @@ import ProductCarousel from '@/components/webshop/ProductCarousel';
 import PromoBanner from '@/components/webshop/PromoBanner';
 import TrustSection from '@/components/webshop/TrustSection';
 import ArticlesSection from '@/components/webshop/ArticlesSection';
-import { getProducts } from '@/lib/catalog';
+import { getShopProducts } from '@/lib/shopCatalog';
 
 export const metadata = {
   title: 'Autosleutel24 Webshop - OEM Sleutels & Behuizingen',
   description: 'Vind de juiste autosleutel, batterij of behuizing voor uw auto. Bestel direct online voor minder dan de dealer prijs.',
 };
 
-export default function WebshopPage() {
-  const featuredProducts = getProducts('public').slice(0, 8);
+export default async function WebshopPage() {
+  /*
+   * Through the merged catalogue, not the raw feed: a product the office took
+   * offline was still on this carousel, and a corrected price was not.
+   * Products marked featured in the CRM lead; the rest fills up the row.
+   */
+  const all = await getShopProducts('public');
+  const withPhoto = all.filter((p) => p.image && !p.image.includes('placeholder'));
+  const featuredProducts = [
+    ...withPhoto.filter((p) => p.featured),
+    ...withPhoto.filter((p) => !p.featured),
+  ].slice(0, 8);
 
   return (
     <div>
@@ -41,9 +51,6 @@ export default function WebshopPage() {
 
       <section className="section">
         <div className="container">
-          <h2 style={{ marginBottom: '2.5rem', fontSize: '1.75rem', color: 'var(--webshop-dark)' }}>
-            Bekijk onze beste aanbiedingen
-          </h2>
           <PromoBanner />
         </div>
       </section>

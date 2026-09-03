@@ -32,6 +32,8 @@ const GROUP_TITLES: Record<FacetKey, string> = {
   condition: 'Uitvoering',
   buttons: 'Aantal knoppen',
   frequency: 'Frequentie',
+  chip: 'Transponder',
+  blade: 'Sleutelbaard',
 };
 
 /** Long lists collapse; short ones never need to. */
@@ -46,7 +48,7 @@ interface Props {
 
 export default function CatalogFilters({
   facets,
-  order = ['make', 'category', 'subcategory', 'buttons', 'condition', 'manufacturer', 'frequency'],
+  order = ['make', 'category', 'subcategory', 'buttons', 'frequency', 'chip', 'blade', 'condition', 'manufacturer'],
   resultCount,
 }: Props) {
   const router = useRouter();

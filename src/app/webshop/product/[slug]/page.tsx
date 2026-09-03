@@ -1,6 +1,5 @@
 import React from 'react';
-import { notFound, redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 import fs from 'fs';
 import path from 'path';
 import ProductBundleSection from '@/components/webshop/ProductBundleSection';
@@ -10,7 +9,6 @@ import ProductAccordions from '@/components/webshop/ProductAccordions';
 import ProductGallery from '@/components/webshop/ProductGallery';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
-import { formatPrice } from '@/lib/catalog';
 import { getShopProductBySlug } from '@/lib/shopCatalog';
 
 /** Categories that require programming after installation. */
@@ -196,13 +194,14 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
           {/* Left: Gallery & Bundle */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {/* Main Image */}
-            <ProductGallery images={entry.images && entry.images.length > 0 ? entry.images : (entry.image ? [entry.image] : ['/images/bmw-key-desktop.png'])} />
+            <ProductGallery images={entry.images && entry.images.length > 0 ? entry.images : (entry.image ? [entry.image] : ['/images/bmw-key-desktop.webp'])} />
 
             {/* Dynamic Bundle Section */}
             <ProductBundleSection
+              mainProductSlug={entry.slug}
               mainProductTitle={entry.titleNl}
               mainProductPrice={sellPrice ?? 0}
-              mainProductImage={entry.image ?? '/images/bmw-key-desktop.png'}
+              mainProductImage={entry.image ?? '/images/bmw-key-desktop.webp'}
               batteryData={batteryData}
             />
           </div>
@@ -217,6 +216,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
               description={entry.descriptionNl}
               needsProgramming={needsProgramming}
               category={entry.category ?? ''}
+              specs={entry.specs}
             />
           </div>
         </div>

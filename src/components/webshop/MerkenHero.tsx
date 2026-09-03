@@ -22,9 +22,9 @@ export default function MerkenHero() {
         position: 'relative',
         width: '100%',
         height: '450px', // Large hero area
-        backgroundImage: 'url(https://placehold.co/1920x800/1e293b/0f172a?text=Garage+Workspace)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        /* A flat colour instead of a placehold.co "Garage Workspace" tile:
+           an external image host is a dependency this page does not need. */
+        background: 'linear-gradient(120deg, #0f172a 0%, #1e293b 60%, #334155 100%)',
       }}>
         {/* Dark Gradient Overlay for text readability (matches the reference's left shadow) */}
         <div style={{

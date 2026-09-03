@@ -1,12 +1,19 @@
-'use client';
 import React from 'react';
 import Link from 'next/link';
-import { VEHICLE_DATA } from '@/lib/vehicleData';
 import NewsletterModal from '@/components/webshop/NewsletterModal';
 import MerkenHero from '@/components/webshop/MerkenHero';
+import brandData from '@/lib/brands.json';
+
+/*
+ * The makes we stock, from the catalogue rather than from VEHICLE_DATA.
+ *
+ * VEHICLE_DATA is the list of cars we can drive out to and open — it is not
+ * the list of keys we sell, and the two are not the same. Every make in it
+ * without a product behind it opened an empty catalogue page.
+ */
+const BRANDS = brandData as { make: string; count: number }[];
 
 export default function MerkenPage() {
-  const brands = Object.keys(VEHICLE_DATA).sort();
 
   return (
     <div style={{ background: '#f6f4eb', minHeight: '100vh', paddingBottom: '6rem', fontFamily: 'Inter, sans-serif' }}>
@@ -53,33 +60,28 @@ export default function MerkenPage() {
           gap: '1.5rem',
           marginTop: '2rem'
         }}>
-          {brands.map(brand => (
-            <Link 
-              href={`/webshop/catalogus?make=${brand.toLowerCase()}`}
-              key={brand}
+          {BRANDS.map(({ make, count }) => (
+            <Link
+              href={`/webshop/catalogus?make=${encodeURIComponent(make)}`}
+              key={make}
               className="brand-square-card"
             >
-              {/* Mock Brand Logo/Image */}
+              {/*
+                A wordmark, not a logo. The tiles used to load a placehold.co
+                image per brand; the manufacturers' real logos are trademarks we
+                have no licence to display.
+              */}
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                <img 
-                  src={`https://placehold.co/200x120/fff/cbd5e1?text=${brand}`} 
-                  alt={`${brand} logo`} 
-                  style={{ maxWidth: '80%', maxHeight: '100px', objectFit: 'contain' }}
-                />
+                <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#cbd5e1', letterSpacing: '0.06em', textTransform: 'uppercase', textAlign: 'center' }}>
+                  {make}
+                </span>
               </div>
-              
-              {/* Brand Title */}
-              <h3 style={{ 
-                fontSize: '1.25rem', 
-                fontWeight: 800, 
-                marginTop: '1.5rem', 
-                marginBottom: 0,
-                textAlign: 'center'
-              }}>
-                {brand}
+
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', marginBottom: 0, textAlign: 'center' }}>
+                {make}
               </h3>
               <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem', textAlign: 'center' }}>
-                Alle {brand} sleutels
+                {count} {count === 1 ? 'artikel' : 'artikelen'}
               </p>
             </Link>
           ))}

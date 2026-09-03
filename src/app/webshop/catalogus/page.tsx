@@ -5,11 +5,9 @@ import type { Metadata } from 'next';
 import CatalogFilters from '@/components/webshop/CatalogFilters';
 import ProductCardList from '@/components/webshop/ProductCardList';
 import {
-  getProducts,
   filterProducts,
   buildFacets,
   shelfPrice,
-  formatPrice,
   facetLabel,
   type Filters,
   type FacetKey,
@@ -41,7 +39,8 @@ export const metadata: Metadata = {
  * questions a customer actually arrives with.
  */
 const FACET_ORDER: FacetKey[] = [
-  'make', 'manufacturer', 'category', 'subcategory', 'buttons', 'condition', 'frequency',
+  'make', 'manufacturer', 'category', 'subcategory', 'buttons', 'frequency', 'chip', 'blade',
+  'condition',
 ];
 
 /** Brands worth a one-click entry point of their own. */
@@ -63,6 +62,8 @@ function parseFilters(sp: Record<string, string | string[] | undefined>): Filter
     condition: one('condition'),
     buttons: buttons ? Number(buttons) : undefined,
     frequency: one('frequency'),
+    chip: one('chip'),
+    blade: one('blade'),
     q: one('q'),
   };
 }

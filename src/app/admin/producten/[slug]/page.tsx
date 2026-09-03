@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -78,6 +79,28 @@ export default async function ProductPage({
       </div>
 
       <ProductEditor product={product} />
+
+      {/*
+        The supplier's own specification, read-only.
+        It is what the office needs in front of them when a customer phones to
+        ask whether this key is 433 or 434 MHz — the answer used to be nowhere
+        in the CRM at all.
+      */}
+      {(feed.specs ?? []).length > 0 && (
+        <section style={{ marginTop: '2rem', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 10, padding: '1.25rem' }}>
+          <h2 style={{ fontSize: '0.95rem', fontWeight: 700, margin: '0 0 0.75rem', color: '#0f172a' }}>
+            Specificaties van A-Key
+          </h2>
+          <dl style={{ display: 'grid', gridTemplateColumns: 'max-content 1fr', gap: '0.4rem 1.25rem', margin: 0, fontSize: '0.9rem' }}>
+            {(feed.specs ?? []).map(([label, value]) => (
+              <React.Fragment key={label}>
+                <dt style={{ color: '#64748b' }}>{label}</dt>
+                <dd style={{ margin: 0, color: '#0f172a', fontWeight: 600 }}>{value}</dd>
+              </React.Fragment>
+            ))}
+          </dl>
+        </section>
+      )}
     </>
   );
 }
