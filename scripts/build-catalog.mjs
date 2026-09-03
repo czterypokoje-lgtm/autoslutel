@@ -76,9 +76,18 @@ const CAR_MAKES = [
 ];
 
 // The company that made the part, as opposed to the car it fits.
+/**
+ * Who made the part.
+ *
+ * Distinct from the car make: a customer looking for a Xhorse blank filters on
+ * this, a customer with a Renault filters on that. The A-Key fallback at the
+ * end matters — without it 296 of 389 products had no brand at all and the
+ * filter was mostly empty.
+ */
 const MANUFACTURERS = [
-  ['Xhorse', /\bxhorse\b|\bvvdi\b/i],
-  ['KeyDIY', /\bkeydiy\b|\bkd-?x?\d/i],
+  ['Xhorse', /\bxhorse\b|\bvvdi\b|\bx[knsez][a-z]{2}\d/i],
+  ['KeyDIY', /\bkeydiy\b|\bkey ?diy\b|\bkd-?x?\d|\bnb\d{2}\b|\bb\d{2}-\d\b|\btb\d{2}-\d\b/i],
+  ['Lonsdor', /\blonsdor\b/i],
   ['Autel', /\bautel\b|\bikey\w+/i],
   ['Silca', /\bsilca\b/i],
   ['JMA', /\bjma\b/i],
@@ -101,7 +110,15 @@ const TRADE_ONLY = new RegExp(
     'lock ?pick', 'picking', 'decoder', 'bump ?key', 'tension tool', 'slim ?jim',
     'opening tool', 'tryout', 'jiggl', 'programmer', 'programming device',
     'emulator', 'bypass cable', 'key cutting machine', 'diagnostic tool',
-    'vvdi', 'xhorse', 'keydiy', 'abrites', 'yanhua', 'autel im', 'course',
+    /*
+     * Brand names alone used to sit here — 'xhorse', 'keydiy', 'vvdi' — which
+     * gated all 78 of their products as trade-only. Both brands make universal
+     * remotes and PCB boards for consumers as well as programmers for the
+     * trade, so the brand says nothing about who may buy it. The tool words on
+     * either side of this line still do.
+     */
+    'vvdi (prog|key tool|mini|max)', 'xhorse (condor|dolphin|key tool|prog)',
+    'kd-?x2', 'keydiy kd', 'abrites', 'yanhua', 'autel im', 'course',
     'training', 'lishi', 'mr\\.? ?li', 'klom', 'obdstar', 'immo', 'akl cable',
     'adapter full kit', 'ecu', 'cluster', 'simulator',
   ].join('|'),
@@ -110,17 +127,33 @@ const TRADE_ONLY = new RegExp(
 
 /** Category, then a narrower subcategory. Order matters — first match wins. */
 const CATEGORIES = [
+  /*
+   * Support tickets and training are not shippable goods and must never reach
+   * a consumer basket. They are listed first so nothing else can claim them.
+   */
+  ['diensten', 'support', /support ?ticket|technischer support|hilfestellung|masterclass|schulung|cursus/i],
   // Tools first — they are gated anyway and their wording is unambiguous.
-  ['gereedschap', 'programmeerapparatuur', /programmer|programming device|emulator|bypass cable|diagnostic|vvdi|xhorse|keydiy|abrites|yanhua|autel im|kd-?x/i],
+  /*
+   * Devices, by what they are. This used to match on 'xhorse|keydiy|vvdi', so
+   * every universal remote from those brands was filed as programming
+   * equipment — and then hidden behind the trade gate.
+   */
+  ['gereedschap', 'programmeerapparatuur', /programmer|programming device|emulator|bypass cable|diagnostic|abrites|yanhua|autel im|kd-?x2|key tool (max|mini|plus)|condor|dolphin/i],
   ['gereedschap', 'sleutelmachine', /cutting machine|key machine/i],
+  ['gereedschap', 'handgereedschap', /werkzeug|gereedschap|splintstift/i],
   ['gereedschap', 'opengereedschap', /lock ?pick|picking|decoder|tension|slim ?jim|opening tool|jiggl|klom|lishi|mr\.? ?li/i],
   // Then the consumer types, narrowest first.
   ['smart-keys', 'smart key', /smart ?key|keyless|proximity|prox key/i],
-  ['afstandsbedieningen', 'universele afstandsbediening', /universal (remote|key)|\bxk\d|\bxn\d/i],
+  /*
+   * Universal keys get their own category: a blank that is programmed to the
+   * car is a different purchase from a remote made for one model, and the shop
+   * navigation already points here.
+   */
+  ['universal-remotes', 'universele afstandsbediening', /universal (remote|key)|\buniversal\b|\bxk[a-z]{2}\d|\bxn[a-z]{2}\d|\bb\d{2}-\d\b|\bnb\d{2}\b|\btb\d{2}-\d\b/i],
   ['afstandsbedieningen', 'afstandsbediening', /\bremote\b|afstandsbediening|key ?fob\b|\bfob\b|flip key/i],
   ['behuizingen', 'sleutelbehuizing', /\bshell\b|\bcase\b|housing|behuizing|\bcover\b|casing|geh.use/i],
   ['behuizingen', 'noodsleutel', /notschl.ssel|emergency key|schluesselblatt/i],
-  ['afstandsbedieningen', 'printplaat', /\bpcb\b|platine|board|tasten/i],
+  ['afstandsbedieningen', 'printplaat', /\bpcb\b|platine|printplaat|printplatine|board|tasten|knoppenfeld|knoppengummi|tastenfeld|tastengummi/i],
   ['transponders', 'transponder', /transponder|\bid4[68]\b|\bhitag\b|\bpcf7\d+/i],
   ['batterijen', 'batterij', /\bbatter|\bcr\d{4}\b/i],
   ['sloten', 'slot & cilinder', /\block\b|\bcylinder\b|ignition|contactslot|barrel|\block set\b/i],
@@ -408,10 +441,30 @@ for (const p of raw) {
   // ("includes an uncut blade") that otherwise hijack the classification.
   const [category, subcategory] =
     (CATEGORIES.find(([, , re]) => re.test(title)) ??
-     CATEGORIES.find(([, , re]) => re.test(hay)))?.slice(0, 2) ?? [null, null];
+     CATEGORIES.find(([, , re]) => re.test(hay)))?.slice(0, 2) ??
+    /*
+     * Last resort, and only after both passes have failed.
+     *
+     * The supplier titles every key "Autosleutel …" or "Funkschlüssel …", so
+     * this cannot live in the ordered list above: there it would match on the
+     * title before a transponder or smart-key rule got a chance at the
+     * description, and it swallowed 147 transponders when it did.
+     */
+    (/^(autosleutel|funkschl.ssel|\d?-?knops autosleutel|[a-z]{2,6}\d{2,4})/i.test(title)
+      ? ['afstandsbedieningen', 'afstandsbediening']
+      : [null, null]);
   if (!category) stats.noCategory++;
 
-  const audience = TRADE_ONLY.test(hay) ? 'trade' : 'public';
+  /*
+   * Judged on the title, not the description.
+   *
+   * A supplier's description says which programmer a key works with — "werkt
+   * met VVDI Key Tool", "KeyDIY KD900" — and matching that gated ordinary
+   * remotes and PCB boards as trade-only. What a product *is* appears in its
+   * title; what it is compatible with appears in its description.
+   */
+  const audience =
+    TRADE_ONLY.test(title) || category === 'diensten' ? 'trade' : 'public';
   stats[audience]++;
 
   const makes = CAR_MAKES.filter(([, re]) => re.test(hay)).map(([name]) => name);
@@ -436,7 +489,9 @@ for (const p of raw) {
     subcategory,
     audience,
     makes,
-    manufacturer: firstMatch(MANUFACTURERS, hay),
+    // Everything in this feed is supplied by A-Key; a recognised brand name
+    // only means they resell that brand's part.
+    manufacturer: firstMatch(MANUFACTURERS, hay) ?? 'A-Key',
     condition: firstMatch(CONDITIONS, hay) ?? 'aftermarket',
     buttons,
     frequency: freqMatch ? `${freqMatch[1]} MHz` : null,

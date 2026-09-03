@@ -32,9 +32,20 @@ export const metadata: Metadata = {
     'Blader door sleutelbehuizingen, afstandsbedieningen, smart keys, transponders en batterijen. Filter op automerk, type en aantal knoppen.',
 };
 
+/*
+ * Fabrikant sits second, right after the car make.
+ *
+ * It used to be sixth, which was right while the field was empty — 296 of 389
+ * products had no manufacturer at all. Now that Xhorse, KeyDIY, Autel and
+ * Lonsdor are detected, "which brand of universal key" is one of the two
+ * questions a customer actually arrives with.
+ */
 const FACET_ORDER: FacetKey[] = [
-  'make', 'category', 'subcategory', 'buttons', 'condition', 'manufacturer', 'frequency',
+  'make', 'manufacturer', 'category', 'subcategory', 'buttons', 'condition', 'frequency',
 ];
+
+/** Brands worth a one-click entry point of their own. */
+const BRAND_SHORTCUTS = ['Xhorse', 'KeyDIY', 'Autel', 'Lonsdor', 'Silca'];
 
 const PAGE_SIZE = 24;
 
@@ -96,6 +107,37 @@ export default async function CatalogPage({
         Sleutelbehuizingen, afstandsbedieningen, smart keys, transponders en batterijen.
         Filter op automerk en type — of laat onze monteur het hele werk doen.
       </p>
+
+      {/*
+        * Brand shortcuts. The universal keys here are made by a handful of
+        * brands, and a customer who owns a Xhorse tool wants that brand's
+        * blanks — not every remote that fits their car.
+        */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', marginBottom: '1.25rem' }}>
+        {BRAND_SHORTCUTS.filter((b) =>
+          (facets.manufacturer ?? []).some((o) => o.value === b)
+        ).map((brand) => {
+          const active = filters.manufacturer === brand;
+          const count = (facets.manufacturer ?? []).find((o) => o.value === brand)?.count ?? 0;
+          return (
+            <Link
+              key={brand}
+              href={active ? '/webshop/catalogus' : `/webshop/catalogus?manufacturer=${encodeURIComponent(brand)}`}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                padding: '.45rem .85rem', borderRadius: 999,
+                border: `1px solid ${active ? '#c2410c' : '#cbd5e1'}`,
+                background: active ? '#fff7ed' : '#fff',
+                color: active ? '#c2410c' : '#0f172a',
+                fontSize: '.85rem', fontWeight: 700, textDecoration: 'none',
+              }}
+            >
+              {brand}
+              <span style={{ color: '#64748b', fontWeight: 500 }}>{count}</span>
+            </Link>
+          );
+        })}
+      </div>
 
       <div
         style={{
