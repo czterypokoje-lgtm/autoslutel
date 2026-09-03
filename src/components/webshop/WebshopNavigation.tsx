@@ -10,11 +10,12 @@ import BrandMegaMenu from '@/components/webshop/BrandMegaMenu';
 
 const categoryLinks = [
   { href: '/webshop/merken', label: 'Merken' },
-  { href: '/webshop/catalogus?category=behuizingen', label: 'Sleutelbehuizingen' },
+  { href: '/webshop/catalogus?category=afstandsbedieningen', label: 'Autosleutels' },
+  { href: '/webshop/catalogus?category=behuizingen', label: 'Behuizingen' },
   { href: '/webshop/catalogus?category=batterijen', label: 'Batterijen' },
-  { href: '/webshop/catalogus?category=transponders', label: 'Transponders' },
+  { href: '/webshop/catalogus?category=printplaten', label: 'Printplaten' },
   { href: '/webshop/catalogus?category=smart-keys', label: 'Smart Keys' },
-  { href: '/webshop/catalogus?category=afstandsbedieningen', label: 'Afstandsbedieningen' },
+  { href: '/webshop/catalogus?category=transponders', label: 'Transponders' },
   { href: '/webshop/catalogus?category=universal-remotes', label: 'Universal Keys' },
   { href: '/webshop/aanbiedingen', label: 'Aanbiedingen' },
 ];

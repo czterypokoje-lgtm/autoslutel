@@ -190,6 +190,12 @@ export interface FacetOption {
 }
 
 const LABELS: Record<string, string> = {
+  printplaten: 'Printplaten (PCB)',
+  noodsleutels: 'Noodsleutels',
+  'universal-remotes': 'Universele sleutels',
+  diensten: 'Diensten',
+  'overige-sleutels': 'Overige sleutels',
+  motorsleutels: 'Motorsleutels',
   afstandsbedieningen: 'Afstandsbedieningen',
   'smart-keys': 'Smart keys / keyless',
   sleutelbaarden: 'Sleutelbaarden',

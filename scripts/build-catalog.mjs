@@ -125,6 +125,74 @@ const TRADE_ONLY = new RegExp(
   'i'
 );
 
+/**
+ * What A-Key says the article is.
+ *
+ * Their descriptions carry a "Produkttyp:" field and their category paths carry
+ * a type for part of the range. Both beat guessing from a title: the title of a
+ * PCB board and of the remote it goes into differ by one word.
+ */
+const SUPPLIER_TYPE = [
+  ['printplaten', 'printplaat', /\bplatine\b|\bpcb\b|printplaat|leiterplatte|boards? f(ue|ü)r/i],
+  ['behuizingen', 'sleutelbehuizing', /schl(ue|ü)sselgeh(ae|ä)use|funkgeh(ae|ä)use|smartkeygeh(ae|ä)use|sleutelbehuizing|sleutelhuis/i],
+  ['smart-keys', 'smart key', /smartkey|smart key|keyless ?go/i],
+  ['noodsleutels', 'noodsleutel', /notschl(ue|ü)ssel|noodsleutel/i],
+  ['sleutelbaarden', 'sleutelbaard', /schl(ue|ü)sselblatt|schluesselblatt/i],
+  ['transponders', 'transponder', /^transponder$|transponderschl(ue|ü)ssel/i],
+  ['afstandsbedieningen', 'afstandsbediening', /funkschl(ue|ü)ssel|funkfernbedienung|funkeinheit|klappschl(ue|ü)ssel|autosleutel|klapsleutel|afstandsbediening/i],
+];
+
+/** A-Key's own category paths, where they name a type rather than a car make. */
+const SUPPLIER_PATHS = {
+  'boards fuer funkschluessel pcb': ['printplaten', 'printplaat'],
+  'notschluessel': ['noodsleutels', 'noodsleutel'],
+  'transponder': ['transponders', 'transponder'],
+  'transponderschluessel': ['transponders', 'transpondersleutel'],
+  'autoschluesselblatt spitze': ['sleutelbaarden', 'sleutelbaard'],
+  'autoschluessel ohne wegfahrsperre': ['afstandsbedieningen', 'sleutel zonder chip'],
+  'autoschluessel': ['afstandsbedieningen', 'afstandsbediening'],
+  'autoschluessel funkschluessel': ['afstandsbedieningen', 'afstandsbediening'],
+  'motorradschluessel': ['motorsleutels', 'motorsleutel'],
+  'zubehoer werkzeug': ['gereedschap', 'handgereedschap'],
+  'batterien': ['batterijen', 'batterij'],
+  // Not car keys at all: building, furniture and safe keys. Grouped so they can
+  // be shown or hidden as one decision instead of leaking in among the remotes.
+  'anlageschluessel': ['overige-sleutels', 'anlagesleutel'],
+  'universal anlageschluessel': ['overige-sleutels', 'anlagesleutel'],
+  'zylinderschluessel': ['overige-sleutels', 'cilindersleutel'],
+  'moebelschluessel': ['overige-sleutels', 'meubelsleutel'],
+  'tresorschluessel': ['overige-sleutels', 'kluissleutel'],
+  'bahnenschluessel': ['overige-sleutels', 'baansleutel'],
+  'bohrmuldenschluessel': ['overige-sleutels', 'boormuldensleutel'],
+  'buntbartschluessel': ['overige-sleutels', 'baardsleutel'],
+  'keilbartschluessel': ['overige-sleutels', 'baardsleutel'],
+  'kreuzbartschluessel': ['overige-sleutels', 'kruissleutel'],
+  'dornschluessel neubautenschluessel': ['overige-sleutels', 'bouwsleutel'],
+  'stahlschluessel vollbart': ['overige-sleutels', 'staalsleutel'],
+};
+
+/** Reads A-Key's own type for a product, or null when they did not give one. */
+function supplierCategory(p) {
+  const tag = (p.tags || '').toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (tag && !/geeignet fuer/.test(tag) && SUPPLIER_PATHS[tag]) return SUPPLIER_PATHS[tag];
+
+  /*
+   * Stop at the next field label. The description runs the fields together —
+   * "Produkttyp: Funkschlüssel Schlüsselbart: SIP22 Anzahl der Tasten: 4" —
+   * and reading 60 characters swept up the blade spec of every remote key, so
+   * 136 complete keys were filed as loose blades.
+   */
+  const typed = (p.description || '').match(
+    /produc?ttyp[e]?\s*:?\s*(.*?)(?=\s*(?:schl(?:ue|ü)ssel(?:bart|rohling|blad)|sleutelbla|anzahl|aantal|funkeinheit|frequentie|transponder|farbe|kleur|material|<|\n|$))/i
+  );
+  if (typed) {
+    const value = typed[1];
+    const hit = SUPPLIER_TYPE.find(([, , re]) => re.test(value));
+    if (hit) return hit.slice(0, 2);
+  }
+  return null;
+}
+
 /** Category, then a narrower subcategory. Order matters — first match wins. */
 const CATEGORIES = [
   /*
@@ -152,8 +220,8 @@ const CATEGORIES = [
   ['universal-remotes', 'universele afstandsbediening', /universal (remote|key)|\buniversal\b|\bxk[a-z]{2}\d|\bxn[a-z]{2}\d|\bb\d{2}-\d\b|\bnb\d{2}\b|\btb\d{2}-\d\b/i],
   ['afstandsbedieningen', 'afstandsbediening', /\bremote\b|afstandsbediening|key ?fob\b|\bfob\b|flip key/i],
   ['behuizingen', 'sleutelbehuizing', /\bshell\b|\bcase\b|housing|behuizing|\bcover\b|casing|geh.use/i],
-  ['behuizingen', 'noodsleutel', /notschl.ssel|emergency key|schluesselblatt/i],
-  ['afstandsbedieningen', 'printplaat', /\bpcb\b|platine|printplaat|printplatine|board|tasten|knoppenfeld|knoppengummi|tastenfeld|tastengummi/i],
+  ['noodsleutels', 'noodsleutel', /notschl.ssel|emergency key/i],
+  ['printplaten', 'printplaat', /\bpcb\b|platine|printplaat|printplatine|\bboard\b|knoppenfeld|knoppengummi|tastenfeld|tastengummi/i],
   ['transponders', 'transponder', /transponder|\bid4[68]\b|\bhitag\b|\bpcf7\d+/i],
   ['batterijen', 'batterij', /\bbatter|\bcr\d{4}\b/i],
   ['sloten', 'slot & cilinder', /\block\b|\bcylinder\b|ignition|contactslot|barrel|\block set\b/i],
@@ -236,6 +304,41 @@ function extractFitment(text, productMakes) {
 /* ── Dutch copy ───────────────────────────────────────────────────────── */
 
 const TYPE_COPY = {
+  /*
+   * The categories the supplier's own data produced. Without an entry here a
+   * product falls back to "Accessoire", so a PCB board was titled
+   * "Accessoire · Audi · XSMA41EN …" on every listing.
+   */
+  printplaten: {
+    noun: 'printplaat',
+    what: 'Losse printplaat voor in een bestaande sleutelbehuizing. De sleutel moet daarna op uw auto worden ingeleerd.',
+    programming: true,
+  },
+  noodsleutels: {
+    noun: 'noodsleutel',
+    what: 'Mechanische noodsleutel — opent het portier als de batterij of de elektronica het laat afweten.',
+    programming: false,
+  },
+  'universal-remotes': {
+    noun: 'universele autosleutel',
+    what: 'Universele sleutel die op uw auto wordt geprogrammeerd. Werkt voor veel merken en modellen.',
+    programming: true,
+  },
+  'overige-sleutels': {
+    noun: 'sleutel',
+    what: 'Sleutel voor woning, meubel of kluis — geen autosleutel.',
+    programming: false,
+  },
+  motorsleutels: {
+    noun: 'motorsleutel',
+    what: 'Sleutel voor motorfietsen.',
+    programming: true,
+  },
+  diensten: {
+    noun: 'dienst',
+    what: 'Technische ondersteuning, geen fysiek artikel.',
+    programming: false,
+  },
   behuizingen: {
     noun: 'sleutelbehuizing',
     what: 'Vervang de versleten of gebarsten kast van uw autosleutel en zet de bestaande elektronica eenvoudig over.',
@@ -440,6 +543,12 @@ for (const p of raw) {
   // Title first: it names the product. The description mentions components
   // ("includes an uncut blade") that otherwise hijack the classification.
   const [category, subcategory] =
+    // Services first: a support ticket is not a product, whatever the rest of
+    // the text looks like.
+    (/support ?ticket|technischer support|hilfestellung|masterclass|schulung|cursus/i.test(title)
+      ? ['diensten', 'support']
+      : null) ??
+    supplierCategory(p) ??
     (CATEGORIES.find(([, , re]) => re.test(title)) ??
      CATEGORIES.find(([, , re]) => re.test(hay)))?.slice(0, 2) ??
     /*
