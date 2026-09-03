@@ -61,30 +61,58 @@ const PROMOTE = {
   'afstandsbedieningen|universele afstandsbediening': ['universal-remotes', 'universele afstandsbediening'],
 };
 
-/** For the rows A-Key left empty. Order matters — first match wins. */
-const FALLBACK = [
+/*
+ * A-Key's own vocabulary, in their order of precedence.
+ *
+ * Their titles name the article type precisely — "Funkschlüssel PCB",
+ * "Funkschlüssel Gehäuse", "Notschlüssel", "Transponderschlüssel" — and that
+ * beats the Category column of the export, which puts complete remote keys and
+ * rubber button pads in with the circuit boards.
+ *
+ * Order is what makes it work: "Funkschlüssel Gehäuse" is a housing, not a
+ * remote, so housings are tested before remotes; a "Transponderschlüssel" is a
+ * key, not a loose chip.
+ */
+const TITLE_RULES = [
   ['diensten', 'support', /support ?ticket|technischer support|hilfestellung|masterclass|schulung/i],
   ['batterijen', 'batterij', /^(cr\d|lr\d|v\d+ga|v\d+a\b|aaa?a?[\s-]|rayovac|\d+\s+rayovac|accu\b)|knopfzelle|batterie|blister/i],
-  ['printplaten', 'printplaat', /platine|printplaat|\bpcb\b|knoppenfeld|knoppengummi|tastenfeld|tastengummi|\bboard\b/i],
-  ['universal-remotes', 'universele afstandsbediening', /\buniversal\b|style\s*\(flip|\(flip-|\bxk[a-z]{2}\d|\bxn[a-z]{2}\d|\bb\d{2}-\d\b|\bnb\d{2}\b|\btb\d{2}-\d\b/i],
-  ['behuizingen', 'sleutelbehuizing', /behuizing|geh(ae|ä)use|schl(ue|ü)sselgeh/i],
-  ['gereedschap', 'handgereedschap', /werkzeug|gereedschap|splintstift/i],
-  ['smart-keys', 'smart key', /smart ?key|keyless ?go/i],
-  ['gereedschap', 'handgereedschap', /spannvorrichtung|spannbacken|stiftentferner|zange|demontage|anschlag x-cut/i],
-  ['accessoires', 'onderdeel', /\bsplinte?\b|klappschl(ue|ü)ssel.*st(ue|ü)ck|schraub|feder\b|tpms|schl(ue|ü)sselkopf/i],
-  /*
-   * Mechanical blanks — Börkey, ABS, AF numbers — with no electronics in them.
-   * A-Key sells a lot of these and left them uncategorised.
-   */
-  ['sleutelbaarden', 'sleutelbaard', /fahrzeugschl(ue|ü)ssel|autoschl(ue|ü)ssel|schl(ue|ü)sselrohling|b(oe|ö)rkey|^[a-z]{2,4}\d[a-z]?\s+\d{3,4}/i],
-  /*
-   * Not car keys at all: safe, furniture, cylinder and master keys. Grouped so
-   * they can be shown or hidden as one decision instead of turning up among
-   * the remotes.
-   */
+
+  // Loose parts before the things they go into.
+  ['accessoires', 'microtaster & antenne', /microtaster|\bantenne\b|tastenfeld|tastengummi|knoppenfeld|knoppengummi|\bsplinte?\b|\btpms\b/i],
+  ['printplaten', 'printplaat', /\bpcb\b|platine|printplaat|leiterplatte|\bboard\b/i],
+  ['behuizingen', 'sleutelbehuizing', /geh(ae|ä)use|behuizing|umbauset|umbaukit|schl(ue|ü)sselkopf/i],
+  ['noodsleutels', 'noodsleutel', /notschl(ue|ü)ssel|noodsleutel/i],
+  ['sleutelbaarden', 'sleutelbaard', /schl(ue|ü)sselblatt|sleutelblad|schl(ue|ü)sselrohling|fahrzeugschl(ue|ü)ssel|b(oe|ö)rkey|^[a-z]{2,4}\d[a-z]?\s+\d{3,4}/i],
+  ['transponders', 'transpondersleutel', /transponderschl(ue|ü)ssel|transpondersleutel/i],
+  ['transponders', 'transponder', /^transponder\b|\btransponder ?chip\b/i],
+
+  // The universal ranges A-Key lists as their own sections.
+  ['universal-remotes', 'KeyDIY universal', /keydiy|key ?diy|\bnb\d{2}\b|\bb\d{2}-\d\b|\btb\d{2}-\d\b|\bfgb\d|\bdz-\d/i],
+  ['universal-remotes', 'Xhorse universal', /xhorse|\bvvdi\b|\bx[knsez][a-z]{2}\d/i],
+  ['universal-remotes', 'Autel universal', /\bautel\b|\bikey\w+/i],
+  ['universal-remotes', 'IEA universal', /\biea universal\b|iea fernbedienung/i],
+  ['universal-remotes', 'universele afstandsbediening', /\buniversal\b|style\s*\(flip|\(flip-/i],
+
+  ['accessoires', 'garageopener', /garagen(oe|ö)ffner|garage ?opener/i],
+  ['gereedschap', 'handgereedschap', /werkzeug|zubeh(oe|ö)r|spannvorrichtung|spannbacken|stiftentferner|zange|demontage|anschlag x-cut/i],
+  ['smart-keys', 'smart key', /smart ?key|keyless ?go|keylessgo/i],
+  ['afstandsbedieningen', 'sleutel zonder startonderbreker', /ohne wegfahrsperre|zonder startonderbreker/i],
+
+  // Not car keys: safe, furniture, cylinder and master keys.
   ['overige-sleutels', 'overige sleutel', /tresorschl|stahlschl|m(oe|ö)belschl|zylinderschl|anlage(n)?schl|anlageprofil|hauptschl(ue|ü)ssel|universalschl|chubbschl|fahrradschl|buntbart|vierkant|bahnenschl|bohrmulden|kreuzbart|keilbart|dornschl|^art\.|^\d{3,4}[a-z]?[-\/ ]/i],
-  // A key that matched nothing above is still a key.
-  ['afstandsbedieningen', 'afstandsbediening', /^autosleutel|^funkschl|^\d?-?knops|^[a-z]{2,6}\d{2,4}/i],
+
+];
+
+/*
+ * The catch-all, and it runs last for a reason.
+ *
+ * Nearly every A-Key title starts with "Funkschlüssel" or "Autosleutel",
+ * including their smart keys — the title of a keyless Audi key says nothing
+ * about being keyless. Ahead of the export's own column this rule swallowed 46
+ * of 60 smart keys. The column knows what the title does not.
+ */
+const GENERIC_TITLE = [
+  ['afstandsbedieningen', 'afstandsbediening', /funkschl(ue|ü)ssel|autosleutel|autoschl(ue|ü)ssel|klappschl(ue|ü)ssel|^\d?-?knops|^[a-z]{2,6}\d{2,4}/i],
 ];
 
 /** Not shippable goods, or trade equipment. Kept out of the consumer shop. */
@@ -124,18 +152,37 @@ const TYPE_COPY = {
 const firstMatch = (list, value) => list.find(([, re]) => re.test(value))?.[0] ?? null;
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
+/**
+ * Three passes, most specific first.
+ *
+ * 1. A title that names the type outright — "Funkschlüssel PCB", "… Gehäuse",
+ *    "Notschlüssel". The export's column puts complete remote keys and rubber
+ *    button pads under circuit boards, so an explicit title beats it.
+ * 2. The export's own column, which knows things the title does not — that an
+ *    ordinary-looking Audi key is a keyless one, for instance.
+ * 3. The catch-all, for the rows with neither.
+ */
 function categorise(row, title) {
+  const named = TITLE_RULES.find(([, , re]) => re.test(title));
+  if (named) return named.slice(0, 2);
+
   const given = row.Category?.trim();
   const sub = row.Subcategory?.trim();
-
   if (given) {
-    const promoted = PROMOTE[`${given}|${sub}`];
-    if (promoted) return promoted;
-    return [given, sub || given];
+    const promoted = PROMOTE[`${given}|${sub}`] ?? [given, sub || given];
+
+    /*
+     * One column the export gets wrong often enough to guard against: it files
+     * complete remote keys as circuit boards. A board always says so in its
+     * name — Platine, PCB, Board — so a "printplaat" whose title never mentions
+     * one is not a board, and falls through to the catch-all below.
+     */
+    const boardWord = /\bpcb\b|platine|printplaat|leiterplatte|\bboard\b/i.test(title);
+    if (promoted[0] !== 'printplaten' || boardWord) return promoted;
   }
 
-  const hit = FALLBACK.find(([, , re]) => re.test(title));
-  return hit ? hit.slice(0, 2) : [null, null];
+  const generic = GENERIC_TITLE.find(([, , re]) => re.test(title));
+  return generic ? generic.slice(0, 2) : [null, null];
 }
 
 /** Everything the title states, as label/value pairs for the spec table. */
