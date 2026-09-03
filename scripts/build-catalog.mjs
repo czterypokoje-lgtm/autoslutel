@@ -283,14 +283,34 @@ function dutchCopy(p) {
   // The supplier title carries what actually distinguishes them: part codes
   // (NSN14, HU101, IKEYVW003AL) and chassis names (E46, Golf 7). Strip the
   // English filler and the make names, keep the rest as the distinguishing tail.
-  const tail = p.title
+  const rawTail = p.title
     .replace(/\b(for|with|compatible|replacement|aftermarket|genuine|oem|new|brand|button|buttons|key|keys|remote|shell|case|blade|fob|smart|universal|style|and|the|of)\b/gi, ' ')
     .replace(new RegExp(`\\b(${p.makes.map((m) => m.split(/[\s-]/)[0]).join('|') || 'zzzz'})\\b`, 'gi'), ' ')
     .replace(/[,()]/g, ' ')
     .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 42)
     .trim();
+
+  /*
+   * The supplier's article code — JPR105E, CPR119, HU101 — is the single most
+   * searchable thing about a key: it is what is printed on the old one and what
+   * a customer types into the search box.
+   *
+   * Cutting the tail at 42 characters used to slice straight through it, so 50
+   * of 389 products lost their code from the Dutch title. It was then invisible
+   * on the page and unfindable in search. Cut on a word boundary instead, and
+   * put the code back if the cut dropped it.
+   */
+  const articleCode = (p.title.match(/\b([A-Z]{2,6}\d{2,4}[A-Z0-9+]*)\b/) ?? [])[1] ?? null;
+
+  let tail = rawTail;
+  if (tail.length > 42) {
+    const cut = tail.slice(0, 42);
+    const boundary = cut.lastIndexOf(' ');
+    tail = (boundary > 20 ? cut.slice(0, boundary) : cut).trim();
+  }
+  if (articleCode && !tail.includes(articleCode)) {
+    tail = tail ? `${tail} ${articleCode}` : articleCode;
+  }
 
   const titleNl = [
     noun,
@@ -356,7 +376,8 @@ function dutchCopy(p) {
     : '. Zelf monteren of door ons laten doen. 12 maanden garantie.';
 
   return {
-    titleNl: titleNl.slice(0, 90),
+    articleCode,
+    titleNl: titleNl.slice(0, 110),
     descriptionNl,
     directAnswer,
     metaDescriptionNl: meta.length > 155 ? `${meta.slice(0, 152).replace(/[ ,.]$/, '')}…` : meta,

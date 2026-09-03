@@ -80,7 +80,7 @@ const websiteSchema = {
   // SearchAction removed — Next.js has no ?s= endpoint; prevents schema error in GSC
 };
 
-import { GlobalHeader, GlobalFooter, GlobalStickyBar } from '@/components/LayoutManager';
+import { GlobalHeader, GlobalFooter, GlobalStickyBar, GlobalWidgets } from '@/components/LayoutManager';
 import PhoneConversionTracker from '@/components/PhoneConversionTracker';
 import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 
@@ -215,9 +215,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GlobalHeader />
         {children}
         <GlobalFooter />
-        <WhatsAppButton />
+        <GlobalWidgets>
+          <WhatsAppButton />
+        </GlobalWidgets>
         <GlobalStickyBar />
-        <ConsentBanner />
+        <GlobalWidgets>
+          <ConsentBanner />
+        </GlobalWidgets>
       </body>
     </html>
   );

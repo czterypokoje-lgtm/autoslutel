@@ -1,0 +1,343 @@
+/*
+ * The van screen.
+ *
+ * Not a smaller version of the office panel. It is used one-handed, with
+ * gloves, in sunlight, standing next to a car — so targets are large, contrast
+ * is high, and there is nothing on the page that is not today's work.
+ */
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12px 12px 60px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  color: var(--crm-ink);
+  letter-spacing: -0.01em;
+}
+
+.sub {
+  color: var(--crm-muted);
+  font-size: 14px;
+}
+
+/* Connection state. Silent when everything is fine. */
+.offline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+  border: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.card {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 12px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--crm-rule);
+  flex-wrap: wrap;
+}
+
+.slot {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--crm-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 5px;
+  border: 1px solid currentColor;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge::before {
+  content: '';
+  width: 3px;
+  height: 11px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.stGepland {
+  color: var(--crm-steel);
+  background: var(--crm-steel-bg);
+}
+.stOnderweg,
+.stBezig {
+  color: var(--crm-warn);
+  background: var(--crm-warn-bg);
+}
+.stAfgerond {
+  color: var(--crm-ok);
+  background: var(--crm-ok-bg);
+}
+.stGeannuleerd {
+  color: var(--crm-muted);
+  background: var(--crm-sunk);
+}
+
+.queued {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--crm-warn);
+}
+
+.body {
+  padding: 12px 14px;
+}
+
+.address {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--crm-ink);
+  line-height: 1.35;
+}
+
+.meta {
+  color: var(--crm-muted);
+  font-size: 14px;
+  margin-top: 3px;
+}
+
+.plate {
+  display: inline-block;
+  padding: 1px 7px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: var(--crm-ink);
+}
+
+.note {
+  margin-top: 10px;
+  padding: 9px 11px;
+  border-radius: 8px;
+  background: var(--crm-sunk);
+  color: var(--crm-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---- Big touch targets ---- */
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0 14px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 10px;
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+  /* No accidental text selection while tapping repeatedly. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tap:active {
+  background: var(--crm-sunk);
+}
+
+.tapPrimary {
+  grid-column: 1 / -1;
+  min-height: 64px;
+  border: none;
+  background: var(--crm-accent);
+  color: #fff;
+  font-size: 18px;
+}
+
+.tapDone {
+  grid-column: 1 / -1;
+  min-height: 64px;
+  border: none;
+  background: var(--crm-ok);
+  color: #fff;
+  font-size: 18px;
+}
+
+.tap:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---- Finish panel ---- */
+
+.finish {
+  border-top: 1px solid var(--crm-rule);
+  padding: 12px 14px;
+  background: var(--crm-bg);
+}
+
+.finishTitle {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--crm-muted);
+  margin: 0 0 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--crm-muted);
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 50px;
+  padding: 12px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 9px;
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  font: inherit;
+  /* 16px keeps iOS Safari from zooming the page on focus. */
+  font-size: 16px;
+}
+
+.input:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+}
+
+.photos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.thumb {
+  width: 68px;
+  height: 68px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--crm-rule2);
+}
+
+.sigPad {
+  width: 100%;
+  height: 170px;
+  border: 2px dashed var(--crm-rule2);
+  border-radius: 10px;
+  background: var(--crm-panel);
+  touch-action: none;
+  display: block;
+}
+
+.sigDone {
+  border-style: solid;
+  border-color: var(--crm-ok);
+}
+
+.materialRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--crm-rule);
+  font-size: 15px;
+}
+
+.materialQty {
+  color: var(--crm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.error {
+  color: var(--crm-stop);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 8px 0 0;
+}
+
+.ok {
+  color: var(--crm-ok);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 8px 0 0;
+}
+
+.empty {
+  padding: 50px 16px;
+  text-align: center;
+  color: var(--crm-muted);
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.warning {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+  border: 1px solid currentColor;
+  font-size: 14px;
+  line-height: 1.5;
+}

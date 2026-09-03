@@ -1,0 +1,465 @@
+/* Agenda and planner. Same density rules as the leads list. */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  color: var(--crm-ink);
+  letter-spacing: -0.01em;
+}
+
+.count {
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.viewSwitch {
+  display: flex;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.viewLink {
+  padding: 6px 14px;
+  color: var(--crm-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--crm-panel);
+}
+
+.viewLink + .viewLink {
+  border-left: 1px solid var(--crm-rule2);
+}
+
+.viewLinkActive {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 11px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 6px;
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.navBtn:hover {
+  border-color: var(--crm-ink);
+  color: var(--crm-ink);
+}
+
+.today {
+  color: var(--crm-ink);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+/* ---- Day view: a column per technician ---- */
+
+.board {
+  display: grid;
+  gap: 1px;
+  background: var(--crm-rule);
+  border: 1px solid var(--crm-rule);
+  border-radius: 8px;
+  /* Same reason as .wrap in leads.module.css: the sticky column headers need a
+     scrollport with a height, or they drift over the cards. */
+  overflow: auto;
+  max-height: calc(100vh - 190px);
+  overscroll-behavior: contain;
+}
+
+.col {
+  background: var(--crm-panel);
+  min-width: 200px;
+}
+
+.colHead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 8px 10px;
+  background: var(--crm-sunk);
+  border-bottom: 1px solid var(--crm-rule);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.colName {
+  color: var(--crm-ink);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.colMeta {
+  margin-left: auto;
+  color: var(--crm-muted);
+  font-size: 11px;
+}
+
+.colBody {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 120px;
+}
+
+/* ---- A job ---- */
+
+.job {
+  display: block;
+  border: 1px solid var(--crm-rule2);
+  border-left-width: 3px;
+  border-radius: 6px;
+  padding: 7px 9px;
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.job:hover {
+  border-color: var(--crm-ink);
+}
+
+.jobSlot {
+  font-weight: 700;
+  color: var(--crm-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.jobLine {
+  display: block;
+  color: var(--crm-muted);
+  margin-top: 1px;
+}
+
+.jobPlate {
+  display: inline-block;
+  padding: 0 5px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  color: var(--crm-ink);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge::before {
+  content: '';
+  width: 3px;
+  height: 9px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.stGepland {
+  color: var(--crm-steel);
+  background: var(--crm-steel-bg);
+}
+.stOnderweg,
+.stBezig {
+  color: var(--crm-warn);
+  background: var(--crm-warn-bg);
+}
+.stAfgerond {
+  color: var(--crm-ok);
+  background: var(--crm-ok-bg);
+}
+.stGeannuleerd {
+  color: var(--crm-muted);
+  background: var(--crm-sunk);
+}
+
+.unassigned {
+  border-left-color: var(--crm-stop);
+}
+
+/* ---- Week view ---- */
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--crm-rule);
+  border: 1px solid var(--crm-rule);
+  border-radius: 8px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.dayHead {
+  padding: 7px 9px;
+  background: var(--crm-sunk);
+  border-bottom: 1px solid var(--crm-rule);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--crm-ink);
+}
+
+.dayHeadToday {
+  box-shadow: inset 0 -2px 0 var(--crm-accent);
+}
+
+.dayMeta {
+  color: var(--crm-muted);
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+/* ---- Empty ---- */
+
+.empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--crm-muted);
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 8px;
+}
+
+.warning {
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: 6px;
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+  border: 1px solid currentColor;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.link {
+  color: var(--crm-accent);
+}
+
+/* ---- Planner ---- */
+
+.planWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .planWrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panel {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--crm-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--crm-muted);
+}
+
+.control {
+  padding: 7px 9px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 5px;
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+  min-height: 34px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.control:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.summaryKey {
+  color: var(--crm-muted);
+}
+
+.summaryVal {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.suggestion {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 10px;
+  margin-bottom: 6px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 6px;
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestionActive {
+  border-color: var(--crm-accent);
+  box-shadow: inset 3px 0 0 var(--crm-accent);
+}
+
+.suggestionName {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.suggestionWhy {
+  display: block;
+  color: var(--crm-muted);
+  font-size: 11px;
+}
+
+.regionTag {
+  margin-left: auto;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
+  border: 1px solid currentColor;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.primary {
+  height: 36px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 6px;
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.secondary {
+  height: 36px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 6px;
+  color: var(--crm-text);
+  background: var(--crm-panel);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.error {
+  flex-basis: 100%;
+  color: var(--crm-stop);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.note {
+  color: var(--crm-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 10px 0 0;
+}

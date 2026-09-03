@@ -14,6 +14,7 @@ import {
   type Filters,
   type FacetKey,
 } from '@/lib/catalog';
+import { getShopProducts } from '@/lib/shopCatalog';
 
 /**
  * Faceted catalogue browse page.
@@ -67,7 +68,7 @@ export default async function CatalogPage({
 
   // Public catalogue only. Trade lines (lock picks, key programmers) are
   // excluded at the data layer, not hidden in the UI.
-  const all = getProducts(isB2B ? 'all' : 'public');
+  const all = await getShopProducts(isB2B ? 'all' : 'public');
   const results = filterProducts(all, filters);
   const facets = buildFacets(all, filters, FACET_ORDER);
 
@@ -134,13 +135,14 @@ export default async function CatalogPage({
                 const price = shelfPrice(p.costPrice);
                 return (
                   <ProductCardList
-                    key={p.id}
-                    id={p.id}
+                    key={p.slug}
                     slug={p.slug}
                     title={p.titleNl || p.title}
+                    subtitle={p.excerpt}
+                    specs={p.specs}
                     category={p.category ? facetLabel('category', p.category) : 'Onderdeel'}
                     price={price ? price.toFixed(2) : '0.00'}
-                    img={p.image || '/images/placeholder.png'}
+                    img={p.image || '/images/product-placeholder.svg'}
                   />
                 );
               })}

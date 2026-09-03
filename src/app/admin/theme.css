@@ -1,0 +1,62 @@
+/*
+ * CRM design tokens.
+ *
+ * Deliberately not the site's orange-and-navy: this is a dense work surface,
+ * and high saturation across eight hours is tiring. Neutral base, brand orange
+ * only on the primary action, colour otherwise reserved for job state.
+ *
+ * Dark theme is not a nicety here — the service runs 24/7 and someone is
+ * reading this at 03:00.
+ */
+
+.crm {
+  --crm-bg: #f4f5f6;
+  --crm-panel: #ffffff;
+  --crm-sunk: #e9ebed;
+  --crm-ink: #14181c;
+  --crm-text: #3b4348;
+  --crm-muted: #6a747b;
+  --crm-rule: #dbdfe2;
+  --crm-rule2: #bcc3c8;
+
+  --crm-accent: #c2410c;
+  --crm-accent-hover: #9a330a;
+
+  --crm-ok: #186b4b;
+  --crm-ok-bg: #e2f1ea;
+  --crm-stop: #9d201c;
+  --crm-stop-bg: #fbe8e6;
+  --crm-warn: #8a5804;
+  --crm-warn-bg: #fbf1dc;
+  --crm-steel: #2c4a63;
+  --crm-steel-bg: #e6edf3;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  .crm {
+    --crm-bg: #0f1215;
+    --crm-panel: #171b1f;
+    --crm-sunk: #20262b;
+    --crm-ink: #eef1f3;
+    --crm-text: #c0c7cc;
+    --crm-muted: #8b959c;
+    --crm-rule: #2a3137;
+    --crm-rule2: #3e474e;
+
+    --crm-accent: #d95f22;
+    --crm-accent-hover: #ef7639;
+
+    --crm-ok: #63cfa0;
+    --crm-ok-bg: #0d2a20;
+    --crm-stop: #f79890;
+    --crm-stop-bg: #331513;
+    --crm-warn: #dfae5c;
+    --crm-warn-bg: #302307;
+    --crm-steel: #8fb3cf;
+    --crm-steel-bg: #16232e;
+
+    color-scheme: dark;
+  }
+}

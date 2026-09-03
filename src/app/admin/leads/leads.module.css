@@ -1,0 +1,455 @@
+/*
+ * Dense list, not cards. Sixty leads as cards is a scrolling penalty, and in
+ * emergency work the whole job is scanning the top of this list fast.
+ */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  color: var(--crm-ink);
+  letter-spacing: -0.01em;
+}
+
+.count {
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.hint {
+  margin-left: auto;
+  color: var(--crm-muted);
+  font-size: 12px;
+}
+
+.kbd {
+  display: inline-block;
+  min-width: 16px;
+  padding: 1px 5px;
+  margin: 0 2px;
+  border: 1px solid var(--crm-rule2);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--crm-panel);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  color: var(--crm-text);
+  text-align: center;
+}
+
+/* ---- Status tabs ---- */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  border-bottom: 1px solid var(--crm-rule);
+  margin-bottom: 10px;
+}
+
+.tab {
+  padding: 7px 12px;
+  border-bottom: 2px solid transparent;
+  color: var(--crm-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--crm-ink);
+}
+
+.tabActive {
+  color: var(--crm-ink);
+  border-bottom-color: var(--crm-accent);
+}
+
+.tabCount {
+  margin-left: 6px;
+  color: var(--crm-muted);
+  font-weight: 500;
+}
+
+/* ---- Filter bar ---- */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldWide {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--crm-muted);
+}
+
+.control {
+  padding: 6px 9px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 5px;
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+.control:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+}
+
+.apply {
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 5px;
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.reset {
+  height: 32px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 5px;
+  color: var(--crm-muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.reset:hover {
+  color: var(--crm-ink);
+}
+
+/* ---- Table ---- */
+
+/*
+ * A real scroll container, on purpose.
+ *
+ * `overflow-x: auto` alone silently turns `overflow-y` into `auto` as well, so
+ * this box already scrolled vertically — but without a height it never had a
+ * scrollport for the sticky header to stick to, and the header floated down
+ * over the rows. Bounding the height makes it one container that scrolls both
+ * ways, with the header pinned to its top.
+ */
+.wrap {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 8px;
+  overflow: auto;
+  max-height: calc(100vh - 230px);
+  overscroll-behavior: contain;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  position: sticky;
+  /* Relative to .wrap's scrollport, not the page. */
+  top: 0;
+  z-index: 5;
+  background: var(--crm-sunk);
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--crm-rule);
+  white-space: nowrap;
+}
+
+.table td {
+  height: 44px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--crm-rule);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.row:hover td {
+  background: var(--crm-sunk);
+}
+
+.rowFocused td {
+  background: var(--crm-sunk);
+  box-shadow: inset 2px 0 0 var(--crm-accent);
+}
+
+.rowStale td {
+  background: var(--crm-stop-bg);
+}
+
+.rowStale:hover td {
+  background: var(--crm-stop-bg);
+  filter: brightness(0.97);
+}
+
+.time {
+  color: var(--crm-muted);
+}
+
+.dateSmall {
+  display: block;
+  font-size: 11px;
+  color: var(--crm-muted);
+}
+
+.strong {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.sub {
+  display: block;
+  font-size: 11px;
+  color: var(--crm-muted);
+  font-weight: 400;
+}
+
+.plate {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 3px;
+  background: var(--crm-bg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--crm-ink);
+}
+
+.money {
+  text-align: right;
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.moneyEmpty {
+  text-align: right;
+  color: var(--crm-muted);
+}
+
+/*
+ * Status carries shape as well as colour — a left bar plus a label — so it
+ * survives a colour-blind reader and a washed-out screen in a van.
+ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid currentColor;
+}
+
+.badge::before {
+  content: '';
+  width: 3px;
+  height: 11px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.stNew {
+  color: var(--crm-steel);
+  background: var(--crm-steel-bg);
+}
+.stQualified {
+  color: var(--crm-warn);
+  background: var(--crm-warn-bg);
+}
+.stContacted {
+  color: var(--crm-warn);
+  background: var(--crm-warn-bg);
+}
+.stSold {
+  color: var(--crm-ok);
+  background: var(--crm-ok-bg);
+}
+.stRejected,
+.stDuplicate {
+  color: var(--crm-muted);
+  background: var(--crm-sunk);
+}
+
+.flag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--crm-stop);
+  color: var(--crm-panel);
+}
+
+.repeat {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+  border: 1px solid currentColor;
+}
+
+.consentNo {
+  color: var(--crm-muted);
+  font-size: 11px;
+}
+
+/* ---- Row actions ---- */
+
+.actions {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.act {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 9px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 5px;
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.act:hover {
+  border-color: var(--crm-ink);
+  color: var(--crm-ink);
+}
+
+.actPrimary {
+  border-color: var(--crm-accent);
+  color: var(--crm-accent);
+}
+
+/* ---- Inline editor ---- */
+
+.editRow td {
+  height: auto;
+  padding: 12px;
+  background: var(--crm-sunk);
+  white-space: normal;
+}
+
+.editGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.editError {
+  flex-basis: 100%;
+  color: var(--crm-stop);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.editNote {
+  flex-basis: 100%;
+  color: var(--crm-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ---- Empty and pagination ---- */
+
+.empty {
+  padding: 44px 16px;
+  text-align: center;
+  color: var(--crm-muted);
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 10px 2px;
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.pageLink {
+  padding: 5px 10px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 5px;
+  color: var(--crm-text);
+  text-decoration: none;
+}
+
+.pageLink:hover {
+  border-color: var(--crm-ink);
+  color: var(--crm-ink);
+}
+
+.warning {
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: 6px;
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+  border: 1px solid currentColor;
+  font-size: 13px;
+  line-height: 1.5;
+}

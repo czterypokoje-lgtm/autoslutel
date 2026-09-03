@@ -46,6 +46,11 @@ export interface CatalogProduct {
   /** Self-contained answer for featured snippets and LLM citation. */
   directAnswer: string;
   metaDescriptionNl: string;
+
+  /** Label/value pairs derived from the supplier data: chip, frequency, … */
+  specs?: [string, string][];
+  /** The supplier's own article code, when their export carries one. */
+  articleCode?: string | null;
 }
 
 const catalog = catalogJson as unknown as {

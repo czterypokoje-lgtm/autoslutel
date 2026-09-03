@@ -1,0 +1,259 @@
+/* Customer list and the single-customer view. */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  color: var(--crm-ink);
+  letter-spacing: -0.01em;
+}
+
+.count {
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.search {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.control {
+  padding: 6px 10px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 5px;
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+.control:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+}
+
+.apply {
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 5px;
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.wrap {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  background: var(--crm-sunk);
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--crm-rule);
+  white-space: nowrap;
+}
+
+.table td {
+  height: 44px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--crm-rule);
+  white-space: nowrap;
+}
+
+.table tbody tr:hover td {
+  background: var(--crm-sunk);
+}
+
+.strong {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.sub {
+  display: block;
+  font-size: 11px;
+  color: var(--crm-muted);
+}
+
+.money {
+  text-align: right;
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.link {
+  color: var(--crm-accent);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* ---- Single customer ---- */
+
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panel {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--crm-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 14px;
+  font-size: 13px;
+}
+
+.summaryKey {
+  color: var(--crm-muted);
+}
+
+.summaryVal {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.item {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--crm-rule);
+  font-size: 13px;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.plate {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--crm-ink);
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ok {
+  color: var(--crm-ok);
+  background: var(--crm-ok-bg);
+}
+
+.no {
+  color: var(--crm-muted);
+  background: var(--crm-sunk);
+}
+
+.danger {
+  border-color: var(--crm-stop);
+  background: var(--crm-stop-bg);
+}
+
+.dangerTitle {
+  color: var(--crm-stop);
+}
+
+.dangerBtn {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--crm-stop);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--crm-stop);
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dangerBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.note {
+  color: var(--crm-muted);
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 10px 0 0;
+}
+
+.empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--crm-muted);
+}
+
+.warning {
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: 6px;
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+  border: 1px solid currentColor;
+  font-size: 13px;
+  line-height: 1.5;
+}

@@ -77,9 +77,63 @@ create index if not exists leads_status_idx      on public.leads (status);
 create index if not exists leads_source_idx      on public.leads (source);
 
 -- Same number on the same calendar day = one lead, not two.
-create unique index if not exists leads_dedupe_idx
-  on public.leads (phone_e164, (created_at::date))
-  where phone_e164 is not null;
+/*
+ * This cannot be indexed as `(created_at::date)`.
+ *
+ * `created_at` is a timestamptz, and turning one into a date depends on the
+ * server's timezone — so the cast is STABLE, not IMMUTABLE, and Postgres
+ * refuses it in an index (42P17). The original statement therefore never ran,
+ * and deduplication was silently off from the day this file was written.
+ *
+ * The fix is a real column, pinned to the timezone the business actually works
+ * in, maintained by a trigger. Now the value is fixed at insert time and the
+ * index is allowed.
+ */
+alter table public.leads add column if not exists created_date date;
+
+update public.leads
+set created_date = (created_at at time zone 'Europe/Amsterdam')::date
+where created_date is null;
+
+create or replace function public.leads_set_created_date()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.created_date := ((coalesce(new.created_at, now())) at time zone 'Europe/Amsterdam')::date;
+  return new;
+end $$;
+
+drop trigger if exists leads_created_date_trg on public.leads;
+create trigger leads_created_date_trg
+  before insert on public.leads
+  for each row execute function public.leads_set_created_date();
+
+/*
+ * The unique index is only created when the existing rows allow it. Duplicates
+ * that are already there are not this migration's to delete — a duplicate lead
+ * is still somebody who called, and merging or dropping one is a decision for
+ * the office, not for a schema change.
+ */
+do $$
+begin
+  if exists (
+    select 1
+    from (
+      select phone_e164, created_date
+      from public.leads
+      where phone_e164 is not null
+      group by phone_e164, created_date
+      having count(*) > 1
+    ) d
+  ) then
+    raise notice 'leads_dedupe_idx not created: duplicate phone/day pairs exist. Resolve them, then re-run.';
+  else
+    create unique index if not exists leads_dedupe_idx
+      on public.leads (phone_e164, created_date)
+      where phone_e164 is not null;
+  end if;
+end $$;
 
 -- 7. Row Level Security -------------------------------------------------------
 -- The API writes with the service-role key, which bypasses RLS. Enabling it

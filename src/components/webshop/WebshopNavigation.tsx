@@ -86,19 +86,28 @@ export default function WebshopNavigation() {
           />
         </Link>
 
-        {/* Search Bar */}
-        <div style={{ flex: 1, maxWidth: '800px', display: 'flex' }}>
+        {/*
+          * Search Bar — a form, so Enter submits and the browser can restore the
+          * query. It used to hold state and nothing else: typing an article code
+          * and pressing the button did nothing at all.
+          */}
+        <form
+          action="/webshop/zoeken"
+          method="get"
+          style={{ flex: 1, maxWidth: '800px', display: 'flex' }}
+        >
           <input 
             type="text" 
-            placeholder="Waarmee kunnen we je helpen?" 
+            name="q"
+            placeholder="Artikelcode, merk of omschrijving" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{ width: '100%', padding: '0.85rem 1rem', border: '2px solid #94a3b8', borderRadius: '4px 0 0 4px', fontSize: '1rem', outline: 'none' }}
           />
-          <button style={{ background: '#b93c20', color: '#fff', border: 'none', padding: '0 1.5rem', borderRadius: '0 4px 4px 0', cursor: 'pointer' }}>
+          <button type="submit" aria-label="Zoeken" style={{ background: '#b93c20', color: '#fff', border: 'none', padding: '0 1.5rem', borderRadius: '0 4px 4px 0', cursor: 'pointer' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </button>
-        </div>
+        </form>
 
         {/* Right Icons */}
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', color: '#334155' }}>

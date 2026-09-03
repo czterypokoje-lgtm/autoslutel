@@ -17,7 +17,14 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
     window.setTimeout(() => setAdded(false), 2200);
   };
   const servicePrice = "169.00";
-  const savings = (oldPrice - price);
+  /*
+   * A crossed-out price only when there genuinely is one to point at.
+   *
+   * The service option carried a hard-coded "€350 dealer / save €181" that had
+   * nothing to do with this product and no source behind it.
+   */
+  const hasReference = purchaseType === 'ship' && oldPrice > price;
+  const savings = oldPrice - price;
   
   // Theme Colors
   const themeOrange = '#b93c20'; // Crutchfield rust orange
@@ -50,14 +57,16 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
           <span style={{ fontSize: '2rem', fontWeight: 800, color: bmBlack, lineHeight: 1 }}>
             {purchaseType === 'ship' ? formatPrice(price) : formatPrice(169.00)}
           </span>
-          <div style={{ paddingBottom: '0.25rem' }}>
-            <span style={{ fontSize: '0.9rem', color: '#64748b', textDecoration: 'line-through', marginRight: '0.5rem' }}>
-              {purchaseType === 'ship' ? formatPrice(oldPrice) : formatPrice(350.00)} dealer
-            </span>
-            <span style={{ background: '#16a34a', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>
-              Bespaar {purchaseType === 'ship' ? formatPrice(savings) : formatPrice(181.00)}
-            </span>
-          </div>
+          {hasReference && (
+            <div style={{ paddingBottom: '0.25rem' }}>
+              <span style={{ fontSize: '0.9rem', color: '#64748b', textDecoration: 'line-through', marginRight: '0.5rem' }}>
+                {formatPrice(oldPrice)}
+              </span>
+              <span style={{ background: '#16a34a', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>
+                Bespaar {formatPrice(savings)}
+              </span>
+            </div>
+          )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.85rem', color: '#334155', marginTop: '0.5rem' }}>
           <span style={{ fontWeight: 800, color: '#000', background: '#ffb3c7', padding: '0 4px', borderRadius: '2px' }}>Klarna.</span>

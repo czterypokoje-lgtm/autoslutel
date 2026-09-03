@@ -1,125 +1,186 @@
 import React from 'react';
 import Link from 'next/link';
 import { slugify } from '@/lib/utils';
+import { FREE_SHIPPING_FROM } from '@/lib/catalog';
+
+/**
+ * One product in a list view.
+ *
+ * This card arrived as a template and kept the template's contents: a "Top
+ * seller" badge on every product, "Best of 2026", "High quality OEM
+ * replacement part" on aftermarket parts, a permanent "In stock", a colour
+ * picker with three swatches for products that have no colours, three bullet
+ * points about key housings shown on batteries, and an "Open Box €x / Scratch
+ * & Dent €y" block whose prices were the real price times 0.85 and 0.8 —
+ * conditions this shop does not sell.
+ *
+ * All of it was a claim to a customer, and none of it was true. Everything
+ * below is either passed in from the catalogue or not shown at all. This is
+ * the same clean-up that removed the invented reviews and certificates from
+ * this site (BW 6:193c).
+ */
 
 interface ProductCardProps {
-  id: string;
-  slug: string;
   title: string;
-  category: string; 
+  category: string;
   price: string;
   oldPrice?: string;
   img: string;
   isBestOf?: boolean;
+  /**
+   * The catalogue's own slug. Without it the link is rebuilt from the title,
+   * which only matches when the displayed title happens to be the one the slug
+   * was generated from — for a translated title it does not, and the link
+   * lands on a 404.
+   */
+  slug?: string;
+  /** One line under the title, from the product's own description. */
+  subtitle?: string;
+  /** Label/value pairs to show as bullets: make, frequency, transponder. */
+  specs?: [string, string][];
+  /** Only known when the office tracks stock for this product. */
+  inStock?: boolean | null;
 }
 
-export default function ProductCard({ id, slug, title, category, price, oldPrice, img, isBestOf }: ProductCardProps) {
+export default function ProductCard({
+  title,
+  category,
+  price,
+  oldPrice,
+  img,
+  slug,
+  subtitle,
+  specs = [],
+  inStock = null,
+}: ProductCardProps) {
+  const href = `/webshop/product/${slug ?? slugify(title)}`;
+  const amount = parseFloat(price);
+  const reference = oldPrice ? parseFloat(oldPrice) : NaN;
+
+  // A struck-through price is a claim that this was once the price.
+  const hasReference =
+    Number.isFinite(reference) && Number.isFinite(amount) && reference > amount;
+
+  // The real rule from the catalogue, not a badge on everything.
+  const freeShipping = Number.isFinite(amount) && amount >= FREE_SHIPPING_FROM;
+
   return (
-    <div style={{
-      background: '#fff',
-      borderRadius: '8px',
-      padding: '1.5rem',
-      position: 'relative',
-      display: 'flex',
-      gap: '2rem',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
-      fontFamily: 'Inter, sans-serif',
-      marginBottom: '1rem',
-      alignItems: 'stretch'
-    }}>
-      
-      {/* Left Column: Badges & Image */}
-      <div style={{ flex: '0 0 300px', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', position: 'absolute', top: 0, left: 0, zIndex: 10 }}>
-          <span style={{ background: '#334155', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '999px' }}>
-            Top seller
-          </span>
-          {isBestOf && (
-            <span style={{ background: '#0d9488', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '999px' }}>
-              Best of 2026
-            </span>
-          )}
-        </div>
-        
-        <Link href={`/webshop/product/${slug}`} style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: '1.5rem' }}>
-          <img 
-            src={img} 
-            alt={title} 
-            style={{ width: '100%', maxWidth: '240px', objectFit: 'contain' }}
-          />
+    <div
+      style={{
+        display: 'flex',
+        gap: '2rem',
+        background: '#fff',
+        border: '1px solid #e5e5e5',
+        borderRadius: '12px',
+        padding: '1.5rem',
+        marginBottom: '1rem',
+      }}
+    >
+      {/* Image */}
+      <div style={{ flex: '0 0 240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Link href={href} style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={img} alt={title} style={{ width: '100%', maxWidth: '220px', objectFit: 'contain' }} />
         </Link>
       </div>
 
-      {/* Middle Column: Details */}
-      <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Link href={`/webshop/product/${slug}`} style={{ textDecoration: 'none', color: '#0f172a' }}>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.25rem' }}>{title}</h2>
-          <div style={{ fontSize: '1rem', color: '#475569', marginBottom: '0.75rem' }}>High quality OEM replacement part</div>
+      {/* Details */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <Link href={href} style={{ textDecoration: 'none', color: '#0f172a' }}>
+          <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem' }}>{title}</h2>
         </Link>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#16a34a', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.75rem' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          In stock
-        </div>
 
+        {subtitle && (
+          <div style={{ fontSize: '0.95rem', color: '#475569', marginBottom: '0.6rem', lineHeight: 1.5 }}>
+            {subtitle}
+          </div>
+        )}
 
-        <ul style={{ paddingLeft: '1.2rem', margin: 0, color: '#0f172a', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', listStyleType: 'disc' }}>
-          <li>Perfecte pasvorm voor originele behuizing</li>
-          <li>Inclusief ongeslepen sleutelblad (indien van toepassing)</li>
-          <li>Eenvoudig overzetten van de interne elektronica</li>
-        </ul>
+        <div style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.6rem' }}>{category}</div>
+
+        {/* Only when the office actually tracks stock for this product. */}
+        {inStock === false && (
+          <div style={{ color: '#9d201c', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.6rem' }}>
+            Tijdelijk uitverkocht
+          </div>
+        )}
+
+        {specs.length > 0 && (
+          <ul
+            style={{
+              paddingLeft: '1.1rem',
+              margin: 0,
+              color: '#0f172a',
+              fontSize: '0.85rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.3rem',
+              listStyleType: 'disc',
+            }}
+          >
+            {specs.slice(0, 4).map(([label, value]) => (
+              <li key={label}>
+                <span style={{ color: '#475569' }}>{label}:</span> {value}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
-      {/* Right Column: Price & Action */}
-      <div style={{ flex: '0 0 220px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', borderLeft: '1px solid #f1f5f9', paddingLeft: '2rem' }}>
-        {/* Fabricated rating removed — see ProductCard.tsx */}
+      {/* Price */}
+      <div
+        style={{
+          flex: '0 0 200px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          borderLeft: '1px solid #f1f5f9',
+          paddingLeft: '1.5rem',
+        }}
+      >
+        {freeShipping && (
+          <div style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 600, marginBottom: '0.5rem' }}>
+            Gratis verzending
+          </div>
+        )}
 
-        <div style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 600, marginBottom: '0.75rem' }}>
-          Free shipping
-        </div>
-
-        {oldPrice && (
+        {hasReference && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', marginBottom: '0.25rem' }}>
             <div style={{ fontSize: '0.8rem', color: '#64748b', textDecoration: 'line-through' }}>
-              €{oldPrice} ⓘ
+              €{oldPrice}
             </div>
             <div style={{ background: '#16a34a', color: '#fff', fontSize: '0.75rem', fontWeight: 800, padding: '0.1rem 0.4rem', borderRadius: '4px', marginTop: '0.2rem' }}>
-              Save €{(parseFloat(oldPrice) - parseFloat(price)).toFixed(2)}
+              Bespaar €{(reference - amount).toFixed(2)}
             </div>
           </div>
         )}
 
-        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', letterSpacing: '-0.5px' }}>
+        <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', letterSpacing: '-0.5px' }}>
           €{price}
         </div>
 
-        <button style={{
-          width: '100%',
-          background: '#c2410c', // Crutchfield orange/red
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          fontWeight: 700,
-          fontSize: '0.9rem',
-          cursor: 'pointer',
-          padding: '0.75rem 0',
-          marginBottom: '1rem'
-        }}>
-          Add to cart
-        </button>
-
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.2rem', fontSize: '0.75rem', color: '#0f172a', fontWeight: 600, marginBottom: 'auto' }}>
-          <div>Open Box: <span style={{fontWeight: 400}}>€{(parseFloat(price) * 0.85).toFixed(2)}</span></div>
-          <div>Scratch & Dent: <span style={{fontWeight: 400}}>€{(parseFloat(price) * 0.8).toFixed(2)}</span></div>
-        </div>
-
-        <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: '#0f172a' }}>
-          <input type="checkbox" style={{ width: '14px', height: '14px' }} />
-          Compare
-        </div>
-
+        {/*
+          * A link, not a button. The old "Add to cart" button did nothing at
+          * all — a dead primary action on every card in every list.
+          */}
+        <Link
+          href={href}
+          style={{
+            width: '100%',
+            background: '#c2410c',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            fontWeight: 700,
+            fontSize: '0.9rem',
+            padding: '0.7rem 0',
+            textAlign: 'center',
+            textDecoration: 'none',
+          }}
+        >
+          Bekijken
+        </Link>
       </div>
-
     </div>
   );
 }

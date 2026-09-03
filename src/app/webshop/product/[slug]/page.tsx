@@ -10,7 +10,8 @@ import ProductAccordions from '@/components/webshop/ProductAccordions';
 import ProductGallery from '@/components/webshop/ProductGallery';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
-import { getProductBySlug, shelfPrice, formatPrice } from '@/lib/catalog';
+import { formatPrice } from '@/lib/catalog';
+import { getShopProductBySlug } from '@/lib/shopCatalog';
 
 /** Categories that require programming after installation. */
 const NEEDS_PROGRAMMING_CATEGORIES = new Set([
@@ -31,7 +32,7 @@ export async function generateMetadata(
   props: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const entry = getProductBySlug(slug);
+  const entry = await getShopProductBySlug(slug);
   const url = `${SITE_CONFIG.domain}/webshop/product/${slug}`;
 
   if (!entry) {
@@ -55,7 +56,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
   const resolvedParams = await props.params;
 
   // Single source of truth: the derived catalogue.
-  const entry = getProductBySlug(resolvedParams.slug);
+  const entry = await getShopProductBySlug(resolvedParams.slug);
 
   if (!entry) {
     notFound();
@@ -74,10 +75,22 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
   const bundleData = bundleMapping[resolvedParams.slug] ?? {};
   const batteryData: BatteryData | null = bundleData.battery ?? null;
 
-  const sellPrice = shelfPrice(entry.costPrice);
-  // Approximate "dealer" reference price as 1.8× our shelf price — visible only
-  // for the strike-through comparison; never charged.
-  const oldPriceNum = sellPrice ? sellPrice * 1.8 : null;
+  // Already merged with the office's overrides; the margin rule is the fallback.
+  const sellPrice = entry.price;
+
+  /*
+   * No invented reference price.
+   *
+   * This used to be `sellPrice * 1.8`, shown struck through as a "dealer"
+   * price. Nobody was ever charged it. A crossed-out price is a claim that
+   * this was once the price, and under BW 6:193c presenting one that never
+   * existed is a misleading commercial practice — the same reason the invented
+   * reviews and certificates were taken off this site.
+   *
+   * Put a real figure here when there is a documented dealer average, with the
+   * source written down.
+   */
+  const oldPriceNum: number | null = null;
 
   const needsProgramming = NEEDS_PROGRAMMING_CATEGORIES.has(entry.category ?? '');
 

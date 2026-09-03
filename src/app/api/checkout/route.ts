@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { SITE_CONFIG } from '@/config/site.config';
-import { getProductBySlug, shelfPrice, shippingFor, VAT_RATE } from '@/lib/catalog';
+import { shippingFor, VAT_RATE } from '@/lib/catalog';
+import { getShopProductBySlug } from '@/lib/shopCatalog';
 import { SERVICE_SURCHARGE, SERVICE_LABEL, type ServiceOption } from '@/lib/cart';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 
@@ -81,10 +82,15 @@ export async function POST(request: Request) {
   for (const raw of incoming.slice(0, 50)) {
     const slug = clean(raw.slug, 120);
     if (!slug) continue;
-    const product = getProductBySlug(slug);
-    if (!product || product.audience !== 'public') continue;
+    /*
+     * Through the merged catalogue: a price the office corrected has to be the
+     * price that is charged, and a product taken offline or out of stock must
+     * not be sellable through a stale basket someone left open.
+     */
+    const product = await getShopProductBySlug(slug);
+    if (!product || product.audience !== 'public' || !product.inStock) continue;
 
-    const unitPrice = shelfPrice(product.costPrice);
+    const unitPrice = product.price;
     if (unitPrice == null) continue;
 
     const quantity = Math.min(20, Math.max(1, Number(raw.quantity) || 1));

@@ -1,0 +1,238 @@
+/*
+ * The CRM is a tool, not a landing page. The public site is orange and
+ * high-contrast because it sells; this surface is looked at for eight hours a
+ * day, so the base is neutral and colour is reserved for state.
+ */
+
+.shell {
+  min-height: 100vh;
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  /* Money and clock columns must line up. */
+  font-variant-numeric: tabular-nums;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 48px;
+  padding: 0 16px;
+  background: var(--crm-panel);
+  border-bottom: 1px solid var(--crm-rule);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--crm-ink);
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  gap: 4px;
+}
+
+.navLink {
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: var(--crm-muted);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navLink:hover {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+.navLinkActive {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.role {
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--crm-rule2);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.signout {
+  background: none;
+  border: 1px solid var(--crm-rule2);
+  color: var(--crm-muted);
+  border-radius: 5px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.signout:hover {
+  color: var(--crm-ink);
+  border-color: var(--crm-ink);
+}
+
+.main {
+  padding: 16px;
+}
+
+/* ---- Centred single-card pages: login, geen toegang ---- */
+
+.centre {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 10px;
+  padding: 28px;
+}
+
+.card h1 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  color: var(--crm-ink);
+  letter-spacing: -0.01em;
+}
+
+.card p {
+  margin: 0 0 18px;
+  color: var(--crm-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--crm-muted);
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 6px;
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 15px;
+}
+
+.input:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+  border-color: var(--crm-accent);
+}
+
+.button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 6px;
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--crm-accent-hover);
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.linkButton {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  border: none;
+  background: none;
+  color: var(--crm-muted);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.linkButton:hover:not(:disabled) {
+  color: var(--crm-ink);
+}
+
+.linkButton:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.note {
+  margin-top: 16px;
+  padding: 11px 13px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.noteOk {
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
+  border: 1px solid var(--crm-ok);
+}
+
+.noteBad {
+  background: var(--crm-stop-bg);
+  color: var(--crm-stop);
+  border: 1px solid var(--crm-stop);
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--crm-muted);
+  font-size: 13px;
+}
