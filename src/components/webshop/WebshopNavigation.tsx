@@ -14,8 +14,9 @@ const categoryLinks = [
   { href: '/webshop/catalogus?category=behuizingen', label: 'Behuizingen' },
   { href: '/webshop/catalogus?category=batterijen', label: 'Batterijen' },
   { href: '/webshop/catalogus?category=printplaten', label: 'Printplaten' },
-  { href: '/webshop/catalogus?category=smart-keys', label: 'Smart Keys' },
+  { href: '/webshop/catalogus?subcategory=smart+key', label: 'Smart Keys' },
   { href: '/webshop/catalogus?category=transponders', label: 'Transponders' },
+  { href: '/webshop/catalogus?category=noodsleutels', label: 'Noodsleutels' },
   { href: '/webshop/catalogus?category=universal-remotes', label: 'Universal Keys' },
   { href: '/webshop/aanbiedingen', label: 'Aanbiedingen' },
 ];

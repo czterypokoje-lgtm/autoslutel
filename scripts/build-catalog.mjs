@@ -19,6 +19,7 @@ import { readFileSync, writeFileSync, existsSync } from 'fs';
 import path from 'path';
 
 const IN = path.join(process.cwd(), 'src/data/akey-products.csv');
+const SECTIONS = path.join(process.cwd(), 'src/data/akey-categories.json');
 const OUT = path.join(process.cwd(), 'src/lib/catalog.json');
 
 /* ── CSV ──────────────────────────────────────────────────────────────── */
@@ -60,6 +61,70 @@ const PROMOTE = {
   'afstandsbedieningen|printplaat': ['printplaten', 'printplaat'],
   'afstandsbedieningen|universele afstandsbediening': ['universal-remotes', 'universele afstandsbediening'],
 };
+
+/*
+ * Where A-Key themselves put each product, read off their category pages by
+ * scripts/scrape-akey-categories.mjs.
+ *
+ * This is the only source that cannot be argued with: a product is on the PCB
+ * page or it is not. The export's own Category column disagrees with it often
+ * — complete remote keys filed as circuit boards — and a title only says what
+ * the wording happens to mention.
+ *
+ * A product sits in several sections at once (a Hyundai PCB is on the Hyundai
+ * page and on the PCB page), so the type sections are ranked and the most
+ * specific one wins. Make sections still contribute the car makes.
+ */
+let akeySections = { products: {} };
+try {
+  akeySections = JSON.parse(readFileSync(SECTIONS, 'utf8'));
+} catch {
+  console.warn('  (no akey-categories.json — run scripts/scrape-akey-categories.mjs)');
+}
+
+/** Most specific first. A board is a board even when it is also a Hyundai part. */
+const SECTION_RANK = [
+  'printplaten', 'accessoires', 'gereedschap', 'noodsleutels', 'sleutelbaarden',
+  'universal-remotes', 'transponders', 'behuizingen', 'smart-keys',
+  'afstandsbedieningen',
+];
+
+const ARTICLE_CODE = /\b([A-Z]{2,6}\d{1,4}[A-Z0-9+]*)\b/;
+
+const germanSlug = (title) =>
+  (title || '')
+    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue')
+    .replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue')
+    .replace(/ß/g, 'ss')
+    .replace(/[^A-Za-z0-9]+/g, '-');
+
+const flatten = (value) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
+const codeIn = (value) => value.replace(/[-_]/g, ' ').match(ARTICLE_CODE)?.[1]?.toUpperCase() ?? null;
+
+const sectionsBySlug = new Map();
+const sectionsByCode = new Map();
+for (const [slug, entry] of Object.entries(akeySections.products ?? {})) {
+  sectionsBySlug.set(flatten(slug), entry);
+  const code = codeIn(slug);
+  if (code && !sectionsByCode.has(code)) sectionsByCode.set(code, entry);
+}
+
+/** A-Key's own answer for one product, or null when they do not list it. */
+function akeyPlacement(title) {
+  const entry =
+    sectionsBySlug.get(flatten(germanSlug(title))) ??
+    (codeIn(title) ? sectionsByCode.get(codeIn(title)) : null);
+  if (!entry) return null;
+
+  const typed = entry.categories.filter((c) => c.fromType);
+  const pool = typed.length > 0 ? typed : entry.categories;
+  if (pool.length === 0) return null;
+
+  pool.sort(
+    (a, b) => SECTION_RANK.indexOf(a.category) - SECTION_RANK.indexOf(b.category)
+  );
+  return { category: pool[0].category, subcategory: pool[0].subcategory, makes: entry.makes ?? [] };
+}
 
 /*
  * A-Key's own vocabulary, in their order of precedence.
@@ -163,6 +228,20 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
  * 3. The catch-all, for the rows with neither.
  */
 function categorise(row, title) {
+  const placed = akeyPlacement(title);
+  if (placed) {
+    /*
+     * A-Key has no smart-key section — a keyless Audi key sits on the Audi
+     * page as an ordinary Funkschlüssel. Their top level is kept as it is, but
+     * the export does know which keys are keyless, so that survives as the
+     * subcategory and stays filterable.
+     */
+    if (placed.category === 'afstandsbedieningen' && row.Category?.trim() === 'smart-keys') {
+      return ['afstandsbedieningen', 'smart key'];
+    }
+    return [placed.category, placed.subcategory];
+  }
+
   const named = TITLE_RULES.find(([, , re]) => re.test(title));
   if (named) return named.slice(0, 2);
 
@@ -229,9 +308,10 @@ for (const row of records) {
   const [category, subcategory] = categorise(row, title);
   if (!category) stats.noCategory++;
 
+  const placement = akeyPlacement(title);
   const makes = row.Makes
     ? row.Makes.split(',').map((m) => m.trim()).filter(Boolean)
-    : [];
+    : (placement?.makes ?? []);
   if (!makes.length) stats.noMake++;
 
   /*

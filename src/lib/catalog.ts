@@ -190,6 +190,13 @@ export interface FacetOption {
 }
 
 const LABELS: Record<string, string> = {
+  'sleutel zonder startonderbreker': 'Sleutel zonder startonderbreker',
+  'transpondersleutel': 'Transpondersleutel',
+  'microtaster & antenne': 'Microtaster & antenne',
+  'KeyDIY universal': 'KeyDIY universeel',
+  'Xhorse universal': 'Xhorse universeel',
+  'Autel universal': 'Autel universeel',
+  'IEA universal': 'IEA universeel',
   printplaten: 'Printplaten (PCB)',
   noodsleutels: 'Noodsleutels',
   'universal-remotes': 'Universele sleutels',
