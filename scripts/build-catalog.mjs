@@ -16,7 +16,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { translateDescription, readFacts } from './accessory-copy.mjs';
+import { translateDescription, readFacts, structureDescription } from './accessory-copy.mjs';
 import path from 'path';
 
 const IN = path.join(process.cwd(), 'src/data/akey-products.csv');
@@ -1168,6 +1168,12 @@ function addAccessories() {
      */
     const { dutch, german } = translateDescription(entry.description);
     const facts = readFacts(entry.description);
+    /*
+     * The same text taken apart: a few feature lines, one group per make with
+     * its models, and the chip list. Printed as one paragraph it ran for
+     * eleven lines and nobody could find their own car in it.
+     */
+    const content = structureDescription(entry.description);
 
     const sentences = [
       dutch.length
@@ -1214,6 +1220,11 @@ function addAccessories() {
       ].filter(Boolean),
       /** What did not translate cleanly, shown on the page as the supplier's own text. */
       supplierNote: german.length ? german : null,
+      /** The description in sections, so the page can lay it out. */
+      content:
+        content.vehicles.length || content.chips.length
+          ? { intro: content.intro, vehicles: content.vehicles, chips: content.chips }
+          : null,
       excerpt: (dutch[0] ?? sentences[0]).slice(0, 200),
       descriptionNl: sentences.join(' '),
       directAnswer: (dutch[0] ?? sentences[0]).slice(0, 200),

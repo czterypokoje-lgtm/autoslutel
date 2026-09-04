@@ -62,6 +62,15 @@ export interface CatalogProduct {
    * Shown as their German original rather than half in Dutch.
    */
   supplierNote?: string[] | null;
+  /**
+   * The description in sections: an intro, the vehicles grouped by make, and
+   * the chips. One paragraph of eleven lines is not something anyone reads.
+   */
+  content?: {
+    intro: string[];
+    vehicles: { make: string; note: string | null; models: string[] }[];
+    chips: string[];
+  } | null;
   /** The supplier's own article code, when their export carries one. */
   articleCode?: string | null;
 }

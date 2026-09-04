@@ -124,9 +124,66 @@ export default function ProductAccordions({ product }: { product: ShopProduct })
           </svg>
         </summary>
         <div style={{ padding: '2rem' }}>
-          <p style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
-            {product.descriptionNl || 'Geen uitgebreide beschrijving beschikbaar voor dit product.'}
-          </p>
+          {/*
+            Laid out, not run together. The supplier writes these as a list —
+            a couple of feature lines, then one line per make with its models
+            — and printing that as a single paragraph made eleven lines of
+            prose in which nobody could find their own car.
+          */}
+          {product.content ? (
+            <>
+              {product.content.intro.map((line) => (
+                <p key={line} style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7, margin: '0 0 .75rem' }}>
+                  {line}
+                </p>
+              ))}
+
+              {product.content.vehicles.length > 0 && (
+                <div style={{ marginTop: '1.5rem' }}>
+                  <h3 style={{ fontSize: '.78rem', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#64748b', margin: '0 0 1rem' }}>
+                    Geschikt voor
+                  </h3>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.25rem 2rem' }}>
+                    {product.content.vehicles.map((group) => (
+                      <div key={group.make}>
+                        <p style={{ margin: '0 0 .35rem', fontWeight: 800, color: '#0f172a', fontSize: '.98rem' }}>
+                          {group.make}
+                          {group.note && (
+                            <span style={{ fontWeight: 500, color: '#64748b', fontSize: '.82rem' }}> — {group.note}</span>
+                          )}
+                        </p>
+                        <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#334155', fontSize: '.9rem', lineHeight: 1.75 }}>
+                          {group.models.map((model) => (
+                            <li key={model}>{model}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {product.content.chips.length > 0 && (
+                <div style={{ marginTop: '1.5rem' }}>
+                  <h3 style={{ fontSize: '.78rem', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#64748b', margin: '0 0 .6rem' }}>
+                    Ondersteunde chips
+                  </h3>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.35rem' }}>
+                    {product.content.chips.map((chip) => (
+                      <span key={chip} style={{ background: '#f1f5f9', borderRadius: 5, padding: '.2rem .5rem', fontSize: '.82rem', color: '#0f172a', fontFamily: 'ui-monospace, monospace' }}>
+                        {chip}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <p style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
+              {product.descriptionNl || 'Geen uitgebreide beschrijving beschikbaar voor dit product.'}
+            </p>
+          )}
 
           {/*
             What the supplier writes that we could not put into Dutch without

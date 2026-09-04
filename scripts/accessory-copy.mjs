@@ -58,6 +58,17 @@ const PHRASES = [
   ['Im Lieferumfang enthalten', 'Meegeleverd'],
   ['Lieferumfang', 'leveringsomvang'],
 
+  ['Liste unterstützter Chiptypen', 'Lijst van ondersteunde chiptypen'],
+  ['unterstützter', 'ondersteunde'], ['unterstützte', 'ondersteunde'],
+  ['Produktmerkmale', 'Producteigenschappen'],
+  ['Daten vom', 'gegevens van het'],
+  ['IMMO-Daten', 'IMMO-gegevens'],
+  ['Dashboard lesen', 'dashboard uitlezen'],
+  ['auslesen', 'uitlezen'], ['lesen', 'uitlezen'],
+  ['hinzufügen', 'toevoegen'],
+  ['vom', 'van het'], ['zum Hinzufügen', 'voor het toevoegen'],
+  ['Serie', 'serie'],
+
   // compounds the first run left standing
   ['Adapter-Komplettset', 'complete adapterset'],
   ['Komplettset', 'complete set'],
@@ -259,4 +270,92 @@ export function readFacts(lines) {
   const requires = clean(text.match(/Erfordert die Verwendung (?:des|von) ([^.]+)\./i)?.[1]);
 
   return { compatible, requires };
+}
+
+
+/* ── structure ───────────────────────────────────────────────────────────
+ *
+ * The supplier writes these descriptions as a list, and the shop was printing
+ * them as one paragraph: "IMMO-gegevens vom MQB-V850/RH850-Dashboard lesen
+ * Ondersteunde voertuigen: VW (sleutel toevoegen): Arteon 2017-2021, Golf
+ * 2013-2021, Passat …" for eleven lines. Nobody reads that, and the customer
+ * cannot find their own car in it.
+ *
+ * The source is regular enough to take apart: a couple of feature lines, then
+ * one line per make — "Audi (Schlüssel hinzufügen): A1 2019-2021, A3 …" —
+ * and sometimes a list of supported chips. Split into those parts, the page
+ * can show a heading per make with the models under it.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/** "Audi (Schlüssel hinzufügen): A1 2019-2021, A3 2021-2021" */
+const MAKE_LINE = /^([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß/\s.-]{1,24}?)\s*(?:\(([^)]{0,60})\))?\s*:\s*(.+)$/;
+
+const VEHICLE_HEADING = /^(?:Ondersteunde|Unterstützte)\s+(?:voertuigen|Fahrzeuge|modellen|Modelle)\s*:?\s*/i;
+const CHIP_HEADING = /^(?:Lijst van ondersteunde chiptypen|Liste unterstützter Chiptypen|Ondersteunde chips)\s*:?\s*/i;
+
+/** Words that open a make line but are not a make. */
+const NOT_A_MAKE = /^(let op|opmerking|hinweis|productfuncties|functies|leveringsomvang|compatibel met|vereist|ondersteunt)/i;
+
+/** The shop calls it Volkswagen; A-Key writes VW. Same make, one spelling. */
+const MAKE_SPELLING = {
+  vw: 'Volkswagen', skoda: 'Škoda', 'mercedes benz': 'Mercedes-Benz',
+  benz: 'Mercedes-Benz', citroen: 'Citroën', 'land rover': 'Land Rover',
+  vauxhall: 'Opel', 'alfa romeo': 'Alfa Romeo',
+};
+
+const spellMake = (make) => MAKE_SPELLING[make.trim().toLowerCase()] ?? make.trim();
+
+export function structureDescription(lines) {
+  const { dutch, german } = translateDescription(lines);
+
+  const intro = [];
+  const chips = [];
+  const groups = [];
+  let current = null;
+
+  for (const raw of dutch) {
+    let line = raw.trim();
+    if (!line) continue;
+
+    if (CHIP_HEADING.test(line)) {
+      chips.push(
+        ...line
+          .replace(CHIP_HEADING, '')
+          .split(/[,;]\s*/)
+          .map((c) => c.trim())
+          .filter(Boolean)
+      );
+      continue;
+    }
+
+    const startsVehicles = VEHICLE_HEADING.test(line);
+    if (startsVehicles) line = line.replace(VEHICLE_HEADING, '').trim();
+
+    const hit = line.match(MAKE_LINE);
+    if (hit && !NOT_A_MAKE.test(hit[1])) {
+      current = {
+        make: spellMake(hit[1]),
+        note: hit[2]?.trim() || null,
+        models: hit[3].split(/,\s*/).map((m) => m.trim()).filter(Boolean),
+      };
+      groups.push(current);
+      continue;
+    }
+
+    // A line after a make group with no label of its own continues it.
+    if (current && /\d{4}/.test(line) && !startsVehicles) {
+      current.models.push(...line.split(/,\s*/).map((m) => m.trim()).filter(Boolean));
+      continue;
+    }
+
+    current = null;
+    intro.push(line);
+  }
+
+  return {
+    intro,
+    vehicles: groups.filter((g) => g.models.length),
+    chips,
+    german,
+  };
 }
