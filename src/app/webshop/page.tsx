@@ -5,6 +5,7 @@ import CategoryGrid from '@/components/webshop/CategoryGrid';
 import ProductCarousel from '@/components/webshop/ProductCarousel';
 import PromoBanner from '@/components/webshop/PromoBanner';
 import TrustpilotPlaceholder from '@/components/webshop/TrustpilotPlaceholder';
+import TrustSection from '@/components/webshop/TrustSection';
 import CustomerLifestyleGallery from '@/components/webshop/CustomerLifestyleGallery';
 import ArticlesSection from '@/components/webshop/ArticlesSection';
 import ProductRow from '@/components/webshop/ProductRow';
@@ -92,7 +93,11 @@ export default async function WebshopPage() {
 
       <ArticlesSection />
 
+      {/* The placeholder shows nothing until Trustpilot is connected, so the
+          real figures — 5.0 from eight Google reviews, linked to the profile —
+          carry the page until then. */}
       <TrustpilotPlaceholder />
+      <TrustSection />
       <CustomerLifestyleGallery />
 
     </div>

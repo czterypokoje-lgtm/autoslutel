@@ -1,6 +1,20 @@
 import React from 'react';
 
 export default function TrustpilotPlaceholder() {
+  /*
+   * Nothing until the account exists.
+   *
+   * The block renders "Excellent ★★★★★" in Trustpilot green above
+   * "[XX,XXX] reviews". The brackets are honest scaffolding, but a visitor
+   * skimming a live page sees a five-star rating we have not earned — which
+   * is a misleidende handelspraktijk (BW 6:193c), the same reason the
+   * invented reviews came off this site in the first place.
+   *
+   * Set NEXT_PUBLIC_TRUSTPILOT_ID once the profile is live and connected, and
+   * this appears on its own.
+   */
+  if (!process.env.NEXT_PUBLIC_TRUSTPILOT_ID) return null;
+
   return (
     <section style={{ background: '#fff', paddingTop: '3rem', borderTop: '1px solid #e5e5e5', overflow: 'hidden' }}>
       <style>{`

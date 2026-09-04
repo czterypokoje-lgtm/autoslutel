@@ -773,8 +773,23 @@ for (const row of records) {
     continue;
   }
 
-  const costPrice = Number(String(row.CostPrice).replace(',', '.'));
-  if (!Number.isFinite(costPrice) || costPrice <= 0) continue;
+  const rawCost = Number(String(row.CostPrice).replace(',', '.'));
+  if (!Number.isFinite(rawCost) || rawCost <= 0) continue;
+
+  /*
+   * "1.0" is a placeholder, not a price.
+   *
+   * 157 rows in the export carry it, and the margin rule turned every one of
+   * them into €3,95 — a Xhorse Key Tool Plus Pad, an OBDSTAR tablet, 17 Autel
+   * universal keys. Live, with a payment provider connected, someone orders a
+   * key programmer for €3,95 and we are bound by it.
+   *
+   * No price rather than a wrong one: the page says "op aanvraag" and
+   * /api/checkout skips a line whose price is null, so it cannot be sold
+   * until the office sets a real figure in the CRM.
+   */
+  const costPrice = rawCost === 1 ? null : rawCost;
+  if (costPrice === null) stats.placeholderPrice = (stats.placeholderPrice ?? 0) + 1;
 
   // Slugs come from A-Key and are already unique; guard anyway so a future
   // export cannot silently collapse two articles onto one page.
