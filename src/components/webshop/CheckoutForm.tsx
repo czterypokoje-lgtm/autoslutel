@@ -40,7 +40,14 @@ const serverSnapshot = () => EMPTY;
  * The totals shown here are recalculated on the server before the payment is
  * created; nothing the browser sends can change what is charged.
  */
-export default function CheckoutForm({ products }: { products: Slim[] }) {
+export default function CheckoutForm({
+  products,
+  paymentStrip,
+}: {
+  products: Slim[];
+  /** Rendered on the server — the icon list reads the filesystem. */
+  paymentStrip?: React.ReactNode;
+}) {
   const lines = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
 
   const lookup = useCallback(
@@ -224,9 +231,12 @@ export default function CheckoutForm({ products }: { products: Slim[] }) {
           {busy ? 'Bezig…' : 'Naar betalen'}
         </button>
 
-        <p style={{ marginTop: '.7rem', fontSize: '.75rem', color: '#64748b', textAlign: 'center' }}>
-          Betalen met iDEAL, creditcard of Bancontact
-        </p>
+        {/*
+          The methods themselves, not a sentence naming three of them. They
+          come from what is switched on at Mollie, so this cannot promise a
+          method the next screen does not offer.
+        */}
+        <div style={{ marginTop: '.9rem' }}>{paymentStrip}</div>
       </aside>
     </form>
   );

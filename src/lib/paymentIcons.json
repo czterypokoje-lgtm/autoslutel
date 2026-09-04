@@ -1,0 +1,38 @@
+[
+ {
+  "id": "ideal",
+  "file": "/images/payment/ideal.svg"
+ },
+ {
+  "id": "creditcard",
+  "file": "/images/payment/creditcard.svg"
+ },
+ {
+  "id": "klarna",
+  "file": "/images/payment/klarna.png"
+ },
+ {
+  "id": "riverty",
+  "file": "/images/payment/riverty.svg"
+ },
+ {
+  "id": "banktransfer",
+  "file": "/images/payment/banktransfer.svg"
+ },
+ {
+  "id": "paybybank",
+  "file": "/images/payment/paybybank.svg"
+ },
+ {
+  "id": "bancontact",
+  "file": "/images/payment/bancontact.svg"
+ },
+ {
+  "id": "kbc",
+  "file": "/images/payment/kbc.svg"
+ },
+ {
+  "id": "belfius",
+  "file": "/images/payment/belfius.svg"
+ }
+]

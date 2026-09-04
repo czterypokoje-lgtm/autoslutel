@@ -10,6 +10,7 @@ import ProductAlternatives from '@/components/webshop/ProductAlternatives';
 import ProductFitmentList from '@/components/webshop/ProductFitmentList';
 import StickyBuyBar from '@/components/webshop/StickyBuyBar';
 import BackToTop from '@/components/webshop/BackToTop';
+import PaymentMethods from '@/components/webshop/PaymentMethods';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
 import { getShopProductBySlug } from '@/lib/shopCatalog';
@@ -252,6 +253,11 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
           </div>
 
           <div className="shop-product-extra">
+            {/* What a customer can pay with, and who brings it. */}
+            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '1.1rem 1.25rem' }}>
+              <PaymentMethods />
+            </div>
+
             <ProductFitmentList product={entry} />
 
             <VehicleFitmentWidget fitment={entry.fitment} />

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import PaymentMethods from '@/components/webshop/PaymentMethods';
 
 export default function WebshopFooter() {
   return (
@@ -77,6 +78,12 @@ export default function WebshopFooter() {
           </div>
         </div>
 
+      </div>
+
+      {/* Payment methods and carrier, site-wide: the questions a first-time
+          visitor has before they trust a shop they have not used before. */}
+      <div style={{ maxWidth: '1400px', margin: '2.5rem auto 0', paddingTop: '1.75rem', borderTop: '1px solid #cbd5e1' }}>
+        <PaymentMethods compact />
       </div>
     </footer>
   );

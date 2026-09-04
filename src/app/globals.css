@@ -1637,3 +1637,57 @@ details[open] summary { color: var(--orange-500); }
   .shop-expert-panel,
   .shop-expert-caret { transition: none; }
 }
+
+/* ── payment methods and carrier ─────────────────────────────────────────
+   The methods are the ones actually enabled on the Mollie account, with
+   their official icons. A logo for a method we cannot accept is a promise
+   the customer only finds out about at the last step of the checkout.
+   ───────────────────────────────────────────────────────────────────────── */
+.pay-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  align-items: flex-start;
+}
+
+.pay-strip-group { display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+
+.pay-strip-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.pay-strip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pay-strip-list li {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: .3rem .45rem;
+  display: flex;
+  align-items: center;
+}
+
+.pay-strip-list img { display: block; width: auto; }
+
+.pay-strip-name {
+  font-weight: 800;
+  font-size: .85rem;
+  letter-spacing: .02em;
+  color: #0f172a;
+  padding: 0 .25rem;
+}
+
+@media (max-width: 640px) {
+  .pay-strip { gap: 1rem 1.5rem; }
+}
