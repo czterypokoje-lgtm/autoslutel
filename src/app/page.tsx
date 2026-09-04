@@ -170,6 +170,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── ACTION BANNERS (4 Columns) ───────────────────────────────────────────── */}
+      <HomeActionBanners />
+
       {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
       <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>
         <FeatureCards 
@@ -227,9 +230,6 @@ export default function HomePage() {
           ]}
         />
       </div>
-
-      {/* ── ACTION BANNERS (4 Columns) ───────────────────────────────────────────── */}
-      <HomeActionBanners />
 
       {/* ===== E-E-A-T MEET THE OWNER ===== */}
       <section style={{ padding: '4rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
