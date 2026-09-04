@@ -23,7 +23,13 @@ function subscribe(cb: () => void) {
   return () => window.removeEventListener(CART_EVENT, h);
 }
 function snapshot() { if (!loaded) { cache = readCart(); loaded = true; } return cache; }
-const serverSnapshot = () => [] as ReturnType<typeof readCart>;
+/*
+ * The same array every call. A fresh `[]` each time makes React think the
+ * store changed on every render — the "getServerSnapshot should be cached"
+ * loop, which on a phone reads as a page that never settles.
+ */
+const EMPTY: ReturnType<typeof readCart> = [];
+const serverSnapshot = () => EMPTY;
 
 /**
  * Checkout.
