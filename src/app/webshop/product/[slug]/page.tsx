@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import TrustSection from '@/components/webshop/TrustSection';
+import ProductRelatedSearches from '@/components/webshop/ProductRelatedSearches';
 import ProductBundleSection from '@/components/webshop/ProductBundleSection';
 import ProductBuyBox from '@/components/webshop/ProductBuyBox';
 import VehicleFitmentWidget from '@/components/webshop/VehicleFitmentWidget';
@@ -287,6 +289,9 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
 
         <ProductAlternatives product={entry} />
       </div>
+
+      <ProductRelatedSearches product={entry} />
+      <TrustSection />
 
       <BackToTop />
 

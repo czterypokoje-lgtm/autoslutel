@@ -461,6 +461,19 @@ button { font-family: inherit; cursor: pointer; }
 }
 details[open] .faq-chevron { transform: rotate(180deg); }
 details[open] summary { color: var(--orange-500); }
+.related-search-link {
+  background: #f1f5f9;
+  color: #334155;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.related-search-link:hover {
+  background: #e2e8f0;
+}
 .faq-answer {
   padding: 0 0 var(--sp-4);
   font-size: 0.9rem;
