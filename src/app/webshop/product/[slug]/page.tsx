@@ -232,6 +232,17 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
 
           <div className="shop-product-media">
             <ProductGallery images={entry.images && entry.images.length > 0 ? entry.images : (entry.image ? [entry.image] : ['/images/product-placeholder.svg'])} />
+            
+            <div style={{ marginTop: '2rem' }}>
+              <ProductBundleSection
+                mainProductSlug={entry.slug}
+                mainProductTitle={entry.titleNl}
+                mainProductPrice={sellPrice ?? 0}
+                mainProductImage={entry.image ?? '/images/product-placeholder.svg'}
+                batteryData={batteryData}
+                offerBatteryLink={NEEDS_PROGRAMMING_CATEGORIES.has(entry.category ?? '')}
+              />
+            </div>
           </div>
 
           <div className="shop-product-buy">
@@ -262,15 +273,6 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
               productChip={entry.chip}
               productBlade={entry.blade}
               productFrequency={entry.frequency}
-            />
-
-            <ProductBundleSection
-              mainProductSlug={entry.slug}
-              mainProductTitle={entry.titleNl}
-              mainProductPrice={sellPrice ?? 0}
-              mainProductImage={entry.image ?? '/images/product-placeholder.svg'}
-              batteryData={batteryData}
-              offerBatteryLink={NEEDS_PROGRAMMING_CATEGORIES.has(entry.category ?? '')}
             />
           </div>
         </div>
