@@ -24,6 +24,13 @@ const categoryLinks = [
 
 export default function WebshopNavigation() {
   const [cartCount, setCartCount] = useState(0);
+  /*
+   * The category strip scrolled sideways on a phone, which hides most of it:
+   * "Universal Keys" and "Aanbiedingen" were three swipes away and nobody
+   * swipes a nav bar. Below 900px the strip is replaced by this drawer, which
+   * is where a phone user looks for a menu.
+   */
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const update = () => setCartCount(readCart().reduce((acc, i) => acc + i.quantity, 0));
     update();
@@ -32,6 +39,21 @@ export default function WebshopNavigation() {
   }, []);
   const [searchQuery, setSearchQuery] = useState('');
   const [showBrandMenu, setShowBrandMenu] = useState(false);
+
+  // The page behind a full-height drawer must not scroll with it.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [menuOpen]);
 
   return (
     <header style={{ width: '100%', fontFamily: 'var(--font-sans)', zIndex: 50, position: 'relative' }} onMouseLeave={() => setShowBrandMenu(false)}>
@@ -79,6 +101,21 @@ export default function WebshopNavigation() {
       {/* Main White Bar */}
       <div className="shop-header-bar">
         
+        {/* Mobile only — opens the menu drawer. */}
+        <button
+          type="button"
+          className="shop-burger"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Menu openen"
+          aria-expanded={menuOpen}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
         {/* Logo */}
         <Link href="/webshop" style={{ flexShrink: 0 }}>
           <Image
@@ -158,6 +195,68 @@ export default function WebshopNavigation() {
         )}
       </div>
 
+      {menuOpen && (
+        <button
+          type="button"
+          className="shop-menu-scrim"
+          aria-label="Menu sluiten"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
+      <nav
+        className={`shop-menu${menuOpen ? ' is-open' : ''}`}
+        aria-label="Hoofdmenu"
+        aria-hidden={!menuOpen}
+      >
+        <div className="shop-menu-head">
+          <strong>Menu</strong>
+          <button type="button" onClick={() => setMenuOpen(false)} aria-label="Sluiten">✕</button>
+        </div>
+
+        <div className="shop-menu-body">
+          <p className="shop-menu-label">Onderdelen</p>
+          {categoryLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="shop-menu-link"
+              onClick={() => setMenuOpen(false)}
+              tabIndex={menuOpen ? 0 : -1}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <p className="shop-menu-label">Mijn gegevens</p>
+          <Link href="/webshop/winkelmand" className="shop-menu-link" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}>
+            Winkelmand{cartCount > 0 ? ` (${cartCount})` : ''}
+          </Link>
+          <Link href="/webshop/orders" className="shop-menu-link" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}>
+            Mijn bestellingen
+          </Link>
+          <Link href="/webshop/account" className="shop-menu-link" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}>
+            Zakelijk account
+          </Link>
+
+          <p className="shop-menu-label">Hulp nodig?</p>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} className="shop-menu-link" tabIndex={menuOpen ? 0 : -1}>
+            Bel {SITE_CONFIG.phone}
+          </a>
+          <a
+            href={`https://wa.me/${SITE_CONFIG.whatsapp}`}
+            className="shop-menu-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            tabIndex={menuOpen ? 0 : -1}
+          >
+            WhatsApp ons
+          </a>
+          <Link href="/verzending-en-retour" className="shop-menu-link" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}>
+            Verzending &amp; retour
+          </Link>
+        </div>
+      </nav>
     </header>
   );
 }

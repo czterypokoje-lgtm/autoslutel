@@ -6,6 +6,8 @@ import ProductCarousel from '@/components/webshop/ProductCarousel';
 import PromoBanner from '@/components/webshop/PromoBanner';
 import TrustSection from '@/components/webshop/TrustSection';
 import ArticlesSection from '@/components/webshop/ArticlesSection';
+import ProductRow from '@/components/webshop/ProductRow';
+import BrandStrip from '@/components/webshop/BrandStrip';
 import { getShopProducts } from '@/lib/shopCatalog';
 
 export const metadata = {
@@ -53,11 +55,26 @@ export default async function WebshopPage() {
         </div>
       </section>
 
+      {/*
+        Shelves, the way a shop has shelves. One row of eight products and
+        three blocks that were empty or editorial made a catalogue of 924
+        articles read as though it had eight.
+      */}
+      <ProductRow category="afstandsbedieningen" title="Autosleutels met afstandsbediening" />
+
+      <BrandStrip />
+
+      <ProductRow category="behuizingen" title="Sleutelbehuizingen" />
+
       <section className="section">
         <div className="container">
           <PromoBanner />
         </div>
       </section>
+
+      <ProductRow category="printplaten" title="Printplaten (PCB)" />
+
+      <ProductRow category="universal-remotes" title="Universele sleutels — KeyDIY, Xhorse, Autel" />
 
       <ArticlesSection />
 

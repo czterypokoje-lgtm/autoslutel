@@ -50,7 +50,7 @@ export default async function CategoryGrid() {
     .sort((a, b) => b[1] - a[1]);
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center' }}>
+    <div className="category-grid">
       {categories.map(([slug, count]) => (
         <Link
           href={`/webshop/catalogus?category=${slug}`}

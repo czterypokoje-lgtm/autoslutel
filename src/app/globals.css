@@ -1348,3 +1348,154 @@ details[open] summary { color: var(--orange-500); }
   .webshop-hero-title { font-size: 1.75rem; line-height: 1.12; margin-bottom: .6rem; }
   .webshop-hero-subtitle { font-size: .95rem; margin-bottom: 1.1rem; }
 }
+
+/* ── the shop menu drawer ────────────────────────────────────────────────
+   The category strip scrolls sideways, which hides most of it — nobody
+   swipes a nav bar. Below 900px it is replaced by a drawer from the left,
+   where a phone user looks for a menu.
+   ───────────────────────────────────────────────────────────────────────── */
+.shop-burger,
+.shop-menu,
+.shop-menu-scrim { display: none; }
+
+@media (max-width: 900px) {
+  .shop-burger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-left: -.4rem;
+    background: none;
+    border: none;
+    color: #0f172a;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* The strip's contents live in the drawer now. */
+  .shop-header-nav { display: none; }
+
+  .shop-menu-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background: rgba(15, 23, 42, .45);
+    border: none;
+    padding: 0;
+  }
+
+  .shop-menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 81;
+    width: min(86vw, 340px);
+    background: #fff;
+    box-shadow: 6px 0 24px rgba(15, 23, 42, .18);
+    transform: translateX(-101%);
+    transition: transform .22s ease-out;
+  }
+  .shop-menu.is-open { transform: translateX(0); }
+
+  .shop-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .9rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 1.05rem;
+    color: #0f172a;
+  }
+  .shop-menu-head button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: .35rem .5rem;
+    cursor: pointer;
+    color: #334155;
+  }
+
+  .shop-menu-body {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: .5rem 0 calc(1.5rem + env(safe-area-inset-bottom));
+  }
+
+  .shop-menu-label {
+    margin: 1.1rem 0 .25rem;
+    padding: 0 1rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+
+  .shop-menu-link {
+    display: block;
+    padding: .8rem 1rem;
+    min-height: 44px;
+    color: #0f172a;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .shop-menu-link:active { background: #f8fafc; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-menu { transition: none; }
+}
+
+/* ── category tiles ──────────────────────────────────────────────────────
+   The tiles were a fixed 220×220 in a wrapping flex row, so on a 375px
+   screen exactly one fitted per line and the grid read as a list.
+   ───────────────────────────────────────────────────────────────────────── */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 1.25rem;
+}
+.category-grid .category-card { width: auto; height: auto; aspect-ratio: 1 / 1; }
+
+@media (max-width: 640px) {
+  .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  .category-grid .category-card { padding: 1rem .75rem; border-radius: 12px; }
+  .category-card-title { font-size: .92rem; margin-top: .5rem; text-align: center; }
+}
+
+/* ── brand chips on the home page ────────────────────────────────────── */
+.brand-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  gap: .6rem;
+}
+
+.brand-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  min-height: 48px;
+  padding: .6rem .9rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--webshop-dark);
+  transition: border-color .15s, transform .15s;
+}
+.brand-chip:hover { border-color: #cbd5e1; transform: translateY(-2px); color: var(--webshop-dark); }
+.brand-chip-name { font-weight: 700; font-size: .95rem; }
+.brand-chip-count { font-size: .8rem; color: #64748b; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .brand-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+  .brand-chip { padding: .55rem .7rem; }
+  .brand-chip-name { font-size: .88rem; }
+}

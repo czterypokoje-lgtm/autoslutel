@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { addToCart } from '@/lib/cart';
 import { formatPrice } from '@/lib/catalog';
 
@@ -18,9 +19,9 @@ import { formatPrice } from '@/lib/catalog';
  * The discount claim is a misleading practice under BW 6:193c for the same
  * reason the invented reviews and reference prices were removed.
  *
- * So: only the real battery, from bundle_mapping.json, unticked, at its real
- * catalogue price — and the button now writes to the basket. With no battery
- * mapped for this key the section renders nothing rather than inventing one.
+ * So: only the battery A-Key names for this key, looked up in our own
+ * catalogue, unticked, at its real price — and the button writes to the
+ * basket. Where the supplier names no cell type, nothing is offered.
  */
 
 interface BatteryData {
@@ -36,17 +37,38 @@ export default function ProductBundleSection({
   mainProductPrice,
   mainProductImage,
   batteryData,
+  offerBatteryLink = false,
 }: {
   mainProductSlug?: string;
   mainProductTitle: string;
   mainProductPrice: number;
   mainProductImage: string;
   batteryData: BatteryData | null;
+  /** Show the battery category when this product is a key that takes one. */
+  offerBatteryLink?: boolean;
 }) {
   const [withBattery, setWithBattery] = useState(false);
   const [added, setAdded] = useState(false);
 
-  if (!batteryData) return null;
+  /*
+   * No battery is offered when the supplier does not name the cell type.
+   * Guessing CR2032 — the most common — would be right most of the time, and
+   * wrong for the customer who opens the key and finds a CR1620. Instead the
+   * category is one tap away for a complete key.
+   */
+  if (!batteryData) {
+    if (!offerBatteryLink) return null;
+    return (
+      <div style={{ marginTop: '2rem', border: '1px solid #e2e8f0', borderRadius: 8, padding: '1rem 1.25rem', display: 'flex', flexWrap: 'wrap', gap: '.5rem 1rem', alignItems: 'center' }}>
+        <span style={{ fontSize: '.92rem', color: '#334155' }}>
+          Batterij los nodig? Wij hebben alle knoopcellen op voorraad.
+        </span>
+        <Link href="/webshop/catalogus?category=batterijen" style={{ color: '#b93c20', fontWeight: 700, textDecoration: 'none', fontSize: '.92rem' }}>
+          Bekijk batterijen →
+        </Link>
+      </div>
+    );
+  }
 
   const total = mainProductPrice + (withBattery ? batteryData.price : 0);
 

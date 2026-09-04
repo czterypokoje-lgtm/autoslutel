@@ -1,8 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import fs from 'fs';
-import path from 'path';
 import ProductBundleSection from '@/components/webshop/ProductBundleSection';
 import ProductBuyBox from '@/components/webshop/ProductBuyBox';
 import VehicleFitmentWidget from '@/components/webshop/VehicleFitmentWidget';
@@ -66,18 +64,23 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
     notFound();
   }
 
-  // Load bundle mapping (optional — fails silently)
-  interface BatteryData { slug: string; title: string; price: number; image: string; }
-  let bundleMapping: Record<string, { battery?: BatteryData }> = {};
-  try {
-    const mappingPath = path.join(process.cwd(), 'src/lib/bundle_mapping.json');
-    bundleMapping = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
-  } catch {
-    // bundle_mapping.json is optional; missing is fine
-  }
-
-  const bundleData = bundleMapping[resolvedParams.slug] ?? {};
-  const batteryData: BatteryData | null = bundleData.battery ?? null;
+  /*
+   * The battery that belongs in this key, looked up in our own catalogue.
+   *
+   * This used to come from bundle_mapping.json — 1,146 entries keyed on the
+   * previous Shopify catalogue's slugs, with photos on a CDN that no longer
+   * answers, so the block never rendered for an A-Key product.
+   */
+  const batteryProduct = entry.battery ? await getShopProductBySlug(entry.battery) : null;
+  const batteryData =
+    batteryProduct && batteryProduct.price != null
+      ? {
+          slug: batteryProduct.slug,
+          title: batteryProduct.titleNl,
+          price: batteryProduct.price,
+          image: batteryProduct.image ?? '/images/product-placeholder.svg',
+        }
+      : null;
 
   // Already merged with the office's overrides; the margin rule is the fallback.
   const sellPrice = entry.price;
@@ -259,6 +262,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
               mainProductPrice={sellPrice ?? 0}
               mainProductImage={entry.image ?? '/images/product-placeholder.svg'}
               batteryData={batteryData}
+              offerBatteryLink={NEEDS_PROGRAMMING_CATEGORIES.has(entry.category ?? '')}
             />
           </div>
         </div>

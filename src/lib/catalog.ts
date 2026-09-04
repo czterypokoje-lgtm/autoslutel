@@ -32,6 +32,8 @@ export interface CatalogProduct {
   chip: string | null;
   /** Key blade profile, e.g. VA2 / VA6 — A-Key's "Schlüsselbart". */
   blade: string | null;
+  /** Slug of the battery this key takes, when the supplier names one. */
+  battery?: string | null;
   costPrice: number | null;
   image: string | null;
   images: string[];

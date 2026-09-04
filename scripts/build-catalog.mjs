@@ -750,6 +750,25 @@ for (const row of records) {
   const blade = spec.blade ?? null;
 
   /*
+   * The battery this key takes, when A-Key says so.
+   *
+   * The old "vaak samen gekocht" block read a mapping file left over from the
+   * previous Shopify catalogue: 1,146 entries keyed on slugs this catalogue
+   * does not have, pointing at images on a CDN that no longer answers. So it
+   * never appeared — and where it did, it offered a battery nobody had checked
+   * against the key.
+   *
+   * A cell type is only offered when the supplier names it. Guessing CR2032
+   * because it is the most common would be right most of the time, and a
+   * customer who opens their key to find the wrong cell has been sold a part
+   * on our guess.
+   */
+  const batteryCode =
+    (`${title} ${(spec.description ?? []).join(' ')}`.match(/\bCR\s?-?(\d{3,4})\b/i) ?? [])[1] ?? null;
+  const battery = batteryCode ? `cr${batteryCode}` : null;
+
+
+  /*
    * The cars this part fits, from A-Key's own list. `makes` used to be the
    * whole answer — brand only — so a Fiat FIR103E never surfaced for the Opel
    * Combo or the Ford Ka it also fits, and no page ever told the customer
@@ -840,6 +859,8 @@ for (const row of records) {
     frequency,
     chip: chip ? chip.toUpperCase().replace(/\s+/g, '') : null,
     blade,
+    /** Slug of the battery this key takes, when the supplier names one. */
+    battery,
     costPrice,
     image:
       (row.Main_Image && onDisk(localise(row.Main_Image))
