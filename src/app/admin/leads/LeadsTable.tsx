@@ -3,6 +3,7 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import styles from './leads.module.css';
+import { waLink } from '@/lib/whatsapp';
 
 export interface LeadRow {
   id: string;
@@ -194,9 +195,9 @@ export default function LeadsTable({
               lead.sale_price === null || lead.sale_price === ''
                 ? null
                 : Number(lead.sale_price);
-            const whatsapp = lead.phone_e164
-              ? `https://wa.me/${lead.phone_e164.replace(/\D/g, '')}`
-              : null;
+            // Same normalisation everywhere: a "06…" number has to become
+            // "316…" before wa.me will open the right chat.
+            const whatsapp = waLink(lead.phone_e164 ?? lead.phone, '');
 
             return (
               <Fragment key={lead.id}>

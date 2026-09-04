@@ -9,6 +9,7 @@ import {
 } from 'react';
 import styles from './vandaag.module.css';
 import { JOB_STATUS_LABELS, slotLabel, type JobStatus } from '@/lib/crmJobs';
+import { waLink, onTheWayMessage } from '@/lib/whatsapp';
 
 export interface VanJob {
   id: string;
@@ -305,11 +306,17 @@ function JobCard({
             <a
               className={styles.tap}
               style={{ gridColumn: '1 / -1' }}
-              href={`https://wa.me/${job.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(
-                `Goedendag${job.customer_name ? ` ${job.customer_name}` : ''}, ik ben onderweg naar u voor ${
-                  job.service_type ?? 'de afspraak'
-                }. Tot zo — Autosleutel24.`
-              )}`}
+              /*
+               * Through waLink: stripping non-digits left a Dutch mobile as
+               * "0611751231", and wa.me needs "31611751231" — every one of
+               * those links opened a chat with a number that does not exist.
+               */
+              href={
+                waLink(
+                  job.customer_phone,
+                  onTheWayMessage(job.customer_name, job.service_type)
+                ) ?? '#'
+              }
               target="_blank"
               rel="noopener noreferrer"
             >

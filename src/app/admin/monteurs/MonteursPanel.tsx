@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { waLink } from '@/lib/whatsapp';
 import { useRouter } from 'next/navigation';
 import styles from '../jobs/jobs.module.css';
 
@@ -122,7 +123,28 @@ export default function MonteursPanel({
                     : 'geen werkgebied'}
                 </span>
               </span>
-              <span style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+              <span style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
+                {/*
+                  Opens WhatsApp on the monteur's number. A link rather than an
+                  integration: the Business Platform wants a verified Meta
+                  business, a number that is not in the WhatsApp app, and a fee
+                  per conversation. This works today and costs nothing.
+                */}
+                {waLink(t.phone, 'Hoi ') && (
+                  <a
+                    className={styles.control}
+                    style={{ width: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                    href={waLink(t.phone, 'Hoi ')!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`WhatsApp ${t.name}`}
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    App
+                  </a>
+                )}
                 <select
                   className={styles.control}
                   style={{ width: 'auto', minWidth: 150 }}

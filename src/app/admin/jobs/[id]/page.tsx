@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { waLink, jobBriefing } from '@/lib/whatsapp';
 import styles from '../jobs.module.css';
 import JobEditor, { type JobDetail } from './JobEditor';
 
@@ -21,11 +22,12 @@ export default async function JobPage({
     supabase
       .from('jobs')
       .select(
-        'id, status, technician_id, scheduled_date, slot_start, slot_end, street, postcode, city, kenteken, service_type, quoted_price, final_price, notes, started_at, completed_at, lead_id, created_at'
+        'id, status, technician_id, scheduled_date, slot_start, slot_end, street, postcode, city, kenteken, service_type, quoted_price, final_price, notes, started_at, completed_at, lead_id, created_at, customer_name, customer_phone'
       )
       .eq('id', id)
       .maybeSingle(),
-    supabase.from('technicians').select('id, name, active').order('name'),
+    // The phone comes along so the briefing can be sent from this page.
+    supabase.from('technicians').select('id, name, phone, active').order('name'),
   ]);
 
   if (error) {
@@ -36,6 +38,12 @@ export default async function JobPage({
     );
   }
   if (!job) notFound();
+
+  const crew = (technicians ?? []) as { id: string; name: string; phone: string | null; active: boolean }[];
+  const assigned = crew.find((t) => t.id === job.technician_id);
+  const briefingLink = assigned
+    ? waLink(assigned.phone, jobBriefing(job as Parameters<typeof jobBriefing>[0]))
+    : null;
 
   return (
     <>
@@ -53,15 +61,28 @@ export default async function JobPage({
               Bekijk lead
             </Link>
           )}
+
+          {/*
+            The briefing a technician needs, already written: when, where,
+            which car, what work, who to ring. A link, not an integration —
+            it opens WhatsApp and a person presses send.
+          */}
+          {briefingLink && (
+            <a
+              className={styles.navBtn}
+              href={briefingLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Appen naar {assigned?.name ?? 'monteur'}
+            </a>
+          )}
         </div>
       </div>
 
       <JobEditor
         job={job as unknown as JobDetail}
-        technicians={
-          ((technicians ?? []) as { id: string; name: string; active: boolean }[])
-            .filter((t) => t.active)
-        }
+        technicians={crew.filter((t) => t.active)}
       />
     </>
   );
