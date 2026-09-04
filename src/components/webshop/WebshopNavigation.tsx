@@ -19,6 +19,14 @@ const categoryLinks = [
   { href: '/webshop/catalogus?category=transponders', label: 'Transponders' },
   { href: '/webshop/catalogus?category=noodsleutels', label: 'Noodsleutels' },
   { href: '/webshop/catalogus?category=universal-remotes', label: 'Universal Keys' },
+  /*
+   * The four tool ranges, as their own entries: a locksmith looking for a
+   * VVDI cable searches for the tool brand, not for "accessoires".
+   */
+  { href: '/webshop/catalogus?subcategory=Xhorse+accessoires', label: 'Xhorse accessoires' },
+  { href: '/webshop/catalogus?subcategory=Autel+accessoires', label: 'Autel accessoires' },
+  { href: '/webshop/catalogus?subcategory=OBDSTAR+accessoires', label: 'OBDSTAR accessoires' },
+  { href: '/webshop/catalogus?subcategory=Zed-FULL+accessoires', label: 'Zed-FULL accessoires' },
   { href: '/webshop/aanbiedingen', label: 'Aanbiedingen' },
 ];
 

@@ -21,6 +21,7 @@ import path from 'path';
 const IN = path.join(process.cwd(), 'src/data/akey-products.csv');
 const SECTIONS = path.join(process.cwd(), 'src/data/akey-categories.json');
 const SPECS = path.join(process.cwd(), 'src/data/akey-specs.json');
+const ACCESSORIES = path.join(process.cwd(), 'src/data/akey-accessories.json');
 const OUT = path.join(process.cwd(), 'src/lib/catalog.json');
 /*
  * A small companion file: the car makes we actually stock, with counts.
@@ -188,6 +189,14 @@ const TITLE_RULES = [
   ['batterijen', 'batterij', /^(cr\d|lr\d|v\d+ga|v\d+a\b|aaa?a?[\s-]|rayovac|\d+\s+rayovac|accu\b)|knopfzelle|batterie|blister/i],
 
   // Loose parts before the things they go into.
+  /*
+   * The four tool-accessory ranges are no longer guessed from CSV titles.
+   * That produced 31 entries with German names, 20 of which are the same
+   * article as one of the 185 scraped from A-Key's own section pages — the
+   * same product twice, under two spellings of the same subcategory. The
+   * scraped set is complete and carries prices, photos and descriptions, so
+   * it is the only source; see addAccessories() below.
+   */
   ['accessoires', 'microtaster & antenne', /microtaster|\bantenne\b|tastenfeld|tastengummi|knoppenfeld|knoppengummi|\bsplinte?\b|\btpms\b/i],
   ['printplaten', 'printplaat', /\bpcb\b|platine|printplaat|leiterplatte|\bboard\b/i],
   ['behuizingen', 'sleutelbehuizing', /geh(ae|ä)use|behuizing|umbauset|umbaukit|schl(ue|ü)sselkopf/i],
@@ -261,6 +270,15 @@ const TYPE_COPY = {
 
 const firstMatch = (list, value) => list.find(([, re]) => re.test(value))?.[0] ?? null;
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+/** A URL slug from a product name: lower case, ASCII, hyphens. */
+const slugify = (value) =>
+  (value ?? '')
+    .toLowerCase()
+    .replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 90);
 
 /**
  * Three passes, most specific first.
@@ -817,12 +835,14 @@ for (const row of records) {
    * The code goes in last and whole — it is what a customer reads off their old
    * key and types into the search box.
    */
-  const titleNl = [
-    cap(copy.noun),
-    makes.slice(0, 3).join(', ') || null,
-    buttons ? `${buttons} knoppen` : null,
-    articleCode,
-  ].filter(Boolean).join(' · ');
+  const titleNl = (category === 'accessoires' || category === 'gereedschap' || category === 'diensten')
+    ? title 
+    : [
+        cap(copy.noun),
+        makes.slice(0, 3).join(', ') || null,
+        buttons ? `${buttons} knoppen` : null,
+        articleCode,
+      ].filter(Boolean).join(' · ');
 
   const sentences = [copy.what];
   const modelNames = vehicles.filter((v) => v.model).map((v) => `${v.make} ${v.model}`);
@@ -903,6 +923,183 @@ for (const row of records) {
     metaDescriptionNl: `${titleNl}. ${closing}`.slice(0, 155),
   });
 }
+
+/* ── the tool-accessory ranges ────────────────────────────────────────────
+ *
+ * Autel, OBDSTAR, Xhorse and Zed-FULL sell adapters, cables, emulators and
+ * licences for their own programmers. A-Key lists 185 of them and none are in
+ * the CSV export, so they are scraped separately by
+ * scripts/scrape-akey-accessories.mjs.
+ *
+ * Their names are model codes with a German noun in front — "5 in 1 Kabel
+ * EIS/ELV geeignet für Mercedes Benz XDMB13EN". The code is the part a
+ * customer searches for and must survive untouched; only the German words
+ * around it are translated, and only whole words from a short list. A
+ * word-by-word pass over German prose is what produced "Werkzeug zur De- en
+ * Montage" in the earlier attempt.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/** Whole German words that appear in these names, and nothing else. */
+const ACC_WORDS = {
+  'Zubehör': 'accessoire', 'Kabel': 'kabel', 'Adapter': 'adapter',
+  'Emulator': 'emulator', 'Modul': 'module', 'Lesemodul': 'leesmodule',
+  'Antenne': 'antenne', 'Lizenz': 'licentie', 'Platine': 'printplaat',
+  'Werkzeug': 'gereedschap', 'Schlüssel': 'sleutel', 'Gehäuse': 'behuizing',
+  'Fernbedienung': 'afstandsbediening', 'Halter': 'houder', 'Halterung': 'houder',
+  'Erweiterung': 'uitbreiding', 'Zubehörset': 'accessoireset', 'Tasche': 'tas',
+  'Netzteil': 'voeding', 'Ladegerät': 'lader', 'Speicher': 'geheugen',
+  'Gerät': 'apparaat', 'Geräte': 'apparaten', 'Sensor': 'sensor',
+  'Ersatz': 'vervanging', 'Zange': 'tang', 'Satz': 'set', 'Stück': 'stuks',
+  'für': 'voor', 'und': 'en', 'mit': 'met', 'ohne': 'zonder', 'alle': 'alle',
+  'geeignet': 'geschikt', 'passend': 'passend', 'oder': 'of', 'zum': 'voor',
+  'zur': 'voor', 'von': 'van', 'bis': 'tot', 'neue': 'nieuwe', 'neu': 'nieuw',
+
+  // Counted across the 185 names rather than guessed: "Adapter" (82) and
+  // "Kabel" (18) are the same word in Dutch, "für" (53) and "Lötfrei…" (11)
+  // are most of the rest, and the tail is one occurrence each.
+  'Lötfreier': 'soldeervrije', 'Lötfreies': 'soldeervrij', 'lötfreier': 'soldeervrije',
+  'Lötadapter': 'soldeeradapter', 'Lötplatine': 'soldeerprintplaat',
+  'Netzadapter': 'voedingsadapter', 'Programmierkabel': 'programmeerkabel',
+  'Fernprogrammierkabel': 'programmeerkabel op afstand',
+  'Kommunikationskabel': 'communicatiekabel', 'ERNEUERUNGSKABEL': 'vernieuwingskabel',
+  'Motorradadapter': 'motoradapter', 'Leistungsadapter': 'vermogensadapter',
+  'Öffnungswerkzeug': 'openingsgereedschap', 'Motorsteuergeräte': 'motorregeleenheden',
+  'Schlüsselprogrammierzubehör': 'sleutelprogrammeer-accessoire',
+  'hinzufügen': 'toevoegen', 'Hinzufügen': 'toevoegen', 'Schlüsseln': 'sleutels',
+  'Aktivierung': 'activering', 'unterstützt': 'ondersteunt',
+  'Erweitertes': 'uitgebreid', 'Erweiterte': 'uitgebreide',
+  'Digitalmultimeter': 'digitale multimeter', 'Überlastschutz': 'overbelastingsbeveiliging',
+  'Jahresupdate': 'jaarupdate', 'Schlüsselkopiermaschine': 'sleutelkopieermachine',
+  'Schlüsselkopiermaschinen': 'sleutelkopieermachines',
+};
+
+const ACC_WORDS_LOWER = Object.fromEntries(
+  Object.entries(ACC_WORDS).map(([k, v]) => [k.toLowerCase(), v])
+);
+
+const dutchName = (name) =>
+  (name ?? '')
+    .replace(/[A-Za-zÄÖÜäöüß]+/g, (word) => {
+      const hit = ACC_WORDS[word] ?? ACC_WORDS_LOWER[word.toLowerCase()];
+      if (!hit) return word;
+      // "ADAPTER" stays shouted, "Kabel" stays capitalised.
+      if (word === word.toUpperCase() && word.length > 2) return hit.toUpperCase();
+      if (word[0] === word[0].toUpperCase()) return hit.charAt(0).toUpperCase() + hit.slice(1);
+      return hit;
+    })
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+/** The programmers a line mentions — model codes, the same in every language. */
+const TOOL_CODES =
+  /\b(VVDI2?|VVDI ?MB|VVDI ?BIM|KD-?X2|KD-?MAX|KD-?MATE|MINI ?OBD|IM508|IM608|APB\d+|XP400 ?PRO|XP400|X300|X300 ?DP|X300 ?PRO|DP ?PLUS|K518|ZED-?FULL|MVCI|J2534|MK808|MS906|TPMS)\b/gi;
+
+/** A one-word Dutch type, read off the name. */
+function accessoryType(name) {
+  const n = (name ?? '').toLowerCase();
+  if (/\bkabel|cable\b/.test(n)) return 'kabel';
+  if (/\badapter\b/.test(n)) return 'adapter';
+  if (/\bemulator\b/.test(n)) return 'emulator';
+  if (/\blizenz|licen[cs]e\b/.test(n)) return 'licentie';
+  if (/\bmodul|module\b/.test(n)) return 'module';
+  if (/\bantenne|antenna\b/.test(n)) return 'antenne';
+  if (/\bplatine|pcb\b/.test(n)) return 'printplaat';
+  if (/\bset\b/.test(n)) return 'set';
+  if (/\bsensor\b/.test(n)) return 'sensor';
+  if (/\bzange|werkzeug|tool\b/.test(n)) return 'gereedschap';
+  return 'accessoire';
+}
+
+function addAccessories() {
+  let accessories = {};
+  try {
+    accessories = JSON.parse(readFileSync(ACCESSORIES, 'utf8')).products ?? {};
+  } catch {
+    console.warn('  (no akey-accessories.json — run scripts/scrape-akey-accessories.mjs)');
+    return 0;
+  }
+
+  let added = 0;
+
+  for (const entry of Object.values(accessories)) {
+    if (!entry.title || entry.price == null) continue;
+
+    const name = dutchName(entry.title);
+    const type = accessoryType(entry.title);
+    const code = entry.articleNumber?.replace(/\s+/g, '') ?? null;
+
+    let slug = slugify(`${entry.brand}-${entry.title}`);
+    if (seenSlugs.has(slug)) {
+      let n = 2;
+      while (seenSlugs.has(`${slug}-${n}`)) n++;
+      slug = `${slug}-${n}`;
+    }
+    seenSlugs.add(slug);
+
+    const tools = [...new Set((entry.description?.join(' ') + ' ' + entry.title).match(TOOL_CODES) ?? [])]
+      .map((t) => t.toUpperCase())
+      .slice(0, 4);
+
+    const titleNl = [`${entry.brand} ${type}`, name, code].filter(Boolean).join(' · ');
+
+    /*
+     * Dutch copy built from facts, not translated prose: what it is, whose
+     * tool it belongs to, which programmers it is named for, and the code the
+     * customer will search on.
+     */
+    const sentences = [
+      `${cap(type)} uit het ${entry.brand}-programma, voor gebruik met uw eigen sleutelprogrammeerapparatuur.`,
+      tools.length ? `Genoemd voor ${tools.join(', ')}.` : null,
+      code ? `Artikelcode ${code}.` : null,
+      'Origineel onderdeel, geleverd via onze leverancier A-Key. Levertijd 2 - 3 werkdagen.',
+    ].filter(Boolean);
+
+    products.push({
+      id: code ?? slug,
+      slug,
+      supplier: 'A-Key',
+      title: entry.title,
+      titleNl,
+      category: 'accessoires',
+      subcategory: entry.subcategory,
+      // These are workshop tools. They stay public — A-Key sells them openly
+      // and a locksmith buying a VVDI cable is exactly our trade customer.
+      audience: 'public',
+      makes: [],
+      manufacturer: entry.brand,
+      condition: 'aftermarket',
+      buttons: null,
+      frequency: null,
+      chip: null,
+      blade: null,
+      battery: null,
+      costPrice: entry.price,
+      image: entry.image ?? '/images/product-placeholder.svg',
+      images: entry.image ? [entry.image] : [],
+      fitment: [],
+      vehiclesRaw: null,
+      replacedBy: null,
+      articleCode: code,
+      specs: [
+        code ? ['Artikelcode', code] : null,
+        ['Merk gereedschap', entry.brand],
+        ['Type', cap(type)],
+        tools.length ? ['Geschikt voor', tools.join(', ')] : null,
+      ].filter(Boolean),
+      excerpt: sentences[0],
+      descriptionNl: sentences.join(' '),
+      directAnswer: sentences[0],
+      metaDescriptionNl: `${titleNl}. Origineel ${entry.brand}-accessoire, 2 - 3 werkdagen geleverd.`.slice(0, 155),
+    });
+
+    added++;
+  }
+
+  return added;
+}
+
+const accessoryCount = addAccessories();
+if (accessoryCount) console.log(`  + ${accessoryCount} tool accessories (Autel, OBDSTAR, Xhorse, Zed-FULL)`);
 
 /** Facet counts, so a filter never offers an option with no results behind it. */
 function facetCount(key) {
