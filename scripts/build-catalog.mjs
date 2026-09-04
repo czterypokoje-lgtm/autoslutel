@@ -138,6 +138,10 @@ const germanSlug = (title) =>
 
 const flatten = (value) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
 
+/** One row per article: the export repeats some under two language titles. */
+const seenIdentities = new Set();
+
+
 const SCRAPED_ACCESSORY_NAMES = new Set(
   Object.values(accessoryData.products ?? {})
     .map((p) => (p.title ? flatten(p.title) : null))
@@ -683,10 +687,39 @@ function specsFor({
 /* ── run ──────────────────────────────────────────────────────────────── */
 
 const rows = parseCsv(readFileSync(IN, 'utf8'));
+
+
+
 const header = rows[0].map((h) => h.trim());
 const records = rows.slice(1).map((r) =>
   Object.fromEntries(header.map((k, i) => [k, (r[i] ?? '').trim()]))
 );
+
+/**
+ * Which of a duplicated pair to keep.
+ *
+ * The twin with the German title is the one A-Key's own data recognises —
+ * their slugs, specifications and article numbers are all German. Keeping the
+ * Dutch-titled twin instead loses the placement, so the product falls back to
+ * the export's Makes column and picks up "Dodge" on a Mercedes-Benz key.
+ */
+const rowIdentity = (row, title) =>
+  flatten(
+    `${row.CostPrice}|${title.replace(
+      /^(Autosleutel geschikt voor|Funkschl(ü|ue)ssel geeignet f(ü|ue)r)\s*/i,
+      ''
+    )}`
+  );
+
+const preferredRow = new Map();
+for (const row of records) {
+  const title = row.Title_DE || row.Title_NL;
+  if (!title || !row.Slug) continue;
+  const id = rowIdentity(row, title);
+  const known = Boolean(akeySpec(title) || akeyPlacement(title));
+  const current = preferredRow.get(id);
+  if (!current || (known && !current.known)) preferredRow.set(id, { slug: row.Slug, known });
+}
 
 const products = [];
 const seenSlugs = new Set();
@@ -702,6 +735,19 @@ for (const row of records) {
    * "CostPrice 1.0", which is not a price. The scraped set has the real
    * price, the photo and the description, so it wins and the row is skipped.
    */
+  /*
+   * The export lists twelve products twice — once with a German title and
+   * once with a Dutch one, same article number and same price. Whichever
+   * arrives first wins; the second is the same thing on a second URL, which
+   * splits its reviews, its stock and its search ranking.
+   */
+  const identity = rowIdentity(row, title);
+  if (preferredRow.get(identity)?.slug !== row.Slug || seenIdentities.has(identity)) {
+    stats.duplicateRow = (stats.duplicateRow ?? 0) + 1;
+    continue;
+  }
+  seenIdentities.add(identity);
+
   if (SCRAPED_ACCESSORY_NAMES.has(flatten(title))) {
     stats.accessoryDuplicate = (stats.accessoryDuplicate ?? 0) + 1;
     continue;
@@ -724,10 +770,24 @@ for (const row of records) {
   if (!category) stats.noCategory++;
 
   const placement = akeyPlacement(title);
+  /*
+   * A-Key's own section membership decides the make, not the export's Makes
+   * column.
+   *
+   * That column carries 46 makes A-Key does not list for the product —
+   * "Dodge" on a Mercedes-Benz ML key, "Opel" on twelve others. A make is a
+   * claim that the part fits that brand's cars, and a wrong one puts the key
+   * on a page where it cannot work. The column is only used where A-Key has
+   * no section data for the product at all.
+   */
   const csvMakes = row.Makes
     ? row.Makes.split(',').map((m) => m.trim()).filter(Boolean)
     : [];
-  const makes = csvMakes.length ? csvMakes : (placement?.makes ?? []);
+  const sectionMakes = placement?.makes ?? [];
+  const makes = sectionMakes.length ? [...sectionMakes] : csvMakes;
+  if (sectionMakes.length && csvMakes.length > sectionMakes.length) {
+    stats.makesTrimmed = (stats.makesTrimmed ?? 0) + 1;
+  }
   if (!makes.length) stats.noMake++;
 
   /*
