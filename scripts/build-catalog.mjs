@@ -16,12 +16,21 @@
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { translateDescription, readFacts } from './accessory-copy.mjs';
 import path from 'path';
 
 const IN = path.join(process.cwd(), 'src/data/akey-products.csv');
 const SECTIONS = path.join(process.cwd(), 'src/data/akey-categories.json');
 const SPECS = path.join(process.cwd(), 'src/data/akey-specs.json');
 const ACCESSORIES = path.join(process.cwd(), 'src/data/akey-accessories.json');
+
+/** Names of the accessories scraped from A-Key's own section pages. */
+let accessoryData = { products: {} };
+try {
+  accessoryData = JSON.parse(readFileSync(ACCESSORIES, 'utf8'));
+} catch {
+  // reported later, where the accessories are added
+}
 const OUT = path.join(process.cwd(), 'src/lib/catalog.json');
 /*
  * A small companion file: the car makes we actually stock, with counts.
@@ -128,6 +137,12 @@ const germanSlug = (title) =>
     .replace(/[^A-Za-z0-9]+/g, '-');
 
 const flatten = (value) => value.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+const SCRAPED_ACCESSORY_NAMES = new Set(
+  Object.values(accessoryData.products ?? {})
+    .map((p) => (p.title ? flatten(p.title) : null))
+    .filter(Boolean)
+);
 const codeIn = (value) => value.replace(/[-_]/g, ' ').match(ARTICLE_CODE)?.[1]?.toUpperCase() ?? null;
 
 const sectionsBySlug = new Map();
@@ -681,6 +696,17 @@ for (const row of records) {
   const title = row.Title_DE || row.Title_NL;
   if (!title || !row.Slug) continue;
 
+  /*
+   * 74 rows in the export are the same articles as the four tool-accessory
+   * ranges scraped from A-Key's own section pages — and several carry
+   * "CostPrice 1.0", which is not a price. The scraped set has the real
+   * price, the photo and the description, so it wins and the row is skipped.
+   */
+  if (SCRAPED_ACCESSORY_NAMES.has(flatten(title))) {
+    stats.accessoryDuplicate = (stats.accessoryDuplicate ?? 0) + 1;
+    continue;
+  }
+
   const costPrice = Number(String(row.CostPrice).replace(',', '.'));
   if (!Number.isFinite(costPrice) || costPrice <= 0) continue;
 
@@ -968,6 +994,8 @@ const ACC_WORDS = {
   'hinzufügen': 'toevoegen', 'Hinzufügen': 'toevoegen', 'Schlüsseln': 'sleutels',
   'Aktivierung': 'activering', 'unterstützt': 'ondersteunt',
   'Erweitertes': 'uitgebreid', 'Erweiterte': 'uitgebreide',
+  'Kompletter': 'complete', 'Komplettes': 'complete', 'Kompletten': 'complete',
+  'Komplettset': 'complete set', 'Basic': 'basis',
   'Digitalmultimeter': 'digitale multimeter', 'Überlastschutz': 'overbelastingsbeveiliging',
   'Jahresupdate': 'jaarupdate', 'Schlüsselkopiermaschine': 'sleutelkopieermachine',
   'Schlüsselkopiermaschinen': 'sleutelkopieermachines',
@@ -1011,10 +1039,8 @@ function accessoryType(name) {
 }
 
 function addAccessories() {
-  let accessories = {};
-  try {
-    accessories = JSON.parse(readFileSync(ACCESSORIES, 'utf8')).products ?? {};
-  } catch {
+  const accessories = accessoryData.products ?? {};
+  if (Object.keys(accessories).length === 0) {
     console.warn('  (no akey-accessories.json — run scripts/scrape-akey-accessories.mjs)');
     return 0;
   }
@@ -1026,7 +1052,9 @@ function addAccessories() {
 
     const name = dutchName(entry.title);
     const type = accessoryType(entry.title);
-    const code = entry.articleNumber?.replace(/\s+/g, '') ?? null;
+    // Kept as A-Key writes it: "RH850 / V850 Full Adapter Kit" is the code a
+    // customer copies, and stripping the spaces made it unsearchable.
+    const code = entry.articleNumber?.trim().replace(/\s{2,}/g, ' ') ?? null;
 
     let slug = slugify(`${entry.brand}-${entry.title}`);
     if (seenSlugs.has(slug)) {
@@ -1047,11 +1075,25 @@ function addAccessories() {
      * tool it belongs to, which programmers it is named for, and the code the
      * customer will search on.
      */
+    /*
+     * A-Key's own description, in Dutch where it translates cleanly.
+     *
+     * The first pass threw this away entirely and left a €272 OBDSTAR kit
+     * described as "adapter uit het OBDSTAR-programma" — nothing about the
+     * airbag reset, the MP001 it needs, or the X300 and P50 it works with.
+     * A line that does not translate cleanly is kept as the manufacturer's
+     * own German text rather than shown half-translated.
+     */
+    const { dutch, german } = translateDescription(entry.description);
+    const facts = readFacts(entry.description);
+
     const sentences = [
-      `${cap(type)} uit het ${entry.brand}-programma, voor gebruik met uw eigen sleutelprogrammeerapparatuur.`,
-      tools.length ? `Genoemd voor ${tools.join(', ')}.` : null,
+      dutch.length
+        ? dutch.join(' ')
+        : `${cap(type)} uit het ${entry.brand}-programma, voor gebruik met uw eigen sleutelprogrammeerapparatuur.`,
+      tools.length && !dutch.length ? `Genoemd voor ${tools.join(', ')}.` : null,
       code ? `Artikelcode ${code}.` : null,
-      'Origineel onderdeel, geleverd via onze leverancier A-Key. Levertijd 2 - 3 werkdagen.',
+      'Geleverd via onze leverancier A-Key. Levertijd 2 - 3 werkdagen.',
     ].filter(Boolean);
 
     products.push({
@@ -1084,11 +1126,15 @@ function addAccessories() {
         code ? ['Artikelcode', code] : null,
         ['Merk gereedschap', entry.brand],
         ['Type', cap(type)],
-        tools.length ? ['Geschikt voor', tools.join(', ')] : null,
+        facts.compatible ? ['Compatibel met', facts.compatible] : null,
+        facts.requires ? ['Vereist', facts.requires] : null,
+        tools.length ? ['Genoemd voor', tools.join(', ')] : null,
       ].filter(Boolean),
-      excerpt: sentences[0],
+      /** What did not translate cleanly, shown on the page as the supplier's own text. */
+      supplierNote: german.length ? german : null,
+      excerpt: (dutch[0] ?? sentences[0]).slice(0, 200),
       descriptionNl: sentences.join(' '),
-      directAnswer: sentences[0],
+      directAnswer: (dutch[0] ?? sentences[0]).slice(0, 200),
       metaDescriptionNl: `${titleNl}. Origineel ${entry.brand}-accessoire, 2 - 3 werkdagen geleverd.`.slice(0, 155),
     });
 

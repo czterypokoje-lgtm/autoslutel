@@ -57,6 +57,11 @@ export interface CatalogProduct {
   vehiclesRaw?: string | null;
   /** The article the supplier says supersedes this one. */
   replacedBy?: string | null;
+  /**
+   * Lines of the supplier's own description that did not translate cleanly.
+   * Shown as their German original rather than half in Dutch.
+   */
+  supplierNote?: string[] | null;
   /** The supplier's own article code, when their export carries one. */
   articleCode?: string | null;
 }

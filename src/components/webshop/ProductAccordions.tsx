@@ -127,6 +127,29 @@ export default function ProductAccordions({ product }: { product: ShopProduct })
           <p style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
             {product.descriptionNl || 'Geen uitgebreide beschrijving beschikbaar voor dit product.'}
           </p>
+
+          {/*
+            What the supplier writes that we could not put into Dutch without
+            guessing. Shown as their own words, marked as German, rather than
+            dropped — for a €272 adapter kit the detail is the whole decision —
+            and rather than half-translated, which is how "Werkzeug zur De- en
+            Montage" reached this site once before.
+          */}
+          {(product.supplierNote?.length ?? 0) > 0 && (
+            <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid #e2e8f0' }}>
+              <p style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', margin: '0 0 .5rem', textTransform: 'uppercase', letterSpacing: '.04em' }}>
+                Aanvullende informatie van de fabrikant (Duits)
+              </p>
+              <ul lang="de" style={{ margin: 0, paddingLeft: '1.1rem', color: '#475569', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                {product.supplierNote!.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+              <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '.75rem 0 0' }}>
+                Vragen over de specificaties? Bel of app ons — wij lezen het voor u na.
+              </p>
+            </div>
+          )}
         </div>
       </details>
 

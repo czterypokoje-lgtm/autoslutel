@@ -112,26 +112,42 @@ const labelled = (lines, label) => {
 
 const BLOCK_END = /^(Kunden kauften|Frage zum Artikel|Kontaktdaten|Bewertungen|Ähnliche Artikel|Zuletzt angesehen|Diesen Artikel|Newsletter|Auf die Vergleichsliste|Auf Wunschzettel)/i;
 
-/** The article's own text: from under "Kategorie <value>" to the cross-sell. */
+/**
+ * The article's own text.
+ *
+ * It sits under a "Beschreibung" heading *below* the price block — not above
+ * it. The first version started after "Kategorie" and stopped at the first
+ * euro amount, which is the price, so it captured the product name and threw
+ * the entire description away: for the OBDSTAR RH850 kit that meant losing
+ * what it does, that it needs the MP001 adapter, and that it works with the
+ * X300 Classic G3 and the P50.
+ *
+ * Everything from the heading to the cross-sell block, minus the shop
+ * furniture that sits between them.
+ */
+const NOISE =
+  /^(inkl\.|zzgl\.|Versand|Versandkostenfreie|\(Standard\)|,|\*|pro Stk|Sofort verfügbar|Knapper Lagerbestand|Nicht auf Lager|Lieferzeit|\(DE - Ausland|Loading\.\.\.|Consent erteilen|Komponenten werden geladen|In den Warenkorb|Frage zum Artikel|Auf die Vergleichsliste|Auf Wunschzettel|Menge|Stück)/i;
+
 function description(lines, title) {
-  const marker = lines.findIndex((l) => /^Kategorie$/i.test(l));
-  const start = marker >= 0 ? marker + 2 : lines.findIndex((l) => /^Beschreibung$/i.test(l)) + 1;
+  const heading = lines.findIndex((l) => /^Beschreibung$/i.test(l));
+  const category = lines.findIndex((l) => /^Kategorie$/i.test(l));
+  const start = heading >= 0 ? heading + 1 : category >= 0 ? category + 2 : -1;
   if (start < 1) return [];
 
   const body = [];
   for (const line of lines.slice(start)) {
     if (BLOCK_END.test(line)) break;
-    if (/^\d+[.,]\d\d\s*€/.test(line)) break; // the price closes the text
+    if (NOISE.test(line)) continue;
+    if (/^\d[\d.]*,\d\d\s*€/.test(line)) continue; // a price, not prose
     if (line.startsWith('#') || line.includes('display: none')) continue;
     if (/^(Beschreibung|Produktinformationen:?)$/i.test(line)) continue;
-    if (/^(inkl\.|zzgl\.|Versand|\(Standard\)|,|\*|pro Stk|Sofort verfügbar|Lieferzeit)/i.test(line)) continue;
     body.push(line);
-    if (body.length >= 40) break;
+    if (body.length >= 60) break;
   }
+
   /*
-   * A-Key repeats the product name as the first line of the text. Keeping it
-   * would put the title twice on our page, once as a heading and once as the
-   * description.
+   * A-Key opens the text with the product name again. Keeping it would put
+   * the title twice on our page, once as a heading and once as prose.
    */
   const norm = (v) => v.toLowerCase().replace(/[^a-z0-9]/g, '');
   while (body.length && title && norm(body[0]).includes(norm(title).slice(0, 18))) body.shift();

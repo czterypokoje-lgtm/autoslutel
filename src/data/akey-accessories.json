@@ -9,7 +9,19 @@
    "articleNumber": "AUAPB 112",
    "akeyCategory": "Autel Zubehör",
    "price": 238,
-   "description": [],
+   "description": [
+    "Autel APB112",
+    "Auto Smart Schlüssel Simulator",
+    "für Autel MaxiIM IM508, IM608, IM608 PRO, MX808IM und OTOFIX IMMO Scanner",
+    "Der Autel APB112 Smart Key Emulator soll die von der Induktionsspule gesendeten Informationen sammeln, um die Probleme der Induktionsspule zu identifizieren und die Informationen des Fahrzeugschlüsselchips zu dekodieren.",
+    "Es kann auch den Fahrzeugschlüsselchip emulieren.",
+    "Autel APB112 Smart Key Emulator",
+    "Unterstützt 46, 4D-Datenerfassung",
+    "Unterstützt 46 Smart Key-Passwortberechnung",
+    "Unterstützt 46 Chip-Emulation",
+    "Unterstützt Toyota4D (94/D4, 98) Smart Key Emulation",
+    "Unterstützt Toyota H (88/A8, A9, 30) Smart Key Emulation"
+   ],
    "image": "/images/products/apb112-smart-key-emulator.jpg"
   },
   "APB130-Schluessel-hinzufuegen-VW-MQB-NEC35XX-Adapter-fuer-XP400-PRO": {
@@ -22,7 +34,32 @@
    "akeyCategory": "Autel Zubehör",
    "price": 82.11,
    "description": [
-    "Autel APB130 Adapter für XP400 PRO"
+    "Autel APB130",
+    "Lesen Sie Immo-Daten von VW MQB 48 Series NEC35XX",
+    "Funktioniert mit dem Autel XP400 PRO Key Programmer Tool Device",
+    "Unterstützte Fahrzeuge: VW: Arteon 2017-2019",
+    "Golf 2013-2019",
+    "Passat 2015-2019",
+    "Polo 2015-2019",
+    "T-Roc 2018-2019",
+    "Audi: A1 2019-2019",
+    "A3 2021-2019",
+    "Q2 2017-2019",
+    "Q3 2019-2019",
+    "Seat: Arona 2018-2019",
+    "Ateca 2018-2019",
+    "Ibiza 2018-2019",
+    "Leon 2013-2019",
+    "Tarraco 2019-2019",
+    "Toledo 2013-2019",
+    "Skoda: Octavia 2013-2019",
+    "Fabia 2015-2019",
+    "Superb 2015-2019",
+    "Kodiaq 2017-2019",
+    "Kamiq 2020-2019",
+    "Rapid 2013-2019",
+    "Chiptypen: D703532 - D70F3525 - D70F3526 - D70F3537 - D70F3529",
+    "Hinweis: Sie benötigen Autel XP400PRO und einen APB130-Adapter, um diese Funktion nutzen zu können"
    ],
    "image": "/images/products/apb130-schluessel-hinzufuegen-vw-mqb-nec35xx-adapter-fuer-xp400-pro.jpg"
   },
@@ -36,8 +73,16 @@
    "akeyCategory": "Autel Zubehör",
    "price": 58.31,
    "description": [
-    "AUTEL",
-    "AUTEL APB131 Adapter für Autel XP400 PRO"
+    "Produktmerkmale: Schlüsseladapter für MQB-V850/RH850-Serie hinzufügen",
+    "IMMO-Daten vom MQB-V850/RH850-Dashboard lesen",
+    "Unterstützte Fahrzeuge: VW (Schlüssel hinzufügen): Arteon 2017-2021, Golf 2013-2021, Passat 2015-2021, Polo 2015-2021, Tiguan 2018-2021, Touran 2016-2022, Jetta 2018-2021, T-Roc 2018-2021, Touareg 2010-2018",
+    "Audi (Schlüssel hinzufügen): A1 2019-2021, A3 2021-2021, A4 2008-2016, A5 2008-2016, A6 2011-2019, A7 2011-2019, A8 2010-2017, Q2 2017-2021, Q3 2019-2021, Q5 2009-2017",
+    "Skoda (Schlüssel hinzufügen): Octavia 2013-2021, Fabia 2015-2021, Superb 2015-2021, Kodiaq 2017-2021, Kamiq 2020-2021, Rapid 2013-2021",
+    "Seat (Schlüssel hinzufügen): Arona 2018-2021, Ateca 2017-2021, Ibiza 2018-2021, Leon 2013-2021, Tarraco 2019-2021, Toledo 2013-2019",
+    "Nissan (Schlüssel hinzufügen und alle Schlüssel verloren): Sylphy/Sentra(B18) 2022-, X-TRAIL/Rogue(T33) 2021-, QASHQAI (J12) 2024-, Juke (F16) 2012-, Note e-POWER (HE13) 2020-,",
+    "Sylphy (B18) 2019-2021, Juke (F16) 2019-2021, Pathfinder (R53) 2022-2023",
+    "Renault/Dacia (Schlüssel hinzufügen und alle Schlüssel verloren): Clio V/Captur II 2019-, Megane IV PH2/Arkana/Trafic III/New Zoe 2020-, Austral 2023-",
+    "Liste unterstützter Chiptypen: D70F3524, D70F3525, D70F3526, D70F3529, D70F3532, D70F3535, D70F3537, D70F3426, D70F3381, D70F3382,D70F3634, D70F3635, R7F701401, R7F701402, R7F701407, R7F701025, R7F701019, R7F701056"
    ],
    "image": "/images/products/apb131-adapter-erweitertes-schluesselprogrammierzubehoer-fuer-autel-xp400-pro.jpg"
   },
@@ -51,7 +96,18 @@
    "akeyCategory": "Autel Zubehör",
    "price": 23.68,
    "description": [
-    "MaxiScan MS300 OBDII Motorcodeleser CAN EOBD OBD2 Scanner"
+    "MaxiScan MS300 OBDII-Codeleser",
+    "Der MS300 OBD-II-Scancodeleser kann schnell die Ursache für die Motorkontrollleuchte Ihres Fahrzeugs finden, Diagnosefehlercodes (DTCs) überprüfen und DTCs löschen.",
+    "MaxiScan MS300-Funktionen: Kompatibel mit inländischen, asiatischen und europäischen Fahrzeugen ab Baujahr 1996",
+    "Ruft generische, herstellerspezifische und ausstehende Diagnosefehlercodes (DTC) ab",
+    "Zeigt DTC-Definitionen auf dem Bildschirm an",
+    "Verfügt über einen gut lesbaren, hintergrundbeleuchteten LCD-Bildschirm, ein mehrsprachiges Menü und DTC-Definitionen",
+    "16-poliger Standard-OBD-II-Anschluss;",
+    "Keine zusätzlichen Kabel erforderlich",
+    "Ruft VIN (Vehicle Identification Number) von 2002 und neueren Fahrzeugen ab, die Modus 9 unterstützen",
+    "Angetrieben durch Fahrzeug;",
+    "Keine Batterien erforderlich",
+    "Unterstützt die CAN-Protokolle (Controller Area Network)."
    ],
    "image": "/images/products/aums300-auto-diagnostic-tool.jpg"
   },
@@ -64,7 +120,14 @@
    "articleNumber": "AU CFA",
    "akeyCategory": "Autel Zubehör",
    "price": 117.81,
-   "description": [],
+   "description": [
+    "Der CAN FD Adater erweitert die Autel Geräte für die Unterstützung des neuen CAN-FD Protokolls bei manchen neuen Fahrzeugmodellen, wie z.B. die GM Modelle ab 2020.",
+    "Der CAN FD Adapter muss zusammen mit dem Autel VCI (Vehicle Communication Interface - Diagnoseadapter) verwendet werden.",
+    "Geeignet für MX808, MX808TS, MK808, MK808TS, DS808, DS808K, DS808BT, MS906, MS908, MS909, MS919, MaxiSys Elite.",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/autel-can-fd-adapter.jpg"
   },
   "Autel-Kabel-zum-Codieren-und-Flashen-geignet-fuer-BMW": {
@@ -76,7 +139,11 @@
    "articleNumber": "AUCF",
    "akeyCategory": "Autel Zubehör",
    "price": 33.32,
-   "description": [],
+   "description": [
+    "Autel Ethernet Y-Kabel zum Codieren und Flashen von BMW F-Serie Fahrzeugen",
+    "Mit Autel im608 PRO MaxiSys MS908 PRO und Autel MaxiSys Elte Geräten.",
+    "Mit diesem Kabel, in Verbindung mit den genannten Geräten, ermöglicht es das Codieren und Programmieren von BMW Fahrzeugen mit dem ISTA-P/ICOM System."
+   ],
    "image": "/images/products/autel-kabel-zum-codieren-und-flashen-geignet-fuer-bmw.jpg"
   },
   "Autel-Key-Programming-Adapter-Kit": {
@@ -89,7 +156,27 @@
    "akeyCategory": "Autel Zubehör",
    "price": 261.8,
    "description": [
-    "IMKPA"
+    "Autel IMKPA ist ein Key Programming Adapter Kit, kompatibel mit dem XP400Pro Key & Chip Programmer. Enthält 12 Adapter für XP400Pro, die Lesen/Schreiben/Löschen für Mercedes Benz ESL_W209/W906-Daten, Mercedes Benz NEC Key Learning, BMW EWS3 Key Learning und ermöglichen. Volkswagen/AUDI/BMW/Benz Key Unlock. Kompatibel mit IM608 Pro, IM608 und IM508 mit XP400Pro.",
+    "Erweiterte IMMO-Funktionen für BMW/Mercedes Benz/Audi/VW",
+    "MaxiIM Key Programming Adapter Kit enthält 12 Adapter, kompatibel mit XP400Pro",
+    "Aktiviert Lesen / Schreiben / Löschen von Mercedes Benz ESL_W209 / W906-Daten",
+    "Ermöglicht Mercedes Benz OE NEC Key Learning",
+    "Aktiviert BMW EWS3 Key Learning",
+    "Ermöglicht Volkswagen / AUDI / BMW / Mercedes Benz Key Unlock",
+    "Kompatibel mit IM608 Tablet und IM508 Tablet mit XP400Pro",
+    "Inhalt: 1 x APB113",
+    "1 x APB114",
+    "1 x APB115",
+    "1 x APB118",
+    "1 x APB119",
+    "1 x APB120",
+    "1 x APB121",
+    "1 x APB122",
+    "1 x APB123",
+    "1 x APB126",
+    "1 x APB127",
+    "1 x APB128",
+    "1 x Aufbewahrungskoffer"
    ],
    "image": "/images/products/autel-key-programming-adapter-kit.jpg"
   },
@@ -102,7 +189,15 @@
    "articleNumber": "JVCI+ Maxi Flash",
    "akeyCategory": "Autel Zubehör",
    "price": 712.81,
-   "description": [],
+   "description": [
+    "Das MaxiFlash JVCI+ ist eine Bluetooth-fähige Fahrzeugkommunikationsschnittstelle (VCI) und ein J2534-1- und J2534-2-kompatibles Pass-Thru-Programmiergerät. Unterstützt CAN FD, 4 CAN-Kanäle, D-PDU, IS O22900-1 und ISO 22900- 2 Protokolle und ist RP1210-kompatibel. Kann mit einem Windows-Computer mit einem entsprechenden OE-Abonnement für die Fahrzeugmodulprogrammierung und bei Anschluss an das MaxiSYS MS909-Tablet für die kompatible Fahrzeugmodulprogrammierung von BMW und Mercedes verwendet werden. Beinhaltet eine einjährige eingeschränkte Garantie. Dieses Gerät wird geliefert ohne Kabel oder Tragetasche – Upgrade mit Autel.",
+    "HINWEIS: Die CAN FD/DoIP-Protokolle sind nicht für alle Fahrzeuge universell. Das CAN FD-Protokoll ist hauptsächlich für GM-Modelle ab 2019 anwendbar, und das DoIP-Protokoll unterstützt hauptsächlich Volvo ab 2018, L- und Rover/Jaguar ab 2017, für BMW F-Chassis und G-Chassis.",
+    "Autel MaxiFlash JVCI+ SAE J2534 RP1210 ISO 22900 Funktionen",
+    "Es handelt sich um eine Kombination aus VCI- und Fahrzeugkommunikationstools, um eine schnellere duale WLAN-Fahrzeug- und Netzwerkkommunikation zu ermöglichen. Es handelt sich um ein PassThru-Programmierschnittstellengerät, das den Standards D-PDU, SAE J2534 und RP1210 entspricht. Unterstützt BT-, WLAN- und USB-Kommunikation. Die Datenübertragung kann mit oder ohne Kabelverbindung erfolgen.",
+    "Das MaxiFlash JVCI+ ist eine Bluetooth-fähige Fahrzeugkommunikationsschnittstelle (VCI) und ein J2534-1- und J2534-2-kompatibles Pass-Thru-Programmiergerät. Kompatibel mit dem MaxiSYS MS909-Diagnosetablett.",
+    "Unterstützt CAN FD, 4 CAN-Kanäle und DoIP, unterstützt D-PDU, IS O22900-1- und ISO 22900-2-Protokolle und ist RP1210-kompatibel.",
+    "Kann mit einem Windows-Computer mit einem entsprechenden OE-Abonnement für die Fahrzeugmodulprogrammierung und bei Anschluss an das MaxiSYS MS909-Tablet für die kompatible Fahrzeugmodulprogrammierung für BMW und Mercedes verwendet werden."
+   ],
    "image": "/images/products/autel-maxiflash-jvci-sae-j2534-rp1210-iso-22900-geraet.jpg"
   },
   "Autel-Toyota-8A-Blade-AKL-Kit": {
@@ -114,7 +209,10 @@
    "articleNumber": "AUTOYOTA8A",
    "akeyCategory": "Autel Zubehör",
    "price": 58.31,
-   "description": [],
+   "description": [
+    "Wird für die Programmierung von Toyota-/Lexus-/Scion-8A-Klingenschlüsseln verwendet",
+    "Kompatibel mit allen Toyota-Fahrzeugen mit 8A-Klingenschlüsseln, einschließlich Camry, Rav4, Prius, Highlander, Tacoma, Sienna und Levin. Kabel zur Verwendung mit Autels G-Box2 und dem APB112 Smart Key Emulator."
+   ],
    "image": "/images/products/autel-toyota-8a-blade-akl-kit.jpg"
   },
   "j5create-USB-30-Gigabit-Ethernet-Adapter": {
@@ -126,7 +224,24 @@
    "articleNumber": "AUAUTELUSB30",
    "akeyCategory": "Zubehör",
    "price": 47.01,
-   "description": [],
+   "description": [
+    "Netzstandard: IEEE 802.3az, IEEE 802.3x, IEEE 802.3, IEEE 802.3u, IEEE 802.3ab",
+    "Anschluss 2: RJ-45",
+    "Temperaturbereich bei Lagerung: -40 - 82 °C",
+    "Gehäusematerial: Aluminium",
+    "Betriebstemperatur: 0 - 59 °C",
+    "Steckverbinder 1 Geschlecht: Männlich",
+    "Maximale Datenübertragungsrate: 1000 Mbit/s",
+    "Steckverbinder 2 Geschlecht: Weiblich",
+    "Anschluss 1: USB-A",
+    "Produktfarbe: Silber",
+    "Kabellänge: 0,145 m",
+    "Gewicht: 40 g",
+    "Tiefe: 14,5 mm",
+    "Breite: 68 mm",
+    "Höhe: 23 mm",
+    "pkwiu: 27.90.44.0"
+   ],
    "image": "/images/products/j5create-usb-30-gigabit-ethernet-adapter.jpg"
   },
   "Netzadapter-EU-Universal-fuer-Autel-ZedFull-ua": {
@@ -139,7 +254,12 @@
    "akeyCategory": "Zubehör / Werkzeug",
    "price": 22.61,
    "description": [
-    "Netzadapter Universal"
+    "Netzadapter Universal",
+    "Netzteil Ladegerät AL-1250",
+    "Auch geeignet für ZedFull u.a.",
+    "Artikelinformationen: Eingang: 100-240V 50/60Hz 1,6A",
+    "Leistung: Ausgang: 12V 5A 60W",
+    "Nur für Innenbereich geeignet"
    ],
    "image": "/images/products/netzadapter-eu-universal-fuer-autel-zedfull-ua.jpg"
   },
@@ -164,7 +284,20 @@
    "articleNumber": "FBS3 Kit",
    "akeyCategory": "OBDSTAR Zubehör",
    "price": 201.11,
-   "description": [],
+   "description": [
+    "Das OBDstar Benz FBS3 Kit dient zum Auslesen des PIN-Codes, zum Zurücksetzen des Steuergeräts (Virgin/Programmierung) sowie zum Programmieren von Schlüsseln.",
+    "Unterstützung für FBS3: Schlüssel hinzufügen, AKL (All Keys Lost), ECM/TCM/ISM/EIS/ELV auf Werkszustand zurücksetzen (Virgin) und Personalisierung einrichten. Kompatibel mit OBDstar G3.",
+    "PIN-Code auslesen",
+    "PIN-Code berechnen (mittels Work Key)",
+    "PIN-Code des BE-Schlüssels auslesen",
+    "PIN-Code berechnen (AKL)",
+    "ECU zurücksetzen (Virgin/Programmierung)",
+    "EIS, ISM, ECM, ELV, TCM",
+    "Schlüssel programmieren: Schlüsseldaten auslesen",
+    "BE-Schlüssel löschen",
+    "Schlüsseldatei generieren",
+    "BE-Schlüssel beschreiben"
+   ],
    "image": "/images/products/fbs3-kit-geeignet-fuer-mercedes-benz.jpg"
   },
   "OBDSTAR-C1022-CAN-DIRECT-V2-Kit": {
@@ -176,7 +309,67 @@
    "articleNumber": "C1022 CAN DIRECT-V2",
    "akeyCategory": "OBDSTAR Zubehör",
    "price": 29.75,
-   "description": [],
+   "description": [
+    "Das CAN DIRECT-V2 dient dazu, bei neueren Fahrzeugen die Gateway-Module zu umgehen und einen direkten Zugriff auf den CAN-Bus des Fahrzeugs für die Programmierung von Proximity-Schlüsseln zu ermöglichen (Hinweis: Beim Auslesen von Daten eines Fahrzeugs mit Gateway-Architektur über den OBD-Diagnoseanschluss wird der Zugriff blockiert!). Es unterstützt die Programmierung von Proximity-Schlüsseln, Tachojustierung, Fahrzeugreparaturen, die Erfassung von CAN-Frames sowie weitere Funktionen.",
+    "Kompatibel mit X300 Classic G3, Odo Master, X300 Pro4 sowie Tools von Drittanbietern. Funktionen des CAN DIRECT-V2 Kits: 1. IMMO (Kompatibel mit X300 Classic G3, X300 Pro4): 1.) TOYOTA/LEXUS (Programmierung von Proximity-Schlüsseln)",
+    "Unterstützt die folgenden (4A)-Modelle: 2019- TOYOTA COROLLA",
+    "2021- TOYOTA COROLLA CROSS",
+    "2021- TOYOTA COROLLA SPORT",
+    "2021- TOYOTA COROLLA SPORT HV",
+    "2021- TOYOTA COROLLA TOURING",
+    "2021- TOYOTA COROLLA TOURING HV",
+    "2021- TOYOTA COROLLA HV",
+    "2019- TOYOTA LEVIN",
+    "2021- TOYOTA LEVIN HV",
+    "2021- TOYOTA ALLION",
+    "2021- TOYOTA LEVIN",
+    "2.) Unterstützt das folgende (8A)-Modell: 2021- TOYOTA Yaris Cross",
+    "3.) Unterstützt die folgenden (8A-A8)-Modelle: 2018- TOYOTA PRADO",
+    "2018- TOYOTA LAND CRUISER",
+    "2018- TOYOTA CROWN",
+    "2018- TOYOTA HIGHLANDER",
+    "4.) Unterstützt die folgenden (8A-A9)-Modelle: 2018- TOYOTA CAMRY",
+    "2018- TOYOTA C-HR",
+    "2018- TOYOTA IZOA",
+    "2018- TOYOTA PRIUS",
+    "2018- TOYOTA VELLFIRE",
+    "2018- TOYOTA ALPHARO",
+    "2018- LEXUS RX450H",
+    "2018- LEXUS LC",
+    "5.) Unterstützt die folgenden (8A-AA)-Modelle: 2018- TOYOTA HIGHLANDER HV",
+    "2018- TOYOTA RAV4",
+    "2018- TOYOTA RAV4 HV",
+    "2018- TOYOTA AVALON",
+    "2018- TOYOTA CROWN KLUGER HV",
+    "2018- LEXUS ES",
+    "2018- LEXUS UX",
+    "2018- LEXUS RX",
+    "2018- LEXUS LS",
+    "6.) Unterstützung für folgende Modelle: 2021- TOYOTA COROLLA CROSS HV",
+    "RENAULT",
+    "2020- RENAULT Clio 5",
+    "2020- RENAULT Captur",
+    "2020- RENAULT Arkana",
+    "2020- RENAULT Kangoo",
+    "2020 RENAULT Espace",
+    "2021- RENAULT Scenic",
+    "2020- RENAULT Zoe",
+    "2022- RENAULT Traffic",
+    "2021- RENAULT MEGANE 4 PH2",
+    "PSA",
+    "2023- PEUGEOT 308 Prox (Für UDS+-Systeme)",
+    "2023- PEUGEOT 208 Prox (Für UDS+-Systeme)",
+    "OPEL",
+    "2022- OPEL Astra L (Für UDS+-Systeme)",
+    "FCA",
+    "2018- DODGE Charger",
+    "2019- DODGE Ram",
+    "2018- DODGE Challenger",
+    "2018- DODGE Durango",
+    "2018- DODGE Journey",
+    "2018- JEEP Renegade Prox",
+    "2019- JEEP Renegade"
+   ],
    "image": "/images/products/obdstar-c1022-can-direct-v2-kit.jpg"
   },
   "OBDSTAR-RH850-V850-Kompletter-Adapter-Kit": {
@@ -188,7 +381,17 @@
    "articleNumber": "RH850 / V850 Full Adapter Kit",
    "akeyCategory": "OBDSTAR Zubehör",
    "price": 272.51,
-   "description": [],
+   "description": [
+    "OBDSTAR RH850/V850 Adapter Basic Kit",
+    "Das RH850/V850 Adapter-Komplettset dient dem Airbag-Reset sowie dem Auslesen von Wegfahrsperren-Daten und PIN-Codes (Kombiinstrument, BCM, ELV usw.). Alle ausgelesenen Daten liegen unverschlüsselt vor und können auch auf Geräten von Drittanbietern verwendet werden!",
+    "Erfordert die Verwendung des MP001-Adapters.",
+    "Kompatibel mit X300 Classic G3 und P50.",
+    "Produktfunktionen: Volkswagen MQB48-5A Schlüsselprogrammierung (ohne Ausbau von Komponenten) (MQB49-5C in Entwicklung); der MQB Collector muss separat erworben werden.",
+    "Ford / Lincoln (ab Modelljahr 2021) Schlüsselprogrammierung (einschließlich „Alle Schlüssel verloren“-Szenarien).",
+    "Nissan / Renault Schlüsselprogrammierung (einschließlich „Alle Schlüssel verloren“-Szenarien).",
+    "FCA Schlüsselprogrammierung (in Kürze per Update verfügbar).",
+    "Airbag-Reset."
+   ],
    "image": "/images/products/obdstar-rh850-v850-kompletter-adapter-kit.jpg"
   },
   "OBDSTAR-Toyota-30-Kabel-fuer-All-Key-lost": {
@@ -200,7 +403,29 @@
    "articleNumber": "Toyota-30 Kabel",
    "akeyCategory": "OBDSTAR Zubehör",
    "price": 23.68,
-   "description": [],
+   "description": [
+    "Hinweis: Das Kabel muss in Verbindung mit einem CAN DIRECT Kit verwendet werden.",
+    "Produktmerkmale: Einfache Handhabung – kein Risiko!",
+    "Exklusive Lösung mit 30-poligem Toyota-Stecker (kein Anstechen des Kabelbaums erforderlich); unterstützt die Typen 4A und 8A-BA. Produktfunktionen: Programmierung von Proximity-Schlüsseln (keine PIN-Eingabe erforderlich)",
+    "Proximity-Schlüsselprogrammierung bei „allen Schlüsseln verloren“ (erfordert die Verwendung einer Key SIM!)",
+    "Unterstützte Modelle: 4A-Modelle (ausgestattet mit Smart-Key-Box vom Typ TMLF19T): AQUA 2022-",
+    "COROLLA CROSS 2022-",
+    "Corolla Cross FACELIFT 2022-",
+    "Corolla FACELIFT 2022-",
+    "YARIS 2020-",
+    "YARIS CROSS 2021-",
+    "8A-BA-Modelle (ausgestattet mit Smart-Key-Box vom Typ TMLF19D): BZ4X 2022-",
+    "GRANVIA HV 2022-",
+    "HARRIER 2022- (MXUA80)",
+    "HARRIER HV 2022- (AXUH8#)",
+    "RAV4 PHV 2022-",
+    "SIENNA HV 2022-",
+    "TUNDRA 2021-",
+    "VENZA HV 2022-",
+    "WILDLANDER PHV 2022-",
+    "Upgrade für 8A-BA-Modelle am 10. August 2023",
+    "Funktioniert in Verbindung mit einer Key SIM!"
+   ],
    "image": "/images/products/obdstar-toyota-30-kabel-fuer-all-key-lost.jpg"
   },
   "10-Adapter-geeignet-fuer-Mercedes-Benz-EIS-EZS": {
@@ -213,7 +438,32 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 345.1,
    "description": [
-    "XDPG30EN"
+    "Ein neuer Satz von 10 Typen von EZS/EIS-Adaptern für Ihre VVDI PROG, speziell entwickelt für schnelles arbeiten, ganz ohne Löten, perfekt für Anfänger und Arbeitsteams.",
+    "Mit diesem erstaunlichen 10-teiligem Kit gehört das Entfernen von MCUs oder das Anlöten von Drähten auf die Leiterplatte der Vergangenheit an.",
+    "Drücken Sie einfach das EIS nach unten, klemmen Sie es am richtigen Adapter fest und schließen Sie es an ein VVDI-Prog-Gerät an, um jedes Mal und innerhalb von Sekunden eine perfekte Messung zu erhalten.",
+    "Dadurch entfallen alle Sorgen und der Stress der ohnehin schon komplizierten Mercedes-Anwendungen",
+    "Eigenschaften des VVDI Prog EZS-Adapters: 1. Muss nicht gelötet werden",
+    "2. Lesen Sie die Daten perfekt",
+    "3. Kann beim Arbeiten mit externer Energie versorgt werden",
+    "4. Einfach zu bedienen, transparentes Material, besser zu beobachten.",
+    "1 x für W164(ST12)",
+    "1 x für W169(ST12)",
+    "1 x für W203(HC08)",
+    "1 x für W209/211(ZWG)",
+    "1 x für W209/211(HC12)",
+    "1 x für W211(ST12)",
+    "1 x für W215/220/230",
+    "1 x für W639(HC08)",
+    "1 x für SPRINTER(ST12)",
+    "1 x für VITO W639(ST12)",
+    "Verkabelung der Xhorse VVDI EIS/EZS-Adapter: Pinbelegung des W203 HC08-Adapters",
+    "Benz W209/W211 ZGW-Adapter",
+    "Benz W169 ST12-Adapter",
+    "Benz W211 ST12 Adapter",
+    "Benz W215/W220/W230 Adapter",
+    "Benz W639 HC08 Adapter",
+    "Benz VITO W639 ST12 Adapter",
+    "Benz Sprinter ST12 Adapter"
    ],
    "image": "/images/products/10-adapter-geeignet-fuer-mercedes-benz-eis-ezs.jpg"
   },
@@ -226,7 +476,14 @@
    "articleNumber": "SF280",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 46.41,
-   "description": [],
+   "description": [
+    "Dieses Kabel ist für die Verwendung mit Nissan Sentra 2021+ und anderen Modellen der 8. Generation mit B18-Chassis ausgelegt.",
+    "Highlights des Autel 16+32 Gateway-Adapters: Neueste Version: V3.65 (Kein Passwort zum Hinzufügen von Schlüsseln erforderlich)",
+    "Verwendet mit Autel MaxiIM IM508/IM608/IM608 Pro",
+    "Anwendbar für Sylphy, Sentra usw. (Modelle mit B18-Chassis)",
+    "Passwort (PIN-Code) erforderlich für alle verlorenen Schlüssel und Ersatz von IMMO-Teilen.",
+    "Der Adapter kann mit allen gängigen Geräten wie ZedFull, Autel, OBD-Star u.a. betrieben werden"
+   ],
    "image": "/images/products/1632-gateway-adapter-for-nissan-fuer-alle-geraete.jpg"
   },
   "5-in-1-Kabel-EIS-ELV-geeignet-fuer-Mercedes-Benz-XDMB13EN": {
@@ -239,7 +496,14 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 86.87,
    "description": [
-    "für Xhorse VVDI MB TOOL XDMB13EN"
+    "Benz 5 in 1 Kabel geeignet für: W204 W207 W212 (ALT)",
+    "W221 W216",
+    "W166 W246",
+    "W164",
+    "W212",
+    "EIS ELV-Wartung",
+    "Schlüsselprogrammierer",
+    "Detection key"
    ],
    "image": "/images/products/5-in-1-kabel-eis-elv-geeignet-fuer-mercedes-benz-xdmb13en.jpg"
   },
@@ -253,7 +517,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 53.55,
    "description": [
-    "VVDI Prog EWS4 Adapter."
+    "VVDI Prog EWS4 Adapter.",
+    "Liest und schreibt das BMW EWS4 Modul."
    ],
    "image": "/images/products/adapter-ews4-xhorse.jpg"
   },
@@ -278,7 +543,38 @@
    "articleNumber": "XDFAKLGL",
    "akeyCategory": "Xhorse",
    "price": 74.97,
-   "description": [],
+   "description": [
+    "Xhorse Ford All Key Lost Bypass Alarmkabel für 2016–2021 Proximity Alle Schlüssel verloren mit aktivem Alarm",
+    "PN: XDFAKLGL",
+    "Support Alle Schlüssel mit Alarm verloren",
+    "Sie müssen nicht immer wieder ausschalten",
+    "Der AKL-Adapter kann NUR mit VVDI Key Tool Plus Pad verwendet werden.",
+    "Dieses Kabel wurde für die Verwendung mit dem Xhorse Key Tool Plus-Gerät entwickelt, um alle Schlüssel verlorenen Jobs bei Ford- und Lincoln-Fahrzeugen ab ca. 2015 (je nach Modell) mit einem aktiven Alarm zu unterstützen. Dadurch können Sie den Alarm umgehen und müssen den Akku nicht ständig ein- und ausschalten.",
+    "Smart Key All Key Lost Programmierung für folgende Modelle: Ford Taurus 2016-",
+    "Ford Mondeo 2016-",
+    "Ford EcoSport 2018-",
+    "Ford Edge 2016-",
+    "Ford Escape 2020",
+    "Ford Escort 2018-",
+    "Ford Focus 2018-",
+    "Ford Mustang 2016-",
+    "Ford Expedition 2020",
+    "Ford Everest 2016-",
+    "Ford Explorer 2016-",
+    "Ford Raptor F150 2018-2019",
+    "Ford Raptor F250 2016-",
+    "Lincoln Aviator 2020",
+    "Lincoln MKX 2015-",
+    "Lincoln Corsair 2020",
+    "Lincoln MKZ 2016-",
+    "Lincoln Continental 2016-",
+    "Lincoln Nautilus 2018-2020",
+    "Lincoln MKT 2020",
+    "Lincoln Navigator 2020",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/all-key-lost-kabel-fuer-ford.jpg"
   },
   "Chrysler-XDKP33GL-128-Kabeladapter-fuer-alle-Geraete": {
@@ -291,7 +587,16 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 32.01,
    "description": [
-    "Autel Chrysler 12 + 8 Kabeladapter"
+    "Sonstiges (1)",
+    "Original Chrysler 12+8 Kabeladapter",
+    "Der Chrysler 12+8 Adapter ist Autels Bypass für das Security Gateway Module (SGM) von Chrysler, das ein Aftermarket-Scan-Tool darauf beschränkt, nur DTCs zu lesen und Daten anzuzeigen.",
+    "Chrysler, Dodge, Ram, Jeep und Fiat ab Baujahr 2018 verfügen jetzt über ein sicheres Gateway-Modul oder SGM. Dieses SGM erlaubt Ihrem Scan-Tool keine bidirektionale Steuerung des Fahrzeugs. Autel hat ein Kabel zur Verfügung gestellt, um das SGM zu umgehen. Das neue Chrysler 12+8 Diagnosekabel ermöglicht die Kommunikation mit den neuesten Modellen von Chrysler, Dodge, Jeep, Fiat und Alfa Fahrzeugen.",
+    "Der 12+8 Adapter kann mit den Scannern der Autel Maxisys Serie MS906BT+ wie MS906BT, MS906S, MS908, MS908S, MS908S PRO, Maxisys Elite und IM608 verwendet werden.",
+    "OBDSTAR-Geräte wie OBDSTAR X300 DP Plus, ZedFull und anderen Geräte",
+    "Starten Sie Geräte wie Launch X431 V, Launch X431 V+ usw.",
+    "Lokalisierung des Chrysler 12+8-Steckers an einem 2020 Dodge Durango",
+    "Das Codiergerät in diesem Video ist nur ein Beispiel. Es kann auch jedes andere Gerät zum Codieren verwendet werden",
+    "YouTube-Videos zulassen"
    ],
    "image": "/images/products/chrysler-xdkp33gl-128-kabeladapter-fuer-alle-geraete.jpg"
   },
@@ -304,9 +609,7 @@
    "articleNumber": "XDPG03EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 17.85,
-   "description": [
-    "Zubehörillustration Anschluss, Lesen und Schreiben des Motorcomputers über CAN- und K-Kabel"
-   ],
+   "description": [],
    "image": "/images/products/ecu-reflash-kabel.jpg"
   },
   "EEPROM-Clip-Adapter": {
@@ -331,9 +634,48 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 452.2,
    "description": [
-    "Token für Xhorse VVDI MB BGA TOOL BENZ",
-    "Seriennummer",
-    "Seriennummer"
+    "1. Übersicht",
+    "Passwortberechnung kann Schlüsselpasswort über EIS und Arbeitsschlüssel (online) erhalten",
+    "Das CAN-Protokoll EIS unterstützt alle die Passwortberechnung",
+    "Unterstützt BGA-Schlüssel und andere NEC-Schlüssel",
+    "Unterstützt die Berechnung des Passworts für NEC v51, v57-Schlüssel. Kein Löten, sichere Methode.",
+    "Die Datenerfassungszeit hängt von der Schlüsselversion ab. Es dauert etwa 3,5 - 13 Minuten",
+    "BGA-Versionen benötigen ca. 5 Minuten, einige Versionen benötigen nur 3,5 Minuten",
+    "Zeit im Server berechnen: 30 Sekunden – 1 Minute",
+    "2. Unterstützte Fahrzeugtypen",
+    "W164",
+    "W164 2009-",
+    "W166, 197, 212, 218, 246",
+    "W169, 209, 211",
+    "W172, 204, 207",
+    "W216",
+    "W221",
+    "W639 2009-",
+    "3. Funktionen",
+    "Modus: OBD- und IR-Adapter, Modus zur Kommunikation mit EIS",
+    "Fahrgestell: Wählen Sie die Fahrgestellnummer aus, Sie können sie mit der automatischen Erkennung in EIS Tools erkennen",
+    "Datenerfassung: Drücken Sie „Datenerfassung“, es wird automatisch mit den folgenden Schritten fortfahren",
+    "1) Stecken Sie den Arbeitsschlüssel in die Zündung und warten Sie 15 Sekunden",
+    "2) Stecken Sie den funktionierenden Schlüssel in das IR-Lesegerät des Geräts, überprüfen Sie den Schlüssel und das Auto",
+    "3) Datenerfassung",
+    "4) Stecken Sie den Arbeitsschlüssel in die Zündung und warten Sie 30 Sekunden",
+    "5) Stecken Sie den Arbeitsschlüssel in das IR-Lesegerät des Geräts, warten Sie auf das Ende ...",
+    "6) Erfassungsdaten speichern",
+    "Daten hochladen: Laden Sie gespeicherte Erfassungsdaten zum Berechnen des Passworts auf den Server hoch.",
+    "Achtung: Sobald das Passwort für eine SSID erfolgreich berechnet wurde, akzeptiert der Server die Berechnung der Erfassungsdaten mit derselben SSID nicht innerhalb von 2 Stunden. Nach 2 Stunden beginnt das Hochladen von Erfassungsdaten mit derselben SSID auf den Server mit einer neuen Aufgabe",
+    "Abfrageergebnis: Berechnungsergebnis des Abfrageservers. Das Passwort wird nach der Erfolgsberechnung automatisch in den Schlüsselpasswortbereich eingetragen. Verwenden Sie \"Kopieren\", um das Passwort in die Zwischenablage zu kopieren",
+    "Auto-Reflash: Das Programm wird das Server-Ergebnis automatisch neu flashen, bis es keine Aufgabe für dieses Gerät gibt. Sie können die Datenerfassung noch einmal starten, während Auto-Reflash startet",
+    "Erfassung nach Erfolg stoppen: Wenn Sie die Datenerfassung ausführen, während Auto-Reflash läuft, stoppt das Programm den Erfassungsfortschritt, wenn das richtige Passwort gefunden wird",
+    "4. Über den Abfrageergebnisstatus",
+    "Das Abfrageergebnis unterstützt Abfrageberechnungsergebnisse in 24 Stunden, andere unterstützen das nicht. Das Abfrageergebnis zeigt Zeit, SSID, Status, Dateiname (Name beim Hochladen auf den Server) an.",
+    "Status hat die folgenden Typen: 1) Warteschlangen: Anzahl x, benötigt etwa y Minuten, bedeutet, dass Ihre Aufgabe y Minuten benötigt",
+    "2) Verarbeitung: benötigt 1 Minute, bedeutet, dass Ihre Aufgabe 1 Minute benötigt, um abgeschlossen zu werden",
+    "3) Passwort: xxxxxxxxxxxxxxxx (kostenlos), bedeutet Erfolg Passwort finden, \"kostenlos\" zeigt an, dass diese Aufgabe kostenlos berechnet wird oder diese Aufgabe bereits zuvor erfolgsberechnet wurde",
+    "4) Verwerfen: Sobald Sie das Passwort erfolgreich berechnet haben, werden die hochgeladenen Erfassungsdaten mit derselben SSID in 2 Stunden verworfen",
+    "5) Bereits hochgeladen: bedeutet, dass der Server diese Datei bereits in der Warteschlange hat",
+    "6) Passwortberechnung vor dem Hochladen bezahlen: bedeutet, dass Ihr Gerät sich nicht für die Berechnung autorisieren muss. Kontaktieren Sie Ihren Händler und zahlen Sie für die Passwortberechnung",
+    "7) Fehlgeschlagen: Dies bedeutet, dass diese Aufgabe kein Passwort erhalten hat, Sie können die Datenerfassung erneut ausführen.",
+    "Fehlgeschlagene Aufgabe ist immer kostenlos"
    ],
    "image": "/images/products/ein-jahr-unbegrenzte-token-fuer-xhorse-vvdi-mb-bga-tool-benz.jpg"
   },
@@ -346,7 +688,11 @@
    "articleNumber": "1328",
    "akeyCategory": "XHORSE Zubehör",
    "price": 82.11,
-   "description": [],
+   "description": [
+    "Funktioniert mit VVDI MB BGA Tool",
+    "Dieses Set enthält 1 Stück 7G-Kabel, 1 Stück ISM-Kabel,",
+    "und 1set EIS-Kabel für 221/164/204/207/212/166, dieses Set EIS-Kabel enthält Armaturenbrettstecker, die andere ähnliche EIS-Kabelsätze nicht enthalten."
+   ],
    "image": "/images/products/eis-esl-kabel-7gism-dashboard-connector-geeignet-fuer-mercedes-benz.jpg"
   },
   "ELV-Adapter": {
@@ -358,9 +704,7 @@
    "articleNumber": "XDMB12EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 118.52,
-   "description": [
-    "Zubehörillustration Repariert den beschädigten ELV Unterstützt die NEC-Reparatur des W204 ELV Liest und schreibt den alten Motorolla ELV Liest und schreibt den alten Motorolla-Schlüssel"
-   ],
+   "description": [],
    "image": "/images/products/elv-adapter.jpg"
   },
   "EWS3-Adapter": {
@@ -372,9 +716,7 @@
    "articleNumber": "XDPG09EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 38.68,
-   "description": [
-    "Zubehörillustration Optionale Artikel, müssen separat erworben werden, lesen und schreiben BMW EWS3-Modul"
-   ],
+   "description": [],
    "image": "/images/products/ews3-adapter.jpg"
   },
   "EZS-Removal-Tool-geeignet-fuer-Mercedes-Benz": {
@@ -387,7 +729,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 17.26,
    "description": [
-    "1 x EZS-Entfernungswerkzeug"
+    "1 x EZS Entfernungswerkzeug",
+    "Farbe kann je nach Verfügbarkeit abweichen"
    ],
    "image": "/images/products/ezs-removal-tool-geeignet-fuer-mercedes-benz.jpg"
   },
@@ -401,7 +744,9 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 17.85,
    "description": [
-    "Größe: 40cm Länge Zubehöranleitung Schließt die Kabelfernbedienung um die Fernbedienung zu generieren"
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
    ],
    "image": "/images/products/fernprogrammierkabel.jpg"
   },
@@ -415,10 +760,41 @@
    "akeyCategory": "Xhorse",
    "price": 94.01,
    "description": [
-    "Seriennummer",
-    "Seriennummer",
-    "genaue Gerätebezeichnung",
-    "genaue Gerätebezeichnung"
+    "Sonstiges (1)",
+    "Bilder (2)",
+    "ID48 Token Paket",
+    "Einjahres ID48-Token-Paket (",
+    "3 Token pro Tag",
+    ").",
+    "Das Paket kann in",
+    "MINI KEY TOOL",
+    "KEY TOOL MAX",
+    "KEY TOOL MAX PRO",
+    "KEY TOOL PLUS",
+    "aktiviert werden.",
+    "Um ein VVDI 48-Token-Paket zu laden, müssen Sie sich zunächst mit dem Konto anmelden, das mit Ihrem Gerät (VVDI Key Tool, Key Tool Max, Key Tool Max Pro oder Key Tool Plus) verknüpft ist.",
+    "Um ein ID48 Tokenpaket installieren zu können müssen zunächst 10 Schlüssel programiert worden sein.",
+    "Anschließend können Sie das Token-Paket im entsprechenden Menü des Geräts aktivieren.",
+    "Die Token werden dann dem Konto gutgeschrieben und können für die Programmierung von Schlüsseln verwendet werden.",
+    "Hier ist eine detailliertere Anleitung: 1.",
+    "Anmelden: Stellen Sie sicher, dass Sie mit dem Konto angemeldet sind, das Sie für den Kauf des VVDI Key Tool oder eines der anderen unterstützten Geräte verwendet haben.",
+    "2.",
+    "Gerät auswählen: Wählen Sie das Gerät aus, mit dem Sie das Token-Paket aktivieren möchten (VVDI Key Tool, Key Tool Max, Key Tool Max Pro oder Key Tool Plus).",
+    "3.",
+    "Token-Paket aktivieren: Suchen Sie im Menü des Geräts nach der Option zur Aktivierung des ID48-Token-Pakets.",
+    "Bei den meisten Geräten finden Sie diese unter \"Sonderfunktionen\" oder \"Token-Verwaltung\".",
+    "4.",
+    "Token laden: Befolgen Sie die Anweisungen auf dem Bildschirm, um das Token-Paket zu aktivieren und die Token auf Ihr Konto zu laden.",
+    "5.",
+    "Token verwenden: Die Token können nun für die Programmierung von Schlüsseln mit dem VVDI Key Tool oder anderen kompatiblen Geräten verwendet werden.",
+    "Wichtige Hinweise: Stellen Sie sicher, dass Sie das Token-Paket mit dem korrekten Gerät und dem dazugehörigen Konto aktivieren.",
+    "Die Token werden dem Konto gutgeschrieben und können nicht auf andere Konten übertragen werden.",
+    "Bei Fragen oder Problemen wenden Sie sich bitte an den Kundensupport von Xhorse oder Ihren Händler.",
+    "Bitte beachten Sie, dass die Token (ID48) nur auf den Account geladen werden können, mit den sie sich beim Kauf ihres Gerätes registriert haben.",
+    "How to activate the transponder clone 48 [96bits] on MINI KEY TOOL",
+    "YouTube-Videos zulassen",
+    "Anleitung",
+    "Anleitung"
    ],
    "image": "/images/products/id48-token-paket.jpg"
   },
@@ -431,9 +807,7 @@
    "articleNumber": "XDMB01EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 27.37,
-   "description": [
-    "Zubehörillustration Kommuniziert mit EIS von IR"
-   ],
+   "description": [],
    "image": "/images/products/ir-adapter.jpg"
   },
   "Key-Reader-Xhorse": {
@@ -446,8 +820,17 @@
    "akeyCategory": "Xhorse",
    "price": 451.01,
    "description": [
-    "Xhorse Key Reader Blade Skimmer Key",
-    "Identification Device tool for Xhorse APP"
+    "Xhorse Key Reader Blade Skimmer Key Identification Device",
+    "Xhorse Key Reader XDKR00GL ist ein professionelles und tragbares Schlüsselidentifikationsgerät. Es kann Autoschlüssel (einschließlich Kunststoffschlüssel und Aluminiumschlüssel) schnell und genau auf dem Markt identifizieren. Mit seiner optischen Abbildungstechnik, egal ob es sich um einen Kunststoffschlüssel, einen Aluminiumschlüssel mit oxidierter Schicht oder einen unkenntlich gemachten Schlüssel handelt. Xhorse XDKR00GL Key Reader kann das Gebiß genau identifizieren und lesen, ohne die Sonden zu brechen. Vor allem dauert der gesamte Schlüsselbart-Lesevorgang nur Sekunden, daher kann der Xhorse XDKR00GL Schlüsselleser Schlüsseldiensten weltweit Zeit und Mühe sparen.",
+    "Die optische Bildgebung nutzt Licht und spezielle Eigenschaften von Photonen, um detaillierte Bilder von Substanzen zu erhalten. Basierend auf der optischen Bildgebungstechnik ist der Xhorse XDKP00GL Key Reader in der Lage, fast alle Auto- und Motorradschlüssel zu identifizieren.",
+    "Parameter des Xhorse-Schlüssellesers: Eingang: 12V/2A",
+    "Bildschirmgröße: 0,91\" OLED",
+    "CPU: 8-Kern-Cortex-A53",
+    "Grafikprozessor: IMG GEB320 68OMHZ",
+    "Arbeitsspeicher: 2 GB LPDDR3",
+    "ROM: 16 GB OMMC",
+    "Kamera: 13 Millionen Pixel",
+    "Bluetooth: 41+WF8021a/b/g/nac"
    ],
    "image": "/images/products/key-reader-xhorse.jpg"
   },
@@ -460,7 +843,11 @@
    "articleNumber": "MIDI-Upgrade",
    "akeyCategory": "Xhorse",
    "price": 261.8,
-   "description": [],
+   "description": [
+    "Upgrade von Basic Version zu",
+    "Advanced",
+    "Version  für Key Tool MIDI"
+   ],
    "image": "/images/products/key-tool-midi-upgrade-advanced.jpg"
   },
   "M1-Klemme-Spannbacke-Xhorse": {
@@ -473,7 +860,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 153.51,
    "description": [
-    "M1 Klemme Größe: 123mm x 47.5mm x 53mm Gewicht: 920g"
+    "M1 Klemme"
    ],
    "image": "/images/products/m1-klemme-spannbacke-xhorse.jpg"
   },
@@ -487,7 +874,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 153.51,
    "description": [
-    "M2 Klemme Größe: 84mm x 36.5mm x 53mm Gewicht: 399g"
+    "M2 Klemme"
    ],
    "image": "/images/products/m2-klemme-spannbacke-xhorse.jpg"
   },
@@ -501,7 +888,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 224.91,
    "description": [
-    "M3 Klemme (optional) Größe: 65.5mm x 46.5mm x 65mm Gewicht: 562g"
+    "M3 Klemme (optional)"
    ],
    "image": "/images/products/m3-klemme-spannbacke-xhorse.jpg"
   },
@@ -515,7 +902,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 148.75,
    "description": [
-    "M4 Klemme (optional) Größe: 60mm x 38mm x 52.5mm Gewicht: 500g"
+    "M4 Klemme (optional)"
    ],
    "image": "/images/products/m4-klemme-spannbacke-xhorse.jpg"
   },
@@ -528,7 +915,16 @@
    "articleNumber": "XDMB10EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 140.3,
-   "description": [],
+   "description": [
+    "Größe: 1.0 x 6 x 40mm Gewicht: 13g",
+    "Zubehörillustration Müssen separat gekauft werden Optionaler Artikel W204, W207: Schnelle Datenerfassung W164, W216: Einfügung frei W164, W209 und W211: Gateway-Emulationsfunktion - VVDI MB Werkzeug Netzteil funktioniert für FBS3-Typen, bei allen verlorenen Schlüssel, und für die Gateway-Emulation. Unterstützt die C Klasse, E Klasse, CL, CLK, ML, GL, GLK mobile Modelle und etc. - VVDI MB Werkzeug-Netzteil benötigt nur 18 Minuten, um die Daten für W204 und W207 zu erfassen, für alle verlorenen Schlüssel.",
+    "Die Datenerfassung ohne diesen Adapter dauert 150 Minuten. Durch diesen Adapter wird die Datenerfassung effizienter, da fast 2 Stunden eingespart werden. (150 Minuten->18 Minuten) - VVDI MB Werkzeug Netzteil für W216, W164 2009 - Für die Erfassung aller wichtigen Datenverluste sind keine unzähligen Ein- und Aussteckvorgänge des IR-Adapters erforderlich.",
+    "Das Ein- und Ausstecken des IR-Adapters muss mehr als 500 Mal durchgeführt werden, wenn der VVDI MB Werkzeug-Netzadapter nicht verwendet wird. Die Arbeitseffizienz wurde stark erhöht. (500 Mal-> Einfügung frei) - VVDI MB Werkzeug-Netzteil unterstützt die Gateway-Emulationsfunktion.",
+    "Auch ohne echtes Gateway können Benutzer diesen Adapter für die OBD-Kommunikation mit W164, W164 2009-, W209 und W211 verwenden (spezielle Verbindungskabel erforderlich). - VVDI MB Werkzeug-Netzteil aktualisiert immer mehr Funktionen.",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/mb-leistungsadapter.jpg"
   },
   "MC9S12-Reflash-Kabel-V1": {
@@ -540,9 +936,7 @@
    "articleNumber": "XDPG01EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 17.85,
-   "description": [
-    "Zubehörillustration DB25-Anschluss, Das Kabel kann Motorola (Freescale) MC9S08, MC9S12 Serie Transponder lesen und schreiben"
-   ],
+   "description": [],
    "image": "/images/products/mc9s12-reflash-kabel-v1.jpg"
   },
   "MCU-Reflash-Kabel-V3": {
@@ -554,9 +948,7 @@
    "articleNumber": "XDPG02EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 17.85,
-   "description": [
-    "Zubehörillustration DB25-Anschluss, Verbindung über Kabel zum Lesen und Schreiben der meisten Transponder"
-   ],
+   "description": [],
    "image": "/images/products/mcu-reflash-kabel-v3.jpg"
   },
   "MVCI-PRO-J2534-Super-Fahrzeugdiagnose-Programmierkabel": {
@@ -569,8 +961,33 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": null,
    "description": [
-    "Xhorse Programmierkabel",
-    "Preis auf Anfrage"
+    "Sonstiges (1)",
+    "Unterstützte Kommunikationsprotokolle",
+    "ISO-9141 K-Line",
+    "ISO-11898-2 DWCAN",
+    "SAE-12411 SWCAN",
+    "VAG KWP1281",
+    "ISO-14230 K-Line",
+    "SAE-31850-VPW",
+    "VAG TP20 CAN",
+    "FD_ISO15765_PS",
+    "ISO-15765 CAN",
+    "SAE-31850-PWM",
+    "VAG TP16 CAN",
+    "Funktionen des Xhorse MVCI+ Pro: Ersatz für Originalhardware",
+    "Ersetzt mehrere teure OEM-Geräte und unterstützt Fahrzeugdiagnose, Programmierung und zugehörige Funktionen auf OEM-Niveau.",
+    "Unterstützung mehrerer Hersteller",
+    "Kompatibel mit Volkswagen, Toyota, Honda, Ford und weiteren Marken für eine breite Abdeckung.",
+    "Zwei Diagnosestandards",
+    "Entspricht den gängigen Standards der Automobilindustrie und unterstützt sowohl das D-PDU- als auch das J2534-Protokoll.",
+    "Unterstützung mehrerer Protokolle",
+    "Unterstützt eine Vielzahl von Fahrzeugkommunikationsprotokollen und OEM-Diagnosesoftware und wird kontinuierlich aktualisiert.",
+    "Stabiler und reibungsloser Betrieb",
+    "Verbindung zum PC für einen stabileren, reibungsloseren und effizienteren Betrieb.",
+    "Worin besteht der Unterschied zwischen dem Xhorse XDMVJPGL MVCI PRO+ J2534-Kabel und dem alten MVCI Pro J2534-Kabel?",
+    "Das vorherige MVCI Pro-Kabel war fest mit dem Hauptgerät verbunden, d. h. USB-Kabel und Hauptgerät waren fest miteinander verbunden. Das neue MVCI Pro+ hingegen ist abnehmbar, sodass das USB-Kabel vom Hauptgerät getrennt werden kann. Dies erleichtert den Austausch und die Aufbewahrung und reduziert den Verschleiß des Steckers. Zusätzlich wurde die Statusanzeige verbessert und bietet nun eine klarere visuelle Rückmeldung während des Betriebs. Beim Xhorse XDMVJPGL MVCI PRO+ geht es nicht um erweiterte Kompatibilität, sondern um optimierte Benutzerfreundlichkeit. Dank des abnehmbaren USB-Anschlusses und des verbesserten Anzeigesystems bietet es Technikern ein praktischeres und robusteres Werkzeug und gleichzeitig die gleiche leistungsstarke Softwareunterstützung wie das ursprüngliche MVCI Pro.",
+    "Anleitung",
+    "YouTube-Videos zulassen"
    ],
    "image": "/images/products/mvci-pro-j2534-super-fahrzeugdiagnose-programmierkabel.jpg"
   },
@@ -583,7 +1000,25 @@
    "articleNumber": "XDPG08EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 54.74,
-   "description": [],
+   "description": [
+    "1. Unterstützte Chipmodelle: VVDI Prog PCF7922 Entsperren",
+    "VVDI Prog PCF7941 Entsperren",
+    "VVDI Prog PCF7945 Entsperren",
+    "VVDI Prog PCF7952 Entsperren",
+    "VVDI Prog PCF7953 Entsperren",
+    "VVDI Prog PCF7961 Entsperren",
+    "2. Zwei optionale Möglichkeiten zum Lesen und Schreiben des PCF79XX-Chips",
+    "Entfernen Sie den Chip und stecken Sie ihn in den IC-Sockel. Wählen Sie die Option „PCF79XX-Chip“.",
+    "3. Beschreibung der VVDI Pro-Optionen",
+    "(1) „EEPROM“: Datenspeicherplatz, der im geschützten Zustand lesen und schreiben kann.",
+    "(2) „EROM“: Programmspeicherplatz (entspricht dem FLASH-Speicherplatz anderer Chips), kann im ungeschützten Zustand lesen und schreiben.",
+    "(3) „Geschützt“: Klicken Sie auf „Geschützt“, um den Chip zu sperren und die Chipdaten nicht mehr auslesen zu können.",
+    "(4) „Ungeschützt“: Klicken Sie auf „Ungeschützt“, um den Chip zu entsperren und Chipdaten auszulesen.",
+    "Nach dem Entsperren werden die Originaldaten im Chip gelöscht.",
+    "4. PCF79XX-Chipfunktion",
+    "(1) Derzeit unterstützt der PCF79XX-Chip das Sperren, Entsperren und Lesen/Schreiben von Daten.",
+    "(2) Die RENEW-Funktion wird in den kommenden Tagen hinzugefügt. Sie lädt die entsprechenden Daten und erneuert den Schlüssel direkt. Die detaillierten spezifischen Fahrzeugmodelldaten werden veröffentlicht."
+   ],
    "image": "/images/products/pcf79xx-adapter-v2-fuer-vvdi-prog-xdpg08.jpg"
   },
   "REMOTE-ERNEUERUNGSKABEL-XDKT02EN": {
@@ -608,7 +1043,16 @@
    "akeyCategory": "Codiergeräte",
    "price": 89.25,
    "description": [
-    "Xhorse XDSKE0EN SMART KEY BOX"
+    "Sonstiges (1)",
+    "Die Xhorse Smart Key Box ist ein Adapter, mit dem über eine Bluetooth-Verbindung mit einer Handy-App auf ein Fahrzeug zugegriffen werden kann.",
+    "Mit anderen Worten, mit diesem Adapter können Sie die Bluetooth-Konnektivität zum Zentralverriegelungssystem / Schlüssellosen Zugangssystem jedes Fahrzeugs hinzufügen, für das Sie eine Xhorse-Universalfernbedienung konfigurieren können.",
+    "Dieser Adapter ermöglicht das drahtlose (über Bluetooth) Sperren, Entsperren und Fernstarten.",
+    "Beachten Sie, dass dieser Adapter dem Fahrzeug keine dieser Funktionen hinzufügt. Damit dieser Adapter das Fahrzeug drahtlos verriegeln, entriegeln oder fernstarten kann, müssen diese Funktionen bereits im Fahrzeug funktionieren, bevor die Xhorse Smart Key Box installiert wird.",
+    "Der Installationsprozess im Überblick: Mitgelieferte Drähte an die Leiterplatte einer Xhorse-Universalfernbedienung anlöten",
+    "Programmieren Sie diese Fernbedienung auf das Fahrzeug",
+    "Verbinden Sie die Smart Key Box über den OBD2-Anschluss mit dem Fahrzeug",
+    "Xhorse Smart Key Box Installation",
+    "YouTube-Videos zulassen"
    ],
    "image": "/images/products/smart-key-box-bluetooth-adapter.jpg"
   },
@@ -621,9 +1065,7 @@
    "articleNumber": "XDPG07EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 49.39,
-   "description": [
-    "Zubehörillustration Optionale Artikel, müssen separat erworben werden, lesen und schreiben AB28FXXX / PA28FXXX / TB28FXXX Transponder (PSOP44 verpackt)"
-   ],
+   "description": [],
    "image": "/images/products/tb28fxxx-adapter.jpg"
   },
   "VVDI-2-Programmierer": {
@@ -636,7 +1078,23 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 1663.62,
    "description": [
-    "1.663,62 €"
+    "Diagnosegerät mit folgenden Funktionen: VAG-Gruppenunterstützung (Diagnose, Sonderfunktionen – Immo 1, Immo 2, Immo 3, 4 und Immo 5, CS, PIN, MAC, EDC17/MED17-Editor, BCM2-Editor, PG35-Schlossanpassung, Smart-Key-Programmierung, alle verlorenen Audi-Schlüssel A6 /A7/A8/Tuareg-immo5 ).",
+    "Ausgeführte Funktionen - Sensoranpassungen, Codierung, TV-frei, Schlüsselprogrammierung über OBD-BCM2, EZS (Audi a6/q7).",
+    "BMW-Service (CAS-Reparatur nach erfolglosem Flashen, Schlüsselunterstützung inklusive CAS 4 auf BDC (ab 24. August 2017), Sperren und Löschen von Schlüsseln in FEM/BDC",
+    "Porsche-Unterstützung (Panamera, Macan, Cayenne, schlüssellose und nicht-schlüssellose Schlüsselprogrammierung)",
+    "PSA-Gruppenunterstützung (derzeit PIN-Lesen und Schlüsselprogrammierung)",
+    "Programmieren von Transpondern der meisten Marken aus einer Datei (Vorbereiten, Entsperren, Kopieren von Transpondern), darunter BMW CAS3+, Mercedes Atego, RangeRover auf PIC",
+    "Passthru-Unterstützung",
+    "Eingebaute Antenne zum Programmieren von Transpondern mit Platz für kleine Carbon- und Glastransponder.",
+    "Im Gerät integrierter Pilot-Frequenztester (Messwert direkt auf dem LCD-Display ablesbar)",
+    "Der Programmierer ist zusätzlich mit einem praktischen Koffer zur Aufbewahrung des Geräts und der Kabel ausgestattet (der Koffer ist ab 05.10.2017 erhältlich)",
+    "Keine Abonnementgebühren",
+    "Sehr häufige Updates",
+    "Die oben beschriebenen Funktionen erschöpfen nicht die Leistungsfähigkeit des Gerätes.",
+    "Dies ist nur ein Überblick über die Möglichkeiten.",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
    ],
    "image": "/images/products/vvdi-2-programmierer.jpg"
   },
@@ -649,7 +1107,10 @@
    "articleNumber": "XDCPDWEN",
    "akeyCategory": "Transponder",
    "price": 23.68,
-   "description": [],
+   "description": [
+    "TYPEN WIE UNTEN",
+    "M35080 M35080V6 160D0WQ   M35080-3 M35080VP 35160WT   M35080-6 D80D0WQ 35128WT"
+   ],
    "image": "/images/products/vvdi-35160dw.jpg"
   },
   "VVDI-Prog-Bosch-ECU-Adapter": {
@@ -661,7 +1122,9 @@
    "articleNumber": "UKBA",
    "akeyCategory": "Xhorse",
    "price": 95.2,
-   "description": [],
+   "description": [
+    "Dies ist ein Bosch ECU-Adapter, der mit VVDI Prog zusammenarbeitet, um das BMW N20 N55 B38 ECU zu lesen, ohne die ECU-Shell zu beschädigen."
+   ],
    "image": "/images/products/vvdi-prog-bosch-ecu-adapter.jpg"
   },
   "XD8ABAGL-Toyota-8A-Adapter": {
@@ -674,7 +1137,65 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 58.31,
    "description": [
-    "2022- für Toyota/Lexus Ba Immo Typ Schlüssel hinzufügen und alle Schlüssel verloren"
+    "Kompatibel mit VVDI Key Tool Max pro, FT mini obd, Key Tool Plus Pad",
+    "Xhorse BA AKL Kabel kompatibele Fahrzeugliste",
+    "Marke",
+    "Jahr",
+    "Platinen nummer",
+    "P4",
+    "Hinweis",
+    "Consecration",
+    "2022-",
+    "3041",
+    "Ba",
+    "/",
+    "Venza",
+    "2021-",
+    "3041",
+    "Ba",
+    "/",
+    "Sienna",
+    "2021-",
+    "3041",
+    "Ba",
+    "/",
+    "Tundra",
+    "2022",
+    "3041",
+    "Ba",
+    "/",
+    "Levin",
+    "2023-",
+    "/",
+    "Ba",
+    "/",
+    "Redwoodtree",
+    "2023-",
+    "3041",
+    "Ba",
+    "/",
+    "Guangqi Venza",
+    "2022-",
+    "3041",
+    "Ba",
+    "/",
+    "Rav4 Double Motor E+",
+    "2021-",
+    "3041",
+    "Ba",
+    "Mit a/c-Taste",
+    "Granvia",
+    "2022-",
+    "3041",
+    "Ba",
+    "/",
+    "Bz4x",
+    "2021-",
+    "3041",
+    "Ba",
+    "/",
+    "Land cruiser",
+    "2022-"
    ],
    "image": "/images/products/xd8abagl-toyota-8a-adapter.jpg"
   },
@@ -687,7 +1208,12 @@
    "articleNumber": "XD8ANKEN",
    "akeyCategory": "Xhorse",
    "price": 118.88,
-   "description": [],
+   "description": [
+    "Xhorse Toyota 8A Non-Smart Key All Keys Lost Adapter via OBD",
+    "Für Toyota 8A H-Chip (nicht intelligent) Alle Schlüssel verloren von Jahr 2014 bis 2019 über OBD, ohne Demontage der Wegfahrsperre",
+    "Unterstützt VVDI2, Key Tool Max+ Mini-OBD-Tool",
+    "Xhorse Toyota 8A Steuerboxkabel unterstützte Automodelle: Levin, Corolla, Rav4, Prado, Land Cruiser, Camry, Highlander, Reiz, Siena"
+   ],
    "image": "/images/products/xd8anken-8a-control-kabel.jpg"
   },
   "XD8ASKGL-Toyota-8A-All-Key-Lost-Adapter-Smartkey": {
@@ -699,7 +1225,11 @@
    "articleNumber": "XD8ASKGL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 214.2,
-   "description": [],
+   "description": [
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/xd8askgl-toyota-8a-all-key-lost-adapter-smartkey.jpg"
   },
   "XDDDM0GL-Digitalmultimeter-mit-Ueberlastschutz": {
@@ -711,7 +1241,35 @@
    "articleNumber": "XDDDM0GL",
    "akeyCategory": "Xhorse",
    "price": 77.35,
-   "description": [],
+   "description": [
+    "Der",
+    "Xhorse Digitalmultimeter XDDDM0GL",
+    "ist die erste Wahl für Profis, die ein vielseitiges und zuverlässiges Messwerkzeug suchen. Dieser",
+    "Digitalmultimeter",
+    "bietet außergewöhnliche Leistung mit erweiterten Funktionen, die auf verschiedene Anforderungen zugeschnitten sind. Entdecken Sie, wie sich der XDDDM0GL von der Konkurrenz abhebt und warum er die perfekte Ergänzung für Ihr Werkzeugset ist.",
+    "Ausgestattet mit",
+    "Überlastschutz",
+    "Der XDDDM0GL sorgt für Sicherheit und Haltbarkeit, indem er Stöße mit bis zu 600 V bewältigt. Diese Funktion verhindert Schäden durch versehentliche Überspannungen und macht es zu einem",
+    "langlebiges Multimeter.",
+    "Ideal sowohl für Profis als auch für Heimwerker.",
+    "Erleben Sie Präzision mit",
+    "AC/DC-Spannungsmessung",
+    "AC/DC-Strommessung",
+    "Widerstandsmessung",
+    "Kapazitätsmessung",
+    "Frequenzmessung",
+    ". Der XDDDM0GL ist ein vielseitiger",
+    "Multimeter",
+    "das ein breites Spektrum an Testanforderungen abdeckt.",
+    "Speziell entwickelt für",
+    "Fernerkennung von Leckagen",
+    "Multimeter mit Leckageerkennung.",
+    "Bietet genaue Messwerte bis zu 0,1 μA. Diese Funktion ist für die Reparatur und Wartung elektronischer Geräte von entscheidender Bedeutung, insbesondere für die Erkennung statischer Lecks in elektronischen Produkten.",
+    "Der XDDDM0GL verfügt über einen",
+    "großen Bildschirm mit hoher Auflösung",
+    "Multimeter mit hochauflösendem Display",
+    "verbessert die Benutzerfreundlichkeit bei verschiedenen Lichtverhältnissen und erleichtert das Arbeiten in Umgebungen mit wenig Licht."
+   ],
    "image": "/images/products/xdddm0gl-digitalmultimeter-mit-ueberlastschutz.jpg"
   },
   "XDKP20GL-Xhorse-Leser-geeignet-fuer-Mercedes-Benz-IR": {
@@ -724,7 +1282,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 31.54,
    "description": [
-    "XDKP20GL Xhorse"
+    "NEUER Xhorse BENZ-IR-Leser XDKP20GL",
+    "geeignet für VVDI Key Tool Plus"
    ],
    "image": "/images/products/xdkp20gl-xhorse-leser-geeignet-fuer-mercedes-benz-ir.jpg"
   },
@@ -738,7 +1297,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 22.61,
    "description": [
-    "XDKP21GL Xhorse"
+    "Xhorse geeignet für Mercedes Benz",
+    "NEC1-Adapter XDKP21GL für VVDI Key Tool Plus"
    ],
    "image": "/images/products/xdkp21gl-xhorse-solder-free-adapter.jpg"
   },
@@ -752,7 +1312,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 22.61,
    "description": [
-    "XDKP22GL Xhorse"
+    "Xhorse geeignet für Mercedes Benz",
+    "NEC2-Adapter XDKP22GL für VVDI Key Tool Plus"
    ],
    "image": "/images/products/xdkp22gl-xhorse-solder-free-adapter.jpg"
   },
@@ -766,7 +1327,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 22.61,
    "description": [
-    "XDKP23GL Xhorse"
+    "Xhorse geeignet für Mercedes Benz",
+    "NEC3-Adapter XDKP23GL für VVDI Key Tool Plus"
    ],
    "image": "/images/products/xdkp23gl-xhorse-solder-free-adapter.jpg"
   },
@@ -779,7 +1341,9 @@
    "articleNumber": "XDKP25",
    "akeyCategory": "Xhorse",
    "price": 23.21,
-   "description": [],
+   "description": [
+    "Falls Ihr Originaladapter defekt oder verloren gegangen ist, ist dieses Produkt der perfekte Ersatz für Ihren alten."
+   ],
    "image": "/images/products/xdkp25-obd-db25-kabel-fuer-vvdi-key-tool-plus.jpg"
   },
   "XDKP26GL-DB15-Kabel": {
@@ -792,7 +1356,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 22.61,
    "description": [
-    "XDKP26GL Xhorse"
+    "Dieser Adapter ermöglicht die Umwandlung eines DB15-Anschlusses in einen Anschluss im Game-Port-Format (15 Pins)."
    ],
    "image": "/images/products/xdkp26gl-db15-kabel.jpg"
   },
@@ -806,7 +1370,9 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 47.6,
    "description": [
-    "Multi Funktions Adapter für Xhorse"
+    "NEU Xhorse Multifunktionsadapter XDKP30GL für VVDI Key Tool Plus",
+    "Xhorse XDKP30GL Multifunktionsadapter BOSH ECU + Benz EZS + EWS4 + Renew 4 in 1 funktioniert mit MINI Prog und Key Tool Plus",
+    "Xhorse XDKP30 Multifunktionsadapter wurde speziell für den Anschluss alter Adapter wie BOSH ECU-Adapter, BENZ EZS-Adapter usw. an KEY TOOL PLUS und MINI PROG entwickelt. Dies könnte dazu beitragen, den Kauf des neuen Zubehörs, das mit KEY TOOL PLUS geliefert wird, zu vermeiden und Ihre alten vollständig zu nutzen."
    ],
    "image": "/images/products/xdkp30gl-multi-funktions-adapter.jpg"
   },
@@ -819,7 +1385,24 @@
    "articleNumber": "XDKP34GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 35.7,
-   "description": [],
+   "description": [
+    "GM",
+    "2020+ Corvette",
+    "2020+ Cadillac CT5",
+    "2020+ Cadillac CTS4",
+    "2021+ Large SUVs",
+    "Ford",
+    "2018+ Expedition/Navigator",
+    "2018+ EcoSport",
+    "2019+ Ranger",
+    "2020+ Transit",
+    "2019+ Transit Connect",
+    "2020+ Explorer/Aviator",
+    "2020+ Super Duty",
+    "2020+ Escape/Corsair",
+    "Artikelgewicht: 0,04",
+    "kg"
+   ],
    "image": "/images/products/xdkp34gl-canfd-adapter.jpg"
   },
   "XDKP36GL-1632-Adapter-geeignet-fuer-Nissan": {
@@ -831,7 +1414,16 @@
    "articleNumber": "XDKP36GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 34.51,
-   "description": [],
+   "description": [
+    "Das Xhorse XDKP36GL Nissan 16+32 Kabel wurde speziell für die Verwendung mit dem VVDI Key Tool Plus entwickelt und eignet sich für den Nissan Sentra (ab Modelljahr 2021) sowie weitere Modelle der 8. Generation mit B18-Fahrgestell.",
+    "Nach einem Update des Key Tool Plus auf die Version V417 ermöglichen das Gerät und das Nissan 16+32 Kabel das Hinzufügen und Anlernen von Schlüsseln über die OBD-Schnittstelle – ganz ohne Eingabe eines Passworts.",
+    "Funktion: Geeignet für Sylphy, Sentra, Renault usw. (Modelle mit B18-Fahrgestell)",
+    "Umgehung des Passworts für das Hinzufügen von Schlüsseln, den Fall „Alle Schlüssel verloren“ (All Key Lost) sowie die HFM-Programmierung.",
+    "Lieferumfang",
+    "1 Stk. X Xhorse 16+ 32 Adapter für Nissan",
+    "Artikelgewicht: 0,04",
+    "kg"
+   ],
    "image": "/images/products/xdkp36gl-1632-adapter-geeignet-fuer-nissan.jpg"
   },
   "XDKP91GL-40-poliges-Gateway-Kabel-geeignet-fuer-Nissan-und-Mitsubishi": {
@@ -844,7 +1436,19 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 41.65,
    "description": [
-    "40-poliges Gateway-Kabel  geeignet für Nissan und Mitsubishi"
+    "Xhorse XDKP91GL 40-Pin Gateway-Kabel für Nissan & Mitsubishi – AKL-Bypass (PIN-Code)",
+    "Kompatibel mit VVDI Key Tool Max Pro und Key Tool Plus",
+    "Unterstützt das Hinzufügen von Schlüsseln sowie den PIN-Code-Bypass bei „Alle Schlüssel verloren“ (AKL)",
+    "Einfache Handhabung, erhöhter Bedienkomfort",
+    "Xhorse XDKP91GL 40-Pin-Anschluss – Unterstützungsliste: J5",
+    "1. Mitsubishi Outlander (2022-)",
+    "2. Nissan SYLPHY (2021-, B18)",
+    "3. Nissan X-TRAIL (2021-, T33)",
+    "4. Nissan PATHFINDER (2022-)",
+    "5. Nissan Ariya (2023-)",
+    "J6",
+    "1. Nissan TEANA (2019-)",
+    "2. Qashqai (2017-)"
    ],
    "image": "/images/products/xdkp91gl-40-poliges-gateway-kabel-geeignet-fuer-nissan-und-mitsubishi.jpg"
   },
@@ -857,7 +1461,20 @@
    "articleNumber": "XDKP92GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 90.44,
-   "description": [],
+   "description": [
+    "Liste der Honda- und Yamaha-Motorräder: Honda Models",
+    "12PIN",
+    "ADV SUPER CUB SH300 2016-2019 FORZA 300 2018-2019 SH125 2016-2019 SH MODE 2016-2019 PCX 2016-2019 SH150 2016-2019 X-ADV 750",
+    "21PIN",
+    "PCX 160",
+    "33PIN",
+    "AIR BLADE 2018-2019 LEAD 125 2017-2019 VARIO 125 2018-2019 BEAT SCOOPY VARIO 150 2018-2019 CLICK 125I 2018-2019 VISION 2018-2019",
+    "Yamaha Models",
+    "12PIN",
+    "AEROX 2018-2019 NMAX GRANF FILANO XMAX NVX 2018-2019 JANUS 2018-2019 QBIX|",
+    "18PIN",
+    "TMAX TMAX DX TMAX SX SPORT TMAX IRON MAX"
+   ],
    "image": "/images/products/xdkp92gl-motorradadapter.jpg"
   },
   "XDKT01EN-Xhorse-VVDI-KEY-TOOL-Remote-Programmier-Kabel": {
@@ -884,7 +1501,10 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 9.52,
    "description": [
-    "Xhorse VVDI Spezial Tool"
+    "Xhorse VVDI Spezial Tool",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
    ],
    "image": "/images/products/xdmb14-en-xhorse-vvdi-oeffnungswerkzeug-ezs.jpg"
   },
@@ -898,7 +1518,10 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 8.93,
    "description": [
-    "VH23 EEPROM & FLASH Lötplatine"
+    "Dies ist die neue Xhorse XDMP03GL EEPROM- & FLASH-Lötplatine, die das Lesen und Schreiben gängiger EEPROM- und FLASH-Chips unterstützt.",
+    "Eigenschaften: EEPROM- und FLASH-Lötadapter",
+    "Kompatibel mit Xhorse Multi Prog",
+    "Unterstützt das Lesen und Schreiben von Daten"
    ],
    "image": "/images/products/xdmp03gl-vh23-eeprom-flash-loetplatine.jpg"
   },
@@ -912,7 +1535,9 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 17.85,
    "description": [
-    "SOP44 & TSOP48 Lötadapter"
+    "Neuer Xhorse XDMP04GL",
+    "SOP44- und TSOP48-Lötadapter für Xhorse Multi-Prog zum Lesen und Schreiben paralleler FLASH-Chips mit SOP44-Paket und TSOP48-Paket, wie",
+    "z.B AM29FXXX, M29FXXX, TB28FXXX series"
    ],
    "image": "/images/products/xdmp04gl-sop44-tsop48-loetadapter-fuer-xhorse-multi-prog.jpg"
   },
@@ -925,7 +1550,11 @@
    "articleNumber": "XDMP05GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 26.78,
-   "description": [],
+   "description": [
+    "2024 Neuer Xhorse XDMP05GL",
+    "VH29 EEPROM- und FLASH-Adapter",
+    "für Multi-Prog-Programmierer"
+   ],
    "image": "/images/products/xdmp05gl-eeprom-und-flash-loetadapter-fuer-xhorse-multi-prog.jpg"
   },
   "XDMP06GL-VH30-SOP44-Loetadapter-fuer-Xhorse-Multi-Prog": {
@@ -938,7 +1567,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 38.08,
    "description": [
-    "VH30 SOP44 Lötadapter für Xhorse"
+    "wie z.B. Am29fxxx, M29fxxx, Tb28fxxx Series"
    ],
    "image": "/images/products/xdmp06gl-vh30-sop44-loetadapter-fuer-xhorse-multi-prog.jpg"
   },
@@ -952,7 +1581,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 34.51,
    "description": [
-    "VH31 TSOP48 Lötadapter"
+    "wie z.B. Sst36vfxxx, At49bvxxx, W19bxxx Series"
    ],
    "image": "/images/products/xdmp07gl-vh31-tsop48-loetadapter-fuer-xhorse-multi-prog.jpg"
   },
@@ -966,7 +1595,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 47.6,
    "description": [
-    "VH36 TSOP56 Adapter"
+    "Unterstützt das Lesen und Schreiben von TSOP56-Parallel-Flash-Chips mithilfe eines Chip-Sockels."
    ],
    "image": "/images/products/xdmp09gl-vh36-tsop56-adapter.jpg"
   },
@@ -980,7 +1609,9 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 24.99,
    "description": [
-    "VH26 PQFP80 Adapter"
+    "Eigenschaften: Unterstützt AM29BDD160G (Bauform: PQFP80)",
+    "Funktioniert mit dem Xhorse Multi Prog",
+    "Unterstützt das Lesen und Schreiben von Daten"
    ],
    "image": "/images/products/xdmp10gl-vh26-pqfp80-adapter.jpg"
   },
@@ -994,7 +1625,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 8.93,
    "description": [
-    "VH43 TQFP64 & ATMEGA Adapter"
+    "Der XDMP11GL-Adapter dient zum Auslesen von ATMEGA-Prozessoren im TQFP64-Gehäuse und ist für die Verwendung mit dem MULTI PROG-Programmiergerät konzipiert.",
+    "Zum direkten Einlöten oder zum Einsetzen in einen ZIF48-Sockel."
    ],
    "image": "/images/products/xdmp11gl-vh43-tqfp64-atmega-adapter.jpg"
   },
@@ -1008,7 +1640,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 8.93,
    "description": [
-    "VH40 MLF28 Adapter"
+    "Der XDMP12GL Adapter dient zum Auslesen von Prozessoren im MLF28-Gehäuse und ist für die Verwendung mit dem MULTI PROG Programmiergerät ausgelegt.",
+    "Zum direkten Einlöten oder zur Verwendung in einem ZIF48-Sockel."
    ],
    "image": "/images/products/xdmp12gl-vh40-mlf28-adapter.jpg"
   },
@@ -1022,7 +1655,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 8.93,
    "description": [
-    "VH41 ATMEGA88PA TQFP32 Adapter"
+    "Der XDMP13GL Adapter dient zum Auslesen von Prozessoren im TQFP32-Gehäuse und ist für die Verwendung mit dem MULTI PROG Programmiergerät ausgelegt.",
+    "Zum direkten Einlöten oder zum Einsetzen in einen ZIF48-Sockel."
    ],
    "image": "/images/products/xdmp13gl-vh41-atmega88pa-tqfp32-adapter.jpg"
   },
@@ -1036,7 +1670,10 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 8.93,
    "description": [
-    "VH42 ATMEGA163 TQFP44 Adapter"
+    "Der XDMP14GLL Adapter dient zum Auslesen von Chips im TQFP44 Gehäuse",
+    "für die Verwendung mit dem   MULTI PROG Programmiergerät konzipiert.",
+    "VH42",
+    "Zum direkten Einlöten oder zum Einsetzen in einen ZIF48-Sockel"
    ],
    "image": "/images/products/xdmp14gl-vh42-atmega163-tqfp44-adapter.jpg"
   },
@@ -1050,7 +1687,9 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 8.93,
    "description": [
-    "VH44 ATMEGA3250 TQFP100 ATMEG Adapter"
+    "Der XDMP15GL Adapter dient zum Auslesen von ATMEGA-integrierten Schaltkreisen im TQFP100 Gehäuse und ist für die Verwendung mit dem MULTI PROG Programmiergerät ausgelegt.",
+    "VH44",
+    "Zum direkten Einlöten oder zum Einsetzen in einen ZIF48-Sockel"
    ],
    "image": "/images/products/xdmp15gl-vh44-atmega3250-tqfp100-atmeg-adapter.jpg"
   },
@@ -1064,7 +1703,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 8.93,
    "description": [
-    "VH46 MC68HC05P18 SOP48/32/28 Adapter"
+    "Der XDMP16GL-Adapter dient zum Auslesen von Chips von SOP8 bis SOP48 und ist für die Verwendung mit dem MULTI PROG-Programmiergerät konzipiert.",
+    "Zum direkten Einlöten oder zum Einsetzen in einen ZIF48-Sockel."
    ],
    "image": "/images/products/xdmp16gl-vh46-mc68hc05p18-sop48-32-28-adapter.jpg"
   },
@@ -1078,7 +1718,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 9.4,
    "description": [
-    "TSOP48 Adapter"
+    "Unterstützt das Löten zum Lesen und Schreiben von TSOP48 Gehäusen und parallelen Geräten wie z. B. der Serien SST36VFXXX, AT49BVXXX und W19BXXX."
    ],
    "image": "/images/products/xdmp17gl-tsop48-adapter.jpg"
   },
@@ -1092,7 +1732,9 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 9.4,
    "description": [
-    "VH47 PLCC32 M29F010B Adapter"
+    "Eigenschaften: Unterstützt M29F010B (Bauform: PLCC32)",
+    "Kompatibel mit Xhorse Multi Prog",
+    "Unterstützt das Lesen und Schreiben von Daten"
    ],
    "image": "/images/products/xdmp18gl-vh47-plcc32-m29f010b-adapter.jpg"
   },
@@ -1106,7 +1748,66 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 952,
    "description": [
-    "Multi-Prog-Programmierer ECU-Programmierer"
+    "Sonstiges (1)",
+    "Die 8 wichtigsten Gründe, sich den ECU-Programmierer Xhorse Multi-Prog Programmer zu besorgen: 1. Integrierte Update-Software: Führen Sie ein zeitnahes Update der Multi-Prog-Firmware durch.",
+    "2. Hochgeschwindigkeits-USB-Kommunikationsschnittstelle: Software automatisch verbinden lassen.",
+    "3. Smart-Betriebsmodus: Mögliche Fehlerursachen werden aufgelistet",
+    "4. Ports reservieren: Für zukünftige Updates.",
+    "5. Selbsttestfunktion: Überprüfen Sie, ob die Maschine gut funktioniert oder nicht.",
+    "6. Stromversorgung: Über ein USB-Kabel zeigt die Software automatisch an, ob eine externe USB-Stromversorgung benötigt wird",
+    "7. Erhalten Sie die kostenlose BMW ISN-Lesefunktion und den kontinuierlichen Update-Service für NEC-, MPC-, Infineon- usw. Chips",
+    "Xhorse Multi-Prog Programmer ECU Programmierer Spezifikationen: Betriebssystem: Linux",
+    "Prozessor: ZYNQ7020 Dual-Core Cortex A9 +FPGA",
+    "Speicher: 256M* 2 DDR+64M NOR FLASH",
+    "Display: 3,5 Zoll",
+    "Eingangsspannung: 15V/4A",
+    "Arbeitsstrom: 300 mA (14 V)",
+    "Arbeitstemperaturen: -20-50℃",
+    "Lagertemperaturen: -30–65 °C",
+    "Externe Schnittstelle: USB/RJ45",
+    "Abmessungen: 233*150*54mm",
+    "Was ist die neue Funktion des Xhorse Multi-Prog Programmer ECU Programmer?",
+    "1. Steuergerät lesen, schreiben und klonen",
+    "BMW B48/ B58 liest ISN",
+    "BMW MSD80/ 81/ 85/ 87/ MSV90",
+    "Mercedes-Benz SIM271",
+    "BMW MSV80",
+    "VW BOSCH MED17 Serie ECUo BMW N13/ N20/ N55/ B38/ TC17X",
+    "Unterstützen Sie Marelli, Siemens, Delphi und andere Steuergerätehersteller",
+    "2. TCU lesen, schreiben und klonen",
+    "Volkswagen Audi Skoda DQ200, DQ250, VL381 TCU usw.",
+    "Porsche DL501 TCU",
+    "Ford Dodge und andere TCU der MPS6-Serie",
+    "BMW DKG, Mercedes-Benz VGS und andere TCU-Modelle",
+    "3. Berechnung und Verarbeitung von Fahrzeugmotordaten",
+    "MED17/EDC17 Datenverarbeitung",
+    "4. Unterstützen Sie die flexible Erweiterung von Plug-Ins von Drittanbietern",
+    "Unterstützen Sie die Entwicklung von Plug-Ins von Drittanbietern und bieten Sie Datenverarbeitungs- und Änderungsdienste an",
+    "5. MCU lesen und schreiben",
+    "Unterstützt das Lesen und Schreiben von MCUs verschiedener Marken, darunter Renesas, Motolora, NXP, Infineon usw.",
+    "Unterstützt das Lesen und Schreiben bestimmter verschlüsselter Chips",
+    "6. Fahrzeug-Immo-Modul lesen und schreiben",
+    "Unterstützt Porsche, LandRover, Mercedes-Benz EZS, VOLVO, VW MQB Armaturenbrett, AUDI BCM2 usw.",
+    "Unterstützte Module einschließlich BMW EWS, CAS1/ CAS2/ CAS3/ CAS4+, FEM BDC usw.",
+    "Unterstützen Sie andere gängige Immo-Module",
+    "Hinweis: Kompatibel mit lötfreien Xhorse-Adaptern und -Kabeln",
+    "7. EEPROM lesen und schreiben",
+    "Unterstützt EEPROM und FLASH",
+    "8. Lesen Sie „Fahrzeug-Dashboard schreiben“.",
+    "Unterstützt das Armaturenbrett von VW, Honda, Hyundai, Kia usw.",
+    "Xhorse Multi Prog ECU- und TCU-Liste (wird ständig aktualisiert)",
+    "ECU (Bench-Modus)",
+    "VAG",
+    "1. SIMOS PCR2.1, EDC17c64",
+    "2. BOSCH: MG1CA811",
+    "3. BOSCH: MED17.1.6, MED17.1.21, MED17.1.61, MED17.5, MED1 7.5.1, MED1 7.5.2, MED1 7.5.5_TC1 766,",
+    "MED1 7.5.5_TC1 767, MED1 7.5.20, MED1 7.5.21, MED1 7.5.25",
+    "4. BOSCH: EDC17C46, EDC17C74, EDC17CP24, EDC17CP44, EDC17CP54, EDC17U01, EDC17U05",
+    "5. BOSCH: MG1CS002一SPC5777, MD1 CP014_TC298TP, MG1 CS001_SPC5777, MG1 CS011 _SPC5777, MG1CS002_TC298TP,",
+    "MD1 CP004_TC298TP, MD1 CP004一SPC5777, MG1 CS111 一SPC5777, MD1 CS004_TC298TP, MG1 CS008_SPC5777, MG1CS008_TC298TP",
+    "6. KONTINENTAL: SIMOS8.3x, SIMOS8.4x, SIMOS8.5x, SIMOS8.6X",
+    "BMW",
+    "1. KONTINENTAL: MSD80, MSV80, MSD81, MSD85, MSD87, MSV90"
    ],
    "image": "/images/products/xdmpg0gl-multi-prog-programmierer-ecu-programmierer-mit-kostenlosem-mqb48.jpg"
   },
@@ -1119,7 +1820,26 @@
    "articleNumber": "XDMPR8GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Zum Lesen der MQB48/MQB49/5C-Armaturenbretter ist es nicht erforderlich, den Draht abzuschneiden oder den Stift anzuheben",
+    "Arbeiten Sie nur mit VVDI Key Tool Plus (MQB48-Lizenz muss aktiviert sein).",
+    "Warum sollten Sie sich für den Xhorse XDMPR8GL MQB RH850 V850 Adapter entscheiden?",
+    "Der Xhorse XDMPR8GL Adapter bietet mehrere wichtige Vorteile: Kfz-Diagnosetool: Erweitern Sie Ihre Diagnosemöglichkeiten mit diesem unverzichtbaren Adapter.",
+    "Schlüsselprogrammieradapter: Perfekt für alle, die sich mit Schlüsselprogrammierung und Fahrzeugsicherheit beschäftigen.",
+    "OBD-Kompatibilität: Lässt sich nahtlos in OBD-Systeme integrieren und ermöglicht so eine umfassende Diagnose.",
+    "Jetzt kaufen: Verpassen Sie nicht die Gelegenheit, Ihr Kfz-Werkzeugset zu erweitern. Bestellen Sie jetzt und erleben Sie den Unterschied.",
+    "Unterstützte Prozessoren: Der Adapter unterstützt eine breite Palette von MCU-Prozessoren, darunter: D70F3426",
+    "D70F3524",
+    "D70F3525",
+    "D70F3526",
+    "D70F3529",
+    "D70F3532",
+    "D70F3537",
+    "R7F701401 (Lesen und Schreiben)",
+    "R7F701402 (Lesen und Schreiben)",
+    "R7F701404 (Lesen)",
+    "R7F701407 (Lesen und Schreiben)"
+   ],
    "image": "/images/products/xdmpr8gl-mqb-rh850-v850-adapter.jpg"
   },
   "XDMQBAGL-MQB48-Adapter": {
@@ -1131,7 +1851,29 @@
    "articleNumber": "XDMQBAGL",
    "akeyCategory": "Transponder",
    "price": 113.05,
-   "description": [],
+   "description": [
+    "Sonstiges (1)",
+    "Bilder (5)",
+    "Xhorse XDMQBAGL MQB48-Adapter für VVDI MLB Tool GL-Version",
+    "Das VVDI MLB Tool erweitert die MQB48 NEC35XX Wegfahrsperren-Datenerfassungsfunktion. Der XHORSE XDMQBAGL MQB-Adapter mit MLB-Ausstattung erfordert keine Demontage des Instruments, sondern nur den Schlüssel. Es müssen lediglich zwei Kabel gelötet werden. Dank der einfachen Bedienung und des geringen Risikos können Schlüssel für die meisten MQB48-Schlüssel hinzugefügt werden.",
+    "Funktionen: Keine Demontage des Instruments erforderlich.",
+    "Einfacheres Lesen der Schlüsseldaten und Hinzufügen von Schlüsseln.",
+    "Für MQB48 sind keine Punkte/Token erforderlich. (KYDZ benötigt Token für MQB48, jeweils 15 $.)",
+    "Funktion: Ähnlich wie MLB: Schlüssel öffnen, Daten lesen und zusätzliche Schlüssel programmieren.",
+    "Dieses neue Tool ist für MQB48 Megamos AES.",
+    "Lesen Sie die Immo-Daten (CS-Code) vom MQB-Schlüssel auf der MQB48-Plattform. So können Sie Schlüssel hinzufügen, ohne das Kombiinstrument auf dem Prüfstand auslesen zu müssen.",
+    "HINWEIS: Laden Sie die Software MLB Tool 2.0.5.0 kostenlos herunter, um Spannungsprobleme in der App zu beheben.",
+    "Wir empfehlen dringend die Verwendung eines PCs. Key Tool Plus funktioniert ebenfalls. Die Berechnung per PC dauert 4 Minuten, während Key Tool Plus mehr als 10 Minuten benötigt.",
+    "Nur für MQB48-Chip. Immo-Daten MQB49/5C können nicht vom Schlüssel abgerufen werden.",
+    "Videoanleitung",
+    "YouTube-Videos zulassen",
+    "Bild 1",
+    "Bild 2",
+    "Bild 3",
+    "https://motokey.co.za/img/cms/Xhorse/XDMQBAGL%20MLB%20MQB48/06.jpg",
+    "Bild 5",
+    "Bild 5"
+   ],
    "image": "/images/products/xdmqbagl-mqb48-adapter.jpg"
   },
   "XDNP10GL-Prog-EEPROM-Adapter": {
@@ -1144,7 +1886,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 22.61,
    "description": [
-    "Prog EEPROM Adapter"
+    "Xhorse Prog EEPROM Adapter XDNP10GL",
+    "für VVDI Key Tool Plus"
    ],
    "image": "/images/products/xdnp10gl-prog-eeprom-adapter.jpg"
   },
@@ -1157,7 +1900,13 @@
    "articleNumber": "XDNP11GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Name: Adapter BMW Cas3 / Cas3 + XDNP11GL zum Arbeiten ohne Löten für Xhorse-Programmierer",
+    "Adapter BMW Cas3 / Cas3 + XDNP11GL  Xhorse zum Programmieren ohne Löten.",
+    "Programmierunterstützung: Xhorse VVDI Key Tool Plus Pad XDKP00EN Programmierer",
+    "Chipprogrammierer Xhorse MINI PROG",
+    "VVDI Prog + DB15-DB25-Kabel"
+   ],
    "image": "/images/products/xdnp11gl-bmw-cas3-cas3-solder-free-adapter.jpg"
   },
   "XDNP12GL-BMW-CAS4-CAS4-Solder-Free-Adapter": {
@@ -1169,7 +1918,13 @@
    "articleNumber": "XDNP12GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Xhorse XDNP12GL wird verwendet, um CAS4/CAS4+-Einheiten für BMW mit lötfreiem Adapter herzustellen.",
+    "BMW CAS4 CAS4+ Lötfreier Adapter",
+    "1 Adapter pro Packung",
+    "PN: XDNP12",
+    "Hersteller: Xhorse"
+   ],
    "image": "/images/products/xdnp12gl-bmw-cas4-cas4-solder-free-adapter.jpg"
   },
   "XDNP14GL-EWS4-Adapter": {
@@ -1182,7 +1937,9 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 47.6,
    "description": [
-    "EWS4 Adapter von Xhorse"
+    "Xhorse XDNP14",
+    "DB15-DB25 EWS4 lötfreier Adapter für BMW",
+    "Arbeitet mit MINI Prog, Key Tool Plus und VVDI Prog"
    ],
    "image": "/images/products/xdnp14gl-ews4-adapter.jpg"
   },
@@ -1195,7 +1952,15 @@
    "articleNumber": "XDNP15GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 8.21,
-   "description": [],
+   "description": [
+    "Die lötfreien Adapter von Xhorse bieten Schlüsseldiensten mehr Komfort und steigern die Effizienz bei der Schlüsselprogrammierung erheblich.",
+    "Da weder eine Demontage noch Lötarbeiten erforderlich sind, sparen diese Adapter bei der täglichen Arbeit viel Zeit.",
+    "1x Xhorse DP15-PS2 Adapter für Key Tool Plus und Mini Prog",
+    "Teilenummer: XDNP15GL",
+    "Hersteller: Xhorse",
+    "Artikelgewicht: 0,04",
+    "kg"
+   ],
    "image": "/images/products/xdnp15gl-dp15-ps2-adapter.jpg"
   },
   "XDNP16GL-Solder-Free-Adapter-geeignet-fuer-Landrover": {
@@ -1207,7 +1972,14 @@
    "articleNumber": "XDNP16GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 129.71,
-   "description": [],
+   "description": [
+    "Xhorse Adapter für MINI PROG und Key Tool PLUS für Programmierung ohne Löten.",
+    "Dieses set enthält adapter für Landrover.",
+    "1 Stück KVM IMMO Adapter für LAND ROVER",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/xdnp16gl-solder-free-adapter-geeignet-fuer-landrover.jpg"
   },
   "XDNP17GL-Solder-Free-Adapter-geeignet-fuer-Porsche": {
@@ -1219,7 +1991,17 @@
    "articleNumber": "XDNP17GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 141.61,
-   "description": [],
+   "description": [
+    "Adapter zum Auslesen des BCM-Moduls geeignet für Porsche (Panamera, Cayenne, Macan ...) ohne Löten mit der Herstellernummer XDNP17GL.",
+    "Der Adapter funktioniert mit KEY TOOL PLUS und MINI PROG",
+    "Der Adapter verwendet Nadeln, die an den Lötpunkten haften, und eine spezielle Halterung an der BCM-Platine",
+    "Der Adapter ist in einem Plastiketui mit einem Schwamm zum Schutz der Nadeln verpackt.",
+    "ohne Löten",
+    "ohne Demontage der Elemente",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/xdnp17gl-solder-free-adapter-geeignet-fuer-porsche.jpg"
   },
   "XDNP18GL-Solder-Free-Adapter-geeignet-fuer-BMW": {
@@ -1231,7 +2013,13 @@
    "articleNumber": "XDNP18GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Xhorse XDNP18 BMW FRM lötfreier Adapter",
+    "Kompatibel mit: MINI Prog",
+    "VVDI-Keytool Plus",
+    "DB15-DB25 Kabel + VVDI Prog",
+    "Xhorse XDNP18 für BMW FRM Anschlussdiagramm"
+   ],
    "image": "/images/products/xdnp18gl-solder-free-adapter-geeignet-fuer-bmw.jpg"
   },
   "XDNP19GL-Solder-Free-Adapter-geeignet-fuer-Honda": {
@@ -1243,7 +2031,14 @@
    "articleNumber": "XDNP19GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Xhorse XDNP19 lötfreier Adapter",
+    "Kompatibel mit: MINI Prog",
+    "VVDI-Keytool Plus",
+    "DB15-DB25 Kabel + VVDI Prog",
+    "Xhorse XDNP19",
+    "Honda MB19F Adapter"
+   ],
    "image": "/images/products/xdnp19gl-solder-free-adapter-geeignet-fuer-honda.jpg"
   },
   "XDNP20GL-Solder-Free-Adapter-geeignet-fuer-Honda": {
@@ -1255,7 +2050,14 @@
    "articleNumber": "XDNP20GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Xhorse XDNP20 lötfreier Adapter",
+    "Kompatibel mit: MINI Prog",
+    "VVDI-Keytool Plus",
+    "DB15-DB25 Kabel + VVDI Prog",
+    "Xhorse XDNP20",
+    "Honda FIT-L MB91F Adapter"
+   ],
    "image": "/images/products/xdnp20gl-solder-free-adapter-geeignet-fuer-honda.jpg"
   },
   "XDNP21GL-12V-5V-Power-Adapter-fuer-VVDI-Key-Tool": {
@@ -1267,7 +2069,9 @@
    "articleNumber": "XDNP22GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
-   "description": [],
+   "description": [
+    "geeignet für VVDI Key Tool"
+   ],
    "image": "/images/products/xdnp21gl-12v-5v-power-adapter-fuer-vvdi-key-tool.jpg"
   },
   "XDNP21GL-Solder-Free-Adapter-geeignet-fuer-Hyundai-Sonata": {
@@ -1279,7 +2083,13 @@
    "articleNumber": "XDNP21GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Xhorse XDNP21 lötfreier Adapter",
+    "Kompatibel mit: MINI Prog",
+    "VVDI-Keytool Plus",
+    "Xhorse XDNP21",
+    "Hyundai Sonata (MB91F Dashboard Adapter)"
+   ],
    "image": "/images/products/xdnp21gl-solder-free-adapter-geeignet-fuer-hyundai-sonata.jpg"
   },
   "XDNP24GL-D80-35080-Adapter": {
@@ -1291,7 +2101,15 @@
    "articleNumber": "XDNP24GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
-   "description": [],
+   "description": [
+    "XDNP24GL Xhorse Mini Prog und Key Tool Plus",
+    "Lötfrei Adapter für D80-35080",
+    "Adapter zum Lesen/Schreiben/Löschen des EEPROM D80/35080 mit der Herstellernummer XDNP24GL.",
+    "Der Adapter funktioniert mit KEY TOOL PLUS und MINI PROG",
+    "ausgestattet mit SOP16-Stecker",
+    "zwei Stellen zum direkten Löten des Eeproms an den Adapter",
+    "dedizierte Stifte für einen externen Anschluss, z. B. einen Clip oder Drähte, um in einem System zu arbeiten"
+   ],
    "image": "/images/products/xdnp24gl-d80-35080-adapter.jpg"
   },
   "XDNP25GL-Dashboard-Adapter-fuer-Kia": {
@@ -1303,7 +2121,13 @@
    "articleNumber": "XDNP25GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
-   "description": [],
+   "description": [
+    "XDNP24GL Xhorse Mini Prog und Key Tool Plus",
+    "Lötfrei Adapter für Kia",
+    "Der Adapter funktioniert mit KEY TOOL PLUS und MINI PROG",
+    "XDNP25",
+    "Kia K3 Adapter"
+   ],
    "image": "/images/products/xdnp25gl-dashboard-adapter-fuer-kia.jpg"
   },
   "XDNP26GL-Dashboard-Adapter-fuer-Kia": {
@@ -1315,7 +2139,13 @@
    "articleNumber": "XDNP26GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
-   "description": [],
+   "description": [
+    "XDNP26GL Xhorse Mini Prog und Key Tool Plus",
+    "Lötfrei Adapter für Kia",
+    "Der Adapter funktioniert mit KEY TOOL PLUS und MINI PROG",
+    "XDNP26",
+    "Kia K5 Adapter"
+   ],
    "image": "/images/products/xdnp26gl-dashboard-adapter-fuer-kia.jpg"
   },
   "XDNP27GL-Solder-Free-Adapter-geeignet-fuer-Volvo": {
@@ -1327,7 +2157,14 @@
    "articleNumber": "XDNP27GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Xhorse XDNP27 lötfreier Adapter",
+    "Kompatibel mit: MINI Prog",
+    "VVDI-Keytool Plus",
+    "DB15-DB25 Kabel + VVDI Prog",
+    "Xhorse XDNP27",
+    "Volvo KVM Adapter"
+   ],
    "image": "/images/products/xdnp27gl-solder-free-adapter-geeignet-fuer-volvo.jpg"
   },
   "XDNP28GL-Solder-Free-Adapter": {
@@ -1339,7 +2176,10 @@
    "articleNumber": "XDNP28GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Mit diesem lötfreien VVDI-Adapter von Xhorse können Sie mühelos komplexe Programmieraufgaben auf Volvo CEM-1-Chips ausführen und so die Leistungsfähigkeit Ihres Xhorse-Programmiertools erweitern.",
+    "Indem Sie die Chipsätze nicht mehr von der Leiterplatte entfernen müssen, können Sie direkt auf den Chipsatz programmieren, ohne Lötkolben oder andere „altmodische“ Werkzeuge, die normalerweise in einem vollständigen Laboraufbau zu finden sind! Jetzt haben Sie die Chance, Ihre Fähigkeiten dorthin zu bringen, wo Ihre Kunden sie am meisten brauchen – wo immer sie sind!"
+   ],
    "image": "/images/products/xdnp28gl-solder-free-adapter.jpg"
   },
   "XDNP29GL-Solder-Free-Adapter": {
@@ -1352,6 +2192,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
    "description": [
+    "Mit diesem lötfreien VVDI-Adapter von Xhorse können Sie mühelos komplexe Programmieraufgaben auf Volvo CEM-2-Chips ausführen und so die Leistungsfähigkeit Ihres Xhorse-Programmiertools erweitern.",
+    "Indem Sie die Chipsätze nicht mehr von der Leiterplatte entfernen müssen, können Sie direkt auf den Chipsatz programmieren, ohne Lötkolben oder andere „altmodische“ Werkzeuge, die normalerweise in einem vollständigen Laboraufbau zu finden sind! Jetzt haben Sie die Chance, Ihre Fähigkeiten dorthin zu bringen, wo Ihre Kunden sie am meisten brauchen – wo immer sie sind!",
     "VOLVO CEM-2 IMMO Adapter"
    ],
    "image": "/images/products/xdnp29gl-solder-free-adapter.jpg"
@@ -1365,7 +2207,12 @@
    "articleNumber": "XDNP33GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 70.21,
-   "description": [],
+   "description": [
+    "Xhorse XDNP33GL Adapter geeignet für BMW N20 B38 N55 ECU",
+    "Interface Board Set 3 stücke (XDNP37 XDNP38 XDNP39)",
+    "für Mini Prog /VVDI Key Tool Plus",
+    "ohne Löten"
+   ],
    "image": "/images/products/xdnp33gl-ecu-interface-board-adapter-set-geeignet-fuer-bmw.jpg"
   },
   "XDNP34-GL-MCU-Kabel-fuer-VVDI-Key-Tool-Plus": {
@@ -1377,7 +2224,13 @@
    "articleNumber": "XDNP34GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 55.93,
-   "description": [],
+   "description": [
+    "Xhorse XDNP34 MCU-Kabel für VVDI Key Tool Plus",
+    "Produktbeschreibung: Das Xhorse XDNP34 MCU-Kabel ist im Lieferumfang des VVDI Key Tool Plus Pad enthalten. Wenn Ihr Originaladapter defekt ist, ist dieses Produkt der perfekte Ersatz für das alte. Bitte beachten Sie, dass das Paket von MINI Prog kein Xhorse XDNP34 MCU-Kabel enthält, wenn Sie Module wie BMW EWS4.x, CAS2/3/4, EWS3, Audi bcm2, Audi j518, Benz EIS usw. lesen möchten, werden Sie dieses Kabel einzeln kaufen müssen.",
+    "Der Hersteller dieses Kabels ist Xhorse und natürlich ist die gute Qualität garantiert.",
+    "Hauptmerkmale des Xhorse XDNP34 MCU-Kabels: Arbeitet mit Xhorse VVDI Key Tool Plus Pad",
+    "Arbeitet mit Xhorse VVDI Mini Prog"
+   ],
    "image": "/images/products/xdnp34-gl-mcu-kabel-fuer-vvdi-key-tool-plus.jpg"
   },
   "XDNP36-9S12xE-Kabel-fuer-VVDI-Key-Tool-Plus": {
@@ -1390,9 +2243,10 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 53.55,
    "description": [
-    "XDNP36 Xhorse",
+    "XDNP36  Xhorse",
     "Lötfreies Adapterpaket Modell",
-    "Für VVDI Key Tool Plus & VVDI Mini Pro"
+    "Für VVDI Key Tool Plus & VVDI Mini Pro",
+    "MINI Prog enthält dieses Kabel nicht, es ist ein optionales Kabel für MINI Prog."
    ],
    "image": "/images/products/xdnp36-9s12xe-kabel-fuer-vvdi-key-tool-plus.jpg"
   },
@@ -1417,7 +2271,12 @@
    "articleNumber": "XDNP41GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 35.7,
-   "description": [],
+   "description": [
+    "Produktbeschreibung",
+    "Xhorse XDNP41 MC68HC05X32 Adapter für VVDI Key Tool Plus und Mini Prog",
+    "Der XDNP41 MC68HC05-Adapter kann verwendet werden, um alte MC68HC05X32-MCUs zu lesen, die bei Mercedes Benz ELV üblich sind.",
+    "Der Adapter kann mit Mini Prog und Key Tool Plus verwendet werden."
+   ],
    "image": "/images/products/xdnp41-mc68hc05x32-adapter.jpg"
   },
   "XDNP45-Adapter-geeignet-fuer-Audi": {
@@ -1429,10 +2288,7 @@
    "articleNumber": "XDNP45",
    "akeyCategory": "XHORSE Zubehör",
    "price": 58.31,
-   "description": [
-    "XHORSE",
-    "Xhorse XDNP45 Adapter geeignet für Audi J518"
-   ],
+   "description": [],
    "image": "/images/products/xdnp45-adapter-geeignet-fuer-audi.jpg"
   },
   "XDNP46GL-MG1CS001-ECU-Adapter": {
@@ -1445,7 +2301,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
    "description": [
-    "MG1CS001 ECU Adapter"
+    "Xhorse XDNP46GL MG1CS001 Steuergeräte Adapter für Mini Prog und VVDI Key Tool Plus"
    ],
    "image": "/images/products/xdnp46gl-mg1cs001-ecu-adapter.jpg"
   },
@@ -1459,7 +2315,7 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
    "description": [
-    "TMS370 Adapter"
+    "Xhorse TMS370 lötfreier Adapter für VVDI Mini PROG, Key Tool Plus"
    ],
    "image": "/images/products/xdnp47gl-tms370-adapter.jpg"
   },
@@ -1473,7 +2329,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
    "description": [
-    "Delphi 48 lötfreier IMMO-Box-Adapter"
+    "Der XHORSE XDNP48GL Delphi 48 IMMO-Box-Adapter dient zur Verbindung des Xhorse Key Tool Plus Tablets mit dem Xhorse VVDI PROG Programmiergerät.",
+    "Mit diesem Produkt lassen sich die Daten der Delphi-IMMO-Box älterer Fahrzeuge auslesen, zudem ermöglicht es das Hinzufügen von Schlüsseln mit 48-Bit-Transponder sowie das Anlernen von Schlüsseln bei Totalverlust (All Keys Lost) für diese Fahrzeugmodelle."
    ],
    "image": "/images/products/xdnp48gl-delphi-48-loetfreier-immo-box-adapter.jpg"
   },
@@ -1487,7 +2344,11 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
    "description": [
-    "Lötfreier Adapter für BMW-Motorsteuergeräte (B48/B58)"
+    "Die lötfreien Adapter von Xhorse bieten Schlüsseldiensten mehr Komfort und steigern die Effizienz bei der Schlüsselprogrammierung erheblich.",
+    "Da weder eine Demontage noch Lötarbeiten erforderlich sind, sparen diese Adapter bei der täglichen Arbeit viel Zeit.",
+    "1x BMW-ECU-Adapter (B48/B58) für Key Tool Plus und Mini Prog",
+    "Artikelnummer: XDNP49GL",
+    "Hersteller: Xhorse"
    ],
    "image": "/images/products/xdnp49gl-loetfreier-adapter-fuer-bmw-motorsteuergeraete-b48-b58.jpg"
   },
@@ -1501,7 +2362,9 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
    "description": [
-    "Lötfreier BMW EWS3-Adapter"
+    "BMW-EWS3 XDNP45GL Adapter für den lötfreien Betrieb mit Mini Prog und VVDI Key Tool Plus",
+    "Xhorse BMW-EWS3 XDNP45GL Adapter für die lötfreie Programmierung.",
+    "Unterstützte Programmiergeräte: Xhorse VVDI Key Tool Plus Pad (XDKP00EN) und Xhorse MINI PROG (XDPPR0EN)."
    ],
    "image": "/images/products/xdnp50gl-loetfreier-bmw-ews3-adapter.jpg"
   },
@@ -1515,7 +2378,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 51.17,
    "description": [
-    "Volvo CEM MPC5748G Adapter"
+    "Xhorse XDNP52 MPC5748G geeignet für Volvo CEM (lötfreie Anwendung)",
+    "Kompatibel mit MINI Prog / Key Tool Plus"
    ],
    "image": "/images/products/xdnp52gl-volvo-cem-mpc5748g-adapter.jpg"
   },
@@ -1529,7 +2393,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 51.17,
    "description": [
-    "VOLVO CEM (MPC5646C) Adapter"
+    "VOLVO CEM (MPC5646C) Adapter geeignet für Volvo CEM (lötfreie Anwendung)",
+    "Kompatibel mit MINI Prog / Key Tool Plus"
    ],
    "image": "/images/products/xdnp53gl-loetfreier-volvo-cem-mpc5646c-adapter.jpg"
   },
@@ -1543,7 +2408,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 34.51,
    "description": [
-    "Lötfreier Adapter für Honda Civic"
+    "Xhorse XDNP54GL Honda Civic lötfreier Adapter",
+    "für Mini Prog und Key Tool Plus"
    ],
    "image": "/images/products/xdnp54gl-loetfreier-adapter-fuer-honda-civic.jpg"
   },
@@ -1557,7 +2423,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
    "description": [
-    "Lötfreier EGS-DQ200-Adapter"
+    "Xhorse XDNP55GL  EGS DQ200-Adapter",
+    "für Mini Prog / Key Tool Plus"
    ],
    "image": "/images/products/xdnp55gl-loetfreier-egs-dq200-adapter.jpg"
   },
@@ -1571,7 +2438,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 39.27,
    "description": [
-    "Lötfreier EGS DL382 Adapter"
+    "Xhorse XDNP56GL EGS DL382 lötfreier Adapter",
+    "für Mini Prog / Key Tool Plus"
    ],
    "image": "/images/products/xdnp56gl-loetfreier-egs-dl382-adapter.jpg"
   },
@@ -1585,7 +2453,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 39.27,
    "description": [
-    "Lötfreier Adapter für Honda"
+    "Xhorse XDNP57GL Honda FIBRE Lötfreier Adapter",
+    "für Mini Prog und Key Tool Plus"
    ],
    "image": "/images/products/xdnp57gl-loetfreier-adapter-fuer-honda.jpg"
   },
@@ -1599,7 +2468,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 39.27,
    "description": [
-    "Lötfreier EGS DL501 Adapter"
+    "Xhorse XDNP58GL EGS DL501 lötfreier Adapter",
+    "für Mini Prog und Key Tool Plus"
    ],
    "image": "/images/products/xdnp58gl-loetfreier-egs-dl501-adapter.jpg"
   },
@@ -1613,7 +2483,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 39.27,
    "description": [
-    "Lötfreier EGS DQ250 Adapter"
+    "Xhorse XDNP59GL EGS DQ250 Adapter",
+    "für Mini Prog / Key Tool Plus"
    ],
    "image": "/images/products/xdnp59gl-loetfreier-egs-dq250-adapter.jpg"
   },
@@ -1627,7 +2498,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 39.27,
    "description": [
-    "Lötfreier EGS VL381 Adapter"
+    "Xhorse XDNP60GL EGS VL381 Adapter",
+    "für Mini Prog / Key Tool Plus"
    ],
    "image": "/images/products/xdnp60gl-loetfreier-egs-vl381-adapter.jpg"
   },
@@ -1641,7 +2513,8 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 28.56,
    "description": [
-    "MC68HC05BX Adapter"
+    "MC68HC05BX Adapter",
+    "In Verbindung mit Multi-PROG oder Key Tool Plus verwendbar; Auslesen der IMMO-Daten ohne Ausbau."
    ],
    "image": "/images/products/xdnp88gl-mc68hc05bx-adapter.jpg"
   },
@@ -1654,7 +2527,34 @@
    "articleNumber": "XDNPBGGL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 83.3,
-   "description": [],
+   "description": [
+    "Sonstiges (1)",
+    "XHORSE XDNPBGGL BMW G Serie BDC2 Adapter Funktion: Mit dem XHORSE Adapter für die BMW G-Serie können Sie Schlüssel im Bench-Modus an das BDC2-Gerät anschließen.",
+    "Der BMW-Adapter unterstützt derzeit weder das Zurücksetzen des Kilometerstands noch den Betrieb bei vollständigem Schlüsselverlust, ist aber ideal für die Verwendung mit einem vorhandenen Schlüssel.",
+    "Kompatibel mit",
+    "VVDI2",
+    "Key Tool Plus Pad",
+    "und",
+    "Key Tool MIDI",
+    "(nur erweiterte Version).",
+    "Aktivierung muss seperat erworben werden",
+    "=>",
+    "BDC2-BMW-G-Lizenz-Aktivierung",
+    "XHORSE XDNPBGGL BMW G Serie BDC2 Adapter Fahrzeugliste: 5er G30 2016.11–2020.06",
+    "5er G31 2017.03–2020.06",
+    "5er G38 2017.05–2020.08",
+    "6er G32 2017.07–2020.06",
+    "7er-Reihe G11/G12 2015.07–2019.02",
+    "X3 F97 2019.04–2021.07",
+    "X3/iX3 G08 2018.05–2021.08",
+    "X3 G01 2017.12–2021.07",
+    "X4 G02 2018.04–2021.07",
+    "X4 F98 2019.04–2021.07",
+    "M5 F90 2017.11–2020.06",
+    "Rolls-Royce 2018-",
+    "How to use",
+    "YouTube-Videos zulassen"
+   ],
    "image": "/images/products/xdnpbggl-bmw-g-bdc2-adapter.jpg"
   },
   "XDNPR8GL-MQB-RH850-V850-Adapter": {
@@ -1666,7 +2566,24 @@
    "articleNumber": "XDNPR8GL",
    "akeyCategory": "XHORSE Zubehör",
    "price": 59.5,
-   "description": [],
+   "description": [
+    "Zum Lesen der MQB48/MQB49/5C-Armaturenbretter ist es nicht erforderlich, den Draht abzuschneiden oder den Stift anzuheben",
+    "Arbeiten Sie nur mit VVDI Key Tool Plus (MQB48-Lizenz muss aktiviert sein).",
+    "Unterstützte Dashboard-Liste",
+    "VW Johnson Controls 34xx-Serie der 4. Generation",
+    "MQB-RH850(R7F)-Serie",
+    "MQB 34xx-Serie",
+    "Unterstützte Prozessoren: D70F3426",
+    "D70F3524",
+    "D70F3525",
+    "D70F3526",
+    "D70F3529",
+    "D70F3532",
+    "D70F3537",
+    "R70F01401",
+    "R70F01402",
+    "R70F01407"
+   ],
    "image": "/images/products/xdnpr8gl-mqb-rh850-v850-adapter.jpg"
   },
   "XDPG11EN-Adapter-Xhorse-M35080-D80": {
@@ -1678,7 +2595,10 @@
    "articleNumber": "XDPG11EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 46.41,
-   "description": [],
+   "description": [
+    "VVDI Prog M35080/D80-Adapter",
+    "V5.1.2 VVDI Prog Funktion hinzufügen D80(ADAPTER), D160(ADAPTER), M350803(ADAPTER), M350806(ADAPTER), M35080V6(ADAPTER),M35080VP(ADAPTER) Optionen in <1-EEPROM&FLASH>->(Benötigt M35080/D80 ADAPTER), diese müssen mit dem M35080 D80-Adapter funktionieren."
+   ],
    "image": "/images/products/xdpg11en-adapter-xhorse-m35080-d80.jpg"
   },
   "XDPG13EN-AM29FXXXB-Adapter-Kit": {
@@ -1703,7 +2623,13 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 41.65,
    "description": [
-    "XDPG14 Xhorse VVDI Prog Adapter"
+    "Xhorse XDPG14CH",
+    "MC68HC05X32 (QFP64)",
+    "Adapter für VVDI PROG Programmierer",
+    "Arbeiten mit dem XHORSE VVDI PROG Programmer",
+    "Chip der Serie MC68HC05X32 (QFP64-Paket) lesen/schreiben.",
+    "Bearbeitbare Typen: OD69J, 1D69J,1H52A, 0G47V",
+    "(Lesen/Schreiben MC68HC05 Serie Mercedes EIS/EZS)"
    ],
    "image": "/images/products/xdpg14-adapter.jpg"
   },
@@ -1717,8 +2643,11 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 41.65,
    "description": [
-    "Adapter XDPG15 Xhorse",
-    "VVDI Prog  für VVDI Programmer Tool Device"
+    "Xhorse VVDI Prog MC68HC05BX (PLCC52)",
+    "Adapter XDPG15 für VVDI Programmer Tool Device",
+    "Lesen/Schreiben MC68HC05BX (PLCC52-Paket)",
+    "Chip der Serie einschließlich 0D60J, 1K20C, 3G96A",
+    "(Lese/Schreib alter Typ Epia BCM)"
    ],
    "image": "/images/products/xdpg15-adapter.jpg"
   },
@@ -1734,7 +2663,9 @@
    "description": [
     "XDPG16 Xhorse TMS370",
     "(PLCC28PLCC44PLCC68)",
-    "Adapter für VVDI Prog Programmierer"
+    "Adapter für VVDI Prog Programmierer",
+    "Hauptfunktion: Lesen/Schreiben Old Jetta (–2009) BCM",
+    "Lesen/Schreiben Opel Sail (–2009) BCM"
    ],
    "image": "/images/products/xdpg16-adapter.jpg"
   },
@@ -1748,9 +2679,18 @@
    "akeyCategory": "Xhorse",
    "price": 45.22,
    "description": [
-    "XDRT20 Frequenztester V2",
-    "unterstützt 315 MHz, 433 MHz, 868 MHz, 902 MHz",
-    "Remote Tester"
+    "Sonstiges (1)",
+    "Xhorse VVDI XDRT20 Frequency Tester V2 Frequenztestbereich: Remote Tester",
+    "315 MHz / 433 MHz / 868 MHz / 902 MHz",
+    "und andere wichtige Frequenzbänder",
+    "IMMO-Signal, Türgriff-Signalerkennung.",
+    "Erkennung von Infrarotsignalen.",
+    "Xhorse VVDI XDRT20 Frequenztester V2 Funktionen: 1.Frequenztester",
+    "2. IMMO-Signal, Türklinkensignalerkennung",
+    "3. Erkennung von Infrarotsignalen",
+    "Intelligente Energieeinsparung, längere Akkulaufzeit, bequemer zu bedienen, exquisit und klein, leichter zu tragen",
+    "unboxing",
+    "YouTube-Videos zulassen"
    ],
    "image": "/images/products/xdrt20en-frequenztester-v2-unterstuetzt-315-mhz-433-mhz-868-mhz-902-mhz.jpg"
   },
@@ -1763,7 +2703,11 @@
    "articleNumber": "XDV207EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 117.81,
-   "description": [],
+   "description": [
+    "Durch die Verwendung des CAS-Steckers können Sie CAN LINE manuell anschließen und 12 V unterstützen.",
+    "Dieser CAS-Stecker wird für die Zusammenarbeit mit VVDI 2 verwendet.",
+    "​"
+   ],
    "image": "/images/products/xdv207en-bmw-cas1-2-3-3-kommunikationskabel.jpg"
   },
   "XHORSE-BDC2-BMW-G-Lizenz-Aktivierung": {
@@ -1775,12 +2719,7 @@
    "articleNumber": "XNRSS353",
    "akeyCategory": "XHORSE Zubehör",
    "price": 35.7,
-   "description": [
-    "Seriennummer",
-    "Seriennummer",
-    "genaue Gerätebezeichnung",
-    "genaue Gerätebezeichnung"
-   ],
+   "description": [],
    "image": "/images/products/xhorse-bdc2-bmw-g-lizenz-aktivierung.jpg"
   },
   "Xhorse-MB-Token-fuer-VVDI-MB-Tool": {
@@ -1793,10 +2732,11 @@
    "akeyCategory": "Xhorse",
    "price": 41.65,
    "description": [
-    "Seriennummer",
-    "Seriennummer",
-    "genaue Gerätebezeichnung",
-    "genaue Gerätebezeichnung"
+    "1 Token, geeignet",
+    "zum Programmieren von MB Schlüsseln",
+    "- für Xhorse Tablet",
+    "- für VVDI MB Tool",
+    "BITTE BEACHTEN SIE: Dies sind nur Token, das Gerät wird separat verkauft"
    ],
    "image": "/images/products/xhorse-mb-token-fuer-vvdi-mb-tool.jpg"
   },
@@ -1811,10 +2751,9 @@
    "price": 452.2,
    "description": [
     "Xhorse MB Token Unlimited Pack für VVDI MB Tool – 1 Jahr",
-    "Seriennummer",
-    "Seriennummer",
-    "genaue Gerätebezeichnung",
-    "genaue Gerätebezeichnung"
+    "- für Xhorse Tablet",
+    "- für VVDI MB Tool",
+    "BITTE BEACHTEN SIE: Dies sind nur Token, das Gerät wird separat verkauft"
    ],
    "image": "/images/products/xhorse-mb-token-fuer-vvdi-mb-tool-fuer-1-jahr.jpg"
   },
@@ -1827,7 +2766,23 @@
    "articleNumber": "XTPMS",
    "akeyCategory": "XHORSE Zubehör",
    "price": 10.59,
-   "description": [],
+   "description": [
+    "Wie kann ich die TPMS-Funktion des VVDI Key Tool Max Pro kostenlos aktualisieren?",
+    "Der Xhorse-Universalsensor ist ein OE-Ersatz mit hervorragender Qualität für die TPMS-Generierung und -Programmierung.",
+    "Mit 6 Funktionen, die Sie in jeder Hinsicht übertreffen.",
+    "Materialien in Automobilqualität und strenge Qualitätskontrolle",
+    "315/433 MHz",
+    "Dual-Frequenz erleichtert die Bestands- und Budgetverwaltung.",
+    "98 % Abdeckung",
+    "Leistungsstarke 98-prozentige Abdeckung des Fahrzeugs mit dem Reifendrucksystem.",
+    "Neuprogrammierbar",
+    "Universell für weltweite Fahrzeuge.",
+    "Winkelverstellbar",
+    "Erfüllen Sie unterschiedliche Anforderungen an die Installation von Radnaben.",
+    "Lange Akkulaufzeit",
+    "Eine zuverlässige",
+    "Batterie hat eine Lebensdauer von 4–6 Jahren."
+   ],
    "image": "/images/products/xhorse-vvdi-key-tool-max-pro-tpms-sensor.jpg"
   },
   "Xhorse-XDMLB0-VVDI-MLB-Tool-zum-Hinzufuegen-von-Schluesseln": {
@@ -1839,7 +2794,37 @@
    "articleNumber": "XDMLB0EN",
    "akeyCategory": "XHORSE Zubehör",
    "price": 236.81,
-   "description": [],
+   "description": [
+    "Xhorse VVDI MLB Tool",
+    "Das Xhorse VVDI MLB Tool ist ein fortschrittliches und leistungsstarkes Werkzeug für VAG MLB Schlüsselprogrammierung, das unübertroffene Bequemlichkeit und Effizienz bietet. Es arbeitet nahtlos mit dem VVDI2 Key Programmer und dem VVDI Key Tool Plus zusammen und bietet eine umfassende Lösung für Schlosser und Automobilprofis.",
+    "Produktbeschreibung",
+    "Das Xhorse XDMLB0 MLB Tool ist speziell für VW Audi Schlüsseladapter konzipiert und kompatibel mit VVDI2 und VVDI Key Tool Plus. Mit diesem Tool ist kein Ausbau des Chips erforderlich, da es die drahtlose Schlüsselgenerierung unterstützt. Das Tool kann sowohl mit Originalschlüsseln als auch mit VVDI MLB Fernbedienungsschlüsseln arbeiten, was es zu einem vielseitigen und unverzichtbaren Werkzeug für jeden Schlosser macht.",
+    "Hauptmerkmale",
+    "VAG MLB Schlüsselprogrammierung: Unterstützt das Hinzufügen von Schlüsseln für eine Vielzahl von VAG MLB Modellen, einschließlich Audi, Porsche, Volkswagen, Lamborghini und Bentley.",
+    "Drahtlose Schlüsselprogrammierung: Ermöglicht die drahtlose Generierung von Originalhändlerschlüsseln und spezialisierten Xhorse-Schlüsseln, was höchste Bequemlichkeit bietet.",
+    "Chip-freie Schlüsselprogrammierung: Kein Ausbau des Chips erforderlich, da die Schlüsseldatenerfassung nur die Zerlegung der Schlüsselhülle erfordert.",
+    "Immo-Detektionstool: Das integrierte Immo-Detektionsmodul unterstützt die drahtlose Schlüsselerkennung und erleichtert die Immo-Detektion.",
+    "Kompatibilität mit Originalschlüsseln: Unterstützt brandneue Originalschlüssel (nicht initialisiert/initialisiert) und VVDI MLB spezialisierte Schlüssel für eine unbegrenzte Wiederverwendung.",
+    "Schlüssel-ID-Umschreibung: Unterstützt die Umschreibung nicht initialisierter Originalschlüssel-IDs.",
+    "Fernbediente Immo-Datensammlung: Sammelt Schlüsseldaten, lädt sie zur Berechnung hoch und erhält Immo-Daten, ohne auf das Fahrzeug zugreifen zu müssen.",
+    "Software-Updates: Online-Software-Updates verfügbar, aktuelle Version: 1.0.3.0.",
+    "Betriebssystemkompatibilität: Kompatibel mit Windows 10 und Windows 11.",
+    "Technische Spezifikationen und Vorteile",
+    "Das Xhorse VVDI MLB Tool wurde entwickelt, um eine erstklassige Leistung und Zuverlässigkeit für die automatische Schlüsselprogrammierung zu bieten. Hier sind die technischen Spezifikationen und Vorteile: Technische Spezifikationen",
+    "Produktname: Xhorse VVDI MLB Tool",
+    "Modell: XDMLB0",
+    "Kompatibilität: VVDI2, VVDI Key Tool Plus",
+    "Software-Version: 1.0.3.0",
+    "Betriebssystem: Windows 10, Windows 11",
+    "Drahtlose Schlüsselgenerierung: Ja",
+    "Chip-Entfernung erforderlich: Nein",
+    "Vorteile",
+    "Erhöhte Effizienz: Das Tool unterstützt drahtlose Schlüsselprogrammierung, eliminiert die Notwendigkeit für Chip-Entfernung und bietet eine nahtlose Erfahrung.",
+    "Umfassende Fahrzeugabdeckung: Unterstützt Schlüsselprogrammierung für eine Vielzahl von Fahrzeugen, einschließlich hochwertiger Marken wie Audi, Porsche, Volkswagen, Lamborghini und Bentley.",
+    "Kosteneffizient: Keine Punkte erforderlich bei Verwendung von VVDI MLB spezialisierten Schlüsseln, was die Betriebskosten für Schlosser reduziert.",
+    "Benutzerfreundliche Oberfläche: Das Tool ist mit einer intuitiven Benutzeroberfläche ausgestattet, die es Benutzern erleichtert, Aufgaben zur Schlüsselprogrammierung effizient auszuführen.",
+    "Zuverlässige Leistung: Hergestellt mit hochwertigen Komponenten und fortschrittlicher Technologie, um eine zuverlässige und konsistente Leistung zu gewährleisten."
+   ],
    "image": "/images/products/xhorse-xdmlb0-vvdi-mlb-tool-zum-hinzufuegen-von-schluesseln.jpg"
   },
   "Xhorse-XDMLBP-Loetfreies-Adapterkit-VVDI-MLB-Werkzeug": {
@@ -1852,7 +2837,14 @@
    "akeyCategory": "XHORSE Zubehör",
    "price": 64.26,
    "description": [
-    "Lötfreies Adapterkit für Xhorse XDMLBPGL VVDI MLB-Werkzeug"
+    "Lötfreies Adapterkit für Xhorse XDMLBPGL VVDI MLB-Werkzeug",
+    "Schlüssel für MLB-Modelle ganz einfach hinzufügen",
+    "Arbeiten mit erhöhter Sicherheit (zwei Kondensatoren müssen entfernt werden)",
+    "Typ 1 Unterstützte Modelle: Audi Lamborghini",
+    "Typ 2 Unterstützte Modelle: Audi Lamborghini",
+    "Typ 3 Unterstützte Modelle: Audi Bentley",
+    "Typ 4 Unterstützte Modelle: Porsche",
+    "Typ 5 Unterstützte Modelle: Volkswagen Touareg"
    ],
    "image": "/images/products/xhorse-xdmlbp-loetfreies-adapterkit-vvdi-mlb-werkzeug.jpg"
   },
@@ -1865,7 +2857,22 @@
    "articleNumber": "ZFPH-FDC",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 333.2,
-   "description": [],
+   "description": [
+    "ZFPH-FDC",
+    "ZED-FULL PLUS Adapter zum Auslesen von PIN-Codes auf Magneti Marelli BSI nach 2021",
+    "Der Adapter ZFPH-FDC ist für die Verwendung mit der ZED-FULL PLUS konzipiert, um Wegfahrsperrendaten und PIN-Codes bei bestimmten neueren Fahrzeugen mit Magneti Marelli BSI ab 2021 auszulesen.",
+    "Er ermöglicht Arbeiten an Fahrzeugen der FIAT-Plattform, insbesondere für Vorkodierungsprozesse von Schlüsseln und Fernbedienungen im Rahmen professioneller Programmierarbeiten.",
+    "Hauptanwendung: Auslesen von Wegfahrsperrendaten / PIN-Code auf Magneti Marelli BSI ab 2021 mit ZED-FULL PLUS.",
+    "geeinet für folgende Fahrzeuge: FIAT Ducato 3",
+    "PEUGEOT Boxer 3",
+    "CITROËN Relay 3",
+    "CITROËN Jumper 3",
+    "OPEL Movano 2021+",
+    "DODGE Ram ProMaster 2021+",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/fiat-ducato-mcu-lesemodul.jpg"
   },
   "MIFARE1356Mhz-Classic1K-Karte-UID-beschreibbar": {
@@ -1889,7 +2896,12 @@
    "articleNumber": "1322",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 17.73,
-   "description": [],
+   "description": [
+    "Hohe Qualität und langlebig",
+    "Getestet vor dem Versand",
+    "Programmierer (1,27 Pitch) und alle SOP8 schmale Chips",
+    "Unterstützung Chips: 24CXX, 93CXX, 25 Serie und alle SOP8 schmale Chips"
+   ],
    "image": "/images/products/programmierer-127-pitch-alle-sop8.jpg"
   },
   "RFID-TAG-TAG103": {
@@ -1902,7 +2914,9 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 2.37,
    "description": [
-    "RFID TAG"
+    "RFID TAG",
+    "TAG103",
+    "blau"
    ],
    "image": "/images/products/rfid-tag-tag103.jpg"
   },
@@ -1916,7 +2930,7 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 2.37,
    "description": [
-    "RFID TAG"
+    "RFID TAG 104 grau"
    ],
    "image": "/images/products/rfid-tag-tag104.jpg"
   },
@@ -1930,7 +2944,9 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 3.56,
    "description": [
-    "RFID TAG"
+    "RFID TAG108",
+    "MIFARE,13,56Mhz",
+    "Classic1K-UID writable tag+125Khz 13 Megamos Clone Tag"
    ],
    "image": "/images/products/rfid-tag-tag108.jpg"
   },
@@ -1943,7 +2959,15 @@
    "articleNumber": "1321",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 17.73,
-   "description": [],
+   "description": [
+    "Eigenschaften: Dieser Artikel für sop8-Chips wie 25*, 24c, 93c* usw.",
+    "Es kann für den Online-In-Circuit-Sop8-Dip8-Adapter verwendet werden, es dient zum Programmieren eines auf die Platine gelöteten Sop8-Chips, kann den Sop8-Chip online programmieren, es ist nicht erforderlich, den Chip von der Platine zu nehmen, um Menschen zu retten Verwendung mit Zed-full ZFH-EA1 Adapter.",
+    "Eigenschaften: TESTCLIP, SOIC 8 / SOP8",
+    "Steckertyp: Testclip",
+    "Pin-Format: SOIC / SOP",
+    "Paket: ein Clip",
+    "ein Kabel + Adapterkarte"
+   ],
    "image": "/images/products/soic8-sop8-test-clip-fuer-eeprom.jpg"
   },
   "Volvo-PinCode-Berechnungsmodul-fuer-Zed-FULL-plus": {
@@ -1955,7 +2979,14 @@
    "articleNumber": "ZFPH-VCA",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 178.5,
-   "description": [],
+   "description": [
+    "Sonstiges (1)",
+    "Volvo PinCode-Berechnungsmodul für Zed-FULL plus",
+    "Nicht geeignet für die alte Zed-Full",
+    "Bitte sehen sie sich das Video zur Erläuterung an.",
+    "How to use",
+    "Step by Step Anleitung"
+   ],
    "image": "/images/products/volvo-pincode-berechnungsmodul-fuer-zed-full-plus.jpg"
   },
   "Zed-FULL-credits-Token": {
@@ -1968,9 +2999,13 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 0.71,
    "description": [
+    "Bilder (3)",
     "Zed FULL credits",
-    "Seriennummer",
-    "Seriennummer"
+    "!!! Bitte Seriennummer mitteilen !!! Sonst ist eine Zuordnung nicht möglich",
+    "Anleitung zur Übertragung der Token vom Computer/Laptop auf das Gerät",
+    "Anleitung ZedFull plus - Token laden - Step 1",
+    "Anleitung ZedFull plus - Token laden - Step 2",
+    "Anleitung ZedFull plus - Token laden - Step 3"
    ],
    "image": "/images/products/zed-full-credits-token.jpg"
   },
@@ -1984,9 +3019,7 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 952,
    "description": [
-    "Zed FULL Jahreslift Bitte Laufzeit und Seriennummer eingeben",
-    "Seriennummer",
-    "Seriennummer"
+    "Zed FULL Jahreslift Bitte Laufzeit und Seriennummer eingeben"
    ],
    "image": "/images/products/zed-full-year-lifs-jahresupdate-fuer-schluesselkopiermaschine.jpg"
   },
@@ -2039,10 +3072,7 @@
    "articleNumber": "ZFH-C03",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 53.55,
-   "description": [
-    "IEA",
-    "ZFH-C03 Motorbike Cabel"
-   ],
+   "description": [],
    "image": "/images/products/zfh-c03-motorbike-cabel.jpg"
   },
   "ZFH-C04-BMW-Case-Cabel": {
@@ -2054,9 +3084,7 @@
    "articleNumber": "ZFH-C04",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 65.45,
-   "description": [
-    "HU133R Notschlüssel"
-   ],
+   "description": [],
    "image": "/images/products/zfh-c04-bmw-case-cabel.jpg"
   },
   "ZFH-C05-CIRCUIT-KABEL-kompatibel-fuer-VW-PASSAT-Zed-FULL": {
@@ -2095,7 +3123,10 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 38.08,
    "description": [
-    "ZFH-C08 Universal 20 Pin"
+    "ZFH-C08 Universal 20 Pin Cable for eeprom application",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
    ],
    "image": "/images/products/zfh-c08-2-universal-20-pin-cable-for-eeprom-application.jpg"
   },
@@ -2108,7 +3139,13 @@
    "articleNumber": "ZFH-C09P",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 190.4,
-   "description": [],
+   "description": [
+    "Bilder (2)",
+    "ZFH-C09P Universal OBD2-Dongle Cable",
+    "Revision ZFH-C09P",
+    "Die Revision des ZFH-C09-P-Kabels wurde durchgeführt, um die korrekte und vollständige Durchführung des PIN-CODE-Lesevorgangs (Schlüsselverlust-Steuergerät) insbesondere für PEUGEOT- und CITROËN-Fahrzeuge zu gewährleisten.",
+    "Revision 2"
+   ],
    "image": "/images/products/zfh-c09p-universal-obd2-dongle-cable.jpg"
   },
   "ZFH-C14-AUTOBATTERIEKABEL-12-DC-Volt-Versorgung-fuer-DAF-LKW-Zed-FULL": {
@@ -2146,9 +3183,7 @@
    "articleNumber": "ZFH-C18",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 178.5,
-   "description": [
-    "ZFH-C18"
-   ],
+   "description": [],
    "image": "/images/products/zfh-c18-chrysler-2018-dasboard-and-star-connector-cable.jpg"
   },
   "ZFH-DONGEL-1-HOLDEN-COMMODORE-DONGLE": {
@@ -2161,7 +3196,7 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 58.49,
    "description": [
-    "HU133R Notschlüssel"
+    "ZFH-DONGEL-1"
    ],
    "image": "/images/products/zfh-dongel-1-holden-commodore-dongle.jpg"
   },
@@ -2189,7 +3224,7 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 47.6,
    "description": [
-    "EA10 für Zed-FULL Anwendungen: 08AZ/AB-908AS/AZMCU PCBADAPTER QFP 64 Pins Motorola MCU (PCB Board) Mercedes"
+    "EA10 für Zed-FULL Anwendungen: 08AZ/AB-908AS/AZMCUPCBADAPTER QFP 64 Pins Motorola MCU (PCB Board) Mercedes"
    ],
    "image": "/images/products/zfh-ea10-08az-ab-908as-az-mcu-pcb-adapter-zed-full.jpg"
   },
@@ -2203,7 +3238,10 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 41.06,
    "description": [
-    "EA11 für Zed-FULL Anwendungen: 05B/X MCU PCB ADAPTER QFP 64 PINS Motorola MCU (PCB Board)"
+    "EA11 für Zed-FULL Anwendungen: 05B/X MCU PCB ADAPTER QFP 64 PINS Motorola MCU (PCB Board)",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
    ],
    "image": "/images/products/zfh-ea11-05b-x-mcu-pcb-adapter-zed-full.jpg"
   },
@@ -2217,7 +3255,10 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 119,
    "description": [
-    "EA12 für Zed-FULL Anwendungen: 05B/XMCU ADAPTER mit Test-Clip QFP64 Pins Motorola MCU Mercedes Benz"
+    "EA12 für Zed-FULL Anwendungen: 05B/XMCU ADAPTER mit Test-Clip QFP64 Pins Motorola MCU ?Mercedes Benz",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
    ],
    "image": "/images/products/zfh-ea12-zed-full.jpg"
   },
@@ -2231,7 +3272,10 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 47.6,
    "description": [
-    "EA2 für Zed-FULL Anwendungen: 64 PINS MCU ADAPTER"
+    "EA2 für Zed-FULL Anwendungen: ?64 PINS MCU ADAPTER",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
    ],
    "image": "/images/products/zfh-ea2-64-pins-mcu-adapter-zed-full.jpg"
   },
@@ -2244,7 +3288,9 @@
    "articleNumber": "ZFH-EA3",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 238,
-   "description": [],
+   "description": [
+    "Zed-FULL BMW EWS3 ADAPTER FOR 52 PINS PLCC MCU"
+   ],
    "image": "/images/products/zfh-ea3-bmw-ews3-test-clip.jpg"
   },
   "ZFH-EA5-705B-PCB-ADAPTER-Zed-FULL": {
@@ -2271,7 +3317,7 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 23.21,
    "description": [
-    "EA6 für Zed-FULL Anwendungen: Eeprom ADAPTER für 05E6 / 05P3 MCU 28 Pins MCU PCB"
+    "EA6 für Zed-FULL Anwendungen: Eeprom ADAPTER für05E6 / 05P3 MCU 28 Pins MCU PCB"
    ],
    "image": "/images/products/zfh-ea6-05e6-05p3-mcu-eeprom-adapter-zed-full.jpg"
   },
@@ -2285,7 +3331,7 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 94.01,
    "description": [
-    "EA7 (REV1) für Zed-FULL Anwendungen: Eeprom Adapter für9S12 MCU"
+    "EA7 (REV1) für Zed-FULL Anwendungen: BMW EWS PCB Adapter 52 Pins MCU PCB Adapter für 11EA9 MCU"
    ],
    "image": "/images/products/zfh-ea7-rev1-eeprom-adapter-zed-full.jpg"
   },
@@ -2327,7 +3373,7 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 37.49,
    "description": [
-    "HU133R Notschlüssel"
+    "ZFH-USB Kabel"
    ],
    "image": "/images/products/zfh-eic-schaltkreisleserkabel.jpg"
   },
@@ -2355,7 +3401,8 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 58.91,
    "description": [
-    "ZFH-EWS-2 - ADAPTER"
+    "ZFH-EWS-2 -  ADAPTER",
+    "ADAPTER VIA SOCKET für Zed-Full & Plus"
    ],
    "image": "/images/products/zfh-ews3-2-adapter-zed-full-plus.jpg"
   },
@@ -2368,7 +3415,18 @@
    "articleNumber": "1489",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 236.81,
-   "description": [],
+   "description": [
+    "geeignet",
+    "Für Mercedes Benz Schlüsselprogrammieranwendungen",
+    "bestehend aus: ZFH-MBCA",
+    "ZFH-MBC1",
+    "ZFH-MBC2",
+    "ZFH-MBC3",
+    "ZFH-MBC4",
+    "ZFH-MBC5",
+    "Bei Programmiervorgängen erfolgt die Schlüsselprogrammierung durch Entfernen von EZS/EIS-Boxen.",
+    "Boxablesung geeignet für EZS/EIS-Einheiten, die wir für spezielle Situationen entwickelt haben"
+   ],
    "image": "/images/products/zfh-mbc-set.jpg"
   },
   "ZFH-PCF79XX-RECYCLING-ADAPTER-Zed-FULL": {
@@ -2393,7 +3451,9 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 7.79,
    "description": [
-    "HU133R Notschlüssel"
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
    ],
    "image": "/images/products/zfh-usb-kabel.jpg"
   },
@@ -2407,8 +3467,10 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 119,
    "description": [
-    "für neue Zed-Full Plus",
-    "incl. Anschlusskabel ZFH-C15"
+    "ZFH-UTE 2",
+    "Universal Transponder Emulator",
+    "incl. Anschlusskabel ZFH-C15",
+    "für neue Zed-Full Plus"
    ],
    "image": "/images/products/zfh-ute-2-universal-transponder-emulator-zed-full.jpg"
   },
@@ -2433,7 +3495,11 @@
    "articleNumber": "ZFHC-HKRP",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 47.6,
-   "description": [],
+   "description": [
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/zfhc-hkrp-zed-full-hyu-kia-fernbedienungskabel.jpg"
   },
   "ZFHC-OBD2-OBD-Kabel-fuer-ZedFull": {
@@ -2446,7 +3512,7 @@
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 119,
    "description": [
-    "ZFHC-OBD2 - OBD Kabel"
+    "OBD Kabel für ZedFull"
    ],
    "image": "/images/products/zfhc-obd2-obd-kabel-fuer-zedfull.jpg"
   },
@@ -2459,7 +3525,36 @@
    "articleNumber": "ZFPH-MQBX",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 297.5,
-   "description": [],
+   "description": [
+    "PDF (1)",
+    "Verbessertes VAG MQB CLUSTER V850 MCU-Lesemodul",
+    "(Softwareaktivierungspaket erforderlich)",
+    "Wir sind uns bewusst, dass es bisher unmöglich war, PIN- und CS-Codes auf",
+    "Johnson Control- und VDO MQBX-Clustern zu lesen. Unser neu entwickeltes",
+    "ZFPH-MQBX-Kabel löst diese Probleme jedoch. IEA bietet die Möglichkeit, PIN- und",
+    "CS-Codes einfacher zu lesen. Lesbare Clustertypen: • V850 D70F3529 JC ANALOG",
+    "• V850 D70F3525 VD ANALOG",
+    "• V850 D70F3526 VD ANALOG",
+    "• V850 D70F3532 VD ANALOG",
+    "• V850 D70F3525 VD DIGITAL",
+    "• V850 D70F3526 VD DIGITAL",
+    "• RH850 D70F3426 JC ANALOG",
+    "• RH850 R70F1402 VD ANALOG",
+    "• RH850 R70F1401 VD DIGITAL",
+    "Hinweis: • Bei Clustern vom Prozessortyp V850 muss der",
+    "Kondensator nicht entfernt werden.",
+    "• Bei Clustern vom Typ RH850 können Sie lesen, indem Sie den Kondensator entfernen.",
+    "Um diesen Vorgang durchzuführen, muss zuerst das Cluster des Fahrzeugs entfernt werden.",
+    "Nach dem Entfernen des Clusters müssen Sie die entsprechenden Farben des",
+    "ZFPH-MQB-Kabels an die entsprechenden Stellen auf der Clusterplatine löten.",
+    "Sie finden",
+    "die Stellen auf dem Zed-FULL plus-Bildschirm, die auf der Platine gelötet werden müssen, im",
+    "Abschnitt „Tipps und Hinweise“ des jeweiligen Fahrzeugmenüs oder indem Sie den QR-Code im",
+    "Menü mit Ihrem Telefon scannen, um auf die entsprechenden Dokumente zuzugreifen. Als Ergebnis dieses",
+    "Vorgangs können Sie nun die PIN- und CS-Codes erfolgreich lesen.",
+    "Anleitung",
+    "Anleitung"
+   ],
    "image": "/images/products/zfph-mqbx-adapter.jpg"
   },
   "ZFPH-RH850-MCU-Reader-Module": {
@@ -2471,11 +3566,17 @@
    "articleNumber": "ZFPH-RH850",
    "akeyCategory": "Zed-FULL Zubehör",
    "price": 189.21,
-   "description": [],
+   "description": [
+    "Renault Clio5-Megane4 (Ph2)- Captur-Sandero",
+    "RH850 MCU Reader Module",
+    "Benachrichtigen, wenn verfügbar",
+    "Additional contact mail (leave blank)*",
+    "I totally agree to receive nothing*"
+   ],
    "image": "/images/products/zfph-rh850-mcu-reader-module.jpg"
   }
  },
- "scrapedAt": "2026-09-04T13:51:01.904Z",
+ "scrapedAt": "2026-09-04T14:13:33.277Z",
  "report": [
   {
    "section": "Autel-Zubehoer",
