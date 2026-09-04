@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { useSearchParams, usePathname } from 'next/navigation';
 import styles from './CatalogFilters.module.css';
 import type { FacetKey, FacetOption } from '@/lib/catalog';
 
@@ -51,7 +52,6 @@ export default function CatalogFilters({
   order = ['make', 'category', 'subcategory', 'buttons', 'frequency', 'chip', 'blade', 'condition', 'manufacturer'],
   resultCount,
 }: Props) {
-  const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
 
@@ -77,22 +77,27 @@ export default function CatalogFilters({
 
   const activeCount = Object.keys(active).length;
 
-  const setFilter = useCallback(
+  /**
+   * The URL this option leads to — the current query with one facet added,
+   * changed or removed.
+   *
+   * Filters are links now, not checkboxes with an onChange. A checkbox needs
+   * JavaScript to have loaded and hydrated before it does anything; a link is
+   * a link the moment the HTML arrives, so the catalogue can be filtered on a
+   * slow phone, on a flaky connection, and by a crawler. It also makes a
+   * filtered view something you can send to someone.
+   */
+  const hrefFor = useCallback(
     (key: string, value: string | null) => {
       const next = new URLSearchParams(params.toString());
       if (value === null || next.get(key) === value) next.delete(key);
       else next.set(key, value);
-      // Any filter change invalidates the page cursor.
-      next.delete('page');
+      next.delete('page'); // any filter change invalidates the page cursor
       const qs = next.toString();
-      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      return qs ? `${pathname}?${qs}` : pathname;
     },
-    [params, pathname, router]
+    [params, pathname]
   );
-
-  const clearAll = useCallback(() => {
-    router.replace(pathname, { scroll: false });
-  }, [pathname, router]);
 
   // The page behind a full-screen drawer must not scroll with it.
   useEffect(() => {
@@ -120,13 +125,22 @@ export default function CatalogFilters({
 
   return (
     <>
-      {/* Mobile only — the button that opens the drawer. */}
-      <button
-        type="button"
-        className="shop-filter-open"
-        onClick={() => setDrawerOpen(true)}
-        aria-expanded={drawerOpen}
-      >
+      {/*
+        The drawer is opened by a checkbox, not by React state: a <button> does
+        nothing until the page has hydrated, and on a phone that leaves the only
+        way to filter 923 products dead while every link around it works. The
+        state below only mirrors it, for Escape and the scroll lock.
+      */}
+      <input
+        type="checkbox"
+        id="shop-filter-toggle"
+        className="shop-filter-toggle"
+        checked={drawerOpen}
+        onChange={(e) => setDrawerOpen(e.target.checked)}
+        aria-label="Filters openen"
+      />
+
+      <label className="shop-filter-open" htmlFor="shop-filter-toggle">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <line x1="4" y1="6" x2="20" y2="6" />
           <line x1="7" y1="12" x2="17" y2="12" />
@@ -135,24 +149,14 @@ export default function CatalogFilters({
         Filters
         {activeCount > 0 && <span className="shop-filter-badge">{activeCount}</span>}
         <span className="shop-filter-open-count">{resultCount} producten</span>
-      </button>
+      </label>
 
-      {drawerOpen && (
-        <button
-          type="button"
-          className="shop-filter-scrim"
-          aria-label="Filters sluiten"
-          onClick={() => setDrawerOpen(false)}
-        />
-      )}
+      <label className="shop-filter-scrim" htmlFor="shop-filter-toggle" aria-hidden="true" />
 
-    <aside
-      className={`${styles.root} shop-filter-panel${drawerOpen ? ' is-open' : ''}`}
-      aria-label="Filters"
-    >
+    <aside className={`${styles.root} shop-filter-panel`} aria-label="Filters">
       <div className="shop-filter-bar">
         <strong>Filters</strong>
-        <button type="button" onClick={() => setDrawerOpen(false)} aria-label="Sluiten">✕</button>
+        <label className="shop-filter-close" htmlFor="shop-filter-toggle" aria-label="Filters sluiten">✕</label>
       </div>
 
       <div className={styles.head}>
@@ -160,9 +164,9 @@ export default function CatalogFilters({
           <strong>{resultCount}</strong> {resultCount === 1 ? 'product' : 'producten'}
         </span>
         {activeCount > 0 && (
-          <button type="button" className={styles.clear} onClick={clearAll}>
+          <Link href={pathname} scroll={false} className={styles.clear}>
             Wis alles ({activeCount})
-          </button>
+          </Link>
         )}
       </div>
 
@@ -171,16 +175,16 @@ export default function CatalogFilters({
           {Object.entries(active).map(([k, v]) => {
             const opt = facets[k]?.find((o) => o.value.toLowerCase() === v.toLowerCase());
             return (
-              <button
+              <Link
                 key={k}
-                type="button"
+                href={hrefFor(k, null)}
+                scroll={false}
                 className={styles.chip}
-                onClick={() => setFilter(k, null)}
                 aria-label={`${GROUP_TITLES[k as FacetKey]} filter verwijderen`}
               >
                 {opt?.label ?? v}
                 <span aria-hidden="true">×</span>
-              </button>
+              </Link>
             );
           })}
         </div>
@@ -213,15 +217,19 @@ export default function CatalogFilters({
                     const checked = active[key]?.toLowerCase() === o.value.toLowerCase();
                     return (
                       <li key={o.value}>
-                        <label className={`${styles.opt} ${checked ? styles.optOn : ''}`}>
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => setFilter(key, o.value)}
-                          />
+                        <Link
+                          href={hrefFor(key, o.value)}
+                          scroll={false}
+                          className={`${styles.opt} ${checked ? styles.optOn : ''}`}
+                          aria-pressed={checked}
+                        >
+                          {/* Looks like a checkbox, behaves like a link. */}
+                          <span className={styles.optBox} aria-hidden="true">
+                            {checked ? '✓' : ''}
+                          </span>
                           <span className={styles.optLabel}>{o.label}</span>
                           <span className={styles.optCount}>{o.count}</span>
-                        </label>
+                        </Link>
                       </li>
                     );
                   })}
@@ -250,9 +258,9 @@ export default function CatalogFilters({
 
       {/* The way out of the drawer, with the number it will show. */}
       <div className="shop-filter-apply">
-        <button type="button" onClick={() => setDrawerOpen(false)}>
+        <label htmlFor="shop-filter-toggle">
           Toon {resultCount} {resultCount === 1 ? 'product' : 'producten'}
-        </button>
+        </label>
       </div>
     </aside>
     </>

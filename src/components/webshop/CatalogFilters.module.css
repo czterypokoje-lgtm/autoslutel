@@ -97,13 +97,25 @@
 .opt:hover { background: #f6f8fa; }
 .optOn { background: #fdf0ec; }
 
-.opt input {
+.opt { text-decoration: none; color: inherit; }
+
+/* Looks like a checkbox; it is the link's own box, so it works before the
+   JavaScript has loaded. */
+.optBox {
   width: 17px;
   height: 17px;
   flex: 0 0 auto;
-  accent-color: #b93c20;
-  cursor: pointer;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  color: #fff;
 }
+.optOn .optBox { background: #b93c20; border-color: #b93c20; }
 
 .optLabel { flex: 1; min-width: 0; font-size: 0.88rem; }
 .optOn .optLabel { font-weight: 600; }
@@ -128,7 +140,7 @@
 }
 .more:hover { color: #b93c20; }
 
-.opt input:focus-visible,
+.opt:focus-visible,
 .clear:focus-visible,
 .chip:focus-visible,
 .more:focus-visible,

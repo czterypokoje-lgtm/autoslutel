@@ -57,6 +57,23 @@ export default function WebshopNavigation() {
 
   return (
     <header style={{ width: '100%', fontFamily: 'var(--font-sans)', zIndex: 50, position: 'relative' }} onMouseLeave={() => setShowBrandMenu(false)}>
+      {/*
+        The menu drawer is opened by a checkbox, not by React state.
+
+        A <button onClick> does nothing until the page has hydrated, and on a
+        phone on a slow connection — or when hydration fails outright — that
+        leaves the only navigation on the screen dead while every link around
+        it still works. A label and a checkbox work the moment the HTML lands.
+        The state below only mirrors it, for Escape and the scroll lock.
+      */}
+      <input
+        type="checkbox"
+        id="shop-menu-toggle"
+        className="shop-menu-toggle"
+        checked={menuOpen}
+        onChange={(e) => setMenuOpen(e.target.checked)}
+        aria-label="Menu openen"
+      />
       
       {/* Top Orange Bar */}
       <div className="shop-topbar">
@@ -101,20 +118,14 @@ export default function WebshopNavigation() {
       {/* Main White Bar */}
       <div className="shop-header-bar">
         
-        {/* Mobile only — opens the menu drawer. */}
-        <button
-          type="button"
-          className="shop-burger"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Menu openen"
-          aria-expanded={menuOpen}
-        >
+        {/* Mobile only — opens the menu drawer, with or without JavaScript. */}
+        <label className="shop-burger" htmlFor="shop-menu-toggle">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
-        </button>
+        </label>
 
         {/* Logo */}
         <Link href="/webshop" style={{ flexShrink: 0 }}>
@@ -195,23 +206,12 @@ export default function WebshopNavigation() {
         )}
       </div>
 
-      {menuOpen && (
-        <button
-          type="button"
-          className="shop-menu-scrim"
-          aria-label="Menu sluiten"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
+      <label className="shop-menu-scrim" htmlFor="shop-menu-toggle" aria-hidden="true" />
 
-      <nav
-        className={`shop-menu${menuOpen ? ' is-open' : ''}`}
-        aria-label="Hoofdmenu"
-        aria-hidden={!menuOpen}
-      >
+      <nav className="shop-menu" aria-label="Hoofdmenu">
         <div className="shop-menu-head">
           <strong>Menu</strong>
-          <button type="button" onClick={() => setMenuOpen(false)} aria-label="Sluiten">✕</button>
+          <label className="shop-menu-close" htmlFor="shop-menu-toggle" aria-label="Menu sluiten">✕</label>
         </div>
 
         <div className="shop-menu-body">
@@ -222,25 +222,24 @@ export default function WebshopNavigation() {
               href={link.href}
               className="shop-menu-link"
               onClick={() => setMenuOpen(false)}
-              tabIndex={menuOpen ? 0 : -1}
             >
               {link.label}
             </Link>
           ))}
 
           <p className="shop-menu-label">Mijn gegevens</p>
-          <Link href="/webshop/winkelmand" className="shop-menu-link" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}>
+          <Link href="/webshop/winkelmand" className="shop-menu-link" onClick={() => setMenuOpen(false)}>
             Winkelmand{cartCount > 0 ? ` (${cartCount})` : ''}
           </Link>
-          <Link href="/webshop/orders" className="shop-menu-link" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}>
+          <Link href="/webshop/orders" className="shop-menu-link" onClick={() => setMenuOpen(false)}>
             Mijn bestellingen
           </Link>
-          <Link href="/webshop/account" className="shop-menu-link" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}>
+          <Link href="/webshop/account" className="shop-menu-link" onClick={() => setMenuOpen(false)}>
             Zakelijk account
           </Link>
 
           <p className="shop-menu-label">Hulp nodig?</p>
-          <a href={`tel:${SITE_CONFIG.phoneTel}`} className="shop-menu-link" tabIndex={menuOpen ? 0 : -1}>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} className="shop-menu-link">
             Bel {SITE_CONFIG.phone}
           </a>
           <a
@@ -248,11 +247,10 @@ export default function WebshopNavigation() {
             className="shop-menu-link"
             target="_blank"
             rel="noopener noreferrer"
-            tabIndex={menuOpen ? 0 : -1}
           >
             WhatsApp ons
           </a>
-          <Link href="/verzending-en-retour" className="shop-menu-link" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}>
+          <Link href="/verzending-en-retour" className="shop-menu-link" onClick={() => setMenuOpen(false)}>
             Verzending &amp; retour
           </Link>
         </div>

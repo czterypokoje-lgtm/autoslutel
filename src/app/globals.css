@@ -1182,9 +1182,20 @@ details[open] summary { color: var(--orange-500); }
    checkboxes — "Automerk" alone is 43 makes — with the first product below
    all of it.
    ───────────────────────────────────────────────────────────────────────── */
+/* Off-screen, not display:none — it stays keyboard-focusable and its
+   :checked state is what opens the drawer, with or without hydration. */
+.shop-filter-toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .shop-filter-open,
 .shop-filter-scrim,
 .shop-filter-bar,
+.shop-filter-close,
 .shop-filter-apply { display: none; }
 
 @media (max-width: 900px) {
@@ -1231,6 +1242,19 @@ details[open] summary { color: var(--orange-500); }
     background: rgba(15, 23, 42, .45);
     border: none;
     padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease-out;
+  }
+  .shop-filter-toggle:checked ~ .shop-filter-scrim { opacity: 1; pointer-events: auto; }
+
+  .shop-filter-close {
+    display: inline-block;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: .35rem .5rem;
+    cursor: pointer;
+    color: #334155;
   }
 
   /* The panel itself: off-screen until opened. */
@@ -1247,6 +1271,7 @@ details[open] summary { color: var(--orange-500); }
     transition: transform .22s ease-out;
     padding-bottom: 5rem;
   }
+  .shop-filter-toggle:checked ~ .shop-filter-panel { transform: translateX(0); }
   .shop-filter-panel.is-open { transform: translateX(0); }
 
   .shop-filter-bar {
@@ -1261,15 +1286,7 @@ details[open] summary { color: var(--orange-500); }
     padding: .85rem 1rem;
     font-size: 1.05rem;
   }
-  .shop-filter-bar button {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    line-height: 1;
-    padding: .35rem .5rem;
-    cursor: pointer;
-    color: #334155;
-  }
+
 
   .shop-filter-apply {
     display: block;
@@ -1279,14 +1296,15 @@ details[open] summary { color: var(--orange-500); }
     border-top: 1px solid #e2e8f0;
     padding: .75rem 1rem calc(.75rem + env(safe-area-inset-bottom));
   }
-  .shop-filter-apply button {
+  .shop-filter-apply label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     min-height: 48px;
     background: #b93c20;
     color: #fff;
-    border: none;
     border-radius: 6px;
-    font: inherit;
     font-weight: 700;
     cursor: pointer;
   }
@@ -1354,9 +1372,22 @@ details[open] summary { color: var(--orange-500); }
    swipes a nav bar. Below 900px it is replaced by a drawer from the left,
    where a phone user looks for a menu.
    ───────────────────────────────────────────────────────────────────────── */
+/*
+ * The checkbox that opens the drawer. Off-screen rather than display:none, so
+ * it stays focusable for the keyboard and its :checked state can drive the CSS.
+ */
+.shop-menu-toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .shop-burger,
 .shop-menu,
-.shop-menu-scrim { display: none; }
+.shop-menu-scrim,
+.shop-menu-close { display: none; }
 
 @media (max-width: 900px) {
   .shop-burger {
@@ -1384,6 +1415,19 @@ details[open] summary { color: var(--orange-500); }
     background: rgba(15, 23, 42, .45);
     border: none;
     padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease-out;
+  }
+  .shop-menu-toggle:checked ~ .shop-menu-scrim { opacity: 1; pointer-events: auto; }
+
+  .shop-menu-close {
+    display: inline-block;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: .35rem .5rem;
+    cursor: pointer;
+    color: #334155;
   }
 
   .shop-menu {
@@ -1398,6 +1442,8 @@ details[open] summary { color: var(--orange-500); }
     transform: translateX(-101%);
     transition: transform .22s ease-out;
   }
+  /* Driven by the checkbox, so it works before — and without — hydration. */
+  .shop-menu-toggle:checked ~ .shop-menu { transform: translateX(0); }
   .shop-menu.is-open { transform: translateX(0); }
 
   .shop-menu-head {
@@ -1409,15 +1455,7 @@ details[open] summary { color: var(--orange-500); }
     font-size: 1.05rem;
     color: #0f172a;
   }
-  .shop-menu-head button {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    line-height: 1;
-    padding: .35rem .5rem;
-    cursor: pointer;
-    color: #334155;
-  }
+
 
   .shop-menu-body {
     flex: 1;
