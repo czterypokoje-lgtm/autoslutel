@@ -4,7 +4,8 @@ import TrustBar from '@/components/webshop/TrustBar';
 import CategoryGrid from '@/components/webshop/CategoryGrid';
 import ProductCarousel from '@/components/webshop/ProductCarousel';
 import PromoBanner from '@/components/webshop/PromoBanner';
-import TrustSection from '@/components/webshop/TrustSection';
+import TrustpilotPlaceholder from '@/components/webshop/TrustpilotPlaceholder';
+import CustomerLifestyleGallery from '@/components/webshop/CustomerLifestyleGallery';
 import ArticlesSection from '@/components/webshop/ArticlesSection';
 import ProductRow from '@/components/webshop/ProductRow';
 import BrandStrip from '@/components/webshop/BrandStrip';
@@ -81,7 +82,8 @@ export default async function WebshopPage() {
 
       <ArticlesSection />
 
-      <TrustSection />
+      <TrustpilotPlaceholder />
+      <CustomerLifestyleGallery />
 
     </div>
   );
