@@ -203,15 +203,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
               <span style={{ color: '#0f172a' }}>{entry.articleCode ?? entry.titleNl}</span>
             </nav>
 
-            <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 1.9rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.2, margin: '0 0 .5rem' }}>
-              {entry.titleNl}
-            </h1>
-
-            {/* The self-contained answer sentence — what this part is, in one
-                line, for the reader and for a featured snippet. */}
-            <p data-direct-answer style={{ color: '#475569', fontSize: '.95rem', lineHeight: 1.55, margin: '0 0 .75rem', maxWidth: '60ch' }}>
-              {entry.directAnswer}
-            </p>
+            {/* The title and direct answer sentence were moved to ProductBuyBox to match Crutchfield layout */}
 
             {entry.replacedBy && (
               <p style={{ fontSize: '.85rem', color: '#92400e', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 8, padding: '.5rem .75rem', margin: '0 0 .75rem' }}>
@@ -246,6 +238,8 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
             <ProductBuyBox
               slug={resolvedParams.slug}
               title={entry.titleNl}
+              subtitle={entry.directAnswer}
+              brand={entry.manufacturer}
               price={sellPrice || 0}
               oldPrice={oldPriceNum || 0}
               description={entry.descriptionNl}

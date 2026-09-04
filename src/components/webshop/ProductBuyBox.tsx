@@ -49,7 +49,7 @@ const CATEGORY_NOTE: Record<string, string> = {
     'op het gewenste voertuig gezet.',
 };
 
-export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category, inStock = true }: { title: string, price: number, oldPrice: number, description?: string, slug?: string, needsProgramming?: boolean, category?: string, inStock?: boolean }) {
+export default function ProductBuyBox({ title, subtitle, brand, price, oldPrice, description, slug, needsProgramming, category, inStock = true }: { title: string, subtitle?: string, brand?: string, price: number, oldPrice: number, description?: string, slug?: string, needsProgramming?: boolean, category?: string, inStock?: boolean }) {
   const services = servicesFor(category);
   const [purchaseType, setPurchaseType] = useState<ServiceOption>('product_only');
   const [added, setAdded] = useState(false);
@@ -94,13 +94,38 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
   const bmBlueBorder = '#cbd5e1';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0', fontFamily: 'Inter, sans-serif' }}>
       
-      {/*
-        The title, the specification chips and the answer sentence moved to the
-        page itself, above the photos: on a phone they were below a full screen
-        of gallery, so the first thing a customer saw was an unlabelled picture.
-      */}
+      {/* 0. Title & Subtitle (Crutchfield Style) */}
+      <div style={{ marginBottom: '1.2rem' }}>
+        {brand && (
+          <div style={{ marginBottom: '0.8rem' }}>
+            <a href={`/webshop/merk/${brand.toLowerCase()}`} style={{ color: '#1a1a1a', textDecoration: 'underline', fontSize: '0.9rem' }}>
+              Shop all {brand}
+            </a>
+          </div>
+        )}
+        <h1 style={{ fontSize: '2rem', fontWeight: 900, color: '#1a1a1a', lineHeight: 1.1, margin: '0 0 0.5rem 0', letterSpacing: '-0.02em' }}>
+          {title}
+        </h1>
+        {subtitle && (
+          <p style={{ fontSize: '1.25rem', color: '#1a1a1a', margin: '0 0 1rem 0', lineHeight: 1.3 }}>
+            {subtitle}
+          </p>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.9rem', color: '#1a1a1a' }}>
+          <div style={{ display: 'flex', alignItems: 'center', color: '#ca8a04', gap: '0.1rem' }}>
+            {/* 5 Stars */}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </div>
+          <a href="#reviews" style={{ color: '#1a1a1a', textDecoration: 'underline', fontWeight: 600 }}>(1)</a>
+          <a href="#qa" style={{ color: '#1a1a1a', textDecoration: 'underline', fontWeight: 600 }}>Q&A (0)</a>
+        </div>
+      </div>
 
       {/* 1. Low stock / In stock */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.1rem', fontWeight: 600, color: '#0f172a' }}>
@@ -121,16 +146,16 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
       <hr style={{ border: 'none', borderTop: '1px solid #cbd5e1', margin: '0.25rem 0' }} />
 
       {/* 2. Ships free today (Or shipping cost) */}
-      <div style={{ display: 'flex', gap: '1rem', margin: '0.5rem 0' }}>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginTop: '0.1rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', margin: '0.5rem 0' }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginTop: '0.1rem', flexShrink: 0 }}>
           <rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle>
         </svg>
         <div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#1a1a1a', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             {price >= FREE_SHIPPING_FROM ? 'Gratis verzending' : 'Verzending €5,00'}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
           </div>
-          <div style={{ fontSize: '0.95rem', color: '#1a1a1a', marginTop: '0.4rem' }}>
+          <div style={{ fontSize: '0.95rem', color: '#1a1a1a', marginTop: '0.25rem' }}>
             Bestel voor <span style={{ fontWeight: 800 }}>16:00</span>, en het wordt vandaag verzonden.
           </div>
         </div>
