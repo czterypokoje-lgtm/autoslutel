@@ -1,0 +1,39 @@
+{
+ "categories": {
+  "afstandsbedieningen": 277,
+  "universal-remotes": 116,
+  "printplaten": 51,
+  "behuizingen": 422,
+  "accessoires": 195,
+  "transponders": 56,
+  "noodsleutels": 28,
+  "batterijen": 28,
+  "sleutelbaarden": 30,
+  "overige-sleutels": 90
+ },
+ "subcategories": {
+  "afstandsbediening": 199,
+  "smart key": 48,
+  "Xhorse universal": 43,
+  "printplaat": 51,
+  "Autel universal": 19,
+  "KeyDIY universal": 38,
+  "universele afstandsbediening": 16,
+  "sleutelbehuizing": 298,
+  "microtaster & antenne": 1,
+  "transponder": 26,
+  "noodsleutel": 28,
+  "batterij": 28,
+  "sleutel zonder startonderbreker": 30,
+  "sleutelbaard": 30,
+  "transpondersleutel": 30,
+  "overige sleutel": 90,
+  "accessoires": 7,
+  "garageopener": 3,
+  "Autel accessoires": 12,
+  "OBDSTAR accessoires": 4,
+  "Xhorse accessoires": 122,
+  "Zed-FULL accessoires": 46,
+  "AccessFobs behuizing": 124
+ }
+}

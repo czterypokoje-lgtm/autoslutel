@@ -6,31 +6,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { SITE_CONFIG } from '@/config/site.config';
 
-import BrandMegaMenu from '@/components/webshop/BrandMegaMenu';
+import { MENU, TOP_BRANDS } from '@/components/webshop/shopMenu';
 
-const categoryLinks = [
-  { href: '/webshop/merken', label: 'Merken' },
-  { href: '/webshop/catalogus?category=afstandsbedieningen', label: 'Autosleutels' },
-  { href: '/webshop/catalogus?category=behuizingen', label: 'Behuizingen' },
-  /* Two ranges of housings; this is the one with our own clean photos. */
-  { href: '/webshop/catalogus?subcategory=AccessFobs+behuizing', label: 'Behuizingen (AccessFobs)' },
-  { href: '/webshop/catalogus?category=batterijen', label: 'Batterijen' },
-  { href: '/webshop/catalogus?category=printplaten', label: 'Printplaten' },
-  { href: '/webshop/catalogus?subcategory=smart+key', label: 'Smart Keys' },
-  { href: '/webshop/catalogus?category=overige-sleutels', label: 'Overige sleutels' },
-  { href: '/webshop/catalogus?category=transponders', label: 'Transponders' },
-  { href: '/webshop/catalogus?category=noodsleutels', label: 'Noodsleutels' },
-  { href: '/webshop/catalogus?category=universal-remotes', label: 'Universal Keys' },
-  /*
-   * The four tool ranges, as their own entries: a locksmith looking for a
-   * VVDI cable searches for the tool brand, not for "accessoires".
-   */
-  { href: '/webshop/catalogus?subcategory=Xhorse+accessoires', label: 'Xhorse accessoires' },
-  { href: '/webshop/catalogus?subcategory=Autel+accessoires', label: 'Autel accessoires' },
-  { href: '/webshop/catalogus?subcategory=OBDSTAR+accessoires', label: 'OBDSTAR accessoires' },
-  { href: '/webshop/catalogus?subcategory=Zed-FULL+accessoires', label: 'Zed-FULL accessoires' },
-  { href: '/webshop/aanbiedingen', label: 'Aanbiedingen' },
-];
 
 export default function WebshopNavigation() {
   const [cartCount, setCartCount] = useState(0);
@@ -48,7 +25,6 @@ export default function WebshopNavigation() {
     return () => window.removeEventListener(CART_EVENT, update);
   }, []);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showBrandMenu, setShowBrandMenu] = useState(false);
 
   // The page behind a full-height drawer must not scroll with it.
   useEffect(() => {
@@ -66,7 +42,7 @@ export default function WebshopNavigation() {
   }, [menuOpen]);
 
   return (
-    <header style={{ width: '100%', fontFamily: 'var(--font-sans)', zIndex: 50, position: 'relative' }} onMouseLeave={() => setShowBrandMenu(false)}>
+    <header style={{ width: '100%', fontFamily: 'var(--font-sans)', zIndex: 50, position: 'relative' }}>
       {/*
         The menu drawer is opened by a checkbox, not by React state.
 
@@ -209,32 +185,88 @@ export default function WebshopNavigation() {
         Gratis verzending vanaf €25 · levertijd 2 - 3 werkdagen
       </div>
 
-      {/* Category Bottom Nav */}
-      <div className="shop-header-nav">
-        {categoryLinks.map((link) => (
-          <div 
-            key={link.href}
-            onMouseEnter={() => {
-              if (link.label === 'Merken') setShowBrandMenu(true);
-              else setShowBrandMenu(false);
-            }}
-          >
-            <Link 
-              href={link.href}
-              style={{ display: 'block', padding: '0.6rem 1.5rem', color: '#334155', fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none', borderBottom: '3px solid transparent' }}
-              onMouseOver={(e) => (e.currentTarget.style.color = '#b93c20')}
-              onMouseOut={(e) => (e.currentTarget.style.color = '#334155')}
-            >
-              {link.label}
+      {/*
+        The category bar.
+
+        It was fifteen flat links that ran off the edge of a 1440px screen, so
+        the last four ranges we added could not be reached at all. Six
+        headings now, each opening one panel, grouped the way a locksmith
+        thinks about a job rather than the way our categories are named.
+
+        The panels open on hover and on keyboard focus — :focus-within, so
+        tabbing through the bar works — and every heading is itself a link to
+        a real page, so a click always goes somewhere.
+      */}
+      <nav className="shop-nav" aria-label="Productcategorieën">
+        <ul className="shop-nav-list">
+          {MENU.map((group) => (
+            <li key={group.label} className="shop-nav-item">
+              <Link href={group.href} className="shop-nav-link">
+                {group.label}
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </Link>
+
+              <div className="shop-nav-panel">
+                <div className="shop-nav-panel-inner">
+                  {group.variant === 'brands' ? (
+                    <>
+                      <div className="shop-nav-brands">
+                        {TOP_BRANDS.map(({ make, count }) => (
+                          <Link
+                            key={make}
+                            href={`/webshop/catalogus?make=${encodeURIComponent(make)}`}
+                            className="shop-nav-brand"
+                          >
+                            {make}
+                            <span>{count}</span>
+                          </Link>
+                        ))}
+                      </div>
+                      <Link href="/webshop/merken" className="shop-nav-all">
+                        Alle merken bekijken →
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <div className="shop-nav-columns">
+                        {group.columns.map((column) => (
+                          <div key={column.title ?? 'links'}>
+                            {column.title && <p className="shop-nav-column-title">{column.title}</p>}
+                            <ul>
+                              {column.links.map((link) => (
+                                <li key={link.href}>
+                                  <Link href={link.href} className="shop-nav-entry">
+                                    <span className="shop-nav-entry-label">
+                                      {link.label}
+                                      <span className="shop-nav-count">{link.count}</span>
+                                    </span>
+                                    {link.note && <span className="shop-nav-note">{link.note}</span>}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                      <Link href={group.href} className="shop-nav-all">
+                        Alles in {group.label.toLowerCase()} →
+                      </Link>
+                    </>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+
+          <li className="shop-nav-item">
+            <Link href="/webshop/aanbiedingen" className="shop-nav-link shop-nav-link-accent">
+              Aanbiedingen
             </Link>
-          </div>
-        ))}
-        {showBrandMenu && (
-          <div className="shop-brand-megamenu" onMouseLeave={() => setShowBrandMenu(false)}>
-            <BrandMegaMenu />
-          </div>
-        )}
-      </div>
+          </li>
+        </ul>
+      </nav>
 
       <label className="shop-menu-scrim" htmlFor="shop-menu-toggle" aria-hidden="true" />
 
@@ -245,17 +277,36 @@ export default function WebshopNavigation() {
         </div>
 
         <div className="shop-menu-body">
-          <p className="shop-menu-label">Onderdelen</p>
-          {categoryLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="shop-menu-link"
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.label}
-            </Link>
+          {/*
+            The same six groups as the bar, collapsed. <details> opens without
+            JavaScript, which is the rule the drawer itself follows.
+          */}
+          {MENU.map((group) => (
+            <details key={group.label} className="shop-menu-group">
+              <summary>{group.label}</summary>
+              {group.variant === 'brands' ? (
+                <Link href="/webshop/merken" className="shop-menu-link" onClick={() => setMenuOpen(false)}>
+                  Alle merken
+                </Link>
+              ) : (
+                group.columns.flatMap((column) => column.links).map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="shop-menu-link"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {link.label}
+                    <span className="shop-menu-count">{link.count}</span>
+                  </Link>
+                ))
+              )}
+            </details>
           ))}
+
+          <Link href="/webshop/aanbiedingen" className="shop-menu-link" onClick={() => setMenuOpen(false)}>
+            Aanbiedingen
+          </Link>
 
           <p className="shop-menu-label">Mijn gegevens</p>
           <Link href="/webshop/winkelmand" className="shop-menu-link" onClick={() => setMenuOpen(false)}>

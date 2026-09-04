@@ -1709,3 +1709,201 @@ details[open] summary { color: var(--orange-500); }
 @media (max-width: 640px) {
   .pay-strip { gap: 1rem 1.5rem; }
 }
+
+/* ── the shop category bar ───────────────────────────────────────────────
+   Six headings, each opening one panel. What it replaced was fifteen flat
+   links that ran off the edge of a 1440px screen, so the last ranges we
+   added could not be reached at all.
+
+   Panels open on hover and on :focus-within, so the bar is usable from the
+   keyboard, and every heading is itself a link to a real page.
+   ───────────────────────────────────────────────────────────────────────── */
+.shop-nav {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  position: relative;
+  z-index: 40;
+}
+
+.shop-nav-list {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  list-style: none;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 1.5rem);
+  max-width: 1400px;
+}
+
+.shop-nav-item { position: static; }
+
+.shop-nav-link {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .95rem 1.15rem;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #334155;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color .14s, border-color .14s;
+  white-space: nowrap;
+}
+.shop-nav-link svg { opacity: .55; transition: transform .16s; }
+.shop-nav-link-accent { color: #b93c20; }
+
+.shop-nav-item:hover > .shop-nav-link,
+.shop-nav-item:focus-within > .shop-nav-link {
+  color: #b93c20;
+  border-bottom-color: #b93c20;
+}
+.shop-nav-item:hover > .shop-nav-link svg,
+.shop-nav-item:focus-within > .shop-nav-link svg { transform: rotate(180deg); }
+
+/* The panel spans the bar, not the item — a column of links under one word
+   looks like a mistake at this width. */
+.shop-nav-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 18px 40px -24px rgba(15, 23, 42, .45);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity .14s ease-out, transform .14s ease-out, visibility .14s;
+}
+.shop-nav-item:hover > .shop-nav-panel,
+.shop-nav-item:focus-within > .shop-nav-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.shop-nav-panel-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.6rem clamp(1rem, 4vw, 2.5rem) 1.4rem;
+}
+
+.shop-nav-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.5rem 3rem;
+}
+.shop-nav-columns ul { list-style: none; margin: 0; padding: 0; }
+
+.shop-nav-column-title {
+  margin: 0 0 .75rem;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.shop-nav-entry {
+  display: block;
+  padding: .5rem .6rem;
+  margin: 0 -.6rem;
+  border-radius: 7px;
+  text-decoration: none;
+  color: #0f172a;
+  transition: background .12s;
+}
+.shop-nav-entry:hover { background: #f8fafc; color: #0f172a; }
+
+.shop-nav-entry-label {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  font-size: .94rem;
+  font-weight: 600;
+}
+.shop-nav-count {
+  font-size: .74rem;
+  font-weight: 500;
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
+}
+.shop-nav-note {
+  display: block;
+  font-size: .8rem;
+  color: #64748b;
+  margin-top: .1rem;
+  line-height: 1.4;
+}
+
+.shop-nav-brands {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: .35rem 1.5rem;
+}
+.shop-nav-brand {
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .4rem .6rem;
+  margin: 0 -.6rem;
+  border-radius: 7px;
+  font-size: .92rem;
+  font-weight: 600;
+  color: #0f172a;
+  text-decoration: none;
+}
+.shop-nav-brand span { color: #94a3b8; font-weight: 500; font-size: .78rem; font-variant-numeric: tabular-nums; }
+.shop-nav-brand:hover { background: #f8fafc; color: #b93c20; }
+
+.shop-nav-all {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+  width: 100%;
+  font-size: .85rem;
+  font-weight: 700;
+  color: #b93c20;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-nav-panel, .shop-nav-link, .shop-nav-link svg { transition: none; }
+}
+
+/* The bar belongs to the desktop; on a phone everything is in the drawer. */
+@media (max-width: 900px) {
+  .shop-nav { display: none; }
+
+  .shop-menu-group summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .8rem 1rem;
+    min-height: 44px;
+    font-weight: 700;
+    color: #0f172a;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+    list-style: none;
+  }
+  .shop-menu-group summary::-webkit-details-marker { display: none; }
+  .shop-menu-group summary::after {
+    content: '＋';
+    color: #94a3b8;
+    font-weight: 400;
+  }
+  .shop-menu-group[open] summary::after { content: '−'; }
+  .shop-menu-group .shop-menu-link {
+    padding-left: 2rem;
+    background: #fafbfc;
+    display: flex;
+    justify-content: space-between;
+    gap: .75rem;
+  }
+  .shop-menu-count { color: #94a3b8; font-weight: 500; font-size: .8rem; }
+}

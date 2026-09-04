@@ -57,6 +57,12 @@ const OUT = path.join(process.cwd(), 'src/lib/catalog.json');
  * few hundred bytes.
  */
 const BRANDS_OUT = path.join(process.cwd(), 'src/lib/brands.json');
+/*
+ * Counts for the shop menu. The navigation is a client component and cannot
+ * read the catalogue — importing it would ship 4 MB to every visitor — and a
+ * menu entry with no products behind it is the thing this file prevents.
+ */
+const NAV_OUT = path.join(process.cwd(), 'src/lib/navCounts.json');
 
 /* ── CSV ──────────────────────────────────────────────────────────────── */
 
@@ -1409,6 +1415,16 @@ writeFileSync(
   VEHICLE_SPECS_OUT,
   JSON.stringify(vehicleSpecs)
 );
+
+const navCounts = { categories: {}, subcategories: {} };
+for (const p of products) {
+  if (p.audience !== 'public') continue;
+  if (p.category) navCounts.categories[p.category] = (navCounts.categories[p.category] ?? 0) + 1;
+  if (p.subcategory) {
+    navCounts.subcategories[p.subcategory] = (navCounts.subcategories[p.subcategory] ?? 0) + 1;
+  }
+}
+writeFileSync(NAV_OUT, `${JSON.stringify(navCounts, null, 1)}\n`);
 
 const pub = products.filter((p) => p.audience === 'public').length;
 console.log(`catalog.json written — ${products.length} A-Key products`);

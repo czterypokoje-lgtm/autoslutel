@@ -1,0 +1,18 @@
+
+> autosleutel-specialist-nl@0.1.0 dev
+> next dev -p 3100
+
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3100
+- Network:       http://172.0.40.51:3100
+- Environments: .env.local
+✓ Ready in 544ms
+⚠ Slow filesystem detected. The benchmark took 226ms. If /Users/ik/Desktop/autosleutel24-repo/.next/dev is a network drive, consider moving it to a local folder.
+See more: https://nextjs.org/docs/app/guides/local-development
+
+ HEAD /admin/login 404 in 882ms (next.js: 206ms, proxy.ts: 282ms, application-code: 394ms)
+ GET /admin/login 404 in 80ms (next.js: 9ms, proxy.ts: 5ms, application-code: 66ms)
+Image with src "/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp" is using quality "80" which is not configured in images.qualities [75]. Please update your config to [75, 80].
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+ HEAD / 200 in 1327ms (next.js: 43ms, application-code: 1284ms)
+[?25h

@@ -13,39 +13,53 @@
   line-height: 1.45;
   /* Money and clock columns must line up. */
   font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-direction: row;
 }
 
-.bar {
+.sidebar {
+  width: 260px;
+  background: var(--crm-sidebar);
+  border-right: 1px solid var(--crm-rule);
   display: flex;
-  align-items: center;
-  gap: 20px;
-  height: 48px;
-  padding: 0 16px;
-  background: var(--crm-panel);
-  border-bottom: 1px solid var(--crm-rule);
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100vh;
   position: sticky;
   top: 0;
-  z-index: 20;
+  padding: 24px 16px;
+  box-sizing: border-box;
 }
 
 .brand {
   font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--crm-ink);
-  white-space: nowrap;
+  font-size: 18px;
+  margin-bottom: 32px;
+  padding: 0 12px;
 }
+
+.navWrapper {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.navWrapper::-webkit-scrollbar { display: none; }
 
 .nav {
   display: flex;
+  flex-direction: column;
   gap: 4px;
 }
 
 .navLink {
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 10px 12px;
+  border-radius: 8px;
   color: var(--crm-muted);
   text-decoration: none;
   font-weight: 500;
+  display: block;
 }
 
 .navLink:hover {
@@ -58,19 +72,27 @@
   color: var(--crm-ink);
 }
 
-.spacer {
-  flex: 1;
+.sidebarBottom {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid var(--crm-rule);
 }
 
 .who {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
   color: var(--crm-muted);
   font-size: 13px;
+  word-break: break-all;
 }
 
 .role {
+  align-self: flex-start;
   padding: 2px 7px;
   border-radius: 999px;
   border: 1px solid var(--crm-rule2);
@@ -84,20 +106,24 @@
   background: none;
   border: 1px solid var(--crm-rule2);
   color: var(--crm-muted);
-  border-radius: 5px;
-  padding: 4px 10px;
+  border-radius: 8px;
+  padding: 8px 12px;
   font: inherit;
   font-size: 13px;
   cursor: pointer;
+  text-align: center;
 }
 
 .signout:hover {
   color: var(--crm-ink);
   border-color: var(--crm-ink);
+  background: var(--crm-sunk);
 }
 
 .main {
-  padding: 16px;
+  flex: 1;
+  padding: 32px;
+  min-width: 0;
 }
 
 /* ---- Centred single-card pages: login, geen toegang ---- */
@@ -237,41 +263,61 @@
   font-size: 13px;
 }
 
-/*
- * The CRM on a phone.
- *
- * The top bar was one non-wrapping 48px row: brand, eleven navigation links,
- * the signed-in address and the sign-out button. On a 375px screen everything
- * past the third link ran off the right edge and could not be reached — and
- * the two screens a monteur actually uses, Vandaag and Mijn agenda, sit at the
- * end of that row.
- */
 @media (max-width: 860px) {
-  .bar {
+  .shell {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
     height: auto;
+    position: relative;
+    padding: 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--crm-rule);
+    flex-direction: row;
     flex-wrap: wrap;
-    gap: 8px 12px;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .brand {
+    margin-bottom: 0;
+    padding: 0;
+  }
+  
+  .navWrapper {
+    flex-basis: 100%;
+    order: 3;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  
+  .nav {
+    flex-direction: row;
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+  
+  .navLink {
+    white-space: nowrap;
     padding: 8px 12px;
   }
 
-  /* The links move to their own full-width row and scroll sideways. */
-  .nav {
-    order: 3;
-    flex-basis: 100%;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-bottom: 2px;
+  .sidebarBottom {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
   }
-  .nav::-webkit-scrollbar { display: none; }
-  .navLink { white-space: nowrap; }
 
-  .spacer { display: none; }
-  .who { font-size: 12px; margin-left: auto; }
-}
-
-@media (max-width: 480px) {
-  /* The address is the least useful thing on a narrow bar; the avatar and the
-     sign-out button stay. */
-  .whoEmail { display: none; }
+  .who {
+    display: none;
+  }
+  
+  .main {
+    padding: 16px;
+  }
 }

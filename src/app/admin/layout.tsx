@@ -35,17 +35,19 @@ export default async function AdminLayout({
   return (
     <div className={`crm ${styles.shell}`}>
       {user && (
-        <header className={styles.bar}>
-          <span className={styles.brand}>Autosleutel24 CRM</span>
-          <AdminNav role={user.role} />
-          <span className={styles.spacer} />
-          <span className={styles.who}>
-            {user.role && <span className={styles.role}>{user.role}</span>}
-            {/* The address is hidden on a narrow bar; the role badge stays. */}
-            <span className={styles.whoEmail}>{user.email}</span>
-          </span>
-          <SignOutButton />
-        </header>
+        <aside className={styles.sidebar}>
+          <div className={styles.brand}>Autosleutel24</div>
+          <div className={styles.navWrapper}>
+            <AdminNav role={user.role} />
+          </div>
+          <div className={styles.sidebarBottom}>
+            <div className={styles.who}>
+              {user.role && <span className={styles.role}>{user.role}</span>}
+              <span className={styles.whoEmail}>{user.email}</span>
+            </div>
+            <SignOutButton />
+          </div>
+        </aside>
       )}
       <main className={user ? styles.main : undefined}>{children}</main>
     </div>
