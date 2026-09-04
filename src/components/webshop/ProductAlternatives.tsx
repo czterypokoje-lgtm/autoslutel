@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { formatPrice } from '@/lib/catalog';
 import { getShopProducts, type ShopProduct } from '@/lib/shopCatalog';
+import AddToCartButton from '@/components/webshop/AddToCartButton';
 
 /**
  * "Vaak vergeleken" — the other keys that fit the same cars, side by side.
@@ -105,6 +106,20 @@ export default async function ProductAlternatives({ product }: { product: ShopPr
               );
             })}
           </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row">Bestellen</th>
+              {columns.map((p) => (
+                <td key={p.slug}>
+                  {p.price == null ? (
+                    '—'
+                  ) : (
+                    <AddToCartButton slug={p.slug} disabled={!p.inStock} variant="outline" />
+                  )}
+                </td>
+              ))}
+            </tr>
+          </tfoot>
         </table>
       </div>
     </section>

@@ -11,6 +11,7 @@ import ProductGallery from '@/components/webshop/ProductGallery';
 import ProductAlternatives from '@/components/webshop/ProductAlternatives';
 import ProductFitmentList from '@/components/webshop/ProductFitmentList';
 import StickyBuyBar from '@/components/webshop/StickyBuyBar';
+import BackToTop from '@/components/webshop/BackToTop';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
 import { getShopProductBySlug } from '@/lib/shopCatalog';
@@ -271,6 +272,8 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
 
         <ProductAlternatives product={entry} />
       </div>
+
+      <BackToTop />
 
       {/* Follows the page down once the real button is out of view. */}
       <StickyBuyBar

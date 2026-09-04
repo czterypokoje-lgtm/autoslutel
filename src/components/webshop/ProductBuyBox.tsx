@@ -298,24 +298,30 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
           </div>
         </div>
 
-        {/* Every order includes Accordion */}
-        <div style={{ borderBottom: `1px solid ${bmBlack}` }}>
-          <button
-            type="button"
-            onClick={() => toggle('includes')}
-            aria-expanded={openPanel === 'includes'}
-            style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', cursor: 'pointer', background: 'none', border: 'none', textAlign: 'left' }}
-          >
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: bmBlack, margin: 0 }}>Elke bestelling bevat</h3>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: openPanel === 'includes' ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </button>
-          <div hidden={openPanel !== 'includes'} style={{ paddingBottom: '1rem', color: '#334155', fontSize: '0.9rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg> 30 dagen retourneren</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> 1 jaar garantie op elektronica</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Gratis technische ondersteuning via WhatsApp</div>
-            </div>
-          </div>
+        {/*
+          Always visible, not behind a chevron. These four lines are the reason
+          someone buys from a small shop instead of a marketplace, and a panel
+          nobody opens says nothing.
+        */}
+        <div style={{ borderBottom: `1px solid ${bmBlack}`, padding: '1rem 0' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: bmBlack, margin: '0 0 .75rem' }}>
+            Bij elke bestelling
+          </h3>
+          <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '.6rem', fontSize: '0.9rem', color: '#334155' }}>
+            {[
+              ['30 dagen retourneren', 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z'],
+              ['12 maanden garantie op elektronica', 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'],
+              ['Gratis hulp via WhatsApp bij het inleren', 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'],
+              ['Verzending 2 - 3 werkdagen vanuit Nederland', 'M1 3h15v13H1zM16 8h4l3 3v5h-7V8z'],
+            ].map(([label, path]) => (
+              <li key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="1.6" style={{ flexShrink: 0 }}>
+                  <path d={path} />
+                </svg>
+                {label}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import styles from './CatalogFilters.module.css';
 import type { FacetKey, FacetOption } from '@/lib/catalog';
@@ -57,6 +57,14 @@ export default function CatalogFilters({
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [closed, setClosed] = useState<Record<string, boolean>>({});
+  /*
+   * On a phone the filter rail came first and ran for two full screens —
+   * "Automerk" alone is 43 makes — so the catalogue opened on a wall of
+   * checkboxes and the first product was somewhere below the fold. Every large
+   * shop puts filters behind one button on mobile; below 900px this panel is
+   * that drawer, and above it nothing changes.
+   */
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const active = useMemo(() => {
     const a: Record<string, string> = {};
@@ -86,12 +94,67 @@ export default function CatalogFilters({
     router.replace(pathname, { scroll: false });
   }, [pathname, router]);
 
+  // The page behind a full-screen drawer must not scroll with it.
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [drawerOpen]);
+
+  // Escape closes it, as a dialog should.
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [drawerOpen]);
+
   const groups = order.filter((k) => facets[k]?.length);
 
   if (!groups.length) return null;
 
   return (
-    <aside className={styles.root} aria-label="Filters">
+    <>
+      {/* Mobile only — the button that opens the drawer. */}
+      <button
+        type="button"
+        className="shop-filter-open"
+        onClick={() => setDrawerOpen(true)}
+        aria-expanded={drawerOpen}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="7" y1="12" x2="17" y2="12" />
+          <line x1="10" y1="18" x2="14" y2="18" />
+        </svg>
+        Filters
+        {activeCount > 0 && <span className="shop-filter-badge">{activeCount}</span>}
+        <span className="shop-filter-open-count">{resultCount} producten</span>
+      </button>
+
+      {drawerOpen && (
+        <button
+          type="button"
+          className="shop-filter-scrim"
+          aria-label="Filters sluiten"
+          onClick={() => setDrawerOpen(false)}
+        />
+      )}
+
+    <aside
+      className={`${styles.root} shop-filter-panel${drawerOpen ? ' is-open' : ''}`}
+      aria-label="Filters"
+    >
+      <div className="shop-filter-bar">
+        <strong>Filters</strong>
+        <button type="button" onClick={() => setDrawerOpen(false)} aria-label="Sluiten">✕</button>
+      </div>
+
       <div className={styles.head}>
         <span className={styles.count}>
           <strong>{resultCount}</strong> {resultCount === 1 ? 'product' : 'producten'}
@@ -184,6 +247,14 @@ export default function CatalogFilters({
         and "4 stars & up (120)" — counts that were not backed by any review
         data. It comes back when real verified-purchase reviews exist.
       */}
+
+      {/* The way out of the drawer, with the number it will show. */}
+      <div className="shop-filter-apply">
+        <button type="button" onClick={() => setDrawerOpen(false)}>
+          Toon {resultCount} {resultCount === 1 ? 'product' : 'producten'}
+        </button>
+      </div>
     </aside>
+    </>
   );
 }

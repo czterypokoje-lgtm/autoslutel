@@ -653,6 +653,30 @@ details[open] summary { color: var(--orange-500); }
   }
 }
 
+/*
+ * On a phone the hero was a 400px block of lime with a 2.5rem serif headline
+ * and nothing else — the product image beside it is desktop-only — so the
+ * first screen of the shop showed no product, no price and no way in.
+ */
+.webshop-hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+.webshop-btn-ghost {
+  background: transparent;
+  color: var(--webshop-dark);
+  border: 1.5px solid var(--webshop-dark);
+  border-radius: 999px;
+  padding: 0.875rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.webshop-btn-ghost:hover { background: rgba(0, 0, 0, .06); color: var(--webshop-dark); }
+
+
 .webshop-hero-content {
   max-width: 600px;
   z-index: 2;
@@ -1151,3 +1175,176 @@ details[open] summary { color: var(--orange-500); }
 .shop-compare-head img { width: 92px; height: 92px; object-fit: contain; }
 .shop-compare-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: #94a3b8; }
 .shop-compare-title { font-size: 0.85rem; font-weight: 700; line-height: 1.35; }
+
+/* ── the filter drawer ───────────────────────────────────────────────────
+   Desktop keeps the rail it had. Below 900px the rail becomes a drawer
+   behind one button, because the catalogue used to open on two screens of
+   checkboxes — "Automerk" alone is 43 makes — with the first product below
+   all of it.
+   ───────────────────────────────────────────────────────────────────────── */
+.shop-filter-open,
+.shop-filter-scrim,
+.shop-filter-bar,
+.shop-filter-apply { display: none; }
+
+@media (max-width: 900px) {
+  .shop-filter-open {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    width: 100%;
+    min-height: 48px;
+    padding: .7rem 1rem;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    color: #0f172a;
+    cursor: pointer;
+  }
+  .shop-filter-open-count {
+    margin-left: auto;
+    font-weight: 500;
+    font-size: .85rem;
+    color: #64748b;
+  }
+  .shop-filter-badge {
+    background: #b93c20;
+    color: #fff;
+    border-radius: 999px;
+    min-width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 0 .35rem;
+  }
+
+  .shop-filter-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: rgba(15, 23, 42, .45);
+    border: none;
+    padding: 0;
+  }
+
+  /* The panel itself: off-screen until opened. */
+  .shop-filter-panel {
+    position: fixed;
+    z-index: 71;
+    inset: 0 0 0 auto;
+    width: min(92vw, 380px);
+    max-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: 0;
+    transform: translateX(101%);
+    transition: transform .22s ease-out;
+    padding-bottom: 5rem;
+  }
+  .shop-filter-panel.is-open { transform: translateX(0); }
+
+  .shop-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: .85rem 1rem;
+    font-size: 1.05rem;
+  }
+  .shop-filter-bar button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: .35rem .5rem;
+    cursor: pointer;
+    color: #334155;
+  }
+
+  .shop-filter-apply {
+    display: block;
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+    padding: .75rem 1rem calc(.75rem + env(safe-area-inset-bottom));
+  }
+  .shop-filter-apply button {
+    width: 100%;
+    min-height: 48px;
+    background: #b93c20;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-filter-panel { transition: none; }
+}
+
+/* ── back to top ─────────────────────────────────────────────────────────
+   Sits above the sticky buy bar on a phone, bottom-right on a desktop.
+   ───────────────────────────────────────────────────────────────────────── */
+.shop-to-top {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  z-index: 55;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .55rem .85rem;
+  min-height: 44px;
+  background: #fff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, .16);
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity .18s ease-out, transform .18s ease-out;
+}
+.shop-to-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+
+@media (min-width: 901px) {
+  .shop-to-top { bottom: 1.5rem; right: 1.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-to-top { transition: none; }
+}
+
+/* The mobile hero, after the base rules it overrides — it sat above them
+   before, so the 2.5rem base size kept winning at the same specificity. */
+@media (max-width: 640px) {
+  /*
+   * 478px of hero under a 221px header meant the whole first screen of the
+   * shop was a headline: no product, no category, no price. Trimmed so the
+   * trust bar and the first category tiles are on screen one.
+   */
+  .webshop-hero { padding: 1.6rem 1.25rem 1.75rem; min-height: 0; }
+  .webshop-hero-actions { flex-direction: column; gap: .6rem; }
+  .webshop-btn-ghost,
+  .webshop-btn-dark { width: 100%; padding: .8rem 1.25rem; font-size: .98rem; }
+  .webshop-hero-title { font-size: 1.75rem; line-height: 1.12; margin-bottom: .6rem; }
+  .webshop-hero-subtitle { font-size: .95rem; margin-bottom: 1.1rem; }
+}
