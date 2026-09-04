@@ -16,7 +16,6 @@ import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
-import HomeActionBanners from '@/components/HomeActionBanners/HomeActionBanners';
 
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
@@ -169,9 +168,6 @@ export default function HomePage() {
 
         </div>
       </section>
-
-      {/* ── ACTION BANNERS (4 Columns) ───────────────────────────────────────────── */}
-      <HomeActionBanners />
 
       {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
       <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>

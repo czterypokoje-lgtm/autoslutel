@@ -8,6 +8,7 @@ import TrustSection from '@/components/webshop/TrustSection';
 import ArticlesSection from '@/components/webshop/ArticlesSection';
 import ProductRow from '@/components/webshop/ProductRow';
 import BrandStrip from '@/components/webshop/BrandStrip';
+import HomeActionBanners from '@/components/HomeActionBanners/HomeActionBanners';
 import { getShopProducts } from '@/lib/shopCatalog';
 
 export const metadata = {
@@ -36,6 +37,8 @@ export default async function WebshopPage() {
     <div>
       <WebshopHero />
       <TrustBar />
+
+      <HomeActionBanners />
 
       <section className="section" id="categorieen">
         <div className="container">
