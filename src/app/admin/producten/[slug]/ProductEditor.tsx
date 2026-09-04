@@ -101,7 +101,9 @@ export default function ProductEditor({ product }: { product: EditorProduct }) {
 
     if (!response || !response.ok) {
       const body = await response?.json().catch(() => null);
-      setError(body?.error ?? 'Opslaan mislukt.');
+      // The status matters: 401 is a session that expired, 404 a stale tab.
+      const status = response ? ` (${response.status})` : ' (geen verbinding)';
+      setError(`${body?.error ?? 'Opslaan mislukt.'}${status}`);
       setBusy(false);
       return;
     }

@@ -37,7 +37,11 @@ export async function PATCH(
   // The slug has to exist in the feed. An override for a product that is not
   // in the catalogue is a row nothing will ever read.
   if (!getProductBySlug(slug)) {
-    return NextResponse.json({ error: 'Onbekend product' }, { status: 404 });
+    // Which slug, so a stale tab or a renamed product is obvious at a glance.
+    return NextResponse.json(
+      { error: `Onbekend product: "${slug}" staat niet in de catalogus` },
+      { status: 404 }
+    );
   }
 
   let body: Record<string, unknown>;
@@ -92,7 +96,15 @@ export async function PATCH(
 
   if (error) {
     console.error('Product override failed:', error.message);
-    return NextResponse.json({ error: 'Opslaan mislukt' }, { status: 500 });
+    /*
+     * The real reason, on screen. This route is office-only, and "Opslaan
+     * mislukt" with the cause hidden in a server log nobody reads costs an
+     * afternoon of guessing — as it just did.
+     */
+    return NextResponse.json(
+      { error: `Opslaan mislukt: ${error.message}` },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json({ override: data }, { headers: { 'Cache-Control': 'no-store' } });
