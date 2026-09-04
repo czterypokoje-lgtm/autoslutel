@@ -4,6 +4,7 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../../klanten/klanten.module.css';
 import OrderPanel, { type OrderDetail } from './OrderPanel';
+import { SERVICE_LABEL, SERVICE_NEEDS, type ServiceOption } from '@/lib/cart';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,12 @@ interface OrderLine {
   name?: string;
   title?: string;
   quantity?: number;
+  /** Older orders wrote `price`; checkout writes unitPrice and lineTotal. */
   price?: number | string;
+  unitPrice?: number | string;
+  lineTotal?: number | string;
+  surcharge?: number | string;
+  service?: ServiceOption;
   slug?: string;
 }
 
@@ -67,9 +73,24 @@ export default async function OrderPage({
                   </span>
                   <span className={styles.sub}>
                     {line.quantity ?? 1} ×{' '}
-                    {line.price !== undefined
-                      ? MONEY.format(Number(line.price))
-                      : 'geen prijs'}
+                    {(() => {
+                      const unit = line.unitPrice ?? line.price;
+                      return unit !== undefined ? MONEY.format(Number(unit)) : 'geen prijs';
+                    })()}
+                    {/*
+                      The service is the part the office has to act on: a line
+                      bought as "opsturen" means a parcel is on its way here,
+                      and one bought as "monteur" is a job to be planned. It
+                      was in the order data and shown nowhere.
+                    */}
+                    {line.service && line.service !== 'product_only' && (
+                      <>
+                        {' · '}
+                        <strong>{SERVICE_LABEL[line.service]}</strong>
+                        {Number(line.surcharge) > 0 && ` (+${MONEY.format(Number(line.surcharge))})`}
+                        {SERVICE_NEEDS[line.service].oldKey && ' — klant stuurt sleutel op'}
+                      </>
+                    )}
                   </span>
                 </div>
               ))

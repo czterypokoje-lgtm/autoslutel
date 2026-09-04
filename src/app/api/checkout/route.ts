@@ -3,7 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 import { SITE_CONFIG } from '@/config/site.config';
 import { shippingFor, VAT_RATE } from '@/lib/catalog';
 import { getShopProductBySlug } from '@/lib/shopCatalog';
-import { SERVICE_SURCHARGE, SERVICE_LABEL, type ServiceOption } from '@/lib/cart';
+import {
+  SERVICE_SURCHARGE,
+  SERVICE_LABEL,
+  SERVICE_NEEDS,
+  SERVICE_OPTIONS,
+  type ServiceOption,
+} from '@/lib/cart';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 
 /**
@@ -37,7 +43,8 @@ interface IncomingLine {
   service: unknown;
 }
 
-const SERVICES: ServiceOption[] = ['product_only', 'send_in', 'mobile_tech'];
+// The list lives in one place; a service added there is accepted here.
+const SERVICES = SERVICE_OPTIONS;
 
 const clean = (v: unknown, max: number): string | null => {
   if (typeof v !== 'string') return null;
@@ -134,10 +141,19 @@ export async function POST(request: Request) {
   }
 
   const needsTechnician = items.some((i) => i.service === 'mobile_tech');
+  /*
+   * Cutting a blade and programming a key both need the vehicle, and both are
+   * work we will not do for someone who cannot show the car is theirs. The
+   * requirement is read from the service definition rather than hard-coded to
+   * the technician option, so a new service cannot slip past it.
+   */
+  const needsKenteken = items.some((i) => SERVICE_NEEDS[i.service].kenteken);
+  const needsOldKey = items.some((i) => SERVICE_NEEDS[i.service].oldKey);
+
   const kenteken = clean(body.kenteken, 12);
-  if (needsTechnician && !kenteken) {
+  if (needsKenteken && !kenteken) {
     return NextResponse.json(
-      { error: 'Voor een monteurbezoek hebben wij uw kenteken nodig' },
+      { error: 'Voor frezen, overzetten of programmeren hebben wij uw kenteken nodig' },
       { status: 400 }
     );
   }
@@ -202,12 +218,15 @@ export async function POST(request: Request) {
 
     // A mobile-technician order is also a job for the service side, so it goes
     // into the same leads table the rest of the site writes to.
-    if (needsTechnician) {
+    if (needsTechnician || needsOldKey) {
       await supabase.from('leads').insert([
         {
           brand: 'Webshop',
           model: items.map((i) => i.title).join(', ').slice(0, 80),
-          service: SERVICE_LABEL.mobile_tech,
+          // Which of the two brought this lead in — a call-out or a parcel.
+          service: needsTechnician
+            ? SERVICE_LABEL.mobile_tech
+            : SERVICE_LABEL.send_in,
           location: postcode,
           postcode,
           phone,

@@ -1,7 +1,15 @@
 'use client';
 import { formatPrice, FREE_SHIPPING_FROM } from '@/lib/catalog';
 import React, { useState } from 'react';
-import { addToCart, SERVICE_SURCHARGE } from '@/lib/cart';
+import {
+  addToCart,
+  servicesFor,
+  SERVICE_SURCHARGE,
+  SERVICE_LABEL,
+  SERVICE_DESCRIPTION,
+  SERVICE_NEEDS,
+  type ServiceOption,
+} from '@/lib/cart';
 import { SITE_CONFIG } from '@/config/site.config';
 
 /**
@@ -42,7 +50,8 @@ const CATEGORY_NOTE: Record<string, string> = {
 };
 
 export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category, inStock = true }: { title: string, price: number, oldPrice: number, description?: string, slug?: string, needsProgramming?: boolean, category?: string, inStock?: boolean }) {
-  const [purchaseType, setPurchaseType] = useState<'ship' | 'service'>('ship');
+  const services = servicesFor(category);
+  const [purchaseType, setPurchaseType] = useState<ServiceOption>('product_only');
   const [added, setAdded] = useState(false);
   /*
    * The two blocks below the button looked like accordions and were not: the
@@ -57,14 +66,15 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
   // purchase choices onto the service options the cart and checkout use.
   const handleAdd = () => {
     if (!slug || !inStock) return;
-    addToCart(slug, purchaseType === 'ship' ? 'product_only' : 'mobile_tech');
+    addToCart(slug, purchaseType);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
   };
   // One place for the call-out fee: the basket and the checkout charge
   // SERVICE_SURCHARGE, and a different number printed here would be a price
   // the customer never gets.
-  const serviceFee = SERVICE_SURCHARGE.mobile_tech;
+  // What this basket line will actually cost with the chosen service on it.
+  const serviceFee = SERVICE_SURCHARGE[purchaseType];
   const servicePriceTotal = price + serviceFee;
   const note = category ? CATEGORY_NOTE[category] : undefined;
 
@@ -74,7 +84,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
    * The service option carried a hard-coded "€350 dealer / save €181" that had
    * nothing to do with this product and no source behind it.
    */
-  const hasReference = purchaseType === 'ship' && oldPrice > price;
+  const hasReference = purchaseType === 'product_only' && oldPrice > price;
   const savings = oldPrice - price;
   
   // Theme Colors
@@ -108,7 +118,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
       <div>
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.75rem', marginBottom: '0.25rem' }}>
           <span style={{ fontSize: '2rem', fontWeight: 800, color: bmBlack, lineHeight: 1 }}>
-            {formatPrice(purchaseType === 'ship' ? price : servicePriceTotal)}
+            {formatPrice(servicePriceTotal)}
           </span>
           {hasReference && (
             <div style={{ paddingBottom: '0.25rem' }}>
@@ -158,68 +168,68 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
         </div>
       </div>
 
-      {/* 5. OPTION SELECTOR (Mobile Tech vs Ship) */}
-      <div style={{ marginTop: '0.5rem' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem', color: bmBlack }}>Kies je service:</h3>
-        <div className="shop-service-grid">
-          
-          {/* Option 1: Ship */}
-          <label 
-            style={{ 
-              display: 'block', 
-              padding: '1rem', 
-              border: purchaseType === 'ship' ? `2px solid ${themeOrange}` : `1px solid ${bmBlueBorder}`, 
-              borderRadius: '8px', 
-              cursor: 'pointer',
-              background: purchaseType === 'ship' ? '#fffaf8' : '#fff',
-              position: 'relative',
-              transition: 'all 0.2s'
-            }}
-            onClick={() => setPurchaseType('ship')}
-          >
-            <div style={{ position: 'absolute', top: 12, right: 12, width: 18, height: 18, borderRadius: '50%', border: purchaseType === 'ship' ? `6px solid ${themeOrange}` : '2px solid #cbd5e1' }} />
-            <div style={{ fontWeight: 800, fontSize: '1rem', color: bmBlack, marginBottom: '0.25rem' }}>Stuur sleutel naar mij</div>
-            <div style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '0.5rem' }}>Inclusief programmeer gids.</div>
-            <div style={{ fontWeight: 700 }}>+ {formatPrice(price)}</div>
-          </label>
+      {/*
+        What we do to the part before it reaches the customer. Which of the
+        four are offered depends on the article: there is nothing to transfer
+        into a battery and nothing to programme on a blade.
+      */}
+      {services.length > 1 && (
+        <div style={{ marginTop: '0.5rem' }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem', color: bmBlack }}>
+            Wat moeten wij ermee doen?
+          </h3>
 
-          {/* Option 2: Service */}
-          <label 
-            style={{ 
-              display: 'block', 
-              padding: '1rem', 
-              border: purchaseType === 'service' ? `2px solid ${themeOrange}` : `1px solid ${bmBlueBorder}`, 
-              borderRadius: '8px', 
-              cursor: 'pointer',
-              background: purchaseType === 'service' ? '#fffaf8' : '#fff',
-              position: 'relative',
-              transition: 'all 0.2s'
-            }}
-            onClick={() => setPurchaseType('service')}
-          >
-            <div style={{ position: 'absolute', top: 12, right: 12, width: 18, height: 18, borderRadius: '50%', border: purchaseType === 'service' ? `6px solid ${themeOrange}` : '2px solid #cbd5e1' }} />
-            <div style={{ fontWeight: 800, fontSize: '1rem', color: bmBlack, marginBottom: '0.25rem' }}>Mobiele Tech komt</div>
-            <div style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '0.5rem' }}>Wij slijpen & programmeren.</div>
-            <div style={{ fontWeight: 700 }}>+ {formatPrice(serviceFee)}</div>
-          </label>
-        </div>
-      </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {services.map((option) => {
+              const chosen = purchaseType === option;
+              const fee = SERVICE_SURCHARGE[option];
+              return (
+                <label
+                  key={option}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '20px 1fr auto',
+                    gap: '0.75rem',
+                    alignItems: 'start',
+                    padding: '0.85rem 1rem',
+                    border: chosen ? `2px solid ${themeOrange}` : `1px solid ${bmBlueBorder}`,
+                    borderRadius: 8,
+                    background: chosen ? '#fffaf8' : '#fff',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <input
+                    type="radio"
+                    name="service"
+                    value={option}
+                    checked={chosen}
+                    onChange={() => setPurchaseType(option)}
+                    style={{ marginTop: 3, accentColor: themeOrange, width: 16, height: 16 }}
+                  />
+                  <span>
+                    <span style={{ display: 'block', fontWeight: 700, color: bmBlack }}>
+                      {SERVICE_LABEL[option]}
+                    </span>
+                    <span style={{ display: 'block', fontSize: '0.82rem', color: '#475569', lineHeight: 1.45 }}>
+                      {SERVICE_DESCRIPTION[option]}
+                    </span>
+                  </span>
+                  <span style={{ fontWeight: 700, color: bmBlack, whiteSpace: 'nowrap' }}>
+                    {fee === 0 ? '—' : `+ ${formatPrice(fee)}`}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
 
-      {/* Programming warning — only shown when shipping (not service) and the
-          product requires ECU programming after fitting. */}
-      {purchaseType === 'ship' && needsProgramming && (
-        <div style={{
-          background: '#fffbeb',
-          border: '1px solid #f59e0b',
-          borderLeft: '4px solid #d97706',
-          borderRadius: '8px',
-          padding: '0.9rem 1.1rem',
-          fontSize: '0.88rem',
-          color: '#92400e',
-          lineHeight: 1.55,
-        }}>
-          ⚠️ <strong>Let op:</strong> dit product vereist programmering na installatie.
-          Onze monteur doet dit voor + {formatPrice(serviceFee)} aan huis.
+          {/* What we will need from them, said before they pay rather than after. */}
+          {(SERVICE_NEEDS[purchaseType].kenteken || SERVICE_NEEDS[purchaseType].oldKey) && (
+            <p style={{ marginTop: '0.75rem', marginBottom: 0, fontSize: '0.82rem', color: '#92400e', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 8, padding: '0.6rem 0.8rem', lineHeight: 1.5 }}>
+              {SERVICE_NEEDS[purchaseType].oldKey
+                ? 'Wij vragen bij het afrekenen uw kenteken. Na uw bestelling ontvangt u het adres waar u uw oude sleutel naartoe stuurt — wij sturen hem binnen twee werkdagen na ontvangst terug.'
+                : 'Wij vragen bij het afrekenen uw kenteken. Zonder eigendomsbewijs frezen of programmeren wij niet.'}
+            </p>
+          )}
         </div>
       )}
 
@@ -247,7 +257,7 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
             ? 'Tijdelijk uitverkocht'
             : added
               ? 'Toegevoegd ✓'
-              : purchaseType === 'ship' ? 'In winkelmand' : 'Boek Monteur'}
+              : 'In winkelmand'}
         </button>
         
         <button style={{ 
