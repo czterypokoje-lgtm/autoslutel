@@ -446,6 +446,10 @@ button { font-family: inherit; cursor: pointer; }
   cursor: pointer;
   gap: var(--sp-4);
   font-family: var(--font-main);
+  list-style: none;
+}
+.faq-question::-webkit-details-marker {
+  display: none;
 }
 .faq-question:hover { color: var(--orange-500); }
 .faq-chevron {
