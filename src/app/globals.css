@@ -1676,6 +1676,7 @@ details[open] summary { color: var(--orange-500); }
   padding: .3rem .45rem;
   display: flex;
   align-items: center;
+  margin-bottom: 0;
 }
 
 .pay-strip-list img { display: block; width: auto; }

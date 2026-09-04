@@ -44,6 +44,7 @@ const METHODS: { id: string; label: string }[] = [
  */
 const CARRIERS: { id: string; label: string }[] = [
   { id: 'dhl', label: 'DHL' },
+  { id: 'postnl', label: 'PostNL' },
 ];
 
 const ICONS = icons as { id: string; file: string }[];
