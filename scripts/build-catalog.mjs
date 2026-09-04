@@ -951,9 +951,46 @@ writeFileSync(
   )
 );
 
+const VEHICLE_SPECS_OUT = path.join(process.cwd(), 'src/lib/vehicleSpecs.json');
+
+const vehicleSpecs = {};
+for (const p of products) {
+  if (!p.fitment || p.fitment.length === 0) continue;
+  
+  for (const v of p.fitment) {
+    if (!v.make || !v.model) continue;
+    const key = `${v.make}|${v.model}`.toLowerCase();
+    if (!vehicleSpecs[key]) {
+      vehicleSpecs[key] = {
+        make: v.make,
+        model: v.model,
+        chips: [],
+        blades: [],
+        frequencies: []
+      };
+    }
+    
+    if (p.chip && !vehicleSpecs[key].chips.includes(p.chip)) {
+      vehicleSpecs[key].chips.push(p.chip);
+    }
+    if (p.blade && !vehicleSpecs[key].blades.includes(p.blade)) {
+      vehicleSpecs[key].blades.push(p.blade);
+    }
+    if (p.frequency && !vehicleSpecs[key].frequencies.includes(p.frequency)) {
+      vehicleSpecs[key].frequencies.push(p.frequency);
+    }
+  }
+}
+
+writeFileSync(
+  VEHICLE_SPECS_OUT,
+  JSON.stringify(vehicleSpecs)
+);
+
 const pub = products.filter((p) => p.audience === 'public').length;
 console.log(`catalog.json written — ${products.length} A-Key products`);
 console.log(`brands.json written — ${Object.keys(makeCounts).length} car makes`);
+console.log(`vehicleSpecs.json written — ${Object.keys(vehicleSpecs).length} vehicles mapped`);
 console.log(`  public ${pub} · trade ${products.length - pub} (gated)`);
 console.log(`  without category ${stats.noCategory} · without make ${stats.noMake} · without image ${stats.noImage}`);
 const byCategory = facetCount('category');

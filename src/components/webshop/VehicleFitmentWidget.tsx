@@ -3,17 +3,32 @@ import React, { useState } from 'react';
 import { VEHICLE_DATA, FALLBACK_MODELS, getYears } from '@/lib/vehicleData';
 
 import type { Fitment } from '@/lib/catalog';
+import vehicleSpecsJson from '@/lib/vehicleSpecs.json';
+
+const vehicleSpecs = vehicleSpecsJson as Record<string, {
+  make: string;
+  model: string;
+  chips: string[];
+  blades: string[];
+  frequencies: string[];
+}>;
 
 export default function VehicleFitmentWidget({ 
   defaultBrand = '',
   defaultModel = '',
   defaultYear = '',
-  fitment = []
+  fitment = [],
+  productChip = null,
+  productBlade = null,
+  productFrequency = null
 }: { 
   defaultBrand?: string,
   defaultModel?: string,
   defaultYear?: string,
-  fitment?: Fitment[]
+  fitment?: Fitment[],
+  productChip?: string | null,
+  productBlade?: string | null,
+  productFrequency?: string | null
 }) {
   const [activeTab, setActiveTab] = useState<'kenteken' | 'handmatig'>('handmatig');
   
@@ -56,6 +71,41 @@ export default function VehicleFitmentWidget({
   };
 
   
+  const checkSpecsMatch = (make: string, model: string, year: number): boolean => {
+    // If we have explicit fitment, check that first
+    if (fitment.length > 0) {
+      const isMatch = fitment.some(f => 
+        make.toLowerCase().includes(f.make.toLowerCase()) &&
+        (model.toLowerCase().includes(f.model.toLowerCase()) || f.model.toLowerCase().includes(model.toLowerCase())) &&
+        year >= f.from && year <= f.to
+      );
+      return isMatch;
+    }
+
+    // No explicit fitment. Fall back to characteristics matching.
+    const key = `${make}|${model}`.toLowerCase();
+    let spec = vehicleSpecs[key];
+    
+    if (!spec) {
+      const relaxedKey = Object.keys(vehicleSpecs).find(k => {
+        const [kMake, kModel] = k.split('|');
+        return kMake.includes(make.toLowerCase()) && 
+               (kModel.includes(model.toLowerCase()) || model.toLowerCase().includes(kModel));
+      });
+      if (relaxedKey) spec = vehicleSpecs[relaxedKey];
+    }
+    
+    // If the car isn't in our baseline data at all, we can't disprove fitment.
+    if (!spec) return true;
+
+    // A product must not contradict the car's known requirements.
+    if (productChip && spec.chips.length > 0 && !spec.chips.includes(productChip)) return false;
+    if (productBlade && spec.blades.length > 0 && !spec.blades.includes(productBlade)) return false;
+    if (productFrequency && spec.frequencies.length > 0 && !spec.frequencies.includes(productFrequency)) return false;
+    
+    return true;
+  };
+
   const checkKenteken = async () => {
     if (!kenteken) return;
     setKentekenLoading(true);
@@ -77,17 +127,7 @@ export default function VehicleFitmentWidget({
       const kModel = (handelsbenaming || '').toLowerCase();
       const kYear = datum_eerste_toelating ? parseInt(datum_eerste_toelating.substring(0,4)) : 0;
       
-      if (fitment.length === 0) {
-        setResult('success');
-        setKentekenLoading(false);
-        return;
-      }
-      
-      const isMatch = fitment.some(f => 
-        kBrand.includes(f.make.toLowerCase()) &&
-        (kModel.includes(f.model.toLowerCase()) || f.model.toLowerCase().includes(kModel)) &&
-        kYear >= f.from && kYear <= f.to
-      );
+      const isMatch = checkSpecsMatch(kBrand, kModel, kYear);
       
       setSelectedBrand(merk || '');
       setSelectedModel(handelsbenaming || '');
@@ -105,21 +145,8 @@ export default function VehicleFitmentWidget({
 
   const checkFitment = () => {
     if (!selectedBrand || !selectedModel || !selectedYear) return;
-    
-    // If no fitment data is available on the product at all, we assume it's generic
-    if (fitment.length === 0) {
-      setResult('success');
-      return;
-    }
-
     const yearNum = parseInt(selectedYear);
-    
-    const isMatch = fitment.some(f => 
-      f.make.toLowerCase() === selectedBrand.toLowerCase() &&
-      f.model.toLowerCase() === selectedModel.toLowerCase() &&
-      yearNum >= f.from && yearNum <= f.to
-    );
-
+    const isMatch = checkSpecsMatch(selectedBrand, selectedModel, yearNum);
     setResult(isMatch ? 'success' : 'fail');
   };
 

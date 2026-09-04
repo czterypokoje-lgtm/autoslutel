@@ -260,7 +260,12 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
 
             <ProductFitmentList product={entry} />
 
-            <VehicleFitmentWidget fitment={entry.fitment} />
+            <VehicleFitmentWidget 
+              fitment={entry.fitment} 
+              productChip={entry.chip}
+              productBlade={entry.blade}
+              productFrequency={entry.frequency}
+            />
 
             <ProductBundleSection
               mainProductSlug={entry.slug}
