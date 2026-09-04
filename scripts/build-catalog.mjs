@@ -410,6 +410,222 @@ const dutchMaterial = (value) => {
   return translated.split(/\s+/).length > 1 ? translated : null;
 };
 
+/* ── which cars it fits ───────────────────────────────────────────────────
+ *
+ * A-Key states this on the product page and nowhere in the export:
+ *
+ *   geeignet für folgende Fahrzeuge: FIAT NEW DOBLO - FIORINO - GRANDE PUNTO
+ *   - MITO - PEUGEOT BIPPER - TEPE - CITROEN NEMO - OPEL COMBO - FORD KA
+ *
+ * Nine cars across five makes. Keeping only "Fiat" — which is what the shop
+ * did — throws away the answer to the one question every visitor arrives
+ * with, and hides the key from the four other makes it fits.
+ *
+ * The list is one string with the make named only when it changes, so it is
+ * read left to right: a known make switches the current make, everything else
+ * is a model under it.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/** Spellings A-Key uses, mapped to the name the catalogue filters on. */
+const MAKE_ALIASES = {
+  vw: 'Volkswagen', volkswagen: 'Volkswagen',
+  citroen: 'Citroën', 'citroën': 'Citroën',
+  skoda: 'Škoda', 'škoda': 'Škoda',
+  mercedes: 'Mercedes-Benz', 'mercedes-benz': 'Mercedes-Benz', benz: 'Mercedes-Benz',
+  'mercedes benz': 'Mercedes-Benz',
+  alfa: 'Alfa Romeo', 'alfa romeo': 'Alfa Romeo',
+  landrover: 'Land Rover', 'land rover': 'Land Rover', 'range rover': 'Land Rover',
+  vauxhall: 'Opel', opel: 'Opel', holden: 'Opel',
+  chevrolet: 'Chevrolet', chevy: 'Chevrolet', gm: 'GM',
+  infinity: 'Infiniti', infiniti: 'Infiniti',
+  seat: 'Seat', audi: 'Audi', bmw: 'BMW', mini: 'Mini', ford: 'Ford',
+  fiat: 'Fiat', iveco: 'Iveco', lancia: 'Lancia', jeep: 'Jeep', dodge: 'Dodge',
+  chrysler: 'Chrysler', peugeot: 'Peugeot', renault: 'Renault', dacia: 'Dacia',
+  nissan: 'Nissan', toyota: 'Toyota', lexus: 'Lexus', honda: 'Honda',
+  acura: 'Honda', hyundai: 'Hyundai', kia: 'Kia', mazda: 'Mazda',
+  mitsubishi: 'Mitsubishi', subaru: 'Subaru', suzuki: 'Suzuki', volvo: 'Volvo',
+  saab: 'Saab', porsche: 'Porsche', jaguar: 'Jaguar', bentley: 'Bentley',
+  maserati: 'Maserati', ferrari: 'Ferrari', smart: 'Smart', rover: 'Rover',
+  ssangyong: 'SsangYong', cadillac: 'Cadillac', buick: 'Buick', tesla: 'Tesla',
+  isuzu: 'Isuzu', daihatsu: 'Daihatsu', daewoo: 'Daewoo', proton: 'Proton',
+  man: 'MAN', scania: 'Scania', daf: 'DAF',
+};
+
+/** Words that are not a car: "und andere", "u.a.", "etc.", "usw.". */
+const NOT_A_MODEL = /^(und andere|u\.?\s?a\.?|usw\.?|etc\.?|others?|various models?|diverse|weitere|andere|models?|uvm\.?|u\.v\.m\.?)$/i;
+
+const decode = (value) =>
+  (value ?? '')
+    .replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&')
+    .replace(/&nbsp;/g, ' ');
+
+/**
+ * "FIAT NEW DOBLO - FIORINO - PEUGEOT BIPPER" -> [{make:'Fiat',model:'New Doblo'},
+ * {make:'Fiat',model:'Fiorino'}, {make:'Peugeot',model:'Bipper'}]
+ */
+/** The set of make names, for telling "Opel" (a menu entry) from "Opel Combo". */
+const MAKE_WORDS = new Set(Object.keys(MAKE_ALIASES));
+
+/**
+ * The per-line form: `geeignet für Hyundai IX25 2017-2018`.
+ *
+ * A-Key's left-hand menu prints 150 lines of the same shape carrying nothing
+ * but a make, so anything that is only a make is dropped here — what is left
+ * is a real model line, often with the years the car was built.
+ */
+function parseFitmentLines(lines, fallbackMakes) {
+  const out = [];
+
+  for (const raw of lines ?? []) {
+    let line = decode(raw).trim();
+    if (!line || line.length > 160) continue;
+
+    // A label sometimes survives on the line: "z.B. folgende Fahrzeuge: …".
+    line = line.replace(/^(?:z\.?\s?B\.?|folgende\s+Fahrzeuge|Fahrzeuge|Modelle)\s*:?\s*/i, '');
+    if (line.includes(':')) continue; // still a label line, not a car
+
+    // "Hyundai IX25 2017-2018" — the years belong to every model on the line.
+    const years = line.match(/\b((?:19|20)\d{2})\s*(?:[-–—>]|bis|to)\s*((?:19|20)\d{2})?/);
+    // "Tucson 2019+" must not become "Tucson +".
+    const withoutYears = line
+      .replace(/\b(19|20)\d{2}\s*(?:[-–—>+]|bis|to)?\s*((?:19|20)\d{2})?/g, ' ')
+      .replace(/[\s+>–—-]+$/, '')
+      .trim();
+
+    // One line can name several cars — "Toyota und Lexus", "A4 / A5 / Q5" —
+    // and the list parser already knows how to walk that.
+    for (const vehicle of parseVehicles(withoutYears, fallbackMakes)) {
+      if (!vehicle.model) continue;
+      out.push({
+        ...vehicle,
+        from: years ? Number(years[1]) : 0,
+        to: years?.[2] ? Number(years[2]) : 9999,
+      });
+    }
+  }
+
+  return out;
+}
+
+function parseVehicles(raw, fallbackMakes) {
+  let text = decode(raw).trim();
+  if (!text) return [];
+
+  // A stray label sometimes survives the line join.
+  text = text.replace(/^(?:folgende\s+)?(?:Fahrzeuge|Modelle)\s*:?\s*/i, '');
+
+  const parts = text
+    .split(/\s+-\s+|\s*[,;\/]\s*|\s+u\.a\.|\s+und\s+andere|\s+und\s+|\s*&\s*|\s+en\s+/i)
+    .map((p) => p.replace(/[.\s]+$/, '').trim())
+    .filter(Boolean);
+
+  const out = [];
+  let current = fallbackMakes[0] ?? null;
+
+  for (const part of parts) {
+    if (NOT_A_MODEL.test(part)) continue;
+
+    const words = part.split(/\s+/);
+    const first = words[0].toLowerCase();
+    const firstTwo = words.slice(0, 2).join(' ').toLowerCase();
+
+    let make = null;
+    let rest = words;
+
+    if (MAKE_ALIASES[firstTwo]) {
+      make = MAKE_ALIASES[firstTwo];
+      rest = words.slice(2);
+    } else if (MAKE_ALIASES[first]) {
+      make = MAKE_ALIASES[first];
+      rest = words.slice(1);
+    }
+
+    if (make) current = make;
+
+    const model = rest.join(' ').replace(/^[-–\s]+/, '').trim();
+    if (!model) {
+      // The entry was only a make ("Audi, Skoda, Seat, VW") — that is still
+      // worth recording as a make this part fits.
+      if (make) out.push({ make, model: null });
+      continue;
+    }
+    if (NOT_A_MODEL.test(model)) continue;
+    if (!current) continue;
+
+    out.push({ make: current, model: titleCaseModel(model) });
+  }
+
+  // Same model twice (A-Key repeats them across lines) is one entry.
+  const seen = new Set();
+  return out.filter(({ make, model }) => {
+    const key = `${make}|${model ?? ''}`.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+/*
+ * A model name is a model name: "Megane II", "Grande Punto", "IX25".
+ *
+ * A-Key's lines carry other things too — trailing year markers ("Ioniq 2017+",
+ * "I30 ->"), and occasionally a whole specification ("Freemont 2+1 Tasten
+ * 433MHZ HITAG2 PCF7945A"). Printing those in the fitment list makes the shop
+ * look like a scrape of someone else's site, which is what it would be.
+ */
+/** Marques that are not in our own make list but are still not models. */
+const OTHER_BRANDS = new Set([
+  'lamborghini', 'bugatti', 'rolls royce', 'aston martin', 'mclaren', 'lotus',
+  'genesis', 'polestar', 'byd', 'mg', 'cupra', 'abarth', 'lancia', 'iveco',
+  'holden', 'scion', 'saturn', 'pontiac', 'hummer', 'infiniti', 'datsun',
+]);
+
+const MODEL_NOISE = /\b(MHZ|HITAG|PCF\d|Tasten|Buttons?|Chip|Transponder|Platine)\b/i;
+
+function cleanModel(model) {
+  const trimmed = (model ?? '')
+    // trailing "2017+", "-> 2016", "> 06"
+    .replace(/\b(19|20)?\d{2,4}\s*[+>–—-]*\s*$/g, '')
+    .replace(/[\s+>–—-]+$/g, '')
+    .replace(/^[\s+>–—-]+/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  /*
+   * Brackets that lost their contents when the years were stripped:
+   * "Tucson (alle )", "Megane 3 (bis )", "SL (129) Bj.". A bracket is kept
+   * only when something readable is still inside it.
+   */
+  const balanced = trimmed
+    .replace(/\(\s*(?:alle|bis|ab|von|seit|und)?\s*\)/gi, '')
+    .replace(/\s*\bBj\.?\s*$/i, '')
+    .replace(/^\s*(?:u\.a\.|z\.b\.)\s*/i, '')
+    .replace(/\s*[([{]\s*$/, '')
+    .replace(/^\s*[)\]}]\s*/, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  if (/^[^([]*\)/.test(balanced)) return null;
+
+  if (!balanced || balanced.length < 2 || balanced.length > 28) return null;
+  // "Audi Lamborghini" is two makes on one line, not an Audi model.
+  if (OTHER_BRANDS.has(balanced.toLowerCase())) return null;
+  if (!/^[A-Za-zÀ-ÿ]/.test(balanced)) return null;
+  if (MODEL_NOISE.test(balanced)) return null;
+  return balanced;
+}
+
+/** "GRANDE PUNTO" -> "Grande Punto", but "CLK" and "A3" keep their shape. */
+function titleCaseModel(model) {
+  return model
+    .split(/\s+/)
+    .map((word) =>
+      word.length > 3 && /^[A-ZÄÖÜ]+$/.test(word)
+        ? word[0] + word.slice(1).toLowerCase()
+        : word
+    )
+    .join(' ');
+}
+
 function specsFor({
   makes, buttons, frequency, chip, blade, articleCode, manufacturer,
   colour, material, models, blank, productType,
@@ -422,7 +638,7 @@ function specsFor({
   if (buttons) specs.push(['Aantal knoppen', String(buttons)]);
   if (productType) specs.push(['Producttype', productType]);
   if (makes.length) specs.push(['Automerk', makes.join(', ')]);
-  if (models) specs.push(['Geschikt voor o.a.', models]);
+  if (models) specs.push(['Past op modellen', models]);
   if (blank) specs.push(['Sleutelrohling', blank]);
   if (manufacturer) specs.push(['Fabrikant', manufacturer]);
   if (colour) specs.push(['Kleur', colour]);
@@ -464,9 +680,10 @@ for (const row of records) {
   if (!category) stats.noCategory++;
 
   const placement = akeyPlacement(title);
-  const makes = row.Makes
+  const csvMakes = row.Makes
     ? row.Makes.split(',').map((m) => m.trim()).filter(Boolean)
-    : (placement?.makes ?? []);
+    : [];
+  const makes = csvMakes.length ? csvMakes : (placement?.makes ?? []);
   if (!makes.length) stats.noMake++;
 
   /*
@@ -532,6 +749,48 @@ for (const row of records) {
 
   const blade = spec.blade ?? null;
 
+  /*
+   * The cars this part fits, from A-Key's own list. `makes` used to be the
+   * whole answer — brand only — so a Fiat FIR103E never surfaced for the Opel
+   * Combo or the Ford Ka it also fits, and no page ever told the customer
+   * which models were meant.
+   */
+  /*
+   * A-Key writes the make field as one string that is sometimes two makes:
+   * "Renault / Dacia". Split it, so the fallback is a real make and not a
+   * label that ends up printed as one.
+   */
+  const specMakes = (spec.make ?? '')
+    .split(/\s*[\/,&]\s*|\s+und\s+/i)
+    .map((m) => MAKE_ALIASES[m.trim().toLowerCase()] ?? (m.trim() || null))
+    .filter(Boolean);
+  const fallbackMakes = [...specMakes, ...(placement?.makes ?? [])];
+
+  const listed = parseVehicles(spec.vehicles, fallbackMakes);
+  const perLine = parseFitmentLines(spec.fitmentLines, fallbackMakes);
+
+  // Both sources, de-duplicated; the per-line form carries the year range.
+  const vehicles = [];
+  const seenVehicle = new Set();
+  for (const v of [...perLine, ...listed]) {
+    const model = v.model ? cleanModel(v.model) : null;
+    if (v.model && !model) continue; // it was noise, not a car
+    const key = `${v.make}|${model ?? ''}`.toLowerCase();
+    if (seenVehicle.has(key)) continue;
+    seenVehicle.add(key);
+    vehicles.push({ from: 0, to: 9999, ...v, model });
+  }
+  const vehicleMakes = [...new Set(vehicles.map((v) => v.make))];
+
+  /*
+   * A make named in the vehicle list counts. The Fiat FIR103E fits a Peugeot
+   * Bipper, a Citroën Nemo, an Opel Combo and a Ford Ka; before this it was
+   * filed under Fiat alone and was unfindable for the other four.
+   */
+  for (const make of vehicleMakes) {
+    if (make && !makes.includes(make)) makes.push(make);
+  }
+
   const copy = TYPE_COPY[category] ?? { noun: 'onderdeel', what: '', programming: false };
 
   /*
@@ -547,7 +806,14 @@ for (const row of records) {
   ].filter(Boolean).join(' · ');
 
   const sentences = [copy.what];
-  if (makes.length) sentences.push(`Geschikt voor ${makes.join(', ')}.`);
+  const modelNames = vehicles.filter((v) => v.model).map((v) => `${v.make} ${v.model}`);
+  if (modelNames.length) {
+    sentences.push(
+      `Past op ${modelNames.slice(0, 6).join(', ')}${modelNames.length > 6 ? ' en meer' : ''}.`
+    );
+  } else if (makes.length) {
+    sentences.push(`Geschikt voor ${makes.join(', ')}.`);
+  }
   if (frequency) sentences.push(`Werkt op ${frequency} — controleer of dit overeenkomt met uw huidige sleutel.`);
   if (chipRaw ?? chip) sentences.push(`Transponder: ${chipRaw ?? chip.toUpperCase()}.`);
   if (blade) sentences.push(`Sleutelbaard ${blade} — vergelijk dit met uw huidige sleutel.`);
@@ -580,7 +846,18 @@ for (const row of records) {
         ? localise(row.Main_Image)
         : images[0]) || '/images/product-placeholder.svg',
     images,
-    fitment: [],
+    /*
+     * Model-level fitment. A-Key publishes no year ranges, so the range is
+     * left open rather than invented — the widget must not tell someone their
+     * 2012 car is excluded on a guess.
+     */
+    fitment: vehicles
+      .filter((v) => v.model)
+      .map((v) => ({ make: v.make, model: v.model, from: v.from ?? 0, to: v.to ?? 9999 })),
+    /** The list exactly as A-Key states it, for the "past op" block. */
+    vehiclesRaw: spec.vehicles ? decode(spec.vehicles) : null,
+    /** The article A-Key says supersedes this one, when they say so. */
+    replacedBy: spec.replacedBy ?? null,
     articleCode,
     specs: specsFor({
       makes,
@@ -595,7 +872,7 @@ for (const row of records) {
       colour: dutchColour(spec.colour),
       // When A-Key put both on one line, the material is inside the colour.
       material: dutchMaterial(spec.material ?? materialInColour(spec.colour)),
-      models: cutAtLabel(spec.models),
+      models: cutAtLabel(spec.vehicles),
       blank: cutAtLabel(spec.blank),
       productType: dutchProductType(spec.productType),
     }),

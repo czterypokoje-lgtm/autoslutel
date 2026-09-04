@@ -95,28 +95,94 @@ function labelled(lines, label) {
 }
 
 /**
- * The free-text description, for the products that have no specification list.
- * The KeyDIY and Xhorse universal boards are all written this way — the
- * frequency is in a sentence rather than a field.
+ * Everything A-Key writes about the product itself.
+ *
+ * Not just the block under a "Beschreibung" heading: on a good half of their
+ * pages there is no such heading, and the line that matters most —
+ *
+ *   geeignet für folgende Fahrzeuge: FIAT NEW DOBLO - FIORINO - GRANDE PUNTO
+ *   - MITO - PEUGEOT BIPPER - TEPE - CITROEN NEMO - OPEL COMBO - FORD KA
+ *
+ * — sits outside it. That list is the whole question a customer has: does this
+ * key fit my car. Reading only the make ("Fiat") throws away eight of the nine
+ * cars it fits, and puts the key on the wrong pages.
+ *
+ * So: everything from the product heading down to the cross-sell block, which
+ * is where this product stops and other products begin.
  */
-function description(lines) {
-  const start = lines.findIndex((l) => /^Beschreibung$/i.test(l));
-  if (start < 0) return [];
+const BLOCK_END = /^(Kunden kauften|Frage zum Artikel|Kontaktdaten|Bewertungen|Ähnliche Artikel|Zuletzt angesehen|Diesen Artikel|Newsletter)/i;
+
+function productBlock(lines) {
+  /*
+   * Every page prints "Artikelnummer / <nr> / Kategorie / <category>" directly
+   * above the article's own text, so that is the reliable anchor. Looking for
+   * the heading text instead landed in the newsletter dialog on half the
+   * pages, and the description came back as "Additional contact mail (leave
+   * blank)".
+   */
+  const marker = lines.findIndex((l) => /^Kategorie$/i.test(l));
+  const start = marker >= 0 ? marker + 2 : lines.findIndex((l) => /^Beschreibung$/i.test(l));
+  if (start < 1) return [];
+
   const body = [];
-  for (const line of lines.slice(start + 1)) {
-    /*
-     * Stop at the cross-sell block. "Kunden kauften dazu folgende Artikel"
-     * is followed by other products with their own prices and article codes,
-     * and reading a frequency out of *those* would put another key's 315 MHz
-     * on this product's page.
-     */
-    if (/^(Frage zum Artikel|Kontaktdaten|Bewertungen|Ähnliche Artikel|Kunden kauften)/i.test(line)) break;
+  for (const line of lines.slice(start)) {
+    if (BLOCK_END.test(line)) break;
+    if (/^\d+[.,]\d\d\s*€/.test(line)) break; // the price ends the text
     if (line.startsWith('#') || line.includes('display: none')) continue;
+    if (/^(Beschreibung|Produktinformationen:?)$/i.test(line)) continue;
     body.push(line);
-    if (body.length >= 25) break;
+    if (body.length >= 60) break;
   }
   return body;
 }
+
+/**
+ * The cars the part fits.
+ *
+ * A-Key writes the list three ways — "geeignet für folgende Fahrzeuge:",
+ * "geeignet für z.B.:" and "passend für folgende Fahrzeuge:" — and separates
+ * the entries with hyphens, commas or slashes.
+ */
+const VEHICLE_LINE = /^(?:geeignet|passend)\s+f[üu]r\s*(?:folgende\s+)?(?:Fahrzeuge|Modelle|z\.?\s?B\.?)\s*:?\s*(.+)$/i;
+
+function vehicleList(lines) {
+  for (const line of lines) {
+    const hit = line.match(VEHICLE_LINE);
+    if (hit) {
+      const value = hit[1].trim();
+      // Not the make line, which is its own field.
+      if (/^Fahrzeugmarke/i.test(value)) continue;
+      if (value.length > 2) return value;
+    }
+  }
+  return null;
+}
+
+/*
+ * The other way A-Key states fitment — one line per car, without a label:
+ *
+ *   geeignet für Hyundai IX25 2017-2018
+ *
+ * Their left-hand menu is 150 lines of the same shape ("geeignet für Opel"),
+ * so everything is collected here and the catalogue build drops the entries
+ * that are nothing but a make name.
+ */
+const FIT_LINE = /^(?:geeignet|passend)\s+f[üu]r\s+(.{3,160})$/i;
+
+function fitmentLines(lines) {
+  const found = [];
+  for (const line of lines) {
+    const hit = line.match(FIT_LINE);
+    if (!hit) continue;
+    const value = hit[1].trim().replace(/\s+/g, ' ');
+    if (/^Fahrzeugmarke/i.test(value)) continue;
+    if (!found.includes(value)) found.push(value);
+  }
+  return found;
+}
+
+/** "(Kann durch FIR134 ersetzt werden)" — the article that supersedes this one. */
+const REPLACED_BY = /\(?\s*Kann durch\s+([A-Z0-9][A-Z0-9 .\/+-]{1,24}?)\s+ersetzt werden\s*\)?/i;
 
 const FREQ = /\b(3\d\d|4\d\d|8\d\d|9\d\d)(?:[.,]\d+)?\s*MHz\b/i;
 const CHIP = /\b(PCF\s?\d{4}[A-Z]*|HITAG\s?[0-9AP]+|MEGAMOS\s?\w*|TIRIS|4D-?\d{2}|ID\s?\d{2}[A-Z]?|8A|4A|47|46)\b/i;
@@ -139,7 +205,7 @@ for (const [i, slug] of slugs.entries()) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const lines = linesOf(await res.text());
-    const prose = description(lines);
+    const prose = productBlock(lines);
     const proseText = prose.join(' ');
 
     // Only fall back to the prose for the two fields it reliably states.
@@ -162,12 +228,22 @@ for (const [i, slug] of slugs.entries()) {
       transponder,
       colour: field(lines, 'Farbe'),
       material: field(lines, 'Material'),
-      make: field(lines, 'geeignet für Fahrzeugmarke'),
-      // "geeignet für z.B.: Megane II" — the models it is known to fit.
-      models: field(lines, 'geeignet für z\\.?B\\.?'),
+      // Both wordings occur: "geeignet für Fahrzeugmarke" and "passend für".
+      // The label is written three ways and is often glued to the line above
+      // it ("Produktinformationen: geeignet für Fahrzeugmarke: Fiat").
+      make: usable(
+        lines
+          .map((l) => l.match(/f[üu]r\s+Fahrzeugmarke\s*:\s*([^\n]{2,40})/i)?.[1])
+          .find(Boolean) ?? ''
+      ),
+      /** The models, verbatim, as A-Key lists them. */
+      vehicles: vehicleList(prose) ?? vehicleList(lines),
+      /** Every "geeignet für …" line on the page, menu entries included. */
+      fitmentLines: fitmentLines(lines),
       blank: field(lines, 'Schlüsselrohling'),
       articleNumber: labelled(lines, 'Artikelnummer'),
       akeyCategory: labelled(lines, 'Kategorie'),
+      replacedBy: usable(proseText.match(REPLACED_BY)?.[1] ?? ''),
       description: prose.length ? prose : null,
       inferred: inferred.length ? inferred : null,
     };

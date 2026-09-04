@@ -51,6 +51,10 @@ export interface CatalogProduct {
 
   /** Label/value pairs derived from the supplier data: chip, frequency, … */
   specs?: [string, string][];
+  /** The fitment list exactly as the supplier states it, for display. */
+  vehiclesRaw?: string | null;
+  /** The article the supplier says supersedes this one. */
+  replacedBy?: string | null;
   /** The supplier's own article code, when their export carries one. */
   articleCode?: string | null;
 }
@@ -177,7 +181,9 @@ function matches(p: CatalogProduct, f: Filters): boolean {
   }
   if (f.q) {
     const needle = f.q.toLowerCase();
-    const hay = `${p.title} ${p.fitment.map((x) => `${x.make} ${x.model}`).join(' ')}`.toLowerCase();
+    const hay = `${p.titleNl} ${p.title} ${p.articleCode ?? ''} ${p.fitment
+      .map((x) => `${x.make} ${x.model}`)
+      .join(' ')}`.toLowerCase();
     if (!hay.includes(needle)) return false;
   }
   return true;

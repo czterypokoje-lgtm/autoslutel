@@ -53,7 +53,7 @@
  },
  {
   "make": "GM",
-  "count": 1
+  "count": 3
  },
  {
   "make": "Honda",
@@ -61,7 +61,7 @@
  },
  {
   "make": "Hyundai",
-  "count": 48
+  "count": 56
  },
  {
   "make": "Iveco",
@@ -158,6 +158,10 @@
  {
   "make": "Toyota",
   "count": 57
+ },
+ {
+  "make": "verschiedene",
+  "count": 1
  },
  {
   "make": "Volkswagen",

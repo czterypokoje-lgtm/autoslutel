@@ -182,6 +182,9 @@ export default function Footer() {
                   iubenda-hosted URLs returned 404, so both footer links were dead. */}
               <Link href="/privacybeleid">Privacybeleid</Link>
               <Link href="/cookiebeleid">Cookiebeleid</Link>
+              {/* Required before a webshop may take an order (BW 6:230m). */}
+              <Link href="/algemene-voorwaarden">Algemene voorwaarden</Link>
+              <Link href="/verzending-en-retour">Verzending &amp; retour</Link>
               {/* Lets visitors change or withdraw consent (AVG art. 7 lid 3) */}
               <ConsentPreferencesButton />
               <Link href="/veelgestelde-vragen">FAQ</Link>

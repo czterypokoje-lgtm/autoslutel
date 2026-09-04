@@ -46,6 +46,13 @@ export const SITE_CONFIG = {
   responseTime: '30-60 minuten',
 
   kvk: '42123555',
+  /*
+   * VERIFY BEFORE INVOICING. This reads as the KvK number with "NL" and "B01"
+   * around it, and that is not how a Dutch btw-identificatienummer is issued —
+   * eenmanszaken get a randomly assigned number, a BV's is built on its RSIN.
+   * A number that belongs to someone else on an invoice is their problem and
+   * ours. Replace it with the number on your own btw-aangifte.
+   */
   btw: 'NL42123555B01',
   rating: '5.0',
   reviewCount: '8', // actual Google review count — update as it grows
@@ -62,3 +69,13 @@ export const SITE_CONFIG = {
 } as const;
 
 export const WHATSAPP_URL = '/whatsapp';
+
+/**
+ * Whether the btw number is at least in the shape the Belastingdienst issues.
+ *
+ * Pages that print it check this first, so a placeholder can never end up on
+ * an invoice or in the terms.
+ */
+export function isBtwConfigured(): boolean {
+  return /^NL\d{9}B\d{2}$/.test(SITE_CONFIG.btw ?? '');
+}

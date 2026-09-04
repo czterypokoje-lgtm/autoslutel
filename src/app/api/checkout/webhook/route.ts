@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { sendMail, orderConfirmation, orderNotification } from '@/lib/email';
+
+interface OrderLine {
+  title: string;
+  quantity: number;
+  lineTotal: number;
+}
 
 /**
  * Mollie payment webhook.
@@ -68,15 +75,41 @@ export async function POST(request: Request) {
 
     // Only ever advance a pending order. A late "expired" callback must not
     // undo an order that Mollie already reported as paid.
-    const { error } = await supabase
+    const { data: updated, error } = await supabase
       .from('orders')
       .update({ status: next, paid_at: next === 'paid' ? new Date().toISOString() : null })
       .eq('mollie_payment_id', paymentId)
-      .eq('status', 'pending');
+      .eq('status', 'pending')
+      .select(
+        'order_number, name, email, phone, street, postcode, city, items, total_inc, shipping_cost, needs_technician'
+      );
 
     if (error) {
       console.error('Order status update failed', error);
       return new NextResponse(null, { status: 500 });
+    }
+
+    /*
+     * Confirm the order to the customer, and tell the office.
+     *
+     * Only on the row this call actually moved from pending to paid — Mollie
+     * retries until it gets a 200, and the update matching zero rows is how we
+     * know a retry has already been handled. Without that check every retry
+     * would send another confirmation.
+     *
+     * The mail is awaited but never fails the webhook: Mollie must not keep
+     * retrying a payment that is correctly recorded because an e-mail provider
+     * was briefly down.
+     */
+    const order = next === 'paid' ? updated?.[0] : undefined;
+    if (order) {
+      const items = Array.isArray(order.items) ? (order.items as OrderLine[]) : [];
+      const payload = { ...order, items } as Parameters<typeof orderConfirmation>[0];
+
+      await Promise.allSettled([
+        sendMail(orderConfirmation(payload)),
+        sendMail(orderNotification({ ...payload, phone: order.phone ?? null })),
+      ]);
     }
 
     return new NextResponse(null, { status: 200 });

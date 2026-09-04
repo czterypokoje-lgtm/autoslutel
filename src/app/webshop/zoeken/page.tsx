@@ -45,6 +45,11 @@ function search(products: ShopProduct[], query: string): Hit[] {
 
     let score = 0;
 
+    const fitsModel = product.fitment.some(
+      (f) => nq.length >= 3 && normalise(`${f.make}${f.model}`).includes(nq)
+    );
+    if (fitsModel) score += 150;
+
     if (code && code === nq) score += 1000;
     else if (code && code.startsWith(nq) && nq.length >= 3) score += 500;
     else if (nq.length >= 3 && nTitle.includes(nq)) score += 200;
@@ -64,7 +69,12 @@ function search(products: ShopProduct[], query: string): Hit[] {
       product.category ?? '',
       product.subcategory ?? '',
       product.chip ?? '',
+      product.blade ?? '',
       product.frequency ?? '',
+      // The models it fits: "combo", "grande punto" and "megane" are what
+      // people actually type, and until the fitment list was read off the
+      // supplier's pages there was nothing here to match them against.
+      product.fitment.map((f) => `${f.make} ${f.model}`).join(' '),
     ]
       .join(' ')
       .toLowerCase();

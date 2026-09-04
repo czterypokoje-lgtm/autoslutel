@@ -41,14 +41,22 @@ const CATEGORY_NOTE: Record<string, string> = {
     'op het gewenste voertuig gezet.',
 };
 
-export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category, specs }: { title: string, price: number, oldPrice: number, description?: string, slug?: string, needsProgramming?: boolean, category?: string, specs?: [string, string][] }) {
+export default function ProductBuyBox({ title, price, oldPrice, description, slug, needsProgramming, category, inStock = true }: { title: string, price: number, oldPrice: number, description?: string, slug?: string, needsProgramming?: boolean, category?: string, inStock?: boolean }) {
   const [purchaseType, setPurchaseType] = useState<'ship' | 'service'>('ship');
   const [added, setAdded] = useState(false);
+  /*
+   * The two blocks below the button looked like accordions and were not: the
+   * chevrons did nothing, the description was always open and "Elke bestelling
+   * bevat" was `display: none`, so its contents never appeared at all.
+   */
+  const [openPanel, setOpenPanel] = useState<'description' | 'includes' | null>('description');
+  const toggle = (panel: 'description' | 'includes') =>
+    setOpenPanel((current) => (current === panel ? null : panel));
 
   // The button was inert. It now writes to the basket, mapping the two
   // purchase choices onto the service options the cart and checkout use.
   const handleAdd = () => {
-    if (!slug) return;
+    if (!slug || !inStock) return;
     addToCart(slug, purchaseType === 'ship' ? 'product_only' : 'mobile_tech');
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
@@ -60,13 +68,6 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
   const servicePriceTotal = price + serviceFee;
   const note = category ? CATEGORY_NOTE[category] : undefined;
 
-  /*
-   * The three answers that decide whether this key can be made to work, right
-   * next to the price. Frequency and transponder are what a customer reads off
-   * their old key; the full table is further down the page.
-   */
-  const KEY_SPECS = ['Frequentie', 'Transponder', 'Sleutelbaard', 'Aantal knoppen', 'Artikelcode'];
-  const headline = (specs ?? []).filter(([label]) => KEY_SPECS.includes(label));
   /*
    * A crossed-out price only when there genuinely is one to point at.
    *
@@ -85,44 +86,22 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontFamily: 'Inter, sans-serif' }}>
       
-      {/* 2. TITLE & REVIEWS */}
-      <div>
-        {/*
-          Removed: a "Bestseller" badge and a "Bekijk alle Autosleutel24" link
-          to "#". The badge sat on all 944 products, which is a sales claim
-          nothing supports, and the link went nowhere.
-        */}
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: bmBlack, lineHeight: 1.2, marginBottom: '0.5rem' }}>
-          {title}
-        </h1>
-        {/*
-          Removed: a five-star row with "(142 reviews)" and a "Q&A (24)" link,
-          identical on every product and backed by nothing. Restore only when
-          the counts come from real verified-purchase data.
-        */}
+      {/*
+        The title, the specification chips and the answer sentence moved to the
+        page itself, above the photos: on a phone they were below a full screen
+        of gallery, so the first thing a customer saw was an unlabelled picture.
+      */}
 
-        {headline.length > 0 && (
-          <dl
-            style={{
-              display: 'flex', flexWrap: 'wrap', gap: '0.4rem 0.5rem',
-              margin: '0.75rem 0 0', padding: 0,
-            }}
-          >
-            {headline.map(([label, value]) => (
-              <div
-                key={label}
-                style={{
-                  display: 'flex', gap: '0.35rem', alignItems: 'baseline',
-                  background: '#f1f5f9', borderRadius: 999,
-                  padding: '0.25rem 0.7rem', fontSize: '0.8rem',
-                }}
-              >
-                <dt style={{ color: '#64748b' }}>{label}</dt>
-                <dd style={{ margin: 0, fontWeight: 700, color: '#0f172a' }}>{value}</dd>
-              </div>
-            ))}
-          </dl>
-        )}
+      {/*
+        Availability before the price, as every parts shop shows it: the first
+        question is whether it can be had at all.
+      */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 700, color: inStock ? '#15803d' : '#b45309' }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10" />
+          {inStock ? <polyline points="8 12 11 15 16 9" /> : <line x1="12" y1="8" x2="12" y2="13" />}
+        </svg>
+        {inStock ? 'Op voorraad — verzending binnen 2 - 3 werkdagen' : 'Tijdelijk uitverkocht'}
       </div>
 
       {/* 3. PRICING */}
@@ -246,8 +225,11 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
 
       {/* 6. ADD TO CART BUTTON (Crutchfield Orange) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <button style={{ 
-          background: themeOrange, 
+        <button
+        id="buy-cta"
+        disabled={!inStock}
+        style={{ 
+          background: inStock ? themeOrange : '#cbd5e1', 
           color: '#fff', 
           border: 'none', 
           padding: '1rem 2rem', 
@@ -261,9 +243,11 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
         onClick={handleAdd}
         type="button"
         >
-          {added
-            ? 'Toegevoegd ✓'
-            : purchaseType === 'ship' ? 'In winkelmand' : 'Boek Monteur'}
+          {!inStock
+            ? 'Tijdelijk uitverkocht'
+            : added
+              ? 'Toegevoegd ✓'
+              : purchaseType === 'ship' ? 'In winkelmand' : 'Boek Monteur'}
         </button>
         
         <button style={{ 
@@ -286,11 +270,16 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
         
         {/* Description Accordion */}
         <div style={{ borderBottom: `1px solid ${bmBlack}` }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', cursor: 'pointer' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: bmBlack, margin: 0 }}>Description & Models</h3>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="18 15 12 9 6 15"></polyline></svg>
-          </div>
-          <div style={{ paddingBottom: '1rem', color: '#334155', fontSize: '0.9rem', lineHeight: 1.6 }}>
+          <button
+            type="button"
+            onClick={() => toggle('description')}
+            aria-expanded={openPanel === 'description'}
+            style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', cursor: 'pointer', background: 'none', border: 'none', textAlign: 'left' }}
+          >
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: bmBlack, margin: 0 }}>Beschrijving</h3>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: openPanel === 'description' ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div hidden={openPanel !== 'description'} style={{ paddingBottom: '1rem', color: '#334155', fontSize: '0.9rem', lineHeight: 1.6 }}>
             {description ? (
               <div 
                 className="product-desc-cleaned"
@@ -311,11 +300,16 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
 
         {/* Every order includes Accordion */}
         <div style={{ borderBottom: `1px solid ${bmBlack}` }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', cursor: 'pointer' }}>
+          <button
+            type="button"
+            onClick={() => toggle('includes')}
+            aria-expanded={openPanel === 'includes'}
+            style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', cursor: 'pointer', background: 'none', border: 'none', textAlign: 'left' }}
+          >
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: bmBlack, margin: 0 }}>Elke bestelling bevat</h3>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div style={{ paddingBottom: '1rem', color: '#334155', fontSize: '0.9rem', display: 'none' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: openPanel === 'includes' ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div hidden={openPanel !== 'includes'} style={{ paddingBottom: '1rem', color: '#334155', fontSize: '0.9rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg> 30 dagen retourneren</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> 1 jaar garantie op elektronica</div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import AddToCartButton from '@/components/webshop/AddToCartButton';
 
 interface ProductCardProps {
   slug: string;
@@ -69,22 +70,24 @@ export default function ProductCard({ slug, title, category, price, img, inStock
         <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>{price}</span>
       </div>
 
-      {/* Bottom Button */}
-      <Link href={`/webshop/product/${slug}`} style={{
-        marginTop: 'auto',
-        display: 'block',
-        textAlign: 'center',
-        background: '#b93c20',
-        color: '#fff',
-        padding: '0.75rem',
-        borderRadius: '6px',
-        fontWeight: 700,
-        textDecoration: 'none',
-        fontSize: '0.9rem',
-        transition: 'background 0.2s',
-      }}>
-        Bekijk Product
-      </Link>
+      {/* Buy, or read on. */}
+      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <AddToCartButton slug={slug} disabled={!inStock} />
+        <Link href={`/webshop/product/${slug}`} style={{
+          display: 'block',
+          textAlign: 'center',
+          background: '#fff',
+          color: '#0f172a',
+          border: '1px solid #cbd5e1',
+          padding: '0.7rem',
+          borderRadius: '6px',
+          fontWeight: 700,
+          textDecoration: 'none',
+          fontSize: '0.9rem',
+        }}>
+          Bekijk product
+        </Link>
+      </div>
 
     </div>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { slugify } from '@/lib/utils';
 import { FREE_SHIPPING_FROM } from '@/lib/catalog';
+import AddToCartButton from '@/components/webshop/AddToCartButton';
 
 /**
  * One product in a list view.
@@ -141,26 +142,30 @@ export default function ProductCard({
         </div>
 
         {/*
-          * A link, not a button. The old "Add to cart" button did nothing at
-          * all — a dead primary action on every card in every list.
+          * Two actions, in the order people use them: buy it, or go and read
+          * more first. The card used to offer only "Bekijken", and the button
+          * before that did nothing at all.
           */}
-        <Link
-          href={href}
-          style={{
-            width: '100%',
-            background: '#c2410c',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            fontWeight: 700,
-            fontSize: '0.9rem',
-            padding: '0.7rem 0',
-            textAlign: 'center',
-            textDecoration: 'none',
-          }}
-        >
-          Bekijken
-        </Link>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%' }}>
+          {slug && <AddToCartButton slug={slug} disabled={inStock === false} />}
+          <Link
+            href={href}
+            style={{
+              width: '100%',
+              background: '#fff',
+              color: '#0f172a',
+              border: '1px solid #cbd5e1',
+              borderRadius: '4px',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              padding: '0.7rem 0',
+              textAlign: 'center',
+              textDecoration: 'none',
+            }}
+          >
+            Bekijken
+          </Link>
+        </div>
       </div>
     </div>
   );
