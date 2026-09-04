@@ -23,6 +23,19 @@ const IN = path.join(process.cwd(), 'src/data/akey-products.csv');
 const SECTIONS = path.join(process.cwd(), 'src/data/akey-categories.json');
 const SPECS = path.join(process.cwd(), 'src/data/akey-specs.json');
 const ACCESSORIES = path.join(process.cwd(), 'src/data/akey-accessories.json');
+const KEYCASE_PHOTOS = path.join(process.cwd(), 'src/data/keycase-photos.json');
+
+/*
+ * Clean photos for key housings, matched to the AccessFobs set by
+ * scripts/extract-keycase-photos.mjs. Every A-Key photo carries their
+ * watermark across the product; these do not.
+ */
+let keycasePhotos = {};
+try {
+  keycasePhotos = JSON.parse(readFileSync(KEYCASE_PHOTOS, 'utf8'));
+} catch {
+  // Optional: without it the A-Key photo is used, watermark and all.
+}
 
 /** Names of the accessories scraped from A-Key's own section pages. */
 let accessoryData = { products: {} };
@@ -969,9 +982,11 @@ for (const row of records) {
     battery,
     costPrice,
     image:
-      (row.Main_Image && onDisk(localise(row.Main_Image))
+      // A matched, unwatermarked photo wins over A-Key's own.
+      keycasePhotos[slug]?.image ??
+      ((row.Main_Image && onDisk(localise(row.Main_Image))
         ? localise(row.Main_Image)
-        : images[0]) || '/images/product-placeholder.svg',
+        : images[0]) || '/images/product-placeholder.svg'),
     images,
     /*
      * Model-level fitment. A-Key publishes no year ranges, so the range is
