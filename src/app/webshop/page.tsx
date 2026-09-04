@@ -12,6 +12,16 @@ import BrandStrip from '@/components/webshop/BrandStrip';
 import HomeActionBanners from '@/components/HomeActionBanners/HomeActionBanners';
 import { getShopProducts } from '@/lib/shopCatalog';
 
+/*
+ * The home page reads the merged catalogue — prices, hidden products and
+ * featured flags all come from the CRM — so it cannot be baked once at build
+ * time. Product and category pages are already rendered per request; this one
+ * was static, which meant a price corrected in the CRM showed everywhere
+ * except the first page a customer sees. Five minutes is short enough to feel
+ * immediate and long enough to keep the page fast.
+ */
+export const revalidate = 300;
+
 export const metadata = {
   // Not "OEM": this catalogue is aftermarket throughout, and the title is
   // the first place a customer is told what they are buying.
