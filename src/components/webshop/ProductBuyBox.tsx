@@ -102,80 +102,73 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
         of gallery, so the first thing a customer saw was an unlabelled picture.
       */}
 
-      {/*
-        Availability before the price, as every parts shop shows it: the first
-        question is whether it can be had at all.
-      */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 700, color: inStock ? '#15803d' : '#b45309' }}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="10" />
-          {inStock ? <polyline points="8 12 11 15 16 9" /> : <line x1="12" y1="8" x2="12" y2="13" />}
+      {/* 1. Low stock / In stock */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.1rem', fontWeight: 600, color: '#0f172a' }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          {inStock ? (
+            <polyline points="20 6 9 17 4 12"></polyline>
+          ) : (
+            <>
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </>
+          )}
         </svg>
-        {inStock ? 'Op voorraad — verzending binnen 2 - 3 werkdagen' : 'Tijdelijk uitverkocht'}
+        {inStock ? 'Op voorraad' : 'Beperkte voorraad (Low stock)'}
       </div>
 
-      {/* 3. PRICING */}
+      <hr style={{ border: 'none', borderTop: '1px solid #cbd5e1', margin: '0.25rem 0' }} />
+
+      {/* 2. Ships free today (Or shipping cost) */}
+      <div style={{ display: 'flex', gap: '1rem', margin: '0.5rem 0' }}>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginTop: '0.1rem' }}>
+          <rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle>
+        </svg>
+        <div>
+          <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {price >= FREE_SHIPPING_FROM ? 'Gratis verzending' : 'Verzending €5,00'}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          </div>
+          <div style={{ fontSize: '0.95rem', color: '#1a1a1a', marginTop: '0.4rem' }}>
+            Bestel voor <span style={{ fontWeight: 800 }}>16:00</span>, en het wordt vandaag verzonden.
+          </div>
+        </div>
+      </div>
+
+      <hr style={{ border: 'none', borderTop: '1px solid #cbd5e1', margin: '0.5rem 0 1.5rem 0' }} />
+
+      {/* 3. Pricing */}
       <div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.75rem', marginBottom: '0.25rem' }}>
-          <span style={{ fontSize: '2rem', fontWeight: 800, color: bmBlack, lineHeight: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.75rem', marginBottom: '1rem' }}>
+          <span style={{ fontSize: '2.5rem', fontWeight: 900, color: bmBlack, lineHeight: 1 }}>
             {formatPrice(servicePriceTotal)}
           </span>
           {hasReference && (
             <div style={{ paddingBottom: '0.25rem' }}>
-              <span style={{ fontSize: '0.9rem', color: '#64748b', textDecoration: 'line-through', marginRight: '0.5rem' }}>
+              <span style={{ fontSize: '1rem', color: '#64748b', textDecoration: 'line-through', marginRight: '0.5rem' }}>
                 {formatPrice(oldPrice)}
-              </span>
-              <span style={{ background: '#16a34a', color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>
-                Bespaar {formatPrice(savings)}
               </span>
             </div>
           )}
         </div>
-        {/*
-          Removed: a Klarna "betaal in 3 delen" line with a "Lees meer" link to
-          "#". Klarna is not enabled on our Mollie account, so it advertised a
-          payment method the checkout does not offer. Put it back when it is
-          switched on and the link points at the terms.
-        */}
       </div>
 
-      {/* 4. TRUST & SHIPPING BADGES (Moved ABOVE the Tech/Ship selector as requested) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
-        <div style={{ background: bmBlueLight, padding: '1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.9rem', fontWeight: 600, color: bmBlack }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-          {price >= FREE_SHIPPING_FROM
-            ? 'Gratis verzending — voor 16:00 besteld, morgen in huis'
-            : `Verzending €5,00 — gratis vanaf ${formatPrice(FREE_SHIPPING_FROM)}`}
-        </div>
-        
-        <div style={{ background: bmBlueLight, padding: '1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.9rem', fontWeight: 600, color: bmBlack, cursor: 'pointer' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-            <div>
-              <div>Gratis 30 dagen retourneren</div>
-              <div style={{ fontWeight: 400, fontSize: '0.85rem' }}>1 jaar garantie</div>
-            </div>
-          </div>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
-
-        <div style={{ background: bmBlueLight, padding: '1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.9rem', fontWeight: 600, color: bmBlack, cursor: 'pointer' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            Gegarandeerd door Autosleutel24 Belofte
-          </div>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
+      {/* 4. PayPal Block */}
+      <div style={{ fontSize: '1.05rem', color: '#1a1a1a', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <img src="/images/payment/paypal.svg" alt="PayPal" style={{ height: '22px', transform: 'translateY(2px)' }} />
+        <span>
+          Betaal in 3 rentevrije delen van {formatPrice(servicePriceTotal / 3)}. <a href="#" style={{ color: '#0284c7', textDecoration: 'underline' }}>Lees meer</a>
+        </span>
+      </div>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <a href="#" style={{ color: '#1a1a1a', textDecoration: 'underline', fontSize: '1rem' }}>Bekijk andere betaalmogelijkheden (See other financing options)</a>
       </div>
 
-      {/*
-        What we do to the part before it reaches the customer. Which of the
-        four are offered depends on the article: there is nothing to transfer
-        into a battery and nothing to programme on a blade.
-      */}
+      {/* Wat moeten wij ermee doen? */}
       {services.length > 1 && (
-        <div style={{ marginTop: '0.5rem' }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem', color: bmBlack }}>
+        <div style={{ marginTop: '0.5rem', marginBottom: '1.5rem' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.75rem', color: bmBlack }}>
             Wat moeten wij ermee doen?
           </h3>
 
@@ -222,9 +215,8 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
             })}
           </div>
 
-          {/* What we will need from them, said before they pay rather than after. */}
           {(SERVICE_NEEDS[purchaseType].kenteken || SERVICE_NEEDS[purchaseType].oldKey) && (
-            <p style={{ marginTop: '0.75rem', marginBottom: 0, fontSize: '0.82rem', color: '#92400e', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 8, padding: '0.6rem 0.8rem', lineHeight: 1.5 }}>
+            <p style={{ marginTop: '0.75rem', marginBottom: 0, fontSize: '0.85rem', color: '#92400e', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 8, padding: '0.6rem 0.8rem', lineHeight: 1.5 }}>
               {SERVICE_NEEDS[purchaseType].oldKey
                 ? 'Wij vragen bij het afrekenen uw kenteken. Na uw bestelling ontvangt u het adres waar u uw oude sleutel naartoe stuurt — wij sturen hem binnen twee werkdagen na ontvangst terug.'
                 : 'Wij vragen bij het afrekenen uw kenteken. Zonder eigendomsbewijs frezen of programmeren wij niet.'}
@@ -234,44 +226,46 @@ export default function ProductBuyBox({ title, price, oldPrice, description, slu
       )}
 
       {/* 6. ADD TO CART BUTTON (Crutchfield Orange) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
         <button
-        id="buy-cta"
-        disabled={!inStock}
-        style={{ 
-          background: inStock ? themeOrange : '#cbd5e1', 
-          color: '#fff', 
-          border: 'none', 
-          padding: '1rem 2rem', 
-          fontSize: '1.1rem', 
-          fontWeight: 700, 
-          borderRadius: '6px',
-          cursor: 'pointer',
-          flex: 1,
-          boxShadow: '0 4px 6px -1px rgba(185, 60, 32, 0.2)'
-        }}
-        onClick={handleAdd}
-        type="button"
+          id="buy-cta"
+          disabled={!inStock}
+          style={{ 
+            background: inStock ? themeOrange : '#cbd5e1', 
+            color: '#fff', 
+            border: 'none', 
+            padding: '1.2rem 2.5rem', 
+            fontSize: '1.4rem', 
+            fontWeight: 700, 
+            borderRadius: '6px',
+            cursor: 'pointer',
+            flex: 1,
+            minWidth: '200px',
+            boxShadow: '0 4px 6px -1px rgba(185, 60, 32, 0.2)'
+          }}
+          onClick={handleAdd}
+          type="button"
         >
           {!inStock
-            ? 'Tijdelijk uitverkocht'
+            ? 'Uitverkocht'
             : added
               ? 'Toegevoegd ✓'
-              : 'In winkelmand'}
+              : 'Add to cart'}
         </button>
         
         <button style={{ 
-          background: '#fff', 
-          border: `1px solid ${bmBlueBorder}`, 
-          borderRadius: '6px', 
-          padding: '1rem', 
+          background: 'none', 
+          border: 'none', 
           display: 'flex', 
           alignItems: 'center', 
-          justifyContent: 'center',
+          gap: '0.5rem',
           color: bmBlack, 
+          fontSize: '1.1rem',
+          fontWeight: 500,
           cursor: 'pointer' 
         }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          Add to wishlist
         </button>
       </div>
 
