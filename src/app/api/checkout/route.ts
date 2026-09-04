@@ -3,13 +3,18 @@ import { createClient } from '@supabase/supabase-js';
 import { SITE_CONFIG } from '@/config/site.config';
 import { shippingFor, VAT_RATE } from '@/lib/catalog';
 import { getShopProductBySlug } from '@/lib/shopCatalog';
+/*
+ * From lib/services, not lib/cart: cart.ts is a client module, and a server
+ * route importing from one gets client references instead of the values —
+ * SERVICE_OPTIONS.includes() threw and every order 500'd.
+ */
 import {
   SERVICE_SURCHARGE,
   SERVICE_LABEL,
   SERVICE_NEEDS,
   SERVICE_OPTIONS,
   type ServiceOption,
-} from '@/lib/cart';
+} from '@/lib/services';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 
 /**

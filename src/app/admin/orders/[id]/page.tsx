@@ -4,7 +4,7 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../../klanten/klanten.module.css';
 import OrderPanel, { type OrderDetail } from './OrderPanel';
-import { SERVICE_LABEL, SERVICE_NEEDS, type ServiceOption } from '@/lib/cart';
+import { SERVICE_LABEL, SERVICE_NEEDS, type ServiceOption } from '@/lib/services';
 
 export const dynamic = 'force-dynamic';
 
