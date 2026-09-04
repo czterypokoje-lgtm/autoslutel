@@ -24,6 +24,7 @@ const SECTIONS = path.join(process.cwd(), 'src/data/akey-categories.json');
 const SPECS = path.join(process.cwd(), 'src/data/akey-specs.json');
 const ACCESSORIES = path.join(process.cwd(), 'src/data/akey-accessories.json');
 const KEYCASE_PHOTOS = path.join(process.cwd(), 'src/data/keycase-photos.json');
+const ACCESSFOBS = path.join(process.cwd(), 'src/data/accessfobs-key-cases.json');
 
 /*
  * Clean photos for key housings, matched to the AccessFobs set by
@@ -1221,6 +1222,110 @@ function addAccessories() {
 
 const accessoryCount = addAccessories();
 if (accessoryCount) console.log(`  + ${accessoryCount} tool accessories (Autel, OBDSTAR, Xhorse, Zed-FULL)`);
+
+/* ── the AccessFobs key cases ────────────────────────────────────────────
+ *
+ * A second range of housings beside A-Key's: clean photos, English source
+ * text naming the cars, the blade and the buttons. They are listed as their
+ * own products under their own subcategory, so both ranges stand side by side
+ * and it is visible which is which.
+ *
+ * Sold at request, not at a price. AccessFobs quote in pounds, and turning
+ * £6.00 into a euro shelf price needs a rate and a buying agreement — neither
+ * of which is mine to assume. Until the office sets one, the page says "op
+ * aanvraag" and the checkout will not sell it: src/app/api/checkout skips a
+ * line whose price is null.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+function addAccessFobsCases() {
+  let data = { products: [] };
+  try {
+    data = JSON.parse(readFileSync(ACCESSFOBS, 'utf8'));
+  } catch {
+    console.warn('  (no accessfobs-key-cases.json — run scripts/extract-accessfobs-cases.mjs)');
+    return 0;
+  }
+
+  let added = 0;
+
+  for (const entry of data.products) {
+    if (!entry.title || !entry.image) continue;
+
+    let slug = slugify(`accessfobs-${entry.title}`);
+    if (seenSlugs.has(slug)) {
+      let n = 2;
+      while (seenSlugs.has(`${slug}-${n}`)) n++;
+      slug = `${slug}-${n}`;
+    }
+    seenSlugs.add(slug);
+
+    const models = entry.vehicles ?? [];
+    const modelNames = models.map((v) => `${v.make} ${v.model}`.trim());
+
+    const titleNl = [
+      'Sleutelbehuizing',
+      entry.makes.slice(0, 3).join(', ') || null,
+      entry.buttons ? `${entry.buttons} knoppen` : null,
+      entry.blade,
+    ].filter(Boolean).join(' · ');
+
+    const sentences = [
+      'Vervangt de versleten of gebarsten kast; de elektronica uit uw eigen sleutel gaat over.',
+      modelNames.length
+        ? `Past op ${modelNames.slice(0, 6).join(', ')}${modelNames.length > 6 ? ' en meer' : ''}.`
+        : null,
+      entry.blade ? `Sleutelbaard ${entry.blade} — vergelijk dit met uw huidige sleutel.` : null,
+      'Prijs op aanvraag: bel of app ons met uw kenteken, dan bevestigen wij levertijd en prijs.',
+    ].filter(Boolean);
+
+    products.push({
+      id: `AF-${entry.id}`,
+      slug,
+      // Named, so it is never mistaken for the A-Key range.
+      supplier: 'AccessFobs',
+      title: entry.title,
+      titleNl,
+      category: 'behuizingen',
+      subcategory: 'AccessFobs behuizing',
+      audience: 'public',
+      makes: entry.makes,
+      manufacturer: 'AccessFobs',
+      condition: 'aftermarket',
+      buttons: entry.buttons,
+      frequency: null,
+      chip: null,
+      blade: entry.blade,
+      battery: null,
+      // No price: a pound figure is not a euro shelf price, and the rate and
+      // the buying terms are the office's to set.
+      costPrice: null,
+      image: entry.image,
+      images: [entry.image],
+      fitment: models,
+      vehiclesRaw: modelNames.join(', ') || null,
+      replacedBy: null,
+      articleCode: null,
+      specs: [
+        entry.blade ? ['Sleutelbaard', entry.blade] : null,
+        entry.buttons ? ['Aantal knoppen', String(entry.buttons)] : null,
+        entry.makes.length ? ['Automerk', entry.makes.join(', ')] : null,
+        modelNames.length ? ['Past op modellen', modelNames.slice(0, 8).join(', ')] : null,
+        ['Herkomst', 'AccessFobs (VK)'],
+      ].filter(Boolean),
+      excerpt: sentences[0],
+      descriptionNl: sentences.join(' '),
+      directAnswer: sentences[0],
+      metaDescriptionNl: `${titleNl}. Sleutelbehuizing op aanvraag.`.slice(0, 155),
+    });
+
+    added++;
+  }
+
+  return added;
+}
+
+const accessFobsCount = addAccessFobsCases();
+if (accessFobsCount) console.log(`  + ${accessFobsCount} AccessFobs key cases (price on request)`);
 
 /** Facet counts, so a filter never offers an option with no results behind it. */
 function facetCount(key) {

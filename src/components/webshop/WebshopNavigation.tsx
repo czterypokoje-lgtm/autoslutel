@@ -12,6 +12,8 @@ const categoryLinks = [
   { href: '/webshop/merken', label: 'Merken' },
   { href: '/webshop/catalogus?category=afstandsbedieningen', label: 'Autosleutels' },
   { href: '/webshop/catalogus?category=behuizingen', label: 'Behuizingen' },
+  /* Two ranges of housings; this is the one with our own clean photos. */
+  { href: '/webshop/catalogus?subcategory=AccessFobs+behuizing', label: 'Behuizingen (AccessFobs)' },
   { href: '/webshop/catalogus?category=batterijen', label: 'Batterijen' },
   { href: '/webshop/catalogus?category=printplaten', label: 'Printplaten' },
   { href: '/webshop/catalogus?subcategory=smart+key', label: 'Smart Keys' },
