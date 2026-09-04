@@ -75,46 +75,6 @@ export default function WebshopNavigation() {
         aria-label="Menu openen"
       />
       
-      {/* Top Orange Bar */}
-      <div className="shop-topbar">
-        <div className="shop-topbar-text">
-          {/* The real rule from the catalogue, not a flat promise: shipping is
-              €5,00 and free from €25,00, and delivery is 2-3 working days. */}
-          Gratis verzending vanaf €25 · levertijd 2 - 3 werkdagen
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          
-          {/* Phone Pill (White bg, Red text) */}
-          <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ 
-            display: 'flex', alignItems: 'center', gap: '0.5rem', 
-            background: '#fff', color: '#b93c20', 
-            padding: '0.2rem 0.75rem', borderRadius: '999px',
-            textDecoration: 'none'
-          }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontWeight: 800, lineHeight: 1.1, fontSize: '0.9rem' }}>{SITE_CONFIG.phone}</span>
-              <span style={{ fontSize: '0.7rem', fontWeight: 600 }}>24/7 Bereikbaar</span>
-            </div>
-          </a>
-
-          {/* Chat Pill (Red bg, White border, White text) */}
-          <div className="shop-topbar-chat" style={{ 
-            display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer',
-            border: '1.5px solid #fff', color: '#fff',
-            padding: '0.2rem 0.75rem', borderRadius: '999px'
-          }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="10" x2="15" y2="10" stroke="#b93c20" strokeWidth="2"></line><line x1="9" y1="14" x2="15" y2="14" stroke="#b93c20" strokeWidth="2"></line></svg>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontWeight: 800, lineHeight: 1.1, fontSize: '0.9rem' }}>Chat</span>
-              <span style={{ fontSize: '0.7rem', fontWeight: 600 }}>met expert</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
       {/* Main White Bar */}
       <div className="shop-header-bar">
         
@@ -177,6 +137,66 @@ export default function WebshopNavigation() {
             <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Winkelmand</span>
           </Link>
         </div>
+      </div>
+
+      {/*
+        Two bars under the search, in the order a customer needs them: who to
+        ask, then what it costs to get it here.
+
+        The phone number used to sit in a pill in an orange bar above the logo,
+        where it read as decoration. Here it is a person with a name, which is
+        what it actually is: Berkan picks up.
+
+        The panel expands from a checkbox, so it opens with or without
+        JavaScript — the same reason the menu does.
+      */}
+      <input type="checkbox" id="shop-expert-toggle" className="shop-expert-toggle" aria-label="Contactgegevens tonen" />
+
+      <div className="shop-expert">
+        <label className="shop-expert-head" htmlFor="shop-expert-toggle">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+            alt=""
+            className="shop-expert-photo"
+          />
+          <span className="shop-expert-text">
+            <strong>Bel of app ons</strong>
+            <span>met een expert zoals Berkan</span>
+          </span>
+          <svg className="shop-expert-caret" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </label>
+
+        <div className="shop-expert-panel">
+          {/*
+            One wrapper, deliberately: the collapse animates grid-template-rows
+            from 0fr, and with two children the second one lands in an implicit
+            auto row and stays visible — which is exactly what it did.
+          */}
+          <div className="shop-expert-panel-inner">
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} className="shop-expert-action">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+            <span><strong>{SITE_CONFIG.phone}</strong> · 24/7 bereikbaar</span>
+          </a>
+          <a
+            href={`https://wa.me/${SITE_CONFIG.whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shop-expert-action"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+            <span>WhatsApp — stuur uw kenteken, wij zoeken het uit</span>
+          </a>
+          </div>
+        </div>
+      </div>
+
+      {/* The real rule from the catalogue: €5,00 shipping, free from €25,00,
+          and 2-3 working days because the parts come from Germany. */}
+      <div className="shop-shipping-bar">
+        Gratis verzending vanaf €25 · levertijd 2 - 3 werkdagen
       </div>
 
       {/* Category Bottom Nav */}

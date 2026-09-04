@@ -1537,3 +1537,103 @@ details[open] summary { color: var(--orange-500); }
   .brand-chip { padding: .55rem .7rem; }
   .brand-chip-name { font-size: .88rem; }
 }
+
+/* ── the expert strip and the shipping bar ───────────────────────────────
+   Two bars under the search: who to ask, then what delivery costs. The
+   phone number used to sit in a pill in an orange bar above the logo,
+   where it read as decoration rather than as a person who picks up.
+   ───────────────────────────────────────────────────────────────────────── */
+.shop-expert-toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shop-expert {
+  background: #f7ece7;
+  border-bottom: 1px solid #ecdcd4;
+}
+
+.shop-expert-head {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: .6rem clamp(1rem, 4vw, 1.5rem);
+  cursor: pointer;
+  color: #0f172a;
+}
+
+.shop-expert-photo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #b93c20;
+  flex-shrink: 0;
+}
+
+.shop-expert-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+.shop-expert-text strong { font-size: 1rem; font-weight: 800; }
+.shop-expert-text span { font-size: .85rem; color: #6b5b54; }
+
+.shop-expert-caret {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: #6b5b54;
+  transition: transform .18s ease-out;
+}
+.shop-expert-toggle:checked ~ .shop-expert .shop-expert-caret { transform: rotate(180deg); }
+
+/* Collapsed by default; grid-template-rows animates to a natural height.
+   One child only — a second one lands in an implicit auto row and never
+   collapses. */
+.shop-expert-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .2s ease-out;
+}
+.shop-expert-panel-inner { overflow: hidden; }
+.shop-expert-toggle:checked ~ .shop-expert .shop-expert-panel { grid-template-rows: 1fr; }
+
+.shop-expert-panel {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 1.5rem);
+}
+
+.shop-expert-action {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .7rem 0;
+  min-height: 44px;
+  color: #0f172a;
+  text-decoration: none;
+  font-size: .9rem;
+  border-top: 1px solid #ecdcd4;
+}
+.shop-expert-action svg { color: #b93c20; flex-shrink: 0; }
+
+.shop-shipping-bar {
+  background: #b93c20;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+  font-size: clamp(.85rem, 3.2vw, 1rem);
+  padding: .65rem 1rem;
+  line-height: 1.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-expert-panel,
+  .shop-expert-caret { transition: none; }
+}
