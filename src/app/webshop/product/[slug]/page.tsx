@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import TrustSection from '@/components/webshop/TrustSection';
 import ProductRelatedSearches from '@/components/webshop/ProductRelatedSearches';
+import CustomerLifestyleGallery from '@/components/webshop/CustomerLifestyleGallery';
 import ProductBundleSection from '@/components/webshop/ProductBundleSection';
 import ProductBuyBox from '@/components/webshop/ProductBuyBox';
 import VehicleFitmentWidget from '@/components/webshop/VehicleFitmentWidget';
@@ -292,6 +293,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
 
       <ProductRelatedSearches product={entry} />
       <TrustSection />
+      <CustomerLifestyleGallery />
 
       <BackToTop />
 
