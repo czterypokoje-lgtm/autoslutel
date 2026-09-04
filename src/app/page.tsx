@@ -16,6 +16,7 @@ import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import HomeActionBanners from '@/components/HomeActionBanners/HomeActionBanners';
 
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
@@ -226,6 +227,9 @@ export default function HomePage() {
           ]}
         />
       </div>
+
+      {/* ── ACTION BANNERS (4 Columns) ───────────────────────────────────────────── */}
+      <HomeActionBanners />
 
       {/* ===== E-E-A-T MEET THE OWNER ===== */}
       <section style={{ padding: '4rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
