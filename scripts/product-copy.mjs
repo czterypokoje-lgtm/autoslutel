@@ -161,7 +161,14 @@ const titleCase = (text) =>
  */
 function modelsIn(tail, fallback = null) {
   const out = [];
-  for (const chunk of String(tail ?? '').split(/\s*[,;|]\s*|\s+-\s+|\s*\/\s*/)) {
+  /*
+   * " - " separates two models, but it also separates the two ends of a year
+   * range: "Toyota Prius   2010 - 2011". Splitting on it first cut that range
+   * in half, and the Prius came out as "2010–nu" — a key sold for a two-year
+   * model, offered for every Prius since.
+   */
+  const source = String(tail ?? '').replace(/((?:19|20)\d{2})\s*-\s*((?:19|20)\d{2})/g, '$1-$2');
+  for (const chunk of source.split(/\s*[,;|]\s*|\s+-\s+|\s*\/\s*/)) {
     const text = chunk.replace(/\s+/g, ' ').trim();
     if (!text) continue;
 
@@ -250,6 +257,21 @@ export function fitmentOf(product, statedMakes) {
     if (!isFitmentLine(line)) continue;
     // Everything after the label; the label itself may sit mid-sentence.
     let text = FIT_MARKER.test(line) ? line.split(FIT_MARKER).slice(1).join(' ') : line;
+
+    /*
+     * Tool compatibility lists put the year first: "2018- TOYOTA PRIUS",
+     * "Ab 2019 – LEXUS ES". Everything after a make was read as the model and
+     * the year, sitting in front, was lost — 48 cars on one OBDSTAR kit came
+     * out with no years at all.
+     */
+    const leadingYear = text.match(/^\s*(?:ab\s+)?((?:19|20)\d{2})\s*[-–—]?\s*((?:19|20)\d{2})?\s+(?=\D)/i);
+    if (leadingYear) {
+      sources.push({
+        text: text.slice(leadingYear[0].length),
+        years: { from: Number(leadingYear[1]), to: leadingYear[2] ? Number(leadingYear[2]) : 9999 },
+      });
+      continue;
+    }
 
     // "2007 -2016" on the next line is this list's year range.
     const next = lines[i + 1]?.trim();
@@ -726,7 +748,7 @@ const escape = (text) =>
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
 
-/** "Golf Sportsvan 2014 t/m nu" */
+/** "Golf Sportsvan vanaf 2014", "Prius 2010–2011" */
 export const fitmentLabel = (entry) => {
   const years =
     entry.from && entry.from > 1950

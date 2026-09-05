@@ -42,7 +42,7 @@
   "make": "Toyota",
   "model": "Cruiser",
   "from": 2007,
-  "to": 9999,
+  "to": 2019,
   "chips": [
    "8A",
    "DST 80Bit - Plus"
@@ -163,7 +163,7 @@
  "Toyota Crown": {
   "make": "Toyota",
   "model": "Crown",
-  "from": 2022,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "8A - AA",
@@ -207,7 +207,7 @@
  "Toyota Rav4": {
   "make": "Toyota",
   "model": "Rav4",
-  "from": 2019,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "8A",
@@ -229,7 +229,7 @@
   "make": "Toyota",
   "model": "Yaris L",
   "from": 2018,
-  "to": 9999,
+  "to": 2021,
   "chips": [
    "8A"
   ],
@@ -247,8 +247,8 @@
  "Toyota Tundra": {
   "make": "Toyota",
   "model": "Tundra",
-  "from": 9999,
-  "to": 9999,
+  "from": 2021,
+  "to": 2024,
   "chips": [
    "8A"
   ],
@@ -262,8 +262,8 @@
  "Toyota Sienna": {
   "make": "Toyota",
   "model": "Sienna",
-  "from": 9999,
-  "to": 9999,
+  "from": 2020,
+  "to": 2024,
   "chips": [
    "8A"
   ],
@@ -277,8 +277,8 @@
  "Toyota Harrier": {
   "make": "Toyota",
   "model": "Harrier",
-  "from": 9999,
-  "to": 9999,
+  "from": 2020,
+  "to": 2024,
   "chips": [
    "8A"
   ],
@@ -312,8 +312,8 @@
  "Toyota Venza": {
   "make": "Toyota",
   "model": "Venza",
-  "from": 9999,
-  "to": 9999,
+  "from": 2022,
+  "to": 2024,
   "chips": [
    "8A"
   ],
@@ -327,7 +327,7 @@
  "Toyota Alphard": {
   "make": "Toyota",
   "model": "Alphard",
-  "from": 9999,
+  "from": 2022,
   "to": 9999,
   "chips": [
    "8A"
@@ -345,8 +345,8 @@
  "Toyota Sequoia": {
   "make": "Toyota",
   "model": "Sequoia",
-  "from": 9999,
-  "to": 9999,
+  "from": 2023,
+  "to": 2024,
   "chips": [
    "8A"
   ],
@@ -360,7 +360,7 @@
  "Toyota Vellfire": {
   "make": "Toyota",
   "model": "Vellfire",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "8A",
@@ -407,7 +407,7 @@
  "Toyota Corolla Cross": {
   "make": "Toyota",
   "model": "Corolla Cross",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -422,7 +422,7 @@
  "Toyota Corolla Sport": {
   "make": "Toyota",
   "model": "Corolla Sport",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -437,7 +437,7 @@
  "Toyota Corolla Sport Hv": {
   "make": "Toyota",
   "model": "Corolla Sport Hv",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -452,7 +452,7 @@
  "Toyota Corolla Touring": {
   "make": "Toyota",
   "model": "Corolla Touring",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -467,7 +467,7 @@
  "Toyota Corolla Touring Hv": {
   "make": "Toyota",
   "model": "Corolla Touring Hv",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -482,7 +482,7 @@
  "Toyota Corolla Hv": {
   "make": "Toyota",
   "model": "Corolla Hv",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -497,7 +497,7 @@
  "Toyota Levin": {
   "make": "Toyota",
   "model": "Levin",
-  "from": 9999,
+  "from": 2019,
   "to": 9999,
   "chips": [
    "4A"
@@ -512,7 +512,7 @@
  "Toyota Levin Hv": {
   "make": "Toyota",
   "model": "Levin Hv",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -527,7 +527,7 @@
  "Toyota Allion": {
   "make": "Toyota",
   "model": "Allion",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -542,7 +542,7 @@
  "Toyota Highlander": {
   "make": "Toyota",
   "model": "Highlander",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -557,7 +557,7 @@
  "Toyota Izoa": {
   "make": "Toyota",
   "model": "Izoa",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -572,7 +572,7 @@
  "Toyota Alpharo": {
   "make": "Toyota",
   "model": "Alpharo",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -587,7 +587,7 @@
  "Lexus Lc": {
   "make": "Lexus",
   "model": "Lc",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -602,7 +602,7 @@
  "Toyota Rav4 Hv": {
   "make": "Toyota",
   "model": "Rav4 Hv",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -617,7 +617,7 @@
  "Toyota Avalon": {
   "make": "Toyota",
   "model": "Avalon",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -632,7 +632,7 @@
  "Toyota Crown Kluger Hv": {
   "make": "Toyota",
   "model": "Crown Kluger Hv",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -647,7 +647,7 @@
  "Lexus Es": {
   "make": "Lexus",
   "model": "Es",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -662,7 +662,7 @@
  "Lexus Ux": {
   "make": "Lexus",
   "model": "Ux",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -677,7 +677,7 @@
  "Lexus Rx": {
   "make": "Lexus",
   "model": "Rx",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -692,7 +692,7 @@
  "Lexus Ls": {
   "make": "Lexus",
   "model": "Ls",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -707,7 +707,7 @@
  "Renault Clio 5": {
   "make": "Renault",
   "model": "Clio 5",
-  "from": 9999,
+  "from": 2020,
   "to": 9999,
   "chips": [
    "4A"
@@ -738,7 +738,7 @@
  "Renault Arkana": {
   "make": "Renault",
   "model": "Arkana",
-  "from": 9999,
+  "from": 2020,
   "to": 9999,
   "chips": [
    "4A"
@@ -804,7 +804,7 @@
  "Renault Zoe": {
   "make": "Renault",
   "model": "Zoe",
-  "from": 9999,
+  "from": 2020,
   "to": 9999,
   "chips": [
    "4A"
@@ -819,7 +819,7 @@
  "Renault Traffic": {
   "make": "Renault",
   "model": "Traffic",
-  "from": 9999,
+  "from": 2022,
   "to": 9999,
   "chips": [
    "4A"
@@ -836,7 +836,7 @@
  "Renault Megane 4 Ph2": {
   "make": "Renault",
   "model": "Megane 4 Ph2",
-  "from": 9999,
+  "from": 2021,
   "to": 9999,
   "chips": [
    "4A"
@@ -851,7 +851,7 @@
  "Dodge Charger": {
   "make": "Dodge",
   "model": "Charger",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -866,7 +866,7 @@
  "Dodge Ram": {
   "make": "Dodge",
   "model": "Ram",
-  "from": 9999,
+  "from": 2019,
   "to": 9999,
   "chips": [
    "4A"
@@ -881,7 +881,7 @@
  "Dodge Challenger": {
   "make": "Dodge",
   "model": "Challenger",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -896,7 +896,7 @@
  "Dodge Durango": {
   "make": "Dodge",
   "model": "Durango",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -911,7 +911,7 @@
  "Dodge Journey": {
   "make": "Dodge",
   "model": "Journey",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -926,7 +926,7 @@
  "Jeep Renegade Prox": {
   "make": "Jeep",
   "model": "Renegade Prox",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -941,7 +941,7 @@
  "Jeep Renegade": {
   "make": "Jeep",
   "model": "Renegade",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -956,7 +956,7 @@
  "Jeep Compass Blade": {
   "make": "Jeep",
   "model": "Compass Blade",
-  "from": 9999,
+  "from": 2019,
   "to": 9999,
   "chips": [
    "4A"
@@ -971,7 +971,7 @@
  "Jeep Compass Prox": {
   "make": "Jeep",
   "model": "Compass Prox",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -986,7 +986,7 @@
  "Jeep Cherokee": {
   "make": "Jeep",
   "model": "Cherokee",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -1001,7 +1001,7 @@
  "Jeep Grand Cherokee": {
   "make": "Jeep",
   "model": "Grand Cherokee",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -1016,7 +1016,7 @@
  "Jeep Wrangler": {
   "make": "Jeep",
   "model": "Wrangler",
-  "from": 9999,
+  "from": 2018,
   "to": 9999,
   "chips": [
    "4A"
@@ -1031,7 +1031,7 @@
  "Chrysler Pacifica Prox": {
   "make": "Chrysler",
   "model": "Pacifica Prox",
-  "from": 9999,
+  "from": 2017,
   "to": 9999,
   "chips": [
    "4A"
@@ -1046,7 +1046,7 @@
  "Chrysler 300c": {
   "make": "Chrysler",
   "model": "300c",
-  "from": 9999,
+  "from": 2015,
   "to": 9999,
   "chips": [
    "4A"
@@ -1168,25 +1168,6 @@
    "behuizingen": 2
   }
  },
- "Opel Corsa C": {
-  "make": "Opel",
-  "model": "Corsa C",
-  "from": 2001,
-  "to": 9999,
-  "chips": [],
-  "blades": [
-   "HU46",
-   "HU100"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 7,
-  "categories": {
-   "afstandsbedieningen": 2,
-   "behuizingen": 5
-  }
- },
  "Saab Produkt": {
   "make": "Saab",
   "model": "Produkt",
@@ -1217,7 +1198,7 @@
   "make": "Opel",
   "model": "Ascona",
   "from": 1975,
-  "to": 9999,
+  "to": 1981,
   "chips": [],
   "blades": [],
   "frequencies": [],
@@ -1230,7 +1211,7 @@
   "make": "Opel",
   "model": "Kadett",
   "from": 1973,
-  "to": 9999,
+  "to": 1983,
   "chips": [],
   "blades": [],
   "frequencies": [],
@@ -1243,7 +1224,7 @@
   "make": "Opel",
   "model": "Manta",
   "from": 1975,
-  "to": 9999,
+  "to": 1981,
   "chips": [],
   "blades": [],
   "frequencies": [],
@@ -1256,7 +1237,7 @@
   "make": "Volkswagen",
   "model": "Crafter",
   "from": 2006,
-  "to": 9999,
+  "to": 2016,
   "chips": [
    "48 Megamos"
   ],
@@ -1382,7 +1363,7 @@
   "make": "Mazda",
   "model": "3 Beide",
   "from": 2009,
-  "to": 9999,
+  "to": 2013,
   "chips": [
    "4D"
   ],
@@ -1949,7 +1930,7 @@
   "make": "Jeep",
   "model": "Compass",
   "from": 2014,
-  "to": 9999,
+  "to": 2022,
   "chips": [
    "PCF7953M - HITAG AES - 4A"
   ],
@@ -4740,35 +4721,11 @@
    "afstandsbedieningen": 1
   }
  },
- "Hyundai Santa Fe": {
+ "Hyundai Santa Fe Keyless Start": {
   "make": "Hyundai",
-  "model": "Santa Fe",
+  "model": "Santa Fe Keyless Start",
   "from": 2012,
-  "to": 9999,
-  "chips": [
-   "PCF7945A / 46Chip",
-   "PCF7936"
-  ],
-  "blades": [
-   "TOY48",
-   "TOY49",
-   "KIA9"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 3,
-  "categories": {
-   "smart-keys": 1,
-   "afstandsbedieningen": 1,
-   "behuizingen": 1
-  }
- },
- "Hyundai Keyless Start": {
-  "make": "Hyundai",
-  "model": "Keyless Start",
-  "from": 2015,
-  "to": 9999,
+  "to": 2015,
   "chips": [
    "PCF7945A / 46Chip"
   ],
@@ -5071,7 +5028,7 @@
   "make": "Chrysler",
   "model": "300 Bj",
   "from": 2011,
-  "to": 9999,
+  "to": 2018,
   "chips": [
    "HITAG2"
   ],
@@ -5913,7 +5870,7 @@
   "make": "Land Rover",
   "model": "Sport",
   "from": 2009,
-  "to": 9999,
+  "to": 2018,
   "chips": [
    "PCF7945P"
   ],
@@ -5984,6 +5941,27 @@
    "afstandsbedieningen": 1
   }
  },
+ "Hyundai Santa Fe": {
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "from": 2018,
+  "to": 9999,
+  "chips": [
+   "PCF7936"
+  ],
+  "blades": [
+   "TOY49",
+   "KIA9"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 2,
+  "categories": {
+   "afstandsbedieningen": 1,
+   "behuizingen": 1
+  }
+ },
  "Kia Santa Fe": {
   "make": "Kia",
   "model": "Santa Fe",
@@ -6052,6 +6030,22 @@
   "count": 6,
   "categories": {
    "transpondersleutels": 6
+  }
+ },
+ "Opel Corsa C": {
+  "make": "Opel",
+  "model": "Corsa C",
+  "from": 2001,
+  "to": 9999,
+  "chips": [],
+  "blades": [
+   "HU46",
+   "HU100"
+  ],
+  "frequencies": [],
+  "count": 5,
+  "categories": {
+   "behuizingen": 5
   }
  },
  "Nissan Primera": {
@@ -7159,7 +7153,7 @@
   "make": "Volkswagen",
   "model": "Beetle",
   "from": 1998,
-  "to": 9999,
+  "to": 2019,
   "chips": [
    "48 Megamos"
   ],
@@ -7422,7 +7416,7 @@
   "make": "Chevrolet",
   "model": "Camaro",
   "from": 2008,
-  "to": 9999,
+  "to": 2016,
   "chips": [
    "ID46 / PCF7952"
   ],
@@ -7439,7 +7433,7 @@
   "make": "Chevrolet",
   "model": "Aveo",
   "from": 2008,
-  "to": 9999,
+  "to": 2016,
   "chips": [
    "ID46 / PCF7952"
   ],
@@ -7497,7 +7491,7 @@
   "make": "Opel",
   "model": "Astra J",
   "from": 2006,
-  "to": 9999,
+  "to": 2014,
   "chips": [
    "PFC7937E/NCF2951E"
   ],
@@ -7516,7 +7510,7 @@
   "make": "Opel",
   "model": "Adam",
   "from": 2006,
-  "to": 9999,
+  "to": 2016,
   "chips": [
    "PFC7937E/NCF2951E"
   ],
@@ -7536,7 +7530,7 @@
   "make": "Opel",
   "model": "Zafira C",
   "from": 2013,
-  "to": 9999,
+  "to": 2018,
   "chips": [
    "PFC7937E/NCF2951E"
   ],
@@ -7555,7 +7549,7 @@
   "make": "Opel",
   "model": "Corsa E",
   "from": 2008,
-  "to": 9999,
+  "to": 2018,
   "chips": [
    "PFC7937E/NCF2951E"
   ],
@@ -7574,7 +7568,7 @@
   "make": "Chevrolet",
   "model": "Orlando",
   "from": 2015,
-  "to": 9999,
+  "to": 2018,
   "chips": [
    "PFC7937E/NCF2951E"
   ],
@@ -7593,7 +7587,7 @@
   "make": "Chevrolet",
   "model": "Mokka",
   "from": 2008,
-  "to": 9999,
+  "to": 2016,
   "chips": [
    "PFC7937E/NCF2951E"
   ],

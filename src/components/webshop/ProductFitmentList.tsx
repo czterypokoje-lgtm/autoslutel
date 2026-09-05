@@ -28,7 +28,9 @@ export default function ProductFitmentList({ product }: { product: ShopProduct }
    */
   const label = ({ model, from, to }: { model: string; from: number; to: number }) => {
     if (!from || from < 1950) return model;
-    return `${model} (${from}${to && to < 9000 ? `–${to}` : '–nu'})`;
+    // "2010–nu" reads as a promise that it still fits this year's car. A-Key
+    // only wrote a start year; "vanaf 2010" says exactly that and no more.
+    return to && to < 9000 ? `${model} ${from}–${to}` : `${model} vanaf ${from}`;
   };
 
   const byMake = new Map<string, string[]>();

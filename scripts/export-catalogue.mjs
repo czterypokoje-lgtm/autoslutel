@@ -100,7 +100,12 @@ function toCsv(rows, headers, delimiter = ';', bom = false) {
 
 const models = (p) =>
   (p.fitment ?? [])
-    .map((f) => `${f.make} ${f.model}${f.from && f.from > 1950 ? ` ${f.from}-${f.to < 9000 ? f.to : 'nu'}` : ''}`)
+    // "vanaf 2014", never "2014-nu": A-Key states a start year, not that the
+    // part still fits a car built this year.
+    .map((f) => {
+      const years = f.from > 1950 ? (f.to && f.to < 9000 ? ` ${f.from}-${f.to}` : ` vanaf ${f.from}`) : '';
+      return `${f.make} ${f.model}${years}`;
+    })
     .join(' | ');
 
 const imageUrl = (p) =>
