@@ -1941,11 +1941,10 @@
    "315 MHz",
    "433 MHz"
   ],
-  "count": 7,
+  "count": 6,
   "categories": {
    "behuizingen": 2,
    "afstandsbedieningen": 3,
-   "sleutelmachines": 1,
    "smart-keys": 1
   }
  },
@@ -2520,10 +2519,9 @@
    "315 MHz",
    "433 MHz"
   ],
-  "count": 5,
+  "count": 4,
   "categories": {
    "afstandsbedieningen": 2,
-   "sleutelmachines": 1,
    "smart-keys": 1,
    "behuizingen": 1
   }
@@ -3000,10 +2998,9 @@
   ],
   "blades": [],
   "frequencies": [],
-  "count": 2,
+  "count": 1,
   "categories": {
-   "programmeerapparatuur": 1,
-   "sleutelmachines": 1
+   "programmeerapparatuur": 1
   }
  },
  "Audi Nsu U.a": {
@@ -3121,287 +3118,6 @@
   "count": 1,
   "categories": {
    "accessoires": 1
-  }
- },
- "Ford Mondeo": {
-  "make": "Ford",
-  "model": "Mondeo",
-  "from": 1994,
-  "to": 9999,
-  "chips": [
-   "PCF7953P / ID49"
-  ],
-  "blades": [
-   "incl.",
-   "HU101",
-   "FO21"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 12,
-  "categories": {
-   "sleutelmachines": 1,
-   "afstandsbedieningen": 3,
-   "smart-keys": 1,
-   "behuizingen": 7
-  }
- },
- "Ford EcoSport": {
-  "make": "Ford",
-  "model": "EcoSport",
-  "from": 2012,
-  "to": 9999,
-  "chips": [],
-  "blades": [
-   "HU101"
-  ],
-  "frequencies": [],
-  "count": 5,
-  "categories": {
-   "sleutelmachines": 1,
-   "behuizingen": 4
-  }
- },
- "Ford Edge": {
-  "make": "Ford",
-  "model": "Edge",
-  "from": 2016,
-  "to": 9999,
-  "chips": [
-   "PCF7953P / ID49",
-   "PCF7945A / PCF7953A"
-  ],
-  "blades": [
-   "HU101"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 4,
-  "categories": {
-   "sleutelmachines": 1,
-   "afstandsbedieningen": 2,
-   "behuizingen": 1
-  }
- },
- "Ford Escape": {
-  "make": "Ford",
-  "model": "Escape",
-  "from": 2020,
-  "to": 9999,
-  "chips": [
-   "PCF7945A / PCF7953A"
-  ],
-  "blades": [
-   "HU101"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 2,
-  "categories": {
-   "sleutelmachines": 1,
-   "afstandsbedieningen": 1
-  }
- },
- "Ford Escort": {
-  "make": "Ford",
-  "model": "Escort",
-  "from": 1993,
-  "to": 9999,
-  "chips": [],
-  "blades": [
-   "FO21"
-  ],
-  "frequencies": [],
-  "count": 2,
-  "categories": {
-   "sleutelmachines": 1,
-   "behuizingen": 1
-  }
- },
- "Ford Focus": {
-  "make": "Ford",
-  "model": "Focus",
-  "from": 1998,
-  "to": 9999,
-  "chips": [
-   "4D63",
-   "PCF7945A / PCF7953A"
-  ],
-  "blades": [
-   "FO40",
-   "incl.",
-   "HU101",
-   "FO21"
-  ],
-  "frequencies": [
-   "315 MHz",
-   "433 MHz"
-  ],
-  "count": 11,
-  "categories": {
-   "sleutelmachines": 1,
-   "afstandsbedieningen": 4,
-   "smart-keys": 1,
-   "behuizingen": 5
-  }
- },
- "Ford Expedition": {
-  "make": "Ford",
-  "model": "Expedition",
-  "from": 2020,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Ford Everest": {
-  "make": "Ford",
-  "model": "Everest",
-  "from": 2016,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Ford Raptor F150": {
-  "make": "Ford",
-  "model": "Raptor F150",
-  "from": 2018,
-  "to": 2019,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Ford Raptor F250": {
-  "make": "Ford",
-  "model": "Raptor F250",
-  "from": 2016,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Lincoln Aviator": {
-  "make": "Lincoln",
-  "model": "Aviator",
-  "from": 2020,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Lincoln Mkx": {
-  "make": "Lincoln",
-  "model": "Mkx",
-  "from": 2015,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Lincoln Corsair": {
-  "make": "Lincoln",
-  "model": "Corsair",
-  "from": 2020,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Lincoln Mkz": {
-  "make": "Lincoln",
-  "model": "Mkz",
-  "from": 2016,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Lincoln Continental": {
-  "make": "Lincoln",
-  "model": "Continental",
-  "from": 2016,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Lincoln Nautilus": {
-  "make": "Lincoln",
-  "model": "Nautilus",
-  "from": 2018,
-  "to": 2020,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Lincoln Mkt": {
-  "make": "Lincoln",
-  "model": "Mkt",
-  "from": 2020,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
-  }
- },
- "Lincoln Navigator": {
-  "make": "Lincoln",
-  "model": "Navigator",
-  "from": 2020,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
   }
  },
  "Mercedes-Benz Sprinter W901-w905": {
@@ -4004,33 +3720,6 @@
   "count": 3,
   "categories": {
    "sleutelbaarden": 3
-  }
- },
- "Mini Plus 2": {
-  "make": "Mini",
-  "model": "Plus 2",
-  "from": 9999,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 4,
-  "categories": {
-   "sleutelmachines": 1,
-   "frezen-en-tasters": 3
-  }
- },
- "Mini Plus Ii": {
-  "make": "Mini",
-  "model": "Plus Ii",
-  "from": 9999,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "sleutelmachines": 1
   }
  },
  "BMW Tacho": {
@@ -5060,6 +4749,32 @@
    "afstandsbedieningen": 1
   }
  },
+ "Ford Focus": {
+  "make": "Ford",
+  "model": "Focus",
+  "from": 1998,
+  "to": 9999,
+  "chips": [
+   "4D63",
+   "PCF7945A / PCF7953A"
+  ],
+  "blades": [
+   "FO40",
+   "incl.",
+   "HU101",
+   "FO21"
+  ],
+  "frequencies": [
+   "315 MHz",
+   "433 MHz"
+  ],
+  "count": 10,
+  "categories": {
+   "afstandsbedieningen": 4,
+   "smart-keys": 1,
+   "behuizingen": 5
+  }
+ },
  "Ford Taurus": {
   "make": "Ford",
   "model": "Taurus",
@@ -5133,6 +4848,50 @@
   "categories": {
    "afstandsbedieningen": 2,
    "behuizingen": 1
+  }
+ },
+ "Ford Edge": {
+  "make": "Ford",
+  "model": "Edge",
+  "from": 2016,
+  "to": 9999,
+  "chips": [
+   "PCF7953P / ID49",
+   "PCF7945A / PCF7953A"
+  ],
+  "blades": [
+   "HU101"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 3,
+  "categories": {
+   "afstandsbedieningen": 2,
+   "behuizingen": 1
+  }
+ },
+ "Ford Mondeo": {
+  "make": "Ford",
+  "model": "Mondeo",
+  "from": 1994,
+  "to": 9999,
+  "chips": [
+   "PCF7953P / ID49"
+  ],
+  "blades": [
+   "incl.",
+   "HU101",
+   "FO21"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 11,
+  "categories": {
+   "afstandsbedieningen": 3,
+   "smart-keys": 1,
+   "behuizingen": 7
   }
  },
  "Ford Fusion": {
@@ -5319,19 +5078,6 @@
   "count": 3,
   "categories": {
    "smart-keys": 3
-  }
- },
- "Mini Plus": {
-  "make": "Mini",
-  "model": "Plus",
-  "from": 9999,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 3,
-  "categories": {
-   "frezen-en-tasters": 3
   }
  },
  "Hyundai / Kia Elantra": {
@@ -6113,6 +5859,25 @@
   "chips": [],
   "blades": [
    "SIP22"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 1,
+  "categories": {
+   "afstandsbedieningen": 1
+  }
+ },
+ "Ford Escape": {
+  "make": "Ford",
+  "model": "Escape",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "PCF7945A / PCF7953A"
+  ],
+  "blades": [
+   "HU101"
   ],
   "frequencies": [
    "433 MHz"
@@ -8155,6 +7920,21 @@
    "behuizingen": 1
   }
  },
+ "Ford Escort": {
+  "make": "Ford",
+  "model": "Escort",
+  "from": 1993,
+  "to": 2003,
+  "chips": [],
+  "blades": [
+   "FO21"
+  ],
+  "frequencies": [],
+  "count": 1,
+  "categories": {
+   "behuizingen": 1
+  }
+ },
  "Ford Escort Van": {
   "make": "Ford",
   "model": "Escort Van",
@@ -8707,6 +8487,21 @@
   "count": 5,
   "categories": {
    "behuizingen": 5
+  }
+ },
+ "Ford EcoSport": {
+  "make": "Ford",
+  "model": "EcoSport",
+  "from": 2012,
+  "to": 2022,
+  "chips": [],
+  "blades": [
+   "HU101"
+  ],
+  "frequencies": [],
+  "count": 4,
+  "categories": {
+   "behuizingen": 4
   }
  },
  "Chrysler Ypsilon": {

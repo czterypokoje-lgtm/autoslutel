@@ -17,11 +17,11 @@
  },
  {
   "make": "Ford",
-  "count": 90
+  "count": 89
  },
  {
   "make": "BMW",
-  "count": 81
+  "count": 80
  },
  {
   "make": "Volkswagen",
@@ -41,7 +41,7 @@
  },
  {
   "make": "Fiat",
-  "count": 63
+  "count": 62
  },
  {
   "make": "Kia",
@@ -84,12 +84,8 @@
   "count": 25
  },
  {
-  "make": "Mini",
-  "count": 25
- },
- {
   "make": "Seat",
-  "count": 25
+  "count": 24
  },
  {
   "make": "Yamaha",
@@ -110,6 +106,10 @@
  {
   "make": "Chevrolet",
   "count": 19
+ },
+ {
+  "make": "Mini",
+  "count": 18
  },
  {
   "make": "Mitsubishi",
@@ -168,15 +168,15 @@
   "count": 4
  },
  {
-  "make": "Iveco",
-  "count": 4
- },
- {
   "make": "Lamborghini",
   "count": 4
  },
  {
   "make": "Ferrari",
+  "count": 3
+ },
+ {
+  "make": "Iveco",
   "count": 3
  },
  {
@@ -241,10 +241,6 @@
  },
  {
   "make": "Lada",
-  "count": 1
- },
- {
-  "make": "Lincoln",
   "count": 1
  },
  {

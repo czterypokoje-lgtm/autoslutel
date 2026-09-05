@@ -183,6 +183,21 @@ const manufacturerOf = (text) => MANUFACTURERS.find(([, re]) => re.test(text))?.
 const TRADE_SUBCATEGORIES = new Set(['opengereedschap']);
 const TRADE_TITLE = /\b(pick|dietrich|aufsperr|lockpick|schlagschl[üu]ssel|bump)/i;
 
+/**
+ * Stock that stays out of the shop window.
+ *
+ * A-Key is a locksmith wholesaler as well as a key supplier, so the catalogue
+ * now holds 1.186 house, cabinet and safe keys, 190 cutters and 34 key
+ * machines. They are real stock and the office can quote and order them from
+ * the CRM — but autosleutel24.nl is a mobile car-key service, and a visitor
+ * looking for a Golf key should not have to walk past a cabinet-key range to
+ * find it.
+ *
+ * Gated rather than dropped: the articles keep their category, their photo and
+ * their price, and appear for a signed-in business account.
+ */
+const TRADE_CATEGORIES = new Set(['woningsleutels', 'sloten', 'sleutelmachines', 'frezen-en-tasters']);
+
 /* ── one article ─────────────────────────────────────────────────────── */
 
 const products = [];
@@ -219,7 +234,11 @@ for (const [slug, filed] of Object.entries(classification.filed)) {
     category: filed.category,
     subcategory: filed.subcategory,
     audience:
-      TRADE_SUBCATEGORIES.has(filed.subcategory) || TRADE_TITLE.test(product.title) ? 'trade' : 'public',
+      TRADE_CATEGORIES.has(filed.category) ||
+      TRADE_SUBCATEGORIES.has(filed.subcategory) ||
+      TRADE_TITLE.test(product.title)
+        ? 'trade'
+        : 'public',
     makes,
     manufacturer: manufacturerOf(text),
     condition: 'aftermarket',
