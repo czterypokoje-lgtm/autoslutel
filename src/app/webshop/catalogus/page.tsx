@@ -174,7 +174,7 @@ export default async function CatalogPage({
                     key={p.slug}
                     slug={p.slug}
                     title={p.titleNl || p.title}
-                    subtitle={p.excerpt}
+                    subtitle={p.directAnswer}
                     specs={p.specs}
                     category={p.category ? facetLabel('category', p.category) : 'Onderdeel'}
                     price={price ? price.toFixed(2) : '0.00'}

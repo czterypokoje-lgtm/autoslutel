@@ -31,6 +31,13 @@ const EMOJI: Record<string, string> = {
   diensten: '🧰',
   sloten: '🔒',
   'smart-keys': '📲',
+  transpondersleutels: '🔑',
+  'sleutels-zonder-chip': '🗝️',
+  motorsleutels: '🏍️',
+  woningsleutels: '🚪',
+  programmeerapparatuur: '💻',
+  sleutelmachines: '⚙️',
+  'frezen-en-tasters': '🪚',
 };
 
 /** Below this a tile is not worth a slot on the home page. */

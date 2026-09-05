@@ -243,6 +243,12 @@ const LABELS: Record<string, string> = {
   transponders: 'Transponders',
   batterijen: 'Batterijen',
   sloten: 'Sloten & cilinders',
+  woningsleutels: 'Woning- & bedrijfssleutels',
+  'sleutels-zonder-chip': 'Sleutels zonder startonderbreker',
+  transpondersleutels: 'Transpondersleutels',
+  programmeerapparatuur: 'Programmeerapparatuur',
+  'frezen-en-tasters': 'Frezen & tasters',
+  sleutelmachines: 'Sleutelmachines',
   accessoires: 'Accessoires',
   gereedschap: 'Gereedschap',
   genuine: 'Origineel',
@@ -253,7 +259,9 @@ const LABELS: Record<string, string> = {
 export const facetLabel = (key: FacetKey, value: string): string => {
   if (key === 'buttons') return `${value} knoppen`;
   if (key === 'chip' || key === 'blade') return value;
-  return LABELS[value] ?? value;
+  // Subcategories are stored as the plain Dutch word ("cilindersleutel") so
+  // the catalogue stays readable; a filter label starts with a capital.
+  return LABELS[value] ?? value.charAt(0).toUpperCase() + value.slice(1);
 };
 
 /** Reads the value(s) a product contributes to a given facet. */

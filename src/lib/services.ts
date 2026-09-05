@@ -91,6 +91,13 @@ const SERVICES_BY_CATEGORY: Record<string, ServiceOption[]> = {
   noodsleutels: ['product_only', 'cut_only'],
   sleutelbaarden: ['product_only', 'cut_only'],
   'overige-sleutels': ['product_only', 'cut_only', 'send_in', 'mobile_tech'],
+  /* The categories the 2026 catalogue rebuild introduced. */
+  transpondersleutels: ['product_only', 'cut_only', 'send_in', 'mobile_tech'],
+  'sleutels-zonder-chip': ['product_only', 'cut_only'],
+  motorsleutels: ['product_only', 'cut_only'],
+  // A house or cabinet key is cut, never programmed, and there is nothing in
+  // it to transfer.
+  woningsleutels: ['product_only', 'cut_only'],
 };
 
 /** The services this product can be bought with. Always at least the article. */

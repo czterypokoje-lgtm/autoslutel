@@ -67,7 +67,10 @@ export const MENU: MenuGroup[] = [
           bySubcategory('Smart keys / keyless', 'smart key', 'Instappen zonder de sleutel te pakken'),
           bySubcategory('Transpondersleutels', 'transpondersleutel', 'Sleutel met chip, zonder afstandsbediening'),
           bySubcategory('Zonder startonderbreker', 'sleutel zonder startonderbreker'),
+          byCategory('Transpondersleutels', 'transpondersleutels', 'Sleutel met chip, zonder afstandsbediening'),
+          byCategory('Zonder startonderbreker', 'sleutels-zonder-chip', 'Alleen frezen, geen programmering'),
           byCategory('Noodsleutels', 'noodsleutels', 'Opent het portier, start de auto niet'),
+          byCategory('Motorsleutels', 'motorsleutels', 'Motor en scooter'),
           byCategory('Overige sleutels', 'overige-sleutels')
         ),
       },
@@ -135,10 +138,30 @@ export const MENU: MenuGroup[] = [
       {
         title: 'Werkplaats',
         links: keep(
+          byCategory('Programmeerapparatuur', 'programmeerapparatuur', 'Sleutels uitlezen en programmeren'),
+          byCategory('Sleutelmachines', 'sleutelmachines', 'Freesmachines'),
+          byCategory('Frezen & tasters', 'frezen-en-tasters', 'Voor uw sleutelmachine'),
           byCategory('Handgereedschap', 'gereedschap'),
           bySubcategory('Garageopeners', 'garageopener'),
           bySubcategory('Microtaster & antenne', 'microtaster & antenne'),
           byCategory('Alle accessoires', 'accessoires')
+        ),
+      },
+    ],
+  },
+  {
+    label: 'Slotenmakerij',
+    href: '/webshop/catalogus?category=woningsleutels',
+    columns: [
+      {
+        title: 'Buiten de auto',
+        links: keep(
+          byCategory('Woning- & bedrijfssleutels', 'woningsleutels', 'Cilinder-, baard- en meubelsleutels'),
+          bySubcategory('Cilindersleutels', 'cilindersleutel'),
+          bySubcategory('Baardsleutels', 'baardsleutel'),
+          bySubcategory('Kluissleutels', 'kluissleutel'),
+          bySubcategory('Meubelsleutels', 'meubelsleutel'),
+          byCategory('Sloten & cilinders', 'sloten')
         ),
       },
     ],

@@ -128,6 +128,9 @@ const PROGRAMMED_CATEGORIES = new Set([
   'afstandsbedieningen',
   'smart-keys',
   'transponders',
+  'transpondersleutels',
+  'printplaten',
+  'universal-remotes',
 ]);
 
 /**

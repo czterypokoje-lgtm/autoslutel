@@ -173,7 +173,7 @@ export default async function SearchPage({
                 key={product.slug}
                 slug={product.slug}
                 title={product.titleNl || product.title}
-                subtitle={product.excerpt}
+                subtitle={product.directAnswer}
                 specs={product.specs}
                 inStock={product.stockQuantity === null ? null : product.inStock}
                 category={product.category ?? 'Onderdeel'}
