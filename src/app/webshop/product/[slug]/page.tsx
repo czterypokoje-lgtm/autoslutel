@@ -253,7 +253,13 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
               brand={entry.manufacturer ?? undefined}
               price={sellPrice || 0}
               oldPrice={oldPriceNum || 0}
-              description={entry.descriptionNl}
+              /*
+               * The opening paragraph only. The full text — the model list,
+               * the alternative article numbers, the supplier's own note —
+               * has its own block further down, and printing all of it twice
+               * made the page read as if it stuttered.
+               */
+              description={entry.descriptionNl?.match(/<p>[\s\S]*?<\/p>/)?.[0] ?? entry.descriptionNl}
               needsProgramming={needsProgramming}
               category={entry.category ?? ''}
               inStock={entry.inStock}

@@ -1,5 +1,5 @@
 {
- "classifiedAt": "2026-09-05T08:07:01.774Z",
+ "classifiedAt": "2026-09-05T11:59:24.409Z",
  "counts": {
   "filed": 3503,
   "review": 41,
@@ -715,7 +715,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -729,7 +728,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -743,7 +741,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -753,10 +750,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Toyota"
+    "Toyota",
+    "Lexus"
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
+    "make from \"Fahrzeugmarke: Toyota / Lexus\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -799,10 +798,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Toyota"
+    "Toyota",
+    "Lexus"
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
+    "make from \"Fahrzeugmarke: Toyota / Lexus\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -827,7 +828,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -841,7 +841,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -866,7 +865,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -880,7 +878,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -936,7 +933,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -1539,7 +1535,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -1875,7 +1870,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -1889,7 +1883,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -1914,7 +1907,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -1928,7 +1920,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -1942,7 +1933,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -1956,7 +1946,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -1970,7 +1959,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -2271,7 +2259,6 @@
    "evidence": [
     "make from breadcrumb: Nissan",
     "listed under \"geeignet für Mazda\"",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "title names Mazda; shelves also said Nissan",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -2475,7 +2462,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -2860,7 +2846,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -2903,7 +2888,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -2918,7 +2902,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volvo",
-    "make from \"Fahrzeugmarke: Volvo\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -3094,7 +3077,6 @@
    "evidence": [
     "make from breadcrumb: Nissan",
     "listed under \"geeignet für Renault\"",
-    "make from \"Fahrzeugmarke: Renault\"",
     "title names Renault; shelves also said Nissan",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -3109,7 +3091,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -3123,7 +3104,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -3137,7 +3117,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -3475,7 +3454,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: VW\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -3490,7 +3468,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Suzuki",
-    "make from \"Fahrzeugmarke: Suzuki\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -3525,7 +3502,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -3540,7 +3516,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -3556,7 +3531,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -3610,15 +3584,15 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Toyota"
+    "Toyota",
+    "Lexus"
    ],
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Lexus — titel zegt Toyota"
+   "needsCheck": null
   },
   "Funkschluessel-Gehaeuse-kompatibel-fuer-Toyota-TOYRC158": {
    "status": "filed",
@@ -3655,7 +3629,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mitsubishi",
-    "make from \"Fahrzeugmarke: Mitsubishi\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -3744,7 +3717,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -3758,7 +3730,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -3825,15 +3796,15 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Alfa Romeo"
+    "Alfa Romeo",
+    "Fiat"
    ],
    "evidence": [
     "make from breadcrumb: Alfa Romeo",
     "listed under \"geeignet für Fiat\"",
-    "title names Alfa Romeo; shelves also said Fiat",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
-   "needsCheck": "hun plank zegt ook Fiat — titel zegt Alfa Romeo"
+   "needsCheck": null
   },
   "Xhorse-Ersatzspannbacke-fuer-Dolphin-XP-007": {
    "status": "filed",
@@ -4113,7 +4084,6 @@
     "listed under \"geeignet für Opel\"",
     "listed under \"geeignet für Renault\"",
     "listed under \"geeignet für Nissan\"",
-    "make from \"Fahrzeugmarke: Renault\"",
     "title names Renault; shelves also said Mercedes-Benz, Opel, Nissan",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -4416,7 +4386,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -4433,7 +4402,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -4450,7 +4418,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -4467,7 +4434,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -4484,7 +4450,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -4501,7 +4466,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -4517,7 +4481,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -4529,10 +4492,12 @@
    "category": "smart-keys",
    "subcategory": "smart key",
    "makes": [
-    "Fiat"
+    "Fiat",
+    "Chrysler"
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
+    "make from \"Fahrzeugmarke: Fiat / Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -4543,10 +4508,12 @@
    "category": "smart-keys",
    "subcategory": "smart key",
    "makes": [
-    "Fiat"
+    "Fiat",
+    "Chrysler"
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
+    "make from \"Fahrzeugmarke: Fiat / Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -4562,7 +4529,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -4590,7 +4556,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -4606,7 +4571,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -4621,7 +4585,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -5056,7 +5019,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -5171,7 +5133,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -5196,10 +5157,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault und Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -5209,10 +5172,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault und Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -5222,10 +5187,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault und Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -5250,10 +5217,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault und Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -5263,10 +5232,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault und Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -5468,7 +5439,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -5494,7 +5464,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mini",
-    "make from \"Fahrzeugmarke: Mini\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -5624,10 +5593,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Fiat"
+    "Fiat",
+    "Citroën"
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
+    "make from \"Fahrzeugmarke: Fiat / Citroen\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -5808,7 +5779,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -5834,7 +5804,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -5991,7 +5960,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Suzuki",
-    "make from \"Fahrzeugmarke: Suzuki\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -6006,7 +5974,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Suzuki",
-    "make from \"Fahrzeugmarke: Suzuki\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -6020,7 +5987,6 @@
    ],
    "evidence": [
     "listed under \"geeignet für Hyundai\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "no shelf; the title says behuizingen"
    ],
    "needsCheck": "categorie afgeleid uit de titel — controleren"
@@ -6034,7 +6000,6 @@
    ],
    "evidence": [
     "listed under \"geeignet für BMW\"",
-    "make from \"Fahrzeugmarke: BMW\"",
     "no shelf; the title says behuizingen"
    ],
    "needsCheck": "categorie afgeleid uit de titel — controleren"
@@ -6044,12 +6009,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "listed under \"geeignet für Hyundai\"",
     "listed under \"geeignet für Kia\"",
-    "title names Hyundai; shelves also said Kia",
     "no shelf; the title says behuizingen"
    ],
    "needsCheck": "categorie afgeleid uit de titel — controleren"
@@ -6059,12 +6024,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "listed under \"geeignet für Hyundai\"",
     "listed under \"geeignet für Kia\"",
-    "title names Hyundai; shelves also said Kia",
     "no shelf; the title says behuizingen"
    ],
    "needsCheck": "categorie afgeleid uit de titel — controleren"
@@ -6299,7 +6264,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -6358,7 +6322,6 @@
    "evidence": [
     "make from breadcrumb: Dacia",
     "listed under \"geeignet für Renault\"",
-    "make from \"Fahrzeugmarke: Renault\"",
     "title names Renault; shelves also said Dacia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -6459,15 +6422,15 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Dacia",
     "listed under \"geeignet für Renault\"",
-    "title names Renault; shelves also said Dacia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
-   "needsCheck": "hun plank zegt ook Dacia — titel zegt Renault"
+   "needsCheck": null
   },
   "j5create-USB-30-Gigabit-Ethernet-Adapter": {
    "status": "filed",
@@ -6507,15 +6470,17 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Volkswagen"
+    "Volkswagen",
+    "Škoda",
+    "Seat"
    ],
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "title names Volkswagen; shelves also said Seat",
+    "make from \"Fahrzeugmarke: Volkswagen - Skoda - Seat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Seat — titel zegt Volkswagen"
+   "needsCheck": null
   },
   "XDV207EN-BMW-CAS1-2-3-3-Kommunikationskabel": {
    "status": "filed",
@@ -6551,7 +6516,6 @@
    "evidence": [
     "make from breadcrumb: Nissan",
     "listed under \"geeignet für Renault\"",
-    "make from \"Fahrzeugmarke: Renault\"",
     "title names Renault; shelves also said Nissan",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -6623,7 +6587,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -7087,7 +7050,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: VW\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -7372,7 +7334,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -7396,7 +7357,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -7411,7 +7371,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -7426,7 +7385,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -7436,11 +7394,13 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Peugeot"
+    "Peugeot",
+    "Opel"
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
+    "make from \"Fahrzeugmarke: Peugeot / Opel / PSA\"",
     "title names Peugeot; shelves also said Citroën",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -7451,11 +7411,13 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Peugeot"
+    "Peugeot",
+    "Opel"
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
+    "make from \"Fahrzeugmarke: Peugeot / Opel / PSA\"",
     "title names Peugeot; shelves also said Citroën",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -7656,10 +7618,12 @@
    "category": "universal-remotes",
    "subcategory": "KeyDIY universal",
    "makes": [
-    "Kia"
+    "Kia",
+    "Hyundai"
    ],
    "evidence": [
     "make from breadcrumb: Kia",
+    "make from \"Fahrzeugmarke: Kia / Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "breadcrumb said afstandsbedieningen, but they list it under \"KEYDIY Universal\""
    ],
@@ -7759,7 +7723,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -7789,10 +7752,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
+    "make from \"Fahrzeugmarke: Hyundai / Kia\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -7829,7 +7794,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -7964,10 +7928,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
+    "make from \"Fahrzeugmarke: Hyundai / Kia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8304,7 +8270,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -8329,7 +8294,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8372,10 +8336,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
+    "make from \"Fahrzeugmarke: Hyundai / Kia\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -8451,10 +8417,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
+    "make from \"Fahrzeugmarke: Hyundai / KIA\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -8534,7 +8502,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -8549,7 +8516,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8563,7 +8529,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -8577,7 +8542,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -8592,7 +8556,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8617,7 +8580,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8627,15 +8589,15 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Honda"
+    "Honda",
+    "Subaru"
    ],
    "evidence": [
     "make from breadcrumb: Honda",
     "listed under \"geeignet für Subaru\"",
-    "title names Honda; shelves also said Subaru",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
-   "needsCheck": "hun plank zegt ook Subaru — titel zegt Honda"
+   "needsCheck": null
   },
   "Funkschluessel-kompatibel-fuer-Toyota-TOYR113": {
    "status": "filed",
@@ -8646,7 +8608,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8669,10 +8630,12 @@
    "category": "smart-keys",
    "subcategory": "smart key",
    "makes": [
-    "Toyota"
+    "Toyota",
+    "Lexus"
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
+    "make from \"Fahrzeugmarke: Toyota / Lexus\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -8687,7 +8650,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -8702,7 +8664,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Jaguar",
-    "make from \"Fahrzeugmarke: Jaguar\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8716,7 +8677,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8731,7 +8691,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -8742,10 +8701,12 @@
    "category": "smart-keys",
    "subcategory": "smart key",
    "makes": [
-    "Toyota"
+    "Toyota",
+    "Lexus"
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
+    "make from \"Fahrzeugmarke: Toyota / Lexus\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -8761,7 +8722,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: VW\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -8776,7 +8736,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -8806,7 +8765,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -8842,7 +8800,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -8857,7 +8814,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -8873,7 +8829,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -8889,7 +8844,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -8905,7 +8859,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -8920,7 +8873,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8930,15 +8882,17 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Volkswagen"
+    "Volkswagen",
+    "Škoda",
+    "Seat"
    ],
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "title names Volkswagen; shelves also said Seat",
+    "make from \"Fahrzeugmarke: VW / Skoda / Seat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
-   "needsCheck": "hun plank zegt ook Seat — titel zegt Volkswagen"
+   "needsCheck": null
   },
   "Funkschluessel-kompatibel-fuer-Volkswagen-VVR115": {
    "status": "filed",
@@ -8949,7 +8903,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8964,7 +8917,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: VW\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -8979,7 +8931,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -8993,7 +8944,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -9009,7 +8959,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -9024,7 +8973,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9038,7 +8986,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9052,7 +8999,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9066,7 +9012,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9080,7 +9025,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9094,7 +9038,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9108,7 +9051,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mini",
-    "make from \"Fahrzeugmarke: Mini\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9118,10 +9060,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Peugeot"
+    "Peugeot",
+    "Opel"
    ],
    "evidence": [
     "make from breadcrumb: Peugeot",
+    "make from \"Fahrzeugmarke: Peugeot / Opel / PSA\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9135,7 +9079,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9149,7 +9092,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Suzuki",
-    "make from \"Fahrzeugmarke: Suzuki\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9159,10 +9101,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Peugeot"
+    "Peugeot",
+    "Opel"
    ],
    "evidence": [
     "make from breadcrumb: Peugeot",
+    "make from \"Fahrzeugmarke: Peugeot / Opel / PSA\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9172,10 +9116,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Peugeot"
+    "Peugeot",
+    "Opel"
    ],
    "evidence": [
     "make from breadcrumb: Peugeot",
+    "make from \"Fahrzeugmarke: Peugeot / Opel / PSA\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9189,7 +9135,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Kia",
-    "make from \"Fahrzeugmarke: Kia\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9203,7 +9148,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9219,7 +9163,6 @@
     "make from breadcrumb: Land Rover",
     "listed under \"geeignet für Volvo\"",
     "listed under \"geeignet für Rover\"",
-    "make from \"Fahrzeugmarke: Volvo\"",
     "title names Volvo; shelves also said Land Rover, Rover",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -9234,7 +9177,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volvo",
-    "make from \"Fahrzeugmarke: Volvo\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9248,7 +9190,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volvo",
-    "make from \"Fahrzeugmarke: Volvo\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9262,7 +9203,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volvo",
-    "make from \"Fahrzeugmarke: Volvo\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9276,7 +9216,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volvo",
-    "make from \"Fahrzeugmarke: Volvo\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9323,7 +9262,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9472,7 +9410,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: VW\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -9489,7 +9426,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: VW\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
@@ -9656,7 +9592,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -9681,7 +9616,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mini",
-    "make from \"Fahrzeugmarke: Mini\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9905,7 +9839,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -9920,7 +9853,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -9935,7 +9867,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -9983,7 +9914,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -9997,7 +9927,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Land Rover",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -10011,7 +9940,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -10021,15 +9949,15 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Kia"
+    "Kia",
+    "Hyundai"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
-   "needsCheck": "hun plank zegt ook Hyundai — titel zegt Kia"
+   "needsCheck": null
   },
   "Funkschluessel-kompatibel-fuer-Mazda-MZR107": {
    "status": "filed",
@@ -10040,7 +9968,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -10054,7 +9981,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volvo",
-    "make from \"Fahrzeugmarke: Volvo\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -10091,7 +10017,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -10859,7 +10784,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -10875,7 +10799,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -10891,7 +10814,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -10906,7 +10828,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -10921,7 +10842,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Suzuki",
-    "make from \"Fahrzeugmarke: Suzuki\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -10935,7 +10855,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -11165,7 +11084,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Saab",
-    "make from \"Fahrzeugmarke: Saab\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -11351,7 +11269,6 @@
    "evidence": [
     "make from breadcrumb: Chrysler",
     "listed under \"geeignet für Fiat\"",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "title names Chrysler; shelves also said Fiat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -11581,7 +11498,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -11711,7 +11627,6 @@
    "evidence": [
     "make from breadcrumb: Chrysler",
     "listed under \"geeignet für Fiat\"",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "title names Chrysler; shelves also said Fiat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -11738,7 +11653,6 @@
    "evidence": [
     "make from breadcrumb: Chrysler",
     "listed under \"geeignet für Fiat\"",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "title names Chrysler; shelves also said Fiat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -11754,7 +11668,6 @@
    "evidence": [
     "make from breadcrumb: Chrysler",
     "listed under \"geeignet für Fiat\"",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "title names Chrysler; shelves also said Fiat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -11780,7 +11693,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -11873,7 +11785,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -11936,7 +11847,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -11946,10 +11856,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault und Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -11959,10 +11871,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault und Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -11976,7 +11890,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -12061,7 +11974,6 @@
     "make from breadcrumb: Land Rover",
     "listed under \"geeignet für Volvo\"",
     "listed under \"geeignet für Rover\"",
-    "make from \"Fahrzeugmarke: Volvo\"",
     "title names Volvo; shelves also said Land Rover, Rover",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -12076,7 +11988,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -12116,7 +12027,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -12145,7 +12055,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -12310,7 +12219,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -12361,7 +12269,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -12375,7 +12282,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -12411,7 +12317,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -12505,7 +12410,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -12530,7 +12434,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -13074,7 +12977,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Subaru",
-    "make from \"Fahrzeugmarke: Subaru\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -13329,7 +13231,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Jaguar",
-    "make from \"Fahrzeugmarke: Jaguar\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -13354,7 +13255,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Land Rover",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -13467,7 +13367,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -13493,7 +13392,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -13613,7 +13511,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
-    "make from \"Fahrzeugmarke: Citroën\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -13638,7 +13535,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Smart",
-    "make from \"Fahrzeugmarke: Smart\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -13648,10 +13544,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
+    "make from \"Fahrzeugmarke: Hyundai / Kia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -13676,7 +13574,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -13691,7 +13588,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -13706,7 +13602,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -13742,7 +13637,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -13936,7 +13830,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Land Rover",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -13973,7 +13866,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -14031,7 +13923,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14045,7 +13936,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -14073,7 +13963,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Kia",
-    "make from \"Fahrzeugmarke: Kia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14087,7 +13976,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Kia",
-    "make from \"Fahrzeugmarke: Kia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14101,7 +13989,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14115,7 +14002,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14130,7 +14016,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -14145,7 +14030,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14160,7 +14044,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -14176,7 +14059,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mini",
-    "make from \"Fahrzeugmarke: Mini\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14190,7 +14072,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Land Rover",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14204,7 +14085,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -14220,7 +14100,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -14236,7 +14115,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Kia\"",
     "title names Kia; shelves also said Hyundai",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -14251,7 +14129,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Alfa Romeo",
-    "make from \"Fahrzeugmarke: Alfa Romeo\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -14266,7 +14143,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14280,7 +14156,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14294,7 +14169,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14308,7 +14182,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -14323,7 +14196,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14353,7 +14225,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -14368,7 +14239,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14382,7 +14252,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -14397,7 +14266,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14411,7 +14279,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -14502,7 +14369,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14516,7 +14382,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14541,7 +14406,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14555,7 +14419,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14569,7 +14432,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14583,7 +14445,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14597,7 +14458,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14611,7 +14471,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14625,7 +14484,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14639,7 +14497,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14653,7 +14510,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Subaru",
-    "make from \"Fahrzeugmarke: Subaru\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -14667,7 +14523,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -14692,7 +14547,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -15073,7 +14927,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15165,7 +15018,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -15195,7 +15047,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15209,7 +15060,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -15330,10 +15180,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
+    "make from \"Fahrzeugmarke: Hyundai / Kia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15343,10 +15195,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
+    "make from \"Fahrzeugmarke: Hyundai / Kia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15356,15 +15210,15 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
     "make from \"Fahrzeugmarke: Kia\"",
-    "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
-   "needsCheck": "hun plank zegt ook Kia — titel zegt Hyundai"
+   "needsCheck": null
   },
   "TN5-Silca-TT5D1-Errebi": {
    "status": "filed",
@@ -15411,7 +15265,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15425,7 +15278,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -15439,7 +15291,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -15453,7 +15304,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15467,7 +15317,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15481,7 +15330,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15571,7 +15419,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -15751,7 +15598,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -15766,7 +15612,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -15781,7 +15626,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -18780,7 +18624,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -18795,7 +18638,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -20015,10 +19857,12 @@
    "category": "universal-remotes",
    "subcategory": "KeyDIY universal",
    "makes": [
-    "Kia"
+    "Kia",
+    "Hyundai"
    ],
    "evidence": [
     "make from breadcrumb: Kia",
+    "make from \"Fahrzeugmarke: Kia / Hyundai\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "breadcrumb said afstandsbedieningen, but they list it under \"KEYDIY Universal\""
    ],
@@ -21384,7 +21228,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mitsubishi",
-    "make from \"Fahrzeugmarke: Mitsubishi\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -21430,15 +21273,15 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Dacia",
     "listed under \"geeignet für Renault\"",
-    "title names Renault; shelves also said Dacia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
-   "needsCheck": "hun plank zegt ook Dacia — titel zegt Renault"
+   "needsCheck": null
   },
   "Funkschluessel-kompatibel-fuer-Opel-OPR109IEA": {
    "status": "filed",
@@ -21856,7 +21699,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -22194,7 +22036,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -22762,7 +22603,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -22804,7 +22644,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -22846,7 +22685,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -22856,10 +22694,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Peugeot"
+    "Peugeot",
+    "Opel"
    ],
    "evidence": [
     "make from breadcrumb: Peugeot",
+    "make from \"Fahrzeugmarke: Peugeot / Opel / PSA Produkttyp: Schlüss\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -22912,7 +22752,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Smart",
-    "make from \"Fahrzeugmarke: Smart\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -22954,7 +22793,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -22968,7 +22806,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -22982,7 +22819,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mini",
-    "make from \"Fahrzeugmarke: Mini\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -22992,10 +22828,14 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Suzuki"
+    "Suzuki",
+    "Chevrolet",
+    "Daewoo"
    ],
    "evidence": [
     "make from breadcrumb: Suzuki",
+    "make from \"Fahrzeugmarke: Suzuki / Chevrolet und Daewoo\"",
+    "make from \"Fahrzeugmarke: Suzuki / Chevrolet und Daewoo\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23024,7 +22864,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -23053,7 +22892,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Jaguar",
-    "make from \"Fahrzeugmarke: Jaguar\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -23100,7 +22938,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23114,7 +22951,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23129,7 +22965,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: VW\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -23144,7 +22979,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Land Rover",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -23158,7 +22992,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Alfa Romeo",
-    "make from \"Fahrzeugmarke: Alfa\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23173,7 +23006,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -23188,7 +23020,6 @@
    ],
    "evidence": [
     "make from breadcrumb: SsangYong",
-    "make from \"Fahrzeugmarke: SsangYong\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23231,7 +23062,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -23246,7 +23076,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23260,7 +23089,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23287,7 +23115,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23301,7 +23128,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23316,7 +23142,6 @@
    "evidence": [
     "make from breadcrumb: Nissan",
     "listed under \"geeignet für Mazda\"",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "title names Mazda; shelves also said Nissan",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -23331,7 +23156,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23345,7 +23169,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -23355,15 +23178,15 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Citroën"
+    "Citroën",
+    "Peugeot"
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Peugeot — titel zegt Citroën"
+   "needsCheck": null
   },
   "Tresorschluessel-Safe-6SV1132-Silca-fuer-STUV": {
    "status": "filed",
@@ -23429,7 +23252,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -23443,7 +23265,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mercedes-Benz",
-    "make from \"Fahrzeugmarke: Mercedes Benz\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23470,7 +23291,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Peugeot",
-    "make from \"Fahrzeugmarke: Peugeot\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -23485,7 +23305,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -23500,7 +23319,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -23515,7 +23333,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23525,15 +23342,15 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Citroën"
+    "Citroën",
+    "Peugeot"
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Peugeot — titel zegt Citroën"
+   "needsCheck": null
   },
   "Funkschluessel-Gehaeuse-kompatibel-fuer-Renault-Dacia-RNRC115": {
    "status": "filed",
@@ -23546,7 +23363,6 @@
    "evidence": [
     "make from breadcrumb: Dacia",
     "listed under \"geeignet für Renault\"",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23556,15 +23372,15 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Citroën"
+    "Citroën",
+    "Peugeot"
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Peugeot — titel zegt Citroën"
+   "needsCheck": null
   },
   "Funkschluessel-Gehaeuse-kompatibel-fuer-Renault-Dacia-RNRC116": {
    "status": "filed",
@@ -23577,7 +23393,6 @@
    "evidence": [
     "make from breadcrumb: Dacia",
     "listed under \"geeignet für Renault\"",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -23591,7 +23406,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Smart",
-    "make from \"Fahrzeugmarke: SMART\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -23616,7 +23430,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Land Rover",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -23676,7 +23489,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -23691,7 +23503,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -23706,7 +23517,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -24103,7 +23913,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -24127,7 +23936,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -24141,7 +23949,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -24155,7 +23962,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -24169,7 +23975,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -24183,7 +23988,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -24197,7 +24001,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -24226,7 +24029,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -24393,7 +24195,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Cadillac",
-    "make from \"Fahrzeugmarke: Cadillac\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -24403,10 +24204,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Hyundai"
+    "Hyundai",
+    "Kia"
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
+    "make from \"Fahrzeugmarke: Hyundai / Kia\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25171,7 +24974,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -25207,7 +25009,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25254,11 +25055,13 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Volkswagen"
+    "Volkswagen",
+    "Audi"
    ],
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
+    "make from \"Fahrzeugmarke: Volkswagen / Audi / VAG\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -25345,7 +25148,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Suzuki",
-    "make from \"Fahrzeugmarke: Suzuki\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25398,7 +25200,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25412,7 +25213,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25426,7 +25226,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25440,7 +25239,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25480,7 +25278,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25494,7 +25291,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25508,7 +25304,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25522,7 +25317,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25549,7 +25343,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25576,7 +25369,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25590,7 +25382,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25604,7 +25395,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25618,7 +25408,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25632,7 +25421,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25724,7 +25512,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25749,7 +25536,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25763,7 +25549,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25777,7 +25562,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25791,7 +25575,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25805,7 +25588,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25819,7 +25601,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25833,7 +25614,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25847,7 +25627,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25862,7 +25641,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -25908,7 +25686,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -25924,7 +25701,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -25939,7 +25715,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25953,7 +25728,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -25980,7 +25754,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chevrolet",
-    "make from \"Fahrzeugmarke: Chevrolet\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26020,7 +25793,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26034,7 +25806,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26048,7 +25819,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26062,7 +25832,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26089,7 +25858,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26103,7 +25871,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26117,7 +25884,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26131,7 +25897,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26178,15 +25943,15 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Citroën"
+    "Citroën",
+    "Peugeot"
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Peugeot — titel zegt Citroën"
+   "needsCheck": null
   },
   "Gehaeuse-kompatibel-fuer-Citroen-CTRC103-mBatteriefach-HU83": {
    "status": "filed",
@@ -26198,7 +25963,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26213,7 +25977,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Peugeot",
-    "make from \"Fahrzeugmarke: Peugeot\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26227,7 +25990,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Peugeot",
-    "make from \"Fahrzeugmarke: Peugeot\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26254,15 +26016,15 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Toyota"
+    "Toyota",
+    "Lexus"
    ],
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Lexus — titel zegt Toyota"
+   "needsCheck": null
   },
   "Funkschluessel-Gehaeuse-kompatibel-fuer-Toyota-TOYRC104": {
    "status": "filed",
@@ -26274,7 +26036,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26290,7 +26051,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26306,7 +26066,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26322,7 +26081,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26338,7 +26096,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26354,7 +26111,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26365,15 +26121,15 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Toyota"
+    "Toyota",
+    "Lexus"
    ],
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Lexus — titel zegt Toyota"
+   "needsCheck": null
   },
   "Funkschluessel-Gehaeuse-kompatibel-fuer-Toyota-TOYRC115": {
    "status": "filed",
@@ -26385,7 +26141,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26401,7 +26156,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26416,7 +26170,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mini",
-    "make from \"Fahrzeugmarke: Mini\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26443,7 +26196,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26457,7 +26209,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mini",
-    "make from \"Fahrzeugmarke: Mini\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26484,7 +26235,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26498,7 +26248,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26512,7 +26261,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mini",
-    "make from \"Fahrzeugmarke: Mini\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26526,7 +26274,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26540,7 +26287,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26554,7 +26300,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Porsche",
-    "make from \"Fahrzeugmarke: Porsche\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26607,7 +26352,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Porsche",
-    "make from \"Fahrzeugmarke: Porsche\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26621,7 +26365,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Porsche",
-    "make from \"Fahrzeugmarke: Porsche\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26636,7 +26379,6 @@
    "evidence": [
     "make from breadcrumb: Jeep",
     "listed under \"geeignet für Land Rover\"",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "title names Land Rover; shelves also said Jeep",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26651,7 +26393,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26665,7 +26406,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26679,7 +26419,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26693,7 +26432,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26720,7 +26458,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26734,7 +26471,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -26749,7 +26485,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -26803,30 +26538,34 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Volkswagen"
+    "Volkswagen",
+    "Škoda",
+    "Seat"
    ],
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "title names Volkswagen; shelves also said Seat",
+    "make from \"Fahrzeugmarke: Volkswagen - Skoda - Seat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Seat — titel zegt Volkswagen"
+   "needsCheck": null
   },
   "Funkschluessel-Gehaeuse-kompatibel-fuer-Volkswagen-VVRC110": {
    "status": "filed",
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Volkswagen"
+    "Volkswagen",
+    "Škoda",
+    "Seat"
    ],
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "title names Volkswagen; shelves also said Seat",
+    "make from \"Fahrzeugmarke: Volkswagen Skoda Seat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Seat — titel zegt Volkswagen"
+   "needsCheck": null
   },
   "Funkschluessel-kompatibel-fuer-Opel-OPR105HU100": {
    "status": "filed",
@@ -26850,7 +26589,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -26865,7 +26603,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -26880,7 +26617,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -26894,7 +26630,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Jaguar",
-    "make from \"Fahrzeugmarke: Jaguar\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -26908,7 +26643,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -26923,7 +26657,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -26937,7 +26670,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Porsche",
-    "make from \"Fahrzeugmarke: Porsche\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -26973,7 +26705,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Porsche",
-    "make from \"Fahrzeugmarke: Porsche\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -34843,7 +34574,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -35659,7 +35389,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -35675,7 +35404,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -35691,7 +35419,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -35707,7 +35434,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: Volkswagen\"",
     "title names Volkswagen; shelves also said Seat",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -35723,7 +35449,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -35739,7 +35464,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -35755,7 +35479,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -35809,7 +35532,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -35819,10 +35541,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Suzuki"
+    "Suzuki",
+    "Opel"
    ],
    "evidence": [
     "make from breadcrumb: Suzuki",
+    "make from \"Fahrzeugmarke: Suzuki / Opel Produkttyp: Schlüsselgehäu\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -35836,7 +35560,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -35850,7 +35573,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -35865,7 +35587,6 @@
    "evidence": [
     "make from breadcrumb: Dacia",
     "listed under \"geeignet für Renault\"",
-    "make from \"Fahrzeugmarke: Renault\"",
     "title names Renault; shelves also said Dacia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -35916,7 +35637,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Peugeot\"",
     "title names Peugeot; shelves also said Citroën",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -35931,7 +35651,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Peugeot",
-    "make from \"Fahrzeugmarke: Peugeot\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -35971,7 +35690,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -35985,7 +35703,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -35999,7 +35716,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36013,7 +35729,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36040,7 +35755,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36054,7 +35768,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36068,7 +35781,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36082,7 +35794,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mitsubishi",
-    "make from \"Fahrzeugmarke: Mitsubishi\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36097,7 +35808,6 @@
    "evidence": [
     "make from breadcrumb: Nissan",
     "listed under \"geeignet für Mazda\"",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "title names Mazda; shelves also said Nissan",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36112,7 +35822,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36127,7 +35836,6 @@
    "evidence": [
     "make from breadcrumb: Jeep",
     "listed under \"geeignet für Land Rover\"",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "title names Land Rover; shelves also said Jeep",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36143,7 +35851,6 @@
    "evidence": [
     "make from breadcrumb: Jeep",
     "listed under \"geeignet für Land Rover\"",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "title names Land Rover; shelves also said Jeep",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36158,7 +35865,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Kia",
-    "make from \"Fahrzeugmarke: Kia\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36172,7 +35878,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36186,7 +35891,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36200,7 +35904,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Kia",
-    "make from \"Fahrzeugmarke: Kia\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36214,7 +35917,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36229,7 +35931,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -36244,7 +35945,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36258,7 +35958,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36273,7 +35972,6 @@
    "evidence": [
     "make from breadcrumb: Hyundai",
     "listed under \"geeignet für Kia\"",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "title names Hyundai; shelves also said Kia",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -36288,7 +35986,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36302,7 +35999,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36316,7 +36012,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36330,7 +36025,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36355,10 +36049,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Chrysler"
+    "Chrysler",
+    "Dodge"
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
+    "make from \"Fahrzeugmarke: Chrysler Dodge\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36372,7 +36068,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36386,7 +36081,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36401,7 +36095,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36417,7 +36110,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36432,7 +36124,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36446,7 +36137,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36460,7 +36150,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36475,7 +36164,6 @@
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36490,7 +36178,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36504,7 +36191,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36518,7 +36204,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36532,7 +36217,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36559,7 +36243,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36573,7 +36256,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36587,7 +36269,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Audi",
-    "make from \"Fahrzeugmarke: Audi\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36615,7 +36296,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36630,7 +36310,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Toyota",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36645,7 +36324,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36661,7 +36339,6 @@
    "evidence": [
     "make from breadcrumb: Lexus",
     "listed under \"geeignet für Toyota\"",
-    "make from \"Fahrzeugmarke: Toyota\"",
     "title names Toyota; shelves also said Lexus",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
@@ -36685,10 +36362,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Renault"
+    "Renault",
+    "Opel"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault / Opel\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36702,7 +36381,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36731,7 +36409,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36758,7 +36435,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Hyundai",
-    "make from \"Fahrzeugmarke: Hyundai\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36785,7 +36461,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mitsubishi",
-    "make from \"Fahrzeugmarke: Mitsubishi\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36799,7 +36474,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36809,10 +36483,12 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Fiat"
+    "Fiat",
+    "Citroën"
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
+    "make from \"Fahrzeugmarke: Fiat / Citroen\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36826,7 +36502,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36840,7 +36515,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36854,7 +36528,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chevrolet",
-    "make from \"Fahrzeugmarke: Chevrolet\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36868,7 +36541,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chevrolet",
-    "make from \"Fahrzeugmarke: Chevrolet\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36878,15 +36550,15 @@
    "category": "behuizingen",
    "subcategory": "sleutelbehuizing",
    "makes": [
-    "Citroën"
+    "Citroën",
+    "Peugeot"
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
     "listed under \"geeignet für Peugeot\"",
-    "title names Citroën; shelves also said Peugeot",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
-   "needsCheck": "hun plank zegt ook Peugeot — titel zegt Citroën"
+   "needsCheck": null
   },
   "Funkschluessel-Gehaeuse-Kompatibel-fuer-BMW-BMRC151": {
    "status": "filed",
@@ -36897,7 +36569,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36911,7 +36582,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -36925,7 +36595,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Funkschlüssel Gehäuse"
    ],
    "needsCheck": null
@@ -36939,7 +36608,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37122,10 +36790,14 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Fiat"
+    "Fiat",
+    "Citroën",
+    "Peugeot"
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
+    "make from \"Fahrzeugmarke: Fiat / Citroen / Peugeot\"",
+    "make from \"Fahrzeugmarke: Fiat / Citroen / Peugeot\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37141,7 +36813,6 @@
    "evidence": [
     "make from breadcrumb: Seat",
     "listed under \"geeignet für Volkswagen\"",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37155,7 +36826,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37169,7 +36839,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Volkswagen",
-    "make from \"Fahrzeugmarke: VW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37196,7 +36865,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37210,7 +36878,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37224,7 +36891,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -37239,7 +36905,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37253,7 +36918,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37267,7 +36931,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37281,7 +36944,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -37296,7 +36958,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37306,10 +36967,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault / Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37323,7 +36986,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37337,7 +36999,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37351,7 +37012,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37365,7 +37025,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Renault",
-    "make from \"Fahrzeugmarke: Renault\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37375,10 +37034,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Renault"
+    "Renault",
+    "Dacia"
    ],
    "evidence": [
     "make from breadcrumb: Renault",
+    "make from \"Fahrzeugmarke: Renault / Dacia\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37392,7 +37053,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37406,7 +37066,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37420,7 +37079,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37434,7 +37092,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37448,7 +37105,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37462,7 +37118,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37476,7 +37131,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37490,7 +37144,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -37505,7 +37158,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Opel",
-    "make from \"Fahrzeugmarke: Opel\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37519,7 +37171,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37533,7 +37184,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37547,7 +37197,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37561,7 +37210,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Nissan",
-    "make from \"Fahrzeugmarke: Nissan\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37575,7 +37223,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Mazda",
-    "make from \"Fahrzeugmarke: Mazda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37603,7 +37250,6 @@
    "evidence": [
     "make from breadcrumb: Jaguar",
     "listed under \"geeignet für Land Rover\"",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "title names Land Rover; shelves also said Jaguar",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -37619,7 +37265,6 @@
    "evidence": [
     "make from breadcrumb: Jaguar",
     "listed under \"geeignet für Land Rover\"",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "title names Land Rover; shelves also said Jaguar",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
@@ -37647,7 +37292,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Land Rover",
-    "make from \"Fahrzeugmarke: Land Rover\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37719,7 +37363,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37746,7 +37389,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Honda",
-    "make from \"Fahrzeugmarke: Honda\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37760,7 +37402,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37774,7 +37415,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37788,7 +37428,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37815,7 +37454,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Ford",
-    "make from \"Fahrzeugmarke: Ford\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37829,7 +37467,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37843,7 +37480,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37857,7 +37493,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37867,10 +37502,16 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Fiat"
+    "Fiat",
+    "Citroën",
+    "Peugeot",
+    "Iveco"
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
+    "make from \"Fahrzeugmarke: Fiat / Citroen / Peugeot / Iveco\"",
+    "make from \"Fahrzeugmarke: Fiat / Citroen / Peugeot / Iveco\"",
+    "make from \"Fahrzeugmarke: Fiat / Citroen / Peugeot / Iveco\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37884,7 +37525,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37907,10 +37547,12 @@
    "category": "afstandsbedieningen",
    "subcategory": "afstandsbediening",
    "makes": [
-    "Fiat"
+    "Fiat",
+    "Peugeot"
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
+    "make from \"Fahrzeugmarke: Fiat / Peugeot\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37924,7 +37566,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Fiat",
-    "make from \"Fahrzeugmarke: Fiat\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37938,7 +37579,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37952,7 +37592,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Citroën",
-    "make from \"Fahrzeugmarke: Citroen\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37966,7 +37605,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37980,7 +37618,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -37994,7 +37631,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -38008,7 +37644,6 @@
    ],
    "evidence": [
     "make from breadcrumb: Chrysler",
-    "make from \"Fahrzeugmarke: Chrysler\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -38022,7 +37657,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel",
     "the article text says smart key / keyless"
    ],
@@ -38065,7 +37699,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -38079,7 +37712,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null
@@ -38093,7 +37725,6 @@
    ],
    "evidence": [
     "make from breadcrumb: BMW",
-    "make from \"Fahrzeugmarke: BMW\"",
     "shelf: Autoschlüssel > Autoschlüssel Funkschlüssel"
    ],
    "needsCheck": null

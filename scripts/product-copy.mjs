@@ -89,16 +89,34 @@ function splitByMake(text) {
   );
   if (!hits.length) return [];
 
+  /*
+   * Consecutive makes with nothing between them share the models that follow.
+   * "geeignet für Toyota Lexus, Cruiser, Prado" is a Cruiser and a Prado sold
+   * under both marques — reading it left to right made a "Lexus Cruiser",
+   * which is not a car anyone can buy.
+   */
   const groups = [];
+  let pending = [];
   for (const [i, hit] of hits.entries()) {
     const from = hit.index + hit[0].length;
     const to = i + 1 < hits.length ? hits[i + 1].index : source.length;
-    groups.push({ make: spellMake(hit[0]), tail: source.slice(from, to).trim() });
+    const tail = source.slice(from, to).trim();
+    pending.push(spellMake(hit[0]));
+
+    // Nothing but punctuation between this make and the next one.
+    if (/^[\s,;/&+·-]*$/.test(tail) && i + 1 < hits.length) continue;
+
+    groups.push({ makes: [...new Set(pending)], tail });
+    pending = [];
   }
+  if (pending.length) groups.push({ makes: [...new Set(pending)], tail: '' });
   return groups;
 }
 
 const YEARS = /\b((?:19|20)\d{2})\s*(?:->|-|–|—|bis|tot|t\/m)?\s*((?:19|20)\d{2})?\s*(->)?/;
+
+/** A line that is nothing but a year range: it belongs to the line above it. */
+const YEAR_LINE = /^\(?\s*((?:19|20)\d{2})\s*[-–—]\s*((?:19|20)\d{2})?\s*\)?$/;
 
 /** Words that are a note about the car, not the name of one. */
 const NOT_A_MODEL =
@@ -116,7 +134,7 @@ const PART_NUMBER = /^[A-Z]{2,6}[0-9]{2,5}[A-Z]{0,3}$/;
  * that the part fits a car with that name.
  */
 const PROSE =
-  /[:;()]|\b(und|oder|nicht|jedoch|f[üu]r|mit|ohne|kann|je nach|sowie|bzw|usw|z\.?\s?b\.?|material|produkttyp|anzahl|transponder|frequenz|funkeinheit|farbe|schl[üu]sselbart|ger[äa]te|lesen|schreiben|anwendung|version|abweichen|enthalten|original|um|zu|programmieren|passwort|berechnung|schneller|lizenz|aktivierung|adapter|immobox|immo|baujahr|\bab\b|software|update|unterst[üu]tzt|funktion|einstellbar|erforderlich|all key lost|key lost|kopieren|hinzuf[üu]gen|tasten?|stil|teilenummer|platine|geh[äa]use|fernbedienung|plattform|chassis|schl[üu]ssel|simulator|emulator|serie|series (?!\d))\b/i;
+  /[:;()]|\b(und|oder|nicht|jedoch|f[üu]r|mit|ohne|kann|je nach|sowie|bzw|usw|z\.?\s?b\.?|material|produkttyp|anzahl|transponder|frequenz|funkeinheit|farbe|schl[üu]sselbart|ger[äa]te|lesen|schreiben|anwendung|version|abweichen|enthalten|original|um|zu|programmieren|passwort|berechnung|schneller|lizenz|aktivierung|adapter|immobox|immo|baujahr|\bab\b|software|update|unterst[üu]tzt|funktion|einstellbar|erforderlich|all key lost|key lost|kopieren|hinzuf[üu]gen|platine|geh[äa]use|fernbedienung|plattform|chassis|schl[üu]ssel|simulator|emulator|serie|series (?!\d)|tasten?|stil|teilenummer|funkfernbedienung|klappschl[üu]ssel)\b/i;
 
 /** The tools we sell, which are named in the same sentences as the cars. */
 const TOOL_BRAND =
@@ -136,121 +154,142 @@ const titleCase = (text) =>
 /**
  * The models named after a make, as separate entries.
  *
- * Their separators are inconsistent — hyphens, commas, slashes and plain
- * spaces all occur in the same list — so the split is on the punctuation only,
- * and a chunk that carries no letters is dropped rather than guessed at.
+ * `fallback` is the year range stated once for the whole list — A-Key writes
+ * "geeignet für Toyota Lexus, Cruiser, Prado" on one line and "2007 -2016" on
+ * the next, and without carrying it across, every one of those cars came out
+ * as "vanaf 9999".
  */
-function modelsIn(tail) {
+function modelsIn(tail, fallback = null) {
   const out = [];
-  for (const chunk of tail.split(/\s*[,;|]\s*|\s+-\s+|\s*\/\s*/)) {
+  for (const chunk of String(tail ?? '').split(/\s*[,;|]\s*|\s+-\s+|\s*\/\s*/)) {
     const text = chunk.replace(/\s+/g, ' ').trim();
     if (!text) continue;
 
     const years = text.match(YEARS);
     const name = text
       .replace(YEARS, ' ')
-      // "Hyundai i30 ->" and "Nissan Interstar ab" leave a dangling token
-      // where the year range used to be.
       .replace(/\s*(->|→|\+|ab|bis|from|onwards)\s*$/i, '')
       .replace(/^[-–—:.\s]+|[-–—:.\s]+$/g, '')
       .replace(/\s{2,}/g, ' ')
       .trim();
 
+    const from = years ? Number(years[1]) : fallback?.from ?? 0;
+    const to = years?.[2] ? Number(years[2]) : years ? 9999 : fallback?.to ?? 9999;
+
     if (!name || name.length < 2) {
-      // A bare year range after a make ("Toyota 2015-2019") still says
-      // something; keep it as a model-less entry rather than losing the years.
-      if (years) out.push({ model: null, from: Number(years[1]), to: years[2] ? Number(years[2]) : 9999 });
+      if (years) out.push({ model: null, from, to });
       continue;
     }
     if (NOT_A_MODEL.test(name)) {
-      out.push({ model: null, from: years ? Number(years[1]) : 0, to: years?.[2] ? Number(years[2]) : 9999 });
+      out.push({ model: null, from, to });
       continue;
     }
     if (/^[\d\s.,-]+$/.test(name)) continue;
-    // "Toyota TOYR120L" — an article number standing where a model should be.
-    // Their pages repeat the part number inside the fitment sentence, and a
-    // customer scanning "past op" for their own car must not read a part
-    // number as one.
     if (PART_NUMBER.test(name)) continue;
     if (!looksLikeModel(name)) continue;
 
-    out.push({
-      model: titleCase(name),
-      from: years ? Number(years[1]) : 0,
-      to: years?.[2] ? Number(years[2]) : 9999,
-    });
+    out.push({ model: titleCase(name), from, to });
   }
   return out;
 }
 
-/** The line that introduces a fitment list, in the three shapes they use. */
-const FIT_INTRO =
-  /^(?:geeignet|passend)\s+f[üu]r\s*(?:z\.?\s?B\.?\s*)?(?:folgende\s+)?(?:Fahrzeuge|Modelle)?\s*:?\s*/i;
+/**
+ * Where the fitment list starts. Matched anywhere in the line, not only at the
+ * start: A-Key writes "3 Tasten Funkschlüssel geeignet für VW - VVR124A", and
+ * an anchored pattern read 538 such lines as prose and threw them away.
+ */
+const FIT_MARKER =
+  /(?:geeignet|passend)\s+f[üu]r\s*(?:z\.?\s?B\.?\s*)?(?:folgende\s+)?(?:Fahrzeuge|Modelle)?\s*:?\s*/i;
+const FIT_INTRO = new RegExp(`^${FIT_MARKER.source}`, 'i');
 
 /**
- * Every car the page names, as structured entries.
+ * Whether a line continues a fitment list.
  *
- * `make` is the make A-Key states in the specification block; it is used as
- * the make for a line that names a model without repeating the make
- * ("geeignet für z.B.: Megane II" on a page whose Fahrzeugmarke is Renault).
- */
-/**
- * Whether a line is part of the fitment list.
- *
- * A-Key breaks a long list over several lines, and only the first carries the
- * "geeignet für folgende Fahrzeuge:" label:
+ * A-Key breaks a long list over several lines and only the first carries the
+ * label:
  *
  *   geeignet für z.B. folgende Fahrzeuge: AUDI Various Models 2015->
  *   SKODA Fabia 2014-> SKODA Various Models 2014->
  *   VW Golf Sportsvan 2014-> VW Polo 2014-> VW Touran 2015->
  *
- * Reading only the labelled line lost five of the six makes. A continuation is
- * recognised by its shape rather than by position: makes and models and years,
- * and none of the words that make a sentence.
+ * A continuation is recognised by its shape: makes, models and years, and
+ * none of the words that make a sentence.
  */
 export function isFitmentLine(line) {
-  if (FIT_INTRO.test(line)) return true;
+  if (FIT_MARKER.test(line)) {
+    /*
+     * "geeignet für" does not always introduce a car. A-Key uses the same
+     * words for what a tool fits — "geeignet für automatische
+     * Schlüsselmaschinen Condor & Triton", "geeignet für Silca Futura" — and
+     * treating those as fitment swallowed them: they were dropped from the
+     * description as a duplicate of a car list that was never built. For a
+     * cutter, which machine it fits is the whole product.
+     */
+    return splitByMake(line.split(FIT_MARKER).slice(1).join(' ')).length > 0;
+  }
   if (PROSE.test(line)) return false;
   if (line.length > 200) return false;
   return splitByMake(line).length > 0;
 }
 
-export function fitmentOf(product, statedMake) {
-  /*
-   * Only lines that say they are about fitment.
-   *
-   * Scanning every line that merely contains a make name is how "Mercedes-Benz
-   * Baureihe: 163 Bj" and "Volvo Silber Material: Hochwertiger Kunststoff"
-   * became models a customer could pick their car from. A shorter, true list
-   * beats a long one with prose in it.
-   */
+/**
+ * Every car the page names, as structured entries.
+ *
+ * `statedMakes` are the makes from the specification block — A-Key writes
+ * "für Fahrzeugmarke: Toyota / Lexus" — and they are used for a line that
+ * names a model without repeating the make.
+ */
+export function fitmentOf(product, statedMakes) {
+  const stated = (Array.isArray(statedMakes) ? statedMakes : [statedMakes]).filter(Boolean);
+  const lines = product.description ?? [];
   const sources = [];
-  if (product.vehicles) sources.push(product.vehicles);
-  for (const line of product.description ?? []) {
-    if (isFitmentLine(line)) sources.push(line.replace(FIT_INTRO, ''));
+
+  if (product.vehicles) sources.push({ text: product.vehicles });
+
+  for (const [i, line] of lines.entries()) {
+    if (!isFitmentLine(line)) continue;
+    // Everything after the label; the label itself may sit mid-sentence.
+    let text = FIT_MARKER.test(line) ? line.split(FIT_MARKER).slice(1).join(' ') : line;
+
+    // "2007 -2016" on the next line is this list's year range.
+    const next = lines[i + 1]?.trim();
+    const yearLine = next?.match(YEAR_LINE);
+    if (yearLine) {
+      sources.push({
+        text,
+        years: { from: Number(yearLine[1]), to: yearLine[2] ? Number(yearLine[2]) : 9999 },
+      });
+      continue;
+    }
+    sources.push({ text });
   }
-  for (const line of product.fitmentLines ?? []) sources.push(line);
+
+  for (const line of product.fitmentLines ?? []) sources.push({ text: line });
 
   const found = [];
-  for (const source of sources) {
-    const groups = splitByMake(source);
+  for (const { text, years } of sources) {
+    const groups = splitByMake(text);
 
     if (!groups.length) {
       // No make in the line — only usable when the page states one itself.
-      if (!statedMake) continue;
-      for (const model of modelsIn(source)) {
-        if (model.model) found.push({ make: statedMake, ...model });
+      for (const model of modelsIn(text, years)) {
+        if (model.model) for (const make of stated) found.push({ make, ...model });
       }
       continue;
     }
 
     for (const group of groups) {
-      const models = modelsIn(group.tail);
+      const models = modelsIn(group.tail, years);
       if (!models.length) {
-        found.push({ make: group.make, model: null, from: 0, to: 9999 });
+        for (const make of group.makes) {
+          found.push({ make, model: null, from: years?.from ?? 0, to: years?.to ?? 9999 });
+        }
         continue;
       }
-      for (const model of models) found.push({ make: group.make, ...model });
+      // A model list after two makes belongs to both: "Toyota Lexus, Cruiser,
+      // Prado" is a Cruiser and a Prado sold as a Toyota and as a Lexus, not a
+      // "Lexus Cruiser".
+      for (const make of group.makes) for (const model of models) found.push({ make, ...model });
     }
   }
 
@@ -259,11 +298,20 @@ export function fitmentOf(product, statedMake) {
   for (const entry of found) {
     const key = `${entry.make}|${entry.model ?? ''}`.toLowerCase();
     const existing = byKey.get(key);
-    if (!existing) byKey.set(key, entry);
-    else {
-      existing.from = Math.min(existing.from || 9999, entry.from || 9999) || 0;
-      existing.to = Math.max(existing.to, entry.to);
+    if (!existing) {
+      byKey.set(key, { ...entry });
+      continue;
     }
+    // Both may legitimately be 0 ("no year stated"); Math.min of two 9999
+    // placeholders used to leave 9999 behind, and 277 cars came out as
+    // "vanaf 9999".
+    const froms = [existing.from, entry.from].filter((y) => y > 1900);
+    existing.from = froms.length ? Math.min(...froms) : 0;
+    // 9999 means "no end year stated", not "still in production", so a real
+    // end year always beats it — otherwise the same list read twice (once
+    // with years, once without) widened every range back to open-ended.
+    const tos = [existing.to, entry.to].filter((y) => y > 1900 && y < 9000);
+    existing.to = tos.length ? Math.max(...tos) : 9999;
   }
 
   const all = [...byKey.values()];
@@ -354,11 +402,14 @@ const capitalise = (text) => (text ? text[0].toUpperCase() + text.slice(1) : tex
  * can print.
  */
 const FREQUENCY_SHAPE = /\b\d{3}(?:[.,]\d+)?\s*(?:\/\s*\d{3}(?:[.,]\d+)?\s*)*MHz\b/i;
+/** They also write it without the unit: "Funkeinheit: 433". */
+const BARE_FREQUENCY = /^(\d{3}(?:[.,]\d+)?)(\s*\/\s*\d{3}(?:[.,]\d+)?)*$/;
 
 export const tidyFrequency = (value) => {
   if (!value) return null;
-  const cleaned = String(value).replace(/\s+/g, ' ').trim();
+  let cleaned = String(value).replace(/\s+/g, ' ').trim();
   if (/^(keine|kein|nein|-)$/i.test(cleaned)) return null;
+  if (BARE_FREQUENCY.test(cleaned)) cleaned += ' MHz';
   const shaped = cleaned.match(FREQUENCY_SHAPE);
   if (!shaped) return null;
   // "315/433MHz" and "433.58 / 434.42 MHz." both occur; one spelling here.
@@ -368,25 +419,37 @@ export const tidyFrequency = (value) => {
 /**
  * A transponder type, or nothing.
  *
- * Same problem, same answer: "PCF7936 (wird mit Superchip geliefert)" is a
- * chip number with a German aside glued to it, and "ohne (nicht im
- * Lieferumfang)" is not a chip at all.
+ * A whitelist of chip shapes was the wrong instrument: it threw away
+ * "DST 80Bit - Plus", "MQB48 / WFS 5C" and 506 other values A-Key states
+ * outright, because a list of known chips can never keep up with a supplier
+ * who sells new ones. So the test is the other way round — everything is kept
+ * unless it is one of the two things that is not a chip: their word for "none",
+ * or a sentence.
  */
-const CHIP_SHAPE =
-  /^(PCF\s?\d{4}[A-Z]*|HITAG\s?[0-9A-Z]+|MEGAMOS\s?\w*|TIRIS|TEXAS\s?\w*|4[A-D]-?\d{0,2}|ID\s?\d{2}[A-Z]?|\d{2}[A-Z]?|8A|4A|7936|7935|7947|7952|7953|XT27[A-Z0-9]*|46|47|48|60|63|70|80)$/i;
+const NOT_A_CHIP = /^(kein|keine|nein|ohne|nicht|-|n\.?v\.?)\b/i;
+/** "Wird bei der Firmware-Generierung automatisch vorbereitet" is a sentence. */
+const CHIP_PROSE =
+  /\b(wird|werden|kann|muss|ist|sind|bei|der|die|das|dem|den|nicht|im|Lieferumfang|enthalten|geliefert|erforderlich|vorbereitet|Generierung)\b/i;
 
 export const tidyChip = (value) => {
   if (!value) return null;
   let cleaned = String(value).replace(/\s+/g, ' ').trim();
-  if (/^(kein|keine|nein|ohne|-)/i.test(cleaned)) return null;
-  // Drop the aside: "PCF7936 (wird mit Superchip geliefert)" -> "PCF7936".
-  cleaned = cleaned.replace(/\s*[（(].*$/, '').replace(/\s+(und|oder|bzw)\s.*$/i, '').trim();
-  if (!cleaned || cleaned.length > 20) return null;
-  // Several chips separated by a slash is a real answer; prose is not.
-  const parts = cleaned.split(/\s*\/\s*/);
-  return parts.every((part) => CHIP_SHAPE.test(part)) ? cleaned : null;
+  if (NOT_A_CHIP.test(cleaned)) return null;
+  // "PCF7936 (wird mit Superchip geliefert)" — keep the chip, drop the aside.
+  cleaned = cleaned.replace(/\s*[（(].*$/, '').trim();
+  // A chip value may join two types: "PCF7945A und 7953A". The fact is worth
+  // keeping; the conjunction is not German we want on a Dutch page.
+  cleaned = cleaned
+    .replace(/\bund\b/gi, 'en')
+    .replace(/\boder\b/gi, 'of')
+    .replace(/\bModell f[üu]r\b/gi, 'model voor')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  if (!cleaned || cleaned.length > 40) return null;
+  return CHIP_PROSE.test(cleaned) ? null : cleaned;
 };
 
+/** Same treatment for the key blade: "mit" and "ohne" are not profiles. */
 /**
  * An article number, or nothing.
  *
@@ -411,11 +474,11 @@ export const tidyArticleNumber = (value) => {
  */
 export const tidyBlade = (value) => {
   if (!value) return null;
-  const text = String(value).trim();
+  const text = String(value).replace(/\s+/g, ' ').trim();
   if (/^(ohne|kein|keine|mit|-)$/i.test(text)) return null;
   if (/^notschl[üu]ssel$/i.test(text)) return 'met noodsleutel';
   if (/^w[äa]hlbar$/i.test(text)) return 'naar keuze';
-  return text;
+  return text.length <= 40 ? text : null;
 };
 
 /** "3 + 1 Paniktaste" -> "3 + 1 paniekknop". The number alone is the facet. */
@@ -435,6 +498,114 @@ export const buttonCount = (value) => {
   const n = Number(String(value ?? '').match(/\d+/)?.[0]);
   return Number.isFinite(n) && n > 0 && n < 12 ? n : null;
 };
+
+/**
+ * The supplier's product name in Dutch, or nothing.
+ *
+ * For a workshop article their heading *is* the product name — "Türöffner-Set
+ * SH-60", "Kreuzpickwerkzeuge FM-04W" — and falling back to the category noun
+ * turned 82 of them into "Gereedschap (SH-60)", which tells a buyer nothing.
+ *
+ * Word for word, from a closed list, and all or nothing: if one word is left
+ * untranslated the whole name is discarded rather than shown half in German.
+ */
+const TOOL_WORDS = {
+  türöffner: 'deuropener', tueroeffner: 'deuropener', öffner: 'opener',
+  werkzeug: 'gereedschap', werkzeuge: 'gereedschap', set: 'set', kit: 'kit',
+  schlüssel: 'sleutel', schlüsselset: 'sleutelset', fräser: 'frees', fräsersatz: 'freesset',
+  taster: 'taster', taststift: 'tastnaald', zange: 'tang', pinzette: 'pincet',
+  schraubendreher: 'schroevendraaier', hebel: 'hefboom', luftkeil: 'luchtkussen',
+  pumpe: 'pomp', ventil: 'ventiel', kreuzpickwerkzeuge: 'kruispickgereedschap',
+  adapter: 'adapter', kabel: 'kabel', halter: 'houder', koffer: 'koffer',
+  batterie: 'batterij', gehäuse: 'behuizing', platine: 'printplaat',
+  ersatz: 'reserve', tasche: 'tas', magnet: 'magneet', spiegel: 'spiegel',
+  lampe: 'lamp', bohrer: 'boor', feile: 'vijl', klebstoff: 'lijm',
+  spannbacke: 'spanklem', klemmadapter: 'klemadapter', emulator: 'emulator',
+  simulator: 'simulator', programmiergerät: 'programmeerapparaat',
+  schlüsselmaschine: 'sleutelmachine', zylinder: 'cilinder', schloss: 'slot',
+  und: 'en', für: 'voor', mit: 'met', ohne: 'zonder', aus: 'van',
+  /* The rest of the workshop vocabulary, from counting what actually blocked
+     a translation across the 722 workshop articles. */
+  geeignet: 'geschikt', passend: 'geschikt', automatische: 'automatische',
+  schlüsselmaschinen: 'sleutelmachines', schlüsselanhänger: 'sleutelhanger',
+  schlüsselringe: 'sleutelringen', schlüsselschilder: 'sleutellabels',
+  kofferanhänger: 'kofferlabel', kennkappen: 'kenkapjes', taststifte: 'tastnaalden',
+  bohrmuldenfräser: 'boormoedenfrees', lötadapter: 'soldeeradapter',
+  lötfrei: 'soldeervrij', lötfreier: 'soldeervrije', autoöffner: 'auto-opener',
+  überzug: 'coating', programmierer: 'programmeur', beschriften: 'beschrijfbaar',
+  stück: 'stuks', satz: 'set', packung: 'verpakking', dose: 'doos',
+  farbig: 'gekleurd', bunt: 'gekleurd', rund: 'rond', runde: 'ronde',
+  gelb: 'geel', weiß: 'wit', weiss: 'wit', orange: 'oranje', rot: 'rood',
+  blau: 'blauw', grün: 'groen', schwarz: 'zwart', grau: 'grijs', silber: 'zilver',
+  flexibel: 'flexibel', flexibler: 'flexibele', klein: 'klein', groß: 'groot',
+  lang: 'lang', kurz: 'kort', neu: 'nieuw', komplett: 'compleet',
+  gerade: 'recht', gebogen: 'gebogen', doppelt: 'dubbel', doppelter: 'dubbele',
+  einfach: 'enkel', stark: 'sterk', dünn: 'dun', breit: 'breed',
+  schwarze: 'zwarte', blaue: 'blauwe', rote: 'rode', grüne: 'groene',
+  braun: 'bruin', lila: 'lila', violett: 'paars', rosa: 'roze', beige: 'beige',
+  türkis: 'turquoise', brombeer: 'paars', gold: 'goud', bronze: 'brons',
+  transparent: 'transparant', natur: 'naturel',
+};
+
+/**
+ * A token that needs no translation: an article code, a number, a unit.
+ *
+ * The code pattern is deliberately case-sensitive. With an /i flag it matched
+ * every ordinary word as well — "Brombeer" went through untouched and the
+ * title came out half German.
+ */
+const CODE_TOKEN = /^[A-Z0-9][A-Z0-9._/+-]*$/;
+const NUMBER_TOKEN = /^[\d.,×x*-]+$/;
+const UNIT_TOKEN = /^(mm|cm|g|kg|v|mhz|bit|pro|plus|mini|max)$/i;
+const PASSES_THROUGH = (word) => CODE_TOKEN.test(word) || NUMBER_TOKEN.test(word) || UNIT_TOKEN.test(word);
+
+/**
+ * Words that need no translation: brands, and the handful that are spelled the
+ * same in both languages. Anything else unknown makes the whole name fail —
+ * without that rule "Ersatz-Luftkeilpumpe" came out as "Reserve-Luftkeilpumpe",
+ * which is neither language.
+ */
+const SAME_IN_BOTH =
+  /^(pro|plus|mini|max|smart|key|tool|cut|auto|start|stop|super|basic|standard|premium|profi|universal|universeel|multi|power|master|slim|flex|magnet|laser|akku|usb|bluetooth|wifi|led|abs|pvc|silca|keyline|xhorse|autel|obdstar|lonsdor|keydiy|kesa|jma|errebi|börkey|boerkey|condor|triton|alpha|beta|miracle|futura|ilco|orion|triax|ninja|dom|abus|kaba|wilka|iseo|mul|lock|t-lock|hu|toy|va|sip|nsn|hon|cy|kia|hy|maz|fo|ne|ssy)$/i;
+
+export function dutchProductName(title, articleNumber) {
+  /*
+   * Only the article number itself is stripped, and only when it stands at
+   * the end. Stripping "anything that looks like a code" turned
+   * "Kreuzpickwerkzeuge FM-04W" into "Kruispickgereedschap FM".
+   */
+  let source = String(title ?? '').replace(/\s+/g, ' ').trim();
+  const code = articleNumber ? String(articleNumber).trim() : null;
+  if (code) {
+    const escaped = code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    source = source.replace(new RegExp(`\\s*[—–(-]?\\s*${escaped}\\s*\\)?\\s*$`, 'i'), '').trim();
+  }
+  if (!source || source.length > 60) return null;
+  // A name that is only a code says no more than the code alone does.
+  if (!/[a-zà-ÿ]{3}/i.test(source)) return null;
+
+  // Split on spaces, brackets and slashes; a hyphen only between two words,
+  // so "FM-04W" survives while "Türöffner-Set" is translated in two halves.
+  const words = source.split(/(\s+|[()/,]|(?<=[A-Za-zÀ-ÿ]{3})-(?=[A-Za-zÀ-ÿ]{3}))/).filter((w) => w !== '');
+  const out = [];
+
+  for (const word of words) {
+    if (/^\s+$/.test(word) || /^[()/,-]$/.test(word)) { out.push(word); continue; }
+    const bare = word.replace(/[.,:;]+$/, '');
+    const punctuation = word.slice(bare.length);
+    const known = TOOL_WORDS[bare.toLowerCase()];
+    if (known) { out.push(known + punctuation); continue; }
+    if (PASSES_THROUGH(bare)) { out.push(word); continue; }
+    // A compound: "Türöffner-Set" splits above, but "Schlüsselset" does not.
+    const compound = Object.entries(TOOL_WORDS).find(([de]) => bare.toLowerCase() === de);
+    if (compound) { out.push(compound[1] + punctuation); continue; }
+    if (SAME_IN_BOTH.test(bare)) { out.push(word); continue; }
+    return null; // one unknown German word and the whole name is discarded
+  }
+
+  const name = out.join('').replace(/\s{2,}/g, ' ').trim();
+  return name ? name.charAt(0).toUpperCase() + name.slice(1) : null;
+}
 
 /**
  * The title, in the order a customer reads it: the car, then what the thing
@@ -470,6 +641,16 @@ export function dutchTitle(product, { category, makes }, fitment) {
    * at most: "Sleutelbaard voor Volkswagen, Audi (HU162FH)" is a title; the
    * same line with seven makes in it is a paragraph.
    */
+  /* For a workshop article their own heading is the product's name. */
+  const WORKSHOP = ['gereedschap', 'accessoires', 'sleutelmachines', 'frezen-en-tasters', 'programmeerapparatuur', 'sloten'];
+  if (WORKSHOP.includes(category)) {
+    const name = dutchProductName(product.title, product.articleNumber);
+    if (name) {
+      const code = tidyArticleNumber(product.articleNumber);
+      return code && !name.includes(code) ? `${name} (${code})` : name;
+    }
+  }
+
   const head = model
     ? [make, model, noun].filter(Boolean).join(' ')
     : makes.length > 1
@@ -592,15 +773,14 @@ export function descriptionHtml(product, classification, { fitment, xrefs, tools
   const own = dutch.filter((line) => line.length > 25);
   if (own.length) parts.push(`<p>${own.slice(0, 4).map(escape).join(' ')}</p>`);
 
-  if (fitment.length) {
-    const shown = fitment.slice(0, 40);
-    parts.push(
-      `<h4>Past op</h4><ul>${shown.map((f) => `<li>${escape(fitmentLabel(f))}</li>`).join('')}</ul>` +
-        (fitment.length > shown.length
-          ? `<p>En ${fitment.length - shown.length} andere modellen — twijfelt u? Stuur ons uw kenteken.</p>`
-          : '')
-    );
-  } else if (makes.length) {
+  /*
+   * No "Past op" list here.
+   *
+   * The product page already prints the fitment as its own block, with the
+   * makes as headings and a link to check a number plate. Repeating it in the
+   * description put the same list on the page twice, 258 times over.
+   */
+  if (!fitment.length && makes.length) {
     parts.push(
       `<p>Geschikt voor ${escape(makes.join(', '))}. Wij controleren de pasvorm op uw kenteken voordat wij verzenden.</p>`
     );

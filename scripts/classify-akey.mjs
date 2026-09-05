@@ -337,11 +337,13 @@ function classify(p) {
     }
   }
 
-  /* The make they print as a field. */
-  const fieldMake = makeOf(p.make);
-  if (fieldMake) {
-    makes.add(fieldMake);
-    evidence.push(`make from "Fahrzeugmarke: ${p.make}"`);
+  /* The make they print as a field — sometimes two: "Toyota / Lexus". */
+  const fieldMakes = makesIn(p.make);
+  for (const fieldMake of fieldMakes) {
+    if (!makes.has(fieldMake)) {
+      makes.add(fieldMake);
+      evidence.push(`make from "Fahrzeugmarke: ${p.make}"`);
+    }
   }
 
   /*
@@ -354,13 +356,19 @@ function classify(p) {
    */
   const titleMakes = makesIn(p.title);
   if (titleMakes.length) {
-    const shelved = [...makes].filter((m) => !titleMakes.includes(m));
+    /*
+     * The title corrects the shelf, never the specification block. A key whose
+     * "Fahrzeugmarke" says "Toyota / Lexus" and whose title says Toyota fits
+     * both — dropping Lexus there cost 39 articles a make they are sold for.
+     */
+    const keep = new Set([...titleMakes, ...fieldMakes]);
+    const shelved = [...makes].filter((m) => !keep.has(m));
     if (shelved.length) {
       needsCheck = `hun plank zegt ook ${shelved.join(', ')} — titel zegt ${titleMakes.join(', ')}`;
       evidence.push(`title names ${titleMakes.join(', ')}; shelves also said ${shelved.join(', ')}`);
     }
     makes.clear();
-    for (const make of titleMakes) makes.add(make);
+    for (const make of keep) makes.add(make);
   }
 
   /* ── the shelf ── */

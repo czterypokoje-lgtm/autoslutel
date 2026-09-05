@@ -179,9 +179,21 @@ export default function ProductAccordions({ product }: { product: ShopProduct })
                 </div>
               )}
             </>
+          ) : product.descriptionNl ? (
+            /*
+             * descriptionNl is HTML — scripts/product-copy.mjs writes it with
+             * paragraphs and lists, because a parts description read as a
+             * paragraph is a paragraph nobody reads. Printed as text it showed
+             * the visitor "<p>Complete afstandsbediening…</p><h4>".
+             */
+            <div
+              className="product-copy"
+              style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7 }}
+              dangerouslySetInnerHTML={{ __html: product.descriptionNl }}
+            />
           ) : (
             <p style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
-              {product.descriptionNl || 'Geen uitgebreide beschrijving beschikbaar voor dit product.'}
+              Geen uitgebreide beschrijving beschikbaar voor dit product.
             </p>
           )}
 

@@ -22,6 +22,26 @@
 
 /** Longest first: the array order is the replacement order. */
 const PHRASES = [
+  // "geeignet für Silca Futura" — what a cutter or a tracer fits. Not a car
+  // list, and the whole product for a workshop article.
+  ['geeignet für automatische Schlüsselmaschinen', 'geschikt voor automatische sleutelmachines'],
+  ['passend für automatische Schlüsselmaschinen', 'geschikt voor automatische sleutelmachines'],
+  ['Schlüsselmaschinen', 'sleutelmachines'],
+  ['Schlüsselmaschine', 'sleutelmachine'],
+  ['Anlageschlüssel', 'systeemsleutels'],
+  ['geeignet für z.B.', 'geschikt voor o.a.'],
+  ['geeignet für', 'geschikt voor'],
+  ['passend für', 'geschikt voor'],
+  ['Taststift', 'tastnaald'],
+  ['Vollhartmetall (Wolframkarbid)', 'volhardmetaal (wolfraamcarbide)'],
+  ['Vollhartmetall', 'volhardmetaal'],
+  ['Hartmetall', 'hardmetaal'],
+  ['Material:', 'Materiaal:'],
+  ['Produktmerkmale:', 'Producteigenschappen:'],
+  ['Lieferumfang:', 'Inhoud van de levering:'],
+  ['Kompatibel mit:', 'Compatibel met:'],
+  ['Fräser', 'frees'],
+  ['Taster', 'taster'],
   // openers
   ['Unterstützte Programmiergeräte:', 'Ondersteunde programmeerapparatuur:'],
   ['Unterstützte Kommunikationsprotokolle', 'Ondersteunde communicatieprotocollen'],
@@ -250,7 +270,9 @@ export function translateDescription(lines) {
     const text = line.trim();
     if (!text) continue;
 
-    const translated = applyPhrases(text);
+    // Their pages carry double spaces ("geeignet  für"), which broke every
+    // phrase match and left the line half German.
+    const translated = applyPhrases(text.replace(/\s+/g, ' '));
     if (STILL_GERMAN.test(translated)) german.push(text);
     else dutch.push(translated);
   }

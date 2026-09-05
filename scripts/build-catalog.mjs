@@ -210,9 +210,26 @@ for (const [slug, filed] of Object.entries(classification.filed)) {
   const images = photosFor(product);
   if (!images.length) skipped.noPhoto++;
 
-  const statedMake = product.make ? spellMake(product.make) : filed.makes[0] ?? null;
-  const fitment = fitmentOf(product, statedMake);
+  /* "für Fahrzeugmarke: Toyota / Lexus" names two makes, and a model listed
+     after it is sold under both. */
+  const statedMakes = product.make
+    ? product.make.split(/\s*[/&+]\s*/).map(spellMake).filter(Boolean)
+    : filed.makes;
+  const fitment = fitmentOf(product, statedMakes);
   const xrefs = crossReferences(product.description ?? []);
+
+  /*
+   * A-Key's own heading names a different article number than their article
+   * field on 448 pages — "Funkschlüssel kompatibel für Toyota - TOYR109" over
+   * article TOYR126L. Both numbers are in circulation, so the other one is
+   * listed as an alternative: a customer searching the number off their old
+   * invoice has to find the article.
+   */
+  const titleCode = product.title.match(/\b([A-Z]{2,6}\d{2,4}[A-Z]{0,3})\b/)?.[1];
+  const ownCode = tidyArticleNumber(product.articleNumber);
+  if (titleCode && ownCode && titleCode !== ownCode && !xrefs.some((x) => x.code === titleCode)) {
+    xrefs.push({ brand: 'A-Key', code: titleCode });
+  }
   const tools = cuttingTools(product.description ?? []);
 
   /* Every make the article is stated to fit: the classifier's, plus every
@@ -220,7 +237,26 @@ for (const [slug, filed] of Object.entries(classification.filed)) {
   const makes = [...new Set([...filed.makes, ...fitment.map((f) => f.make)])];
 
   const text = `${product.title} ${(product.description ?? []).join(' ')}`;
-  const { german } = translateDescription(product.description ?? []);
+
+  /*
+   * What the supplier says that we could not put into Dutch. The
+   * specification block is excluded: those lines are already the table above,
+   * and printing "Produkttyp: Funkschlüssel / Schlüsselbart: TOY49" under a
+   * heading that says "German" made the page look untranslated when in fact
+   * every one of those values is in the table in Dutch.
+   */
+  const SPEC_LINE =
+    /^(Produktinformationen|Produkttyp|Schl[üu]sselbart|Schl[üu]sselrohling|Anzahl der Tasten|Funkeinheit|Transponder|Farbe|Material|f[üu]r Fahrzeugmarke|Board\s*-?\s*Nr)/i;
+  const { german } = translateDescription(
+    (product.description ?? [])
+      .filter((line) => !SPEC_LINE.test(line.trim()))
+      // And not the heading again: "3 Tasten-Funkschlüssel kompatibel für
+      // Toyota TOYR111K" under "extra information" is the title in German.
+      .filter((line) => {
+        const strip = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return !strip(line).includes(strip(product.title).slice(0, 24));
+      })
+  );
 
   const cost = costOf(product.price);
   if (cost == null) skipped.noPrice++;
@@ -300,7 +336,11 @@ if (existsSync(ACCESSFOBS)) {
       images: item.image ? [item.image] : [],
       /* Through the same filter as A-Key's: the AccessFobs scrape read some
          sentences as models ("Flip key head and transponder chip for"). */
-      fitment: (item.vehicles ?? []).filter((v) => v.make && v.model && v.model.length <= 32 && !/\bfor\b|\band\b/i.test(v.model)),
+      fitment: (item.vehicles ?? [])
+        .filter((v) => v.make && v.model && v.model.length <= 32 && !/\bfor\b|\band\b/i.test(v.model))
+        // Their scrape read "2015-2012" off one page; a range that runs
+        // backwards is a typo, not a fact.
+        .map((v) => (v.to && v.from && v.to < v.from ? { ...v, from: v.to, to: v.from } : v)),
       excerpt: (item.notes ?? []).join(' ').slice(0, 400),
       titleNl: item.title,
       descriptionNl: `<p>Vervangende sleutelbehuizing. U zet uw eigen elektronica en sleutelbaard erin — de auto hoeft daarna niet opnieuw geprogrammeerd te worden.</p>${
