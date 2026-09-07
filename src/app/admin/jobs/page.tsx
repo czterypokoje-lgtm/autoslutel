@@ -10,6 +10,7 @@ import {
   type JobStatus,
 } from '@/lib/crmJobs';
 import styles from './jobs.module.css';
+import { technicianColour } from '@/lib/crmColours';
 
 export const dynamic = 'force-dynamic';
 
@@ -226,7 +227,7 @@ function DayBoard({
     ...technicians.map((t) => ({
       key: t.id,
       name: t.name,
-      color: t.color ?? '#2c4a63',
+      color: technicianColour(t.color),
       online: t.online,
       jobs: jobs.filter((j) => j.technician_id === t.id),
     })),

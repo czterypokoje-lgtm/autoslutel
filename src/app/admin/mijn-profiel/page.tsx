@@ -2,6 +2,7 @@ import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../vandaag/vandaag.module.css';
 import ProfileForm, { type Profile } from './ProfileForm';
+import { technicianColour } from '@/lib/crmColours';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,7 +48,7 @@ export default async function MijnProfielPage() {
     name: (data.name as string) ?? '',
     phone: (data.phone as string) ?? '',
     werkgebied: Array.isArray(data.werkgebied) ? (data.werkgebied as string[]) : [],
-    color: (data.color as string) ?? '#2c4a63',
+    color: technicianColour(data.color as string | null),
     photoUrl: (data.photo_url as string) ?? null,
     online: data.online === true,
     onlineSince: (data.online_since as string) ?? null,

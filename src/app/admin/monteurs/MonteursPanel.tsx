@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { waLink } from '@/lib/whatsapp';
 import { useRouter } from 'next/navigation';
 import styles from '../jobs/jobs.module.css';
+import { TECHNICIAN_COLOURS, technicianColour } from '@/lib/crmColours';
 
 export interface Technician {
   id: string;
@@ -20,7 +21,7 @@ interface CrmUser {
   email: string;
 }
 
-const COLOURS = ['#2c4a63', '#c2410c', '#186b4b', '#6b21a8', '#8a5804', '#9d201c'];
+const COLOURS = TECHNICIAN_COLOURS;
 
 export default function MonteursPanel({
   technicians,
@@ -112,7 +113,7 @@ export default function MonteursPanel({
             <div key={t.id} className={styles.suggestion}>
               <span
                 className={styles.dot}
-                style={{ background: t.color ?? '#2c4a63' }}
+                style={{ background: technicianColour(t.color) }}
               />
               <span>
                 <span className={styles.suggestionName}>{t.name}</span>

@@ -1,24 +1,35 @@
 /*
- * The CRM is a tool, not a landing page. The public site is orange and
- * high-contrast because it sells; this surface is looked at for eight hours a
- * day, so the base is neutral and colour is reserved for state.
+ * The CRM shell.
+ *
+ * A sidebar that never scrolls away, a content column that does, and one card
+ * idiom for everything inside it: a rounded panel holding rows separated by
+ * hairlines. Every list in this CRM — jobs, products, leads, technicians —
+ * is that same card, so the eye learns the shape once.
+ *
+ * The classes at the bottom (.note, .label, .input, .card, .button) are the
+ * ones the thirty-nine page components already use; they keep their names so
+ * this is a reskin and not a rewrite of every screen.
  */
 
 .shell {
   min-height: 100vh;
   background: var(--crm-bg);
   color: var(--crm-text);
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-size: 14px;
-  line-height: 1.45;
-  /* Money and clock columns must line up. */
+  line-height: 1.5;
+  letter-spacing: -0.006em;
+  /* Money and clock columns have to line up. */
   font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
   display: flex;
   flex-direction: row;
 }
 
+/* ── sidebar ─────────────────────────────────────────────────────────── */
+
 .sidebar {
-  width: 260px;
+  width: 248px;
   background: var(--crm-sidebar);
   border-right: 1px solid var(--crm-rule);
   display: flex;
@@ -27,17 +38,89 @@
   height: 100vh;
   position: sticky;
   top: 0;
-  padding: 24px 16px;
+  padding: 14px 10px 12px;
   box-sizing: border-box;
+}
+
+/** Brand, search and account on one line, the way an app bar reads. */
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 0;
+  margin-bottom: 18px;
 }
 
 .brand {
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   color: var(--crm-ink);
-  font-size: 18px;
-  margin-bottom: 32px;
-  padding: 0 12px;
+  font-size: 15px;
+  margin-right: auto;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/** The mark: a key's bow, so the sidebar says what shop this is. */
+.brandMark {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--crm-accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.iconGhost {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  color: var(--crm-muted);
+  border-radius: var(--crm-r-sm);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.iconGhost:hover {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+/** The signed-in user, as a round mark with a presence dot. */
+.avatar {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--crm-raised);
+  color: var(--crm-ink);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-decoration: none;
+  border: 1px solid var(--crm-rule2);
+}
+
+.avatar::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid var(--crm-bg);
 }
 
 .navWrapper {
@@ -50,83 +133,406 @@
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
 }
 
-.navLink {
-  padding: 10px 12px;
-  border-radius: 8px;
+.groupLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--crm-muted);
+  padding: 0 10px;
+  margin: 18px 0 6px;
+}
+.groupLabel:first-child { margin-top: 0; }
+
+.navLink {
+  padding: 7px 10px;
+  border-radius: var(--crm-r-sm);
+  color: var(--crm-text);
   text-decoration: none;
   font-weight: 500;
-  display: block;
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.navLink svg {
+  flex-shrink: 0;
+  color: var(--crm-muted);
 }
 
 .navLink:hover {
   background: var(--crm-sunk);
   color: var(--crm-ink);
 }
+.navLink:hover svg { color: var(--crm-text); }
 
-.navLinkActive {
+.navLinkActive,
+.navLinkActive:hover {
   background: var(--crm-sunk);
   color: var(--crm-ink);
+  font-weight: 600;
+}
+
+/* The one place the brand colour appears in navigation. */
+.navLinkActive svg { color: var(--crm-accent); }
+
+/** A count sitting at the right of a nav item. */
+.navCount {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--crm-muted);
+  background: var(--crm-raised);
+  border-radius: 999px;
+  padding: 1px 6px;
+  min-width: 8px;
+  text-align: center;
 }
 
 .sidebarBottom {
-  margin-top: 24px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--crm-rule);
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-top: 24px;
-  border-top: 1px solid var(--crm-rule);
+  gap: 1px;
 }
 
 .who {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 0 12px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 4px;
   color: var(--crm-muted);
-  font-size: 13px;
-  word-break: break-all;
+  font-size: 12px;
+  min-width: 0;
+}
+
+.whoEmail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .role {
-  align-self: flex-start;
-  padding: 2px 7px;
+  padding: 1px 6px;
   border-radius: 999px;
   border: 1px solid var(--crm-rule2);
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .signout {
   background: none;
-  border: 1px solid var(--crm-rule2);
-  color: var(--crm-muted);
-  border-radius: 8px;
-  padding: 8px 12px;
+  border: none;
+  color: var(--crm-text);
+  border-radius: var(--crm-r-sm);
+  padding: 7px 10px;
   font: inherit;
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: 500;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
 .signout:hover {
   color: var(--crm-ink);
-  border-color: var(--crm-ink);
   background: var(--crm-sunk);
 }
 
+.version {
+  font-size: 10.5px;
+  color: var(--crm-muted);
+  padding: 8px 10px 0;
+  opacity: 0.7;
+}
+
+/* ── content column ──────────────────────────────────────────────────── */
+
 .main {
   flex: 1;
-  padding: 32px;
+  padding: 26px 30px 60px;
   min-width: 0;
 }
 
-/* ---- Centred single-card pages: login, geen toegang ---- */
+/**
+ * Every page opens the same way: what this screen is, one line saying what
+ * you do here, and the actions for it pinned right.
+ */
+.pageHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--crm-ink);
+}
+
+.pageSub {
+  margin: 4px 0 0;
+  color: var(--crm-muted);
+  font-size: 13.5px;
+  max-width: 62ch;
+}
+
+.pageActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  padding: 0 10px;
+  height: 34px;
+  color: var(--crm-muted);
+}
+
+.searchBox:focus-within {
+  border-color: var(--crm-rule2);
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+.searchInput {
+  border: none;
+  background: none;
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13.5px;
+  width: 180px;
+  outline: none;
+}
+
+.searchInput::placeholder { color: var(--crm-muted); }
+
+/** The one control on a page that commits something. */
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 13px;
+  border: none;
+  border-radius: var(--crm-r);
+  background: var(--crm-ink);
+  color: #0a0a0a;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.primaryBtn:hover { background: #fff; }
+
+.ghostBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ghostBtn:hover {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+/* ── the list idiom ──────────────────────────────────────────────────── */
+
+.listCard {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--crm-rule);
+  min-width: 0;
+}
+
+.row:last-child { border-bottom: none; }
+.row:hover { background: rgba(255, 255, 255, 0.02); }
+
+.rowMain {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rowTitleLine {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--crm-ink);
+  text-decoration: none;
+}
+
+a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/** The identifier under the name: a slug, an article code, a plate. */
+.rowSlug {
+  font-size: 12.5px;
+  color: var(--crm-muted);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-raised);
+  color: var(--crm-text);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip svg { color: var(--crm-muted); }
+
+.chipWarn { background: var(--crm-warn-bg); color: var(--crm-warn); }
+.chipWarn svg { color: currentColor; }
+.chipOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.chipOk svg { color: currentColor; }
+.chipStop { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.chipStop svg { color: currentColor; }
+.chipSteel { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.chipSteel svg { color: currentColor; }
+
+.rowActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/** Icon buttons sit in one rounded group, as on the reference. */
+.iconGroup {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  overflow: hidden;
+}
+
+.iconBtn {
+  width: 32px;
+  height: 30px;
+  border: none;
+  border-right: 1px solid var(--crm-rule2);
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.iconBtn:last-child { border-right: none; }
+
+.iconBtn:hover {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+/** A switch, for the one setting a row can carry. */
+.switch {
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  border: none;
+  background: var(--crm-raised);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--crm-muted);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.switchOn { background: var(--crm-ink); }
+.switchOn::after { transform: translateX(14px); background: #0a0a0a; }
+
+/** Nothing here yet — said in one line, with the way out. */
+.empty {
+  padding: 44px 20px;
+  text-align: center;
+  color: var(--crm-muted);
+  font-size: 13.5px;
+}
+
+/* ── centred single-card pages: login, geen toegang ──────────────────── */
 
 .centre {
   min-height: 100vh;
@@ -135,7 +541,9 @@
   padding: 24px;
   background: var(--crm-bg);
   color: var(--crm-text);
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
 }
 
 .card {
@@ -143,74 +551,72 @@
   max-width: 380px;
   background: var(--crm-panel);
   border: 1px solid var(--crm-rule);
-  border-radius: 10px;
+  border-radius: var(--crm-r-lg);
   padding: 28px;
+  box-shadow: var(--crm-shadow-lg);
 }
 
 .card h1 {
   margin: 0 0 6px;
   font-size: 20px;
+  font-weight: 700;
   color: var(--crm-ink);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
 }
 
 .card p {
   margin: 0 0 18px;
   color: var(--crm-muted);
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.55;
 }
 
 .label {
   display: block;
   font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--crm-muted);
+  font-weight: 600;
+  color: var(--crm-text);
   margin-bottom: 6px;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .input {
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 12px;
+  padding: 9px 11px;
   border: 1px solid var(--crm-rule2);
-  border-radius: 6px;
+  border-radius: var(--crm-r-sm);
   background: var(--crm-bg);
   color: var(--crm-ink);
   font: inherit;
-  font-size: 15px;
+  font-size: 14px;
 }
 
+.input::placeholder { color: var(--crm-muted); }
+
 .input:focus {
-  outline: 2px solid var(--crm-accent);
-  outline-offset: -1px;
-  border-color: var(--crm-accent);
+  outline: none;
+  border-color: var(--crm-rule2);
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
 }
 
 .button {
   width: 100%;
   margin-top: 14px;
-  padding: 11px 14px;
+  padding: 10px 14px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--crm-r-sm);
   background: var(--crm-accent);
   color: #fff;
   font: inherit;
-  font-weight: 700;
-  font-size: 15px;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
 }
 
-.button:hover:not(:disabled) {
-  background: var(--crm-accent-hover);
-}
-
-.button:disabled {
-  opacity: 0.55;
-  cursor: default;
-}
+.button:hover:not(:disabled) { background: var(--crm-accent-hover); }
+.button:disabled { opacity: 0.55; cursor: default; }
 
 .linkButton {
   display: block;
@@ -222,24 +628,21 @@
   color: var(--crm-muted);
   font: inherit;
   font-size: 13px;
-  text-decoration: underline;
-  text-underline-offset: 2px;
   cursor: pointer;
 }
 
 .linkButton:hover:not(:disabled) {
   color: var(--crm-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-.linkButton:disabled {
-  opacity: 0.55;
-  cursor: default;
-}
+.linkButton:disabled { opacity: 0.55; cursor: default; }
 
 .note {
   margin-top: 16px;
-  padding: 11px 13px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: var(--crm-r-sm);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -247,13 +650,13 @@
 .noteOk {
   background: var(--crm-ok-bg);
   color: var(--crm-ok);
-  border: 1px solid var(--crm-ok);
+  border: 1px solid rgba(110, 231, 183, 0.25);
 }
 
 .noteBad {
   background: var(--crm-stop-bg);
   color: var(--crm-stop);
-  border: 1px solid var(--crm-stop);
+  border: 1px solid rgba(252, 165, 165, 0.25);
 }
 
 .backLink {
@@ -263,46 +666,40 @@
   font-size: 13px;
 }
 
+/* ── narrow ──────────────────────────────────────────────────────────── */
+
 @media (max-width: 860px) {
-  .shell {
-    flex-direction: column;
-  }
-  
+  .shell { flex-direction: column; }
+
   .sidebar {
     width: 100%;
     height: auto;
-    position: relative;
-    padding: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 10px 12px;
     border-right: none;
     border-bottom: 1px solid var(--crm-rule);
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
+    background: var(--crm-bg);
   }
 
-  .brand {
-    margin-bottom: 0;
-    padding: 0;
-  }
-  
+  .brandRow { margin-bottom: 0; padding: 0; flex: 1; }
+
   .navWrapper {
     flex-basis: 100%;
     order: 3;
     overflow-x: auto;
     overflow-y: hidden;
   }
-  
-  .nav {
-    flex-direction: row;
-    gap: 8px;
-    padding-bottom: 4px;
-  }
-  
-  .navLink {
-    white-space: nowrap;
-    padding: 8px 12px;
-  }
+
+  .nav { flex-direction: row; gap: 4px; padding-bottom: 2px; }
+  .groupLabel { display: none; }
+  .navLink { white-space: nowrap; padding: 7px 11px; }
+  .navCount { display: none; }
 
   .sidebarBottom {
     margin-top: 0;
@@ -313,11 +710,16 @@
     margin-left: auto;
   }
 
-  .who {
-    display: none;
-  }
-  
-  .main {
-    padding: 16px;
-  }
+  .who { display: none; }
+  .version { display: none; }
+  .signout { width: auto; }
+  .signout span { display: none; }
+
+  .main { padding: 18px 14px 48px; }
+  .pageActions { margin-left: 0; width: 100%; }
+  .searchInput { width: 100%; }
+  .searchBox { flex: 1; }
+
+  .row { flex-wrap: wrap; padding: 13px 14px; }
+  .rowActions { margin-left: auto; }
 }

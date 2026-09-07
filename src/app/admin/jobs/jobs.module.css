@@ -2,17 +2,18 @@
 
 .head {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 16px;
   flex-wrap: wrap;
-  margin: 0 0 12px;
+  margin: 0 0 22px;
 }
 
 .title {
   margin: 0;
-  font-size: 17px;
+  font-size: 22px;
+  font-weight: 700;
   color: var(--crm-ink);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
 }
 
 .count {
@@ -31,7 +32,7 @@
 .viewSwitch {
   display: flex;
   border: 1px solid var(--crm-rule2);
-  border-radius: 6px;
+  border-radius: var(--crm-r-sm);
   overflow: hidden;
 }
 
@@ -59,7 +60,7 @@
   height: 32px;
   padding: 0 11px;
   border: 1px solid var(--crm-rule2);
-  border-radius: 6px;
+  border-radius: var(--crm-r-sm);
   background: var(--crm-panel);
   color: var(--crm-text);
   text-decoration: none;
@@ -86,7 +87,7 @@
   gap: 1px;
   background: var(--crm-rule);
   border: 1px solid var(--crm-rule);
-  border-radius: 8px;
+  border-radius: var(--crm-r-lg);
   /* Same reason as .wrap in leads.module.css: the sticky column headers need a
      scrollport with a height, or they drift over the cards. */
   overflow: auto;
@@ -144,7 +145,7 @@
   display: block;
   border: 1px solid var(--crm-rule2);
   border-left-width: 3px;
-  border-radius: 6px;
+  border-radius: var(--crm-r-sm);
   padding: 7px 9px;
   background: var(--crm-bg);
   color: var(--crm-text);
@@ -172,7 +173,7 @@
   display: inline-block;
   padding: 0 5px;
   border: 1px solid var(--crm-rule2);
-  border-radius: 3px;
+  border-radius: var(--crm-r-sm);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 10px;
   color: var(--crm-ink);
@@ -182,13 +183,13 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 1px 6px;
-  border-radius: 4px;
-  border: 1px solid currentColor;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-raised);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .badge::before {
@@ -229,7 +230,7 @@
   gap: 1px;
   background: var(--crm-rule);
   border: 1px solid var(--crm-rule);
-  border-radius: 8px;
+  border-radius: var(--crm-r);
   overflow: hidden;
   overflow-x: auto;
 }
@@ -261,13 +262,13 @@
   color: var(--crm-muted);
   background: var(--crm-panel);
   border: 1px solid var(--crm-rule);
-  border-radius: 8px;
+  border-radius: var(--crm-r);
 }
 
 .warning {
   margin: 0 0 12px;
   padding: 11px 13px;
-  border-radius: 6px;
+  border-radius: var(--crm-r-sm);
   background: var(--crm-warn-bg);
   color: var(--crm-warn);
   border: 1px solid currentColor;
@@ -297,7 +298,7 @@
 .panel {
   background: var(--crm-panel);
   border: 1px solid var(--crm-rule);
-  border-radius: 8px;
+  border-radius: var(--crm-r-lg);
   padding: 16px;
 }
 
@@ -330,14 +331,14 @@
 }
 
 .control {
-  padding: 7px 9px;
+  padding: 0 10px;
   border: 1px solid var(--crm-rule2);
-  border-radius: 5px;
-  background: var(--crm-bg);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
   color: var(--crm-ink);
   font: inherit;
-  font-size: 13px;
-  min-height: 34px;
+  font-size: 13.5px;
+  height: 34px;
   box-sizing: border-box;
   width: 100%;
 }
@@ -372,7 +373,7 @@
   padding: 9px 10px;
   margin-bottom: 6px;
   border: 1px solid var(--crm-rule2);
-  border-radius: 6px;
+  border-radius: var(--crm-r-sm);
   background: var(--crm-bg);
   color: var(--crm-text);
   font: inherit;
@@ -400,7 +401,7 @@
 .regionTag {
   margin-left: auto;
   padding: 1px 6px;
-  border-radius: 3px;
+  border-radius: var(--crm-r-sm);
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -418,16 +419,20 @@
 }
 
 .primary {
-  height: 36px;
-  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
   border: none;
-  border-radius: 6px;
-  background: var(--crm-accent);
-  color: #fff;
+  border-radius: var(--crm-r);
+  background: var(--crm-ink);
+  color: #0a0a0a;
   font: inherit;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13.5px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .primary:disabled {
@@ -441,7 +446,7 @@
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--crm-rule2);
-  border-radius: 6px;
+  border-radius: var(--crm-r-sm);
   color: var(--crm-text);
   background: var(--crm-panel);
   text-decoration: none;

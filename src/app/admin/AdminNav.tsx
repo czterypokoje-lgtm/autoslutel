@@ -2,104 +2,112 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {
+  BarChart3,
+  CalendarDays,
+  CircleUser,
+  Inbox,
+  Package,
+  Settings,
+  Tag,
+  Truck,
+  Users,
+  Wallet,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
 import styles from './admin.module.css';
 import type { CrmRole } from '@/lib/crmSession';
 
-const OFFICE_LINKS = [
+/**
+ * The sidebar.
+ *
+ * Every item had the same three-line hamburger glyph before this, which is the
+ * same as having no icons at all: the eye cannot use them to find anything, so
+ * eleven identical marks just made the list longer. Each item now carries the
+ * icon for the thing it is — a van for the day's route, a wallet for the cash
+ * book, a wrench for the technicians — and the shape becomes the fastest way
+ * to hit the right screen without reading.
+ */
+
+interface NavItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
   {
-    group: 'Sales & Planning',
+    group: 'Werk',
     items: [
-      { href: '/admin/leads', label: 'Leads' },
-      { href: '/admin/jobs', label: 'Agenda' },
-      { href: '/admin/vandaag', label: 'Vandaag' },
+      { href: '/admin/leads', label: 'Leads', icon: Inbox },
+      { href: '/admin/jobs', label: 'Agenda', icon: CalendarDays },
+      { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
     ],
   },
   {
     group: 'Webshop',
     items: [
-      { href: '/admin/orders', label: 'Bestellingen' },
-      { href: '/admin/producten', label: 'Producten' },
+      { href: '/admin/orders', label: 'Bestellingen', icon: Package },
+      { href: '/admin/producten', label: 'Producten', icon: Tag },
     ],
   },
   {
     group: 'Beheer',
     items: [
-      { href: '/admin/klanten', label: 'Klanten' },
-      { href: '/admin/kas', label: 'Kas' },
-      { href: '/admin/rapportage', label: 'Rapportage' },
-      { href: '/admin/monteurs', label: 'Monteurs' },
-      { href: '/admin/instellingen', label: 'Instellingen' },
-      { href: '/admin/mijn-profiel', label: 'Profiel' },
+      { href: '/admin/klanten', label: 'Klanten', icon: Users },
+      { href: '/admin/kas', label: 'Kas', icon: Wallet },
+      { href: '/admin/rapportage', label: 'Rapportage', icon: BarChart3 },
+      { href: '/admin/monteurs', label: 'Monteurs', icon: Wrench },
+      { href: '/admin/instellingen', label: 'Instellingen', icon: Settings },
+      { href: '/admin/mijn-profiel', label: 'Profiel', icon: CircleUser },
     ],
   },
 ];
 
-const MONTEUR_LINKS = [
+const MONTEUR_LINKS: { group: string; items: NavItem[] }[] = [
   {
     group: 'Werk',
     items: [
-      { href: '/admin/vandaag', label: 'Vandaag' },
-      { href: '/admin/mijn-agenda', label: 'Mijn agenda' },
-      { href: '/admin/mijn-profiel', label: 'Profiel' },
+      { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
+      { href: '/admin/mijn-agenda', label: 'Mijn agenda', icon: CalendarDays },
+      { href: '/admin/mijn-profiel', label: 'Profiel', icon: CircleUser },
     ],
   },
 ];
 
-const GenericIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    style={{ marginRight: 10, verticalAlign: 'text-bottom' }}
-  >
-    <path d="M4 6h16M4 12h16M4 18h7" />
-  </svg>
-);
-
 export default function AdminNav({ role }: { role: CrmRole | null }) {
   const pathname = usePathname();
-  const links = role === 'monteur' ? MONTEUR_LINKS : OFFICE_LINKS;
+  const groups = role === 'monteur' ? MONTEUR_LINKS : OFFICE_LINKS;
+
+  /*
+   * "Starts with" would light up both /admin/jobs and /admin/jobs/nieuw, which
+   * is right, but it would also light up nothing at all on /admin itself. An
+   * exact match plus a trailing slash keeps a detail page attached to its
+   * section without one section claiming another's prefix.
+   */
+  const isActive = (href: string) => pathname === href || pathname?.startsWith(`${href}/`);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {links.map((group) => (
+    <>
+      {groups.map((group) => (
         <div key={group.group}>
-          <div
-            style={{
-              fontSize: '11px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              fontWeight: 700,
-              color: 'var(--crm-muted)',
-              marginBottom: '8px',
-              paddingLeft: '12px',
-            }}
-          >
-            {group.group}
-          </div>
+          <div className={styles.groupLabel}>{group.group}</div>
           <nav className={styles.nav}>
-            {group.items.map(({ href, label }) => (
+            {group.items.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
-                className={
-                  pathname?.startsWith(href)
-                    ? `${styles.navLink} ${styles.navLinkActive}`
-                    : styles.navLink
-                }
+                aria-current={isActive(href) ? 'page' : undefined}
+                className={isActive(href) ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}
               >
-                <GenericIcon />
+                <Icon size={16} strokeWidth={1.9} aria-hidden="true" />
                 {label}
               </Link>
             ))}
           </nav>
         </div>
       ))}
-    </div>
+    </>
   );
 }

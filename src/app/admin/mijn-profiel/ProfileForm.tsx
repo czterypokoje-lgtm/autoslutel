@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../vandaag/vandaag.module.css';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
+import { TECHNICIAN_COLOURS } from '@/lib/crmColours';
 
 export interface Profile {
   name: string;
@@ -18,7 +19,7 @@ export interface Profile {
   email: string;
 }
 
-const COLOURS = ['#2c4a63', '#c2410c', '#186b4b', '#6b21a8', '#8a5804', '#9d201c'];
+const COLOURS = TECHNICIAN_COLOURS;
 
 export default function ProfileForm({ profile }: { profile: Profile }) {
   const router = useRouter();

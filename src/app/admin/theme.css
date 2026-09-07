@@ -1,41 +1,65 @@
 /*
  * CRM design tokens.
  *
- * Deliberately not the site's orange-and-navy: this is a dense work surface,
- * and high saturation across eight hours is tiring. Neutral base, brand orange
- * only on the primary action, colour otherwise reserved for job state.
+ * A work surface, not a shop window. The public site is orange and
+ * high-contrast because it has to sell in three seconds; this is looked at for
+ * eight hours a day, so the base is a flat near-black, the rules are quiet,
+ * and colour is spent only where it carries meaning — the state of a job, the
+ * page you are on, the one button that commits something.
  *
- * Dark theme is not a nicety here — the service runs 24/7 and someone is
- * reading this at 03:00.
+ * Dark is not decoration here. The service runs 24/7 and someone reads this
+ * at 03:00 in a van.
+ *
+ * The scale below is deliberately short. Four surfaces, three inks, two rules:
+ * anything that needs a fifth grey is a component that has not been thought
+ * through.
  */
 
 .crm {
-  /* Forced dark theme to match visual redesign request */
-  --crm-bg: #11100e;
-  --crm-sidebar: #171614;
-  --crm-panel: #1c1a18;
-  --crm-sunk: #24221f;
-  --crm-ink: #fdfdfd;
-  --crm-text: #d1d5db;
-  --crm-muted: #9ca3af;
-  --crm-rule: #2a2825;
-  --crm-rule2: #3f3c37;
+  /* ── surfaces, from the page up ── */
+  --crm-bg: #0a0a0a;        /* the page itself */
+  --crm-sidebar: #0a0a0a;   /* same plane; the rule alone divides them */
+  --crm-panel: #111111;     /* a card lifted off the page */
+  --crm-sunk: #1a1a1a;      /* a row under the cursor, an active nav item */
+  --crm-raised: #232323;    /* a control sitting on a card */
 
-  --crm-accent: #c2410c;
-  --crm-accent-hover: #9a330a;
+  /* ── ink ── */
+  --crm-ink: #ededed;       /* headings, values, the thing you came to read */
+  --crm-text: #b4b4b4;      /* body */
+  --crm-muted: #757575;     /* labels, meta, anything you skim past */
 
-  --crm-ok: #a7f3d0;
-  --crm-ok-bg: #064e3b;
-  --crm-stop: #fecaca;
-  --crm-stop-bg: #7f1d1d;
-  --crm-warn: #fde68a;
-  --crm-warn-bg: #78350f;
-  --crm-steel: #bae6fd;
-  --crm-steel-bg: #0c4a6e;
+  /* ── rules ── */
+  --crm-rule: #1f1f1f;      /* between rows */
+  --crm-rule2: #2e2e2e;     /* around controls */
+
+  /* ── the one accent ── */
+  --crm-accent: #ea580c;
+  --crm-accent-hover: #f97316;
+  --crm-accent-soft: rgba(234, 88, 12, 0.14);
+
+  /* ── state; each pair is a fill and the ink that survives on it ── */
+  --crm-ok: #6ee7b7;
+  --crm-ok-bg: rgba(16, 185, 129, 0.13);
+  --crm-stop: #fca5a5;
+  --crm-stop-bg: rgba(239, 68, 68, 0.13);
+  --crm-warn: #fcd34d;
+  --crm-warn-bg: rgba(245, 158, 11, 0.13);
+  --crm-steel: #93c5fd;
+  --crm-steel-bg: rgba(59, 130, 246, 0.13);
+
+  /* ── geometry, so every corner in the CRM is one of three ── */
+  --crm-r-sm: 6px;
+  --crm-r: 10px;
+  --crm-r-lg: 14px;
+
+  --crm-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --crm-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
 
   color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  /* Inherits exactly from the root, as we are forcing dark theme */
-}
+/*
+ * One theme on purpose. A CRM that changes colour when the technician's phone
+ * flips to light mode at sunrise is a CRM whose state badges have to be legible
+ * twice over; these are legible once, on this ground.
+ */
