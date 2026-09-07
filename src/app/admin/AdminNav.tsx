@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  BadgeCheck,
   BarChart3,
   CalendarDays,
+  Handshake,
   CircleUser,
   Inbox,
   Package,
@@ -41,6 +43,7 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
     group: 'Werk',
     items: [
       { href: '/admin/leads', label: 'Leads', icon: Inbox },
+      { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
       { href: '/admin/jobs', label: 'Agenda', icon: CalendarDays },
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
     ],
@@ -69,8 +72,15 @@ const MONTEUR_LINKS: { group: string; items: NavItem[] }[] = [
   {
     group: 'Werk',
     items: [
+      { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
       { href: '/admin/mijn-agenda', label: 'Mijn agenda', icon: CalendarDays },
+    ],
+  },
+  {
+    group: 'Mijzelf',
+    items: [
+      { href: '/admin/mijn-vak', label: 'Mijn vak', icon: BadgeCheck },
       { href: '/admin/mijn-profiel', label: 'Profiel', icon: CircleUser },
     ],
   },
