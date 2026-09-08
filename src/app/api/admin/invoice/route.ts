@@ -1,4 +1,3 @@
-import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -17,6 +16,13 @@ const ALLOWED: Record<string, string> = {
   'image/webp': 'webp',
   'image/heic': 'heic',
   'image/heif': 'heif',
+  /*
+   * Most supplier portals offer the invoice as a spreadsheet as well, and that
+   * reads far better than a PDF: one row per article, already separated.
+   */
+  'text/csv': 'csv',
+  'application/vnd.ms-excel': 'xls',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
 };
 
 /**
@@ -78,7 +84,21 @@ export async function POST(request: Request) {
 
   /* ── read it, if it can be read ── */
   let text = '';
-  if (file.type === 'application/pdf') {
+  if (extension === 'csv') {
+    // A CSV is already the text; the parser reads a row the same way it reads
+    // a line, once the separators are spaces.
+    text = bytes.toString('utf8').replace(/[;\t]/g, '  ');
+  } else if (extension === 'xlsx' || extension === 'xls') {
+    try {
+      const { read, utils } = await import('xlsx');
+      const book = read(bytes, { type: 'buffer' });
+      text = book.SheetNames.map((name) =>
+        utils.sheet_to_csv(book.Sheets[name], { FS: '  ' })
+      ).join('\n');
+    } catch (error) {
+      console.warn('Spreadsheet read failed:', error instanceof Error ? error.message : error);
+    }
+  } else if (file.type === 'application/pdf') {
     try {
       // pdf-parse v2 is a class, not the callable default of v1.
       const { PDFParse } = await import('pdf-parse');
@@ -97,17 +117,36 @@ export async function POST(request: Request) {
   const header = text ? readInvoiceHeader(text) : { invoiceNumber: null, invoiceDate: null, supplier: null };
 
   /* ── keep the paper ── */
-  let fileUrl: string;
-  try {
-    const blob = await put(`facturen/${crypto.randomUUID()}.${extension}`, bytes, {
-      access: 'public',
-      contentType: file.type,
-    });
-    fileUrl = blob.url;
-  } catch (error) {
-    console.error('Invoice upload failed:', error instanceof Error ? error.message : error);
-    return NextResponse.json({ error: 'Opslaan van het bestand mislukt.' }, { status: 502 });
+  /*
+   * Supabase Storage, not Vercel Blob.
+   *
+   * Blob needs BLOB_READ_WRITE_TOKEN, which this deployment does not have — so
+   * every upload failed with "Opslaan van het bestand mislukt" and no way for
+   * the monteur to know why. Supabase is already paid for, already
+   * authenticated on this request, and works on a laptop as well as in
+   * production.
+   *
+   * The bucket is private: an invoice carries a supplier, an address and what
+   * somebody paid. The page gets a signed link that expires.
+   */
+  const objectPath = `${technicianId ?? 'kantoor'}/${crypto.randomUUID()}.${extension}`;
+  const { error: storeError } = await supabase.storage
+    .from('facturen')
+    .upload(objectPath, bytes, { contentType: file.type, upsert: false });
+
+  if (storeError) {
+    console.error('Invoice upload failed:', storeError.message);
+    return NextResponse.json(
+      {
+        error: /bucket|not found/i.test(storeError.message)
+          ? 'De opslagmap "facturen" bestaat nog niet — voer 0020_invoice_storage.sql uit.'
+          : `Opslaan van het bestand mislukt: ${storeError.message}`,
+      },
+      { status: 502 }
+    );
   }
+
+  const fileUrl = objectPath;
 
   const { data: invoice, error } = await supabase
     .from('purchase_invoices')

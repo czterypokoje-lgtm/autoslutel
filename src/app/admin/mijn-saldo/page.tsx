@@ -1,269 +1,244 @@
+import { BadgeEuro, CheckCircle2, Coins, TrendingUp } from 'lucide-react';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import styles from './Dashboard.module.css';
+import { PageHead, StatGrid, Stat, Card, CardHead, Badge, Empty, Notice, Table, ui } from '../_ui';
+import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import PayoutForm from './PayoutForm';
 
 export const dynamic = 'force-dynamic';
 
+const euro = (value: number) => `€ ${value.toFixed(2).replace('.', ',')}`;
+
+/**
+ * What this technician earned, and what they can draw.
+ *
+ * Every figure here comes from their own completed jobs. The version this
+ * replaces printed "↑ 12% vs vorige maand" beside every tile, a revenue curve
+ * with an invented shape, and a job-type ring reading 60/30/10 — none of it
+ * from the database. A number somebody cannot trust is worse than no number,
+ * because they stop believing the ones that are real as well.
+ *
+ * Where there is nothing to compare against yet, no comparison is shown.
+ * "Geen vergelijking" is the honest answer in a technician's first month.
+ */
 export default async function MijnSaldoPage() {
   const user = await requireCrmUser('/admin/mijn-saldo');
   const supabase = await createSupabaseServerClient();
 
-  const { data: tech } = await supabase.from('technicians').select('id, name').eq('user_id', user.id).single();
+  const { data: tech } = await supabase
+    .from('technicians')
+    .select('id')
+    .eq('user_id', user.id)
+    .maybeSingle();
 
   if (!tech) {
-    return <div style={{ padding: '2rem' }}>Je account is nog niet gekoppeld.</div>;
+    return (
+      <>
+        <PageHead title="Mijn saldo" />
+        <Notice tone="bad">Uw login is nog niet aan een monteur gekoppeld.</Notice>
+      </>
+    );
   }
 
-  const { data: jobs } = await supabase
-    .from('jobs')
-    .select('id, car_make, car_model, service_type, quoted_price, final_price, commission_pct, status, scheduled_date')
-    .eq('technician_id', tech.id)
-    .eq('status', 'afgerond')
-    .order('scheduled_date', { ascending: false });
+  const [{ data: jobs }, { data: payouts }] = await Promise.all([
+    supabase
+      .from('jobs')
+      .select(
+        'id, car_make, car_model, scenario, service_type, quoted_price, final_price, commission_pct, scheduled_date'
+      )
+      .eq('technician_id', tech.id)
+      .eq('status', 'afgerond')
+      .order('scheduled_date', { ascending: false }),
+    supabase.from('payout_requests').select('amount, status').eq('technician_id', tech.id),
+  ]);
 
-  const { data: payouts } = await supabase
-    .from('payout_requests')
-    .select('amount, status')
-    .eq('technician_id', tech.id);
+  const done = jobs ?? [];
 
-  const completedJobs = jobs || [];
-  
-  let totalRevenue = 0;
-  let totalEarnings = 0;
-  const makeCounts: Record<string, number> = {};
+  /** What was charged, not what was quoted; the agreed commission even at 0%. */
+  const priceOf = (job: (typeof done)[number]) => Number(job.final_price ?? job.quoted_price) || 0;
+  const earnedOn = (job: (typeof done)[number]) =>
+    priceOf(job) * ((100 - Number(job.commission_pct ?? 25)) / 100);
 
-  for (const job of completedJobs) {
-    /*
-     * What was actually charged, not what was quoted. A job that ran into a
-     * second immobiliser and was settled at a different figure would otherwise
-     * pay the monteur on the phone estimate.
-     */
-    const price = Number(job.final_price ?? job.quoted_price) || 0;
-    /*
-     * ?? and not ||: a technician on a 0% deal had `0 || 25` turn into 25, and
-     * a quarter of their money vanished into a commission nobody agreed.
-     */
-    const comm = Number(job.commission_pct ?? 25);
-    totalRevenue += price;
-    totalEarnings += price * ((100 - comm) / 100);
-    
-    if (job.car_make) {
-      makeCounts[job.car_make] = (makeCounts[job.car_make] || 0) + price;
-    }
-  }
+  const revenue = done.reduce((total, job) => total + priceOf(job), 0);
+  const earned = done.reduce((total, job) => total + earnedOn(job), 0);
 
-  /*
-   * A rejected request is not money that left. The old sum counted every row
-   * whatever its status — it read `status` and never used it — so a refusal
-   * permanently reduced what the monteur could draw, in our favour.
-   *
-   * Pending still holds the amount back, because otherwise the same money can
-   * be requested twice; it is shown separately so it does not read as paid.
-   */
-  const paidOut = (payouts || [])
+  const paidOut = (payouts ?? [])
     .filter((p) => p.status === 'paid')
-    .reduce((sum, p) => sum + Number(p.amount), 0);
-  const pendingOut = (payouts || [])
+    .reduce((total, p) => total + Number(p.amount), 0);
+  const pendingOut = (payouts ?? [])
     .filter((p) => p.status === 'pending')
-    .reduce((sum, p) => sum + Number(p.amount), 0);
+    .reduce((total, p) => total + Number(p.amount), 0);
 
-  const totalWithdrawn = paidOut;
-  const availableBalance = Math.max(0, totalEarnings - paidOut - pendingOut);
-  
-  const avgPrice = completedJobs.length > 0 ? (totalRevenue / completedJobs.length) : 0;
-  
-  // Progress for Revenue Target (e.g. € 5000)
-  const target = 5000;
-  const progressPct = Math.min(100, Math.round((totalRevenue / target) * 100));
-  const strokeDash = `${(progressPct / 100) * 125.6} 125.6`;
+  const available = Math.max(0, earned - paidOut - pendingOut);
 
-  // Sort top makes
-  const topMakes = Object.entries(makeCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
+  /* ── this month against last, from the rows themselves ── */
+  const now = new Date();
+  const monthKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  const thisMonth = monthKey(now);
+  const lastMonth = monthKey(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+
+  const inMonth = (key: string) => done.filter((job) => (job.scheduled_date ?? '').startsWith(key));
+  const revenueThis = inMonth(thisMonth).reduce((total, job) => total + priceOf(job), 0);
+  const revenueLast = inMonth(lastMonth).reduce((total, job) => total + priceOf(job), 0);
+
+  /** Null when last month holds nothing to compare with — not 0%, not a guess. */
+  const change = revenueLast > 0 ? Math.round(((revenueThis - revenueLast) / revenueLast) * 100) : null;
+  const changeText =
+    change == null
+      ? 'geen vergelijking met vorige maand'
+      : `${change >= 0 ? '+' : ''}${change}% t.o.v. vorige maand`;
+
+  const average = done.length ? revenue / done.length : 0;
+
+  /* ── what kind of work this actually was ── */
+  const byKind = new Map<string, { count: number; revenue: number }>();
+  for (const job of done) {
+    const label = isScenario(job.scenario)
+      ? SCENARIO_INFO[job.scenario].label
+      : (job.service_type ?? 'Overig');
+    const entry = byKind.get(label) ?? { count: 0, revenue: 0 };
+    entry.count += 1;
+    entry.revenue += priceOf(job);
+    byKind.set(label, entry);
+  }
+  const kinds = [...byKind].sort((a, b) => b[1].revenue - a[1].revenue);
 
   return (
-    <div className={styles.dashboard}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Overzicht (Mijn Saldo)</h1>
-        <PayoutForm availableBalance={availableBalance} />
-      </header>
+    <>
+      <PageHead
+        title="Mijn saldo"
+        sub="Wat u heeft verdiend op klussen via Autosleutel24, en wat u kunt opnemen."
+        actions={<PayoutForm available={available} />}
+      />
 
-      {/* TOP CARDS */}
-      <div className={styles.grid4}>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>
-            Klussen Afgerond
-            <svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,15 L15,10 L30,12 L45,5 L60,2" fill="none" stroke="#3b82f6" strokeWidth="2"/><path d="M0,20 L0,15 L15,10 L30,12 L45,5 L60,2 L60,20 Z" fill="rgba(59, 130, 246, 0.1)"/></svg>
-          </div>
-          <div className={styles.cardValue}>{completedJobs.length}</div>
-          <div className={styles.cardTrend}>
-            <span className={styles.trendUp}>↑ 12%</span> <span className={styles.trendText}>vs vorige maand</span>
-          </div>
-        </div>
+      <StatGrid>
+        <Stat
+          label="Beschikbaar"
+          value={euro(available)}
+          foot={pendingOut > 0 ? `${euro(pendingOut)} in behandeling` : 'direct op te nemen'}
+          icon={<Coins size={15} strokeWidth={2} />}
+          tone={available > 0 ? 'ok' : undefined}
+        />
+        <Stat
+          label="Klussen afgerond"
+          value={done.length}
+          foot={`${inMonth(thisMonth).length} deze maand`}
+          icon={<CheckCircle2 size={15} strokeWidth={2} />}
+        />
+        <Stat
+          label="Omzet"
+          value={euro(revenue)}
+          foot={changeText}
+          icon={<TrendingUp size={15} strokeWidth={2} />}
+          tone={change == null ? undefined : change >= 0 ? 'ok' : 'warn'}
+        />
+        <Stat
+          label="Gemiddelde klus"
+          value={done.length ? euro(average) : '—'}
+          foot={done.length ? 'over alle afgeronde klussen' : 'nog geen klussen'}
+          icon={<BadgeEuro size={15} strokeWidth={2} />}
+        />
+      </StatGrid>
 
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>
-            Beschikbaar Saldo
-            <svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,18 L15,12 L30,15 L45,8 L60,5" fill="none" stroke="#f97316" strokeWidth="2"/><path d="M0,20 L0,18 L15,12 L30,15 L45,8 L60,5 L60,20 Z" fill="rgba(249, 115, 22, 0.1)"/></svg>
-          </div>
-          <div className={styles.cardValue}>€ {availableBalance.toFixed(0)}</div>
-          <div className={styles.cardTrend}>
-            <span className={styles.trendUp}>↑ 5%</span> <span className={styles.trendText}>vs vorige maand</span>
-          </div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>
-            Totale Omzet
-            <svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,10 L15,8 L30,12 L45,4 L60,2" fill="none" stroke="#eab308" strokeWidth="2"/><path d="M0,20 L0,10 L15,8 L30,12 L45,4 L60,2 L60,20 Z" fill="rgba(234, 179, 8, 0.1)"/></svg>
-          </div>
-          <div className={styles.cardValue}>€ {totalRevenue.toFixed(0)}</div>
-          <div className={styles.cardTrend}>
-            <span className={styles.trendUp}>↑ 18%</span> <span className={styles.trendText}>vs vorige maand</span>
-          </div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>
-            Gemiddelde Prijs
-            <svg width="60" height="20" viewBox="0 0 60 20"><path d="M0,5 L15,12 L30,8 L45,15 L60,10" fill="none" stroke="#10b981" strokeWidth="2"/><path d="M0,20 L0,5 L15,12 L30,8 L45,15 L60,10 L60,20 Z" fill="rgba(16, 185, 129, 0.1)"/></svg>
-          </div>
-          <div className={styles.cardValue}>€ {avgPrice.toFixed(0)}</div>
-          <div className={styles.cardTrend}>
-            <span className={styles.trendDown}>↓ 2%</span> <span className={styles.trendText}>vs vorige maand</span>
-          </div>
-        </div>
-      </div>
-
-      {/* MIDDLE ROW */}
-      <div className={styles.grid2}>
-        <div className={styles.card}>
-          <div className={styles.chartHeader}>
-            <div className={styles.chartTitle}>Omzet Trend (Laatste 7 dagen)</div>
-            <select className={styles.chartSelect}><option>Deze week</option></select>
-          </div>
-          <div style={{ height: '200px', width: '100%', position: 'relative' }}>
-            <svg width="100%" height="100%" viewBox="0 0 400 150" preserveAspectRatio="none">
-              <path d="M0,100 L50,80 L100,90 L150,50 L200,60 L250,90 L300,40 L350,50 L400,20" fill="none" stroke="#60a5fa" strokeWidth="2"/>
-              <path d="M0,150 L0,100 L50,80 L100,90 L150,50 L200,60 L250,90 L300,40 L350,50 L400,20 L400,150 Z" fill="rgba(96, 165, 250, 0.05)"/>
-            </svg>
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: '0.75rem', padding: '0 10px' }}>
-              <span>Ma</span><span>Di</span><span>Wo</span><span>Do</span><span>Vr</span><span>Za</span><span>Zo</span>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.chartHeader}>
-            <div className={styles.chartTitle}>Maanddoel</div>
-            <select className={styles.chartSelect}><option>Deze maand</option></select>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '200px' }}>
-            <svg width="200" height="100" viewBox="0 0 100 50">
-              <path d="M10,50 A40,40 0 0,1 90,50" fill="none" stroke="#334155" strokeWidth="15" strokeLinecap="round" />
-              <path d="M10,50 A40,40 0 0,1 90,50" fill="none" stroke="#60a5fa" strokeWidth="15" strokeLinecap="round" strokeDasharray={strokeDash} />
-            </svg>
-            <div style={{ marginTop: '-20px', fontSize: '2rem', fontWeight: 'bold' }}>{progressPct}%</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px', fontSize: '0.75rem', color: '#94a3b8' }}>
-              <span>€0</span>
-              <span>Doel: €5.000</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* BOTTOM ROW */}
-      <div className={styles.grid2}>
-        <div className={styles.card}>
-          <div className={styles.chartHeader}>
-            <div className={styles.chartTitle}>Soort Klussen (Analyse)</div>
-            <select className={styles.chartSelect}><option>Deze week</option></select>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '200px' }}>
-            <svg width="150" height="150" viewBox="0 0 42 42">
-              <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#334155" strokeWidth="6"></circle>
-              <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#3b82f6" strokeWidth="6" strokeDasharray="60 40" strokeDashoffset="25"></circle>
-              <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#60a5fa" strokeWidth="6" strokeDasharray="30 70" strokeDashoffset="-35"></circle>
-              <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#bfdbfe" strokeWidth="6" strokeDasharray="10 90" strokeDashoffset="-65"></circle>
-            </svg>
-            <div style={{ marginLeft: '2rem' }}>
-              <div style={{ fontSize: '0.875rem', marginBottom: '0.5rem', color: '#f8fafc' }}><span style={{ color: '#3b82f6' }}>●</span> Bijmaken (60%)</div>
-              <div style={{ fontSize: '0.875rem', marginBottom: '0.5rem', color: '#f8fafc' }}><span style={{ color: '#60a5fa' }}>●</span> Kwijt (30%)</div>
-              <div style={{ fontSize: '0.875rem', marginBottom: '0.5rem', color: '#f8fafc' }}><span style={{ color: '#bfdbfe' }}>●</span> Slot (10%)</div>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={styles.chartHeader}>
-            <div className={styles.chartTitle}>Top Automerken</div>
-            <select className={styles.chartSelect}><option>Deze maand</option></select>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div className={styles.listRow} style={{ color: '#94a3b8', borderBottom: 'none' }}>
-              <span>Automerk</span>
-              <span>Omzet</span>
-            </div>
-            {topMakes.length === 0 ? (
-              <div className={styles.listRow}>Geen data</div>
-            ) : (
-              topMakes.map(([make, amount]) => (
-                <div key={make} className={styles.listRow}>
-                  <span style={{ fontWeight: 500, color: '#f8fafc' }}>{make}</span>
-                  <span style={{ color: '#94a3b8' }}>€ {amount}</span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* FULL WIDTH ROW: HISTORY */}
-      <div className={styles.card} style={{ marginTop: '1.5rem' }}>
-        <div className={styles.chartHeader}>
-          <div className={styles.chartTitle}>Transactiegeschiedenis (Recente Klussen)</div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className={styles.listRow} style={{ color: '#94a3b8', borderBottom: '1px solid #334155', paddingBottom: '0.75rem' }}>
-            <span style={{ flex: 2 }}>Voertuig & Datum</span>
-            <span style={{ flex: 1 }}>Dienst</span>
-            <span style={{ flex: 1, textAlign: 'right' }}>Klant betaalde</span>
-            <span style={{ flex: 1, textAlign: 'right', fontWeight: 600 }}>Jouw verdienste</span>
-          </div>
-          {completedJobs.length === 0 ? (
-            <div className={styles.listRow} style={{ padding: '1rem 0' }}>Geen afgeronde klussen gevonden.</div>
-          ) : (
-            completedJobs.slice(0, 50).map(job => {
-              const price = Number(job.final_price ?? job.quoted_price) || 0;
-              const comm = Number(job.commission_pct ?? 25);
-              const earned = price * ((100 - comm) / 100);
-
-              // Date formatting safely
-              const dateStr = job.scheduled_date ? new Date(job.scheduled_date).toLocaleDateString('nl-NL', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Onbekend';
-
+      <Card>
+        <CardHead>Soort werk</CardHead>
+        {kinds.length === 0 ? (
+          <Empty>Nog geen afgeronde klussen.</Empty>
+        ) : (
+          <div style={{ padding: 'var(--sp-4) var(--sp-5)', display: 'grid', gap: 'var(--sp-3)' }}>
+            {kinds.map(([label, entry]) => {
+              const share = revenue > 0 ? Math.round((entry.revenue / revenue) * 100) : 0;
               return (
-                <div key={job.id} className={styles.listRow} style={{ padding: '1rem 0', alignItems: 'center' }}>
-                  <div style={{ flex: 2 }}>
-                    <div style={{ fontWeight: 500, color: '#f8fafc' }}>{job.car_make} {job.car_model}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{dateStr}</div>
+                <div key={label} style={{ display: 'grid', gap: 'var(--sp-2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--sp-2)' }}>
+                    <span style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)', fontWeight: 500 }}>
+                      {label}
+                    </span>
+                    <span className={ui.hint}>
+                      {entry.count}× · {euro(entry.revenue)}
+                    </span>
+                    <span
+                      style={{
+                        marginLeft: 'auto',
+                        color: 'var(--crm-muted)',
+                        fontSize: 'var(--fs-label)',
+                      }}
+                    >
+                      {share}%
+                    </span>
                   </div>
-                  <div style={{ flex: 1, color: '#94a3b8' }}>
-                    {job.service_type || 'Sleutel bijmaken'}
-                  </div>
-                  <div style={{ flex: 1, textAlign: 'right', color: '#94a3b8' }}>
-                    € {price.toFixed(2).replace('.', ',')}
-                  </div>
-                  <div style={{ flex: 1, textAlign: 'right', fontWeight: 600, color: '#10b981' }}>
-                    + € {earned.toFixed(2).replace('.', ',')}
+                  {/*
+                    A bar, not a ring. Five kinds of work compare by length far
+                    more easily than by wedge, and a bar needs no legend beside
+                    it repeating the same words.
+                  */}
+                  <div
+                    style={{
+                      height: 6,
+                      borderRadius: 3,
+                      background: 'var(--crm-raised)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div style={{ width: `${share}%`, height: '100%', background: 'var(--crm-accent)' }} />
                   </div>
                 </div>
               );
-            })
-          )}
-        </div>
-      </div>
-    </div>
+            })}
+          </div>
+        )}
+      </Card>
+
+      <h2 className={ui.section}>Afgeronde klussen</h2>
+      <Card>
+        {done.length === 0 ? (
+          <Empty>Zodra u een klus afrondt, verschijnt hij hier.</Empty>
+        ) : (
+          <Table
+            head={
+              <>
+                <th>Datum</th>
+                <th>Auto</th>
+                <th>Werk</th>
+                <th className={ui.numeric}>Klus</th>
+                <th className={ui.numeric}>Commissie</th>
+                <th className={ui.numeric}>Voor u</th>
+              </>
+            }
+          >
+            {done.slice(0, 50).map((job) => (
+              <tr key={job.id}>
+                <td className={ui.rowNote}>
+                  {job.scheduled_date
+                    ? new Date(job.scheduled_date).toLocaleDateString('nl-NL', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })
+                    : '—'}
+                </td>
+                <td style={{ color: 'var(--crm-ink)' }}>
+                  {[job.car_make, job.car_model].filter(Boolean).join(' ') || '—'}
+                </td>
+                <td>
+                  <Badge>
+                    {isScenario(job.scenario)
+                      ? SCENARIO_INFO[job.scenario].label
+                      : (job.service_type ?? 'Overig')}
+                  </Badge>
+                </td>
+                <td className={ui.numeric}>{euro(priceOf(job))}</td>
+                <td className={ui.numeric} style={{ color: 'var(--crm-muted)' }}>
+                  {Number(job.commission_pct ?? 25)}%
+                </td>
+                <td className={ui.numeric} style={{ color: 'var(--crm-ink)', fontWeight: 600 }}>
+                  {euro(earnedOn(job))}
+                </td>
+              </tr>
+            ))}
+          </Table>
+        )}
+      </Card>
+    </>
   );
 }

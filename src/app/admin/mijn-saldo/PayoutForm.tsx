@@ -2,52 +2,65 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Banknote } from 'lucide-react';
 import { requestPayout } from './actions';
-import styles from '../vandaag/vandaag.module.css';
+import { ui } from '../_ui';
 
-export default function PayoutForm({ availableBalance }: { availableBalance: number }) {
+/**
+ * Asking for the balance to be paid out.
+ *
+ * The whole balance at once, deliberately: a technician drawing an odd amount
+ * has a reason we would only guess at, and every partial figure would need its
+ * own validation on both sides. Asking is all this does — approving is the
+ * office's, enforced in the database by migration 0017.
+ */
+export default function PayoutForm({ available }: { available: number }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null);
 
-  async function handlePayout() {
-    if (availableBalance <= 0) return;
-    
+  const nothingToDraw = available <= 0;
+
+  async function submit() {
+    if (nothingToDraw) return;
     setBusy(true);
-    setError('');
-    setSuccess('');
+    setMessage(null);
 
-    const res = await requestPayout(availableBalance);
-    if (res.error) {
-      setError(res.error);
-    } else {
-      setSuccess('Uitbetaling succesvol aangevraagd!');
-      router.refresh();
-    }
+    const result = await requestPayout(available);
     setBusy(false);
+
+    setMessage(
+      'error' in result && result.error
+        ? { text: result.error, ok: false }
+        : { text: 'Aangevraagd. Het kantoor handelt het af.', ok: true }
+    );
+    router.refresh();
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-      {error && <span style={{ color: '#ef4444', fontSize: '0.875rem' }}>{error}</span>}
-      {success && <span style={{ color: '#10b981', fontSize: '0.875rem' }}>{success}</span>}
-      <button 
-        style={{
-          background: '#3b82f6',
-          color: 'white',
-          border: 'none',
-          borderRadius: '6px',
-          padding: '0.5rem 1rem',
-          fontSize: '0.875rem',
-          fontWeight: 500,
-          cursor: busy || availableBalance <= 0 || !!success ? 'not-allowed' : 'pointer',
-          opacity: busy || availableBalance <= 0 || !!success ? 0.5 : 1
-        }}
-        onClick={handlePayout} 
-        disabled={busy || availableBalance <= 0 || !!success}
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
+      {message && (
+        <span
+          style={{
+            fontSize: 'var(--fs-label)',
+            color: message.ok ? 'var(--crm-ok)' : 'var(--crm-stop)',
+          }}
+        >
+          {message.text}
+        </span>
+      )}
+      <button
+        className={`${ui.btn} ${ui.btnPrimary}`}
+        onClick={submit}
+        disabled={busy || nothingToDraw || (message?.ok ?? false)}
+        title={nothingToDraw ? 'U heeft op dit moment niets openstaan' : undefined}
       >
-        {busy ? 'Bezig...' : `€ ${availableBalance.toFixed(2).replace('.', ',')} Opnemen`}
+        <Banknote size={15} strokeWidth={2} />
+        {busy
+          ? 'Bezig…'
+          : nothingToDraw
+            ? 'Niets op te nemen'
+            : `${available.toFixed(2).replace('.', ',')} opnemen`}
       </button>
     </div>
   );

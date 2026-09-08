@@ -105,37 +105,37 @@ export default function BusDashboard({
               <th>
                 <div className={styles.thContent}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-                  Product name
+                  Artikel
                 </div>
               </th>
               <th>
                 <div className={styles.thContent}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                  Vendor
+                  Leverancier
                 </div>
               </th>
               <th>
                 <div className={styles.thContent}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                  Unit price
+                  Stukprijs
                 </div>
               </th>
               <th>
                 <div className={styles.thContent}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                  Texes
+                  Btw
                 </div>
               </th>
               <th>
                 <div className={styles.thContent}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                  Total amount
+                  Waarde
                 </div>
               </th>
               <th>
                 <div className={styles.thContent}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                  Quantity
+                  Aantal
                 </div>
               </th>
             </tr>
@@ -212,26 +212,23 @@ export default function BusDashboard({
             {filteredStock.length === 0 && (
               <tr>
                 <td colSpan={7} style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
-                  No products found.
+                  Niets in uw bus dat hierop lijkt.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
 
-        {/* PAGINATION */}
+        {/*
+          The footer used to carry pages 1 2 3 4 … that were not wired to
+          anything — a van holds a few dozen article types, so there is nothing
+          to page through. It says how many there are instead.
+        */}
         <div className={styles.tableFooter}>
           <div>
-            Viewing 1-{Math.min(13, filteredStock.length)} of {filteredStock.length} results
-          </div>
-          <div className={styles.pagination}>
-            <button className={styles.pageBtn}>&lt;</button>
-            <button className={`${styles.pageBtn} ${styles.pageBtnActive}`}>1</button>
-            <button className={styles.pageBtn}>2</button>
-            <button className={styles.pageBtn}>3</button>
-            <button className={styles.pageBtn}>4</button>
-            <button className={styles.pageBtn}>...</button>
-            <button className={styles.pageBtn}>&gt;</button>
+            {filteredStock.length === myStock.length
+              ? `${myStock.length} artikel(en) in uw bus`
+              : `${filteredStock.length} van ${myStock.length} artikelen`}
           </div>
         </div>
       </div>

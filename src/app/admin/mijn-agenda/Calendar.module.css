@@ -8,7 +8,7 @@
 
 .sidebar {
   width: 280px;
-  background: white;
+  background: var(--crm-panel);
   padding: 1.5rem;
   border-right: 1px solid var(--crm-rule);
   display: flex;
@@ -23,7 +23,7 @@
 }
 
 .miniCalendar {
-  background: white;
+  background: var(--crm-panel);
   border-radius: var(--crm-r-lg);
   padding: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -60,7 +60,7 @@
 
 .miniDayActive {
   background: var(--crm-steel);
-  color: white;
+  color: var(--crm-ink);
   font-weight: 600;
 }
 
@@ -127,7 +127,7 @@
 
 .buttonGroup {
   display: flex;
-  background: white;
+  background: var(--crm-panel);
   border-radius: var(--crm-r);
   border: 1px solid var(--crm-rule);
   overflow: hidden;
@@ -154,7 +154,7 @@
   font-weight: 500;
   border: 1px solid var(--crm-rule);
   border-radius: var(--crm-r);
-  background: white;
+  background: var(--crm-panel);
   color: var(--crm-ink);
   cursor: pointer;
   display: flex;
@@ -175,7 +175,7 @@
 }
 
 .weekHeader {
-  background: white;
+  background: var(--crm-panel);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -185,7 +185,7 @@
 }
 
 .weekNumber {
-  background: white;
+  background: var(--crm-panel);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -194,7 +194,7 @@
 }
 
 .dayCell {
-  background: white;
+  background: var(--crm-panel);
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -216,7 +216,7 @@
   color: var(--crm-steel);
   font-weight: 600;
   background: var(--crm-steel);
-  color: white;
+  color: var(--crm-ink);
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -266,7 +266,7 @@
   text-overflow: ellipsis;
   cursor: pointer;
   border-left: 3px solid var(--crm-rule2);
-  background: white;
+  background: var(--crm-panel);
   color: var(--crm-text);
 }
 .jobChip:hover {

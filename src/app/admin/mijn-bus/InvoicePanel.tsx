@@ -64,6 +64,16 @@ export default function InvoicePanel({ invoices }: { invoices: InvoiceRow[] }) {
     router.refresh();
   }
 
+  async function openFile(path: string) {
+    const supabase = createSupabaseBrowserClient();
+    const { data, error } = await supabase.storage.from('facturen').createSignedUrl(path, 60);
+    if (error || !data) {
+      setNotice({ text: 'Kon het bestand niet openen.', tone: 'bad' });
+      return;
+    }
+    window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
+  }
+
   /** Ticking a line is a write of its own, so a half-checked list survives a reload. */
   async function toggle(line: InvoiceLineRow) {
     const supabase = createSupabaseBrowserClient();
@@ -113,18 +123,13 @@ export default function InvoicePanel({ invoices }: { invoices: InvoiceRow[] }) {
         <FileText size={16} strokeWidth={1.9} />
         Inkoopfacturen
       </h2>
-      <p className={ui.sub} style={{ marginBottom: 'var(--sp-3)' }}>
-        Koopt u ergens onderdelen? Upload de factuur — een PDF wordt uitgelezen, van een foto
-        bewaren we het bewijs en typt u de regels erbij. Niets komt in uw voorraad voordat u het
-        heeft aangevinkt.
-      </p>
 
       {notice && <Notice tone={notice.tone}>{notice.text}</Notice>}
 
       <input
         ref={fileInput}
         type="file"
-        accept="application/pdf,image/jpeg,image/png,image/webp,image/heic,image/heif"
+        accept="application/pdf,text/csv,.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.xls,.xlsx,image/jpeg,image/png,image/webp,image/heic,image/heif"
         hidden
         onChange={(event) => {
           const file = event.target.files?.[0];
@@ -133,29 +138,47 @@ export default function InvoicePanel({ invoices }: { invoices: InvoiceRow[] }) {
         }}
       />
 
-      <Card>
-        <div className={ui.row}>
-          <div className={ui.rowMain}>
-            <div className={ui.rowTitleLine}>
-              <span className={ui.rowTitle}>Factuur toevoegen</span>
-            </div>
-            <div className={ui.rowMeta}>
-              <span className={ui.hint}>PDF of foto, tot 12 MB</span>
-            </div>
-          </div>
-          <div className={ui.rowActions}>
-            <button
-              className={`${ui.btn} ${ui.btnPrimary}`}
-              onClick={() => fileInput.current?.click()}
-              disabled={busy}
-            >
-              {busy ? <Loader2 size={15} className="spin" /> : <Upload size={15} strokeWidth={2} />}
-              {busy ? 'Bezig…' : 'Uploaden'}
-            </button>
-          </div>
-        </div>
+      {/*
+        A small box, not a banner. Uploading an invoice is something a monteur
+        does once a fortnight; the stock above is what they open this page for,
+        so the entry point is a strip at the foot of it rather than a card
+        competing with the thing they came to read.
+      */}
+      <button
+        type="button"
+        onClick={() => fileInput.current?.click()}
+        disabled={busy}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--sp-3)',
+          width: '100%',
+          padding: 'var(--sp-3) var(--sp-4)',
+          marginBottom: 'var(--sp-3)',
+          border: '1px dashed var(--crm-rule2)',
+          borderRadius: 'var(--crm-r)',
+          background: 'transparent',
+          color: 'var(--crm-muted)',
+          font: 'inherit',
+          fontSize: 'var(--fs-sm)',
+          textAlign: 'left',
+          cursor: busy ? 'default' : 'pointer',
+        }}
+      >
+        {busy ? <Loader2 size={16} /> : <Upload size={16} strokeWidth={1.9} />}
+        <span style={{ color: 'var(--crm-text)', fontWeight: 500 }}>
+          {busy ? 'Bezig met lezen…' : 'Factuur toevoegen'}
+        </span>
+        <span style={{ marginLeft: 'auto' }}>PDF, CSV, Excel of foto · tot 12 MB</span>
+      </button>
 
-        {invoices.length === 0 && <Empty>Nog geen facturen geüpload.</Empty>}
+      <Card>
+        {invoices.length === 0 && (
+          <Empty>
+            Nog geen facturen. Een PDF, CSV of Excel wordt uitgelezen; van een foto bewaren we het
+            bewijs. Niets komt in uw voorraad voordat u het heeft aangevinkt.
+          </Empty>
+        )}
 
         {invoices.map((invoice) => {
           const ticked = invoice.lines.filter((l) => l.confirmed).length;
@@ -190,9 +213,15 @@ export default function InvoicePanel({ invoices }: { invoices: InvoiceRow[] }) {
                   </div>
                 </div>
                 <div className={ui.rowActions}>
-                  <a className={ui.btn} href={invoice.file_url} target="_blank" rel="noopener noreferrer">
+                  {/*
+                    The bucket is private, so there is no URL to link to — a
+                    signed one is minted here and lasts a minute. That is the
+                    point: an invoice link should not survive in a browser
+                    history.
+                  */}
+                  <button className={ui.btn} onClick={() => openFile(invoice.file_url)} disabled={busy}>
                     Bekijken
-                  </a>
+                  </button>
                   {!done && (
                     <button
                       className={`${ui.btn} ${ui.btnPrimary}`}

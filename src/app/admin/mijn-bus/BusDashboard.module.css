@@ -29,7 +29,7 @@
   padding: 0.5rem 1rem;
   border: 1px solid var(--crm-rule);
   border-radius: var(--crm-r);
-  background: white;
+  background: var(--crm-panel);
   color: var(--crm-text);
   font-size: 0.875rem;
   font-weight: 500;
@@ -39,7 +39,7 @@
 
 .statsContainer {
   display: flex;
-  background: white;
+  background: var(--crm-panel);
   border: 1px solid var(--crm-sunk);
   border-radius: var(--crm-r-lg);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -113,7 +113,7 @@
 }
 
 .tableSection {
-  background: white;
+  background: var(--crm-panel);
   border: 1px solid var(--crm-sunk);
   border-radius: var(--crm-r-lg);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -283,7 +283,7 @@
   justify-content: center;
   border-radius: var(--crm-r);
   border: 1px solid var(--crm-rule);
-  background: white;
+  background: var(--crm-panel);
   color: var(--crm-text);
   font-size: 0.875rem;
   cursor: pointer;

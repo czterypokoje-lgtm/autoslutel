@@ -159,7 +159,7 @@ export default function MyAgenda({ days, name, icalToken, currentMonth }: { days
       <div className={styles.main}>
         <div className={styles.topBar}>
           <div className={styles.topBarLeft}>
-            <h1>Calendar</h1>
+            <h1>Mijn agenda</h1>
           </div>
           <div className={styles.topBarRight}>
             <div className={styles.buttonGroup}>
@@ -190,7 +190,7 @@ export default function MyAgenda({ days, name, icalToken, currentMonth }: { days
         <div className={styles.calendarGrid}>
           {/* Header Row */}
           <div className={styles.weekHeader} style={{ background: 'transparent' }}>W</div>
-          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
+          {['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].map(day => (
             <div key={day} className={styles.weekHeader}>{day}</div>
           ))}
 

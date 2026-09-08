@@ -33,7 +33,7 @@
 .serverBubble:hover {
   border-radius: var(--crm-r-lg);
   background-color: var(--crm-accent, var(--crm-steel));
-  color: white;
+  color: var(--crm-ink);
 }
 
 .channelsSidebar {

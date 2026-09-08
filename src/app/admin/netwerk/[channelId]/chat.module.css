@@ -49,7 +49,7 @@
   height: 40px;
   border-radius: var(--crm-r-lg);
   background-color: var(--crm-accent, var(--crm-steel));
-  color: white;
+  color: var(--crm-ink);
   display: flex;
   align-items: center;
   justify-content: center;
