@@ -55,6 +55,44 @@
   --crm-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   --crm-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
 
+  /* ── spacing, on a 4px grid ──
+     Nine steps, and nothing between them. Every gap in this CRM is one of
+     these; a 13px margin is a decision nobody made on purpose. */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* ── type ──
+     Seven sizes. The CRM had grown 28 of them, which is what happens when
+     each page picks a number that looks right on that page alone. */
+  --fs-micro: 11px;   /* counts, timestamps */
+  --fs-label: 12px;   /* field labels, table headers */
+  --fs-sm: 13.5px;    /* dense body: rows, chips, controls */
+  --fs-base: 15px;    /* body */
+  --fs-lg: 18px;      /* section heading */
+  --fs-xl: 22px;      /* page title */
+  --fs-2xl: 28px;     /* a number that is the point of the screen */
+
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* ── the data colours ──
+     For charts and stat tiles only. Kept apart from the state colours above,
+     because "this bar is blue" must never be read as "this thing is fine". */
+  --crm-data-1: #60a5fa;
+  --crm-data-2: #f0a868;
+  --crm-data-3: #5eead4;
+  --crm-data-4: #c4b5fd;
+  --crm-data-5: #fca5a5;
+
   color-scheme: dark;
 }
 
