@@ -1,0 +1,316 @@
+/*
+ * Chart styling, on the same tokens as everything else.
+ *
+ * The one deliberate inversion in this CRM lives here: the four figures at the
+ * top of an analytics screen sit on a light card. Everything around them is
+ * near-black, so they read as the answer before anything is scanned — which is
+ * the whole job of a number at the top of a dashboard.
+ */
+
+/* ── the highlight cards ─────────────────────────────────────────────── */
+
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-6);
+}
+
+.highlight {
+  background: var(--crm-card-plain);
+  color: var(--crm-card-ink);
+  border-radius: 16px;
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-height: 112px;
+  justify-content: center;
+}
+
+.highlightTint { background: var(--crm-card-tint); }
+
+.highlightLabel {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.highlightRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  /* No wrapping: "€ 21.940,00" pushed its delta onto a second line, and a
+     percentage sitting under a figure reads as a second figure. */
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.highlightValue {
+  font-size: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.highlightDelta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--fs-label);
+  /* Not green-or-red. Up is not automatically good — a rise in "gemiddelde
+     klus" can be one expensive job — and colouring it invites the wrong read. */
+  color: var(--crm-card-ink);
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── line chart ──────────────────────────────────────────────────────── */
+
+.chartWrap { width: 100%; }
+
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Below this the months collide, and only then is scrolling better than
+   an unreadable axis. */
+@media (max-width: 560px) {
+  .chartWrap { overflow-x: auto; }
+  .chart { min-width: 460px; }
+}
+
+.grid {
+  stroke: var(--crm-rule);
+  stroke-width: 1;
+}
+
+.axis {
+  fill: var(--crm-muted);
+  font-size: 11px;
+  font-family: inherit;
+}
+
+.line {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.lineDashed {
+  fill: none;
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+  stroke-linecap: round;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-label);
+  color: var(--crm-text);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chartEmpty {
+  padding: var(--sp-10) var(--sp-4);
+  text-align: center;
+  color: var(--crm-muted);
+  font-size: var(--fs-sm);
+}
+
+/* ── bars ────────────────────────────────────────────────────────────── */
+
+.bars {
+  display: flex;
+  gap: var(--sp-3);
+  height: 210px;
+  padding: var(--sp-2) 0 0;
+}
+
+.barAxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--crm-muted);
+  text-align: right;
+  min-width: 34px;
+  /* The labels sit level with the gridlines, and the last one with the floor. */
+  padding-bottom: 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.barPlot {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-3);
+  border-bottom: 1px solid var(--crm-rule);
+  padding-bottom: 22px;
+  position: relative;
+  min-width: 0;
+}
+
+.barCol {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 0;
+}
+
+.bar {
+  width: 100%;
+  max-width: 42px;
+  border-radius: 8px 8px 0 0;
+  min-height: 4px;
+}
+
+.barLabel {
+  position: absolute;
+  bottom: 0;
+  font-size: 11px;
+  color: var(--crm-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ── ranked list ─────────────────────────────────────────────────────── */
+
+.ranked {
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-1) 0;
+}
+
+.rankedRow {
+  display: grid;
+  grid-template-columns: minmax(72px, 1fr) 2fr auto;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.rankedLabel {
+  font-size: var(--fs-sm);
+  color: var(--crm-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rankedTrack {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--crm-raised);
+  overflow: hidden;
+}
+
+.rankedFill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--crm-ink);
+  min-width: 3px;
+}
+
+.rankedValue {
+  font-size: var(--fs-label);
+  color: var(--crm-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── ring ────────────────────────────────────────────────────────────── */
+
+.donutWrap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.donutKey { flex: 1 1 150px; }
+
+.donut {
+  width: 148px;
+  height: 148px;
+  flex-shrink: 0;
+}
+
+.donutKey {
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 150px;
+}
+
+.donutKeyRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+}
+
+.donutKeyLabel {
+  color: var(--crm-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.donutKeyValue {
+  margin-left: auto;
+  color: var(--crm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The wide row (chart beside a ranking) stacks before either half gets too
+   narrow to read; a 240px line chart is a squiggle, not a chart. */
+.wideRow {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(240px, 1fr);
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-6);
+}
+
+.splitRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-6);
+}
+
+@media (max-width: 960px) {
+  .wideRow { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .highlights { gap: var(--sp-3); }
+  .highlight { padding: var(--sp-4); min-height: 96px; }
+  .bars { height: 180px; }
+}

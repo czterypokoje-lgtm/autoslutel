@@ -1,25 +1,40 @@
-import { BadgeEuro, CheckCircle2, Coins, TrendingUp } from 'lucide-react';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { PageHead, StatGrid, Stat, Card, CardHead, Badge, Empty, Notice, Table, ui } from '../_ui';
+import { PageHead, Card, CardHead, Badge, Empty, Notice, Table, ui } from '../_ui';
+import { HighlightCard, LineChart, Legend, BarChart, RankedBars, Donut, chart } from '../_ui/charts';
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import PayoutForm from './PayoutForm';
 
 export const dynamic = 'force-dynamic';
 
 const euro = (value: number) => `€ ${value.toFixed(2).replace('.', ',')}`;
+const euroShort = (value: number) =>
+  value >= 1000 ? `€${Math.round(value / 1000)}K` : `€${Math.round(value)}`;
+
+/*
+ * The figure at the top of a dashboard, without cents once it runs into the
+ * thousands: "€ 21.940,00" did not fit its card and was cut to "€ 21.940…",
+ * and two decimals on a headline number are two characters nobody reads. The
+ * table below still carries them, which is where they matter.
+ */
+const euroHeadline = (value: number) =>
+  value >= 1000
+    ? `€ ${Math.round(value).toLocaleString('nl-NL')}`
+    : `€ ${value.toFixed(2).replace('.', ',')}`;
+
+const MONTHS = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
 
 /**
- * What this technician earned, and what they can draw.
+ * The technician's own analytics.
  *
- * Every figure here comes from their own completed jobs. The version this
- * replaces printed "↑ 12% vs vorige maand" beside every tile, a revenue curve
- * with an invented shape, and a job-type ring reading 60/30/10 — none of it
- * from the database. A number somebody cannot trust is worse than no number,
- * because they stop believing the ones that are real as well.
+ * Everything on this page is computed from their completed jobs. Nothing is
+ * illustrative: where a comparison has no previous period the delta is simply
+ * absent, and every chart draws an empty state rather than a flat line through
+ * zero — a line through zero looks like a measurement, and it is not one.
  *
- * Where there is nothing to compare against yet, no comparison is shown.
- * "Geen vergelijking" is the honest answer in a technician's first month.
+ * The four cards at the top are light on a dark page. That is the only place in
+ * this CRM the surfaces invert, and it is deliberate: they are the answer, and
+ * they should be legible before anything else is read.
  */
 export default async function MijnSaldoPage() {
   const user = await requireCrmUser('/admin/mijn-saldo');
@@ -44,7 +59,7 @@ export default async function MijnSaldoPage() {
     supabase
       .from('jobs')
       .select(
-        'id, car_make, car_model, scenario, service_type, quoted_price, final_price, commission_pct, scheduled_date'
+        'id, car_make, car_model, city, scenario, service_type, quoted_price, final_price, commission_pct, scheduled_date'
       )
       .eq('technician_id', tech.id)
       .eq('status', 'afgerond')
@@ -68,129 +83,135 @@ export default async function MijnSaldoPage() {
   const pendingOut = (payouts ?? [])
     .filter((p) => p.status === 'pending')
     .reduce((total, p) => total + Number(p.amount), 0);
-
   const available = Math.max(0, earned - paidOut - pendingOut);
 
-  /* ── this month against last, from the rows themselves ── */
+  /* ── periods ── */
   const now = new Date();
+  const year = now.getFullYear();
   const monthKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
   const thisMonth = monthKey(now);
-  const lastMonth = monthKey(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+  const lastMonth = monthKey(new Date(year, now.getMonth() - 1, 1));
 
   const inMonth = (key: string) => done.filter((job) => (job.scheduled_date ?? '').startsWith(key));
-  const revenueThis = inMonth(thisMonth).reduce((total, job) => total + priceOf(job), 0);
-  const revenueLast = inMonth(lastMonth).reduce((total, job) => total + priceOf(job), 0);
 
-  /** Null when last month holds nothing to compare with — not 0%, not a guess. */
-  const change = revenueLast > 0 ? Math.round(((revenueThis - revenueLast) / revenueLast) * 100) : null;
-  const changeText =
-    change == null
-      ? 'geen vergelijking met vorige maand'
-      : `${change >= 0 ? '+' : ''}${change}% t.o.v. vorige maand`;
+  /** Percentage change, or null when the earlier period holds nothing. */
+  const delta = (current: number, previous: number) =>
+    previous > 0 ? ((current - previous) / previous) * 100 : null;
 
-  const average = done.length ? revenue / done.length : 0;
+  const revenueThis = inMonth(thisMonth).reduce((t, j) => t + priceOf(j), 0);
+  const revenueLast = inMonth(lastMonth).reduce((t, j) => t + priceOf(j), 0);
+  const countThis = inMonth(thisMonth).length;
+  const countLast = inMonth(lastMonth).length;
+  const avgThis = countThis ? revenueThis / countThis : 0;
+  const avgLast = countLast ? revenueLast / countLast : 0;
 
-  /* ── what kind of work this actually was ── */
-  const byKind = new Map<string, { count: number; revenue: number }>();
-  for (const job of done) {
-    const label = isScenario(job.scenario)
-      ? SCENARIO_INFO[job.scenario].label
-      : (job.service_type ?? 'Overig');
-    const entry = byKind.get(label) ?? { count: 0, revenue: 0 };
-    entry.count += 1;
-    entry.revenue += priceOf(job);
-    byKind.set(label, entry);
-  }
-  const kinds = [...byKind].sort((a, b) => b[1].revenue - a[1].revenue);
+  /* ── twelve months, this year against last ── */
+  const monthly = (whichYear: number) =>
+    MONTHS.map((_, index) =>
+      done
+        .filter((job) => (job.scheduled_date ?? '').startsWith(`${whichYear}-${String(index + 1).padStart(2, '0')}`))
+        .reduce((total, job) => total + priceOf(job), 0)
+    );
+
+  const thisYear = monthly(year);
+  const previousYear = monthly(year - 1);
+  const hasLastYear = previousYear.some((value) => value > 0);
+
+  /* Only the months up to now: a line that drops to zero in December every
+     year is drawing the calendar, not the work. */
+  const upTo = now.getMonth() + 1;
+  const series = [
+    { label: `${year}`, points: thisYear.slice(0, upTo) },
+    ...(hasLastYear ? [{ label: `${year - 1}`, points: previousYear.slice(0, upTo), dashed: true }] : []),
+  ];
+
+  /* ── the cars, the work, the places ── */
+  const tally = (key: (job: (typeof done)[number]) => string | null) => {
+    const map = new Map<string, number>();
+    for (const job of done) {
+      const label = key(job);
+      if (!label) continue;
+      map.set(label, (map.get(label) ?? 0) + priceOf(job));
+    }
+    return [...map]
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => b.value - a.value);
+  };
+
+  const makes = tally((job) => job.car_make).slice(0, 6);
+  const kinds = tally((job) =>
+    isScenario(job.scenario) ? SCENARIO_INFO[job.scenario].label : (job.service_type ?? null)
+  ).slice(0, 6);
+  const places = tally((job) => job.city).slice(0, 5);
 
   return (
     <>
       <PageHead
         title="Mijn saldo"
-        sub="Wat u heeft verdiend op klussen via Autosleutel24, en wat u kunt opnemen."
+        sub="Wat u verdiende op klussen via Autosleutel24, en waar het vandaan kwam."
         actions={<PayoutForm available={available} />}
       />
 
-      <StatGrid>
-        <Stat
-          label="Beschikbaar"
-          value={euro(available)}
-          foot={pendingOut > 0 ? `${euro(pendingOut)} in behandeling` : 'direct op te nemen'}
-          icon={<Coins size={15} strokeWidth={2} />}
-          tone={available > 0 ? 'ok' : undefined}
-        />
-        <Stat
-          label="Klussen afgerond"
+      <div className={chart.highlights}>
+        <HighlightCard label="Beschikbaar" value={euroHeadline(available)} delta={null} tint />
+        <HighlightCard
+          label="Klussen"
           value={done.length}
-          foot={`${inMonth(thisMonth).length} deze maand`}
-          icon={<CheckCircle2 size={15} strokeWidth={2} />}
+          delta={delta(countThis, countLast)}
         />
-        <Stat
-          label="Omzet"
-          value={euro(revenue)}
-          foot={changeText}
-          icon={<TrendingUp size={15} strokeWidth={2} />}
-          tone={change == null ? undefined : change >= 0 ? 'ok' : 'warn'}
-        />
-        <Stat
+        <HighlightCard label="Omzet" value={euroHeadline(revenue)} delta={delta(revenueThis, revenueLast)} tint />
+        <HighlightCard
           label="Gemiddelde klus"
-          value={done.length ? euro(average) : '—'}
-          foot={done.length ? 'over alle afgeronde klussen' : 'nog geen klussen'}
-          icon={<BadgeEuro size={15} strokeWidth={2} />}
+          value={done.length ? euroHeadline(revenue / done.length) : '—'}
+          delta={delta(avgThis, avgLast)}
         />
-      </StatGrid>
+      </div>
 
-      <Card>
-        <CardHead>Soort werk</CardHead>
-        {kinds.length === 0 ? (
-          <Empty>Nog geen afgeronde klussen.</Empty>
-        ) : (
-          <div style={{ padding: 'var(--sp-4) var(--sp-5)', display: 'grid', gap: 'var(--sp-3)' }}>
-            {kinds.map(([label, entry]) => {
-              const share = revenue > 0 ? Math.round((entry.revenue / revenue) * 100) : 0;
-              return (
-                <div key={label} style={{ display: 'grid', gap: 'var(--sp-2)' }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--sp-2)' }}>
-                    <span style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)', fontWeight: 500 }}>
-                      {label}
-                    </span>
-                    <span className={ui.hint}>
-                      {entry.count}× · {euro(entry.revenue)}
-                    </span>
-                    <span
-                      style={{
-                        marginLeft: 'auto',
-                        color: 'var(--crm-muted)',
-                        fontSize: 'var(--fs-label)',
-                      }}
-                    >
-                      {share}%
-                    </span>
-                  </div>
-                  {/*
-                    A bar, not a ring. Five kinds of work compare by length far
-                    more easily than by wedge, and a bar needs no legend beside
-                    it repeating the same words.
-                  */}
-                  <div
-                    style={{
-                      height: 6,
-                      borderRadius: 3,
-                      background: 'var(--crm-raised)',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <div style={{ width: `${share}%`, height: '100%', background: 'var(--crm-accent)' }} />
-                  </div>
-                </div>
-              );
-            })}
+      {/* ── the year, and where the work came from ── */}
+      <div className={chart.wideRow}>
+        <Card padded>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-4)', flexWrap: 'wrap', marginBottom: 'var(--sp-5)' }}>
+            <strong style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)' }}>Omzet per maand</strong>
+            <div style={{ marginLeft: 'auto' }}>
+              <Legend
+                items={[
+                  { label: `${year}` },
+                  ...(hasLastYear ? [{ label: `${year - 1}`, dashed: true }] : []),
+                ]}
+              />
+            </div>
           </div>
-        )}
-      </Card>
+          <LineChart series={series} labels={MONTHS.slice(0, upTo)} format={euroShort} />
+        </Card>
 
-      <h2 className={ui.section}>Afgeronde klussen</h2>
+        <Card padded>
+          <strong style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)', display: 'block', marginBottom: 'var(--sp-5)' }}>
+            Automerken
+          </strong>
+          <RankedBars rows={makes} format={euro} />
+        </Card>
+      </div>
+
+      {/* ── what kind of work, and where ── */}
+      <div className={chart.splitRow}>
+        <Card padded>
+          <strong style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)', display: 'block', marginBottom: 'var(--sp-4)' }}>
+            Soort werk
+          </strong>
+          <BarChart bars={kinds} format={euroShort} />
+        </Card>
+
+        <Card padded>
+          <strong style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)', display: 'block', marginBottom: 'var(--sp-4)' }}>
+            Waar u werkte
+          </strong>
+          <Donut slices={places} format={euro} />
+        </Card>
+      </div>
+
+      {/* ── the jobs behind the numbers ── */}
       <Card>
+        <CardHead>Afgeronde klussen</CardHead>
         {done.length === 0 ? (
           <Empty>Zodra u een klus afrondt, verschijnt hij hier.</Empty>
         ) : (

@@ -85,13 +85,28 @@
   --fw-bold: 700;
 
   /* ── the data colours ──
-     For charts and stat tiles only. Kept apart from the state colours above,
-     because "this bar is blue" must never be read as "this thing is fine". */
-  --crm-data-1: #60a5fa;
-  --crm-data-2: #f0a868;
-  --crm-data-3: #5eead4;
-  --crm-data-4: #c4b5fd;
-  --crm-data-5: #fca5a5;
+     For charts only. Kept apart from the state colours above, because "this
+     bar is blue" must never be read as "this thing is fine".
+
+     Pastels rather than the saturated primaries a chart library ships with:
+     against a near-black page a full-strength blue vibrates, and six of them
+     side by side is unreadable. These stay distinct at 6px wide, which is what
+     a bar in a dense card actually is. */
+  --crm-data-1: #95a4fc;  /* periwinkle */
+  --crm-data-2: #baedbd;  /* mint */
+  --crm-data-3: #b1e3ff;  /* sky */
+  --crm-data-4: #c6c7f8;  /* lilac */
+  --crm-data-5: #a8c5da;  /* steel */
+  --crm-data-6: #ffe999;  /* sand */
+
+  /* ── the highlight cards ──
+     A light card on a dark page, which is the one deliberate inversion in this
+     CRM. It is reserved for the four figures at the top of an analytics screen:
+     everything else is dark, so these read as the answer before anything is
+     scanned. */
+  --crm-card-tint: #e3f5ff;   /* the accented pair */
+  --crm-card-plain: #f7f9fb;  /* the quiet pair */
+  --crm-card-ink: #1c1c1c;
 
   color-scheme: dark;
 }
