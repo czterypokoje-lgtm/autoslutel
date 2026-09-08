@@ -17,7 +17,7 @@ export default async function MijnSaldoPage() {
 
   const { data: jobs } = await supabase
     .from('jobs')
-    .select('id, car_make, car_model, service_type, quoted_price, commission_pct, status, scheduled_date')
+    .select('id, car_make, car_model, service_type, quoted_price, final_price, commission_pct, status, scheduled_date')
     .eq('technician_id', tech.id)
     .eq('status', 'afgerond')
     .order('scheduled_date', { ascending: false });
@@ -34,8 +34,17 @@ export default async function MijnSaldoPage() {
   const makeCounts: Record<string, number> = {};
 
   for (const job of completedJobs) {
-    const price = Number(job.quoted_price) || 0;
-    const comm = Number(job.commission_pct) || 25;
+    /*
+     * What was actually charged, not what was quoted. A job that ran into a
+     * second immobiliser and was settled at a different figure would otherwise
+     * pay the monteur on the phone estimate.
+     */
+    const price = Number(job.final_price ?? job.quoted_price) || 0;
+    /*
+     * ?? and not ||: a technician on a 0% deal had `0 || 25` turn into 25, and
+     * a quarter of their money vanished into a commission nobody agreed.
+     */
+    const comm = Number(job.commission_pct ?? 25);
     totalRevenue += price;
     totalEarnings += price * ((100 - comm) / 100);
     
@@ -44,8 +53,23 @@ export default async function MijnSaldoPage() {
     }
   }
 
-  const totalWithdrawn = (payouts || []).reduce((sum, p) => sum + Number(p.amount), 0);
-  const availableBalance = Math.max(0, totalEarnings - totalWithdrawn);
+  /*
+   * A rejected request is not money that left. The old sum counted every row
+   * whatever its status — it read `status` and never used it — so a refusal
+   * permanently reduced what the monteur could draw, in our favour.
+   *
+   * Pending still holds the amount back, because otherwise the same money can
+   * be requested twice; it is shown separately so it does not read as paid.
+   */
+  const paidOut = (payouts || [])
+    .filter((p) => p.status === 'paid')
+    .reduce((sum, p) => sum + Number(p.amount), 0);
+  const pendingOut = (payouts || [])
+    .filter((p) => p.status === 'pending')
+    .reduce((sum, p) => sum + Number(p.amount), 0);
+
+  const totalWithdrawn = paidOut;
+  const availableBalance = Math.max(0, totalEarnings - paidOut - pendingOut);
   
   const avgPrice = completedJobs.length > 0 ? (totalRevenue / completedJobs.length) : 0;
   
@@ -212,8 +236,8 @@ export default async function MijnSaldoPage() {
             <div className={styles.listRow} style={{ padding: '1rem 0' }}>Geen afgeronde klussen gevonden.</div>
           ) : (
             completedJobs.slice(0, 50).map(job => {
-              const price = Number(job.quoted_price) || 0;
-              const comm = Number(job.commission_pct) || 25;
+              const price = Number(job.final_price ?? job.quoted_price) || 0;
+              const comm = Number(job.commission_pct ?? 25);
               const earned = price * ((100 - comm) / 100);
 
               // Date formatting safely

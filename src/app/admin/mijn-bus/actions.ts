@@ -1,66 +1,67 @@
 'use server';
 
 import { requireCrmUser } from '@/lib/crmSession';
-import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
+/**
+ * Move parts from one van to another.
+ *
+ * Through the caller's own session, not the service-role key. The previous
+ * version reached for the admin client because 0008 gives a monteur no write
+ * access to `stock_items` — but that bypasses every policy, and it took both
+ * technician ids straight from the caller, so any monteur could move parts out
+ * of somebody else's van into their own.
+ *
+ * `crm_transfer_stock` (migration 0018) is the whole write surface now: it
+ * checks the caller owns the source, moves both sides in one transaction, and
+ * locks the row so two transfers cannot read the same quantity.
+ */
 export async function transferStock(
   fromTechId: string | null,
   toTechId: string | null,
   description: string,
   quantity: number
-) {
-  const user = await requireCrmUser();
-  if (user.role !== 'monteur' && user.role !== 'kantoor' && user.role !== 'owner') {
-    throw new Error('Not authorized');
+): Promise<{ ok: true } | { error: string }> {
+  await requireCrmUser();
+
+  if (!Number.isFinite(quantity) || quantity <= 0) {
+    return { error: 'Ongeldig aantal.' };
   }
-  if (quantity <= 0) throw new Error('Invalid quantity');
-
-  // We use the admin client because monteurs do not have RLS write access to stock_items.
-  const adminDb = createSupabaseAdminClient();
-
-  // 1. Decrement sender
-  const { data: senderStock, error: err1 } = await adminDb
-    .from('stock_items')
-    .select('id, quantity')
-    .eq('description', description)
-    .is('technician_id', fromTechId)
-    .single();
-
-  if (err1 || !senderStock) throw new Error('Source stock item not found');
-  if (senderStock.quantity < quantity) throw new Error('Not enough stock');
-
-  const { error: err2 } = await adminDb
-    .from('stock_items')
-    .update({ quantity: senderStock.quantity - quantity, updated_at: new Date().toISOString() })
-    .eq('id', senderStock.id);
-    
-  if (err2) throw new Error('Failed to decrement');
-
-  // 2. Increment receiver
-  // Try to find if receiver already has this item
-  const { data: receiverStock } = await adminDb
-    .from('stock_items')
-    .select('id, quantity')
-    .eq('description', description)
-    .is('technician_id', toTechId)
-    .single();
-
-  if (receiverStock) {
-    const { error: err3 } = await adminDb
-      .from('stock_items')
-      .update({ quantity: receiverStock.quantity + quantity, updated_at: new Date().toISOString() })
-      .eq('id', receiverStock.id);
-    if (err3) throw new Error('Failed to increment');
-  } else {
-    // Create new row for receiver
-    const { error: err4 } = await adminDb
-      .from('stock_items')
-      .insert({
-        technician_id: toTechId,
-        description,
-        quantity,
-        min_quantity: 0
-      });
-    if (err4) throw new Error('Failed to create destination stock');
+  if (!description?.trim()) {
+    return { error: 'Kies een artikel.' };
   }
+
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.rpc('crm_transfer_stock', {
+    p_from: fromTechId,
+    p_to: toTechId,
+    p_description: description.trim(),
+    p_quantity: quantity,
+  });
+
+  if (error) {
+    console.error('Stock transfer failed:', error.message);
+    return {
+      error: /function|does not exist/i.test(error.message)
+        ? 'Voer supabase/migrations/0018_stock_transfer.sql uit.'
+        : 'Overzetten mislukt.',
+    };
+  }
+
+  /* The function answers in words rather than throwing, so the reason survives. */
+  const said: Record<string, string> = {
+    ok: '',
+    ongeldig_aantal: 'Ongeldig aantal.',
+    geen_omschrijving: 'Kies een artikel.',
+    zelfde_bus: 'Bron en bestemming zijn hetzelfde.',
+    geen_monteur: 'Uw login is niet aan een monteur gekoppeld.',
+    niet_uw_voorraad: 'U kunt alleen uit uw eigen bus overzetten.',
+    alleen_eigen_bus: 'Uit het magazijn kunt u alleen naar uw eigen bus halen.',
+    niet_gevonden: 'Dit artikel ligt niet in de bron-bus.',
+    te_weinig: 'Daar liggen er niet genoeg van.',
+  };
+
+  const outcome = String(data);
+  if (outcome === 'ok') return { ok: true };
+  return { error: said[outcome] ?? 'Overzetten mislukt.' };
 }

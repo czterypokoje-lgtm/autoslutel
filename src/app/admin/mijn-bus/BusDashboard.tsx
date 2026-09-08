@@ -18,6 +18,8 @@ export default function BusDashboard({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  /** Why a transfer was refused, in the monteur's own words. */
+  const [notice, setNotice] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
   // Stats calculation
@@ -31,36 +33,50 @@ export default function BusDashboard({
   async function handleAddStock(description: string, qty: number) {
     if (loading) return;
     setLoading(true);
-    try {
-      await transferStock(null, technicianId, description, qty);
-      router.refresh();
-    } catch (err) {
-      console.error(err);
-      alert('Fout bij ophalen uit magazijn.');
-    } finally {
-      setLoading(false);
+    setNotice(null);
+    // The action answers with a reason rather than throwing, so the monteur is
+    // told which rule stopped them instead of "er ging iets mis".
+    const result = await transferStock(null, technicianId, description, qty);
+    setLoading(false);
+    if ('error' in result) {
+      setNotice(result.error);
+      return;
     }
+    router.refresh();
   }
 
   async function handleRemoveStock(description: string, qty: number) {
     if (loading) return;
     setLoading(true);
-    try {
-      await transferStock(technicianId, null, description, qty);
-      router.refresh();
-    } catch (err) {
-      console.error(err);
-      alert('Fout bij terugleggen in magazijn.');
-    } finally {
-      setLoading(false);
+    setNotice(null);
+    const result = await transferStock(technicianId, null, description, qty);
+    setLoading(false);
+    if ('error' in result) {
+      setNotice(result.error);
+      return;
     }
+    router.refresh();
   }
 
   return (
     <div className={styles.container}>
-      
+      {notice && (
+        <p
+          style={{
+            margin: '0 0 14px',
+            padding: '10px 12px',
+            borderRadius: 'var(--crm-r-sm)',
+            background: 'var(--crm-stop-bg)',
+            color: 'var(--crm-stop)',
+            fontSize: 13,
+          }}
+        >
+          {notice}
+        </p>
+      )}
+
       <div className={styles.header}>
-        <h1 className={styles.title}>Product Catalogs</h1>
+        <h1 className={styles.title}>Mijn bus</h1>
         <button className={styles.filterBtn}>
           Filter
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
@@ -71,7 +87,7 @@ export default function BusDashboard({
       <div className={styles.statsContainer}>
         <div className={styles.statSection}>
           <div className={styles.statTop}>
-            <span className={styles.statLabel}>Total Products</span>
+            <span className={styles.statLabel}>Artikelen in de bus</span>
             <div className={styles.statIcon} style={{color: '#4f46e5', background: '#e0e7ff'}}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
             </div>
@@ -86,7 +102,7 @@ export default function BusDashboard({
 
         <div className={styles.statSection}>
           <div className={styles.statTop}>
-            <span className={styles.statLabel}>Active Products</span>
+            <span className={styles.statLabel}>Op voorraad</span>
             <div className={styles.statIcon} style={{color: '#2563eb', background: '#dbeafe'}}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
             </div>
@@ -101,7 +117,7 @@ export default function BusDashboard({
 
         <div className={styles.statSection}>
           <div className={styles.statTop}>
-            <span className={styles.statLabel}>Total Vendors</span>
+            <span className={styles.statLabel}>In het magazijn</span>
             <div className={styles.statIcon} style={{color: '#4f46e5', background: '#e0e7ff'}}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             </div>
@@ -116,7 +132,7 @@ export default function BusDashboard({
 
         <div className={styles.statSection}>
           <div className={styles.statTop}>
-            <span className={styles.statLabel}>Active Vendors</span>
+            <span className={styles.statLabel}>Bijna op</span>
             <div className={styles.statIcon} style={{color: '#4f46e5', background: '#e0e7ff'}}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             </div>
@@ -132,11 +148,11 @@ export default function BusDashboard({
 
       <div className={styles.tableSection}>
         <div className={styles.tableHeader}>
-          <h2 className={styles.tableTitle}>Products list</h2>
+          <h2 className={styles.tableTitle}>Wat er in de bus ligt</h2>
           <div className={styles.searchBox}>
             <input 
               type="text" 
-              placeholder="Search..." 
+              placeholder="Zoek een artikel" 
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
