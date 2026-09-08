@@ -66,10 +66,19 @@ export async function POST(request: Request) {
      * than composing one — a confirmation is only useful if it names what we
      * actually stored.
      */
-    say: !known
-      ? 'Deze auto staat niet in ons systeem. Ik laat een collega u terugbellen.'
-      : makeIn.corrected || modelIn.corrected || yearIn.corrected
+    /*
+     * The confirmation comes first, even when the car is unknown.
+     *
+     * If we repaired "Pesjot" into "Peugeot" and then refuse the job, a wrong
+     * repair produces a wrong refusal — and the caller never hears what we
+     * thought they said, so they cannot correct it. Confirm, then refuse on the
+     * next turn if it still is not a car we can do.
+     */
+    say:
+      makeIn.corrected || modelIn.corrected || yearIn.corrected
         ? `Een ${[make, modelIn.value, yearIn.value].filter(Boolean).join(' ')}, klopt dat?`
-        : null,
+        : known
+          ? null
+          : 'Deze auto staat niet in ons systeem. Ik laat een collega u terugbellen.',
   });
 }
