@@ -1,108 +1,122 @@
+import Link from 'next/link';
+import { Settings2 } from 'lucide-react';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import Link from 'next/link';
 import styles from './netwerk.module.css';
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * The network shell: servers down the left, that server's channels beside it.
+ *
+ * A server is a country. Nederland today, België and Deutschland later — and
+ * that boundary is not decoration: the price list, the VAT and the contract all
+ * differ across it, so a technician in Antwerp has no business in the Dutch
+ * pricing channel.
+ *
+ * Which server you are looking at rides in the URL rather than in state, so a
+ * channel link can be shared and the page works before it hydrates. The whole
+ * shell is server-rendered for the same reason.
+ */
 export default async function NetwerkLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<Record<string, string>>;
 }) {
   const user = await requireCrmUser('/admin/netwerk');
   const supabase = await createSupabaseServerClient();
+  await params;
 
-  // Fetch servers the user can see
-  const { data: servers } = await supabase
-    .from('chat_servers')
-    .select('id, name')
-    .order('name');
+  const [{ data: servers }, { data: channels }] = await Promise.all([
+    supabase.from('chat_servers').select('id, name').order('name'),
+    supabase.from('chat_channels').select('id, server_id, name, slug, type').order('name'),
+  ]);
 
-  // Fetch channels the user can see
-  const { data: channels } = await supabase
-    .from('chat_channels')
-    .select('id, server_id, name, slug, type')
-    .order('name');
+  const all = servers ?? [];
+  /*
+   * A monteur belongs to one server; the office sees them all and lands on the
+   * first. There is no server switcher for a technician because there is
+   * nothing to switch to — showing one they cannot enter is a dead end.
+   */
+  const active = all[0] ?? null;
+  const mine = (channels ?? []).filter((c) => !active || c.server_id === active.id);
 
-  // In a real Discord, we'd filter channels by access.
-  // For now we rely on the DB returning only accessible channels,
-  // or we filter them if the RLS allows reading all.
-  // We'll group them by type.
-  
-  const generalChannels = channels?.filter(c => c.type === 'general') || [];
-  const makeChannels = channels?.filter(c => c.type === 'make') || [];
-  const regionChannels = channels?.filter(c => c.type === 'region') || [];
-  const dmChannels = channels?.filter(c => c.type === 'dm') || [];
+  const groups: { title: string; type: string; prefix: string }[] = [
+    { title: 'Algemeen', type: 'general', prefix: '#' },
+    { title: 'Automerken', type: 'make', prefix: '#' },
+    { title: 'Regio’s', type: 'region', prefix: '#' },
+    { title: 'Gesprekken', type: 'dm', prefix: '@' },
+  ];
+
+  const isOffice = user.role === 'owner' || user.role === 'kantoor';
 
   return (
     <div className={styles.layout}>
-      {/* Servers Sidebar */}
       <div className={styles.serversSidebar}>
-        {servers?.map(s => (
-          <div key={s.id} className={styles.serverBubble} title={s.name}>
-            {s.name.substring(0, 2).toUpperCase()}
-          </div>
+        {all.map((server) => (
+          <Link
+            key={server.id}
+            href={`/admin/netwerk?server=${server.id}`}
+            className={`${styles.serverBubble} ${active?.id === server.id ? styles.serverBubbleActive : ''}`}
+            title={server.name}
+          >
+            {server.name.substring(0, 2).toUpperCase()}
+          </Link>
         ))}
+
+        {isOffice && (
+          <Link
+            href="/admin/netwerk/beheer"
+            className={styles.serverBubble}
+            title="Servers en kanalen beheren"
+          >
+            +
+          </Link>
+        )}
       </div>
 
-      {/* Channels Sidebar */}
       <div className={styles.channelsSidebar}>
         <div className={styles.serverHeader}>
-          {servers?.[0]?.name || 'Netwerk'}
+          {active?.name ?? 'Netwerk'}
+          {isOffice && (
+            <Link href="/admin/netwerk/beheer" title="Beheren" className={styles.headerAction}>
+              <Settings2 size={15} strokeWidth={1.9} />
+            </Link>
+          )}
         </div>
 
         <div className={styles.channelList}>
-          {generalChannels.length > 0 && (
-            <div className={styles.channelGroup}>
-              <div className={styles.groupTitle}>Algemeen</div>
-              {generalChannels.map(c => (
-                <Link key={c.id} href={`/admin/netwerk/${c.id}`} className={styles.channelLink}>
-                  <span className={styles.hash}>#</span> {c.name}
-                </Link>
-              ))}
-            </div>
-          )}
+          {groups.map((group) => {
+            const inGroup = mine.filter((channel) => channel.type === group.type);
+            if (!inGroup.length) return null;
+            return (
+              <div className={styles.channelGroup} key={group.type}>
+                <div className={styles.groupTitle}>{group.title}</div>
+                {inGroup.map((channel) => (
+                  <Link
+                    key={channel.id}
+                    href={`/admin/netwerk/${channel.id}`}
+                    className={styles.channelLink}
+                  >
+                    <span className={styles.hash}>{group.prefix}</span> {channel.name}
+                  </Link>
+                ))}
+              </div>
+            );
+          })}
 
-          {makeChannels.length > 0 && (
-            <div className={styles.channelGroup}>
-              <div className={styles.groupTitle}>Automerken</div>
-              {makeChannels.map(c => (
-                <Link key={c.id} href={`/admin/netwerk/${c.id}`} className={styles.channelLink}>
-                  <span className={styles.hash}>#</span> {c.name}
-                </Link>
-              ))}
-            </div>
-          )}
-
-          {regionChannels.length > 0 && (
-            <div className={styles.channelGroup}>
-              <div className={styles.groupTitle}>Regio's</div>
-              {regionChannels.map(c => (
-                <Link key={c.id} href={`/admin/netwerk/${c.id}`} className={styles.channelLink}>
-                  <span className={styles.hash}>#</span> {c.name}
-                </Link>
-              ))}
-            </div>
-          )}
-
-          {dmChannels.length > 0 && (
-            <div className={styles.channelGroup}>
-              <div className={styles.groupTitle}>Direct Messages</div>
-              {dmChannels.map(c => (
-                <Link key={c.id} href={`/admin/netwerk/${c.id}`} className={styles.channelLink}>
-                  <span className={styles.hash}>@</span> {c.name}
-                </Link>
-              ))}
-            </div>
+          {mine.length === 0 && (
+            <p className={styles.groupTitle} style={{ padding: 'var(--sp-4)' }}>
+              Nog geen kanalen op deze server.
+              {isOffice && ' Maak er een via het tandwiel hierboven.'}
+            </p>
           )}
         </div>
       </div>
 
-      {/* Main Chat Area */}
-      <div className={styles.main}>
-        {children}
-      </div>
+      <div className={styles.main}>{children}</div>
     </div>
   );
 }

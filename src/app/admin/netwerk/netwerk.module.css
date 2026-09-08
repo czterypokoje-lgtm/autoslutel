@@ -98,3 +98,30 @@
   flex-direction: column;
   background-color: var(--crm-surface, var(--crm-panel));
 }
+
+/* The gear beside the server name, for the office only. */
+.serverHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.headerAction {
+  margin-left: auto;
+  color: var(--crm-muted);
+  display: inline-flex;
+  padding: var(--sp-1);
+  border-radius: var(--crm-r-sm);
+}
+
+.headerAction:hover {
+  color: var(--crm-ink);
+  background: var(--crm-sunk);
+}
+
+/* Which country you are looking at. Without this every bubble looked the same
+   and the second server was indistinguishable from the first. */
+.serverBubbleActive {
+  background: var(--crm-accent);
+  color: #fff;
+}

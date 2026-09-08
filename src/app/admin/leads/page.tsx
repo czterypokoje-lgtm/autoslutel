@@ -3,6 +3,7 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from './leads.module.css';
 import LeadsTable, { type LeadRow } from './LeadsTable';
+import { PageHead } from '../_ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -251,19 +252,26 @@ export default async function LeadsPage({
 
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Leads</h1>
-        <span className={styles.count}>
-          {total} {total === 1 ? 'lead' : 'leads'}
-          {range !== 'all' && ` · laatste ${range} ${range === '1' ? 'dag' : 'dagen'}`}
-        </span>
-        <span className={styles.hint}>
-          <span className={styles.kbd}>/</span> zoeken
-          <span className={styles.kbd}>j</span>
-          <span className={styles.kbd}>k</span> navigeren
-          <span className={styles.kbd}>e</span> bewerken
-        </span>
-      </div>
+      {/*
+        Shared header, so Leads opens the way every other screen does. The
+        keyboard hints stay in the actions slot rather than under the title:
+        they are a tool for the person working the queue, not a description of
+        the page.
+      */}
+      <PageHead
+        title="Leads"
+        sub={`${total} ${total === 1 ? 'lead' : 'leads'}${
+          range !== 'all' ? ` · laatste ${range} ${range === '1' ? 'dag' : 'dagen'}` : ''
+        }`}
+        actions={
+          <span className={styles.hint}>
+            <span className={styles.kbd}>/</span> zoeken
+            <span className={styles.kbd}>j</span>
+            <span className={styles.kbd}>k</span> navigeren
+            <span className={styles.kbd}>e</span> bewerken
+          </span>
+        }
+      />
 
       {lateCount > 0 && (
         <p className={styles.warning}>

@@ -11,6 +11,8 @@ import {
 } from '@/lib/crmJobs';
 import styles from './jobs.module.css';
 import { technicianColour } from '@/lib/crmColours';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { PageHead, ui } from '../_ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -135,60 +137,60 @@ export default async function JobsPage({
 
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Agenda</h1>
-        <span className={styles.count}>
-          {heading} · {rows.length} {rows.length === 1 ? 'klus' : 'klussen'}
-        </span>
+      {/*
+        The page header comes from the shared primitives now, so Agenda opens
+        the same way every other screen does. The board below keeps its own
+        stylesheet: a week grid of technicians is not a list of rows, and
+        forcing it through the row idiom would cost more than it saved.
+      */}
+      <PageHead
+        title="Agenda"
+        sub={`${heading} · ${rows.length} ${rows.length === 1 ? 'klus' : 'klussen'}`}
+        actions={
+          <>
+            <div className={styles.viewSwitch}>
+              <Link
+                href={`/admin/jobs?datum=${date}`}
+                className={view === 'dag' ? `${styles.viewLink} ${styles.viewLinkActive}` : styles.viewLink}
+              >
+                Dag
+              </Link>
+              <Link
+                href={`/admin/jobs?datum=${date}&weergave=week`}
+                className={view === 'week' ? `${styles.viewLink} ${styles.viewLinkActive}` : styles.viewLink}
+              >
+                Week
+              </Link>
+            </div>
 
-        <div className={styles.toolbar}>
-          <div className={styles.viewSwitch}>
             <Link
-              href={`/admin/jobs?datum=${date}`}
-              className={
-                view === 'dag'
-                  ? `${styles.viewLink} ${styles.viewLinkActive}`
-                  : styles.viewLink
-              }
+              className={`${ui.btn} ${ui.btnIcon}`}
+              href={`/admin/jobs?datum=${prev}${view === 'week' ? '&weergave=week' : ''}`}
+              aria-label="Vorige"
             >
-              Dag
+              <ChevronLeft size={16} strokeWidth={2} />
             </Link>
             <Link
-              href={`/admin/jobs?datum=${date}&weergave=week`}
-              className={
-                view === 'week'
-                  ? `${styles.viewLink} ${styles.viewLinkActive}`
-                  : styles.viewLink
-              }
+              className={ui.btn}
+              href={`/admin/jobs?datum=${today}${view === 'week' ? '&weergave=week' : ''}`}
             >
-              Week
+              Vandaag
             </Link>
-          </div>
+            <Link
+              className={`${ui.btn} ${ui.btnIcon}`}
+              href={`/admin/jobs?datum=${next}${view === 'week' ? '&weergave=week' : ''}`}
+              aria-label="Volgende"
+            >
+              <ChevronRight size={16} strokeWidth={2} />
+            </Link>
 
-          <Link
-            className={styles.navBtn}
-            href={`/admin/jobs?datum=${prev}${view === 'week' ? '&weergave=week' : ''}`}
-          >
-            ‹
-          </Link>
-          <Link
-            className={styles.navBtn}
-            href={`/admin/jobs?datum=${today}${view === 'week' ? '&weergave=week' : ''}`}
-          >
-            Vandaag
-          </Link>
-          <Link
-            className={styles.navBtn}
-            href={`/admin/jobs?datum=${next}${view === 'week' ? '&weergave=week' : ''}`}
-          >
-            ›
-          </Link>
-
-          <Link className={styles.navBtn} href="/admin/jobs/nieuw">
-            + Klus
-          </Link>
-        </div>
-      </div>
+            <Link className={`${ui.btn} ${ui.btnPrimary}`} href="/admin/jobs/nieuw">
+              <Plus size={15} strokeWidth={2.2} />
+              Nieuwe klus
+            </Link>
+          </>
+        }
+      />
 
       {techs.length === 0 && (
         <p className={styles.warning}>
