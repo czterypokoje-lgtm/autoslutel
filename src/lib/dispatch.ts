@@ -22,6 +22,8 @@ export interface Candidate {
   id: string;
   name: string;
   werkgebied: string[];
+  base_lat: number | null;
+  base_lng: number | null;
   online: boolean;
   tier: Tier;
   /** Their declared coverage rows. */
@@ -38,6 +40,8 @@ export interface DispatchRequest {
   car: Car;
   scenario: Scenario;
   postcode: string | null;
+  lat: number | null;
+  lng: number | null;
   /** The article the quote picked, when it picked one. */
   articleCode?: string | null;
 }
@@ -102,7 +106,11 @@ function nearness(werkgebied: string[], postcode: string | null): number {
  * gone, and someone has to go back. Everything else on this list is a
  * preference; that one is money.
  */
-function scoreOf(candidate: Candidate, request: DispatchRequest): { score: number; reason: string } {
+function scoreOf(
+  candidate: Candidate,
+  request: DispatchRequest,
+  driveTimeSeconds: number | null
+): { score: number; reason: string } {
   const reasons: string[] = [];
   let score = 0;
 
@@ -111,9 +119,22 @@ function scoreOf(candidate: Candidate, request: DispatchRequest): { score: numbe
     reasons.push('heeft het onderdeel in de bus');
   }
 
-  const near = nearness(candidate.werkgebied, request.postcode);
-  score += near * 25;
-  if (near > 0.9) reasons.push('rijdt hier');
+  if (driveTimeSeconds !== null) {
+    // 30 mins (1800s) = perfect 25 points. 
+    // Closer than 30 mins doesn't add points. Longer than 30 mins drops points linearly.
+    // 2 hours (7200s) away = 0 points.
+    const penalty = Math.max(0, (driveTimeSeconds - 1800) / 5400); // 5400s = 90 mins spread
+    const points = Math.max(0, 25 * (1 - penalty));
+    score += points;
+    
+    if (driveTimeSeconds < 1800) reasons.push('binnen half uur rijden');
+    else if (driveTimeSeconds < 3600) reasons.push('binnen 1 uur rijden');
+  } else {
+    // Fallback if geocoding/routing failed
+    const near = nearness(candidate.werkgebied, request.postcode);
+    score += near * 25;
+    if (near > 0.9) reasons.push('rijdt hier');
+  }
 
   if (candidate.online) {
     score += 15;
@@ -145,7 +166,7 @@ function scoreOf(candidate: Candidate, request: DispatchRequest): { score: numbe
  * than dying, so a premium technician who is under a dashboard does not block
  * everyone else.
  */
-export function planDispatch(candidates: Candidate[], request: DispatchRequest): DispatchPlan {
+export async function planDispatch(candidates: Candidate[], request: DispatchRequest): Promise<DispatchPlan> {
   const rejected: Rejection[] = [];
   const passed: Candidate[] = [];
 
@@ -166,8 +187,22 @@ export function planDispatch(candidates: Candidate[], request: DispatchRequest):
 
   if (!passed.length) return { offers: [], rejected, empty: true };
 
+  // Resolve drive times for those who passed
+  let driveTimes: (number | null)[] = passed.map(() => null);
+  if (request.lat && request.lng) {
+    const { getDriveTimes } = await import('@/lib/googleMaps');
+    const origins = passed.map(c => ({
+      lat: c.base_lat ?? request.lat!, 
+      lng: c.base_lng ?? request.lng!
+    }));
+    
+    // Batch fetch from Maps API
+    const results = await getDriveTimes(origins, { lat: request.lat, lng: request.lng });
+    driveTimes = results.map(r => r ? r.durationSeconds : null);
+  }
+
   const scored = passed
-    .map((candidate) => ({ candidate, ...scoreOf(candidate, request) }))
+    .map((candidate, idx) => ({ candidate, ...scoreOf(candidate, request, driveTimes[idx]) }))
     .sort((a, b) => b.score - a.score);
 
   /* Waves, in tier order. A tier with nobody in it costs no time. */

@@ -97,70 +97,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Telecommunicatiewet 11.7a, and by Google's EU user consent policy —
           defaulting to "granted" puts the Ads account at risk.
         */}
-        <script
-          id="consent-defaults"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('consent','default',{
-                ad_storage:'denied',
-                ad_user_data:'denied',
-                ad_personalization:'denied',
-                analytics_storage:'denied',
-                functionality_storage:'granted',
-                security_storage:'granted',
-                personalization_storage:'denied',
-                wait_for_update: 500
-              });
-              gtag('set','ads_data_redaction', true);
-              gtag('set','url_passthrough', true);
-            `,
-          }}
-        />
-        {/* Google Tag Manager */}
-        <Script
-          id="gtm-script"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-PRT75SWX');`
-          }}
-        />
-        {/* End Google Tag Manager */}
-        {/* Google tag (gtag.js) */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-C4WR7TYCTV"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-C4WR7TYCTV');
-          `}
-        </Script>
-        {/* Google Ads Click to call conversion snippet */}
-        <Script id="google-ads-conversion" strategy="afterInteractive">
-          {`
-            window.gtag_report_conversion = function(url) {
-              var callback = function () {
-                if (typeof(url) != 'undefined') {
-                  window.location = url;
-                }
-              };
-              gtag('event', 'conversion', {
-                  'send_to': 'AW-18315813515/FoiPCLLl7NocEIvF1J1E',
-                  'event_callback': callback
-              });
-              return false;
-            };
-          `}
-        </Script>
         {/*
           Microsoft Clarity is loaded from src/lib/consent.ts only after the
           visitor accepts statistics cookies. It records sessions and is not
@@ -199,6 +135,63 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <Script id="consent-defaults">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent','default',{
+              ad_storage:'denied',
+              ad_user_data:'denied',
+              ad_personalization:'denied',
+              analytics_storage:'denied',
+              functionality_storage:'granted',
+              security_storage:'granted',
+              personalization_storage:'denied',
+              wait_for_update: 500
+            });
+            gtag('set','ads_data_redaction', true);
+            gtag('set','url_passthrough', true);
+          `}
+        </Script>
+        {/* Google Tag Manager */}
+        <Script id="gtm-script">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-PRT75SWX');
+          `}
+        </Script>
+        {/* End Google Tag Manager */}
+        {/* Google tag (gtag.js) */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-C4WR7TYCTV" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-C4WR7TYCTV');
+          `}
+        </Script>
+        {/* Google Ads Click to call conversion snippet */}
+        <Script id="google-ads-conversion" strategy="afterInteractive">
+          {`
+            window.gtag_report_conversion = function(url) {
+              var callback = function () {
+                if (typeof(url) != 'undefined') {
+                  window.location = url;
+                }
+              };
+              gtag('event', 'conversion', {
+                  'send_to': 'AW-18315813515/FoiPCLLl7NocEIvF1J1E',
+                  'event_callback': callback
+              });
+              return false;
+            };
+          `}
+        </Script>
+
         <AdParameterTracker />
         <PhoneConversionTracker />
         {/* Google Tag Manager (noscript) */}

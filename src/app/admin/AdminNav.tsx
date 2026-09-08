@@ -9,6 +9,7 @@ import {
   Handshake,
   CircleUser,
   Inbox,
+  MessageSquare,
   Package,
   Settings,
   Tag,
@@ -46,6 +47,7 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
       { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
       { href: '/admin/jobs', label: 'Agenda', icon: CalendarDays },
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
+      { href: '/admin/netwerk', label: 'Netwerk', icon: MessageSquare },
     ],
   },
   {
@@ -75,12 +77,15 @@ const MONTEUR_LINKS: { group: string; items: NavItem[] }[] = [
       { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
       { href: '/admin/mijn-agenda', label: 'Mijn agenda', icon: CalendarDays },
+      { href: '/admin/netwerk', label: 'Netwerk', icon: MessageSquare },
     ],
   },
   {
     group: 'Mijzelf',
     items: [
       { href: '/admin/mijn-vak', label: 'Mijn vak', icon: BadgeCheck },
+      { href: '/admin/mijn-bus', label: 'Mijn bus', icon: Package },
+      { href: '/admin/mijn-saldo', label: 'Saldo', icon: Wallet },
       { href: '/admin/mijn-profiel', label: 'Profiel', icon: CircleUser },
     ],
   },

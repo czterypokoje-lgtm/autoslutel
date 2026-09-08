@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate } from '@/lib/crmJobs';
@@ -48,6 +49,19 @@ export default async function VandaagPage({
     );
   }
 
+  // Force first-run wizard if this is a monteur and they have no coverage declared
+  if (user.role === 'monteur' && technicianId) {
+    const { data: coverage } = await supabase
+      .from('technician_coverage')
+      .select('id')
+      .eq('technician_id', technicianId)
+      .limit(1);
+
+    if (!coverage || coverage.length === 0) {
+      redirect('/admin/start');
+    }
+  }
+
   let query = supabase
     .from('jobs')
     .select(
@@ -79,11 +93,18 @@ export default async function VandaagPage({
     );
   }
 
+  const { data: vanStock } = await supabase
+    .from('stock_items')
+    .select('id, description, quantity')
+    .eq('technician_id', technicianId || '00000000-0000-0000-0000-000000000000')
+    .order('description');
+
   return (
     <VanScreen
       jobs={(data ?? []) as unknown as VanJob[]}
       technicianName={me?.name ?? null}
       today={today}
+      vanStock={vanStock || []}
     />
   );
 }

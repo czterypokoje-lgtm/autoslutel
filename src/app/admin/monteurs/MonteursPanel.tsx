@@ -30,11 +30,12 @@ export default function MonteursPanel({
 }) {
   const router = useRouter();
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [werkgebied, setWerkgebied] = useState('');
+  const [email, setEmail] = useState('');
   const [colour, setColour] = useState(COLOURS[0]);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  /** Shown once after an invite, then gone — nothing stores it. */
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
 
   /*
    * Accounts with the monteur role that can be linked to a record here.
@@ -70,10 +71,10 @@ export default function MonteursPanel({
     setSaving(true);
     setError('');
 
-    const response = await fetch('/api/admin/technicians', {
+    const response = await fetch('/api/admin/invite-technician', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, werkgebied, color: colour }),
+      body: JSON.stringify({ name, email, color: colour }),
     }).catch(() => null);
 
     if (!response || !response.ok) {
@@ -83,9 +84,16 @@ export default function MonteursPanel({
       return;
     }
 
+    /*
+     * The link is shown once and stored nowhere. Losing it means inviting
+     * again, which is the correct trade: a one-time link that can be looked up
+     * later is a password with extra steps.
+     */
+    const created = await response.json().catch(() => null);
+    setInviteLink(created?.inviteLink ?? null);
+
     setName('');
-    setPhone('');
-    setWerkgebied('');
+    setEmail('');
     setSaving(false);
     router.refresh();
   }
@@ -174,7 +182,7 @@ export default function MonteursPanel({
       </div>
 
       <form className={styles.panel} onSubmit={add}>
-        <h2>Monteur toevoegen</h2>
+        <h2>Monteur uitnodigen</h2>
 
         <div className={styles.field}>
           <label className={styles.fieldLabel} htmlFor="nm">Naam</label>
@@ -188,25 +196,14 @@ export default function MonteursPanel({
         </div>
 
         <div className={styles.field} style={{ marginTop: 10 }}>
-          <label className={styles.fieldLabel} htmlFor="ph">Telefoon</label>
+          <label className={styles.fieldLabel} htmlFor="em">E-mailadres</label>
           <input
-            id="ph"
+            id="em"
+            type="email"
             className={styles.control}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-
-        <div className={styles.field} style={{ marginTop: 10 }}>
-          <label className={styles.fieldLabel} htmlFor="wg">
-            Werkgebied (postcodereeksen)
-          </label>
-          <input
-            id="wg"
-            className={styles.control}
-            placeholder="3500-3599, 1000-1099"
-            value={werkgebied}
-            onChange={(e) => setWerkgebied(e.target.value)}
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -235,22 +232,52 @@ export default function MonteursPanel({
 
         <div className={styles.actions}>
           <button className={styles.primary} type="submit" disabled={saving}>
-            {saving ? 'Opslaan…' : 'Toevoegen'}
+            {saving ? 'Uitnodigen…' : 'Uitnodiging versturen'}
           </button>
           {error && <div className={styles.error}>{error}</div>}
         </div>
 
+        {inviteLink && (
+          <div className={styles.note} style={{ display: 'grid', gap: 8 }}>
+            <strong>Uitnodiging klaar — stuur deze link naar de monteur.</strong>
+            <input
+              className={styles.control}
+              readOnly
+              value={inviteLink}
+              onFocus={(event) => event.currentTarget.select()}
+              style={{ width: '100%', fontFamily: 'ui-monospace, monospace', fontSize: 12 }}
+            />
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className={styles.control}
+                style={{ width: 'auto', cursor: 'pointer' }}
+                onClick={() => navigator.clipboard?.writeText(inviteLink)}
+              >
+                Link kopiëren
+              </button>
+              <a
+                className={styles.control}
+                style={{ width: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `Welkom bij Autosleutel24. Stel hier je wachtwoord in en vul je gegevens aan: ${inviteLink}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Via WhatsApp sturen
+              </a>
+            </div>
+            <span style={{ fontSize: 12, color: 'var(--crm-muted)' }}>
+              De link is eenmalig en wordt nergens bewaard. Kwijt? Nodig opnieuw uit.
+            </span>
+          </div>
+        )}
+
         <p className={styles.note}>
-          Het werkgebied stuurt het monteurvoorstel bij het inplannen: de eerste
-          vier cijfers van de postcode bepalen de regio. Laat het leeg en de
-          monteur wordt nog steeds voorgesteld, alleen lager.
-        </p>
-        <p className={styles.note}>
-          De keuzelijst naast elke monteur koppelt een login aan de persoon.
-          Alleen accounts met de rol <code>monteur</code> staan erin — maak die
-          eerst aan met{' '}
-          <code>node scripts/crm-user.mjs naam@… monteur</code>. Zonder koppeling
-          blijft het scherm &ldquo;Vandaag&rdquo; leeg voor die monteur.
+          De monteur stelt zelf een wachtwoord in via de link. Daarna doorlopen ze een
+          wizard voor telefoonnummer, werkgebied en welke auto’s ze aankunnen — zonder
+          dat laatste krijgen ze geen klussen aangeboden.
         </p>
       </form>
     </div>

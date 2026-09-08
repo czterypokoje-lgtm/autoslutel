@@ -106,10 +106,12 @@ export default function VanScreen({
   jobs,
   technicianName,
   today,
+  vanStock,
 }: {
   jobs: VanJob[];
   technicianName: string | null;
   today: string;
+  vanStock: { id: string; description: string; quantity: number }[];
 }) {
   const [rows, setRows] = useState(jobs);
 
@@ -222,7 +224,7 @@ export default function VanScreen({
         <p className={styles.empty}>Geen klussen vandaag.</p>
       ) : (
         rows.map((job) => (
-          <JobCard key={job.id} job={job} onPatch={patchJob} />
+          <JobCard key={job.id} job={job} onPatch={patchJob} vanStock={vanStock} />
         ))
       )}
     </div>
@@ -232,9 +234,11 @@ export default function VanScreen({
 function JobCard({
   job,
   onPatch,
+  vanStock,
 }: {
   job: VanJob;
   onPatch: (id: string, patch: Record<string, unknown>) => Promise<boolean>;
+  vanStock: { id: string; description: string; quantity: number }[];
 }) {
   const [finishing, setFinishing] = useState(false);
   const next = NEXT_STATUS[job.status] ?? null;
@@ -340,6 +344,7 @@ function JobCard({
           job={job}
           onPatch={onPatch}
           onDone={() => setFinishing(false)}
+          vanStock={vanStock}
         />
       )}
     </div>
@@ -357,10 +362,12 @@ function FinishPanel({
   job,
   onPatch,
   onDone,
+  vanStock,
 }: {
   job: VanJob;
   onPatch: (id: string, patch: Record<string, unknown>) => Promise<boolean>;
   onDone: () => void;
+  vanStock: { id: string; description: string; quantity: number }[];
 }) {
   const [price, setPrice] = useState(
     job.final_price === null
@@ -493,10 +500,14 @@ function FinishPanel({
     if (!description) return;
 
     setBusy(true);
+
+    const stockItem = vanStock.find(s => s.description === description);
+    const stock_item_id = stockItem ? stockItem.id : undefined;
+
     const ok = await fetch(`/api/admin/jobs/${job.id}/materials`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description, quantity: 1 }),
+      body: JSON.stringify({ description, quantity: 1, stock_item_id }),
     })
       .then((r) => r.ok)
       .catch(() => false);
@@ -618,10 +629,16 @@ function FinishPanel({
         <div className={styles.row}>
           <input
             className={styles.input}
+            list="van-stock-list"
             placeholder="Bijv. smart key Mercedes"
             value={material}
             onChange={(e) => setMaterial(e.target.value)}
           />
+          <datalist id="van-stock-list">
+            {vanStock.filter(s => s.quantity > 0).map(s => (
+              <option key={s.id} value={s.description} />
+            ))}
+          </datalist>
           <button className={styles.tap} onClick={addMaterial} disabled={busy}>
             Toevoegen
           </button>

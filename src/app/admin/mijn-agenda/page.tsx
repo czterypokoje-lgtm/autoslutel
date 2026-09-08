@@ -10,9 +10,10 @@ export const dynamic = 'force-dynamic';
  * The monteur's own two weeks: what is planned, and which days they are not
  * available. Same page for the office, showing their own linked record.
  */
-export default async function MijnAgendaPage() {
+export default async function MijnAgendaPage({ searchParams }: { searchParams: Promise<{ month?: string }> }) {
   const user = await requireCrmUser('/admin/mijn-agenda');
   const supabase = await createSupabaseServerClient();
+  const params = await searchParams;
 
   const { data: me } = await supabase
     .from('technicians')
@@ -24,22 +25,24 @@ export default async function MijnAgendaPage() {
     return (
       <div className={styles.wrap}>
         <p className={styles.warning}>
-          Je account is nog niet aan een monteur gekoppeld. Kantoor doet dat bij
-          <strong> Monteurs</strong> — zonder koppeling is er geen agenda om te
-          tonen.
+          Je account is nog niet aan een monteur gekoppeld.
         </p>
       </div>
     );
   }
 
-  const today = isoDate(new Date());
-  const from = weekStart(today);
-  const to = addDays(from, 13);
+  const todayStr = isoDate(new Date());
+  const displayMonthStr = params.month ? `${params.month}-01` : todayStr;
+  
+  // To build a 35-day grid (5 weeks), start from the Monday of the first day of the selected month.
+  const firstDayOfMonth = displayMonthStr.substring(0, 8) + '01';
+  const from = weekStart(firstDayOfMonth);
+  const to = addDays(from, 34); // 35 days total
 
   const [{ data: jobs }, { data: away }] = await Promise.all([
     supabase
       .from('jobs')
-      .select('id, status, scheduled_date, slot_start, slot_end, postcode, city, service_type, kenteken')
+      .select('id, status, scheduled_date, slot_start, slot_end, postcode, city, service_type, kenteken, quoted_price')
       .eq('technician_id', me.id)
       .gte('scheduled_date', from)
       .lte('scheduled_date', to)
@@ -56,11 +59,11 @@ export default async function MijnAgendaPage() {
     (away ?? []).map((a) => [a.date as string, (a.reason as string) ?? ''])
   );
 
-  const days: AgendaDay[] = Array.from({ length: 14 }, (_, i) => {
+  const days: AgendaDay[] = Array.from({ length: 35 }, (_, i) => {
     const date = addDays(from, i);
     return {
       date,
-      isToday: date === today,
+      isToday: date === todayStr,
       away: awayByDate.has(date),
       reason: awayByDate.get(date) ?? '',
       jobs: (jobs ?? [])
@@ -73,6 +76,7 @@ export default async function MijnAgendaPage() {
           place: [j.postcode, j.city].filter(Boolean).join(' '),
           service: (j.service_type as string) ?? '',
           kenteken: (j.kenteken as string) ?? '',
+          price: Number(j.quoted_price) || 0,
         })),
     };
   });
@@ -82,6 +86,7 @@ export default async function MijnAgendaPage() {
       days={days}
       name={me.name as string}
       icalToken={me.ical_token as string}
+      currentMonth={displayMonthStr.substring(0, 7)}
     />
   );
 }

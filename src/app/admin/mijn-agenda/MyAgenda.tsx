@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import styles from '../vandaag/vandaag.module.css';
-import { slotLabel } from '@/lib/crmJobs';
+import styles from './Calendar.module.css';
 
 export interface AgendaDay {
   date: string;
@@ -19,28 +18,20 @@ export interface AgendaDay {
     place: string;
     service: string;
     kenteken: string;
+    price?: number;
   }[];
 }
 
-const DAY = new Intl.DateTimeFormat('nl-NL', {
-  weekday: 'short',
-  day: 'numeric',
-  month: 'short',
-  timeZone: 'Europe/Amsterdam',
-});
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
-export default function MyAgenda({
-  days,
-  name,
-  icalToken,
-}: {
-  days: AgendaDay[];
-  name: string;
-  icalToken: string;
-}) {
+export default function MyAgenda({ days, name, icalToken, currentMonth }: { days: AgendaDay[]; name: string; icalToken: string; currentMonth: string; }) {
   const router = useRouter();
+
+  // Navigation state
+  const [selectedDate, setSelectedDate] = useState<string | null>(new Date().toISOString().split('T')[0]);
+  const activeDay = days.find(d => d.date === selectedDate);
   const [busy, setBusy] = useState('');
-  const [copied, setCopied] = useState(false);
 
   async function toggleAway(day: AgendaDay) {
     setBusy(day.date);
@@ -53,112 +44,215 @@ export default function MyAgenda({
     router.refresh();
   }
 
-  // webcal:// makes phones offer to subscribe instead of downloading a file once.
-  const feedPath = `/api/agenda/${icalToken}`;
-  const feedUrl =
-    typeof window === 'undefined'
-      ? feedPath
-      : `${window.location.origin}${feedPath}`;
+  // Month navigation logic
+  const [yearStr, monthStr] = currentMonth.split('-');
+  const dateObj = new Date(parseInt(yearStr), parseInt(monthStr) - 1, 1);
+  const currentMonthIdx = dateObj.getMonth();
+  const currentYear = dateObj.getFullYear();
+
+  const handlePrevMonth = () => {
+    const prev = new Date(currentYear, currentMonthIdx - 1, 1);
+    const m = prev.toISOString().substring(0, 7);
+    router.push(`?month=${m}`);
+  };
+
+  const handleNextMonth = () => {
+    const next = new Date(currentYear, currentMonthIdx + 1, 1);
+    const m = next.toISOString().substring(0, 7);
+    router.push(`?month=${m}`);
+  };
+
+  // View toggle state
+  const [viewMode, setViewMode] = useState<'standaard' | 'heatmap'>('heatmap');
+
+  const handleAdjustScheduleClick = () => {
+    alert("Klik op een dag in de kalender (links of in het overzicht) en gebruik vervolgens de knop 'Vrij nemen' of 'Zet op beschikbaar' in het zijpaneel.");
+  };
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Mijn agenda</h1>
-        <span className={styles.sub}>{name} · komende twee weken</span>
+    <div className={styles.calendarContainer}>
+      
+      {/* SIDEBAR */}
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarTitle}>Agenda: {name}</div>
+        
+        <div className={styles.miniCalendar}>
+          <div className={styles.miniCalendarHeader}>
+            <button onClick={handlePrevMonth} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '1rem' }}>&lt;</button>
+            <span>{MONTHS[currentMonthIdx]} {currentYear}</span>
+            <button onClick={handleNextMonth} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '1rem' }}>&gt;</button>
+          </div>
+          <div className={styles.miniGrid}>
+            {DAYS.map(d => <div key={d} className={styles.miniDayHeader}>{d}</div>)}
+            {days.map((d, i) => {
+              const dNum = new Date(d.date).getDate();
+              const isSelected = d.date === selectedDate;
+              return (
+                <div 
+                  key={d.date} 
+                  className={`${styles.miniDay} ${isSelected ? styles.miniDayActive : ''}`}
+                  onClick={() => setSelectedDate(d.date)}
+                >
+                  {dNum}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Selected Day Details Panel */}
+        <div className={styles.filters} style={{ flex: 1 }}>
+          <div className={styles.filterHeader}>
+            Details voor {selectedDate ? new Date(selectedDate).toLocaleDateString('nl-NL') : ''}
+          </div>
+          
+          {!activeDay ? (
+            <div style={{ fontSize: '0.875rem', color: '#64748b' }}>Klik op een dag in de kalender.</div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%', overflowY: 'auto', paddingRight: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  className={styles.outlinedButton}
+                  style={{ width: '100%', justifyContent: 'center' }}
+                  onClick={() => toggleAway(activeDay)}
+                  disabled={busy === activeDay.date}
+                >
+                  {busy === activeDay.date
+                    ? '...'
+                    : activeDay.away
+                      ? 'Zet op beschikbaar'
+                      : 'Vrij nemen (blokkeren)'}
+                </button>
+              </div>
+
+              {activeDay.away && (
+                <div style={{ color: '#ef4444', fontSize: '0.875rem', fontWeight: 500 }}>🔴 Niet beschikbaar ({activeDay.reason || 'Vrij'})</div>
+              )}
+              
+              {activeDay.jobs.length === 0 ? (
+                <div style={{ fontSize: '0.875rem', color: '#64748b' }}>Geen klussen ingepland.</div>
+              ) : (
+                activeDay.jobs.map(job => (
+                  <div key={job.id} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.75rem', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                      <strong style={{ fontSize: '0.875rem' }}>{job.slot_start.substring(0, 5)} - {job.slot_end.substring(0, 5)}</strong>
+                      <span className={`${styles.badge} ${styles[`badge_${job.status}`] || styles.badgeInquiry}`}>{job.status}</span>
+                    </div>
+                    <div style={{ fontSize: '0.875rem', color: '#475569', marginBottom: '0.25rem' }}>
+                      📍 {job.place}
+                    </div>
+                    <div style={{ fontSize: '0.875rem', color: '#475569', marginBottom: '0.25rem' }}>
+                      🔧 {job.service || 'Geen dienst'}
+                    </div>
+                    <div style={{ fontSize: '0.875rem', color: '#475569' }}>
+                      🚗 {job.kenteken || 'Onbekend'}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className={styles.card}>
-        <div className={styles.body}>
-          <span className={styles.label}>In je eigen telefoonagenda</span>
-          <p className={styles.meta}>
-            Abonneer je één keer; daarna verschijnen nieuwe klussen vanzelf.
-            Deze link is je sleutel — deel hem niet.
-          </p>
-          <div className={styles.row}>
-            <a
-              className={`${styles.tap} ${styles.tapPrimary}`}
-              href={feedUrl.replace(/^https?:/, 'webcal:')}
-            >
-              Toevoegen aan agenda
-            </a>
-            <button
-              className={styles.tap}
-              type="button"
-              onClick={() => {
-                navigator.clipboard?.writeText(feedUrl).then(
-                  () => setCopied(true),
-                  () => setCopied(false)
-                );
-              }}
-            >
-              {copied ? 'Gekopieerd' : 'Kopieer link'}
+      {/* MAIN CONTENT */}
+      <div className={styles.main}>
+        <div className={styles.topBar}>
+          <div className={styles.topBarLeft}>
+            <h1>Calendar</h1>
+          </div>
+          <div className={styles.topBarRight}>
+            <div className={styles.buttonGroup}>
+              <button 
+                className={`${styles.button} ${viewMode === 'standaard' ? styles.buttonActive : ''}`}
+                onClick={() => setViewMode('standaard')}
+              >
+                Standaard
+              </button>
+              <button 
+                className={`${styles.button} ${viewMode === 'heatmap' ? styles.buttonActive : ''}`}
+                onClick={() => setViewMode('heatmap')}
+              >
+                Omzet Heatmap
+              </button>
+            </div>
+            <button className={styles.outlinedButton} onClick={handleAdjustScheduleClick}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              Mijn rooster aanpassen
+            </button>
+            <button className={styles.outlinedButton}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              Maand v
             </button>
           </div>
         </div>
-      </div>
 
-      {days.map((day) => (
-        <div className={styles.card} key={day.date}>
-          <div className={styles.cardHead}>
-            <span className={styles.slot} style={{ fontSize: 16 }}>
-              {DAY.format(new Date(`${day.date}T12:00:00Z`))}
-            </span>
-            {day.isToday && (
-              <span className={`${styles.badge} ${styles.stOnderweg}`}>vandaag</span>
-            )}
-            {day.away && (
-              <span className={`${styles.badge} ${styles.stGeannuleerd}`}>
-                niet beschikbaar
-              </span>
-            )}
-            <span className={styles.queued}>
-              {day.jobs.length > 0 && `${day.jobs.length} klus`}
-            </span>
-          </div>
+        <div className={styles.calendarGrid}>
+          {/* Header Row */}
+          <div className={styles.weekHeader} style={{ background: 'transparent' }}>W</div>
+          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
+            <div key={day} className={styles.weekHeader}>{day}</div>
+          ))}
 
-          <div className={styles.body}>
-            {day.jobs.length === 0 ? (
-              <div className={styles.meta}>Geen klussen.</div>
-            ) : (
-              day.jobs.map((job) => (
-                <div key={job.id} className={styles.meta}>
-                  <strong className={styles.address} style={{ fontSize: 15 }}>
-                    {slotLabel(job.slot_start, job.slot_end)}
-                  </strong>{' '}
-                  {job.place} · {job.service || 'geen dienst'}
-                  {job.kenteken && ` · ${job.kenteken}`}
-                </div>
-              ))
-            )}
+          {/* Grid Cells */}
+          {Array.from({ length: 5 }).map((_, weekIdx) => (
+            <div style={{ display: 'contents' }} key={`w${weekIdx}`}>
+              {/* Week Number Col */}
+              <div className={styles.weekNumber}>{44 + weekIdx}</div>
+              
+              {/* 7 Days per week */}
+              {Array.from({ length: 7 }).map((_, dayIdx) => {
+                const cellIndex = weekIdx * 7 + dayIdx;
+                const realDay = days[cellIndex];
+                
+                if (!realDay) return <div key={`empty-${cellIndex}`} className={styles.dayCell} />;
 
-            <div className={styles.row}>
-              <button
-                className={styles.tap}
-                onClick={() => toggleAway(day)}
-                disabled={busy === day.date}
-              >
-                {busy === day.date
-                  ? '…'
-                  : day.away
-                    ? 'Ik ben wél beschikbaar'
-                    : 'Dag vrij nemen'}
-              </button>
-              {day.isToday && (
-                <Link className={styles.tap} href="/admin/vandaag">
-                  Naar vandaag
-                </Link>
-              )}
+                const dateNum = new Date(realDay.date).getDate();
+                const totalJobs = realDay.jobs.length;
+                const revenue = realDay.jobs.reduce((sum, j) => sum + (j.price || 0), 0);
+                const isBlue = viewMode === 'heatmap' && totalJobs > 0;
+                
+                return (
+                  <div 
+                    key={realDay.date} 
+                    className={`${styles.dayCell} ${isBlue ? styles.dayCellActive : ''}`}
+                    onClick={() => setSelectedDate(realDay.date)}
+                    style={{ cursor: 'pointer', outline: realDay.date === selectedDate ? '2px solid #3b82f6' : 'none' }}
+                  >
+                    <div className={styles.dayHeader}>
+                      <span className={realDay.isToday ? styles.dayHeaderCurrent : ''}>{dateNum}</span>
+                    </div>
+                    
+                    <div className={styles.dayContent}>
+                      {/* List out actual jobs inside the cell */}
+                      <div className={styles.jobList}>
+                        {realDay.jobs.map(job => (
+                          <div key={job.id} className={`${styles.jobChip} ${styles[`jobChip_${job.status}`] || styles.jobChip_default}`} title={`${job.service} - ${job.place}`}>
+                            <span className={styles.jobTime}>{job.slot_start.substring(0, 5)}</span>
+                            <span className={styles.jobDesc}>{job.kenteken || job.place}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {totalJobs > 0 && viewMode === 'heatmap' && (
+                        <div className={styles.dayFooter}>
+                          <div className={styles.statRow}>Verwachte Omzet</div>
+                          <div className={styles.statValue} style={{ fontSize: '1rem' }}>
+                            €{revenue}
+                          </div>
+                        </div>
+                      )}
+                      {realDay.away && (
+                        <div className={styles.statRow} style={{ color: '#ef4444' }}>Vrij/Afwezig</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-
-            {day.away && day.jobs.length > 0 && (
-              <p className={styles.note}>
-                Let op: deze dag staat als vrij, maar er staan nog klussen
-                ingepland. Kantoor moet die verzetten.
-              </p>
-            )}
-          </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }

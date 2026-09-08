@@ -89,7 +89,18 @@ export async function POST(request: Request) {
     quoted_price: quoted,
     notes: text(body.notes, 2000),
     status: 'gepland',
+    lat: null as number | null,
+    lng: null as number | null,
   };
+
+  if (row.postcode && row.city) {
+    const { geocodeAddress } = await import('@/lib/googleMaps');
+    const coords = await geocodeAddress(row.postcode, row.city);
+    if (coords) {
+      row.lat = coords.lat;
+      row.lng = coords.lng;
+    }
+  }
 
   let supabase;
   try {

@@ -63,9 +63,10 @@ export async function POST(
       unit_cost: unitCost,
       product_slug:
         typeof body.product_slug === 'string' ? body.product_slug.slice(0, 200) : null,
+      stock_item_id: typeof body.stock_item_id === 'string' && UUID.test(body.stock_item_id) ? body.stock_item_id : null,
       created_by: user.id,
     })
-    .select('id, description, quantity, unit_cost')
+    .select('id, description, quantity, unit_cost, stock_item_id')
     .single();
 
   if (error) {

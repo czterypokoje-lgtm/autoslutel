@@ -68,6 +68,19 @@ export async function POST(request: Request) {
 
   const supabase = createSupabaseAdminClient();
 
+  const city = asText(body.city, 60);
+  
+  let lat = null;
+  let lng = null;
+  if (postcode && city) {
+    const { geocodeAddress } = await import('@/lib/googleMaps');
+    const coords = await geocodeAddress(postcode, city);
+    if (coords) {
+      lat = coords.lat;
+      lng = coords.lng;
+    }
+  }
+
   const { data: job, error } = await supabase
     .from('jobs')
     .insert({
@@ -78,7 +91,9 @@ export async function POST(request: Request) {
       slot_end: end,
       postcode,
       street: asText(body.street, 120),
-      city: asText(body.city, 60),
+      city,
+      lat,
+      lng,
       customer_name: name,
       customer_phone: phone,
       car_make: car.make,
@@ -103,7 +118,7 @@ export async function POST(request: Request) {
   /* ── who gets offered it, and when ── */
   const [{ data: technicians }, { data: coverage }, { data: subs }, { data: stock }, { data: busy }] =
     await Promise.all([
-      supabase.from('technicians').select('id, name, werkgebied, online, active').eq('active', true),
+      supabase.from('technicians').select('id, name, werkgebied, online, active, base_lat, base_lng').eq('active', true),
       supabase
         .from('technician_coverage')
         .select('technician_id, make, model, scenario, from_year, to_year, excluded'),
@@ -129,6 +144,8 @@ export async function POST(request: Request) {
     id: t.id,
     name: t.name,
     werkgebied: (t.werkgebied ?? []) as string[],
+    base_lat: t.base_lat as number | null,
+    base_lng: t.base_lng as number | null,
     online: Boolean(t.online),
     tier: tierOf.get(t.id) ?? 'starter',
     coverage: rows.filter((r) => r.technician_id === t.id),
@@ -137,10 +154,12 @@ export async function POST(request: Request) {
     acceptRate: null,
   }));
 
-  const plan = planDispatch(candidates, {
+  const plan = await planDispatch(candidates, {
     car,
     scenario,
     postcode,
+    lat,
+    lng,
     articleCode: quote.article?.code ?? null,
   });
 
