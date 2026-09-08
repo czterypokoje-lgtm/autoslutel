@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { waLink, jobBriefing } from '@/lib/whatsapp';
 import styles from '../jobs.module.css';
 import JobEditor, { type JobDetail } from './JobEditor';
+import PaymentPanel, { type PaymentRow } from './PaymentPanel';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +19,7 @@ export default async function JobPage({
 
   const supabase = await createSupabaseServerClient();
 
-  const [{ data: job, error }, { data: technicians }] = await Promise.all([
+  const [{ data: job, error }, { data: technicians }, { data: payments }] = await Promise.all([
     supabase
       .from('jobs')
       .select(
@@ -28,6 +29,16 @@ export default async function JobPage({
       .maybeSingle(),
     // The phone comes along so the briefing can be sent from this page.
     supabase.from('technicians').select('id, name, phone, active').order('name'),
+    /*
+     * What has been taken on this job. `status` is what decides whether the
+     * money arrived — an iDEAL request exists before it is paid, so a row alone
+     * is not revenue.
+     */
+    supabase
+      .from('job_payments')
+      .select('id, amount, method, status, checkout_url, commission_amount, paid_at, received_by')
+      .eq('job_id', id)
+      .order('created_at', { ascending: false }),
   ]);
 
   if (error) {
@@ -79,6 +90,12 @@ export default async function JobPage({
           )}
         </div>
       </div>
+
+      <PaymentPanel
+        jobId={job.id}
+        due={Number(job.final_price ?? job.quoted_price) || 0}
+        payments={(payments ?? []) as PaymentRow[]}
+      />
 
       <JobEditor
         job={job as unknown as JobDetail}
