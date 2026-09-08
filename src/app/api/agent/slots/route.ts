@@ -4,6 +4,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { isScenario, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import { coversCar, type CoverageRow } from '@/lib/capability';
 import { coversPostcode, TIME_SLOTS, slotLabel } from '@/lib/crmJobs';
+import { repairMake, repairModel, repairYear, repairPostcode, repairPhone } from '@/lib/agentInput';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,8 +30,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
   }
 
-  const make = asText(body.make, 40);
-  const postcode = asPostcode(body.postcode);
+  const makeIn = repairMake(body.make);
+  const make = makeIn.value;
+  const postcode = repairPostcode(body.postcode).value;
   if (!make || !postcode) {
     return NextResponse.json({ error: 'Merk of postcode ontbreekt' }, { status: 400 });
   }
@@ -40,7 +42,9 @@ export async function POST(request: Request) {
   const scenario: Scenario =
     stated && isScenario(stated) ? stated : working === false ? 'alle_sleutels_kwijt' : 'bijmaken';
 
-  const car = { make, model: asText(body.model, 40), year: asYear(body.year) };
+  const modelIn = repairModel(body.model, make);
+  const yearIn = repairYear(body.year);
+  const car = { make, model: modelIn.value, year: yearIn.value };
   const supabase = createSupabaseAdminClient();
 
   const [{ data: technicians }, { data: coverage }] = await Promise.all([

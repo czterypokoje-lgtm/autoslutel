@@ -3,6 +3,7 @@ import { checkAgent, asText, asYear, asBool, asPostcode } from '@/lib/agentAuth'
 import { quoteFor } from '@/lib/quote';
 import { isScenario, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { repairMake, repairModel, repairYear, repairPostcode, repairPhone } from '@/lib/agentInput';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +26,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
   }
 
-  const make = asText(body.make, 40);
+  const makeIn = repairMake(body.make);
+  const make = makeIn.value;
   if (!make) return NextResponse.json({ error: 'Merk ontbreekt' }, { status: 400 });
 
   /*
@@ -41,9 +43,11 @@ export async function POST(request: Request) {
         ? 'alle_sleutels_kwijt'
         : 'bijmaken';
 
-  const car = { make, model: asText(body.model, 40), year: asYear(body.year) };
+  const modelIn = repairModel(body.model, make);
+  const yearIn = repairYear(body.year);
+  const car = { make, model: modelIn.value, year: yearIn.value };
   const keyless = asBool(body.keyless);
-  const postcode = asPostcode(body.postcode);
+  const postcode = repairPostcode(body.postcode).value;
   const result = quoteFor(car, scenario, keyless);
 
   /*

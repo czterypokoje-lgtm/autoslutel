@@ -6,6 +6,7 @@ import { quoteFor } from '@/lib/quote';
 import { planDispatch, type Candidate } from '@/lib/dispatch';
 import type { CoverageRow } from '@/lib/capability';
 import type { Tier } from '@/lib/subscription';
+import { repairMake, repairModel, repairYear, repairPostcode, repairPhone } from '@/lib/agentInput';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,15 +36,31 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
   }
 
-  const make = asText(body.make, 40);
-  const postcode = asPostcode(body.postcode);
+  const makeIn = repairMake(body.make);
+  const make = makeIn.value;
+  const postcode = repairPostcode(body.postcode).value;
   const name = asText(body.customer_name, 80);
-  const phone = asText(body.customer_phone, 30);
+  const phoneIn = repairPhone(body.customer_phone);
+  const phone = phoneIn.value;
   const date = asText(body.date, 10);
   const start = asText(body.slot_start, 5);
 
-  if (!make || !postcode || !phone || !date || !start) {
+  if (!make || !postcode || !date || !start) {
     return NextResponse.json({ error: 'Onvolledige boeking' }, { status: 400 });
+  }
+
+  /*
+   * The one field where a mistake cannot be recovered. A wrong car is corrected
+   * on the doorstep; a wrong number means nobody can reach this customer at all,
+   * and the job sits in the agenda until somebody notices. Refused with a
+   * sentence the agent can say, so it asks again instead of booking blind.
+   */
+  if (!phone) {
+    return NextResponse.json({
+      booked: false,
+      reason: 'telefoonnummer_onduidelijk',
+      say: 'Ik heb uw telefoonnummer niet goed verstaan. Kunt u het cijfer voor cijfer herhalen?',
+    });
   }
   if (!DATE.test(date) || !TIME.test(start)) {
     return NextResponse.json({ error: 'Ongeldige datum of tijd' }, { status: 400 });
@@ -54,7 +71,9 @@ export async function POST(request: Request) {
   const scenario: Scenario =
     stated && isScenario(stated) ? stated : working === false ? 'alle_sleutels_kwijt' : 'bijmaken';
 
-  const car = { make, model: asText(body.model, 40), year: asYear(body.year) };
+  const modelIn = repairModel(body.model, make);
+  const yearIn = repairYear(body.year);
+  const car = { make, model: modelIn.value, year: yearIn.value };
   const keyless = asBool(body.keyless);
 
   const quote = quoteFor(car, scenario, keyless);
