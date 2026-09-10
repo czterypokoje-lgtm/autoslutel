@@ -129,11 +129,20 @@
   overflow: auto;
   max-height: calc(100vh - 190px);
   overscroll-behavior: contain;
+  /* A swipe on a phone now lands on one whole technician/day column instead
+     of stopping half-way between two — the "which one am I even looking at"
+     problem a plain scroll leaves you with on a narrow screen. */
+  scroll-snap-type: x proximity;
 }
 
 .gutter {
   background: var(--crm-panel);
   min-width: 52px;
+  /* Pinned through the horizontal scroll too, or swiping past the first
+     column loses the one thing every other column needs — what hour it is. */
+  position: sticky;
+  left: 0;
+  z-index: 7;
 }
 
 .gutterHead {
@@ -157,6 +166,7 @@
 .track {
   position: relative;
   background: var(--crm-panel);
+  scroll-snap-align: start;
 }
 
 .trackHead {
@@ -312,6 +322,20 @@
   .planWrap {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  /* The name and the action row (App, login, activate) no longer fit on one
+     line at this width — .suggestionActions drops to its own full-width row
+     instead of overflowing off the right edge. */
+  .suggestion {
+    flex-wrap: wrap;
+  }
+
+  .suggestionActions {
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 
 .panel {
@@ -415,6 +439,14 @@
   display: block;
   color: var(--crm-muted);
   font-size: 11px;
+}
+
+.suggestionActions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .regionTag {

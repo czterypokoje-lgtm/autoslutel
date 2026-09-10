@@ -132,7 +132,7 @@ export default function MonteursPanel({
                     : 'geen werkgebied'}
                 </span>
               </span>
-              <span style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
+              <span className={styles.suggestionActions}>
                 {/*
                   Opens WhatsApp on the monteur's number. A link rather than an
                   integration: the Business Platform wants a verified Meta

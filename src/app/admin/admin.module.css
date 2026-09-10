@@ -740,13 +740,23 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    transform: translateX(-100%);
+    /*
+     * translate3d + backface-visibility force this onto its own GPU layer
+     * before the slide starts, not mid-transition. Without it, mobile
+     * Safari can composite two paints of the drawer's text on top of each
+     * other while it moves — every label reading doubled and offset, which
+     * is exactly what a plain translateX did here.
+     */
+    transform: translate3d(-100%, 0, 0);
     transition: transform 0.2s ease;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
     overflow-y: auto;
   }
 
-  .navDrawerOpen { transform: translateX(0); }
+  .navDrawerOpen { transform: translate3d(0, 0, 0); }
 
   .backdrop {
     display: block;
