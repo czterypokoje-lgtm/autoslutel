@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { transferStock } from './actions';
 import styles from './BusDashboard.module.css';
 
@@ -18,47 +17,71 @@ export default function BusDashboard({
   otherTechs: any[];
   technicianId: string;
 }) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  /*
+   * A local, mutable copy of the prop. Every +/- used to wait for the full
+   * round trip — the server action, then router.refresh() re-fetching this
+   * whole page's data — before the number on screen moved at all, with one
+   * shared `loading` flag freezing every other item's buttons in the
+   * meantime. This is what lets a tap change the number immediately: update
+   * here first, fire the real transfer in the background, and only correct
+   * it if the server actually refuses.
+   */
+  const [stock, setStock] = useState(myStock);
+  /** Which article is mid-transfer, so only *that* row's buttons wait. */
+  const [pending, setPending] = useState<Set<string>>(new Set());
   /** Why a transfer was refused, in the monteur's own words. */
   const [notice, setNotice] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
   // Stats calculation
-  const totalProducts = myStock.length;
-  const activeProducts = myStock.filter(item => item.quantity > 0).length;
-  
-  const filteredStock = myStock.filter(item => 
+  const totalProducts = stock.length;
+  const activeProducts = stock.filter(item => item.quantity > 0).length;
+
+  const filteredStock = stock.filter(item =>
     item.description.toLowerCase().includes(search.toLowerCase())
   );
 
-  async function handleAddStock(description: string, qty: number) {
-    if (loading) return;
-    setLoading(true);
+  async function adjustStock(description: string, delta: number) {
+    if (pending.has(description)) return;
+    const current = stock.find((i) => i.description === description);
+    if (!current || current.quantity + delta < 0) return;
+
     setNotice(null);
+    setPending((prev) => new Set(prev).add(description));
+    setStock((prev) =>
+      prev.map((i) => (i.description === description ? { ...i, quantity: i.quantity + delta } : i))
+    );
+
     // The action answers with a reason rather than throwing, so the monteur is
     // told which rule stopped them instead of "er ging iets mis".
-    const result = await transferStock(null, technicianId, description, qty);
-    setLoading(false);
+    const result =
+      delta > 0
+        ? await transferStock(null, technicianId, description, delta)
+        : await transferStock(technicianId, null, description, -delta);
+
+    setPending((prev) => {
+      const next = new Set(prev);
+      next.delete(description);
+      return next;
+    });
+
     if ('error' in result) {
+      // The server refused — put the number back and say why, rather than
+      // leave the screen showing a quantity that was never actually moved.
+      setStock((prev) =>
+        prev.map((i) => (i.description === description ? { ...i, quantity: current.quantity } : i))
+      );
       setNotice(result.error);
       return;
     }
-    router.refresh();
+
+    // No router.refresh(): the local state above is already correct, and a
+    // full page re-fetch here would only reintroduce the wait this exists
+    // to remove. A real navigation to this page still picks up server truth.
   }
 
-  async function handleRemoveStock(description: string, qty: number) {
-    if (loading) return;
-    setLoading(true);
-    setNotice(null);
-    const result = await transferStock(technicianId, null, description, qty);
-    setLoading(false);
-    if ('error' in result) {
-      setNotice(result.error);
-      return;
-    }
-    router.refresh();
-  }
+  const handleAddStock = (description: string, qty: number) => adjustStock(description, qty);
+  const handleRemoveStock = (description: string, qty: number) => adjustStock(description, -qty);
 
   return (
     <div className={styles.container}>
@@ -160,18 +183,18 @@ export default function BusDashboard({
                       <button 
                         className={styles.qtyBtn} 
                         onClick={() => handleRemoveStock(item.description, 1)}
-                        disabled={loading || item.quantity === 0}
+                        disabled={pending.has(item.description) || item.quantity === 0}
                       >−</button>
                       <input type="text" className={styles.qtyInput} value={item.quantity} readOnly />
-                      <button 
-                        className={styles.qtyBtn} 
+                      <button
+                        className={styles.qtyBtn}
                         onClick={() => handleAddStock(item.description, 1)}
-                        disabled={loading}
+                        disabled={pending.has(item.description)}
                       >+</button>
-                      <button 
+                      <button
                         className={styles.addBtn}
                         onClick={() => handleAddStock(item.description, 1)}
-                        disabled={loading}
+                        disabled={pending.has(item.description)}
                       >
                         Add
                       </button>
@@ -223,18 +246,18 @@ export default function BusDashboard({
                   <button
                     className={styles.qtyBtn}
                     onClick={() => handleRemoveStock(item.description, 1)}
-                    disabled={loading || item.quantity === 0}
+                    disabled={pending.has(item.description) || item.quantity === 0}
                   >−</button>
                   <input type="text" className={styles.qtyInput} value={item.quantity} readOnly />
                   <button
                     className={styles.qtyBtn}
                     onClick={() => handleAddStock(item.description, 1)}
-                    disabled={loading}
+                    disabled={pending.has(item.description)}
                   >+</button>
                   <button
                     className={styles.addBtn}
                     onClick={() => handleAddStock(item.description, 1)}
-                    disabled={loading}
+                    disabled={pending.has(item.description)}
                   >
                     Add
                   </button>
