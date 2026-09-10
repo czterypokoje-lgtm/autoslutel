@@ -84,6 +84,13 @@ export async function POST(request: Request) {
 
   /* ── read it, if it can be read ── */
   let text = '';
+  /*
+   * Surfaced in the response below (readError), temporarily — the console.warn
+   * this replaced went to a log nobody reading the upload result can see, which
+   * is exactly why "0 regel(s)" on every file gave no way to tell a scanned
+   * PDF apart from an actual extraction failure.
+   */
+  let readError: string | null = null;
   if (extension === 'csv') {
     // A CSV is already the text; the parser reads a row the same way it reads
     // a line, once the separators are spaces.
@@ -96,7 +103,8 @@ export async function POST(request: Request) {
         utils.sheet_to_csv(book.Sheets[name], { FS: '  ' })
       ).join('\n');
     } catch (error) {
-      console.warn('Spreadsheet read failed:', error instanceof Error ? error.message : error);
+      readError = error instanceof Error ? error.message : String(error);
+      console.warn('Spreadsheet read failed:', readError);
     }
   } else if (file.type === 'application/pdf') {
     try {
@@ -109,7 +117,8 @@ export async function POST(request: Request) {
     } catch (error) {
       // A scanned PDF has no text layer. Not a failure: the file is still
       // stored and the lines get typed, same as a photograph.
-      console.warn('PDF text extraction failed:', error instanceof Error ? error.message : error);
+      readError = error instanceof Error ? error.message : String(error);
+      console.warn('PDF text extraction failed:', readError);
     }
   }
 
@@ -203,7 +212,13 @@ export async function POST(request: Request) {
       invoiceNumber: header.invoiceNumber,
       say: lines.length
         ? `${lines.length} regel(s) gelezen. Controleer ze en vink aan wat klopt.`
-        : 'Bestand opgeslagen. Er kon geen tekst uit gelezen worden — voeg de regels handmatig toe.',
+        : readError
+          // Temporary: a thrown extraction error, spelled out, so this can be
+          // diagnosed from the upload result itself instead of a server log
+          // nobody sees. Remove once the pdf-parse/Vercel bundling issue is
+          // confirmed fixed.
+          ? `Bestand opgeslagen. Uitlezen mislukte: ${readError}`
+          : 'Bestand opgeslagen. Er kon geen tekst uit gelezen worden — voeg de regels handmatig toe.',
     },
     { status: 201 }
   );
