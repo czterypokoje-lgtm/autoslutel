@@ -455,3 +455,96 @@
   font-size: 13px;
   line-height: 1.5;
 }
+
+/* ---- Mobile cards ----
+ * The nine-column table on a phone either forces a sideways scroll nobody
+ * discovers or squeezes every column to a sliver. Below the breakpoint this
+ * is the same lead data read top to bottom instead of left to right; the
+ * table hides, this shows. Desktop never sees it.
+ */
+.cards {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .wrap {
+    display: none;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .card {
+    background: var(--crm-panel);
+    border: 1px solid var(--crm-rule);
+    border-radius: var(--crm-r-lg);
+    padding: 12px 14px;
+  }
+
+  .cardStale {
+    border-color: var(--crm-stop);
+    background: var(--crm-stop-bg);
+  }
+
+  .cardHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .cardMain {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+
+  .cardMain .strong {
+    font-size: 16px;
+  }
+
+  .cardGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--crm-rule);
+  }
+
+  .cardGrid > div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cardLabel {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--crm-muted);
+    margin-bottom: 2px;
+  }
+
+  .cardGrid .money,
+  .cardGrid .moneyEmpty {
+    text-align: left;
+  }
+
+  .cardFlags {
+    margin-top: 10px;
+  }
+
+  .card .actions {
+    margin-top: 12px;
+    justify-content: stretch;
+  }
+
+  .card .act {
+    flex: 1;
+    justify-content: center;
+    height: 40px;
+  }
+}

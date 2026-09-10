@@ -28,6 +28,10 @@ export interface VanJob {
   customer_name: string | null;
   customer_phone: string | null;
   signature_url: string | null;
+  car_make: string | null;
+  car_model: string | null;
+  car_year: number | null;
+  keyless: boolean | null;
 }
 
 const STATUS_CLASS: Record<string, string> = {
@@ -247,6 +251,7 @@ function JobCard({
   const mapsUrl = address
     ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`
     : null;
+  const car = [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ');
 
   return (
     <div className={styles.card}>
@@ -262,6 +267,14 @@ function JobCard({
       </div>
 
       <div className={styles.body}>
+        {car && (
+          <div className={styles.car}>
+            {car}
+            {job.keyless !== null && (
+              <span className={styles.keylessBadge}>{job.keyless ? 'Keyless' : 'Sleutel'}</span>
+            )}
+          </div>
+        )}
         <div className={styles.address}>{address || 'Geen adres'}</div>
         <div className={styles.meta}>
           {job.service_type ?? 'geen dienst'}

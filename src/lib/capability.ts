@@ -27,6 +27,8 @@ export interface CoverageRow {
   from_year: number | null;
   to_year: number | null;
   excluded: boolean;
+  /** null = the technician covers both a smart key and a bladed key here. */
+  keyless: boolean | null;
 }
 
 export interface Car {
@@ -65,6 +67,18 @@ function yearMatches(row: CoverageRow, year: number | null | undefined): boolean
   return true;
 }
 
+/**
+ * A bladed key and a smart key are different work — different blanks,
+ * usually a different tool. `null` on the row means the technician declared
+ * both; `null` on the request means the car's key type is not known, and an
+ * unknown must not exclude a row any more than an unstated year does.
+ */
+function keylessMatches(row: CoverageRow, keyless: boolean | null | undefined): boolean {
+  if (row.keyless == null) return true;
+  if (keyless == null) return true;
+  return row.keyless === keyless;
+}
+
 /** A model-specific row outranks a make-wide one, whichever way it points. */
 const specificity = (row: CoverageRow) => (row.model ? 2 : 1);
 
@@ -74,14 +88,20 @@ const specificity = (row: CoverageRow) => (row.model ? 2 : 1);
  * The most specific matching row wins, so "all Volkswagen, except the Touareg"
  * is two rows rather than a list of every Volkswagen that is not a Touareg.
  */
-export function coversCar(rows: CoverageRow[], car: Car, scenario: Scenario): boolean {
+export function coversCar(
+  rows: CoverageRow[],
+  car: Car,
+  scenario: Scenario,
+  keyless?: boolean | null
+): boolean {
   const make = norm(car.make);
   const matches = rows.filter(
     (row) =>
       row.scenario === scenario &&
       norm(row.make) === make &&
       modelMatches(row.model, car.model) &&
-      yearMatches(row, car.year)
+      yearMatches(row, car.year) &&
+      keylessMatches(row, keyless)
   );
 
   if (!matches.length) return false;
@@ -105,9 +125,9 @@ export function byTechnician(rows: CoverageRow[]): Map<string, CoverageRow[]> {
 }
 
 /** The technicians whose declared coverage says yes to this job. */
-export function whoCanDo(rows: CoverageRow[], car: Car, scenario: Scenario): string[] {
+export function whoCanDo(rows: CoverageRow[], car: Car, scenario: Scenario, keyless?: boolean | null): string[] {
   return [...byTechnician(rows)]
-    .filter(([, list]) => coversCar(list, car, scenario))
+    .filter(([, list]) => coversCar(list, car, scenario, keyless))
     .map(([id]) => id);
 }
 

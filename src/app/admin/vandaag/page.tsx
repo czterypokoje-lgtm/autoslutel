@@ -65,7 +65,7 @@ export default async function VandaagPage({
   let query = supabase
     .from('jobs')
     .select(
-      'id, status, scheduled_date, slot_start, slot_end, street, postcode, city, kenteken, service_type, quoted_price, final_price, notes, customer_name, customer_phone, signature_url'
+      'id, status, scheduled_date, slot_start, slot_end, street, postcode, city, kenteken, service_type, quoted_price, final_price, notes, customer_name, customer_phone, signature_url, car_make, car_model, car_year, keyless'
     )
     .eq('scheduled_date', today)
     .order('slot_start');

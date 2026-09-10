@@ -94,10 +94,17 @@
   border: 1px solid;
 }
 
-.badgeInquiry { color: var(--crm-warn); border-color: var(--crm-warn); background: var(--crm-warn-bg); }
-.badgeConfirmed { color: var(--crm-ok); border-color: var(--crm-ok); background: var(--crm-ok-bg); }
-.badgeClosed { color: var(--crm-steel); border-color: var(--crm-steel); background: var(--crm-steel-bg); }
-.badgeCancelled { color: var(--crm-stop); border-color: var(--crm-stop); background: var(--crm-stop-bg); }
+/*
+ * Named after the real job statuses (gepland/onderweg/bezig/afgerond/
+ * geannuleerd) rather than a generic inquiry/confirmed/closed set that never
+ * matched them — every status badge fell back to the same orange regardless
+ * of what the job actually was.
+ */
+.badge_gepland { color: var(--crm-steel); border-color: var(--crm-steel); background: var(--crm-steel-bg); }
+.badge_onderweg,
+.badge_bezig { color: var(--crm-warn); border-color: var(--crm-warn); background: var(--crm-warn-bg); }
+.badge_afgerond { color: var(--crm-ok); border-color: var(--crm-ok); background: var(--crm-ok-bg); }
+.badge_geannuleerd { color: var(--crm-muted); border-color: var(--crm-rule2); background: var(--crm-sunk); }
 
 .main {
   flex: 1;
@@ -292,5 +299,33 @@
 .dayFooter {
   margin-top: 0.5rem;
   padding-top: 0.25rem;
-  border-top: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid var(--crm-rule);
+}
+
+/*
+ * Phone width. The 40px-plus-seven-columns month grid has no room to shrink
+ * into — before this, a phone either forced the page to scroll sideways to
+ * reach it, or squeezed it down to unreadable slivers, while the 280px
+ * sidebar took most of the screen either way. Below this width the sidebar
+ * *is* the app: a month picker plus the selected day's jobs, full width,
+ * which is the whole reason a technician opens this page from their van.
+ * The dense month grid is a planning view for a desk, not a phone.
+ */
+@media (max-width: 860px) {
+  .calendarContainer {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    box-sizing: border-box;
+    border-right: none;
+    border-bottom: 1px solid var(--crm-rule);
+    padding: 1rem;
+  }
+
+  .main {
+    display: none;
+  }
 }

@@ -18,11 +18,11 @@ export const dynamic = 'force-dynamic';
 export default async function NewJobPage({
   searchParams,
 }: {
-  searchParams: Promise<{ lead?: string; order?: string; datum?: string }>;
+  searchParams: Promise<{ lead?: string; order?: string; datum?: string; monteur?: string; slot?: string }>;
 }) {
   await requireOfficeUser('/admin/jobs/nieuw');
 
-  const { lead: leadId, order: orderId, datum } = await searchParams;
+  const { lead: leadId, order: orderId, datum, monteur, slot } = await searchParams;
   const supabase = await createSupabaseServerClient();
 
   let lead: PlanLead | null = null;
@@ -182,7 +182,14 @@ export default async function NewJobPage({
         </p>
       )}
 
-      <PlanForm lead={lead} order={order} date={date} suggestions={suggestions} />
+      <PlanForm
+        lead={lead}
+        order={order}
+        date={date}
+        suggestions={suggestions}
+        initialSlot={slot && /^\d{2}:\d{2}$/.test(slot) ? slot : undefined}
+        initialTechnicianId={monteur}
+      />
     </>
   );
 }

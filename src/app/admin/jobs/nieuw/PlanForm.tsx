@@ -34,26 +34,37 @@ export default function PlanForm({
   order,
   date,
   suggestions,
+  initialSlot,
+  initialTechnicianId,
 }: {
   lead: PlanLead | null;
   order: { id: string; order_number: string; total_inc: number } | null;
   date: string;
   suggestions: SuggestionView[];
+  /** Set when this form opened from a click on an empty hour in the calendar. */
+  initialSlot?: string;
+  initialTechnicianId?: string;
 }) {
   const router = useRouter();
 
   const [scheduledDate, setScheduledDate] = useState(date);
   // 10:00–12:00 is the first slot of a normal working day; night windows exist
-  // but should never be the default.
-  const [slot, setSlot] = useState('10:00');
+  // but should never be the default. A click on the calendar overrides both.
+  const [slot, setSlot] = useState(initialSlot ?? '10:00');
   const [technicianId, setTechnicianId] = useState<string>(
-    suggestions[0]?.id ?? ''
+    initialTechnicianId ?? suggestions[0]?.id ?? ''
   );
   const [street, setStreet] = useState('');
   const [city, setCity] = useState(lead?.location ?? '');
   const [postcode, setPostcode] = useState(lead?.postcode ?? '');
   const [kenteken, setKenteken] = useState(lead?.kenteken ?? '');
   const [service, setService] = useState(lead?.service ?? '');
+  // A lead that came through the site already says which car it is; a walk-in
+  // planned by hand starts blank and the office types it in.
+  const [carMake, setCarMake] = useState(lead?.brand ?? '');
+  const [carModel, setCarModel] = useState(lead?.model ?? '');
+  const [carYear, setCarYear] = useState(lead?.year ?? '');
+  const [keylessChoice, setKeylessChoice] = useState<'' | 'true' | 'false'>('');
   // A webshop order is already paid, so the agreed price is known exactly.
   const [quoted, setQuoted] = useState(order ? String(order.total_inc) : '');
   const [notes, setNotes] = useState('');
@@ -85,6 +96,10 @@ export default function PlanForm({
         postcode,
         city,
         kenteken,
+        car_make: carMake || null,
+        car_model: carModel || null,
+        car_year: carYear || null,
+        keyless: keylessChoice === '' ? null : keylessChoice === 'true',
         service_type: service,
         quoted_price: quoted,
         notes,
@@ -212,6 +227,62 @@ export default function PlanForm({
               value={kenteken}
               onChange={(e) => setKenteken(e.target.value)}
             />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="merk">
+              Automerk
+            </label>
+            <input
+              id="merk"
+              className={styles.control}
+              placeholder="bijv. Toyota"
+              value={carMake}
+              onChange={(e) => setCarMake(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="model">
+              Model
+            </label>
+            <input
+              id="model"
+              className={styles.control}
+              placeholder="bijv. Aygo"
+              value={carModel}
+              onChange={(e) => setCarModel(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="bouwjaar">
+              Bouwjaar
+            </label>
+            <input
+              id="bouwjaar"
+              className={styles.control}
+              inputMode="numeric"
+              placeholder="bijv. 2018"
+              value={carYear}
+              onChange={(e) => setCarYear(e.target.value.replace(/\D/g, '').slice(0, 4))}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="keyless">
+              Sleuteltype
+            </label>
+            <select
+              id="keyless"
+              className={styles.control}
+              value={keylessChoice}
+              onChange={(e) => setKeylessChoice(e.target.value as '' | 'true' | 'false')}
+            >
+              <option value="">Onbekend</option>
+              <option value="false">Sleutel (contactslot)</option>
+              <option value="true">Keyless (start-knop)</option>
+            </select>
           </div>
         </div>
 

@@ -123,6 +123,21 @@
   border: 2px solid var(--crm-bg);
 }
 
+/*
+ * On desktop this is a plain wrapper standing between .sidebar and
+ * .navWrapper — invisible, but it has to pass .sidebar's flex column down
+ * to .navWrapper's own flex:1, or the scroll area below stops sizing itself
+ * against the remaining height and just grows with its content instead.
+ * The mobile media query below replaces every one of these rules with the
+ * fixed-position drawer.
+ */
+.navDrawer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
 .navWrapper {
   flex: 1;
   overflow-y: auto;
@@ -668,6 +683,12 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 /* ── narrow ──────────────────────────────────────────────────────────── */
 
+.mobileMenuBtn,
+.backdrop,
+.drawerClose {
+  display: none;
+}
+
 @media (max-width: 860px) {
   .shell { flex-direction: column; }
 
@@ -677,43 +698,79 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     position: sticky;
     top: 0;
     z-index: 20;
-    padding: 10px 12px;
+    padding: 0;
     border-right: none;
     border-bottom: 1px solid var(--crm-rule);
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
     background: var(--crm-bg);
   }
 
-  .brandRow { margin-bottom: 0; padding: 0; flex: 1; }
+  .brandRow { margin-bottom: 0; padding: 10px 12px; }
 
-  .navWrapper {
-    flex-basis: 100%;
-    order: 3;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  .nav { flex-direction: row; gap: 4px; padding-bottom: 2px; }
-  .groupLabel { display: none; }
-  .navLink { white-space: nowrap; padding: 7px 11px; }
-  .navCount { display: none; }
-
-  .sidebarBottom {
-    margin-top: 0;
-    padding-top: 0;
-    border-top: none;
-    flex-direction: row;
+  .mobileMenuBtn {
+    display: flex;
     align-items: center;
-    margin-left: auto;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    color: var(--crm-text);
+    border-radius: var(--crm-r-sm);
+    cursor: pointer;
   }
 
-  .who { display: none; }
-  .version { display: none; }
-  .signout { width: auto; }
-  .signout span { display: none; }
+  .mobileMenuBtn:hover { background: var(--crm-sunk); color: var(--crm-ink); }
+
+  /*
+   * Everything desktop shows permanently — every group, every label, the
+   * webshop link, sign-out, the account line — unchanged inside here. Only
+   * *where* it sits changes: off-screen behind a slide-in drawer instead of
+   * a strip nobody could read.
+   */
+  .navDrawer {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 60;
+    width: min(84vw, 300px);
+    height: 100vh;
+    background: var(--crm-sidebar);
+    border-right: 1px solid var(--crm-rule);
+    padding: 14px 10px 12px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
+  }
+
+  .navDrawerOpen { transform: translateX(0); }
+
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .drawerClose {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 8px;
+    right: -40px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--crm-panel);
+    color: var(--crm-ink);
+    cursor: pointer;
+  }
 
   .main { padding: 18px 14px 48px; }
   .pageActions { margin-left: 0; width: 100%; }

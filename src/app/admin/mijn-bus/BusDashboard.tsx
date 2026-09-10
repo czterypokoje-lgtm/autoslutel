@@ -92,15 +92,16 @@ export default function BusDashboard({
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--crm-muted)" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </div>
         </div>
 
+        <div className={styles.tableWrap}>
         <table className={styles.table}>
           <thead>
             <tr>
               <th style={{ width: '40px', paddingLeft: '1.5rem' }}>
-                <input type="checkbox" style={{ borderRadius: '4px', border: '1px solid #d1d5db' }} />
+                <input type="checkbox" style={{ borderRadius: '4px', border: '1px solid var(--crm-rule2)' }} />
               </th>
               <th>
                 <div className={styles.thContent}>
@@ -218,6 +219,7 @@ export default function BusDashboard({
             )}
           </tbody>
         </table>
+        </div>
 
         {/*
           The footer used to carry pages 1 2 3 4 … that were not wired to

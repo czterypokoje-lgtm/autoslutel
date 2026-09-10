@@ -44,6 +44,8 @@ export interface DispatchRequest {
   lng: number | null;
   /** The article the quote picked, when it picked one. */
   articleCode?: string | null;
+  /** null/unknown does not exclude — see capability.ts's keylessMatches. */
+  keyless?: boolean | null;
 }
 
 export interface Rejection {
@@ -171,7 +173,7 @@ export async function planDispatch(candidates: Candidate[], request: DispatchReq
   const passed: Candidate[] = [];
 
   for (const candidate of candidates) {
-    if (!coversCar(candidate.coverage, request.car, request.scenario)) {
+    if (!coversCar(candidate.coverage, request.car, request.scenario, request.keyless)) {
       rejected.push({ id: candidate.id, name: candidate.name, gate: 'kan_auto_niet' });
       continue;
     }

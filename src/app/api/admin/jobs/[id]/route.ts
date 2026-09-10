@@ -32,6 +32,13 @@ function text(value: unknown, max: number): string | null {
   return trimmed ? trimmed.slice(0, max) : null;
 }
 
+function year(value: unknown): number | null | 'invalid' {
+  if (value === null || value === undefined || value === '') return null;
+  const n = Number(value);
+  if (!Number.isInteger(n) || n < 1950 || n > new Date().getFullYear() + 1) return 'invalid';
+  return n;
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -89,6 +96,22 @@ export async function PATCH(
 
   for (const field of ['notes', 'street', 'city'] as const) {
     if (field in body) patch[field] = text(body[field], 2000);
+  }
+
+  for (const field of ['car_make', 'car_model'] as const) {
+    if (field in body) patch[field] = text(body[field], 60);
+  }
+
+  if ('car_year' in body) {
+    const value = year(body.car_year);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bouwjaar' }, { status: 400 });
+    }
+    patch.car_year = value;
+  }
+
+  if ('keyless' in body) {
+    patch.keyless = typeof body.keyless === 'boolean' ? body.keyless : null;
   }
 
   if ('final_price' in body) {

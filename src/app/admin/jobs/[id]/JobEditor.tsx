@@ -16,6 +16,10 @@ export interface JobDetail {
   postcode: string | null;
   city: string | null;
   kenteken: string | null;
+  car_make: string | null;
+  car_model: string | null;
+  car_year: number | null;
+  keyless: boolean | null;
   service_type: string | null;
   quoted_price: number | string | null;
   final_price: number | string | null;
@@ -42,6 +46,12 @@ export default function JobEditor({
     job.final_price === null ? '' : String(job.final_price)
   );
   const [notes, setNotes] = useState(job.notes ?? '');
+  const [carMake, setCarMake] = useState(job.car_make ?? '');
+  const [carModel, setCarModel] = useState(job.car_model ?? '');
+  const [carYear, setCarYear] = useState(job.car_year === null ? '' : String(job.car_year));
+  const [keylessChoice, setKeylessChoice] = useState<'' | 'true' | 'false'>(
+    job.keyless === null ? '' : job.keyless ? 'true' : 'false'
+  );
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -64,6 +74,10 @@ export default function JobEditor({
         slot_end: window?.end ?? trimTime(job.slot_end),
         final_price: finalPrice.trim() === '' ? null : finalPrice.trim(),
         notes,
+        car_make: carMake.trim() || null,
+        car_model: carModel.trim() || null,
+        car_year: carYear.trim() || null,
+        keyless: keylessChoice === '' ? null : keylessChoice === 'true',
       }),
     }).catch(() => null);
 
@@ -149,6 +163,54 @@ export default function JobEditor({
               value={finalPrice}
               onChange={(e) => setFinalPrice(e.target.value)}
             />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="cm">Automerk</label>
+            <input
+              id="cm"
+              className={styles.control}
+              placeholder="bijv. Toyota"
+              value={carMake}
+              onChange={(e) => setCarMake(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="cmo">Model</label>
+            <input
+              id="cmo"
+              className={styles.control}
+              placeholder="bijv. Aygo"
+              value={carModel}
+              onChange={(e) => setCarModel(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="cy">Bouwjaar</label>
+            <input
+              id="cy"
+              className={styles.control}
+              inputMode="numeric"
+              placeholder="bijv. 2018"
+              value={carYear}
+              onChange={(e) => setCarYear(e.target.value.replace(/\D/g, '').slice(0, 4))}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="ck">Sleuteltype</label>
+            <select
+              id="ck"
+              className={styles.control}
+              value={keylessChoice}
+              onChange={(e) => setKeylessChoice(e.target.value as '' | 'true' | 'false')}
+            >
+              <option value="">Onbekend</option>
+              <option value="false">Sleutel (contactslot)</option>
+              <option value="true">Keyless (start-knop)</option>
+            </select>
           </div>
         </div>
 

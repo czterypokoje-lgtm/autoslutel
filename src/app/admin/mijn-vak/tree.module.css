@@ -1,0 +1,217 @@
+.errorNote {
+  color: var(--crm-stop);
+  font-size: 13px;
+  margin: 0 0 var(--sp-3);
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+
+.searchIcon {
+  color: var(--crm-muted);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  max-width: 380px;
+  padding: 9px 12px;
+  border-radius: var(--crm-r-sm);
+  border: 1px solid var(--crm-rule2);
+  background: var(--crm-raised);
+  color: var(--crm-ink);
+  font-size: 14px;
+}
+
+.searchInput:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+}
+
+.summary {
+  margin-left: auto;
+  color: var(--crm-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.legend {
+  display: flex;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--crm-muted);
+  font-size: 12px;
+}
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.empty {
+  color: var(--crm-muted);
+  font-size: 14px;
+  padding: var(--sp-4);
+  text-align: center;
+}
+
+.makeCard {
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  overflow: hidden;
+}
+
+.makeHead {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--crm-ink);
+  font: inherit;
+  text-align: left;
+}
+
+.makeHead:hover {
+  background: var(--crm-sunk);
+}
+
+.makeName {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.makeCount {
+  margin-left: auto;
+  color: var(--crm-muted);
+  font-size: 12px;
+}
+
+.makeQuick {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-4) var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.quickLabel {
+  color: var(--crm-muted);
+  font-size: 12px;
+  margin-right: 2px;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--crm-rule2);
+  background: var(--crm-raised);
+  color: var(--crm-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  border-color: var(--crm-accent);
+}
+
+.toggle:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.toggleOn {
+  background: var(--crm-accent-soft);
+  border-color: var(--crm-accent);
+  color: var(--crm-accent-hover);
+}
+
+.modelList {
+  border-top: 1px solid var(--crm-rule);
+}
+
+.modelRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 7px var(--sp-4);
+  border-top: 1px solid var(--crm-rule);
+}
+
+.modelRow:first-child {
+  border-top: none;
+}
+
+.modelName {
+  font-size: 13px;
+  color: var(--crm-ink);
+}
+
+.modelYears {
+  font-size: 12px;
+  color: var(--crm-muted);
+  white-space: nowrap;
+}
+
+.modelToggles {
+  display: flex;
+  gap: 6px;
+}
+
+.toggleSm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--crm-r-sm);
+  border: 1px solid var(--crm-rule2);
+  background: var(--crm-raised);
+  color: var(--crm-muted);
+  cursor: pointer;
+}
+
+.toggleSm:hover {
+  border-color: var(--crm-accent);
+}
+
+.toggleSm:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.toggleSm.toggleOn {
+  background: var(--crm-accent-soft);
+  border-color: var(--crm-accent);
+  color: var(--crm-accent-hover);
+}
+
+@media (max-width: 640px) {
+  .modelRow {
+    grid-template-columns: 1fr auto;
+  }
+
+  .modelYears {
+    display: none;
+  }
+}

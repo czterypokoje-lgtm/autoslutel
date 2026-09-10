@@ -1,8 +1,7 @@
-import Link from 'next/link';
-import { Settings2 } from 'lucide-react';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from './netwerk.module.css';
+import NetworkSidebar from './NetworkSidebar';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,68 +53,7 @@ export default async function NetwerkLayout({
 
   return (
     <div className={styles.layout}>
-      <div className={styles.serversSidebar}>
-        {all.map((server) => (
-          <Link
-            key={server.id}
-            href={`/admin/netwerk?server=${server.id}`}
-            className={`${styles.serverBubble} ${active?.id === server.id ? styles.serverBubbleActive : ''}`}
-            title={server.name}
-          >
-            {server.name.substring(0, 2).toUpperCase()}
-          </Link>
-        ))}
-
-        {isOffice && (
-          <Link
-            href="/admin/netwerk/beheer"
-            className={styles.serverBubble}
-            title="Servers en kanalen beheren"
-          >
-            +
-          </Link>
-        )}
-      </div>
-
-      <div className={styles.channelsSidebar}>
-        <div className={styles.serverHeader}>
-          {active?.name ?? 'Netwerk'}
-          {isOffice && (
-            <Link href="/admin/netwerk/beheer" title="Beheren" className={styles.headerAction}>
-              <Settings2 size={15} strokeWidth={1.9} />
-            </Link>
-          )}
-        </div>
-
-        <div className={styles.channelList}>
-          {groups.map((group) => {
-            const inGroup = mine.filter((channel) => channel.type === group.type);
-            if (!inGroup.length) return null;
-            return (
-              <div className={styles.channelGroup} key={group.type}>
-                <div className={styles.groupTitle}>{group.title}</div>
-                {inGroup.map((channel) => (
-                  <Link
-                    key={channel.id}
-                    href={`/admin/netwerk/${channel.id}`}
-                    className={styles.channelLink}
-                  >
-                    <span className={styles.hash}>{group.prefix}</span> {channel.name}
-                  </Link>
-                ))}
-              </div>
-            );
-          })}
-
-          {mine.length === 0 && (
-            <p className={styles.groupTitle} style={{ padding: 'var(--sp-4)' }}>
-              Nog geen kanalen op deze server.
-              {isOffice && ' Maak er een via het tandwiel hierboven.'}
-            </p>
-          )}
-        </div>
-      </div>
-
+      <NetworkSidebar servers={all} active={active} isOffice={isOffice} groups={groups} channels={mine} />
       <div className={styles.main}>{children}</div>
     </div>
   );

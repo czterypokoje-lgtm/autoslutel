@@ -140,7 +140,7 @@ export async function POST(request: Request) {
       supabase.from('technicians').select('id, name, werkgebied, online, active, base_lat, base_lng').eq('active', true),
       supabase
         .from('technician_coverage')
-        .select('technician_id, make, model, scenario, from_year, to_year, excluded'),
+        .select('technician_id, make, model, scenario, from_year, to_year, excluded, keyless'),
       supabase.from('technician_subscription').select('technician_id, tier'),
       supabase.from('stock_items').select('technician_id, product_slug').gt('quantity', 0),
       supabase
@@ -180,6 +180,7 @@ export async function POST(request: Request) {
     lat,
     lng,
     articleCode: quote.article?.code ?? null,
+    keyless,
   });
 
   if (!plan.empty) {

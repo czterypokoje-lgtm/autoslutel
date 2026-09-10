@@ -27,6 +27,17 @@ function price(value: unknown): number | null | 'invalid' {
   return Math.round(n * 100) / 100;
 }
 
+function year(value: unknown): number | null | 'invalid' {
+  if (value === null || value === undefined || value === '') return null;
+  const n = Number(value);
+  if (!Number.isInteger(n) || n < 1950 || n > new Date().getFullYear() + 1) return 'invalid';
+  return n;
+}
+
+function bool(value: unknown): boolean | null {
+  return typeof value === 'boolean' ? value : null;
+}
+
 export async function POST(request: Request) {
   const { response } = await requireOfficeUserApi();
   if (response) return response;
@@ -72,6 +83,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Ongeldig bedrag' }, { status: 400 });
   }
 
+  const carYear = year(body.car_year);
+  if (carYear === 'invalid') {
+    return NextResponse.json({ error: 'Ongeldig bouwjaar' }, { status: 400 });
+  }
+
   const row = {
     lead_id: leadId,
     order_id: orderId,
@@ -83,6 +99,10 @@ export async function POST(request: Request) {
     postcode: text(body.postcode, 12)?.toUpperCase().replace(/\s+/g, '') ?? null,
     city: text(body.city, 120),
     kenteken: text(body.kenteken, 12)?.toUpperCase().replace(/\s+/g, '') ?? null,
+    car_make: text(body.car_make, 60),
+    car_model: text(body.car_model, 60),
+    car_year: carYear,
+    keyless: bool(body.keyless),
     customer_name: text(body.customer_name, 120),
     customer_phone: text(body.customer_phone, 40),
     service_type: text(body.service_type, 120),

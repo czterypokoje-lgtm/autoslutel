@@ -15,6 +15,7 @@ export interface CoverageEntry {
   from_year: number | null;
   to_year: number | null;
   excluded: boolean;
+  keyless: boolean | null;
 }
 
 export interface ToolEntry {
@@ -92,7 +93,7 @@ export default function CoveragePanel({
           from_year: fromYear ? Number(fromYear) : null,
           excluded,
         },
-        { onConflict: 'technician_id,make,model,scenario' }
+        { onConflict: 'technician_id,make,model,scenario,keyless' }
       )
     );
 

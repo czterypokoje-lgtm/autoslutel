@@ -107,7 +107,7 @@ export default function MyAgenda({ days, name, icalToken, currentMonth }: { days
           </div>
           
           {!activeDay ? (
-            <div style={{ fontSize: '0.875rem', color: '#64748b' }}>Klik op een dag in de kalender.</div>
+            <div style={{ fontSize: '0.875rem', color: 'var(--crm-muted)' }}>Klik op een dag in de kalender.</div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%', overflowY: 'auto', paddingRight: '0.5rem' }}>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -126,25 +126,25 @@ export default function MyAgenda({ days, name, icalToken, currentMonth }: { days
               </div>
 
               {activeDay.away && (
-                <div style={{ color: '#ef4444', fontSize: '0.875rem', fontWeight: 500 }}>🔴 Niet beschikbaar ({activeDay.reason || 'Vrij'})</div>
+                <div style={{ color: 'var(--crm-stop)', fontSize: '0.875rem', fontWeight: 500 }}>🔴 Niet beschikbaar ({activeDay.reason || 'Vrij'})</div>
               )}
               
               {activeDay.jobs.length === 0 ? (
-                <div style={{ fontSize: '0.875rem', color: '#64748b' }}>Geen klussen ingepland.</div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--crm-muted)' }}>Geen klussen ingepland.</div>
               ) : (
                 activeDay.jobs.map(job => (
-                  <div key={job.id} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '0.75rem', borderRadius: '8px' }}>
+                  <div key={job.id} style={{ background: 'var(--crm-sunk)', border: '1px solid var(--crm-rule2)', padding: '0.75rem', borderRadius: '8px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                       <strong style={{ fontSize: '0.875rem' }}>{job.slot_start.substring(0, 5)} - {job.slot_end.substring(0, 5)}</strong>
-                      <span className={`${styles.badge} ${styles[`badge_${job.status}`] || styles.badgeInquiry}`}>{job.status}</span>
+                      <span className={`${styles.badge} ${styles[`badge_${job.status}`] || styles.badge_gepland}`}>{job.status}</span>
                     </div>
-                    <div style={{ fontSize: '0.875rem', color: '#475569', marginBottom: '0.25rem' }}>
+                    <div style={{ fontSize: '0.875rem', color: 'var(--crm-text)', marginBottom: '0.25rem' }}>
                       📍 {job.place}
                     </div>
-                    <div style={{ fontSize: '0.875rem', color: '#475569', marginBottom: '0.25rem' }}>
+                    <div style={{ fontSize: '0.875rem', color: 'var(--crm-text)', marginBottom: '0.25rem' }}>
                       🔧 {job.service || 'Geen dienst'}
                     </div>
-                    <div style={{ fontSize: '0.875rem', color: '#475569' }}>
+                    <div style={{ fontSize: '0.875rem', color: 'var(--crm-text)' }}>
                       🚗 {job.kenteken || 'Onbekend'}
                     </div>
                   </div>
@@ -217,7 +217,7 @@ export default function MyAgenda({ days, name, icalToken, currentMonth }: { days
                     key={realDay.date} 
                     className={`${styles.dayCell} ${isBlue ? styles.dayCellActive : ''}`}
                     onClick={() => setSelectedDate(realDay.date)}
-                    style={{ cursor: 'pointer', outline: realDay.date === selectedDate ? '2px solid #3b82f6' : 'none' }}
+                    style={{ cursor: 'pointer', outline: realDay.date === selectedDate ? '2px solid var(--crm-steel)' : 'none' }}
                   >
                     <div className={styles.dayHeader}>
                       <span className={realDay.isToday ? styles.dayHeaderCurrent : ''}>{dateNum}</span>
@@ -243,7 +243,7 @@ export default function MyAgenda({ days, name, icalToken, currentMonth }: { days
                         </div>
                       )}
                       {realDay.away && (
-                        <div className={styles.statRow} style={{ color: '#ef4444' }}>Vrij/Afwezig</div>
+                        <div className={styles.statRow} style={{ color: 'var(--crm-stop)' }}>Vrij/Afwezig</div>
                       )}
                     </div>
                   </div>

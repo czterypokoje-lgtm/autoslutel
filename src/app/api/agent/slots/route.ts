@@ -42,6 +42,7 @@ export async function POST(request: Request) {
   const scenario: Scenario =
     stated && isScenario(stated) ? stated : working === false ? 'alle_sleutels_kwijt' : 'bijmaken';
 
+  const keyless = asBool(body.keyless);
   const modelIn = repairModel(body.model, make);
   const yearIn = repairYear(body.year);
   const car = { make, model: modelIn.value, year: yearIn.value };
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
 
   const [{ data: technicians }, { data: coverage }] = await Promise.all([
     supabase.from('technicians').select('id, name, werkgebied, active').eq('active', true),
-    supabase.from('technician_coverage').select('technician_id, make, model, scenario, from_year, to_year, excluded'),
+    supabase.from('technician_coverage').select('technician_id, make, model, scenario, from_year, to_year, excluded, keyless'),
   ]);
 
   const rows = (coverage ?? []) as CoverageRow[];
@@ -57,7 +58,7 @@ export async function POST(request: Request) {
   /* Who could take this at all: the car and the area, before any calendar. */
   const able = (technicians ?? []).filter((t) => {
     const mine = rows.filter((r) => r.technician_id === t.id);
-    if (!coversCar(mine, car, scenario)) return false;
+    if (!coversCar(mine, car, scenario, keyless)) return false;
     const area = (t.werkgebied ?? []) as string[];
     return !area.length || area.some((range) => coversPostcode(range, postcode));
   });

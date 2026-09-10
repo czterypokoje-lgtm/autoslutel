@@ -172,6 +172,7 @@ export default function LeadsTable({
   }
 
   return (
+    <>
     <div className={styles.wrap} ref={containerRef}>
       <table className={styles.table}>
         <thead>
@@ -335,6 +336,113 @@ export default function LeadsTable({
         </tbody>
       </table>
     </div>
+
+    {/*
+      * The desktop table has nine columns because a planner scans them all
+      * at once; nine columns is also exactly what does not fit a phone.
+      * Rather than let the table squeeze into illegible slivers or hide the
+      * rest behind an unmarked horizontal scroll, this is the same data as
+      * a stack of cards — everything a lead needs read top to bottom
+      * instead of left to right. Desktop never sees this; mobile never sees
+      * the table (leads.module.css). Inline editing (status, sale price)
+      * stays a desktop action — Bel/App/Plan in cover what a phone is for.
+      */}
+    <div className={styles.cards}>
+      {view.map((lead) => {
+        const isLate = lead.status === 'new' && lead.created_at < staleBefore;
+        const repeat = lead.phone_e164 ? repeats[lead.phone_e164] : undefined;
+        const price =
+          lead.sale_price === null || lead.sale_price === '' ? null : Number(lead.sale_price);
+        const whatsapp = waLink(lead.phone_e164 ?? lead.phone, '');
+
+        return (
+          <div key={lead.id} className={`${styles.card} ${isLate ? styles.cardStale : ''}`}>
+            <div className={styles.cardHead}>
+              <div>
+                <span className={styles.time}>{TIME.format(new Date(lead.created_at))}</span>
+                <span className={styles.dateSmall}>{DATE.format(new Date(lead.created_at))}</span>
+              </div>
+              <span className={`${styles.badge} ${STATUS_CLASS[lead.status] ?? styles.stNew}`}>
+                {STATUS_LABELS[lead.status] ?? lead.status}
+              </span>
+            </div>
+
+            <div className={styles.cardMain}>
+              <span className={styles.strong}>{prettyPhone(lead.phone, lead.phone_e164)}</span>
+              <span className={styles.sub}>
+                {lead.name ?? 'geen naam'}
+                {lead.consent_marketing === false && (
+                  <span className={styles.consentNo}> · geen marketing</span>
+                )}
+              </span>
+            </div>
+
+            <div className={styles.cardGrid}>
+              <div>
+                <span className={styles.cardLabel}>Plaats</span>
+                <span className={styles.strong}>{lead.postcode ?? '—'}</span>
+                <span className={styles.sub}>{lead.location ?? ''}</span>
+              </div>
+              <div>
+                <span className={styles.cardLabel}>Voertuig</span>
+                <span className={styles.strong}>
+                  {[lead.brand, lead.model].filter(Boolean).join(' ') || '—'}
+                </span>
+                <span className={styles.sub}>
+                  {lead.kenteken && <span className={styles.plate}>{lead.kenteken}</span>}
+                  {lead.year ? ` ${lead.year}` : ''}
+                </span>
+              </div>
+              <div>
+                <span className={styles.cardLabel}>Dienst</span>
+                <span className={styles.strong}>{lead.service ?? '—'}</span>
+              </div>
+              <div>
+                <span className={styles.cardLabel}>Bron</span>
+                <span className={styles.strong}>{lead.source ?? 'unknown'}</span>
+              </div>
+              <div>
+                <span className={styles.cardLabel}>Waarde</span>
+                <span className={price === null ? styles.moneyEmpty : styles.money}>
+                  {price === null ? '—' : MONEY.format(price)}
+                </span>
+              </div>
+            </div>
+
+            {(isLate || repeat) && (
+              <div className={styles.cardFlags}>
+                {isLate && <span className={styles.flag}>te laat</span>}
+                {repeat && (
+                  <span
+                    className={styles.repeat}
+                    title={`Dit nummer belde ${repeat.count} keer; vorige aanvraag ${daysAgo(repeat.last)} dagen geleden.`}
+                  >
+                    {repeat.count}× eerder
+                  </span>
+                )}
+              </div>
+            )}
+
+            <div className={styles.actions}>
+              {lead.phone_e164 && (
+                <a className={styles.act} href={`tel:${lead.phone_e164}`}>
+                  Bel
+                </a>
+              )}
+              {whatsapp && (
+                <a className={styles.act} href={whatsapp} target="_blank" rel="noopener noreferrer">
+                  App
+                </a>
+              )}
+              <Link className={`${styles.act} ${styles.actPrimary}`} href={`/admin/jobs/nieuw?lead=${lead.id}`}>
+                Plan in
+              </Link>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+    </>
   );
 }
 

@@ -90,31 +90,83 @@
   padding: 0 4px;
 }
 
-/* ---- Day view: a column per technician ---- */
+/* ---- Shared: the coloured dot, the column name, the small meta number ---- */
 
-.board {
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  flex: none;
+}
+
+.colName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--crm-ink);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.colMeta {
+  flex: none;
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Day and week view, hour grid: a real calendar, not a stacked list ---- */
+
+.hourGrid {
   display: grid;
   gap: 1px;
   background: var(--crm-rule);
   border: 1px solid var(--crm-rule);
   border-radius: var(--crm-r-lg);
-  /* Same reason as .wrap in leads.module.css: the sticky column headers need a
-     scrollport with a height, or they drift over the cards. */
   overflow: auto;
   max-height: calc(100vh - 190px);
   overscroll-behavior: contain;
 }
 
-.col {
+.gutter {
   background: var(--crm-panel);
-  min-width: 200px;
+  min-width: 52px;
 }
 
-.colHead {
+.gutterHead {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  height: 44px;
+  background: var(--crm-sunk);
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.gutterHour {
+  box-sizing: border-box;
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 3px 8px 0 0;
+}
+
+.track {
+  position: relative;
+  background: var(--crm-panel);
+}
+
+.trackHead {
   position: sticky;
   top: 0;
   z-index: 5;
-  padding: 8px 10px;
+  /* Matches .gutterHead exactly (same content-box height, same border-bottom)
+     so the hour lines in every track start at the same pixel as the labels. */
+  height: 44px;
+  padding: 0 10px;
   background: var(--crm-sunk);
   border-bottom: 1px solid var(--crm-rule);
   display: flex;
@@ -122,146 +174,103 @@
   gap: 8px;
 }
 
-.dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  flex: none;
+.trackBody {
+  position: relative;
+  /*
+   * Hour lines drawn once as a background rather than 24 divider elements per
+   * column — the same visual result, and it scrolls as one paint instead of
+   * many.
+   */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--crm-rule) 0,
+    var(--crm-rule) 1px,
+    transparent 1px,
+    transparent var(--hour-h)
+  );
 }
 
-.colName {
-  color: var(--crm-ink);
-  font-weight: 700;
-  font-size: 13px;
-}
-
-.colMeta {
-  margin-left: auto;
-  color: var(--crm-muted);
-  font-size: 11px;
-}
-
-.colBody {
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-height: 120px;
-}
-
-/* ---- A job ---- */
-
-.job {
+.slotClick {
+  position: absolute;
+  left: 0;
+  right: 0;
   display: block;
-  border: 1px solid var(--crm-rule2);
-  border-left-width: 3px;
+}
+
+.slotClick:hover {
+  background: var(--crm-sunk);
+}
+
+.event {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  overflow: hidden;
   border-radius: var(--crm-r-sm);
-  padding: 7px 9px;
+  border-left: 3px solid var(--crm-rule2);
   background: var(--crm-bg);
   color: var(--crm-text);
   text-decoration: none;
-  font-size: 12px;
-}
-
-.job:hover {
-  border-color: var(--crm-ink);
-}
-
-.jobSlot {
-  font-weight: 700;
-  color: var(--crm-ink);
-  font-variant-numeric: tabular-nums;
-}
-
-.jobLine {
-  display: block;
-  color: var(--crm-muted);
-  margin-top: 1px;
-}
-
-.jobPlate {
-  display: inline-block;
-  padding: 0 5px;
-  border: 1px solid var(--crm-rule2);
-  border-radius: var(--crm-r-sm);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 10px;
-  color: var(--crm-ink);
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 2px 8px;
-  border-radius: var(--crm-r-sm);
-  background: var(--crm-raised);
+  padding: 3px 7px;
   font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0;
-  white-space: nowrap;
+  line-height: 1.3;
 }
 
-.badge::before {
-  content: '';
-  width: 3px;
-  height: 9px;
-  border-radius: 2px;
-  background: currentColor;
+.event:hover {
+  outline: 1px solid var(--crm-ink);
+  z-index: 8;
 }
 
-.stGepland {
-  color: var(--crm-steel);
-  background: var(--crm-steel-bg);
-}
-.stOnderweg,
-.stBezig {
-  color: var(--crm-warn);
-  background: var(--crm-warn-bg);
-}
-.stAfgerond {
-  color: var(--crm-ok);
-  background: var(--crm-ok-bg);
-}
-.stGeannuleerd {
-  color: var(--crm-muted);
-  background: var(--crm-sunk);
-}
-
-.unassigned {
+.eventUnassigned {
   border-left-color: var(--crm-stop);
 }
 
-/* ---- Week view ---- */
-
-.week {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(140px, 1fr));
-  gap: 1px;
-  background: var(--crm-rule);
-  border: 1px solid var(--crm-rule);
-  border-radius: var(--crm-r);
-  overflow: hidden;
-  overflow-x: auto;
-}
-
-.dayHead {
-  padding: 7px 9px;
-  background: var(--crm-sunk);
-  border-bottom: 1px solid var(--crm-rule);
-  font-size: 12px;
+.eventTime {
   font-weight: 700;
   color: var(--crm-ink);
+  font-variant-numeric: tabular-nums;
+  display: block;
+}
+
+.eventCar {
+  display: block;
+  color: var(--crm-accent-hover);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eventLine {
+  display: block;
+  color: var(--crm-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nowLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 2px solid var(--crm-stop);
+  z-index: 9;
+}
+
+.nowLine::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--crm-stop);
 }
 
 .dayHeadToday {
   box-shadow: inset 0 -2px 0 var(--crm-accent);
-}
-
-.dayMeta {
-  color: var(--crm-muted);
-  font-weight: 500;
-  margin-left: 5px;
 }
 
 /* ---- Empty ---- */

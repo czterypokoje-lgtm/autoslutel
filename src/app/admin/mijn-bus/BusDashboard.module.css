@@ -151,8 +151,16 @@
   color: var(--crm-text);
 }
 
+/* Six columns of real content do not fit a phone width; scrolling the table
+   sideways inside its own box beats squeezing every column unreadable or
+   letting it force the whole page to scroll. Same pattern as leads.module.css. */
+.tableWrap {
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
+  min-width: 640px;
   border-collapse: collapse;
 }
 
@@ -295,4 +303,28 @@
   border-color: var(--crm-steel);
   color: var(--crm-steel);
   font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .tableHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .searchBox {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .tableFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    text-align: center;
+  }
 }
