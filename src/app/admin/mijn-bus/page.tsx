@@ -114,14 +114,14 @@ export default async function MijnBusPage() {
         />
       </StatGrid>
 
+      <InvoicePanel invoices={rows} />
+
       <BusDashboard
         myStock={stock}
         centralStock={centralStock ?? []}
         otherTechs={otherTechs ?? []}
         technicianId={tech.id}
       />
-
-      <InvoicePanel invoices={rows} />
     </>
   );
 }
