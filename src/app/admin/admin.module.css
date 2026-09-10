@@ -685,7 +685,8 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 .mobileMenuBtn,
 .backdrop,
-.drawerClose {
+.drawerClose,
+.tabBar {
   display: none;
 }
 
@@ -789,4 +790,71 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
 
   .row { flex-wrap: wrap; padding: 13px 14px; }
   .rowActions { margin-left: auto; }
+
+  /*
+   * Room for the tab bar below, so the last card in any list is not sitting
+   * half-hidden behind it — the fixed bar occupies space no scroll ever
+   * reaches otherwise.
+   */
+  .mainWithTabBar {
+    padding-bottom: calc(48px + 62px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /*
+   * The monteur's four daily tools, thumb-reachable without opening the
+   * drawer. Aanbod (offers) sits raised and orange in the middle: an offer
+   * expires on a clock, so it is the one tab a technician must find without
+   * hunting for it.
+   */
+  .tabBar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    height: 62px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--crm-sidebar);
+    border-top: 1px solid var(--crm-rule);
+  }
+
+  .tabItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: var(--crm-muted);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .tabItemActive {
+    color: var(--crm-accent);
+  }
+
+  .tabCenter {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .tabCenterBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--crm-accent);
+    color: #fff;
+    border: 4px solid var(--crm-sidebar);
+    transform: translateY(-16px);
+    box-shadow: 0 4px 16px rgba(234, 88, 12, 0.5);
+  }
 }

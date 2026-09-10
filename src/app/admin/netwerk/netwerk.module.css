@@ -164,9 +164,17 @@
   /* .main's own padding shrinks to 18px/14px/48px below this width
      (admin.module.css) — the bleed has to match or it either falls short
      or overshoots past the sidebar. */
+  /*
+   * Bottom is deliberately left alone here, unlike the top and sides: a
+   * monteur's .main reserves extra space below for the tab bar
+   * (.mainWithTabBar in admin.module.css), and that amount isn't a constant
+   * this file can bleed past correctly for every role. Whatever padding
+   * .main leaves at the bottom, the chat keeps — it reads as intentional
+   * breathing room above the tab bar rather than a gap.
+   */
   .layout {
-    height: calc(100% + 66px);
-    margin: -18px -14px -48px;
+    height: calc(100% + 18px);
+    margin: -18px -14px 0;
   }
 
   .mobileMenuBtn {

@@ -3,6 +3,7 @@ import './theme.css';
 import styles from './admin.module.css';
 import { getCrmUser } from '@/lib/crmSession';
 import Sidebar from './Sidebar';
+import MobileTabBar from './MobileTabBar';
 
 /**
  * The CRM shell.
@@ -46,10 +47,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     .map((part) => part.charAt(0).toUpperCase())
     .join('') || '?';
 
+  const isMonteur = user?.role === 'monteur';
+
   return (
     <div className={`crm ${styles.shell}`}>
       {user && <Sidebar role={user.role} email={user.email} initials={initials} />}
-      <main className={user ? styles.main : undefined}>{children}</main>
+      <main className={user ? `${styles.main} ${isMonteur ? styles.mainWithTabBar : ''}` : undefined}>
+        {children}
+      </main>
+      {isMonteur && <MobileTabBar />}
     </div>
   );
 }
