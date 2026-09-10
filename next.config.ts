@@ -28,6 +28,21 @@ const nextConfig: NextConfig = {
    * install step already put the correct native binary.
    */
   serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'xlsx'],
+  /*
+   * The third layer of the same problem. pdfjs-dist loads its worker script
+   * with a dynamically computed path — "Setting up fake worker failed:
+   * Cannot find module '/var/task/node_modules/pdfjs-dist/legacy/build/
+   * pdf.worker.mjs'" — and Vercel's own file-tracing step (separate from
+   * Next's bundler, and unaffected by serverExternalPackages) only copies
+   * node_modules files it can see referenced by a static import. A
+   * dynamically-built path is invisible to it, so the worker file — needed
+   * only at runtime, never imported by name anywhere in this codebase —
+   * never made it into the deployed function. This forces it in regardless
+   * of what the tracer's static analysis finds.
+   */
+  outputFileTracingIncludes: {
+    '/api/admin/invoice': ['./node_modules/pdfjs-dist/**/*.mjs', './node_modules/pdf-parse/dist/**/*'],
+  },
   images: {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
