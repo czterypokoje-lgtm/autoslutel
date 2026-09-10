@@ -16,6 +16,18 @@ const brandRedirects = brands.map(brand => ({
 }));
 
 const nextConfig: NextConfig = {
+  /*
+   * pdf-parse pulls in @napi-rs/canvas, a native compiled binary — the class
+   * of dependency Next's bundler cannot package into a serverless function
+   * correctly. Left un-configured, the invoice route builds fine, deploys
+   * fine, and then silently returns empty text on every real request: the
+   * failure is caught (route.ts) and logged as a warning, not thrown, so it
+   * never shows up as an error, only as "0 regel(s)" on every invoice. This
+   * tells Next to require these straight from node_modules in the deployed
+   * function instead of bundling them, which is where the platform's own
+   * install step already put the correct native binary.
+   */
+  serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'xlsx'],
   images: {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',

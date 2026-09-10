@@ -154,9 +154,16 @@ export function parseInvoiceText(text: string): InvoiceLine[] {
 
 /** Supplier and invoice number, where the paper states them plainly. */
 export function readInvoiceHeader(text: string) {
+  /*
+   * `\s*` here used to include the newline, so a standalone "FACTUUR" title
+   * — the header almost every real invoice has, one line above
+   * "Factuurnummer: F-2026-04512" — let the match bleed onto that next line
+   * and capture the word "Factuurnummer" itself as the number. `[ \t]*`
+   * keeps the match on one line, the way a label and its value actually sit.
+   */
   const number =
-    text.match(/factuur(?:nummer)?\s*[:.]?\s*([A-Z0-9][A-Z0-9\-/]{3,20})/i)?.[1] ??
-    text.match(/invoice\s*(?:no|number|#)?\s*[:.]?\s*([A-Z0-9][A-Z0-9\-/]{3,20})/i)?.[1] ??
+    text.match(/factuur(?:nummer)?[ \t]*[:.]?[ \t]*([A-Z0-9][A-Z0-9\-/]{3,20})/i)?.[1] ??
+    text.match(/invoice[ \t]*(?:no|number|#)?[ \t]*[:.]?[ \t]*([A-Z0-9][A-Z0-9\-/]{3,20})/i)?.[1] ??
     null;
 
   const date =
