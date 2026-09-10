@@ -1,12 +1,16 @@
+/*
+ * This is a section inside the CRM's own <main>, not a page of its own —
+ * repainting its background here (it used to be var(--crm-sunk), a
+ * different shade of near-black to the page around it) drew a visible seam
+ * exactly where this component met whatever sits above it. No background,
+ * no own font-family: both now come from the shell, the same as every
+ * other CRM page.
+ */
 .container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding-bottom: 2rem;
-  background-color: var(--crm-sunk);
-  min-height: 100vh;
   padding: 2rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .header {
