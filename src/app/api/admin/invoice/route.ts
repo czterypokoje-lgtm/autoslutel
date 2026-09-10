@@ -108,6 +108,25 @@ export async function POST(request: Request) {
     }
   } else if (file.type === 'application/pdf') {
     try {
+      /*
+       * pdfjs-dist (what pdf-parse actually runs) expects a handful of
+       * browser globals — DOMMatrix chief among them — that plain Node.js
+       * simply does not have. @napi-rs/canvas is already a dependency of
+       * pdf-parse for exactly this reason; Node just never wires its
+       * implementations into the global scope on its own, so a request
+       * that never touched this route before crashed with "DOMMatrix is
+       * not defined" the first time it needed to read a real transform out
+       * of the PDF.
+       */
+      if (typeof (globalThis as { DOMMatrix?: unknown }).DOMMatrix === 'undefined') {
+        const canvas = await import('@napi-rs/canvas');
+        Object.assign(globalThis, {
+          DOMMatrix: canvas.DOMMatrix,
+          Path2D: canvas.Path2D,
+          ImageData: canvas.ImageData,
+        });
+      }
+
       // pdf-parse v2 is a class, not the callable default of v1.
       const { PDFParse } = await import('pdf-parse');
       const parser = new PDFParse({ data: new Uint8Array(bytes) });
