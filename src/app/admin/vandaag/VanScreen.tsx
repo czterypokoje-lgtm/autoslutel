@@ -10,6 +10,16 @@ import {
 import styles from './vandaag.module.css';
 import { JOB_STATUS_LABELS, slotLabel, type JobStatus } from '@/lib/crmJobs';
 import { waLink, onTheWayMessage } from '@/lib/whatsapp';
+import { Car, MapPin, User, Wrench } from 'lucide-react';
+
+/** The colour a monteur reads a job's status from before they've read a word of it. */
+const STATUS_ACCENT: Record<string, string> = {
+  gepland: 'var(--crm-steel)',
+  onderweg: 'var(--crm-warn)',
+  bezig: 'var(--crm-warn)',
+  afgerond: 'var(--crm-ok)',
+  geannuleerd: 'var(--crm-muted)',
+};
 
 /**
  * A phone photo straight off the camera is routinely 3–12MB, and nothing in
@@ -293,7 +303,7 @@ function JobCard({
   const car = [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ');
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} style={{ borderLeftColor: STATUS_ACCENT[job.status] ?? 'var(--crm-rule)' }}>
       <div className={styles.cardHead}>
         <span className={styles.slot}>
           {slotLabel(job.slot_start, job.slot_end)}
@@ -308,14 +318,19 @@ function JobCard({
       <div className={styles.body}>
         {car && (
           <div className={styles.car}>
+            <Car size={18} strokeWidth={2} className={styles.rowIcon} />
             {car}
             {job.keyless !== null && (
               <span className={styles.keylessBadge}>{job.keyless ? 'Keyless' : 'Sleutel'}</span>
             )}
           </div>
         )}
-        <div className={styles.address}>{address || 'Geen adres'}</div>
+        <div className={styles.address}>
+          <MapPin size={16} strokeWidth={2} className={styles.rowIcon} />
+          {address || 'Geen adres'}
+        </div>
         <div className={styles.meta}>
+          <Wrench size={14} strokeWidth={2} className={styles.rowIcon} />
           {job.service_type ?? 'geen dienst'}
           {job.kenteken && (
             <>
@@ -324,7 +339,12 @@ function JobCard({
             </>
           )}
         </div>
-        {job.customer_name && <div className={styles.meta}>{job.customer_name}</div>}
+        {job.customer_name && (
+          <div className={styles.meta}>
+            <User size={14} strokeWidth={2} className={styles.rowIcon} />
+            {job.customer_name}
+          </div>
+        )}
 
         {job.notes && <div className={styles.note}>{job.notes}</div>}
 

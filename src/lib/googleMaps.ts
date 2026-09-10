@@ -58,6 +58,52 @@ export async function geocodeAddress(postcode: string, city: string): Promise<Co
   return null;
 }
 
+export interface PostcodeLocation {
+  city: string | null;
+  coords: Coordinates | null;
+}
+
+/**
+ * The real place a Dutch postcode belongs to — "6711" back into "Ede", not
+ * whatever a caller said or a voice agent transcribed. A spoken city name is
+ * one more thing that can be misheard; the postcode a customer reads off
+ * their own door is far more reliable, and Google already knows exactly
+ * which place every one of the ~4,400 Dutch four-digit postcodes is in.
+ *
+ * Returns coordinates from the same request rather than making a caller do
+ * a second geocode of postcode+city afterwards — this runs inside a live
+ * phone call (/api/agent/book), and one round trip beats two. Used to
+ * correct a booking, never to block one: a failed or slow lookup here must
+ * never be the reason a job doesn't save.
+ */
+export async function resolvePostcode(postcode: string): Promise<PostcodeLocation> {
+  if (!API_KEY) {
+    console.warn('Missing GOOGLE_MAPS_API_KEY, skipping postcode lookup');
+    return { city: null, coords: null };
+  }
+
+  const url = new URL('https://maps.googleapis.com/maps/api/geocode/json');
+  url.searchParams.set('address', `${postcode}, Netherlands`);
+  url.searchParams.set('region', 'nl');
+  url.searchParams.set('key', API_KEY);
+
+  const data = await getJson(url);
+  if (data?.status !== 'OK' || !data.results?.length) return { city: null, coords: null };
+
+  const result = data.results[0];
+  const components = result.address_components as { long_name: string; types: string[] }[] | undefined;
+
+  // Dutch geocoding results name the town under one of these, in order of
+  // how specific (and how likely to actually be "the city") each one is.
+  const byType = (type: string) => components?.find((c) => c.types.includes(type))?.long_name ?? null;
+  const city = byType('locality') ?? byType('postal_town') ?? byType('administrative_area_level_2');
+
+  const location = result.geometry?.location;
+  const coords = location ? { lat: location.lat, lng: location.lng } : null;
+
+  return { city, coords };
+}
+
 /**
  * Get drive time from a single origin to a single destination.
  */

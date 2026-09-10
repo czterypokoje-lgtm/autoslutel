@@ -51,6 +51,7 @@
 .card {
   background: var(--crm-panel);
   border: 1px solid var(--crm-rule);
+  border-left: 4px solid var(--crm-rule);
   border-radius: var(--crm-r-lg);
   margin-bottom: 14px;
   overflow: hidden;
@@ -126,24 +127,30 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: var(--crm-accent-hover);
   line-height: 1.35;
-  margin-bottom: 2px;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
 }
 
 .keylessBadge {
   flex: none;
-  padding: 1px 8px;
+  padding: 2px 9px;
   border-radius: 999px;
   background: var(--crm-raised);
   color: var(--crm-muted);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .address {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 17px;
   font-weight: 700;
   color: var(--crm-ink);
@@ -151,9 +158,25 @@
 }
 
 .meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   color: var(--crm-muted);
   font-size: 14px;
-  margin-top: 3px;
+  margin-top: 6px;
+}
+
+.rowIcon {
+  flex: none;
+  color: var(--crm-muted);
+}
+
+.car .rowIcon {
+  color: var(--crm-accent-hover);
+}
+
+.address .rowIcon {
+  color: var(--crm-ink);
 }
 
 .plate {

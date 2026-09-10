@@ -120,6 +120,19 @@ export async function POST(request: Request) {
       row.lat = coords.lat;
       row.lng = coords.lng;
     }
+  } else if (row.postcode) {
+    // No city typed at all — fill the gap from the postcode itself rather
+    // than leave the job showing a bare postcode with nowhere to drive to.
+    // A city the office *did* type is left alone: it may be a specific
+    // neighbourhood ("Amsterdam Zuid") more precise than what a postcode
+    // lookup alone would return.
+    const { resolvePostcode } = await import('@/lib/googleMaps');
+    const resolved = await resolvePostcode(row.postcode);
+    if (resolved.city) row.city = resolved.city;
+    if (resolved.coords) {
+      row.lat = resolved.coords.lat;
+      row.lng = resolved.coords.lng;
+    }
   }
 
   let supabase;

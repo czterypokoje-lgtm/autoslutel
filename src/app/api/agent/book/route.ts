@@ -87,16 +87,24 @@ export async function POST(request: Request) {
 
   const supabase = createSupabaseAdminClient();
 
-  const city = asText(body.city, 60);
-  
+  /*
+   * The postcode, not the spoken city name, decides what gets stored — a
+   * caller reading a postcode off their own door is far more reliable than
+   * a city name a voice agent had to transcribe. Falls back to whatever the
+   * agent captured only if the lookup itself is unavailable or fails; it
+   * must never be the reason a booking doesn't go through.
+   */
+  const spokenCity = asText(body.city, 60);
+  let city = spokenCity;
   let lat = null;
   let lng = null;
-  if (postcode && city) {
-    const { geocodeAddress } = await import('@/lib/googleMaps');
-    const coords = await geocodeAddress(postcode, city);
-    if (coords) {
-      lat = coords.lat;
-      lng = coords.lng;
+  if (postcode) {
+    const { resolvePostcode } = await import('@/lib/googleMaps');
+    const resolved = await resolvePostcode(postcode);
+    if (resolved.city) city = resolved.city;
+    if (resolved.coords) {
+      lat = resolved.coords.lat;
+      lng = resolved.coords.lng;
     }
   }
 
