@@ -1,6 +1,24 @@
+/*
+ * `height: 100vh` here was the bug: this box is nested inside <main>, not
+ * the viewport, and `.main` already sits inside the CRM shell with its own
+ * padding and (on mobile) a sticky top bar above it. A hard 100vh ignored
+ * all of that and claimed a full screen's height on top of the space
+ * already taken — the excess spilled past the bottom of the real viewport,
+ * exposing the page's own background (the webshop's light theme, not the
+ * CRM's dark one) in the gap. `height: 100%` fills exactly what `.main`'s
+ * content box actually has, no more.
+ *
+ * The negative margins then bleed past that same padding on every side —
+ * a chat reading as boxed-in with 30px of margin around it doesn't read as
+ * an app, it reads as a form. `height`'s `calc()` grows by the same amount
+ * the margins pull out, so the box still exactly fills the space it bled
+ * into instead of falling short of it.
+ */
 .layout {
   display: flex;
-  height: 100vh; /* Adjust based on global layout */
+  height: calc(100% + 86px);
+  min-height: 0;
+  margin: -26px -30px -60px;
   overflow: hidden;
   background-color: var(--crm-surface);
 }
@@ -143,6 +161,14 @@
  * pick a channel and the drawer closes, the conversation gets the screen.
  */
 @media (max-width: 860px) {
+  /* .main's own padding shrinks to 18px/14px/48px below this width
+     (admin.module.css) — the bleed has to match or it either falls short
+     or overshoots past the sidebar. */
+  .layout {
+    height: calc(100% + 66px);
+    margin: -18px -14px -48px;
+  }
+
   .mobileMenuBtn {
     display: flex;
     align-items: center;

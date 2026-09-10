@@ -15,6 +15,17 @@
  * through.
  */
 
+/*
+ * The page behind the CRM is still the public site's <body>, styled for the
+ * orange webshop. iOS Safari's rubber-band bounce at the top or bottom of a
+ * scroll — and any layout that comes in a pixel short of the real viewport —
+ * shows through to whatever is back there. Loaded only while a /admin/*
+ * route is mounted, so the webshop's own pages never see this.
+ */
+body {
+  background: #0a0a0a;
+}
+
 .crm {
   /* ── surfaces, from the page up ── */
   --crm-bg: #0a0a0a;        /* the page itself */
