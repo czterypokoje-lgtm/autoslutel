@@ -120,7 +120,6 @@ export default async function MijnBusPage() {
         myStock={stock}
         centralStock={centralStock ?? []}
         otherTechs={otherTechs ?? []}
-        technicianId={tech.id}
       />
     </>
   );

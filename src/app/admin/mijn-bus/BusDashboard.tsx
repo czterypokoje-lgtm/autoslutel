@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { transferStock } from './actions';
+import { adjustOwnStock } from './actions';
 import styles from './BusDashboard.module.css';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -10,12 +10,10 @@ export default function BusDashboard({
   myStock,
   centralStock,
   otherTechs,
-  technicianId
 }: {
   myStock: any[];
   centralStock: any[];
   otherTechs: any[];
-  technicianId: string;
 }) {
   /*
    * A local, mutable copy of the prop. Every +/- used to wait for the full
@@ -54,10 +52,7 @@ export default function BusDashboard({
 
     // The action answers with a reason rather than throwing, so the monteur is
     // told which rule stopped them instead of "er ging iets mis".
-    const result =
-      delta > 0
-        ? await transferStock(null, technicianId, description, delta)
-        : await transferStock(technicianId, null, description, -delta);
+    const result = await adjustOwnStock(description, delta);
 
     setPending((prev) => {
       const next = new Set(prev);

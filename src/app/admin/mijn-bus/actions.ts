@@ -65,3 +65,54 @@ export async function transferStock(
   if (outcome === 'ok') return { ok: true };
   return { error: said[outcome] ?? 'Overzetten mislukt.' };
 }
+
+/**
+ * The +/- on a monteur's own "wat er in de bus ligt" list: not a transfer
+ * between two named bins, just correcting the count of an article already
+ * sitting in this van. crm_transfer_stock (above) refused this every time
+ * for anything that arrived via a confirmed invoice rather than a warehouse
+ * hand-out — it has no warehouse quantity to pull the "+1" from, so the tap
+ * silently did nothing. crm_adjust_own_stock (0024) writes the one row
+ * directly instead of moving anything between two places.
+ */
+export async function adjustOwnStock(
+  description: string,
+  delta: number
+): Promise<{ ok: true } | { error: string }> {
+  await requireCrmUser();
+
+  if (!Number.isFinite(delta) || delta === 0) {
+    return { error: 'Ongeldig aantal.' };
+  }
+  if (!description?.trim()) {
+    return { error: 'Kies een artikel.' };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.rpc('crm_adjust_own_stock', {
+    p_description: description.trim(),
+    p_delta: delta,
+  });
+
+  if (error) {
+    console.error('Stock adjust failed:', error.message);
+    return {
+      error: /function|does not exist/i.test(error.message)
+        ? 'Voer supabase/migrations/0024_adjust_own_stock.sql uit.'
+        : 'Aanpassen mislukt.',
+    };
+  }
+
+  const said: Record<string, string> = {
+    ok: '',
+    ongeldig_aantal: 'Ongeldig aantal.',
+    geen_omschrijving: 'Kies een artikel.',
+    geen_monteur: 'Uw login is niet aan een monteur gekoppeld.',
+    niet_gevonden: 'Dit artikel staat niet in uw bus.',
+    te_weinig: 'Daar liggen er niet genoeg van.',
+  };
+
+  const outcome = String(data);
+  if (outcome === 'ok') return { ok: true };
+  return { error: said[outcome] ?? 'Aanpassen mislukt.' };
+}
