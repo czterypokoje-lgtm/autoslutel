@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Check, FileText, Loader2, Plus, Upload, X } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { ui, Card, CardHead, Badge, Empty, Notice } from '../_ui';
+import styles from './invoicePanel.module.css';
 
 export interface InvoiceLineRow {
   id: string;
@@ -238,54 +239,99 @@ export default function InvoicePanel({ invoices }: { invoices: InvoiceRow[] }) {
 
               {expanded && invoice.lines.length > 0 && (
                 <div style={{ borderBottom: '1px solid var(--crm-rule)' }}>
-                  <table className={ui.table}>
-                    <thead>
-                      <tr>
-                        <th style={{ width: 44 }} />
-                        <th>Omschrijving</th>
-                        <th>Artikelnr.</th>
-                        <th className={ui.numeric}>Aantal</th>
-                        <th className={ui.numeric}>Stukprijs</th>
-                        <th>Herkend</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {invoice.lines.map((line) => (
-                        <tr key={line.id}>
-                          <td>
-                            <button
-                              className={`${ui.btn} ${ui.btnIcon}`}
-                              onClick={() => toggle(line)}
-                              disabled={done || busy}
-                              aria-label={line.confirmed ? 'Uitvinken' : 'Aanvinken'}
-                              style={
-                                line.confirmed
-                                  ? { borderColor: 'var(--crm-ok)', color: 'var(--crm-ok)' }
-                                  : undefined
-                              }
-                            >
-                              {line.confirmed ? <Check size={15} strokeWidth={2.4} /> : <Plus size={15} />}
-                            </button>
-                          </td>
-                          <td style={{ color: 'var(--crm-ink)' }}>{line.description}</td>
-                          <td className={ui.rowNote}>{line.article_code ?? '—'}</td>
-                          <td className={ui.numeric}>{Number(line.quantity)}</td>
-                          <td className={ui.numeric}>
-                            {line.unit_price == null
-                              ? '—'
-                              : `€ ${Number(line.unit_price).toFixed(2).replace('.', ',')}`}
-                          </td>
-                          <td>
+                  <div className={styles.desktopTable}>
+                    <table className={ui.table}>
+                      <thead>
+                        <tr>
+                          <th style={{ width: 44 }} />
+                          <th>Omschrijving</th>
+                          <th>Artikelnr.</th>
+                          <th className={ui.numeric}>Aantal</th>
+                          <th className={ui.numeric}>Stukprijs</th>
+                          <th>Herkend</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {invoice.lines.map((line) => (
+                          <tr key={line.id}>
+                            <td>
+                              <button
+                                className={`${ui.btn} ${ui.btnIcon}`}
+                                onClick={() => toggle(line)}
+                                disabled={done || busy}
+                                aria-label={line.confirmed ? 'Uitvinken' : 'Aanvinken'}
+                                style={
+                                  line.confirmed
+                                    ? { borderColor: 'var(--crm-ok)', color: 'var(--crm-ok)' }
+                                    : undefined
+                                }
+                              >
+                                {line.confirmed ? <Check size={15} strokeWidth={2.4} /> : <Plus size={15} />}
+                              </button>
+                            </td>
+                            <td style={{ color: 'var(--crm-ink)' }}>{line.description}</td>
+                            <td className={ui.rowNote}>{line.article_code ?? '—'}</td>
+                            <td className={ui.numeric}>{Number(line.quantity)}</td>
+                            <td className={ui.numeric}>
+                              {line.unit_price == null
+                                ? '—'
+                                : `€ ${Number(line.unit_price).toFixed(2).replace('.', ',')}`}
+                            </td>
+                            <td>
+                              {line.matched_slug ? (
+                                <Badge tone="ok">uit onze catalogus</Badge>
+                              ) : (
+                                <Badge>eigen omschrijving</Badge>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/*
+                    * The same lines, one card each — every field the table
+                    * shows, stacked instead of squeezed sideways, and the
+                    * confirm toggle sized for a thumb instead of a table
+                    * cell.
+                    */}
+                  <div className={styles.cards}>
+                    {invoice.lines.map((line) => (
+                      <div
+                        key={line.id}
+                        className={`${styles.lineCard} ${line.confirmed ? styles.lineCardConfirmed : ''}`}
+                      >
+                        <button
+                          type="button"
+                          className={`${styles.toggleBtn} ${line.confirmed ? styles.toggleBtnOn : ''}`}
+                          onClick={() => toggle(line)}
+                          disabled={done || busy}
+                          aria-label={line.confirmed ? 'Uitvinken' : 'Aanvinken'}
+                        >
+                          {line.confirmed ? <Check size={17} strokeWidth={2.4} /> : <Plus size={17} />}
+                        </button>
+
+                        <div className={styles.lineCardMain}>
+                          <span className={styles.lineCardDesc}>{line.description}</span>
+                          <div className={styles.lineCardMeta}>
+                            {line.article_code && <span>{line.article_code}</span>}
+                            <span>{Number(line.quantity)}×</span>
+                            <span className={styles.lineCardPrice}>
+                              {line.unit_price == null
+                                ? '—'
+                                : `€ ${Number(line.unit_price).toFixed(2).replace('.', ',')}`}
+                            </span>
                             {line.matched_slug ? (
                               <Badge tone="ok">uit onze catalogus</Badge>
                             ) : (
                               <Badge>eigen omschrijving</Badge>
                             )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 

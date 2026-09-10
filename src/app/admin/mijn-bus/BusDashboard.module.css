@@ -309,42 +309,15 @@
   font-weight: 600;
 }
 
-@media (max-width: 640px) {
-  .container {
-    padding: 1rem;
-  }
-
-  .tableHeader {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-
-  .searchBox {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .tableFooter {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-    text-align: center;
-  }
-
-  .tableWrap {
-    display: none;
-  }
-
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-/* ---- Mobile cards ---- */
-
+/*
+ * Mobile cards. Defined here, before the media query below that turns them
+ * on — a later rule of equal specificity beats an earlier one regardless of
+ * which is inside a media query, so this exact block used to sit *after*
+ * that query and silently overrode its `display: flex` back to `none` on
+ * every phone, no matter how narrow the screen got. The count in the
+ * footer came straight from JS and was never wrong; the cards themselves
+ * were just never allowed to render.
+ */
 .cards {
   display: none;
 }
@@ -382,4 +355,38 @@
 .stockCardTotal {
   color: var(--crm-muted);
   font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .tableHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .searchBox {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .tableFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .tableWrap {
+    display: none;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 }
