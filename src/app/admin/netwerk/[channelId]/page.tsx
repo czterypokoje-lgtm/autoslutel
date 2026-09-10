@@ -5,7 +5,7 @@ import ChatClient from './ChatClient';
 export const dynamic = 'force-dynamic';
 
 export default async function ChannelPage({ params }: { params: Promise<{ channelId: string }> }) {
-  const user = await requireCrmUser();
+  await requireCrmUser();
   const { channelId } = await params;
   const supabase = await createSupabaseServerClient();
 
@@ -30,10 +30,9 @@ export default async function ChannelPage({ params }: { params: Promise<{ channe
     .limit(50);
 
   return (
-    <ChatClient 
-      channel={channel} 
-      initialMessages={initialMessages || []} 
-      userId={user.id} 
+    <ChatClient
+      channel={channel}
+      initialMessages={initialMessages || []}
     />
   );
 }
