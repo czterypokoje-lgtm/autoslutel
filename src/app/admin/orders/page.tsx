@@ -196,6 +196,50 @@ export default async function OrdersPage({
           </tbody>
         </table>
       </div>
+
+      <div className={styles.cards}>
+        {rows.length === 0 ? (
+          <p className={styles.empty}>
+            Geen bestellingen. De webshop kan pas afrekenen als er een Mollie-sleutel is
+            ingesteld — tot die tijd blijft deze lijst leeg.
+          </p>
+        ) : (
+          rows.map((o) => (
+            <div key={o.id as string} className={styles.card}>
+              <div className={styles.cardHead}>
+                <Link
+                  className={`${styles.strong} ${styles.link} ${styles.cardTitle}`}
+                  href={`/admin/orders/${o.id as string}`}
+                >
+                  {o.order_number as string}
+                  <span className={styles.sub}>{o.name as string}</span>
+                </Link>
+                <span className={`${styles.badge} ${styles.no}`}>{o.status as string}</span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Plaats</span>
+                <span className={styles.cardValue}>{[o.postcode, o.city].filter(Boolean).join(' ') || '—'}</span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Monteur nodig</span>
+                <span className={styles.cardValue}>{o.needs_technician ? 'ja' : '—'}</span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Track &amp; trace</span>
+                <span className={styles.cardValue}>{(o.tracking_code as string) ?? '—'}</span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Totaal</span>
+                <span className={styles.cardValue}>{MONEY.format(Number(o.total_inc ?? 0))}</span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Datum</span>
+                <span className={styles.cardValue}>{DATE.format(new Date(o.created_at as string))}</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </>
   );
 }

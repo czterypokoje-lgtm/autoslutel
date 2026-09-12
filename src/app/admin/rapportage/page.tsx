@@ -109,6 +109,31 @@ export default async function RapportagePage() {
             </tbody>
           </table>
         </div>
+        <div className={styles.cards}>
+          {sources.length === 0 ? (
+            <p className={styles.empty}>Nog geen data.</p>
+          ) : (
+            sources.map(([name, s]) => (
+              <div key={name} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>{name}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Leads / klussen / verkocht</span>
+                  <span className={styles.cardValue}>{s.leads} / {s.klussen} / {s.verkocht}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Conversie</span>
+                  <span className={styles.cardValue}>{percent(s.verkocht, s.leads)}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Omzet</span>
+                  <span className={styles.cardValue}>{MONEY.format(s.omzet)}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
         <p className={styles.note}>
           Welk kanaal echt werk oplevert, niet alleen kliks. Telefonische leads
           ontbreken hier: er is nog geen belregistratie, dus elk getal in deze
@@ -151,6 +176,31 @@ export default async function RapportagePage() {
               )}
             </tbody>
           </table>
+        </div>
+        <div className={styles.cards}>
+          {(service.data ?? []).length === 0 ? (
+            <p className={styles.empty}>Nog geen afgeronde klussen.</p>
+          ) : (
+            (service.data ?? []).map((row) => (
+              <div key={row.dienst as string} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>{row.dienst as string}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Afgeronde klussen</span>
+                  <span className={styles.cardValue}>{show(row.klussen)}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Gemiddeld</span>
+                  <span className={styles.cardValue}>{show(row.gemiddelde_waarde, (n) => MONEY.format(n))}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Totaal</span>
+                  <span className={styles.cardValue}>{show(row.totaal, (n) => MONEY.format(n))}</span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
         <p className={styles.note}>Stuurt prijsstelling en advertentiebudget.</p>
       </div>
@@ -219,6 +269,27 @@ export default async function RapportagePage() {
             </tbody>
           </table>
         </div>
+        <div className={styles.cards}>
+          {(technician.data ?? []).length === 0 ? (
+            <p className={styles.empty}>Nog geen monteurs.</p>
+          ) : (
+            (technician.data ?? []).map((row) => (
+              <div key={row.technician_id as string} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>{row.name as string}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Klussen / werkdagen / per dag</span>
+                  <span className={styles.cardValue}>{show(row.klussen)} / {show(row.werkdagen)} / {show(row.per_dag)}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Omzet</span>
+                  <span className={styles.cardValue}>{show(row.omzet, (n) => MONEY.format(n))}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
         <p className={styles.note}>Capaciteit, en de vraag of er iemand bij moet.</p>
       </div>
 
@@ -249,6 +320,27 @@ export default async function RapportagePage() {
               )}
             </tbody>
           </table>
+        </div>
+        <div className={styles.cards}>
+          {(region.data ?? []).length === 0 ? (
+            <p className={styles.empty}>Nog geen data.</p>
+          ) : (
+            (region.data ?? []).map((row) => (
+              <div key={row.postcode4 as string} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>{row.postcode4 as string}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Leads</span>
+                  <span className={styles.cardValue}>{show(row.leads)}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Verkocht</span>
+                  <span className={styles.cardValue}>{show(row.verkocht)}</span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
         <p className={styles.note}>
           Dit sluit terug op de website: komen er veel leads uit één regio, dan

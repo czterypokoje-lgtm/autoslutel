@@ -99,58 +99,102 @@ export default async function KlantenPage({
       </div>
 
       {rows.length === 0 ? (
-        <div className={styles.wrap}>
-          <p className={styles.empty}>
-            {search ? 'Geen klant gevonden.' : 'Nog geen klanten met een telefoonnummer.'}
-          </p>
-        </div>
+        <>
+          <div className={styles.wrap}>
+            <p className={styles.empty}>
+              {search ? 'Geen klant gevonden.' : 'Nog geen klanten met een telefoonnummer.'}
+            </p>
+          </div>
+          <div className={styles.cards}>
+            <p className={styles.empty}>
+              {search ? 'Geen klant gevonden.' : 'Nog geen klanten met een telefoonnummer.'}
+            </p>
+          </div>
+        </>
       ) : (
-        <div className={styles.wrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Klant</th>
-                <th>Plaats</th>
-                <th>Aanvragen</th>
-                <th>Verkocht</th>
-                <th style={{ textAlign: 'right' }}>Omzet</th>
-                <th>Laatste</th>
-                <th>Marketing</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((c) => (
-                <tr key={c.phone_e164}>
-                  <td>
-                    <Link
-                      className={`${styles.strong} ${styles.link}`}
-                      href={`/admin/klanten/${encodeURIComponent(c.phone_e164)}`}
-                    >
-                      {c.name ?? 'geen naam'}
-                    </Link>
-                    <span className={styles.sub}>{c.phone_e164}</span>
-                  </td>
-                  <td>{c.postcode ?? '—'}</td>
-                  <td>{c.lead_count}</td>
-                  <td>{c.sold_count}</td>
-                  <td className={styles.money}>
-                    {MONEY.format(Number(c.total_value ?? 0))}
-                  </td>
-                  <td>{DATE.format(new Date(c.last_seen))}</td>
-                  <td>
-                    <span
-                      className={`${styles.badge} ${
-                        c.consent_marketing ? styles.ok : styles.no
-                      }`}
-                    >
-                      {c.consent_marketing ? 'ja' : 'nee'}
-                    </span>
-                  </td>
+        <>
+          <div className={styles.wrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Klant</th>
+                  <th>Plaats</th>
+                  <th>Aanvragen</th>
+                  <th>Verkocht</th>
+                  <th style={{ textAlign: 'right' }}>Omzet</th>
+                  <th>Laatste</th>
+                  <th>Marketing</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {rows.map((c) => (
+                  <tr key={c.phone_e164}>
+                    <td>
+                      <Link
+                        className={`${styles.strong} ${styles.link}`}
+                        href={`/admin/klanten/${encodeURIComponent(c.phone_e164)}`}
+                      >
+                        {c.name ?? 'geen naam'}
+                      </Link>
+                      <span className={styles.sub}>{c.phone_e164}</span>
+                    </td>
+                    <td>{c.postcode ?? '—'}</td>
+                    <td>{c.lead_count}</td>
+                    <td>{c.sold_count}</td>
+                    <td className={styles.money}>
+                      {MONEY.format(Number(c.total_value ?? 0))}
+                    </td>
+                    <td>{DATE.format(new Date(c.last_seen))}</td>
+                    <td>
+                      <span
+                        className={`${styles.badge} ${
+                          c.consent_marketing ? styles.ok : styles.no
+                        }`}
+                      >
+                        {c.consent_marketing ? 'ja' : 'nee'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={styles.cards}>
+            {rows.map((c) => (
+              <div key={c.phone_e164} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <Link
+                    className={`${styles.strong} ${styles.link} ${styles.cardTitle}`}
+                    href={`/admin/klanten/${encodeURIComponent(c.phone_e164)}`}
+                  >
+                    {c.name ?? 'geen naam'}
+                    <span className={styles.sub}>{c.phone_e164}</span>
+                  </Link>
+                  <span className={`${styles.badge} ${c.consent_marketing ? styles.ok : styles.no}`}>
+                    {c.consent_marketing ? 'marketing ja' : 'marketing nee'}
+                  </span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Plaats</span>
+                  <span className={styles.cardValue}>{c.postcode ?? '—'}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Aanvragen / verkocht</span>
+                  <span className={styles.cardValue}>{c.lead_count} / {c.sold_count}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Omzet</span>
+                  <span className={styles.cardValue}>{MONEY.format(Number(c.total_value ?? 0))}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Laatste contact</span>
+                  <span className={styles.cardValue}>{DATE.format(new Date(c.last_seen))}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </>
   );

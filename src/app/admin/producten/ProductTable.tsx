@@ -37,9 +37,14 @@ export default function ProductTable({
 }) {
   if (rows.length === 0) {
     return (
-      <div className={styles.wrap}>
-        <p className={styles.empty}>Geen producten met deze filters.</p>
-      </div>
+      <>
+        <div className={styles.wrap}>
+          <p className={styles.empty}>Geen producten met deze filters.</p>
+        </div>
+        <div className={styles.cards}>
+          <p className={styles.empty}>Geen producten met deze filters.</p>
+        </div>
+      </>
     );
   }
 
@@ -124,6 +129,65 @@ export default function ProductTable({
             })}
           </tbody>
         </table>
+      </div>
+
+      <div className={styles.cards}>
+        {rows.map((row) => {
+          const price = row.priceOverride ?? row.feedPrice;
+          const hidden = row.published === false;
+          const low = row.trackStock && row.stockQuantity <= row.minQuantity;
+
+          return (
+            <div key={row.slug} className={styles.card} style={hidden ? { opacity: 0.55 } : undefined}>
+              <div className={styles.cardHead}>
+                <Link
+                  className={`${styles.strong} ${styles.link} ${styles.cardTitle}`}
+                  href={`/admin/producten/${encodeURIComponent(row.slug)}`}
+                >
+                  {row.titleOverride ?? row.title}
+                  <span className={styles.sub}>{row.makes.join(', ') || 'geen merk'} · {row.slug}</span>
+                </Link>
+                <span className={`${styles.badge} ${hidden ? styles.no : styles.ok}`}>
+                  {hidden ? 'verborgen' : 'zichtbaar'}
+                </span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Categorie</span>
+                <span className={styles.cardValue}>{row.category}</span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Voor</span>
+                <span className={styles.cardValue}>{row.audience === 'trade' ? 'vakhandel' : 'publiek'}</span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Inkoop</span>
+                <span className={styles.cardValue}>
+                  {row.costOverride !== null
+                    ? MONEY.format(row.costOverride)
+                    : row.feedCost !== null
+                      ? MONEY.format(row.feedCost)
+                      : '—'}
+                </span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Prijs</span>
+                <span className={styles.cardValue}>
+                  {price !== null ? MONEY.format(price) : '—'}
+                  {row.priceOverride !== null && ` (eigen prijs)`}
+                </span>
+              </div>
+              <div className={styles.cardRow}>
+                <span className={styles.cardLabel}>Voorraad</span>
+                <span
+                  className={styles.cardValue}
+                  style={low ? { color: 'var(--crm-stop)', fontWeight: 700 } : undefined}
+                >
+                  {row.trackStock ? `${row.stockQuantity}${low ? ' · bijbestellen' : ''}` : 'niet bijgehouden'}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {pages > 1 && (

@@ -260,3 +260,75 @@
   font-size: 13px;
   line-height: 1.5;
 }
+
+/*
+ * The mobile card list every table on this shared module can reuse: a title
+ * line plus label/value rows for whatever columns that table has. Kept
+ * generic on purpose — Klanten, Rapportage, Producten and Orders each have
+ * different columns, and a bespoke card per table would be six designs for
+ * what is fundamentally one shape.
+ *
+ * `.cards` defaults to hidden and only the media query turns it on — the one
+ * unconditional rule comes first, so there's nothing after it in the file to
+ * silently win regardless of viewport (the exact bug fixed in
+ * BusDashboard.module.css earlier).
+ */
+.cards {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: 12px 14px;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.cardTitle {
+  min-width: 0;
+}
+
+.cardRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 3px 0;
+  font-size: 13px;
+}
+
+.cardRow:last-child {
+  padding-bottom: 0;
+}
+
+.cardLabel {
+  flex: none;
+  color: var(--crm-muted);
+}
+
+.cardValue {
+  min-width: 0;
+  text-align: right;
+  color: var(--crm-ink);
+}
+
+@media (max-width: 720px) {
+  .wrap {
+    display: none;
+  }
+  .cards {
+    display: flex;
+  }
+}

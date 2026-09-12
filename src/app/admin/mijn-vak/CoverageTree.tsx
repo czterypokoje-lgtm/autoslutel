@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronRight, Key, Radio, Search } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { SCENARIOS, type Scenario } from '@/lib/scenarios';
@@ -48,18 +47,24 @@ export default function CoverageTree({
   catalog: CatalogMake[];
   coverage: CoverageEntry[];
 }) {
-  const router = useRouter();
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /*
+   * A local, mutable copy of the prop — same reasoning as BusDashboard's
+   * stock stepper: setting up coverage means ticking many boxes in a row,
+   * and waiting for a full router.refresh() per tap made that feel exactly
+   * as slow as the stock stepper did before it got the same treatment.
+   */
+  const [rows, setRows] = useState(coverage);
 
   const supabase = createSupabaseBrowserClient();
 
   /* make -> model|'' -> which key types are on, from the rows that exist */
   const state = useMemo(() => {
     const map = new Map<string, Map<string, Set<KeyType>>>();
-    for (const row of coverage) {
+    for (const row of rows) {
       if (row.excluded || row.scenario !== 'bijmaken') continue;
       const make = norm(row.make);
       const model = row.model ? norm(row.model) : '';
@@ -81,7 +86,7 @@ export default function CoverageTree({
       }
     }
     return map;
-  }, [coverage]);
+  }, [rows]);
 
   const hasType = (make: string, model: string, type: KeyType): boolean =>
     state.get(norm(make))?.get(norm(model))?.has(type) ?? false;
@@ -112,6 +117,11 @@ export default function CoverageTree({
    * On: one upsert per scenario. Off: one delete matching that exact row
    * shape — never a blanket delete, or turning off "keyless" would also
    * remove a separately-declared "blade" row for the same car.
+   *
+   * Updates `rows` immediately and only reaches for the network in the
+   * background — reverting on an actual failure — instead of waiting for a
+   * full refetch to show a tap that already succeeded from the tapper's
+   * point of view.
    */
   async function setCoverage(make: string, model: string | null, type: KeyType, on: boolean) {
     const key = `${make}|${model ?? ''}|${type}`;
@@ -119,9 +129,22 @@ export default function CoverageTree({
     setError(null);
 
     const keylessValue = type === 'keyless';
+    const previous = rows;
 
     if (on) {
-      const rows = SCENARIOS.map((scenario: Scenario) => ({
+      const newRows: CoverageEntry[] = SCENARIOS.map((scenario: Scenario) => ({
+        id: `pending-${key}-${scenario}`,
+        make,
+        model,
+        scenario,
+        from_year: null,
+        to_year: null,
+        excluded: false,
+        keyless: keylessValue,
+      }));
+      setRows((prev) => [...prev, ...newRows]);
+
+      const upsertRows = SCENARIOS.map((scenario: Scenario) => ({
         technician_id: technicianId,
         make,
         model,
@@ -131,8 +154,9 @@ export default function CoverageTree({
       }));
       const { error: upsertError } = await supabase
         .from('technician_coverage')
-        .upsert(rows, { onConflict: 'technician_id,make,model,scenario,keyless' });
+        .upsert(upsertRows, { onConflict: 'technician_id,make,model,scenario,keyless' });
       if (upsertError) {
+        setRows(previous);
         setError(
           /does not exist|relation|column/i.test(upsertError.message)
             ? 'Voer supabase/migrations/0023_coverage_keyless.sql uit.'
@@ -140,6 +164,15 @@ export default function CoverageTree({
         );
       }
     } else {
+      setRows((prev) =>
+        prev.filter((r) => {
+          const sameMake = norm(r.make) === norm(make);
+          const sameModel = model ? norm(r.model ?? '') === norm(model) : r.model === null;
+          const sameType = r.keyless === keylessValue;
+          return !(sameMake && sameModel && sameType);
+        })
+      );
+
       let query = supabase
         .from('technician_coverage')
         .delete()
@@ -148,14 +181,16 @@ export default function CoverageTree({
         .eq('keyless', keylessValue);
       query = model ? query.ilike('model', model) : query.is('model', null);
       const { error: deleteError } = await query;
-      if (deleteError) setError(deleteError.message);
+      if (deleteError) {
+        setRows(previous);
+        setError(deleteError.message);
+      }
     }
 
     setBusy(null);
-    router.refresh();
   }
 
-  const totalOn = coverage.filter((r) => !r.excluded && r.scenario === 'bijmaken').length;
+  const totalOn = rows.filter((r) => !r.excluded && r.scenario === 'bijmaken').length;
 
   return (
     <div>
