@@ -155,7 +155,14 @@ export default async function MonteurOverview({ user }: { user: CrmUser }) {
         style={{ '--hero-accent': next ? STATUS_ACCENT[next.status] : 'var(--crm-rule)' } as CSSProperties}
       >
       <Card className={styles.hero}>
-        <CardHead>Volgende klus</CardHead>
+        <CardHead>
+          Volgende klus
+          {upcoming.length > 0 && (
+            <span className={styles.heroCount}>
+              · {upcoming.length} {upcoming.length === 1 ? 'klus' : 'klussen'} nog te gaan
+            </span>
+          )}
+        </CardHead>
         {!next ? (
           <Empty>
             {finishedToday.length > 0
@@ -184,6 +191,18 @@ export default async function MonteurOverview({ user }: { user: CrmUser }) {
               <Wrench size={14} strokeWidth={2} className={styles.heroIcon} />
               {next.service_type ?? 'geen dienst'}
             </div>
+          </div>
+        )}
+        {upcoming.length > 1 && (
+          <div className={styles.heroUpcoming}>
+            {upcoming.slice(1).map((job) => (
+              <Row
+                key={job.id}
+                title={[job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ') || 'Klus'}
+                note={job.service_type ?? undefined}
+                meta={`${slotLabel(job.slot_start, job.slot_end)} · ${job.city || '—'}`}
+              />
+            ))}
           </div>
         )}
         <Link href="/admin/vandaag" className={styles.heroLink}>

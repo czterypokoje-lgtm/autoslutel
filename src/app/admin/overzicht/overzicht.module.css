@@ -72,6 +72,17 @@
   letter-spacing: 0.03em;
 }
 
+.heroCount {
+  margin-left: var(--sp-1);
+  color: var(--crm-muted);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+}
+
+.heroUpcoming {
+  border-top: 1px solid var(--crm-rule);
+}
+
 .heroLink {
   display: block;
   padding: var(--sp-4) var(--sp-5);
