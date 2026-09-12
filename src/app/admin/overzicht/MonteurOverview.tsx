@@ -4,6 +4,7 @@ import { Car, MapPin, Wrench } from 'lucide-react';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate, slotLabel, JOB_STATUS_LABELS, type JobStatus } from '@/lib/crmJobs';
 import { earnedOn, computeAvailable } from '@/lib/technicianBalance';
+import { stockStatus } from '@/lib/stockStatus';
 import { PageHead, Card, CardHead, Row, Notice, Empty } from '../_ui';
 import { HighlightCard, BarChart, chart } from '../_ui/charts';
 import styles from './overzicht.module.css';
@@ -130,9 +131,8 @@ export default async function MonteurOverview({ user }: { user: CrmUser }) {
     .filter((p) => p.status === 'pending')
     .reduce((sum, p) => sum + Number(p.amount), 0);
 
-  const lowStock = (stock ?? []).filter(
-    (s) => s.min_quantity !== null && Number(s.quantity) <= Number(s.min_quantity)
-  ).length;
+  const outOfStock = (stock ?? []).filter((s) => stockStatus(s) === 'out').length;
+  const lowStock = (stock ?? []).filter((s) => stockStatus(s) === 'low').length;
 
   /* ── this week, per day ── */
   const weekBars = DAY_LABELS.map((label, index) => {
@@ -218,11 +218,18 @@ export default async function MonteurOverview({ user }: { user: CrmUser }) {
         <HighlightCard label="Open aanbod" value={offerCount ?? 0} delta={null} />
       </div>
 
-      {(lowStock > 0 || pendingPayout > 0) && (
+      {(outOfStock > 0 || lowStock > 0 || pendingPayout > 0) && (
         <Card className={styles.stack}>
           <CardHead>Even checken</CardHead>
+          {outOfStock > 0 && (
+            <Row
+              title="Artikelen op in uw bus"
+              meta={`${outOfStock} artikel${outOfStock === 1 ? '' : 'en'}`}
+              href="/admin/mijn-bus"
+            />
+          )}
           {lowStock > 0 && (
-            <Row title="Lage voorraad in uw bus" meta={`${lowStock} artikel${lowStock === 1 ? '' : 'en'}`} href="/admin/mijn-bus" />
+            <Row title="Bijna op in uw bus" meta={`${lowStock} artikel${lowStock === 1 ? '' : 'en'}`} href="/admin/mijn-bus" />
           )}
           {pendingPayout > 0 && (
             <Row title="Uitbetaling aangevraagd" meta={euro(pendingPayout)} href="/admin/mijn-saldo" />

@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate, slotLabel } from '@/lib/crmJobs';
+import { stockStatus } from '@/lib/stockStatus';
 import { PageHead, Card, CardHead, Row, Badge, Notice } from '../_ui';
 import { HighlightCard, LineChart, BarChart, RankedBars, Donut, chart } from '../_ui/charts';
 import styles from './overzicht.module.css';
@@ -110,17 +111,23 @@ export default async function OfficeOverview() {
   const priorWeek = weeks[1];
 
   /* ── the queues that need a decision ── */
+  const outOfStockTechnicians = new Set(
+    (stock ?? []).filter((s) => stockStatus(s) === 'out').map((s) => s.technician_id)
+  );
   const lowStockTechnicians = new Set(
-    (stock ?? [])
-      .filter((s) => s.min_quantity !== null && Number(s.quantity) <= Number(s.min_quantity))
-      .map((s) => s.technician_id)
+    (stock ?? []).filter((s) => stockStatus(s) === 'low').map((s) => s.technician_id)
   );
   const pendingPayoutTotal = (pendingPayouts ?? []).reduce((sum, p) => sum + Number(p.amount), 0);
   const pendingPayoutCount = (pendingPayouts ?? []).length;
   const ordersWaiting = ordersToPlan ?? 0;
   const unmetThisWeek = unmetCount ?? 0;
 
-  const hasQueue = ordersWaiting > 0 || pendingPayoutCount > 0 || lowStockTechnicians.size > 0 || unmetThisWeek > 0;
+  const hasQueue =
+    ordersWaiting > 0 ||
+    pendingPayoutCount > 0 ||
+    outOfStockTechnicians.size > 0 ||
+    lowStockTechnicians.size > 0 ||
+    unmetThisWeek > 0;
 
   /* ── who's out there right now ── */
   const techs = technicians ?? [];
@@ -214,10 +221,17 @@ export default async function OfficeOverview() {
                 href="/admin/kas"
               />
             )}
+            {outOfStockTechnicians.size > 0 && (
+              <Row
+                title="Artikelen op"
+                meta={`bij ${outOfStockTechnicians.size} monteur${outOfStockTechnicians.size === 1 ? '' : 's'}`}
+                href="/admin/monteurs"
+              />
+            )}
             {lowStockTechnicians.size > 0 && (
               <Row
                 title="Lage voorraad"
-                meta={`${lowStockTechnicians.size} monteur${lowStockTechnicians.size === 1 ? '' : 's'}`}
+                meta={`bij ${lowStockTechnicians.size} monteur${lowStockTechnicians.size === 1 ? '' : 's'}`}
                 href="/admin/monteurs"
               />
             )}

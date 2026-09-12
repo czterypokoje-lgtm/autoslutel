@@ -1,6 +1,7 @@
-import { Boxes, PackageCheck, TriangleAlert, Warehouse } from 'lucide-react';
+import { Boxes, PackageCheck, PackageX, TriangleAlert, Warehouse } from 'lucide-react';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { stockStatus } from '@/lib/stockStatus';
 import { PageHead, StatGrid, Stat, Notice } from '../_ui';
 import BusDashboard from './BusDashboard';
 import InvoicePanel, { type InvoiceRow } from './InvoicePanel';
@@ -54,13 +55,8 @@ export default async function MijnBusPage() {
 
   const stock = myStock ?? [];
   const inVan = stock.reduce((total, item) => total + Number(item.quantity ?? 0), 0);
-  /*
-   * "Bijna op" is what min_quantity is for: a part sitting at or under the
-   * level the technician set is the one that will not be there next week.
-   */
-  const low = stock.filter(
-    (item) => Number(item.min_quantity ?? 0) > 0 && Number(item.quantity ?? 0) <= Number(item.min_quantity)
-  ).length;
+  const outCount = stock.filter((item) => stockStatus(item) === 'out').length;
+  const lowCount = stock.filter((item) => stockStatus(item) === 'low').length;
   const value = stock.reduce(
     (total, item) => total + Number(item.quantity ?? 0) * Number(item.unit_cost ?? 0),
     0
@@ -86,6 +82,18 @@ export default async function MijnBusPage() {
         sub="Wat er nu in uw bus ligt. Haal uit het magazijn, geef door aan een collega, of upload een inkoopfactuur om alles in één keer bij te schrijven."
       />
 
+      {(outCount > 0 || lowCount > 0) && (
+        <Notice tone={outCount > 0 ? 'bad' : 'info'}>
+          {[
+            outCount > 0 && `${outCount} artikel${outCount === 1 ? ' is' : 'en zijn'} op`,
+            lowCount > 0 && `${lowCount} artikel${lowCount === 1 ? '' : 'en'} bijna op`,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          .
+        </Notice>
+      )}
+
       <StatGrid>
         <Stat
           label="Artikelen"
@@ -94,11 +102,18 @@ export default async function MijnBusPage() {
           icon={<Boxes size={15} strokeWidth={2} />}
         />
         <Stat
+          label="Op"
+          value={outCount}
+          foot={outCount ? 'geen stuks meer over' : 'niets helemaal op'}
+          icon={<PackageX size={15} strokeWidth={2} />}
+          tone={outCount ? 'stop' : undefined}
+        />
+        <Stat
           label="Bijna op"
-          value={low}
-          foot={low ? 'onder uw eigen minimum' : 'niets onder het minimum'}
+          value={lowCount}
+          foot={lowCount ? 'onder uw eigen minimum' : 'niets onder het minimum'}
           icon={<TriangleAlert size={15} strokeWidth={2} />}
-          tone={low ? 'warn' : undefined}
+          tone={lowCount ? 'warn' : undefined}
         />
         <Stat
           label="Inkoopwaarde"

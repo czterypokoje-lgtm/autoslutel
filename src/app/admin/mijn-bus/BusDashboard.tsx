@@ -2,9 +2,20 @@
 
 import { useState } from 'react';
 import { adjustOwnStock } from './actions';
+import { stockStatus } from '@/lib/stockStatus';
 import styles from './BusDashboard.module.css';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+
+/** The same "op" / "bijna op" marking, wherever an article is listed. */
+function StockBadge({ status }: { status: 'out' | 'low' | 'ok' }) {
+  if (status === 'ok') return null;
+  return (
+    <span className={status === 'out' ? styles.stockBadgeStop : styles.stockBadgeWarn}>
+      {status === 'out' ? 'Op' : 'Bijna op'}
+    </span>
+  );
+}
 
 export default function BusDashboard({
   myStock,
@@ -169,6 +180,7 @@ export default function BusDashboard({
                     <div className={styles.productCell}>
                       <div style={{ fontSize: '1.5rem' }}>📦</div>
                       {item.description}
+                      <StockBadge status={stockStatus(item)} />
                     </div>
                   </td>
                   <td>{unitPrice === null ? '—' : MONEY.format(unitPrice)}</td>
@@ -228,6 +240,7 @@ export default function BusDashboard({
                 <div className={styles.stockCardHead}>
                   <span style={{ fontSize: '1.3rem' }}>📦</span>
                   <span className={styles.stockCardName}>{item.description}</span>
+                  <StockBadge status={stockStatus(item)} />
                 </div>
 
                 <div className={styles.stockCardPrice}>
