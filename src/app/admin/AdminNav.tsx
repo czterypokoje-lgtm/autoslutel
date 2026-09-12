@@ -6,6 +6,7 @@ import {
   BadgeCheck,
   BarChart3,
   CalendarDays,
+  Euro,
   Handshake,
   CircleUser,
   History,
@@ -51,6 +52,7 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
       { href: '/admin/jobs', label: 'Agenda', icon: CalendarDays },
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
       { href: '/admin/netwerk', label: 'Netwerk', icon: MessageSquare },
+      { href: '/admin/tarieven', label: 'Tarieven', icon: Euro },
     ],
   },
   {

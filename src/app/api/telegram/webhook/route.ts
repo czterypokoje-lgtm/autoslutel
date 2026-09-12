@@ -16,7 +16,7 @@ interface TelegramUpdate {
 }
 
 /** `/start <technician_id>` — the deep link from Mijn profiel, connecting this chat. */
-async function handleStart(chatId: number | string, technicianId: string) {
+async function handleTechnicianStart(chatId: number | string, technicianId: string) {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase
     .from('technicians')
@@ -24,6 +24,19 @@ async function handleStart(chatId: number | string, technicianId: string) {
     .eq('id', technicianId);
   if (error) {
     console.error('Telegram chat id link failed:', error.message);
+    return;
+  }
+  await sendTelegram(String(chatId), 'Gekoppeld! U ontvangt hier voortaan meldingen van Autosleutel24.');
+}
+
+/** `/start admin_<user_id>` — the same connect link, from an office user's Mijn profiel instead. */
+async function handleAdminStart(chatId: number | string, userId: string) {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from('admin_telegram')
+    .upsert({ user_id: userId, telegram_chat_id: String(chatId) }, { onConflict: 'user_id' });
+  if (error) {
+    console.error('Telegram admin chat id link failed:', error.message);
     return;
   }
   await sendTelegram(String(chatId), 'Gekoppeld! U ontvangt hier voortaan meldingen van Autosleutel24.');
@@ -97,10 +110,14 @@ export async function POST(request: Request) {
 
   const text = body.message?.text ?? '';
   const chatId = body.message?.chat?.id;
-  const match = /^\/start(?:@\w+)?\s+([0-9a-f-]{36})/i.exec(text);
+  const match = /^\/start(?:@\w+)?\s+(admin_)?([0-9a-f-]{36})/i.exec(text);
 
-  if (match && chatId !== undefined && UUID.test(match[1])) {
-    await handleStart(chatId, match[1]);
+  if (match && chatId !== undefined && UUID.test(match[2])) {
+    if (match[1]) {
+      await handleAdminStart(chatId, match[2]);
+    } else {
+      await handleTechnicianStart(chatId, match[2]);
+    }
   }
 
   // Telegram only cares about the 200 — it retries anything else.

@@ -1,8 +1,14 @@
-import { requireCrmUser } from '@/lib/crmSession';
+import { requireCrmUser, OFFICE_ROLES } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../vandaag/vandaag.module.css';
 import ProfileForm, { type Profile } from './ProfileForm';
 import { technicianColour } from '@/lib/crmColours';
+
+function telegramConnectUrl(startPayload: string): string | null {
+  return process.env.TELEGRAM_BOT_USERNAME
+    ? `https://t.me/${process.env.TELEGRAM_BOT_USERNAME}?start=${startPayload}`
+    : null;
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -39,6 +45,55 @@ export default async function MijnProfielPage() {
   }
 
   if (!data) {
+    // Office roles have no technicians row at all — that's expected, not an
+    // error, and this is where their own (admin_telegram) connect card lives
+    // instead of a technician profile there's nothing to show for them.
+    if (user.role && OFFICE_ROLES.includes(user.role)) {
+      const { data: adminTelegram } = await supabase
+        .from('admin_telegram')
+        .select('telegram_chat_id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      return (
+        <div className={styles.wrap}>
+          <div className={styles.head}>
+            <h1 className={styles.title}>Mijn profiel</h1>
+            <span className={styles.sub}>{user.email}</span>
+          </div>
+          <div className={styles.card}>
+            <div className={styles.body}>
+              <span className={styles.label}>Meldingen via Telegram</span>
+              {adminTelegram?.telegram_chat_id ? (
+                <p className={styles.meta}>
+                  Gekoppeld — nieuwe klantgesprekken en meldingen komen hier binnen.
+                </p>
+              ) : telegramConnectUrl(`admin_${user.id}`) ? (
+                <>
+                  <p className={styles.meta}>Nog niet gekoppeld.</p>
+                  <a
+                    className={`${styles.tap} ${styles.tapPrimary}`}
+                    style={{ gridColumn: 'auto', width: '100%', textDecoration: 'none' }}
+                    href={telegramConnectUrl(`admin_${user.id}`)!}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open Telegram en druk op Start
+                  </a>
+                  <p className={styles.note}>
+                    Opent de Autosleutel24-bot in Telegram. Druk daar op <strong>Start</strong> — daarna
+                    komen gesprektranscripten van de spraakassistent en andere meldingen hier automatisch binnen.
+                  </p>
+                </>
+              ) : (
+                <p className={styles.note}>Nog niet beschikbaar op deze omgeving.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={styles.wrap}>
         <p className={styles.warning}>
@@ -61,9 +116,7 @@ export default async function MijnProfielPage() {
     employmentType: (data.employment_type as string) ?? 'zzp',
     email: user.email ?? '',
     telegramConnected: Boolean(data.telegram_chat_id),
-    telegramConnectUrl: process.env.TELEGRAM_BOT_USERNAME
-      ? `https://t.me/${process.env.TELEGRAM_BOT_USERNAME}?start=${data.id}`
-      : null,
+    telegramConnectUrl: telegramConnectUrl(data.id as string),
   };
 
   return <ProfileForm profile={profile} />;

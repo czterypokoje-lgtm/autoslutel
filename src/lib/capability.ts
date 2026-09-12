@@ -51,7 +51,7 @@ const norm = (value: string | null | undefined) =>
  * Sportsvan" does not cover a plain "Golf" — that would be us widening a claim
  * the technician did not make.
  */
-function modelMatches(rowModel: string | null, carModel: string | null | undefined): boolean {
+export function modelMatches(rowModel: string | null, carModel: string | null | undefined): boolean {
   if (!rowModel) return true; // the row covers the whole make
   const row = norm(rowModel);
   const car = norm(carModel);
@@ -59,7 +59,12 @@ function modelMatches(rowModel: string | null, carModel: string | null | undefin
   return car === row || car.startsWith(`${row} `);
 }
 
-function yearMatches(row: CoverageRow, year: number | null | undefined): boolean {
+export interface YearRange {
+  from_year: number | null;
+  to_year: number | null;
+}
+
+export function yearMatches(row: YearRange, year: number | null | undefined): boolean {
   if (row.from_year == null && row.to_year == null) return true;
   if (year == null) return true; // no year stated: do not exclude on it
   if (row.from_year != null && year < row.from_year) return false;
@@ -73,14 +78,18 @@ function yearMatches(row: CoverageRow, year: number | null | undefined): boolean
  * both; `null` on the request means the car's key type is not known, and an
  * unknown must not exclude a row any more than an unstated year does.
  */
-function keylessMatches(row: CoverageRow, keyless: boolean | null | undefined): boolean {
+export interface KeylessRow {
+  keyless: boolean | null;
+}
+
+export function keylessMatches(row: KeylessRow, keyless: boolean | null | undefined): boolean {
   if (row.keyless == null) return true;
   if (keyless == null) return true;
   return row.keyless === keyless;
 }
 
 /** A model-specific row outranks a make-wide one, whichever way it points. */
-const specificity = (row: CoverageRow) => (row.model ? 2 : 1);
+export const specificity = (row: { model: string | null }) => (row.model ? 2 : 1);
 
 /**
  * Whether these coverage rows say yes to this car and scenario.
@@ -111,6 +120,45 @@ export function coversCar(
   // A single exclusion at the deciding level is a no: the technician said no
   // to this car specifically, and that beats a general yes.
   return deciding.some((row) => !row.excluded) && !deciding.some((row) => row.excluded);
+}
+
+/**
+ * Do we serve this car at all, in any scenario? The gate the voice agent
+ * checks before it even asks what's wrong — deliberately scenario- and
+ * keyless-blind, because those aren't known yet at that point in the call.
+ */
+export function anyCoverage(rows: CoverageRow[], car: Car): boolean {
+  const make = norm(car.make);
+  const matches = rows.filter(
+    (row) => norm(row.make) === make && modelMatches(row.model, car.model) && yearMatches(row, car.year)
+  );
+  if (!matches.length) return false;
+
+  const strongest = Math.max(...matches.map(specificity));
+  const deciding = matches.filter((row) => specificity(row) === strongest);
+  return deciding.some((row) => !row.excluded);
+}
+
+/**
+ * Smart key or bladed key, read off what technicians have actually declared
+ * for this car — `null` when coverage is silent or mixed, which the agent
+ * treats as "ask the caller" rather than "assume".
+ */
+export function keylessSignal(rows: CoverageRow[], car: Car): boolean | null {
+  const make = norm(car.make);
+  const matches = rows.filter(
+    (row) =>
+      !row.excluded && norm(row.make) === make && modelMatches(row.model, car.model) && yearMatches(row, car.year)
+  );
+  if (!matches.length) return null;
+
+  const strongest = Math.max(...matches.map(specificity));
+  const deciding = matches.filter((row) => specificity(row) === strongest);
+  const smart = deciding.some((row) => row.keyless === true);
+  const plain = deciding.some((row) => row.keyless === false || row.keyless == null);
+  if (smart && !plain) return true;
+  if (plain && !smart) return false;
+  return null;
 }
 
 /** Group flat coverage rows by technician, ready for coversCar. */

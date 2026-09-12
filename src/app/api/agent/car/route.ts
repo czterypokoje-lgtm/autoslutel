@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { checkAgent, asText, asYear } from '@/lib/agentAuth';
-import { knowCar, looksKeyless } from '@/lib/quote';
+import { anyCoverage, keylessSignal, type CoverageRow } from '@/lib/capability';
 import { repairMake, repairModel, repairYear, repairPostcode, repairPhone } from '@/lib/agentInput';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,7 +37,20 @@ export async function POST(request: Request) {
   const modelIn = repairModel(body.model, make);
   const yearIn = repairYear(body.year);
   const car = { make, model: modelIn.value, year: yearIn.value };
-  const known = knowCar(car);
+
+  /*
+   * "Do we know this car" is a dispatch question, not a webshop one — answered
+   * by what technicians have declared they can do (technician_coverage), never
+   * by the retail parts catalogue. A technician's coverage is scenario- and
+   * keyless-blind here on purpose: neither is known yet at this point in the call.
+   */
+  const supabase = createSupabaseAdminClient();
+  const { data: coverageRows } = await supabase
+    .from('technician_coverage')
+    .select('technician_id, make, model, scenario, from_year, to_year, excluded, keyless');
+  const rows = (coverageRows ?? []) as CoverageRow[];
+
+  const known = anyCoverage(rows, car);
 
   return NextResponse.json({
     known,
@@ -55,12 +69,12 @@ export async function POST(request: Request) {
       heard: { make: makeIn.heard, model: modelIn.heard, year: yearIn.heard },
     },
     /*
-     * null means "we cannot tell from the catalogue" — both a smart key and a
-     * bladed key exist for this car, so the trim decides and the caller has to
+     * null means coverage is silent or mixed — both a smart key and a bladed
+     * key are declared for this car, so the trim decides and the caller has to
      * be asked. When they answer, their answer wins: they are the one looking
      * at the car.
      */
-    keyless: looksKeyless(car),
+    keyless: keylessSignal(rows, car),
     /*
      * When we corrected something, the agent gets the sentence to say rather
      * than composing one — a confirmation is only useful if it names what we
