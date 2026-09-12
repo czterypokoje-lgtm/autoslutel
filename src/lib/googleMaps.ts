@@ -82,9 +82,16 @@ export async function resolvePostcode(postcode: string): Promise<PostcodeLocatio
     return { city: null, coords: null };
   }
 
+  /*
+   * A free-text `address` search fuzzy-matches — a malformed or nonexistent
+   * postcode like "6802EE" (missing the space Google's parser wants) can come
+   * back "OK" while actually matching an unrelated village, which is worse
+   * than returning nothing. The `components` filter asks for an exact postal
+   * code instead of guessing, and cleanly reports ZERO_RESULTS when there
+   * isn't one.
+   */
   const url = new URL('https://maps.googleapis.com/maps/api/geocode/json');
-  url.searchParams.set('address', `${postcode}, Netherlands`);
-  url.searchParams.set('region', 'nl');
+  url.searchParams.set('components', `postal_code:${postcode}|country:NL`);
   url.searchParams.set('key', API_KEY);
 
   const data = await getJson(url);
