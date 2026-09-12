@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { ChevronDown, ChevronRight, Key, Radio, Search } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
-import { SCENARIOS, type Scenario } from '@/lib/scenarios';
+import { SCENARIOS, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import type { CatalogMake } from '@/lib/carCatalog';
 import styles from './tree.module.css';
 
@@ -24,15 +24,21 @@ const norm = (v: string) => v.trim().toLowerCase();
 
 /**
  * The whole "which cars can you do" question, answered with two checkboxes
- * instead of a form.
+ * per scenario instead of a form.
  *
- * Every toggle here writes or removes a full set of four scenario rows in one
- * go — a technician who can cut a key can, in the ordinary case, also handle
- * a lost-all-keys job on the same car, and asking them to declare that four
- * times per model is precision nobody wants. A make-level checkbox is the
- * same action at the make instead of the model: `model = null` already means
- * "the whole make" everywhere else in the platform (capability.ts), so
- * checking it here is not a shortcut, it is the real, correct row.
+ * Scoped to one scenario tab at a time on purpose — bijmaken (spare key),
+ * alle sleutels kwijt (AKL), reparatie and slot/cilinder are genuinely
+ * different jobs needing different tools and experience, and coversCar()
+ * (capability.ts) already matches dispatch on the exact scenario a job needs.
+ * An earlier version of this picker wrote all four scenarios at once when a
+ * make was switched on — convenient to build, but it meant ticking "Toyota,
+ * met sleutel" silently also claimed AKL and slot/cilinder for that car,
+ * which is exactly the wrong side to be wrong on: capability.ts's own words,
+ * "a job we accept and cannot do costs the call-out, the customer, and the
+ * review." A make-level checkbox is still the same action at the make
+ * instead of the model: `model = null` already means "the whole make"
+ * everywhere else in the platform, so checking it here is not a shortcut, it
+ * is the real, correct row — just for one scenario, not four.
  *
  * The list itself is our own catalogue (carCatalog.ts) rather than a generic
  * car database: nothing outside it is a car we can put a key on, so nothing
@@ -51,6 +57,7 @@ export default function CoverageTree({
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [activeScenario, setActiveScenario] = useState<Scenario>('bijmaken');
   /*
    * A local, mutable copy of the prop — same reasoning as BusDashboard's
    * stock stepper: setting up coverage means ticking many boxes in a row,
@@ -61,11 +68,21 @@ export default function CoverageTree({
 
   const supabase = createSupabaseBrowserClient();
 
-  /* make -> model|'' -> which key types are on, from the rows that exist */
+  /** How many makes/models are on, per scenario — the tab bar's count badges. */
+  const countByScenario = useMemo(() => {
+    const counts = new Map<Scenario, number>();
+    for (const row of rows) {
+      if (row.excluded) continue;
+      counts.set(row.scenario, (counts.get(row.scenario) ?? 0) + 1);
+    }
+    return counts;
+  }, [rows]);
+
+  /* make -> model|'' -> which key types are on, from the rows that exist, for the active scenario only */
   const state = useMemo(() => {
     const map = new Map<string, Map<string, Set<KeyType>>>();
     for (const row of rows) {
-      if (row.excluded || row.scenario !== 'bijmaken') continue;
+      if (row.excluded || row.scenario !== activeScenario) continue;
       const make = norm(row.make);
       const model = row.model ? norm(row.model) : '';
       let models = map.get(make);
@@ -86,7 +103,7 @@ export default function CoverageTree({
       }
     }
     return map;
-  }, [rows]);
+  }, [rows, activeScenario]);
 
   const hasType = (make: string, model: string, type: KeyType): boolean =>
     state.get(norm(make))?.get(norm(model))?.has(type) ?? false;
@@ -113,10 +130,12 @@ export default function CoverageTree({
   }
 
   /**
-   * Turn a key type on or off for a make (model = null) or a specific model.
-   * On: one upsert per scenario. Off: one delete matching that exact row
-   * shape — never a blanket delete, or turning off "keyless" would also
-   * remove a separately-declared "blade" row for the same car.
+   * Turn a key type on or off, for the active scenario, for a make
+   * (model = null) or a specific model. On: one upsert. Off: one delete
+   * matching that exact row shape — never a blanket delete, or turning off
+   * "keyless" would also remove a separately-declared "blade" row, and never
+   * across scenarios, or turning off "bijmaken" would also revoke AKL the
+   * technician set up separately on the same car.
    *
    * Updates `rows` immediately and only reaches for the network in the
    * background — reverting on an actual failure — instead of waiting for a
@@ -124,7 +143,7 @@ export default function CoverageTree({
    * point of view.
    */
   async function setCoverage(make: string, model: string | null, type: KeyType, on: boolean) {
-    const key = `${make}|${model ?? ''}|${type}`;
+    const key = `${activeScenario}|${make}|${model ?? ''}|${type}`;
     setBusy(key);
     setError(null);
 
@@ -132,29 +151,31 @@ export default function CoverageTree({
     const previous = rows;
 
     if (on) {
-      const newRows: CoverageEntry[] = SCENARIOS.map((scenario: Scenario) => ({
-        id: `pending-${key}-${scenario}`,
+      const newRow: CoverageEntry = {
+        id: `pending-${key}`,
         make,
         model,
-        scenario,
+        scenario: activeScenario,
         from_year: null,
         to_year: null,
         excluded: false,
         keyless: keylessValue,
-      }));
-      setRows((prev) => [...prev, ...newRows]);
+      };
+      setRows((prev) => [...prev, newRow]);
 
-      const upsertRows = SCENARIOS.map((scenario: Scenario) => ({
-        technician_id: technicianId,
-        make,
-        model,
-        scenario,
-        keyless: keylessValue,
-        excluded: false,
-      }));
-      const { error: upsertError } = await supabase
-        .from('technician_coverage')
-        .upsert(upsertRows, { onConflict: 'technician_id,make,model,scenario,keyless' });
+      const { error: upsertError } = await supabase.from('technician_coverage').upsert(
+        [
+          {
+            technician_id: technicianId,
+            make,
+            model,
+            scenario: activeScenario,
+            keyless: keylessValue,
+            excluded: false,
+          },
+        ],
+        { onConflict: 'technician_id,make,model,scenario,keyless' }
+      );
       if (upsertError) {
         setRows(previous);
         setError(
@@ -166,10 +187,11 @@ export default function CoverageTree({
     } else {
       setRows((prev) =>
         prev.filter((r) => {
+          const sameScenario = r.scenario === activeScenario;
           const sameMake = norm(r.make) === norm(make);
           const sameModel = model ? norm(r.model ?? '') === norm(model) : r.model === null;
           const sameType = r.keyless === keylessValue;
-          return !(sameMake && sameModel && sameType);
+          return !(sameScenario && sameMake && sameModel && sameType);
         })
       );
 
@@ -177,6 +199,7 @@ export default function CoverageTree({
         .from('technician_coverage')
         .delete()
         .eq('technician_id', technicianId)
+        .eq('scenario', activeScenario)
         .ilike('make', make)
         .eq('keyless', keylessValue);
       query = model ? query.ilike('model', model) : query.is('model', null);
@@ -190,11 +213,29 @@ export default function CoverageTree({
     setBusy(null);
   }
 
-  const totalOn = rows.filter((r) => !r.excluded && r.scenario === 'bijmaken').length;
+  const totalOn = countByScenario.get(activeScenario) ?? 0;
 
   return (
     <div>
       {error && <p className={styles.errorNote}>{error}</p>}
+
+      <div className={styles.scenarioTabs}>
+        {SCENARIOS.map((scenario) => (
+          <button
+            key={scenario}
+            type="button"
+            className={`${styles.scenarioTab} ${scenario === activeScenario ? styles.scenarioTabOn : ''}`}
+            onClick={() => setActiveScenario(scenario)}
+          >
+            {SCENARIO_INFO[scenario].label}
+            <span className={styles.scenarioTabCount}>{countByScenario.get(scenario) ?? 0}</span>
+          </button>
+        ))}
+      </div>
+      <p className={styles.scenarioNote}>
+        Dekking is per situatie — een merk aanvinken bij &ldquo;{SCENARIO_INFO.bijmaken.label}&rdquo; betekent niet
+        automatisch dat u ook &ldquo;{SCENARIO_INFO.alle_sleutels_kwijt.label}&rdquo; aankunt. Zet elke situatie apart aan.
+      </p>
 
       <div className={styles.searchRow}>
         <Search size={15} strokeWidth={2} className={styles.searchIcon} />
@@ -241,7 +282,7 @@ export default function CoverageTree({
                   <button
                     type="button"
                     className={`${styles.toggle} ${bladeOn ? styles.toggleOn : ''}`}
-                    disabled={busy === `${makeRow.make}||blade`}
+                    disabled={busy === `${activeScenario}|${makeRow.make}||blade`}
                     onClick={() => setCoverage(makeRow.make, null, 'blade', !bladeOn)}
                   >
                     <Key size={13} strokeWidth={2} /> Sleutel
@@ -251,7 +292,7 @@ export default function CoverageTree({
                   <button
                     type="button"
                     className={`${styles.toggle} ${keylessOn ? styles.toggleOn : ''}`}
-                    disabled={busy === `${makeRow.make}||keyless`}
+                    disabled={busy === `${activeScenario}|${makeRow.make}||keyless`}
                     onClick={() => setCoverage(makeRow.make, null, 'keyless', !keylessOn)}
                   >
                     <Radio size={13} strokeWidth={2} /> Keyless
@@ -278,7 +319,7 @@ export default function CoverageTree({
                             <button
                               type="button"
                               className={`${styles.toggleSm} ${modelBladeOn ? styles.toggleOn : ''}`}
-                              disabled={bladeOn || busy === `${makeRow.make}|${model.model}|blade`}
+                              disabled={bladeOn || busy === `${activeScenario}|${makeRow.make}|${model.model}|blade`}
                               title={bladeOn ? 'Al gedekt via heel merk' : 'Sleutel'}
                               onClick={() => setCoverage(makeRow.make, model.model, 'blade', !modelBladeOn)}
                             >
@@ -289,7 +330,7 @@ export default function CoverageTree({
                             <button
                               type="button"
                               className={`${styles.toggleSm} ${modelKeylessOn ? styles.toggleOn : ''}`}
-                              disabled={keylessOn || busy === `${makeRow.make}|${model.model}|keyless`}
+                              disabled={keylessOn || busy === `${activeScenario}|${makeRow.make}|${model.model}|keyless`}
                               title={keylessOn ? 'Al gedekt via heel merk' : 'Keyless'}
                               onClick={() => setCoverage(makeRow.make, model.model, 'keyless', !modelKeylessOn)}
                             >
