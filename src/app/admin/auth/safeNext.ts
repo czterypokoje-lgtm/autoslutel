@@ -6,8 +6,8 @@
  * user on their own domain with a fresh session in the address bar.
  */
 export function safeNext(value: string | null | undefined): string {
-  if (typeof value !== 'string') return '/admin/leads';
+  if (typeof value !== 'string') return '/admin/overzicht';
   // Reject protocol-relative (`//evil.com`) and absolute URLs outright.
-  if (!value.startsWith('/admin') || value.startsWith('//')) return '/admin/leads';
+  if (!value.startsWith('/admin') || value.startsWith('//')) return '/admin/overzicht';
   return value;
 }

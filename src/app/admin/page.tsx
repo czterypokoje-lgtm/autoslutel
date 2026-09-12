@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation';
-import { getCrmUser, homeForRole } from '@/lib/crmSession';
+import { getCrmUser } from '@/lib/crmSession';
 
 /**
- * /admin has nothing of its own to show. Where it sends you depends on who you
- * are: the office starts at the leads pipeline, a monteur at today's work.
+ * /admin has nothing of its own to show — everyone signed in goes to the
+ * overview homepage, which then shows the office or the monteur their own
+ * view of it.
  */
 export default async function AdminIndex() {
   const user = await getCrmUser();
-  redirect(user ? homeForRole(user.role) : '/admin/login');
+  redirect(user ? '/admin/overzicht' : '/admin/login');
 }

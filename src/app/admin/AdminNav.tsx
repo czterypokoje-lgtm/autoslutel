@@ -10,6 +10,7 @@ import {
   CircleUser,
   History,
   Inbox,
+  LayoutDashboard,
   MessageSquare,
   Package,
   Settings,
@@ -44,6 +45,7 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
   {
     group: 'Werk',
     items: [
+      { href: '/admin/overzicht', label: 'Overzicht', icon: LayoutDashboard },
       { href: '/admin/leads', label: 'Leads', icon: Inbox },
       { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
       { href: '/admin/jobs', label: 'Agenda', icon: CalendarDays },
@@ -75,6 +77,7 @@ const MONTEUR_LINKS: { group: string; items: NavItem[] }[] = [
   {
     group: 'Werk',
     items: [
+      { href: '/admin/overzicht', label: 'Overzicht', icon: LayoutDashboard },
       { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
       { href: '/admin/mijn-agenda', label: 'Mijn agenda', icon: CalendarDays },

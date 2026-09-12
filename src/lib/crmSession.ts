@@ -92,11 +92,6 @@ export async function requireCrmUser(returnTo?: string): Promise<CrmUser> {
   return user;
 }
 
-/** Where a role belongs when it lands on /admin with nothing more specific. */
-export function homeForRole(role: CrmRole | null): string {
-  return role === 'monteur' ? '/admin/vandaag' : '/admin/leads';
-}
-
 /**
  * For route handlers. Returns a 401/403 Response instead of redirecting, so
  * fetch callers get a status code rather than an HTML login page.

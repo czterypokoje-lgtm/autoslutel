@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, CardHead, Badge, Empty, Notice, Table, ui } from '../_ui';
 import { HighlightCard, LineChart, Legend, BarChart, RankedBars, Donut, chart } from '../_ui/charts';
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
+import { priceOf, earnedOn, computeAvailable } from '@/lib/technicianBalance';
 import PayoutForm from './PayoutForm';
 
 export const dynamic = 'force-dynamic';
@@ -69,21 +70,8 @@ export default async function MijnSaldoPage() {
 
   const done = jobs ?? [];
 
-  /** What was charged, not what was quoted; the agreed commission even at 0%. */
-  const priceOf = (job: (typeof done)[number]) => Number(job.final_price ?? job.quoted_price) || 0;
-  const earnedOn = (job: (typeof done)[number]) =>
-    priceOf(job) * ((100 - Number(job.commission_pct ?? 25)) / 100);
-
   const revenue = done.reduce((total, job) => total + priceOf(job), 0);
-  const earned = done.reduce((total, job) => total + earnedOn(job), 0);
-
-  const paidOut = (payouts ?? [])
-    .filter((p) => p.status === 'paid')
-    .reduce((total, p) => total + Number(p.amount), 0);
-  const pendingOut = (payouts ?? [])
-    .filter((p) => p.status === 'pending')
-    .reduce((total, p) => total + Number(p.amount), 0);
-  const available = Math.max(0, earned - paidOut - pendingOut);
+  const available = computeAvailable(done, payouts ?? []);
 
   /* ── periods ── */
   const now = new Date();
