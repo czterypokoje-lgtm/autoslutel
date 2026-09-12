@@ -1,7 +1,7 @@
 import { NextResponse, after } from 'next/server';
 import { checkAgent, asText, asYear, asBool, asPostcode } from '@/lib/agentAuth';
 import { jobBriefing } from '@/lib/whatsapp';
-import { sendTelegram } from '@/lib/telegram';
+import { sendTelegramOffer } from '@/lib/telegram';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { isScenario, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import { quoteFor } from '@/lib/quote';
@@ -198,18 +198,21 @@ export async function POST(request: Request) {
 
   if (!plan.empty) {
     const now = Date.now();
-    await supabase.from('job_offers').insert(
-      plan.offers.map((offer) => ({
-        job_id: job.id,
-        technician_id: offer.technicianId,
-        rank: offer.rank,
-        tier_at_offer: offer.tier,
-        score: offer.score,
-        reason: offer.reason,
-        offered_at: new Date(now + offer.opensAfter * 1000).toISOString(),
-        expires_at: new Date(now + offer.expiresAfter * 1000).toISOString(),
-      }))
-    );
+    const { data: insertedOffers } = await supabase
+      .from('job_offers')
+      .insert(
+        plan.offers.map((offer) => ({
+          job_id: job.id,
+          technician_id: offer.technicianId,
+          rank: offer.rank,
+          tier_at_offer: offer.tier,
+          score: offer.score,
+          reason: offer.reason,
+          offered_at: new Date(now + offer.opensAfter * 1000).toISOString(),
+          expires_at: new Date(now + offer.expiresAfter * 1000).toISOString(),
+        }))
+      )
+      .select('id, technician_id');
 
     /*
      * Only the offers that open immediately (rank 1, opensAfter === 0) are
@@ -220,6 +223,7 @@ export async function POST(request: Request) {
      * or Vandaag; they just don't get a Telegram message for it yet.
      */
     const chatIdOf = new Map((technicians ?? []).map((t) => [t.id, t.telegram_chat_id]));
+    const offerIdOf = new Map((insertedOffers ?? []).map((o) => [o.technician_id, o.id]));
     const briefing = jobBriefing({
       scheduled_date: date,
       slot_start: start,
@@ -236,11 +240,10 @@ export async function POST(request: Request) {
     for (const offer of plan.offers) {
       if (offer.opensAfter > 0) continue;
       const chatId = chatIdOf.get(offer.technicianId);
+      const offerId = offerIdOf.get(offer.technicianId);
+      if (!offerId) continue;
       after(() =>
-        sendTelegram(
-          chatId,
-          `Nieuwe klus aangeboden!\n\n${briefing}\n\nBekijk en accepteer: https://autosleutel24.nl/admin/aanbod`
-        )
+        sendTelegramOffer(chatId, `Nieuwe klus aangeboden!\n\n${briefing}`, offerId)
       );
     }
   }
