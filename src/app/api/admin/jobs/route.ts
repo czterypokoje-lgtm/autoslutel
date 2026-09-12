@@ -1,7 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { requireOfficeUserApi } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { TIME_SLOTS, trimTime } from '@/lib/crmJobs';
+import { jobBriefing } from '@/lib/whatsapp';
+import { sendTelegram } from '@/lib/telegram';
 
 export const dynamic = 'force-dynamic';
 
@@ -167,6 +169,27 @@ export async function POST(request: Request) {
     if (leadError) {
       console.error('Lead status not updated after planning:', leadError.message);
     }
+  }
+
+  /*
+   * A manual assignment, unlike the voice agent's job_offers flow, is a
+   * decision the office already made — the technician isn't asked to accept
+   * it, so this is a "here's your job" notice, not a "here's an offer" one.
+   */
+  if (technicianId) {
+    const briefing = jobBriefing(row);
+    after(async () => {
+      const { data: tech } = await supabase
+        .from('technicians')
+        .select('telegram_chat_id')
+        .eq('id', technicianId)
+        .maybeSingle();
+      if (!tech?.telegram_chat_id) return;
+      await sendTelegram(
+        tech.telegram_chat_id,
+        `Nieuwe klus ingepland!\n\n${briefing}\n\nBekijk: https://autosleutel24.nl/admin/vandaag`
+      );
+    });
   }
 
   return NextResponse.json(
