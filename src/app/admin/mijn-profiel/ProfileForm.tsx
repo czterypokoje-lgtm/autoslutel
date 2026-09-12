@@ -17,6 +17,9 @@ export interface Profile {
   active: boolean;
   employmentType: string;
   email: string;
+  telegramConnected: boolean;
+  /** null when TELEGRAM_BOT_USERNAME isn't configured on this deployment yet. */
+  telegramConnectUrl: string | null;
 }
 
 const COLOURS = TECHNICIAN_COLOURS;
@@ -196,6 +199,35 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
             Dit is voor vandaag, nu. Een hele dag vrij nemen doe je bij{' '}
             <strong>Mijn agenda</strong>.
           </p>
+        </div>
+      </div>
+
+      {/* ---- Telegram ---- */}
+      <div className={styles.card}>
+        <div className={styles.body}>
+          <span className={styles.label}>Meldingen via Telegram</span>
+          {profile.telegramConnected ? (
+            <p className={styles.meta}>Gekoppeld — nieuwe klussen, voorraad en berichten komen hier binnen.</p>
+          ) : profile.telegramConnectUrl ? (
+            <>
+              <p className={styles.meta}>Nog niet gekoppeld.</p>
+              <a
+                className={`${styles.tap} ${styles.tapPrimary}`}
+                style={{ gridColumn: 'auto', width: '100%', textDecoration: 'none' }}
+                href={profile.telegramConnectUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open Telegram en druk op Start
+              </a>
+              <p className={styles.note}>
+                Opent de Autosleutel24-bot in Telegram. Druk daar op <strong>Start</strong> — daarna
+                komen meldingen hier automatisch binnen.
+              </p>
+            </>
+          ) : (
+            <p className={styles.note}>Nog niet beschikbaar op deze omgeving.</p>
+          )}
         </div>
       </div>
 

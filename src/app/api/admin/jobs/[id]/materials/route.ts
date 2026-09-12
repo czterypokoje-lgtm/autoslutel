@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { getCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { readStockStatusById, notifyIfStockWorsenedById } from '@/lib/stockNotify';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,6 +55,17 @@ export async function POST(
     return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
   }
 
+  const stockItemId =
+    typeof body.stock_item_id === 'string' && UUID.test(body.stock_item_id) ? body.stock_item_id : null;
+
+  /*
+   * The actual deduction happens in Postgres (job_material_stock_trg,
+   * 0008_calendar_stock_templates.sql) once the insert below lands — read the
+   * status here, before that trigger runs, so `after()` has a "before" to
+   * compare against.
+   */
+  const before = stockItemId ? await readStockStatusById(supabase, stockItemId) : null;
+
   const { data, error } = await supabase
     .from('job_materials')
     .insert({
@@ -63,7 +75,7 @@ export async function POST(
       unit_cost: unitCost,
       product_slug:
         typeof body.product_slug === 'string' ? body.product_slug.slice(0, 200) : null,
-      stock_item_id: typeof body.stock_item_id === 'string' && UUID.test(body.stock_item_id) ? body.stock_item_id : null,
+      stock_item_id: stockItemId,
       created_by: user.id,
     })
     .select('id, description, quantity, unit_cost, stock_item_id')
@@ -72,6 +84,10 @@ export async function POST(
   if (error) {
     console.error('Job material insert failed:', error.message);
     return NextResponse.json({ error: 'Opslaan mislukt' }, { status: 500 });
+  }
+
+  if (stockItemId && before) {
+    after(() => notifyIfStockWorsenedById(supabase, stockItemId, before));
   }
 
   return NextResponse.json({ material: data }, { status: 201 });

@@ -12,12 +12,17 @@ export default async function MijnProfielPage() {
 
   const { data, error } = await supabase
     .from('technicians')
-    .select('id, name, phone, werkgebied, color, photo_url, online, online_since, active, employment_type')
+    .select(
+      'id, name, phone, werkgebied, color, photo_url, online, online_since, active, employment_type, telegram_chat_id'
+    )
     .eq('user_id', user.id)
     .maybeSingle();
 
   if (error) {
     const missing = /column|does not exist/i.test(error.message);
+    const missingMigration = error.message.includes('telegram_chat_id')
+      ? '0025_telegram_chat_id.sql'
+      : '0012_technician_profile.sql';
     return (
       <div className={styles.wrap}>
         <p className={styles.warning}>
@@ -25,7 +30,7 @@ export default async function MijnProfielPage() {
           {missing && (
             <>
               <br />
-              Voer <code>supabase/migrations/0012_technician_profile.sql</code> uit.
+              Voer <code>supabase/migrations/{missingMigration}</code> uit.
             </>
           )}
         </p>
@@ -55,6 +60,10 @@ export default async function MijnProfielPage() {
     active: data.active === true,
     employmentType: (data.employment_type as string) ?? 'zzp',
     email: user.email ?? '',
+    telegramConnected: Boolean(data.telegram_chat_id),
+    telegramConnectUrl: process.env.TELEGRAM_BOT_USERNAME
+      ? `https://t.me/${process.env.TELEGRAM_BOT_USERNAME}?start=${data.id}`
+      : null,
   };
 
   return <ProfileForm profile={profile} />;

@@ -26,3 +26,6 @@ export function stockStatus(item: StockLevel): StockStatus {
 
   return 'ok';
 }
+
+/** Ranked so a caller can tell "got worse" from "still bad" — see stockNotify.ts. */
+export const STOCK_SEVERITY: Record<StockStatus, number> = { ok: 0, low: 1, out: 2 };

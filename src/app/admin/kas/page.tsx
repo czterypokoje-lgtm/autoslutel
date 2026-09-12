@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
+import PayoutActions from './PayoutActions';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,10 +12,14 @@ export default async function KasPage() {
   await requireOfficeUser('/admin/kas');
 
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase
-    .from('crm_technician_balance')
-    .select('*')
-    .order('saldo', { ascending: false });
+  const [{ data, error }, { data: pendingPayouts }] = await Promise.all([
+    supabase.from('crm_technician_balance').select('*').order('saldo', { ascending: false }),
+    supabase
+      .from('payout_requests')
+      .select('id, amount, created_at, technician_id')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true }),
+  ]);
 
   if (error) {
     const missing = /does not exist|relation|permission denied/i.test(error.message);
@@ -32,6 +37,7 @@ export default async function KasPage() {
   }
 
   const rows = data ?? [];
+  const nameOf = new Map(rows.map((r) => [r.technician_id as string, r.name as string]));
   const owedToUs = rows
     .filter((r) => Number(r.saldo) > 0)
     .reduce((sum, r) => sum + Number(r.saldo), 0);
@@ -48,6 +54,33 @@ export default async function KasPage() {
           {MONEY.format(owedByUs)}
         </span>
       </div>
+
+      {(pendingPayouts ?? []).length > 0 && (
+        <div className={styles.panel} style={{ marginBottom: 16 }}>
+          <h2>Uitbetalingsverzoeken</h2>
+          {(pendingPayouts ?? []).map((payout) => (
+            <div
+              key={payout.id}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 12,
+                padding: '10px 0',
+                borderBottom: '1px solid var(--crm-rule)',
+              }}
+            >
+              <div>
+                <strong>{nameOf.get(payout.technician_id) ?? 'Onbekend'}</strong>
+                <span className={styles.sub} style={{ marginLeft: 8 }}>
+                  {MONEY.format(Number(payout.amount))}
+                </span>
+              </div>
+              <PayoutActions id={payout.id} />
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className={styles.wrap}>
         <table className={styles.table}>

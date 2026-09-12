@@ -1,7 +1,9 @@
 'use server';
 
+import { after } from 'next/server';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { readStockStatus, notifyIfStockWorsened } from '@/lib/stockNotify';
 
 /**
  * Move parts from one van to another.
@@ -32,6 +34,14 @@ export async function transferStock(
   }
 
   const supabase = await createSupabaseServerClient();
+
+  /*
+   * Only the source van can end up worse off — the destination only gains.
+   * Read its status before the move so `after()` below has something to
+   * compare against once the row has actually changed.
+   */
+  const before = fromTechId ? await readStockStatus(supabase, fromTechId, description.trim()) : null;
+
   const { data, error } = await supabase.rpc('crm_transfer_stock', {
     p_from: fromTechId,
     p_to: toTechId,
@@ -62,8 +72,12 @@ export async function transferStock(
   };
 
   const outcome = String(data);
-  if (outcome === 'ok') return { ok: true };
-  return { error: said[outcome] ?? 'Overzetten mislukt.' };
+  if (outcome !== 'ok') return { error: said[outcome] ?? 'Overzetten mislukt.' };
+
+  if (fromTechId && before) {
+    after(() => notifyIfStockWorsened(supabase, fromTechId, description.trim(), before));
+  }
+  return { ok: true };
 }
 
 /**
@@ -79,7 +93,7 @@ export async function adjustOwnStock(
   description: string,
   delta: number
 ): Promise<{ ok: true } | { error: string }> {
-  await requireCrmUser();
+  const user = await requireCrmUser();
 
   if (!Number.isFinite(delta) || delta === 0) {
     return { error: 'Ongeldig aantal.' };
@@ -89,6 +103,20 @@ export async function adjustOwnStock(
   }
 
   const supabase = await createSupabaseServerClient();
+
+  /* A "+1" can only ever improve things — only worth checking on the way down. */
+  let techId: string | null = null;
+  let before: Awaited<ReturnType<typeof readStockStatus>> | null = null;
+  if (delta < 0) {
+    const { data: me } = await supabase
+      .from('technicians')
+      .select('id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    techId = me?.id ?? null;
+    if (techId) before = await readStockStatus(supabase, techId, description.trim());
+  }
+
   const { data, error } = await supabase.rpc('crm_adjust_own_stock', {
     p_description: description.trim(),
     p_delta: delta,
@@ -113,6 +141,10 @@ export async function adjustOwnStock(
   };
 
   const outcome = String(data);
-  if (outcome === 'ok') return { ok: true };
-  return { error: said[outcome] ?? 'Aanpassen mislukt.' };
+  if (outcome !== 'ok') return { error: said[outcome] ?? 'Aanpassen mislukt.' };
+
+  if (techId && before) {
+    after(() => notifyIfStockWorsened(supabase, techId, description.trim(), before));
+  }
+  return { ok: true };
 }

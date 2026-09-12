@@ -1,14 +1,11 @@
 /**
- * WhatsApp links from the CRM.
- *
- * Deliberately wa.me links, not the WhatsApp Business Platform. That needs a
- * verified Meta business, a phone number that is *not* in the WhatsApp app,
- * templates approved per message type, and a fee per conversation. A link
- * costs nothing, needs no approval, and works this afternoon: it opens
- * WhatsApp with the message already written, and a person presses send.
- *
- * The API is worth doing later for automatic notifications and for replies
- * landing back in the CRM — this is the 80% that does not need any of it.
+ * WhatsApp links from the CRM — browser-safe, imported by client components
+ * (VanScreen, LeadsTable, MonteursPanel) as well as server code. Deliberately
+ * has no dependency on the Twilio SDK: that lives in `whatsappSend.ts`
+ * instead, guarded with `server-only`, so it can never end up bundled into a
+ * page a phone downloads (Twilio's Node SDK pulls in things like `net`, which
+ * do not exist in a browser and broke the build the first time this was
+ * tried in this same file).
  */
 
 /**

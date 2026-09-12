@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { checkAgent, asText, asYear, asBool, asPostcode } from '@/lib/agentAuth';
+import { jobBriefing } from '@/lib/whatsapp';
+import { sendTelegram } from '@/lib/telegram';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { isScenario, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import { quoteFor } from '@/lib/quote';
@@ -145,7 +147,10 @@ export async function POST(request: Request) {
   /* ── who gets offered it, and when ── */
   const [{ data: technicians }, { data: coverage }, { data: subs }, { data: stock }, { data: busy }] =
     await Promise.all([
-      supabase.from('technicians').select('id, name, werkgebied, online, active, base_lat, base_lng').eq('active', true),
+      supabase
+        .from('technicians')
+        .select('id, name, telegram_chat_id, werkgebied, online, active, base_lat, base_lng')
+        .eq('active', true),
       supabase
         .from('technician_coverage')
         .select('technician_id, make, model, scenario, from_year, to_year, excluded, keyless'),
@@ -205,6 +210,39 @@ export async function POST(request: Request) {
         expires_at: new Date(now + offer.expiresAfter * 1000).toISOString(),
       }))
     );
+
+    /*
+     * Only the offers that open immediately (rank 1, opensAfter === 0) are
+     * anything to tell someone about right now — Aanbod itself hides an offer
+     * until its own offered_at (aanbod/page.tsx), and there is no delayed-send
+     * queue here to make a staggered lower-tier offer land on time. A later
+     * tier's technician still sees it the moment it opens if they check Aanbod
+     * or Vandaag; they just don't get a Telegram message for it yet.
+     */
+    const chatIdOf = new Map((technicians ?? []).map((t) => [t.id, t.telegram_chat_id]));
+    const briefing = jobBriefing({
+      scheduled_date: date,
+      slot_start: start,
+      slot_end: end,
+      street: asText(body.street, 120),
+      postcode,
+      city,
+      service_type: SCENARIO_INFO[scenario].label,
+      quoted_price: quote.total,
+      notes: asText(body.notes, 500),
+      customer_name: name,
+      customer_phone: phone,
+    });
+    for (const offer of plan.offers) {
+      if (offer.opensAfter > 0) continue;
+      const chatId = chatIdOf.get(offer.technicianId);
+      after(() =>
+        sendTelegram(
+          chatId,
+          `Nieuwe klus aangeboden!\n\n${briefing}\n\nBekijk en accepteer: https://autosleutel24.nl/admin/aanbod`
+        )
+      );
+    }
   }
 
   return NextResponse.json({
