@@ -112,15 +112,34 @@ for (const file of readdirSync(IMAGE_DIR)) {
   else entry.clean.push({ index: Number(index), file });
 }
 
+/*
+ * The "clean" filename suffix turned out not to be reliable — many
+ * `_<i>`-suffixed files still carry the watermark, and a single product's own
+ * gallery routinely mixes genuinely clean and watermarked photos regardless
+ * of suffix (679 products do). Checked pixel-by-pixel instead, once, by
+ * flag-watermarked-photos.mjs. Filtering happens per product, never across
+ * products — this only ever drops a worse photo of the SAME item in favour of
+ * a better one already downloaded for it, so there is no risk of the wrong
+ * part being shown.
+ */
+const WATERMARK_FLAGS_FILE = path.join(process.cwd(), 'src/data/watermark-flags.json');
+const watermarkFlags = existsSync(WATERMARK_FLAGS_FILE)
+  ? JSON.parse(readFileSync(WATERMARK_FLAGS_FILE, 'utf8'))
+  : {};
+
+function preferUnwatermarked(files) {
+  const clean = files.filter((f) => !watermarkFlags[f]);
+  return clean.length ? clean : files;
+}
+
 function photosFor(product) {
   const entry = photosByHash.get(urlHash(product.url));
   if (!entry) return [];
   if (entry.clean.length) {
-    return entry.clean
-      .sort((a, b) => a.index - b.index)
-      .map((p) => `/images/products/${p.file}`);
+    const ordered = entry.clean.sort((a, b) => a.index - b.index).map((p) => p.file);
+    return preferUnwatermarked(ordered).map((f) => `/images/products/${f}`);
   }
-  return entry.watermarked.map((f) => `/images/products/${f}`);
+  return preferUnwatermarked(entry.watermarked).map((f) => `/images/products/${f}`);
 }
 
 /* ── pricing ─────────────────────────────────────────────────────────── */
