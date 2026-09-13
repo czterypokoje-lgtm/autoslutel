@@ -1,6 +1,7 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { waLink } from '@/lib/whatsapp';
+import { SITE_CONFIG } from '@/config/site.config';
 import NewListingForm from './NewListingForm';
 import ListingActions from './ListingActions';
 import styles from './marktplaats.module.css';
@@ -82,9 +83,13 @@ export default async function MarktplaatsPage() {
             const cover = listing.photos[0] ?? null;
             const price = listing.price === null || listing.price === '' ? null : Number(listing.price);
             const isOwner = listing.posted_by === user.id;
-            const wa = seller?.phone
-              ? waLink(seller.phone, `Hoi, ik zag "${listing.title}" op Marktplaats — is dit nog beschikbaar?`)
-              : null;
+            // Office-posted listings have no technician to pull a phone
+            // number from — fall back to the business WhatsApp so there is
+            // always someone to message, not just when a monteur posted it.
+            const wa = waLink(
+              seller?.phone ?? SITE_CONFIG.whatsapp,
+              `Hoi, ik zag "${listing.title}" op Marktplaats — is dit nog beschikbaar?`
+            );
 
             return (
               <div key={listing.id} className={`${styles.card} ${listing.status === 'sold' ? styles.cardSold : ''}`}>
