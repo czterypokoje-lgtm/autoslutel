@@ -45,11 +45,15 @@ const METHODS: { id: string; label: string }[] = [
 const CARRIERS: { id: string; label: string }[] = [
   { id: 'dhl', label: 'DHL' },
   { id: 'postnl', label: 'PostNL' },
+  { id: 'ups', label: 'UPS' },
+  { id: 'gls', label: 'GLS' },
 ];
 
 const CARRIER_ICON: Record<string, string> = {
   dhl: '/images/carriers/dhl.svg',
   postnl: '/images/carriers/postnl.svg',
+  ups: '/images/carriers/ups.svg',
+  gls: '/images/carriers/gls.svg',
 };
 
 const ICONS = icons as { id: string; file: string }[];
