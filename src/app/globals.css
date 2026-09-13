@@ -1680,29 +1680,30 @@ details[open] summary { color: var(--orange-500); }
 .pay-strip-list {
   display: flex;
   flex-wrap: wrap;
-  gap: .45rem;
+  align-items: center;
+  gap: .85rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/*
+ * No card, no border, no shadow around each logo — the earlier boxed-pill
+ * treatment put a white bordered box around every icon *inside* the section's
+ * own white card (see the inline wrapper in product/[slug]/page.tsx), which
+ * read as boxes nested in a box. Most of these logos already carry their own
+ * colour (iDEAL's yellow, Klarna's pink, banktransfer's blue) — letting them
+ * sit flat on the card, the way Stripe/Shopify trust strips do it, is
+ * cleaner than wrapping every one of them a second time.
+ */
 .pay-strip-list li {
-  background: #fff;
-  border: 1px solid #edf1f5;
-  border-radius: 8px;
-  padding: .4rem .6rem;
   display: flex;
   align-items: center;
   margin-bottom: 0;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, .05);
-  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  transition: transform .15s ease, opacity .15s ease;
 }
 
-.pay-strip-list li:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(15, 23, 42, .09);
-  border-color: #dbe3ea;
-}
+.pay-strip-list li:hover { transform: translateY(-2px); opacity: .85; }
 
 .pay-strip-list img { display: block; width: auto; }
 
@@ -1722,20 +1723,7 @@ details[open] summary { color: var(--orange-500); }
  */
 .pay-strip-list--carriers { gap: .6rem; }
 
-.pay-strip-list--carriers li {
-  background: none;
-  border: none;
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
-  transition: transform .15s ease;
-}
-
-.pay-strip-list--carriers li:hover {
-  transform: translateY(-2px);
-  box-shadow: none;
-  border-color: transparent;
-}
+.pay-strip-list--carriers li:hover { opacity: 1; }
 
 .pay-strip-list--carriers img { border-radius: 50%; }
 
