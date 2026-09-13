@@ -133,9 +133,38 @@ export async function POST(request: Request) {
     }
   }
 
+  /*
+   * A phone booking is a lead too — Leads/Rapportage attribute and count every
+   * inbound channel, and a call that books straight through was skipping that
+   * entirely, undercounting real conversions from the voice line. Filed
+   * pre-sold ('sold', not 'new') because a phone booking already has a
+   * confirmed price, time and address — there is nothing left to qualify.
+   */
+  const phoneE164 = phone.startsWith('0') ? `+31${phone.slice(1)}` : null;
+  const { data: lead } = await supabase
+    .from('leads')
+    .insert({
+      brand: car.make,
+      model: car.model,
+      year: car.year != null ? String(car.year) : null,
+      service: SCENARIO_INFO[scenario].label,
+      location: city,
+      postcode,
+      name,
+      phone,
+      phone_e164: phoneE164,
+      source: 'phone',
+      status: 'sold',
+      sale_price: total,
+      first_contact_at: new Date().toISOString(),
+    })
+    .select('id')
+    .single();
+
   const { data: job, error } = await supabase
     .from('jobs')
     .insert({
+      lead_id: lead?.id ?? null,
       status: 'gepland',
       job_source: 'agent',
       scheduled_date: date,
