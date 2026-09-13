@@ -10,6 +10,7 @@ import {
 import styles from './vandaag.module.css';
 import { JOB_STATUS_LABELS, slotLabel, type JobStatus } from '@/lib/crmJobs';
 import { waLink, onTheWayMessage } from '@/lib/whatsapp';
+import { toWebp } from '@/lib/toWebp';
 import { Car, MapPin, User, Wrench } from 'lucide-react';
 
 /** The colour a monteur reads a job's status from before they've read a word of it. */
@@ -20,45 +21,6 @@ const STATUS_ACCENT: Record<string, string> = {
   afgerond: 'var(--crm-ok)',
   geannuleerd: 'var(--crm-muted)',
 };
-
-/**
- * A phone photo straight off the camera is routinely 3–12MB, and nothing in
- * this app ever shows one larger than a 68px thumbnail. Shrinking it in the
- * browser before a single byte leaves the phone — often over a van's weak
- * 4G — is the difference between a couple of seconds and a stalled upload,
- * and it never gets re-downloaded at full size just to render a thumbnail
- * either. HEIC (the default on iPhone) gets re-encoded to JPEG along the
- * way for free, which every browser can then actually display.
- *
- * Best-effort: if the browser can't decode this particular file client-side,
- * the original upload still goes through unchanged.
- */
-async function compressPhoto(file: File, maxDimension = 1600, quality = 0.82): Promise<File> {
-  const bitmap = await createImageBitmap(file).catch(() => null);
-  if (!bitmap) return file;
-
-  const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
-  const width = Math.round(bitmap.width * scale);
-  const height = Math.round(bitmap.height * scale);
-
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    bitmap.close();
-    return file;
-  }
-  ctx.drawImage(bitmap, 0, 0, width, height);
-  bitmap.close();
-
-  const blob = await new Promise<Blob | null>((resolve) =>
-    canvas.toBlob(resolve, 'image/jpeg', quality)
-  );
-  if (!blob) return file;
-
-  return new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' });
-}
 
 export interface VanJob {
   id: string;
@@ -549,7 +511,7 @@ function FinishPanel({
     setBusy(true);
     setError('');
 
-    const upload = await compressPhoto(file).catch(() => file);
+    const upload = await toWebp(file).catch(() => file);
 
     const response = await fetch(`/api/admin/jobs/${job.id}/photos?kind=${kind}`, {
       method: 'POST',

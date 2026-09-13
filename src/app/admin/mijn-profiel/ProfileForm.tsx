@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import styles from '../vandaag/vandaag.module.css';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { TECHNICIAN_COLOURS } from '@/lib/crmColours';
+import { toWebp } from '@/lib/toWebp';
 
 export interface Profile {
   name: string;
@@ -89,10 +90,11 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
     );
   }
 
-  async function uploadPhoto(file: File) {
+  async function uploadPhoto(rawFile: File) {
     setBusy(true);
     setError('');
 
+    const file = await toWebp(rawFile).catch(() => rawFile);
     const response = await fetch('/api/admin/profiel/foto', {
       method: 'POST',
       headers: { 'Content-Type': file.type },

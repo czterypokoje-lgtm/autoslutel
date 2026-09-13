@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../../klanten/klanten.module.css';
 import jobStyles from '../../jobs/jobs.module.css';
+import { toWebp } from '@/lib/toWebp';
 
 export interface EditorProduct {
   slug: string;
@@ -113,10 +114,11 @@ export default function ProductEditor({ product }: { product: EditorProduct }) {
     router.refresh();
   }
 
-  async function upload(file: File, main: boolean) {
+  async function upload(rawFile: File, main: boolean) {
     setBusy(true);
     setError('');
 
+    const file = await toWebp(rawFile).catch(() => rawFile);
     const response = await fetch(
       `/api/admin/products/${encodeURIComponent(product.slug)}/image${main ? '?main=1' : ''}`,
       { method: 'POST', headers: { 'Content-Type': file.type }, body: file }

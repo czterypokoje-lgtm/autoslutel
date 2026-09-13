@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, Settings2, X } from 'lucide-react';
+import { Menu, Settings2, ShoppingBag, X } from 'lucide-react';
 import styles from './netwerk.module.css';
 
 interface Server {
@@ -109,6 +109,13 @@ export default function NetworkSidebar({
           </div>
 
           <div className={styles.channelList}>
+            <div className={styles.channelGroup}>
+              <div className={styles.groupTitle}>Marktplaats</div>
+              <Link href="/admin/netwerk/marktplaats" className={styles.channelLink} onClick={() => setOpen(false)}>
+                <ShoppingBag size={14} strokeWidth={2} style={{ marginRight: 6 }} /> Tools &amp; onderdelen
+              </Link>
+            </div>
+
             {groups.map((group) => {
               const inGroup = channels.filter((channel) => channel.type === group.type);
               if (!inGroup.length) return null;

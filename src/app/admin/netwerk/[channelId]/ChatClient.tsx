@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState, useRef } from 'react';
+import { Paperclip } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
+import { toWebp } from '@/lib/toWebp';
 import styles from './chat.module.css';
 import { sendMessage } from '../actions';
 
@@ -12,6 +14,7 @@ interface Message {
   user_id: string | null;
   parent_id: string | null;
   content: string;
+  attachment_url: string | null;
   created_at: string;
   technicians?: { name: string } | null;
 }
@@ -46,8 +49,11 @@ export default function ChatClient({
   const [liveMessages, setLiveMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
+  const [pendingPhoto, setPendingPhoto] = useState<{ file: File; previewUrl: string } | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   /*
    * Created once, not on every render. createSupabaseBrowserClient() builds
@@ -112,14 +118,43 @@ export default function ChatClient({
     };
   }, [channel.id, supabase]);
 
+  function handlePickPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (pendingPhoto) URL.revokeObjectURL(pendingPhoto.previewUrl);
+    setPendingPhoto({ file, previewUrl: URL.createObjectURL(file) });
+  }
+
+  function clearPendingPhoto() {
+    if (pendingPhoto) URL.revokeObjectURL(pendingPhoto.previewUrl);
+    setPendingPhoto(null);
+  }
+
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
-    if (!input.trim() || sending) return;
+    if ((!input.trim() && !pendingPhoto) || sending) return;
 
     setSending(true);
     try {
-      await sendMessage(channel.id, input.trim(), null);
+      let attachmentUrl: string | null = null;
+      if (pendingPhoto) {
+        setUploadingPhoto(true);
+        const webp = await toWebp(pendingPhoto.file).catch(() => pendingPhoto.file);
+        const response = await fetch(`/api/admin/netwerk/chat/upload?channel=${channel.id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': webp.type },
+          body: webp,
+        });
+        const body = await response.json();
+        setUploadingPhoto(false);
+        if (!response.ok) throw new Error(body?.error ?? 'Uploaden mislukt');
+        attachmentUrl = body.url;
+      }
+
+      await sendMessage(channel.id, input.trim(), null, attachmentUrl);
       setInput('');
+      clearPendingPhoto();
       /*
        * No router.refresh() here on purpose. The insert this just made
        * broadcasts over the same realtime subscription every other viewer
@@ -133,6 +168,7 @@ export default function ChatClient({
       alert('Verzenden mislukt');
     } finally {
       setSending(false);
+      setUploadingPhoto(false);
     }
   }
 
@@ -163,7 +199,12 @@ export default function ChatClient({
                   <span className={styles.sender}>{senderName}</span>
                   <span className={styles.time}>{formatTime(m.created_at)}</span>
                 </div>
-                <div className={styles.content}>{m.content}</div>
+                {m.content && <div className={styles.content}>{m.content}</div>}
+                {m.attachment_url && (
+                  <a href={m.attachment_url} target="_blank" rel="noreferrer">
+                    <img className={styles.attachment} src={m.attachment_url} alt="Bijlage" />
+                  </a>
+                )}
               </div>
             </div>
           );
@@ -172,13 +213,41 @@ export default function ChatClient({
       </div>
 
       <form className={styles.inputArea} onSubmit={handleSend}>
-        <input
-          className={styles.input}
-          placeholder={`Bericht in #${channel.name}`}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={sending}
-        />
+        {pendingPhoto && (
+          <div className={styles.pendingPhoto}>
+            <img src={pendingPhoto.previewUrl} alt="" />
+            <span>{uploadingPhoto ? 'Uploaden…' : 'Foto klaar om te versturen'}</span>
+            <button type="button" className={styles.pendingRemove} onClick={clearPendingPhoto} disabled={sending}>
+              Verwijderen
+            </button>
+          </div>
+        )}
+        <div className={styles.inputRow}>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handlePickPhoto}
+            style={{ display: 'none' }}
+          />
+          <button
+            type="button"
+            className={styles.attachBtn}
+            onClick={() => fileInputRef.current?.click()}
+            disabled={sending}
+            aria-label="Foto bijvoegen"
+            title="Foto bijvoegen"
+          >
+            <Paperclip size={18} strokeWidth={2} />
+          </button>
+          <input
+            className={styles.input}
+            placeholder={`Bericht in #${channel.name}`}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={sending}
+          />
+        </div>
       </form>
     </div>
   );

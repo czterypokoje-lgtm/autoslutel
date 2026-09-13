@@ -58,7 +58,12 @@ async function notifyChannelRecipients(channelId: string, senderTechnicianId: st
   }
 }
 
-export async function sendMessage(channelId: string, content: string, parentId: string | null = null) {
+export async function sendMessage(
+  channelId: string,
+  content: string,
+  parentId: string | null = null,
+  attachmentUrl: string | null = null
+) {
   const user = await requireCrmUser();
   const supabase = await createSupabaseServerClient();
 
@@ -79,6 +84,7 @@ export async function sendMessage(channelId: string, content: string, parentId: 
       channel_id: channelId,
       content,
       parent_id: parentId,
+      attachment_url: attachmentUrl,
       user_id: user.role !== 'monteur' ? user.id : null,
       technician_id: technicianId,
     });
@@ -88,5 +94,5 @@ export async function sendMessage(channelId: string, content: string, parentId: 
     throw new Error('Kon bericht niet verzenden');
   }
 
-  after(() => notifyChannelRecipients(channelId, technicianId, content));
+  after(() => notifyChannelRecipients(channelId, technicianId, content || '📷 Foto'));
 }

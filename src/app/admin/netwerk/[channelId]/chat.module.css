@@ -84,6 +84,35 @@
   background-color: var(--crm-surface, var(--crm-panel));
 }
 
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.attachBtn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--crm-r);
+  border: none;
+  background-color: var(--crm-surface-hover, var(--crm-raised));
+  color: var(--crm-text-muted, var(--crm-muted));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.attachBtn:hover:not(:disabled) {
+  color: var(--crm-text-strong, var(--crm-ink));
+}
+
+.attachBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .input {
   width: 100%;
   background-color: var(--crm-surface-hover, var(--crm-raised));
@@ -96,4 +125,38 @@
 
 .input::placeholder {
   color: var(--crm-text-muted, var(--crm-muted));
+}
+
+.pendingPhoto {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  color: var(--crm-text-muted, var(--crm-muted));
+}
+
+.pendingPhoto img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: var(--crm-r-sm);
+}
+
+.pendingRemove {
+  border: none;
+  background: none;
+  color: var(--crm-text-muted, var(--crm-muted));
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.attachment {
+  display: block;
+  max-width: 260px;
+  max-height: 260px;
+  border-radius: var(--crm-r);
+  margin-top: 6px;
+  cursor: zoom-in;
 }
