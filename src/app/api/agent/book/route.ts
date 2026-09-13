@@ -4,7 +4,7 @@ import { jobBriefing } from '@/lib/whatsapp';
 import { sendTelegramOffer } from '@/lib/telegram';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { isScenario, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
-import { quoteFor } from '@/lib/quote';
+import { priceFor, type PriceRow } from '@/lib/dispatchPricing';
 import { planDispatch, type Candidate } from '@/lib/dispatch';
 import type { CoverageRow } from '@/lib/capability';
 import type { Tier } from '@/lib/subscription';
@@ -78,16 +78,39 @@ export async function POST(request: Request) {
   const car = { make, model: modelIn.value, year: yearIn.value };
   const keyless = asBool(body.keyless);
 
-  const quote = quoteFor(car, scenario, keyless);
-  if (!quote.ok) {
-    return NextResponse.json({ booked: false, reason: quote.reason, say: quote.say });
+  const supabase = createSupabaseAdminClient();
+
+  /*
+   * Priced the same way /api/agent/quote prices it — dispatch_pricing for a
+   * job that needs a part, flat SCENARIO_INFO labour for one that doesn't —
+   * never trusted from the request. Whatever the agent believes it said,
+   * what the customer owes is what our own pricing says now, not what it said
+   * a minute ago; a caller who can talk an agent into a number must not be
+   * able to make that number binding.
+   */
+  const info = SCENARIO_INFO[scenario];
+  let total: number;
+  if (!info.programming) {
+    total = info.labour;
+  } else {
+    const { data: priceRows } = await supabase
+      .from('dispatch_pricing')
+      .select('make, model, scenario, from_year, to_year, keyless, price')
+      .eq('scenario', scenario);
+    const result = priceFor((priceRows ?? []) as PriceRow[], car, scenario, keyless);
+    if (!result) {
+      return NextResponse.json({
+        booked: false,
+        reason: 'geen_prijs',
+        say: 'Voor deze auto heb ik geen prijs paraat. Ik laat een collega u terugbellen met een prijs.',
+      });
+    }
+    total = result.price;
   }
 
   /* The window closes where the slot list said it would. */
   const [h, m] = start.split(':').map(Number);
   const end = `${String((h + 2) % 24).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-
-  const supabase = createSupabaseAdminClient();
 
   /*
    * The postcode, not the spoken city name, decides what gets stored — a
@@ -131,7 +154,7 @@ export async function POST(request: Request) {
       keyless,
       scenario,
       service_type: SCENARIO_INFO[scenario].label,
-      quoted_price: quote.total,
+      quoted_price: total,
       notes: asText(body.notes, 500),
     })
     .select('id')
@@ -192,7 +215,7 @@ export async function POST(request: Request) {
     postcode,
     lat,
     lng,
-    articleCode: quote.article?.code ?? null,
+    articleCode: null,
     keyless,
   });
 
@@ -232,7 +255,7 @@ export async function POST(request: Request) {
       postcode,
       city,
       service_type: SCENARIO_INFO[scenario].label,
-      quoted_price: quote.total,
+      quoted_price: total,
       notes: asText(body.notes, 500),
       customer_name: name,
       customer_phone: phone,
@@ -253,13 +276,13 @@ export async function POST(request: Request) {
     reference: job.id,
     date,
     slot: `${start}–${end}`,
-    total: quote.total,
+    total,
     /*
      * The job exists either way. If nobody was offered it, the office picks it
      * up from the board rather than the customer being told no after saying yes.
      */
     offered: plan.offers.length,
-    say: `Genoteerd. ${date} tussen ${start} en ${end}, € ${quote.total
+    say: `Genoteerd. ${date} tussen ${start} en ${end}, € ${total
       .toFixed(2)
       .replace('.', ',')}. U krijgt een bevestiging per WhatsApp.`,
   });
