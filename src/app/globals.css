@@ -800,6 +800,21 @@ details[open] summary { color: var(--orange-500); }
   justify-content: center;
   width: 100%;
 }
+.category-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .55);
+  color: var(--webshop-dark);
+  transition: transform .2s ease, background .2s ease;
+}
+.category-card:hover .category-card-icon {
+  background: rgba(255, 255, 255, .8);
+  transform: scale(1.06);
+}
 .category-card-title {
   font-weight: 600;
   color: var(--webshop-dark);

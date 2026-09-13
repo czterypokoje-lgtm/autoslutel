@@ -1,5 +1,27 @@
 import React from 'react';
 import Link from 'next/link';
+import {
+  Radio,
+  PackageOpen,
+  Shuffle,
+  Antenna,
+  CircuitBoard,
+  KeySquare,
+  Key,
+  BatteryFull,
+  Wrench,
+  ShoppingBag,
+  KeyRound,
+  Cog,
+  Lock,
+  Nfc,
+  Bike,
+  Home,
+  Cpu,
+  Settings,
+  Ruler,
+  type LucideIcon,
+} from 'lucide-react';
 import { facetLabel } from '@/lib/catalog';
 import { getShopProducts } from '@/lib/shopCatalog';
 
@@ -16,28 +38,28 @@ import { getShopProducts } from '@/lib/shopCatalog';
  */
 
 /** Only for the look of the tile; unknown categories fall back to a key. */
-const EMOJI: Record<string, string> = {
-  afstandsbedieningen: '📡',
-  behuizingen: '🧩',
-  'universal-remotes': '🎛️',
-  transponders: '📶',
-  printplaten: '🔌',
-  noodsleutels: '🗝️',
-  sleutelbaarden: '🔑',
-  batterijen: '🔋',
-  gereedschap: '🔧',
-  accessoires: '🛒',
-  'overige-sleutels': '🔐',
-  diensten: '🧰',
-  sloten: '🔒',
-  'smart-keys': '📲',
-  transpondersleutels: '🔑',
-  'sleutels-zonder-chip': '🗝️',
-  motorsleutels: '🏍️',
-  woningsleutels: '🚪',
-  programmeerapparatuur: '💻',
-  sleutelmachines: '⚙️',
-  'frezen-en-tasters': '🪚',
+const ICON: Record<string, LucideIcon> = {
+  afstandsbedieningen: Radio,
+  behuizingen: PackageOpen,
+  'universal-remotes': Shuffle,
+  transponders: Antenna,
+  printplaten: CircuitBoard,
+  noodsleutels: KeySquare,
+  sleutelbaarden: Key,
+  batterijen: BatteryFull,
+  gereedschap: Wrench,
+  accessoires: ShoppingBag,
+  'overige-sleutels': KeyRound,
+  diensten: Cog,
+  sloten: Lock,
+  'smart-keys': Nfc,
+  transpondersleutels: KeyRound,
+  'sleutels-zonder-chip': Key,
+  motorsleutels: Bike,
+  woningsleutels: Home,
+  programmeerapparatuur: Cpu,
+  sleutelmachines: Settings,
+  'frezen-en-tasters': Ruler,
 };
 
 /** Below this a tile is not worth a slot on the home page. */
@@ -58,22 +80,27 @@ export default async function CategoryGrid() {
 
   return (
     <div className="category-grid">
-      {categories.map(([slug, count]) => (
-        <Link
-          href={`/webshop/catalogus?category=${slug}`}
-          key={slug}
-          className="category-card"
-          style={{ textDecoration: 'none' }}
-        >
-          <div className="category-card-img-wrapper" style={{ fontSize: '2.5rem', textAlign: 'center', padding: '1rem' }}>
-            {EMOJI[slug] ?? '🔑'}
-          </div>
-          <div className="category-card-title">{facetLabel('category', slug)}</div>
-          <div style={{ textAlign: 'center', fontSize: '0.8rem', color: '#64748b', paddingBottom: '0.75rem' }}>
-            {count} artikelen
-          </div>
-        </Link>
-      ))}
+      {categories.map(([slug, count]) => {
+        const Icon = ICON[slug] ?? KeyRound;
+        return (
+          <Link
+            href={`/webshop/catalogus?category=${slug}`}
+            key={slug}
+            className="category-card"
+            style={{ textDecoration: 'none' }}
+          >
+            <div className="category-card-img-wrapper">
+              <span className="category-card-icon">
+                <Icon size={30} strokeWidth={1.75} />
+              </span>
+            </div>
+            <div className="category-card-title">{facetLabel('category', slug)}</div>
+            <div style={{ textAlign: 'center', fontSize: '0.8rem', color: '#64748b', paddingBottom: '0.75rem' }}>
+              {count} artikelen
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }
