@@ -41,7 +41,32 @@ import { translateDescription } from './accessory-copy.mjs';
 const RAW = path.join(process.cwd(), 'src/data/akey-catalog-raw.json');
 const CLASSIFIED = path.join(process.cwd(), 'src/data/akey-classified.json');
 const ACCESSFOBS = path.join(process.cwd(), 'src/data/accessfobs-key-cases.json');
+const KEYCASE_PHOTOS = path.join(process.cwd(), 'src/data/keycase-photos.json');
+const ACCESSFOBS_MATCHES = path.join(process.cwd(), 'src/data/accessfobs-photo-matches.json');
 const IMAGE_DIR = path.join(process.cwd(), 'public/images/products');
+
+/*
+ * Clean AccessFobs photos swapped in for specific A-Key products whose own
+ * photo carries their watermark — see extract-keycase-photos.mjs and
+ * match-accessfobs-photos.mjs for how these maps are built and, just as
+ * importantly, how conservatively: a wrong photo is worse than a watermarked
+ * one. Only high-confidence matches are ever applied here; keycase-photos.json
+ * carries no confidence field because every one of its matches already
+ * requires a blade match plus make or button agreement.
+ */
+function loadPhotoOverrides() {
+  const overrides = new Map();
+  for (const file of [KEYCASE_PHOTOS, ACCESSFOBS_MATCHES]) {
+    if (!existsSync(file)) continue;
+    const map = JSON.parse(readFileSync(file, 'utf8'));
+    for (const [slug, entry] of Object.entries(map)) {
+      if (entry.confidence && entry.confidence !== 'high') continue;
+      overrides.set(slug, entry.image);
+    }
+  }
+  return overrides;
+}
+const photoOverrides = loadPhotoOverrides();
 
 const OUT = path.join(process.cwd(), 'src/lib/catalog.json');
 const BRANDS_OUT = path.join(process.cwd(), 'src/lib/brands.json');
@@ -207,7 +232,9 @@ for (const [slug, filed] of Object.entries(classification.filed)) {
   const product = raw[slug];
   if (!product) continue;
 
-  const images = photosFor(product);
+  const images = photoOverrides.has(slug.toLowerCase())
+    ? [photoOverrides.get(slug.toLowerCase())]
+    : photosFor(product);
   if (!images.length) skipped.noPhoto++;
 
   /* "für Fahrzeugmarke: Toyota / Lexus" names two makes, and a model listed
