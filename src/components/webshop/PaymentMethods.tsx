@@ -37,15 +37,20 @@ const METHODS: { id: string; label: string }[] = [
 /**
  * Who we hand the parcel to.
  *
- * A logo file in public/images/carriers/<id>.svg (or .png) is used when it is
- * there; without one the name is shown as text, which is a true statement
- * either way. Add or remove a carrier here — never leave one on the page that
- * we do not actually ship with.
+ * A logo file in public/images/carriers/<id>.svg is used when it is there;
+ * without one the name is shown as text, which is a true statement either
+ * way. Add or remove a carrier here — never leave one on the page that we do
+ * not actually ship with.
  */
 const CARRIERS: { id: string; label: string }[] = [
   { id: 'dhl', label: 'DHL' },
   { id: 'postnl', label: 'PostNL' },
 ];
+
+const CARRIER_ICON: Record<string, string> = {
+  dhl: '/images/carriers/dhl.svg',
+  postnl: '/images/carriers/postnl.svg',
+};
 
 const ICONS = icons as { id: string; file: string }[];
 
@@ -60,17 +65,12 @@ export default function PaymentMethods({
   compact?: boolean;
 }) {
   const methods = METHODS.map((m) => ({ ...m, icon: iconFor(m.id) })).filter((m) => m.icon);
-
-  /*
-   * Carrier logos are trademarks and we hold no file for them yet; the name
-   * in text says the same thing truthfully. Drop <id>.svg into
-   * public/images/carriers and add it to the manifest to show the mark.
-   */
-  const carriers = CARRIERS.map((c) => ({ ...c, icon: null as string | null }));
+  const carriers = CARRIERS.map((c) => ({ ...c, icon: CARRIER_ICON[c.id] ?? null }));
 
   if (methods.length === 0 && carriers.length === 0) return null;
 
   const height = compact ? 22 : 28;
+  const carrierHeight = compact ? 36 : 44;
 
   return (
     <div className="pay-strip">
@@ -89,12 +89,18 @@ export default function PaymentMethods({
       {carriers.length > 0 && (
         <div className="pay-strip-group">
           <span className="pay-strip-label">Verzonden met</span>
-          <ul className="pay-strip-list">
+          <ul className="pay-strip-list pay-strip-list--carriers">
             {carriers.map((c) =>
               c.icon ? (
                 <li key={c.id} title={c.label}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={c.icon} alt={c.label} height={height} style={{ height }} loading="lazy" />
+                  <img
+                    src={c.icon}
+                    alt={c.label}
+                    height={carrierHeight}
+                    style={{ height: carrierHeight }}
+                    loading="lazy"
+                  />
                 </li>
               ) : (
                 // No logo file yet — the carrier's name is the honest fallback.

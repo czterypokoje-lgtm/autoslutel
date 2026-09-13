@@ -1706,6 +1706,26 @@ details[open] summary { color: var(--orange-500); }
   padding: 0 .25rem;
 }
 
+/*
+ * Carrier badges are self-contained circular marks (white disc + border baked
+ * into the SVG itself, public/images/carriers/*.svg) — the payment row's
+ * bordered rectangular pill would double up borders around an already-round
+ * logo, so this list gets its own plain, larger treatment instead.
+ */
+.pay-strip-list--carriers { gap: .6rem; }
+
+.pay-strip-list--carriers li {
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  transition: transform .15s ease;
+}
+
+.pay-strip-list--carriers li:hover { transform: translateY(-2px); }
+
+.pay-strip-list--carriers img { border-radius: 50%; }
+
 @media (max-width: 640px) {
   .pay-strip { gap: 1rem 1.5rem; }
 }
