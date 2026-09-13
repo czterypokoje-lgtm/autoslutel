@@ -22,6 +22,7 @@ export interface LeadRow {
   source: string | null;
   status: string;
   sale_price: number | string | null;
+  quoted_price: number | string | null;
   consent_marketing: boolean | null;
   first_contact_at: string | null;
 }
@@ -196,6 +197,10 @@ export default function LeadsTable({
               lead.sale_price === null || lead.sale_price === ''
                 ? null
                 : Number(lead.sale_price);
+            const quoted =
+              lead.quoted_price === null || lead.quoted_price === ''
+                ? null
+                : Number(lead.quoted_price);
             // Same normalisation everywhere: a "06…" number has to become
             // "316…" before wa.me will open the right chat.
             const whatsapp = waLink(lead.phone_e164 ?? lead.phone, '');
@@ -275,6 +280,9 @@ export default function LeadsTable({
 
                   <td className={price === null ? styles.moneyEmpty : styles.money}>
                     {price === null ? '—' : MONEY.format(price)}
+                    {price === null && quoted !== null && (
+                      <span className={styles.sub}>geschat {MONEY.format(quoted)}</span>
+                    )}
                   </td>
 
                   <td>
@@ -353,6 +361,8 @@ export default function LeadsTable({
         const repeat = lead.phone_e164 ? repeats[lead.phone_e164] : undefined;
         const price =
           lead.sale_price === null || lead.sale_price === '' ? null : Number(lead.sale_price);
+        const quoted =
+          lead.quoted_price === null || lead.quoted_price === '' ? null : Number(lead.quoted_price);
         const whatsapp = waLink(lead.phone_e164 ?? lead.phone, '');
 
         return (
@@ -406,6 +416,9 @@ export default function LeadsTable({
                 <span className={price === null ? styles.moneyEmpty : styles.money}>
                   {price === null ? '—' : MONEY.format(price)}
                 </span>
+                {price === null && quoted !== null && (
+                  <span className={styles.sub}>geschat {MONEY.format(quoted)}</span>
+                )}
               </div>
             </div>
 

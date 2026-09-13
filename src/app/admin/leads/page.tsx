@@ -154,7 +154,7 @@ export default async function LeadsPage({
     supabase
       .from('leads')
       .select(
-        'id, created_at, name, phone, phone_e164, email, postcode, location, brand, model, year, kenteken, service, source, status, sale_price, consent_marketing, first_contact_at',
+        'id, created_at, name, phone, phone_e164, email, postcode, location, brand, model, year, kenteken, service, source, status, sale_price, quoted_price, consent_marketing, first_contact_at',
         { count: 'exact' }
       )
   )

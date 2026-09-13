@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import styles from './HorizontalKentekenForm.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
+import { publicQuoteFor, type StartType, type WorkingKeyType } from '@/lib/publicQuote';
 
 export default function HorizontalKentekenForm() {
   const [kenteken, setKenteken] = useState('');
@@ -10,6 +11,10 @@ export default function HorizontalKentekenForm() {
   const [phone, setPhone] = useState('');
   const [vehicle, setVehicle] = useState<any>(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [workingKey, setWorkingKey] = useState<WorkingKeyType | null>(null);
+  const [startType, setStartType] = useState<StartType | null>(null);
+
+  const quote = publicQuoteFor(workingKey, startType);
 
   const formatKenteken = (value: string) => {
     // Basic formatting for Dutch plates: remove invalid chars, uppercase
@@ -67,6 +72,7 @@ export default function HorizontalKentekenForm() {
     if (vehicle) {
       msg += `*Auto:* ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar})\n`;
     }
+    if (quote) msg += `*Dienst:* ${quote.service} (vanaf €${quote.from})\n`;
     if (postcode) msg += `*Locatie/Postcode:* ${postcode}\n`;
     if (phone) msg += `*Telefoon:* ${phone}\n`;
     return `https://wa.me/${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
@@ -91,7 +97,7 @@ export default function HorizontalKentekenForm() {
         brand: vehicle ? vehicle.merk : 'KENTEKEN AANVRAAG',
         model: vehicle ? `${kenteken} - ${vehicle.model}` : kenteken,
         year: vehicle ? vehicle.bouwjaar : 'N/A',
-        service: 'Prijsopgave via kenteken',
+        service: quote ? `Prijsopgave via kenteken — ${quote.service}` : 'Prijsopgave via kenteken',
         // phone and postcode as their own fields: postcode is what routes a
         // lead to the right partner, phone is what deduplicates it.
         location: postcode,
@@ -99,6 +105,8 @@ export default function HorizontalKentekenForm() {
         phone,
         photoUrl: '',
         source: 'kenteken_form',
+        scenario: quote?.scenario ?? null,
+        quotedPrice: quote ? quote.from : null,
         gclid: getCookie('gclid'),
         wbraid: getCookie('wbraid'),
         gbraid: getCookie('gbraid')
@@ -200,6 +208,56 @@ export default function HorizontalKentekenForm() {
           </a>
         </div>
 
+      </div>
+
+      <div className={styles.questionsRow}>
+        <div className={styles.questionGroup}>
+          <span className={styles.questionLabel}>Werkende sleutel?</span>
+          <div className={styles.toggleGroup}>
+            <button
+              type="button"
+              className={`${styles.toggleBtn} ${workingKey === 'yes' ? styles.toggleBtnActive : ''}`}
+              onClick={() => setWorkingKey('yes')}
+            >
+              Ja
+            </button>
+            <button
+              type="button"
+              className={`${styles.toggleBtn} ${workingKey === 'no' ? styles.toggleBtnActive : ''}`}
+              onClick={() => { setWorkingKey('no'); setStartType(null); }}
+            >
+              Nee, kwijt
+            </button>
+          </div>
+        </div>
+
+        {workingKey === 'yes' && (
+          <div className={styles.questionGroup}>
+            <span className={styles.questionLabel}>Starten met?</span>
+            <div className={styles.toggleGroup}>
+              <button
+                type="button"
+                className={`${styles.toggleBtn} ${startType === 'push' ? styles.toggleBtnActive : ''}`}
+                onClick={() => setStartType('push')}
+              >
+                Startknop
+              </button>
+              <button
+                type="button"
+                className={`${styles.toggleBtn} ${startType === 'key' ? styles.toggleBtnActive : ''}`}
+                onClick={() => setStartType('key')}
+              >
+                Contactslot
+              </button>
+            </div>
+          </div>
+        )}
+
+        {quote && (
+          <span className={styles.priceHint}>
+            {quote.service} vanaf <strong>€{quote.from}</strong>
+          </span>
+        )}
       </div>
     </div>
   );
