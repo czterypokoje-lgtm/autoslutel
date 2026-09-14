@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { CITIES } from '@/config/cities';
 
 export default function HomeActionBanners() {
   return (
@@ -24,11 +25,11 @@ export default function HomeActionBanners() {
                   <line x1="15" y1="6" x2="15" y2="21"></line>
                 </svg>
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: '#fff', padding: '0.25rem 0.5rem', borderRadius: '4px', fontWeight: 900, color: '#4d7c0f', fontSize: '1.5rem', whiteSpace: 'nowrap' }}>
-                  60+
+                  {CITIES.length}+
                 </div>
               </div>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginTop: '1rem', color: '#1a1a1a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Regio's<br/>in Nederland
+                Regio&apos;s<br/>in Nederland
               </h3>
             </div>
             <Link href="/steden" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
@@ -61,32 +62,6 @@ export default function HomeActionBanners() {
             </div>
             <Link href="/contact" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
               Neem contact op <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-
-          {/* Column 3: Track Your Order */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', marginBottom: '1.5rem', minHeight: '180px', position: 'relative' }}>
-              <svg width="140" height="140" viewBox="0 0 24 24" fill="#f3f4f6" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0 }}>
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-              </svg>
-              <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-                <h3 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#1a1a1a', margin: '0', lineHeight: 1.1, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
-                  Volg
-                </h3>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 600, color: '#4b5563', margin: '0', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                  Je Bestelling
-                </h3>
-              </div>
-              {/* Courier Logos Placeholder */}
-              <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1.5rem' }}>
-                <span style={{ fontSize: '0.7rem', fontWeight: 800, background: '#ef4444', color: '#fff', padding: '0.15rem 0.4rem', borderRadius: '2px' }}>POSTNL</span>
-                <span style={{ fontSize: '0.7rem', fontWeight: 800, background: '#fbbf24', color: '#b45309', padding: '0.15rem 0.4rem', borderRadius: '2px' }}>DHL</span>
-              </div>
-            </div>
-            <Link href="/webshop/orders" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-              Volg je bestelling <span aria-hidden="true">→</span>
             </Link>
           </div>
 
