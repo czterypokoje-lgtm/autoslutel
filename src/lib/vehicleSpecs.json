@@ -1168,6 +1168,84 @@
    "behuizingen": 2
   }
  },
+ "Opel Corsa C": {
+  "make": "Opel",
+  "model": "Corsa C",
+  "from": 2001,
+  "to": 9999,
+  "chips": [],
+  "blades": [
+   "HU46",
+   "HU100"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 7,
+  "categories": {
+   "afstandsbedieningen": 2,
+   "behuizingen": 5
+  }
+ },
+ "Opel Meriva": {
+  "make": "Opel",
+  "model": "Meriva",
+  "from": 2002,
+  "to": 2016,
+  "chips": [],
+  "blades": [
+   "HU100"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 5,
+  "categories": {
+   "afstandsbedieningen": 2,
+   "behuizingen": 3
+  }
+ },
+ "Opel Combo": {
+  "make": "Opel",
+  "model": "Combo",
+  "from": 2002,
+  "to": 9999,
+  "chips": [
+   "ID46",
+   "PCF7947 Delphi"
+  ],
+  "blades": [
+   "SIP22",
+   "HU100"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 7,
+  "categories": {
+   "afstandsbedieningen": 4,
+   "behuizingen": 3
+  }
+ },
+ "Opel Tigra": {
+  "make": "Opel",
+  "model": "Tigra",
+  "from": 2002,
+  "to": 2009,
+  "chips": [],
+  "blades": [
+   "HU100",
+   "HU46"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 7,
+  "categories": {
+   "afstandsbedieningen": 2,
+   "behuizingen": 5
+  }
+ },
  "Saab Produkt": {
   "make": "Saab",
   "model": "Produkt",
@@ -1763,6 +1841,7 @@
   "to": 9999,
   "chips": [
    "PCF7946 / PCF7947 / PCF7961",
+   "PCF7961M - HITAG - AES",
    "PCF7946"
   ],
   "blades": [
@@ -1772,9 +1851,9 @@
   "frequencies": [
    "433 MHz"
   ],
-  "count": 3,
+  "count": 4,
   "categories": {
-   "afstandsbedieningen": 2,
+   "afstandsbedieningen": 3,
    "behuizingen": 1
   }
  },
@@ -1880,6 +1959,53 @@
    "behuizingen": 1
   }
  },
+ "Hyundai Sonata": {
+  "make": "Hyundai",
+  "model": "Sonata",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "DST AES - 8A"
+  ],
+  "blades": [
+   "TOY48"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 2,
+  "categories": {
+   "smart-keys": 2
+  }
+ },
+ "Hyundai Elantra": {
+  "make": "Hyundai",
+  "model": "Elantra",
+  "from": 2016,
+  "to": 9999,
+  "chips": [
+   "DST AES - 8A",
+   "4D63",
+   "PCF7936",
+   "PCF7945A en 7953A"
+  ],
+  "blades": [
+   "TOY48",
+   "Notschlüssel TOY48",
+   "TOY49",
+   "Notschlüssel KIA7",
+   "KIA9"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 5,
+  "categories": {
+   "smart-keys": 1,
+   "afstandsbedieningen": 3,
+   "behuizingen": 1
+  }
+ },
  "Hyundai Tucson": {
   "make": "Hyundai",
   "model": "Tucson",
@@ -1890,20 +2016,22 @@
    "NCF2952X / HITAG3",
    "NCF2951X 47",
    "siehe Foto",
-   "ID47"
+   "ID47",
+   "PCF7945A en 7953A"
   ],
   "blades": [
    "TOY48",
    "met noodsleutel",
+   "Notschlüssel KIA7",
    "HY22"
   ],
   "frequencies": [
    "433 MHz"
   ],
-  "count": 12,
+  "count": 14,
   "categories": {
-   "smart-keys": 4,
-   "afstandsbedieningen": 3,
+   "smart-keys": 5,
+   "afstandsbedieningen": 4,
    "behuizingen": 5
   }
  },
@@ -1912,6 +2040,25 @@
   "model": "Ix25 Creta Älteres Modell",
   "from": 2015,
   "to": 2018,
+  "chips": [
+   "DST AES - 8A"
+  ],
+  "blades": [
+   "TOY48"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 1,
+  "categories": {
+   "smart-keys": 1
+  }
+ },
+ "Hyundai Sonata Hybrid": {
+  "make": "Hyundai",
+  "model": "Sonata Hybrid",
+  "from": 2018,
+  "to": 2019,
   "chips": [
    "DST AES - 8A"
   ],
@@ -1968,6 +2115,19 @@
    "behuizingen": 1
   }
  },
+ "Volkswagen Golf Iv": {
+  "make": "Volkswagen",
+  "model": "Golf Iv",
+  "from": 9999,
+  "to": 9999,
+  "chips": [],
+  "blades": [],
+  "frequencies": [],
+  "count": 3,
+  "categories": {
+   "sleutelbaarden": 3
+  }
+ },
  "Kia Sportage": {
   "make": "Kia",
   "model": "Sportage",
@@ -2012,6 +2172,44 @@
   "count": 1,
   "categories": {
    "afstandsbedieningen": 1
+  }
+ },
+ "Renault Scenic 3": {
+  "make": "Renault",
+  "model": "Scenic 3",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "PCF7961 ID46"
+  ],
+  "blades": [
+   "VA2"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 2,
+  "categories": {
+   "afstandsbedieningen": 2
+  }
+ },
+ "Renault Latitude": {
+  "make": "Renault",
+  "model": "Latitude",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "PCF7961 ID46"
+  ],
+  "blades": [
+   "VA2"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 2,
+  "categories": {
+   "afstandsbedieningen": 2
   }
  },
  "Kia 3rap": {
@@ -3057,6 +3255,30 @@
    "sleutels-zonder-chip": 1
   }
  },
+ "Hyundai Santa Fe": {
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "from": 2018,
+  "to": 9999,
+  "chips": [
+   "NCF2952X / HITAG3",
+   "PCF7936"
+  ],
+  "blades": [
+   "TOY48",
+   "TOY49",
+   "KIA9"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 3,
+  "categories": {
+   "smart-keys": 1,
+   "afstandsbedieningen": 1,
+   "behuizingen": 1
+  }
+ },
  "Opel Holden": {
   "make": "Opel",
   "model": "Holden",
@@ -3065,9 +3287,10 @@
   "chips": [],
   "blades": [],
   "frequencies": [],
-  "count": 5,
+  "count": 6,
   "categories": {
-   "sleutelbaarden": 5
+   "sleutelbaarden": 5,
+   "sleutels-zonder-chip": 1
   }
  },
  "Chevrolet Gm U.a": {
@@ -3760,28 +3983,6 @@
    "behuizingen": 2
   }
  },
- "Opel Combo": {
-  "make": "Opel",
-  "model": "Combo",
-  "from": 2005,
-  "to": 9999,
-  "chips": [
-   "ID46",
-   "PCF7947 Delphi"
-  ],
-  "blades": [
-   "SIP22",
-   "HU100"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 5,
-  "categories": {
-   "afstandsbedieningen": 2,
-   "behuizingen": 3
-  }
- },
  "Ford Ka": {
   "make": "Ford",
   "model": "Ka",
@@ -3981,29 +4182,6 @@
    "afstandsbedieningen": 1
   }
  },
- "Hyundai Elantra": {
-  "make": "Hyundai",
-  "model": "Elantra",
-  "from": 2018,
-  "to": 9999,
-  "chips": [
-   "4D63",
-   "PCF7936"
-  ],
-  "blades": [
-   "Notschlüssel TOY48",
-   "TOY49",
-   "KIA9"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 3,
-  "categories": {
-   "afstandsbedieningen": 2,
-   "behuizingen": 1
-  }
- },
  "Hyundai I20": {
   "make": "Hyundai",
   "model": "I20",
@@ -4145,6 +4323,44 @@
   "count": 1,
   "categories": {
    "transponders": 1
+  }
+ },
+ "Renault Scenic 2": {
+  "make": "Renault",
+  "model": "Scenic 2",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "PCF7943 - HITAG2 46 Crytpo WR - Type5"
+  ],
+  "blades": [
+   "met noodsleutel"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 1,
+  "categories": {
+   "smart-keys": 1
+  }
+ },
+ "Renault Megane 2": {
+  "make": "Renault",
+  "model": "Megane 2",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "PCF7943 - HITAG2 46 Crytpo WR - Type5"
+  ],
+  "blades": [
+   "met noodsleutel"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 1,
+  "categories": {
+   "smart-keys": 1
   }
  },
  "Mercedes-Benz Vito": {
@@ -4952,9 +5168,10 @@
    "433 MHz",
    "868 MHz"
   ],
-  "count": 5,
+  "count": 6,
   "categories": {
    "afstandsbedieningen": 3,
+   "noodsleutels": 1,
    "smart-keys": 1,
    "behuizingen": 1
   }
@@ -5183,6 +5400,33 @@
   "count": 1,
   "categories": {
    "smart-keys": 1
+  }
+ },
+ "General Motors Holden": {
+  "make": "General Motors",
+  "model": "Holden",
+  "from": 9999,
+  "to": 9999,
+  "chips": [],
+  "blades": [],
+  "frequencies": [],
+  "count": 1,
+  "categories": {
+   "sleutels-zonder-chip": 1
+  }
+ },
+ "Buick Holden": {
+  "make": "Buick",
+  "model": "Holden",
+  "from": 9999,
+  "to": 9999,
+  "chips": [],
+  "blades": [],
+  "frequencies": [],
+  "count": 2,
+  "categories": {
+   "sleutels-zonder-chip": 1,
+   "transpondersleutels": 1
   }
  },
  "Porsche Dom": {
@@ -5414,6 +5658,76 @@
    "noodsleutels": 1
   }
  },
+ "BMW 5er Cas3": {
+  "make": "BMW",
+  "model": "5er Cas3",
+  "from": 9999,
+  "to": 9999,
+  "chips": [],
+  "blades": [],
+  "frequencies": [],
+  "count": 1,
+  "categories": {
+   "noodsleutels": 1
+  }
+ },
+ "Renault Logan": {
+  "make": "Renault",
+  "model": "Logan",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "PCF7961M - HITAG - AES"
+  ],
+  "blades": [
+   "VA2"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 1,
+  "categories": {
+   "afstandsbedieningen": 1
+  }
+ },
+ "Renault Symbol": {
+  "make": "Renault",
+  "model": "Symbol",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "PCF7961M - HITAG - AES"
+  ],
+  "blades": [
+   "VA2"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 1,
+  "categories": {
+   "afstandsbedieningen": 1
+  }
+ },
+ "Dacia Symbol": {
+  "make": "Dacia",
+  "model": "Symbol",
+  "from": 9999,
+  "to": 9999,
+  "chips": [
+   "PCF7961M - HITAG - AES"
+  ],
+  "blades": [
+   "VA2"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 1,
+  "categories": {
+   "afstandsbedieningen": 1
+  }
+ },
  "Renault Originalschlüssel": {
   "make": "Renault",
   "model": "Originalschlüssel",
@@ -5520,11 +5834,12 @@
    "315 MHz",
    "433 MHz"
   ],
-  "count": 11,
+  "count": 13,
   "categories": {
    "afstandsbedieningen": 4,
    "smart-keys": 1,
    "transpondersleutels": 1,
+   "sleutelbaarden": 2,
    "behuizingen": 5
   }
  },
@@ -5534,17 +5849,20 @@
   "from": 9999,
   "to": 9999,
   "chips": [
-   "4D63"
+   "4D63",
+   "PCF7945A / PCF7953A"
   ],
   "blades": [
-   "FO40"
+   "FO40",
+   "HU101"
   ],
   "frequencies": [
-   "315 MHz"
+   "315 MHz",
+   "433 MHz"
   ],
-  "count": 1,
+  "count": 2,
   "categories": {
-   "afstandsbedieningen": 1
+   "afstandsbedieningen": 2
   }
  },
  "Ford Freestyle": {
@@ -5941,27 +6259,6 @@
    "afstandsbedieningen": 1
   }
  },
- "Hyundai Santa Fe": {
-  "make": "Hyundai",
-  "model": "Santa Fe",
-  "from": 2018,
-  "to": 9999,
-  "chips": [
-   "PCF7936"
-  ],
-  "blades": [
-   "TOY49",
-   "KIA9"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 2,
-  "categories": {
-   "afstandsbedieningen": 1,
-   "behuizingen": 1
-  }
- },
  "Kia Santa Fe": {
   "make": "Kia",
   "model": "Santa Fe",
@@ -6030,22 +6327,6 @@
   "count": 6,
   "categories": {
    "transpondersleutels": 6
-  }
- },
- "Opel Corsa C": {
-  "make": "Opel",
-  "model": "Corsa C",
-  "from": 2001,
-  "to": 9999,
-  "chips": [],
-  "blades": [
-   "HU46",
-   "HU100"
-  ],
-  "frequencies": [],
-  "count": 5,
-  "categories": {
-   "behuizingen": 5
   }
  },
  "Nissan Primera": {
@@ -6275,6 +6556,26 @@
    "behuizingen": 1
   }
  },
+ "Hyundai I30": {
+  "make": "Hyundai",
+  "model": "I30",
+  "from": 2016,
+  "to": 9999,
+  "chips": [
+   "ID46",
+   "PCF7945A en 7953A"
+  ],
+  "blades": [
+   "Notschlüssel KIA7"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 2,
+  "categories": {
+   "afstandsbedieningen": 2
+  }
+ },
  "Chevrolet Gm": {
   "make": "Chevrolet",
   "model": "Gm",
@@ -6478,19 +6779,6 @@
  "Buick Gmc": {
   "make": "Buick",
   "model": "Gmc",
-  "from": 9999,
-  "to": 9999,
-  "chips": [],
-  "blades": [],
-  "frequencies": [],
-  "count": 1,
-  "categories": {
-   "transpondersleutels": 1
-  }
- },
- "Buick Holden": {
-  "make": "Buick",
-  "model": "Holden",
   "from": 9999,
   "to": 9999,
   "chips": [],
@@ -6887,25 +7175,6 @@
    "behuizingen": 3
   }
  },
- "Hyundai I30": {
-  "make": "Hyundai",
-  "model": "I30",
-  "from": 2016,
-  "to": 9999,
-  "chips": [
-   "PCF7945A en 7953A"
-  ],
-  "blades": [
-   "Notschlüssel KIA7"
-  ],
-  "frequencies": [
-   "433 MHz"
-  ],
-  "count": 1,
-  "categories": {
-   "afstandsbedieningen": 1
-  }
- },
  "Hyundai Ix35 07": {
   "make": "Hyundai",
   "model": "Ix35 07",
@@ -7116,6 +7385,25 @@
   "model": "Escape",
   "from": 9999,
   "to": 9999,
+  "chips": [
+   "PCF7945A / PCF7953A"
+  ],
+  "blades": [
+   "HU101"
+  ],
+  "frequencies": [
+   "433 MHz"
+  ],
+  "count": 1,
+  "categories": {
+   "afstandsbedieningen": 1
+  }
+ },
+ "Ford Flex": {
+  "make": "Ford",
+  "model": "Flex",
+  "from": 2011,
+  "to": 2016,
   "chips": [
    "PCF7945A / PCF7953A"
   ],
@@ -8537,21 +8825,6 @@
    "behuizingen": 6
   }
  },
- "Opel Meriva": {
-  "make": "Opel",
-  "model": "Meriva",
-  "from": 2004,
-  "to": 2016,
-  "chips": [],
-  "blades": [
-   "HU100"
-  ],
-  "frequencies": [],
-  "count": 3,
-  "categories": {
-   "behuizingen": 3
-  }
- },
  "Opel Mokka": {
   "make": "Opel",
   "model": "Mokka",
@@ -9717,22 +9990,6 @@
   "count": 4,
   "categories": {
    "behuizingen": 4
-  }
- },
- "Opel Tigra": {
-  "make": "Opel",
-  "model": "Tigra",
-  "from": 2002,
-  "to": 2009,
-  "chips": [],
-  "blades": [
-   "HU100",
-   "HU46"
-  ],
-  "frequencies": [],
-  "count": 5,
-  "categories": {
-   "behuizingen": 5
   }
  },
  "Ford B-Max": {

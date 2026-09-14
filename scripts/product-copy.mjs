@@ -120,7 +120,7 @@ const YEAR_LINE = /^\(?\s*((?:19|20)\d{2})\s*[-–—]\s*((?:19|20)\d{2})?\s*\)?
 
 /** Words that are a note about the car, not the name of one. */
 const NOT_A_MODEL =
-  /^(various models?|alle modelle|diverse|modelle|models|und|and|usw|etc|z\.?\s?b\.?|siehe|u\.a\.?)$/i;
+  /^(various models?|alle modelle|diverse|modelle|models|und|and|andere|andere modelle|other[s]?|usw|etc|z\.?\s?b\.?|siehe|u\.a\.?)$/i;
 
 /** TOYR120L, MARC103, XKHO00EN — an article code, not a car. */
 const PART_NUMBER = /^[A-Z]{2,6}[0-9]{2,5}[A-Z]{0,3}$/;
@@ -159,6 +159,19 @@ const titleCase = (text) =>
  * the next, and without carrying it across, every one of those cars came out
  * as "vanaf 9999".
  */
+/**
+ * "Corsa C: 2001 - 2007 Meriva: 2002 - 2008 Combo: 2002 - 2008" — a model list
+ * with no comma between entries, only a colon in front of each one's own year
+ * range. The ordinary comma/slash split reads the whole line as one chunk,
+ * the colon trips the PROSE filter (it also marks a spec label like
+ * "Material:"), and all four cars were lost, not just one. Matched as
+ * name/year pairs directly, sidestepping the split entirely; only used when
+ * this shape repeats — a single "Model: 2001" is rare enough elsewhere that
+ * guessing wrong there is not worth the risk of a false positive.
+ */
+const NAME_COLON_YEAR =
+  /([A-ZÄÖÜ][\wÄÖÜäöüß.'-]*(?:\s[A-ZÄÖÜ0-9][\wÄÖÜäöüß.'-]*){0,2})\s*:\s*((?:19|20)\d{2})(?:-((?:19|20)\d{2}))?/g;
+
 function modelsIn(tail, fallback = null) {
   const out = [];
   /*
@@ -168,7 +181,18 @@ function modelsIn(tail, fallback = null) {
    * model, offered for every Prius since.
    */
   const source = String(tail ?? '').replace(/((?:19|20)\d{2})\s*-\s*((?:19|20)\d{2})/g, '$1-$2');
-  for (const chunk of source.split(/\s*[,;|]\s*|\s+-\s+|\s*\/\s*/)) {
+
+  const colonYearPairs = [...source.matchAll(NAME_COLON_YEAR)];
+  if (colonYearPairs.length > 1) {
+    for (const [, name, from, to] of colonYearPairs) {
+      const trimmed = name.trim();
+      if (!trimmed || NOT_A_MODEL.test(trimmed) || !looksLikeModel(trimmed)) continue;
+      out.push({ model: titleCase(trimmed), from: Number(from), to: to ? Number(to) : 9999 });
+    }
+    return out;
+  }
+
+  for (const chunk of source.split(/\s*[,;|]\s*|\s+-\s+|\s*\/\s*|\s+und\s+/)) {
     const text = chunk.replace(/\s+/g, ' ').trim();
     if (!text) continue;
 
