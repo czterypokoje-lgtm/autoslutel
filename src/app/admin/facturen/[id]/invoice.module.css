@@ -79,6 +79,23 @@
   border-color: #6ee7b7;
 }
 
+.editBtn {
+  height: 38px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  font-weight: 600;
+  font-size: 13.5px;
+  text-decoration: none;
+}
+.editBtn:hover {
+  background: #f3f4f6;
+}
+
 .printBtn {
   height: 38px;
   padding: 0 18px;

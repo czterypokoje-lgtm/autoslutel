@@ -69,6 +69,9 @@ export default function PrintButton({ invoiceId, status }: { invoiceId: string; 
             </option>
           ))}
         </select>
+        <Link href={`/admin/facturen/${invoiceId}/bewerken`} className={styles.editBtn}>
+          Bewerken
+        </Link>
         <button type="button" className={styles.printBtn} onClick={() => window.print()}>
           Afdrukken / Opslaan als PDF
         </button>

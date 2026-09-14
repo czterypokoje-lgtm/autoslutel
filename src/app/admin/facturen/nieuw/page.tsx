@@ -2,7 +2,7 @@ import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SITE_CONFIG } from '@/config/site.config';
 import { PageHead } from '../../_ui';
-import InvoiceForm from './InvoiceForm';
+import InvoiceForm from '../InvoiceForm';
 
 export const dynamic = 'force-dynamic';
 

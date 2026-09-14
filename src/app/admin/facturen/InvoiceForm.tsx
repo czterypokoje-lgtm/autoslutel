@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ui } from '../../_ui';
-import styles from './nieuw.module.css';
+import { ui } from '../_ui';
+import styles from './invoice-form.module.css';
 
 interface Line {
   description: string;
@@ -11,6 +11,28 @@ interface Line {
   unitPrice: string;
   discount: string;
   vatRate: string;
+}
+
+export interface InvoiceFormValues {
+  billerName: string;
+  billerStreet: string;
+  billerPostcode: string;
+  billerCity: string;
+  billerEmail: string;
+  billerPhone: string;
+  billerKvk: string;
+  billerBtw: string;
+  clientName: string;
+  clientStreet: string;
+  clientPostcode: string;
+  clientCity: string;
+  clientEmail: string;
+  clientPhone: string;
+  clientBtw: string;
+  technicianId: string;
+  creditApplied: string;
+  notes: string;
+  lines: Line[];
 }
 
 const EMPTY_LINE: Line = { description: '', quantity: '1', unitPrice: '', discount: '0', vatRate: '21' };
@@ -27,39 +49,51 @@ function num(value: string): number {
  * technician can fill in "very fast", so every total updates as they type
  * rather than waiting for a save round-trip, and a new line is one click, not
  * a modal.
+ *
+ * Doubles as the edit form: pass `invoiceId` and this PATCHes the existing
+ * row and its lines instead of creating a new one. The lines table has no
+ * concept of "this line used to exist" — an edit simply replaces every line
+ * with whatever is on screen when Opslaan is pressed, which is simpler and
+ * exactly as correct, since the form is never partially submitted.
  */
 export default function InvoiceForm({
   technicians,
   showTechnicianPicker,
   biller,
+  invoiceId,
+  initial,
 }: {
   technicians: { id: string; name: string }[];
   showTechnicianPicker: boolean;
   biller: { name: string; email: string; phone: string; kvk: string; btw: string };
+  /** Present only when editing an existing invoice. */
+  invoiceId?: string;
+  initial?: InvoiceFormValues;
 }) {
   const router = useRouter();
+  const isEdit = Boolean(invoiceId);
 
-  const [billerName, setBillerName] = useState(biller.name);
-  const [billerStreet, setBillerStreet] = useState('');
-  const [billerPostcode, setBillerPostcode] = useState('');
-  const [billerCity, setBillerCity] = useState('');
-  const [billerEmail, setBillerEmail] = useState(biller.email);
-  const [billerPhone, setBillerPhone] = useState(biller.phone);
-  const [billerKvk, setBillerKvk] = useState(biller.kvk);
-  const [billerBtw, setBillerBtw] = useState(biller.btw);
+  const [billerName, setBillerName] = useState(initial?.billerName ?? biller.name);
+  const [billerStreet, setBillerStreet] = useState(initial?.billerStreet ?? '');
+  const [billerPostcode, setBillerPostcode] = useState(initial?.billerPostcode ?? '');
+  const [billerCity, setBillerCity] = useState(initial?.billerCity ?? '');
+  const [billerEmail, setBillerEmail] = useState(initial?.billerEmail ?? biller.email);
+  const [billerPhone, setBillerPhone] = useState(initial?.billerPhone ?? biller.phone);
+  const [billerKvk, setBillerKvk] = useState(initial?.billerKvk ?? biller.kvk);
+  const [billerBtw, setBillerBtw] = useState(initial?.billerBtw ?? biller.btw);
 
-  const [clientName, setClientName] = useState('');
-  const [clientStreet, setClientStreet] = useState('');
-  const [clientPostcode, setClientPostcode] = useState('');
-  const [clientCity, setClientCity] = useState('');
-  const [clientEmail, setClientEmail] = useState('');
-  const [clientPhone, setClientPhone] = useState('');
-  const [clientBtw, setClientBtw] = useState('');
+  const [clientName, setClientName] = useState(initial?.clientName ?? '');
+  const [clientStreet, setClientStreet] = useState(initial?.clientStreet ?? '');
+  const [clientPostcode, setClientPostcode] = useState(initial?.clientPostcode ?? '');
+  const [clientCity, setClientCity] = useState(initial?.clientCity ?? '');
+  const [clientEmail, setClientEmail] = useState(initial?.clientEmail ?? '');
+  const [clientPhone, setClientPhone] = useState(initial?.clientPhone ?? '');
+  const [clientBtw, setClientBtw] = useState(initial?.clientBtw ?? '');
 
-  const [technicianId, setTechnicianId] = useState('');
-  const [lines, setLines] = useState<Line[]>([{ ...EMPTY_LINE }]);
-  const [creditApplied, setCreditApplied] = useState('0');
-  const [notes, setNotes] = useState('');
+  const [technicianId, setTechnicianId] = useState(initial?.technicianId ?? '');
+  const [lines, setLines] = useState<Line[]>(initial?.lines?.length ? initial.lines : [{ ...EMPTY_LINE }]);
+  const [creditApplied, setCreditApplied] = useState(initial?.creditApplied ?? '0');
+  const [notes, setNotes] = useState(initial?.notes ?? '');
 
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -107,36 +141,38 @@ export default function InvoiceForm({
     }
 
     setSaving(true);
-    const response = await fetch('/api/admin/invoices', {
-      method: 'POST',
+    const payload = {
+      biller_name: billerName,
+      biller_street: billerStreet,
+      biller_postcode: billerPostcode,
+      biller_city: billerCity,
+      biller_email: billerEmail,
+      biller_phone: billerPhone,
+      biller_kvk: billerKvk,
+      biller_btw: billerBtw,
+      client_name: clientName,
+      client_street: clientStreet,
+      client_postcode: clientPostcode,
+      client_city: clientCity,
+      client_email: clientEmail,
+      client_phone: clientPhone,
+      client_btw: clientBtw,
+      technician_id: technicianId || null,
+      credit_applied: creditApplied,
+      notes,
+      lines: goodLines.map((l) => ({
+        description: l.description,
+        quantity: num(l.quantity),
+        unitPrice: num(l.unitPrice),
+        discount: num(l.discount),
+        vatRate: num(l.vatRate),
+      })),
+    };
+
+    const response = await fetch(isEdit ? `/api/admin/invoices/${invoiceId}` : '/api/admin/invoices', {
+      method: isEdit ? 'PATCH' : 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        biller_name: billerName,
-        biller_street: billerStreet,
-        biller_postcode: billerPostcode,
-        biller_city: billerCity,
-        biller_email: billerEmail,
-        biller_phone: billerPhone,
-        biller_kvk: billerKvk,
-        biller_btw: billerBtw,
-        client_name: clientName,
-        client_street: clientStreet,
-        client_postcode: clientPostcode,
-        client_city: clientCity,
-        client_email: clientEmail,
-        client_phone: clientPhone,
-        client_btw: clientBtw,
-        technician_id: technicianId || null,
-        credit_applied: creditApplied,
-        notes,
-        lines: goodLines.map((l) => ({
-          description: l.description,
-          quantity: num(l.quantity),
-          unitPrice: num(l.unitPrice),
-          discount: num(l.discount),
-          vatRate: num(l.vatRate),
-        })),
-      }),
+      body: JSON.stringify(payload),
     }).catch(() => null);
 
     if (!response || !response.ok) {
@@ -146,8 +182,12 @@ export default function InvoiceForm({
       return;
     }
 
-    const body = await response.json();
-    router.push(`/admin/facturen/${body.id}`);
+    if (isEdit) {
+      router.push(`/admin/facturen/${invoiceId}`);
+    } else {
+      const body = await response.json();
+      router.push(`/admin/facturen/${body.id}`);
+    }
   }
 
   return (
@@ -170,7 +210,7 @@ export default function InvoiceForm({
         <div className={styles.panel}>
           <h2>Aan (klant)</h2>
           <div className={styles.fieldGrid}>
-            <Field label="Naam / bedrijf *" value={clientName} onChange={setClientName} autoFocus />
+            <Field label="Naam / bedrijf *" value={clientName} onChange={setClientName} autoFocus={!isEdit} />
             <Field label="Straat + nummer" value={clientStreet} onChange={setClientStreet} />
             <Field label="Postcode" value={clientPostcode} onChange={setClientPostcode} />
             <Field label="Plaats" value={clientCity} onChange={setClientCity} />
@@ -321,7 +361,7 @@ export default function InvoiceForm({
 
       <div className={styles.actions}>
         <button type="button" className={`${ui.btn} ${ui.btnPrimary}`} onClick={save} disabled={saving}>
-          {saving ? 'Opslaan…' : 'Factuur aanmaken'}
+          {saving ? 'Opslaan…' : isEdit ? 'Wijzigingen opslaan' : 'Factuur aanmaken'}
         </button>
       </div>
     </div>
