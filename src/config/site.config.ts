@@ -16,8 +16,11 @@ export const SITE_CONFIG = {
 
   address: {
     street: '', // Mobile service-area business — no storefront shown
-    city: 'Midden-Nederland',
-    region: 'Utrecht',
+    // Matches the base city on the real Google Business Profile — "Midden-
+    // Nederland" isn't a real place Google can match NAP data against, and
+    // a mismatch here works against local ranking, not for it.
+    city: 'Bussum',
+    region: 'Noord-Holland',
     postal: '',
     country: 'NL',
   },
