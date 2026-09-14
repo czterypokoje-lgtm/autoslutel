@@ -313,6 +313,29 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
+        {/* Local context — real per-city detail that used to be written into
+            the data (cities.ts) but never actually reached the page. */}
+        {(city.localFact || city.commonJob) && (
+          <section style={{ padding: '3rem 0', background: '#fff' }}>
+            <div className="container" style={{ maxWidth: '760px', margin: '0 auto' }}>
+              <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '1rem' }}>
+                Autosleutel service in {city.city}
+              </h2>
+              {city.localFact && (
+                <p style={{ color: 'var(--gray-700)', lineHeight: 1.7, marginBottom: city.commonJob ? '1rem' : 0 }}>
+                  {city.localFact}
+                </p>
+              )}
+              {city.commonJob && (
+                <p style={{ color: 'var(--gray-700)', lineHeight: 1.7 }}>
+                  <strong>Veelvoorkomende klus in {city.city}:</strong> {city.commonJob}
+                  {city.avgJobDuration && <> — gemiddelde duur ter plaatse: {city.avgJobDuration}.</>}
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* SEO Gallery — max 3 city-relevant images */}
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
           <div className="container">
