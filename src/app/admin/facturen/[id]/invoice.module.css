@@ -39,6 +39,46 @@
   text-decoration: underline;
 }
 
+.barRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statusError {
+  color: #b91c1c;
+  font-size: 12.5px;
+}
+
+.statusSelect {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #111827;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.status_concept {
+  background: #f3f4f6;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+.status_verzonden {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+}
+.status_betaald {
+  background: #d1fae5;
+  color: #065f46;
+  border-color: #6ee7b7;
+}
+
 .printBtn {
   height: 38px;
   padding: 0 18px;
@@ -68,6 +108,7 @@
 /* ── the sheet itself ────────────────────────────────────────────────── */
 
 .sheet {
+  position: relative;
   width: 100%;
   max-width: 860px;
   background: #fff;
@@ -76,6 +117,24 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+.paidStamp {
+  position: absolute;
+  top: 64px;
+  right: 56px;
+  padding: 8px 22px;
+  border: 3px solid #16a34a;
+  border-radius: 8px;
+  color: #16a34a;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+  opacity: 0.85;
+  pointer-events: none;
 }
 
 @media print {

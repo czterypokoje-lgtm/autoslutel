@@ -49,6 +49,7 @@ interface Invoice {
   subtotal: number | string;
   vat_total: number | string;
   total: number | string;
+  status: 'concept' | 'verzonden' | 'betaald';
 }
 
 /**
@@ -79,9 +80,10 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className={styles.page}>
-      <PrintButton />
+      <PrintButton invoiceId={inv.id} status={inv.status} />
 
       <div className={styles.sheet} id="invoice-sheet">
+        {inv.status === 'betaald' && <div className={styles.paidStamp}>Betaald</div>}
         <div className={styles.top}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt={inv.biller_name} className={styles.logo} />
