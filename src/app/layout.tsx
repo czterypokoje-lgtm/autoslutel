@@ -164,16 +164,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
         {/* End Google Tag Manager */}
-        {/* Google tag (gtag.js) */}
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-C4WR7TYCTV" />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-C4WR7TYCTV');
-          `}
-        </Script>
+        {/*
+          GA4 (G-C4WR7TYCTV) is no longer loaded here directly — it's now
+          configured as a "Google Tag" inside the GTM container itself
+          (GTM-PRT75SWX), which runs its own gtag-compatible runtime. Loading
+          both would double-fire every pageview and event: one hit from this
+          script, one from GTM's copy, doubling every number in GA4 for no
+          reason. The bare `gtag(...)` calls below (and in PhoneConversionTracker,
+          ContactForm) still work — they push into the same dataLayer that
+          the consent-defaults script above already queues onto, and GTM's
+          Google Tag now reads from there.
+        */}
         {/* Google Ads Click to call conversion snippet */}
         <Script id="google-ads-conversion" strategy="afterInteractive">
           {`
