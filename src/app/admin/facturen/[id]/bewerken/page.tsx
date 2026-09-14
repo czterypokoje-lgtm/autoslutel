@@ -34,6 +34,7 @@ export default async function FactuurBewerkenPage({ params }: { params: Promise<
     billerPhone: invoice.biller_phone ?? '',
     billerKvk: invoice.biller_kvk ?? '',
     billerBtw: invoice.biller_btw ?? '',
+    billerIban: invoice.biller_iban ?? '',
     clientName: invoice.client_name ?? '',
     clientStreet: invoice.client_street ?? '',
     clientPostcode: invoice.client_postcode ?? '',
@@ -77,6 +78,7 @@ export default async function FactuurBewerkenPage({ params }: { params: Promise<
           phone: invoice.biller_phone ?? '',
           kvk: invoice.biller_kvk ?? '',
           btw: invoice.biller_btw ?? '',
+          iban: invoice.biller_iban ?? '',
         }}
       />
     </>

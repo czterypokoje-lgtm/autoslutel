@@ -36,6 +36,7 @@ interface Invoice {
   biller_phone: string | null;
   biller_kvk: string | null;
   biller_btw: string | null;
+  biller_iban: string | null;
   client_name: string;
   client_street: string | null;
   client_postcode: string | null;
@@ -50,6 +51,7 @@ interface Invoice {
   vat_total: number | string;
   total: number | string;
   status: 'concept' | 'verzonden' | 'betaald';
+  paid_at: string | null;
 }
 
 /**
@@ -83,7 +85,6 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
       <PrintButton invoiceId={inv.id} status={inv.status} />
 
       <div className={styles.sheet} id="invoice-sheet">
-        {inv.status === 'betaald' && <div className={styles.paidStamp}>Betaald</div>}
         <div className={styles.top}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt={inv.biller_name} className={styles.logo} />
@@ -106,6 +107,7 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
             phone={inv.biller_phone}
             kvk={inv.biller_kvk}
             btw={inv.biller_btw}
+            iban={inv.biller_iban}
             align="left"
           />
           <Party
@@ -168,6 +170,9 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
               <TotalLine label={`Credit toegepast op ${DATE.format(new Date(inv.issue_date))}`} value={MONEY.format(credit)} />
             )}
             <TotalLine label="Totaal verschuldigd (EUR)" value={MONEY.format(Number(inv.total))} final />
+            {inv.status === 'betaald' && inv.paid_at && (
+              <p className={styles.paidNote}>Betaald op {DATE.format(new Date(inv.paid_at))}</p>
+            )}
           </div>
         </div>
       </div>
@@ -185,6 +190,7 @@ function Party({
   phone,
   kvk,
   btw,
+  iban,
   align,
 }: {
   name: string;
@@ -196,6 +202,7 @@ function Party({
   phone: string | null;
   kvk?: string | null;
   btw: string | null;
+  iban?: string | null;
   align: 'left' | 'right';
 }) {
   return (
@@ -215,7 +222,7 @@ function Party({
           {phone}
         </p>
       )}
-      {(kvk || btw) && (
+      {(kvk || btw || iban) && (
         <p className={styles.partyGap}>
           {kvk && (
             <>
@@ -226,6 +233,12 @@ function Party({
           {btw && (
             <>
               BTW: <span className={styles.dim}>{btw}</span>
+              {iban && <br />}
+            </>
+          )}
+          {iban && (
+            <>
+              IBAN: <span className={styles.dim}>{iban}</span>
             </>
           )}
         </p>

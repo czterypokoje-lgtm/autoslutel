@@ -22,6 +22,7 @@ export interface InvoiceFormValues {
   billerPhone: string;
   billerKvk: string;
   billerBtw: string;
+  billerIban: string;
   clientName: string;
   clientStreet: string;
   clientPostcode: string;
@@ -65,7 +66,7 @@ export default function InvoiceForm({
 }: {
   technicians: { id: string; name: string }[];
   showTechnicianPicker: boolean;
-  biller: { name: string; email: string; phone: string; kvk: string; btw: string };
+  biller: { name: string; email: string; phone: string; kvk: string; btw: string; iban: string };
   /** Present only when editing an existing invoice. */
   invoiceId?: string;
   initial?: InvoiceFormValues;
@@ -81,6 +82,7 @@ export default function InvoiceForm({
   const [billerPhone, setBillerPhone] = useState(initial?.billerPhone ?? biller.phone);
   const [billerKvk, setBillerKvk] = useState(initial?.billerKvk ?? biller.kvk);
   const [billerBtw, setBillerBtw] = useState(initial?.billerBtw ?? biller.btw);
+  const [billerIban, setBillerIban] = useState(initial?.billerIban ?? biller.iban);
 
   const [clientName, setClientName] = useState(initial?.clientName ?? '');
   const [clientStreet, setClientStreet] = useState(initial?.clientStreet ?? '');
@@ -150,6 +152,7 @@ export default function InvoiceForm({
       biller_phone: billerPhone,
       biller_kvk: billerKvk,
       biller_btw: billerBtw,
+      biller_iban: billerIban,
       client_name: clientName,
       client_street: clientStreet,
       client_postcode: clientPostcode,
@@ -204,6 +207,7 @@ export default function InvoiceForm({
             <Field label="Telefoon" value={billerPhone} onChange={setBillerPhone} />
             <Field label="KvK" value={billerKvk} onChange={setBillerKvk} />
             <Field label="BTW-nummer" value={billerBtw} onChange={setBillerBtw} />
+            <Field label="IBAN" value={billerIban} onChange={setBillerIban} />
           </div>
         </div>
 

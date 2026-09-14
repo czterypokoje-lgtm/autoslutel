@@ -54,6 +54,13 @@ export const SITE_CONFIG = {
    * ours. Replace it with the number on your own btw-aangifte.
    */
   btw: 'NL42123555B01',
+  /*
+   * VERIFY BEFORE INVOICING — same placeholder problem as kvk/btw above. A
+   * factuur with someone else's bank account on it is a mistake, not just a
+   * blank field. Replace with the real account before this is used to bill
+   * anyone; the invoice form lets each factuur override it anyway.
+   */
+  iban: 'NL00BANK0123456789',
   rating: '5.0',
   reviewCount: '8', // actual Google review count — update as it grows
 

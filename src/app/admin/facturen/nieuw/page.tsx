@@ -33,6 +33,7 @@ export default async function NieuweFactuurPage() {
           phone: SITE_CONFIG.phone,
           kvk: SITE_CONFIG.kvk,
           btw: SITE_CONFIG.btw,
+          iban: SITE_CONFIG.iban,
         }}
       />
     </>

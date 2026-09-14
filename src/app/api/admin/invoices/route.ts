@@ -123,6 +123,7 @@ export async function POST(request: Request) {
       biller_phone: text(body.biller_phone, 40) ?? SITE_CONFIG.phone,
       biller_kvk: text(body.biller_kvk, 40) ?? SITE_CONFIG.kvk,
       biller_btw: text(body.biller_btw, 40) ?? SITE_CONFIG.btw,
+      biller_iban: text(body.biller_iban, 40) ?? SITE_CONFIG.iban,
       client_name: clientName,
       client_street: text(body.client_street, 200),
       client_postcode: text(body.client_postcode, 20),

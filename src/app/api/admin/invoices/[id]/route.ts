@@ -81,9 +81,18 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       return NextResponse.json({ error: 'Onbekende status' }, { status: 400 });
     }
 
+    /*
+     * paid_at is set the moment betaald is first chosen, and cleared if the
+     * status is ever moved back off it — a plain line of text on the sheet
+     * ("Betaald op ...") needs a real date behind it, not just a boolean.
+     */
     const { error } = await supabase
       .from('sales_invoices')
-      .update({ status: body.status, updated_at: new Date().toISOString() })
+      .update({
+        status: body.status,
+        paid_at: body.status === 'betaald' ? new Date().toISOString() : null,
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', id);
 
     if (error) {
@@ -134,6 +143,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       biller_phone: text(body.biller_phone, 40),
       biller_kvk: text(body.biller_kvk, 40),
       biller_btw: text(body.biller_btw, 40),
+      biller_iban: text(body.biller_iban, 40),
       client_name: clientName,
       client_street: text(body.client_street, 200),
       client_postcode: text(body.client_postcode, 20),
