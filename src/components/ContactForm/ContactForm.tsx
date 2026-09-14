@@ -64,9 +64,19 @@ export default function ContactForm() {
          * and never navigates. That trigger is built for a form that
          * posts and reloads; this one never does, so relying on it is how a
          * form that works perfectly can still show zero conversions.
+         *
+         * email/phone_number ride along for Google Ads' "Enhanced
+         * conversions for leads" — GTM's own tag hashes them before
+         * anything leaves the browser, this just has to hand them over. Only
+         * sent on a real, successful submission, and only what the visitor
+         * just typed into this form themselves.
          */
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({ event: 'contact_form_submit' });
+        window.dataLayer.push({
+          event: 'contact_form_submit',
+          email: data.get('email') || undefined,
+          phone_number: data.get('phone') || undefined,
+        });
         if (typeof window.gtag === 'function') {
           window.gtag('event', 'generate_lead', { event_category: 'contact_form' });
         }
