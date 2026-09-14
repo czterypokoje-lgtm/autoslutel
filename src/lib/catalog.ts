@@ -159,6 +159,25 @@ export function formatPrice(value: number | null): string {
   return `€${value.toFixed(2).replace('.', ',')}`;
 }
 
+/*
+ * Real orderings only. "Nieuwste" is deliberately absent — nothing in the
+ * catalogue records when a product was added, so there is no honest way to
+ * answer "newest first" yet.
+ */
+export type SortKey = 'prijs-oplopend' | 'prijs-aflopend' | 'naam';
+
+export function sortProducts<T extends CatalogProduct>(products: T[], sort?: SortKey): T[] {
+  if (!sort) return products;
+  const priceOf = (p: T) => shelfPrice(p.costPrice) ?? Number.POSITIVE_INFINITY;
+  const sorted = [...products];
+  if (sort === 'prijs-oplopend') sorted.sort((a, b) => priceOf(a) - priceOf(b));
+  else if (sort === 'prijs-aflopend') sorted.sort((a, b) => priceOf(b) - priceOf(a));
+  else if (sort === 'naam') {
+    sorted.sort((a, b) => (a.titleNl || a.title).localeCompare(b.titleNl || b.title, 'nl'));
+  }
+  return sorted;
+}
+
 /* ── filtering ────────────────────────────────────────────────────────── */
 
 export interface Filters {
@@ -205,10 +224,7 @@ function matches(p: CatalogProduct, f: Filters): boolean {
   return true;
 }
 
-export function filterProducts(
-  products: CatalogProduct[],
-  filters: Filters
-): CatalogProduct[] {
+export function filterProducts<T extends CatalogProduct>(products: T[], filters: Filters): T[] {
   return products.filter((p) => matches(p, filters));
 }
 

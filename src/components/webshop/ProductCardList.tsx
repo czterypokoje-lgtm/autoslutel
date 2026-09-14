@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { slugify } from '@/lib/utils';
 import { FREE_SHIPPING_FROM } from '@/lib/catalog';
 import AddToCartButton from '@/components/webshop/AddToCartButton';
+import WishlistHeart from '@/components/webshop/WishlistHeart';
 
 /**
  * One product in a list view.
@@ -69,6 +70,16 @@ export default function ProductCard({
     <div className="shop-list-card">
       {/* Image */}
       <div className="shop-list-card-media">
+        {slug && (
+          <div className="shop-list-card-badges">
+            <WishlistHeart slug={slug} title={title} />
+            {freeShipping && (
+              <span className="shop-shipping-badge" title="Gratis verzending">
+                Gratis verzending
+              </span>
+            )}
+          </div>
+        )}
         <Link href={href} style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={img} alt={title} style={{ width: '100%', maxWidth: '220px', objectFit: 'contain' }} />
@@ -78,11 +89,11 @@ export default function ProductCard({
       {/* Details */}
       <div className="shop-list-card-body">
         <Link href={href} style={{ textDecoration: 'none', color: '#0f172a' }}>
-          <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem' }}>{title}</h2>
+          <h2 className="shop-list-card-title" style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.25rem' }}>{title}</h2>
         </Link>
 
         {subtitle && (
-          <div style={{ fontSize: '0.95rem', color: '#475569', marginBottom: '0.6rem', lineHeight: 1.5 }}>
+          <div className="shop-list-card-subtitle" style={{ fontSize: '0.95rem', color: '#475569', marginBottom: '0.6rem', lineHeight: 1.5 }}>
             {subtitle}
           </div>
         )}
@@ -98,6 +109,7 @@ export default function ProductCard({
 
         {specs.length > 0 && (
           <ul
+            className="shop-list-card-specs"
             style={{
               paddingLeft: '1.1rem',
               margin: 0,
@@ -120,8 +132,10 @@ export default function ProductCard({
 
       {/* Price */}
       <div className="shop-list-card-price">
+        {/* Same fact as the badge over the image — shown as plain text here
+            on desktop, hidden on mobile where the badge already says it. */}
         {freeShipping && (
-          <div style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 600, marginBottom: '0.5rem' }}>
+          <div className="shop-list-card-shipping-text" style={{ fontSize: '0.8rem', color: '#334155', fontWeight: 600, marginBottom: '0.5rem' }}>
             Gratis verzending
           </div>
         )}
@@ -150,6 +164,7 @@ export default function ProductCard({
           {slug && <AddToCartButton slug={slug} disabled={inStock === false} />}
           <Link
             href={href}
+            className="shop-list-card-secondary-cta"
             style={{
               width: '100%',
               background: '#fff',

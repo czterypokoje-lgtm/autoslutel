@@ -9,8 +9,10 @@ import {
   buildFacets,
   shelfPrice,
   facetLabel,
+  sortProducts,
   type Filters,
   type FacetKey,
+  type SortKey,
 } from '@/lib/catalog';
 import { getShopProducts } from '@/lib/shopCatalog';
 
@@ -48,6 +50,8 @@ const BRAND_SHORTCUTS = ['Xhorse', 'KeyDIY', 'Autel', 'Lonsdor', 'Silca'];
 
 const PAGE_SIZE = 24;
 
+const SORT_KEYS: SortKey[] = ['prijs-oplopend', 'prijs-aflopend', 'naam'];
+
 function parseFilters(sp: Record<string, string | string[] | undefined>): Filters {
   const one = (k: string) => {
     const v = sp[k];
@@ -81,8 +85,20 @@ export default async function CatalogPage({
   // Public catalogue only. Trade lines (lock picks, key programmers) are
   // excluded at the data layer, not hidden in the UI.
   const all = await getShopProducts(isB2B ? 'all' : 'public');
-  const results = filterProducts(all, filters);
+  const matched = filterProducts(all, filters);
   const facets = buildFacets(all, filters, FACET_ORDER);
+
+  // In-stock and sort are display ordering/narrowing on top of the real
+  // filters, not facets themselves — kept out of Filters/matches() since
+  // `inStock` only exists on the shop's own ShopProduct, not the base
+  // CatalogProduct every other facet operates on.
+  const onlyInStockRaw = Array.isArray(sp.inStock) ? sp.inStock[0] : sp.inStock;
+  const onlyInStock = onlyInStockRaw === '1';
+  const sortRaw = Array.isArray(sp.sort) ? sp.sort[0] : sp.sort;
+  const sort = SORT_KEYS.find((s) => s === sortRaw);
+
+  const narrowed = onlyInStock ? matched.filter((p) => p.inStock) : matched;
+  const results = sortProducts(narrowed, sort);
 
   const page = Math.max(1, Number(Array.isArray(sp.page) ? sp.page[0] : sp.page) || 1);
   const pageItems = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -166,7 +182,7 @@ export default async function CatalogPage({
               </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="shop-catalog-list">
               {pageItems.map((p) => {
                 const price = shelfPrice(p.costPrice);
                 return (

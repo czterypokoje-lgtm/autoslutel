@@ -25,6 +25,12 @@ import type { FacetKey, FacetOption } from '@/lib/catalog';
  * category — see the faceted-navigation note in the webshop blueprint.
  */
 
+const SORT_OPTIONS: { value: string; label: string }[] = [
+  { value: 'prijs-oplopend', label: 'Prijs: laag naar hoog' },
+  { value: 'prijs-aflopend', label: 'Prijs: hoog naar laag' },
+  { value: 'naam', label: 'Naam A-Z' },
+];
+
 const GROUP_TITLES: Record<FacetKey, string> = {
   category: 'Categorie',
   subcategory: 'Type',
@@ -76,6 +82,8 @@ export default function CatalogFilters({
   }, [params]);
 
   const activeCount = Object.keys(active).length;
+  const currentSort = params.get('sort');
+  const onlyInStock = params.get('inStock') === '1';
 
   /**
    * The URL this option leads to — the current query with one facet added,
@@ -151,6 +159,38 @@ export default function CatalogFilters({
         <span className="shop-filter-open-count">{resultCount} producten</span>
       </label>
 
+      <div className="shop-toolbar-row">
+        <details className="shop-sort">
+          <summary>
+            Sorteren
+            <span aria-hidden="true" className="shop-sort-caret">⌄</span>
+          </summary>
+          <div className="shop-sort-menu">
+            {SORT_OPTIONS.map((o) => (
+              <Link
+                key={o.value}
+                href={hrefFor('sort', o.value)}
+                scroll={false}
+                className={currentSort === o.value ? 'shop-sort-optOn' : 'shop-sort-opt'}
+              >
+                {currentSort === o.value ? '✓ ' : ''}
+                {o.label}
+              </Link>
+            ))}
+          </div>
+        </details>
+
+        <Link
+          href={hrefFor('inStock', onlyInStock ? null : '1')}
+          scroll={false}
+          className="shop-stock-toggle"
+          aria-pressed={onlyInStock}
+        >
+          <span className={`shop-stock-switch ${onlyInStock ? 'shop-stock-switchOn' : ''}`} aria-hidden="true" />
+          Alleen op voorraad
+        </Link>
+      </div>
+
       <label className="shop-filter-scrim" htmlFor="shop-filter-toggle" aria-hidden="true" />
 
     <aside className={`${styles.root} shop-filter-panel`} aria-label="Filters">
@@ -168,6 +208,38 @@ export default function CatalogFilters({
             Wis alles ({activeCount})
           </Link>
         )}
+      </div>
+
+      <div className={styles.sortRow}>
+        <details className="shop-sort shop-sort--sidebar">
+          <summary>
+            Sorteren
+            <span aria-hidden="true" className="shop-sort-caret">⌄</span>
+          </summary>
+          <div className="shop-sort-menu">
+            {SORT_OPTIONS.map((o) => (
+              <Link
+                key={o.value}
+                href={hrefFor('sort', o.value)}
+                scroll={false}
+                className={currentSort === o.value ? 'shop-sort-optOn' : 'shop-sort-opt'}
+              >
+                {currentSort === o.value ? '✓ ' : ''}
+                {o.label}
+              </Link>
+            ))}
+          </div>
+        </details>
+
+        <Link
+          href={hrefFor('inStock', onlyInStock ? null : '1')}
+          scroll={false}
+          className="shop-stock-toggle"
+          aria-pressed={onlyInStock}
+        >
+          <span className={`shop-stock-switch ${onlyInStock ? 'shop-stock-switchOn' : ''}`} aria-hidden="true" />
+          Alleen op voorraad
+        </Link>
       </div>
 
       {activeCount > 0 && (

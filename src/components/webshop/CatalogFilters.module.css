@@ -36,6 +36,15 @@
 }
 .clear:hover { color: #8f2d17; }
 
+.sortRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0 12px;
+  border-bottom: 1px solid #eef1f4;
+}
+
 /* active filter chips */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 0 4px; }
 
