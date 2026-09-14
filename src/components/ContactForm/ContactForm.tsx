@@ -2,6 +2,13 @@
 
 import React, { useState } from 'react';
 
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'succeeded' | 'error'>('idle');
 
@@ -49,6 +56,20 @@ export default function ContactForm() {
       if (response.ok) {
         setStatus('succeeded');
         form.reset();
+
+        /*
+         * A real conversion event, fired directly — not left to GTM's
+         * automatic Form Submission trigger, which listens for the native
+         * `submit` event but this handler already called preventDefault()
+         * and never navigates. That trigger is built for a form that
+         * posts and reloads; this one never does, so relying on it is how a
+         * form that works perfectly can still show zero conversions.
+         */
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'contact_form_submit' });
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'generate_lead', { event_category: 'contact_form' });
+        }
       } else {
         setStatus('error');
       }
