@@ -123,8 +123,10 @@ export default function ConsentBanner() {
               <span className={styles.optionBody}>
                 <span className={styles.optionName}>Statistieken</span>
                 <span className={styles.optionDesc}>
-                  Google Analytics en Microsoft Clarity. Helpt ons te zien welke
-                  pagina&apos;s werken. Clarity maakt opnames van websessies.
+                  Google Analytics en Microsoft Clarity. Laat ons zien welke
+                  pagina&apos;s goed werken. Microsoft Clarity maakt daarbij
+                  opnames van websessies (muisbewegingen, klikken en
+                  scrollgedrag).
                 </span>
               </span>
             </label>
