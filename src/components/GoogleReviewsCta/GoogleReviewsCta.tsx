@@ -79,9 +79,7 @@ export default function GoogleReviewsCta({ title, intro }: GoogleReviewsCtaProps
         <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
         <div>
           <div className="stars">★★★★★</div>
-          <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>
-            {SITE_CONFIG.reviewCount} Google beoordelingen
-          </span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Google beoordelingen</span>
         </div>
       </div>
       <div className={styles.reviewGrid}>
@@ -106,7 +104,7 @@ export default function GoogleReviewsCta({ title, intro }: GoogleReviewsCtaProps
           rel="noopener noreferrer"
           style={{ fontSize: '0.9rem', color: '#b93c20', fontWeight: 600, textDecoration: 'none' }}
         >
-          Bekijk alle {SITE_CONFIG.reviewCount} reviews op Google →
+          Bekijk alle reviews op Google →
         </a>
       </div>
     </div>

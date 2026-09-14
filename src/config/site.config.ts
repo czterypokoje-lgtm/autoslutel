@@ -62,7 +62,7 @@ export const SITE_CONFIG = {
    */
   iban: 'NL00BANK0123456789',
   rating: '5.0',
-  reviewCount: '8', // actual Google review count — update as it grows
+  reviewCount: '10', // actual Google review count — update as it grows
 
   social: {
     facebook: 'https://www.facebook.com/autosleutel24utrecht',
