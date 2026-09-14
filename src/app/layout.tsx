@@ -170,28 +170,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           (GTM-PRT75SWX), which runs its own gtag-compatible runtime. Loading
           both would double-fire every pageview and event: one hit from this
           script, one from GTM's copy, doubling every number in GA4 for no
-          reason. The bare `gtag(...)` calls below (and in PhoneConversionTracker,
-          ContactForm) still work — they push into the same dataLayer that
-          the consent-defaults script above already queues onto, and GTM's
-          Google Tag now reads from there.
+          reason.
+
+          The Google Ads "Click to call" conversion used to be reported from
+          a window.gtag_report_conversion() defined here, called directly from
+          PhoneConversionTracker with preventDefault() first — so the actual
+          phone call only happened inside that call's callback. If the
+          callback never ran (and it stopped running once the standalone
+          gtag.js above was removed), the click just did nothing: no call, no
+          error. That function and its call site are gone; the "Click to
+          call" tag already exists in GTM itself, wired to the click_to_call
+          dataLayer event PhoneConversionTracker still sends on every tel:
+          click, everywhere on the site.
         */}
-        {/* Google Ads Click to call conversion snippet */}
-        <Script id="google-ads-conversion" strategy="afterInteractive">
-          {`
-            window.gtag_report_conversion = function(url) {
-              var callback = function () {
-                if (typeof(url) != 'undefined') {
-                  window.location = url;
-                }
-              };
-              gtag('event', 'conversion', {
-                  'send_to': 'AW-18315813515/FoiPCLLl7NocEIvF1J1E',
-                  'event_callback': callback
-              });
-              return false;
-            };
-          `}
-        </Script>
 
         <AdParameterTracker />
         <PhoneConversionTracker />
