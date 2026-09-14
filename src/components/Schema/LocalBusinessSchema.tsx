@@ -74,6 +74,11 @@ export default function LocalBusinessSchema() {
       { '@type': 'City', 'name': 'Bilthoven' },
       { '@type': 'City', 'name': 'Den Haag', 'sameAs': 'https://en.wikipedia.org/wiki/The_Hague' },
       { '@type': 'City', 'name': 'Amsterdam-Zuid' },
+      // Real technician coverage, not just the Bussum-radius reach: the
+      // office confirmed staff actually stationed in these two on top of
+      // Den Haag and Amsterdam above.
+      { '@type': 'City', 'name': 'Rotterdam', 'sameAs': 'https://en.wikipedia.org/wiki/Rotterdam' },
+      { '@type': 'City', 'name': 'Alkmaar' },
     ],
     priceRange: '€€',
     paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'iDEAL', 'Pin'],

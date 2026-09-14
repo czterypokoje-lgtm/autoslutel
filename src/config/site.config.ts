@@ -31,7 +31,7 @@ export const SITE_CONFIG = {
     lng: '5.1611',
     radiusMeters: '75000', // 75km serving area around Bussum HQ
   },
-  serviceAreaString: 'Utrecht, Amsterdam en Midden-Nederland',
+  serviceAreaString: 'Utrecht, Amsterdam, Den Haag, Rotterdam, Alkmaar en Midden-Nederland',
 
   prices: {
     unlock: '149',
