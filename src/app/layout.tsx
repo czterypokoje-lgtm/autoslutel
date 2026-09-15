@@ -153,14 +153,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('set','url_passthrough', true);
           `}
         </Script>
-        {/* Google Tag Manager */}
+        {/*
+          Google Tag Manager — production hostname only. Every Vercel preview
+          deploy (autoslutel-git-*-nethoreca.vercel.app) and every localhost
+          dev session renders this exact layout, so without this check the
+          CRM team testing the admin panel fires the same GTM container as a
+          real customer — GA4 events, the Google Ads "generate_lead"
+          conversion, Clarity — inflating conversion counts with staff
+          testing and polluting session recordings with admin traffic.
+          Checked client-side (not via next/headers) because reading the
+          request Host header in this root layout would force every page in
+          the site out of static generation.
+        */}
         <Script id="gtm-script">
           {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-PRT75SWX');
+            if (window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') {
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-PRT75SWX');
+            }
           `}
         </Script>
         {/* End Google Tag Manager */}
@@ -186,7 +199,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <AdParameterTracker />
         <PhoneConversionTracker />
-        {/* Google Tag Manager (noscript) */}
+        {/*
+          Google Tag Manager (noscript) — left unconditional. Gating this on
+          hostname needs the request Host header, which (see gtm-script
+          above) would cost the whole site its static generation. The
+          exposure is a JS-disabled browser hitting a preview/localhost URL,
+          which does not happen in practice for internal CRM testing.
+        */}
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-PRT75SWX"

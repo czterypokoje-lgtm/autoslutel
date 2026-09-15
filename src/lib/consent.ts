@@ -159,8 +159,11 @@ export function applyConsent(state: ConsentState | null): void {
 const CLARITY_ID = 'y9gjejwp8z';
 let clarityRequested = false;
 
+const PROD_HOSTNAMES = ['www.autosleutel24.nl', 'autosleutel24.nl'];
+
 export function loadClarity(): void {
   if (typeof window === 'undefined' || clarityRequested) return;
+  if (!PROD_HOSTNAMES.includes(window.location.hostname)) return;
   if (document.getElementById('ms-clarity')) return;
   clarityRequested = true;
 
