@@ -10,12 +10,7 @@ export default function ProductTrustBanner() {
       marginTop: '4rem',
       fontFamily: 'Inter, sans-serif'
     }}>
-      <div className="container" style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(4, 1fr)', 
-        gap: '2rem',
-        color: '#fff'
-      }}>
+      <div className="container shop-promise-grid">
         
         {/* 1. Shipping Offers */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

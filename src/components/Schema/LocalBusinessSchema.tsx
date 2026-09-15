@@ -40,6 +40,13 @@ export default function LocalBusinessSchema() {
         closes: '23:59',
       },
     ],
+    /*
+     * Kept in sync with the real Google Business Profile service area, plus
+     * a handful of extra cities the office serves but hasn't added to GBP
+     * yet (Houten, Maarssen, Leusden, IJsselstein, Vianen, Woerden, Alphen
+     * aan den Rijn) — those stay rather than understating real coverage;
+     * the office is adding them to GBP separately.
+     */
     areaServed: [
       { '@type': 'City', 'name': 'Utrecht', 'sameAs': 'https://en.wikipedia.org/wiki/Utrecht' },
       { '@type': 'City', 'name': 'Amsterdam', 'sameAs': 'https://en.wikipedia.org/wiki/Amsterdam' },
@@ -61,6 +68,17 @@ export default function LocalBusinessSchema() {
       { '@type': 'City', 'name': 'Vianen' },
       { '@type': 'City', 'name': 'Woerden' },
       { '@type': 'City', 'name': 'Alphen aan den Rijn' },
+      { '@type': 'City', 'name': 'Bussum' },
+      { '@type': 'City', 'name': 'Huizen' },
+      { '@type': 'City', 'name': 'Zeewolde' },
+      { '@type': 'City', 'name': 'Bilthoven' },
+      { '@type': 'City', 'name': 'Den Haag', 'sameAs': 'https://en.wikipedia.org/wiki/The_Hague' },
+      { '@type': 'City', 'name': 'Amsterdam-Zuid' },
+      // Real technician coverage, not just the Bussum-radius reach: the
+      // office confirmed staff actually stationed in these two on top of
+      // Den Haag and Amsterdam above.
+      { '@type': 'City', 'name': 'Rotterdam', 'sameAs': 'https://en.wikipedia.org/wiki/Rotterdam' },
+      { '@type': 'City', 'name': 'Alkmaar' },
     ],
     priceRange: '€€',
     paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'iDEAL', 'Pin'],

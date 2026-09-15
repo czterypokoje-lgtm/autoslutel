@@ -1,18 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
+import AddToCartButton from '@/components/webshop/AddToCartButton';
 
 interface ProductCardProps {
-  id: number;
   slug: string;
   title: string;
-  category: string; 
+  category: string;
+  /** Already formatted by formatPrice — it carries its own euro sign. */
   price: string;
-  oldPrice?: string;
   img: string;
-  isBestOf?: boolean;
+  inStock?: boolean;
 }
 
-export default function ProductCard({ id, slug, title, category, price, oldPrice, img, isBestOf }: ProductCardProps) {
+export default function ProductCard({ slug, title, category, price, img, inStock = true }: ProductCardProps) {
   return (
     <div style={{
       background: '#fff',
@@ -24,17 +24,11 @@ export default function ProductCard({ id, slug, title, category, price, oldPrice
       boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
       fontFamily: 'Inter, sans-serif'
     }}>
-      {/* Top Badges */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', zIndex: 10 }}>
-        <span style={{ background: '#334155', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '999px' }}>
-          Top seller
-        </span>
-        {isBestOf && (
-          <span style={{ background: '#0d9488', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '999px' }}>
-            Best of 2026
-          </span>
-        )}
-      </div>
+      {/*
+        Removed: a "Top seller" badge on every card and a "Best of 2026" badge
+        on whichever two happened to be first and fourth in the carousel.
+        Neither came from sales data.
+      */}
 
       {/* Image */}
       <Link href={`/webshop/product/${slug}`} style={{ display: 'block', marginBottom: '1rem', textAlign: 'center', marginTop: '1.5rem' }}>
@@ -64,36 +58,36 @@ export default function ProductCard({ id, slug, title, category, price, oldPrice
         purchase reviews and it can come back.
       */}
 
-      {/* In Stock */}
-      <div style={{ color: '#16a34a', fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-        In stock
+      <div style={{ color: inStock ? '#16a34a' : '#b45309', fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.75rem' }}>
+        {inStock ? 'Op voorraad' : 'Tijdelijk uitverkocht'}
       </div>
 
+      {/*
+        `price` arrives from formatPrice, which already writes the euro sign.
+        The extra one here rendered every card as "€€12,95".
+      */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '1rem' }}>
-        <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>€{price}</span>
-        {oldPrice && (
-          <span style={{ fontSize: '0.85rem', color: '#94a3b8', textDecoration: 'line-through' }}>
-            €{oldPrice}
-          </span>
-        )}
+        <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>{price}</span>
       </div>
 
-      {/* Bottom Button */}
-      <Link href={`/webshop/product/${slug}`} style={{
-        marginTop: 'auto',
-        display: 'block',
-        textAlign: 'center',
-        background: '#b93c20',
-        color: '#fff',
-        padding: '0.75rem',
-        borderRadius: '6px',
-        fontWeight: 700,
-        textDecoration: 'none',
-        fontSize: '0.9rem',
-        transition: 'background 0.2s',
-      }}>
-        Bekijk Product
-      </Link>
+      {/* Buy, or read on. */}
+      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <AddToCartButton slug={slug} disabled={!inStock} />
+        <Link href={`/webshop/product/${slug}`} style={{
+          display: 'block',
+          textAlign: 'center',
+          background: '#fff',
+          color: '#0f172a',
+          border: '1px solid #cbd5e1',
+          padding: '0.7rem',
+          borderRadius: '6px',
+          fontWeight: 700,
+          textDecoration: 'none',
+          fontSize: '0.9rem',
+        }}>
+          Bekijk product
+        </Link>
+      </div>
 
     </div>
   );

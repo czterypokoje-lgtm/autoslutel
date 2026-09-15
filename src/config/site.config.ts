@@ -16,8 +16,11 @@ export const SITE_CONFIG = {
 
   address: {
     street: '', // Mobile service-area business — no storefront shown
-    city: 'Midden-Nederland',
-    region: 'Utrecht',
+    // Matches the base city on the real Google Business Profile — "Midden-
+    // Nederland" isn't a real place Google can match NAP data against, and
+    // a mismatch here works against local ranking, not for it.
+    city: 'Bussum',
+    region: 'Noord-Holland',
     postal: '',
     country: 'NL',
   },
@@ -28,7 +31,7 @@ export const SITE_CONFIG = {
     lng: '5.1611',
     radiusMeters: '75000', // 75km serving area around Bussum HQ
   },
-  serviceAreaString: 'Utrecht, Amsterdam en Midden-Nederland',
+  serviceAreaString: 'Utrecht, Amsterdam, Den Haag, Rotterdam, Alkmaar en Midden-Nederland',
 
   prices: {
     unlock: '149',
@@ -46,9 +49,23 @@ export const SITE_CONFIG = {
   responseTime: '30-60 minuten',
 
   kvk: '42123555',
+  /*
+   * VERIFY BEFORE INVOICING. This reads as the KvK number with "NL" and "B01"
+   * around it, and that is not how a Dutch btw-identificatienummer is issued —
+   * eenmanszaken get a randomly assigned number, a BV's is built on its RSIN.
+   * A number that belongs to someone else on an invoice is their problem and
+   * ours. Replace it with the number on your own btw-aangifte.
+   */
   btw: 'NL42123555B01',
+  /*
+   * VERIFY BEFORE INVOICING — same placeholder problem as kvk/btw above. A
+   * factuur with someone else's bank account on it is a mistake, not just a
+   * blank field. Replace with the real account before this is used to bill
+   * anyone; the invoice form lets each factuur override it anyway.
+   */
+  iban: 'NL00BANK0123456789',
   rating: '5.0',
-  reviewCount: '8', // actual Google review count — update as it grows
+  reviewCount: '10', // actual Google review count — update as it grows
 
   social: {
     facebook: 'https://www.facebook.com/autosleutel24utrecht',
@@ -62,3 +79,13 @@ export const SITE_CONFIG = {
 } as const;
 
 export const WHATSAPP_URL = '/whatsapp';
+
+/**
+ * Whether the btw number is at least in the shape the Belastingdienst issues.
+ *
+ * Pages that print it check this first, so a placeholder can never end up on
+ * an invoice or in the terms.
+ */
+export function isBtwConfigured(): boolean {
+  return /^NL\d{9}B\d{2}$/.test(SITE_CONFIG.btw ?? '');
+}

@@ -1,16 +1,23 @@
 import React from 'react';
-import { notFound, redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
-import fs from 'fs';
-import path from 'path';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import TrustpilotPlaceholder from '@/components/webshop/TrustpilotPlaceholder';
+import ProductRelatedSearches from '@/components/webshop/ProductRelatedSearches';
+import CustomerLifestyleGallery from '@/components/webshop/CustomerLifestyleGallery';
 import ProductBundleSection from '@/components/webshop/ProductBundleSection';
 import ProductBuyBox from '@/components/webshop/ProductBuyBox';
 import VehicleFitmentWidget from '@/components/webshop/VehicleFitmentWidget';
 import ProductAccordions from '@/components/webshop/ProductAccordions';
 import ProductGallery from '@/components/webshop/ProductGallery';
+import ProductAlternatives from '@/components/webshop/ProductAlternatives';
+import ProductFitmentList from '@/components/webshop/ProductFitmentList';
+import StickyBuyBar from '@/components/webshop/StickyBuyBar';
+import BackToTop from '@/components/webshop/BackToTop';
+import PaymentMethods from '@/components/webshop/PaymentMethods';
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
-import { getProductBySlug, shelfPrice, formatPrice } from '@/lib/catalog';
+import { getShopProductBySlug } from '@/lib/shopCatalog';
+import { facetLabel } from '@/lib/catalog';
 
 /** Categories that require programming after installation. */
 const NEEDS_PROGRAMMING_CATEGORIES = new Set([
@@ -31,7 +38,7 @@ export async function generateMetadata(
   props: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await props.params;
-  const entry = getProductBySlug(slug);
+  const entry = await getShopProductBySlug(slug);
   const url = `${SITE_CONFIG.domain}/webshop/product/${slug}`;
 
   if (!entry) {
@@ -55,31 +62,52 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
   const resolvedParams = await props.params;
 
   // Single source of truth: the derived catalogue.
-  const entry = getProductBySlug(resolvedParams.slug);
+  const entry = await getShopProductBySlug(resolvedParams.slug);
 
   if (!entry) {
     notFound();
   }
 
-  // Load bundle mapping (optional — fails silently)
-  interface BatteryData { slug: string; title: string; price: number; image: string; }
-  let bundleMapping: Record<string, { battery?: BatteryData }> = {};
-  try {
-    const mappingPath = path.join(process.cwd(), 'src/lib/bundle_mapping.json');
-    bundleMapping = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
-  } catch {
-    // bundle_mapping.json is optional; missing is fine
-  }
+  /*
+   * The battery that belongs in this key, looked up in our own catalogue.
+   *
+   * This used to come from bundle_mapping.json — 1,146 entries keyed on the
+   * previous Shopify catalogue's slugs, with photos on a CDN that no longer
+   * answers, so the block never rendered for an A-Key product.
+   */
+  const batteryProduct = entry.battery ? await getShopProductBySlug(entry.battery) : null;
+  const batteryData =
+    batteryProduct && batteryProduct.price != null
+      ? {
+          slug: batteryProduct.slug,
+          title: batteryProduct.titleNl,
+          price: batteryProduct.price,
+          image: batteryProduct.image ?? '/images/product-placeholder.svg',
+        }
+      : null;
 
-  const bundleData = bundleMapping[resolvedParams.slug] ?? {};
-  const batteryData: BatteryData | null = bundleData.battery ?? null;
+  // Already merged with the office's overrides; the margin rule is the fallback.
+  const sellPrice = entry.price;
 
-  const sellPrice = shelfPrice(entry.costPrice);
-  // Approximate "dealer" reference price as 1.8× our shelf price — visible only
-  // for the strike-through comparison; never charged.
-  const oldPriceNum = sellPrice ? sellPrice * 1.8 : null;
+  /*
+   * No invented reference price.
+   *
+   * This used to be `sellPrice * 1.8`, shown struck through as a "dealer"
+   * price. Nobody was ever charged it. A crossed-out price is a claim that
+   * this was once the price, and under BW 6:193c presenting one that never
+   * existed is a misleading commercial practice — the same reason the invented
+   * reviews and certificates were taken off this site.
+   *
+   * Put a real figure here when there is a documented dealer average, with the
+   * source written down.
+   */
+  const oldPriceNum: number | null = null;
 
   const needsProgramming = NEEDS_PROGRAMMING_CATEGORIES.has(entry.category ?? '');
+
+  /** The chips under the title: the specs a customer checks before buying. */
+  const HEADLINE_SPECS = ['Frequentie', 'Transponder', 'Sleutelbaard', 'Aantal knoppen', 'Artikelcode'];
+  const headlineSpecs = (entry.specs ?? []).filter(([label]) => HEADLINE_SPECS.includes(label));
 
   const productSchema = {
     '@context': 'https://schema.org',
@@ -93,11 +121,16 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
     brand: entry.manufacturer
       ? { '@type': 'Brand', name: entry.manufacturer }
       : undefined,
-    // What the part fits, as structured data rather than prose.
-    isAccessoryOrSparePartFor: entry.fitment.slice(0, 20).map((f) => ({
+    // The supplier's article number, which is what a customer searches for.
+    mpn: entry.articleCode ?? undefined,
+    /*
+     * What the part fits, as structured data rather than prose. No
+     * vehicleModelDate: A-Key publishes no year ranges, and "0/9999" is not a
+     * production span — an invented one would be marked-up misinformation.
+     */
+    isAccessoryOrSparePartFor: entry.fitment.slice(0, 30).map((f) => ({
       '@type': 'Vehicle',
       name: `${f.make} ${f.model}`,
-      vehicleModelDate: `${f.from}/${f.to}`,
     })),
     offers: sellPrice
       ? {
@@ -130,7 +163,7 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
   };
 
   return (
-    <div style={{ background: '#f9fafb', minHeight: '100vh', padding: '2rem 0', fontFamily: 'Inter, sans-serif' }}>
+    <div className="shop-product-page" style={{ background: '#f9fafb', minHeight: '100vh', padding: '2rem 0', fontFamily: 'Inter, sans-serif' }}>
       {/* Plain <script>, not next/script: schema injected after hydration is
           absent from the HTML Googlebot fetches first. */}
       <script
@@ -142,80 +175,138 @@ export default async function ProductPage(props: { params: Promise<{ slug: strin
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      {/* A complete answer in two or three sentences — the passage LLMs and
-          Google featured snippets quote. The English supplier blurb never
-          answered the question on its own. */}
-      <div
-        data-direct-answer
-        style={{
-          maxWidth: 1240,
-          margin: '0 auto 1.25rem',
-          padding: '0 1.25rem',
-        }}
-      >
-        <p
-          style={{
-            background: '#fff',
-            border: '1px solid #e5e7eb',
-            borderLeft: '3px solid #b93c20',
-            borderRadius: 10,
-            padding: '0.9rem 1.1rem',
-            margin: 0,
-            fontSize: '0.95rem',
-            lineHeight: 1.6,
-            color: '#334155',
-          }}
-        >
-          {entry.directAnswer}
-        </p>
-      </div>
+      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(1rem, 4vw, 2rem)' }}>
 
-      {/* Fitment Widget Header */}
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', marginBottom: '1.5rem' }}>
-        <VehicleFitmentWidget fitment={entry.fitment} />
-      </div>
+        {/*
+          Three blocks, in the order a phone should read them: the photos, the
+          price and the button, then everything that supports the decision.
+          The fitment check used to sit above all of it — a 400px panel between
+          the customer and the product they had just clicked.
+        */}
+        <div className="shop-product-grid">
 
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
+          <div className="shop-product-head">
+            <nav style={{ fontSize: '.8rem', color: '#64748b', marginBottom: '.6rem' }}>
+              <Link href="/webshop" style={{ color: '#64748b', textDecoration: 'none' }}>Webshop</Link>
+              <span aria-hidden="true"> › </span>
+              {entry.category && (
+                <>
+                  <Link
+                    href={`/webshop/catalogus?category=${entry.category}`}
+                    style={{ color: '#64748b', textDecoration: 'none' }}
+                  >
+                    {facetLabel('category', entry.category)}
+                  </Link>
+                  <span aria-hidden="true"> › </span>
+                </>
+              )}
+              <span style={{ color: '#0f172a' }}>{entry.articleCode ?? entry.titleNl}</span>
+            </nav>
 
-        {/* Main 2-Col Layout (Left: Gallery & Bundles, Right: Buy Box) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: '3rem', alignItems: 'start' }}>
+            {/* The title and direct answer sentence were moved to ProductBuyBox to match Crutchfield layout */}
 
-          {/* Left: Gallery & Bundle */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            {/* Main Image */}
-            <ProductGallery images={entry.images && entry.images.length > 0 ? entry.images : (entry.image ? [entry.image] : ['/images/bmw-key-desktop.png'])} />
+            {entry.replacedBy && (
+              <p style={{ fontSize: '.85rem', color: '#92400e', background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: 8, padding: '.5rem .75rem', margin: '0 0 .75rem' }}>
+                Let op: onze leverancier vervangt dit artikel door <strong>{entry.replacedBy}</strong>.
+                U ontvangt de opvolger als deze uitverkocht is — bel ons als u specifiek deze
+                uitvoering nodig heeft.
+              </p>
+            )}
 
-            {/* Dynamic Bundle Section */}
-            <ProductBundleSection
-              mainProductTitle={entry.titleNl}
-              mainProductPrice={sellPrice ?? 0}
-              mainProductImage={entry.image ?? '/images/bmw-key-desktop.png'}
-              batteryData={batteryData}
-            />
+            {/* Frequency, transponder and blade: what decides whether this key
+                can be made to work, before the photo rather than after it. */}
+            {headlineSpecs.length > 0 && (
+              <dl style={{ display: 'flex', flexWrap: 'wrap', gap: '.4rem .5rem', margin: 0, padding: 0 }}>
+                {headlineSpecs.map(([label, value]) => (
+                  <div
+                    key={label}
+                    style={{ display: 'flex', gap: '.35rem', alignItems: 'baseline', background: '#eef2f7', borderRadius: 999, padding: '.25rem .7rem', fontSize: '.8rem' }}
+                  >
+                    <dt style={{ color: '#64748b' }}>{label}</dt>
+                    <dd style={{ margin: 0, fontWeight: 700, color: '#0f172a' }}>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
           </div>
 
-          {/* Right: Details */}
-          <div style={{ paddingRight: '2rem' }}>
+          <div className="shop-product-media">
+            <ProductGallery images={entry.images && entry.images.length > 0 ? entry.images : (entry.image ? [entry.image] : ['/images/product-placeholder.svg'])} />
+            
+            <div style={{ marginTop: '2rem' }}>
+              <ProductBundleSection
+                mainProductSlug={entry.slug}
+                mainProductTitle={entry.titleNl}
+                mainProductPrice={sellPrice ?? 0}
+                mainProductImage={entry.image ?? '/images/product-placeholder.svg'}
+                batteryData={batteryData}
+                offerBatteryLink={NEEDS_PROGRAMMING_CATEGORIES.has(entry.category ?? '')}
+              />
+            </div>
+          </div>
+
+          <div className="shop-product-buy">
             <ProductBuyBox
               slug={resolvedParams.slug}
               title={entry.titleNl}
+              subtitle={entry.directAnswer}
+              brand={entry.manufacturer ?? undefined}
               price={sellPrice || 0}
               oldPrice={oldPriceNum || 0}
-              description={entry.descriptionNl}
+              /*
+               * The opening paragraph only. The full text — the model list,
+               * the alternative article numbers, the supplier's own note —
+               * has its own block further down, and printing all of it twice
+               * made the page read as if it stuttered.
+               */
+              description={entry.descriptionNl?.match(/<p>[\s\S]*?<\/p>/)?.[0] ?? entry.descriptionNl}
               needsProgramming={needsProgramming}
               category={entry.category ?? ''}
+              inStock={entry.inStock}
+            />
+          </div>
+
+          <div className="shop-product-extra">
+            {/* What a customer can pay with, and who brings it. */}
+            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '1.1rem 1.25rem' }}>
+              <PaymentMethods />
+            </div>
+
+            <ProductFitmentList product={entry} />
+
+            <VehicleFitmentWidget 
+              fitment={entry.fitment} 
+              productChip={entry.chip}
+              productBlade={entry.blade}
+              productFrequency={entry.frequency}
             />
           </div>
         </div>
       </div>
 
       {/* Below the Fold: Product Highlights (Beige Background) */}
-      <div style={{ background: '#f6f4eb', padding: '4rem 1rem', marginTop: '2rem' }}>
+      <div style={{ background: '#f6f4eb', padding: 'clamp(2rem, 6vw, 4rem) 1rem', marginTop: '2rem' }}>
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <ProductAccordions product={entry} />
         </div>
+
+        <ProductAlternatives product={entry} />
       </div>
 
+      <ProductRelatedSearches product={entry} />
+      <TrustpilotPlaceholder />
+      <CustomerLifestyleGallery />
+
+      <BackToTop />
+
+      {/* Follows the page down once the real button is out of view. */}
+      <StickyBuyBar
+        slug={entry.slug}
+        title={entry.titleNl}
+        image={entry.image ?? '/images/product-placeholder.svg'}
+        price={sellPrice}
+        inStock={entry.inStock}
+      />
     </div>
   );
 }

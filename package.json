@@ -11,12 +11,17 @@
     "catalog": "node scripts/build-catalog.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.5",
     "@supabase/supabase-js": "^2.112.4",
     "@vercel/blob": "^2.8.0",
     "cheerio": "^1.2.0",
+    "lucide-react": "^1.42.0",
     "next": "16.2.4",
+    "pdf-parse": "^2.4.5",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "server-only": "^0.0.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -26,6 +31,6 @@
     "eslint-config-next": "16.2.4",
     "exiftool-vendored": "^36.1.0",
     "sharp": "^0.35.3",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }

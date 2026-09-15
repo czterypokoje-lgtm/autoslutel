@@ -1,153 +1,285 @@
-'use client';
-import React, { useState } from 'react';
+import React from 'react';
+import type { ShopProduct } from '@/lib/shopCatalog';
 
-export default function ProductAccordions({ product }: { product: any }) {
-  const [openSection, setOpenSection] = useState<string>('highlights');
+/**
+ * The detail blocks under the fold.
+ *
+ * The specification table used to be four fixed rows — "Merk: Aftermarket",
+ * "Conditie: Nieuw", "Geschikt voor: Universeel / Diverse modellen" and
+ * "Keurmerk: CE gecertificeerd" — identical on every product, reading
+ * `product.brand`, a field that does not exist on a catalogue entry. Nothing
+ * on the page said 433 MHz or PCF7947, which are the two things that decide
+ * whether the key can be made to work.
+ *
+ * It now renders `product.specs`, which scripts/build-catalog.mjs fills from
+ * A-Key's own published specification block.
+ *
+ * The CE claim is gone: we do not hold the declaration of conformity for these
+ * parts, and stating a certification we cannot produce on request is not a
+ * claim to make on 944 product pages.
+ */
 
-  const toggleSection = (id: string) => {
-    setOpenSection(prev => prev === id ? '' : id);
-  };
+/** What is physically in the box, by what the product is. */
+function boxContents(product: ShopProduct): string[] {
+  const title = product.titleNl;
 
-  const accordionHeaderStyle = {
-    padding: '1.5rem',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    cursor: 'pointer',
-    background: '#fff',
-    borderBottom: '1px solid #f1f5f9'
-  };
+  switch (product.category) {
+    case 'behuizingen':
+      return [`1x ${title}`, 'Losse behuizing — zonder elektronica, transponder of batterij'];
+    case 'printplaten':
+      return [`1x ${title}`, 'Losse printplaat — zonder behuizing en zonder sleutelbaard'];
+    case 'sleutelbaarden':
+      return [`1x ${title}`, 'Ongefreesde sleutelbaard — moet op uw slot worden gefreesd'];
+    case 'transponders':
+      return [`1x ${title}`, 'Losse transponder — moet op uw auto worden ingeleerd'];
+    case 'noodsleutels':
+      return [`1x ${title}`];
+    default:
+      return [
+        `1x ${title}`,
+        'Batterij geplaatst',
+        'Moet op uw auto worden ingeleerd (programmeren)',
+      ];
+  }
+}
 
-  const titleStyle = {
-    fontSize: '1.25rem',
-    fontWeight: 800,
-    margin: 0,
-    color: '#0f172a'
-  };
+/** The programming question, answered for what this product actually is. */
+function programmingAnswer(product: ShopProduct): string {
+  switch (product.category) {
+    case 'behuizingen':
+      return 'Nee. U zet de elektronica uit uw huidige sleutel over in deze behuizing; ' +
+        'de auto merkt geen verschil. Alleen de sleutelbaard moet nog worden gefreesd.';
+    case 'sleutelbaarden':
+      return 'Nee, maar de baard moet wel op uw slot worden gefreesd.';
+    case 'printplaten':
+      return 'Ja. Een printplaat is nieuwe elektronica en moet op uw auto worden ingeleerd.';
+    default:
+      return 'Ja. De transponder in deze sleutel moet op uw auto worden ingeleerd door ' +
+        'een specialist. Wij doen dat ter plaatse, of u laat het elders doen.';
+  }
+}
 
+export default function ProductAccordions({ product }: { product: ShopProduct }) {
   const containerStyle = {
-    background: '#fff', 
-    borderRadius: '12px', 
-    border: '1px solid #e5e5e5', 
-    overflow: 'hidden', 
-    marginBottom: '1rem'
+    background: '#fff',
+    borderRadius: '12px',
+    border: '1px solid #e5e5e5',
+    overflow: 'hidden',
+    marginBottom: '1rem',
   };
 
-  const iconStyle = (isOpen: boolean) => ({
-    transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-    transition: 'transform 0.2s ease-in-out'
-  });
+  const titleStyle = { fontSize: '1.25rem', fontWeight: 800, margin: 0, color: 'inherit' };
+
+  const specs = product.specs ?? [];
 
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-      
-      {/* Product highlights */}
-      <div style={containerStyle}>
-        <div style={accordionHeaderStyle} onClick={() => toggleSection('highlights')}>
-          <h2 style={titleStyle}>Product highlights</h2>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={iconStyle(openSection === 'highlights')}>
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </div>
-        {openSection === 'highlights' && (
-          <div style={{ padding: '2rem', borderTop: '1px solid #f1f5f9' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem' }}>Product info:</h3>
-            <div 
-              className="prose prose-sm max-w-none"
-              style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7 }}
-              dangerouslySetInnerHTML={{ __html: product.description || 'Geen uitgebreide beschrijving beschikbaar voor dit product.' }}
-            />
-          </div>
-        )}
-      </div>
 
-      {/* Specificaties (Specs) */}
-      <div style={containerStyle}>
-        <div style={accordionHeaderStyle} onClick={() => toggleSection('specs')}>
+      {/* Specificaties */}
+      <details style={containerStyle} open>
+        <summary className="faq-question" style={{ padding: '1.5rem', background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
           <h2 style={titleStyle}>Specificaties</h2>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={iconStyle(openSection === 'specs')}>
+          <svg className="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
-        </div>
-        {openSection === 'specs' && (
-          <div style={{ padding: '2rem', borderTop: '1px solid #f1f5f9' }}>
+        </summary>
+        <div style={{ padding: '1.5rem 2rem 2rem' }}>
+          {specs.length > 0 ? (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
               <tbody>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '1rem 0', fontWeight: 600, width: '30%', color: '#334155' }}>Merk</td>
-                  <td style={{ padding: '1rem 0', color: '#0f172a' }}>{product.brand || 'Aftermarket'}</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '1rem 0', fontWeight: 600, color: '#334155' }}>Conditie</td>
-                  <td style={{ padding: '1rem 0', color: '#0f172a' }}>Nieuw</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '1rem 0', fontWeight: 600, color: '#334155' }}>Geschikt voor</td>
-                  <td style={{ padding: '1rem 0', color: '#0f172a' }}>{product.brand ? `Diverse ${product.brand} modellen` : 'Universeel / Diverse modellen'}</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '1rem 0', fontWeight: 600, color: '#334155' }}>Keurmerk</td>
-                  <td style={{ padding: '1rem 0', color: '#0f172a' }}>CE gecertificeerd</td>
-                </tr>
+                {specs.map(([label, value]) => (
+                  <tr key={label} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <th
+                      scope="row"
+                      style={{ padding: '0.85rem 0', fontWeight: 600, width: '34%', color: '#334155', textAlign: 'left' }}
+                    >
+                      {label}
+                    </th>
+                    <td style={{ padding: '0.85rem 0', color: '#0f172a' }}>{value}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-          </div>
-        )}
-      </div>
+          ) : (
+            <p style={{ color: '#475569', margin: 0 }}>
+              Onze leverancier publiceert voor dit artikel geen technische specificaties.
+              Bel of app ons met uw kenteken — dan zoeken wij uit welke uitvoering u nodig heeft.
+            </p>
+          )}
+
+          <p style={{ marginTop: '1.25rem', marginBottom: 0, fontSize: '0.85rem', color: '#64748b' }}>
+            Specificaties zoals opgegeven door de fabrikant. Twijfelt u of dit de juiste
+            uitvoering is? Vergelijk de frequentie en de transponder met uw huidige sleutel,
+            of stuur ons uw kenteken.
+          </p>
+        </div>
+      </details>
+
+      {/* Beschrijving */}
+      <details style={containerStyle}>
+        <summary className="faq-question" style={{ padding: '1.5rem', background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
+          <h2 style={titleStyle}>Productinformatie</h2>
+          <svg className="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </summary>
+        <div style={{ padding: '2rem' }}>
+          {/*
+            Laid out, not run together. The supplier writes these as a list —
+            a couple of feature lines, then one line per make with its models
+            — and printing that as a single paragraph made eleven lines of
+            prose in which nobody could find their own car.
+          */}
+          {product.content ? (
+            <>
+              {product.content.intro.map((line) => (
+                <p key={line} style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7, margin: '0 0 .75rem' }}>
+                  {line}
+                </p>
+              ))}
+
+              {product.content.vehicles.length > 0 && (
+                <div style={{ marginTop: '1.5rem' }}>
+                  <h3 style={{ fontSize: '.78rem', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#64748b', margin: '0 0 1rem' }}>
+                    Geschikt voor
+                  </h3>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '1.25rem 2rem' }}>
+                    {product.content.vehicles.map((group) => (
+                      <div key={group.make}>
+                        <p style={{ margin: '0 0 .35rem', fontWeight: 800, color: '#0f172a', fontSize: '.98rem' }}>
+                          {group.make}
+                          {group.note && (
+                            <span style={{ fontWeight: 500, color: '#64748b', fontSize: '.82rem' }}> — {group.note}</span>
+                          )}
+                        </p>
+                        <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#334155', fontSize: '.9rem', lineHeight: 1.75 }}>
+                          {group.models.map((model) => (
+                            <li key={model}>{model}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {product.content.chips.length > 0 && (
+                <div style={{ marginTop: '1.5rem' }}>
+                  <h3 style={{ fontSize: '.78rem', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: '#64748b', margin: '0 0 .6rem' }}>
+                    Ondersteunde chips
+                  </h3>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.35rem' }}>
+                    {product.content.chips.map((chip) => (
+                      <span key={chip} style={{ background: '#f1f5f9', borderRadius: 5, padding: '.2rem .5rem', fontSize: '.82rem', color: '#0f172a', fontFamily: 'ui-monospace, monospace' }}>
+                        {chip}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          ) : product.descriptionNl ? (
+            /*
+             * descriptionNl is HTML — scripts/product-copy.mjs writes it with
+             * paragraphs and lists, because a parts description read as a
+             * paragraph is a paragraph nobody reads. Printed as text it showed
+             * the visitor "<p>Complete afstandsbediening…</p><h4>".
+             */
+            <div
+              className="product-copy"
+              style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7 }}
+              dangerouslySetInnerHTML={{ __html: product.descriptionNl }}
+            />
+          ) : (
+            <p style={{ color: '#1a1a1a', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
+              Geen uitgebreide beschrijving beschikbaar voor dit product.
+            </p>
+          )}
+
+          {/*
+            What the supplier writes that we could not put into Dutch without
+            guessing. Shown as their own words, marked as German, rather than
+            dropped — for a €272 adapter kit the detail is the whole decision —
+            and rather than half-translated, which is how "Werkzeug zur De- en
+            Montage" reached this site once before.
+          */}
+          {(product.supplierNote?.length ?? 0) > 0 && (
+            <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid #e2e8f0' }}>
+              <p style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', margin: '0 0 .5rem', textTransform: 'uppercase', letterSpacing: '.04em' }}>
+                Aanvullende informatie van de fabrikant (Duits)
+              </p>
+              <ul lang="de" style={{ margin: 0, paddingLeft: '1.1rem', color: '#475569', fontSize: '0.88rem', lineHeight: 1.6 }}>
+                {product.supplierNote!.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+              <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '.75rem 0 0' }}>
+                Vragen over de specificaties? Bel of app ons — wij lezen het voor u na.
+              </p>
+            </div>
+          )}
+        </div>
+      </details>
 
       {/* Wat zit er in de doos */}
-      <div style={containerStyle}>
-        <div style={accordionHeaderStyle} onClick={() => toggleSection('box')}>
+      <details style={containerStyle}>
+        <summary className="faq-question" style={{ padding: '1.5rem', background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
           <h2 style={titleStyle}>Wat zit er in de doos</h2>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={iconStyle(openSection === 'box')}>
+          <svg className="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
+        </summary>
+        <div style={{ padding: '2rem' }}>
+          <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem', lineHeight: 1.8, fontSize: '0.95rem', color: '#334155', margin: 0 }}>
+            {boxContents(product).map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+            <li>12 maanden garantie</li>
+          </ul>
         </div>
-        {openSection === 'box' && (
-          <div style={{ padding: '2rem', borderTop: '1px solid #f1f5f9' }}>
-            <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem', lineHeight: 1.8, fontSize: '0.95rem', color: '#334155' }}>
-              <li>1x {product.title}</li>
-              <li>Montage-instructies (indien van toepassing)</li>
-              <li>Garantiebewijs (12 maanden)</li>
-            </ul>
-          </div>
-        )}
-      </div>
-
-      {/*
-        Reviews accordion removed.
-
-        It rendered "Reviews (177)", an average of "4.8 / 5" and two invented
-        testimonials signed "Mark R." and "Jeroen B." — the same on every one
-        of the 2,093 products. Invented reviews are a misleidende
-        handelspraktijk (BW 6:193c) and marking them up would risk a manual
-        action from Google.
-
-        Bring this back wired to real, verified-purchase reviews, and only
-        then add AggregateRating to the Product schema.
-      */}
+      </details>
 
       {/* Q&A */}
-      <div style={containerStyle}>
-        <div style={accordionHeaderStyle} onClick={() => toggleSection('qa')}>
-          <h2 style={titleStyle}>Veelgestelde Vragen (Q&A)</h2>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={iconStyle(openSection === 'qa')}>
+      <details style={containerStyle}>
+        <summary className="faq-question" style={{ padding: '1.5rem', background: '#fff', borderBottom: '1px solid #f1f5f9' }}>
+          <h2 style={titleStyle}>Veelgestelde vragen</h2>
+          <svg className="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
-        </div>
-        {openSection === 'qa' && (
-          <div style={{ padding: '2rem', borderTop: '1px solid #f1f5f9' }}>
-            <div style={{ marginBottom: '1.5rem' }}>
-              <h4 style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>Q: Moet deze sleutel nog geprogrammeerd worden?</h4>
-              <p style={{ fontSize: '0.95rem', color: '#334155' }}>A: Ja, tenzij u alleen de behuizing vervangt en uw oude elektronica overzet, moet de transponderchip in deze sleutel worden ingeleerd op uw auto door een specialist.</p>
-            </div>
-            <div>
-              <h4 style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>Q: Zit er een batterij bij inbegrepen?</h4>
-              <p style={{ fontSize: '0.95rem', color: '#334155' }}>A: Bij de meeste complete sleutels is een standaard batterij inbegrepen. Wij raden echter aan om een extra kwaliteitsbatterij (Panasonic/Varta) mee te bestellen.</p>
-            </div>
+        </summary>
+        <div style={{ padding: '2rem' }}>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <h3 style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem', fontSize: '1rem' }}>
+              Moet dit artikel nog geprogrammeerd worden?
+            </h3>
+            <p style={{ fontSize: '0.95rem', color: '#334155', margin: 0 }}>{programmingAnswer(product)}</p>
           </div>
-        )}
-      </div>
+
+          {product.frequency && (
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem', fontSize: '1rem' }}>
+                Hoe weet ik of {product.frequency} de juiste frequentie is?
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: '#334155', margin: 0 }}>
+                De frequentie staat meestal op de printplaat in uw huidige sleutel, of in het
+                typegoedkeuringsnummer op de achterkant. Wijkt hij af, dan werkt de
+                afstandsbediening niet — stuur ons bij twijfel uw kenteken.
+              </p>
+            </div>
+          )}
+
+          <div>
+            <h3 style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem', fontSize: '1rem' }}>
+              Kan ik dit ook door jullie laten monteren?
+            </h3>
+            <p style={{ fontSize: '0.95rem', color: '#334155', margin: 0 }}>
+              Ja. Kies bij het bestellen voor een monteurbezoek; wij komen naar u toe en
+              programmeren de sleutel ter plaatse op uw auto.
+            </p>
+          </div>
+        </div>
+      </details>
 
     </div>
   );

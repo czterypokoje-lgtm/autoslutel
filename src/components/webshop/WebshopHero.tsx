@@ -13,11 +13,20 @@ export default function WebshopHero() {
             <span style={{ fontStyle: 'italic' }}>betaalt minder.</span>
           </h1>
           <p className="webshop-hero-subtitle">
-            De beste OEM autosleutels en accessoires, voor minder dan bij de dealer.
+            Autosleutels, behuizingen en printplaten voor vrijwel elk merk — voor minder dan bij de dealer.
           </p>
-          <Link href="#categorieen" className="webshop-btn-dark">
-            Bespaar nu
-          </Link>
+          {/*
+            Two ways in, both to a real page. "Bespaar nu" jumped to an anchor
+            further down the same screen, which is not a destination.
+          */}
+          <div className="webshop-hero-actions">
+            <Link href="/webshop/catalogus" className="webshop-btn-dark">
+              Bekijk alle onderdelen
+            </Link>
+            <Link href="/webshop/merken" className="webshop-btn-ghost">
+              Zoek op automerk
+            </Link>
+          </div>
         </div>
 
         {/* Right Image Placeholder (Desktop) */}
@@ -40,7 +49,7 @@ export default function WebshopHero() {
           <div style={{
              width: '80%', 
              height: '90%', 
-             background: 'url(https://placehold.co/600x600/transparent/121212?text=Autosleutel+Display) no-repeat right center',
+             background: 'url(/images/bmw-key-desktop.webp) no-repeat right center',
              backgroundSize: 'contain'
           }} />
         </div>

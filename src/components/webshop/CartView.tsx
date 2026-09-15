@@ -30,9 +30,18 @@ function snapshot() {
   if (!loaded) { cache = readCart(); loaded = true; }
   return cache;
 }
-// localStorage does not exist during SSR, so the basket is read through an
-// external store rather than an effect + setState.
-const serverSnapshot = () => [] as ReturnType<typeof readCart>;
+/*
+ * localStorage does not exist during SSR, so the basket is read through an
+ * external store rather than an effect + setState.
+ *
+ * The server snapshot has to be the *same* array every call. Returning a
+ * fresh `[]` makes React compare two different references, decide the store
+ * changed, and render again — "The result of getServerSnapshot should be
+ * cached to avoid an infinite loop", which on a phone shows up as a page that
+ * never settles and buttons that do not respond.
+ */
+const EMPTY: ReturnType<typeof readCart> = [];
+const serverSnapshot = () => EMPTY;
 
 export default function CartView({ products }: { products: Slim[] }) {
   const lines = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
@@ -66,7 +75,7 @@ export default function CartView({ products }: { products: Slim[] }) {
   const toGo = Math.max(0, FREE_SHIPPING_FROM - totals.subtotalInc);
 
   return (
-    <div style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'minmax(0,1fr) minmax(0,320px)', alignItems: 'start' }}>
+    <div className="shop-split-grid">
       <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: '.75rem' }}>
         {totals.lines.map((l) => (
           <li key={`${l.slug}-${l.service}`} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '1rem', display: 'flex', gap: '1rem' }}>

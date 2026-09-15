@@ -1,0 +1,416 @@
+/*
+ * This is a section inside the CRM's own <main>, not a page of its own —
+ * repainting its background here (it used to be var(--crm-sunk), a
+ * different shade of near-black to the page around it) drew a visible seam
+ * exactly where this component met whatever sits above it. No background,
+ * no own font-family: both now come from the shell, the same as every
+ * other CRM page.
+ */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--crm-ink);
+  letter-spacing: -0.025em;
+}
+
+.filterBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.statsContainer {
+  display: flex;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-sunk);
+  border-radius: var(--crm-r-lg);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.statSection {
+  flex: 1;
+  padding: 1.5rem;
+  border-right: 1px solid var(--crm-sunk);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.statSection:last-child {
+  border-right: none;
+}
+
+.statTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--crm-muted);
+  font-weight: 500;
+}
+
+.statIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--crm-steel-bg);
+  color: var(--crm-steel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+.statBottom {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--crm-ink);
+}
+
+.statBadge {
+  font-size: 0.7rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.statBadgeRed {
+  background: var(--crm-stop-bg);
+  color: var(--crm-stop);
+}
+.statBadgeGreen {
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
+}
+
+.tableSection {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-sunk);
+  border-radius: var(--crm-r-lg);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHeader {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tableTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--crm-ink);
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--crm-rule);
+  border-radius: 9999px;
+  width: 300px;
+}
+.searchBox input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.875rem;
+  color: var(--crm-text);
+}
+
+/* Six columns of real content do not fit a phone width; scrolling the table
+   sideways inside its own box beats squeezing every column unreadable or
+   letting it force the whole page to scroll. Same pattern as leads.module.css. */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--crm-muted);
+  border-top: 1px solid var(--crm-sunk);
+  border-bottom: 1px solid var(--crm-sunk);
+}
+
+.thContent {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--crm-sunk);
+  font-size: 0.875rem;
+  color: var(--crm-text);
+  vertical-align: middle;
+}
+
+.productCell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 600;
+  color: var(--crm-ink);
+}
+
+.productIcon {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--crm-r-sm);
+  border: 1px solid var(--crm-sunk);
+}
+
+.vendorCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vendorAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--crm-steel-bg);
+  color: var(--crm-steel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.qtyControl {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qtyBtn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--crm-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+.qtyBtn:hover {
+  color: var(--crm-ink);
+}
+
+.qtyInput {
+  width: 50px;
+  text-align: center;
+  border: 1px solid var(--crm-rule);
+  border-radius: 9999px;
+  padding: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--crm-ink);
+}
+
+.addBtn {
+  color: var(--crm-steel);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+.addBtn:hover {
+  text-decoration: underline;
+}
+
+.tableFooter {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--crm-muted);
+  font-size: 0.875rem;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.pageBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--crm-r);
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.pageBtn:hover {
+  background: var(--crm-panel);
+}
+.pageBtnActive {
+  border-color: var(--crm-steel);
+  color: var(--crm-steel);
+  font-weight: 600;
+}
+
+/*
+ * Mobile cards. Defined here, before the media query below that turns them
+ * on — a later rule of equal specificity beats an earlier one regardless of
+ * which is inside a media query, so this exact block used to sit *after*
+ * that query and silently overrode its `display: flex` back to `none` on
+ * every phone, no matter how narrow the screen got. The count in the
+ * footer came straight from JS and was never wrong; the cards themselves
+ * were just never allowed to render.
+ */
+.cards {
+  display: none;
+}
+
+.stockCard {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-sunk);
+  border-radius: var(--crm-r-lg);
+  padding: 12px 14px;
+}
+
+.stockCardHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stockCardName {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.stockCardPrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--crm-text);
+  font-size: 13px;
+  padding-top: 8px;
+  margin-bottom: 10px;
+  border-top: 1px solid var(--crm-sunk);
+}
+
+.stockCardTotal {
+  color: var(--crm-muted);
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .tableHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .searchBox {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .tableFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .tableWrap {
+    display: none;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* ── stock status marking, table row and card alike ── */
+
+.stockBadgeWarn,
+.stockBadgeStop {
+  flex: none;
+  margin-left: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stockBadgeWarn {
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+}
+
+.stockBadgeStop {
+  background: var(--crm-stop-bg);
+  color: var(--crm-stop);
+}

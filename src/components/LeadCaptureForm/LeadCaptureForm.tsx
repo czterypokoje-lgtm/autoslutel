@@ -2,6 +2,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { CAR_MODELS, BRANDS_LIST, SERVICES_LIST, YEARS_LIST } from "@/data/carModels";
 import { SITE_CONFIG } from "@/config/site.config";
+import { toWebp } from "@/lib/toWebp";
 import styles from "./LeadCaptureForm.module.css";
 
 interface Props {
@@ -39,13 +40,14 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const rawFile = e.target.files?.[0];
+    if (!rawFile) return;
 
     setIsUploading(true);
     setUploadError("");
 
     try {
+      const file = await toWebp(rawFile).catch(() => rawFile);
       const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
         method: 'POST',
         body: file,

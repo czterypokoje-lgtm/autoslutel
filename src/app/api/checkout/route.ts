@@ -1,8 +1,20 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { SITE_CONFIG } from '@/config/site.config';
-import { getProductBySlug, shelfPrice, shippingFor, VAT_RATE } from '@/lib/catalog';
-import { SERVICE_SURCHARGE, SERVICE_LABEL, type ServiceOption } from '@/lib/cart';
+import { shippingFor, VAT_RATE } from '@/lib/catalog';
+import { getShopProductBySlug } from '@/lib/shopCatalog';
+/*
+ * From lib/services, not lib/cart: cart.ts is a client module, and a server
+ * route importing from one gets client references instead of the values —
+ * SERVICE_OPTIONS.includes() threw and every order 500'd.
+ */
+import {
+  SERVICE_SURCHARGE,
+  SERVICE_LABEL,
+  SERVICE_NEEDS,
+  SERVICE_OPTIONS,
+  type ServiceOption,
+} from '@/lib/services';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 
 /**
@@ -36,7 +48,8 @@ interface IncomingLine {
   service: unknown;
 }
 
-const SERVICES: ServiceOption[] = ['product_only', 'send_in', 'mobile_tech'];
+// The list lives in one place; a service added there is accepted here.
+const SERVICES = SERVICE_OPTIONS;
 
 const clean = (v: unknown, max: number): string | null => {
   if (typeof v !== 'string') return null;
@@ -81,10 +94,15 @@ export async function POST(request: Request) {
   for (const raw of incoming.slice(0, 50)) {
     const slug = clean(raw.slug, 120);
     if (!slug) continue;
-    const product = getProductBySlug(slug);
-    if (!product || product.audience !== 'public') continue;
+    /*
+     * Through the merged catalogue: a price the office corrected has to be the
+     * price that is charged, and a product taken offline or out of stock must
+     * not be sellable through a stale basket someone left open.
+     */
+    const product = await getShopProductBySlug(slug);
+    if (!product || product.audience !== 'public' || !product.inStock) continue;
 
-    const unitPrice = shelfPrice(product.costPrice);
+    const unitPrice = product.price;
     if (unitPrice == null) continue;
 
     const quantity = Math.min(20, Math.max(1, Number(raw.quantity) || 1));
@@ -128,10 +146,19 @@ export async function POST(request: Request) {
   }
 
   const needsTechnician = items.some((i) => i.service === 'mobile_tech');
+  /*
+   * Cutting a blade and programming a key both need the vehicle, and both are
+   * work we will not do for someone who cannot show the car is theirs. The
+   * requirement is read from the service definition rather than hard-coded to
+   * the technician option, so a new service cannot slip past it.
+   */
+  const needsKenteken = items.some((i) => SERVICE_NEEDS[i.service].kenteken);
+  const needsOldKey = items.some((i) => SERVICE_NEEDS[i.service].oldKey);
+
   const kenteken = clean(body.kenteken, 12);
-  if (needsTechnician && !kenteken) {
+  if (needsKenteken && !kenteken) {
     return NextResponse.json(
-      { error: 'Voor een monteurbezoek hebben wij uw kenteken nodig' },
+      { error: 'Voor frezen, overzetten of programmeren hebben wij uw kenteken nodig' },
       { status: 400 }
     );
   }
@@ -196,12 +223,15 @@ export async function POST(request: Request) {
 
     // A mobile-technician order is also a job for the service side, so it goes
     // into the same leads table the rest of the site writes to.
-    if (needsTechnician) {
+    if (needsTechnician || needsOldKey) {
       await supabase.from('leads').insert([
         {
           brand: 'Webshop',
           model: items.map((i) => i.title).join(', ').slice(0, 80),
-          service: SERVICE_LABEL.mobile_tech,
+          // Which of the two brought this lead in — a call-out or a parcel.
+          service: needsTechnician
+            ? SERVICE_LABEL.mobile_tech
+            : SERVICE_LABEL.send_in,
           location: postcode,
           postcode,
           phone,

@@ -1,0 +1,247 @@
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 16px 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--crm-ink, var(--crm-text-strong));
+}
+
+.sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--crm-muted, var(--crm-text-muted));
+}
+
+.body {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.panel {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--crm-ink, var(--crm-text-strong));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+}
+
+.form textarea,
+.form input {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--crm-muted, var(--crm-text-muted));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.field input,
+.field textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--crm-rule2, var(--crm-rule));
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg, var(--crm-surface));
+  color: var(--crm-ink, var(--crm-text-strong));
+  font: inherit;
+  font-size: 13.5px;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.previewRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+}
+
+.previewRow img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--crm-r-sm);
+}
+
+.submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  height: 36px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.error {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 13px;
+  color: var(--crm-stop, #f87171);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardSold {
+  opacity: 0.6;
+}
+
+.cardPhoto {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--crm-sunk, var(--crm-surface-hover));
+}
+
+.cardPhotoEmpty {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--crm-muted, var(--crm-text-muted));
+  font-size: 12px;
+  background: var(--crm-sunk, var(--crm-surface-hover));
+}
+
+.cardBody {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.cardTitle {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--crm-ink, var(--crm-text-strong));
+}
+
+.cardDesc {
+  font-size: 12.5px;
+  color: var(--crm-muted, var(--crm-text-muted));
+  line-height: 1.4;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.cardPrice {
+  font-weight: 700;
+  color: var(--crm-ink, var(--crm-text-strong));
+}
+
+.cardSeller {
+  font-size: 11.5px;
+  color: var(--crm-muted, var(--crm-text-muted));
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--crm-r-sm);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--crm-ok-bg, rgba(74, 222, 128, 0.15));
+  color: var(--crm-ok, #4ade80);
+}
+
+.badgeSold {
+  background: var(--crm-sunk, rgba(148, 163, 184, 0.15));
+  color: var(--crm-muted, var(--crm-text-muted));
+}
+
+.cardActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.act {
+  flex: 1;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: var(--crm-r-sm);
+  border: 1px solid var(--crm-rule2, var(--crm-rule));
+  background: transparent;
+  color: var(--crm-ink, var(--crm-text-strong));
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.actPrimary {
+  background: var(--crm-accent);
+  border-color: var(--crm-accent);
+  color: #fff;
+}
+
+.empty {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--crm-muted, var(--crm-text-muted));
+  font-size: 13.5px;
+}

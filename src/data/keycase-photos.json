@@ -1,0 +1,74 @@
+{
+ "funkschlussel-gehause-kompatibel-fur-bmw-bmrc104-hu92": {
+  "image": "/images/products/key-cases_8056717410606.jpg",
+  "from": "Diamond Key Case with HU92 Blade compatible with BMW 3 Series",
+  "matchedOn": "blade HU92 + make + 3 buttons",
+  "confidence": "high"
+ },
+ "gehause-kompatibel-fur-citroen-ctrc102-o-batteriefach-hu83": {
+  "image": "/images/products/key-cases_14652237119865.jpg",
+  "from": "HU83 Transponder Key Case for Citroen Peugeot Vauxhall",
+  "matchedOn": "blade HU83 + make",
+  "confidence": "medium"
+ },
+ "gehause-kompatibel-fur-citroen-ctrc103-m-batteriefach-hu83": {
+  "image": "/images/products/key-cases_14652237119865.jpg",
+  "from": "HU83 Transponder Key Case for Citroen Peugeot Vauxhall",
+  "matchedOn": "blade HU83 + make",
+  "confidence": "medium"
+ },
+ "gehause-kompatibel-fur-citroen-ctrc104-m-batteriefach-va2": {
+  "image": "/images/products/key-cases_14652234498425.jpg",
+  "from": "VA2 Transponder Key Case for Citroen Peugeot",
+  "matchedOn": "blade VA2 + make",
+  "confidence": "medium"
+ },
+ "gehause-kompatibel-fur-citroen-ctrc112-o-batteriefach-va2": {
+  "image": "/images/products/key-cases_14652234498425.jpg",
+  "from": "VA2 Transponder Key Case for Citroen Peugeot",
+  "matchedOn": "blade VA2 + make",
+  "confidence": "medium"
+ },
+ "gehause-kompatibel-fur-citroen-ctrc114-o-batteriefach-hu83": {
+  "image": "/images/products/key-cases_14652237119865.jpg",
+  "from": "HU83 Transponder Key Case for Citroen Peugeot Vauxhall",
+  "matchedOn": "blade HU83 + make",
+  "confidence": "medium"
+ },
+ "gehause-kompatibel-fur-citroen-ctrc116-o-batteriefach-va2": {
+  "image": "/images/products/key-cases_14652234498425.jpg",
+  "from": "VA2 Transponder Key Case for Citroen Peugeot",
+  "matchedOn": "blade VA2 + make",
+  "confidence": "medium"
+ },
+ "gehause-kompatibel-fur-citroen-ctrc117-o-batteriefach-va2": {
+  "image": "/images/products/key-cases_14652234498425.jpg",
+  "from": "VA2 Transponder Key Case for Citroen Peugeot",
+  "matchedOn": "blade VA2 + make",
+  "confidence": "medium"
+ },
+ "gehause-kompatibel-fur-citroen-ctrc118-m-batteriefach-hu83": {
+  "image": "/images/products/key-cases_14652237119865.jpg",
+  "from": "HU83 Transponder Key Case for Citroen Peugeot Vauxhall",
+  "matchedOn": "blade HU83 + make",
+  "confidence": "medium"
+ },
+ "gehause-umbausatz-kompatibel-fur-peugeot-pgrc108-o-batteriefach-va2": {
+  "image": "/images/products/key-cases_14652234498425.jpg",
+  "from": "VA2 Transponder Key Case for Citroen Peugeot",
+  "matchedOn": "blade VA2 + make",
+  "confidence": "medium"
+ },
+ "funkschlussel-gehause-kompatibel-fur-suzuki-surc106": {
+  "image": "/images/products/key-cases_14947929784697.jpg",
+  "from": "Remote Key Case with HU133R Blade for Suzuki",
+  "matchedOn": "blade SX4 + make",
+  "confidence": "medium"
+ },
+ "funkschlussel-gehause-kompatibel-fur-suzuki-surc151": {
+  "image": "/images/products/key-cases_14947929784697.jpg",
+  "from": "Remote Key Case with HU133R Blade for Suzuki",
+  "matchedOn": "blade SX4 + make",
+  "confidence": "medium"
+ }
+}

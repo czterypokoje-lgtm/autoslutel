@@ -15,20 +15,24 @@ import { shelfPrice, shippingFor, VAT_RATE } from './catalog';
 export const CART_KEY = 'as24_cart_v1';
 export const CART_EVENT = 'as24:cart-changed';
 
-/** How the customer wants the part delivered — see the service selector. */
-export type ServiceOption = 'product_only' | 'send_in' | 'mobile_tech';
+/*
+ * The service definitions live in ./services, which has no 'use client'
+ * directive — the checkout route and the CRM are server code and need the
+ * real values, not client references. Re-exported here so basket code can
+ * keep importing everything from one place.
+ */
+export type { ServiceOption } from './services';
+export {
+  SERVICE_SURCHARGE,
+  SERVICE_LABEL,
+  SERVICE_DESCRIPTION,
+  SERVICE_NEEDS,
+  SERVICE_OPTIONS,
+  servicesFor,
+} from './services';
 
-export const SERVICE_SURCHARGE: Record<ServiceOption, number> = {
-  product_only: 0,
-  send_in: 29.95,   // we transfer the electronics and cut the blade
-  mobile_tech: 169, // technician comes out, cuts and programmes on location
-};
-
-export const SERVICE_LABEL: Record<ServiceOption, string> = {
-  product_only: 'Alleen product',
-  send_in: 'Opsturen — wij doen het',
-  mobile_tech: 'Mobiele monteur komt langs',
-};
+import { SERVICE_OPTIONS, SERVICE_SURCHARGE } from './services';
+import type { ServiceOption } from './services';
 
 export interface CartLine {
   slug: string;
@@ -48,9 +52,7 @@ export function readCart(): CartLine[] {
       .map((l) => ({
         slug: l.slug,
         quantity: Math.min(20, Math.max(1, Number(l.quantity) || 1)),
-        service: (['product_only', 'send_in', 'mobile_tech'] as const).includes(l.service)
-          ? l.service
-          : 'product_only',
+        service: SERVICE_OPTIONS.includes(l.service) ? l.service : 'product_only',
       }));
   } catch {
     return [];
@@ -126,6 +128,9 @@ const PROGRAMMED_CATEGORIES = new Set([
   'afstandsbedieningen',
   'smart-keys',
   'transponders',
+  'transpondersleutels',
+  'printplaten',
+  'universal-remotes',
 ]);
 
 /**

@@ -1,24 +1,53 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { VEHICLE_DATA, FALLBACK_MODELS, getYears } from '@/lib/vehicleData';
 
 import type { Fitment } from '@/lib/catalog';
+import vehicleSpecsJson from '@/lib/vehicleSpecs.json';
+
+const vehicleSpecs = vehicleSpecsJson as Record<string, {
+  make: string;
+  model: string;
+  chips: string[];
+  blades: string[];
+  frequencies: string[];
+}>;
 
 export default function VehicleFitmentWidget({ 
   defaultBrand = '',
   defaultModel = '',
   defaultYear = '',
-  fitment = []
+  fitment = [],
+  productChip = null,
+  productBlade = null,
+  productFrequency = null
 }: { 
   defaultBrand?: string,
   defaultModel?: string,
   defaultYear?: string,
-  fitment?: Fitment[]
+  fitment?: Fitment[],
+  productChip?: string | null,
+  productBlade?: string | null,
+  productFrequency?: string | null
 }) {
   const [activeTab, setActiveTab] = useState<'kenteken' | 'handmatig'>('handmatig');
   
+  /*
+   * The defaults are the product's own make and model, rendered on the server
+   * and unchanged for the life of this component, so they belong in the
+   * initialiser. Three effects used to copy them into state after the first
+   * paint, which React 19 rejects outright (react-hooks/set-state-in-effect)
+   * and which cost an extra render each.
+   *
+   * The third of those effects cleared model, year and origin whenever the
+   * brand changed — including the moment a kenteken lookup filled all three
+   * in, so a successful lookup wiped its own answer.
+   */
+  const brandFromDefault =
+    Object.keys(VEHICLE_DATA).find((b) => b.toLowerCase() === defaultBrand.toLowerCase()) ?? '';
+
   // States for all dropdowns
-  const [selectedBrand, setSelectedBrand] = useState<string>(defaultBrand || '');
+  const [selectedBrand, setSelectedBrand] = useState<string>(brandFromDefault);
   const [selectedModel, setSelectedModel] = useState<string>(defaultModel || '');
   const [selectedYear, setSelectedYear] = useState<string>(defaultYear || '');
   const [selectedOrigin, setSelectedOrigin] = useState<string>('');
@@ -32,28 +61,51 @@ export default function VehicleFitmentWidget({
   const availableModels = selectedBrand ? (VEHICLE_DATA[selectedBrand] || FALLBACK_MODELS) : [];
   const years = getYears();
 
-  // Auto-select brand if defaultBrand is provided (e.g. from the URL/product)
-  useEffect(() => {
-    if (defaultBrand && !selectedBrand) {
-      // Find matching brand case-insensitively
-      const match = allBrands.find(b => b.toLowerCase() === defaultBrand.toLowerCase());
-      if (match) setSelectedBrand(match);
-    }
-  }, [defaultBrand, allBrands, selectedBrand]);
-
-  useEffect(() => {
-    if (defaultModel) setSelectedModel(defaultModel);
-    if (defaultYear) setSelectedYear(defaultYear);
-  }, [defaultModel, defaultYear]);
-
-  // Reset dependent fields when brand changes
-  useEffect(() => {
+  /** Picking another make invalidates the model, year and origin below it. */
+  const chooseBrand = (brand: string) => {
+    setSelectedBrand(brand);
     setSelectedModel('');
     setSelectedYear('');
     setSelectedOrigin('');
-  }, [selectedBrand]);
+    setResult('idle');
+  };
 
   
+  const checkSpecsMatch = (make: string, model: string, year: number): boolean => {
+    // If we have explicit fitment, check that first
+    if (fitment.length > 0) {
+      const isMatch = fitment.some(f => 
+        make.toLowerCase().includes(f.make.toLowerCase()) &&
+        (model.toLowerCase().includes(f.model.toLowerCase()) || f.model.toLowerCase().includes(model.toLowerCase())) &&
+        year >= f.from && year <= f.to
+      );
+      return isMatch;
+    }
+
+    // No explicit fitment. Fall back to characteristics matching.
+    const key = `${make}|${model}`.toLowerCase();
+    let spec = vehicleSpecs[key];
+    
+    if (!spec) {
+      const relaxedKey = Object.keys(vehicleSpecs).find(k => {
+        const [kMake, kModel] = k.split('|');
+        return kMake.includes(make.toLowerCase()) && 
+               (kModel.includes(model.toLowerCase()) || model.toLowerCase().includes(kModel));
+      });
+      if (relaxedKey) spec = vehicleSpecs[relaxedKey];
+    }
+    
+    // If the car isn't in our baseline data at all, we can't disprove fitment.
+    if (!spec) return true;
+
+    // A product must not contradict the car's known requirements.
+    if (productChip && spec.chips.length > 0 && !spec.chips.includes(productChip)) return false;
+    if (productBlade && spec.blades.length > 0 && !spec.blades.includes(productBlade)) return false;
+    if (productFrequency && spec.frequencies.length > 0 && !spec.frequencies.includes(productFrequency)) return false;
+    
+    return true;
+  };
+
   const checkKenteken = async () => {
     if (!kenteken) return;
     setKentekenLoading(true);
@@ -75,17 +127,7 @@ export default function VehicleFitmentWidget({
       const kModel = (handelsbenaming || '').toLowerCase();
       const kYear = datum_eerste_toelating ? parseInt(datum_eerste_toelating.substring(0,4)) : 0;
       
-      if (fitment.length === 0) {
-        setResult('success');
-        setKentekenLoading(false);
-        return;
-      }
-      
-      const isMatch = fitment.some(f => 
-        kBrand.includes(f.make.toLowerCase()) &&
-        (kModel.includes(f.model.toLowerCase()) || f.model.toLowerCase().includes(kModel)) &&
-        kYear >= f.from && kYear <= f.to
-      );
+      const isMatch = checkSpecsMatch(kBrand, kModel, kYear);
       
       setSelectedBrand(merk || '');
       setSelectedModel(handelsbenaming || '');
@@ -103,29 +145,17 @@ export default function VehicleFitmentWidget({
 
   const checkFitment = () => {
     if (!selectedBrand || !selectedModel || !selectedYear) return;
-    
-    // If no fitment data is available on the product at all, we assume it's generic
-    if (fitment.length === 0) {
-      setResult('success');
-      return;
-    }
-
     const yearNum = parseInt(selectedYear);
-    
-    const isMatch = fitment.some(f => 
-      f.make.toLowerCase() === selectedBrand.toLowerCase() &&
-      f.model.toLowerCase() === selectedModel.toLowerCase() &&
-      yearNum >= f.from && yearNum <= f.to
-    );
-
+    const isMatch = checkSpecsMatch(selectedBrand, selectedModel, yearNum);
     setResult(isMatch ? 'success' : 'fail');
   };
 
-  // Reset result if user changes inputs
-  useEffect(() => {
-    setResult('idle');
-  }, [selectedBrand, selectedModel, selectedYear]);
-
+  /*
+   * The outcome is cleared where the input changes, not in an effect watching
+   * the three fields. That effect also ran after a kenteken lookup — which
+   * fills brand, model and year — so it wiped the "past op uw auto" answer it
+   * had just produced.
+   */
 
   return (
     <div style={{
@@ -204,7 +234,7 @@ export default function VehicleFitmentWidget({
           
           <select 
             value={selectedBrand} 
-            onChange={(e) => setSelectedBrand(e.target.value)}
+            onChange={(e) => chooseBrand(e.target.value)}
             style={{ padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px', flex: '1 1 120px', fontSize: '0.85rem', color: selectedBrand ? '#0f172a' : '#64748b', background: '#fff' }}
           >
             <option value="">Merk</option>
@@ -215,7 +245,7 @@ export default function VehicleFitmentWidget({
 
           <select 
             value={selectedModel}
-            onChange={(e) => setSelectedModel(e.target.value)}
+            onChange={(e) => { setSelectedModel(e.target.value); setResult('idle'); }}
             disabled={!selectedBrand}
             style={{ padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px', flex: '1 1 120px', fontSize: '0.85rem', color: selectedModel ? '#0f172a' : '#64748b', background: !selectedBrand ? '#f1f5f9' : '#fff' }}
           >
@@ -227,7 +257,7 @@ export default function VehicleFitmentWidget({
 
           <select 
             value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
+            onChange={(e) => { setSelectedYear(e.target.value); setResult('idle'); }}
             disabled={!selectedModel}
             style={{ padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px', flex: '1 1 120px', fontSize: '0.85rem', color: selectedYear ? '#0f172a' : '#64748b', background: !selectedModel ? '#f1f5f9' : '#fff' }}
           >

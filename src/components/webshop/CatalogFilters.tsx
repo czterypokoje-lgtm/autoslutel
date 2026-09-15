@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useMemo, useState, useCallback } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import Link from 'next/link';
+import { useSearchParams, usePathname } from 'next/navigation';
 import styles from './CatalogFilters.module.css';
 import type { FacetKey, FacetOption } from '@/lib/catalog';
 
@@ -24,6 +25,12 @@ import type { FacetKey, FacetOption } from '@/lib/catalog';
  * category — see the faceted-navigation note in the webshop blueprint.
  */
 
+const SORT_OPTIONS: { value: string; label: string }[] = [
+  { value: 'prijs-oplopend', label: 'Prijs: laag naar hoog' },
+  { value: 'prijs-aflopend', label: 'Prijs: hoog naar laag' },
+  { value: 'naam', label: 'Naam A-Z' },
+];
+
 const GROUP_TITLES: Record<FacetKey, string> = {
   category: 'Categorie',
   subcategory: 'Type',
@@ -32,6 +39,8 @@ const GROUP_TITLES: Record<FacetKey, string> = {
   condition: 'Uitvoering',
   buttons: 'Aantal knoppen',
   frequency: 'Frequentie',
+  chip: 'Transponder',
+  blade: 'Sleutelbaard',
 };
 
 /** Long lists collapse; short ones never need to. */
@@ -46,15 +55,22 @@ interface Props {
 
 export default function CatalogFilters({
   facets,
-  order = ['make', 'category', 'subcategory', 'buttons', 'condition', 'manufacturer', 'frequency'],
+  order = ['make', 'category', 'subcategory', 'buttons', 'frequency', 'chip', 'blade', 'condition', 'manufacturer'],
   resultCount,
 }: Props) {
-  const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [closed, setClosed] = useState<Record<string, boolean>>({});
+  /*
+   * On a phone the filter rail came first and ran for two full screens —
+   * "Automerk" alone is 43 makes — so the catalogue opened on a wall of
+   * checkboxes and the first product was somewhere below the fold. Every large
+   * shop puts filters behind one button on mobile; below 900px this panel is
+   * that drawer, and above it nothing changes.
+   */
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const active = useMemo(() => {
     const a: Record<string, string> = {};
@@ -66,39 +82,164 @@ export default function CatalogFilters({
   }, [params]);
 
   const activeCount = Object.keys(active).length;
+  const currentSort = params.get('sort');
+  const onlyInStock = params.get('inStock') === '1';
 
-  const setFilter = useCallback(
+  /**
+   * The URL this option leads to — the current query with one facet added,
+   * changed or removed.
+   *
+   * Filters are links now, not checkboxes with an onChange. A checkbox needs
+   * JavaScript to have loaded and hydrated before it does anything; a link is
+   * a link the moment the HTML arrives, so the catalogue can be filtered on a
+   * slow phone, on a flaky connection, and by a crawler. It also makes a
+   * filtered view something you can send to someone.
+   */
+  const hrefFor = useCallback(
     (key: string, value: string | null) => {
       const next = new URLSearchParams(params.toString());
       if (value === null || next.get(key) === value) next.delete(key);
       else next.set(key, value);
-      // Any filter change invalidates the page cursor.
-      next.delete('page');
+      next.delete('page'); // any filter change invalidates the page cursor
       const qs = next.toString();
-      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      return qs ? `${pathname}?${qs}` : pathname;
     },
-    [params, pathname, router]
+    [params, pathname]
   );
 
-  const clearAll = useCallback(() => {
-    router.replace(pathname, { scroll: false });
-  }, [pathname, router]);
+  // The page behind a full-screen drawer must not scroll with it.
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [drawerOpen]);
+
+  // Escape closes it, as a dialog should.
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [drawerOpen]);
 
   const groups = order.filter((k) => facets[k]?.length);
 
   if (!groups.length) return null;
 
   return (
-    <aside className={styles.root} aria-label="Filters">
+    <>
+      {/*
+        The drawer is opened by a checkbox, not by React state: a <button> does
+        nothing until the page has hydrated, and on a phone that leaves the only
+        way to filter 923 products dead while every link around it works. The
+        state below only mirrors it, for Escape and the scroll lock.
+      */}
+      <input
+        type="checkbox"
+        id="shop-filter-toggle"
+        className="shop-filter-toggle"
+        checked={drawerOpen}
+        onChange={(e) => setDrawerOpen(e.target.checked)}
+        aria-label="Filters openen"
+      />
+
+      <label className="shop-filter-open" htmlFor="shop-filter-toggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="7" y1="12" x2="17" y2="12" />
+          <line x1="10" y1="18" x2="14" y2="18" />
+        </svg>
+        Filters
+        {activeCount > 0 && <span className="shop-filter-badge">{activeCount}</span>}
+        <span className="shop-filter-open-count">{resultCount} producten</span>
+      </label>
+
+      <div className="shop-toolbar-row">
+        <details className="shop-sort">
+          <summary>
+            Sorteren
+            <span aria-hidden="true" className="shop-sort-caret">⌄</span>
+          </summary>
+          <div className="shop-sort-menu">
+            {SORT_OPTIONS.map((o) => (
+              <Link
+                key={o.value}
+                href={hrefFor('sort', o.value)}
+                scroll={false}
+                className={currentSort === o.value ? 'shop-sort-optOn' : 'shop-sort-opt'}
+              >
+                {currentSort === o.value ? '✓ ' : ''}
+                {o.label}
+              </Link>
+            ))}
+          </div>
+        </details>
+
+        <Link
+          href={hrefFor('inStock', onlyInStock ? null : '1')}
+          scroll={false}
+          className="shop-stock-toggle"
+          aria-pressed={onlyInStock}
+        >
+          <span className={`shop-stock-switch ${onlyInStock ? 'shop-stock-switchOn' : ''}`} aria-hidden="true" />
+          Alleen op voorraad
+        </Link>
+      </div>
+
+      <label className="shop-filter-scrim" htmlFor="shop-filter-toggle" aria-hidden="true" />
+
+    <aside className={`${styles.root} shop-filter-panel`} aria-label="Filters">
+      <div className="shop-filter-bar">
+        <strong>Filters</strong>
+        <label className="shop-filter-close" htmlFor="shop-filter-toggle" aria-label="Filters sluiten">✕</label>
+      </div>
+
       <div className={styles.head}>
         <span className={styles.count}>
           <strong>{resultCount}</strong> {resultCount === 1 ? 'product' : 'producten'}
         </span>
         {activeCount > 0 && (
-          <button type="button" className={styles.clear} onClick={clearAll}>
+          <Link href={pathname} scroll={false} className={styles.clear}>
             Wis alles ({activeCount})
-          </button>
+          </Link>
         )}
+      </div>
+
+      <div className={styles.sortRow}>
+        <details className="shop-sort shop-sort--sidebar">
+          <summary>
+            Sorteren
+            <span aria-hidden="true" className="shop-sort-caret">⌄</span>
+          </summary>
+          <div className="shop-sort-menu">
+            {SORT_OPTIONS.map((o) => (
+              <Link
+                key={o.value}
+                href={hrefFor('sort', o.value)}
+                scroll={false}
+                className={currentSort === o.value ? 'shop-sort-optOn' : 'shop-sort-opt'}
+              >
+                {currentSort === o.value ? '✓ ' : ''}
+                {o.label}
+              </Link>
+            ))}
+          </div>
+        </details>
+
+        <Link
+          href={hrefFor('inStock', onlyInStock ? null : '1')}
+          scroll={false}
+          className="shop-stock-toggle"
+          aria-pressed={onlyInStock}
+        >
+          <span className={`shop-stock-switch ${onlyInStock ? 'shop-stock-switchOn' : ''}`} aria-hidden="true" />
+          Alleen op voorraad
+        </Link>
       </div>
 
       {activeCount > 0 && (
@@ -106,16 +247,16 @@ export default function CatalogFilters({
           {Object.entries(active).map(([k, v]) => {
             const opt = facets[k]?.find((o) => o.value.toLowerCase() === v.toLowerCase());
             return (
-              <button
+              <Link
                 key={k}
-                type="button"
+                href={hrefFor(k, null)}
+                scroll={false}
                 className={styles.chip}
-                onClick={() => setFilter(k, null)}
                 aria-label={`${GROUP_TITLES[k as FacetKey]} filter verwijderen`}
               >
                 {opt?.label ?? v}
                 <span aria-hidden="true">×</span>
-              </button>
+              </Link>
             );
           })}
         </div>
@@ -148,15 +289,19 @@ export default function CatalogFilters({
                     const checked = active[key]?.toLowerCase() === o.value.toLowerCase();
                     return (
                       <li key={o.value}>
-                        <label className={`${styles.opt} ${checked ? styles.optOn : ''}`}>
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => setFilter(key, o.value)}
-                          />
+                        <Link
+                          href={hrefFor(key, o.value)}
+                          scroll={false}
+                          className={`${styles.opt} ${checked ? styles.optOn : ''}`}
+                          aria-pressed={checked}
+                        >
+                          {/* Looks like a checkbox, behaves like a link. */}
+                          <span className={styles.optBox} aria-hidden="true">
+                            {checked ? '✓' : ''}
+                          </span>
                           <span className={styles.optLabel}>{o.label}</span>
                           <span className={styles.optCount}>{o.count}</span>
-                        </label>
+                        </Link>
                       </li>
                     );
                   })}
@@ -182,6 +327,14 @@ export default function CatalogFilters({
         and "4 stars & up (120)" — counts that were not backed by any review
         data. It comes back when real verified-purchase reviews exist.
       */}
+
+      {/* The way out of the drawer, with the number it will show. */}
+      <div className="shop-filter-apply">
+        <label htmlFor="shop-filter-toggle">
+          Toon {resultCount} {resultCount === 1 ? 'product' : 'producten'}
+        </label>
+      </div>
     </aside>
+    </>
   );
 }

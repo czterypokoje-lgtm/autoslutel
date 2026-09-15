@@ -1,0 +1,356 @@
+/*
+ * The CRM's primitives.
+ *
+ * Every page used to bring its own stylesheet, and eleven of them had grown to
+ * 3,234 lines carrying 60 different hardcoded colours, 16 corner radii and 28
+ * font sizes. Three of those pages were built on a light Tailwind palette, so
+ * they rendered as white cards floating in a near-black app.
+ *
+ * This is the fix, and it is components rather than a stylesheet on purpose: a
+ * CSS file with good rules in it gets ignored by the next page, whereas a page
+ * that has no <Card> of its own has to import this one.
+ *
+ * Nothing here sets a colour, size or gap that is not a token.
+ */
+
+/* ── page ────────────────────────────────────────────────────────────── */
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-6);
+}
+
+.headText { min-width: 0; }
+
+.title {
+  margin: 0;
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.025em;
+  color: var(--crm-ink);
+}
+
+.sub {
+  margin: var(--sp-1) 0 0;
+  color: var(--crm-muted);
+  font-size: var(--fs-sm);
+  max-width: 68ch;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: var(--sp-8) 0 var(--sp-3);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+}
+
+.section svg { color: var(--crm-muted); }
+
+/* ── card ────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  overflow: hidden;
+}
+
+.cardPad { padding: var(--sp-5) var(--sp-6); }
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+}
+
+/* ── row ─────────────────────────────────────────────────────────────── */
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--crm-rule);
+  min-width: 0;
+}
+
+.row:last-child { border-bottom: none; }
+.row:hover { background: rgba(255, 255, 255, 0.02); }
+
+.rowMain {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.rowTitleLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+  color: var(--crm-ink);
+  text-decoration: none;
+}
+
+a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+.rowNote {
+  font-size: var(--fs-label);
+  color: var(--crm-muted);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.rowActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+
+/* ── stat tile ───────────────────────────────────────────────────────── */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-5);
+}
+
+.stat {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: var(--sp-4) var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.statTop {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--crm-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-medium);
+}
+
+.statIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--crm-r-sm);
+  display: grid;
+  place-items: center;
+  background: var(--crm-raised);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.statValue {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.statFoot {
+  font-size: var(--fs-label);
+  color: var(--crm-muted);
+}
+
+/* ── badge ───────────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px var(--sp-2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-raised);
+  color: var(--crm-text);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.badge svg { color: var(--crm-muted); }
+.badgeOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.badgeWarn { background: var(--crm-warn-bg); color: var(--crm-warn); }
+.badgeStop { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.badgeInfo { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.badgeOk svg, .badgeWarn svg, .badgeStop svg, .badgeInfo svg { color: currentColor; }
+
+/* ── buttons ─────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 34px;
+  padding: 0 var(--sp-3);
+  border-radius: var(--crm-r);
+  border: 1px solid var(--crm-rule2);
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) { background: var(--crm-sunk); color: var(--crm-ink); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.btnPrimary {
+  border-color: transparent;
+  background: var(--crm-ink);
+  color: #0a0a0a;
+  font-weight: var(--fw-semibold);
+}
+.btnPrimary:hover:not(:disabled) { background: #fff; color: #0a0a0a; }
+
+.btnDanger { border-color: var(--crm-stop); color: var(--crm-stop); }
+.btnDanger:hover:not(:disabled) { background: var(--crm-stop-bg); color: var(--crm-stop); }
+
+.btnIcon { width: 34px; padding: 0; }
+
+/* ── fields ──────────────────────────────────────────────────────────── */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-text);
+}
+
+.hint { font-size: var(--fs-label); color: var(--crm-muted); }
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 34px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+}
+
+textarea.input { height: auto; padding: var(--sp-2) var(--sp-3); line-height: 1.5; }
+.input::placeholder { color: var(--crm-muted); }
+
+.input:focus {
+  outline: none;
+  border-color: var(--crm-rule2);
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+/* ── table ───────────────────────────────────────────────────────────── */
+
+.tableWrap { overflow-x: auto; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.table th {
+  text-align: left;
+  padding: var(--sp-3) var(--sp-5);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-muted);
+  border-bottom: 1px solid var(--crm-rule);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--crm-rule);
+  color: var(--crm-text);
+  vertical-align: middle;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+.numeric { text-align: right; }
+
+/* ── empty & notices ─────────────────────────────────────────────────── */
+
+.empty {
+  padding: var(--sp-12) var(--sp-5);
+  text-align: center;
+  color: var(--crm-muted);
+  font-size: var(--fs-sm);
+}
+
+.notice {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--crm-r);
+  font-size: var(--fs-sm);
+  margin-bottom: var(--sp-4);
+}
+
+.noticeOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.noticeBad { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.noticeInfo { background: var(--crm-steel-bg); color: var(--crm-steel); }
+
+@media (max-width: 720px) {
+  .row { flex-wrap: wrap; padding: var(--sp-3) var(--sp-4); }
+  .actions { margin-left: 0; width: 100%; }
+  .table th, .table td { padding: var(--sp-2) var(--sp-3); }
+}

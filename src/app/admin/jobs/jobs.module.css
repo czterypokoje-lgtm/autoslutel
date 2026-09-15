@@ -1,0 +1,521 @@
+/* Agenda and planner. Same density rules as the leads list. */
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--crm-ink);
+  letter-spacing: -0.025em;
+}
+
+.count {
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.viewSwitch {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  overflow: hidden;
+  height: 34px;
+}
+
+.viewLink {
+  padding: 0 var(--sp-3);
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  color: var(--crm-muted);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  background: var(--crm-panel);
+}
+
+.viewLink + .viewLink {
+  border-left: 1px solid var(--crm-rule2);
+}
+
+.viewLinkActive {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 34px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navBtn:hover {
+  border-color: var(--crm-ink);
+  color: var(--crm-ink);
+}
+
+.today {
+  color: var(--crm-ink);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+/* ---- Shared: the coloured dot, the column name, the small meta number ---- */
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  flex: none;
+}
+
+.colName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--crm-ink);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.colMeta {
+  flex: none;
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Day and week view, hour grid: a real calendar, not a stacked list ---- */
+
+.hourGrid {
+  display: grid;
+  gap: 1px;
+  background: var(--crm-rule);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  overflow: auto;
+  max-height: calc(100vh - 190px);
+  overscroll-behavior: contain;
+  /* A swipe on a phone now lands on one whole technician/day column instead
+     of stopping half-way between two — the "which one am I even looking at"
+     problem a plain scroll leaves you with on a narrow screen. */
+  scroll-snap-type: x proximity;
+}
+
+.gutter {
+  background: var(--crm-panel);
+  min-width: 52px;
+  /* Pinned through the horizontal scroll too, or swiping past the first
+     column loses the one thing every other column needs — what hour it is. */
+  position: sticky;
+  left: 0;
+  z-index: 7;
+}
+
+.gutterHead {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  height: 44px;
+  background: var(--crm-sunk);
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.gutterHour {
+  box-sizing: border-box;
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 3px 8px 0 0;
+}
+
+.track {
+  position: relative;
+  background: var(--crm-panel);
+  scroll-snap-align: start;
+}
+
+.trackHead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  /* Matches .gutterHead exactly (same content-box height, same border-bottom)
+     so the hour lines in every track start at the same pixel as the labels. */
+  height: 44px;
+  padding: 0 10px;
+  background: var(--crm-sunk);
+  border-bottom: 1px solid var(--crm-rule);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trackBody {
+  position: relative;
+  /*
+   * Hour lines drawn once as a background rather than 24 divider elements per
+   * column — the same visual result, and it scrolls as one paint instead of
+   * many.
+   */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--crm-rule) 0,
+    var(--crm-rule) 1px,
+    transparent 1px,
+    transparent var(--hour-h)
+  );
+}
+
+.slotClick {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: block;
+}
+
+.slotClick:hover {
+  background: var(--crm-sunk);
+}
+
+.event {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  overflow: hidden;
+  border-radius: var(--crm-r-sm);
+  border-left: 3px solid var(--crm-rule2);
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  text-decoration: none;
+  padding: 3px 7px;
+  font-size: 11.5px;
+  line-height: 1.3;
+}
+
+.event:hover {
+  outline: 1px solid var(--crm-ink);
+  z-index: 8;
+}
+
+.eventUnassigned {
+  border-left-color: var(--crm-stop);
+}
+
+.eventTime {
+  font-weight: 700;
+  color: var(--crm-ink);
+  font-variant-numeric: tabular-nums;
+  display: block;
+}
+
+.eventCar {
+  display: block;
+  color: var(--crm-accent-hover);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eventLine {
+  display: block;
+  color: var(--crm-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nowLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 2px solid var(--crm-stop);
+  z-index: 9;
+}
+
+.nowLine::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--crm-stop);
+}
+
+.dayHeadToday {
+  box-shadow: inset 0 -2px 0 var(--crm-accent);
+}
+
+/* ---- Empty ---- */
+
+.empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--crm-muted);
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+}
+
+.warning {
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+  border: 1px solid currentColor;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.link {
+  color: var(--crm-accent);
+}
+
+/* ---- Planner ---- */
+
+.planWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .planWrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The name and the action row (App, login, activate) no longer fit on one
+     line at this width — .suggestionActions drops to its own full-width row
+     instead of overflowing off the right edge. */
+  .suggestion {
+    flex-wrap: wrap;
+  }
+
+  .suggestionActions {
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.panel {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: 16px;
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--crm-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--crm-muted);
+}
+
+.control {
+  padding: 0 10px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13.5px;
+  height: 34px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.control:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.summaryKey {
+  color: var(--crm-muted);
+}
+
+.summaryVal {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.suggestion {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 10px;
+  margin-bottom: 6px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestionActive {
+  border-color: var(--crm-accent);
+  box-shadow: inset 3px 0 0 var(--crm-accent);
+}
+
+.suggestionName {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.suggestionWhy {
+  display: block;
+  color: var(--crm-muted);
+  font-size: 11px;
+}
+
+.suggestionActions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.regionTag {
+  margin-left: auto;
+  padding: 1px 6px;
+  border-radius: var(--crm-r-sm);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
+  border: 1px solid currentColor;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--crm-r);
+  background: var(--crm-ink);
+  color: #0a0a0a;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.secondary {
+  height: 36px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  color: var(--crm-text);
+  background: var(--crm-panel);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.error {
+  flex-basis: 100%;
+  color: var(--crm-stop);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.note {
+  color: var(--crm-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 10px 0 0;
+}

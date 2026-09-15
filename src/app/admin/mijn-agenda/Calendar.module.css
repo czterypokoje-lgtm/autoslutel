@@ -1,0 +1,331 @@
+.calendarContainer {
+  display: flex;
+  background-color: var(--crm-panel);
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--crm-ink);
+}
+
+.sidebar {
+  width: 280px;
+  background: var(--crm-panel);
+  padding: 1.5rem;
+  border-right: 1px solid var(--crm-rule);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sidebarTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--crm-ink);
+}
+
+.miniCalendar {
+  background: var(--crm-panel);
+  border-radius: var(--crm-r-lg);
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--crm-rule);
+}
+
+.miniCalendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.miniGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.miniDayHeader {
+  color: var(--crm-muted);
+  margin-bottom: 0.5rem;
+}
+
+.miniDay {
+  padding: 0.25rem;
+  border-radius: var(--crm-r-sm);
+  cursor: pointer;
+}
+
+.miniDayActive {
+  background: var(--crm-steel);
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filterHeader {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--crm-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+/*
+ * Named after the real job statuses (gepland/onderweg/bezig/afgerond/
+ * geannuleerd) rather than a generic inquiry/confirmed/closed set that never
+ * matched them — every status badge fell back to the same orange regardless
+ * of what the job actually was.
+ */
+.badge_gepland { color: var(--crm-steel); border-color: var(--crm-steel); background: var(--crm-steel-bg); }
+.badge_onderweg,
+.badge_bezig { color: var(--crm-warn); border-color: var(--crm-warn); background: var(--crm-warn-bg); }
+.badge_afgerond { color: var(--crm-ok); border-color: var(--crm-ok); background: var(--crm-ok-bg); }
+.badge_geannuleerd { color: var(--crm-muted); border-color: var(--crm-rule2); background: var(--crm-sunk); }
+
+.main {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.topBarLeft h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--crm-ink);
+}
+
+.topBarRight {
+  display: flex;
+  gap: 1rem;
+}
+
+.buttonGroup {
+  display: flex;
+  background: var(--crm-panel);
+  border-radius: var(--crm-r);
+  border: 1px solid var(--crm-rule);
+  overflow: hidden;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: var(--crm-muted);
+  cursor: pointer;
+}
+
+.buttonActive {
+  background: var(--crm-steel-bg);
+  color: var(--crm-steel);
+}
+
+.outlinedButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calendarGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 40px repeat(7, 1fr);
+  grid-template-rows: 40px repeat(5, 1fr);
+  gap: 1px;
+  background: var(--crm-rule);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  overflow: hidden;
+}
+
+.weekHeader {
+  background: var(--crm-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--crm-muted);
+}
+
+.weekNumber {
+  background: var(--crm-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--crm-muted);
+}
+
+.dayCell {
+  background: var(--crm-panel);
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.dayCellActive {
+  background: var(--crm-steel-bg);
+}
+
+.dayHeader {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.875rem;
+  color: var(--crm-muted);
+  margin-bottom: 0.5rem;
+}
+
+.dayHeaderCurrent {
+  color: var(--crm-steel);
+  font-weight: 600;
+  background: var(--crm-steel);
+  color: var(--crm-ink);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dayContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.statRow {
+  font-size: 0.75rem;
+  color: var(--crm-muted);
+  margin-top: 0.25rem;
+}
+
+.statValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--crm-steel);
+}
+
+.jobList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: auto;
+  overflow-y: auto;
+  max-height: 80px;
+}
+
+.jobChip {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.25rem;
+  border-radius: var(--crm-r-sm);
+  font-size: 0.65rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  border-left: 3px solid var(--crm-rule2);
+  background: var(--crm-panel);
+  color: var(--crm-text);
+}
+.jobChip:hover {
+  filter: brightness(0.95);
+}
+
+.jobTime {
+  color: var(--crm-muted);
+  font-weight: 600;
+}
+
+.jobDesc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jobChip_gepland { border-left-color: var(--crm-warn); }
+.jobChip_onderweg { border-left-color: var(--crm-steel); }
+.jobChip_bezig { border-left-color: var(--crm-data-4); }
+.jobChip_afgerond { border-left-color: var(--crm-ok); }
+.jobChip_geannuleerd { border-left-color: var(--crm-stop); }
+
+.dayFooter {
+  margin-top: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--crm-rule);
+}
+
+/*
+ * Phone width. The 40px-plus-seven-columns month grid has no room to shrink
+ * into — before this, a phone either forced the page to scroll sideways to
+ * reach it, or squeezed it down to unreadable slivers, while the 280px
+ * sidebar took most of the screen either way. Below this width the sidebar
+ * *is* the app: a month picker plus the selected day's jobs, full width,
+ * which is the whole reason a technician opens this page from their van.
+ * The dense month grid is a planning view for a desk, not a phone.
+ */
+@media (max-width: 860px) {
+  .calendarContainer {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    box-sizing: border-box;
+    border-right: none;
+    border-bottom: 1px solid var(--crm-rule);
+    padding: 1rem;
+  }
+
+  .main {
+    display: none;
+  }
+}

@@ -1,0 +1,295 @@
+/*
+ * On screen this sheet sits inside the CRM's dark shell, same as any other
+ * admin page. On paper — printed, or "Save as PDF" from the button below —
+ * the sidebar and tab bar have no reason to exist, so they are hidden by
+ * element rather than by the shell's own (CSS-module-hashed, unreachable
+ * from here) class names.
+ */
+@media print {
+  :global(aside),
+  :global(nav[aria-label='Snelmenu']) {
+    display: none !important;
+  }
+}
+
+.page {
+  background: #f3f4f6;
+  min-height: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.bar {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back {
+  color: #374151;
+  font-size: 13.5px;
+  text-decoration: none;
+}
+.back:hover {
+  text-decoration: underline;
+}
+
+.barRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statusError {
+  color: #b91c1c;
+  font-size: 12.5px;
+}
+
+.statusSelect {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #111827;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.status_concept {
+  background: #f3f4f6;
+  color: #4b5563;
+  border-color: #d1d5db;
+}
+.status_verzonden {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+}
+.status_betaald {
+  background: #d1fae5;
+  color: #065f46;
+  border-color: #6ee7b7;
+}
+
+.editBtn {
+  height: 38px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  font-weight: 600;
+  font-size: 13.5px;
+  text-decoration: none;
+}
+.editBtn:hover {
+  background: #f3f4f6;
+}
+
+.printBtn {
+  height: 38px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: none;
+  background: #b93c20;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.printBtn:hover {
+  background: #9a3016;
+}
+
+@media print {
+  .page {
+    background: #fff;
+    padding: 0;
+  }
+  .bar {
+    display: none;
+  }
+}
+
+/* ── the sheet itself ────────────────────────────────────────────────── */
+
+.sheet {
+  width: 100%;
+  max-width: 860px;
+  background: #fff;
+  color: #111827;
+  padding: 56px 64px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+@media print {
+  .sheet {
+    box-shadow: none;
+    padding: 24px 0;
+    max-width: none;
+  }
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 48px;
+}
+
+.logo {
+  height: 56px;
+  width: auto;
+}
+
+.topRight {
+  text-align: right;
+}
+
+.h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: #111827;
+}
+
+.issueDate {
+  margin: 0;
+  font-size: 13.5px;
+  color: #6b7280;
+}
+.issueDate strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+.parties {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.party,
+.partyRight {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #374151;
+}
+.party {
+  text-align: left;
+}
+.partyRight {
+  text-align: right;
+}
+
+.partyName {
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 2px;
+}
+
+.partyGap {
+  margin-top: 8px;
+}
+
+.dim {
+  color: #6b7280;
+}
+
+/* ── line items ──────────────────────────────────────────────────────── */
+
+.lines {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 32px;
+  font-size: 13.5px;
+}
+
+.lines thead th {
+  text-align: right;
+  padding: 0 0 10px;
+  color: #6b7280;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.lines tbody td {
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+  color: #111827;
+  text-align: right;
+  vertical-align: top;
+}
+
+.left {
+  text-align: left !important;
+}
+.right {
+  text-align: right;
+}
+
+/* ── totals ──────────────────────────────────────────────────────────── */
+
+.totalsRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.notes {
+  flex: 1;
+  font-size: 13px;
+  color: #6b7280;
+  white-space: pre-wrap;
+}
+
+.totals {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.total,
+.totalRuled,
+.totalFinal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: #374151;
+}
+
+.totalRuled {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.totalFinal {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  padding-top: 4px;
+}
+
+.paidNote {
+  text-align: right;
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #16a34a;
+}

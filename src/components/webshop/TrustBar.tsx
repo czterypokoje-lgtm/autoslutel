@@ -1,5 +1,15 @@
 import React from 'react';
 
+/*
+ * Two claims here were not ours to make.
+ *
+ * "OEM Kwaliteit gegarandeerd" sat above a catalogue in which all 944 products
+ * are aftermarket — A-Key's own listings say so, and several add "Kein
+ * Renault-Originalschlüssel" in as many words. And "Voor 23:59 besteld, morgen
+ * in huis" promised next-day delivery on stock we order in from Germany at 2-3
+ * working days; the webshop menu was meanwhile promising two days, so the same
+ * visitor was told two different things on one screen.
+ */
 export default function TrustBar() {
   return (
     <div className="webshop-trust-bar">
@@ -8,7 +18,7 @@ export default function TrustBar() {
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
           <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-        OEM Kwaliteit gegarandeerd
+        Aftermarket onderdelen — geen dealerprijzen
       </div>
       <div className="webshop-trust-item">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -30,7 +40,7 @@ export default function TrustBar() {
           <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
           <line x1="12" y1="22.08" x2="12" y2="12"></line>
         </svg>
-        Voor 23:59 besteld, morgen in huis
+        Levertijd 2 - 3 werkdagen
       </div>
     </div>
   );

@@ -38,12 +38,37 @@ declare global {
   }
 }
 
+/**
+ * The choice as recorded in the cookie: "10" is statistics yes, marketing no.
+ *
+ * The fallback for every device where localStorage is not available. It
+ * carries no timestamp — the cookie's own max-age is what expires it.
+ */
+function readConsentCookie(): ConsentState | null {
+  if (typeof document === 'undefined') return null;
+
+  const raw = document.cookie
+    .split('; ')
+    .find((c) => c.startsWith(`${CONSENT_COOKIE}=`))
+    ?.slice(CONSENT_COOKIE.length + 1);
+
+  const value = raw ? decodeURIComponent(raw) : '';
+  if (!/^[01]{2}$/.test(value)) return null;
+
+  return {
+    version: CONSENT_VERSION,
+    at: new Date().toISOString(),
+    statistics: value[0] === '1',
+    marketing: value[1] === '1',
+  };
+}
+
 /** Reads the stored choice, or null when the visitor has not decided yet. */
 export function readConsent(): ConsentState | null {
   if (typeof window === 'undefined') return null;
   try {
     const raw = window.localStorage.getItem(CONSENT_KEY);
-    if (!raw) return null;
+    if (!raw) return readConsentCookie();
     const parsed = JSON.parse(raw) as ConsentState;
 
     // A record from an older wording is not consent for the current one.
@@ -55,8 +80,8 @@ export function readConsent(): ConsentState | null {
 
     return parsed;
   } catch {
-    // Private mode, blocked storage, corrupt JSON — treat as "not decided".
-    return null;
+    // Private mode, blocked storage, corrupt JSON — try the cookie instead.
+    return readConsentCookie();
   }
 }
 
@@ -67,14 +92,28 @@ export function writeConsent(choice: { statistics: boolean; marketing: boolean }
     statistics: choice.statistics,
     marketing: choice.marketing,
   };
+  /*
+   * The cookie is written first, and separately.
+   *
+   * These used to share one try block with localStorage first, so on a device
+   * where localStorage throws — Safari in private browsing, or storage blocked
+   * for an insecure origin — the write failed before the cookie line ran and
+   * nothing was recorded at all. The banner then came back on every single
+   * page load, with no way for the visitor to ever get rid of it.
+   */
   try {
-    window.localStorage.setItem(CONSENT_KEY, JSON.stringify(state));
     const maxAge = CONSENT_MAX_AGE_DAYS * 24 * 60 * 60;
     document.cookie = `${CONSENT_COOKIE}=${encodeURIComponent(
       `${state.statistics ? 1 : 0}${state.marketing ? 1 : 0}`
     )};path=/;max-age=${maxAge};SameSite=Lax`;
   } catch {
-    // Storage unavailable — the choice still applies for this page view.
+    // Cookies blocked as well; the choice still applies for this page view.
+  }
+
+  try {
+    window.localStorage.setItem(CONSENT_KEY, JSON.stringify(state));
+  } catch {
+    // Storage unavailable — the cookie above is the record.
   }
   applyConsent(state);
   notifyConsentChanged();

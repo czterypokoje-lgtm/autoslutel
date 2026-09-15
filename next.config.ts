@@ -16,6 +16,33 @@ const brandRedirects = brands.map(brand => ({
 }));
 
 const nextConfig: NextConfig = {
+  /*
+   * pdf-parse pulls in @napi-rs/canvas, a native compiled binary — the class
+   * of dependency Next's bundler cannot package into a serverless function
+   * correctly. Left un-configured, the invoice route builds fine, deploys
+   * fine, and then silently returns empty text on every real request: the
+   * failure is caught (route.ts) and logged as a warning, not thrown, so it
+   * never shows up as an error, only as "0 regel(s)" on every invoice. This
+   * tells Next to require these straight from node_modules in the deployed
+   * function instead of bundling them, which is where the platform's own
+   * install step already put the correct native binary.
+   */
+  serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'xlsx'],
+  /*
+   * The third layer of the same problem. pdfjs-dist loads its worker script
+   * with a dynamically computed path — "Setting up fake worker failed:
+   * Cannot find module '/var/task/node_modules/pdfjs-dist/legacy/build/
+   * pdf.worker.mjs'" — and Vercel's own file-tracing step (separate from
+   * Next's bundler, and unaffected by serverExternalPackages) only copies
+   * node_modules files it can see referenced by a static import. A
+   * dynamically-built path is invisible to it, so the worker file — needed
+   * only at runtime, never imported by name anywhere in this codebase —
+   * never made it into the deployed function. This forces it in regardless
+   * of what the tracer's static analysis finds.
+   */
+  outputFileTracingIncludes: {
+    '/api/admin/invoice': ['./node_modules/pdfjs-dist/**/*.mjs', './node_modules/pdf-parse/dist/**/*'],
+  },
   images: {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',

@@ -30,6 +30,10 @@ export interface CatalogProduct {
   buttons: number | null;
   frequency: string | null;
   chip: string | null;
+  /** Key blade profile, e.g. VA2 / VA6 — A-Key's "Schlüsselbart". */
+  blade: string | null;
+  /** Slug of the battery this key takes, when the supplier names one. */
+  battery?: string | null;
   costPrice: number | null;
   image: string | null;
   images: string[];
@@ -46,6 +50,29 @@ export interface CatalogProduct {
   /** Self-contained answer for featured snippets and LLM citation. */
   directAnswer: string;
   metaDescriptionNl: string;
+
+  /** Label/value pairs derived from the supplier data: chip, frequency, … */
+  specs?: [string, string][];
+  /** The fitment list exactly as the supplier states it, for display. */
+  vehiclesRaw?: string | null;
+  /** The article the supplier says supersedes this one. */
+  replacedBy?: string | null;
+  /**
+   * Lines of the supplier's own description that did not translate cleanly.
+   * Shown as their German original rather than half in Dutch.
+   */
+  supplierNote?: string[] | null;
+  /**
+   * The description in sections: an intro, the vehicles grouped by make, and
+   * the chips. One paragraph of eleven lines is not something anyone reads.
+   */
+  content?: {
+    intro: string[];
+    vehicles: { make: string; note: string | null; models: string[] }[];
+    chips: string[];
+  } | null;
+  /** The supplier's own article code, when their export carries one. */
+  articleCode?: string | null;
 }
 
 const catalog = catalogJson as unknown as {
@@ -132,6 +159,25 @@ export function formatPrice(value: number | null): string {
   return `€${value.toFixed(2).replace('.', ',')}`;
 }
 
+/*
+ * Real orderings only. "Nieuwste" is deliberately absent — nothing in the
+ * catalogue records when a product was added, so there is no honest way to
+ * answer "newest first" yet.
+ */
+export type SortKey = 'prijs-oplopend' | 'prijs-aflopend' | 'naam';
+
+export function sortProducts<T extends CatalogProduct>(products: T[], sort?: SortKey): T[] {
+  if (!sort) return products;
+  const priceOf = (p: T) => shelfPrice(p.costPrice) ?? Number.POSITIVE_INFINITY;
+  const sorted = [...products];
+  if (sort === 'prijs-oplopend') sorted.sort((a, b) => priceOf(a) - priceOf(b));
+  else if (sort === 'prijs-aflopend') sorted.sort((a, b) => priceOf(b) - priceOf(a));
+  else if (sort === 'naam') {
+    sorted.sort((a, b) => (a.titleNl || a.title).localeCompare(b.titleNl || b.title, 'nl'));
+  }
+  return sorted;
+}
+
 /* ── filtering ────────────────────────────────────────────────────────── */
 
 export interface Filters {
@@ -142,6 +188,13 @@ export interface Filters {
   condition?: string;
   buttons?: number;
   frequency?: string;
+  /*
+   * Frequency and transponder are the two answers that decide whether a key
+   * can work at all. A customer who has read them off their old key wants to
+   * narrow to them directly, not scroll a category.
+   */
+  chip?: string;
+  blade?: string;
   maxPrice?: number;
   /** Free-text, matched against title and fitment. */
   q?: string;
@@ -155,28 +208,29 @@ function matches(p: CatalogProduct, f: Filters): boolean {
   if (f.condition && p.condition?.toLowerCase() !== f.condition.toLowerCase()) return false;
   if (f.buttons && p.buttons !== f.buttons) return false;
   if (f.frequency && p.frequency?.toLowerCase() !== f.frequency.toLowerCase()) return false;
+  if (f.chip && p.chip?.toLowerCase() !== f.chip.toLowerCase()) return false;
+  if (f.blade && p.blade?.toLowerCase() !== f.blade.toLowerCase()) return false;
   if (f.maxPrice != null) {
     const price = shelfPrice(p.costPrice);
     if (price == null || price > f.maxPrice) return false;
   }
   if (f.q) {
     const needle = f.q.toLowerCase();
-    const hay = `${p.title} ${p.fitment.map((x) => `${x.make} ${x.model}`).join(' ')}`.toLowerCase();
+    const hay = `${p.titleNl} ${p.title} ${p.articleCode ?? ''} ${p.fitment
+      .map((x) => `${x.make} ${x.model}`)
+      .join(' ')}`.toLowerCase();
     if (!hay.includes(needle)) return false;
   }
   return true;
 }
 
-export function filterProducts(
-  products: CatalogProduct[],
-  filters: Filters
-): CatalogProduct[] {
+export function filterProducts<T extends CatalogProduct>(products: T[], filters: Filters): T[] {
   return products.filter((p) => matches(p, filters));
 }
 
 export type FacetKey =
   | 'category' | 'subcategory' | 'make'
-  | 'manufacturer' | 'condition' | 'buttons' | 'frequency';
+  | 'manufacturer' | 'condition' | 'buttons' | 'frequency' | 'chip' | 'blade';
 
 export interface FacetOption {
   value: string;
@@ -185,6 +239,19 @@ export interface FacetOption {
 }
 
 const LABELS: Record<string, string> = {
+  'sleutel zonder startonderbreker': 'Sleutel zonder startonderbreker',
+  'transpondersleutel': 'Transpondersleutel',
+  'microtaster & antenne': 'Microtaster & antenne',
+  'KeyDIY universal': 'KeyDIY universeel',
+  'Xhorse universal': 'Xhorse universeel',
+  'Autel universal': 'Autel universeel',
+  'IEA universal': 'IEA universeel',
+  printplaten: 'Printplaten (PCB)',
+  noodsleutels: 'Noodsleutels',
+  'universal-remotes': 'Universele sleutels',
+  diensten: 'Diensten',
+  'overige-sleutels': 'Overige sleutels',
+  motorsleutels: 'Motorsleutels',
   afstandsbedieningen: 'Afstandsbedieningen',
   'smart-keys': 'Smart keys / keyless',
   sleutelbaarden: 'Sleutelbaarden',
@@ -192,6 +259,12 @@ const LABELS: Record<string, string> = {
   transponders: 'Transponders',
   batterijen: 'Batterijen',
   sloten: 'Sloten & cilinders',
+  woningsleutels: 'Woning- & bedrijfssleutels',
+  'sleutels-zonder-chip': 'Sleutels zonder startonderbreker',
+  transpondersleutels: 'Transpondersleutels',
+  programmeerapparatuur: 'Programmeerapparatuur',
+  'frezen-en-tasters': 'Frezen & tasters',
+  sleutelmachines: 'Sleutelmachines',
   accessoires: 'Accessoires',
   gereedschap: 'Gereedschap',
   genuine: 'Origineel',
@@ -201,7 +274,10 @@ const LABELS: Record<string, string> = {
 
 export const facetLabel = (key: FacetKey, value: string): string => {
   if (key === 'buttons') return `${value} knoppen`;
-  return LABELS[value] ?? value;
+  if (key === 'chip' || key === 'blade') return value;
+  // Subcategories are stored as the plain Dutch word ("cilindersleutel") so
+  // the catalogue stays readable; a filter label starts with a capital.
+  return LABELS[value] ?? value.charAt(0).toUpperCase() + value.slice(1);
 };
 
 /** Reads the value(s) a product contributes to a given facet. */

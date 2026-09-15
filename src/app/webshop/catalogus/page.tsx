@@ -5,15 +5,16 @@ import type { Metadata } from 'next';
 import CatalogFilters from '@/components/webshop/CatalogFilters';
 import ProductCardList from '@/components/webshop/ProductCardList';
 import {
-  getProducts,
   filterProducts,
   buildFacets,
   shelfPrice,
-  formatPrice,
   facetLabel,
+  sortProducts,
   type Filters,
   type FacetKey,
+  type SortKey,
 } from '@/lib/catalog';
+import { getShopProducts } from '@/lib/shopCatalog';
 
 /**
  * Faceted catalogue browse page.
@@ -31,11 +32,25 @@ export const metadata: Metadata = {
     'Blader door sleutelbehuizingen, afstandsbedieningen, smart keys, transponders en batterijen. Filter op automerk, type en aantal knoppen.',
 };
 
+/*
+ * Fabrikant sits second, right after the car make.
+ *
+ * It used to be sixth, which was right while the field was empty — 296 of 389
+ * products had no manufacturer at all. Now that Xhorse, KeyDIY, Autel and
+ * Lonsdor are detected, "which brand of universal key" is one of the two
+ * questions a customer actually arrives with.
+ */
 const FACET_ORDER: FacetKey[] = [
-  'make', 'category', 'subcategory', 'buttons', 'condition', 'manufacturer', 'frequency',
+  'make', 'manufacturer', 'category', 'subcategory', 'buttons', 'frequency', 'chip', 'blade',
+  'condition',
 ];
 
+/** Brands worth a one-click entry point of their own. */
+const BRAND_SHORTCUTS = ['Xhorse', 'KeyDIY', 'Autel', 'Lonsdor', 'Silca'];
+
 const PAGE_SIZE = 24;
+
+const SORT_KEYS: SortKey[] = ['prijs-oplopend', 'prijs-aflopend', 'naam'];
 
 function parseFilters(sp: Record<string, string | string[] | undefined>): Filters {
   const one = (k: string) => {
@@ -51,6 +66,8 @@ function parseFilters(sp: Record<string, string | string[] | undefined>): Filter
     condition: one('condition'),
     buttons: buttons ? Number(buttons) : undefined,
     frequency: one('frequency'),
+    chip: one('chip'),
+    blade: one('blade'),
     q: one('q'),
   };
 }
@@ -67,9 +84,21 @@ export default async function CatalogPage({
 
   // Public catalogue only. Trade lines (lock picks, key programmers) are
   // excluded at the data layer, not hidden in the UI.
-  const all = getProducts(isB2B ? 'all' : 'public');
-  const results = filterProducts(all, filters);
+  const all = await getShopProducts(isB2B ? 'all' : 'public');
+  const matched = filterProducts(all, filters);
   const facets = buildFacets(all, filters, FACET_ORDER);
+
+  // In-stock and sort are display ordering/narrowing on top of the real
+  // filters, not facets themselves — kept out of Filters/matches() since
+  // `inStock` only exists on the shop's own ShopProduct, not the base
+  // CatalogProduct every other facet operates on.
+  const onlyInStockRaw = Array.isArray(sp.inStock) ? sp.inStock[0] : sp.inStock;
+  const onlyInStock = onlyInStockRaw === '1';
+  const sortRaw = Array.isArray(sp.sort) ? sp.sort[0] : sp.sort;
+  const sort = SORT_KEYS.find((s) => s === sortRaw);
+
+  const narrowed = onlyInStock ? matched.filter((p) => p.inStock) : matched;
+  const results = sortProducts(narrowed, sort);
 
   const page = Math.max(1, Number(Array.isArray(sp.page) ? sp.page[0] : sp.page) || 1);
   const pageItems = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -96,14 +125,38 @@ export default async function CatalogPage({
         Filter op automerk en type — of laat onze monteur het hele werk doen.
       </p>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 260px) minmax(0, 1fr)',
-          gap: '1.75rem',
-          alignItems: 'start',
-        }}
-      >
+      {/*
+        * Brand shortcuts. The universal keys here are made by a handful of
+        * brands, and a customer who owns a Xhorse tool wants that brand's
+        * blanks — not every remote that fits their car.
+        */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', marginBottom: '1.25rem' }}>
+        {BRAND_SHORTCUTS.filter((b) =>
+          (facets.manufacturer ?? []).some((o) => o.value === b)
+        ).map((brand) => {
+          const active = filters.manufacturer === brand;
+          const count = (facets.manufacturer ?? []).find((o) => o.value === brand)?.count ?? 0;
+          return (
+            <Link
+              key={brand}
+              href={active ? '/webshop/catalogus' : `/webshop/catalogus?manufacturer=${encodeURIComponent(brand)}`}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                padding: '.45rem .85rem', borderRadius: 999,
+                border: `1px solid ${active ? '#c2410c' : '#cbd5e1'}`,
+                background: active ? '#fff7ed' : '#fff',
+                color: active ? '#c2410c' : '#0f172a',
+                fontSize: '.85rem', fontWeight: 700, textDecoration: 'none',
+              }}
+            >
+              {brand}
+              <span style={{ color: '#64748b', fontWeight: 500 }}>{count}</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className="shop-catalog-grid">
         <Suspense fallback={<div />}>
           <CatalogFilters facets={facets} order={FACET_ORDER} resultCount={results.length} />
         </Suspense>
@@ -129,18 +182,19 @@ export default async function CatalogPage({
               </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="shop-catalog-list">
               {pageItems.map((p) => {
                 const price = shelfPrice(p.costPrice);
                 return (
                   <ProductCardList
-                    key={p.id}
-                    id={p.id}
+                    key={p.slug}
                     slug={p.slug}
                     title={p.titleNl || p.title}
+                    subtitle={p.directAnswer}
+                    specs={p.specs}
                     category={p.category ? facetLabel('category', p.category) : 'Onderdeel'}
                     price={price ? price.toFixed(2) : '0.00'}
-                    img={p.image || '/images/placeholder.png'}
+                    img={p.image || '/images/product-placeholder.svg'}
                   />
                 );
               })}

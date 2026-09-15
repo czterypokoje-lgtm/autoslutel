@@ -57,7 +57,18 @@ export default function ConsentBanner() {
     return () => window.removeEventListener(OPEN_PREFERENCES_EVENT, reopen);
   }, [stored]);
 
-  const open = reopened || stored === null;
+  /*
+   * A way to get the banner out of the way while testing on a phone.
+   *
+   * Set NEXT_PUBLIC_HIDE_CONSENT=1 in .env.local. It is checked together with
+   * NODE_ENV, so it cannot silently switch the banner off on the live site —
+   * running without a consent banner is not a styling choice, it is a breach
+   * of the Telecommunicatiewet art. 11.7a.
+   */
+  const hiddenForDev =
+    process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_HIDE_CONSENT === '1';
+
+  const open = !hiddenForDev && (reopened || stored === null);
 
   const save = useCallback((choice: { statistics: boolean; marketing: boolean }) => {
     // writeConsent notifies the store, which flips `stored` away from null.
@@ -112,8 +123,10 @@ export default function ConsentBanner() {
               <span className={styles.optionBody}>
                 <span className={styles.optionName}>Statistieken</span>
                 <span className={styles.optionDesc}>
-                  Google Analytics en Microsoft Clarity. Helpt ons te zien welke
-                  pagina&apos;s werken. Clarity maakt opnames van websessies.
+                  Google Analytics en Microsoft Clarity. Laat ons zien welke
+                  pagina&apos;s goed werken. Microsoft Clarity maakt daarbij
+                  opnames van websessies (muisbewegingen, klikken en
+                  scrollgedrag).
                 </span>
               </span>
             </label>

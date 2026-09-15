@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import CheckoutForm from '@/components/webshop/CheckoutForm';
 import { getProducts } from '@/lib/catalog';
+import PaymentMethods from '@/components/webshop/PaymentMethods';
 
 export const metadata: Metadata = {
   title: { absolute: 'Afrekenen | Autosleutel24' },
@@ -18,7 +19,7 @@ export default function CheckoutPage() {
       <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', marginBottom: '1.5rem' }}>
         Afrekenen
       </h1>
-      <CheckoutForm products={slim} />
+      <CheckoutForm products={slim} paymentStrip={<PaymentMethods compact />} />
     </div>
   );
 }

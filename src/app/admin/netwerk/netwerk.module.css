@@ -1,0 +1,262 @@
+/*
+ * `height: 100vh` here was the bug: this box is nested inside <main>, not
+ * the viewport, and `.main` already sits inside the CRM shell with its own
+ * padding and (on mobile) a sticky top bar above it. A hard 100vh ignored
+ * all of that and claimed a full screen's height on top of the space
+ * already taken — the excess spilled past the bottom of the real viewport,
+ * exposing the page's own background (the webshop's light theme, not the
+ * CRM's dark one) in the gap. `height: 100%` fills exactly what `.main`'s
+ * content box actually has, no more.
+ *
+ * The negative margins then bleed past that same padding on every side —
+ * a chat reading as boxed-in with 30px of margin around it doesn't read as
+ * an app, it reads as a form. `height`'s `calc()` grows by the same amount
+ * the margins pull out, so the box still exactly fills the space it bled
+ * into instead of falling short of it.
+ */
+.layout {
+  display: flex;
+  height: calc(100% + 86px);
+  min-height: 0;
+  margin: -26px -30px -60px;
+  overflow: hidden;
+  background-color: var(--crm-surface);
+}
+
+/* Desktop: an ordinary flex row, identical to before this existed. */
+.sidebars {
+  display: flex;
+}
+
+.mobileMenuBtn,
+.backdrop,
+.drawerClose {
+  display: none;
+}
+
+.serversSidebar {
+  width: 72px;
+  background-color: var(--crm-surface-dark, var(--crm-bg));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 12px;
+  gap: 8px;
+  border-right: 1px solid var(--crm-rule);
+}
+
+.serverBubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: var(--crm-surface-hover, var(--crm-panel));
+  color: var(--crm-text, var(--crm-text));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-radius 0.2s, background-color 0.2s;
+}
+
+.serverBubble:hover {
+  border-radius: var(--crm-r-lg);
+  background-color: var(--crm-accent, var(--crm-steel));
+  color: var(--crm-ink);
+}
+
+.channelsSidebar {
+  width: 240px;
+  background-color: var(--crm-surface-secondary, var(--crm-sidebar));
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--crm-rule);
+}
+
+.serverHeader {
+  height: 48px;
+  padding: 12px 16px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--crm-rule);
+  color: var(--crm-text-strong, var(--crm-ink));
+}
+
+.channelList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.channelGroup {
+  margin-bottom: 16px;
+}
+
+.groupTitle {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--crm-text-muted, var(--crm-muted));
+  padding: 8px;
+  letter-spacing: 0.02em;
+}
+
+.channelLink {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  color: var(--crm-text, var(--crm-muted));
+  text-decoration: none;
+  border-radius: var(--crm-r-sm);
+  margin-bottom: 2px;
+}
+
+.channelLink:hover {
+  background-color: var(--crm-surface-hover, var(--crm-sunk));
+  color: var(--crm-text-strong, var(--crm-text));
+}
+
+.hash {
+  margin-right: 6px;
+  font-size: 1.2em;
+  color: var(--crm-text-muted, var(--crm-muted));
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--crm-surface, var(--crm-panel));
+}
+
+/* The gear beside the server name, for the office only. */
+.serverHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.headerAction {
+  margin-left: auto;
+  color: var(--crm-muted);
+  display: inline-flex;
+  padding: var(--sp-1);
+  border-radius: var(--crm-r-sm);
+}
+
+.headerAction:hover {
+  color: var(--crm-ink);
+  background: var(--crm-sunk);
+}
+
+/* Which country you are looking at. Without this every bubble looked the same
+   and the second server was indistinguishable from the first. */
+.serverBubbleActive {
+  background: var(--crm-accent);
+  color: #fff;
+}
+
+/*
+ * Phone width: 72px + 240px of fixed sidebar left ~60px for the chat itself.
+ * Below this, both sidebars become one slide-in drawer behind a hamburger —
+ * pick a channel and the drawer closes, the conversation gets the screen.
+ */
+@media (max-width: 860px) {
+  /* .main's own padding shrinks to 18px/14px/48px below this width
+     (admin.module.css) — the bleed has to match or it either falls short
+     or overshoots past the sidebar. */
+  /*
+   * Bottom is deliberately left alone here, unlike the top and sides: a
+   * monteur's .main reserves extra space below for the tab bar
+   * (.mainWithTabBar in admin.module.css), and that amount isn't a constant
+   * this file can bleed past correctly for every role. Whatever padding
+   * .main leaves at the bottom, the chat keeps — it reads as intentional
+   * breathing room above the tab bar rather than a gap.
+   */
+  .layout {
+    height: calc(100% + 18px);
+    margin: -18px -14px 0;
+  }
+
+  .mobileMenuBtn {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    width: 100%;
+    height: 44px;
+    padding: 0 var(--sp-4);
+    border: none;
+    border-bottom: 1px solid var(--crm-rule);
+    background: var(--crm-sunk);
+    color: var(--crm-ink);
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .mobileMenuLabel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .layout {
+    flex-direction: column;
+  }
+
+  .main {
+    min-width: 0;
+  }
+
+  .sidebars {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 60;
+    width: min(84vw, 320px);
+    /* Same fix as .navDrawer in admin.module.css: translate3d + these two
+       force a GPU layer before the slide, not during it — otherwise mobile
+       Safari can paint the drawer's text twice, offset, mid-transition. */
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.2s ease;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .sidebarsOpen {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .drawerClose {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 8px;
+    right: -40px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--crm-panel);
+    color: var(--crm-ink);
+    cursor: pointer;
+  }
+
+  .channelsSidebar {
+    flex: 1;
+    width: auto;
+  }
+}

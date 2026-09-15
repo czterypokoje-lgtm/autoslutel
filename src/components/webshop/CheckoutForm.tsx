@@ -2,7 +2,14 @@
 
 import React, { useState, useSyncExternalStore, useCallback } from 'react';
 import Link from 'next/link';
-import { readCart, priceCart, clearCart, CART_EVENT, SERVICE_LABEL } from '@/lib/cart';
+import {
+  readCart,
+  priceCart,
+  clearCart,
+  CART_EVENT,
+  SERVICE_LABEL,
+  SERVICE_NEEDS,
+} from '@/lib/cart';
 import { formatPrice } from '@/lib/catalog';
 import type { CatalogProduct } from '@/lib/catalog';
 
@@ -16,7 +23,13 @@ function subscribe(cb: () => void) {
   return () => window.removeEventListener(CART_EVENT, h);
 }
 function snapshot() { if (!loaded) { cache = readCart(); loaded = true; } return cache; }
-const serverSnapshot = () => [] as ReturnType<typeof readCart>;
+/*
+ * The same array every call. A fresh `[]` each time makes React think the
+ * store changed on every render — the "getServerSnapshot should be cached"
+ * loop, which on a phone reads as a page that never settles.
+ */
+const EMPTY: ReturnType<typeof readCart> = [];
+const serverSnapshot = () => EMPTY;
 
 /**
  * Checkout.
@@ -27,7 +40,14 @@ const serverSnapshot = () => [] as ReturnType<typeof readCart>;
  * The totals shown here are recalculated on the server before the payment is
  * created; nothing the browser sends can change what is charged.
  */
-export default function CheckoutForm({ products }: { products: Slim[] }) {
+export default function CheckoutForm({
+  products,
+  paymentStrip,
+}: {
+  products: Slim[];
+  /** Rendered on the server — the icon list reads the filesystem. */
+  paymentStrip?: React.ReactNode;
+}) {
   const lines = useSyncExternalStore(subscribe, snapshot, serverSnapshot);
 
   const lookup = useCallback(
@@ -39,6 +59,13 @@ export default function CheckoutForm({ products }: { products: Slim[] }) {
   );
   const totals = priceCart(lines, lookup);
   const needsTechnician = totals.lines.some((l) => l.service === 'mobile_tech');
+  /*
+   * Cutting a blade and programming a key both need the vehicle, and both are
+   * refused without proof the car is the customer's. Read from the service
+   * definition so a service added later cannot skip the question.
+   */
+  const needsKenteken = totals.lines.some((l) => SERVICE_NEEDS[l.service].kenteken);
+  const needsOldKey = totals.lines.some((l) => SERVICE_NEEDS[l.service].oldKey);
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -103,7 +130,7 @@ export default function CheckoutForm({ products }: { products: Slim[] }) {
   };
 
   return (
-    <form onSubmit={submit} style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'minmax(0,1fr) minmax(0,320px)', alignItems: 'start' }}>
+    <form onSubmit={submit} className="shop-split-grid">
       <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, padding: '1.25rem', display: 'grid', gap: '.9rem' }}>
         <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>Uw gegevens</h2>
 
@@ -117,13 +144,30 @@ export default function CheckoutForm({ products }: { products: Slim[] }) {
           <label><span style={label}>Plaats *</span><input name="city" required autoComplete="address-level2" style={field} /></label>
         </div>
 
-        {needsTechnician && (
+        {needsKenteken && (
           <div style={{ background: '#fdf6e3', border: '1px solid #f0d9a0', borderRadius: 9, padding: '.9rem 1rem' }}>
             <p style={{ margin: '0 0 .6rem', fontSize: '.87rem', color: '#7a5a06', lineHeight: 1.55 }}>
-              U heeft gekozen voor een monteurbezoek. Wij hebben uw kenteken nodig
-              om de juiste sleutel voor te bereiden.
+              {needsTechnician
+                ? 'U heeft gekozen voor een monteurbezoek. Wij hebben uw kenteken nodig om de juiste sleutel voor te bereiden.'
+                : 'Voor frezen en overzetten hebben wij uw kenteken nodig — daarmee bepalen wij het juiste sleutelprofiel.'}
             </p>
             <label><span style={label}>Kenteken *</span><input name="kenteken" required placeholder="XX-XXX-X" style={{ ...field, textTransform: 'uppercase' }} /></label>
+            <p style={{ margin: '.6rem 0 0', fontSize: '.8rem', color: '#7a5a06', lineHeight: 1.5 }}>
+              Wij werken alleen aan een voertuig als u kunt aantonen dat het van u is. Onze
+              monteur vraagt ter plaatse om een legitimatie; bij opsturen vragen wij een kopie
+              van het kentekenbewijs.
+            </p>
+          </div>
+        )}
+
+        {needsOldKey && (
+          <div style={{ background: '#eef6ff', border: '1px solid #bfdbfe', borderRadius: 9, padding: '.9rem 1rem' }}>
+            <p style={{ margin: 0, fontSize: '.87rem', color: '#1e3a8a', lineHeight: 1.55 }}>
+              <strong>U stuurt uw oude sleutel naar ons op.</strong> Na uw betaling ontvangt u
+              per e-mail het verzendadres en een korte instructie. Wij zetten de elektronica
+              over, frezen de baard en sturen alles binnen twee werkdagen na ontvangst terug —
+              verzekerd en met track &amp; trace.
+            </p>
           </div>
         )}
 
@@ -187,9 +231,12 @@ export default function CheckoutForm({ products }: { products: Slim[] }) {
           {busy ? 'Bezig…' : 'Naar betalen'}
         </button>
 
-        <p style={{ marginTop: '.7rem', fontSize: '.75rem', color: '#64748b', textAlign: 'center' }}>
-          Betalen met iDEAL, creditcard of Bancontact
-        </p>
+        {/*
+          The methods themselves, not a sentence naming three of them. They
+          come from what is switched on at Mollie, so this cannot promise a
+          method the next screen does not offer.
+        */}
+        <div style={{ marginTop: '.9rem' }}>{paymentStrip}</div>
       </aside>
     </form>
   );

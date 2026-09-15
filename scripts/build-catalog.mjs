@@ -1,530 +1,500 @@
 /**
- * Turns the raw supplier export into a structured, filterable catalogue.
+ * The catalogue the shop reads.
  *
- *   node scripts/build-catalog.mjs
- *   src/lib/scraped_products.json  ->  src/lib/catalog.json
+ *   node scripts/scrape-akey-catalog.mjs     every product page, once
+ *   node scripts/scrape-akey-sections.mjs    which shelves each one stands on
+ *   node scripts/classify-akey.mjs           what each one is
+ *   node scripts/build-catalog.mjs           -> src/lib/catalog.json
  *
- * The raw export has one usable text field per product and a `brand` column
- * that is not a car brand at all but the supplier's collection name — which is
- * why the brand filter on the site was showing audio brands from a template.
- * Everything the UI filters on is derived here, once, at build time, so the
- * pages never parse strings at request time.
+ * This step does no deciding. The category was settled in classify-akey.mjs
+ * against A-Key's own filing, and the Dutch copy is composed in
+ * product-copy.mjs from the facts on their page. What is left here is
+ * assembly: price, photo, specification table, and the three companion files
+ * the shop's menu and brand pages read.
  *
- * Two decisions worth knowing about:
- *
- *  - `audience`. Lock picks, decoders and key-programming devices are not
- *    consumer goods: in the Netherlands they sit close to inbrekerswerktuig,
- *    and a locksmith selling car-key programmers to the public undercuts its
- *    own trade. Those products are marked `trade` and are meant to sit behind
- *    a verified-business login, out of the public catalogue and out of any
- *    Merchant Center feed.
- *
- *  - Attribute coverage is deliberately partial. Only ~240 products have a
- *    button count because most of the catalogue is blades, tools and
- *    batteries, which have no buttons. Facets must therefore be contextual:
- *    show a filter only when the current result set actually varies on it.
+ * The rule the whole chain is built on: a field is either something A-Key
+ * states or it is null. Nothing is inferred to fill a gap, because a filled
+ * gap reads exactly like a fact to the customer who acts on it.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs';
+import path from 'path';
+import { CATEGORIES } from './taxonomy.mjs';
+import {
+  fitmentOf,
+  crossReferences,
+  cuttingTools,
+  dutchTitle,
+  descriptionHtml,
+  directAnswer,
+  metaDescription,
+  spellMake,
+  tidyFrequency,
+  tidyChip,
+  buttonCount,
+  buttonLabel,
+  tidyBlade,
+  tidyArticleNumber,
+} from './product-copy.mjs';
+import { translateDescription } from './accessory-copy.mjs';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SRC = join(root, 'src/lib/scraped_products.json');
-const OUT = join(root, 'src/lib/catalog.json');
+const RAW = path.join(process.cwd(), 'src/data/akey-catalog-raw.json');
+const CLASSIFIED = path.join(process.cwd(), 'src/data/akey-classified.json');
+const ACCESSFOBS = path.join(process.cwd(), 'src/data/accessfobs-key-cases.json');
+const KEYCASE_PHOTOS = path.join(process.cwd(), 'src/data/keycase-photos.json');
+const ACCESSFOBS_MATCHES = path.join(process.cwd(), 'src/data/accessfobs-photo-matches.json');
+const IMAGE_DIR = path.join(process.cwd(), 'public/images/products');
 
-/* ── vocabularies ─────────────────────────────────────────────────────── */
+/*
+ * Clean AccessFobs photos swapped in for specific A-Key products whose own
+ * photo carries their watermark — see extract-keycase-photos.mjs and
+ * match-accessfobs-photos.mjs for how these maps are built and, just as
+ * importantly, how conservatively: a wrong photo is worse than a watermarked
+ * one. Only high-confidence matches are ever applied here; keycase-photos.json
+ * carries no confidence field because every one of its matches already
+ * requires a blade match plus make or button agreement.
+ */
+function loadPhotoOverrides() {
+  const overrides = new Map();
+  for (const file of [KEYCASE_PHOTOS, ACCESSFOBS_MATCHES]) {
+    if (!existsSync(file)) continue;
+    const map = JSON.parse(readFileSync(file, 'utf8'));
+    for (const [slug, entry] of Object.entries(map)) {
+      if (entry.confidence && entry.confidence !== 'high') continue;
+      overrides.set(slug, entry.image);
+    }
+  }
+  return overrides;
+}
+const photoOverrides = loadPhotoOverrides();
 
-// Longest first, so "Land Rover" wins over a bare "Rover" inside it.
-const CAR_MAKES = [
-  ['Mercedes-Benz', /\bmercedes(-|\s)?benz\b|\bmercedes\b/i],
-  ['Land Rover', /\bland[\s-]?rover\b|\brange[\s-]?rover\b/i],
-  ['Alfa Romeo', /\balfa[\s-]?romeo\b/i],
-  ['Volkswagen', /\bvolkswagen\b|\bvw\b/i],
-  ['Opel', /\bopel\b|\bvauxhall\b/i], // same cars, NL name is Opel
-  ['Citroën', /\bcitroe?n\b/i],
-  ['BMW', /\bbmw\b/i],
-  ['Audi', /\baudi\b/i],
-  ['Ford', /\bford\b/i],
-  ['Peugeot', /\bpeugeot\b/i],
-  ['Renault', /\brenault\b/i],
-  ['Toyota', /\btoyota\b/i],
-  ['Nissan', /\bnissan\b/i],
-  ['Honda', /\bhonda\b/i],
-  ['Hyundai', /\bhyundai\b/i],
-  ['Kia', /\bkia\b/i],
-  ['Volvo', /\bvolvo\b/i],
-  ['Seat', /\bseat\b/i],
-  ['Škoda', /\bskoda\b|\bškoda\b/i],
-  ['Fiat', /\bfiat\b/i],
-  ['Mazda', /\bmazda\b/i],
-  ['Mitsubishi', /\bmitsubishi\b/i],
-  ['Suzuki', /\bsuzuki\b/i],
-  ['Jaguar', /\bjaguar\b/i],
-  ['Porsche', /\bporsche\b/i],
-  ['Mini', /\bmini\b/i],
-  ['Dacia', /\bdacia\b/i],
-  ['Chevrolet', /\bchevrolet\b|\bdaewoo\b/i],
-  ['Jeep', /\bjeep\b/i],
-  ['Lexus', /\blexus\b/i],
-  ['Subaru', /\bsubaru\b/i],
-  ['Tesla', /\btesla\b/i],
-  ['Chrysler', /\bchrysler\b/i],
-  ['Dodge', /\bdodge\b/i],
-  ['Iveco', /\biveco\b/i],
-  ['Smart', /\bsmart\s?(fortwo|forfour|car)\b/i],
+const OUT = path.join(process.cwd(), 'src/lib/catalog.json');
+const BRANDS_OUT = path.join(process.cwd(), 'src/lib/brands.json');
+const NAV_OUT = path.join(process.cwd(), 'src/lib/navCounts.json');
+const VEHICLES_OUT = path.join(process.cwd(), 'src/lib/vehicleSpecs.json');
+
+for (const file of [RAW, CLASSIFIED]) {
+  if (!existsSync(file)) {
+    console.error(`Missing ${path.relative(process.cwd(), file)} — see the header of this file for the order.`);
+    process.exit(1);
+  }
+}
+
+const raw = JSON.parse(readFileSync(RAW, 'utf8')).products;
+const classification = JSON.parse(readFileSync(CLASSIFIED, 'utf8'));
+
+/* ── photos ──────────────────────────────────────────────────────────────
+ *
+ * The files on disk are named akey_<n>_<hash>[_<i>].jpg, where the hash is the
+ * first eight characters of the md5 of the product page URL. The number in
+ * front is a download sequence and changes between runs, so the hash is the
+ * only stable key — matching on it is what lets a re-scrape keep every photo
+ * already downloaded.
+ *
+ * Two sets are on disk. The suffixed ones (_0, _1) came from A-Key's 320px
+ * variant, which carries no watermark; the unsuffixed ones are the 800px
+ * variant with their logo printed across the middle of the product. The clean
+ * ones win, at the resolution that costs.
+ * ─────────────────────────────────────────────────────────────────────── */
+
+import { createHash } from 'crypto';
+
+const urlHash = (url) => createHash('md5').update(url).digest('hex').slice(0, 8);
+
+const photosByHash = new Map();
+for (const file of readdirSync(IMAGE_DIR)) {
+  const hit = file.match(/^akey_\d+_([0-9a-f]{8})(?:_(\d+))?\.(?:jpg|jpeg|png|webp)$/i);
+  if (!hit) continue;
+  const [, hash, index] = hit;
+  if (!photosByHash.has(hash)) photosByHash.set(hash, { clean: [], watermarked: [] });
+  const entry = photosByHash.get(hash);
+  if (index === undefined) entry.watermarked.push(file);
+  else entry.clean.push({ index: Number(index), file });
+}
+
+/*
+ * The "clean" filename suffix turned out not to be reliable — many
+ * `_<i>`-suffixed files still carry the watermark, and a single product's own
+ * gallery routinely mixes genuinely clean and watermarked photos regardless
+ * of suffix (679 products do). Checked pixel-by-pixel instead, once, by
+ * flag-watermarked-photos.mjs. Filtering happens per product, never across
+ * products — this only ever drops a worse photo of the SAME item in favour of
+ * a better one already downloaded for it, so there is no risk of the wrong
+ * part being shown.
+ */
+const WATERMARK_FLAGS_FILE = path.join(process.cwd(), 'src/data/watermark-flags.json');
+const watermarkFlags = existsSync(WATERMARK_FLAGS_FILE)
+  ? JSON.parse(readFileSync(WATERMARK_FLAGS_FILE, 'utf8'))
+  : {};
+
+function preferUnwatermarked(files) {
+  const clean = files.filter((f) => !watermarkFlags[f]);
+  return clean.length ? clean : files;
+}
+
+function photosFor(product) {
+  const entry = photosByHash.get(urlHash(product.url));
+  if (!entry) return [];
+  if (entry.clean.length) {
+    const ordered = entry.clean.sort((a, b) => a.index - b.index).map((p) => p.file);
+    return preferUnwatermarked(ordered).map((f) => `/images/products/${f}`);
+  }
+  return preferUnwatermarked(entry.watermarked).map((f) => `/images/products/${f}`);
+}
+
+/* ── pricing ─────────────────────────────────────────────────────────── */
+
+/**
+ * A-Key's price is what we pay. The shelf price is set in src/lib/catalog.ts
+ * from this number, so it is stored raw and converted in one place only.
+ *
+ * A cost of exactly 1.00 is their placeholder for "ask us", not a price:
+ * 157 articles carried it, and every one of them would have gone on the shelf
+ * at €2,95 for a part that costs us more than that.
+ */
+const costOf = (price) => (price == null || price === 1 ? null : price);
+
+/* ── the specification table ─────────────────────────────────────────── */
+
+const SPEC_LABELS = [
+  ['Frequentie', (p) => tidyFrequency(p.frequency)],
+  ['Transponder', (p) => tidyChip(p.transponder)],
+  ['Aantal knoppen', (p) => buttonLabel(p.buttons)],
+  ['Sleutelbaard', (p) => tidyBlade(p.blade)],
+  ['Sleutelrohling', (p) => p.blank],
+  ['Printplaat', (p) => p.boardNumber],
+  ['Kleur', (p) => translateColour(p.colour)],
+  ['Materiaal', (p) => translateMaterial(p.material)],
+  ['Artikelnummer', (p) => tidyArticleNumber(p.articleNumber)],
 ];
 
-// The company that made the part, as opposed to the car it fits.
+const COLOURS = {
+  schwarz: 'zwart', weiss: 'wit', weiß: 'wit', silber: 'zilver', grau: 'grijs',
+  blau: 'blauw', rot: 'rood', gelb: 'geel', grün: 'groen', braun: 'bruin',
+  chrom: 'chroom', gold: 'goud', orange: 'oranje', transparent: 'transparant',
+};
+
+const translateColour = (value) => {
+  if (!value) return null;
+  const key = value.trim().toLowerCase();
+  return COLOURS[key] ?? value;
+};
+
+const translateMaterial = (value) => {
+  if (!value) return null;
+  return value
+    .replace(/hochwertiger?\s+Kunststoff/i, 'hoogwaardig kunststof')
+    .replace(/\bKunststoff\b/i, 'kunststof')
+    .replace(/\bMetall\b/i, 'metaal')
+    .replace(/\bMessing\b/i, 'messing')
+    .replace(/\bZink(druckguss)?\b/i, 'zink')
+    .replace(/\bStahl\b/i, 'staal')
+    .replace(/ohne Emblem/i, 'zonder embleem')
+    .replace(/mit Emblem/i, 'met embleem');
+};
+
+const specsFor = (p) =>
+  SPEC_LABELS.map(([label, read]) => [label, read(p)]).filter(([, value]) => value);
+
+/* ── which manufacturer made it ──────────────────────────────────────── */
+
 const MANUFACTURERS = [
-  ['Xhorse', /\bxhorse\b|\bvvdi\b/i],
-  ['KeyDIY', /\bkeydiy\b|\bkd-?x?\d/i],
+  ['Xhorse', /\bxhorse\b|\bvvdi\b|\bx[knsez][a-z]{2}\d/i],
+  ['KeyDIY', /\bkeydiy\b|\bkey ?diy\b|\bkd-?x?\d|\bnb\d{2}\b/i],
+  ['Lonsdor', /\blonsdor\b/i],
   ['Autel', /\bautel\b|\bikey\w+/i],
+  ['OBDSTAR', /\bobdstar\b/i],
+  ['Zed-FULL', /\bzed-?full\b/i],
   ['Silca', /\bsilca\b/i],
-  ['JMA', /\bjma\b/i],
   ['Keyline', /\bkeyline\b/i],
-  ['Lishi', /\blishi\b|\bmr\.?\s?li\b/i],
-  ['KLOM', /\bklom\b/i],
-  ['JMD', /\bjmd\b/i],
-  ['USPRO', /\buspro\b/i],
-  ['NXP', /\bnxp\b/i],
+  ['JMA', /\bjma\b/i],
+  ['Börkey', /\bb[öo]e?rkey\b/i],
+  ['KESA', /\bkesa\b/i],
+  ['A-Key', /\ba[\s-]?key\b/i],
 ];
 
-/* ── classification ───────────────────────────────────────────────────── */
+const manufacturerOf = (text) => MANUFACTURERS.find(([, re]) => re.test(text))?.[0] ?? null;
+
+/* ── audience ────────────────────────────────────────────────────────── */
 
 /**
- * Trade-only. Deliberately broad: a false positive costs a public listing,
- * a false negative puts a lock pick in a consumer basket.
- */
-const TRADE_ONLY = new RegExp(
-  [
-    'lock ?pick', 'picking', 'decoder', 'bump ?key', 'tension tool', 'slim ?jim',
-    'opening tool', 'tryout', 'jiggl', 'programmer', 'programming device',
-    'emulator', 'bypass cable', 'key cutting machine', 'diagnostic tool',
-    'vvdi', 'xhorse', 'keydiy', 'abrites', 'yanhua', 'autel im', 'course',
-    'training', 'lishi', 'mr\\.? ?li', 'klom', 'obdstar', 'immo', 'akl cable',
-    'adapter full kit', 'ecu', 'cluster', 'simulator',
-  ].join('|'),
-  'i'
-);
-
-/** Category, then a narrower subcategory. Order matters — first match wins. */
-const CATEGORIES = [
-  // Tools first — they are gated anyway and their wording is unambiguous.
-  ['gereedschap', 'programmeerapparatuur', /programmer|programming device|emulator|bypass cable|diagnostic|vvdi|xhorse|keydiy|abrites|yanhua|autel im|kd-?x/i],
-  ['gereedschap', 'sleutelmachine', /cutting machine|key machine/i],
-  ['gereedschap', 'opengereedschap', /lock ?pick|picking|decoder|tension|slim ?jim|opening tool|jiggl|klom|lishi|mr\.? ?li/i],
-  // Then the consumer types, narrowest first.
-  ['smart-keys', 'smart key', /smart ?key|keyless|proximity|prox key/i],
-  ['afstandsbedieningen', 'universele afstandsbediening', /universal (remote|key)|\bxk\d|\bxn\d/i],
-  ['afstandsbedieningen', 'afstandsbediening', /\bremote\b|afstandsbediening|key ?fob\b|\bfob\b|flip key/i],
-  ['behuizingen', 'sleutelbehuizing', /\bshell\b|\bcase\b|housing|behuizing|\bcover\b|casing|geh.use/i],
-  ['behuizingen', 'noodsleutel', /notschl.ssel|emergency key|schluesselblatt/i],
-  ['afstandsbedieningen', 'printplaat', /\bpcb\b|platine|board|tasten/i],
-  ['transponders', 'transponder', /transponder|\bid4[68]\b|\bhitag\b|\bpcf7\d+/i],
-  ['batterijen', 'batterij', /\bbatter|\bcr\d{4}\b/i],
-  ['sloten', 'slot & cilinder', /\block\b|\bcylinder\b|ignition|contactslot|barrel|\block set\b/i],
-  ['accessoires', 'accessoire', /keyring|sleutelhanger|pouch|faraday|etui|sticker|\bcable\b/i],
-  // Blades last: "blade" appears in a great many descriptions as a component,
-  // so matching it early swallowed a third of the catalogue.
-  ['sleutelbaarden', 'sleutelbaard', /\bblades?\b|sleutelbaard|key blank|\bblank\b/i],
-];
-
-
-const CONDITIONS = [
-  ['genuine', /\bgenuine\b|\boriginal\b|\bofficial\b/i],
-  ['oem', /\boem\b/i],
-  ['aftermarket', /after ?market|\bcompatible\b|\breplacement\b/i],
-];
-
-/* ── helpers ──────────────────────────────────────────────────────────── */
-
-const slugify = (s) =>
-  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-   .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
-
-const firstMatch = (pairs, hay) => {
-  for (const [value, re] of pairs) if (re.test(hay)) return value;
-  return null;
-};
-
-/** Strips supplier HTML down to plain text so we can search and measure it. */
-const plain = (html) =>
-  (html || '').replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/gi, ' ')
-              .replace(/\s+/g, ' ').trim();
-
-/**
- * Pulls "Hyundai i20 2008-2012" style rows out of the description. Partial by
- * nature — roughly 60% of products carry a year range at all — so anything
- * built on this has to tolerate an empty list.
- */
-function extractFitment(text, productMakes) {
-  const out = [];
-  const push = (make, model, from, to) => {
-    if (!make) return;
-    const key = `${make}|${model}|${from}|${to}`;
-    if (out.some((x) => `${x.make}|${x.model}|${x.from}|${x.to}` === key)) return;
-    if (out.length < 40) out.push({ make, model: model.trim().slice(0, 28), from, to });
-  };
-
-  // "Hyundai i20 2008-2012" — make named right before the model.
-  const withMake = /\b([A-Z][a-zA-Z-]{2,})\s+([A-Za-z0-9][\w '.-]{0,18}?)\s+((?:19|20)\d{2})\s*[-–—]\s*((?:19|20)\d{2})/g;
-  let m;
-  while ((m = withMake.exec(text)) !== null) {
-    push(firstMatch(CAR_MAKES, m[1]), m[2], +m[3], +m[4]);
-  }
-
-  // "Fiesta 2009-2017" with no make on the line. Common once the description
-  // has already named the brand in a heading; inherit it from the product.
-  if (productMakes.length === 1) {
-    const noMake = /\b([A-Z][\w '.-]{1,20}?)\s+((?:19|20)\d{2})\s*[-–—]\s*((?:19|20)\d{2})/g;
-    while ((m = noMake.exec(text)) !== null) {
-      const model = m[1].trim();
-      // Skip when the captured word is the make itself or an obvious non-model.
-      if (firstMatch(CAR_MAKES, model)) continue;
-      if (/^(from|for|the|and|with|models?|years?|compatible|fits)$/i.test(model)) continue;
-      push(productMakes[0], model, +m[2], +m[3]);
-    }
-  }
-
-  // "Astra 2004 onwards" / "Golf 2015 >" — open-ended range.
-  if (productMakes.length === 1) {
-    const openEnded = /\b([A-Z][\w '.-]{1,20}?)\s+((?:19|20)\d{2})\s*(?:onwards?|\+|>|and later)/gi;
-    while ((m = openEnded.exec(text)) !== null) {
-      const model = m[1].trim();
-      if (firstMatch(CAR_MAKES, model)) continue;
-      push(productMakes[0], model, +m[2], new Date().getFullYear());
-    }
-  }
-
-  return out;
-}
-
-/* ── Dutch copy ───────────────────────────────────────────────────────── */
-
-const TYPE_COPY = {
-  behuizingen: {
-    noun: 'sleutelbehuizing',
-    what: 'Vervang de versleten of gebarsten kast van uw autosleutel en zet de bestaande elektronica eenvoudig over.',
-    programming: false,
-  },
-  sleutelbaarden: {
-    noun: 'sleutelbaard',
-    what: 'Ongeslepen sleutelbaard om uw bestaande sleutel te vervangen of aan te vullen. Wij slijpen hem passend op uw slot.',
-    programming: false,
-  },
-  afstandsbedieningen: {
-    noun: 'afstandsbediening',
-    what: 'Afstandsbediening voor het openen en sluiten van uw auto op afstand.',
-    programming: true,
-  },
-  'smart-keys': {
-    noun: 'smart key',
-    what: 'Keyless-entry sleutel: de auto herkent de sleutel in uw zak, u hoeft hem niet in het contact te steken.',
-    programming: true,
-  },
-  transponders: {
-    noun: 'transponderchip',
-    what: 'De chip die met de startonderbreker van uw auto communiceert. Zonder een correct ingeleerde transponder start de auto niet.',
-    programming: true,
-  },
-  batterijen: {
-    noun: 'batterij',
-    what: 'Vervangingsbatterij voor uw autosleutel. Merkt u dat het bereik kleiner wordt, dan is de batterij meestal de oorzaak.',
-    programming: false,
-  },
-  sloten: {
-    noun: 'slotonderdeel',
-    what: 'Vervangend slot of cilinder. Klemt uw sleutel of draait het contact zwaar, dan zijn de lamellen meestal versleten.',
-    programming: false,
-  },
-  accessoires: {
-    noun: 'accessoire',
-    what: 'Accessoire voor uw autosleutel.',
-    programming: false,
-  },
-  gereedschap: {
-    noun: 'gereedschap',
-    what: 'Professioneel gereedschap voor autosleutelspecialisten.',
-    programming: false,
-  },
-};
-
-/** Groups fitment rows per make so the sentence reads naturally. */
-function fitmentSentence(fitment) {
-  if (!fitment.length) return null;
-  const byMake = new Map();
-  for (const f of fitment) {
-    if (!byMake.has(f.make)) byMake.set(f.make, []);
-    byMake.get(f.make).push(`${f.model} ${f.from}–${f.to}`);
-  }
-  const parts = [...byMake.entries()].map(
-    ([make, models]) => `${make} ${models.slice(0, 6).join(', ')}`
-  );
-  return parts.join(' · ');
-}
-
-/**
- * Writes the Dutch product copy from the structured attributes.
+ * Opening tools are sold to the trade, not to whoever finds the page.
  *
- * The supplier's own text is English and, with permission or not, identical to
- * the text on their site — Google picks one source for duplicate copy and it
- * is rarely the newer shop. Generating from attributes gives every product
- * distinct Dutch prose and keeps it consistent with the filters, because both
- * read the same fields.
+ * Not the whole gereedschap category, as before: a screwdriver set is not a
+ * lock pick, and hiding it behind a business login sold nothing to anybody.
+ * The subcategory the classifier assigned is precise enough to gate on.
  */
-function dutchCopy(p) {
-  const t = TYPE_COPY[p.category] ?? TYPE_COPY.accessoires;
-  const makes = p.makes.slice(0, 3).join(', ');
-  const noun = cap(t.noun);
+const TRADE_SUBCATEGORIES = new Set(['opengereedschap']);
+const TRADE_TITLE = /\b(pick|dietrich|aufsperr|lockpick|schlagschl[üu]ssel|bump)/i;
 
-  // The generated part alone is not unique — 1,058 of 1,112 products would end
-  // up sharing a title, which is the duplicate-title problem all over again.
-  // The supplier title carries what actually distinguishes them: part codes
-  // (NSN14, HU101, IKEYVW003AL) and chassis names (E46, Golf 7). Strip the
-  // English filler and the make names, keep the rest as the distinguishing tail.
-  const tail = p.title
-    .replace(/\b(for|with|compatible|replacement|aftermarket|genuine|oem|new|brand|button|buttons|key|keys|remote|shell|case|blade|fob|smart|universal|style|and|the|of)\b/gi, ' ')
-    .replace(new RegExp(`\\b(${p.makes.map((m) => m.split(/[\s-]/)[0]).join('|') || 'zzzz'})\\b`, 'gi'), ' ')
-    .replace(/[,()]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 42)
-    .trim();
+/**
+ * Stock that stays out of the shop window.
+ *
+ * A-Key is a locksmith wholesaler as well as a key supplier, so the catalogue
+ * now holds 1.186 house, cabinet and safe keys, 190 cutters and 34 key
+ * machines. They are real stock and the office can quote and order them from
+ * the CRM — but autosleutel24.nl is a mobile car-key service, and a visitor
+ * looking for a Golf key should not have to walk past a cabinet-key range to
+ * find it.
+ *
+ * Gated rather than dropped: the articles keep their category, their photo and
+ * their price, and appear for a signed-in business account.
+ */
+const TRADE_CATEGORIES = new Set(['woningsleutels', 'sloten', 'sleutelmachines', 'frezen-en-tasters']);
 
-  const titleNl = [
-    noun,
-    makes || null,
-    p.buttons ? `${p.buttons} knoppen` : null,
-    tail && tail.length > 1 ? tail : null,
-  ].filter(Boolean).join(' · ');
+/* ── one article ─────────────────────────────────────────────────────── */
 
-  const specs = [];
-  if (p.buttons) specs.push(`${p.buttons} knoppen`);
-  if (p.frequency) specs.push(p.frequency);
-  if (p.chip) specs.push(`chip ${p.chip}`);
-  if (p.condition === 'genuine') specs.push('origineel onderdeel');
-  else if (p.condition === 'oem') specs.push('OEM-kwaliteit');
-
-  const fits = fitmentSentence(p.fitment);
-
-  const note = t.programming
-    ? 'Let op: deze sleutel moet nog op uw auto worden ingeleerd. Zonder programmering opent hij wel, maar start de auto niet — onze monteur regelt dat op locatie of u stuurt de sleutel naar ons op.'
-    : 'Programmeren is niet nodig — u kunt dit onderdeel zelf monteren, of het door onze monteur laten doen.';
-
-  // The opening sentence names the product; `what` explains it. Repeating the
-  // noun in both reads like filler, so the opening leads with the fitment.
-  const opening = makes
-    ? `Deze ${t.noun} is geschikt voor ${makes}.`
-    : `Deze ${t.noun} past op meerdere modellen.`;
-
-  const descriptionNl = [
-    opening,
-    t.what,
-    specs.length ? `Uitvoering: ${specs.join(', ')}.` : null,
-    fits ? `Past op: ${fits}.` : null,
-    note,
-  ].filter(Boolean).join(' ');
-
-  // Two or three sentences that answer the question on their own — what LLMs
-  // and Google featured snippets quote, and what the English blurb never did.
-  const directAnswer = [
-    `${noun}${makes ? ` voor ${makes}` : ''}${p.buttons ? ` met ${p.buttons} knoppen` : ''}.`,
-    specs.length ? `Uitvoering: ${specs.join(', ')}.` : null,
-    p.fitment.length ? `Past op ${p.fitment.length} model${p.fitment.length === 1 ? '' : 'len'}.` : null,
-    t.programming
-      ? 'Inleren op uw auto is vereist; dat doen wij op locatie.'
-      : 'U kunt dit onderdeel zelf monteren.',
-  ].filter(Boolean).join(' ');
-
-  // Aim for 120–155 characters: long enough to earn the click, short enough
-  // that Google does not cut the end off.
-  // Naming the leading model keeps otherwise near-identical descriptions
-  // distinct, and it is the phrase people actually search for.
-  const leadModel = p.fitment[0]
-    ? `${p.fitment[0].make} ${p.fitment[0].model} ${p.fitment[0].from}-${p.fitment[0].to}`
-    : null;
-
-  let meta = [
-    makes ? `${noun} voor ${makes}` : noun,
-    p.buttons ? `${p.buttons} knoppen` : null,
-    leadModel ? `o.a. ${leadModel}` : null,
-    p.fitment.length > 1 ? `+${p.fitment.length - 1} modellen` : null,
-  ].filter(Boolean).join(', ');
-  meta += t.programming
-    ? '. Inclusief inleren op locatie mogelijk. 12 maanden garantie.'
-    : '. Zelf monteren of door ons laten doen. 12 maanden garantie.';
-
-  return {
-    titleNl: titleNl.slice(0, 90),
-    descriptionNl,
-    directAnswer,
-    metaDescriptionNl: meta.length > 155 ? `${meta.slice(0, 152).replace(/[ ,.]$/, '')}…` : meta,
-  };
-}
-
-const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-
-/* ── build ────────────────────────────────────────────────────────────── */
-
-const raw = JSON.parse(readFileSync(SRC, 'utf8'));
-const seen = new Set();
 const products = [];
-const stats = { trade: 0, public: 0, noCategory: 0, withButtons: 0, withFitment: 0 };
+const skipped = { noCategory: 0, noPhoto: 0, noPrice: 0 };
 
-for (const p of raw) {
-  const title = (p.title || '').trim();
-  if (!title) continue;
+for (const [slug, filed] of Object.entries(classification.filed)) {
+  const product = raw[slug];
+  if (!product) continue;
 
-  const body = plain(p.description);
-  const hay = `${title} ${p.tags || ''} ${body.slice(0, 600)}`;
+  const images = photoOverrides.has(slug.toLowerCase())
+    ? [photoOverrides.get(slug.toLowerCase())]
+    : photosFor(product);
+  if (!images.length) skipped.noPhoto++;
 
-  let slug = slugify(title);
-  if (seen.has(slug)) slug = `${slug}-${p.id}`;
-  seen.add(slug);
+  /* "für Fahrzeugmarke: Toyota / Lexus" names two makes, and a model listed
+     after it is sold under both. */
+  const statedMakes = product.make
+    ? product.make.split(/\s*[/&+]\s*/).map(spellMake).filter(Boolean)
+    : filed.makes;
+  const fitment = fitmentOf(product, statedMakes);
+  const xrefs = crossReferences(product.description ?? []);
 
-  // Title first: it names the product. The description mentions components
-  // ("includes an uncut blade") that otherwise hijack the classification.
-  const [category, subcategory] =
-    (CATEGORIES.find(([, , re]) => re.test(title)) ??
-     CATEGORIES.find(([, , re]) => re.test(hay)))?.slice(0, 2) ?? [null, null];
-  if (!category) stats.noCategory++;
+  /*
+   * A-Key's own heading names a different article number than their article
+   * field on 448 pages — "Funkschlüssel kompatibel für Toyota - TOYR109" over
+   * article TOYR126L. Both numbers are in circulation, so the other one is
+   * listed as an alternative: a customer searching the number off their old
+   * invoice has to find the article.
+   */
+  const titleCode = product.title.match(/\b([A-Z]{2,6}\d{2,4}[A-Z]{0,3})\b/)?.[1];
+  const ownCode = tidyArticleNumber(product.articleNumber);
+  if (titleCode && ownCode && titleCode !== ownCode && !xrefs.some((x) => x.code === titleCode)) {
+    xrefs.push({ brand: 'A-Key', code: titleCode });
+  }
+  const tools = cuttingTools(product.description ?? []);
 
-  const audience = TRADE_ONLY.test(hay) ? 'trade' : 'public';
-  stats[audience]++;
+  /* Every make the article is stated to fit: the classifier's, plus every
+     make named in a fitment line. */
+  const makes = [...new Set([...filed.makes, ...fitment.map((f) => f.make)])];
 
-  const makes = CAR_MAKES.filter(([, re]) => re.test(hay)).map(([name]) => name);
+  const text = `${product.title} ${(product.description ?? []).join(' ')}`;
 
-  const buttonsMatch = title.match(/(\d)\s*[- ]?(?:button|knop|btn)\b/i);
-  const buttons = buttonsMatch ? +buttonsMatch[1] : null;
-  if (buttons) stats.withButtons++;
+  /*
+   * What the supplier says that we could not put into Dutch. The
+   * specification block is excluded: those lines are already the table above,
+   * and printing "Produkttyp: Funkschlüssel / Schlüsselbart: TOY49" under a
+   * heading that says "German" made the page look untranslated when in fact
+   * every one of those values is in the table in Dutch.
+   */
+  const SPEC_LINE =
+    /^(Produktinformationen|Produkttyp|Schl[üu]sselbart|Schl[üu]sselrohling|Anzahl der Tasten|Funkeinheit|Transponder|Farbe|Material|f[üu]r Fahrzeugmarke|Board\s*-?\s*Nr)/i;
+  const { german } = translateDescription(
+    (product.description ?? [])
+      .filter((line) => !SPEC_LINE.test(line.trim()))
+      // And not the heading again: "3 Tasten-Funkschlüssel kompatibel für
+      // Toyota TOYR111K" under "extra information" is the title in German.
+      .filter((line) => {
+        const strip = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return !strip(line).includes(strip(product.title).slice(0, 24));
+      })
+  );
 
-  const freqMatch = hay.match(/\b(\d{3}(?:\.\d+)?)\s*MHz\b/i);
-  const chipMatch = hay.match(/\b(ID\s?\d{2}|PCF\s?\d{4}|Hitag\s?\d?|4D-?\d{2}|46|48)\b/i);
+  const cost = costOf(product.price);
+  if (cost == null) skipped.noPrice++;
 
-  const fitment = extractFitment(body, makes);
-  if (fitment.length) stats.withFitment++;
-
-  const priceRaw = parseFloat(String(p.price ?? '').replace(',', '.'));
+  const batteryCode = text.match(/\bCR\s?-?(\d{3,4})\b/i)?.[1] ?? null;
 
   products.push({
-    id: String(p.id),
-    slug,
-    title,
-    category,
-    subcategory,
-    audience,
+    id: tidyArticleNumber(product.articleNumber) ?? slug,
+    slug: slug.toLowerCase(),
+    title: product.title,
+    category: filed.category,
+    subcategory: filed.subcategory,
+    audience:
+      TRADE_CATEGORIES.has(filed.category) ||
+      TRADE_SUBCATEGORIES.has(filed.subcategory) ||
+      TRADE_TITLE.test(product.title)
+        ? 'trade'
+        : 'public',
     makes,
-    manufacturer: firstMatch(MANUFACTURERS, hay),
-    condition: firstMatch(CONDITIONS, hay) ?? 'aftermarket',
-    buttons,
-    frequency: freqMatch ? `${freqMatch[1]} MHz` : null,
-    chip: chipMatch ? chipMatch[1].replace(/\s+/g, '') : null,
-    // Supplier cost, not a shop price. Pricing is applied downstream so the
-    // margin, VAT and rounding rules live in one place.
-    costPrice: Number.isFinite(priceRaw) ? priceRaw : null,
-    image: p.imageLocalPath || null,
-    images: p.images || (p.imageLocalPath ? [p.imageLocalPath] : []),
-    fitment,
-    excerpt: body.slice(0, 260),
+    manufacturer: manufacturerOf(text),
+    condition: 'aftermarket',
+    buttons: buttonCount(product.buttons),
+    frequency: tidyFrequency(product.frequency),
+    chip: tidyChip(product.transponder),
+    blade: tidyBlade(product.blade),
+    battery: batteryCode ? `cr${batteryCode}` : null,
+    costPrice: cost,
+    image: images[0] ?? null,
+    images,
+    fitment: fitment.filter((f) => f.model).map((f) => ({ make: f.make, model: f.model, from: f.from, to: f.to })),
+    excerpt: (product.description ?? []).join(' ').slice(0, 400),
+
+    titleNl: dutchTitle(product, filed, fitment),
+    descriptionNl: descriptionHtml(product, filed, { fitment, xrefs, tools }),
+    directAnswer: directAnswer(product, filed, fitment),
+    metaDescriptionNl: metaDescription(product, filed, fitment, cost),
+
+    specs: specsFor(product),
+    vehiclesRaw: product.vehicles ?? null,
+    replacedBy: product.replacedBy ?? null,
+    supplierNote: german.length ? german.slice(0, 6) : null,
+    articleCode: tidyArticleNumber(product.articleNumber),
+    /** Article numbers the same part is sold under elsewhere in the trade. */
+    crossReferences: xrefs.length ? xrefs : null,
+    /** Set by the classifier when a filing deserves a human glance. */
+    needsCheck: filed.needsCheck ?? null,
+    /** In stock at our supplier at the time of the last sync. */
+    inStock: product.availability !== 'OutOfStock',
   });
-
-  // Dutch copy is derived last so it can read every attribute above.
-  const last = products[products.length - 1];
-  Object.assign(last, dutchCopy(last));
 }
 
-/* ── deduplicate ──────────────────────────────────────────────────────────
-   The supplier feed lists the same part several times — one group had the
-   identical part number 1K0905851B six times over, differing only in cost and
-   in how much fitment text each listing carried. Shipping those as separate
-   pages would recreate the duplicate-title problem the site was just cleaned
-   of, and split any ranking between near-identical URLs.
+/* ── the AccessFobs housings ─────────────────────────────────────────── */
 
-   Records are grouped on the part number when the title carries one, else on
-   a normalised title. The surviving record keeps the richest fitment, the
-   lowest cost, and the union of every group member's fitment rows.
-   ─────────────────────────────────────────────────────────────────────── */
-
-function dedupeKey(p) {
-  // Manufacturer part numbers: 1K0905851B, IKEYVW003AL, 5K0837202AD…
-  const part = p.title.match(/\b[0-9A-Z]{2,}[0-9]{3,}[0-9A-Z]*\b/);
-  if (part) return `part:${part[0].toUpperCase()}`;
-  return `title:${p.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()}`;
-}
-
-function dedupe(list) {
-  const groups = new Map();
-  for (const p of list) {
-    const k = dedupeKey(p);
-    if (!groups.has(k)) groups.set(k, []);
-    groups.get(k).push(p);
+if (existsSync(ACCESSFOBS)) {
+  const data = JSON.parse(readFileSync(ACCESSFOBS, 'utf8'));
+  for (const item of data.products) {
+    const slug = `accessfobs-${String(item.id)}`;
+    products.push({
+      id: slug,
+      slug,
+      title: item.title,
+      category: 'behuizingen',
+      subcategory: 'AccessFobs behuizing',
+      audience: 'public',
+      makes: item.makes ?? [],
+      manufacturer: 'AccessFobs',
+      condition: 'aftermarket',
+      buttons: item.buttons ?? null,
+      frequency: null,
+      chip: null,
+      blade: item.blade ?? null,
+      battery: null,
+      /* Their prices are in pounds and we have no buying price, so these are
+         listed but not priced — see the note in the report below. */
+      costPrice: null,
+      image: item.image ?? null,
+      images: item.image ? [item.image] : [],
+      /* Through the same filter as A-Key's: the AccessFobs scrape read some
+         sentences as models ("Flip key head and transponder chip for"). */
+      fitment: (item.vehicles ?? [])
+        .filter((v) => v.make && v.model && v.model.length <= 32 && !/\bfor\b|\band\b/i.test(v.model))
+        // Their scrape read "2015-2012" off one page; a range that runs
+        // backwards is a typo, not a fact.
+        .map((v) => (v.to && v.from && v.to < v.from ? { ...v, from: v.to, to: v.from } : v)),
+      excerpt: (item.notes ?? []).join(' ').slice(0, 400),
+      titleNl: item.title,
+      descriptionNl: `<p>Vervangende sleutelbehuizing. U zet uw eigen elektronica en sleutelbaard erin — de auto hoeft daarna niet opnieuw geprogrammeerd te worden.</p>${
+        (item.vehicles ?? []).length
+          ? `<h4>Past op</h4><ul>${item.vehicles
+              .map((v) => `<li>${v.make} ${v.model}</li>`)
+              .join('')}</ul>`
+          : ''
+      }`,
+      directAnswer: `Sleutelbehuizing${item.makes?.length ? ` voor ${item.makes[0]}` : ''}.`,
+      metaDescriptionNl: `Sleutelbehuizing${item.makes?.length ? ` voor ${item.makes.join(', ')}` : ''}. Zelf ombouwen of door onze monteur laten doen.`,
+      specs: [
+        item.blade ? ['Sleutelbaard', item.blade] : null,
+        item.buttons ? ['Aantal knoppen', String(item.buttons)] : null,
+      ].filter(Boolean),
+      vehiclesRaw: null,
+      replacedBy: null,
+      supplierNote: null,
+      articleCode: null,
+      crossReferences: null,
+      needsCheck: 'inkoopprijs ontbreekt — nog niet te koop',
+      inStock: true,
+    });
   }
-
-  const merged = [];
-  let removed = 0;
-  for (const group of groups.values()) {
-    if (group.length === 1) { merged.push(group[0]); continue; }
-    removed += group.length - 1;
-
-    // Keep the listing with the most fitment detail; ties go to the cheapest.
-    const best = group.slice().sort((a, b) =>
-      b.fitment.length - a.fitment.length ||
-      (a.costPrice ?? Infinity) - (b.costPrice ?? Infinity)
-    )[0];
-
-    const seen = new Set(best.fitment.map((f) => `${f.make}|${f.model}|${f.from}|${f.to}`));
-    for (const other of group) {
-      if (other === best) continue;
-      for (const f of other.fitment) {
-        const k = `${f.make}|${f.model}|${f.from}|${f.to}`;
-        if (!seen.has(k) && best.fitment.length < 40) { seen.add(k); best.fitment.push(f); }
-      }
-      const c = other.costPrice;
-      if (c != null && (best.costPrice == null || c < best.costPrice)) best.costPrice = c;
-      for (const m of other.makes) if (!best.makes.includes(m)) best.makes.push(m);
-    }
-    merged.push(best);
-  }
-  return { merged, removed };
 }
 
-const { merged: deduped, removed: duplicatesRemoved } = dedupe(products);
-products.length = 0;
-products.push(...deduped);
+/* ── the companion files ─────────────────────────────────────────────── */
 
-// Copy is regenerated after merging so it reflects the combined fitment.
-for (const p of products) Object.assign(p, dutchCopy(p));
+const publicProducts = products.filter((p) => p.audience === 'public');
+
+const brandCounts = new Map();
+for (const p of publicProducts) {
+  for (const make of p.makes) brandCounts.set(make, (brandCounts.get(make) ?? 0) + 1);
+}
+const brands = [...brandCounts]
+  .map(([make, count]) => ({ make, count }))
+  .sort((a, b) => b.count - a.count || a.make.localeCompare(b.make));
 
 const facetCount = (key) => {
-  const c = {};
-  for (const p of products) {
-    if (p.audience !== 'public') continue;
-    const v = p[key];
-    for (const x of Array.isArray(v) ? v : [v]) if (x) c[x] = (c[x] || 0) + 1;
+  const counts = {};
+  for (const p of publicProducts) {
+    const value = p[key];
+    if (value) counts[value] = (counts[value] ?? 0) + 1;
   }
-  return Object.fromEntries(Object.entries(c).sort((a, b) => b[1] - a[1]));
+  return counts;
 };
 
-const catalog = {
-  generatedAt: new Date().toISOString(),
-  count: products.length,
-  facets: {
-    category: facetCount('category'),
-    subcategory: facetCount('subcategory'),
-    makes: facetCount('makes'),
-    manufacturer: facetCount('manufacturer'),
-    condition: facetCount('condition'),
-    buttons: facetCount('buttons'),
-    frequency: facetCount('frequency'),
-  },
-  products,
-};
+/**
+ * Every model we stock something for, with the chips, blades and frequencies
+ * that turn up on it.
+ *
+ * The fitment widget shows those three next to the model a visitor picks, so
+ * they can check them against the key in their hand before ordering.
+ */
+const vehicles = {};
+for (const p of publicProducts) {
+  for (const f of p.fitment) {
+    const key = `${f.make} ${f.model}`;
+    vehicles[key] ??= {
+      make: f.make, model: f.model, from: f.from, to: f.to,
+      chips: [], blades: [], frequencies: [], count: 0, categories: {},
+    };
+    const entry = vehicles[key];
+    entry.count++;
+    entry.categories[p.category] = (entry.categories[p.category] ?? 0) + 1;
+    entry.from = Math.min(entry.from || 9999, f.from || 9999) || 0;
+    entry.to = Math.max(entry.to, f.to);
+    for (const [field, value] of [['chips', p.chip], ['blades', p.blade], ['frequencies', p.frequency]]) {
+      if (value && !entry[field].includes(value)) entry[field].push(value);
+    }
+  }
+}
 
-writeFileSync(OUT, JSON.stringify(catalog));
-console.log(`catalog.json written — ${products.length} products (${duplicatesRemoved} duplicates merged)`);
-const pub = products.filter((p) => p.audience === 'public').length;
-console.log(`  public ${pub} · trade ${products.length - pub} (gated)`);
-console.log(`  with fitment ${products.filter((p) => p.fitment.length).length} · with buttons ${products.filter((p) => p.buttons).length}`);
-console.log('  car makes:', Object.keys(catalog.facets.makes).length);
-console.log('  categories:', Object.keys(catalog.facets.category).join(', '));
+writeFileSync(
+  OUT,
+  `${JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      count: products.length,
+      facets: { category: facetCount('category'), subcategory: facetCount('subcategory') },
+      products,
+    },
+    null,
+    1
+  )}\n`
+);
+writeFileSync(BRANDS_OUT, `${JSON.stringify(brands, null, 1)}\n`);
+writeFileSync(
+  NAV_OUT,
+  `${JSON.stringify({ categories: facetCount('category'), subcategories: facetCount('subcategory') }, null, 1)}\n`
+);
+writeFileSync(VEHICLES_OUT, `${JSON.stringify(vehicles, null, 1)}\n`);
+
+/* ── report ──────────────────────────────────────────────────────────── */
+
+const byCategory = facetCount('category');
+
+console.log(`catalog.json — ${products.length} articles\n`);
+for (const [category, count] of Object.entries(byCategory).sort((a, b) => b[1] - a[1])) {
+  console.log(`  ${String(count).padStart(5)}  ${CATEGORIES[category]?.label ?? category}`);
+}
+
+console.log(`\n  public ${publicProducts.length} · trade ${products.length - publicProducts.length} (gated)`);
+console.log(`  with a photo      ${products.filter((p) => p.image).length}`);
+console.log(`  with a price      ${products.filter((p) => p.costPrice != null).length}`);
+console.log(`  with a make       ${products.filter((p) => p.makes.length).length}`);
+console.log(`  with models       ${products.filter((p) => p.fitment.length).length}`);
+console.log(`  with a spec table ${products.filter((p) => p.specs.length).length}`);
+console.log(`  flagged for check ${products.filter((p) => p.needsCheck).length}`);
+console.log(`\n  ${brands.length} makes · ${Object.keys(vehicles).length} models`);
+console.log(`  ${classification.review.length} articles held back for review (see akey-classified.json)`);

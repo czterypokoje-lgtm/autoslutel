@@ -80,7 +80,7 @@ const websiteSchema = {
   // SearchAction removed — Next.js has no ?s= endpoint; prevents schema error in GSC
 };
 
-import { GlobalHeader, GlobalFooter, GlobalStickyBar } from '@/components/LayoutManager';
+import { GlobalHeader, GlobalFooter, GlobalStickyBar, GlobalWidgets } from '@/components/LayoutManager';
 import PhoneConversionTracker from '@/components/PhoneConversionTracker';
 import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 
@@ -97,70 +97,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Telecommunicatiewet 11.7a, and by Google's EU user consent policy —
           defaulting to "granted" puts the Ads account at risk.
         */}
-        <script
-          id="consent-defaults"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('consent','default',{
-                ad_storage:'denied',
-                ad_user_data:'denied',
-                ad_personalization:'denied',
-                analytics_storage:'denied',
-                functionality_storage:'granted',
-                security_storage:'granted',
-                personalization_storage:'denied',
-                wait_for_update: 500
-              });
-              gtag('set','ads_data_redaction', true);
-              gtag('set','url_passthrough', true);
-            `,
-          }}
-        />
-        {/* Google Tag Manager */}
-        <Script
-          id="gtm-script"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-PRT75SWX');`
-          }}
-        />
-        {/* End Google Tag Manager */}
-        {/* Google tag (gtag.js) */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-C4WR7TYCTV"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-C4WR7TYCTV');
-          `}
-        </Script>
-        {/* Google Ads Click to call conversion snippet */}
-        <Script id="google-ads-conversion" strategy="afterInteractive">
-          {`
-            window.gtag_report_conversion = function(url) {
-              var callback = function () {
-                if (typeof(url) != 'undefined') {
-                  window.location = url;
-                }
-              };
-              gtag('event', 'conversion', {
-                  'send_to': 'AW-18315813515/FoiPCLLl7NocEIvF1J1E',
-                  'event_callback': callback
-              });
-              return false;
-            };
-          `}
-        </Script>
         {/*
           Microsoft Clarity is loaded from src/lib/consent.ts only after the
           visitor accepts statistics cookies. It records sessions and is not
@@ -199,6 +135,55 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <Script id="consent-defaults">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent','default',{
+              ad_storage:'denied',
+              ad_user_data:'denied',
+              ad_personalization:'denied',
+              analytics_storage:'denied',
+              functionality_storage:'granted',
+              security_storage:'granted',
+              personalization_storage:'denied',
+              wait_for_update: 500
+            });
+            gtag('set','ads_data_redaction', true);
+            gtag('set','url_passthrough', true);
+          `}
+        </Script>
+        {/* Google Tag Manager */}
+        <Script id="gtm-script">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-PRT75SWX');
+          `}
+        </Script>
+        {/* End Google Tag Manager */}
+        {/*
+          GA4 (G-C4WR7TYCTV) is no longer loaded here directly — it's now
+          configured as a "Google Tag" inside the GTM container itself
+          (GTM-PRT75SWX), which runs its own gtag-compatible runtime. Loading
+          both would double-fire every pageview and event: one hit from this
+          script, one from GTM's copy, doubling every number in GA4 for no
+          reason.
+
+          The Google Ads "Click to call" conversion used to be reported from
+          a window.gtag_report_conversion() defined here, called directly from
+          PhoneConversionTracker with preventDefault() first — so the actual
+          phone call only happened inside that call's callback. If the
+          callback never ran (and it stopped running once the standalone
+          gtag.js above was removed), the click just did nothing: no call, no
+          error. That function and its call site are gone; the "Click to
+          call" tag already exists in GTM itself, wired to the click_to_call
+          dataLayer event PhoneConversionTracker still sends on every tel:
+          click, everywhere on the site.
+        */}
+
         <AdParameterTracker />
         <PhoneConversionTracker />
         {/* Google Tag Manager (noscript) */}
@@ -215,9 +200,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GlobalHeader />
         {children}
         <GlobalFooter />
-        <WhatsAppButton />
+        <GlobalWidgets>
+          <WhatsAppButton />
+        </GlobalWidgets>
         <GlobalStickyBar />
-        <ConsentBanner />
+        <GlobalWidgets>
+          <ConsentBanner />
+        </GlobalWidgets>
       </body>
     </html>
   );

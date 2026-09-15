@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
+import { isScenario } from '@/lib/scenarios';
 
 /**
  * Lead capture.
@@ -93,6 +94,14 @@ export async function POST(request: Request) {
     const wbraid = clean(body.wbraid, MAX.clickId);
     const gbraid = clean(body.gbraid, MAX.clickId);
 
+    // What the visitor chose (working key vs. all lost) and the indicative
+    // price shown for it, from forms that ask (see publicQuote.ts). Never
+    // trusted beyond a plausible range — this is a quote, not an invoice.
+    const scenario = isScenario(body.scenario) ? body.scenario : null;
+    const quotedPriceNum = Number(body.quotedPrice);
+    const quotedPrice =
+      Number.isFinite(quotedPriceNum) && quotedPriceNum > 0 && quotedPriceNum < 10000 ? quotedPriceNum : null;
+
     // Reject an entirely empty submission rather than storing a blank row.
     if (!brand && !model && !service && !location && !phone) {
       return NextResponse.json({ error: 'Onvoldoende gegevens' }, { status: 400 });
@@ -135,6 +144,8 @@ export async function POST(request: Request) {
       source,
       consent_marketing: body.consentMarketing === true,
       consent_at: body.consentMarketing === true ? new Date().toISOString() : null,
+      scenario,
+      quoted_price: quotedPrice,
     };
 
     let { data, error } = await supabase.from('leads').insert([enrichedRow]);

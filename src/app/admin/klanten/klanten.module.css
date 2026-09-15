@@ -1,0 +1,334 @@
+/* Customer list and the single-customer view. */
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--crm-ink);
+  letter-spacing: -0.025em;
+}
+
+.count {
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.search {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.control {
+  padding: 0 10px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13.5px;
+  height: 34px;
+  box-sizing: border-box;
+}
+
+.control:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+}
+
+.apply {
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.wrap {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  background: var(--crm-sunk);
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--crm-rule);
+  white-space: nowrap;
+}
+
+.table td {
+  height: 44px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--crm-rule);
+  white-space: nowrap;
+}
+
+.table tbody tr:hover td {
+  background: var(--crm-sunk);
+}
+
+.strong {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.sub {
+  display: block;
+  font-size: 11px;
+  color: var(--crm-muted);
+}
+
+.money {
+  text-align: right;
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.link {
+  color: var(--crm-accent);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* ---- Single customer ---- */
+
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panel {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.panel h2 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--crm-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 14px;
+  font-size: 13px;
+}
+
+.summaryKey {
+  color: var(--crm-muted);
+}
+
+.summaryVal {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.item {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--crm-rule);
+  font-size: 13px;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.plate {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--crm-ink);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-raised);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.ok {
+  color: var(--crm-ok);
+  background: var(--crm-ok-bg);
+}
+
+.no {
+  color: var(--crm-muted);
+  background: var(--crm-sunk);
+}
+
+.danger {
+  border-color: var(--crm-stop);
+  background: var(--crm-stop-bg);
+}
+
+.dangerTitle {
+  color: var(--crm-stop);
+}
+
+.dangerBtn {
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--crm-stop);
+  border-radius: var(--crm-r-sm);
+  background: transparent;
+  color: var(--crm-stop);
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dangerBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.note {
+  color: var(--crm-muted);
+  font-size: 12px;
+  line-height: 1.55;
+  margin: 10px 0 0;
+}
+
+.empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--crm-muted);
+}
+
+.warning {
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-warn-bg);
+  color: var(--crm-warn);
+  border: 1px solid currentColor;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/*
+ * The mobile card list every table on this shared module can reuse: a title
+ * line plus label/value rows for whatever columns that table has. Kept
+ * generic on purpose — Klanten, Rapportage, Producten and Orders each have
+ * different columns, and a bespoke card per table would be six designs for
+ * what is fundamentally one shape.
+ *
+ * `.cards` defaults to hidden and only the media query turns it on — the one
+ * unconditional rule comes first, so there's nothing after it in the file to
+ * silently win regardless of viewport (the exact bug fixed in
+ * BusDashboard.module.css earlier).
+ */
+.cards {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: 12px 14px;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.cardTitle {
+  min-width: 0;
+}
+
+.cardRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 3px 0;
+  font-size: 13px;
+}
+
+.cardRow:last-child {
+  padding-bottom: 0;
+}
+
+.cardLabel {
+  flex: none;
+  color: var(--crm-muted);
+}
+
+.cardValue {
+  min-width: 0;
+  text-align: right;
+  color: var(--crm-ink);
+}
+
+@media (max-width: 720px) {
+  .wrap {
+    display: none;
+  }
+  .cards {
+    display: flex;
+  }
+}
