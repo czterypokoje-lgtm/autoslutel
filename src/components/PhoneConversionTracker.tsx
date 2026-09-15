@@ -46,6 +46,16 @@ export default function PhoneConversionTracker() {
         // was granted and the pixel actually loaded (see src/lib/consent.ts);
         // calling it beforehand would throw, hence the guard.
         window.oaiq?.('track', 'lead_created', { content_name: 'phone_call' });
+        // Belt-and-suspenders server-side send — a phone click has no other
+        // server round-trip, so nothing else can catch it if a tracking
+        // blocker silently drops the client beacon above. No-ops server-side
+        // until OPENAI_ADS_API_KEY is configured (see the route itself).
+        fetch('/api/track-call-conversion', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sourceUrl: window.location.href }),
+          keepalive: true,
+        }).catch(() => {});
       }
 
       if (
