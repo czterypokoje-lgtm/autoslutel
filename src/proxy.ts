@@ -22,6 +22,24 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/s
  */
 const NOINDEX = ['/webshop'];
 
+/**
+ * Countries blocked outright, at the office's request, after seeing zero-
+ * click Clarity sessions from Poland and India.
+ *
+ * Never applied to /api/* — a payment or messaging webhook (Mollie,
+ * Telegram) can legitimately call in from a server hosted anywhere, and
+ * blocking those would break real functionality to stop traffic that costs
+ * nothing (a session with 0 clicks isn't spending ad budget or filling a
+ * form). Never applied to a known crawler either: Googlebot and friends
+ * don't request pages from a Dutch IP, and robots.txt already explicitly
+ * invites several of these by name — blocking them here would silently
+ * contradict that and could deindex the site.
+ */
+const BLOCKED_COUNTRIES = new Set(['PL', 'IN']);
+
+const KNOWN_CRAWLER =
+  /bot|crawl|spider|slurp|googlebot|bingbot|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|linkedinbot|applebot|petalbot|gptbot|chatgpt-user|claudebot|claude-web|google-extended|perplexitybot|youbot|amazonbot|anthropic-ai|bytespider/i;
+
 const PROTECTED = [
   '/offline-conversions',
   '/demo-form',
@@ -110,6 +128,17 @@ async function handleCrm(request: NextRequest): Promise<NextResponse> {
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  if (!pathname.startsWith('/api/')) {
+    const country = request.headers.get('x-vercel-ip-country') ?? '';
+    const userAgent = request.headers.get('user-agent') ?? '';
+    if (BLOCKED_COUNTRIES.has(country) && !KNOWN_CRAWLER.test(userAgent)) {
+      return new NextResponse('Not available in your region.', {
+        status: 403,
+        headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' },
+      });
+    }
+  }
+
   if (pathname === CRM || pathname.startsWith(`${CRM}/`) || pathname.startsWith('/api/admin/')) {
     return handleCrm(request);
   }
@@ -150,6 +179,10 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    // Every page, for the country block above — everything except static
+    // assets and Next's own internals, which a geo-check has no reason to
+    // run against.
+    '/((?!_next/static|_next/image|favicon\\.ico|apple-icon\\.png|icon\\.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff2?)$).*)',
     '/webshop/:path*',
     '/webshop',
     '/offline-conversions/:path*',
