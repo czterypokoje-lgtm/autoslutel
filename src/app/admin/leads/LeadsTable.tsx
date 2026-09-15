@@ -39,6 +39,7 @@ const STATUS_LABELS: Record<string, string> = {
   sold: 'Verkocht',
   rejected: 'Afgewezen',
   duplicate: 'Dubbel',
+  spam: 'Spam',
 };
 
 const STATUS_CLASS: Record<string, string> = {
@@ -48,7 +49,20 @@ const STATUS_CLASS: Record<string, string> = {
   sold: styles.stSold,
   rejected: styles.stRejected,
   duplicate: styles.stDuplicate,
+  spam: styles.stSpam,
 };
+
+/**
+ * A quick, non-authoritative check — this never blocks a submission or
+ * auto-rejects a lead, it only tells the office which rows are worth a
+ * second look before marking one spam. A real customer with an unusual but
+ * valid number should never be silently dropped by a regex.
+ */
+function hasNoValidContact(lead: { phone_e164: string | null; email: string | null }): boolean {
+  const phoneOk = !!lead.phone_e164 && /^\+31\d{9}$/.test(lead.phone_e164);
+  const emailOk = !!lead.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email);
+  return !phoneOk && !emailOk;
+}
 
 /*
  * Timezone is pinned so the server render and the client render agree — a
@@ -274,6 +288,14 @@ export default function LeadsTable({
                         )} dagen geleden.`}
                       >
                         {repeat.count}×
+                      </span>
+                    )}
+                    {hasNoValidContact(lead) && (
+                      <span
+                        className={styles.flag}
+                        title="Geen geldig Nederlands telefoonnummer of e-mailadres — controleer voordat u belt of dit als spam markeert."
+                      >
+                        geen contact
                       </span>
                     )}
                   </td>

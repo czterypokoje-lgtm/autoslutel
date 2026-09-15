@@ -120,6 +120,27 @@ export async function POST(request: Request) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    /*
+     * Auto-flagged, not auto-dropped. The same phone number submitting again
+     * within 72 hours is almost always the same person retrying a form or
+     * clicking a second ad, not a second independent lead — but the row is
+     * still kept (never silently discarded) so the office can see it and the
+     * offline-conversions export can exclude it from what gets reported to
+     * Google Ads as a real conversion.
+     */
+    const phoneE164ForDupeCheck = toE164NL(phone);
+    let initialStatus: string | undefined;
+    if (phoneE164ForDupeCheck) {
+      const since = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
+      const { data: recent } = await supabase
+        .from('leads')
+        .select('id')
+        .eq('phone_e164', phoneE164ForDupeCheck)
+        .gte('created_at', since)
+        .limit(1);
+      if (recent && recent.length > 0) initialStatus = 'duplicate';
+    }
+
     const legacyRow = {
       brand,
       model,
@@ -146,6 +167,7 @@ export async function POST(request: Request) {
       consent_at: body.consentMarketing === true ? new Date().toISOString() : null,
       scenario,
       quoted_price: quotedPrice,
+      ...(initialStatus ? { status: initialStatus } : {}),
     };
 
     let { data, error } = await supabase.from('leads').insert([enrichedRow]);

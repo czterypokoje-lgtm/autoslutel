@@ -318,6 +318,10 @@
   color: var(--crm-muted);
   background: var(--crm-sunk);
 }
+.stSpam {
+  color: var(--crm-stop);
+  background: var(--crm-stop-bg);
+}
 
 .flag {
   display: inline-block;
