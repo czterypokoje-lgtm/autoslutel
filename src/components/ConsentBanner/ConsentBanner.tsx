@@ -140,7 +140,7 @@ export default function ConsentBanner() {
               <span className={styles.optionBody}>
                 <span className={styles.optionName}>Marketing</span>
                 <span className={styles.optionDesc}>
-                  Google Ads. Meet welke advertenties tot een aanvraag leiden en
+                  Google Ads en OpenAI Ads. Meet welke advertenties tot een aanvraag leiden en
                   maakt relevantere advertenties mogelijk.
                 </span>
               </span>

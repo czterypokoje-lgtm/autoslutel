@@ -35,6 +35,7 @@ declare global {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
     clarity?: unknown;
+    oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
   }
 }
 
@@ -150,6 +151,7 @@ export function applyConsent(state: ConsentState | null): void {
   });
 
   if (statistics) loadClarity();
+  if (marketing) loadOpenAIPixel();
 }
 
 /**
@@ -172,6 +174,35 @@ export function loadClarity(): void {
   s.async = true;
   s.src = `https://www.clarity.ms/tag/${CLARITY_ID}`;
   document.head.appendChild(s);
+}
+
+/**
+ * OpenAI Ads Manager pixel (ads.openai.com). Same reasoning as Clarity above:
+ * it is a marketing/ad-matching pixel, not a Consent-Mode-aware Google tag,
+ * so it must not load at all until marketing consent is actually granted —
+ * loading it under "denied" would defeat the point of asking.
+ */
+const OPENAI_PIXEL_ID = 'NgrU53SbdM3WdR4Kjvyp6Z';
+let openaiPixelRequested = false;
+
+export function loadOpenAIPixel(): void {
+  if (typeof window === 'undefined' || openaiPixelRequested) return;
+  if (!PROD_HOSTNAMES.includes(window.location.hostname)) return;
+  if (window.oaiq) return;
+  openaiPixelRequested = true;
+
+  const q = ((...args: unknown[]) => {
+    q.q.push(args);
+  }) as { q: unknown[][] } & ((...args: unknown[]) => void);
+  q.q = [];
+  window.oaiq = q;
+
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://bzrcdn.openai.com/sdk/oaiq.min.js';
+  document.head.appendChild(s);
+
+  window.oaiq('init', { pixelId: OPENAI_PIXEL_ID });
 }
 
 /** Opens the preferences panel from anywhere (footer link, cookie policy page). */
