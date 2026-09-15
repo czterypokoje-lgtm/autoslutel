@@ -19,16 +19,16 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Autosleutel Bijmaken vanaf €149 | Autosleutel24',
   },
-  description: 'Autosleutel bijmaken nodig? 24/7 op locatie, vaste prijs vanaf €149 — goedkoper dan de dealer. Binnen 30 min ter plaatse. Bel of WhatsApp nu!',
+  description: 'Autosleutel bijmaken of kopiëren nodig? 24/7 op locatie, vaste prijs vanaf €149 — goedkoper dan de dealer. Binnen 30 min ter plaatse. Bel of WhatsApp nu!',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` },
   openGraph: {
-    title: 'Autosleutel Bijmaken vanaf €149 | Autosleutel24',
+    title: 'Autosleutel Bijmaken & Kopiëren vanaf €149 | Autosleutel24',
     url: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Autosleutel Bijmaken vanaf €149 | Autosleutel24',
+    title: 'Autosleutel Bijmaken & Kopiëren vanaf €149 | Autosleutel24',
   },
 };
 
@@ -38,7 +38,7 @@ export default function SleutelBijmakenPage() {
     "@type": "Service",
     "name": "Autosleutel Bijmaken",
     "provider": getBaseLocalBusinessSchema(),
-    "serviceType": "Autosleutel bijmaken, transponder programmeren, smart key inleren",
+    "serviceType": "Autosleutel bijmaken, autosleutel kopiëren, transponder programmeren, smart key inleren",
     "priceRange": "€149 - €500",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
@@ -152,9 +152,9 @@ return (
             <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
               <HeroTrustBadge />
             </div>
-            <h1>Autosleutel Bijmaken — Reservesleutel Auto Laten Maken Op Locatie</h1>
+            <h1>Autosleutel Bijmaken & Kopiëren — Reservesleutel Auto Laten Maken Op Locatie</h1>
             <p className={styles.heroLead}>
-              Nieuwe sleutel nodig? Wij komen <strong>24/7 naar u toe</strong> en programmeren ter plaatse — goedkoper dan de dealer, zonder wachttijd.
+              Autosleutel bijmaken of kopiëren nodig? Wij komen <strong>24/7 naar u toe</strong> en programmeren ter plaatse — goedkoper dan de dealer, zonder wachttijd.
             </p>
             <div style={{ marginTop: '2rem' }}>
               <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />

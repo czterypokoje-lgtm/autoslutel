@@ -12,13 +12,13 @@ function getStableHash(str: string): number {
 
 const introTemplates = [
   (city: string, travel: string) => `Welkom bij ${SITE_CONFIG.name}, uw betrouwbare partner voor alles rondom autosleutels in ${city} en omstreken. Heeft u een probleem met uw sleutel, afstandsbediening of slot? Onze specialisten staan 24/7 voor u klaar en zijn vaak al binnen ${travel} ter plaatse om u weer op weg te helpen. Wij werken volledig mobiel en beschikken over de meest geavanceerde apparatuur.`,
-  (city: string, travel: string) => `Heeft u met spoed een nieuwe autosleutel nodig in ${city}? Of krijgt u uw auto niet meer open? ${SITE_CONFIG.name} biedt een unieke, volledig mobiele slotenmakerservice. Binnen gemiddeld ${travel} is onze monteur bij u in ${city} gearriveerd. Wij garanderen een schadevrije opening en kunnen vrijwel elke sleutel ter plekke voor u bijmaken en inleren.`,
+  (city: string, travel: string) => `Heeft u met spoed een nieuwe autosleutel nodig in ${city}? Of krijgt u uw auto niet meer open? ${SITE_CONFIG.name} biedt een unieke, volledig mobiele slotenmakerservice. Binnen gemiddeld ${travel} is onze monteur bij u in ${city} gearriveerd. Wij garanderen een schadevrije opening en kunnen vrijwel elke sleutel ter plekke voor u bijmaken, kopiëren en inleren.`,
   (city: string, travel: string) => `In ${city} en de wijde regio eromheen is ${SITE_CONFIG.name} dé specialist op het gebied van autosleutels en autobeveiliging. U hoeft uw voertuig niet naar een dure dealer te slepen als u al uw sleutels kwijt bent. Wij komen naar u toe. Met een gemiddelde aanrijtijd van slechts ${travel} lossen wij uw probleem direct naast de auto op.`
 ];
 
 const bodyTemplates1 = [
   (city: string) => `Onze mobiele werkplaatsen rijden dagelijks door ${city}. Ze zijn uitgerust met computergestuurde CNC-freesmachines en de modernste OBD-uitleesapparatuur. Hierdoor kunnen we niet alleen traditionele transpondersleutels, maar ook geavanceerde Smart Keys en Keyless Go-systemen moeiteloos programmeren. Of u nu op uw oprit staat, op uw werk of langs een drukke weg in ${city}, onze service gaat altijd door.`,
-  (city: string) => `Waar traditionele garages in ${city} vaak een wachttijd van weken hebben voor het bestellen van een originele autosleutel, doen wij dit direct uit voorraad. Onze monteurs in ${city} hebben toegang tot software van meer dan 59 automerken. Dit betekent dat wij de boordcomputer kunnen uitlezen, oude en verloren sleutels veilig uit het geheugen kunnen blokkeren, en ter plekke een compleet nieuwe sleutel voor u maken.`,
+  (city: string) => `Waar traditionele garages in ${city} vaak een wachttijd van weken hebben voor het bestellen van een originele autosleutel, doen wij dit direct uit voorraad. Onze monteurs in ${city} hebben toegang tot software van meer dan 59 automerken. Dit betekent dat wij de boordcomputer kunnen uitlezen, oude en verloren sleutels veilig uit het geheugen kunnen blokkeren, en ter plekke een compleet nieuwe sleutel voor u bijmaken of kopiëren.`,
   (city: string) => `Het verliezen van uw laatste autosleutel (All Keys Lost) in ${city} is een stressvolle gebeurtenis. Wij nemen deze zorg volledig uit handen. Omdat wij niet werken met wegsleepdiensten of dure tussenpersonen, bent u bij ons tot wel 50% voordeliger uit. Onze ervaren technici zijn getraind om veilig de immobiliser of ECU van uw voertuig te bereiken, zelfs als de deuren geblokkeerd zijn met zogenaamde deadlocks.`
 ];
 
@@ -42,7 +42,7 @@ export default function CitySeoText({ cityName, travelTime }: CitySeoTextProps) 
 
   return (
     <div className="seo-article-block">
-      <h2>Compleet Verzorgde Autosleutelservice in {cityName}</h2>
+      <h2>Autosleutel Bijmaken & Kopiëren — Complete Service in {cityName}</h2>
       <p>{intro(cityName, travelTime)}</p>
       
       <h3>Moderne Apparatuur, Direct uit Voorraad</h3>

@@ -65,11 +65,11 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
   return {
     title: {
-      absolute: city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
+      absolute: city.customMetaTitle || `Autosleutel Bijmaken & Kopiëren ${city.city} | 24/7`,
     },
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel kwijt in ${city.city}? Binnen 30–60 min ter plaatse, vanaf €${SITE_CONFIG.prices.transponder}. Alle merken, 12 maanden garantie.`
+        `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Binnen 30–60 min ter plaatse, vanaf €${SITE_CONFIG.prices.transponder}. Alle merken, 12 maanden garantie.`
     ),
     alternates: {
       canonical: pageUrl,
@@ -81,8 +81,8 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     openGraph: {
       type: 'website',
       url: pageUrl,
-      title: `Autosleutel Bijmaken ${city.city} | Mobiel Programmeren 24/7`,
-      description: `Autosleutel kwijt of reserve bijmaken in ${city.city}? Wij zijn er binnen 30-60 min ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
+      title: `Autosleutel Bijmaken & Kopiëren ${city.city} | 24/7`,
+      description: `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Wij zijn er binnen 30-60 min ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
     other: {
@@ -183,7 +183,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   {city.customH1 ? (
                     city.customH1
                   ) : (
-                    <>Autosleutel Bijmaken & Sleutelmaker {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Service</span></>
+                    <>Autosleutel Bijmaken & Kopiëren {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Service</span></>
                   )}
                 </h1>
                 <p className={styles.heroUtrechtLead}>
@@ -218,7 +218,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                 <HeroTrustBadge />
               </div>
-              <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
+              <h1>{city.customH1 || `Autosleutel Bijmaken & Kopiëren ${city.city} — 24/7 Service`}</h1>
               <p className={styles.heroLead}>
                 Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
                 Alle merken, ter plaatse geprogrammeerd.
