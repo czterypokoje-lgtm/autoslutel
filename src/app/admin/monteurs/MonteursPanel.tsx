@@ -124,7 +124,9 @@ export default function MonteursPanel({
                 style={{ background: technicianColour(t.color) }}
               />
               <span>
-                <span className={styles.suggestionName}>{t.name}</span>
+                <a className={styles.suggestionName} href={`/admin/monteurs/${t.id}`}>
+                  {t.name}
+                </a>
                 <span className={styles.suggestionWhy}>
                   {t.phone ?? 'geen telefoon'} ·{' '}
                   {t.werkgebied && t.werkgebied.length > 0
