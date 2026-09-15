@@ -403,11 +403,47 @@
   .heroCtas { flex-direction: column; }
   .heroPhoneBtn, .heroWaBtn, .heroUrgentBtn { width: 100%; justify-content: center; }
   .emergencyInner { flex-direction: column; gap: 0.75rem; }
-  .servicesGrid { grid-template-columns: 1fr; }
   .reviewGrid { grid-template-columns: 1fr; }
   .finalCtaBtns { flex-direction: column; }
   .mapBox { height: 340px; }
   .mapLiveBanner { flex-direction: column; text-align: center; gap: 0.5rem; }
+
+  /*
+   * Six full-height cards stacked stretched this section to several
+   * screens of scrolling on a phone. A horizontal swipe carousel keeps
+   * one card (plus a teaser of the next) in view at a time instead —
+   * scroll-snap only, no JS, so it degrades to plain scroll if disabled.
+   */
+  .services { padding: 2.5rem 0; }
+  .servicesGrid {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.85rem;
+    padding: 0 1.25rem 0.75rem;
+    margin: 0 -1.25rem;
+    scrollbar-width: none;
+  }
+  .servicesGrid::-webkit-scrollbar { display: none; }
+  .serviceCard {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+  .serviceImgBox { height: 120px; }
+  .serviceBody { padding: 1rem; }
+  .serviceTitle { font-size: 1rem; margin-bottom: 0.4rem; }
+  .serviceDesc {
+    font-size: 0.87rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .serviceActionBtn { padding: 0.6rem 1rem; font-size: 0.9rem; }
 }
 
 
