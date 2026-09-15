@@ -16,6 +16,7 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import styles from './page.module.css';
 
 export async function generateStaticParams() {
   return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
@@ -180,73 +181,73 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '3rem', maxWidth: 560, margin: '0 auto 3rem' }}>
               Wij specialiseren ons in alle autosleutel services voor {brand.name} — snel, mobiel en goedkoper dan de dealer.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '2rem' }}>
+            <div className={styles.dienstenGrid}>
 
               {/* Card 1: Bijmaken */}
-              <Link href="/diensten/autosleutel-bijmaken" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-bijmaken-${brand.slug}`}>
-                <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
+              <Link href="/diensten/autosleutel-bijmaken" className={styles.dienstCard} id={`brand-dienst-bijmaken-${brand.slug}`}>
+                <div className={styles.dienstCardImg}>
                   <Image src="/images/service_bijmaken.webp" alt={`${brand.name} autosleutel bijmaken`} fill style={{ objectFit: 'contain' }} />
                 </div>
-                <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
+                <h3 className={styles.dienstCardTitle}>
                   {brand.name} Autosleutel Bijmaken
                 </h3>
-                <p style={{ color: '#64748b', fontSize: '0.92rem', lineHeight: 1.6, flex: 1 }}>
+                <p className={styles.dienstCardDesc}>
                   Extra of reserve {brand.name} sleutel nodig? Wij frezen en programmeren een nieuwe sleutel direct bij u op locatie, vaak de helft goedkoper dan de {brand.name}-dealer.
                 </p>
-                <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €149,- ex</span>
-                  <span style={{ color: 'var(--navy-700)', fontWeight: 600, fontSize: '0.9rem' }}>Lees meer &rarr;</span>
+                <div className={styles.dienstCardFooter}>
+                  <span className={styles.dienstCardPrice}>Vanaf €149,- ex</span>
+                  <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
 
               {/* Card 2: Kwijt */}
-              <Link href="/diensten/alle-sleutels-kwijt-auto" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-kwijt-${brand.slug}`}>
-                <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
+              <Link href="/diensten/alle-sleutels-kwijt-auto" className={styles.dienstCard} id={`brand-dienst-kwijt-${brand.slug}`}>
+                <div className={styles.dienstCardImg}>
                   <Image src="/images/service_kwijt_illustration.webp" alt={`${brand.name} autosleutels kwijt`} fill style={{ objectFit: 'contain' }} />
                 </div>
-                <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
+                <h3 className={styles.dienstCardTitle}>
                   {brand.name} Autosleutels Kwijt
                 </h3>
-                <p style={{ color: '#64748b', fontSize: '0.92rem', lineHeight: 1.6, flex: 1 }}>
+                <p className={styles.dienstCardDesc}>
                   Alle {brand.name} sleutels kwijt? Wij komen direct naar u toe, openen de auto schadevrij, frezen een nieuwe sleutel en leren hem in de {brand.name} boordcomputer.
                 </p>
-                <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €299,- ex</span>
-                  <span style={{ color: 'var(--navy-700)', fontWeight: 600, fontSize: '0.9rem' }}>Lees meer &rarr;</span>
+                <div className={styles.dienstCardFooter}>
+                  <span className={styles.dienstCardPrice}>Vanaf €299,- ex</span>
+                  <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
 
               {/* Card 3: Openen */}
-              <Link href="/diensten/auto-openen-zonder-sleutel" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-openen-${brand.slug}`}>
-                <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
+              <Link href="/diensten/auto-openen-zonder-sleutel" className={styles.dienstCard} id={`brand-dienst-openen-${brand.slug}`}>
+                <div className={styles.dienstCardImg}>
                   <Image src="/images/service_openen.webp" alt={`${brand.name} autodeur openen`} fill style={{ objectFit: 'contain' }} />
                 </div>
-                <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
+                <h3 className={styles.dienstCardTitle}>
                   {brand.name} Autodeur Openen
                 </h3>
-                <p style={{ color: '#64748b', fontSize: '0.92rem', lineHeight: 1.6, flex: 1 }}>
+                <p className={styles.dienstCardDesc}>
                   Sleutel in de {brand.name} laten liggen? Wij openen uw auto 100% schadevrij met professioneel gereedschap, zonder krassen of beschadigingen.
                 </p>
-                <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €149,- ex</span>
-                  <span style={{ color: 'var(--navy-700)', fontWeight: 600, fontSize: '0.9rem' }}>Lees meer &rarr;</span>
+                <div className={styles.dienstCardFooter}>
+                  <span className={styles.dienstCardPrice}>Vanaf €149,- ex</span>
+                  <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
 
               {/* Card 4: Contactslot Vervangen */}
-              <Link href="/diensten" style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-contactslot-${brand.slug}`}>
-                <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem' }}>
+              <Link href="/diensten" className={styles.dienstCard} id={`brand-dienst-contactslot-${brand.slug}`}>
+                <div className={styles.dienstCardImg}>
                   <Image src="/images/service_contactslot.webp" alt={`${brand.name} contactslot vervangen`} fill style={{ objectFit: 'contain' }} />
                 </div>
-                <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
+                <h3 className={styles.dienstCardTitle}>
                   {brand.name} Contactslot Vervangen
                 </h3>
-                <p style={{ color: '#64748b', fontSize: '0.92rem', lineHeight: 1.6, flex: 1 }}>
+                <p className={styles.dienstCardDesc}>
                   {brand.name} contactslot defect of beschadigd? Wij vervangen het contactslot en programmeren de nieuwe sleutel direct ter plaatse, zonder uw auto naar de garage te slepen.
                 </p>
-                <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €299,- ex</span>
-                  <span style={{ color: 'var(--navy-700)', fontWeight: 600, fontSize: '0.9rem' }}>Lees meer &rarr;</span>
+                <div className={styles.dienstCardFooter}>
+                  <span className={styles.dienstCardPrice}>Vanaf €299,- ex</span>
+                  <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
 
