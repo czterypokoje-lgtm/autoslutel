@@ -5,6 +5,12 @@ import styles from './HorizontalKentekenForm.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
 import { publicQuoteFor, type StartType, type WorkingKeyType } from '@/lib/publicQuote';
 
+declare global {
+  interface Window {
+    oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
+  }
+}
+
 export default function HorizontalKentekenForm() {
   const [kenteken, setKenteken] = useState('');
   const [postcode, setPostcode] = useState('');
@@ -113,7 +119,8 @@ export default function HorizontalKentekenForm() {
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));
-    
+    window.oaiq?.('track', 'lead_created', { content_name: 'kenteken_form' });
+
     (e.currentTarget as HTMLAnchorElement).href = buildWhatsappUrl();
   };
 

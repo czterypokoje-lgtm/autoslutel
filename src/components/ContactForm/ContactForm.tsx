@@ -6,6 +6,7 @@ declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
+    oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
   }
 }
 
@@ -80,6 +81,7 @@ export default function ContactForm() {
         if (typeof window.gtag === 'function') {
           window.gtag('event', 'generate_lead', { event_category: 'contact_form' });
         }
+        window.oaiq?.('track', 'lead_created', { content_name: 'contact_form' });
       } else {
         setStatus('error');
       }

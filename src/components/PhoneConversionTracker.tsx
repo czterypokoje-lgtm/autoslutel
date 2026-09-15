@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 declare global {
   interface Window {
     dataLayer?: unknown[];
+    oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
   }
 }
 
@@ -39,6 +40,12 @@ export default function PhoneConversionTracker() {
 
       if (target.href.startsWith('tel:')) {
         window.dataLayer.push({ event: 'click_to_call', link_url: target.href });
+        // OpenAI Ads "Lead created" conversion — a phone call is the
+        // majority of this business's real leads, so it counts the same as
+        // a web form submit. window.oaiq only exists once marketing consent
+        // was granted and the pixel actually loaded (see src/lib/consent.ts);
+        // calling it beforehand would throw, hence the guard.
+        window.oaiq?.('track', 'lead_created', { content_name: 'phone_call' });
       }
 
       if (

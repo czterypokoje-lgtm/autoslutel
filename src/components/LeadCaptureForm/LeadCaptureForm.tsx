@@ -5,6 +5,12 @@ import { SITE_CONFIG } from "@/config/site.config";
 import { toWebp } from "@/lib/toWebp";
 import styles from "./LeadCaptureForm.module.css";
 
+declare global {
+  interface Window {
+    oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
+  }
+}
+
 interface Props {
   city?: string;
   phone: string;
@@ -114,6 +120,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));
+    window.oaiq?.('track', 'lead_created', { content_name: city ? 'city_form' : 'hero_form' });
 
     // Open WhatsApp synchronously, inside the click's call stack. Doing this
     // from a setTimeout put it outside the user-gesture chain, so popup
