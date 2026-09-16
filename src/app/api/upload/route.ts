@@ -1,5 +1,7 @@
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import sharp from 'sharp';
+import convert from 'heic-convert';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 
 /**
@@ -80,9 +82,51 @@ export async function POST(request: Request): Promise<NextResponse> {
       })
     );
 
-    const blob = await put(`leads/photo.${extension}`, capped, {
+    /*
+     * HEIC/HEIF only gets this far when the client's own conversion
+     * (toWebp.ts) couldn't decode it — that's normal on plenty of browsers,
+     * WhatsApp's in-app one included, since createImageBitmap has no HEIC
+     * support outside Safari's own engine. Storing that raw file public and
+     * re-serving it from our domain meant the photo looked fine to whoever
+     * uploaded it (often actual Safari) and broken or half-rendered to
+     * anyone viewing it from a browser that can't decode HEIC at all — most
+     * of them. Converting here, server-side, means the format a customer's
+     * phone happened to save in stops being a rendering lottery for
+     * whoever opens the link next.
+     */
+    let body: ReadableStream<Uint8Array> | Buffer = capped;
+    let finalContentType = contentType;
+    let finalExtension = extension;
+
+    if (contentType === 'image/heic' || contentType === 'image/heif') {
+      // Drain the stream into a buffer first — sharp needs the whole file
+      // either way, and this guarantees a real fallback: if conversion
+      // fails, `original` (not the now-exhausted stream) is what gets
+      // stored, so a failed conversion is never worse than today's behavior.
+      const chunks: Uint8Array[] = [];
+      for await (const chunk of capped as unknown as AsyncIterable<Uint8Array>) {
+        chunks.push(chunk);
+      }
+      const original = Buffer.concat(chunks);
+      body = original;
+
+      try {
+        // sharp's bundled libheif only decodes AVIF, not the HEVC payload real
+        // phone cameras write — heic-convert wraps a WASM libheif build that
+        // does, giving us a real (lossless, PNG) intermediate to re-encode
+        // through sharp so the stored file is still our normal webp output.
+        const decoded = await convert({ buffer: original, format: 'PNG' });
+        body = await sharp(Buffer.from(decoded)).rotate().webp({ quality: 82 }).toBuffer();
+        finalContentType = 'image/webp';
+        finalExtension = 'webp';
+      } catch (conversionError) {
+        console.error('HEIC server-side conversion failed, storing original HEIC:', conversionError);
+      }
+    }
+
+    const blob = await put(`leads/photo.${finalExtension}`, body, {
       access: 'public',
-      contentType,
+      contentType: finalContentType,
       addRandomSuffix: true, // unguessable path; no collisions on a fixed name
       token: process.env.bbauto_READ_WRITE_TOKEN,
     });
