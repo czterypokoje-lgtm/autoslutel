@@ -24,15 +24,24 @@ export default async function RapportagePage() {
 
   const supabase = await createSupabaseServerClient();
 
-  const [source, service, response, technician, region] = await Promise.all([
+  const [source, service, response, technician, region, make, makeRegion, commission] = await Promise.all([
     supabase.from('crm_report_source').select('*'),
     supabase.from('crm_report_service').select('*').order('klussen', { ascending: false }),
     supabase.from('crm_report_response').select('*').order('week', { ascending: false }).limit(8),
     supabase.from('crm_report_technician').select('*').order('klussen', { ascending: false }),
     supabase.from('crm_report_region').select('*').order('leads', { ascending: false }).limit(15),
+    supabase.from('crm_report_make').select('*').order('omzet', { ascending: false }),
+    supabase
+      .from('crm_report_make_region')
+      .select('*')
+      .order('omzet', { ascending: false })
+      .limit(20),
+    supabase.from('crm_report_commission').select('*').order('omzet', { ascending: false }),
   ]);
 
-  const failed = [source, service, response, technician, region].find((r) => r.error);
+  const failed = [source, service, response, technician, region, make, makeRegion, commission].find(
+    (r) => r.error
+  );
   if (failed?.error) {
     const missing = /does not exist|relation|permission denied/i.test(failed.error.message);
     return (
@@ -41,7 +50,8 @@ export default async function RapportagePage() {
         {missing && (
           <>
             <br />
-            Voer <code>supabase/migrations/0006_customers_reports.sql</code> uit.
+            Voer <code>supabase/migrations/0006_customers_reports.sql</code> en{' '}
+            <code>supabase/migrations/0036_revenue_analysis.sql</code> uit.
           </>
         )}
       </div>
@@ -346,6 +356,192 @@ export default async function RapportagePage() {
           Dit sluit terug op de website: komen er veel leads uit één regio, dan
           verdient die stadspagina de volgende uren contentwerk. Het CRM levert
           hier het bewijs voor de SEO-planning.
+        </p>
+      </div>
+
+      <div className={styles.panel}>
+        <h2>6 · Omzet en annuleringen per automerk</h2>
+        <div className={styles.wrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Merk</th>
+                <th>Klussen</th>
+                <th>Geannuleerd</th>
+                <th>Annuleer %</th>
+                <th style={{ textAlign: 'right' }}>Gemiddeld</th>
+                <th style={{ textAlign: 'right' }}>Omzet</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(make.data ?? []).length === 0 ? (
+                <tr>
+                  <td colSpan={6} className={styles.empty}>Nog geen afgeronde klussen.</td>
+                </tr>
+              ) : (
+                (make.data ?? []).map((row) => (
+                  <tr key={row.merk as string}>
+                    <td className={styles.strong}>{row.merk as string}</td>
+                    <td>{show(row.klussen)}</td>
+                    <td>{show(row.geannuleerd)}</td>
+                    <td>{show(row.annuleer_pct, (n) => `${n}%`)}</td>
+                    <td className={styles.money}>
+                      {show(row.gemiddelde_prijs, (n) => MONEY.format(n))}
+                    </td>
+                    <td className={styles.money}>{show(row.omzet, (n) => MONEY.format(n))}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className={styles.cards}>
+          {(make.data ?? []).length === 0 ? (
+            <p className={styles.empty}>Nog geen afgeronde klussen.</p>
+          ) : (
+            (make.data ?? []).map((row) => (
+              <div key={row.merk as string} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>{row.merk as string}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Klussen / geannuleerd</span>
+                  <span className={styles.cardValue}>{show(row.klussen)} / {show(row.geannuleerd)} ({show(row.annuleer_pct, (n) => `${n}%`)})</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Gemiddeld / omzet</span>
+                  <span className={styles.cardValue}>{show(row.gemiddelde_prijs, (n) => MONEY.format(n))} / {show(row.omzet, (n) => MONEY.format(n))}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+        <p className={styles.note}>
+          Een merk met veel omzet maar ook een hoog annuleerpercentage kost meer
+          tijd dan het lijkt op te leveren — dit is waar dat zichtbaar wordt.
+        </p>
+      </div>
+
+      <div className={styles.panel}>
+        <h2>7 · Welk merk verkoopt waar (top 20 op omzet)</h2>
+        <div className={styles.wrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Merk</th>
+                <th>Postcode</th>
+                <th>Klussen</th>
+                <th>Geannuleerd</th>
+                <th style={{ textAlign: 'right' }}>Omzet</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(makeRegion.data ?? []).length === 0 ? (
+                <tr>
+                  <td colSpan={5} className={styles.empty}>Nog geen data.</td>
+                </tr>
+              ) : (
+                (makeRegion.data ?? []).map((row) => (
+                  <tr key={`${row.merk}-${row.postcode4}`}>
+                    <td className={styles.strong}>{row.merk as string}</td>
+                    <td>{row.postcode4 as string}</td>
+                    <td>{show(row.klussen)}</td>
+                    <td>{show(row.geannuleerd)}</td>
+                    <td className={styles.money}>{show(row.omzet, (n) => MONEY.format(n))}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className={styles.cards}>
+          {(makeRegion.data ?? []).length === 0 ? (
+            <p className={styles.empty}>Nog geen data.</p>
+          ) : (
+            (makeRegion.data ?? []).map((row) => (
+              <div key={`${row.merk}-${row.postcode4}`} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>
+                    {row.merk as string} · {row.postcode4 as string}
+                  </span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Klussen / geannuleerd</span>
+                  <span className={styles.cardValue}>{show(row.klussen)} / {show(row.geannuleerd)}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Omzet</span>
+                  <span className={styles.cardValue}>{show(row.omzet, (n) => MONEY.format(n))}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+        <p className={styles.note}>
+          Waar focussen: een merk dat elders verlies draait kan hier alsnog de
+          moeite waard zijn in één specifieke regio, en omgekeerd.
+        </p>
+      </div>
+
+      <div className={styles.panel}>
+        <h2>8 · Commissie per monteur — afgesproken vs. echt</h2>
+        <div className={styles.wrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Monteur</th>
+                <th>Klussen</th>
+                <th style={{ textAlign: 'right' }}>Omzet</th>
+                <th style={{ textAlign: 'right' }}>Commissie</th>
+                <th>Effectief %</th>
+                <th>Ingesteld %</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(commission.data ?? []).length === 0 ? (
+                <tr>
+                  <td colSpan={6} className={styles.empty}>Nog geen monteurs.</td>
+                </tr>
+              ) : (
+                (commission.data ?? []).map((row) => (
+                  <tr key={row.technician_id as string}>
+                    <td className={styles.strong}>{row.name as string}</td>
+                    <td>{show(row.klussen)}</td>
+                    <td className={styles.money}>{show(row.omzet, (n) => MONEY.format(n))}</td>
+                    <td className={styles.money}>{show(row.commissie, (n) => MONEY.format(n))}</td>
+                    <td>{show(row.effectief_commissie_pct, (n) => `${n}%`)}</td>
+                    <td>{show(row.gemiddeld_ingesteld_pct, (n) => `${n}%`)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className={styles.cards}>
+          {(commission.data ?? []).length === 0 ? (
+            <p className={styles.empty}>Nog geen monteurs.</p>
+          ) : (
+            (commission.data ?? []).map((row) => (
+              <div key={row.technician_id as string} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>{row.name as string}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Omzet / commissie</span>
+                  <span className={styles.cardValue}>{show(row.omzet, (n) => MONEY.format(n))} / {show(row.commissie, (n) => MONEY.format(n))}</span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Effectief % / ingesteld %</span>
+                  <span className={styles.cardValue}>{show(row.effectief_commissie_pct, (n) => `${n}%`)} / {show(row.gemiddeld_ingesteld_pct, (n) => `${n}%`)}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+        <p className={styles.note}>
+          &quot;Effectief %&quot; is commissie gedeeld door omzet — wat er echt
+          binnenkomt. Wijkt dit structureel af van het ingestelde percentage,
+          dan klopt er iets niet in de afspraak of in hoe een monteur betaalt.
         </p>
       </div>
     </>
