@@ -131,6 +131,39 @@ export default function CoverageTree({
   const hasType = (make: string, model: string, type: KeyType): boolean =>
     state.get(norm(make))?.get(norm(model))?.has(type) ?? false;
 
+  /** The real from/to year already on a row, so an existing bound shows up
+   * instead of the inputs looking blank the next time this page loads. */
+  const yearOf = (make: string, model: string | null, type: KeyType): { from: string; to: string } => {
+    const row = rows.find(
+      (r) =>
+        r.scenario === activeScenario &&
+        norm(r.make) === norm(make) &&
+        (model ? norm(r.model ?? '') === norm(model) : r.model === null) &&
+        r.keyless === (type === 'keyless')
+    );
+    return { from: row?.from_year ? String(row.from_year) : '', to: row?.to_year ? String(row.to_year) : '' };
+  };
+
+  /*
+   * Draft year bounds, keyed by make/model/type — separate from `rows` so
+   * typing a year doesn't need a round trip before the input reflects what
+   * was typed, and pre-seeded from the real row the moment one exists.
+   */
+  const [yearDrafts, setYearDrafts] = useState<Record<string, { from: string; to: string }>>({});
+  const draftKey = (make: string, model: string | null, type: KeyType) => `${norm(make)}|${model ? norm(model) : ''}|${type}`;
+  const draftYear = (make: string, model: string | null, type: KeyType) =>
+    yearDrafts[draftKey(make, model, type)] ?? yearOf(make, model, type);
+
+  function setDraftYear(make: string, model: string | null, type: KeyType, field: 'from' | 'to', value: string) {
+    const k = draftKey(make, model, type);
+    setYearDrafts((prev) => ({ ...prev, [k]: { ...draftYear(make, model, type), [field]: value } }));
+  }
+
+  const toIntOrNull = (v: string): number | null => {
+    const n = parseInt(v, 10);
+    return Number.isFinite(n) && v.trim() !== '' ? n : null;
+  };
+
   const usable = useMemo(
     () => catalog.filter((m) => !EXCLUDED_MAKES.has(norm(m.make))),
     [catalog]
@@ -188,13 +221,21 @@ export default function CoverageTree({
    * full refetch to show a tap that already succeeded from the tapper's
    * point of view.
    */
-  async function setCoverage(make: string, model: string | null, type: KeyType, on: boolean) {
+  async function setCoverage(
+    make: string,
+    model: string | null,
+    type: KeyType,
+    on: boolean,
+    years?: { fromYear: number | null; toYear: number | null }
+  ) {
     const key = `${activeScenario}|${make}|${model ?? ''}|${type}`;
     setBusy(key);
     setError(null);
 
     const keylessValue = type === 'keyless';
     const previous = rows;
+    const fromYear = years?.fromYear ?? null;
+    const toYear = years?.toYear ?? null;
 
     if (on) {
       const newRow: CoverageEntry = {
@@ -202,12 +243,26 @@ export default function CoverageTree({
         make,
         model,
         scenario: activeScenario,
-        from_year: null,
-        to_year: null,
+        from_year: fromYear,
+        to_year: toYear,
         excluded: false,
         keyless: keylessValue,
       };
-      setRows((prev) => [...prev, newRow]);
+      // Replace any existing row for this exact make/model/scenario/keyless
+      // (not just the synthetic pending id) — this path also runs when
+      // editing the year bounds on a row that's already on, where the real
+      // row has a real UUID, not the pending placeholder's id.
+      setRows((prev) => [
+        ...prev.filter((r) => {
+          const sameRow =
+            r.scenario === activeScenario &&
+            norm(r.make) === norm(make) &&
+            (model ? norm(r.model ?? '') === norm(model) : r.model === null) &&
+            r.keyless === keylessValue;
+          return !sameRow;
+        }),
+        newRow,
+      ]);
 
       const { error: upsertError } = await supabase.from('technician_coverage').upsert(
         [
@@ -218,6 +273,8 @@ export default function CoverageTree({
             scenario: activeScenario,
             keyless: keylessValue,
             excluded: false,
+            from_year: fromYear,
+            to_year: toYear,
           },
         ],
         { onConflict: 'technician_id,make,model,scenario,keyless' }
@@ -261,6 +318,53 @@ export default function CoverageTree({
 
   const totalOn = countByScenario.get(activeScenario) ?? 0;
 
+  /**
+   * "Alle jaren" was the only option before — a technician who does BMW
+   * except the newest models had no honest way to say that, so every make
+   * either meant "all of it" or nothing. Blank stays "alle jaren" (no
+   * bound); filling in a year narrows it, matching how dispatch already
+   * reads from_year/to_year everywhere else (capability.ts, dispatchPricing.ts).
+   * Editing the years on an already-on toggle re-saves immediately on blur —
+   * no separate save button, same as every other toggle here.
+   */
+  function renderYearInputs(make: string, model: string | null, type: KeyType, isOn: boolean) {
+    const y = draftYear(make, model, type);
+    const commit = (field: 'from' | 'to', value: string) => {
+      setDraftYear(make, model, type, field, value);
+      if (isOn) {
+        const next = field === 'from' ? { from: value, to: y.to } : { from: y.from, to: value };
+        setCoverage(make, model, type, true, {
+          fromYear: toIntOrNull(next.from),
+          toYear: toIntOrNull(next.to),
+        });
+      }
+    };
+
+    return (
+      <span className={styles.yearRange}>
+        <input
+          type="number"
+          inputMode="numeric"
+          className={styles.yearInput}
+          placeholder="vanaf"
+          value={y.from}
+          onChange={(e) => setDraftYear(make, model, type, 'from', e.target.value)}
+          onBlur={(e) => commit('from', e.target.value)}
+        />
+        <span className={styles.yearDash}>–</span>
+        <input
+          type="number"
+          inputMode="numeric"
+          className={styles.yearInput}
+          placeholder="tot"
+          value={y.to}
+          onChange={(e) => setDraftYear(make, model, type, 'to', e.target.value)}
+          onBlur={(e) => commit('to', e.target.value)}
+        />
+      </span>
+    );
+  }
+
   function renderMakeCard(makeRow: CatalogMake) {
     const isOpen = expanded.has(makeRow.make) || (search.length > 0 && filtered.length <= 6);
     const makeHasBlade = makeRow.models.some((m) => m.nonKeyless);
@@ -269,7 +373,7 @@ export default function CoverageTree({
     const keylessOn = hasType(makeRow.make, '', 'keyless');
 
     return (
-      <div key={makeRow.make} className={styles.makeCard}>
+      <div key={makeRow.make} className={`${styles.makeCard} ${isOpen ? styles.makeCardOpen : ''}`}>
         <button type="button" className={styles.makeHead} onClick={() => toggleExpand(makeRow.make)}>
           {isOpen ? <ChevronDown size={16} strokeWidth={2} /> : <ChevronRight size={16} strokeWidth={2} />}
           <span className={styles.makeName}>{makeRow.make}</span>
@@ -277,26 +381,44 @@ export default function CoverageTree({
         </button>
 
         <div className={styles.makeQuick}>
-          <span className={styles.quickLabel}>Hele merk, alle jaren:</span>
+          <span className={styles.quickLabel}>Hele merk:</span>
           {makeHasBlade && (
-            <button
-              type="button"
-              className={`${styles.toggle} ${bladeOn ? styles.toggleOn : ''}`}
-              disabled={busy === `${activeScenario}|${makeRow.make}||blade`}
-              onClick={() => setCoverage(makeRow.make, null, 'blade', !bladeOn)}
-            >
-              <Key size={13} strokeWidth={2} /> Sleutel
-            </button>
+            <span className={styles.togglePair}>
+              <button
+                type="button"
+                className={`${styles.toggle} ${bladeOn ? styles.toggleOn : ''}`}
+                disabled={busy === `${activeScenario}|${makeRow.make}||blade`}
+                onClick={() => {
+                  const y = draftYear(makeRow.make, null, 'blade');
+                  setCoverage(makeRow.make, null, 'blade', !bladeOn, {
+                    fromYear: toIntOrNull(y.from),
+                    toYear: toIntOrNull(y.to),
+                  });
+                }}
+              >
+                <Key size={13} strokeWidth={2} /> Sleutel
+              </button>
+              {renderYearInputs(makeRow.make, null, 'blade', bladeOn)}
+            </span>
           )}
           {makeHasKeyless && (
-            <button
-              type="button"
-              className={`${styles.toggle} ${keylessOn ? styles.toggleOn : ''}`}
-              disabled={busy === `${activeScenario}|${makeRow.make}||keyless`}
-              onClick={() => setCoverage(makeRow.make, null, 'keyless', !keylessOn)}
-            >
-              <Radio size={13} strokeWidth={2} /> Keyless
-            </button>
+            <span className={styles.togglePair}>
+              <button
+                type="button"
+                className={`${styles.toggle} ${keylessOn ? styles.toggleOn : ''}`}
+                disabled={busy === `${activeScenario}|${makeRow.make}||keyless`}
+                onClick={() => {
+                  const y = draftYear(makeRow.make, null, 'keyless');
+                  setCoverage(makeRow.make, null, 'keyless', !keylessOn, {
+                    fromYear: toIntOrNull(y.from),
+                    toYear: toIntOrNull(y.to),
+                  });
+                }}
+              >
+                <Radio size={13} strokeWidth={2} /> Keyless
+              </button>
+              {renderYearInputs(makeRow.make, null, 'keyless', keylessOn)}
+            </span>
           )}
         </div>
 
