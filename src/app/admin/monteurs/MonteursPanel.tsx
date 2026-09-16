@@ -53,6 +53,7 @@ export default function MonteursPanel({
    * so this list is what makes fase 3 usable at all.
    */
   const [users, setUsers] = useState<CrmUser[]>([]);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -173,6 +174,30 @@ export default function MonteursPanel({
       window.alert(body?.error ?? 'Verwijderen mislukt.');
       return;
     }
+    router.refresh();
+  }
+
+  async function removeLogin(user: CrmUser) {
+    if (
+      !window.confirm(
+        `Login ${user.email} definitief verwijderen? Elke monteur die hiermee gekoppeld is verliest zijn login. Het e-mailadres komt daarna weer vrij voor een nieuwe uitnodiging.`
+      )
+    ) {
+      return;
+    }
+
+    setDeletingUserId(user.id);
+    const response = await fetch(`/api/admin/crm-users/${user.id}`, {
+      method: 'DELETE',
+    }).catch(() => null);
+
+    setDeletingUserId(null);
+    if (!response || !response.ok) {
+      const body = await response?.json().catch(() => null);
+      window.alert(body?.error ?? 'Verwijderen mislukt.');
+      return;
+    }
+    setUsers((current) => current.filter((u) => u.id !== user.id));
     router.refresh();
   }
 
@@ -435,6 +460,32 @@ export default function MonteursPanel({
           dat laatste krijgen ze geen klussen aangeboden.
         </p>
       </form>
+
+      {users.length > 0 && (
+        <div className={styles.panel}>
+          <h2>Logins</h2>
+          <p className={styles.note}>
+            Elke monteur-login, gekoppeld of niet. Een e-mailadres kan pas opnieuw
+            gebruikt worden voor een uitnodiging nadat de oude login hier is
+            verwijderd — Supabase staat geen dubbel e-mailadres toe.
+          </p>
+          {users.map((u) => (
+            <div key={u.id} className={styles.suggestion}>
+              <span>{u.email}</span>
+              <span className={styles.suggestionActions}>
+                <button
+                  type="button"
+                  className={styles.secondary}
+                  disabled={deletingUserId === u.id}
+                  onClick={() => removeLogin(u)}
+                >
+                  {deletingUserId === u.id ? 'Verwijderen…' : 'Verwijderen'}
+                </button>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
