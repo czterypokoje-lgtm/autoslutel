@@ -117,11 +117,18 @@ export default function InvoiceForm({
    * live subscription would be solving a problem that doesn't exist yet.
    */
   const [priceList, setPriceList] = useState<{ description: string; price: number }[]>([]);
+  const [priceListError, setPriceListError] = useState('');
   useEffect(() => {
     fetch('/api/admin/price-list')
-      .then((r) => (r.ok ? r.json() : { items: [] }))
-      .then((body) => setPriceList(body.items ?? []))
-      .catch(() => {});
+      .then(async (r) => {
+        const body = await r.json().catch(() => null);
+        if (!r.ok) {
+          setPriceListError(`Prijslijst laden mislukt (${r.status}): ${body?.error ?? 'onbekende fout'}`);
+          return;
+        }
+        setPriceList(body?.items ?? []);
+      })
+      .catch((err) => setPriceListError(`Prijslijst laden mislukt: ${err.message}`));
   }, []);
 
   function addLineFromTemplate(description: string) {
@@ -271,6 +278,7 @@ export default function InvoiceForm({
 
       <div className={styles.panel}>
         <h2>Regels</h2>
+        {priceListError && <p className={styles.error}>{priceListError}</p>}
         {priceList.length > 0 && (
           <label className={styles.field} style={{ marginBottom: '0.75rem' }}>
             <span className={styles.fieldLabel}>Snel toevoegen vanuit prijslijst</span>
