@@ -1,4 +1,5 @@
 import { getProducts } from './catalog';
+import { mergeExtraModels } from './carCatalogExtra';
 
 /** Mirrors quote.ts's COMPLETE_KEY — the categories that are actually a key. */
 const COMPLETE_KEY = ['afstandsbedieningen', 'smart-keys', 'transpondersleutels', 'sleutels-zonder-chip'];
@@ -72,12 +73,16 @@ export function catalogTree(): CatalogMake[] {
     }
   }
 
-  cache = [...byMake.entries()]
+  const fromWebshop = [...byMake.entries()]
     .map(([make, models]) => ({
       make,
       models: [...models.values()].sort((a, b) => a.model.localeCompare(b.model, 'nl')),
     }))
     .sort((a, b) => a.make.localeCompare(b.make, 'nl'));
+
+  // Coverage ("can this technician service this car") is a broader question
+  // than the webshop's own retail stock — see carCatalogExtra.ts.
+  cache = mergeExtraModels(fromWebshop);
 
   return cache;
 }

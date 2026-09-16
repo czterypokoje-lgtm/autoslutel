@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ui } from '../_ui';
 import styles from './invoice-form.module.css';
@@ -106,6 +106,33 @@ export default function InvoiceForm({
 
   function addLine() {
     setLines((prev) => [...prev, { ...EMPTY_LINE }]);
+  }
+
+  /*
+   * Real, office-maintained prices (dispatch_pricing, the same table
+   * get_price reads for the voice/WhatsApp agent) offered as ready-made
+   * lines — picking one fills in description + price instead of a
+   * technician typing out "BMW 3 Serie bijmaken" and guessing the number
+   * from memory. Fetched once; this list changes rarely enough that a
+   * live subscription would be solving a problem that doesn't exist yet.
+   */
+  const [priceList, setPriceList] = useState<{ description: string; price: number }[]>([]);
+  useEffect(() => {
+    fetch('/api/admin/price-list')
+      .then((r) => (r.ok ? r.json() : { items: [] }))
+      .then((body) => setPriceList(body.items ?? []))
+      .catch(() => {});
+  }, []);
+
+  function addLineFromTemplate(description: string) {
+    const template = priceList.find((p) => p.description === description);
+    if (!template) return;
+    setLines((prev) => {
+      const blankIndex = prev.findIndex((l) => !l.description.trim());
+      const filled: Line = { ...EMPTY_LINE, description: template.description, unitPrice: String(template.price) };
+      if (blankIndex === -1) return [...prev, filled];
+      return prev.map((l, i) => (i === blankIndex ? filled : l));
+    });
   }
 
   function removeLine(index: number) {
@@ -244,6 +271,26 @@ export default function InvoiceForm({
 
       <div className={styles.panel}>
         <h2>Regels</h2>
+        {priceList.length > 0 && (
+          <label className={styles.field} style={{ marginBottom: '0.75rem' }}>
+            <span className={styles.fieldLabel}>Snel toevoegen vanuit prijslijst</span>
+            <select
+              className={styles.control}
+              value=""
+              onChange={(e) => {
+                if (e.target.value) addLineFromTemplate(e.target.value);
+                e.target.value = '';
+              }}
+            >
+              <option value="">— kies een auto/dienst —</option>
+              {priceList.map((p) => (
+                <option key={p.description} value={p.description}>
+                  {p.description} — {MONEY.format(p.price)}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <div className={styles.linesHead}>
           <span>Beschrijving</span>
           <span>Aantal</span>
