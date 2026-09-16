@@ -23,6 +23,29 @@ type KeyType = 'keyless' | 'blade';
 const norm = (v: string) => v.trim().toLowerCase();
 
 /**
+ * Motorcycle marques and rare-in-NL American car brands that only appear
+ * here because the webshop's own key-parts catalogue happens to stock a
+ * part fitting them — not because a mobile car-key technician should ever
+ * be declaring "I can do this" for a motorcycle. Excluded from the picker
+ * entirely rather than just deprioritised: there is no real dispatch
+ * scenario where offering these here helps anyone.
+ */
+const EXCLUDED_MAKES = new Set(['aprilia', 'ducati', 'buick', 'cadillac', 'chrysler', 'dodge', 'general motors']);
+
+/**
+ * Real demand order, not a guess — ranked from actual completed jobs
+ * (weighted higher) and real leads across the whole business. Everything
+ * not in this list still exists below under "Overige merken"; nothing is
+ * deleted, just not made a technician scroll past 25 makes they will
+ * plausibly never see a job for before reaching Volkswagen and BMW.
+ */
+const POPULAR_ORDER = [
+  'volkswagen', 'bmw', 'kia', 'mercedes-benz', 'peugeot', 'fiat', 'opel',
+  'toyota', 'ford', 'renault', 'nissan', 'hyundai', 'citroen', 'citroën',
+  'volvo', 'audi', 'mitsubishi', 'mazda', 'suzuki', 'honda',
+];
+
+/**
  * The whole "which cars can you do" question, answered with two checkboxes
  * per scenario instead of a form.
  *
@@ -108,17 +131,40 @@ export default function CoverageTree({
   const hasType = (make: string, model: string, type: KeyType): boolean =>
     state.get(norm(make))?.get(norm(model))?.has(type) ?? false;
 
+  const usable = useMemo(
+    () => catalog.filter((m) => !EXCLUDED_MAKES.has(norm(m.make))),
+    [catalog]
+  );
+
   const filtered = useMemo(() => {
     const term = norm(search);
-    if (!term) return catalog;
-    return catalog
+    if (!term) return usable;
+    return usable
       .map((m) => {
         if (norm(m.make).includes(term)) return m;
         const models = m.models.filter((mo) => norm(mo.model).includes(term));
         return models.length ? { ...m, models } : null;
       })
       .filter((m): m is CatalogMake => m !== null);
-  }, [catalog, search]);
+  }, [usable, search]);
+
+  /*
+   * Split only while not searching — once someone types, relevance to their
+   * search term matters more than how common the make is, so search results
+   * stay one flat list exactly as before.
+   */
+  const { popular, others } = useMemo(() => {
+    if (search) return { popular: [], others: [] };
+    const rank = new Map(POPULAR_ORDER.map((m, i) => [m, i]));
+    const pop: CatalogMake[] = [];
+    const rest: CatalogMake[] = [];
+    for (const m of filtered) {
+      if (rank.has(norm(m.make))) pop.push(m);
+      else rest.push(m);
+    }
+    pop.sort((a, b) => rank.get(norm(a.make))! - rank.get(norm(b.make))!);
+    return { popular: pop, others: rest };
+  }, [filtered, search]);
 
   function toggleExpand(make: string) {
     setExpanded((prev) => {
@@ -215,6 +261,92 @@ export default function CoverageTree({
 
   const totalOn = countByScenario.get(activeScenario) ?? 0;
 
+  function renderMakeCard(makeRow: CatalogMake) {
+    const isOpen = expanded.has(makeRow.make) || (search.length > 0 && filtered.length <= 6);
+    const makeHasBlade = makeRow.models.some((m) => m.nonKeyless);
+    const makeHasKeyless = makeRow.models.some((m) => m.keyless);
+    const bladeOn = hasType(makeRow.make, '', 'blade');
+    const keylessOn = hasType(makeRow.make, '', 'keyless');
+
+    return (
+      <div key={makeRow.make} className={styles.makeCard}>
+        <button type="button" className={styles.makeHead} onClick={() => toggleExpand(makeRow.make)}>
+          {isOpen ? <ChevronDown size={16} strokeWidth={2} /> : <ChevronRight size={16} strokeWidth={2} />}
+          <span className={styles.makeName}>{makeRow.make}</span>
+          <span className={styles.makeCount}>{makeRow.models.length} modellen</span>
+        </button>
+
+        <div className={styles.makeQuick}>
+          <span className={styles.quickLabel}>Hele merk, alle jaren:</span>
+          {makeHasBlade && (
+            <button
+              type="button"
+              className={`${styles.toggle} ${bladeOn ? styles.toggleOn : ''}`}
+              disabled={busy === `${activeScenario}|${makeRow.make}||blade`}
+              onClick={() => setCoverage(makeRow.make, null, 'blade', !bladeOn)}
+            >
+              <Key size={13} strokeWidth={2} /> Sleutel
+            </button>
+          )}
+          {makeHasKeyless && (
+            <button
+              type="button"
+              className={`${styles.toggle} ${keylessOn ? styles.toggleOn : ''}`}
+              disabled={busy === `${activeScenario}|${makeRow.make}||keyless`}
+              onClick={() => setCoverage(makeRow.make, null, 'keyless', !keylessOn)}
+            >
+              <Radio size={13} strokeWidth={2} /> Keyless
+            </button>
+          )}
+        </div>
+
+        {isOpen && (
+          <div className={styles.modelList}>
+            {makeRow.models.map((model) => {
+              const modelBladeOn = hasType(makeRow.make, model.model, 'blade') || bladeOn;
+              const modelKeylessOn = hasType(makeRow.make, model.model, 'keyless') || keylessOn;
+              const years =
+                model.fromYear || model.toYear
+                  ? `${model.fromYear ?? '…'}–${model.toYear ?? 'nu'}`
+                  : 'alle jaren';
+
+              return (
+                <div key={model.model} className={styles.modelRow}>
+                  <span className={styles.modelName}>{model.model}</span>
+                  <span className={styles.modelYears}>{years}</span>
+                  <span className={styles.modelToggles}>
+                    {model.nonKeyless && (
+                      <button
+                        type="button"
+                        className={`${styles.toggleSm} ${modelBladeOn ? styles.toggleOn : ''}`}
+                        disabled={bladeOn || busy === `${activeScenario}|${makeRow.make}|${model.model}|blade`}
+                        title={bladeOn ? 'Al gedekt via heel merk' : 'Sleutel'}
+                        onClick={() => setCoverage(makeRow.make, model.model, 'blade', !modelBladeOn)}
+                      >
+                        <Key size={12} strokeWidth={2} />
+                      </button>
+                    )}
+                    {model.keyless && (
+                      <button
+                        type="button"
+                        className={`${styles.toggleSm} ${modelKeylessOn ? styles.toggleOn : ''}`}
+                        disabled={keylessOn || busy === `${activeScenario}|${makeRow.make}|${model.model}|keyless`}
+                        title={keylessOn ? 'Al gedekt via heel merk' : 'Keyless'}
+                        onClick={() => setCoverage(makeRow.make, model.model, 'keyless', !modelKeylessOn)}
+                      >
+                        <Radio size={12} strokeWidth={2} />
+                      </button>
+                    )}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div>
       {error && <p className={styles.errorNote}>{error}</p>}
@@ -261,91 +393,24 @@ export default function CoverageTree({
       <div className={styles.tree}>
         {filtered.length === 0 && <div className={styles.empty}>Niets gevonden voor &ldquo;{search}&rdquo;.</div>}
 
-        {filtered.map((makeRow) => {
-          const isOpen = expanded.has(makeRow.make) || (search.length > 0 && filtered.length <= 6);
-          const makeHasBlade = makeRow.models.some((m) => m.nonKeyless);
-          const makeHasKeyless = makeRow.models.some((m) => m.keyless);
-          const bladeOn = hasType(makeRow.make, '', 'blade');
-          const keylessOn = hasType(makeRow.make, '', 'keyless');
-
-          return (
-            <div key={makeRow.make} className={styles.makeCard}>
-              <button type="button" className={styles.makeHead} onClick={() => toggleExpand(makeRow.make)}>
-                {isOpen ? <ChevronDown size={16} strokeWidth={2} /> : <ChevronRight size={16} strokeWidth={2} />}
-                <span className={styles.makeName}>{makeRow.make}</span>
-                <span className={styles.makeCount}>{makeRow.models.length} modellen</span>
-              </button>
-
-              <div className={styles.makeQuick}>
-                <span className={styles.quickLabel}>Hele merk, alle jaren:</span>
-                {makeHasBlade && (
-                  <button
-                    type="button"
-                    className={`${styles.toggle} ${bladeOn ? styles.toggleOn : ''}`}
-                    disabled={busy === `${activeScenario}|${makeRow.make}||blade`}
-                    onClick={() => setCoverage(makeRow.make, null, 'blade', !bladeOn)}
-                  >
-                    <Key size={13} strokeWidth={2} /> Sleutel
-                  </button>
-                )}
-                {makeHasKeyless && (
-                  <button
-                    type="button"
-                    className={`${styles.toggle} ${keylessOn ? styles.toggleOn : ''}`}
-                    disabled={busy === `${activeScenario}|${makeRow.make}||keyless`}
-                    onClick={() => setCoverage(makeRow.make, null, 'keyless', !keylessOn)}
-                  >
-                    <Radio size={13} strokeWidth={2} /> Keyless
-                  </button>
-                )}
-              </div>
-
-              {isOpen && (
-                <div className={styles.modelList}>
-                  {makeRow.models.map((model) => {
-                    const modelBladeOn = hasType(makeRow.make, model.model, 'blade') || bladeOn;
-                    const modelKeylessOn = hasType(makeRow.make, model.model, 'keyless') || keylessOn;
-                    const years =
-                      model.fromYear || model.toYear
-                        ? `${model.fromYear ?? '…'}–${model.toYear ?? 'nu'}`
-                        : 'alle jaren';
-
-                    return (
-                      <div key={model.model} className={styles.modelRow}>
-                        <span className={styles.modelName}>{model.model}</span>
-                        <span className={styles.modelYears}>{years}</span>
-                        <span className={styles.modelToggles}>
-                          {model.nonKeyless && (
-                            <button
-                              type="button"
-                              className={`${styles.toggleSm} ${modelBladeOn ? styles.toggleOn : ''}`}
-                              disabled={bladeOn || busy === `${activeScenario}|${makeRow.make}|${model.model}|blade`}
-                              title={bladeOn ? 'Al gedekt via heel merk' : 'Sleutel'}
-                              onClick={() => setCoverage(makeRow.make, model.model, 'blade', !modelBladeOn)}
-                            >
-                              <Key size={12} strokeWidth={2} />
-                            </button>
-                          )}
-                          {model.keyless && (
-                            <button
-                              type="button"
-                              className={`${styles.toggleSm} ${modelKeylessOn ? styles.toggleOn : ''}`}
-                              disabled={keylessOn || busy === `${activeScenario}|${makeRow.make}|${model.model}|keyless`}
-                              title={keylessOn ? 'Al gedekt via heel merk' : 'Keyless'}
-                              onClick={() => setCoverage(makeRow.make, model.model, 'keyless', !modelKeylessOn)}
-                            >
-                              <Radio size={12} strokeWidth={2} />
-                            </button>
-                          )}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {search ? (
+          filtered.map(renderMakeCard)
+        ) : (
+          <>
+            {popular.length > 0 && (
+              <>
+                <div className={styles.groupHeader}>Populaire merken</div>
+                {popular.map(renderMakeCard)}
+              </>
+            )}
+            {others.length > 0 && (
+              <>
+                <div className={styles.groupHeader}>Overige merken</div>
+                {others.map(renderMakeCard)}
+              </>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
