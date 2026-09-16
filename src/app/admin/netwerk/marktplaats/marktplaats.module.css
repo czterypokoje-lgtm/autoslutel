@@ -51,6 +51,19 @@
   grid-column: 1 / -1;
 }
 
+/*
+ * The 2fr/1fr split has no mobile override below — on a phone it kept
+ * "Titel"/"Prijs" and "Omschrijving"/"Foto toevoegen" as literal side-by-
+ * side pairs (the .field divs and the bare photo button are the actual
+ * grid items here, not the inputs above), pushing the second column off
+ * the edge of the screen instead of stacking.
+ */
+@media (max-width: 640px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}
+
 .field {
   display: flex;
   flex-direction: column;

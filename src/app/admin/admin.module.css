@@ -737,7 +737,14 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     height: 100vh;
     background: var(--crm-sidebar);
     border-right: 1px solid var(--crm-rule);
-    padding: 14px 10px 12px;
+    /*
+     * Bottom padding reserves the fixed .tabBar's own height (62px + its
+     * safe-area inset) so "Webshop bekijken" and sign-out never end up
+     * sitting in the same band as its icons for a monteur — the drawer
+     * z-index beats the tab bar's, but that only decides who paints on top
+     * where they overlap; it does not stop the overlap from looking wrong.
+     */
+    padding: 14px 10px calc(74px + env(safe-area-inset-bottom, 0px));
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
