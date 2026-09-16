@@ -2,6 +2,7 @@ import { NextResponse, after } from 'next/server';
 import { checkAgent, asText, asYear, asBool, asPostcode } from '@/lib/agentAuth';
 import { jobBriefing } from '@/lib/whatsapp';
 import { sendTelegramOffer } from '@/lib/telegram';
+import { sendWhatsAppOffer } from '@/lib/elevenlabsWhatsapp';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { isScenario, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import { priceFor, type PriceRow } from '@/lib/dispatchPricing';
@@ -201,7 +202,7 @@ export async function POST(request: Request) {
     await Promise.all([
       supabase
         .from('technicians')
-        .select('id, name, telegram_chat_id, werkgebied, online, active, base_lat, base_lng')
+        .select('id, name, telegram_chat_id, phone, werkgebied, online, active, base_lat, base_lng')
         .eq('active', true),
       supabase
         .from('technician_coverage')
@@ -275,6 +276,7 @@ export async function POST(request: Request) {
      * or Vandaag; they just don't get a Telegram message for it yet.
      */
     const chatIdOf = new Map((technicians ?? []).map((t) => [t.id, t.telegram_chat_id]));
+    const phoneOf = new Map((technicians ?? []).map((t) => [t.id, t.phone as string | null]));
     const offerIdOf = new Map((insertedOffers ?? []).map((o) => [o.technician_id, o.id]));
     const briefing = jobBriefing({
       scheduled_date: date,
@@ -296,6 +298,17 @@ export async function POST(request: Request) {
       if (!offerId) continue;
       after(() =>
         sendTelegramOffer(chatId, `Nieuwe klus aangeboden!\n\n${briefing}`, offerId)
+      );
+      // Parallel WhatsApp offer via the ElevenLabs Technician Agent — a
+      // silent no-op until ELEVENLABS_* env vars and the Meta template are
+      // in place (see src/lib/elevenlabsWhatsapp.ts). Telegram stays the
+      // live path until this is confirmed working end to end.
+      after(() =>
+        sendWhatsAppOffer(phoneOf.get(offer.technicianId), {
+          carLabel: `${car.make} ${car.model ?? ''}`.trim(),
+          city: city ?? '',
+          price: String(total),
+        })
       );
     }
   }
