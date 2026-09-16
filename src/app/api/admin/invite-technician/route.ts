@@ -60,10 +60,20 @@ export async function POST(request: Request) {
    * generateLink creates the user and hands us the one-time link without
    * needing mail delivery: the office sends it over WhatsApp, which this CRM
    * already does, and the technician sets their own password on arrival.
+   *
+   * redirectTo is explicit rather than left to Supabase's project-level
+   * default: that default is still the dev "Site URL" (localhost), which
+   * generateLink otherwise falls back to silently — the invite link looks
+   * fine, opens, and drops the technician on a localhost address that
+   * doesn't exist for them. /admin/auth/callback is the route that actually
+   * exchanges Supabase's code for a session; this must point there, not at
+   * a bare origin.
    */
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.autosleutel24.nl';
   const { data: invite, error: createError } = await adminAuth.generateLink({
     type: 'invite',
     email,
+    options: { redirectTo: `${base}/admin/auth/callback` },
   });
 
   if (createError || !invite?.user) {
