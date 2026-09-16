@@ -24,7 +24,7 @@ export default async function RapportagePage() {
 
   const supabase = await createSupabaseServerClient();
 
-  const [source, service, response, technician, region, make, makeRegion, commission] = await Promise.all([
+  const [source, service, response, technician, region, make, makeRegion, commission, capabilityGap] = await Promise.all([
     supabase.from('crm_report_source').select('*'),
     supabase.from('crm_report_service').select('*').order('klussen', { ascending: false }),
     supabase.from('crm_report_response').select('*').order('week', { ascending: false }).limit(8),
@@ -37,11 +37,24 @@ export default async function RapportagePage() {
       .order('omzet', { ascending: false })
       .limit(20),
     supabase.from('crm_report_commission').select('*').order('omzet', { ascending: false }),
+    supabase
+      .from('crm_report_capability_gap_summary')
+      .select('*')
+      .order('gemiste_leads', { ascending: false })
+      .limit(20),
   ]);
 
-  const failed = [source, service, response, technician, region, make, makeRegion, commission].find(
-    (r) => r.error
-  );
+  const failed = [
+    source,
+    service,
+    response,
+    technician,
+    region,
+    make,
+    makeRegion,
+    commission,
+    capabilityGap,
+  ].find((r) => r.error);
   if (failed?.error) {
     const missing = /does not exist|relation|permission denied/i.test(failed.error.message);
     return (
@@ -50,8 +63,9 @@ export default async function RapportagePage() {
         {missing && (
           <>
             <br />
-            Voer <code>supabase/migrations/0006_customers_reports.sql</code> en{' '}
-            <code>supabase/migrations/0036_revenue_analysis.sql</code> uit.
+            Voer <code>supabase/migrations/0006_customers_reports.sql</code>,{' '}
+            <code>supabase/migrations/0036_revenue_analysis.sql</code> en{' '}
+            <code>supabase/migrations/0037_capability_gaps.sql</code> uit.
           </>
         )}
       </div>
@@ -542,6 +556,76 @@ export default async function RapportagePage() {
           &quot;Effectief %&quot; is commissie gedeeld door omzet — wat er echt
           binnenkomt. Wijkt dit structureel af van het ingestelde percentage,
           dan klopt er iets niet in de afspraak of in hoe een monteur betaalt.
+        </p>
+      </div>
+
+      <div className={styles.panel}>
+        <h2>9 · Leads buiten capaciteit</h2>
+        <div className={styles.wrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Merk</th>
+                <th>Jaar</th>
+                <th>Scenario</th>
+                <th>Gemiste leads</th>
+                <th>Laatste</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(capabilityGap.data ?? []).length === 0 ? (
+                <tr>
+                  <td colSpan={5} className={styles.empty}>
+                    Geen gemiste leads door ontbrekende capaciteit — of nog geen
+                    dekking ingesteld om tegen te toetsen.
+                  </td>
+                </tr>
+              ) : (
+                (capabilityGap.data ?? []).map((row, i) => (
+                  <tr key={i}>
+                    <td className={styles.strong}>{row.brand as string}</td>
+                    <td>{show(row.year)}</td>
+                    <td>{row.scenario as string}</td>
+                    <td>{show(row.gemiste_leads)}</td>
+                    <td>
+                      {row.laatste
+                        ? new Date(row.laatste as string).toLocaleDateString('nl-NL')
+                        : '—'}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className={styles.cards}>
+          {(capabilityGap.data ?? []).length === 0 ? (
+            <p className={styles.empty}>
+              Geen gemiste leads door ontbrekende capaciteit — of nog geen
+              dekking ingesteld om tegen te toetsen.
+            </p>
+          ) : (
+            (capabilityGap.data ?? []).map((row, i) => (
+              <div key={i} className={styles.card}>
+                <div className={styles.cardHead}>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>
+                    {row.brand as string} {show(row.year)} · {row.scenario as string}
+                  </span>
+                </div>
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}>Gemiste leads</span>
+                  <span className={styles.cardValue}>{show(row.gemiste_leads)}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+        <p className={styles.note}>
+          Niet geraden: afgeleid uit de echte dekking in technician_coverage.
+          Een lead staat hier alleen als geen enkele actieve monteur dat merk +
+          jaar + scenario momenteel dekt — bijvoorbeeld &quot;Mercedes-Benz na
+          2014&quot; als dat expliciet is uitgesloten. Dit is waar een nieuwe
+          tool of monteur zich het snelst terugbetaalt.
         </p>
       </div>
     </>
