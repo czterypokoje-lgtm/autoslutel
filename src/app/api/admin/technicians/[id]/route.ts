@@ -1,3 +1,4 @@
+import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { requireOfficeUserApi } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -85,4 +86,72 @@ export async function PATCH(
   }
 
   return NextResponse.json({ technician: data });
+}
+
+/*
+ * jobs.technician_id is "on delete set null" (0013_technician_platform.sql),
+ * so removing a technician never touches or hides their job history — those
+ * rows just become unassigned, exactly like a job nobody has claimed yet.
+ *
+ * A linked login is cleaned up too rather than left behind: the invite route
+ * already treats "a login with no technician record behind it" as a fault
+ * worth deleting over (see its own comment), and a technician removed here
+ * without removing their auth user would be the same problem in reverse —
+ * an account that can still sign in and would land on a page with nothing
+ * on it.
+ */
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { response } = await requireOfficeUserApi();
+  if (response) return response;
+
+  const { id } = await params;
+  if (!UUID.test(id)) {
+    return NextResponse.json({ error: 'Ongeldig id' }, { status: 400 });
+  }
+
+  let supabase;
+  try {
+    supabase = await createSupabaseServerClient();
+  } catch {
+    return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
+  }
+
+  const { data: technician, error: fetchError } = await supabase
+    .from('technicians')
+    .select('id, user_id')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (fetchError) {
+    console.error('Technician lookup failed:', fetchError.message);
+    return NextResponse.json({ error: 'Verwijderen mislukt' }, { status: 500 });
+  }
+  if (!technician) {
+    return NextResponse.json({ error: 'Monteur niet gevonden' }, { status: 404 });
+  }
+
+  const { error: deleteError } = await supabase.from('technicians').delete().eq('id', id);
+  if (deleteError) {
+    console.error('Technician delete failed:', deleteError.message);
+    return NextResponse.json({ error: 'Verwijderen mislukt' }, { status: 500 });
+  }
+
+  // Best-effort: the technician row is already gone either way, and a
+  // failed login cleanup is not worth surfacing as an error to the office.
+  if (technician.user_id) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (url && serviceKey) {
+      const adminAuth = createClient(url, serviceKey, {
+        auth: { autoRefreshToken: false, persistSession: false },
+      }).auth.admin;
+      const { error: authError } = await adminAuth.deleteUser(technician.user_id);
+      if (authError) console.error('Technician login cleanup failed:', authError.message);
+    }
+  }
+
+  return NextResponse.json({ success: true });
 }

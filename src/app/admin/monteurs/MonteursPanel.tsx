@@ -37,6 +37,16 @@ export default function MonteursPanel({
   /** Shown once after an invite, then gone — nothing stores it. */
   const [inviteLink, setInviteLink] = useState<string | null>(null);
 
+  /* Inline edit — which technician's row is open, and its draft fields. */
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editPhone, setEditPhone] = useState('');
+  const [editWerkgebied, setEditWerkgebied] = useState('');
+  const [editColour, setEditColour] = useState(COLOURS[0]);
+  const [editSaving, setEditSaving] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
   /*
    * Accounts with the monteur role that can be linked to a record here.
    * Without the link the van screen has no way to tell whose jobs are whose,
@@ -107,6 +117,65 @@ export default function MonteursPanel({
     router.refresh();
   }
 
+  function startEdit(technician: Technician) {
+    setEditingId(technician.id);
+    setEditName(technician.name);
+    setEditPhone(technician.phone ?? '');
+    setEditWerkgebied((technician.werkgebied ?? []).join(', '));
+    setEditColour(technician.color ?? COLOURS[0]);
+    setEditError('');
+  }
+
+  async function saveEdit(id: string) {
+    setEditSaving(true);
+    setEditError('');
+
+    const response = await fetch(`/api/admin/technicians/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: editName,
+        phone: editPhone || null,
+        werkgebied: editWerkgebied,
+        color: editColour,
+      }),
+    }).catch(() => null);
+
+    if (!response || !response.ok) {
+      const body = await response?.json().catch(() => null);
+      setEditError(body?.error ?? 'Opslaan mislukt.');
+      setEditSaving(false);
+      return;
+    }
+
+    setEditSaving(false);
+    setEditingId(null);
+    router.refresh();
+  }
+
+  async function remove(technician: Technician) {
+    if (
+      !window.confirm(
+        `${technician.name} definitief verwijderen? Klussen blijven bestaan, maar worden ongepland — dit kan niet ongedaan worden gemaakt.`
+      )
+    ) {
+      return;
+    }
+
+    setDeletingId(technician.id);
+    const response = await fetch(`/api/admin/technicians/${technician.id}`, {
+      method: 'DELETE',
+    }).catch(() => null);
+
+    setDeletingId(null);
+    if (!response || !response.ok) {
+      const body = await response?.json().catch(() => null);
+      window.alert(body?.error ?? 'Verwijderen mislukt.');
+      return;
+    }
+    router.refresh();
+  }
+
   return (
     <div className={styles.planWrap}>
       <div className={styles.panel}>
@@ -117,69 +186,153 @@ export default function MonteursPanel({
             en kan een klus alleen ongepland blijven staan.
           </p>
         ) : (
-          technicians.map((t) => (
-            <div key={t.id} className={styles.suggestion}>
-              <span
-                className={styles.dot}
-                style={{ background: technicianColour(t.color) }}
-              />
-              <span>
-                <a className={styles.suggestionName} href={`/admin/monteurs/${t.id}`}>
-                  {t.name}
-                </a>
-                <span className={styles.suggestionWhy}>
-                  {t.phone ?? 'geen telefoon'} ·{' '}
-                  {t.werkgebied && t.werkgebied.length > 0
-                    ? t.werkgebied.join(', ')
-                    : 'geen werkgebied'}
-                </span>
-              </span>
-              <span className={styles.suggestionActions}>
-                {/*
-                  Opens WhatsApp on the monteur's number. A link rather than an
-                  integration: the Business Platform wants a verified Meta
-                  business, a number that is not in the WhatsApp app, and a fee
-                  per conversation. This works today and costs nothing.
-                */}
-                {waLink(t.phone, 'Hoi ') && (
-                  <a
+          technicians.map((t) =>
+            editingId === t.id ? (
+              <div key={t.id} className={styles.suggestion} style={{ flexDirection: 'column', alignItems: 'stretch', gap: 8 }}>
+                <div className={styles.field}>
+                  <label className={styles.fieldLabel}>Naam</label>
+                  <input
                     className={styles.control}
-                    style={{ width: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                    href={waLink(t.phone, 'Hoi ')!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={`WhatsApp ${t.name}`}
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                  />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.fieldLabel}>Telefoon</label>
+                  <input
+                    className={styles.control}
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                  />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.fieldLabel}>Werkgebied (postcodes, komma-gescheiden)</label>
+                  <input
+                    className={styles.control}
+                    placeholder="1000, 1010-1099, 3500"
+                    value={editWerkgebied}
+                    onChange={(e) => setEditWerkgebied(e.target.value)}
+                  />
+                </div>
+                <div className={styles.field}>
+                  <span className={styles.fieldLabel}>Kleur</span>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    {COLOURS.map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        aria-label={`Kleur ${c}`}
+                        onClick={() => setEditColour(c)}
+                        style={{
+                          width: 26,
+                          height: 26,
+                          borderRadius: 6,
+                          background: c,
+                          border: editColour === c ? '2px solid var(--crm-ink)' : '1px solid var(--crm-rule2)',
+                          cursor: 'pointer',
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {editError && <div className={styles.error}>{editError}</div>}
+                <div className={styles.actions}>
+                  <button
+                    type="button"
+                    className={styles.primary}
+                    disabled={editSaving}
+                    onClick={() => saveEdit(t.id)}
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </svg>
-                    App
+                    {editSaving ? 'Opslaan…' : 'Opslaan'}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.secondary}
+                    onClick={() => setEditingId(null)}
+                  >
+                    Annuleren
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div key={t.id} className={styles.suggestion}>
+                <span
+                  className={styles.dot}
+                  style={{ background: technicianColour(t.color) }}
+                />
+                <span>
+                  <a className={styles.suggestionName} href={`/admin/monteurs/${t.id}`}>
+                    {t.name}
                   </a>
-                )}
-                <select
-                  className={styles.control}
-                  style={{ width: 'auto', minWidth: 150 }}
-                  value={t.user_id ?? ''}
-                  onChange={(e) => link(t.id, e.target.value)}
-                  aria-label={`Login koppelen aan ${t.name}`}
-                >
-                  <option value="">Geen login</option>
-                  {users.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.email}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  className={styles.secondary}
-                  onClick={() => toggle(t)}
-                >
-                  {t.active ? 'Non-actief' : 'Activeren'}
-                </button>
-              </span>
-            </div>
-          ))
+                  <span className={styles.suggestionWhy}>
+                    {t.phone ?? 'geen telefoon'} ·{' '}
+                    {t.werkgebied && t.werkgebied.length > 0
+                      ? t.werkgebied.join(', ')
+                      : 'geen werkgebied'}
+                  </span>
+                </span>
+                <span className={styles.suggestionActions}>
+                  {/*
+                    Opens WhatsApp on the monteur's number. A link rather than an
+                    integration: the Business Platform wants a verified Meta
+                    business, a number that is not in the WhatsApp app, and a fee
+                    per conversation. This works today and costs nothing.
+                  */}
+                  {waLink(t.phone, 'Hoi ') && (
+                    <a
+                      className={styles.control}
+                      style={{ width: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                      href={waLink(t.phone, 'Hoi ')!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`WhatsApp ${t.name}`}
+                    >
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </svg>
+                      App
+                    </a>
+                  )}
+                  <select
+                    className={styles.control}
+                    style={{ width: 'auto', minWidth: 150 }}
+                    value={t.user_id ?? ''}
+                    onChange={(e) => link(t.id, e.target.value)}
+                    aria-label={`Login koppelen aan ${t.name}`}
+                  >
+                    <option value="">Geen login</option>
+                    {users.map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.email}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    className={styles.secondary}
+                    onClick={() => toggle(t)}
+                  >
+                    {t.active ? 'Non-actief' : 'Activeren'}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.secondary}
+                    onClick={() => startEdit(t)}
+                  >
+                    Bewerken
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.secondary}
+                    disabled={deletingId === t.id}
+                    onClick={() => remove(t)}
+                  >
+                    {deletingId === t.id ? 'Verwijderen…' : 'Verwijderen'}
+                  </button>
+                </span>
+              </div>
+            )
+          )
         )}
       </div>
 
