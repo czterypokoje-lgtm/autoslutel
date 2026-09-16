@@ -31,11 +31,21 @@ export default function MonteursPanel({
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [colour, setColour] = useState(COLOURS[0]);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   /** Shown once after an invite, then gone — nothing stores it. */
   const [inviteLink, setInviteLink] = useState<string | null>(null);
+  /** Set when a password was typed directly instead of using a link. */
+  const [passwordConfirmed, setPasswordConfirmed] = useState<string | null>(null);
+
+  /* Per-technician "set password directly" for an already-existing login. */
+  const [resetId, setResetId] = useState<string | null>(null);
+  const [resetPassword, setResetPassword] = useState('');
+  const [resetSaving, setResetSaving] = useState(false);
+  const [resetError, setResetError] = useState('');
+  const [resetDone, setResetDone] = useState<{ id: string; password: string } | null>(null);
 
   /* Inline edit — which technician's row is open, and its draft fields. */
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -85,7 +95,7 @@ export default function MonteursPanel({
     const response = await fetch('/api/admin/invite-technician', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, color: colour }),
+      body: JSON.stringify({ name, email, color: colour, password: password || undefined }),
     }).catch(() => null);
 
     if (!response || !response.ok) {
@@ -101,12 +111,45 @@ export default function MonteursPanel({
      * later is a password with extra steps.
      */
     const created = await response.json().catch(() => null);
-    setInviteLink(created?.inviteLink ?? null);
+    if (created?.passwordSet) {
+      setPasswordConfirmed(password);
+      setInviteLink(null);
+    } else {
+      setInviteLink(created?.inviteLink ?? null);
+      setPasswordConfirmed(null);
+    }
 
     setName('');
     setEmail('');
+    setPassword('');
     setSaving(false);
     router.refresh();
+  }
+
+  async function setTechnicianPassword(technicianId: string) {
+    setResetError('');
+    if (resetPassword.length < 8) {
+      setResetError('Wachtwoord moet minimaal 8 tekens zijn.');
+      return;
+    }
+    setResetSaving(true);
+
+    const response = await fetch(`/api/admin/technicians/${technicianId}/set-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: resetPassword }),
+    }).catch(() => null);
+
+    setResetSaving(false);
+    if (!response || !response.ok) {
+      const body = await response?.json().catch(() => null);
+      setResetError(body?.error ?? 'Opslaan mislukt.');
+      return;
+    }
+
+    setResetDone({ id: technicianId, password: resetPassword });
+    setResetId(null);
+    setResetPassword('');
   }
 
   async function toggle(technician: Technician) {
@@ -346,6 +389,20 @@ export default function MonteursPanel({
                   >
                     Bewerken
                   </button>
+                  {t.user_id && (
+                    <button
+                      type="button"
+                      className={styles.secondary}
+                      onClick={() => {
+                        setResetId(t.id);
+                        setResetPassword('');
+                        setResetError('');
+                        setResetDone(null);
+                      }}
+                    >
+                      Wachtwoord
+                    </button>
+                  )}
                   <button
                     type="button"
                     className={styles.secondary}
@@ -355,6 +412,49 @@ export default function MonteursPanel({
                     {deletingId === t.id ? 'Verwijderen…' : 'Verwijderen'}
                   </button>
                 </span>
+                {resetId === t.id && (
+                  <div className={styles.field} style={{ flexBasis: '100%', marginTop: 8 }}>
+                    <label className={styles.fieldLabel}>Nieuw wachtwoord voor {t.name}</label>
+                    <input
+                      type="text"
+                      className={styles.control}
+                      placeholder="Minimaal 8 tekens"
+                      value={resetPassword}
+                      onChange={(e) => setResetPassword(e.target.value)}
+                      autoFocus
+                    />
+                    {resetError && <div className={styles.error}>{resetError}</div>}
+                    <div className={styles.actions} style={{ marginTop: 6 }}>
+                      <button
+                        type="button"
+                        className={styles.primary}
+                        disabled={resetSaving}
+                        onClick={() => setTechnicianPassword(t.id)}
+                      >
+                        {resetSaving ? 'Opslaan…' : 'Wachtwoord instellen'}
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.secondary}
+                        onClick={() => setResetId(null)}
+                      >
+                        Annuleren
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {resetDone?.id === t.id && (
+                  <div className={styles.note} style={{ flexBasis: '100%', marginTop: 8, display: 'grid', gap: 6 }}>
+                    <strong>Nieuw wachtwoord — geef dit door aan {t.name}.</strong>
+                    <input
+                      className={styles.control}
+                      readOnly
+                      value={resetDone.password}
+                      onFocus={(event) => event.currentTarget.select()}
+                      style={{ width: '100%', fontFamily: 'ui-monospace, monospace', fontSize: 12 }}
+                    />
+                  </div>
+                )}
               </div>
             )
           )
@@ -388,6 +488,24 @@ export default function MonteursPanel({
         </div>
 
         <div className={styles.field} style={{ marginTop: 10 }}>
+          <label className={styles.fieldLabel} htmlFor="pw">
+            Wachtwoord (optioneel — leeg voor een link per e-mail/WhatsApp)
+          </label>
+          <input
+            id="pw"
+            type="text"
+            className={styles.control}
+            placeholder="Minimaal 8 tekens"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <span style={{ fontSize: 12, color: 'var(--crm-muted)' }}>
+            Ingevuld? Dan wordt de link overgeslagen en kan de monteur direct
+            inloggen met dit wachtwoord — handig als de link-e-mail niet aankomt.
+          </span>
+        </div>
+
+        <div className={styles.field} style={{ marginTop: 10 }}>
           <span className={styles.fieldLabel}>Kleur in de agenda</span>
           <div style={{ display: 'flex', gap: 6 }}>
             {COLOURS.map((c) => (
@@ -416,6 +534,22 @@ export default function MonteursPanel({
           </button>
           {error && <div className={styles.error}>{error}</div>}
         </div>
+
+        {passwordConfirmed && (
+          <div className={styles.note} style={{ display: 'grid', gap: 8 }}>
+            <strong>Account aangemaakt — geef dit wachtwoord door aan de monteur.</strong>
+            <input
+              className={styles.control}
+              readOnly
+              value={passwordConfirmed}
+              onFocus={(event) => event.currentTarget.select()}
+              style={{ width: '100%', fontFamily: 'ui-monospace, monospace', fontSize: 12 }}
+            />
+            <span style={{ fontSize: 12, color: 'var(--crm-muted)' }}>
+              Ook dit wordt nergens bewaard — na deze melding is het weg.
+            </span>
+          </div>
+        )}
 
         {inviteLink && (
           <div className={styles.note} style={{ display: 'grid', gap: 8 }}>

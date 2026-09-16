@@ -38,6 +38,11 @@ export async function POST(request: Request) {
   const colour = text(body.color, 7);
   const activeColour = colour && HEX_COLOUR.test(colour) ? colour : DEFAULT_TECHNICIAN_COLOUR;
 
+  const password = text(body.password, 72);
+  if (password && password.length < 8) {
+    return NextResponse.json({ error: 'Wachtwoord moet minimaal 8 tekens zijn' }, { status: 400 });
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) {
@@ -68,23 +73,50 @@ export async function POST(request: Request) {
    * doesn't exist for them. /admin/auth/callback is the route that actually
    * exchanges Supabase's code for a session; this must point there, not at
    * a bare origin.
+   *
+   * The link flow has turned out fragile in practice — email clients that
+   * pre-fetch links for security scanning silently burn the one-time token
+   * before the office ever forwards it — so a password set here directly is
+   * offered as an alternative, not a replacement: still one password per
+   * technician, chosen by the office each time, never a shared or repo-
+   * committed default like the old "password123". email_confirm skips the
+   * link entirely since a password the office just typed already proves
+   * they intended this account to exist.
    */
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.autosleutel24.nl';
-  const { data: invite, error: createError } = await adminAuth.generateLink({
-    type: 'invite',
-    email,
-    options: { redirectTo: `${base}/admin/auth/callback` },
-  });
+  let userId: string;
+  let actionLink: string | null = null;
 
-  if (createError || !invite?.user) {
-    console.error('Invite failed:', createError?.message);
-    return NextResponse.json(
-      { error: 'Uitnodigen mislukt — bestaat dit e-mailadres al?' },
-      { status: 500 }
-    );
+  if (password) {
+    const { data, error: createError } = await adminAuth.createUser({
+      email,
+      password,
+      email_confirm: true,
+    });
+    if (createError || !data?.user) {
+      console.error('Invite failed:', createError?.message);
+      return NextResponse.json(
+        { error: 'Uitnodigen mislukt — bestaat dit e-mailadres al?' },
+        { status: 500 }
+      );
+    }
+    userId = data.user.id;
+  } else {
+    const { data, error: createError } = await adminAuth.generateLink({
+      type: 'invite',
+      email,
+      options: { redirectTo: `${base}/admin/auth/callback` },
+    });
+    if (createError || !data?.user) {
+      console.error('Invite failed:', createError?.message);
+      return NextResponse.json(
+        { error: 'Uitnodigen mislukt — bestaat dit e-mailadres al?' },
+        { status: 500 }
+      );
+    }
+    userId = data.user.id;
+    actionLink = data.properties?.action_link ?? null;
   }
-
-  const userId = invite.user.id;
 
   /* The role decides what they can see; without it they land on geen-toegang. */
   const { error: roleError } = await adminAuth.updateUserById(userId, {
@@ -129,7 +161,8 @@ export async function POST(request: Request) {
        * Handed back once, and never stored. The office sends it on; if it is
        * lost, invite again rather than looking it up — there is nowhere to look.
        */
-      inviteLink: invite.properties?.action_link ?? null,
+      inviteLink: actionLink,
+      passwordSet: Boolean(password),
     },
     { status: 201 }
   );
