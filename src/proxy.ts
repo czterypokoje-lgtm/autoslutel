@@ -14,13 +14,12 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/s
  * the X-Robots-Tag header is how they get their noindex.
  */
 /**
- * Noindex-only, not auth-gated: these stay publicly reachable but must never
- * enter a search index. The webshop catalogue is built on third-party product
- * data and every page inherits the root canonical, so it is not fit to publish.
- * Belt and braces alongside the layout metadata and the robots.txt disallow —
- * a header cannot be missed by a route that forgets to inherit metadata.
+ * Blocked outright — not just noindexed. The webshop was previously only
+ * hidden from search engines while still being fully reachable by direct
+ * URL, which meant anyone who found or was sent a /webshop/* link could see
+ * it live. Pulled back to a real 404 until it's ready to launch.
  */
-const NOINDEX = ['/webshop'];
+const HIDDEN = ['/webshop'];
 
 /**
  * Countries blocked outright, at the office's request, after seeing zero-
@@ -143,13 +142,14 @@ export async function proxy(request: NextRequest) {
     return handleCrm(request);
   }
 
-  const isNoIndex = NOINDEX.some(
+  const isHidden = HIDDEN.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`)
   );
-  if (isNoIndex) {
-    const res = NextResponse.next();
-    res.headers.set('X-Robots-Tag', 'noindex, nofollow');
-    return res;
+  if (isHidden) {
+    return new NextResponse('Not Found', {
+      status: 404,
+      headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' },
+    });
   }
 
   const isProtected = PROTECTED.some(
