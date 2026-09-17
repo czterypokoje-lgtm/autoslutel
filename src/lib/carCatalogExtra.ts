@@ -94,6 +94,26 @@ export const EXTRA_MODELS: Record<string, string[]> = {
     'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'Q2', 'Q3', 'Q4 e-tron',
     'Q5', 'Q7', 'Q8', 'TT', 'R8', 'e-tron', 'e-tron GT',
   ],
+  seat: [
+    'Mii', 'Ibiza', 'Leon', 'Toledo', 'Arona', 'Ateca', 'Tarraco', 'Alhambra',
+    'Altea', 'Altea XL', 'Exeo', 'Cordoba', 'Inca',
+  ],
+  chevrolet: [
+    'Spark', 'Aveo', 'Kalos', 'Cruze', 'Lacetti', 'Matiz', 'Nubira', 'Orlando',
+    'Captiva', 'Trax', 'Epica', 'Evanda', 'Tacuma', 'Camaro', 'Corvette',
+  ],
+  mini: [
+    'One', 'Cooper', 'Cooper S', 'Clubman', 'Countryman', 'Paceman',
+    'Cabrio', 'Coupé', 'Roadster', 'Electric',
+  ],
+  mitsubishi: [
+    'Colt', 'Space Star', 'Lancer', 'Outlander', 'ASX', 'Eclipse Cross',
+    'Pajero', 'Pajero Pinin', 'L200', 'Grandis', 'Carisma', 'i-MiEV',
+  ],
+  mazda: [
+    '2', '3', '5', '6', 'CX-3', 'CX-30', 'CX-5', 'CX-60', 'CX-7', 'CX-9',
+    'MX-5', 'MX-30', 'RX-8', 'Premacy', 'Tribute', 'BT-50',
+  ],
 };
 
 export function mergeExtraModels(catalog: CatalogMake[]): CatalogMake[] {
@@ -123,4 +143,36 @@ export function mergeExtraModels(catalog: CatalogMake[]): CatalogMake[] {
   }
 
   return catalog.sort((a, b) => a.make.localeCompare(b.make, 'nl'));
+}
+
+/**
+ * The models to offer a monteur for a make, clean.
+ *
+ * Where a curated lineup exists it is used on its own, and the supplier feed
+ * is ignored entirely for that make. catalog.json holds parts fitment, not a
+ * model list, and a part that fits several cars drags their names along with
+ * it — so Fiat arrives carrying "Gilera" (a motorcycle marque) and "Maruti"
+ * (an Indian make), Opel carries "Kangoo", "Ram", "Holden" and "Saturn",
+ * Volkswagen carries "5k 0 959 753 Ad" and "Keylessgo", and several makes
+ * carry "Oldtimerschlüssel" and "Schlüsselblatt Sx9", which are product
+ * categories rather than cars. Alongside those sit plain misspellings
+ * ("Tuareg", "Caravele", "Beatle") and the German supplier's "U.a" —
+ * "unter anderem", meaning "among others".
+ *
+ * Filtering that by hand would be a blocklist with no end. The curated lists
+ * cover all twenty makes that appear in real jobs, so for those the feed adds
+ * nothing but noise. Makes outside the twenty still fall back to it: an
+ * imperfect list beats an empty one, and the monteur can read.
+ */
+export function pickerModels(make: string, fromCatalogue: string[]): string[] {
+  const curated = EXTRA_MODELS[make.trim().toLowerCase()];
+  const source = curated ?? fromCatalogue;
+
+  const seen = new Map<string, string>();
+  for (const model of source) {
+    const name = model.trim();
+    if (!name) continue;
+    if (!seen.has(name.toLowerCase())) seen.set(name.toLowerCase(), name);
+  }
+  return [...seen.values()].sort((a, b) => a.localeCompare(b, 'nl'));
 }

@@ -5,7 +5,8 @@ import { ChevronDown, ChevronRight, Plus, Search } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { SCENARIOS, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import type { CatalogMake } from '@/lib/carCatalog';
-import { TOP_BRANDS, brandRank, isTopBrand, isExcludedMake, canonicalModel } from '@/lib/topBrands';
+import { TOP_BRANDS, brandRank, isTopBrand, isExcludedMake } from '@/lib/topBrands';
+import { pickerModels } from '@/lib/carCatalogExtra';
 import { specificity } from '@/lib/capability';
 import styles from './prices.module.css';
 
@@ -145,17 +146,40 @@ export default function PriceTree({
     });
   }, [catalog, rows, search]);
 
-  const modelsFor = (make: string): string[] => {
-    const raw =
-      catalog.find((m) => m.make.toLowerCase() === make.toLowerCase())?.models.map((m) => m.model) ?? [];
-    // canonicalModel folds the supplier's misspellings (Beatle -> Beetle) so
-    // the same car cannot appear twice under two spellings.
-    const seen = new Map<string, string>();
-    for (const model of raw) {
-      const name = canonicalModel(model);
-      if (!seen.has(name.toLowerCase())) seen.set(name.toLowerCase(), name);
-    }
-    return [...seen.values()].sort((a, b) => a.localeCompare(b, 'nl'));
+  const modelsFor = (make: string): string[] =>
+    pickerModels(
+      make,
+      catalog.find((m) => m.make.toLowerCase() === make.toLowerCase())?.models.map((m) => m.model) ?? []
+    );
+
+  /*
+   * Every model of the make, already listed, whether or not it has been
+   * priced yet.
+   *
+   * The unpriced ones are not rows in the database — they exist only on
+   * screen until a price is typed into one. Writing a row per model per
+   * monteur up front would be thousands of rows that mean nothing, and worse,
+   * each would make the monteur dispatchable for a car they never agreed a
+   * price for. A placeholder here costs nothing and says the same thing:
+   * "this model exists, name your price."
+   */
+  const placeholdersFor = (make: string, saved: PriceEntry[]): PriceEntry[] => {
+    const taken = new Set(
+      saved.filter((r) => r.model).map((r) => `${r.model!.toLowerCase()}|${r.scenario}`)
+    );
+    return modelsFor(make)
+      .filter((model) => !taken.has(`${model.toLowerCase()}|bijmaken`))
+      .map((model) => ({
+        id: `new:${make}:${model}`,
+        make,
+        model,
+        scenario: 'bijmaken' as Scenario,
+        from_year: null,
+        to_year: null,
+        excluded: false,
+        keyless: null,
+        price: null,
+      }));
   };
 
   const draftFor = (make: string): Draft => drafts[make] ?? EMPTY_DRAFT;
@@ -252,14 +276,47 @@ export default function PriceTree({
     setError(null);
 
     for (const [id, patch] of entries) {
-      const { error: updateError } = await supabase
-        .from('technician_coverage')
-        .update(patch)
-        .eq('id', id);
-      if (updateError) {
-        setBusy(false);
-        setError(explain(updateError.message));
-        return;
+      /*
+       * A placeholder has no database row yet — its id is the synthetic
+       * "new:make:model". Editing one is an insert, and it only becomes a row
+       * at all once it carries a price, because an unpriced row would make
+       * the monteur dispatchable for a car with no agreed price.
+       */
+      if (id.startsWith('new:')) {
+        const row = rows.find((r) => r.id === id);
+        if (!row || row.price == null) continue;
+        const { data, error: insertError } = await supabase
+          .from('technician_coverage')
+          .insert({
+            technician_id: technicianId,
+            make: row.make,
+            model: row.model,
+            scenario: row.scenario,
+            keyless: row.keyless,
+            from_year: row.from_year,
+            to_year: row.to_year,
+            excluded: row.excluded,
+            price: row.price,
+          })
+          .select('id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+          .single();
+        if (insertError) {
+          setBusy(false);
+          setError(explain(insertError.message));
+          return;
+        }
+        // Swap the placeholder for the row the database actually created.
+        setRows((r) => r.map((x) => (x.id === id ? (data as PriceEntry) : x)));
+      } else {
+        const { error: updateError } = await supabase
+          .from('technician_coverage')
+          .update(patch)
+          .eq('id', id);
+        if (updateError) {
+          setBusy(false);
+          setError(explain(updateError.message));
+          return;
+        }
       }
       setDirty((d) => {
         const next = { ...d };
@@ -415,10 +472,17 @@ export default function PriceTree({
                         </tr>
                       </thead>
                       <tbody>
-                        {ordered(mine).map((row) => {
+                        {ordered([...mine, ...placeholdersFor(make, mine)]).map((row) => {
                           const isException = row.excluded || isNarrowerThanSibling(row, mine);
+                          /* Not saved yet: only a price makes it real. */
+                          const isNew = row.id.startsWith('new:');
                           return (
-                          <tr key={row.id} className={isException ? styles.exceptionRow : undefined}>
+                          <tr
+                            key={row.id}
+                            className={
+                              isNew ? styles.newRow : isException ? styles.exceptionRow : undefined
+                            }
+                          >
                             <td className={row.model ? styles.strong : styles.muted}>
                               {isException && <span className={styles.exceptionMark}>↳</span>}
                               {row.model ?? 'Heel merk'}
@@ -514,36 +578,42 @@ export default function PriceTree({
                             </td>
                             {!readOnly && (
                               <td className={styles.rowActions}>
-                                <button
-                                  type="button"
-                                  className={styles.ghostBtn}
-                                  title={
-                                    row.excluded
-                                      ? 'Toch doen, tegen een eigen prijs'
-                                      : 'Deze jaren doe ik niet'
-                                  }
-                                  onClick={() => editRow(row.id, { excluded: !row.excluded })}
-                                >
-                                  {row.excluded ? 'Toch wel' : 'Doe ik niet'}
-                                </button>
-                                {!row.excluded && (
-                                  <button
-                                    type="button"
-                                    className={styles.ghostBtn}
-                                    disabled={busy}
-                                    title="Andere prijs of uitzondering voor een paar bouwjaren"
-                                    onClick={() => void addException(row)}
-                                  >
-                                    Uitzondering
-                                  </button>
+                                {isNew ? (
+                                  <span className={styles.muted}>vul een prijs in</span>
+                                ) : (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className={styles.ghostBtn}
+                                      title={
+                                        row.excluded
+                                          ? 'Toch doen, tegen een eigen prijs'
+                                          : 'Deze jaren doe ik niet'
+                                      }
+                                      onClick={() => editRow(row.id, { excluded: !row.excluded })}
+                                    >
+                                      {row.excluded ? 'Toch wel' : 'Doe ik niet'}
+                                    </button>
+                                    {!row.excluded && (
+                                      <button
+                                        type="button"
+                                        className={styles.ghostBtn}
+                                        disabled={busy}
+                                        title="Andere prijs of uitzondering voor een paar bouwjaren"
+                                        onClick={() => void addException(row)}
+                                      >
+                                        Uitzondering
+                                      </button>
+                                    )}
+                                    <button
+                                      type="button"
+                                      className={styles.ghostBtn}
+                                      onClick={() => void removeRow(row.id)}
+                                    >
+                                      Verwijderen
+                                    </button>
+                                  </>
                                 )}
-                                <button
-                                  type="button"
-                                  className={styles.ghostBtn}
-                                  onClick={() => void removeRow(row.id)}
-                                >
-                                  Verwijderen
-                                </button>
                               </td>
                             )}
                           </tr>

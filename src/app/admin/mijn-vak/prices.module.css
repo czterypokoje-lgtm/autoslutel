@@ -367,3 +367,14 @@
   outline: none;
   box-shadow: 0 0 0 3px var(--crm-accent-soft);
 }
+
+/* A model that exists but has no price yet — present so the monteur can see
+   the whole line-up, dimmed so it is clear nothing is agreed for it. */
+.newRow td {
+  opacity: 0.62;
+}
+
+.newRow input,
+.newRow select {
+  opacity: 1;
+}
