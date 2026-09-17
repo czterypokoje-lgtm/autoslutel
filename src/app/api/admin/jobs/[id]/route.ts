@@ -102,7 +102,7 @@ export async function PATCH(
     patch.slot_end = end;
   }
 
-  for (const field of ['notes', 'street', 'city'] as const) {
+  for (const field of ['notes', 'street', 'city', 'postcode'] as const) {
     if (field in body) patch[field] = text(body[field], 2000);
   }
 

@@ -60,6 +60,8 @@ export default function JobEditor({
     job.commission_amount === null ? '' : String(job.commission_amount)
   );
   const [notes, setNotes] = useState(job.notes ?? '');
+  const [city, setCity] = useState(job.city ?? '');
+  const [postcode, setPostcode] = useState(job.postcode ?? '');
   const [carMake, setCarMake] = useState(job.car_make ?? '');
   const [carModel, setCarModel] = useState(job.car_model ?? '');
   const [carYear, setCarYear] = useState(job.car_year === null ? '' : String(job.car_year));
@@ -106,6 +108,8 @@ export default function JobEditor({
         commission_pct: commissionPct.trim() === '' ? null : commissionPct.trim(),
         commission_amount: commissionAmount.trim() === '' ? null : commissionAmount.trim(),
         notes,
+        city: city.trim() || null,
+        postcode: postcode.trim() || null,
         car_make: carMake.trim() || null,
         car_model: carModel.trim() || null,
         car_year: carYear.trim() || null,
@@ -303,6 +307,30 @@ export default function JobEditor({
               <option value="reparatie">Sleutel repareren</option>
               <option value="slot">Slot of cilinder</option>
             </select>
+          </div>
+        </div>
+
+        <div className={styles.row}>
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="city">Plaats (City)</label>
+            <input
+              id="city"
+              className={styles.control}
+              placeholder="bijv. Amsterdam"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="pc">Postcode</label>
+            <input
+              id="pc"
+              className={styles.control}
+              placeholder="bijv. 1011 AB"
+              value={postcode}
+              onChange={(e) => setPostcode(e.target.value)}
+            />
           </div>
         </div>
 
