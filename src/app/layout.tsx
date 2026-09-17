@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/next';
 import ConsentBanner from '@/components/ConsentBanner/ConsentBanner';
 
 
@@ -225,6 +226,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GlobalStickyBar />
         <GlobalWidgets>
           <ConsentBanner />
+        </GlobalWidgets>
+        {/*
+          Vercel Web Analytics — the traffic number that does not depend on
+          consent.
+
+          Since the consent banner went in on 31 August, Google Analytics has
+          only received anonymous pings, and this site is far below the volume
+          Google needs to model those into a user count — so GA4 has reported
+          zero active users while real customers kept arriving. This counts
+          page views without a cookie or any device identifier, so it needs no
+          consent under the AVG and sees every visitor rather than only those
+          who accept. GA4 stays where it is for the funnel and Ads attribution
+          it does when consent is granted; this is the number to trust for
+          "how many people actually came".
+
+          Inside GlobalWidgets so it never mounts on /admin — the CRM is staff
+          traffic and has no business in the site's visitor numbers, the same
+          reason the GTM snippet above is gated to the production hostname.
+        */}
+        <GlobalWidgets>
+          <Analytics />
         </GlobalWidgets>
       </body>
     </html>
