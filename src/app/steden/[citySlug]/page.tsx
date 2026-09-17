@@ -64,8 +64,21 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   if (!city) return {};
   const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
   return {
+    /*
+     * "Sleutelmaker", not "Kopiëren".
+     *
+     * Google was rewriting the title of every city page — all ten in the
+     * Ahrefs report came back "Is page title used in SERP: No" — and the
+     * rewrite it substituted was always the same: Kopiëren swapped for
+     * Sleutelmaker. The top-ranking keyword per city says the same thing
+     * ("sleutelmaker bussum", "sleutelmaker amstelveen"), and the word
+     * already appears a dozen times in each page's own body, which is where
+     * Google was taking it from. This is not a guess about intent; it is the
+     * word Google and the searchers both chose over ours.
+     */
     title: {
-      absolute: city.customMetaTitle || `Autosleutel Bijmaken & Kopiëren ${city.city} | 24/7`,
+      absolute:
+        city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
     },
     description: clampMeta(
       city.customMetaDesc ||
@@ -81,7 +94,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     openGraph: {
       type: 'website',
       url: pageUrl,
-      title: `Autosleutel Bijmaken & Kopiëren ${city.city} | 24/7`,
+      title: city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
       description: `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Wij zijn er binnen 30-60 min ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
@@ -183,7 +196,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   {city.customH1 ? (
                     city.customH1
                   ) : (
-                    <>Autosleutel Bijmaken & Kopiëren {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Service</span></>
+                    <>Autosleutel Bijmaken & Sleutelmaker {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Service</span></>
                   )}
                 </h1>
                 <p className={styles.heroUtrechtLead}>
@@ -218,7 +231,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                 <HeroTrustBadge />
               </div>
-              <h1>{city.customH1 || `Autosleutel Bijmaken & Kopiëren ${city.city} — 24/7 Service`}</h1>
+              <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
               <p className={styles.heroLead}>
                 Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
                 Alle merken, ter plaatse geprogrammeerd.
