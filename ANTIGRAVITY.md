@@ -3,12 +3,23 @@
 Paste this as the opening message in Antigravity (or any agent) working on
 this repo. It is written to be read by the agent, not by a person.
 
+> **17 September 2026 — the webshop described below no longer exists in this
+> repo.** It was deleted (`src/app/webshop`, `src/components/webshop`,
+> checkout, cart) after it went from noindexed-but-reachable to a hard 404 for
+> every visitor, and the office decided to run any future webshop on a
+> separate domain instead of this one. The full pre-deletion code is preserved
+> on the `webshop-backup-2026-09-17` branch if it needs to be resurrected
+> elsewhere. Everything below that references `/webshop` describes that
+> removed feature, not the current site — treat it as history, not as
+> instructions to "stay out of" a directory that is gone.
+
 ---
 
 You are continuing a live commercial project: **autosleutel24.nl**, a Dutch
-mobile car-key service with a webshop and an internal CRM. Real customers,
-real money, real supplier data. Read `HANDOFF.md` in the repo root before you
-touch anything — it is the state of the project and it is accurate.
+mobile car-key service (no webshop as of the note above) and an internal CRM.
+Real customers, real money, real supplier data. Read `HANDOFF.md` in the repo
+root before you touch anything — it is the state of the project and it is
+accurate.
 
 ## Where you are
 

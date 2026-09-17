@@ -57,7 +57,7 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
     ],
   },
   {
-    group: 'Webshop',
+    group: 'Winkel',
     items: [
       { href: '/admin/orders', label: 'Bestellingen', icon: Package },
       { href: '/admin/producten', label: 'Producten', icon: Tag },

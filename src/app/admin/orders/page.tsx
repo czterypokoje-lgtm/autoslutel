@@ -153,8 +153,8 @@ export default async function OrdersPage({
             {rows.length === 0 ? (
               <tr>
                 <td colSpan={8} className={styles.empty}>
-                  Geen bestellingen. De webshop kan pas afrekenen als er een
-                  Mollie-sleutel is ingesteld — tot die tijd blijft deze lijst leeg.
+                  Geen bestellingen. De webshop is offline; hier staan alleen bestellingen
+                  van vóór die tijd.
                 </td>
               </tr>
             ) : (
@@ -200,8 +200,8 @@ export default async function OrdersPage({
       <div className={styles.cards}>
         {rows.length === 0 ? (
           <p className={styles.empty}>
-            Geen bestellingen. De webshop kan pas afrekenen als er een Mollie-sleutel is
-            ingesteld — tot die tijd blijft deze lijst leeg.
+            Geen bestellingen. De webshop is offline; hier staan alleen bestellingen van
+            vóór die tijd.
           </p>
         ) : (
           rows.map((o) => (

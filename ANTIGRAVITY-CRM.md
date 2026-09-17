@@ -4,6 +4,14 @@ Paste this as the opening message of a chat that works on `/admin` only.
 Written 4 September 2026. The webshop has its own brief in
 `ANTIGRAVITY.md`; read that one only if your change crosses into the shop.
 
+> **17 September 2026 — the webshop was deleted from this repo**
+> (`src/app/webshop`, `src/components/webshop`, checkout, cart). It is
+> preserved on the `webshop-backup-2026-09-17` branch; a future webshop is
+> planned for a separate domain instead. `/admin/orders` and
+> `/admin/producten` still exist for historical bookkeeping and internal
+> stock/pricing data, but nothing publishes to a live storefront anymore —
+> references to "the webshop" below are historical, not current state.
+
 ---
 
 You are working on the internal CRM of **autosleutel24.nl**, a Dutch mobile

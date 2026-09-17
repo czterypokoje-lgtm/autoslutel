@@ -7,9 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        // /webshop is excluded until the catalogue runs on licensed product
-        // data and each page has its own canonical (see webshop/layout.tsx).
-        disallow: ['/api/', '/webshop'],
+        disallow: ['/api/'],
         // NOTE: /_next/ is intentionally NOT blocked — Google needs JS chunks for rendering
       },
       {
@@ -28,7 +26,7 @@ export default function robots(): MetadataRoute.Robots {
           'Bytespider',
         ],
         allow: '/',
-        disallow: ['/api/', '/webshop'],
+        disallow: ['/api/'],
       },
     ],
     // Sitemaps — main sitemap (which now includes all dynamic images)

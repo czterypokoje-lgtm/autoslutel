@@ -14,14 +14,6 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/s
  * the X-Robots-Tag header is how they get their noindex.
  */
 /**
- * Blocked outright — not just noindexed. The webshop was previously only
- * hidden from search engines while still being fully reachable by direct
- * URL, which meant anyone who found or was sent a /webshop/* link could see
- * it live. Pulled back to a real 404 until it's ready to launch.
- */
-const HIDDEN = ['/webshop'];
-
-/**
  * Countries blocked outright, at the office's request, after seeing zero-
  * click Clarity sessions from Poland and India.
  *
@@ -72,8 +64,8 @@ async function handleCrm(request: NextRequest): Promise<NextResponse> {
     (p) => pathname === p || pathname.startsWith(`${p}/`)
   );
 
-  // Fail closed, the same way /api/checkout does without a Mollie key: an
-  // unconfigured deployment refuses rather than exposing an unguarded panel.
+  // Fail closed: an unconfigured deployment refuses rather than exposing an
+  // unguarded panel.
   if (!supabaseAuthConfigured()) {
     return crmHeaders(
       new NextResponse('CRM is niet geconfigureerd', { status: 503 })
@@ -142,16 +134,6 @@ export async function proxy(request: NextRequest) {
     return handleCrm(request);
   }
 
-  const isHidden = HIDDEN.some(
-    (p) => pathname === p || pathname.startsWith(`${p}/`)
-  );
-  if (isHidden) {
-    return new NextResponse('Not Found', {
-      status: 404,
-      headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' },
-    });
-  }
-
   const isProtected = PROTECTED.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`)
   );
@@ -183,8 +165,6 @@ export const config = {
     // assets and Next's own internals, which a geo-check has no reason to
     // run against.
     '/((?!_next/static|_next/image|favicon\\.ico|apple-icon\\.png|icon\\.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff2?)$).*)',
-    '/webshop/:path*',
-    '/webshop',
     '/offline-conversions/:path*',
     '/demo-form/:path*',
     '/demo-kenteken/:path*',

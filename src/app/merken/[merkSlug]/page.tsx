@@ -251,23 +251,6 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 </div>
               </Link>
 
-              {/* Card 5: Webshop (HIDDEN FOR NOW) */}
-              {/* <Link href={`/webshop/merk/${brand.slug}`} style={{ display: 'flex', flexDirection: 'column', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2.5rem 2rem 2rem', textDecoration: 'none', transition: 'all 0.2s ease', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }} id={`brand-dienst-webshop-${brand.slug}`}>
-                <div style={{ width: '100%', height: '160px', position: 'relative', marginBottom: '1.75rem', background: '#f8fafc', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: '3rem' }}>🛒</span>
-                </div>
-                <h3 style={{ color: '#0f172a', fontSize: '1.2rem', fontWeight: 800, marginBottom: '0.75rem', textAlign: 'center' }}>
-                  {brand.name} Webshop
-                </h3>
-                <p style={{ color: '#64748b', fontSize: '0.92rem', lineHeight: 1.6, flex: 1 }}>
-                  Op zoek naar losse {brand.name} batterijen, lege behuizingen of accessoires? Bestel ze direct en voordelig in onze webshop.
-                </p>
-                <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem' }}>Vanaf €4,95</span>
-                  <span style={{ color: 'var(--navy-700)', fontWeight: 600, fontSize: '0.9rem' }}>Shop Nu &rarr;</span>
-                </div>
-              </Link> */}
-
             </div>
           </div>
         </section>

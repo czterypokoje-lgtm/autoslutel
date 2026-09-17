@@ -5,8 +5,8 @@
  * from the server with the service-role key, so an anon key was never needed.
  * The CRM signs people in, and a browser session needs it.
  *
- * Fail closed, like /api/checkout does with the Mollie key: a deployment
- * missing credentials must refuse to sign anyone in, not half-work.
+ * Fail closed: a deployment missing credentials must refuse to sign anyone
+ * in, not half-work.
  */
 
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';

@@ -256,7 +256,7 @@ export default function ProductEditor({ product }: { product: EditorProduct }) {
             }}
           >
             <div style={{ color: 'var(--crm-muted)', fontSize: 12 }}>
-              autosleutel24.nl › webshop › product
+              autosleutel24.nl › product
             </div>
             <div
               style={{
@@ -488,14 +488,6 @@ export default function ProductEditor({ product }: { product: EditorProduct }) {
             <button className={jobStyles.primary} onClick={save} disabled={busy}>
               {busy ? 'Opslaan…' : 'Opslaan'}
             </button>
-            <a
-              className={jobStyles.secondary}
-              href={`/webshop/product/${product.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Bekijk in winkel
-            </a>
             {saved && <span className={styles.note}>Opgeslagen.</span>}
             {error && <div className={jobStyles.error}>{error}</div>}
           </div>

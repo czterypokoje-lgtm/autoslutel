@@ -94,10 +94,10 @@ export default function Sidebar({
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            title="De webshop openen zoals een klant hem ziet"
+            title="De site openen zoals een bezoeker hem ziet"
           >
             <ExternalLink size={16} strokeWidth={1.9} aria-hidden="true" />
-            Webshop bekijken
+            Site bekijken
           </a>
 
           <SignOutButton />
