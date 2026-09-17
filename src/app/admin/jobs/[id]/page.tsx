@@ -32,7 +32,7 @@ export default async function JobPage({
     supabase
       .from('jobs')
       .select(
-        'id, status, technician_id, scheduled_date, slot_start, slot_end, street, postcode, city, kenteken, service_type, quoted_price, final_price, notes, started_at, completed_at, lead_id, created_at, customer_name, customer_phone, job_source, car_make, car_model, car_year, scenario, keyless'
+        'id, status, technician_id, scheduled_date, slot_start, slot_end, street, postcode, city, kenteken, service_type, quoted_price, final_price, commission_pct, commission_amount, notes, started_at, completed_at, lead_id, created_at, customer_name, customer_phone, job_source, car_make, car_model, car_year, scenario, keyless'
       )
       .eq('id', id)
       .maybeSingle(),

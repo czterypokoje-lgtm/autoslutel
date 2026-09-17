@@ -39,6 +39,14 @@ function year(value: unknown): number | null | 'invalid' {
   return n;
 }
 
+/** Matches the numeric(5,2) check constraint on jobs.commission_pct. */
+function percentage(value: unknown): number | null | 'invalid' {
+  if (value === null || value === undefined || value === '') return null;
+  const n = typeof value === 'number' ? value : Number(String(value).replace(',', '.'));
+  if (!Number.isFinite(n) || n < 0 || n > 100) return 'invalid';
+  return Math.round(n * 100) / 100;
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -120,6 +128,34 @@ export async function PATCH(
       return NextResponse.json({ error: 'Ongeldig bedrag' }, { status: 400 });
     }
     patch.final_price = value;
+  }
+
+  /*
+   * Commission, correctable after the fact by the office.
+   *
+   * Deliberately absent from MONTEUR_FIELDS below: a monteur reports what the
+   * work came to, they do not set their own cut. Both halves are stored as
+   * given rather than one being derived from the other, because a flat agreed
+   * euro amount is a real arrangement and recomputing it from a percentage
+   * would overwrite it.
+   */
+  if ('commission_pct' in body) {
+    const value = percentage(body.commission_pct);
+    if (value === 'invalid') {
+      return NextResponse.json(
+        { error: 'Commissie moet tussen 0 en 100 liggen' },
+        { status: 400 }
+      );
+    }
+    patch.commission_pct = value;
+  }
+
+  if ('commission_amount' in body) {
+    const value = price(body.commission_amount);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig commissiebedrag' }, { status: 400 });
+    }
+    patch.commission_amount = value;
   }
 
   if (Object.keys(patch).length === 0) {

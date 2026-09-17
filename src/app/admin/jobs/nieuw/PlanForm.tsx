@@ -80,8 +80,15 @@ export default function PlanForm({
    * agreed rate and the office can override it for this one job.
    */
   const [commissionPct, setCommissionPct] = useState('');
-  /* Set once per technician, so typing over it is never undone by a re-render. */
-  const [pctTouched, setPctTouched] = useState(false);
+  const [commissionAmount, setCommissionAmount] = useState('');
+  /*
+   * Which box the office typed in last decides which one is the truth and
+   * which is calculated from it. Not a formatting detail: a round percentage
+   * rarely gives a round euro amount, so forcing either one to always be
+   * derived means the office can never simply agree "wij houden €75" on a
+   * job. Whichever they last touched wins; the other follows.
+   */
+  const [lastEdited, setLastEdited] = useState<'pct' | 'amount' | null>(null);
   const [notes, setNotes] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -95,15 +102,44 @@ export default function PlanForm({
    */
   const agreedPct =
     suggestions.find((s) => s.id === technicianId)?.commissionPct ?? null;
-  const shownPct = pctTouched ? commissionPct : String(agreedPct ?? DEFAULT_COMMISSION_PCT);
 
-  const quotedNumber = Number(quoted.replace(',', '.'));
-  const pctNumber = Number(shownPct.replace(',', '.'));
+  const num = (s: string) => Number(s.replace(',', '.'));
+  const quotedNumber = num(quoted);
+  const haveQuote = Number.isFinite(quotedNumber) && quotedNumber > 0;
+
+  /*
+   * One of these two is typed and the other is calculated. Before the office
+   * has touched either, both come from the monteur's agreed rate.
+   */
+  let shownPct: string;
+  let shownAmount: string;
+  if (lastEdited === 'amount') {
+    shownAmount = commissionAmount;
+    const amt = num(commissionAmount);
+    shownPct =
+      haveQuote && Number.isFinite(amt) ? String(Math.round((amt / quotedNumber) * 1000) / 10) : '';
+  } else {
+    shownPct = lastEdited === 'pct' ? commissionPct : String(agreedPct ?? DEFAULT_COMMISSION_PCT);
+    const pct = num(shownPct);
+    shownAmount =
+      haveQuote && Number.isFinite(pct) ? (Math.round(quotedNumber * pct) / 100).toFixed(2) : '';
+  }
+
+  const pctNumber = num(shownPct);
+  const amountNumber = num(shownAmount);
   const splitIsReal =
-    Number.isFinite(quotedNumber) && quotedNumber > 0 &&
-    Number.isFinite(pctNumber) && pctNumber >= 0 && pctNumber <= 100;
-  const ourCut = splitIsReal ? (quotedNumber * pctNumber) / 100 : null;
-  const technicianGets = splitIsReal && ourCut !== null ? quotedNumber - ourCut : null;
+    haveQuote &&
+    Number.isFinite(amountNumber) &&
+    amountNumber >= 0 &&
+    amountNumber <= quotedNumber &&
+    Number.isFinite(pctNumber) &&
+    pctNumber >= 0 &&
+    pctNumber <= 100;
+  const ourCut = splitIsReal ? amountNumber : null;
+  const technicianGets = splitIsReal ? quotedNumber - amountNumber : null;
+  /* Catches "commissie hoger dan de prijs", which is always a typo. */
+  const splitIsImpossible =
+    haveQuote && Number.isFinite(amountNumber) && amountNumber > quotedNumber;
   const euro = (n: number) =>
     new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(n);
 
@@ -138,7 +174,11 @@ export default function PlanForm({
         keyless: keylessChoice === '' ? null : keylessChoice === 'true',
         service_type: service,
         quoted_price: quoted,
+        // Both, because the office may have agreed a flat euro amount that is
+        // not a round percentage of the price — sending only one would make
+        // the server recompute it and lose the number actually agreed.
         commission_pct: shownPct,
+        commission_amount: shownAmount,
         notes,
       }),
     }).catch(() => null);
@@ -219,28 +259,50 @@ export default function PlanForm({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor="commissie">
+            <label className={styles.fieldLabel} htmlFor="commissiePct">
               Onze commissie (%)
             </label>
             <input
-              id="commissie"
+              id="commissiePct"
               className={styles.control}
               inputMode="decimal"
               placeholder="25"
               value={shownPct}
               onChange={(e) => {
-                setPctTouched(true);
+                setLastEdited('pct');
                 setCommissionPct(e.target.value);
               }}
             />
-            <p className={styles.hint}>
-              {ourCut !== null && technicianGets !== null ? (
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="commissieBedrag">
+              Onze commissie (€)
+            </label>
+            <input
+              id="commissieBedrag"
+              className={styles.control}
+              inputMode="decimal"
+              placeholder="62.25"
+              value={shownAmount}
+              onChange={(e) => {
+                setLastEdited('amount');
+                setCommissionAmount(e.target.value);
+              }}
+            />
+          </div>
+
+          <div className={styles.fieldWide}>
+            <p className={splitIsImpossible ? styles.hintBad : styles.hint}>
+              {splitIsImpossible ? (
+                <>Commissie is hoger dan de afgesproken prijs — controleer het bedrag.</>
+              ) : ourCut !== null && technicianGets !== null ? (
                 <>
                   Wij houden <strong>{euro(ourCut)}</strong> · monteur krijgt{' '}
                   <strong>{euro(technicianGets)}</strong>
                 </>
               ) : agreedPct !== null ? (
-                `Afgesproken tarief van deze monteur: ${agreedPct}%`
+                `Afgesproken tarief van deze monteur: ${agreedPct}% — vul een prijs in voor de verdeling`
               ) : (
                 `Geen afspraak vastgelegd — standaard ${DEFAULT_COMMISSION_PCT}%`
               )}

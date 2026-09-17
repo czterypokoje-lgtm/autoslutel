@@ -23,6 +23,8 @@ export interface JobDetail {
   service_type: string | null;
   quoted_price: number | string | null;
   final_price: number | string | null;
+  commission_pct: number | string | null;
+  commission_amount: number | string | null;
   notes: string | null;
   started_at: string | null;
   completed_at: string | null;
@@ -45,6 +47,17 @@ export default function JobEditor({
   const [finalPrice, setFinalPrice] = useState(
     job.final_price === null ? '' : String(job.final_price)
   );
+  /*
+   * Commission, correctable here after the fact — a price gets renegotiated
+   * at the kerb often enough that the cut agreed when the job was planned is
+   * not always the cut that ends up being right.
+   */
+  const [commissionPct, setCommissionPct] = useState(
+    job.commission_pct === null ? '' : String(job.commission_pct)
+  );
+  const [commissionAmount, setCommissionAmount] = useState(
+    job.commission_amount === null ? '' : String(job.commission_amount)
+  );
   const [notes, setNotes] = useState(job.notes ?? '');
   const [carMake, setCarMake] = useState(job.car_make ?? '');
   const [carModel, setCarModel] = useState(job.car_model ?? '');
@@ -55,6 +68,21 @@ export default function JobEditor({
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  /*
+   * The split reads off the werkelijke prijs once there is one, and the
+   * afgesproken prijs until then — that is the number the commission is
+   * actually taken from at each stage of the job.
+   */
+  const toNum = (v: string | number | null) =>
+    v === null || v === '' ? NaN : Number(String(v).replace(',', '.'));
+  const typedFinal = toNum(finalPrice);
+  const basisPrice = Number.isFinite(typedFinal) ? typedFinal : toNum(job.quoted_price);
+  const typedCommission = toNum(commissionAmount);
+  const haveBoth =
+    Number.isFinite(basisPrice) && basisPrice > 0 && Number.isFinite(typedCommission);
+  const commissionTooHigh = haveBoth && typedCommission > basisPrice;
+  const monteurGets = haveBoth && !commissionTooHigh ? basisPrice - typedCommission : null;
 
   async function save() {
     setSaving(true);
@@ -73,6 +101,8 @@ export default function JobEditor({
         slot_start: window?.start ?? slot,
         slot_end: window?.end ?? trimTime(job.slot_end),
         final_price: finalPrice.trim() === '' ? null : finalPrice.trim(),
+        commission_pct: commissionPct.trim() === '' ? null : commissionPct.trim(),
+        commission_amount: commissionAmount.trim() === '' ? null : commissionAmount.trim(),
         notes,
         car_make: carMake.trim() || null,
         car_model: carModel.trim() || null,
@@ -163,6 +193,49 @@ export default function JobEditor({
               value={finalPrice}
               onChange={(e) => setFinalPrice(e.target.value)}
             />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="cpct">
+              Commissie (%)
+            </label>
+            <input
+              id="cpct"
+              className={styles.control}
+              inputMode="decimal"
+              placeholder="25"
+              value={commissionPct}
+              onChange={(e) => setCommissionPct(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="camt">
+              Commissie (€)
+            </label>
+            <input
+              id="camt"
+              className={styles.control}
+              inputMode="decimal"
+              placeholder="62.25"
+              value={commissionAmount}
+              onChange={(e) => setCommissionAmount(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.fieldWide}>
+            <p className={commissionTooHigh ? styles.hintBad : styles.hint}>
+              {commissionTooHigh ? (
+                <>Commissie is hoger dan de prijs — controleer het bedrag.</>
+              ) : monteurGets !== null ? (
+                <>
+                  Monteur houdt <strong>{MONEY.format(monteurGets)}</strong> over van{' '}
+                  {MONEY.format(basisPrice as number)}
+                </>
+              ) : (
+                'Vul een prijs en commissie in om de verdeling te zien.'
+              )}
+            </p>
           </div>
 
           <div className={styles.field}>

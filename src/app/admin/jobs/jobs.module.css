@@ -387,6 +387,19 @@
   font-weight: 700;
 }
 
+/* The commission split reads under both boxes, not beside one of them. */
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.hintBad {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--crm-stop);
+}
+
 .control {
   padding: 0 10px;
   border: 1px solid var(--crm-rule2);

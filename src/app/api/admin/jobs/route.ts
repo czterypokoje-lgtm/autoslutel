@@ -115,10 +115,29 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+
+  /*
+   * The euro amount is taken as sent, not recomputed from the percentage.
+   * The office can agree a flat "wij houden €75" that is not a round
+   * percentage of the price, and recomputing here would quietly replace the
+   * figure they actually agreed with a rounded one.
+   */
+  const sentAmount = price(body.commission_amount);
+  if (sentAmount === 'invalid') {
+    return NextResponse.json({ error: 'Ongeldig commissiebedrag' }, { status: 400 });
+  }
+  if (sentAmount !== null && quoted !== null && sentAmount > quoted) {
+    return NextResponse.json(
+      { error: 'Commissie kan niet hoger zijn dan de afgesproken prijs' },
+      { status: 400 }
+    );
+  }
+
   const commissionAmount =
-    commissionPct !== null && quoted !== null
+    sentAmount ??
+    (commissionPct !== null && quoted !== null
       ? Math.round(quoted * commissionPct) / 100
-      : null;
+      : null);
 
   const row = {
     lead_id: leadId,
