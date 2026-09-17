@@ -17,6 +17,7 @@ import { BRANDS } from '@/config/brands';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import { captionFromFilename } from '@/lib/imageCaption';
 import styles from './page.module.css';
 import fs from 'fs';
 import path from 'path';
@@ -485,14 +486,10 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                     </div>
                   ) : serviceImages.length > 0 ? (
                     <GallerySlider 
-                      images={serviceImages.map(src => {
-                        const parts = src.split('/');
-                        const filename = parts[parts.length - 1].replace('.webp', '').replace('.jpg', '').replace(/-/g, ' ');
-                        return {
-                          src,
-                          caption: filename.replace(/\b\w/g, c => c.toUpperCase())
-                        };
-                      })}
+                      images={serviceImages.map(src => ({
+                        src,
+                        caption: captionFromFilename(src),
+                      }))}
                       title="Onze service in de hele regio — Galerij"
                     />
                   ) : (

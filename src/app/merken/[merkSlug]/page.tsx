@@ -11,6 +11,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import FaqSection from '@/components/FaqSection/FaqSection';
 import { getFaqForBrand } from '@/config/faq';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import { captionFromFilename } from '@/lib/imageCaption';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
@@ -463,13 +464,10 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                     
                     {recentWorkImages && recentWorkImages.length > 0 ? (
                       <GallerySlider 
-                        images={recentWorkImages.map(filename => {
-                          const cleanName = filename.replace('.webp', '').replace('.jpg', '').replace(/-/g, ' ');
-                          return {
-                            src: `/images/merken/${filename}`,
-                            caption: cleanName.replace(/\b\w/g, c => c.toUpperCase())
-                          };
-                        })}
+                        images={recentWorkImages.map(filename => ({
+                          src: `/images/merken/${filename}`,
+                          caption: captionFromFilename(filename),
+                        }))}
                         title="" 
                       />
                     ) : (
