@@ -189,3 +189,75 @@
   color: var(--crm-muted);
   font-size: 13.5px;
 }
+
+/* ── inline row editing ───────────────────────────────────────────────
+   A tarief is edited where it is read, rather than in a separate form:
+   the office is nearly always correcting one number on a row they are
+   already looking at. Inputs are sized down from the add-form's 36px so
+   a row in edit mode stays the same height as its neighbours and the
+   table does not jump when one opens. */
+
+.cellInput {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+  height: 30px;
+  box-sizing: border-box;
+}
+
+.cellInput:focus {
+  outline: none;
+  border-color: var(--crm-rule2);
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+.editingRow {
+  background: var(--crm-panel);
+}
+
+/* Two year boxes share one cell without widening the column. */
+.yearPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.rowActions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.saveBtn {
+  padding: 5px 12px;
+  border: none;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.saveBtn:hover:not(:disabled) {
+  background: var(--crm-accent-hover);
+}
+
+.saveBtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.rowError {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--crm-stop);
+}
