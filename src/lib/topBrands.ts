@@ -44,6 +44,45 @@ export const TOP_BRANDS: string[] = [
   'Mazda',
 ];
 
+/**
+ * Makes that should never be offered to a monteur.
+ *
+ * They exist in the supplier's parts catalogue but not in a single real job:
+ * two motorcycle marques, and American brands almost nobody drives here.
+ * Listing them only makes the picker longer to scroll.
+ */
+const EXCLUDED_MAKES = new Set(
+  [
+    'Aprilia',
+    'Ducati',
+    'Buick',
+    'Cadillac',
+    'Chrysler',
+    'Dodge',
+    'Ferrari',
+    'General Motors',
+  ].map((m) => m.toLowerCase())
+);
+
+export function isExcludedMake(make: string): boolean {
+  return EXCLUDED_MAKES.has(make.trim().toLowerCase());
+}
+
+/**
+ * Model names the supplier feed spells wrong, mapped to the real thing.
+ *
+ * "Beatle" is A-Key's own typo for the Volkswagen Beetle. It reaches us
+ * through catalog.json, so the picker listed Beatle and Beetle as two
+ * different cars and a monteur could price each of them separately.
+ */
+const MODEL_ALIASES: Record<string, string> = {
+  beatle: 'Beetle',
+};
+
+export function canonicalModel(model: string): string {
+  return MODEL_ALIASES[model.trim().toLowerCase()] ?? model;
+}
+
 const TOP_SET = new Set(TOP_BRANDS.map((b) => b.toLowerCase()));
 
 export function isTopBrand(make: string): boolean {

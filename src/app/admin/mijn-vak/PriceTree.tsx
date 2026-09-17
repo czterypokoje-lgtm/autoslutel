@@ -5,7 +5,7 @@ import { ChevronDown, ChevronRight, Plus, Search } from 'lucide-react';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { SCENARIOS, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import type { CatalogMake } from '@/lib/carCatalog';
-import { TOP_BRANDS, brandRank, isTopBrand } from '@/lib/topBrands';
+import { TOP_BRANDS, brandRank, isTopBrand, isExcludedMake, canonicalModel } from '@/lib/topBrands';
 import { specificity } from '@/lib/capability';
 import styles from './prices.module.css';
 
@@ -112,6 +112,9 @@ export default function PriceTree({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
+  /** Pending edits per row id, flushed by saveAll(). */
+  const [dirty, setDirty] = useState<Record<string, Partial<PriceEntry>>>({});
+  const [saved, setSaved] = useState(false);
 
   const byMake = useMemo(() => {
     const map = new Map<string, PriceEntry[]>();
@@ -132,7 +135,7 @@ export default function PriceTree({
     // A make a monteur already priced always shows, even outside the catalogue.
     for (const r of rows) if (!names.has(r.make.toLowerCase())) names.set(r.make.toLowerCase(), r.make);
 
-    const all = [...names.values()];
+    const all = [...names.values()].filter((m) => !isExcludedMake(m));
     const q = search.trim().toLowerCase();
     const filtered = q ? all.filter((m) => m.toLowerCase().includes(q)) : all;
     return filtered.sort((a, b) => {
@@ -142,8 +145,18 @@ export default function PriceTree({
     });
   }, [catalog, rows, search]);
 
-  const modelsFor = (make: string): string[] =>
-    catalog.find((m) => m.make.toLowerCase() === make.toLowerCase())?.models.map((m) => m.model) ?? [];
+  const modelsFor = (make: string): string[] => {
+    const raw =
+      catalog.find((m) => m.make.toLowerCase() === make.toLowerCase())?.models.map((m) => m.model) ?? [];
+    // canonicalModel folds the supplier's misspellings (Beatle -> Beetle) so
+    // the same car cannot appear twice under two spellings.
+    const seen = new Map<string, string>();
+    for (const model of raw) {
+      const name = canonicalModel(model);
+      if (!seen.has(name.toLowerCase())) seen.set(name.toLowerCase(), name);
+    }
+    return [...seen.values()].sort((a, b) => a.localeCompare(b, 'nl'));
+  };
 
   const draftFor = (make: string): Draft => drafts[make] ?? EMPTY_DRAFT;
   const setDraft = (make: string, patch: Partial<Draft>) =>
@@ -195,32 +208,83 @@ export default function PriceTree({
   }
 
   /*
-   * One updater for every editable cell. Optimistic, with the previous rows
-   * kept so a rejected write puts the table back rather than leaving the
-   * screen claiming something the database refused.
+   * Edits are held until "Opslaan", not written on every blur.
+   *
+   * Setting up a price list means touching a lot of cells in a row — years,
+   * scenario, sleuteltype, price — and saving each one separately made a
+   * dozen writes out of one decision, with no way to change your mind. The
+   * table shows pending values; `dirty` is what will be sent.
    */
-  async function patchRow(id: string, patch: Partial<PriceEntry>) {
-    const previous = rows;
+  function editRow(id: string, patch: Partial<PriceEntry>) {
     setRows((r) => r.map((row) => (row.id === id ? { ...row, ...patch } : row)));
+    setDirty((d) => ({ ...d, [id]: { ...(d[id] ?? {}), ...patch } }));
     setError(null);
-    const { error: updateError } = await supabase
-      .from('technician_coverage')
-      .update(patch)
-      .eq('id', id);
-    if (updateError) {
-      setRows(previous);
-      setError(explain(updateError.message));
-    }
+    setSaved(false);
   }
 
   function updatePrice(id: string, value: string) {
-    const priceValue = Number(value.replace(',', '.'));
+    const trimmed = value.trim();
+    if (trimmed === '') {
+      editRow(id, { price: null });
+      return;
+    }
+    const priceValue = Number(trimmed.replace(',', '.'));
     if (!Number.isFinite(priceValue) || priceValue < 0) return;
-    void patchRow(id, { price: priceValue });
+    editRow(id, { price: priceValue });
   }
 
   function updateYear(id: string, field: 'from_year' | 'to_year', value: string) {
-    void patchRow(id, { [field]: toIntOrNull(value) } as Partial<PriceEntry>);
+    editRow(id, { [field]: toIntOrNull(value) } as Partial<PriceEntry>);
+  }
+
+  const pendingCount = Object.keys(dirty).length;
+
+  /*
+   * Saved one row at a time rather than in a single statement: PostgREST has
+   * no multi-row update with different values per row, and an upsert would
+   * need every column of every row resent. A failure stops there and says so,
+   * leaving the rows it has not reached still marked as pending.
+   */
+  async function saveAll() {
+    const entries = Object.entries(dirty);
+    if (entries.length === 0) return;
+    setBusy(true);
+    setError(null);
+
+    for (const [id, patch] of entries) {
+      const { error: updateError } = await supabase
+        .from('technician_coverage')
+        .update(patch)
+        .eq('id', id);
+      if (updateError) {
+        setBusy(false);
+        setError(explain(updateError.message));
+        return;
+      }
+      setDirty((d) => {
+        const next = { ...d };
+        delete next[id];
+        return next;
+      });
+    }
+
+    setBusy(false);
+    setSaved(true);
+  }
+
+  /** Throws away pending edits by reloading what the server actually holds. */
+  async function discardAll() {
+    const { data, error: reloadError } = await supabase
+      .from('technician_coverage')
+      .select('id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+      .eq('technician_id', technicianId);
+    if (reloadError) {
+      setError(explain(reloadError.message));
+      return;
+    }
+    setRows((data ?? []) as PriceEntry[]);
+    setDirty({});
+    setSaved(false);
   }
 
   /*
@@ -270,6 +334,41 @@ export default function PriceTree({
   return (
     <div className={styles.wrap}>
       {error && <p className={styles.error}>{error}</p>}
+
+      {/*
+        Sticky so it stays reachable: a brand like Volkswagen runs to twenty
+        rows, and a save button at the bottom of that is a save button nobody
+        finds after editing the row they opened the page for.
+      */}
+      {!readOnly && (pendingCount > 0 || saved) && (
+        <div className={pendingCount > 0 ? styles.saveBar : styles.saveBarDone}>
+          <span className={styles.saveText}>
+            {pendingCount > 0
+              ? `${pendingCount} ${pendingCount === 1 ? 'wijziging' : 'wijzigingen'} nog niet opgeslagen`
+              : 'Alles opgeslagen.'}
+          </span>
+          {pendingCount > 0 && (
+            <>
+              <button
+                type="button"
+                className={styles.ghostBtn}
+                disabled={busy}
+                onClick={() => void discardAll()}
+              >
+                Ongedaan maken
+              </button>
+              <button
+                type="button"
+                className={styles.addBtn}
+                disabled={busy}
+                onClick={() => void saveAll()}
+              >
+                {busy ? 'Opslaan…' : 'Opslaan'}
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       <div className={styles.searchRow}>
         <Search size={15} aria-hidden="true" />
@@ -337,24 +436,62 @@ export default function PriceTree({
                                     className={styles.yearInput}
                                     type="number"
                                     placeholder="alle"
-                                    defaultValue={row.from_year ?? ''}
+                                    value={row.from_year ?? ''}
                                     aria-label="Bouwjaar vanaf"
-                                    onBlur={(e) => updateYear(row.id, 'from_year', e.target.value)}
+                                    onChange={(e) => updateYear(row.id, 'from_year', e.target.value)}
                                   />
                                   <span className={styles.dash}>–</span>
                                   <input
                                     className={styles.yearInput}
                                     type="number"
                                     placeholder="nu"
-                                    defaultValue={row.to_year ?? ''}
+                                    value={row.to_year ?? ''}
                                     aria-label="Bouwjaar tot"
-                                    onBlur={(e) => updateYear(row.id, 'to_year', e.target.value)}
+                                    onChange={(e) => updateYear(row.id, 'to_year', e.target.value)}
                                   />
                                 </span>
                               )}
                             </td>
-                            <td>{SCENARIO_INFO[row.scenario]?.label ?? row.scenario}</td>
-                            <td className={styles.muted}>{keylessLabel(row.keyless)}</td>
+                            <td>
+                              {readOnly ? (
+                                SCENARIO_INFO[row.scenario]?.label ?? row.scenario
+                              ) : (
+                                <select
+                                  className={styles.rowSelect}
+                                  value={row.scenario}
+                                  aria-label="Scenario"
+                                  onChange={(e) =>
+                                    editRow(row.id, { scenario: e.target.value as Scenario })
+                                  }
+                                >
+                                  {SCENARIOS.map((sc) => (
+                                    <option key={sc} value={sc}>
+                                      {SCENARIO_INFO[sc].label}
+                                    </option>
+                                  ))}
+                                </select>
+                              )}
+                            </td>
+                            <td className={styles.muted}>
+                              {readOnly ? (
+                                keylessLabel(row.keyless)
+                              ) : (
+                                <select
+                                  className={styles.rowSelect}
+                                  value={row.keyless === null ? '' : String(row.keyless)}
+                                  aria-label="Sleuteltype"
+                                  onChange={(e) =>
+                                    editRow(row.id, {
+                                      keyless: e.target.value === '' ? null : e.target.value === 'true',
+                                    })
+                                  }
+                                >
+                                  <option value="">Beide</option>
+                                  <option value="true">Keyless</option>
+                                  <option value="false">Baard/contact</option>
+                                </select>
+                              )}
+                            </td>
                             <td className={styles.money}>
                               {row.excluded ? (
                                 <span className={styles.notDone}>doet hij niet</span>
@@ -367,14 +504,11 @@ export default function PriceTree({
                               ) : (
                                 <input
                                   className={styles.priceInput}
-                                  defaultValue={row.price == null ? '' : String(row.price)}
+                                  value={row.price == null ? '' : String(row.price)}
                                   placeholder="—"
                                   inputMode="decimal"
                                   aria-label={`Prijs voor ${row.model ?? make}`}
-                                  onBlur={(e) => {
-                                    if (e.target.value.trim() === '') return;
-                                    updatePrice(row.id, e.target.value);
-                                  }}
+                                  onChange={(e) => updatePrice(row.id, e.target.value)}
                                 />
                               )}
                             </td>
@@ -388,7 +522,7 @@ export default function PriceTree({
                                       ? 'Toch doen, tegen een eigen prijs'
                                       : 'Deze jaren doe ik niet'
                                   }
-                                  onClick={() => void patchRow(row.id, { excluded: !row.excluded })}
+                                  onClick={() => editRow(row.id, { excluded: !row.excluded })}
                                 >
                                   {row.excluded ? 'Toch wel' : 'Doe ik niet'}
                                 </button>
