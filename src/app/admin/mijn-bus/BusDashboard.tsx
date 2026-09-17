@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { adjustOwnStock } from './actions';
 import { stockStatus } from '@/lib/stockStatus';
+import { GROUP_INFO, STOCK_GROUPS, type StockGroup } from '@/lib/stockCategory';
 import styles from './BusDashboard.module.css';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -17,14 +18,34 @@ function StockBadge({ status }: { status: 'out' | 'low' | 'ok' }) {
   );
 }
 
+interface StockItem {
+  id: string;
+  description: string;
+  quantity: number;
+  min_quantity: number;
+  unit_cost: number | string | null;
+  group?: string | null;
+}
+
+interface StockMove {
+  id: number | string;
+  description: string;
+  delta: number | string;
+  quantity_after: number | string;
+  reason: string;
+  changed_at: string;
+}
+
 export default function BusDashboard({
   myStock,
   centralStock,
   otherTechs,
+  moves = [],
 }: {
   myStock: any[];
   centralStock: any[];
   otherTechs: any[];
+  moves?: StockMove[];
 }) {
   /*
    * A local, mutable copy of the prop. Every +/- used to wait for the full
@@ -41,14 +62,37 @@ export default function BusDashboard({
   /** Why a transfer was refused, in the monteur's own words. */
   const [notice, setNotice] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  /** null = every group; otherwise only that one. */
+  const [group, setGroup] = useState<StockGroup | null>(null);
 
   // Stats calculation
   const totalProducts = stock.length;
   const activeProducts = stock.filter(item => item.quantity > 0).length;
 
-  const filteredStock = stock.filter(item =>
-    item.description.toLowerCase().includes(search.toLowerCase())
+  const filteredStock = stock.filter(
+    (item) =>
+      item.description.toLowerCase().includes(search.toLowerCase()) &&
+      (group === null || item.group === group)
   );
+
+  /*
+   * Per-group totals, from the full van rather than the filtered view — the
+   * chips have to keep showing what is in each group while one of them is
+   * selected, or picking a group would empty every other chip's count.
+   */
+  const perGroup = STOCK_GROUPS.map((g) => {
+    const items: StockItem[] = stock.filter((item: StockItem) => item.group === g.id);
+    return {
+      ...g,
+      count: items.length,
+      units: items.reduce((total, item) => total + Number(item.quantity ?? 0), 0),
+      value: items.reduce(
+        (total, item) => total + Number(item.quantity ?? 0) * Number(item.unit_cost ?? 0),
+        0
+      ),
+      short: items.filter((item) => stockStatus(item) !== 'ok').length,
+    };
+  }).filter((g) => g.count > 0);
 
   async function adjustStock(description: string, delta: number) {
     if (pending.has(description)) return;
@@ -127,6 +171,33 @@ export default function BusDashboard({
           </div>
         </div>
 
+        {perGroup.length > 1 && (
+          <div className={styles.groupChips}>
+            <button
+              type="button"
+              className={group === null ? styles.chipOn : styles.chip}
+              onClick={() => setGroup(null)}
+            >
+              Alles
+              <span className={styles.chipCount}>{stock.length}</span>
+            </button>
+            {perGroup.map((g) => (
+              <button
+                key={g.id}
+                type="button"
+                className={group === g.id ? styles.chipOn : styles.chip}
+                onClick={() => setGroup(group === g.id ? null : g.id)}
+                title={`${g.units} stuks · ${MONEY.format(g.value)}`}
+              >
+                <span aria-hidden="true">{g.icon}</span>
+                {g.label}
+                <span className={styles.chipCount}>{g.count}</span>
+                {g.short > 0 && <span className={styles.chipShort} title="bijna op of op" />}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className={styles.tableWrap}>
         <table className={styles.table}>
           <thead>
@@ -178,7 +249,14 @@ export default function BusDashboard({
                   </td>
                   <td>
                     <div className={styles.productCell}>
-                      <div style={{ fontSize: '1.5rem' }}>📦</div>
+                      {/* The kind of part, so the eye can sort the list before
+                          reading a single article code. */}
+                      <div
+                        className={styles.groupIcon}
+                        title={GROUP_INFO[(item.group as StockGroup) ?? 'overig']?.label}
+                      >
+                        {GROUP_INFO[(item.group as StockGroup) ?? 'overig']?.icon ?? '📦'}
+                      </div>
                       {item.description}
                       <StockBadge status={stockStatus(item)} />
                     </div>
@@ -238,7 +316,9 @@ export default function BusDashboard({
             return (
               <div key={item.id} className={styles.stockCard}>
                 <div className={styles.stockCardHead}>
-                  <span style={{ fontSize: '1.3rem' }}>📦</span>
+                  <span style={{ fontSize: '1.3rem' }}>
+                    {GROUP_INFO[(item.group as StockGroup) ?? 'overig']?.icon ?? '📦'}
+                  </span>
                   <span className={styles.stockCardName}>{item.description}</span>
                   <StockBadge status={stockStatus(item)} />
                 </div>
@@ -294,6 +374,77 @@ export default function BusDashboard({
           </div>
         </div>
       </div>
+
+      {/*
+        Analysis: where the value sits, and what has moved.
+
+        Deliberately two readings rather than a wall of tiles. Which groups
+        hold the money answers "what is this van worth and in what", and the
+        movement list answers "what changed" — the two questions a stock page
+        is actually opened for. Both come from real rows; nothing is modelled
+        or projected.
+      */}
+      {perGroup.length > 0 && (
+        <div className={styles.analysis}>
+          <div className={styles.analysisCard}>
+            <h3 className={styles.analysisTitle}>Waarde per soort</h3>
+            <div className={styles.bars}>
+              {[...perGroup]
+                .sort((a, b) => b.value - a.value)
+                .map((g) => {
+                  const top = Math.max(...perGroup.map((x) => x.value), 1);
+                  return (
+                    <div key={g.id} className={styles.barRow}>
+                      <span className={styles.barLabel}>
+                        <span aria-hidden="true">{g.icon}</span> {g.label}
+                      </span>
+                      <span className={styles.barTrack}>
+                        <span
+                          className={styles.barFill}
+                          style={{ width: `${Math.round((g.value / top) * 100)}%` }}
+                        />
+                      </span>
+                      <span className={styles.barValue}>{MONEY.format(g.value)}</span>
+                      <span className={styles.barUnits}>{g.units} st.</span>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+
+          <div className={styles.analysisCard}>
+            <h3 className={styles.analysisTitle}>Laatste mutaties</h3>
+            {moves.length === 0 ? (
+              <p className={styles.analysisEmpty}>
+                Nog geen mutaties vastgelegd. De geschiedenis begint zodra
+                0039_stock_history.sql is uitgevoerd.
+              </p>
+            ) : (
+              <ul className={styles.moveList}>
+                {moves.slice(0, 12).map((move) => {
+                  const delta = Number(move.delta);
+                  return (
+                    <li key={String(move.id)} className={styles.moveRow}>
+                      <span className={delta < 0 ? styles.moveOut : styles.moveIn}>
+                        {delta > 0 ? `+${delta}` : delta}
+                      </span>
+                      <span className={styles.moveName}>{move.description}</span>
+                      <span className={styles.moveMeta}>
+                        {move.reason} ·{' '}
+                        {new Date(move.changed_at).toLocaleDateString('nl-NL', {
+                          day: '2-digit',
+                          month: '2-digit',
+                        })}
+                      </span>
+                      <span className={styles.moveAfter}>→ {Number(move.quantity_after)}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );

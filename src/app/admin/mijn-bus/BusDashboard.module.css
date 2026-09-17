@@ -414,3 +414,214 @@
   background: var(--crm-stop-bg);
   color: var(--crm-stop);
 }
+
+/* ── category chips ───────────────────────────────────────────────── */
+
+.groupChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 1.5rem 0.9rem;
+}
+
+.chip,
+.chipOn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--crm-rule2);
+  background: transparent;
+  color: var(--crm-muted);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+}
+
+.chip:hover {
+  color: var(--crm-ink);
+  border-color: var(--crm-ink);
+}
+
+.chipOn {
+  background: var(--crm-accent-soft);
+  border-color: var(--crm-accent);
+  color: var(--crm-accent);
+}
+
+.chipCount {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+/* A dot rather than a number: which groups need attention, not how many. */
+.chipShort {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--crm-stop);
+}
+
+.groupIcon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+/* ── analysis ─────────────────────────────────────────────────────── */
+
+.analysis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.analysisCard {
+  padding: 16px 18px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+}
+
+.analysisTitle {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--crm-muted);
+}
+
+.analysisEmpty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--crm-muted);
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: minmax(96px, 1.1fr) 2fr auto auto;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+}
+
+.barLabel {
+  color: var(--crm-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.barTrack {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--crm-bg);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--crm-accent);
+}
+
+.barValue {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--crm-ink);
+  white-space: nowrap;
+}
+
+.barUnits {
+  font-variant-numeric: tabular-nums;
+  color: var(--crm-muted);
+  white-space: nowrap;
+}
+
+.moveList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.moveRow {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--crm-rule);
+  font-size: 12.5px;
+}
+
+.moveRow:last-child {
+  border-bottom: none;
+}
+
+.moveIn,
+.moveOut {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  min-width: 34px;
+  text-align: right;
+}
+
+.moveIn {
+  color: var(--crm-ok);
+}
+
+.moveOut {
+  color: var(--crm-stop);
+}
+
+.moveName {
+  color: var(--crm-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moveMeta,
+.moveAfter {
+  color: var(--crm-muted);
+  white-space: nowrap;
+}
+
+.moveAfter {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 560px) {
+  .groupChips {
+    padding: 0 1rem 0.8rem;
+  }
+
+  .barRow {
+    grid-template-columns: 1fr auto;
+  }
+
+  .barTrack {
+    grid-column: 1 / -1;
+  }
+
+  .moveRow {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .moveMeta {
+    grid-column: 2 / -1;
+  }
+}

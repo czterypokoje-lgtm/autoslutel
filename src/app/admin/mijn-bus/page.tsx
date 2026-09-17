@@ -2,6 +2,7 @@ import { Boxes, PackageCheck, PackageX, TriangleAlert, Warehouse } from 'lucide-
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { stockStatus } from '@/lib/stockStatus';
+import { stockGroupOf } from '@/lib/stockCategory';
 import { PageHead, StatGrid, Stat, Notice } from '../_ui';
 import BusDashboard from './BusDashboard';
 import InvoicePanel, { type InvoiceRow } from './InvoicePanel';
@@ -38,7 +39,13 @@ export default async function MijnBusPage() {
     );
   }
 
-  const [{ data: myStock }, { data: centralStock }, { data: otherTechs }, { data: invoices }] =
+  const [
+    { data: myStock },
+    { data: centralStock },
+    { data: otherTechs },
+    { data: invoices },
+    { data: moves },
+  ] =
     await Promise.all([
       supabase.from('stock_items').select('*').eq('technician_id', tech.id).order('description'),
       supabase.from('stock_items').select('*').is('technician_id', null).order('description'),
@@ -51,9 +58,25 @@ export default async function MijnBusPage() {
         .eq('technician_id', tech.id)
         .order('created_at', { ascending: false })
         .limit(20),
+      /*
+       * Recent movements. Selected defensively — stock_moves arrives with
+       * 0039, and this page has to keep working on a database that has not
+       * run it yet, the same way the rest of the CRM degrades.
+       */
+      supabase
+        .from('stock_moves')
+        .select('id, description, delta, quantity_after, reason, changed_at')
+        .eq('technician_id', tech.id)
+        .order('changed_at', { ascending: false })
+        .limit(40),
     ]);
 
-  const stock = myStock ?? [];
+  /*
+   * The group is worked out here, not in the browser: stockGroupOf reads the
+   * parts catalogue, which is a multi-megabyte build-time import and has no
+   * business being shipped to a monteur's phone to draw an icon.
+   */
+  const stock = (myStock ?? []).map((item) => ({ ...item, group: stockGroupOf(item) }));
   const inVan = stock.reduce((total, item) => total + Number(item.quantity ?? 0), 0);
   const outCount = stock.filter((item) => stockStatus(item) === 'out').length;
   const lowCount = stock.filter((item) => stockStatus(item) === 'low').length;
@@ -135,6 +158,7 @@ export default async function MijnBusPage() {
         myStock={stock}
         centralStock={centralStock ?? []}
         otherTechs={otherTechs ?? []}
+        moves={moves ?? []}
       />
     </>
   );
