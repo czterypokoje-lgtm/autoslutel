@@ -229,6 +229,7 @@ export default async function MonteurDetailPage({ params }: { params: Promise<{ 
                 <th>Plaats</th>
                 <th className={ui.numeric}>Klus</th>
                 <th className={ui.numeric}>Commissie</th>
+                <th></th>
               </>
             }
           >
@@ -256,6 +257,11 @@ export default async function MonteurDetailPage({ params }: { params: Promise<{ 
                 <td className={ui.numeric}>{job.quoted_price != null || job.final_price != null ? euro(priceOf(job)) : '—'}</td>
                 <td className={ui.numeric} style={{ color: 'var(--crm-muted)' }}>
                   {job.commission_amount != null ? euro(Number(job.commission_amount)) : '—'}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  <Link href={`/admin/jobs/${job.id}`} style={{ color: 'var(--crm-accent)', textDecoration: 'none', fontWeight: 600, fontSize: '13px' }}>
+                    Bewerk
+                  </Link>
                 </td>
               </tr>
             ))}

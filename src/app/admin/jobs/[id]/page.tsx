@@ -7,6 +7,7 @@ import styles from '../jobs.module.css';
 import JobEditor, { type JobDetail } from './JobEditor';
 import PaymentPanel, { type PaymentRow } from './PaymentPanel';
 import OfferHistory, { type OfferRow } from './OfferHistory';
+import DeleteJobButton from './DeleteJobButton';
 import { Badge } from '../../_ui';
 
 const SOURCE_LABEL: Record<string, string> = {
@@ -132,6 +133,8 @@ export default async function JobPage({
               Appen naar {assigned?.name ?? 'monteur'}
             </a>
           )}
+
+          <DeleteJobButton jobId={job.id} />
         </div>
       </div>
 
