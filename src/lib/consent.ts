@@ -132,9 +132,10 @@ export function applyConsent(state: ConsentState | null): void {
   const marketing = state?.marketing ?? false;
 
   window.dataLayer = window.dataLayer || [];
-  const gtag = (...args: unknown[]) => {
-    window.dataLayer!.push(args);
-  };
+  function gtag(..._args: unknown[]) {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer!.push(arguments);
+  }
 
   gtag('consent', 'update', {
     analytics_storage: statistics ? 'granted' : 'denied',
