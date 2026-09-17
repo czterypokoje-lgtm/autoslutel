@@ -261,3 +261,62 @@
     justify-content: center;
   }
 }
+
+/* ── exceptions ───────────────────────────────────────────────────────
+   A narrower row is an exception to a broader one for the same car. It is
+   indented and tinted so the table reads the way dispatch resolves it:
+   general rule first, the years that deviate underneath. */
+
+.exceptionRow td:first-child {
+  padding-left: 18px;
+}
+
+.exceptionRow {
+  background: color-mix(in srgb, var(--crm-accent) 4%, transparent);
+}
+
+.exceptionMark {
+  margin-right: 6px;
+  color: var(--crm-muted);
+}
+
+.notDone {
+  color: var(--crm-stop);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.yearCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.yearInput {
+  width: 62px;
+  padding: 4px 6px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.yearInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+.dash {
+  color: var(--crm-muted);
+}
+
+.rowActions {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  align-items: center;
+}

@@ -43,6 +43,30 @@ comment on column public.technician_coverage.price is
 
 
 /*
+ * Years have to be years.
+ *
+ * A row reached production with from_year = -1 — a number spinner stepped
+ * below zero from an empty field in the old picker, and nothing rejected it.
+ * It read as "-1-" in the bouwjaar column and, worse, yearMatches() treated
+ * it as a real lower bound. The bad row has been corrected; this stops the
+ * next one. Null stays allowed: it means "all years", which is the common case.
+ */
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'technician_coverage_year_sanity_check'
+  ) then
+    alter table public.technician_coverage
+      add constraint technician_coverage_year_sanity_check
+      check (
+        (from_year is null or (from_year between 1950 and 2100))
+        and (to_year is null or (to_year between 1950 and 2100))
+      );
+  end if;
+end $$;
+
+
+/*
  * Who changed what, and when.
  *
  * The office asked to see not only the prices a monteur set but the history

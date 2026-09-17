@@ -88,8 +88,41 @@ export function keylessMatches(row: KeylessRow, keyless: boolean | null | undefi
   return row.keyless === keyless;
 }
 
-/** A model-specific row outranks a make-wide one, whichever way it points. */
-export const specificity = (row: { model: string | null }) => (row.model ? 2 : 1);
+/**
+ * How specific a row is. The highest score decides; ties are resolved by the
+ * caller.
+ *
+ * A model-specific row outranks a make-wide one, whichever way it points, and
+ * within the same model a narrower span of years outranks a wider one. That
+ * second half is what makes an exception expressible: "Niro 2005–2016 at
+ * €250, except 2012–2013 which is €350" is two rows, and the narrow one has
+ * to win for the years it covers. While specificity looked only at the model
+ * those two rows tied, and which price applied to a 2012 Niro was undefined —
+ * whichever the database happened to return first.
+ *
+ * The model term is worth more than any span so that a make-wide row with
+ * tight years can never outrank a row naming the actual model.
+ */
+const YEAR_FLOOR = 1950;
+const YEAR_CEILING = 2100;
+
+export const specificity = (row: {
+  model: string | null;
+  from_year?: number | null;
+  to_year?: number | null;
+}): number => {
+  const base = row.model ? 1000 : 0;
+
+  const from = row.from_year ?? null;
+  const to = row.to_year ?? null;
+  // No year constraint at all is the least specific a row can be.
+  if (from === null && to === null) return base;
+
+  // An open-ended bound still narrows things, just less than a closed one.
+  const span = (to ?? YEAR_CEILING) - (from ?? YEAR_FLOOR);
+  const clamped = Math.min(Math.max(span, 0), YEAR_CEILING - YEAR_FLOOR);
+  return base + (YEAR_CEILING - YEAR_FLOOR - clamped) + 1;
+};
 
 /**
  * Whether these coverage rows say yes to this car and scenario.
