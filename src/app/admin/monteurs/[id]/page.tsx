@@ -62,6 +62,29 @@ export default async function MonteurDetailPage({ params }: { params: Promise<{ 
 
   if (!tech) notFound();
 
+  /*
+   * Their price list and the trail behind it.
+   *
+   * Both are read-only here: the office needs to see what a monteur charges
+   * and how it has moved, but a price is the monteur's own declaration and
+   * changing it behind their back would make the log a record of nobody's
+   * decision. price is selected defensively — the column arrives with
+   * 0038, and this page must still render on a database that has not run it.
+   */
+  const [{ data: priceRows }, { data: priceLog }] = await Promise.all([
+    supabase
+      .from('technician_coverage')
+      .select('id, make, model, scenario, from_year, to_year, keyless, excluded, price')
+      .eq('technician_id', id)
+      .order('make'),
+    supabase
+      .from('technician_coverage_log')
+      .select('id, action, make, model, scenario, old_price, new_price, changed_at')
+      .eq('technician_id', id)
+      .order('changed_at', { ascending: false })
+      .limit(25),
+  ]);
+
   const { data: jobsData, error } = await supabase
     .from('jobs')
     .select(
@@ -233,6 +256,123 @@ export default async function MonteurDetailPage({ params }: { params: Promise<{ 
                 <td className={ui.numeric}>{job.quoted_price != null || job.final_price != null ? euro(priceOf(job)) : '—'}</td>
                 <td className={ui.numeric} style={{ color: 'var(--crm-muted)' }}>
                   {job.commission_amount != null ? euro(Number(job.commission_amount)) : '—'}
+                </td>
+              </tr>
+            ))}
+          </Table>
+        )}
+      </Card>
+
+      <Card>
+        <CardHead>
+          <h2>Prijzen van deze monteur</h2>
+          <span className={ui.sub}>
+            {priceRows?.length ?? 0} {(priceRows?.length ?? 0) === 1 ? 'auto' : 'auto\u2019s'} — wat
+            hij hiervoor rekent. Een prijs is tegelijk zijn opgave dat hij het werk doet.
+          </span>
+        </CardHead>
+        {!priceRows || priceRows.length === 0 ? (
+          <Empty>
+            Nog geen prijzen opgegeven. Zolang deze lijst leeg is krijgt hij geen klussen
+            aangeboden.
+          </Empty>
+        ) : (
+          <Table
+            head={
+              <>
+                <th>Merk</th>
+                <th>Model</th>
+                <th>Bouwjaar</th>
+                <th>Scenario</th>
+                <th>Sleutel</th>
+                <th className={ui.numeric}>Prijs</th>
+              </>
+            }
+          >
+            {priceRows.map((row) => (
+              <tr key={row.id as string}>
+                <td className={ui.rowStrong}>{row.make as string}</td>
+                <td className={ui.rowNote}>{(row.model as string) ?? 'Heel merk'}</td>
+                <td className={ui.rowNote}>
+                  {row.from_year || row.to_year
+                    ? `${row.from_year ?? ''}\u2013${row.to_year ?? ''}`
+                    : 'alle'}
+                </td>
+                <td>
+                  {isScenario(row.scenario)
+                    ? SCENARIO_INFO[row.scenario].label
+                    : ((row.scenario as string) ?? '—')}
+                </td>
+                <td className={ui.rowNote}>
+                  {row.keyless === true ? 'Keyless' : row.keyless === false ? 'Baard/contact' : 'Beide'}
+                </td>
+                <td className={ui.numeric}>
+                  {row.price != null ? euro(Number(row.price)) : '—'}
+                </td>
+              </tr>
+            ))}
+          </Table>
+        )}
+      </Card>
+
+      <Card>
+        <CardHead>
+          <h2>Wijzigingen</h2>
+          <span className={ui.sub}>
+            De laatste 25 aanpassingen aan zijn prijslijst, met datum.
+          </span>
+        </CardHead>
+        {!priceLog || priceLog.length === 0 ? (
+          <Empty>
+            Nog geen wijzigingen vastgelegd. De geschiedenis begint zodra
+            0038_technician_pricing.sql is uitgevoerd.
+          </Empty>
+        ) : (
+          <Table
+            head={
+              <>
+                <th>Wanneer</th>
+                <th>Actie</th>
+                <th>Auto</th>
+                <th>Scenario</th>
+                <th className={ui.numeric}>Van</th>
+                <th className={ui.numeric}>Naar</th>
+              </>
+            }
+          >
+            {priceLog.map((entry) => (
+              <tr key={String(entry.id)}>
+                <td className={ui.rowNote}>
+                  {new Date(entry.changed_at as string).toLocaleString('nl-NL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </td>
+                <td>
+                  <Badge tone={entry.action === 'delete' ? 'stop' : 'info'}>
+                    {entry.action === 'insert'
+                      ? 'toegevoegd'
+                      : entry.action === 'update'
+                        ? 'gewijzigd'
+                        : 'verwijderd'}
+                  </Badge>
+                </td>
+                <td className={ui.rowStrong}>
+                  {[entry.make, entry.model].filter(Boolean).join(' ') || '—'}
+                </td>
+                <td className={ui.rowNote}>
+                  {isScenario(entry.scenario)
+                    ? SCENARIO_INFO[entry.scenario].label
+                    : ((entry.scenario as string) ?? '—')}
+                </td>
+                <td className={ui.numeric} style={{ color: 'var(--crm-muted)' }}>
+                  {entry.old_price != null ? euro(Number(entry.old_price)) : '—'}
+                </td>
+                <td className={ui.numeric}>
+                  {entry.new_price != null ? euro(Number(entry.new_price)) : '—'}
                 </td>
               </tr>
             ))}

@@ -1,0 +1,263 @@
+/*
+ * A monteur's price list, brand first.
+ *
+ * The grid collapses to one column on a phone: a monteur setting prices is
+ * usually doing it in the van, and a two-column card grid at 375px leaves no
+ * room for the price row inside an opened brand.
+ */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-stop-bg);
+  color: var(--crm-stop);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-muted);
+  height: 38px;
+}
+
+.search {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.brandGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+/* An opened brand takes the whole row — its table needs the width. */
+.brandCardOpen {
+  grid-column: 1 / -1;
+}
+
+.brandCard {
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-panel);
+  overflow: hidden;
+}
+
+.brandHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  background: transparent;
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.brandHead:hover {
+  background: var(--crm-bg);
+}
+
+.brandName {
+  flex: 1;
+}
+
+/* How many cars this monteur has already priced for the brand. */
+.count {
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--crm-accent-soft);
+  color: var(--crm-accent);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.rare {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--crm-muted);
+}
+
+.brandBody {
+  padding: 0 12px 12px;
+  border-top: 1px solid var(--crm-rule2);
+}
+
+.empty {
+  margin: 12px 0;
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.table th {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--crm-rule2);
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--crm-rule);
+  vertical-align: middle;
+}
+
+.strong {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--crm-muted);
+}
+
+.money {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--crm-ink);
+  font-weight: 700;
+}
+
+.priceInput {
+  width: 96px;
+  padding: 4px 8px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.priceInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+/* The new-price row: seven controls that wrap rather than scroll sideways. */
+.addRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--crm-rule2);
+}
+
+.cell {
+  flex: 1 1 110px;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+.cell:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.addBtn:hover:not(:disabled) {
+  background: var(--crm-accent-hover);
+}
+
+.addBtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.ghostBtn {
+  padding: 4px 10px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: transparent;
+  color: var(--crm-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ghostBtn:hover {
+  color: var(--crm-ink);
+  border-color: var(--crm-ink);
+}
+
+@media (max-width: 560px) {
+  .brandGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Seven inputs side by side do not fit a phone; two per row does. */
+  .cell {
+    flex: 1 1 calc(50% - 3px);
+  }
+
+  .addBtn {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}

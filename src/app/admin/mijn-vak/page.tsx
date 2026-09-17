@@ -5,7 +5,7 @@ import brands from '@/lib/brands.json';
 import { TIER_TERMS, breakEven, monthlyCost, type Tier } from '@/lib/subscription';
 import { catalogTree } from '@/lib/carCatalog';
 import CoveragePanel, { type CoverageEntry, type ToolEntry } from './CoveragePanel';
-import CoverageTree from './CoverageTree';
+import PriceTree, { type PriceEntry } from './PriceTree';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,7 +47,7 @@ export default async function MijnVakPage() {
   const [{ data: coverage }, { data: tools }, { data: sub }, { data: done }] = await Promise.all([
     supabase
       .from('technician_coverage')
-      .select('id, make, model, scenario, from_year, to_year, excluded, keyless')
+      .select('id, make, model, scenario, from_year, to_year, excluded, keyless, price')
       .eq('technician_id', me.id)
       .order('make'),
     supabase
@@ -132,14 +132,15 @@ export default async function MijnVakPage() {
       </div>
 
       <h2 style={{ fontSize: 15, fontWeight: 700, color: 'var(--crm-ink)', margin: '0 0 10px' }}>
-        Welke auto&rsquo;s u aankunt
+        Uw prijzen
       </h2>
       <p className={styles.pageSub} style={{ marginBottom: 12 }}>
-        Klik een merk open, en vink aan of u de sleutel, de keyless-uitvoering, of beide aankunt.
-        &ldquo;Hele merk&rdquo; dekt alle modellen en alle jaren in één keer.
+        Klik een merk open en zet erbij wat u voor die auto rekent. Een prijs is tegelijk uw
+        opgave dat u het werk doet: alleen auto&rsquo;s die hier staan worden u aangeboden.
+        Laat het model leeg om het hele merk te dekken.
       </p>
 
-      <CoverageTree technicianId={me.id} catalog={catalog} coverage={coverageRows} />
+      <PriceTree technicianId={me.id} catalog={catalog} rows={coverageRows as PriceEntry[]} />
 
       <p className={styles.pageSub} style={{ margin: '26px 0 0' }}>
         Gereedschap, en geavanceerd: uitzonderingen op een merk, of een jaartal beperken.
