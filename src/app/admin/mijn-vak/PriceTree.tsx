@@ -47,6 +47,13 @@ function toIntOrNull(v: string): number | null {
   return v.trim() && Number.isInteger(n) && n > 1950 && n < 2100 ? n : null;
 }
 
+/** A copy of `source` without the listed keys. */
+function omit<T>(source: Record<string, T>, keys: string[]): Record<string, T> {
+  const next = { ...source };
+  for (const key of keys) delete next[key];
+  return next;
+}
+
 function keylessLabel(v: boolean | null): string {
   return v === true ? 'Keyless' : v === false ? 'Baard/contact' : 'Beide';
 }
@@ -292,7 +299,22 @@ export default function PriceTree({
     editRow(id, { [field]: parsed } as Partial<PriceEntry>);
   }
 
-  const pendingCount = Object.keys(dirty).length;
+  /*
+   * Only edits that can actually be written count as pending.
+   *
+   * Typing a bouwjaar into a model that has no price yet is not a change
+   * waiting to be saved — there is no row to save it to, and one is only
+   * created once a price is named. Counting those made the bar show work
+   * that pressing Opslaan could never clear.
+   */
+  const savableIds = Object.keys(dirty).filter((id) => {
+    if (!id.startsWith('new:')) return true;
+    const row = rows.find((r) => r.id === id);
+    return row != null && row.price != null;
+  });
+  const pendingCount = savableIds.length;
+  /* Rows started but still missing the one thing that makes them real. */
+  const unpricedCount = Object.keys(dirty).length - pendingCount;
 
   /*
    * Saved one row at a time rather than in a single statement: PostgREST has
@@ -301,12 +323,14 @@ export default function PriceTree({
    * leaving the rows it has not reached still marked as pending.
    */
   async function saveAll() {
-    const entries = Object.entries(dirty);
-    if (entries.length === 0) return;
+    if (savableIds.length === 0) return;
     setBusy(true);
     setError(null);
 
-    for (const [id, patch] of entries) {
+    const written: string[] = [];
+
+    for (const id of savableIds) {
+      const patch = dirty[id];
       /*
        * A placeholder has no database row yet — its id is the synthetic
        * "new:make:model". Editing one is an insert, and it only becomes a row
@@ -334,6 +358,8 @@ export default function PriceTree({
         if (insertError) {
           setBusy(false);
           setError(explain(insertError.message));
+          // Keep what was already written out of the pending count.
+          if (written.length) setDirty((d) => omit(d, written));
           return;
         }
         // Swap the placeholder for the row the database actually created.
@@ -346,15 +372,14 @@ export default function PriceTree({
         if (updateError) {
           setBusy(false);
           setError(explain(updateError.message));
+          if (written.length) setDirty((d) => omit(d, written));
           return;
         }
       }
-      setDirty((d) => {
-        const next = { ...d };
-        delete next[id];
-        return next;
-      });
+      written.push(id);
     }
+
+    setDirty((d) => omit(d, written));
 
     setBusy(false);
     setSaved(true);
@@ -430,12 +455,14 @@ export default function PriceTree({
         rows, and a save button at the bottom of that is a save button nobody
         finds after editing the row they opened the page for.
       */}
-      {!readOnly && (pendingCount > 0 || saved) && (
+      {!readOnly && (pendingCount > 0 || unpricedCount > 0 || saved) && (
         <div className={pendingCount > 0 ? styles.saveBar : styles.saveBarDone}>
           <span className={styles.saveText}>
             {pendingCount > 0
               ? `${pendingCount} ${pendingCount === 1 ? 'wijziging' : 'wijzigingen'} nog niet opgeslagen`
-              : 'Alles opgeslagen.'}
+              : unpricedCount > 0
+                ? `${unpricedCount} ${unpricedCount === 1 ? 'regel wacht' : 'regels wachten'} nog op een prijs`
+                : 'Alles opgeslagen.'}
           </span>
           {pendingCount > 0 && (
             <>
