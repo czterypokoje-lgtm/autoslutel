@@ -78,19 +78,31 @@ export default async function NewJobPage({
 
   const date = datum && /^\d{4}-\d{2}-\d{2}$/.test(datum) ? datum : isoDate(new Date());
 
-  const [{ data: technicians, error: techError }, { data: dayJobs }, { data: away }] =
-    await Promise.all([
-      supabase
-        .from('technicians')
-        .select('id, name, active, werkgebied, color')
-        .order('name'),
-      supabase.from('jobs').select('technician_id').eq('scheduled_date', date),
-      supabase
-        .from('technician_availability')
-        .select('technician_id')
-        .eq('date', date)
-        .eq('available', false),
-    ]);
+  const [
+    { data: technicians, error: techError },
+    { data: dayJobs },
+    { data: away },
+    { data: subscriptions },
+  ] = await Promise.all([
+    supabase
+      .from('technicians')
+      .select('id, name, active, werkgebied, color')
+      .order('name'),
+    supabase.from('jobs').select('technician_id').eq('scheduled_date', date),
+    supabase
+      .from('technician_availability')
+      .select('technician_id')
+      .eq('date', date)
+      .eq('available', false),
+    /*
+     * The rate each monteur actually agreed to, so the form can fill it in
+     * rather than the office remembering it per person. Until now no manually
+     * planned job ever got a commission_pct at all — it was only written when
+     * a technician accepted an offer through the app — so every one of them
+     * fell back to a hardcoded 25% on the balance and payout screens.
+     */
+    supabase.from('technician_subscription').select('technician_id, commission_pct'),
+  ]);
 
   if (techError) {
     return (
@@ -133,6 +145,14 @@ export default async function NewJobPage({
     if (id) loadByTechnician[id] = (loadByTechnician[id] ?? 0) + 1;
   }
 
+  const commissionByTechnician: Record<string, number> = {};
+  for (const sub of subscriptions ?? []) {
+    const id = sub.technician_id as string | null;
+    if (id && sub.commission_pct != null) {
+      commissionByTechnician[id] = Number(sub.commission_pct);
+    }
+  }
+
   const suggestions = suggestTechnicians({
     technicians: (technicians ?? []) as unknown as TechnicianLike[],
     postcode: lead?.postcode ?? null,
@@ -143,6 +163,7 @@ export default async function NewJobPage({
     name: s.technician.name,
     inRegion: s.inRegion,
     reason: s.reason,
+    commissionPct: commissionByTechnician[s.technician.id] ?? null,
   }));
 
   return (

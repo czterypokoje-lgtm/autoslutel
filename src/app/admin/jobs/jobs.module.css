@@ -373,6 +373,20 @@
   color: var(--crm-muted);
 }
 
+/* Reads the split back to the office while they type, so the number they
+   are agreeing to is visible before the job is saved. */
+.hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--crm-muted);
+}
+
+.hint strong {
+  color: var(--crm-ink);
+  font-weight: 700;
+}
+
 .control {
   padding: 0 10px;
   border: 1px solid var(--crm-rule2);

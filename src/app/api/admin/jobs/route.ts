@@ -29,6 +29,14 @@ function price(value: unknown): number | null | 'invalid' {
   return Math.round(n * 100) / 100;
 }
 
+/** Matches the numeric(5,2) check constraint on jobs.commission_pct. */
+function percentage(value: unknown): number | null | 'invalid' {
+  if (value === null || value === undefined || value === '') return null;
+  const n = typeof value === 'number' ? value : Number(String(value).replace(',', '.'));
+  if (!Number.isFinite(n) || n < 0 || n > 100) return 'invalid';
+  return Math.round(n * 100) / 100;
+}
+
 function year(value: unknown): number | null | 'invalid' {
   if (value === null || value === undefined || value === '') return null;
   const n = Number(value);
@@ -90,6 +98,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Ongeldig bouwjaar' }, { status: 400 });
   }
 
+  /*
+   * Commission is stored on the job, both as the rate and as the euro amount
+   * it worked out to.
+   *
+   * The rate, because a tier can change and what someone was owed on a job
+   * they already did must not change with it. The amount, because
+   * crm_report_commission and crm_report_make both sum jobs.commission_amount
+   * — nothing was writing that column on a manually planned job, so those
+   * reports only ever saw whatever had been filled in by hand.
+   */
+  const commissionPct = percentage(body.commission_pct);
+  if (commissionPct === 'invalid') {
+    return NextResponse.json(
+      { error: 'Commissie moet tussen 0 en 100 liggen' },
+      { status: 400 }
+    );
+  }
+  const commissionAmount =
+    commissionPct !== null && quoted !== null
+      ? Math.round(quoted * commissionPct) / 100
+      : null;
+
   const row = {
     lead_id: leadId,
     order_id: orderId,
@@ -109,6 +139,8 @@ export async function POST(request: Request) {
     customer_phone: text(body.customer_phone, 40),
     service_type: text(body.service_type, 120),
     quoted_price: quoted,
+    commission_pct: commissionPct,
+    commission_amount: commissionAmount,
     notes: text(body.notes, 2000),
     status: 'gepland',
     lat: null as number | null,

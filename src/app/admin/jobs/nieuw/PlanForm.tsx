@@ -27,7 +27,12 @@ interface SuggestionView {
   name: string;
   inRegion: boolean;
   reason: string;
+  /** The rate this monteur agreed to, or null when they have no subscription row. */
+  commissionPct: number | null;
 }
+
+/** Falls back to the same 25% the payout and balance screens assume. */
+const DEFAULT_COMMISSION_PCT = 25;
 
 export default function PlanForm({
   lead,
@@ -67,9 +72,40 @@ export default function PlanForm({
   const [keylessChoice, setKeylessChoice] = useState<'' | 'true' | 'false'>('');
   // A webshop order is already paid, so the agreed price is known exactly.
   const [quoted, setQuoted] = useState(order ? String(order.total_inc) : '');
+  /*
+   * Commission is recorded on the job itself, not read from the monteur's
+   * profile later: a rate is an agreement made when the work is handed over,
+   * and changing someone's tier next month must not silently rewrite what
+   * they were owed on a job they already did. The field starts from their
+   * agreed rate and the office can override it for this one job.
+   */
+  const [commissionPct, setCommissionPct] = useState('');
+  /* Set once per technician, so typing over it is never undone by a re-render. */
+  const [pctTouched, setPctTouched] = useState(false);
   const [notes, setNotes] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+
+  /*
+   * Derived rather than synced through an effect: the field shows the selected
+   * monteur's agreed rate until the office types over it, and switching
+   * monteur before that picks up the new rate on its own. Doing this with a
+   * useEffect + setState would re-render on every selection change and could
+   * overwrite something already typed.
+   */
+  const agreedPct =
+    suggestions.find((s) => s.id === technicianId)?.commissionPct ?? null;
+  const shownPct = pctTouched ? commissionPct : String(agreedPct ?? DEFAULT_COMMISSION_PCT);
+
+  const quotedNumber = Number(quoted.replace(',', '.'));
+  const pctNumber = Number(shownPct.replace(',', '.'));
+  const splitIsReal =
+    Number.isFinite(quotedNumber) && quotedNumber > 0 &&
+    Number.isFinite(pctNumber) && pctNumber >= 0 && pctNumber <= 100;
+  const ourCut = splitIsReal ? (quotedNumber * pctNumber) / 100 : null;
+  const technicianGets = splitIsReal && ourCut !== null ? quotedNumber - ourCut : null;
+  const euro = (n: number) =>
+    new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(n);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -102,6 +138,7 @@ export default function PlanForm({
         keyless: keylessChoice === '' ? null : keylessChoice === 'true',
         service_type: service,
         quoted_price: quoted,
+        commission_pct: shownPct,
         notes,
       }),
     }).catch(() => null);
@@ -179,6 +216,35 @@ export default function PlanForm({
               value={quoted}
               onChange={(e) => setQuoted(e.target.value)}
             />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="commissie">
+              Onze commissie (%)
+            </label>
+            <input
+              id="commissie"
+              className={styles.control}
+              inputMode="decimal"
+              placeholder="25"
+              value={shownPct}
+              onChange={(e) => {
+                setPctTouched(true);
+                setCommissionPct(e.target.value);
+              }}
+            />
+            <p className={styles.hint}>
+              {ourCut !== null && technicianGets !== null ? (
+                <>
+                  Wij houden <strong>{euro(ourCut)}</strong> · monteur krijgt{' '}
+                  <strong>{euro(technicianGets)}</strong>
+                </>
+              ) : agreedPct !== null ? (
+                `Afgesproken tarief van deze monteur: ${agreedPct}%`
+              ) : (
+                `Geen afspraak vastgelegd — standaard ${DEFAULT_COMMISSION_PCT}%`
+              )}
+            </p>
           </div>
 
           <div className={styles.field}>
