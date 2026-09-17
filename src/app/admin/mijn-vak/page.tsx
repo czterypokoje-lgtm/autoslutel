@@ -1,7 +1,6 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../admin.module.css';
-import brands from '@/lib/brands.json';
 import { TIER_TERMS, breakEven, monthlyCost, type Tier } from '@/lib/subscription';
 import { catalogTree } from '@/lib/carCatalog';
 import CoveragePanel, { type CoverageEntry, type ToolEntry } from './CoveragePanel';
@@ -80,7 +79,6 @@ export default async function MijnVakPage() {
   const commission = revenue * ((sub?.commission_pct ?? terms.commissionPct) / 100);
   const paid = commission + Number(sub?.monthly_fee ?? terms.monthlyFee);
 
-  const makes = (brands as { make: string }[]).map((b) => b.make);
   const catalog = catalogTree();
   const coverageRows = (coverage ?? []) as CoverageEntry[];
 
@@ -145,12 +143,7 @@ export default async function MijnVakPage() {
       <p className={styles.pageSub} style={{ margin: '26px 0 0' }}>
         Gereedschap, en geavanceerd: uitzonderingen op een merk, of een jaartal beperken.
       </p>
-      <CoveragePanel
-        technicianId={me.id}
-        makes={makes}
-        coverage={coverageRows}
-        tools={(tools ?? []) as ToolEntry[]}
-      />
+      <CoveragePanel technicianId={me.id} tools={(tools ?? []) as ToolEntry[]} />
     </>
   );
 }
