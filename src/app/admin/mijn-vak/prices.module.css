@@ -385,3 +385,25 @@
   font-size: 12px;
   font-weight: 700;
 }
+
+/* ── Mobile responsiveness for the table ── */
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .brandBody {
+    padding: 0 0 12px 0; /* Let scroll hit the very edge */
+  }
+  .tableWrap {
+    padding: 0 12px; /* Inner padding so content isn't flush */
+  }
+  .table {
+    min-width: 580px; /* Force table wide enough to not squash inputs */
+  }
+  .table th, .table td {
+    white-space: nowrap;
+  }
+}

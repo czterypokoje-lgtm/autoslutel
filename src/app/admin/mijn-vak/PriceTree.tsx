@@ -532,18 +532,19 @@ export default function PriceTree({
                   {mine.length === 0 ? (
                     <p className={styles.empty}>Nog geen prijzen voor {make}.</p>
                   ) : (
-                    <table className={styles.table}>
-                      <thead>
-                        <tr>
-                          <th>Model</th>
-                          <th>Bouwjaar</th>
-                          <th>Scenario</th>
-                          <th>Sleutel</th>
-                          <th style={{ textAlign: 'right' }}>Prijs</th>
-                          {!readOnly && <th />}
-                        </tr>
-                      </thead>
-                      <tbody>
+                    <div className={styles.tableWrap}>
+                      <table className={styles.table}>
+                        <thead>
+                          <tr>
+                            <th>Model</th>
+                            <th>Bouwjaar</th>
+                            <th>Scenario</th>
+                            <th>Sleutel</th>
+                            <th style={{ textAlign: 'right' }}>Prijs</th>
+                            {!readOnly && <th />}
+                          </tr>
+                        </thead>
+                        <tbody>
                         {ordered([...mine, ...placeholdersFor(make, mine)]).map((row) => {
                           const isException = row.excluded || isNarrowerThanSibling(row, mine);
                           /* Not saved yet: only a price makes it real. */
@@ -709,8 +710,9 @@ export default function PriceTree({
                           </tr>
                           );
                         })}
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
+                    </div>
                   )}
 
                   {!readOnly && (
