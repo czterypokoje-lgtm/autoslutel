@@ -143,15 +143,10 @@ export default async function MonteurDetailPage({ params }: { params: Promise<{ 
   const previousYear = monthly(year - 1);
   const hasLastYear = previousYear.some((value) => value > 0);
   const upTo = now.getMonth() + 1;
-  const firstActiveMonth = Array.from({ length: 12 }).findIndex(
-    (_, i) => thisYear[i] > 0 || previousYear[i] > 0
-  );
-  const startMonthIndex = firstActiveMonth === -1 ? 0 : firstActiveMonth;
   const series = [
-    { label: `${year}`, points: thisYear.slice(startMonthIndex, upTo) },
-    ...(hasLastYear ? [{ label: `${year - 1}`, points: previousYear.slice(startMonthIndex, upTo), dashed: true }] : []),
+    { label: `${year}`, points: thisYear.slice(0, upTo) },
+    ...(hasLastYear ? [{ label: `${year - 1}`, points: previousYear.slice(0, upTo), dashed: true }] : []),
   ];
-  const chartLabels = MONTHS.slice(startMonthIndex, upTo);
 
   /* ── the work, and where ── */
   const tally = (key: (job: (typeof done)[number]) => string | null) => {
@@ -199,7 +194,7 @@ export default async function MonteurDetailPage({ params }: { params: Promise<{ 
               <Legend items={[{ label: `${year}` }, ...(hasLastYear ? [{ label: `${year - 1}`, dashed: true }] : [])]} />
             </div>
           </div>
-          <LineChart series={series} labels={chartLabels} format={euroShort} />
+          <LineChart series={series} labels={MONTHS.slice(0, upTo)} format={euroShort} />
         </Card>
 
         <Card padded>
