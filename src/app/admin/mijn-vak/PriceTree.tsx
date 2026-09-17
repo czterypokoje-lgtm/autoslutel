@@ -256,9 +256,21 @@ export default function PriceTree({
    * dozen writes out of one decision, with no way to change your mind. The
    * table shows pending values; `dirty` is what will be sent.
    */
-  function editRow(id: string, patch: Partial<PriceEntry>) {
-    setRows((r) => r.map((row) => (row.id === id ? { ...row, ...patch } : row)));
-    setDirty((d) => ({ ...d, [id]: { ...(d[id] ?? {}), ...patch } }));
+  /*
+   * Takes the whole row, not just its id, because a placeholder is not in
+   * `rows` yet — it is built during render from the model list. Editing one
+   * used to map over `rows`, find nothing and drop the change on the floor:
+   * the typed price stayed visible (it lives in the text buffer) while the
+   * row itself was never recorded, so saving had nothing to write and the
+   * button appeared to do nothing. The first edit materialises it instead.
+   */
+  function editRow(row: PriceEntry, patch: Partial<PriceEntry>) {
+    setRows((r) =>
+      r.some((existing) => existing.id === row.id)
+        ? r.map((existing) => (existing.id === row.id ? { ...existing, ...patch } : existing))
+        : [...r, { ...row, ...patch }]
+    );
+    setDirty((d) => ({ ...d, [row.id]: { ...(d[row.id] ?? {}), ...patch } }));
     setError(null);
     setSaved(false);
   }
@@ -273,30 +285,30 @@ export default function PriceTree({
     setText((t) => ({ ...t, [`${id}:${field}`]: raw }));
   }
 
-  function updatePrice(id: string, raw: string) {
-    typeInto(id, 'price', raw);
+  function updatePrice(row: PriceEntry, raw: string) {
+    typeInto(row.id, 'price', raw);
     const trimmed = raw.trim();
     if (trimmed === '') {
-      editRow(id, { price: null });
+      editRow(row, { price: null });
       return;
     }
     const priceValue = Number(trimmed.replace(',', '.'));
     // A half-typed "25," is kept on screen but not written until it parses.
     if (!Number.isFinite(priceValue) || priceValue < 0) return;
-    editRow(id, { price: priceValue });
+    editRow(row, { price: priceValue });
   }
 
-  function updateYear(id: string, field: 'from_year' | 'to_year', raw: string) {
-    typeInto(id, field, raw);
+  function updateYear(row: PriceEntry, field: 'from_year' | 'to_year', raw: string) {
+    typeInto(row.id, field, raw);
     const trimmed = raw.trim();
     if (trimmed === '') {
-      editRow(id, { [field]: null } as Partial<PriceEntry>);
+      editRow(row, { [field]: null } as Partial<PriceEntry>);
       return;
     }
     // Only a complete, plausible year is stored; "20" stays visible meanwhile.
     const parsed = toIntOrNull(trimmed);
     if (parsed === null) return;
-    editRow(id, { [field]: parsed } as Partial<PriceEntry>);
+    editRow(row, { [field]: parsed } as Partial<PriceEntry>);
   }
 
   /*
@@ -536,11 +548,17 @@ export default function PriceTree({
                           const isException = row.excluded || isNarrowerThanSibling(row, mine);
                           /* Not saved yet: only a price makes it real. */
                           const isNew = row.id.startsWith('new:');
+                          /* Started but still missing the price that creates it. */
+                          const needsPrice = isNew && row.price == null;
                           return (
                           <tr
                             key={row.id}
                             className={
-                              isNew ? styles.newRow : isException ? styles.exceptionRow : undefined
+                              needsPrice
+                                ? styles.newRow
+                                : isException
+                                  ? styles.exceptionRow
+                                  : undefined
                             }
                           >
                             <td className={row.model ? styles.strong : styles.muted}>
@@ -565,7 +583,7 @@ export default function PriceTree({
                                     value={cellText(row.id, 'from_year', row.from_year)}
                                     aria-label="Bouwjaar vanaf"
                                     onChange={(e) =>
-                                      updateYear(row.id, 'from_year', e.target.value.replace(/\D/g, ''))
+                                      updateYear(row, 'from_year', e.target.value.replace(/\D/g, ''))
                                     }
                                   />
                                   <span className={styles.dash}>–</span>
@@ -578,7 +596,7 @@ export default function PriceTree({
                                     value={cellText(row.id, 'to_year', row.to_year)}
                                     aria-label="Bouwjaar tot"
                                     onChange={(e) =>
-                                      updateYear(row.id, 'to_year', e.target.value.replace(/\D/g, ''))
+                                      updateYear(row, 'to_year', e.target.value.replace(/\D/g, ''))
                                     }
                                   />
                                 </span>
@@ -593,7 +611,7 @@ export default function PriceTree({
                                   value={row.scenario}
                                   aria-label="Scenario"
                                   onChange={(e) =>
-                                    editRow(row.id, { scenario: e.target.value as Scenario })
+                                    editRow(row, { scenario: e.target.value as Scenario })
                                   }
                                 >
                                   {SCENARIOS.map((sc) => (
@@ -613,7 +631,7 @@ export default function PriceTree({
                                   value={row.keyless === null ? '' : String(row.keyless)}
                                   aria-label="Sleuteltype"
                                   onChange={(e) =>
-                                    editRow(row.id, {
+                                    editRow(row, {
                                       keyless: e.target.value === '' ? null : e.target.value === 'true',
                                     })
                                   }
@@ -641,15 +659,17 @@ export default function PriceTree({
                                   inputMode="decimal"
                                   aria-label={`Prijs voor ${row.model ?? make}`}
                                   onChange={(e) =>
-                                    updatePrice(row.id, e.target.value.replace(/[^0-9.,]/g, ''))
+                                    updatePrice(row, e.target.value.replace(/[^0-9.,]/g, ''))
                                   }
                                 />
                               )}
                             </td>
                             {!readOnly && (
                               <td className={styles.rowActions}>
-                                {isNew ? (
+                                {needsPrice ? (
                                   <span className={styles.muted}>vul een prijs in</span>
+                                ) : isNew ? (
+                                  <span className={styles.pendingNew}>wordt toegevoegd</span>
                                 ) : (
                                   <>
                                     <button
@@ -660,7 +680,7 @@ export default function PriceTree({
                                           ? 'Toch doen, tegen een eigen prijs'
                                           : 'Deze jaren doe ik niet'
                                       }
-                                      onClick={() => editRow(row.id, { excluded: !row.excluded })}
+                                      onClick={() => editRow(row, { excluded: !row.excluded })}
                                     >
                                       {row.excluded ? 'Toch wel' : 'Doe ik niet'}
                                     </button>

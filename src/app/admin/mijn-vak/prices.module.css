@@ -378,3 +378,10 @@
 .newRow select {
   opacity: 1;
 }
+
+/* A placeholder that has been given a price: it will exist after Opslaan. */
+.pendingNew {
+  color: var(--crm-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
