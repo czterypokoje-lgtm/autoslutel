@@ -16,13 +16,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '', '/diensten', '/steden', '/merken', '/prijzen', '/blog', '/kennisbank',
     '/over-ons', '/galerij', '/beoordelingen', '/veelgestelde-vragen',
     '/contact', '/privacybeleid', '/cookiebeleid',
-    '/autosleutel-kwijt', '/autosleutel-bestellen-op-kenteken'
+    '/autosleutel-kwijt', '/autosleutel-bestellen-op-kenteken',
+    // Linked from the footer of every page and indexable, but was never
+    // listed here — the only orphan left after the model pages came out.
+    '/algemene-voorwaarden'
   ].map(p => ({
     url: `${base}${p}`,
     lastModified: lastModifiedFor(
       p || '/',
       p === '' ? 'home'
-        : ['/privacybeleid', '/cookiebeleid'].includes(p) ? 'legal'
+        : ['/privacybeleid', '/cookiebeleid', '/algemene-voorwaarden'].includes(p) ? 'legal'
         : p === '/prijzen' ? 'prijzen'
         : p === '/kennisbank' ? 'kennisbank'
         : p === '/blog' ? 'blog'
