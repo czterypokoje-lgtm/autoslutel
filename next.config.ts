@@ -61,6 +61,22 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...brandRedirects,
+      /*
+       * The per-model pages are gone — 664 routes that measured 94-97%
+       * identical to each other, which is scaled content abuse and is
+       * penalised across the whole domain rather than page by page. The model
+       * names now live as text on the parent brand page.
+       *
+       * Redirected rather than deleted: these URLs are in Google's index and
+       * may be linked from elsewhere, and answering 664 of them with a 404 is
+       * its own bad signal. A 301 to the brand page passes on whatever they
+       * earned and sends the visitor somewhere that answers the same question.
+       */
+      {
+        source: "/merken/:merkSlug/:modelSlug",
+        destination: "/merken/:merkSlug",
+        permanent: true,
+      },
       {
         source: "/blog/sleutel-kwijt-utrecht-stappenplan",
         destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",

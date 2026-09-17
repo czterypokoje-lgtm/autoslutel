@@ -341,19 +341,25 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   Wij leveren snelle en betaalbare {brand.name} reservesleutels voor alle modellen, waaronder:
                 </p>
 
+                {/*
+                  Model names are plain text, not links to a page each.
+                  Every model used to get its own route, and those 664 pages
+                  measured 94-97% identical to one another — one template with
+                  the model name swapped, which is what Google's spam policy
+                  calls scaled content abuse and demotes site-wide rather than
+                  page by page. The model names still belong here: they are the
+                  words a customer searches for, and on this page they sit in
+                  real surrounding content about this specific brand.
+                */}
                 <ul className="models-list">
                   {brand.models?.map(m => (
-                    <li key={m.slug} style={{ breakInside: 'avoid' }}>
-                      <Link href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${m.slug}-sleutel-bijmaken`} style={{ color: '#1e293b', textDecoration: 'none' }} className="model-link-hover">
-                        {brand.name} {m.name} sleutels
-                      </Link>
+                    <li key={m.slug} style={{ breakInside: 'avoid', color: '#1e293b' }}>
+                      {brand.name} {m.name} sleutels
                     </li>
                   ))}
                   {brand.specialIntents?.map(intent => (
-                    <li key={intent.slug} style={{ breakInside: 'avoid' }}>
-                      <Link href={`/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken/${intent.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none' }} className="model-link-hover">
-                        {intent.name}
-                      </Link>
+                    <li key={intent.slug} style={{ breakInside: 'avoid', color: 'var(--orange-600)' }}>
+                      {intent.name}
                     </li>
                   ))}
                   {(!brand.models || brand.models.length === 0) && (

@@ -76,24 +76,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
-  // 5. Model Pages and Special Intents
-  const modelPages = BRANDS.flatMap(b => {
-    const models = (b.models || []).map(m => ({
-      url: `${base}/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken/${m.slug}-sleutel-bijmaken`,
-      lastModified: lastModifiedFor('', 'merken'),
-      changeFrequency: 'monthly' as const,
-      priority: 0.75,
-    }));
-    
-    const intents = (b.specialIntents || []).map(intent => ({
-      url: `${base}/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken/${intent.slug}`,
-      lastModified: lastModifiedFor('', 'merken'),
-      changeFrequency: 'monthly' as const,
-      priority: 0.75,
-    }));
-
-    return [...models, ...intents];
-  });
+  /*
+   * 5. No model pages.
+   *
+   * There used to be one page per brand-and-model pair — 664 of them, built
+   * from a single template and measuring 94-97% identical to one another.
+   * They now 301 to their brand page (see next.config.ts), and a sitemap
+   * should only ever list final URLs, never redirects.
+   */
   // 8. Blog Pages
   // These slugs are 301'd in next.config.ts. A sitemap should only list final
   // URLs, so listing them wasted crawl budget on four guaranteed redirects.
@@ -119,7 +109,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...servicePages,
     ...cityPages,
     ...brandPages,
-    ...modelPages,
     ...blogPages
   ];
 }
