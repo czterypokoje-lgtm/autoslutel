@@ -115,6 +115,16 @@ export default function PriceTree({
   const [drafts, setDrafts] = useState<Record<string, Draft>>({});
   /** Pending edits per row id, flushed by saveAll(). */
   const [dirty, setDirty] = useState<Record<string, Partial<PriceEntry>>>({});
+  /*
+   * Exactly what was typed, per cell, keyed "<rowId>:<field>".
+   *
+   * The inputs are controlled, and parsing on every keystroke made them
+   * impossible to type in: "2005" is rejected at "2", "20" and "200" before
+   * it becomes a year, so each character was wiped as it was entered, and a
+   * price could never take a decimal because "25," parses back to "25". The
+   * raw string is what the box shows; the parsed value is what gets saved.
+   */
+  const [text, setText] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
 
   const byMake = useMemo(() => {
@@ -246,19 +256,40 @@ export default function PriceTree({
     setSaved(false);
   }
 
-  function updatePrice(id: string, value: string) {
-    const trimmed = value.trim();
+  /** What a cell should display: what is being typed, else what is stored. */
+  function cellText(id: string, field: string, stored: number | string | null): string {
+    const typed = text[`${id}:${field}`];
+    return typed ?? (stored == null ? '' : String(stored));
+  }
+
+  function typeInto(id: string, field: string, raw: string) {
+    setText((t) => ({ ...t, [`${id}:${field}`]: raw }));
+  }
+
+  function updatePrice(id: string, raw: string) {
+    typeInto(id, 'price', raw);
+    const trimmed = raw.trim();
     if (trimmed === '') {
       editRow(id, { price: null });
       return;
     }
     const priceValue = Number(trimmed.replace(',', '.'));
+    // A half-typed "25," is kept on screen but not written until it parses.
     if (!Number.isFinite(priceValue) || priceValue < 0) return;
     editRow(id, { price: priceValue });
   }
 
-  function updateYear(id: string, field: 'from_year' | 'to_year', value: string) {
-    editRow(id, { [field]: toIntOrNull(value) } as Partial<PriceEntry>);
+  function updateYear(id: string, field: 'from_year' | 'to_year', raw: string) {
+    typeInto(id, field, raw);
+    const trimmed = raw.trim();
+    if (trimmed === '') {
+      editRow(id, { [field]: null } as Partial<PriceEntry>);
+      return;
+    }
+    // Only a complete, plausible year is stored; "20" stays visible meanwhile.
+    const parsed = toIntOrNull(trimmed);
+    if (parsed === null) return;
+    editRow(id, { [field]: parsed } as Partial<PriceEntry>);
   }
 
   const pendingCount = Object.keys(dirty).length;
@@ -327,6 +358,7 @@ export default function PriceTree({
 
     setBusy(false);
     setSaved(true);
+    setText({});
   }
 
   /** Throws away pending edits by reloading what the server actually holds. */
@@ -341,6 +373,7 @@ export default function PriceTree({
     }
     setRows((data ?? []) as PriceEntry[]);
     setDirty({});
+    setText({});
     setSaved(false);
   }
 
@@ -498,20 +531,28 @@ export default function PriceTree({
                                 <span className={styles.yearCell}>
                                   <input
                                     className={styles.yearInput}
-                                    type="number"
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={4}
                                     placeholder="alle"
-                                    value={row.from_year ?? ''}
+                                    value={cellText(row.id, 'from_year', row.from_year)}
                                     aria-label="Bouwjaar vanaf"
-                                    onChange={(e) => updateYear(row.id, 'from_year', e.target.value)}
+                                    onChange={(e) =>
+                                      updateYear(row.id, 'from_year', e.target.value.replace(/\D/g, ''))
+                                    }
                                   />
                                   <span className={styles.dash}>–</span>
                                   <input
                                     className={styles.yearInput}
-                                    type="number"
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={4}
                                     placeholder="nu"
-                                    value={row.to_year ?? ''}
+                                    value={cellText(row.id, 'to_year', row.to_year)}
                                     aria-label="Bouwjaar tot"
-                                    onChange={(e) => updateYear(row.id, 'to_year', e.target.value)}
+                                    onChange={(e) =>
+                                      updateYear(row.id, 'to_year', e.target.value.replace(/\D/g, ''))
+                                    }
                                   />
                                 </span>
                               )}
@@ -568,11 +609,13 @@ export default function PriceTree({
                               ) : (
                                 <input
                                   className={styles.priceInput}
-                                  value={row.price == null ? '' : String(row.price)}
+                                  value={cellText(row.id, 'price', row.price)}
                                   placeholder="—"
                                   inputMode="decimal"
                                   aria-label={`Prijs voor ${row.model ?? make}`}
-                                  onChange={(e) => updatePrice(row.id, e.target.value)}
+                                  onChange={(e) =>
+                                    updatePrice(row.id, e.target.value.replace(/[^0-9.,]/g, ''))
+                                  }
                                 />
                               )}
                             </td>
@@ -640,18 +683,24 @@ export default function PriceTree({
                       </select>
                       <input
                         className={styles.cell}
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={4}
                         placeholder="vanaf"
                         value={draftFor(make).fromYear}
-                        onChange={(e) => setDraft(make, { fromYear: e.target.value })}
+                        onChange={(e) =>
+                          setDraft(make, { fromYear: e.target.value.replace(/\D/g, '') })
+                        }
                         aria-label="Bouwjaar vanaf"
                       />
                       <input
                         className={styles.cell}
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={4}
                         placeholder="tot"
                         value={draftFor(make).toYear}
-                        onChange={(e) => setDraft(make, { toYear: e.target.value })}
+                        onChange={(e) => setDraft(make, { toYear: e.target.value.replace(/\D/g, '') })}
                         aria-label="Bouwjaar tot"
                       />
                       <select
