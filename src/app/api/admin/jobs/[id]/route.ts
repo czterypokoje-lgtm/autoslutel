@@ -122,6 +122,17 @@ export async function PATCH(
     patch.keyless = typeof body.keyless === 'boolean' ? body.keyless : null;
   }
 
+  if ('scenario' in body) {
+    const s = body.scenario;
+    if (s === null || s === '') {
+      patch.scenario = null;
+    } else if (typeof s === 'string' && ['bijmaken', 'alle_sleutels_kwijt', 'reparatie', 'slot'].includes(s)) {
+      patch.scenario = s;
+    } else {
+      return NextResponse.json({ error: 'Ongeldig scenario' }, { status: 400 });
+    }
+  }
+
   if ('final_price' in body) {
     const value = price(body.final_price);
     if (value === 'invalid') {

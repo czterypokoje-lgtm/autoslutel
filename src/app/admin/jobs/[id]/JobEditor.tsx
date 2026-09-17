@@ -20,6 +20,7 @@ export interface JobDetail {
   car_model: string | null;
   car_year: number | null;
   keyless: boolean | null;
+  scenario: string | null;
   service_type: string | null;
   quoted_price: number | string | null;
   final_price: number | string | null;
@@ -65,6 +66,7 @@ export default function JobEditor({
   const [keylessChoice, setKeylessChoice] = useState<'' | 'true' | 'false'>(
     job.keyless === null ? '' : job.keyless ? 'true' : 'false'
   );
+  const [scenarioChoice, setScenarioChoice] = useState(job.scenario ?? '');
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -108,6 +110,7 @@ export default function JobEditor({
         car_model: carModel.trim() || null,
         car_year: carYear.trim() || null,
         keyless: keylessChoice === '' ? null : keylessChoice === 'true',
+        scenario: scenarioChoice === '' ? null : scenarioChoice,
       }),
     }).catch(() => null);
 
@@ -283,6 +286,22 @@ export default function JobEditor({
               <option value="">Onbekend</option>
               <option value="false">Sleutel (contactslot)</option>
               <option value="true">Keyless (start-knop)</option>
+            </select>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="cscen">Service (Scenario)</label>
+            <select
+              id="cscen"
+              className={styles.control}
+              value={scenarioChoice}
+              onChange={(e) => setScenarioChoice(e.target.value)}
+            >
+              <option value="">Overig / Onbekend</option>
+              <option value="bijmaken">Sleutel bijmaken</option>
+              <option value="alle_sleutels_kwijt">Alle sleutels kwijt</option>
+              <option value="reparatie">Sleutel repareren</option>
+              <option value="slot">Slot of cilinder</option>
             </select>
           </div>
         </div>
