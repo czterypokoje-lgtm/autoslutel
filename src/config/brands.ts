@@ -693,6 +693,7 @@ export const BRANDS: Brand[] = [
     slug: 'tesla', name: 'Tesla', nameSlug: 'tesla', priority: 'P3',
     system: 'Tesla Key Card / NFC',
     excerpt: 'Tesla sleutel kaart & fob specialist. Model 3, Y, S, X.',
+    customSeoBlurb: 'Heeft u een nieuwe Tesla autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Tesla. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Model S; wij bieden dealer-kwaliteit voor een lagere prijs.',
     models: [
       { slug: 'cybertruck', name: 'Cybertruck', years: 'Alle bouwjaren' },
       { slug: 'model-3', name: 'Model 3', years: 'Alle bouwjaren' },
@@ -706,6 +707,7 @@ export const BRANDS: Brand[] = [
     slug: 'lexus', name: 'Lexus', nameSlug: 'lexus', priority: 'P2',
     system: 'Toyota/Lexus Smart Key',
     excerpt: 'Lexus sleutel specialist. RX, NX, IS, ES.',
+    customSeoBlurb: 'Heeft u een nieuwe Lexus autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Lexus. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw CT200h; wij bieden dealer-kwaliteit voor een lagere prijs.',
     models: [
       { slug: 'ct', name: 'CT', years: 'Alle bouwjaren' },
       { slug: 'es', name: 'ES', years: 'Alle bouwjaren' },
@@ -1011,27 +1013,6 @@ export const BRANDS: Brand[] = [
     ],
   },
   {
-    slug: 'lexus', name: 'Lexus', nameSlug: 'lexus', priority: 'P3',
-    system: 'Toyota Smart Key / Immo',
-    excerpt: 'Lexus autosleutel programmering op locatie. CT200h, RX, IS, NX.',
-    customSeoBlurb: 'Heeft u een nieuwe Lexus autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Lexus. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw CT200h; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'ct', name: 'CT', years: 'Alle bouwjaren' },
-      { slug: 'es', name: 'ES', years: 'Alle bouwjaren' },
-      { slug: 'gs', name: 'GS', years: 'Alle bouwjaren' },
-      { slug: 'is', name: 'IS', years: 'Alle bouwjaren' },
-      { slug: 'lc', name: 'LC', years: 'Alle bouwjaren' },
-      { slug: 'lfa', name: 'LFA', years: 'Alle bouwjaren' },
-      { slug: 'ls', name: 'LS', years: 'Alle bouwjaren' },
-      { slug: 'nx', name: 'NX', years: 'Alle bouwjaren' },
-      { slug: 'rc', name: 'RC', years: 'Alle bouwjaren' },
-      { slug: 'rx', name: 'RX', years: 'Alle bouwjaren' },
-      { slug: 'rz', name: 'RZ', years: 'Alle bouwjaren' },
-      { slug: 'sc', name: 'SC', years: 'Alle bouwjaren' },
-      { slug: 'ux', name: 'UX', years: 'Alle bouwjaren' },
-    ],
-  },
-  {
     slug: 'lincoln', name: 'Lincoln', nameSlug: 'lincoln', priority: 'P3',
     system: 'Ford PATS / BCM',
     excerpt: 'Lincoln autosleutel programmering op locatie. Navigator, Aviator, MKX.',
@@ -1173,20 +1154,6 @@ export const BRANDS: Brand[] = [
     ],
   },
   {
-    slug: 'tesla', name: 'Tesla', nameSlug: 'tesla', priority: 'P3',
-    system: 'NFC / BLE / RFID',
-    excerpt: 'Tesla autosleutel programmering op locatie. Model S, Model 3, Model X, Model Y.',
-    customSeoBlurb: 'Heeft u een nieuwe Tesla autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Tesla. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Model S; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'cybertruck', name: 'Cybertruck', years: 'Alle bouwjaren' },
-      { slug: 'model-3', name: 'Model 3', years: 'Alle bouwjaren' },
-      { slug: 'model-s', name: 'Model S', years: 'Alle bouwjaren' },
-      { slug: 'model-x', name: 'Model X', years: 'Alle bouwjaren' },
-      { slug: 'model-y', name: 'Model Y', years: 'Alle bouwjaren' },
-      { slug: 'roadster', name: 'Roadster', years: 'Alle bouwjaren' },
-    ],
-  },
-  {
     slug: 'gmc', name: 'GMC', nameSlug: 'gmc', priority: 'P3',
     system: 'GM Global A / PK3',
     excerpt: 'GMC autosleutel programmering op locatie. Sierra, Yukon, Acadia.',
@@ -1210,3 +1177,17 @@ export const BRANDS: Brand[] = [
     ],
   }
 ];
+
+/**
+ * How many makes we actually serve.
+ *
+ * This number was typed by hand in six places — the /merken title, its meta
+ * description, its H1, an H2, the footer and the navigation — and it had
+ * drifted: the list carried duplicate Tesla and Lexus entries, so "59 merken"
+ * was right by luck while BRANDS.length said 61. Deriving it means the copy
+ * cannot disagree with the data again.
+ *
+ * Not the same as the logo grid on the home page, which shows a curated subset
+ * of makes we happen to have artwork for.
+ */
+export const BRAND_COUNT = BRANDS.length;

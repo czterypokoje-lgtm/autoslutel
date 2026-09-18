@@ -124,8 +124,14 @@ export default function BrandsLogoGrid({
              */
             <details className={styles.moreBrands}>
               <summary className={styles.moreToggle}>
+                {/*
+                  * Names the remainder, not a total. "Alle 35 merken tonen"
+                  * read as though we serve 35 makes, while the navigation,
+                  * footer and /merken all correctly say 59 — 35 is just how
+                  * many logos we hold artwork for.
+                  */}
                 <span className={styles.moreOpen}>
-                  Alle {BRANDS_WITH_LOGOS.length} merken tonen
+                  Nog {rest.length} merken tonen
                 </span>
                 <span className={styles.moreClose}>Minder merken tonen</span>
               </summary>
@@ -137,12 +143,6 @@ export default function BrandsLogoGrid({
               </ul>
             </details>
           )}
-
-          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <Link href="/merken" className={styles.brandsAllLink}>
-              Bekijk alle {BRANDS_WITH_LOGOS.length} merken die wij bedienen &rarr;
-            </Link>
-          </div>
         </div>
 
       </div>

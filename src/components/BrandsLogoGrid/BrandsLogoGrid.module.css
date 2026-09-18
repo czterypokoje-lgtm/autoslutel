@@ -136,23 +136,7 @@
   color: var(--orange-600);
 }
 
-.brandsAllLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--orange-600);
-  font-weight: 700;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: opacity 0.2s;
-  background: rgba(249, 115, 22, 0.1);
-  padding: 0.75rem 1.5rem;
-  border-radius: 30px;
-}
-.brandsAllLink:hover {
-  opacity: 0.8;
-  background: rgba(249, 115, 22, 0.15);
-}
+
 
 
 /* ── SHOW ALL MERKEN ───────────────────────────────────────────────────────
