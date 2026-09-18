@@ -1,0 +1,127 @@
+/*
+ * Lifted from the home page's own hero (app/page.module.css) so the two are
+ * literally the same rules rather than two copies that drift apart. The
+ * breadcrumb colours are re-stated for a white ground — the service pages'
+ * version was written for a navy band and is invisible here.
+ */
+
+.heroSplit {
+  background: #ffffff;
+  padding: 3rem 2rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.heroSplitInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+/* Phone order: heading, photo, form. The photo earns its place before the
+   form asks for anything. */
+.heroTopContent {
+  order: 1;
+}
+
+.heroImageContent {
+  order: 2;
+  width: 100%;
+}
+
+.heroBottomContent {
+  order: 3;
+}
+
+@media (min-width: 992px) {
+  .heroSplitInner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'top image'
+      'bottom image';
+    gap: 2rem 3rem;
+    align-items: center;
+  }
+
+  .heroTopContent {
+    grid-area: top;
+    order: initial;
+    align-self: end;
+  }
+
+  .heroImageContent {
+    grid-area: image;
+    order: initial;
+    align-self: center;
+  }
+
+  .heroBottomContent {
+    grid-area: bottom;
+    order: initial;
+    align-self: start;
+  }
+}
+
+.heroSplit h1 {
+  color: var(--navy-900);
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  margin-bottom: 1rem;
+}
+
+.accent {
+  color: var(--orange-500);
+}
+
+.heroSplitLead {
+  color: var(--gray-700);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  max-width: 620px;
+}
+
+.heroSplitLead strong {
+  color: var(--navy-900);
+}
+
+.badgeWrap {
+  margin-bottom: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Grey on white, where the service pages used white-on-navy. */
+.breadcrumb {
+  font-size: 0.8rem;
+  color: var(--gray-500, #6b7280);
+  margin-bottom: 1.25rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.breadcrumb a {
+  color: var(--gray-500, #6b7280);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--orange-600);
+}
+
+@media (max-width: 600px) {
+  .heroSplit {
+    padding: 2rem 1.25rem;
+  }
+}

@@ -10,7 +10,8 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
-import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import SplitHero from '@/components/SplitHero/SplitHero';
+import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import Image from 'next/image';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
@@ -143,24 +144,38 @@ return (
       <script id="sleutel-bijmaken-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script id="sleutel-bijmaken-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
-        {/* Hero */}
-        <section className={styles.hero}>
-          <div className={styles.heroInner}>
-            <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-              <Link href="/">Home</Link> <span>/</span> <Link href="/diensten">Diensten</Link> <span>/</span> <span>Autosleutel Bijmaken</span>
-            </nav>
-            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
-              <HeroTrustBadge />
-            </div>
-            <h1>Autosleutel Bijmaken & Kopiëren — Reservesleutel Auto Laten Maken Op Locatie</h1>
-            <p className={styles.heroLead}>
-              Autosleutel bijmaken of kopiëren nodig? Wij komen <strong>24/7 naar u toe</strong> en programmeren ter plaatse — goedkoper dan de dealer, zonder wachttijd.
-            </p>
-            <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
-            </div>
-          </div>
-        </section>
+        {/*
+          The same hero as the home page, via SplitHero — an ad click landing
+          here used to meet a dark navy band and a single row of fields, a
+          visibly different site from the one the same campaign shows on the
+          home page.
+
+          The kenteken wizard replaces the flat form for the same reason it
+          does there: one decision per step, and merk, model and bouwjaar
+          arrive from the RDW instead of being typed. LeadCaptureForm stays as
+          the fallback for anyone without a Dutch plate.
+        */}
+        <SplitHero
+          crumbs={[
+            { label: 'Home', href: '/' },
+            { label: 'Diensten', href: '/diensten' },
+            { label: 'Autosleutel Bijmaken' },
+          ]}
+          titleTop="Autosleutel Bijmaken of Kopiëren?"
+          titleAccent="Wij Maken Hem Op Locatie!"
+          lead={
+            <>
+              Reservesleutel nodig of sleutel kwijt? Wij komen <strong>24/7 naar u toe</strong> en
+              programmeren ter plaatse — goedkoper dan de dealer, zonder wachttijd.
+            </>
+          }
+          image={{
+            src: '/images/seo/auto_sleutel_maken_op_locatie_utrecht.webp',
+            alt: 'Autosleutel bijmaken en programmeren op locatie door een mobiele specialist',
+          }}
+        >
+          <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />} />
+        </SplitHero>
 
         <BrandsMarquee />
 
