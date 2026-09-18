@@ -15,7 +15,6 @@ import { captionFromFilename } from '@/lib/imageCaption';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
-import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import styles from './page.module.css';
 
@@ -89,6 +88,15 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
   } catch (e) {
     // ignore
   }
+
+  /*
+   * Fallback artwork for makes we have no job photos of yet. These checks used
+   * to live inside the "Voorbeeld" section that has been folded into Recent
+   * Werk; they are hoisted here so the merged section can read them.
+   */
+  const hasKey1 = fs.existsSync(path.join(process.cwd(), 'public', 'images', 'keys', `${brand.slug}-autosleutel-bijmaken-1.webp`));
+  const hasKey2 = fs.existsSync(path.join(process.cwd(), 'public', 'images', 'keys', `${brand.slug}-autosleutel-bijmaken-2.webp`));
+  const hasExampleKeys = hasKey1 || hasKey2;
 
   // alphabetGroups logic removed because it is no longer used in the new UI layout.
 
@@ -256,29 +264,73 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
           </div>
         </section>
 
-        {/* ── RECENT WERK GALLERY ── */}
-        {recentWorkImages.length > 0 && (
+        {/* ── RECENT WERK ──
+          *
+          * This used to be two sections showing the same photographs from
+          * /images/merken: this grid, and an "Voorbeeld {merk} Autosleutels"
+          * block further down that put the identical files through
+          * GallerySlider with keyword captions. A visitor scrolled past the
+          * same job cards twice, and the second pass was the weaker of the two.
+          *
+          * One section now. The prose from the deleted block moved up here
+          * because it was the genuinely useful part of it, and the per-file
+          * captions became alt text — they carry the make, the service and the
+          * city, which is worth keeping on an image and not worth painting on
+          * top of a card that already has that text baked into the artwork.
+          */}
+        {(recentWorkImages.length > 0 || hasExampleKeys) && (
           <section style={{ padding: '4.5rem 0', background: '#ffffff' }}>
-            <div className="container">
-              <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <div className="container" style={{ maxWidth: 1100 }}>
+              <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                 <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--orange-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Recente Projecten</span>
                 <h2 style={{ fontSize: '1.9rem', fontWeight: 800, color: '#0f172a', marginTop: '0.35rem' }}>
                   Recent Werk: {brand.name} Autosleutels
                 </h2>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
-                {recentWorkImages.slice(0, 3).map((img, idx) => (
-                  <div key={idx} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', position: 'relative', aspectRatio: '4/3', backgroundColor: '#f1f5f9' }}>
-                    <Image 
-                      src={`/images/merken/${img}`} 
-                      alt={`${brand.name} autosleutel bijmaken`} 
-                      fill 
-                      style={{ objectFit: 'contain' }} 
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  </div>
-                ))}
+
+              <div style={{ maxWidth: 780, margin: '0 auto 2.5rem' }}>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '1rem' }}>
+                  Om u een goed beeld te geven van de kwaliteit die wij leveren, ziet u hieronder voorbeelden van originele {brand.name} sleutels die wij recent hebben bijgemaakt. Wij leveren altijd sleutels van de hoogste kwaliteit, inclusief alle benodigde elektronica (zoals de transponderchip voor de startonderbreker en de afstandsbediening voor de centrale deurvergrendeling).
+                </p>
+                <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7, margin: 0 }}>
+                  Elke sleutel wordt op locatie mechanisch gefreesd en direct elektronisch ingeleerd in de boordcomputer van uw {brand.name}. Zo bent u verzekerd van een perfect werkende reservesleutel of nieuwe hoofdsleutel met 12 maanden volledige garantie.
+                </p>
               </div>
+
+              {recentWorkImages.length > 0 ? (
+                /* Six, not three: the deleted slider was showing every file, and
+                   some makes have as many as eleven. Three would have quietly
+                   dropped most of them. */
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '1.5rem' }}>
+                  {recentWorkImages.slice(0, 6).map((img) => (
+                    <div key={img} style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', position: 'relative', aspectRatio: '4/3', backgroundColor: '#f1f5f9' }}>
+                      <Image
+                        src={`/images/merken/${img}`}
+                        alt={captionFromFilename(img)}
+                        fill
+                        style={{ objectFit: 'contain' }}
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                /* Makes with no job photos yet still get the example keys, which
+                   is what the deleted section fell back to. */
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  {hasKey1 && (
+                    <div style={{ flex: '1 1 280px', background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Image src={`/images/keys/${brand.slug}-autosleutel-bijmaken-1.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 1`} width={400} height={300} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
+                    </div>
+                  )}
+                  {hasKey2 && (
+                    <div style={{ flex: '1 1 280px', background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Image src={`/images/keys/${brand.slug}-autosleutel-bijmaken-2.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 2`} width={400} height={300} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </section>
         )}
@@ -434,60 +486,6 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
 
             </div>
 
-          </div>
-        </section>
-
-        {/* ── AUTOSLEUTEL VOORBEELDEN (ANTI-THIN CONTENT) ── */}
-        <section style={{ padding: '3.5rem 0 1.5rem', background: '#ffffff' }}>
-          <div className="container" style={{ maxWidth: 1000 }}>
-            {(() => {
-              const key1Path = path.join(process.cwd(), 'public', 'images', 'keys', `${brand.slug}-autosleutel-bijmaken-1.webp`);
-              const key2Path = path.join(process.cwd(), 'public', 'images', 'keys', `${brand.slug}-autosleutel-bijmaken-2.webp`);
-              
-              const hasKey1 = fs.existsSync(key1Path);
-              const hasKey2 = fs.existsSync(key2Path);
-
-              if (!hasKey1 && !hasKey2) return null;
-
-              return (
-                <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <div style={{ width: '100%' }}>
-                    <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>
-                      Voorbeeld {brand.name} Autosleutels
-                    </h2>
-                    <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-                      Om u een goed beeld te geven van de kwaliteit die wij leveren, ziet u hieronder voorbeelden van originele {brand.name} sleutels die wij recent hebben bijgemaakt. Wij leveren altijd sleutels van de hoogste kwaliteit, inclusief alle benodigde elektronica (zoals de transponderchip voor de startonderbreker en de afstandsbediening voor de centrale deurvergrendeling).
-                    </p>
-                    <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '2rem' }}>
-                      Elke sleutel wordt op locatie mechanisch gefreesd en direct elektronisch ingeleerd in de boordcomputer van uw {brand.name}. Zo bent u verzekerd van een perfect werkende reservesleutel of nieuwe hoofdsleutel met 12 maanden volledige garantie.
-                    </p>
-                    
-                    {recentWorkImages && recentWorkImages.length > 0 ? (
-                      <GallerySlider 
-                        images={recentWorkImages.map(filename => ({
-                          src: `/images/merken/${filename}`,
-                          caption: captionFromFilename(filename),
-                        }))}
-                        title="" 
-                      />
-                    ) : (
-                      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                        {hasKey1 && (
-                          <div style={{ flex: 1, background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Image src={`/images/keys/${brand.slug}-autosleutel-bijmaken-1.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 1`} width={400} height={300} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
-                          </div>
-                        )}
-                        {hasKey2 && (
-                          <div style={{ flex: 1, background: '#f8fafc', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Image src={`/images/keys/${brand.slug}-autosleutel-bijmaken-2.webp`} alt={`${brand.name} sleutel bijmaken voorbeeld 2`} width={400} height={300} style={{ width: '100%', height: 'auto', maxHeight: '200px', objectFit: 'contain', mixBlendMode: 'multiply' }} loading="lazy" />
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })()}
           </div>
         </section>
 
