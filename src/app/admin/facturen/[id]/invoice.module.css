@@ -293,3 +293,27 @@
   font-weight: 600;
   color: #16a34a;
 }
+
+/* Only shown on a concept — a sent or paid factuur is reversed with a
+   creditfactuur, not deleted. Quiet by default so it is not the thing the
+   eye lands on next to Afdrukken. */
+.deleteBtn {
+  padding: 7px 14px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: transparent;
+  color: var(--crm-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  border-color: var(--crm-stop);
+  color: var(--crm-stop);
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

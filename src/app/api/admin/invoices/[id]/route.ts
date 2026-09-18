@@ -193,3 +193,63 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   return NextResponse.json({ ok: true });
 }
+
+/**
+ * Delete an invoice.
+ *
+ * Only a concept. A factuur that has been sent or paid carries an invoice
+ * number from a gap-free sequence, and a missing number in that sequence is
+ * the first thing an accountant asks about — the Belastingdienst expects an
+ * issued invoice to be kept for seven years (AWR art. 52), not removed. The
+ * way to undo one of those is a creditfactuur, which leaves both documents
+ * in the books and explains itself.
+ *
+ * A concept was never issued, so there is nothing to keep. RLS does the
+ * ownership check: a monteur reaches only their own rows, the office reaches
+ * all of them, and the same rule already governs reading and editing.
+ */
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const user = await getCrmUser();
+  if (!user) return NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 });
+  if (!user.role) return NextResponse.json({ error: 'Geen toegang' }, { status: 403 });
+
+  const { id } = await params;
+  if (!UUID.test(id)) {
+    return NextResponse.json({ error: 'Ongeldig factuur-id' }, { status: 400 });
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data: invoice, error: readError } = await supabase
+    .from('sales_invoices')
+    .select('id, status, invoice_number')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (readError) {
+    return NextResponse.json({ error: readError.message }, { status: 500 });
+  }
+  if (!invoice) {
+    // Either gone already, or RLS says it is not theirs. Same answer either way.
+    return NextResponse.json({ error: 'Factuur niet gevonden' }, { status: 404 });
+  }
+
+  if (invoice.status !== 'concept') {
+    return NextResponse.json(
+      {
+        error:
+          `Factuur ${invoice.invoice_number} is al ${invoice.status} en mag niet worden verwijderd. ` +
+          'Maak een creditfactuur om hem terug te draaien.',
+      },
+      { status: 409 }
+    );
+  }
+
+  const { error: deleteError } = await supabase.from('sales_invoices').delete().eq('id', id);
+  if (deleteError) {
+    return NextResponse.json({ error: deleteError.message }, { status: 500 });
+  }
+
+  // sales_invoice_lines cascade from the FK in 0032.
+  return NextResponse.json({ ok: true });
+}

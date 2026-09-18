@@ -25,6 +25,34 @@ export default function PrintButton({ invoiceId, status }: { invoiceId: string; 
   const [current, setCurrent] = useState<Status>(status);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [deleting, setDeleting] = useState(false);
+
+  /*
+   * Only a concept can go. A sent or paid factuur carries a number from a
+   * gap-free sequence, and a hole in that sequence is the first thing an
+   * accountant asks about — those are reversed with a creditfactuur, not
+   * removed. The server enforces this too; the button simply does not
+   * pretend to offer something that will be refused.
+   */
+  async function remove() {
+    if (!confirm('Deze conceptfactuur definitief verwijderen?')) return;
+    setDeleting(true);
+    setError('');
+
+    const response = await fetch(`/api/admin/invoices/${invoiceId}`, {
+      method: 'DELETE',
+    }).catch(() => null);
+
+    if (!response || !response.ok) {
+      const body = await response?.json().catch(() => null);
+      setError(body?.error ?? 'Verwijderen mislukt.');
+      setDeleting(false);
+      return;
+    }
+
+    router.push('/admin/facturen');
+    router.refresh();
+  }
 
   async function changeStatus(next: Status) {
     if (next === current) return;
@@ -75,6 +103,17 @@ export default function PrintButton({ invoiceId, status }: { invoiceId: string; 
         <button type="button" className={styles.printBtn} onClick={() => window.print()}>
           Afdrukken / Opslaan als PDF
         </button>
+        {current === 'concept' && (
+          <button
+            type="button"
+            className={styles.deleteBtn}
+            onClick={remove}
+            disabled={deleting}
+            title="Alleen een concept kan worden verwijderd"
+          >
+            {deleting ? 'Verwijderen…' : 'Verwijderen'}
+          </button>
+        )}
       </div>
     </div>
   );
