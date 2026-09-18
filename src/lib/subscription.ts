@@ -6,12 +6,27 @@
  * Google, per click, for a stranger who may be driving a car nobody can do.
  * This is the same money for a booked job at an agreed price.
  *
- * The middle tier is priced at €399 rather than €599 on purpose. At €599 it was
- * never the cheapest option at any revenue: Premium overtook Starter at €7,059
- * a month while Pro did not until €8,557, so by the time Pro made sense Premium
- * already made more sense, and a technician who did the arithmetic would either
- * stay free or jump straight to €1,200. See breakEven() below — the test file
- * asserts that each tier is genuinely the cheapest somewhere.
+ * The three prices are not independent of each other, and that is the thing to
+ * understand before touching any of them.
+ *
+ * A tier is only worth offering if it is the cheapest option at *some* revenue.
+ * Pro was once €599 and was cheapest at none: Premium overtook Starter at
+ * €7,059 a month while Pro did not until €8,557, so by the time Pro made sense
+ * Premium already made more sense, and a technician who did the arithmetic
+ * would either stay free or jump straight to the top tier.
+ *
+ * Pro now costs €679, which puts its break-even against Starter at €9,700. On
+ * its own that would have recreated exactly that dead-tier problem — Premium
+ * at €1,200 overtook Starter at €7,059, well before €9,700 — so Premium moved
+ * to €1,800 with it. The ladder that results:
+ *
+ *     up to  €9,700   Starter is cheapest
+ *     €9,700–€11,300  Pro is cheapest
+ *     above €11,300   Premium is cheapest
+ *
+ * Raise one fee and the tier above it has to move too, or the tier you just
+ * raised stops being anybody's best answer. bestTier() is the check: every
+ * tier should win somewhere on it.
  *
  * These are the defaults for a *new* agreement. What an existing technician
  * actually pays lives on their own row in technician_subscription, because a
@@ -47,14 +62,14 @@ export const TIER_TERMS: Record<Tier, TierTerms> = {
   },
   pro: {
     label: 'Pro',
-    monthlyFee: 399,
+    monthlyFee: 679,
     commissionPct: 18,
     prioritySeconds: 45,
     pitch: 'Voor wie er een paar klussen per week uit haalt.',
   },
   premium: {
     label: 'Premium',
-    monthlyFee: 1200,
+    monthlyFee: 1800,
     commissionPct: 8,
     prioritySeconds: 90,
     pitch: 'U ziet elke klus in uw gebied als eerste, en betaalt de laagste commissie.',
@@ -75,7 +90,7 @@ export function bestTier(revenue: number): Tier {
 /**
  * The revenue at which `tier` becomes cheaper than `other`, or null when it
  * never does. This is the number a technician actually wants on the page:
- * "Pro is voordeliger vanaf € 5.700 omzet per maand."
+ * "Pro is voordeliger vanaf € 9.700 omzet per maand."
  */
 export function breakEven(tier: Tier, other: Tier): number | null {
   const a = TIER_TERMS[tier];
