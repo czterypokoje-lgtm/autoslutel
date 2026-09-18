@@ -27,7 +27,20 @@ import { isAuthorized, adminAuthConfigured } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
-const EXPORT_COLUMNS = 'id, created_at, service, status, gclid, wbraid, gbraid';
+/*
+ * The job is joined in for its revenue.
+ *
+ * The CSV has always had a Conversion Value column and the office had to type
+ * every figure into it by hand, defaulting to 0 — so an export done quickly
+ * told Google every click was worth nothing, which is worse than sending no
+ * value at all: it trains Smart Bidding that this traffic has no worth.
+ *
+ * jobs.lead_id is the link. Only a finished job counts; a planned one has not
+ * earned anything yet and reporting its quote as revenue would be inventing
+ * a number.
+ */
+const EXPORT_COLUMNS =
+  'id, created_at, service, status, gclid, wbraid, gbraid, jobs (status, final_price, quoted_price, completed_at)';
 
 function unauthorized() {
   // 404 rather than 401: do not confirm that this endpoint exists.
@@ -72,8 +85,36 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const positive = (data ?? []).filter((l) => l.status === 'qualified' || l.status === 'sold');
-    const negative = (data ?? []).filter((l) => l.status === 'spam' || l.status === 'duplicate');
+    /*
+     * What this lead actually earned. Null, never 0, when we do not know:
+     * the office can still type a figure, but nothing here guesses one, and
+     * a lead with no finished job is reported as a conversion without a
+     * value rather than as a conversion worth nothing.
+     */
+    const withValue = (data ?? []).map((lead) => {
+      const jobs = (Array.isArray(lead.jobs) ? lead.jobs : lead.jobs ? [lead.jobs] : []) as {
+        status?: string;
+        final_price?: number | string | null;
+        quoted_price?: number | string | null;
+        completed_at?: string | null;
+      }[];
+      const done = jobs.filter((j) => j.status === 'afgerond');
+      const earned = done.reduce(
+        (total, j) => total + Number(j.final_price ?? j.quoted_price ?? 0),
+        0
+      );
+      const { jobs: _dropped, ...rest } = lead as Record<string, unknown> & { jobs?: unknown };
+      return {
+        ...(rest as { id: string; status: string; created_at: string }),
+        job_value: done.length && earned > 0 ? Math.round(earned * 100) / 100 : null,
+        job_count: done.length,
+        /* Google wants the time the conversion happened, not the click. */
+        conversion_time: done[0]?.completed_at ?? null,
+      };
+    });
+
+    const positive = withValue.filter((l) => l.status === 'qualified' || l.status === 'sold');
+    const negative = withValue.filter((l) => l.status === 'spam' || l.status === 'duplicate');
 
     return NextResponse.json(
       { success: true, positive, negative },

@@ -10,6 +10,11 @@ interface ExportLead {
   gclid: string | null;
   wbraid: string | null;
   gbraid: string | null;
+  /** Revenue from finished jobs on this lead. Null when there is none yet. */
+  job_value?: number | null;
+  job_count?: number;
+  /** When the work was finished — the moment the conversion actually happened. */
+  conversion_time?: string | null;
 }
 
 const mapServiceToConversion = (service: string) => {
@@ -66,6 +71,21 @@ export default function OfflineConversionsPage() {
 
           const vals: Record<string, number> = {};
           const names: Record<string, string> = {};
+          /*
+           * Prefill the value from what the job actually earned.
+           *
+           * It used to start empty and fall back to 0 on download, so an
+           * export done quickly told Google every one of these clicks was
+           * worth nothing — worse than sending no value, because it teaches
+           * Smart Bidding this traffic has no worth. Still editable: the
+           * figure is a starting point, not a lock.
+           */
+          const values: Record<string, number> = {};
+          (data.positive || []).forEach((lead: ExportLead) => {
+            if (lead.job_value != null) values[lead.id] = lead.job_value;
+          });
+          setJobValues(values);
+
           (data.positive || []).forEach((lead: ExportLead) => {
             const cName = mapServiceToConversion(lead.service || '');
             names[lead.id] = cName;
@@ -109,8 +129,16 @@ export default function OfflineConversionsPage() {
       const gclid = clickId(lead);
       if (!gclid) return;
       const cName = conversionNames[lead.id] || 'Job Completed - Extra Key';
-      const cValue = jobValues[lead.id] || 0;
-      csv += `${gclid},${cName},${formatDate(lead.created_at)},${cValue},EUR\n`;
+      /*
+       * An unknown value is left blank, not written as 0. Google treats an
+       * empty Conversion Value as "no value supplied" and a 0 as "this was
+       * worth nothing" — and the second is a lie that Smart Bidding acts on.
+       */
+      const known = jobValues[lead.id];
+      const cValue = Number.isFinite(known) && known > 0 ? String(known) : '';
+      /* The conversion happened when the work finished, not when the form came in. */
+      const when = formatDate(lead.conversion_time || lead.created_at);
+      csv += `${gclid},${cName},${when},${cValue},EUR\n`;
       exportedIds.push(lead.id);
     });
 
