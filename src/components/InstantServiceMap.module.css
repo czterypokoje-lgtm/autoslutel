@@ -66,3 +66,85 @@
     --map-crop: 60px;
   }
 }
+
+
+/* ── FACADE ────────────────────────────────────────────────────────────────
+ *
+ * Shares .mapRoot so the placeholder and the real embed occupy exactly the
+ * same box — tapping swaps one for the other without the page jumping.
+ */
+
+.facade {
+  display: block;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+
+  /* .mapRoot crops the top for the embed's title bar; the static image has no
+     title bar to hide. */
+  --map-crop: 0px;
+}
+
+.facadeImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.facadeOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+
+  /* Dark enough that white type is legible over roads and water, light enough
+     that the map still reads as a map. */
+  background: linear-gradient(rgba(7, 21, 37, 0.35), rgba(7, 21, 37, 0.55));
+  transition: background 0.2s ease;
+}
+
+.facade:hover .facadeOverlay,
+.facade:focus-visible .facadeOverlay {
+  background: linear-gradient(rgba(7, 21, 37, 0.28), rgba(7, 21, 37, 0.48));
+}
+
+.facade:focus-visible {
+  outline: 3px solid var(--orange-400);
+  outline-offset: 2px;
+}
+
+.facadeCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.4rem;
+  border-radius: 999px;
+  background: var(--orange-500);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(7, 21, 37, 0.3);
+}
+
+.facadeHint {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(7, 21, 37, 0.7);
+  max-width: 24ch;
+  line-height: 1.35;
+}
+
+/* No map image available — a solid brand panel rather than a broken frame. */
+.facadeOverlayPlain {
+  background: var(--navy-800);
+}
