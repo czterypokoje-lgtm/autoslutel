@@ -25,7 +25,7 @@ export default function BrandsMarquee() {
           <div key={`${brand.name}-${i}`} className={styles.marqueeItem}>
             <Image 
               src={brand.logo} 
-              alt={`${brand.name} autosleutel bijmaken`} 
+              alt={`${brand.name} logo`} 
               width={70} 
               height={40} 
               style={{ objectFit: 'contain' }}

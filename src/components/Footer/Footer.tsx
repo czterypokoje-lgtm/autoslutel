@@ -126,13 +126,21 @@ export default function Footer() {
 
           {/* Steden */}
           <div>
-            <h4 className={styles.colTitle}>Steden</h4>
+            {/*
+              The phrase belongs in the heading, once — not on every link.
+              This list used to render "Amsterdam autosleutel bijmaken", "Den
+              Haag autosleutel bijmaken" and so on for twenty cities, on every
+              page of the site. That is roughly 900 repetitions of one phrase
+              across the footer alone, which is keyword stuffing rather than
+              navigation, and it made the links harder to scan for the
+              visitors they are actually there for. The city name is what
+              someone is looking for in a list of cities.
+            */}
+            <h4 className={styles.colTitle}>Autosleutel bijmaken per stad</h4>
             <ul className={styles.linkList}>
               {steden.map(([label, href]) => (
                 <li key={href}>
-                  <Link href={href}>
-                    {label.includes('Alle') ? label : `${label} autosleutel bijmaken`}
-                  </Link>
+                  <Link href={href}>{label}</Link>
                 </li>
               ))}
             </ul>

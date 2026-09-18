@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { SITE_CONFIG } from '@/config/site.config';
 import ContactForm from '@/components/ContactForm/ContactForm';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import { Phone, Mail, Clock, MapPin, MessageSquareText } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -53,6 +54,8 @@ export default function ContactPage() {
              </p>
           </div>
         </section>
+
+        <VerifiedReviewBanner />
 
         {/* MAIN SPLIT SECTION */}
         <section style={{ padding: '5rem 1.5rem', background: '#fff' }}>

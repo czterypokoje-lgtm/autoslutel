@@ -15,6 +15,8 @@ import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
 
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
@@ -168,6 +170,8 @@ export default function HomePage() {
 
         </div>
       </section>
+      <VerifiedReviewBanner />
+
 
       {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
       <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>

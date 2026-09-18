@@ -1,0 +1,139 @@
+.bannerContainer {
+  background: #1150c2;
+  color: #fff;
+  width: 100%;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 900px) {
+  .inner {
+    flex-direction: row;
+    align-items: center;
+    padding: 3.5rem 1.5rem;
+    gap: 3rem;
+  }
+}
+
+.leftSection {
+  flex: 1;
+}
+
+.supertitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.divider {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .divider {
+    display: block;
+    width: 1px;
+    align-self: stretch;
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.reviewSection {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reviewerHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #8b9db1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.reviewerName {
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.reviewerMeta {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.15rem;
+}
+
+.stars {
+  color: #facc15;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+}
+
+.reviewText {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  max-width: 600px;
+}
+
+.logosSection {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .logosSection {
+    margin-left: auto;
+  }
+}
+
+.logoCircle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.logoCircle:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}

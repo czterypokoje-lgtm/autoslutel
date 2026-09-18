@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { DIENSTEN } from '@/config/diensten';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -25,6 +27,8 @@ export default function DienstenOverviewPage() {
           </p>
         </div>
       </section>
+
+      <VerifiedReviewBanner />
 
       <BrandsMarquee />
 

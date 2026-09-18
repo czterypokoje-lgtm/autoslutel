@@ -12,6 +12,8 @@ import Image from 'next/image';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
@@ -276,6 +278,8 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
             </div>
           </section>
         )}
+
+        <VerifiedReviewBanner />
 
         <BrandsMarquee />
 

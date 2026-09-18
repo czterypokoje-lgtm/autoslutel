@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import styles from './ServiceAreaMap.module.css';
 import { CITIES } from '@/config/cities';
+import InstantServiceMap from '../InstantServiceMap';
 
 type City = { name: string; slug: string };
 
@@ -58,21 +58,7 @@ export default function ServiceAreaMap() {
         
         {/* ── VISUAL MAP (IMAGE BASED) ── */}
         <div className={styles.imageCol}>
-          <div className={styles.imageWrapper}>
-            <Image 
-              src="/images/nl-map-orange.png" 
-              alt="Kaart werkgebied Autosleutel24 Nederland" 
-              fill
-              className={styles.mapImage}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-            />
-          </div>
-          {/* Subtle trust badge overlay on map */}
-          <div className={styles.mapBadge}>
-            <div className={styles.badgePulse}></div>
-            <span><strong>Actief</strong> in uw regio</span>
-          </div>
+          <InstantServiceMap />
         </div>
 
         {/* ── INTERACTIVE ACCORDION PANEL (SEO & MOBILE FIRST) ── */}

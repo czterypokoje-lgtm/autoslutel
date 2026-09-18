@@ -89,11 +89,11 @@ export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false 
                 <Link
                   href={`/merken/${brand.slug}`}
                   className={styles.brandLogoCard}
-                  title={`${brand.name} autosleutel bijmaken — ${brand.models}`}
+                  title={`${brand.name} — ${brand.models}`}
                 >
                   <Image
                     src={brand.svg}
-                    alt={`${brand.name} logo — autosleutel bijmaken`}
+                    alt={`${brand.name} logo`}
                     className={styles.brandLogoImg}
                     width={80}
                     height={48}
