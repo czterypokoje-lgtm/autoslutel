@@ -882,62 +882,161 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   ),
   'autosleutel-kwijt-wat-nu-stappenplan': (
     <>
-      <h2>Autosleutel Kwijt? Het Complete Stappenplan (Inclusief Kosten & Oplossingen)</h2>
-      
-      <p className="lead" style={{ fontSize: '1.15rem', lineHeight: 1.7, fontWeight: 500, color: 'var(--navy-800)', marginBottom: '1.5rem' }}>
-        Een verloren autosleutel is bijzonder stressvol, vooral als je geen reservesleutel hebt. Ontdek in deze complete gids direct wat je opties zijn, hoe een specialist veilig een nieuwe sleutel inleert en wat de verwachte kosten zijn.
-      </p>
-
-      <div style={{ margin: '2rem 0', position: 'relative', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
-        <Image 
-          src="/images/blog/lost_key_process_illustration.webp" 
-          alt="Het proces van een autosleutel bijmaken op locatie: van probleem naar oplossing" 
-          width={800}
-          height={800}
-          style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-        />
-      </div>
-
-      <h3>Direct Actie: Het 5-Stappenplan bij een Verloren Autosleutel</h3>
-      <p>Volg deze stappen direct nadat u merkt dat u uw autosleutels kwijt bent om paniek te voorkomen en veiligheid te garanderen:</p>
-      <ul>
-        <li><strong>Stap 1: Blijf kalm en pas de 'driehoeksmeting' toe.</strong> Stress blokkeert je geheugen. Beperk je zoektocht strikt tot de fysieke ruimtes waar je bent geweest sinds je uit de auto stapte. Gebruik een zaklamp; het licht reflecteert op het metaal van de sleutel.</li>
-        <li><strong>Stap 2: Beveilig uw voertuig direct.</strong> Staat uw auto onbeheerd in de openbare ruimte? Zorg ervoor dat er geen waardevolle spullen in het zicht liggen voor het geval de deuren niet op slot zitten.</li>
-        <li><strong>Stap 3: Controleer of er nog een reservesleutel is.</strong> Als u geen reservesleutel meer heeft (all keys lost), kan de auto niet gestart worden. De startonderbreker deactiveren zonder sleutel is onmogelijk, omdat dit systeem autodiefstal voorkomt.</li>
-        <li><strong>Stap 4: Verzamel eigendomsbewijzen (Belangrijk voor Veiligheid).</strong> Om diefstal te voorkomen, eisen wij en officiële dealers altijd een geldig kentekenbewijs en legitimatiebewijs. Zonder deze documenten mogen wij wettelijk geen nieuwe autosleutel programmeren.</li>
-        <li><strong>Stap 5: Bel een gecertificeerde mobiele slotenmaker of dealer.</strong> Een dealer vereist vaak dat de auto wordt weggesleept (met bijbehorende hoge sleepkosten) en heeft levertijden tot wel twee weken. Een mobiele autosleutelspecialist zoals Autosleutel24 komt direct naar u toe en freest de sleutel ter plekke.</li>
-      </ul>
-
-      <h3>De Techniek: Hoe wij een nieuwe sleutel inleren (Zonder Origineel)</h3>
       <p>
-        Moderne auto's zijn zeer geavanceerd beveiligd met immobiliser (startonderbreker) systemen. Wanneer u uw laatste autosleutel kwijt bent, moet de boordcomputer van uw auto gereset worden om oude, verloren sleutels uit te wissen.
+        U staat bij uw auto. U voelt in uw jaszak, uw tas, uw broekzak. Niets. Op dat moment
+        bellen de meeste mensen meteen de merkdealer, of erger: een bergingsdienst. Dat is
+        begrijpelijk &mdash; u bent gestrest en wilt gewoon verder. Maar die reflex kost al snel
+        honderden euro&rsquo;s en uren wachttijd die u niet hoeft te verliezen.
       </p>
       <p>
-        <strong>Hoe werkt dit proces?</strong><br/>
-        Wij openen uw auto 100% schadevrij met speciaal Lishi-gereedschap. Vervolgens sluiten wij onze geautoriseerde diagnoseapparatuur aan op de OBD2-poort van uw auto. Hiermee wissen wij de oude, verloren sleutelcodes uit het ECU-geheugen (Essentieel ter preventie van autodiefstal!). Pas nadat de oude sleutels onklaar zijn gemaakt, leren wij de transponderchip in uw nieuwe sleutel of smartkey veilig in. De motor krijgt dan weer het juiste cryptografische signaal om te starten.
+        Een mobiele autosleutelspecialist is in de meeste gevallen sneller, goedkoper en minstens
+        even capabel als de dealer. Wij staan doorgaans binnen 30 tot 60 minuten bij u. Hieronder
+        leest u welke stappen u direct moet nemen, wat het kost bij een specialist tegenover de
+        dealer, wat uw verzekering vergoedt en hoe u dit een volgende keer voorkomt.
       </p>
 
-      <h3>Kosten en Verzekering: Wat betaalt u voor een nieuwe sleutel?</h3>
+      <h2>Wat u direct moet doen</h2>
       <p>
-        De kosten voor een autosleutel bijmaken bij verlies lopen flink uiteen.
+        Controleer eerst de voor de hand liggende plekken voordat u iemand belt. Jaszak, handtas,
+        bureau, het slot van de voordeur. Kijk ook in de auto zelf: op de stoel, in de kofferbak,
+        in het dashboardkastje. Het klinkt simpel, maar een kwijtgeraakte sleutel blijkt regelmatig
+        gewoon ergens anders te liggen.
       </p>
-      <ul>
-        <li><strong>Basissleutel met transponder (zonder afstandsbediening):</strong> €50 tot €100.</li>
-        <li><strong>Sleutel met afstandsbediening / Klapsleutel:</strong> €100 tot €250.</li>
-        <li><strong>Keyless entry / Smart keys (o.a. BMW CAS4, Mercedes FBS3/4):</strong> €150 tot €450, afhankelijk van het merk.</li>
-      </ul>
       <p>
-        <strong>Vergoedt de verzekering een verloren autosleutel?</strong><br/>
-        Als u Allrisk of WA+ Beperkt Casco verzekerd bent, dekt de autoverzekering in veel gevallen de kosten voor het vervangen van sloten en sleutels, mits er aantoonbaar sprake is van diefstal (inclusief officieel politierapport). Bent u de sleutel zelf kwijtgeraakt? Dan betaalt u de kosten vrijwel altijd zelf.
+        Noteer alvast het kenteken en het VIN-nummer. De meeste sleutelmakers vragen dit als
+        eerste. Het VIN vindt u op het kentekenbewijs of onderaan de voorruit aan bestuurderszijde.
+        Zo verliest u geen tijd zodra de monteur er is.
+      </p>
+      <p>
+        Dan de vraag die alles bepaalt: bent u buitengesloten, of staat de auto thuis en mist u
+        alleen de sleutel? Buitengesloten vraagt om directe actie. Staat de auto veilig, dan heeft
+        u iets meer tijd om rustig te vergelijken &mdash; al is snel handelen verstandig zodra er
+        ook een diefstalrisico speelt.
       </p>
 
-      <h3>Veelgestelde Vragen (Troubleshooting)</h3>
-      <p><strong>Mijn auto herkent de sleutel niet meer, maar ik heb hem wel?</strong><br/>Probeer de batterij (vaak een CR2032) te vervangen. Werkt dit niet? Mogelijk is de transponderchip defect geraakt na een val of waterschade. De sleutel moet dan opnieuw geprogrammeerd of gerepareerd worden.</p>
-      <p><strong>De sleutel ligt nog in de afgesloten auto, wat nu?</strong><br/>Breek absoluut geen ruit in! Wij kunnen autodeuren voor 99% van alle merken volledig schadevrij en zonder krassen ontgrendelen.</p>
+      <h2>Drie situaties waarin wachten u meer kost dan handelen</h2>
 
-      <div style={{ background: '#f8fafc', borderLeft: '4px solid #1d4ed8', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
-        <strong>Sleutel kwijt en direct professionele hulp nodig op locatie?</strong> Autosleutel24 komt naar u toe met een mobiele werkplaats, leest de auto uit, wist verloren sleutels voor uw veiligheid en programmeert direct een nieuwe. Bel of stuur een WhatsApp-bericht via <a href={WHATSAPP_URL} style={{ color: '#1d4ed8', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a>.
-      </div>
+      <h3>Buitengesloten: sla de bergingsdienst over</h3>
+      <p>
+        Een bergingsbedrijf sleept uw auto naar de dealer. Dat klinkt als een oplossing, maar u
+        betaalt sleepkosten, uw auto staat ergens anders dan u, en u wacht alsnog uren op de
+        dealer. Een mobiele specialist rijdt naar u toe en opent de auto schadevrij ter plaatse,
+        zonder krassen op het slot of de carrosserie. Vaak staat u eerder in uw auto dan een
+        bergingsbedrijf &uuml;berhaupt ter plaatse is. Meer daarover leest u in ons artikel over{' '}
+        <Link href="/blog/sleutel-in-auto-laten-liggen-oplossingen">
+          buitengesloten raken bij de auto
+        </Link>
+        .
+      </p>
+
+      <h3>Gestolen sleutel: het transpondergeheugen wissen is niet optioneel</h3>
+      <p>
+        Wie uw originele sleutel heeft, kan in principe uw auto starten. Het wissen van het
+        transpondergeheugen is doorgaans de enige manier om die toegang te blokkeren, al vragen
+        sommige systemen aanvullende stappen zoals fabrieksautorisatie of het vervangen van een
+        module. Dit is geen administratieve formaliteit maar een technische ingreep via de ECU, ter
+        plaatse uitgevoerd met professionele diagnoseapparatuur. Slaat u deze stap over, dan loopt
+        uw auto risico &mdash; ook als die nu op een veilig lijkende plek staat. De volledige
+        aanpak staat in ons artikel over{' '}
+        <Link href="/blog/autosleutel-gestolen-wat-te-doen">een gestolen autosleutel</Link>.
+      </p>
+
+      <h3>Alle sleutels weg: de all-keys-lost-procedure</h3>
+      <p>
+        Bent u werkelijk alle sleutels kwijt, dan wordt het iets complexer. De specialist voert een
+        zogenoemde all-keys-lost-procedure uit via de OBD2-poort. Dat duurt langer dan een gewone
+        bijmaakklus. Bij de meeste gangbare merken handelt een ervaren mobiele specialist dit op
+        locatie af; bij bepaalde nieuwere of zwaar beveiligde systemen is soms aanvullende
+        dealerautorisatie nodig. Hoe dat werkt zonder origineel leest u in ons artikel over{' '}
+        <Link href="/blog/autosleutel-bijmaken-zonder-origineel">
+          een sleutel bijmaken zonder origineel
+        </Link>
+        .
+      </p>
+      <p>
+        Zorg dat u het volgende bij de hand heeft: een geldig legitimatiebewijs, het
+        kentekenbewijs en het VIN-nummer. Bij een lease- of bedrijfsauto komt daar een
+        schriftelijke machtiging bij, en soms een KvK-uittreksel.
+      </p>
+
+      <h2>Hoe een mobiele specialist het ter plaatse oplost</h2>
+      <p>
+        Het proces is eenvoudiger dan de meeste mensen verwachten. De monteur sluit aan op de
+        OBD2-poort, leest het immobilizersysteem uit en programmeert de nieuwe transponder
+        rechtstreeks in de ECU. Daarna wordt het sleutelblad ter plaatse gefreesd. Geen wachttijd
+        op een bestelling, geen tweede afspraak.
+      </p>
+      <p>
+        Voor smart keys en sleutelloos starten &mdash; BMW, Mercedes, Audi, Volkswagen, Ford
+        &mdash; worden originele en aftermarket-sleutels direct ingeleerd. De meeste klussen zijn
+        binnen 30 tot 60 minuten klaar. Bij een all-keys-lost-procedure of bepaalde
+        premium-varianten met extra beveiligingslagen duurt het langer, maar ook die klussen doen
+        wij gewoon op uw locatie.
+      </p>
+
+      <h2>Wat uw verzekering vergoedt</h2>
+      <p>
+        De dekking volgt de soort verzekering. WA dekt niets. Beperkt casco dekt doorgaans alleen
+        aantoonbare diefstal, niet puur kwijtraken. Allrisk dekt in de meeste gevallen zowel
+        verlies als diefstal, maar controleer uw polisvoorwaarden: een eigen risico is vaak van
+        toepassing en de hoogte verschilt per verzekeraar.
+      </p>
+      <p>
+        De maximumvergoedingen lopen sterk uiteen. Sommige verzekeraars hanteren een limiet rond de
+        &euro;500, andere vergoeden het omcoderen van sloten zonder maximum, en weer andere sluiten
+        enkel verlies uit. Wij noemen hier bewust geen merknamen of vaste bedragen: die
+        voorwaarden wijzigen en alleen uw eigen polis is bindend. Lees de formulering na, want die
+        bepaalt of juist &uuml;w situatie gedekt is. Meer context staat in ons artikel over{' '}
+        <Link href="/blog/verzekering-dekt-autosleutel-vervangen">
+          wat uw verzekering bij sleutelvervanging dekt
+        </Link>
+        .
+      </p>
+      <p>
+        Bij diefstal geldt bij vrijwel alle verzekeraars een aanvullende eis: doe aangifte bij de
+        politie v&oacute;&oacute;rdat u claimt. Zonder aangifte geen vergoeding. Voor de claim
+        heeft u de aangifte, de factuur van de sleutelmaker en het kentekenbewijs nodig. Heeft u
+        een beveiligde sleutel waarvoor een sleutelcertificaat vereist is, dan vraagt u dat eerst
+        opnieuw aan bij de fabrikant.
+      </p>
+
+      <h2>Zo voorkomt u dit een volgende keer</h2>
+      <p>
+        De eenvoudigste preventie is een reservesleutel. Die kost een fractie van wat u betaalt bij
+        totaal sleutelverlies. Een mobiele specialist komt naar u toe, freest en programmeert de
+        sleutel ter plaatse, en binnen een uur heeft u een volwaardige back-up. Dat is de
+        goedkoopste verzekering tegen dit hele scenario.
+      </p>
+      <p>
+        Na een gestolen sleutel zijn er een paar maatregelen die u niet moet overslaan. Laat het
+        transpondergeheugen wissen zodat de gestolen sleutel geen toegang meer geeft. Overweeg een
+        aanvullend mechanisch beveiligingssysteem als uw auto regelmatig onbewaakt staat. En bewaar
+        de reservesleutel nooit in de auto zelf &mdash; het lijkt logisch, maar het is een
+        veelgemaakte fout.
+      </p>
+
+      <h2>De conclusie</h2>
+      <p>
+        Een verloren autosleutel vraagt om snel handelen, maar niet automatisch om de dealer. In
+        veel gevallen wint een mobiele specialist op prijs, snelheid en gemak: u betaalt minder, u
+        wacht korter en uw auto hoeft nergens heen gesleept te worden. Uitzonderingen bestaan
+        &mdash; bij bepaalde zeer nieuwe of zwaar beveiligde modellen kan dealerinmenging nodig
+        zijn. Voor de grote meerderheid van rijdend Nederland is een mobiele specialist de
+        verstandigere keuze. Het kostenverschil staat uitgewerkt in ons artikel over{' '}
+        <Link href="/blog/dealer-vs-mobiele-sleutelmaker">
+          de dealer tegenover een mobiele sleutelmaker
+        </Link>
+        .
+      </p>
+      <p>
+        Autosleutel24 is 24/7 bereikbaar in de Randstad en Midden-Nederland, met een volledig
+        uitgeruste servicebus en professionele diagnoseapparatuur. Op alle werkzaamheden geldt 12
+        maanden garantie.{' '}
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+          Stuur ons een WhatsApp
+        </a>{' '}
+        of bel {SITE_CONFIG.phone} &mdash; wij lossen het op, waar u ook staat.
+      </p>
     </>
   ),
   'autosleutel-bijmaken-kosten-prijslijst': (
