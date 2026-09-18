@@ -7,6 +7,11 @@ interface BrandsLogoGridProps {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   hideSeoHeader?: boolean;
+  /**
+   * How many logos to show before the "show all" toggle. Eight fills exactly
+   * one row on desktop, two on tablet, four on a phone.
+   */
+  initiallyVisible?: number;
 }
 
 export const BRANDS_WITH_LOGOS = [
@@ -47,7 +52,12 @@ export const BRANDS_WITH_LOGOS = [
   { name: 'Bentley', slug: 'bentley-autosleutel-bijmaken', models: 'Continental GT, Bentayga, Flying Spur', svg: '/brands/bentley_sleutel_bijmaken.webp' }
 ];
 
-export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false }: BrandsLogoGridProps) {
+export default function BrandsLogoGrid({
+  title,
+  subtitle,
+  hideSeoHeader = false,
+  initiallyVisible = 8,
+}: BrandsLogoGridProps) {
   // Build-time check for localization safety (prevent German/English leaks on Dutch pages)
   if (process.env.NODE_ENV !== 'production') {
     const textToCheck = `${title || ''} ${subtitle || ''}`;
@@ -56,19 +66,35 @@ export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false 
     }
   }
 
+  /*
+   * Thirty-five logos at once buried Volkswagen and BMW — the makes people
+   * actually arrive looking for — under Bentley, Ferrari and Saab. The common
+   * ones lead; the rest are one click away.
+   */
+  const lead = BRANDS_WITH_LOGOS.slice(0, initiallyVisible);
+  const rest = BRANDS_WITH_LOGOS.slice(initiallyVisible);
+
   return (
     <section className={styles.brandsSection}>
       <div className={`container ${styles.brandsLayout}`}>
-        
+
         {/* Left Side: Technician Hero */}
         <div className={styles.brandsHero}>
-          <Image 
+          {/*
+           * Hidden below 1024px — see the CSS. This photo exists to sit beside
+           * the grid, and on a phone, where it cannot, it becomes a full screen
+           * of stock photography between the visitor and the thing they came
+           * for. No `priority`: the section sits well below the fold, so
+           * preloading it only competed with the real LCP image.
+           */}
+          <Image
             src="/images/technician_pointing.jpg"
             alt="Autosleutel specialist wijst naar merken"
             width={500}
             height={600}
-            priority
             className={styles.heroImg}
+            loading="lazy"
+            sizes="(max-width: 1024px) 0px, 400px"
           />
         </div>
 
@@ -84,26 +110,33 @@ export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false 
           )}
 
           <ul className={styles.brandsLogoGrid}>
-            {BRANDS_WITH_LOGOS.map((brand) => (
-              <li key={brand.slug} className={styles.brandLogoItem}>
-                <Link
-                  href={`/merken/${brand.slug}`}
-                  className={styles.brandLogoCard}
-                  title={`${brand.name} — ${brand.models}`}
-                >
-                  <Image
-                    src={brand.svg}
-                    alt={`${brand.name} logo`}
-                    className={styles.brandLogoImg}
-                    width={80}
-                    height={48}
-                    loading="lazy"
-                  />
-                  <span className={styles.brandLogoName}>{brand.name} sleutel bijmaken</span>
-                </Link>
-              </li>
+            {lead.map((brand) => (
+              <BrandCard key={brand.slug} brand={brand} />
             ))}
           </ul>
+
+          {rest.length > 0 && (
+            /*
+             * <details> rather than a useState toggle: this stays a server
+             * component, ships no JavaScript, and works before hydration. The
+             * hidden logos are real markup in the page either way, so every
+             * /merken link is still there for a crawler to follow.
+             */
+            <details className={styles.moreBrands}>
+              <summary className={styles.moreToggle}>
+                <span className={styles.moreOpen}>
+                  Alle {BRANDS_WITH_LOGOS.length} merken tonen
+                </span>
+                <span className={styles.moreClose}>Minder merken tonen</span>
+              </summary>
+
+              <ul className={`${styles.brandsLogoGrid} ${styles.restGrid}`}>
+                {rest.map((brand) => (
+                  <BrandCard key={brand.slug} brand={brand} />
+                ))}
+              </ul>
+            </details>
+          )}
 
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
             <Link href="/merken" className={styles.brandsAllLink}>
@@ -111,8 +144,30 @@ export default function BrandsLogoGrid({ title, subtitle, hideSeoHeader = false 
             </Link>
           </div>
         </div>
-        
+
       </div>
     </section>
+  );
+}
+
+function BrandCard({ brand }: { brand: (typeof BRANDS_WITH_LOGOS)[number] }) {
+  return (
+    <li className={styles.brandLogoItem}>
+      <Link
+        href={`/merken/${brand.slug}`}
+        className={styles.brandLogoCard}
+        title={`${brand.name} — ${brand.models}`}
+      >
+        <Image
+          src={brand.svg}
+          alt={`${brand.name} logo`}
+          className={styles.brandLogoImg}
+          width={80}
+          height={48}
+          loading="lazy"
+        />
+        <span className={styles.brandLogoName}>{brand.name} sleutel bijmaken</span>
+      </Link>
+    </li>
   );
 }

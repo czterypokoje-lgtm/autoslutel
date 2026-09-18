@@ -17,16 +17,26 @@
 }
 
 /* Left Hero Image Area */
+
+/*
+ * Hidden below 1024px, which is exactly the breakpoint where .brandsLayout
+ * stops being a row. Beside the grid this photo frames the section; stacked
+ * above it on a phone it is a full screen of stock photography standing
+ * between the visitor and the logos they came to tap.
+ */
 .brandsHero {
+  /* The original `display: flex` lives in the 1024px rule below; leaving it
+     here too would sit *after* this none and quietly win. */
+  display: none;
   flex: 0 0 100%;
   max-width: 500px;
   position: relative;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
 @media (min-width: 1024px) {
   .brandsHero {
+    display: flex;
     flex: 0 0 400px; /* fixed width for the image column on desktop */
   }
 }
@@ -142,4 +152,66 @@
 .brandsAllLink:hover {
   opacity: 0.8;
   background: rgba(249, 115, 22, 0.15);
+}
+
+
+/* ── SHOW ALL MERKEN ───────────────────────────────────────────────────────
+ *
+ * A <details> holding the logos past the first row. No JavaScript, no
+ * hydration, and the hidden cards are ordinary markup, so every /merken link
+ * is in the HTML whether it is open or not.
+ */
+
+.moreBrands {
+  /* Matches .brandsLogoGrid's gap, so the toggle sits one grid row below the
+     logos rather than at some unrelated distance. */
+  margin-top: 12px;
+}
+
+.moreToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  background: var(--navy-800);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+
+  /* Safari still draws its own disclosure triangle without both of these. */
+  list-style: none;
+}
+
+.moreToggle::-webkit-details-marker {
+  display: none;
+}
+
+.moreToggle:hover {
+  background: var(--navy-700);
+}
+
+.moreToggle:focus-visible {
+  outline: 3px solid var(--orange-400);
+  outline-offset: 2px;
+}
+
+/* One label for each state, so the control says what it will do next. */
+.moreClose {
+  display: none;
+}
+
+.moreBrands[open] .moreOpen {
+  display: none;
+}
+
+.moreBrands[open] .moreClose {
+  display: inline;
+}
+
+.restGrid {
+  margin-top: 12px;
 }
