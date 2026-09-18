@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './theme.css';
 import styles from './admin.module.css';
 import { getCrmUser } from '@/lib/crmSession';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import Sidebar from './Sidebar';
 import MobileTabBar from './MobileTabBar';
 
@@ -47,11 +48,37 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     .map((part) => part.charAt(0).toUpperCase())
     .join('') || '?';
 
+  /*
+   * The profile photo, for the avatar in the corner.
+   *
+   * It has lived on technicians.photo_url all along and was only ever shown
+   * on the profile page itself — so a monteur who uploaded one still saw
+   * their initials everywhere else, including the button that opens that
+   * very page. Office and owner accounts have no technicians row, so they
+   * keep the initials; that is the fallback, not a failure.
+   */
+  let photoUrl: string | null = null;
+  if (user) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data } = await supabase
+        .from('technicians')
+        .select('photo_url')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      photoUrl = (data?.photo_url as string) ?? null;
+    } catch {
+      // Unconfigured deployment, or no row: initials still work.
+    }
+  }
+
   const isMonteur = user?.role === 'monteur';
 
   return (
     <div className={`crm ${styles.shell}`}>
-      {user && <Sidebar role={user.role} email={user.email} initials={initials} />}
+      {user && (
+        <Sidebar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
+      )}
       <main className={user ? `${styles.main} ${isMonteur ? styles.mainWithTabBar : ''}` : undefined}>
         {children}
       </main>

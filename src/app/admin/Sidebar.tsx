@@ -24,10 +24,13 @@ export default function Sidebar({
   role,
   email,
   initials,
+  photoUrl,
 }: {
   role: CrmRole | null;
   email: string | null;
   initials: string;
+  /** technicians.photo_url; null for an office account, which has no row. */
+  photoUrl?: string | null;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -60,7 +63,18 @@ export default function Sidebar({
         </Link>
 
         <Link href="/admin/mijn-profiel" className={styles.avatar} title={email ?? 'Profiel'}>
-          {initials}
+          {photoUrl ? (
+            /*
+              Plain <img>, not next/image: the file sits in blob storage under
+              a URL the office can change at any time, and routing it through
+              the optimiser would need that host allow-listed in next.config
+              for a 28px circle.
+            */
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={photoUrl} alt="" className={styles.avatarPhoto} />
+          ) : (
+            initials
+          )}
         </Link>
       </div>
 
