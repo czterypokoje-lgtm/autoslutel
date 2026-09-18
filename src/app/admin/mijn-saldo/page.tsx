@@ -237,8 +237,15 @@ export default async function MijnSaldoPage() {
                   </Badge>
                 </td>
                 <td className={ui.numeric}>{euro(priceOf(job))}</td>
+                {/*
+                  The euro amount, not the rate. A monteur is owed a figure,
+                  and reading "25%" next to every job invites arithmetic about
+                  the deal rather than a glance at what came in. The
+                  percentage still drives the sum — it is just not the thing
+                  on screen.
+                */}
                 <td className={ui.numeric} style={{ color: 'var(--crm-muted)' }}>
-                  {Number(job.commission_pct ?? 25)}%
+                  {euro(priceOf(job) - earnedOn(job))}
                 </td>
                 <td className={ui.numeric} style={{ color: 'var(--crm-ink)', fontWeight: 600 }}>
                   {euro(earnedOn(job))}

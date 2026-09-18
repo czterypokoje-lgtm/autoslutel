@@ -100,9 +100,14 @@ export default async function MijnVakPage() {
           <div className={styles.rowMain}>
             <div className={styles.rowTitleLine}>
               <span className={styles.rowTitle}>{terms.label}</span>
+              {/*
+                The fee, not the rate. What a monteur needs from this line is
+                what the month costs; the commission is already shown below as
+                the euro figure they actually paid, which is the number that
+                answers the same question without inviting arithmetic.
+              */}
               <span className={styles.rowSlug}>
-                € {Number(sub?.monthly_fee ?? terms.monthlyFee).toFixed(0)} p/m ·{' '}
-                {Number(sub?.commission_pct ?? terms.commissionPct)}% commissie
+                € {Number(sub?.monthly_fee ?? terms.monthlyFee).toFixed(0)} p/m
               </span>
             </div>
             <div className={styles.rowMeta}>

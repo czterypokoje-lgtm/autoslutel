@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../jobs/jobs.module.css';
+import { TIER_TERMS } from '@/lib/subscription';
 
 export default function Wizard({ technicianId }: { technicianId: string }) {
   const router = useRouter();
@@ -215,6 +216,14 @@ export default function Wizard({ technicianId }: { technicianId: string }) {
 
   return (
     <div className={styles.panel}>
+      {/*
+        The rate stays on this screen, unlike the rest of the monteur's
+        views. This is the moment somebody agrees to it — a commission
+        hidden at the point of signing is one they never consented to, and
+        every figure here now comes from TIER_TERMS rather than being typed
+        in, because these prices had already drifted: the screen was still
+        offering Pro at €399 and Premium at €1.200 after both had changed.
+      */}
       <h2>Stap 4: Abonnement</h2>
       <p className={styles.note}>Kies je niveau. De commissie wordt per voltooide klus ingehouden.</p>
 
@@ -222,24 +231,30 @@ export default function Wizard({ technicianId }: { technicianId: string }) {
         <label style={{ display: 'flex', gap: 15, padding: 15, border: `2px solid ${tier === 'starter' ? 'var(--crm-ink)' : 'var(--crm-rule2)'}`, borderRadius: 8, cursor: 'pointer' }}>
           <input type="radio" name="tier" value="starter" checked={tier === 'starter'} onChange={() => setTier('starter')} />
           <div>
-            <strong>Starter</strong> (€0 / mnd)
-            <div className={styles.suggestionWhy}>25% commissie per klus. Basisdekking.</div>
+            <strong>{TIER_TERMS.starter.label}</strong> (€{TIER_TERMS.starter.monthlyFee} / mnd)
+            <div className={styles.suggestionWhy}>
+              {TIER_TERMS.starter.commissionPct}% commissie per klus. Basisdekking.
+            </div>
           </div>
         </label>
         
         <label style={{ display: 'flex', gap: 15, padding: 15, border: `2px solid ${tier === 'pro' ? 'var(--crm-ink)' : 'var(--crm-rule2)'}`, borderRadius: 8, cursor: 'pointer' }}>
           <input type="radio" name="tier" value="pro" checked={tier === 'pro'} onChange={() => setTier('pro')} />
           <div>
-            <strong>Pro</strong> (€399 / mnd)
-            <div className={styles.suggestionWhy}>18% commissie per klus. Meer voorrang bij nieuwe klussen.</div>
+            <strong>{TIER_TERMS.pro.label}</strong> (€{TIER_TERMS.pro.monthlyFee} / mnd)
+            <div className={styles.suggestionWhy}>
+              {TIER_TERMS.pro.commissionPct}% commissie per klus. Meer voorrang bij nieuwe klussen.
+            </div>
           </div>
         </label>
         
         <label style={{ display: 'flex', gap: 15, padding: 15, border: `2px solid ${tier === 'premium' ? 'var(--crm-ink)' : 'var(--crm-rule2)'}`, borderRadius: 8, cursor: 'pointer' }}>
           <input type="radio" name="tier" value="premium" checked={tier === 'premium'} onChange={() => setTier('premium')} />
           <div>
-            <strong>Premium</strong> (€1.200 / mnd)
-            <div className={styles.suggestionWhy}>8% commissie per klus. De hoogste prioriteit.</div>
+            <strong>{TIER_TERMS.premium.label}</strong> (€{TIER_TERMS.premium.monthlyFee} / mnd)
+            <div className={styles.suggestionWhy}>
+              {TIER_TERMS.premium.commissionPct}% commissie per klus. De hoogste prioriteit.
+            </div>
           </div>
         </label>
       </div>
