@@ -35,12 +35,16 @@ export default async function NetwerkLayout({
 
   const all = servers ?? [];
   /*
-   * A monteur belongs to one server; the office sees them all and lands on the
-   * first. There is no server switcher for a technician because there is
-   * nothing to switch to — showing one they cannot enter is a dead end.
+   * Which server is open is decided in the sidebar, not here.
+   *
+   * This used to pin it to all[0] and filter the channels to match, which
+   * meant the server bubbles linked to ?server=<id> and nothing happened —
+   * a layout in the App Router is never handed searchParams, so it could not
+   * see which one had been picked. Every server therefore showed Nederland's
+   * channels. The full list goes down instead and the client component, which
+   * can read the query string, does the filtering.
    */
-  const active = all[0] ?? null;
-  const mine = (channels ?? []).filter((c) => !active || c.server_id === active.id);
+  const mine = channels ?? [];
 
   const groups: { title: string; type: string; prefix: string }[] = [
     { title: 'Algemeen', type: 'general', prefix: '#' },
@@ -59,7 +63,7 @@ export default async function NetwerkLayout({
 
   return (
     <div className={styles.layout}>
-      <NetworkSidebar servers={all} active={active} isOffice={isOffice} groups={groups} channels={mine} />
+      <NetworkSidebar servers={all} isOffice={isOffice} groups={groups} channels={mine} />
       <div className={styles.main}>{children}</div>
     </div>
   );

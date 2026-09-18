@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronDown, Menu, Settings2, ShoppingBag, X } from 'lucide-react';
 import styles from './netwerk.module.css';
@@ -43,17 +44,34 @@ const SHUT_KEY = 'as24_netwerk_shut';
 
 export default function NetworkSidebar({
   servers,
-  active,
   isOffice,
   groups,
   channels,
 }: {
   servers: Server[];
-  active: Server | null;
   isOffice: boolean;
   groups: Group[];
   channels: Channel[];
 }) {
+  /*
+   * The open server comes from ?server=, falling back to the first one.
+   *
+   * It has to be read here rather than in the layout: a layout in the App
+   * Router is never given searchParams, so the bubbles linked to
+   * ?server=<id> and the channel list never changed. A monteur only ever has
+   * one server anyway; this is what makes the office's switcher work.
+   */
+  const searchParams = useSearchParams();
+  const requested = searchParams.get('server');
+  const active = useMemo(
+    () => servers.find((s) => s.id === requested) ?? servers[0] ?? null,
+    [servers, requested]
+  );
+  const visible = useMemo(
+    () => (active ? channels.filter((c) => c.server_id === active.id) : []),
+    [channels, active]
+  );
+
   const [open, setOpen] = useState(false);
   /*
    * Which groups are collapsed, remembered in this browser.
@@ -151,7 +169,7 @@ export default function NetworkSidebar({
             </div>
 
             {groups.map((group) => {
-              const inGroup = channels.filter((channel) => channel.type === group.type);
+              const inGroup = visible.filter((channel) => channel.type === group.type);
               if (!inGroup.length) return null;
               const collapsed = shut.has(group.type);
               return (
@@ -186,7 +204,7 @@ export default function NetworkSidebar({
               );
             })}
 
-            {channels.length === 0 && (
+            {visible.length === 0 && (
               <p className={styles.groupTitle} style={{ padding: 'var(--sp-4)' }}>
                 Nog geen kanalen op deze server.
                 {isOffice && ' Maak er een via het tandwiel hierboven.'}
