@@ -529,8 +529,15 @@ export default function PriceTree({
 
               {open && (
                 <div className={styles.brandBody}>
-                  {mine.length === 0 ? (
-                    <p className={styles.empty}>Nog geen prijzen voor {make}.</p>
+                  {/*
+                    The empty state used to hide the whole table whenever a
+                    make had no saved rows — which is every make before a
+                    monteur starts — so the model placeholders it was supposed
+                    to be listing never appeared at all. Only a make we have
+                    no models for is genuinely empty now.
+                  */}
+                  {mine.length === 0 && placeholdersFor(make, mine).length === 0 ? (
+                    <p className={styles.empty}>Geen modellen bekend voor {make}.</p>
                   ) : (
                     <div className={styles.tableWrap}>
                       <table className={styles.table}>

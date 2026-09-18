@@ -61,11 +61,16 @@ const EXCLUDED_MAKES = new Set(
     'Dodge',
     'Ferrari',
     'General Motors',
+    /* Scooters, and an American marque with no presence here. */
+    'Kymco',
+    'Lincoln',
   ].map((m) => m.toLowerCase())
 );
 
 export function isExcludedMake(make: string): boolean {
-  return EXCLUDED_MAKES.has(make.trim().toLowerCase());
+  return EXCLUDED_MAKES.has(
+    make.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  );
 }
 
 /**

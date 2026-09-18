@@ -114,13 +114,61 @@ export const EXTRA_MODELS: Record<string, string[]> = {
     '2', '3', '5', '6', 'CX-3', 'CX-30', 'CX-5', 'CX-60', 'CX-7', 'CX-9',
     'MX-5', 'MX-30', 'RX-8', 'Premacy', 'Tribute', 'BT-50',
   ],
+
+  /* ── the rest of the catalogue's makes, so none falls back to the feed ── */
+
+  abarth: ['500', '595', '695', '124 Spider', 'Grande Punto', 'Punto Evo'],
+  'alfa romeo': [
+    '147', '156', '159', '166', 'Brera', 'Giulia', 'Giulietta', 'GT', 'GTV',
+    'Mito', 'Spider', 'Stelvio', 'Tonale', '4C', '8C',
+  ],
+  'aston martin': ['DB7', 'DB9', 'DB11', 'DBS', 'DBX', 'Rapide', 'Vanquish', 'Vantage'],
+  dacia: ['Dokker', 'Duster', 'Jogger', 'Lodgy', 'Logan', 'Sandero', 'Spring'],
+  daewoo: ['Espero', 'Kalos', 'Lanos', 'Leganza', 'Matiz', 'Nexia', 'Nubira', 'Tacuma'],
+  honda: [
+    'Accord', 'City', 'Civic', 'CR-V', 'CR-Z', 'e', 'FR-V', 'HR-V', 'Insight',
+    'Jazz', 'Legend', 'Prelude', 'S2000', 'Stream', 'ZR-V',
+  ],
+  infiniti: ['EX', 'FX', 'G37', 'M', 'Q30', 'Q50', 'Q60', 'Q70', 'QX30', 'QX50', 'QX70'],
+  isuzu: ['D-Max', 'N-Series', 'Rodeo', 'Trooper'],
+  iveco: ['Daily', 'Eurocargo', 'S-Way', 'Stralis'],
+  jaguar: ['E-Pace', 'F-Pace', 'F-Type', 'I-Pace', 'S-Type', 'X-Type', 'XE', 'XF', 'XJ', 'XK'],
+  jeep: [
+    'Avenger', 'Cherokee', 'Commander', 'Compass', 'Grand Cherokee', 'Patriot',
+    'Renegade', 'Wrangler',
+  ],
+  lancia: ['Delta', 'Flavia', 'Musa', 'Phedra', 'Thesis', 'Voyager', 'Ypsilon'],
+  'land rover': [
+    'Defender', 'Discovery', 'Discovery Sport', 'Freelander', 'Range Rover',
+    'Range Rover Evoque', 'Range Rover Sport', 'Range Rover Velar',
+  ],
+  lexus: ['CT', 'ES', 'GS', 'IS', 'LC', 'LS', 'LX', 'NX', 'RC', 'RX', 'RZ', 'UX'],
+  maserati: ['GranCabrio', 'GranTurismo', 'Grecale', 'Ghibli', 'Levante', 'MC20', 'Quattroporte'],
+  porsche: [
+    '911', '718 Boxster', '718 Cayman', 'Boxster', 'Cayenne', 'Cayman',
+    'Macan', 'Panamera', 'Taycan',
+  ],
+  saab: ['900', '9000', '9-3', '9-5', '9-7X'],
+  smart: ['Forfour', 'Fortwo', 'Roadster', '#1', '#3'],
+  subaru: [
+    'BRZ', 'Forester', 'Impreza', 'Justy', 'Legacy', 'Levorg', 'Outback',
+    'Solterra', 'Tribeca', 'XV',
+  ],
+  suzuki: [
+    'Across', 'Alto', 'Baleno', 'Celerio', 'Grand Vitara', 'Ignis', 'Jimny',
+    'S-Cross', 'Splash', 'Swift', 'SX4', 'Vitara', 'Wagon R',
+  ],
+  skoda: [
+    'Citigo', 'Enyaq', 'Fabia', 'Felicia', 'Kamiq', 'Karoq', 'Kodiaq',
+    'Octavia', 'Rapid', 'Roomster', 'Scala', 'Superb', 'Yeti',
+  ],
 };
 
 export function mergeExtraModels(catalog: CatalogMake[]): CatalogMake[] {
   const byMake = new Map(catalog.map((m) => [m.make.toLowerCase(), m]));
 
   for (const make of catalog) {
-    const extra = EXTRA_MODELS[make.make.toLowerCase()];
+    const extra = EXTRA_MODELS[makeKey(make.make)];
     if (!extra) continue;
     const existingModels = new Set(make.models.map((m) => m.model.toLowerCase()));
     const added: CatalogModel[] = extra
@@ -164,8 +212,24 @@ export function mergeExtraModels(catalog: CatalogMake[]): CatalogMake[] {
  * nothing but noise. Makes outside the twenty still fall back to it: an
  * imperfect list beats an empty one, and the monteur can read.
  */
+/**
+ * Accents folded away for lookup.
+ *
+ * The supplier writes "Citroën" and "Škoda"; our own lists are keyed plainly.
+ * Without folding, Citroën matched no curated list and fell back to the feed
+ * while Citroen matched one — so the picker showed the make twice, once clean
+ * and once full of junk.
+ */
+export function makeKey(make: string): string {
+  return make
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
 export function pickerModels(make: string, fromCatalogue: string[]): string[] {
-  const curated = EXTRA_MODELS[make.trim().toLowerCase()];
+  const curated = EXTRA_MODELS[makeKey(make)];
   const source = curated ?? fromCatalogue;
 
   const seen = new Map<string, string>();
