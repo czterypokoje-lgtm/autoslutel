@@ -8,7 +8,7 @@ export default function VerifiedReviewBanner() {
         
         {/* Left Section */}
         <div className={styles.leftSection}>
-          <div className={styles.supertitle}>NEDERLAND'S TOP AUTOSLOTENMAKER</div>
+          <div className={styles.supertitle}>NEDERLAND&apos;S TOP AUTOSLOTENMAKER</div>
           <h2 className={styles.title}>
             Wat Geverifieerde Klanten<br/>Zeggen Over Onze Service
           </h2>
