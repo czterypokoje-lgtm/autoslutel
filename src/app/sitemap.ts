@@ -3,7 +3,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 import { DIENSTEN } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
-import { BLOG_POSTS } from '@/config/services';
+import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
 import { lastModifiedFor } from '@/lib/contentDates';
 import fs from 'fs';
 import path from 'path';
@@ -88,15 +88,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
    * should only ever list final URLs, never redirects.
    */
   // 8. Blog Pages
-  // These slugs are 301'd in next.config.ts. A sitemap should only list final
-  // URLs, so listing them wasted crawl budget on four guaranteed redirects.
-  const REDIRECTED_BLOG_SLUGS = new Set([
-    'auto-openen-zonder-sleutel-tips-hulp',
-    'auto-openen-zonder-sleutel-schadevrij',
-    'autosleutel-bijmaken-tips-snel-veilig',
-    'sleutel-bijmaken-auto-mobiele-service',
-  ]);
-
   const blogPages = BLOG_POSTS
     .filter(b => !REDIRECTED_BLOG_SLUGS.has(b.slug))
     .map(b => ({

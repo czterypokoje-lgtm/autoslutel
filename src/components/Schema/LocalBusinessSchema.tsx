@@ -83,13 +83,20 @@ export default function LocalBusinessSchema() {
     priceRange: '€€',
     paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'iDEAL', 'Pin'],
     currenciesAccepted: 'EUR',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: parseFloat(SITE_CONFIG.rating),
-      reviewCount: parseInt(SITE_CONFIG.reviewCount, 10),
-      bestRating: 5,
-      worstRating: 1,
-    },
+    /*
+     * No aggregateRating.
+     *
+     * The reviews are real, but they live on our Google Business Profile, not
+     * on this page. Google calls that self-serving — a business rating itself
+     * on its own site — and states plainly that pages using LocalBusiness or
+     * Organization markup are "ineligible for the star review feature". So
+     * these stars were never being shown; the markup only asserted something
+     * Google's own guidance says not to assert, on a domain that can do
+     * without the attention.
+     *
+     * The 5.0 in Google Maps and the local pack comes from the Business
+     * Profile itself and is untouched by this.
+     */
     sameAs: [
       SITE_CONFIG.social.facebook,
       SITE_CONFIG.social.instagram,

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { BLOG_POSTS } from '@/config/services';
+import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
@@ -24,7 +24,9 @@ export default function BlogPage() {
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '1.5rem' }}>
-          {BLOG_POSTS.map((post) => (
+          {/* Redirected posts are not listed: a link to a 301 spends a
+              visitor's click and a crawler's budget on a hop. */}
+          {BLOG_POSTS.filter((post) => !REDIRECTED_BLOG_SLUGS.has(post.slug)).map((post) => (
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}

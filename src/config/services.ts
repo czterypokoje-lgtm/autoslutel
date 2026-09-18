@@ -1,3 +1,22 @@
+/**
+ * Posts that now 301 elsewhere (see next.config.ts).
+ *
+ * They stay in BLOG_POSTS because their bodies are still referenced and the
+ * redirect needs a slug to have existed, but nothing should link to them:
+ * the blog index was still listing all four, so every visitor and crawler
+ * following one landed on a redirect, and four internal links pointed at
+ * URLs that pass their value on rather than holding it.
+ *
+ * One list, used by the index and the sitemap alike, so the two cannot
+ * disagree about which posts are live.
+ */
+export const REDIRECTED_BLOG_SLUGS = new Set([
+  'auto-openen-zonder-sleutel-tips-hulp',
+  'auto-openen-zonder-sleutel-schadevrij',
+  'autosleutel-bijmaken-tips-snel-veilig',
+  'sleutel-bijmaken-auto-mobiele-service',
+]);
+
 export const BLOG_POSTS = [
   {
     /*
@@ -12,7 +31,7 @@ export const BLOG_POSTS = [
     slug: 'contactslot-defect-sleutel-draait-niet',
     title: 'Contactslot Defect: Sleutel Draait Niet Meer Om',
     excerpt:
-      'Draait uw sleutel niet meer of alleen met kracht? Meestal is het contactslot versleten, niet de sleutel. Hoe u het verschil herkent, wat reparatie kost en wanneer vervangen nodig is.',
+      'Draait uw sleutel niet meer, of alleen met kracht? Meestal is het contactslot versleten, niet de sleutel. Zo herkent u het verschil — en wat het kost.',
     keywords: [
       'contactslot defect',
       'sleutel draait niet in contactslot',
@@ -41,7 +60,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'verzekering-dekt-autosleutel-vervangen',
-    title: 'Wordt Autosleutel Vervanging Vergoed door de Verzekering in NL?',
+    title: 'Vergoedt Uw Verzekering het Vervangen van een Autosleutel?',
     excerpt: 'All Risk, WA+, of WA? Wij leggen uit welke polissen vergoeden en hoe u claimt.',
     keywords: ['verzekering dekt autosleutel', 'autosleutel verzekering claim'],
     publishDate: '2026-02-05',
@@ -65,7 +84,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'ghost-immobiliser-utrecht',
-    title: 'Ghost Immobiliser: Waarom Elke Keyless Auto in Utrecht Er Een Nodig Heeft',
+    title: 'Ghost Immobiliser: Bescherming voor Elke Keyless Auto',
     excerpt: 'Relay attacks in Utrecht en omgeving nemen toe. Ghost immobiliser is de definitieve oplossing.',
     keywords: ['ghost immobiliser utrecht', 'relay attack bescherming'],
     publishDate: '2026-02-26',
@@ -73,7 +92,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'faraday-pouch-bescherming-relay-attack',
-    title: 'Faraday Pouch: Het €50 Apparaat Dat Uw €30.000 Auto Beschermt',
+    title: 'Faraday Pouch: €50 Bescherming tegen Relay-diefstal',
     excerpt: 'Keyless entry is handig maar gevaarlijk. Faraday pouch + Ghost = maximale bescherming.',
     keywords: ['faraday pouch bescherming', 'relay attack voorkomen'],
     publishDate: '2026-03-05',
@@ -105,7 +124,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'autosleutel-gestolen-wat-te-doen',
-    title: 'Autosleutel Gestolen of Auto Gestolen? Direct Actie Stappenplan',
+    title: 'Autosleutel Gestolen? Dit Moet U Direct Doen',
     excerpt: 'Is uw autosleutel gestolen of heeft u het vermoeden van autodiefstal? Auto gestolen wat nu? Lees hier welke stappen u direct moet ondernemen om uw auto te beveiligen en de verzekeringsdekking te garanderen.',
     keywords: ['autosleutel gestolen', 'auto gestolen met sleutel', 'autosleutel deprogrammeren', 'verzekering autosleutel diefstal', 'auto gestolen wat nu'],
     publishDate: '2026-04-02',
@@ -113,7 +132,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'auto-beveiligen-tegen-diefstal-tips',
-    title: 'Auto Beveiligen Tegen Diefstal: Effectieve Tips & Strategieën',
+    title: 'Auto Beveiligen Tegen Diefstal: Tips die Werken',
     excerpt: 'Ontdek effectieve tips om je auto te beveiligen tegen diefstal. Leer hoe je autodiefstal kunt voorkomen met fysieke en elektronische maatregelen. Zorg voor gemoedsrust met onze uitgebreide beveiligingsgids.',
     keywords: ['auto beveiligen tegen diefstal', 'effectieve tips voor auto beveiliging', 'autodiefstal voorkomen', 'keyless entry beveiligen', 'autosleutel veilig opbergen'],
     publishDate: '2026-07-11',
@@ -185,9 +204,9 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'autosleutel-repareren-tips-kosten-besparen',
-    title: 'Autosleutel Repareren: Tips voor Zelf doen en Kosten Besparen',
+    title: 'Autosleutel Repareren: Zelf Doen en Kosten Besparen',
     excerpt: 'Een kapotte autosleutel hoeft niet duur te zijn. Ontdek praktische tips om zelf je batterij of behuizing te repareren, en bespaar flink op de kosten!',
-    keywords: ['autosleutel repareren', 'zelf autosleutel repareren', 'autosleutel behuizing vervangen', 'autosleutel batterij vervangen', 'autosleutel repareren kosten'],
+    keywords: ['autosleutel repareren', 'zelf autosleutel repareren', 'autosleutel behuizing vervangen', 'autosleutel repareren kosten', 'kapotte autosleutel'],
     publishDate: '2026-07-14',
     readTime: '6 min',
   },
