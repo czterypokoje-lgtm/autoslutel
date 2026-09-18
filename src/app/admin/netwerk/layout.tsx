@@ -8,10 +8,11 @@ export const dynamic = 'force-dynamic';
 /**
  * The network shell: servers down the left, that server's channels beside it.
  *
- * A server is a country. Nederland today, België and Deutschland later — and
- * that boundary is not decoration: the price list, the VAT and the contract all
- * differ across it, so a technician in Antwerp has no business in the Dutch
- * pricing channel.
+ * A server is a country: Nederland, Duitsland, België. The boundary sorts the
+ * conversation, not the people — every monteur can read all three (0042).
+ * Pricing, VAT and contracts do differ per country, but these channels move
+ * knowledge rather than money, and the person who solved this exact car last
+ * week is as likely to be over a border as not.
  *
  * Which server you are looking at rides in the URL rather than in state, so a
  * channel link can be shared and the page works before it hydrates. The whole
