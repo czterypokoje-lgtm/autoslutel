@@ -44,6 +44,12 @@ export default async function NetwerkLayout({
 
   const groups: { title: string; type: string; prefix: string }[] = [
     { title: 'Algemeen', type: 'general', prefix: '#' },
+    /*
+     * Problems before makes: twenty make channels push everything under them
+     * off a phone screen, and "mijn programmer doet het niet" is the reason
+     * someone opens this at all.
+     */
+    { title: 'Problemen', type: 'probleem', prefix: '#' },
     { title: 'Automerken', type: 'make', prefix: '#' },
     { title: 'Regio’s', type: 'region', prefix: '#' },
     { title: 'Gesprekken', type: 'dm', prefix: '@' },

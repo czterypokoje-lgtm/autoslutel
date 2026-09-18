@@ -260,3 +260,52 @@
     width: auto;
   }
 }
+
+/* ── collapsible channel groups ───────────────────────────────────────
+   Twenty make channels make a long sidebar; a monteur who only reads
+   Problemen should not scroll past every marque to reach it. */
+
+.groupToggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: var(--sp-2) var(--sp-4);
+  border: none;
+  background: transparent;
+  color: var(--crm-muted);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+}
+
+.groupToggle:hover {
+  color: var(--crm-ink);
+}
+
+.caret,
+.caretShut {
+  flex: none;
+  transition: transform 0.15s ease;
+}
+
+.caretShut {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret,
+  .caretShut {
+    transition: none;
+  }
+}
+
+.groupCount {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}

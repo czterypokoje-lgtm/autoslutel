@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, Settings2, ShoppingBag, X } from 'lucide-react';
+import { ChevronDown, Menu, Settings2, ShoppingBag, X } from 'lucide-react';
 import styles from './netwerk.module.css';
 
 interface Server {
@@ -39,6 +39,8 @@ interface Group {
  * layout.tsx and handed down as props, so a channel link works before this
  * hydrates, same as the rest of this shell.
  */
+const SHUT_KEY = 'as24_netwerk_shut';
+
 export default function NetworkSidebar({
   servers,
   active,
@@ -53,6 +55,38 @@ export default function NetworkSidebar({
   channels: Channel[];
 }) {
   const [open, setOpen] = useState(false);
+  /*
+   * Which groups are collapsed, remembered in this browser.
+   *
+   * Twenty make channels is a long sidebar, and a monteur who only ever
+   * reads Problemen should not have to scroll past every marque each time.
+   * Read lazily inside useState so the server render and the first client
+   * render agree — reading localStorage during render directly would
+   * mismatch and blank the list on hydration.
+   */
+  const [shut, setShut] = useState<Set<string>>(() => {
+    if (typeof window === 'undefined') return new Set();
+    try {
+      const raw = window.localStorage.getItem(SHUT_KEY);
+      return new Set(raw ? (JSON.parse(raw) as string[]) : []);
+    } catch {
+      return new Set();
+    }
+  });
+
+  function toggleGroup(type: string) {
+    setShut((previous) => {
+      const next = new Set(previous);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      try {
+        window.localStorage.setItem(SHUT_KEY, JSON.stringify([...next]));
+      } catch {
+        // Private mode, storage blocked — the choice still holds for this visit.
+      }
+      return next;
+    });
+  }
 
   return (
     <>
@@ -119,19 +153,35 @@ export default function NetworkSidebar({
             {groups.map((group) => {
               const inGroup = channels.filter((channel) => channel.type === group.type);
               if (!inGroup.length) return null;
+              const collapsed = shut.has(group.type);
               return (
                 <div className={styles.channelGroup} key={group.type}>
-                  <div className={styles.groupTitle}>{group.title}</div>
-                  {inGroup.map((channel) => (
-                    <Link
-                      key={channel.id}
-                      href={`/admin/netwerk/${channel.id}`}
-                      className={styles.channelLink}
-                      onClick={() => setOpen(false)}
-                    >
-                      <span className={styles.hash}>{group.prefix}</span> {channel.name}
-                    </Link>
-                  ))}
+                  <button
+                    type="button"
+                    className={styles.groupToggle}
+                    onClick={() => toggleGroup(group.type)}
+                    aria-expanded={!collapsed}
+                  >
+                    <ChevronDown
+                      size={12}
+                      strokeWidth={2.5}
+                      className={collapsed ? styles.caretShut : styles.caret}
+                      aria-hidden="true"
+                    />
+                    {group.title}
+                    <span className={styles.groupCount}>{inGroup.length}</span>
+                  </button>
+                  {!collapsed &&
+                    inGroup.map((channel) => (
+                      <Link
+                        key={channel.id}
+                        href={`/admin/netwerk/${channel.id}`}
+                        className={styles.channelLink}
+                        onClick={() => setOpen(false)}
+                      >
+                        <span className={styles.hash}>{group.prefix}</span> {channel.name}
+                      </Link>
+                    ))}
                 </div>
               );
             })}
