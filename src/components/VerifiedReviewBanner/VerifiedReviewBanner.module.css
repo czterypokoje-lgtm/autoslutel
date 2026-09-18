@@ -1,5 +1,11 @@
+/*
+ * #1150c2 was a royal blue that appeared nowhere else on the site. The band is
+ * now the same navy the rest of the brand uses — and the same one the home
+ * page gallery band sits on, so the two dark sections match instead of
+ * clashing.
+ */
 .bannerContainer {
-  background: #1150c2;
+  background: var(--navy-800);
   color: #fff;
   width: 100%;
 }
@@ -31,15 +37,25 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 0.6rem;
 }
 
+/*
+ * The heading rendered near-black on the blue band. Not an inheritance
+ * problem to debug twice: globals.css sets `color` on `h1, h2, h3...`
+ * directly, and a rule that targets the element always beats a colour merely
+ * inherited from .bannerContainer. The only fix is to state it here.
+ *
+ * orange-400 rather than orange-500: the brighter tint holds ~4.8:1 against
+ * the navy, where the darker one starts to sink into it.
+ */
 .title {
   font-size: clamp(1.75rem, 3vw, 2.25rem);
   font-weight: 800;
   line-height: 1.2;
   margin: 0;
+  color: var(--orange-400);
 }
 
 .divider {
