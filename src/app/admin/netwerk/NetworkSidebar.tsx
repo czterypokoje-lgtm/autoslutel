@@ -210,9 +210,22 @@ export default function NetworkSidebar({
 
             <div className={styles.channelGroup}>
               <div className={styles.groupTitle}>Marktplaats</div>
-              <Link href="/admin/netwerk/marktplaats" className={styles.channelLink} onClick={() => setOpen(false)}>
-                <ShoppingBag size={14} strokeWidth={2} style={{ marginRight: 6 }} /> Tools &amp; onderdelen
-              </Link>
+              {canEnter ? (
+                <Link href="/admin/netwerk/marktplaats" className={styles.channelLink} onClick={() => setOpen(false)}>
+                  <ShoppingBag size={14} strokeWidth={2} style={{ marginRight: 6 }} /> Tools &amp; onderdelen
+                </Link>
+              ) : (
+                /* Behind the same door as the channels — buying and selling
+                   between monteurs is part of what Pro is for. */
+                <span
+                  className={styles.channelLocked}
+                  title="Alleen voor Pro en geverifieerde monteurs"
+                >
+                  <ShoppingBag size={14} strokeWidth={2} style={{ marginRight: 6 }} /> Tools &amp;
+                  onderdelen
+                  <Lock size={11} strokeWidth={2.2} aria-hidden="true" />
+                </span>
+              )}
             </div>
 
             {groups.map((group) => {

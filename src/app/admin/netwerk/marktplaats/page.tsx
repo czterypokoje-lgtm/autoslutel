@@ -32,6 +32,38 @@ interface Listing {
  */
 export default async function MarktplaatsPage() {
   const user = await requireCrmUser('/admin/netwerk/marktplaats');
+
+  /*
+   * The same Pro gate as the channels, enforced here and not only in the
+   * sidebar — hiding a link is not access control, and this page is one
+   * typed URL away otherwise.
+   */
+  const isOfficeUser = user.role === 'owner' || user.role === 'kantoor';
+  if (!isOfficeUser) {
+    const gate = await createSupabaseServerClient();
+    const { data: meRow } = await gate
+      .from('technicians')
+      .select('verified, technician_subscription (tier)')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    const sub = (meRow?.technician_subscription ?? null) as
+      | { tier?: string }
+      | { tier?: string }[]
+      | null;
+    const subTier = Array.isArray(sub) ? sub[0]?.tier : sub?.tier;
+    const mayEnter = meRow?.verified === true || subTier === 'pro' || subTier === 'premium';
+    if (!mayEnter) {
+      return (
+        <div className={styles.panel} style={{ padding: 24 }}>
+          <h1 style={{ fontSize: 18, margin: '0 0 8px' }}>Alleen voor Pro en geverifieerde monteurs</h1>
+          <p style={{ color: 'var(--crm-muted)', margin: 0, lineHeight: 1.6 }}>
+            De marktplaats voor tools en onderdelen hoort bij een Pro-account. Vraag het
+            kantoor om toegang.
+          </p>
+        </div>
+      );
+    }
+  }
   const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
