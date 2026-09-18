@@ -1,16 +1,15 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import Link from 'next/link';
-import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import { SITE_CONFIG } from '@/config/site.config';
 import ContactForm from '@/components/ContactForm/ContactForm';
-import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
-import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import { Phone, Mail, Clock, MapPin, MessageSquareText } from 'lucide-react';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
     absolute: 'Contact & 24/7 Spoedhulp | Autosleutel24',
   },
-  description: `Neem contact op met ${SITE_CONFIG.fullName}. Bel, WhatsApp, of stuur een bericht. 24/7 bereikbaar. Reactietijd: ${SITE_CONFIG.responseTime}.`,
+  description: `Neem contact op met ${SITE_CONFIG.fullName}. Bel of stuur een bericht. 24/7 bereikbaar. Reactietijd: ${SITE_CONFIG.responseTime}.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/contact`,
   },
@@ -25,222 +24,130 @@ const breadcrumbSchema = {
   ],
 };
 
-const faqItems = [
-  {
-    q: "Wat als jullie mijn autosleutel niet kunnen bijmaken?",
-    a: "Wij bedienen 95%+ van alle automerken in Nederland. Als het ons om technische redenen niet lukt, betaalt u helemaal niets. No cure, no pay."
-  },
-  {
-    q: "Moet ik vooraf betalen?",
-    a: "Nee. U betaalt pas na oplevering en als u de sleutel zelf heeft getest. De vaste prijs wordt altijd vooraf afgesproken zodat u weet waar u aan toe bent."
-  },
-  {
-    q: "Komen jullie ook 's nachts?",
-    a: "Ja, onze mobiele service is 24/7 beschikbaar, ook in het weekend. En wij rekenen geen bizarre toeslagen voor avond- of nachturen."
-  },
-  {
-    q: "Werkt dit ook zonder originele sleutel?",
-    a: "Ja. Zelfs als u alle sleutels kwijt bent (All Keys Lost), decoderen wij uw slot mechanisch en programmeren we een gloednieuwe sleutel direct in op uw contactslot of ECU (boordcomputer)."
-  }
-];
-
-type Props = {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-};
-
-export default async function ContactPage(props: Props) {
-  const searchParams = await props.searchParams;
-  const q = typeof searchParams?.q === 'string' ? searchParams.q : null;
-  
-  const defaultH1 = `Autosleutel Bijmaken? Gemiddeld Binnen ${SITE_CONFIG.responseTime} Bij U`;
-  let h1Text = defaultH1;
-  if (q) {
-    // Capitalize each word from the query to make it look like a natural Title
-    const formattedQuery = q.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    h1Text = `${formattedQuery}? Gemiddeld Binnen ${SITE_CONFIG.responseTime} Bij U`;
-  }
-
-  const steps = [
-    { num: "1", title: "Bel of vul in", icon: "📞" },
-    { num: "2", title: `Monteur onderweg (gem. ${SITE_CONFIG.responseTime})`, icon: "🚐" },
-    { num: "3", title: "Sleutel gemaakt op locatie", icon: "🔑" },
-    { num: "4", title: "Testen + garantie", icon: "✅" },
-  ];
-
+export default function ContactPage() {
   return (
     <>
-      <Script id="contact-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <main>
+      <Script
+        id="breadcrumb-schema-contact"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <main style={{ width: '100%', overflowX: 'hidden', background: '#fff' }}>
         
-        {/* ── HERO & SUBHEADLINE ─────────────────────────────────────── */}
-        <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 1.5rem', textAlign: 'center', color: '#fff' }}>
-          <div className="container" style={{ maxWidth: '900px', margin: '0 auto' }}>
-            <h1 style={{ color: '#fff', fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.1 }}>
-              {h1Text}
-            </h1>
-            <p style={{ fontSize: '1.25rem', color: 'rgba(255,255,255,0.85)', marginBottom: '2.5rem', lineHeight: 1.5, maxWidth: '700px', margin: '0 auto 2.5rem' }}>
-              Reservesleutel, sleutel kwijt of contactslot defect — onze monteur komt 24/7 naar u toe. 
-              <strong> Vaste prijs vooraf, geen sleepkosten.</strong>
-            </p>
-
-            <div style={{ marginBottom: '3rem' }}>
-              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
-            </div>
-
-            {/* ── CTAs Side by Side ── */}
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>
-              <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', background: 'var(--color-primary)', color: '#fff', padding: '1.25rem 2rem', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 15px rgba(249, 115, 22, 0.3)' }}>
-                <span>📞 Bel Direct: {SITE_CONFIG.phone}</span>
-              </a>
-              <a href="#form-section" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', background: '#fff', color: 'var(--navy-900)', padding: '1.25rem 2rem', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none', border: '2px solid transparent' }}>
-                <span>📝 Gratis Offerte Aanvragen</span>
-              </a>
-            </div>
-
-            {/* ── Trust Strip ── */}
-            <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap', fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> 24/7 Beschikbaar</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> Vaste prijs vanaf €{SITE_CONFIG.prices.unlock}</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> 12 mnd garantie</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><span style={{ color: 'var(--color-primary)' }}>✓</span> Verzekerd</span>
-            </div>
+        {/* HERO SECTION */}
+        <section style={{
+          background: 'linear-gradient(180deg, var(--navy-50) 0%, #ffffff 100%)',
+          padding: '6rem 1.5rem 4rem',
+          textAlign: 'center',
+          borderBottom: '1px solid var(--color-border)'
+        }}>
+          <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
+             <div style={{ display: 'inline-flex', alignItems: 'center', background: '#e0ebf6', color: 'var(--color-primary)', padding: '0.4rem 1.25rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1.5rem' }}>
+                Contact Us
+             </div>
+             <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, color: 'var(--navy-900)', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
+                Probleem met uw autosleutel?<br/>Wij kunnen helpen!
+             </h1>
+             <p style={{ fontSize: '1.15rem', color: 'var(--gray-600)', lineHeight: 1.6, maxWidth: '600px', margin: '0 auto' }}>
+                Professionele autoslotenmaker service in Nederland. Duidelijke prijzen, betrouwbaar werk en mobiele hulp wanneer u het nodig heeft. Bel <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: 'var(--color-primary)', fontWeight: 600, textDecoration: 'none' }}>{SITE_CONFIG.phone}</a>.
+             </p>
           </div>
         </section>
 
-        {/* 3 steps HowTo (Full Width) */}
-        <div style={{ padding: '3.5rem 0', background: '#ffffff', borderBottom: '1px solid var(--color-border)' }}>
-          <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem' }}>
-            <HowItWorks variant="default" />
-          </div>
-        </div>
-
-        <div className="container" style={{ maxWidth: '1100px', padding: '4rem 1.5rem' }}>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '4rem', alignItems: 'start' }}>
+        {/* MAIN SPLIT SECTION */}
+        <section style={{ padding: '5rem 1.5rem', background: '#fff' }}>
+          <div className={`container ${styles.splitGrid}`} style={{ maxWidth: '1200px', margin: '0 auto' }}>
             
-            {/* ── LEFT COLUMN: SOCIAL PROOF, PRICING, HOW IT WORKS ── */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+            {/* LEFT COLUMN: FORM */}
+            <div className={styles.leftCol}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                <MessageSquareText size={32} color="var(--color-primary)" strokeWidth={2} />
+                <h2 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--navy-900)', letterSpacing: '-0.01em' }}>Neem Contact Op</h2>
+              </div>
+              <p style={{ color: 'var(--gray-600)', lineHeight: 1.6, marginBottom: '2.5rem', fontSize: '1.05rem' }}>
+                Autosleutel24 is de professionele autoslotenmaker. Vul het onderstaande formulier in en een van onze vertegenwoordigers helpt u zo snel mogelijk om uw sleutelprobleem op te lossen.
+              </p>
               
-              {/* Pricing Table */}
-              <div>
-                <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Tarieven</h2>
-                <p style={{ color: 'var(--color-text-muted)', marginBottom: '1.5rem', fontWeight: 600 }}>Geen verrassingen achteraf. Dit betaalt u — punt.</p>
-                <div style={{ overflowX: 'auto', borderRadius: '8px', boxShadow: 'var(--shadow-md)' }}>
-                  <table style={{ width: '100%', minWidth: '500px', borderCollapse: 'collapse', background: '#fff', textAlign: 'left' }}>
-                    <thead style={{ background: 'var(--navy-900)', color: '#fff' }}>
-                      <tr>
-                        <th style={{ padding: '1rem' }}>Sleutel Type</th>
-                        <th style={{ padding: '1rem' }}>Dealer Prijs</th>
-                        <th style={{ padding: '1rem', background: 'var(--color-primary)' }}>Onze Prijs</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                        <td style={{ padding: '1rem' }}>Standaard sleutel</td>
-                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>€400 - €800</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
-                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €{SITE_CONFIG.prices.unlock}</td>
-                      </tr>
-                      <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                        <td style={{ padding: '1rem' }}>Klapsleutel / Flip Key</td>
-                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>€400 - €800</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
-                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €149</td>
-                      </tr>
-                      <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                        <td style={{ padding: '1rem' }}>Smart Key / Keyless</td>
-                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>€400 - €800</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
-                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €199</td>
-                      </tr>
-                      <tr>
-                        <td style={{ padding: '1rem' }}>Alle sleutels kwijt (geen werkende sleutel)</td>
-                        <td style={{ padding: '1rem', color: '#64748b' }}><span style={{ textDecoration: 'line-through' }}>€500 - €1500</span><br/><small style={{ fontSize: '0.75rem' }}>(1-2 weken levertijd bij dealer)</small></td>
-                        <td style={{ padding: '1rem', fontWeight: 700 }}>Vanaf €299</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Social Proof */}
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-                  <div style={{ fontSize: '1.25rem', color: '#fbbf24' }}>★★★★★</div>
-                  <span style={{ fontWeight: 700 }}>{SITE_CONFIG.rating}/5</span>
-                  
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div style={{ padding: '1.5rem', background: '#fff', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
-                    <div style={{ color: '#fbbf24', marginBottom: '0.5rem', fontSize: '1.1rem' }}>★★★★★</div>
-                    <p style={{ fontStyle: 'italic', marginBottom: '1rem', color: 'var(--color-text-primary)' }}>&ldquo;Sleutel van mijn Audi A4 kwijt, dealer had 8 dagen wachttijd. Binnen 40 minuten ter plaatse, sleutel werkte direct.&rdquo;</p>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-muted)' }}>— Mark D., Utrecht</div>
-                  </div>
-                  
-                  <div style={{ padding: '1.5rem', background: '#fff', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
-                    <div style={{ color: '#fbbf24', marginBottom: '0.5rem', fontSize: '1.1rem' }}>★★★★★</div>
-                    <p style={{ fontStyle: 'italic', marginBottom: '1rem', color: 'var(--color-text-primary)' }}>&ldquo;Zaterdagavond gebeld, dacht dat er niemand zou opnemen. Binnen 35 minuten stond de monteur voor de deur.&rdquo;</p>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-muted)' }}>— Sanne V., Hilversum</div>
-                  </div>
-
-                  <div style={{ padding: '1.5rem', background: '#fff', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
-                    <div style={{ color: '#fbbf24', marginBottom: '0.5rem', fontSize: '1.1rem' }}>★★★★★</div>
-                    <p style={{ fontStyle: 'italic', marginBottom: '1rem', color: 'var(--color-text-primary)' }}>&ldquo;Eerlijke prijs, geen verrassingen. Precies wat er van tevoren was afgesproken.&rdquo;</p>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-muted)' }}>— Thomas B., Almere</div>
-                  </div>
-                </div>
-              </div>
-
+              <ContactForm />
+              
+              <p style={{ marginTop: '1.5rem', fontSize: '0.75rem', color: 'var(--gray-400)', lineHeight: 1.5 }}>
+                * Door dit formulier in te dienen, gaat u ermee akkoord dat wij via e-mail of telefoon contact met u opnemen met betrekking tot uw aanvraag.
+              </p>
             </div>
 
-            {/* ── RIGHT COLUMN: FORM & FAQ ── */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+            {/* RIGHT COLUMN: INFO BLOCKS */}
+            <div className={styles.rightCol} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               
-              {/* Form Section */}
-              <div id="form-section" style={{ background: '#fff', padding: '2.5rem 2rem', borderRadius: '16px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)' }}>
-                <h2 style={{ marginBottom: '1.5rem', fontSize: '1.75rem' }}>Gratis Offerte Aanvragen</h2>
-                <ContactForm />
-                {/* We add the microcopy right here via a small wrapper since the form is untouched */}
-                <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--color-text-muted)', marginTop: '1rem', fontWeight: 500 }}>
-                  🕒 Wij bellen u binnen 5 minuten terug — ook &apos;s avonds en in het weekend.
+              {/* TOP BLUE BLOCK */}
+              <div style={{ background: 'var(--color-primary)', color: '#fff', padding: '2.5rem', borderRadius: '16px', boxShadow: '0 20px 40px rgba(13, 33, 55, 0.15)' }}>
+                <h3 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '1rem' }}>Direct Hulp Nodig?</h3>
+                <p style={{ color: 'rgba(255,255,255,0.9)', marginBottom: '2rem', lineHeight: 1.5, fontSize: '1.05rem' }}>
+                  Heeft u het nu direct nodig? Bel ons meteen of stuur een e-mail. Onze meldkamer staat 24/7 klaar om u verder te helpen.
                 </p>
+                <div className={styles.buttonGroup}>
+                  <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary}>
+                    <Phone size={18} strokeWidth={2.5} /> Bel voor Service
+                  </a>
+                  <a href={`mailto:${SITE_CONFIG.email}`} className={styles.btnOutline}>
+                    <Mail size={18} strokeWidth={2.5} /> Stuur een E-mail
+                  </a>
+                </div>
               </div>
 
-              {/* FAQ Section */}
-              <div style={{ background: 'var(--color-bg-alt)', padding: '2rem', borderRadius: '12px' }}>
-                <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Veelgestelde Vragen</h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {faqItems.map((item, idx) => (
-                    <details key={idx} style={{ background: '#fff', padding: '1rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
-                      <summary style={{ fontWeight: 700, cursor: 'pointer', outline: 'none', color: 'var(--navy-900)' }}>
-                        {item.q}
-                      </summary>
-                      <p style={{ marginTop: '0.75rem', color: 'var(--color-text-primary)', lineHeight: 1.5, fontSize: '0.95rem' }}>
-                        {item.a}
+              {/* BOTTOM GRAY BLOCK */}
+              <div style={{ background: 'var(--navy-50)', padding: '2.5rem', borderRadius: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2.25rem' }}>
+                  
+                  <div style={{ display: 'flex', gap: '1.25rem' }}>
+                    <div style={{ flexShrink: 0, width: '48px', height: '48px', borderRadius: '50%', background: '#fff', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+                      <Phone size={20} strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Telefoonnummer</h4>
+                      <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: 'var(--gray-600)', textDecoration: 'none', fontSize: '1rem' }}>{SITE_CONFIG.phone}</a>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '1.25rem' }}>
+                    <div style={{ flexShrink: 0, width: '48px', height: '48px', borderRadius: '50%', background: '#fff', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+                      <Clock size={20} strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Openingstijden</h4>
+                      <p style={{ color: 'var(--gray-600)', fontSize: '1rem', lineHeight: 1.5 }}>
+                        Maandag – Zondag: 24/7 bereikbaar<br/>
+                        <span style={{ fontSize: '0.9rem', color: 'var(--gray-500)' }}>Nooddienst altijd beschikbaar</span>
                       </p>
-                    </details>
-                  ))}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '1.25rem' }}>
+                    <div style={{ flexShrink: 0, width: '48px', height: '48px', borderRadius: '50%', background: '#fff', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+                      <Mail size={20} strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>E-mailadres</h4>
+                      <a href={`mailto:${SITE_CONFIG.email}`} style={{ color: 'var(--gray-600)', textDecoration: 'none', fontSize: '1rem' }}>{SITE_CONFIG.email}</a>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '1.25rem' }}>
+                    <div style={{ flexShrink: 0, width: '48px', height: '48px', borderRadius: '50%', background: '#fff', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+                      <MapPin size={20} strokeWidth={2} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Werkgebied</h4>
+                      <p style={{ color: 'var(--gray-600)', fontSize: '1rem', lineHeight: 1.5 }}>
+                        Landelijke dekking in Nederland. Wij komen direct naar u toe.
+                      </p>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
             </div>
 
-          </div>
-        </div>
-
-        {/* ── FINAL CTA BLOCK ────────────────────────────────────────── */}
-        <section style={{ background: 'var(--navy-900)', padding: '4rem 1.5rem', textAlign: 'center', color: '#fff' }}>
-          <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2 style={{ color: '#fff', fontSize: '2.25rem', fontWeight: 800, marginBottom: '1rem' }}>Nog Steeds Zonder Sleutel? Wij Staan Al Klaar.</h2>
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
-              24/7 bereikbaar — ook nu. Neem direct contact op voor een vaste prijsopgave en ETA.
-            </p>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', background: 'var(--color-primary)', color: '#fff', padding: '1.25rem 2.5rem', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 15px rgba(249, 115, 22, 0.3)' }}>
-                <span>📞 Bel: {SITE_CONFIG.phone}</span>
-              </a>
-              <a href="#form-section" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', background: 'transparent', border: '2px solid rgba(255,255,255,0.2)', color: '#fff', padding: '1.25rem 2.5rem', borderRadius: '8px', fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none' }}>
-                <span>📝 Offerte Aanvragen</span>
-              </a>
-            </div>
           </div>
         </section>
 

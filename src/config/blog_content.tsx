@@ -108,18 +108,23 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Wat kost het werkelijk?</h3>
       <p>
-        Uit onze eigen afgeronde klussen van het afgelopen jaar ligt het zwaartepunt rond de{' '}
-        <strong>&euro;180</strong>. De meeste personenauto&rsquo;s vallen tussen de{' '}
-        <strong>&euro;170 en &euro;230</strong> &mdash; denk aan een Volkswagen Golf, Kia Picanto
-        of Fiat Panda. Bedrijfswagens en modellen waarbij het slot met de startonderbreker
-        samenhangt, lopen op tot ongeveer <strong>&euro;450</strong>; bij ons was de duurste een
-        Ford Transit.
+        Het vervangen van een contactslot kost bij ons doorgaans tussen de{' '}
+        <strong>&euro;300 en &euro;500</strong>, inclusief voorrijden, het onderdeel en het
+        aanleren van de sleutel aan de startonderbreker. Waar u binnen die marge uitkomt, hangt af
+        van het model: hoe meer het slot met de boordelektronica verweven is, hoe meer werk het
+        aanleren kost. Bedrijfswagens zitten doorgaans aan de bovenkant.
       </p>
       <p>
-        Dat zijn bedragen inclusief voorrijden en programmering, uitgevoerd op uw eigen locatie.
-        De dealer werkt met een vast tarief per uur plus onderdelen en vraagt u de auto te
-        brengen &mdash; wat bij een auto die niet start betekent dat er ook nog gesleept moet
-        worden. Het volledige kostenplaatje van die vergelijking staat in ons artikel over{' '}
+        Kan de cilinder gereviseerd worden in plaats van vervangen, dan valt het lager uit &mdash;
+        er is dan geen nieuw slot nodig en uw bestaande sleutel blijft in gebruik. Of dat kan,
+        blijkt pas als de monteur het slot heeft bekeken, dus dat hoort u ter plaatse en niet
+        vooraf aan de telefoon.
+      </p>
+      <p>
+        Alles gebeurt op de plek waar de auto staat. De dealer rekent een uurtarief plus
+        onderdelen en vraagt u de auto te brengen &mdash; bij een auto die niet start betekent dat
+        ook nog sleepkosten. Het volledige kostenplaatje van die vergelijking staat in ons artikel
+        over{' '}
         <Link href="/blog/dealer-vs-mobiele-sleutelmaker">
           de dealer tegenover een mobiele sleutelmaker
         </Link>
