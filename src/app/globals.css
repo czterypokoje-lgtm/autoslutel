@@ -367,7 +367,7 @@ button { font-family: inherit; cursor: pointer; }
 .price-table .price-col { font-weight: 700; color: var(--orange-500); white-space: nowrap; }
 
 /* ---- GALLERY GRID (placeholder) ---- */
-.gallery-section { padding: var(--sp-20) 0; background: var(--gray-100); }
+.gallery-section { padding: 0 0 var(--sp-20); background: var(--gray-100); }
 .gallery-grid {
   display: flex;
   overflow-x: auto;

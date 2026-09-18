@@ -1,54 +1,68 @@
-.mapRoot {
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  background: #f8fafc;
-}
+/*
+ * Sizing the My Maps embed.
+ *
+ * Two rules do the real work: the root always has a *definite* height, and the
+ * iframe is absolutely positioned against it. Percentage heights need a
+ * definite parent, and the old markup had neither on mobile.
+ */
 
-.iframeWrapper {
+.mapRoot {
   position: relative;
   width: 100%;
-  height: 440px;
   overflow: hidden;
+  border-radius: 12px;
+  background: #e8eaf0;
+
+  /* A ratio is a height the box can always work out, because it always has a
+     width. Slightly taller than wide suits the Netherlands, which is a tall
+     country, and keeps the whole service area in frame on a phone. */
+  aspect-ratio: 4 / 4.3;
+
+  /*
+   * How much of the top to cut away.
+   *
+   * My Maps embeds ship a title bar that cannot be turned off by any parameter,
+   * so it is cropped by pushing the iframe up behind the top edge. It wraps to
+   * two lines at phone widths, which is why mobile cuts more — the previous
+   * 65px was measured on a desktop-width single line and left the second line
+   * showing. If a sliver of the bar ever reappears, this one number is the
+   * thing to raise.
+   */
+  --map-crop: 92px;
 }
 
-/* Hide the Google My Maps top banner which is ~58px tall */
 .googleMapIframe {
   position: absolute;
-  top: -58px;
+  top: calc(var(--map-crop) * -1);
   left: 0;
   width: 100%;
-  height: calc(100% + 58px);
+
+  /* Give back exactly what the crop took, so the map still fills the frame. */
+  height: calc(100% + var(--map-crop));
+  border: none;
+  display: block;
 }
 
-.loadingSpinnerOverlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(4px);
-  z-index: 10;
-  color: var(--navy-800);
-  font-weight: 600;
-  font-size: 0.95rem;
-}
+@media (min-width: 900px) {
+  .mapRoot {
+    /*
+     * Back to filling the column beside the province list. Here the height is
+     * definite for a different reason: .imageCol is a stretched flex item in a
+     * row, so 100% resolves. min-height keeps it sane if the list is short.
+     */
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 520px;
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(232, 82, 10, 0.2);
-  border-top-color: #E8520A;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
+    /*
+     * The column stretches to match the province accordion beside it, which is
+     * long — without a cap the map was rendering 1862px tall, most of it empty
+     * sea. The cap is not new behaviour being added so much as old behaviour
+     * being bounded.
+     */
+    max-height: 620px;
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+    /* One line at this width. */
+    --map-crop: 60px;
   }
 }

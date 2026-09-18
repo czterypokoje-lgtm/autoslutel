@@ -1,38 +1,49 @@
 /*
- * Two auto-scrolling photo rows. No JavaScript: the whole thing is one
- * keyframe on a doubled track, which is why it stays smooth on a phone —
- * transform is composited, so the rows never touch the main thread that the
- * home page's INP score is already fighting for.
+ * Two auto-scrolling photo rows on a solid brand band.
+ *
+ * No JavaScript: the whole thing is one keyframe on a doubled track, which is
+ * why it stays smooth on a phone — transform is composited, so the rows never
+ * touch the main thread the home page's INP score is already fighting for.
  */
 
-.wrap {
+.band {
   width: 100%;
-  margin: 2rem 0 0;
+  /* The reference site uses a royal blue that belongs to nothing else here.
+     This is autosleutel24's own primary navy — same idea (a solid brand band
+     framing the photos), in this site's colours. */
+  background: var(--navy-800);
+  padding: 3rem 0 3.25rem;
+  overflow: hidden;
+}
+
+.head {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 0 1.25rem;
+  text-align: center;
 }
 
 .title {
-  font-size: 1.5rem;
+  color: #ffffff;
+  font-size: clamp(1.5rem, 3.4vw, 2.3rem);
   font-weight: 800;
-  margin: 0 0 1.5rem;
-  color: var(--color-text-primary, #0f172a);
+  line-height: 1.2;
+  margin: 0 0 0.6rem;
+  text-wrap: balance;
 }
 
-/*
- * Full bleed. This is mounted as a sibling of .container, not inside it, so
- * plain 100% is already the full width of the screen — no 100vw, which on
- * desktop is the window *including* the scrollbar and would push the rows a
- * few pixels past both edges.
- */
+.subtitle {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  line-height: 1.5;
+  margin: 0;
+  text-wrap: balance;
+}
+
 .viewport {
-  width: 100%;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-
-  /* Fade the two edges so tiles dissolve out instead of being guillotined. */
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
 }
 
 .row {
@@ -41,12 +52,13 @@
 
 .track {
   display: flex;
+  align-items: stretch;
   gap: 0.75rem;
   width: max-content;
   margin: 0;
   padding: 0;
   list-style: none;
-  animation: marquee 44s linear infinite;
+  animation: marquee 46s linear infinite;
   will-change: transform;
 
   /* Half the gap: the doubled track must travel one copy *plus* the gap that
@@ -56,7 +68,7 @@
   --half-gap: 0.375rem;
 }
 
-.reverse .track {
+.reverse {
   animation-direction: reverse;
 }
 
@@ -74,40 +86,53 @@
     transform: translate3d(0, 0, 0);
   }
   to {
-    /* Exactly one copy of the list, plus the gap that copy owns. */
     transform: translate3d(calc(-50% - var(--half-gap)), 0, 0);
   }
 }
 
+/*
+ * One fixed height per row; the width follows each photograph's own aspect
+ * ratio, set inline per tile. This is what keeps the wall from reading as a
+ * grid of identical cards.
+ */
 .tile {
-  position: relative;
   flex: 0 0 auto;
-  width: 300px;
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
+  height: 300px;
+  width: auto;
+  border-radius: 10px;
   overflow: hidden;
-  background: #e5e7eb;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .image {
+  display: block;
+  height: 100%;
+  width: 100%;
   object-fit: cover;
 }
 
 @media (max-width: 640px) {
+  .band {
+    padding: 2.25rem 0 2.5rem;
+  }
+
+  .head {
+    margin-bottom: 1.5rem;
+  }
+
   .viewport {
     gap: 0.5rem;
   }
 
   .track {
     gap: 0.5rem;
-    animation-duration: 32s;
+    animation-duration: 34s;
     --half-gap: 0.25rem;
   }
 
   .tile {
-    width: 200px;
-    border-radius: 10px;
+    height: 180px;
+    border-radius: 8px;
   }
 }
 
