@@ -1,0 +1,133 @@
+/*
+ * Two auto-scrolling photo rows. No JavaScript: the whole thing is one
+ * keyframe on a doubled track, which is why it stays smooth on a phone —
+ * transform is composited, so the rows never touch the main thread that the
+ * home page's INP score is already fighting for.
+ */
+
+.wrap {
+  width: 100%;
+  margin: 2rem 0 0;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 1.5rem;
+  color: var(--color-text-primary, #0f172a);
+}
+
+/*
+ * Full bleed. This is mounted as a sibling of .container, not inside it, so
+ * plain 100% is already the full width of the screen — no 100vw, which on
+ * desktop is the window *including* the scrollbar and would push the rows a
+ * few pixels past both edges.
+ */
+.viewport {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  /* Fade the two edges so tiles dissolve out instead of being guillotined. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.row {
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  gap: 0.75rem;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: marquee 44s linear infinite;
+  will-change: transform;
+
+  /* Half the gap: the doubled track must travel one copy *plus* the gap that
+     copy owns, or the loop jumps by a hairline every cycle. Kept as a variable
+     so the mobile breakpoint can change the gap without restating the
+     keyframe. */
+  --half-gap: 0.375rem;
+}
+
+.reverse .track {
+  animation-direction: reverse;
+}
+
+/*
+ * Hovering means somebody is looking at one photo. Holding a finger on it
+ * (:active) means the same on a phone.
+ */
+.viewport:hover .track,
+.viewport:active .track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    /* Exactly one copy of the list, plus the gap that copy owns. */
+    transform: translate3d(calc(-50% - var(--half-gap)), 0, 0);
+  }
+}
+
+.tile {
+  position: relative;
+  flex: 0 0 auto;
+  width: 300px;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e5e7eb;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+}
+
+.image {
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  .viewport {
+    gap: 0.5rem;
+  }
+
+  .track {
+    gap: 0.5rem;
+    animation-duration: 32s;
+    --half-gap: 0.25rem;
+  }
+
+  .tile {
+    width: 200px;
+    border-radius: 10px;
+  }
+}
+
+/*
+ * Motion that cannot be stopped is a real accessibility problem, and an
+ * animation is the wrong way to show photos to somebody who has asked the
+ * system for less of it. Stop it and hand back a strip they scroll themselves.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+    width: auto;
+  }
+
+  .row {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .row::-webkit-scrollbar {
+    display: none;
+  }
+}
