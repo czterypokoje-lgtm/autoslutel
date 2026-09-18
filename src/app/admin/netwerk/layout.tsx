@@ -29,10 +29,29 @@ export default async function NetwerkLayout({
   const supabase = await createSupabaseServerClient();
   await params;
 
-  const [{ data: servers }, { data: channels }] = await Promise.all([
-    supabase.from('chat_servers').select('id, name').order('name'),
-    supabase.from('chat_channels').select('id, server_id, name, slug, type').order('name'),
-  ]);
+  const [{ data: servers }, { data: channels }, { data: presence }, { data: me }] =
+    await Promise.all([
+      supabase.from('chat_servers').select('id, name').order('name'),
+      supabase.from('chat_channels').select('id, server_id, name, slug, type').order('name'),
+      /*
+       * Presence comes from a view, not a count here: chat_servers is
+       * readable by every monteur while technicians is not, so this is how a
+       * starter account learns four people are online in Nederland without
+       * being able to list who they are.
+       */
+      supabase.from('chat_server_presence').select('server_id, online_count, member_count'),
+      /*
+       * Whether this monteur may actually open a channel. Mirrors
+       * can_access_channel's rule so the UI can lock the door before the
+       * database refuses — a list of channels that all error on click is
+       * worse than one that says why.
+       */
+      supabase
+        .from('technicians')
+        .select('id, verified, technician_subscription (tier)')
+        .eq('user_id', user.id)
+        .maybeSingle(),
+    ]);
 
   const all = servers ?? [];
   /*
@@ -45,7 +64,23 @@ export default async function NetwerkLayout({
    * channels. The full list goes down instead and the client component, which
    * can read the query string, does the filtering.
    */
+  const isOffice = user.role === 'owner' || user.role === 'kantoor';
   const mine = channels ?? [];
+
+  const tier =
+    (me?.technician_subscription as { tier?: string } | { tier?: string }[] | null) ?? null;
+  const tierName = Array.isArray(tier) ? tier[0]?.tier : tier?.tier;
+  /* Office always in; a monteur needs a paid tier or a verified badge. */
+  const canEnter =
+    isOffice || me?.verified === true || tierName === 'pro' || tierName === 'premium';
+
+  const presenceById: Record<string, { online: number; members: number }> = {};
+  for (const row of presence ?? []) {
+    presenceById[row.server_id as string] = {
+      online: Number(row.online_count ?? 0),
+      members: Number(row.member_count ?? 0),
+    };
+  }
 
   const groups: { title: string; type: string; prefix: string }[] = [
     { title: 'Algemeen', type: 'general', prefix: '#' },
@@ -60,11 +95,16 @@ export default async function NetwerkLayout({
     { title: 'Gesprekken', type: 'dm', prefix: '@' },
   ];
 
-  const isOffice = user.role === 'owner' || user.role === 'kantoor';
-
   return (
     <div className={styles.layout}>
-      <NetworkSidebar servers={all} isOffice={isOffice} groups={groups} channels={mine} />
+      <NetworkSidebar
+        servers={all}
+        isOffice={isOffice}
+        groups={groups}
+        channels={mine}
+        presence={presenceById}
+        canEnter={canEnter}
+      />
       <div className={styles.main}>{children}</div>
     </div>
   );

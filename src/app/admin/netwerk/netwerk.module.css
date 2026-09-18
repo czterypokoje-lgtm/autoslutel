@@ -46,6 +46,8 @@
 }
 
 .serverBubble {
+  /* The online badge is absolutely placed against this. */
+  position: relative;
   width: 48px;
   height: 48px;
   border-radius: 24px;
@@ -308,4 +310,98 @@
   margin-left: auto;
   font-variant-numeric: tabular-nums;
   opacity: 0.6;
+}
+
+/* ── presence and the Pro gate ────────────────────────────────────────
+   A starter monteur sees the whole network and can open none of it. The
+   door is glass on purpose: a list of channels with people behind them
+   is the argument for upgrading; a blank page is not. */
+
+.onlineDot {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  border: 2px solid var(--crm-bg);
+  background: var(--crm-ok);
+  color: #06281c;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 13px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.presenceBar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.presenceName {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--crm-ink);
+}
+
+.presenceCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--crm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.presenceLive {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--crm-ok);
+}
+
+.proNotice {
+  display: flex;
+  gap: 8px;
+  margin: var(--sp-3) var(--sp-4);
+  padding: 10px 11px;
+  border: 1px solid var(--crm-accent);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent-soft);
+  color: var(--crm-ink);
+}
+
+.proNotice strong {
+  display: block;
+  font-size: 12.5px;
+  margin-bottom: 3px;
+}
+
+.proNotice p {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--crm-muted);
+}
+
+.channelLocked {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--sp-2) var(--sp-4);
+  color: var(--crm-muted);
+  font-size: 13px;
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.channelLocked svg {
+  margin-left: auto;
+  flex: none;
 }

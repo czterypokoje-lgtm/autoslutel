@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronDown, Menu, Settings2, ShoppingBag, X } from 'lucide-react';
+import { ChevronDown, Lock, Menu, Settings2, ShoppingBag, X } from 'lucide-react';
 import styles from './netwerk.module.css';
 
 interface Server {
@@ -45,11 +45,17 @@ const SHUT_KEY = 'as24_netwerk_shut';
 export default function NetworkSidebar({
   servers,
   isOffice,
+  presence = {},
+  canEnter = true,
   groups,
   channels,
 }: {
   servers: Server[];
   isOffice: boolean;
+  /** Real online/member counts per server id, from chat_server_presence. */
+  presence?: Record<string, { online: number; members: number }>;
+  /** False for a starter monteur: channels are listed but not openable. */
+  canEnter?: boolean;
   groups: Group[];
   channels: Channel[];
 }) {
@@ -131,10 +137,20 @@ export default function NetworkSidebar({
               key={server.id}
               href={`/admin/netwerk?server=${server.id}`}
               className={`${styles.serverBubble} ${active?.id === server.id ? styles.serverBubbleActive : ''}`}
-              title={server.name}
+              title={`${server.name} — ${presence[server.id]?.online ?? 0} online van ${
+                presence[server.id]?.members ?? 0
+              }`}
               onClick={() => setOpen(false)}
             >
               {server.name.substring(0, 2).toUpperCase()}
+              {/*
+                Only when somebody actually is online. A permanent "0 online"
+                badge advertises an empty room; absence of a badge says the
+                same thing without drawing the eye to it.
+              */}
+              {(presence[server.id]?.online ?? 0) > 0 && (
+                <span className={styles.onlineDot}>{presence[server.id]?.online}</span>
+              )}
             </Link>
           ))}
 
@@ -161,6 +177,37 @@ export default function NetworkSidebar({
           </div>
 
           <div className={styles.channelList}>
+            {active && (
+              <div className={styles.presenceBar}>
+                <span className={styles.presenceName}>{active.name}</span>
+                <span className={styles.presenceCount}>
+                  <span className={styles.presenceLive} aria-hidden="true" />
+                  {presence[active.id]?.online ?? 0} online
+                  {presence[active.id]?.members
+                    ? ` · ${presence[active.id]?.members} leden`
+                    : ''}
+                </span>
+              </div>
+            )}
+
+            {!canEnter && (
+              /*
+                Shown once, above the list, rather than on every locked row:
+                twenty repetitions of the same notice reads as a broken page,
+                not an offer.
+              */
+              <div className={styles.proNotice}>
+                <Lock size={13} strokeWidth={2.2} aria-hidden="true" />
+                <div>
+                  <strong>Alleen voor Pro en geverifieerde monteurs</strong>
+                  <p>
+                    U ziet welke kanalen er zijn en wie er online is. Meelezen en meepraten
+                    hoort bij een Pro-account — vraag het kantoor om toegang.
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className={styles.channelGroup}>
               <div className={styles.groupTitle}>Marktplaats</div>
               <Link href="/admin/netwerk/marktplaats" className={styles.channelLink} onClick={() => setOpen(false)}>
@@ -190,16 +237,28 @@ export default function NetworkSidebar({
                     <span className={styles.groupCount}>{inGroup.length}</span>
                   </button>
                   {!collapsed &&
-                    inGroup.map((channel) => (
-                      <Link
-                        key={channel.id}
-                        href={`/admin/netwerk/${channel.id}`}
-                        className={styles.channelLink}
-                        onClick={() => setOpen(false)}
-                      >
-                        <span className={styles.hash}>{group.prefix}</span> {channel.name}
-                      </Link>
-                    ))}
+                    inGroup.map((channel) =>
+                      canEnter ? (
+                        <Link
+                          key={channel.id}
+                          href={`/admin/netwerk/${channel.id}`}
+                          className={styles.channelLink}
+                          onClick={() => setOpen(false)}
+                        >
+                          <span className={styles.hash}>{group.prefix}</span> {channel.name}
+                        </Link>
+                      ) : (
+                        /* Visible, and deliberately not a link. */
+                        <span
+                          key={channel.id}
+                          className={styles.channelLocked}
+                          title="Alleen voor Pro en geverifieerde monteurs"
+                        >
+                          <span className={styles.hash}>{group.prefix}</span> {channel.name}
+                          <Lock size={11} strokeWidth={2.2} aria-hidden="true" />
+                        </span>
+                      )
+                    )}
                 </div>
               );
             })}
