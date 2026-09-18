@@ -1,5 +1,29 @@
 export const BLOG_POSTS = [
   {
+    /*
+     * Deliberately about the mechanical ignition lock, not the electronics.
+     * "auto-herkent-sleutel-niet-meer" already owns the immobiliser side and
+     * "autosleutel-repareren-tips-kosten-besparen" already lists
+     * "autosleutel behuizing vervangen" among its keywords, so neither the
+     * transponder nor the housing is touched here. The gap this fills is a
+     * worn barrel: a key that will not turn, turns only with force, or works
+     * on some days. Ten real jobs in the CRM and no article for any of them.
+     */
+    slug: 'contactslot-defect-sleutel-draait-niet',
+    title: 'Contactslot Defect: Sleutel Draait Niet Meer Om',
+    excerpt:
+      'Draait uw sleutel niet meer of alleen met kracht? Meestal is het contactslot versleten, niet de sleutel. Hoe u het verschil herkent, wat reparatie kost en wanneer vervangen nodig is.',
+    keywords: [
+      'contactslot defect',
+      'sleutel draait niet in contactslot',
+      'contactslot vervangen kosten',
+      'contactslot reparatie',
+      'sleutel klemt in contactslot',
+    ],
+    publishDate: '2026-09-18',
+    readTime: '7 min',
+  },
+  {
     slug: 'autosleutel-kosten-per-merk-2026',
     title: 'Autosleutel Vervangingskosten per Merk 2026',
     excerpt: 'BMW, Mercedes, Audi, VW, Toyota — wat kost een nieuwe autosleutel echt?',

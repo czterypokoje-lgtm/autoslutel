@@ -4,6 +4,165 @@ import Image from 'next/image';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const BLOG_CONTENT: Record<string, React.ReactNode> = {
+  'contactslot-defect-sleutel-draait-niet': (
+    <>
+      <h2>Uw sleutel draait niet meer om: is het de sleutel of het slot?</h2>
+      <p>
+        U steekt de sleutel in het contact en er gebeurt niets. Hij gaat er wel in, maar draaien
+        lukt niet &mdash; of alleen als u flink duwt en wrikt. Gisteren ging het nog. De meeste
+        mensen denken dan meteen aan een dure elektronicastoring, maar in verreweg de meeste
+        gevallen is er iets veel simpelers aan de hand: het contactslot is mechanisch versleten.
+      </p>
+      <p>
+        Dat onderscheid is belangrijk, want het bepaalt wie u nodig heeft en wat het gaat kosten.
+        Een versleten contactslot is een mechanisch probleem dat een autosleutelspecialist ter
+        plaatse oplost. Een auto die de sleutel niet <em>herkent</em> is iets heel anders &mdash;
+        dat is de startonderbreker, en daarover leest u meer in ons artikel over{' '}
+        <Link href="/blog/auto-herkent-sleutel-niet-meer">
+          een auto die de sleutel niet meer herkent
+        </Link>
+        .
+      </p>
+
+      <h3>Het verschil in dertig seconden vastgesteld</h3>
+      <p>
+        U kunt zelf bepalen welke kant het op zit, zonder gereedschap. Let op wat er precies
+        gebeurt op het moment dat u de sleutel omdraait.
+      </p>
+      <ul>
+        <li>
+          <strong>De sleutel draait niet of stroef, en het dashboard blijft donker:</strong>{' '}
+          mechanisch. Het slotcilinder-mechanisme zit vast of is versleten.
+        </li>
+        <li>
+          <strong>De sleutel draait normaal, het dashboard licht op, maar de motor slaat niet
+          aan:</strong> elektronisch. De startonderbreker herkent de transponder niet.
+        </li>
+        <li>
+          <strong>De sleutel draait wel, maar de auto slaat af zodra u loslaat:</strong> vaak een
+          versleten contactblok achter de cilinder, niet de cilinder zelf.
+        </li>
+        <li>
+          <strong>Het werkt de ene dag wel en de andere dag niet:</strong> bijna altijd slijtage.
+          Elektronica valt zelden met tussenpozen uit; mechaniek doet dat wel.
+        </li>
+      </ul>
+
+      <h3>Waarom een contactslot versleten raakt</h3>
+      <p>
+        Een contactslot is een slotcilinder met een reeks tuimelaars die door de baard van uw
+        sleutel op de juiste hoogte worden gezet. Elke keer dat u de sleutel erin steekt, schuurt
+        metaal langs metaal. Na tien- tot honderdduizenden keren zijn zowel de tuimelaars als de
+        sleutelbaard afgesleten, en past het profiel niet meer nauwkeurig genoeg.
+      </p>
+      <p>
+        Twee dingen versnellen dat proces aanzienlijk. Het eerste is een zware sleutelbos: al dat
+        gewicht hangt aan de cilinder en trekt hem scheef, elke bocht en elke drempel opnieuw. Het
+        tweede is een versleten sleutel. Wie jarenlang dezelfde sleutel gebruikt, slijt niet alleen
+        die sleutel, maar ook het slot &mdash; en wie dan een nieuwe sleutel laat frezen, merkt
+        soms dat die nieuwe sleutel juist <em>slechter</em> werkt. Dat is geen fout aan de sleutel:
+        de nieuwe sleutel heeft het originele profiel, terwijl het slot inmiddels naar de oude,
+        versleten sleutel is meegevormd.
+      </p>
+      <p>
+        Dat laatste verklaart iets wat we regelmatig aan de telefoon horen: &ldquo;met mijn oude
+        sleutel gaat het wel, met de reservesleutel niet.&rdquo; Dat is geen toeval en het betekent
+        bijna altijd dat het slot op zijn eind loopt.
+      </p>
+
+      <h3>Wat u zelf kunt proberen &mdash; en wat u beter laat</h3>
+      <p>
+        Voordat u iemand belt, zijn er twee dingen die soms helpen en geen schade aanrichten.
+        Haal alles behalve de autosleutel van uw sleutelbos en probeer het opnieuw. Beweeg
+        daarnaast het stuur zachtjes heen en weer terwijl u de sleutel omdraait: bij een
+        geblokkeerd stuurslot staat er spanning op de vergrendelpen, en die spanning houdt de
+        cilinder tegen. Dit is veruit de meest voorkomende &ldquo;storing&rdquo; die helemaal geen
+        storing is.
+      </p>
+      <p>
+        Wat u niet moet doen: kracht zetten. Een sleutel die afbreekt in de cilinder verandert een
+        overzichtelijke klus in een aanzienlijk grotere. Gebruik ook geen WD-40 of andere
+        olie-achtige smeermiddelen in het slot. Die binden stof en gruis, waardoor het mechanisme
+        op termijn juist vaster gaat zitten. Een slotenmaker gebruikt grafiet- of PTFE-spray,
+        precies omdat die droog achterblijft.
+      </p>
+
+      <h3>Reparatie of vervanging?</h3>
+      <p>
+        Niet elk versleten contactslot hoeft compleet vervangen te worden, en dat scheelt in de
+        praktijk het meeste geld. In veel gevallen kan de cilinder worden gereviseerd: het
+        mechanisme wordt uit elkaar genomen, de versleten tuimelaars worden vervangen en het slot
+        wordt opnieuw afgesteld op een vers gefreesde sleutel. Uw bestaande sleutel en de
+        elektronica blijven dan gewoon in gebruik.
+      </p>
+      <p>
+        Vervangen is nodig wanneer de cilinderbehuizing zelf beschadigd is, wanneer er is
+        ingebroken, of bij bepaalde modellen waarbij het slot en de startonderbreker &eacute;&eacute;n
+        geheel vormen. In dat laatste geval moet het nieuwe slot ook aan de auto worden
+        aangeleerd &mdash; dat is dezelfde programmering die bij een{' '}
+        <Link href="/blog/autosleutel-bijmaken-zonder-origineel">
+          nieuwe sleutel zonder origineel
+        </Link>{' '}
+        nodig is, en het is de reden dat de prijs per model uiteenloopt.
+      </p>
+
+      <h3>Wat kost het werkelijk?</h3>
+      <p>
+        Uit onze eigen afgeronde klussen van het afgelopen jaar ligt het zwaartepunt rond de{' '}
+        <strong>&euro;180</strong>. De meeste personenauto&rsquo;s vallen tussen de{' '}
+        <strong>&euro;170 en &euro;230</strong> &mdash; denk aan een Volkswagen Golf, Kia Picanto
+        of Fiat Panda. Bedrijfswagens en modellen waarbij het slot met de startonderbreker
+        samenhangt, lopen op tot ongeveer <strong>&euro;450</strong>; bij ons was de duurste een
+        Ford Transit.
+      </p>
+      <p>
+        Dat zijn bedragen inclusief voorrijden en programmering, uitgevoerd op uw eigen locatie.
+        De dealer werkt met een vast tarief per uur plus onderdelen en vraagt u de auto te
+        brengen &mdash; wat bij een auto die niet start betekent dat er ook nog gesleept moet
+        worden. Het volledige kostenplaatje van die vergelijking staat in ons artikel over{' '}
+        <Link href="/blog/dealer-vs-mobiele-sleutelmaker">
+          de dealer tegenover een mobiele sleutelmaker
+        </Link>
+        .
+      </p>
+
+      <h3>Waarom dit zelden vanzelf overgaat</h3>
+      <p>
+        Een contactslot dat af en toe hapert, wordt niet beter. Het patroon is bijna altijd
+        hetzelfde: eerst werkt het na een paar pogingen, dan alleen in een bepaalde stand, dan
+        helemaal niet meer. Het vervelende is dat dat laatste moment zich niet aankondigt en zich
+        zelden op een handig tijdstip voordoet.
+      </p>
+      <p>
+        Wie er op tijd bij is, heeft bovendien meer keuze. Een slot dat nog draait, kan vaak
+        gereviseerd worden. Een slot waarin een sleutel is afgebroken of dat volledig is
+        vastgelopen, moet er in de regel uit. Het verschil zit hem in een paar honderd euro en in
+        de vraag of u zelf kunt kiezen wanneer het gebeurt.
+      </p>
+
+      <h3>Wat wij ter plaatse doen</h3>
+      <p>
+        Onze monteur stelt eerst vast of het probleem mechanisch of elektronisch is &mdash; dat
+        kost een paar minuten en voorkomt dat er onnodig een slot vervangen wordt. Daarna wordt de
+        cilinder uitgebouwd, gereviseerd of vervangen, en zo nodig een nieuwe sleutel gefreesd en
+        aan de startonderbreker aangeleerd. De meeste klussen zijn binnen 45 tot 90 minuten klaar,
+        op de plek waar de auto staat.
+      </p>
+      <p>
+        Op alle werkzaamheden zit 12 maanden garantie. Twijfelt u of het bij u om het slot of om
+        de elektronica gaat? Bel ons en beschrijf wat er gebeurt als u de sleutel omdraait &mdash;
+        aan die ene beschrijving hoort onze monteur meestal al welke kant het op zit, en dan weet
+        u meteen waar u aan toe bent.
+      </p>
+      <p>
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+          Stuur ons een WhatsApp
+        </a>{' '}
+        of bel {SITE_CONFIG.phone}. Wij zijn 24/7 bereikbaar in de Randstad en Midden-Nederland.
+      </p>
+    </>
+  ),
+
   'autosleutel-batterij-vervangen-stappenplan': (
     <>
       <h2>Hoe kan ik een autosleutel batterij vervangen? (Model-per-Model Gids)</h2>
