@@ -97,6 +97,16 @@
   height: auto;
   border-radius: 12px;
   object-fit: cover;
+
+  /*
+   * `height: auto` derives the box from the file's real aspect ratio, not from
+   * the width/height props — those only hold until the image loads. A landscape
+   * photo is unaffected by this cap, but a portrait one (the contactslot page
+   * ships a 375x499 shot of an EIS module) rendered 768px tall and swamped the
+   * form beside it. The cap bounds that case and object-fit crops rather than
+   * squashing.
+   */
+  max-height: 520px;
 }
 
 /* Grey on white, where the service pages used white-on-navy. */

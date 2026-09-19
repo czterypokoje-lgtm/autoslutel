@@ -1,7 +1,39 @@
 import React from 'react';
 import styles from './VerifiedReviewBanner.module.css';
 
-export default function VerifiedReviewBanner() {
+export interface BannerReview {
+  /** As the reviewer signs it on Google. */
+  name: string;
+  /** The line under the name, e.g. "Local Guide • 12 reviews". */
+  meta: string;
+  /** The review, quoted as written. */
+  text: string;
+}
+
+/**
+ * The review shown when a page does not name one of its own.
+ *
+ * NOTE FOR WHOEVER ADDS THE NEXT ONE: these must be real reviews, quoted from
+ * the Google profile. A service page showing an invented testimonial is a
+ * misleading commercial practice under BW 6:193c, and it is the kind of thing
+ * that costs a Google Business Profile its reviews outright. If there is no
+ * real review about a given service yet, leave the page on this default rather
+ * than writing one that fits.
+ */
+const DEFAULT_REVIEW: BannerReview = {
+  name: 'Sanne V.',
+  meta: 'Local Guide • 12 reviews',
+  text: 'Snel en vakkundig geholpen! Ik was al mijn sleutels kwijt. Nieuwe sleutel geprogrammeerd in no-time. Na wat rondbellen was Autosleutel24 de enige die binnen 2 uur ter plaatse kon zijn, en met de beste prijs. 👍',
+};
+
+/**
+ * @param review A review relevant to this particular page. A contactslot page
+ *   showing a review about lost keys is a weaker proof than one about a
+ *   contactslot — but only if the contactslot review actually exists.
+ */
+export default function VerifiedReviewBanner({ review }: { review?: BannerReview } = {}) {
+  const { name, meta, text } = review ?? DEFAULT_REVIEW;
+
   return (
     <div className={styles.bannerContainer}>
       <div className={styles.inner}>
@@ -20,10 +52,10 @@ export default function VerifiedReviewBanner() {
         {/* Middle Section (Review) */}
         <div className={styles.reviewSection}>
           <div className={styles.reviewerHeader}>
-            <div className={styles.avatar}>S</div>
+            <div className={styles.avatar}>{name.trim().charAt(0).toUpperCase()}</div>
             <div className={styles.reviewerInfo}>
-              <div className={styles.reviewerName}>Sanne V.</div>
-              <div className={styles.reviewerMeta}>Local Guide • 12 reviews</div>
+              <div className={styles.reviewerName}>{name}</div>
+              <div className={styles.reviewerMeta}>{meta}</div>
             </div>
           </div>
           
@@ -31,9 +63,7 @@ export default function VerifiedReviewBanner() {
             ★★★★★
           </div>
 
-          <p className={styles.reviewText}>
-            Snel en vakkundig geholpen! Ik was al mijn sleutels kwijt. Nieuwe sleutel geprogrammeerd in no-time. Na wat rondbellen was Autosleutel24 de enige die binnen 2 uur ter plaatse kon zijn, en met de beste prijs. 👍
-          </p>
+          <p className={styles.reviewText}>{text}</p>
         </div>
 
         {/* Right Section (Logos) */}

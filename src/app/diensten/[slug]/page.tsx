@@ -6,6 +6,8 @@ import { DIENSTEN } from '@/config/diensten';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import SplitHero from '@/components/SplitHero/SplitHero';
+import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import Image from 'next/image';
@@ -163,68 +165,61 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
       <script id={`svc-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <script id={`bc-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
-        {/* ── HERO ─────────────────────────────────────────────────── */}
-        {slug === 'alle-sleutels-kwijt-auto' ? (
-          <section className={styles.heroSplit}>
-            <div className={styles.heroSplitInner}>
-              <div className={styles.heroSplitText}>
-                <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-                  <Link href="/">Home</Link> <span>/</span>
-                  <Link href="/diensten">Diensten</Link> <span>/</span>
-                  <span>{service.title}</span>
-                </nav>
-
-                <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
-                  <HeroTrustBadge />
-                </div>
-                <h1>
-                  {service.h1.includes('—') ? (
-                    <>
-                      {service.h1.split('—')[0]} — <span style={{ color: 'var(--orange-500)' }}>{service.h1.split('—').slice(1).join('—')}</span>
-                    </>
-                  ) : (
-                    service.h1
-                  )}
-                </h1>
-
-                <p className={styles.heroSplitLead}>{service.intro}</p>
-
-                {service.directAnswer && (
-                  <p
-                    data-direct-answer
-                    style={{
-                      marginTop: '1.25rem',
-                      padding: '1rem 1.15rem',
-                      background: 'rgba(255,255,255,0.08)',
-                      borderLeft: '3px solid #e2620f',
-                      borderRadius: '8px',
-                      fontSize: '1rem',
-                      lineHeight: 1.65,
-                    }}
-                  >
-                    {service.directAnswer}
-                  </p>
-                )}
-
-                <div style={{ marginTop: '2rem' }}>
-                  <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
-                </div>
-              </div>
-              <div className={styles.heroSplitImage}>
-                <Image 
-                  src="/images/service_kwijt.webp" 
-                  alt="Alle autosleutels kwijt, we maken een nieuwe sleutel op locatie"
-                  width={800}
-                  height={450}
-                  style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
-                  priority
-                  quality={80}
-                />
-              </div>
-            </div>
-          </section>
+        {/* ── HERO ─────────────────────────────────────────────────────
+          *
+          * Two layouts, chosen by whether the service has a photograph.
+          *
+          * With one, it gets SplitHero — the same white hero as the home page
+          * and /diensten/autosleutel-bijmaken, with the kenteken wizard beside
+          * the picture. Somebody arriving here from an ad used to meet a dark
+          * navy band and a flat row of fields: visibly a different site from
+          * the one the same campaign shows on the home page.
+          *
+          * Without one, the dark band stays. The split hero has a picture in
+          * it, so a page with no picture cannot use it — most services have no
+          * photo of their own yet, and filling the gap with a generic stock
+          * image would be worse than the honest dark band. Add a heroImage to
+          * a service in diensten.ts and that page upgrades on its own.
+          */}
+        {service.heroImage ? (
+          <SplitHero
+            crumbs={[
+              { label: 'Home', href: '/' },
+              { label: 'Diensten', href: '/diensten' },
+              { label: service.title },
+            ]}
+            titleTop={service.h1.includes('—') ? service.h1.split('—')[0].trim() : service.h1}
+            titleAccent={service.h1.includes('—') ? service.h1.split('—').slice(1).join('—').trim() : undefined}
+            lead={service.intro}
+            image={service.heroImage}
+          >
+            {service.directAnswer && (
+              /*
+               * Restyled for the white hero. The dark version painted this in
+               * rgba(255,255,255,0.08) with white text — carried onto a light
+               * ground unchanged it was near-invisible grey on white, which is
+               * how it already looked on the dark band in the report.
+               */
+              <p
+                data-direct-answer
+                style={{
+                  marginBottom: '1.5rem',
+                  padding: '1rem 1.15rem',
+                  background: 'var(--gray-50)',
+                  borderLeft: '3px solid var(--orange-500)',
+                  borderRadius: '8px',
+                  fontSize: '0.98rem',
+                  lineHeight: 1.65,
+                  color: 'var(--gray-700)',
+                }}
+              >
+                {service.directAnswer}
+              </p>
+            )}
+            <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+          </SplitHero>
         ) : (
-          <section 
+          <section
             className={styles.hero}
             style={slug === 'autosleutels-repareren' ? {
               backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%), url('/images/seo/autosleutel_reparatie_hero.webp')`,
@@ -259,18 +254,18 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <p
                   data-direct-answer
                   style={{
-                  marginTop: '1.25rem',
-                  padding: '1rem 1.15rem',
-                  background: 'rgba(255,255,255,0.08)',
-                  borderLeft: '3px solid #e2620f',
-                  borderRadius: '8px',
-                  fontSize: '1rem',
-                  lineHeight: 1.65,
+                    marginTop: '1.25rem',
+                    padding: '1rem 1.15rem',
+                    background: 'rgba(255,255,255,0.08)',
+                    borderLeft: '3px solid #e2620f',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    lineHeight: 1.65,
                   }}
                 >
                   {service.directAnswer}
                 </p>
-                )}
+              )}
 
               <div style={{ marginTop: '2rem' }}>
                 <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />

@@ -23,6 +23,16 @@ export type Service = {
   directAnswer?: string;
   priceFrom?: string;
   duration?: string;
+  /**
+   * A photograph of this specific job.
+   *
+   * Doubles as the switch between the two hero layouts in
+   * /diensten/[slug]: a service with a photo gets the light split hero the
+   * home page uses, one without keeps the dark band. That is not a hack —
+   * the split hero has a picture in it, so it cannot be used by a page that
+   * has no picture to put there. Add an image here and the page upgrades.
+   */
+  heroImage?: { src: string; alt: string };
   steps: string[];
   faq: { q: string; a: string }[];
   relatedSlugs: string[];
@@ -180,6 +190,12 @@ export const DIENSTEN: Service[] = [
     system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
     priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
     duration: '60–180 minuten',
+    /* Already had this photo, in a hand-written split hero of its own that
+       SplitHero now replaces. */
+    heroImage: {
+      src: '/images/service_kwijt.webp',
+      alt: 'Alle autosleutels kwijt — nieuwe sleutel gemaakt en ingeleerd op locatie',
+    },
     directAnswer:
       'Alle sleutels kwijt (All Keys Lost) lossen wij ter plaatse op vanaf €299, meestal binnen 60 tot 120 minuten. Wij openen de auto, lezen de sleutelcode uit de boordcomputer, frezen een nieuwe sleutel en leren die in. De verloren sleutels worden daarbij uit het geheugen gewist, zodat er met de oude sleutels niet meer gestart kan worden.',
     steps: [
@@ -475,6 +491,10 @@ export const DIENSTEN: Service[] = [
     system: 'Mercedes EIS / ELV / ESL systemen, BMW CAS/Immo synchronisatie, mechanical ignition locks',
     priceFrom: `Vanaf €${SITE_CONFIG.prices.ignition}`,
     duration: '45–120 minuten',
+    heroImage: {
+      src: '/images/seo/contactslot-auto-vervangen-werkplaats-utrecht.webp',
+      alt: 'Mercedes CLK contactslot met EIS-module opengemaakt voor reparatie op locatie',
+    },
     directAnswer:
       'Een contactslot vervangen of repareren kost vanaf €299 en duurt 60 tot 120 minuten. Klemt de sleutel, of draait hij wel maar start de auto niet, dan zijn meestal de lamellen in de cilinder versleten. Wij vervangen de cilinder en passen die aan op uw bestaande sleutel, zodat u niet met twee verschillende sleutels komt te zitten.',
     steps: [
