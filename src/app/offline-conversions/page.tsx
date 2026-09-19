@@ -80,16 +80,24 @@ export default function OfflineConversionsPage() {
            * Smart Bidding this traffic has no worth. Still editable: the
            * figure is a starting point, not a lock.
            */
-          const values: Record<string, number> = {};
-          (data.positive || []).forEach((lead: ExportLead) => {
-            if (lead.job_value != null) values[lead.id] = lead.job_value;
-          });
-          setJobValues(values);
-
+          /*
+           * One pass, and the real figure wins.
+           *
+           * This used to be two passes: the first wrote the actual invoice
+           * value from the linked job, the second wrote a per-service average
+           * and called setJobValues again — throwing the real number away one
+           * line after fetching it. Nobody noticed because no lead is linked
+           * to a job yet, so both passes produced the same averages. The
+           * moment jobs.lead_id is populated it would have silently reported
+           * estimates as revenue.
+           */
           (data.positive || []).forEach((lead: ExportLead) => {
             const cName = mapServiceToConversion(lead.service || '');
             names[lead.id] = cName;
-            vals[lead.id] = getSuggestedValue(cName);
+            vals[lead.id] =
+              lead.job_value != null && lead.job_value > 0
+                ? lead.job_value
+                : getSuggestedValue(cName);
           });
           setJobValues(vals);
           setConversionNames(names);
