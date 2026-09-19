@@ -15,6 +15,37 @@ export interface GalleryProject {
 }
 
 export const REAL_GALLERY_PROJECTS: GalleryProject[] = [
+  /*
+   * Zaandam, Purmerend en Hoofddorp. De bestanden stonden al in public/images
+   * en werden door de stadspagina als hero-foto gebruikt, maar waren nooit in
+   * deze lijst opgenomen — dus viel de galerij op die pagina's terug op
+   * willekeurige BMW- en Audi-foto's uit andere steden.
+   *
+   * De stadsnaam staat bewust in de alt-tekst: de galerij op een stadspagina
+   * filtert op precies dat, dus zonder de naam verschijnt de foto nooit op de
+   * pagina waar hij voor gemaakt is.
+   */
+  {
+    id: 105,
+    src: '/images/autosleutel-bijmaken-zaandam.webp',
+    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Zaandam',
+    width: 1376,
+    height: 768
+  },
+  {
+    id: 106,
+    src: '/images/autosleutel-bijmaken-purmerend.webp',
+    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Purmerend',
+    width: 1376,
+    height: 768
+  },
+  {
+    id: 107,
+    src: '/images/autosleutel-bijmaken-hoofddorp.webp',
+    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Hoofddorp',
+    width: 1376,
+    height: 768
+  },
   {
     id: 100,
     src: '/images/autosleutel-bijmaken-breda.webp',
