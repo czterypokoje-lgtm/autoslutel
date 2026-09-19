@@ -43,6 +43,40 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     '/api/admin/invoice': ['./node_modules/pdfjs-dist/**/*.mjs', './node_modules/pdf-parse/dist/**/*'],
   },
+  /*
+   * The mirror image of the problem above, and it broke a deploy outright:
+   *
+   *   The Vercel Function "diensten/afstandsbediening-bijmaken" is 304.43mb
+   *   uncompressed which exceeds the maximum uncompressed size limit of 250mb
+   *
+   * /diensten/[slug] lists a service's photos with
+   * readdirSync(path.join(process.cwd(), 'public', 'images', slug)). Because
+   * `slug` is only known at runtime, the tracer cannot work out which folder
+   * is meant and conservatively pulls in all of public/images — 322 MB of
+   * photographs — as if the function needed them. Hence 304 MB.
+   *
+   * It needs none of them. Every one of these routes is prerendered
+   * (generateStaticParams, no dynamicParams, no revalidate), so the filenames
+   * are baked into the HTML at build time and the images themselves are served
+   * from the CDN, never from the function. The directory read happens during
+   * the build, which runs against the full repo and is unaffected by this.
+   *
+   * Scoped to the one route that has the problem: /merken/[merkSlug] does the
+   * same trick against a *static* path, so the tracer resolves it and pulls in
+   * only public/images/merken (21 MB). Should a service page ever be rendered
+   * on demand, the readdirSync is inside a try/catch that falls back to an
+   * empty list rather than throwing.
+   */
+  outputFileTracingExcludes: {
+    /*
+     * The brackets are escaped because these keys are matched with picomatch,
+     * where an unescaped [slug] is a character class meaning "one of s, l, u,
+     * g" — it silently matches nothing here, which is exactly how the first
+     * attempt at this failed while looking correct. The docs' own example
+     * escapes them the same way.
+     */
+    '/diensten/\\[slug\\]': ['./public/**/*'],
+  },
   images: {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
