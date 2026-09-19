@@ -35,7 +35,20 @@
   transition: opacity 0.15s ease;
 }
 .cta:hover { opacity: 0.9; text-decoration: none; color: var(--color-danger, #c0392b); }
-@media (max-width: 640px) {
-  .banner { padding: 0.45rem 1rem; }
-  .text { font-size: 0.75rem; }
+/*
+ * Gone on phones.
+ *
+ * At 375px the strap wrapped to two or three lines and pushed the hero down
+ * before anyone had read a word of it — a permanent cost on every page for a
+ * phone number that is already on screen. 767px is not a guess: it is exactly
+ * where StickyCallBar appears, so the call-to-action hands over from the top
+ * of the page to the bar pinned at the bottom with no gap and no duplication.
+ *
+ * Hidden rather than removed: on a desktop it is a thin single line that costs
+ * nothing, and it is the only always-visible phone CTA there.
+ */
+@media (max-width: 767px) {
+  .banner {
+    display: none;
+  }
 }
