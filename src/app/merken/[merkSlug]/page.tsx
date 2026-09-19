@@ -12,6 +12,7 @@ import FaqSection from '@/components/FaqSection/FaqSection';
 import { getFaqForBrand } from '@/config/faq';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import { captionFromFilename } from '@/lib/imageCaption';
+import { brandLimitNotice } from '@/lib/serviceLimits';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
@@ -263,6 +264,39 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             </div>
           </div>
         </section>
+
+        {/*
+          * What we cannot do for this make, said before the visitor spends our
+          * advertising budget finding out. Mercedes FBS4 and the Volkswagen
+          * order-only years are the two that generate calls we have to turn
+          * away — putting it on the page is cheaper than taking the call, and
+          * the same rules drive the kenteken wizard so the two cannot drift.
+          */}
+        {(() => {
+          const notice = brandLimitNotice(brand.name);
+          if (!notice) return null;
+          return (
+            <section style={{ padding: '2rem 0 0', background: '#ffffff' }}>
+              <div className="container" style={{ maxWidth: 1000 }}>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.4rem',
+                  background: '#fff8ed',
+                  border: '1px solid #f7cf9b',
+                  borderLeft: '4px solid #e8830a',
+                  borderRadius: '10px',
+                  padding: '1.1rem 1.25rem',
+                  color: '#7c4a03',
+                  lineHeight: 1.6,
+                }}>
+                  <strong style={{ fontSize: '1rem' }}>{notice.title}</strong>
+                  <span style={{ fontSize: '0.95rem' }}>{notice.detail}</span>
+                </div>
+              </div>
+            </section>
+          );
+        })()}
 
         {/* ── RECENT WERK ──
           *

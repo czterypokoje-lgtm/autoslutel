@@ -342,3 +342,43 @@
 
 /* the wizard is placed on dark hero sections too */
 .onDark .shell { border-color: rgba(255, 255, 255, .16); }
+
+/* ── SERVICE LIMITS ────────────────────────────────────────────────────────
+ *
+ * Two weights, because the two messages are not the same news. A delay is an
+ * amber note the visitor reads and then carries on booking; "we cannot do this
+ * car" is a red stop, and the price block is not rendered beside it at all.
+ */
+
+.limitWarn,
+.limitBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.limitWarn {
+  background: #fff8ed;
+  border: 1px solid #f7cf9b;
+  color: #7c4a03;
+}
+
+.limitBlock {
+  background: #fdf2f2;
+  border: 1px solid #f2b8b5;
+  color: #8a1c15;
+}
+
+.limitTitle {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.limitDetail {
+  opacity: 0.95;
+}

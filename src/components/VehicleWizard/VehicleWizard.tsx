@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styles from './VehicleWizard.module.css';
+import { serviceLimit } from '@/lib/serviceLimits';
 import { SITE_CONFIG } from '@/config/site.config';
 import {
   PushButtonIcon,
@@ -144,6 +145,21 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
   }, [plateDigits, lookup]);
 
   const quote = quoteFor(startType, remote, workingKey);
+
+  /*
+   * What we can actually do for this car.
+   *
+   * Shown before the price rather than after it: a visitor who reads "vanaf
+   * €249" and only then learns we cannot key their 2016 Mercedes has already
+   * cost us the click and is about to cost us the phone call. `workingKey`
+   * decides the scenario — no working key is all-keys-lost, which is the
+   * harder job and has stricter limits.
+   */
+  const limit = serviceLimit(
+    vehicle?.merk,
+    vehicle?.bouwjaar,
+    workingKey === 'no' ? 'akl' : 'add-key',
+  );
 
   function buildWhatsAppUrl() {
     const lines = [
@@ -446,6 +462,24 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               U krijgt direct de exacte prijs en aankomsttijd via WhatsApp.
             </p>
 
+            {limit.status !== 'ok' && (
+              <div
+                className={
+                  limit.status === 'unavailable' ? styles.limitBlock : styles.limitWarn
+                }
+                role="alert"
+              >
+                <strong className={styles.limitTitle}>{limit.title}</strong>
+                <span className={styles.limitDetail}>{limit.detail}</span>
+              </div>
+            )}
+
+            {/*
+              * No price when we cannot do the job. A "richtprijs" beside a
+              * notice saying we cannot help is the kind of mixed message that
+              * gets someone to send the form anyway.
+              */}
+            {limit.status !== 'unavailable' && (
             <div className={styles.quote}>
               <div className={styles.quoteLabel}>Richtprijs — {quote.service}</div>
               <div className={styles.quoteAmount}>vanaf €{quote.from}</div>
@@ -454,8 +488,10 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
                   ? `Voor uw ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar}). `
                   : ''}
                 De exacte prijs bevestigen wij vooraf — nooit achteraf.
+                {limit.status === 'lead-time' && ` Levertijd ${limit.lead}.`}
               </div>
             </div>
+            )}
 
             <div className={styles.fields}>
               <div className={styles.row2}>
