@@ -46,7 +46,7 @@ export default function ContactForm() {
     }).catch(err => console.error('Error saving lead', err));
 
     try {
-      const response = await fetch('https://formspree.io/f/mdennjae', {
+      const response = await fetch('https://formspree.io/f/mgavvqvd', {
         method: 'POST',
         body: data,
         headers: {
