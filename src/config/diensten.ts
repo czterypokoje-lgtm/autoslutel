@@ -33,6 +33,18 @@ export type Service = {
    * has no picture to put there. Add an image here and the page upgrades.
    */
   heroImage?: { src: string; alt: string };
+  /**
+   * Price rows for this service alone.
+   *
+   * Without it the page shows the generic key-price table — standaard sleutel,
+   * smart key, behuizing, all keys lost — which on, say, the contactslot page
+   * meant five of six rows were about something the visitor did not come for.
+   *
+   * Only put real figures here. Everything below comes from SITE_CONFIG.prices
+   * or from a range the business has actually quoted; where there is no fixed
+   * price, say so rather than inventing a tier.
+   */
+  pricing?: { service: string; features: string; ours: string; dealer: string }[];
   steps: string[];
   faq: { q: string; a: string }[];
   relatedSlugs: string[];
@@ -492,9 +504,37 @@ export const DIENSTEN: Service[] = [
     priceFrom: `Vanaf €${SITE_CONFIG.prices.ignition}`,
     duration: '45–120 minuten',
     heroImage: {
-      src: '/images/seo/contactslot-auto-vervangen-werkplaats-utrecht.webp',
+      src: '/images/contactslot-auto-vervangen/auto_contactslot_vervangen_mercedes_eis_utrecht.webp',
       alt: 'Mercedes CLK contactslot met EIS-module opengemaakt voor reparatie op locatie',
     },
+    pricing: [
+      {
+        service: 'Contactslot reviseren',
+        features: 'Versleten lamellen in de cilinder vervangen en afstellen op uw bestaande sleutel',
+        ours: `Vanaf € ${SITE_CONFIG.prices.ignition},-`,
+        dealer: 'Vaak hele stuurkolom (€ 600+)',
+      },
+      {
+        service: 'Contactslot vervangen (mechanisch)',
+        features: 'Nieuwe cilinder, omgebouwd op uw huidige sleutel zodat u één sleutel houdt',
+        ours: '€ 300 - € 500,-',
+        dealer: 'Vaak hele stuurkolom (€ 600+)',
+      },
+      {
+        service: 'Mercedes EIS/ELV · BMW CAS',
+        features: 'Elektronisch stuurslot of EIS-module repareren of emulator programmeren op locatie',
+        /* No fixed figure: it depends on the module and the car. Saying so is
+           better than publishing a tier nobody can honour. */
+        ours: 'Prijs op aanvraag',
+        dealer: 'Complete stuurkolom (€ 1.200+)',
+      },
+      {
+        service: 'Sleutel afgebroken in contactslot',
+        features: 'Afgebroken sleuteldeel verwijderen met extractietools, zonder het slot te beschadigen',
+        ours: `Vanaf € ${SITE_CONFIG.prices.transponder},-`,
+        dealer: 'Vaak hele stuurkolom (€ 600+)',
+      },
+    ],
     directAnswer:
       'Een contactslot vervangen of repareren kost vanaf €299 en duurt 60 tot 120 minuten. Klemt de sleutel, of draait hij wel maar start de auto niet, dan zijn meestal de lamellen in de cilinder versleten. Wij vervangen de cilinder en passen die aan op uw bestaande sleutel, zodat u niet met twee verschillende sleutels komt te zitten.',
     steps: [

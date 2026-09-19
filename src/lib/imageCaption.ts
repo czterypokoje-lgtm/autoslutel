@@ -31,6 +31,15 @@ const ACRONYMS: Record<string, string> = {
   ds: 'DS',
   gmc: 'GMC',
   suv: 'SUV',
+  /* Immobiliser and lock systems, which read as typos title-cased:
+     "Eis", "Elv", "Cas", "Bcm". */
+  eis: 'EIS',
+  elv: 'ELV',
+  esl: 'ESL',
+  cas: 'CAS',
+  bcm: 'BCM',
+  obd: 'OBD',
+  akl: 'AKL',
 };
 
 export function captionFromFilename(input: string): string {

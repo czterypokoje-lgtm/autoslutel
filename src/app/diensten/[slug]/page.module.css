@@ -651,10 +651,6 @@
   .section {
     padding: 3rem 1rem;
   }
-  .pricingTable th:nth-child(4),
-  .pricingTable td:nth-child(4) {
-    display: none;
-  }
   .ctaBlock {
     padding: 3rem 1.5rem;
     border-radius: 0;
@@ -837,13 +833,92 @@
   .relatedBlogsContainer {
     padding: 0 1rem;
   }
-  .pricingTable {
-    display: table !important;
-    min-width: 100% !important;
-    font-size: 0.8rem;
+}
+
+
+
+/* ── PRICE TABLE ON A PHONE ────────────────────────────────────────────────
+ *
+ * Four columns in a 375px viewport is a sideways scroll, and a sideways
+ * scroll inside a page is something most people never discover — the dealer
+ * comparison, which is the whole argument, sat off the right edge unread.
+ *
+ * Below 768px each row becomes a card: the service name is the card's
+ * heading, and the other three cells put their column label beside the value
+ * (carried in via data-label, since the <thead> is gone).
+ */
+@media (max-width: 767px) {
+  .tableWrapper {
+    overflow-x: visible;
+    border: none;
+    border-radius: 0;
   }
-  .pricingTable th, .pricingTable td {
-    padding: 0.5rem 0.4rem !important;
+
+  .pricingTable,
+  .pricingTable tbody,
+  .pricingTable tr,
+  .pricingTable td {
+    display: block;
+    width: 100%;
+  }
+
+  /* Off-screen rather than display:none — the headers still label the cells
+     for a screen reader walking the table. */
+  .pricingTable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .pricingTable tr {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 0.85rem;
+    padding: 0.35rem 0;
+    background: #ffffff;
+  }
+
+  .pricingTable td {
+    border-bottom: 1px solid #f1f5f9;
+    padding: 0.6rem 1rem;
+  }
+
+  .pricingTable td:last-child {
+    border-bottom: none;
+  }
+
+  /* First cell is the card title: no label, larger, in brand navy. */
+  .pricingTable td:first-child {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--navy-900, #071525);
+    background: #f8fafc;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .pricingTable td:not(:first-child)::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    margin-bottom: 0.15rem;
   }
 }
 
+/*
+ * Two rules used to live at max-width:640px and were removed when the card
+ * layout above landed, so nobody reinstates them:
+ *
+ *   .pricingTable td:nth-child(4) { display: none }  hid the Dealer Prijs
+ *     column on phones — the side-by-side comparison is the argument the
+ *     table exists to make, and it was invisible to most of the traffic.
+ *
+ *   .pricingTable { display: table !important }  forced the table layout back
+ *     at narrow widths and, being !important, beat anything written later.
+ */

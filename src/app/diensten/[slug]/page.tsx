@@ -7,6 +7,7 @@ import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import SplitHero from '@/components/SplitHero/SplitHero';
+import GalleryMarquee from '@/components/GallerySlider/GalleryMarquee';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import FeatureCards from '@/components/FeatureCards/FeatureCards';
@@ -121,8 +122,31 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
     { strong: 'Slijtage aan sleutelblad of sleutelbaard:', text: 'Door jarenlang gebruik is het metaal afgesleten waardoor de sleutel hakt of blijft hangen.' }
   ];
 
+  /*
+   * Photographs of this service, read off disk rather than listed in code:
+   * drop a file into public/images/<slug>/ and it appears. The filename is the
+   * caption and the alt text, so it has to read like one —
+   * auto_contactslot_vervangen_mercedes_eis_utrecht.webp, not IMG_4821.
+   */
+  let servicePhotos: string[] = [];
+  try {
+    servicePhotos = fs
+      .readdirSync(path.join(process.cwd(), 'public', 'images', slug))
+      .filter((f) => /\.(webp|jpe?g|png)$/i.test(f))
+      .sort();
+  } catch {
+    // No folder for this service yet.
+  }
+
   const pricingHeaders = ['Dienst / Sleuteltype', 'Kenmerken', 'Onze Tarieven (excl. btw)', 'Dealer Prijs'];
-  const pricingRows = [
+
+  /*
+   * A service with its own price rows shows only those. The generic table
+   * below is the fallback for services that have not been given one — on the
+   * contactslot page it meant five of its six rows were about smart keys and
+   * behuizingen, which is not what the visitor came for.
+   */
+  const genericPricingRows = [
     ['Standaard autosleutel (mechanisch)', 'Zonder afstandsbediening, incl. transponder chip', `Vanaf € ${SITE_CONFIG.prices.transponder},-`, '€ 400 - € 800 (1-2 wk levertijd)'],
     ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € ${SITE_CONFIG.prices.remote},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
     ['Smart Key / Keyless Entry', 'Proximity start, volledig geprogrammeerd', `Vanaf € ${SITE_CONFIG.prices.smartKey},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
@@ -130,6 +154,10 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
     ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
     ['Contactslot reparatie / vervanging', 'Reviseren of nieuw slot incl. sleutels', `Vanaf € ${SITE_CONFIG.prices.ignition},-`, 'Vaak hele stuurkolom (€ 600+)']
   ];
+
+  const pricingRows = service.pricing
+    ? service.pricing.map((r) => [r.service, r.features, r.ours, r.dealer])
+    : genericPricingRows;
 
   const howToSchema = {
     '@context': 'https://schema.org', '@type': 'HowTo',
@@ -274,6 +302,30 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
           </section>
         )}
 
+        {/*
+          * The home page's sliding photo wall, for services that have enough
+          * photographs of their own to fill it.
+          *
+          * SIX IS NOT ARBITRARY. GalleryMarquee splits the list across two rows
+          * travelling in opposite directions and repeats a row until it is long
+          * enough to loop. Below six that repetition is visible — the same
+          * photo passing three times in one row reads as a bug, and a wall of
+          * work you have not done yet is worse than no wall. Drop more files
+          * into public/images/<slug>/ and the grid further down becomes this.
+          */}
+        {servicePhotos.length >= 6 && (
+          <GalleryMarquee
+            images={servicePhotos.map((file) => ({
+              src: `/images/${slug}/${file}`,
+              caption: captionFromFilename(file),
+              width: 1000,
+              height: 750,
+            }))}
+            title={`${service.title} — Recent Werk`}
+            subtitle="Elke dag op locatie, door heel Nederland."
+          />
+        )}
+
         <VerifiedReviewBanner />
 
         <BrandsMarquee />
@@ -410,12 +462,18 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                           </tr>
                         </thead>
                         <tbody>
+                          {/*
+                            * data-label carries the column heading down to the
+                            * phone layout, where the <thead> is hidden and each
+                            * row becomes a card — otherwise "€ 300 - € 500"
+                            * would sit there with nothing saying what it is.
+                            */}
                           {pricingRows.map((row, idx) => (
                             <tr key={idx}>
-                              <td>{row[0]}</td>
-                              <td>{row[1]}</td>
-                              <td><strong>{row[2]}</strong></td>
-                              <td>{row[3]}</td>
+                              <td data-label={pricingHeaders[0]}>{row[0]}</td>
+                              <td data-label={pricingHeaders[1]}>{row[1]}</td>
+                              <td data-label={pricingHeaders[2]}><strong>{row[2]}</strong></td>
+                              <td data-label={pricingHeaders[3]}>{row[3]}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -465,23 +523,29 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                     </div>
-                  ) : slug === 'contactslot-auto-vervangen' ? (
+                  ) : servicePhotos.length > 0 ? (
+                    /*
+                     * Photos of this service from public/images/<slug>/. Two
+                     * hard-coded <img> tags used to sit here repeating the
+                     * same files the hero already shows.
+                     */
                     <div style={{
                       display: 'grid',
-                      gridTemplateColumns: 'repeat(2, 1fr)',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
                       gap: '1rem',
                       margin: '1.25rem 0'
                     }}>
-                      <img 
-                        src="/images/seo/contactslot-auto-vervangen-werkplaats-utrecht.webp" 
-                        alt="Demonteren en herstellen van defecte mechanische cilinder" 
-                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
-                      />
-                      <img 
-                        src="/images/seo/contactslot-auto-vervangen-mobiel-amsterdam.webp" 
-                        alt="Vastgelopen contactslot gerepareerd op locatie" 
-                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
-                      />
+                      {servicePhotos.map((file) => (
+                        <Image
+                          key={file}
+                          src={`/images/${slug}/${file}`}
+                          alt={captionFromFilename(file)}
+                          width={480}
+                          height={360}
+                          style={{ width: '100%', height: 'auto', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
+                          loading="lazy"
+                        />
+                      ))}
                     </div>
                   ) : serviceImages.length > 0 ? (
                     <GallerySlider 
