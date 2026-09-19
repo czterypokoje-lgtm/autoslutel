@@ -60,14 +60,18 @@ const OLDEST_YEAR = 2000;
 const MERCEDES_FBS4_FROM = 2013;
 
 /**
- * Volkswagen MQB with component protection (SFD).
+ * Volkswagen, all keys lost.
  *
- * We can do these, but the key itself has to be ordered as an original through
- * the dealer channel, so nothing is same-day. Add-key applies from 2015,
- * all-keys-lost from 2014.
+ * ONLY all-keys-lost. An extra key alongside a working one is same-day as
+ * usual — the working key is what makes that possible. With no key left the
+ * replacement has to be ordered as an original through the dealer channel,
+ * which is what takes the days.
+ *
+ * Applying this to add-key as well, as an earlier version did, quietly told
+ * every VW owner wanting a spare to wait four days for a job we do while they
+ * watch.
  */
-const VW_ORDER_KEY_ADD_FROM = 2015;
-const VW_ORDER_KEY_AKL_FROM = 2014;
+const VW_AKL_ORDER_FROM = 2014;
 
 /** Normalises RDW make strings: "MERCEDES-BENZ", "VOLKSWAGEN", "V.W." … */
 function normaliseMake(make: string): string {
@@ -122,17 +126,14 @@ export function serviceLimit(
     };
   }
 
-  if (isVolkswagen(make)) {
-    const from = scenario === 'akl' ? VW_ORDER_KEY_AKL_FROM : VW_ORDER_KEY_ADD_FROM;
-    if (y >= from) {
-      return {
-        status: 'lead-time',
-        title: 'Mogelijk, maar niet dezelfde dag',
-        lead: '2-4 werkdagen',
-        detail:
-          'Voor Volkswagens van dit bouwjaar moet de sleutel als origineel onderdeel bij de dealer besteld worden. Wij programmeren hem daarna gewoon bij u op locatie, maar houd rekening met 2 tot 4 werkdagen levertijd. Spoed op dezelfde dag is hier helaas niet mogelijk.',
-      };
-    }
+  if (isVolkswagen(make) && scenario === 'akl' && y >= VW_AKL_ORDER_FROM) {
+    return {
+      status: 'lead-time',
+      title: 'Mogelijk, maar niet dezelfde dag',
+      lead: '2-4 werkdagen',
+      detail:
+        'Bent u álle sleutels kwijt van een Volkswagen van dit bouwjaar, dan moet de nieuwe sleutel als origineel onderdeel bij de dealer besteld worden. Wij programmeren hem daarna gewoon bij u op locatie, maar houd rekening met 2 tot 4 werkdagen. Heeft u nog wél een werkende sleutel en wilt u er een bij? Dat doen wij gewoon dezelfde dag.',
+    };
   }
 
   return { status: 'ok' };
@@ -152,9 +153,9 @@ export function brandLimitNotice(make: string): { title: string; detail: string 
   }
   if (isVolkswagen(make)) {
     return {
-      title: 'Let op: Volkswagen vanaf bouwjaar 2014/2015',
+      title: 'Volkswagen: sleutel bijmaken dezelfde dag, alle sleutels kwijt 2-4 werkdagen',
       detail:
-        'Voor deze bouwjaren bestellen wij de sleutel als origineel onderdeel bij de dealer. Wij maken en programmeren hem daarna bij u op locatie, maar reken op 2 tot 4 werkdagen. Dezelfde dag klaar is bij deze modellen niet mogelijk.',
+        'Heeft u nog een werkende sleutel en wilt u een reservesleutel? Die maken en programmeren wij gewoon dezelfde dag bij u op locatie. Bent u vanaf bouwjaar 2014 álle sleutels kwijt, dan moet de nieuwe sleutel als origineel onderdeel bij de dealer besteld worden — reken dan op 2 tot 4 werkdagen.',
     };
   }
   return null;
