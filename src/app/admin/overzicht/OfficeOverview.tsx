@@ -356,7 +356,7 @@ export default async function OfficeOverview() {
           {jobsToday.length === 0 ? (
             <Notice tone="info">Vandaag geen klussen gepland.</Notice>
           ) : (
-            jobsToday.map((job: any) => {
+            jobsToday.map((job) => {
               const b = badgeProps(job.status);
               const logo = getBrandLogo(job.car_make);
               const title = [job.car_make, job.car_model].filter(Boolean).join(' ') || 'Autosleutel Maken';

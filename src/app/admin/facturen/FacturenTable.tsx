@@ -204,7 +204,11 @@ function InvoiceDetailDrawer({ invoice, onClose }: { invoice: InvoiceRow; onClos
 
 export default function FacturenTable({ rows }: { rows: InvoiceRow[] }) {
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceRow | null>(null);
-  const [filter, setFilter] = useState<'All' | 'Draft' | 'Sent' | 'Due' | 'Overdue' | 'Paid'>('All');
+  /* One source for the tab values, so the array and the state cannot drift —
+     which is what forced the `as any` cast below. */
+  const FILTERS = ['All', 'Draft', 'Sent', 'Due', 'Overdue', 'Paid'] as const;
+  type Filter = (typeof FILTERS)[number];
+  const [filter, setFilter] = useState<Filter>('All');
   const [search, setSearch] = useState('');
 
   // Calculate Metrics
@@ -282,8 +286,8 @@ export default function FacturenTable({ rows }: { rows: InvoiceRow[] }) {
       {/* Tabs & Search */}
       <div className={styles.filtersBar}>
         <div className={styles.tabs} style={{marginBottom: 0, paddingBottom: 0}}>
-          {['All', 'Draft', 'Sent', 'Due', 'Overdue', 'Paid'].map(t => (
-            <div key={t} className={`${styles.tab} ${filter === t ? styles.active : ''}`} onClick={() => setFilter(t as any)}>
+          {FILTERS.map(t => (
+            <div key={t} className={`${styles.tab} ${filter === t ? styles.active : ''}`} onClick={() => setFilter(t)}>
               {t === 'All' ? 'Alles' : t === 'Draft' ? 'Concept' : t === 'Sent' ? 'Verzonden' : t === 'Due' ? 'Openstaand' : t === 'Overdue' ? 'Vervallen' : 'Betaald'}
             </div>
           ))}
