@@ -147,7 +147,7 @@
   border-radius: var(--crm-r-sm);
   border: none;
   background: var(--crm-accent);
-  color: #fff;
+  color: var(--crm-on-accent);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;

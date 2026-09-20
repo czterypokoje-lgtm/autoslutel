@@ -17,7 +17,7 @@
 
 .phone {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: var(--orange-600, #d85308);
+  color: var(--crm-accent);
   text-decoration: none;
 }
 
@@ -26,13 +26,13 @@
 }
 
 .noPhone {
-  color: #94a3b8;
+  color: var(--crm-muted);
   font-style: italic;
 }
 
 .when,
 .duration {
-  color: #64748b;
+  color: var(--crm-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -40,12 +40,12 @@
   margin: 0.7rem 0 0;
   line-height: 1.6;
   font-size: 0.93rem;
-  color: #334155;
+  color: var(--crm-text);
 }
 
 .transcript {
   margin-top: 0.7rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--crm-rule);
   padding-top: 0.6rem;
 }
 
@@ -53,7 +53,7 @@
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--crm-text);
 }
 
 .turns {
@@ -87,22 +87,22 @@
 /* The two sides get different grounds so a long call can be skimmed rather
    than read — who said what is the first question, not the words. */
 .agent {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
 }
 
 .user {
-  background: #fff7ed;
-  color: #431407;
+  background: var(--crm-accent-soft);
+  color: var(--crm-ink);
 }
 
 .error {
   margin: 0;
-  color: #b91c1c;
+  color: var(--crm-stop);
   line-height: 1.6;
 }
 
 .hint {
-  color: #64748b;
+  color: var(--crm-muted);
   font-size: 0.85rem;
 }

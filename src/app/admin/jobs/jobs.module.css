@@ -505,7 +505,7 @@
   border: none;
   border-radius: var(--crm-r);
   background: var(--crm-ink);
-  color: #0a0a0a;
+  color: var(--crm-on-ink);
   font: inherit;
   font-weight: 600;
   font-size: 13.5px;

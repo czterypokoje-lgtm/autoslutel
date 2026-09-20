@@ -50,7 +50,7 @@
   border: none;
   border-radius: var(--crm-r-sm);
   background: var(--crm-accent);
-  color: #fff;
+  color: var(--crm-on-accent);
   font: inherit;
   font-weight: 700;
   font-size: 13px;

@@ -116,7 +116,7 @@
   border: none;
   border-radius: var(--crm-r-sm);
   background: var(--crm-accent);
-  color: #fff;
+  color: var(--crm-on-accent);
   font: inherit;
   font-weight: 700;
   font-size: 13px;
@@ -132,7 +132,7 @@
   grid-column: 1 / -1;
   margin: 0;
   font-size: 13px;
-  color: var(--crm-stop, #f87171);
+  color: var(--crm-stop);
 }
 
 .grid {
@@ -217,8 +217,8 @@
   border-radius: var(--crm-r-sm);
   font-size: 11px;
   font-weight: 700;
-  background: var(--crm-ok-bg, rgba(74, 222, 128, 0.15));
-  color: var(--crm-ok, #4ade80);
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
 }
 
 .badgeSold {
@@ -249,7 +249,7 @@
 .actPrimary {
   background: var(--crm-accent);
   border-color: var(--crm-accent);
-  color: #fff;
+  color: var(--crm-on-accent);
 }
 
 .empty {

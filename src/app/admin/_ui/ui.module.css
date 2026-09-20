@@ -248,10 +248,10 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
 .btnPrimary {
   border-color: transparent;
   background: var(--crm-ink);
-  color: #0a0a0a;
+  color: var(--crm-on-ink);
   font-weight: var(--fw-semibold);
 }
-.btnPrimary:hover:not(:disabled) { background: #fff; color: #0a0a0a; }
+.btnPrimary:hover:not(:disabled) { background: var(--crm-ink-hover); color: var(--crm-on-ink); }
 
 .btnDanger { border-color: var(--crm-stop); color: var(--crm-stop); }
 .btnDanger:hover:not(:disabled) { background: var(--crm-stop-bg); color: var(--crm-stop); }
