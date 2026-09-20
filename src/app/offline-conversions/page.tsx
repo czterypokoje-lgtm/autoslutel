@@ -32,8 +32,22 @@ const getSuggestedValue = (conversionName: string) => {
   return 206; // Extra Key
 };
 
+/**
+ * The timestamp format Google Ads accepts, in the timezone the file declares.
+ *
+ * Both halves of that matter and both were wrong. The CSV header says
+ * `Parameters:TimeZone=Europe/Amsterdam`, but this returned UTC — so every
+ * conversion was reported two hours earlier than it happened (an hour in
+ * winter). And an ISO string with a `T` or a `+00:00` offset is rejected
+ * outright: "The value '2026-09-19 17:22:21+00:00' in column 'Conversion Time'
+ * is invalid."
+ *
+ * 'sv-SE' is the shortest way to get `YYYY-MM-DD HH:mm:ss` out of
+ * toLocaleString, and it honours the timeZone option, so the value matches the
+ * header instead of contradicting it.
+ */
 function formatDate(iso: string) {
-  return new Date(iso).toISOString().replace('T', ' ').substring(0, 19);
+  return new Date(iso).toLocaleString('sv-SE', { timeZone: 'Europe/Amsterdam' });
 }
 
 function clickId(lead: ExportLead) {
@@ -165,7 +179,13 @@ export default function OfflineConversionsPage() {
       if (!gclid) return;
       const cName = mapServiceToConversion(lead.service || '');
       const now = formatDate(new Date().toISOString());
-      csv += `${gclid},${cName},${formatDate(lead.created_at)},RETRACTION,${now}\n`;
+      /*
+       * RETRACT, not RETRACTION. Google's adjustment types are RETRACT,
+       * RESTATE and ENHANCEMENT; the longer word was rejected on every row
+       * — "The value 'RETRACTION' in column 'Adjustment Type' is invalid."
+       * It went unnoticed because no adjustments file had ever been uploaded.
+       */
+      csv += `${gclid},${cName},${formatDate(lead.created_at)},RETRACT,${now}\n`;
       exportedIds.push(lead.id);
     });
 
