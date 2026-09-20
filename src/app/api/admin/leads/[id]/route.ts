@@ -109,7 +109,17 @@ export async function PATCH(
   const isFirstContact =
     typeof patch.status === 'string' && patch.status !== 'new' && patch.status !== 'duplicate';
 
-  patch.updated_by = user.email;
+  /*
+   * user.id, not user.email. `updated_by` is uuid — writing an address into
+   * it makes Postgres reject the whole statement with
+   *
+   *   invalid input syntax for type uuid: "someone@example.com"
+   *
+   * which surfaced in the CRM as every triage click turning into "niet
+   * opgeslagen". `sold_to` below is text and does take the address; the two
+   * columns look alike and are not, which is exactly how this got through.
+   */
+  patch.updated_by = user.id;
 
   // `sold` without a real amount is the failure this whole screen exists to
   // prevent: /api/export-conversions would ship a conversion worth nothing to
