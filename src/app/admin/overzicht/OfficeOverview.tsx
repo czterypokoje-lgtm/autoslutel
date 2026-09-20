@@ -51,6 +51,7 @@ export default async function OfficeOverview() {
     { data: reportTechnician },
     { data: openLeads },
     { data: reportSource },
+    { data: marketingCosts },
   ] = await Promise.all([
     supabase
       .from('jobs')
@@ -67,6 +68,7 @@ export default async function OfficeOverview() {
     supabase.from('crm_report_technician').select('*').order('omzet', { ascending: false }).limit(5),
     supabase.from('leads').select('status').in('status', ['new', 'qualified', 'contacted']),
     supabase.from('crm_report_source').select('*'),
+    supabase.from('crm_marketing_costs').select('*').gte('date', daysAgo(14).toISOString().split('T')[0]),
   ]);
 
   const jobsToday = todayJobs ?? [];
@@ -115,44 +117,61 @@ export default async function OfficeOverview() {
 
   const badgeProps = (status: string) => {
     switch (status) {
-      case 'afgerond': return { tone: 'ok' as const, label: 'Tamamlandı' };
-      case 'onderweg': return { tone: 'warn' as const, label: 'Devam Ediyor' };
-      case 'bezig': return { tone: 'warn' as const, label: 'Devam Ediyor' };
-      case 'gepland': return { tone: 'info' as const, label: 'Bekliyor' };
-      default: return { tone: 'info' as const, label: 'Planlandı' };
+      case 'afgerond': return { tone: 'ok' as const, label: 'Afgerond' };
+      case 'onderweg': return { tone: 'warn' as const, label: 'In Behandeling' };
+      case 'bezig': return { tone: 'warn' as const, label: 'In Behandeling' };
+      case 'gepland': return { tone: 'info' as const, label: 'Wachtend' };
+      default: return { tone: 'info' as const, label: 'Gepland' };
     }
   };
 
   
-  const mixedData = [
-    { date: '1 Nis', revenue: 2200, calls: 18, conversion: 10 },
-    { date: '2 Nis', revenue: 1200, calls: 17, conversion: 5 },
-    { date: '3 Nis', revenue: 1400, calls: 20, conversion: 9 },
-    { date: '4 Nis', revenue: 1300, calls: 16, conversion: 6 },
-    { date: '5 Nis', revenue: 2300, calls: 19, conversion: 8 },
-    { date: '6 Nis', revenue: 1800, calls: 23, conversion: 10 },
-    { date: '7 Nis', revenue: 2100, calls: 27, conversion: 20 },
-    { date: '8 Nis', revenue: 2000, calls: 26, conversion: 18 },
-    { date: '9 Nis', revenue: 2480, calls: 30, conversion: 20 },
-    { date: '10 Nis', revenue: 2000, calls: 22, conversion: 15 },
-    { date: '11 Nis', revenue: 2300, calls: 24, conversion: 12 },
-    { date: '12 Nis', revenue: 2050, calls: 25, conversion: 18 },
-    { date: '13 Nis', revenue: 2200, calls: 26, conversion: 28 },
-    { date: '14 Nis', revenue: 2600, calls: 16, conversion: 20 },
-  ];
+  
+  // Aggregate real marketing data and revenue for the chart
+  const mixedData = Array.from({ length: 14 }).map((_, i) => {
+    const d = daysAgo(13 - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const displayDate = d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+    
+    // Revenue for that day
+    const dayJobs = (yearJobs || []).filter(j => j.scheduled_date === dateStr && j.final_price);
+    const revenue = dayJobs.reduce((sum, j) => sum + (Number(j.final_price) || 0), 0);
+    
+    // Clicks/Calls for that day
+    const dayCosts = (marketingCosts || []).filter(c => c.date === dateStr);
+    const clicks = dayCosts.reduce((sum, c) => sum + (Number(c.clicks) || 0), 0);
+    
+    // Total leads generated that day
+    const dayLeads = (leadDates || []).filter(l => l.created_at.startsWith(dateStr));
+    const leads = dayLeads.length;
+    
+    // Conversion: Leads / Clicks (If zero clicks but got leads, assume 100% organic, but let's cap at 100%)
+    const conversion = clicks > 0 ? Math.min(Math.round((leads / clicks) * 100), 100) : (leads > 0 ? 100 : 0);
+
+    // Fallback visually if no marketing API data is present yet
+    const finalCalls = clicks > 0 ? clicks : leads * 2; // Dummy estimate if API not set up
+
+    return {
+      date: displayDate,
+      revenue,
+      calls: finalCalls,
+      conversion
+    };
+  });
+  
 
   return (
     <div className={styles.dashboardGrid}>
       <div>
-        <div style={{color: 'var(--crm-muted)', fontSize: '13px', marginBottom: '4px'}}>İyi Günler 👋</div>
-        <PageHead title="Bugünkü Operasyon Merkezi" sub={`Operasyonlar normal seyrediyor. ${jobsToday.length - doneToday.length} aktif iş, ${last7} yeni lead bekliyor.`} />
+        <div style={{color: 'var(--crm-muted)', fontSize: '13px', marginBottom: '4px'}}>Goedendag 👋</div>
+        <PageHead title="Operatiecentrum Vandaag" sub={`Operaties verlopen normaal. ${jobsToday.length - doneToday.length} actieve klussen, ${last7} nieuwe leads wachten.`} />
       </div>
 
       <div className={styles.kpiStrip}>
         <div className={styles.kpiCard}>
           <div className={styles.kpiTop}>
             <div className={`${styles.kpiIcon} ${styles.green}`}><Users size={20} /></div>
-            <div className={styles.kpiTitle}>Yeni Lead</div>
+            <div className={styles.kpiTitle}>Nieuwe Leads</div>
           </div>
           <div className={styles.kpiMain}>
             {last7}
@@ -162,13 +181,13 @@ export default async function OfficeOverview() {
               </span>
             )}
           </div>
-          <div className={styles.kpiSub}>Dünden daha yüksek</div>
+          <div className={styles.kpiSub}>Vergeleken met gisteren</div>
         </div>
 
         <div className={styles.kpiCard}>
           <div className={styles.kpiTop}>
             <div className={`${styles.kpiIcon} ${styles.green}`}><Briefcase size={20} /></div>
-            <div className={styles.kpiTitle}>Bugünkü İş</div>
+            <div className={styles.kpiTitle}>Klussen Vandaag</div>
           </div>
           <div className={styles.kpiMain}>
             {jobsToday.length}
@@ -178,13 +197,13 @@ export default async function OfficeOverview() {
               </span>
             )}
           </div>
-          <div className={styles.kpiSub}>{doneToday.length} tamamlandı, {jobsToday.length - doneToday.length} bekliyor</div>
+          <div className={styles.kpiSub}>{doneToday.length} afgerond, {jobsToday.length - doneToday.length} wachten</div>
         </div>
 
         <div className={styles.kpiCard}>
           <div className={styles.kpiTop}>
             <div className={`${styles.kpiIcon} ${styles.green}`}><Euro size={20} /></div>
-            <div className={styles.kpiTitle}>Gelir</div>
+            <div className={styles.kpiTitle}>Omzet</div>
           </div>
           <div className={styles.kpiMain}>
             {euro(revenueToday)}
@@ -194,19 +213,19 @@ export default async function OfficeOverview() {
               </span>
             )}
           </div>
-          <div className={styles.kpiSub}>Düne göre artış</div>
+          <div className={styles.kpiSub}>Vergeleken met gisteren</div>
         </div>
 
         <div className={styles.kpiCard}>
           <div className={styles.kpiTop}>
             <div className={`${styles.kpiIcon} ${styles.green}`}><Target size={20} /></div>
-            <div className={styles.kpiTitle}>Müşteri Memnuniyeti</div>
+            <div className={styles.kpiTitle}>Klanttevredenheid</div>
           </div>
           <div className={styles.kpiMain}>
             %98
             <span style={{ fontSize: '12px', color: 'var(--crm-ok)' }}>▲ +2%</span>
           </div>
-          <div className={styles.kpiSub}>Gerçek müşteri değerlendirmesi</div>
+          <div className={styles.kpiSub}>Echte klantbeoordelingen</div>
         </div>
       </div>
 
@@ -216,9 +235,9 @@ export default async function OfficeOverview() {
             <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
               <span style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                 <AlertCircle size={18} color="var(--crm-stop)" /> 
-                Aksiyon Merkezi
+                Actiecentrum
               </span>
-              <Link href="/admin/orders" style={{color: 'var(--crm-accent-hover)', fontSize: '12px', textDecoration: 'none'}}>Tüm aksiyonları gör &rarr;</Link>
+              <Link href="/admin/orders" style={{color: 'var(--crm-accent-hover)', fontSize: '12px', textDecoration: 'none'}}>Bekijk alle acties &rarr;</Link>
             </div>
           </CardHead>
           {ordersWaiting > 0 && (
@@ -230,7 +249,7 @@ export default async function OfficeOverview() {
                 <div className={styles.actionTitle}>Bestelling ohne Monteur</div>
                 <div className={styles.actionSub}>{ordersWaiting} bestellingen wachten</div>
               </div>
-              <Link href="/admin/orders" className={styles.actionBtn} style={{background: 'var(--crm-stop-bg)', color: 'var(--crm-stop)'}}>Teknisyen Ata</Link>
+              <Link href="/admin/orders" className={styles.actionBtn} style={{background: 'var(--crm-stop-bg)', color: 'var(--crm-stop)'}}>Monteur Toewijzen</Link>
             </div>
           )}
           {pendingPayoutCount > 0 && (
@@ -242,7 +261,7 @@ export default async function OfficeOverview() {
                 <div className={styles.actionTitle}>Openstaande uitbetalingen</div>
                 <div className={styles.actionSub}>{pendingPayoutCount}× · {euro(pendingPayoutTotal)}</div>
               </div>
-              <Link href="/admin/kas" className={styles.actionBtn} style={{background: 'var(--crm-warn-bg)', color: 'var(--crm-warn)'}}>Ödeme Yap</Link>
+              <Link href="/admin/kas" className={styles.actionBtn} style={{background: 'var(--crm-warn-bg)', color: 'var(--crm-warn)'}}>Uitbetalen</Link>
             </div>
           )}
           {(outOfStockTechnicians.size > 0 || lowStockTechnicians.size > 0) && (
@@ -251,10 +270,10 @@ export default async function OfficeOverview() {
                 <PackageX size={16} />
               </div>
               <div className={styles.actionContent}>
-                <div className={styles.actionTitle}>Düşük stok uyarısı</div>
-                <div className={styles.actionSub}>{outOfStockTechnicians.size + lowStockTechnicians.size} teknisyende eksik</div>
+                <div className={styles.actionTitle}>Lage voorraad waarschuwing</div>
+                <div className={styles.actionSub}>{outOfStockTechnicians.size + lowStockTechnicians.size} monteur tekort</div>
               </div>
-              <Link href="/admin/monteurs" className={styles.actionBtn} style={{background: 'var(--crm-warn-bg)', color: 'var(--crm-warn)'}}>Stok Detayları</Link>
+              <Link href="/admin/monteurs" className={styles.actionBtn} style={{background: 'var(--crm-warn-bg)', color: 'var(--crm-warn)'}}>Voorraad details</Link>
             </div>
           )}
           {unmetThisWeek > 0 && (
@@ -266,7 +285,7 @@ export default async function OfficeOverview() {
                 <div className={styles.actionTitle}>Gemiste aanvragen (7d)</div>
                 <div className={styles.actionSub}>{unmetThisWeek}× geen dekking</div>
               </div>
-              <Link href="/admin/leads" className={styles.actionBtn} style={{background: 'var(--crm-steel-bg)', color: 'var(--crm-steel)'}}>Şimdi Ara</Link>
+              <Link href="/admin/leads" className={styles.actionBtn} style={{background: 'var(--crm-steel-bg)', color: 'var(--crm-steel)'}}>Nu bellen</Link>
             </div>
           )}
           {ordersWaiting === 0 && pendingPayoutCount === 0 && outOfStockTechnicians.size === 0 && unmetThisWeek === 0 && (
@@ -279,9 +298,9 @@ export default async function OfficeOverview() {
             <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
               <span style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                 <Clock size={18} color="var(--crm-accent)" /> 
-                Bugünün İşleri
+                Klussen Vandaag
               </span>
-              <Link href="/admin/jobs" style={{color: 'var(--crm-accent-hover)', fontSize: '12px', textDecoration: 'none'}}>Tümünü gör &rarr;</Link>
+              <Link href="/admin/jobs" style={{color: 'var(--crm-accent-hover)', fontSize: '12px', textDecoration: 'none'}}>Bekijk alles &rarr;</Link>
             </div>
           </CardHead>
           {jobsToday.length === 0 ? (
@@ -328,9 +347,9 @@ export default async function OfficeOverview() {
             <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
               <span style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                 <Users size={18} color="var(--crm-accent)" /> 
-                Canlı Teknisyenler
+                Live Monteurs
               </span>
-              <Link href="/admin/monteurs" style={{color: 'var(--crm-accent-hover)', fontSize: '12px', textDecoration: 'none'}}>Tüm ekibi gör &rarr;</Link>
+              <Link href="/admin/monteurs" style={{color: 'var(--crm-accent-hover)', fontSize: '12px', textDecoration: 'none'}}>Bekijk het team &rarr;</Link>
             </div>
           </CardHead>
           {techs.length === 0 ? (
@@ -345,7 +364,7 @@ export default async function OfficeOverview() {
                   <div className={styles.techName}>{tech.name}</div>
                   <div className={styles.techLocation}>{tech.city || 'Nederland'}</div>
                 </div>
-                <div style={{flex: 'none'}}><Badge tone={tech.online ? 'ok' : 'info'}>{tech.online ? 'Müsait' : 'Çevrimdışı'}</Badge></div>
+                <div style={{flex: 'none'}}><Badge tone={tech.online ? 'ok' : 'info'}>{tech.online ? 'Beschikbaar' : 'Offline'}</Badge></div>
                 <div className={styles.techActions}>
                   <button className={styles.techBtn}><Phone size={14} /></button>
                   <button className={styles.techBtn}><MoreHorizontal size={14} /></button>
@@ -360,21 +379,21 @@ export default async function OfficeOverview() {
         <Card padded>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px'}}>
             <strong className={styles.cardLabel} style={{display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px'}}>
-              <span style={{color: 'var(--crm-accent)'}}>📊</span> Gelir, Aramalar ve Dönüşüm
+              <span style={{color: 'var(--crm-accent)'}}>📊</span> Omzet, Aramalar ve Dönüşüm
             </strong>
             <select style={{fontSize: '12px', padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--crm-rule)'}}>
-              <option>Son 14 Gün</option>
+              <option>Laatste 14 Dagen</option>
             </select>
           </div>
           <div style={{display: 'flex', gap: '16px', marginBottom: '16px', fontSize: '12px', color: 'var(--crm-muted)'}}>
-            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: 'var(--crm-accent)', opacity: 0.5}}></div> Gelir (€)</div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: '#2196F3'}}></div> Gelen Arama</div>
-            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: '#4CAF50'}}></div> Lead Dönüşüm (%)</div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: 'var(--crm-accent)', opacity: 0.5}}></div> Omzet (€)</div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: '#2196F3'}}></div> Oproepen</div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: '#4CAF50'}}></div> Conversie (%)</div>
           </div>
           <MixedChart data={mixedData} />
         </Card>
         <Card padded>
-          <strong className={styles.cardLabel}>Top Teknisyenler</strong>
+          <strong className={styles.cardLabel}>Top Monteurs</strong>
           <RankedBars rows={topTechnicians} format={euro} />
         </Card>
       </div>

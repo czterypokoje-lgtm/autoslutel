@@ -253,8 +253,8 @@ export default async function LeadsPage({
   return (
     <>
       <PageHead
-        title="Lead / İşler"
-        sub="Tüm lead'leri ve iş süreçlerini tek yerden yönetin."
+        title="Leads / Klussen"
+        sub="Beheer alle leads en klussen op één plek."
       />
 
       {lateCount > 0 && (
@@ -291,7 +291,7 @@ export default async function LeadsPage({
             type="search"
             className={styles.searchInput}
             defaultValue={search}
-            placeholder="Müşteri, plaka, araç, telefon veya iş no ile ara..."
+            placeholder="Zoek op klant, kenteken, auto, telefoon of klus nr..."
           />
         </div>
 
@@ -300,9 +300,9 @@ export default async function LeadsPage({
         </button>
 
         <div className={styles.toggles}>
-          <button type="button" className={`${styles.toggleBtn} ${styles.active}`}>Liste</button>
-          <button type="button" className={styles.toggleBtn}>Tablo</button>
-          <button type="button" className={styles.toggleBtn}>Harita</button>
+          <button type="button" className={`${styles.toggleBtn} ${styles.active}`}>Lijst</button>
+          <button type="button" className={styles.toggleBtn}>Tabel</button>
+          <button type="button" className={styles.toggleBtn}>Kaart</button>
         </div>
       </form>
 
