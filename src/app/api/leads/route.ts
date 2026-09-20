@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 import { isScenario } from '@/lib/scenarios';
+import { notifyNewLead } from '@/lib/leadNotify';
 
 /**
  * Lead capture.
@@ -185,6 +186,30 @@ export async function POST(request: Request) {
     if (error) {
       console.error('Error inserting lead into Supabase:', error);
       return NextResponse.json({ error: 'Opslaan mislukt' }, { status: 500 });
+    }
+
+    /*
+     * Tell somebody. Until this line existed the route ended at the insert:
+     * the lead was stored correctly and then sat there, because nothing on
+     * any phone or in any inbox said it had arrived.
+     *
+     * Awaited, not fired and forgotten. On a serverless runtime the function
+     * can be frozen the moment the response is returned, so a floating
+     * promise here is an alert that sometimes sends — which is worse than one
+     * that never does, because nobody goes looking for the missing half.
+     *
+     * Wrapped anyway: the lead is already committed at this point, and a mail
+     * provider having a bad minute must not turn that into an error page for
+     * a customer who is standing next to a locked car.
+     */
+    try {
+      await notifyNewLead({
+        ...enrichedRow,
+        location,
+        status: initialStatus ?? 'new',
+      });
+    } catch (notifyError) {
+      console.error('[leads] lead saved but the alert failed', notifyError);
     }
 
     return NextResponse.json({ success: true, data }, { status: 200 });
