@@ -617,3 +617,51 @@
   color: var(--crm-stop);
   line-height: 1.5;
 }
+
+/* ── pager ───────────────────────────────────────────────────────────────
+ *
+ * .pager and .pageLink were referenced by the markup and never defined, so
+ * the control rendered as unstyled inline text — "Vorige1 / 2Volgende" with
+ * no spacing and a tap target the height of one line of type, which on a
+ * phone is close to unhittable.
+ */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  margin: var(--sp-5) 0 var(--sp-8);
+  font-size: var(--fs-sm);
+  color: var(--crm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pageLink,
+.pager > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px is the minimum comfortable touch target; the old inline text was
+     about 18px tall. */
+  min-height: 44px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--crm-r-sm);
+  text-decoration: none;
+}
+
+.pageLink {
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-panel);
+  color: var(--crm-accent-hover);
+  font-weight: var(--fw-semibold);
+}
+
+.pageLink:hover {
+  background: var(--crm-sunk);
+}
+
+/* The disabled ends and the "1 / 2" counter: present, clearly not buttons. */
+.pager > span {
+  color: var(--crm-muted);
+  opacity: 0.65;
+}

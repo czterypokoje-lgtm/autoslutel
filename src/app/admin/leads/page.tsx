@@ -54,6 +54,14 @@ function sanitiseSearch(raw: string): string {
  * opt-in: any filter change drops back to page 1, because page 3 of a result
  * set you just replaced is meaningless.
  */
+/*
+ * The page number goes in the third parameter, never in `changes`.
+ *
+ * Both pager links used to pass `{ page: String(page + 1) }`, and changes are
+ * written to the query string under their own key — so the link read
+ * `?page=2` while this file reads the page from `p`. The parameter was simply
+ * ignored and every "Volgende" reloaded page one.
+ */
 function buildHref(
   current: Record<string, string | undefined>,
   changes: Record<string, string | undefined> = {},
@@ -348,7 +356,7 @@ export default async function LeadsPage({
       {pages > 1 && (
         <div className={styles.pager}>
           {page > 1 ? (
-            <Link href={buildHref(currentParams, { page: String(page - 1) })} className={styles.pageLink}>
+            <Link href={buildHref(currentParams, {}, page - 1)} className={styles.pageLink}>
               &larr; Vorige
             </Link>
           ) : (
@@ -358,7 +366,7 @@ export default async function LeadsPage({
             {page} / {pages}
           </span>
           {page < pages ? (
-            <Link href={buildHref(currentParams, { page: String(page + 1) })} className={styles.pageLink}>
+            <Link href={buildHref(currentParams, {}, page + 1)} className={styles.pageLink}>
               Volgende &rarr;
             </Link>
           ) : (
