@@ -55,7 +55,6 @@ const fmt = (iso: string, opts: Intl.DateTimeFormatOptions) =>
   new Date(iso).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam', ...opts });
 
 const time = (iso: string) => fmt(iso, { hour: '2-digit', minute: '2-digit' });
-const when = (iso: string) => fmt(iso, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 const dayStamp = (iso: string) => fmt(iso, { day: 'numeric', month: 'short' });
 
 /** Initials for the avatar: a name if we have one, otherwise the last digits. */
