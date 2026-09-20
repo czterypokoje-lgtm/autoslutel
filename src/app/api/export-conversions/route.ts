@@ -132,10 +132,21 @@ export async function GET(request: Request) {
         completed_at?: string | null;
       }[];
       const done = jobs.filter((j) => j.status === 'afgerond');
-      const earned = done.reduce(
-        (total, j) => total + Number(j.final_price ?? j.quoted_price ?? 0),
-        0
-      );
+      /*
+       * final_price only — never a quote.
+       *
+       * The office reports that the estimate shown on the public form runs
+       * 25-30% high on some jobs: it is produced before anyone knows the real
+       * location or has verified what the customer typed about the car. A
+       * quote is what was hoped for; final_price is what was charged, and
+       * Smart Bidding optimises against whatever number it is given.
+       *
+       * A completed job with no final_price therefore contributes nothing
+       * rather than its quote, and the conversion uploads with an empty value
+       * — which Google reads as "no value supplied" instead of a figure
+       * nobody collected.
+       */
+      const earned = done.reduce((total, j) => total + Number(j.final_price ?? 0), 0);
       const { jobs: _dropped, ...rest } = lead as Record<string, unknown> & { jobs?: unknown };
       return {
         ...(rest as { id: string; status: string; created_at: string }),
