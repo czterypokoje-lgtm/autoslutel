@@ -11,6 +11,7 @@ import {
   CircleUser,
   History,
   Inbox,
+  PhoneCall,
   LayoutDashboard,
   MessageSquare,
   Package,
@@ -49,6 +50,7 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
     items: [
       { href: '/admin/overzicht', label: 'Overzicht', icon: LayoutDashboard },
       { href: '/admin/leads', label: 'Leads', icon: Inbox },
+      { href: '/admin/gesprekken', label: 'Gesprekken', icon: PhoneCall },
       { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
       { href: '/admin/jobs', label: 'Agenda', icon: CalendarDays },
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
