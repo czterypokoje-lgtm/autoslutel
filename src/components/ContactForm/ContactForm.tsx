@@ -77,6 +77,16 @@ export default function ContactForm() {
           event: 'contact_form_submit',
           email: data.get('email') || undefined,
           phone_number: data.get('phone') || undefined,
+          // Facebook Pixel Advanced Matching expects these specific keys:
+          user_data: {
+            email_address: data.get('email') || undefined,
+            phone_number: data.get('phone') || undefined,
+            address: {
+              postal_code: data.get('postcode') || undefined,
+              city: data.get('location') || undefined,
+            },
+            external_id: data.get('email') || data.get('phone') || undefined
+          }
         });
         if (typeof window.gtag === 'function') {
           window.gtag('event', 'generate_lead', { event_category: 'contact_form' });
