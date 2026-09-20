@@ -1,108 +1,474 @@
-.list {
+/*
+ * Three panes: pick, read, act.
+ *
+ * Fixed outer columns with a fluid middle — the list and the context both
+ * hold short, predictable content, while the transcript is the part that
+ * should take whatever room is left.
+ */
+.console {
   display: grid;
-  gap: 0.85rem;
+  grid-template-columns: 300px minmax(0, 1fr) 280px;
+  gap: var(--sp-4);
+  align-items: start;
+  /* Each pane scrolls inside itself, so the page never scrolls three
+     independent columns as one tall document. */
+  height: calc(100vh - 210px);
+  min-height: 460px;
 }
 
-.meta {
+.listPane,
+.threadPane,
+.contextPane {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+}
+
+/* ── pane 1: list ─────────────────────────────────────────────────────── */
+
+.group + .group {
+  border-top: 1px solid var(--crm-rule);
+}
+
+.groupHead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.85rem;
-}
-
-.channel {
-  font-weight: 700;
-}
-
-.phone {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: var(--crm-accent);
-  text-decoration: none;
-}
-
-.phone:hover {
-  text-decoration: underline;
-}
-
-.noPhone {
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--crm-sunk);
+  border-bottom: 1px solid var(--crm-rule);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--crm-muted);
-  font-style: italic;
 }
 
-.when,
-.duration {
+.groupCount {
+  font-variant-numeric: tabular-nums;
+}
+
+.listItem {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding: 11px 13px;
+  border: none;
+  border-bottom: 1px solid var(--crm-rule);
+  border-left: 3px solid transparent;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.listItem:hover {
+  background: var(--crm-sunk);
+}
+
+.listItemActive {
+  background: var(--crm-accent-soft);
+  border-left-color: var(--crm-accent);
+}
+
+.avatar {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--crm-sunk);
+  color: var(--crm-muted);
+}
+
+.ch_phone { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.ch_whatsapp { background: var(--crm-ok-bg); color: var(--crm-ok); }
+
+.listBody {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.listTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+
+.listName {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listTime {
+  flex: none;
+  font-size: 11px;
   color: var(--crm-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.summary {
-  margin: 0.7rem 0 0;
-  line-height: 1.6;
-  font-size: 0.93rem;
-  color: var(--crm-text);
+/* Two lines of summary, then stop — enough to recognise the call, not enough
+   to turn the list into a second transcript. */
+.listSnippet {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.transcript {
-  margin-top: 0.7rem;
-  border-top: 1px solid var(--crm-rule);
-  padding-top: 0.6rem;
+.listTags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+  flex-wrap: wrap;
 }
 
-.transcript summary {
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.dot.ok { background: var(--crm-ok); }
+.dot.bad { background: var(--crm-stop); }
+.dot.neutral { background: var(--crm-muted); }
+
+.listMeta {
+  font-size: 10.5px;
+  color: var(--crm-muted);
+}
+
+.chipMini {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--crm-accent-soft);
+  color: var(--crm-accent-hover);
+}
+
+/* ── pane 2: transcript ───────────────────────────────────────────────── */
+
+.threadHead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 12px 16px;
+  background: var(--crm-panel);
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.back {
+  display: none;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-panel);
+  color: var(--crm-ink);
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
+}
+
+.threadWho { min-width: 0; flex: 1; }
+
+.threadName {
+  font-size: var(--fs-md, 15px);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.threadMeta {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.outcome {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.outcome.ok { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.outcome.bad { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.outcome.neutral { background: var(--crm-sunk); color: var(--crm-muted); }
+
+.summary {
+  margin: 14px 16px 0;
+  padding: 12px 14px;
+  border-radius: var(--crm-r-md, 10px);
+  background: var(--crm-accent-soft);
+  border: 1px solid var(--crm-rule);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
   color: var(--crm-text);
+}
+
+.summaryLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--crm-accent-hover);
+  margin-bottom: 4px;
 }
 
 .turns {
-  margin-top: 0.7rem;
-  display: grid;
-  gap: 0.45rem;
-  /* Long calls otherwise push every other card off the screen. */
-  max-height: 22rem;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
 }
 
-.agent,
-.user {
-  margin: 0;
-  padding: 0.5rem 0.7rem;
-  border-radius: 9px;
-  font-size: 0.89rem;
-  line-height: 1.55;
+.turnAgent,
+.turnUser {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 78%;
 }
 
-.agent strong,
-.user strong {
-  display: block;
-  font-size: 0.7rem;
+/* Agent left, customer right — the chat convention, so the eye can follow a
+   long transcript without reading every speaker label. */
+.turnAgent { align-self: flex-start; align-items: flex-start; }
+.turnUser { align-self: flex-end; align-items: flex-end; }
+
+.turnWho {
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 0.15rem;
-  opacity: 0.65;
+  color: var(--crm-muted);
 }
 
-/* The two sides get different grounds so a long call can be skimmed rather
-   than read — who said what is the first question, not the words. */
-.agent {
+.bubble {
+  margin: 0;
+  padding: 9px 13px;
+  border-radius: 14px;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.turnAgent .bubble {
+  background: var(--crm-sunk);
+  color: var(--crm-text);
+  border-bottom-left-radius: 4px;
+}
+
+.turnUser .bubble {
+  background: var(--crm-accent);
+  color: var(--crm-on-accent);
+  border-bottom-right-radius: 4px;
+}
+
+.noTurns {
+  margin: 0;
+  color: var(--crm-muted);
+  font-size: var(--fs-sm);
+}
+
+/* ── pane 3: context ──────────────────────────────────────────────────── */
+
+.contextPane {
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  background: var(--crm-bg);
+  border: none;
+}
+
+.ctxCard {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ctxHead {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--crm-muted);
+}
+
+.ctxNumber {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.ctxRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-micro);
+  color: var(--crm-text);
+  min-width: 0;
+}
+
+.ctxRow svg { flex: none; color: var(--crm-muted); }
+
+.ctxStatus {
+  align-self: flex-start;
+  padding: 2px 9px;
+  border-radius: 999px;
   background: var(--crm-sunk);
   color: var(--crm-ink);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: capitalize;
 }
 
-.user {
-  background: var(--crm-accent-soft);
+.ctxEmpty {
+  margin: 0;
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+}
+
+.btn,
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  /* 38px: a real tap target in a narrow column. */
+  min-height: 38px;
+  padding: 0 13px;
+  border-radius: var(--crm-r-sm);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-panel);
   color: var(--crm-ink);
 }
 
-.error {
-  margin: 0;
-  color: var(--crm-stop);
-  line-height: 1.6;
+.btn:hover { background: var(--crm-sunk); }
+
+.btnPrimary {
+  background: var(--crm-accent);
+  border-color: var(--crm-accent);
+  color: var(--crm-on-accent);
 }
 
-.hint {
-  color: var(--crm-muted);
-  font-size: 0.85rem;
+.btnPrimary:hover { background: var(--crm-accent-hover); }
+
+/* ── tablet: drop the context column under the transcript ─────────────── */
+
+@media (max-width: 1180px) {
+  .console {
+    grid-template-columns: 270px minmax(0, 1fr);
+    height: auto;
+    min-height: 0;
+  }
+
+  .listPane,
+  .threadPane {
+    height: calc(100vh - 230px);
+  }
+
+  .contextPane {
+    grid-column: 1 / -1;
+    height: auto;
+    overflow: visible;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  .ctxCard {
+    flex: 1 1 220px;
+  }
+}
+
+/* ── phone: one pane at a time ────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .console {
+    display: block;
+    height: auto;
+  }
+
+  .listPane,
+  .threadPane {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  /*
+   * A list and a transcript side by side on a 375px screen give each about
+   * 180px. So the selection decides which one is on screen: the list until
+   * something is picked, then the conversation with a back button.
+   */
+  .hasSelection .listPane {
+    display: none;
+  }
+
+  .back {
+    display: flex;
+  }
+
+  .contextPane {
+    display: flex;
+    flex-direction: column;
+    padding: var(--sp-4) 0 0;
+  }
+
+  .turnAgent,
+  .turnUser {
+    max-width: 88%;
+  }
 }

@@ -24,10 +24,12 @@ interface PostCallPayload {
      */
     metadata?: {
       call_duration_secs?: number;
-      phone_call?: { external_number?: string; direction?: string };
+      phone_call?: { external_number?: string; direction?: string } | null;
+      whatsapp?: { external_number?: string; phone_number?: string } | null;
+      sms?: unknown;
+      conversation_initiation_source?: string;
       phone_number?: string;
       from_number?: string;
-      channel?: string;
       [key: string]: unknown;
     };
     conversation_initiation_client_data?: { dynamic_variables?: Record<string, unknown> };
@@ -43,19 +45,45 @@ interface PostCallPayload {
  * when someone later filters the list by channel.
  */
 function detectChannel(data: NonNullable<PostCallPayload['data']>): string {
-  const raw = String(data.metadata?.channel ?? '').toLowerCase();
-  if (raw.includes('whatsapp')) return 'whatsapp';
-  if (raw.includes('phone') || raw.includes('voice')) return 'phone';
-  if (data.metadata?.phone_call) return 'phone';
+  const meta = data.metadata;
+  if (!meta) return 'unknown';
+
+  /*
+   * Read from the real payload, which the first stored call settled:
+   * `metadata.channel` does not exist at all. What ElevenLabs actually sends
+   * is one populated sub-object per channel and null for the rest —
+   *
+   *   phone_call: { type: 'twilio', call_sid, direction, external_number, … }
+   *   whatsapp:   null
+   *   sms:        null
+   *
+   * The previous version led with `metadata.channel`, which was dead code,
+   * and then fell through to `phone_call` — right for a call by luck, and
+   * wrong for WhatsApp, which would have been stored as 'unknown' because
+   * nothing here ever looked at `metadata.whatsapp`.
+   */
+  if (meta.whatsapp) return 'whatsapp';
+  if (meta.phone_call) return 'phone';
+  if (meta.sms) return 'sms';
+
+  /* Last resort, and a real one: the source that opened the conversation. */
+  const source = String(meta.conversation_initiation_source ?? '').toLowerCase();
+  if (source.includes('whatsapp')) return 'whatsapp';
+  if (source.includes('twilio') || source.includes('phone')) return 'phone';
+
   return 'unknown';
 }
 
 /** The customer's number, from whichever key this payload happens to use. */
 function detectPhone(data: NonNullable<PostCallPayload['data']>): string | null {
+  const meta = data.metadata;
   const candidate =
-    data.metadata?.phone_call?.external_number ??
-    data.metadata?.from_number ??
-    data.metadata?.phone_number;
+    meta?.phone_call?.external_number ??
+    /* WhatsApp carries the customer under its own object, not phone_call. */
+    meta?.whatsapp?.external_number ??
+    meta?.whatsapp?.phone_number ??
+    meta?.from_number ??
+    meta?.phone_number;
   return typeof candidate === 'string' && candidate.trim() ? candidate.trim() : null;
 }
 
