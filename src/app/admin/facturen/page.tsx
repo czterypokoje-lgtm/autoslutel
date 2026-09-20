@@ -28,8 +28,7 @@ export default async function FacturenPage() {
         car_make,
         car_model,
         kenteken,
-        service_type,
-        problem
+        service_type
       )
     `)
     .order('created_at', { ascending: false })

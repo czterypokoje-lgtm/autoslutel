@@ -25,7 +25,7 @@ interface InvoiceRow {
     car_model: string | null;
     kenteken: string | null;
     service_type: string | null;
-    problem: string | null;
+    
   } | null;
 }
 
@@ -95,7 +95,7 @@ function InvoiceDetailDrawer({ invoice, onClose }: { invoice: InvoiceRow; onClos
                     <div className={styles.avatar} style={{background: 'transparent', border: '1px solid var(--crm-rule)'}}>🚗</div>
                     <div>
                       <div style={{fontWeight: 500, color: 'var(--crm-ink)'}}>{[invoice.job.car_make, invoice.job.car_model].filter(Boolean).join(' ') || 'Auto'} • {invoice.job.kenteken || ''}</div>
-                      <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>{invoice.job.service_type || invoice.job.problem || 'Service'}</div>
+                      <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>{invoice.job.service_type || 'Service'}</div>
                     </div>
                   </div>
                 </div>
@@ -268,7 +268,7 @@ export default function FacturenTable({ rows }: { rows: InvoiceRow[] }) {
 
                 <div style={{flex: 2, display: 'flex', flexDirection: 'column'}}>
                   <span style={{fontSize: '13px', color: 'var(--crm-ink)'}}>{row.job ? ([row.job.car_make, row.job.car_model].filter(Boolean).join(' ') || 'Auto') : 'Dienst'}</span>
-                  <span style={{fontSize: '11px', color: 'var(--crm-muted)'}}>{row.job?.service_type || row.job?.problem || '—'}</span>
+                  <span style={{fontSize: '11px', color: 'var(--crm-muted)'}}>{row.job?.service_type || '—'}</span>
                 </div>
 
                 <div style={{flex: 1, textAlign: 'right', fontWeight: 600, fontSize: '14px', color: 'var(--crm-ink)'}}>

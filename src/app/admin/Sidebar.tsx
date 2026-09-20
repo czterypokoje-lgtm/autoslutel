@@ -53,14 +53,13 @@ export default function Sidebar({
           Autosleutel24
         </Link>
 
-        {/*
-          The search field lives on the page that has something to search,
-          not up here — this is the way in to it, so the shortcut sits in
-          the same place on every screen.
-        */}
-        <Link href="/admin/klanten" className={styles.iconGhost} title="Zoeken">
-          <Search size={16} strokeWidth={1.9} aria-hidden="true" />
-        </Link>
+        
+        {/* Only office roles have the global search to Klanten */}
+        {(role === 'owner' || role === 'kantoor') && (
+          <Link href="/admin/klanten" className={styles.iconGhost} title="Zoeken">
+            <Search size={16} strokeWidth={1.9} aria-hidden="true" />
+          </Link>
+        )}
 
         <Link href="/admin/mijn-profiel" className={styles.avatar} title={email ?? 'Profiel'}>
           {photoUrl ? (

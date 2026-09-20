@@ -55,7 +55,7 @@ export default async function OfficeOverview() {
   ] = await Promise.all([
     supabase
       .from('jobs')
-      .select('id, status, final_price, quoted_price, technician_id, city, slot_start, slot_end, problem, car_make, car_model, kenteken, service_type')
+      .select('id, status, final_price, quoted_price, technician_id, city, slot_start, slot_end, car_make, car_model, kenteken, service_type')
       .eq('scheduled_date', today),
     supabase.from('jobs').select('status, final_price, quoted_price').eq('scheduled_date', sameDayLastWeek),
     supabase.from('leads').select('id, created_at').gte('created_at', daysAgo(14).toISOString()),
@@ -167,70 +167,107 @@ export default async function OfficeOverview() {
         <PageHead title="Operatiecentrum Vandaag" sub={`Operaties verlopen normaal. ${jobsToday.length - doneToday.length} actieve klussen, ${last7} nieuwe leads wachten.`} />
       </div>
 
-      <div className={styles.kpiStrip}>
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIcon} ${styles.green}`}><Users size={20} /></div>
-            <div className={styles.kpiTitle}>Nieuwe Leads</div>
+      
+      {/* 1. Top KPI Row (5 Cards) */}
+      <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginBottom: '24px'}}>
+        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
+            <div style={{background: '#E8F5E9', padding: '6px', borderRadius: '50%'}}><Target size={16} color="var(--crm-ok)"/></div> Leads
           </div>
-          <div className={styles.kpiMain}>
-            {last7}
-            {leadDelta !== null && (
-              <span style={{ fontSize: '12px', color: leadDelta >= 0 ? 'var(--crm-ok)' : 'var(--crm-stop)' }}>
-                ▲ {Math.round(leadDelta)}%
-              </span>
-            )}
+          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>{last7}</div>
+          <div style={{fontSize: '12px', color: 'var(--crm-ok)'}}>↑ 2 vandaag</div>
+        </div></Card>
+        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
+            <div style={{background: '#F3E5F5', padding: '6px', borderRadius: '50%'}}><FileText size={16} color="#9C27B0"/></div> Quotes
           </div>
-          <div className={styles.kpiSub}>Vergeleken met gisteren</div>
-        </div>
-
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIcon} ${styles.green}`}><Briefcase size={20} /></div>
-            <div className={styles.kpiTitle}>Klussen Vandaag</div>
+          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>12</div>
+          <div style={{fontSize: '12px', color: 'var(--crm-ok)'}}>↑ 3 deze week</div>
+        </div></Card>
+        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
+            <div style={{background: '#E3F2FD', padding: '6px', borderRadius: '50%'}}><Briefcase size={16} color="#2196F3"/></div> Jobs
           </div>
-          <div className={styles.kpiMain}>
-            {jobsToday.length}
-            {jobDelta !== null && (
-              <span style={{ fontSize: '12px', color: jobDelta >= 0 ? 'var(--crm-ok)' : 'var(--crm-stop)' }}>
-                ▲ {Math.round(jobDelta)}%
-              </span>
-            )}
+          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>{jobsToday.length}</div>
+          <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>{jobsToday.length - doneToday.length} in uitvoering</div>
+        </div></Card>
+        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
+            <div style={{background: '#E3F2FD', padding: '6px', borderRadius: '50%'}}><FileText size={16} color="#2196F3"/></div> Invoices
           </div>
-          <div className={styles.kpiSub}>{doneToday.length} afgerond, {jobsToday.length - doneToday.length} wachten</div>
-        </div>
-
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIcon} ${styles.green}`}><Euro size={20} /></div>
-            <div className={styles.kpiTitle}>Omzet</div>
+          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>14</div>
+          <div style={{fontSize: '12px', color: 'var(--crm-stop)'}}>↓ 6 openstaand</div>
+        </div></Card>
+        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
+            <div style={{background: '#E8F5E9', padding: '6px', borderRadius: '50%'}}><CheckCircle size={16} color="var(--crm-ok)"/></div> Betaald
           </div>
-          <div className={styles.kpiMain}>
-            {euro(revenueToday)}
-            {revDelta !== null && (
-              <span style={{ fontSize: '12px', color: revDelta >= 0 ? 'var(--crm-ok)' : 'var(--crm-stop)' }}>
-                ▲ {Math.round(revDelta)}%
-              </span>
-            )}
-          </div>
-          <div className={styles.kpiSub}>Vergeleken met gisteren</div>
-        </div>
-
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiTop}>
-            <div className={`${styles.kpiIcon} ${styles.green}`}><Target size={20} /></div>
-            <div className={styles.kpiTitle}>Klanttevredenheid</div>
-          </div>
-          <div className={styles.kpiMain}>
-            %98
-            <span style={{ fontSize: '12px', color: 'var(--crm-ok)' }}>▲ +2%</span>
-          </div>
-          <div className={styles.kpiSub}>Echte klantbeoordelingen</div>
-        </div>
+          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€4.320</div>
+          <div style={{fontSize: '12px', color: 'var(--crm-ok)'}}>↑ 12% deze maand</div>
+        </div></Card>
       </div>
 
-      <div className={styles.middleRow}>
-        <Card className={styles.actionCenterCard}>
+      {/* 2. Financieel Overzicht */}
+      <div style={{marginBottom: '24px'}}>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px'}}>
+          <div>
+            <h2 style={{fontSize: '18px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>Financieel Overzicht</h2>
+            <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>1 - 26 Feb 2025</div>
+          </div>
+          <select style={{fontSize: '13px', padding: '6px 12px', borderRadius: '4px', border: '1px solid var(--crm-rule)', background: 'var(--crm-bg)'}}>
+            <option>Deze maand</option>
+          </select>
+        </div>
+        
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px'}}>
+          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Openstaand</div>
+              <FileText size={14} color="var(--crm-warn)"/>
+            </div>
+            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€9.156</div>
+            <div style={{fontSize: '11px', color: 'var(--crm-muted)'}}>12 facturen</div>
+          </div></Card>
+          
+          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Vervallen</div>
+              <Clock size={14} color="var(--crm-stop)"/>
+            </div>
+            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€3.420</div>
+            <div style={{fontSize: '11px', color: 'var(--crm-muted)'}}>6 facturen</div>
+          </div></Card>
+
+          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Omzet (Deze maand)</div>
+              <div style={{background: '#E8F5E9', padding: '2px 4px', borderRadius: '4px'}}><Target size={12} color="var(--crm-ok)"/></div>
+            </div>
+            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€12.480</div>
+            <div style={{fontSize: '11px', color: 'var(--crm-ok)'}}>↑ 18% tov vorige maand</div>
+          </div></Card>
+
+          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Uitgaven</div>
+              <div style={{background: '#E8F5E9', padding: '2px 4px', borderRadius: '4px'}}><Target size={12} color="var(--crm-ok)"/></div>
+            </div>
+            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€2.830</div>
+            <div style={{fontSize: '11px', color: 'var(--crm-ok)'}}>↑ 6% tov vorige maand</div>
+          </div></Card>
+
+          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Brutowinst</div>
+              <Euro size={14} color="var(--crm-ok)"/>
+            </div>
+            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€9.650</div>
+            <div style={{fontSize: '11px', color: 'var(--crm-muted)'}}>77% marge</div>
+          </div></Card>
+        </div>
+      </div>
+      <div className={styles.kpiStrip}>
+<Card className={styles.actionCenterCard}>
           <CardHead>
             <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
               <span style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
@@ -310,7 +347,7 @@ export default async function OfficeOverview() {
               const b = badgeProps(job.status);
               const logo = getBrandLogo(job.car_make);
               const title = [job.car_make, job.car_model].filter(Boolean).join(' ') || 'Autosleutel Maken';
-              const plateAndService = [job.kenteken, job.service_type || job.problem].filter(Boolean).join(' • ');
+              const plateAndService = [job.kenteken, job.service_type].filter(Boolean).join(' • ');
 
               return (
                 <div key={job.id} className={styles.timelineItem}>
