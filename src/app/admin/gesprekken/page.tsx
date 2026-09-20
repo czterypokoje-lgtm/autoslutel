@@ -105,6 +105,11 @@ export default async function GesprekkenPage() {
     if (key && !jobByPhone.has(key)) jobByPhone.set(key, job);
   }
 
+  /*
+   * The journey rail needs every conversation this number has had, not just
+   * the selected one — so the phone is normalised onto each row here and the
+   * grouping happens in the client, which already holds the whole list.
+   */
   const conversations: Conversation[] = rows.map((row) => {
     const key = toE164NL(row.phone);
     const lead = key ? leadByPhone.get(key) ?? null : null;
@@ -113,6 +118,7 @@ export default async function GesprekkenPage() {
       id: row.id,
       channel: row.channel,
       phone: row.phone,
+      phoneKey: key,
       outcome: row.outcome,
       durationSecs: row.duration_secs,
       summary: row.summary,
