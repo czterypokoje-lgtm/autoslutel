@@ -331,3 +331,67 @@
   color: var(--crm-ok);
   font-weight: var(--fw-bold);
 }
+
+/* MOBILE RESPONSIVE STYLES */
+@media (max-width: 1024px) {
+  .layout {
+    flex-direction: column;
+  }
+  .drawerCol {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    height: 85vh;
+    z-index: 1000;
+  }
+  .drawerCard {
+    height: 100%;
+    border-radius: var(--crm-r-lg) var(--crm-r-lg) 0 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  }
+}
+
+@media (max-width: 768px) {
+  .richRow {
+    flex-wrap: wrap;
+    position: relative;
+    align-items: flex-start;
+    padding-top: 16px;
+  }
+  
+  .richRow > input[type="checkbox"] {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+  
+  .rowInfo {
+    flex: 1 1 calc(100% - 70px);
+    padding-right: 30px; /* avoid checkbox overlap */
+  }
+  
+  .rowPrice, .rowStatus, .rowAssignee {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--crm-rule);
+    padding-top: 10px;
+    margin-top: 4px;
+    text-align: right;
+  }
+  
+  .rowPrice {
+    flex-direction: row-reverse;
+  }
+  
+  .rowStatus {
+    flex-direction: row-reverse;
+  }
+  
+  .rowAssignee {
+    flex-direction: row;
+  }
+}

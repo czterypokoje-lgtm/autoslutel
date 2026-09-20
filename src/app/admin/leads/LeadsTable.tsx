@@ -164,13 +164,13 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
                 </div>
 
                 <div className={styles.rowPrice}>
-                  {row.quoted_price ? `€${row.quoted_price}` : (row.sale_price ? `€${row.sale_price}` : '—')}
+                  <span>{row.quoted_price ? `€${row.quoted_price}` : (row.sale_price ? `€${row.sale_price}` : '—')}</span>
                   <div style={{fontSize: '11px', color: 'var(--crm-muted)', fontWeight: 400}}>{row.source || 'Website'}</div>
                 </div>
 
                 <div className={styles.rowStatus}>
                   <Badge tone={leadTone(row.status)}>{STATUS_LABELS[row.status] || row.status}</Badge>
-                  <div style={{fontSize: '11px', color: 'var(--crm-muted)', marginTop: '4px'}}>{timeAgo(row.created_at)}</div>
+                  <div style={{fontSize: '11px', color: 'var(--crm-muted)', margin: 0}}>{timeAgo(row.created_at)}</div>
                 </div>
 
                 <div className={styles.rowAssignee}>
