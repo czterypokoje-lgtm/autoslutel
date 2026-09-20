@@ -1,108 +1,571 @@
-.list {
+/*
+ * Conversations console: pick · read · who this is.
+ *
+ * Outer columns hold short predictable content and are fixed; the transcript
+ * takes whatever is left. Each pane scrolls inside itself so the page is never
+ * three independent columns pretending to be one tall document.
+ */
+.console {
   display: grid;
-  gap: 0.85rem;
+  grid-template-columns: 310px minmax(0, 1fr) 300px;
+  gap: var(--sp-4);
+  align-items: start;
+  height: calc(100vh - 205px);
+  min-height: 480px;
 }
 
-.meta {
+.listPane,
+.threadPane,
+.contextPane {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.listPane {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 16px;
+}
+
+/* ── pane 1: list ─────────────────────────────────────────────────────── */
+
+.group + .group { border-top: 1px solid var(--crm-rule); }
+
+.groupHead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.85rem;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: none;
+  background: var(--crm-panel);
+  border-bottom: 1px solid var(--crm-rule);
+  font: inherit;
+  cursor: pointer;
 }
 
-.channel {
-  font-weight: 700;
+.groupName {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
 }
 
-.phone {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: var(--orange-600, #d85308);
-  text-decoration: none;
-}
+.chev { transition: transform 0.15s ease; color: var(--crm-muted); }
+.chevShut { transform: rotate(-90deg); color: var(--crm-muted); }
 
-.phone:hover {
-  text-decoration: underline;
-}
-
-.noPhone {
-  color: #94a3b8;
-  font-style: italic;
-}
-
-.when,
-.duration {
-  color: #64748b;
+.groupCount {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.summary {
-  margin: 0.7rem 0 0;
-  line-height: 1.6;
-  font-size: 0.93rem;
-  color: #334155;
-}
-
-.transcript {
-  margin-top: 0.7rem;
-  border-top: 1px solid #e2e8f0;
-  padding-top: 0.6rem;
-}
-
-.transcript summary {
+.listItem {
+  width: 100%;
+  display: flex;
+  gap: 11px;
+  padding: 12px;
+  margin: 4px 6px;
+  width: calc(100% - 12px);
+  border: none;
+  border-radius: 14px;
+  background: none;
+  text-align: left;
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #475569;
+  font: inherit;
+  transition: background 0.12s ease;
 }
 
-.turns {
-  margin-top: 0.7rem;
-  display: grid;
-  gap: 0.45rem;
-  /* Long calls otherwise push every other card off the screen. */
-  max-height: 22rem;
-  overflow-y: auto;
+.listItem:hover { background: var(--crm-sunk); }
+
+/*
+ * The selected row is a filled card, as in the reference — the strongest
+ * signal on the pane, because "which one am I reading" is the question the
+ * list exists to answer.
+ */
+.listItemActive,
+.listItemActive:hover {
+  background: var(--crm-ink);
 }
 
-.agent,
-.user {
-  margin: 0;
-  padding: 0.5rem 0.7rem;
-  border-radius: 9px;
-  font-size: 0.89rem;
-  line-height: 1.55;
+.listItemActive .listName,
+.listItemActive .listSnippet,
+.listItemActive .listTime,
+.listItemActive .listMeta { color: var(--crm-on-ink); }
+.listItemActive .listSnippet,
+.listItemActive .listTime,
+.listItemActive .listMeta { opacity: 0.72; }
+
+.avatar,
+.heroAvatar {
+  position: relative;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--crm-sunk);
+  color: var(--crm-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
-.agent strong,
-.user strong {
-  display: block;
-  font-size: 0.7rem;
+.ch_phone { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.ch_whatsapp { background: var(--crm-ok-bg); color: var(--crm-ok); }
+
+/* Channel mark on the avatar, so the list reads by shape before it reads by
+   text — the same trick the sidebar icons use. */
+.avatarBadge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+  border: 1px solid var(--crm-rule);
+}
+
+.listBody { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 3px; }
+
+.listTop { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); }
+
+.listName {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listTime { flex: none; font-size: 11px; color: var(--crm-muted); font-variant-numeric: tabular-nums; }
+
+.listSnippet {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.listTags { display: flex; align-items: center; gap: 7px; margin-top: 3px; flex-wrap: wrap; }
+
+/* The reference's segmented progress bar, carrying the one thing we actually
+   measure: how the conversation ended. */
+.pipRail {
+  width: 34px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--crm-rule);
+  overflow: hidden;
+  flex: none;
+}
+
+.pip { display: block; height: 100%; border-radius: 999px; }
+.ok .pip { width: 100%; background: var(--crm-ok); }
+.bad .pip { width: 32%; background: var(--crm-stop); }
+.neutral .pip { width: 60%; background: var(--crm-muted); }
+
+.listMeta { font-size: 10.5px; color: var(--crm-muted); }
+
+.chipMini {
+  font-size: 9.5px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.15rem;
-  opacity: 0.65;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--crm-accent-soft);
+  color: var(--crm-accent-hover);
 }
 
-/* The two sides get different grounds so a long call can be skimmed rather
-   than read — who said what is the first question, not the words. */
-.agent {
-  background: #f1f5f9;
-  color: #0f172a;
+/* ── pane 2: the conversation ─────────────────────────────────────────── */
+
+.threadPane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
 }
 
-.user {
-  background: #fff7ed;
-  color: #431407;
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px 18px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 16px;
 }
 
-.error {
+.heroAvatar { width: 46px; height: 46px; font-size: 14px; }
+
+.back {
+  display: none;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--crm-rule);
+  border-radius: 10px;
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  cursor: pointer;
+}
+
+.heroWho { min-width: 0; flex: 1; }
+
+.heroName {
   margin: 0;
-  color: #b91c1c;
-  line-height: 1.6;
+  font-size: 18px;
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.hint {
-  color: #64748b;
-  font-size: 0.85rem;
+.heroFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 3px;
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.heroFacts span { display: inline-flex; align-items: center; gap: 4px; }
+
+.heroStats { display: flex; gap: 20px; flex: none; }
+
+.stat { display: flex; flex-direction: column; gap: 2px; }
+
+.statLabel {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--crm-muted);
+}
+
+.statValue {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.statChip,
+.jChip {
+  align-self: flex-start;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.statChip.ok, .jChip.ok { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.statChip.bad, .jChip.bad { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.statChip.neutral, .jChip.neutral { background: var(--crm-sunk); color: var(--crm-muted); }
+
+.card {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 11px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--crm-muted);
+}
+
+.cardHead svg { color: var(--crm-accent); }
+
+.cardCount { margin-left: auto; text-transform: none; letter-spacing: 0; font-weight: 600; }
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--crm-accent);
+  flex: none;
+}
+
+.summaryText {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--crm-text);
+}
+
+.turns { display: flex; flex-direction: column; gap: 13px; }
+
+/*
+ * Speaker-labelled rows rather than chat bubbles: a transcript is read top to
+ * bottom looking for one exchange, and alternating bubbles make every line
+ * start at a different x — which is exactly what slows that scan down.
+ */
+.rowAgent,
+.rowUser {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+}
+
+.whoAgent,
+.whoUser {
+  font-size: 11px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.whoAgent { color: var(--crm-accent-hover); }
+.whoUser { color: var(--crm-steel); }
+
+.turnText {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--crm-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.actionBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 18px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 16px;
+  /* Sticks to the bottom of the pane so the actions are reachable without
+     scrolling a long transcript back down. */
+  position: sticky;
+  bottom: 0;
+}
+
+.pill,
+.pillPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 15px;
+  border-radius: 999px;
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pill:hover { background: var(--crm-sunk); }
+
+.pillPrimary {
+  background: var(--crm-accent);
+  border-color: var(--crm-accent);
+  color: var(--crm-on-accent);
+}
+
+.pillPrimary:hover { background: var(--crm-accent-hover); }
+
+/* ── pane 3: journey + context ────────────────────────────────────────── */
+
+.contextPane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.ctxCard {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ctxHead {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--crm-muted);
+}
+
+.journey { list-style: none; margin: 0; padding: 0; }
+
+.jEvent {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  padding-bottom: 14px;
+}
+
+/* The rail: drawn on every event but the last, so the line stops with the
+   timeline instead of trailing into empty space. */
+.jEvent:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 22px;
+  bottom: 0;
+  width: 1px;
+  background: var(--crm-rule);
+}
+
+.jEvent:last-child { padding-bottom: 0; }
+
+.jIcon {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--crm-sunk);
+  color: var(--crm-muted);
+  border: 1px solid var(--crm-rule);
+}
+
+.jEventActive .jIcon {
+  background: var(--crm-accent);
+  border-color: var(--crm-accent);
+  color: var(--crm-on-accent);
+}
+
+.jBody { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+
+.jTop { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+
+.jTitle { font-size: var(--fs-micro); font-weight: var(--fw-bold); color: var(--crm-ink); }
+
+.jWhen { font-size: 10.5px; color: var(--crm-muted); font-variant-numeric: tabular-nums; }
+
+.jNote {
+  margin: 5px 0 0;
+  padding: 7px 9px;
+  border-radius: 9px;
+  background: var(--crm-sunk);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--crm-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ctxRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-micro);
+  color: var(--crm-text);
+  min-width: 0;
+}
+
+.ctxRow svg { flex: none; color: var(--crm-muted); }
+
+.ctxStatus {
+  align-self: flex-start;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.ctxEmpty { margin: 0; font-size: var(--fs-micro); color: var(--crm-muted); line-height: 1.5; }
+
+/* ── tablet ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 1240px) {
+  .console {
+    grid-template-columns: 280px minmax(0, 1fr);
+    height: auto;
+  }
+
+  .listPane, .threadPane { height: calc(100vh - 230px); }
+
+  .contextPane {
+    grid-column: 1 / -1;
+    height: auto;
+    overflow: visible;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .ctxCard { flex: 1 1 230px; }
+  .heroStats { display: none; }
+}
+
+/* ── phone: one pane at a time ────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .console { display: block; height: auto; }
+
+  .listPane, .threadPane {
+    height: auto;
+    overflow: visible;
+  }
+
+  /* A list and a transcript side by side at 375px give each about 180px, so
+     the selection decides which one is on screen. */
+  .hasSelection .listPane { display: none; }
+
+  .back { display: flex; }
+
+  .threadPane { display: flex; }
+
+  .hero { flex-wrap: wrap; }
+  .heroAvatar { width: 38px; height: 38px; }
+  .heroName { font-size: 16px; }
+
+  .contextPane { flex-direction: column; padding-top: var(--sp-4); }
+
+  .rowAgent, .rowUser {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .whoAgent, .whoUser { text-align: left; }
+
+  .actionBar { position: static; }
 }

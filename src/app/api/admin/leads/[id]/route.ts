@@ -89,6 +89,28 @@ export async function PATCH(
     return NextResponse.json({ error: 'Niets om te wijzigen' }, { status: 400 });
   }
 
+  /*
+   * First contact.
+   *
+   * The column has existed since 0001 and the response has always selected
+   * it, but nothing ever wrote it — so "how long did this lead wait before a
+   * human answered it" was unanswerable, which is the one number that says
+   * whether the pipeline is working.
+   *
+   * Set the first time a lead leaves `new`, and never again: this is the
+   * moment somebody first picked it up, not the moment it last moved. A
+   * status going back to `new` does not clear it either — the contact
+   * happened.
+   *
+   * `duplicate` is excluded on purpose. The intake route assigns it
+   * automatically, with no human involved, so counting it as contact would
+   * quietly flatter the response time it exists to measure.
+   */
+  const isFirstContact =
+    typeof patch.status === 'string' && patch.status !== 'new' && patch.status !== 'duplicate';
+
+  patch.updated_by = user.email;
+
   // `sold` without a real amount is the failure this whole screen exists to
   // prevent: /api/export-conversions would ship a conversion worth nothing to
   // Google Ads, and the bidding would optimise on it.
@@ -111,13 +133,13 @@ export async function PATCH(
     return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
   }
 
+  const COLUMNS = 'id, status, sale_price, sold_at, assigned_to, updated_at, first_contact_at';
+
   const { data, error } = await supabase
     .from('leads')
     .update(patch)
     .eq('id', id)
-    .select(
-      'id, status, sale_price, sold_at, assigned_to, updated_at, first_contact_at'
-    )
+    .select(COLUMNS)
     .maybeSingle();
 
   if (error) {
@@ -131,8 +153,37 @@ export async function PATCH(
     return NextResponse.json({ error: 'Lead niet gevonden' }, { status: 404 });
   }
 
+  /*
+   * The stamp is its own statement with `.is('first_contact_at', null)` in the
+   * filter, rather than a field in the patch above, so the condition is
+   * evaluated by Postgres and not by this process. Folding it into the patch
+   * would re-stamp on every later status change — turning "when did a human
+   * first answer this" into "when was this last touched", which is a number
+   * that always looks good and means nothing.
+   *
+   * Failure here is logged, not returned: the status change the user asked
+   * for has already succeeded, and reporting it as failed would have them
+   * click it again.
+   */
+  let lead = data;
+  if (isFirstContact && data.first_contact_at === null) {
+    const { data: stamped, error: stampError } = await supabase
+      .from('leads')
+      .update({ first_contact_at: new Date().toISOString() })
+      .eq('id', id)
+      .is('first_contact_at', null)
+      .select(COLUMNS)
+      .maybeSingle();
+
+    if (stampError) {
+      console.error('CRM first_contact_at stamp failed:', stampError.message);
+    } else if (stamped) {
+      lead = stamped;
+    }
+  }
+
   return NextResponse.json(
-    { lead: data },
+    { lead },
     { headers: { 'Cache-Control': 'no-store' } }
   );
 }

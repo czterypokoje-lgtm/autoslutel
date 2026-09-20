@@ -317,3 +317,91 @@
   opacity: 0.5;
   cursor: default;
 }
+
+/* ── phone ───────────────────────────────────────────────────────────────
+ *
+ * The sheet is modelled on an A4 page and had no screen breakpoint at all:
+ * 64px of side padding plus a `.totals` column pinned to `width: 300px` with
+ * `flex-shrink: 0` overflowed any phone before the first line item was drawn.
+ *
+ * `@media screen and ...` on purpose — the print rules above still need the
+ * full A4 geometry, and an unqualified max-width query would also match the
+ * paper the invoice is actually sent on.
+ */
+@media screen and (max-width: 640px) {
+  .page {
+    padding: 12px;
+  }
+
+  /*
+   * Five controls — back, status, Bewerken, "Afdrukken / Opslaan als PDF",
+   * Verwijderen — on one non-wrapping row, with the longest label of the set
+   * last. It was being cut mid-word at the right edge. The back link takes
+   * its own line and the actions wrap under it.
+   */
+  .bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .barRight {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .printBtn,
+  .editBtn,
+  .statusSelect,
+  .deleteBtn {
+    /* Full-height taps rather than 38px slivers, and no label clipping. */
+    min-height: 40px;
+  }
+
+  .sheet {
+    padding: 24px 20px;
+  }
+
+  .h1 {
+    font-size: 22px;
+  }
+
+  .top {
+    margin-bottom: 28px;
+  }
+
+  .logo {
+    height: 40px;
+  }
+
+  /* Sender and recipient stack; the right-hand block loses its right
+     alignment, which only ever made sense beside another column. */
+  .parties {
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .partyRight {
+    text-align: left;
+  }
+
+  .lines {
+    font-size: 12.5px;
+    margin-bottom: 24px;
+  }
+
+  .lines thead th,
+  .lines tbody td {
+    padding-left: 4px;
+  }
+
+  .totalsRow {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .totals {
+    width: 100%;
+  }
+}

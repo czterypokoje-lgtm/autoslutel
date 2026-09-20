@@ -154,7 +154,7 @@
    and the second server was indistinguishable from the first. */
 .serverBubbleActive {
   background: var(--crm-accent);
-  color: #fff;
+  color: var(--crm-on-accent);
 }
 
 /*
@@ -327,7 +327,7 @@
   border-radius: 999px;
   border: 2px solid var(--crm-bg);
   background: var(--crm-ok);
-  color: #06281c;
+  color: var(--crm-on-state);
   font-size: 10px;
   font-weight: 800;
   line-height: 13px;

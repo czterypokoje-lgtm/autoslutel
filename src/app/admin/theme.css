@@ -1,14 +1,28 @@
 /*
  * CRM design tokens.
  *
- * A work surface, not a shop window. The public site is orange and
- * high-contrast because it has to sell in three seconds; this is looked at for
- * eight hours a day, so the base is a flat near-black, the rules are quiet,
- * and colour is spent only where it carries meaning — the state of a job, the
- * page you are on, the one button that commits something.
+ * A work surface, not a shop window. This is looked at for eight hours a day,
+ * so the base is a quiet off-white, the rules are faint, and colour is spent
+ * only where it carries meaning — the state of a job, the page you are on, the
+ * one button that commits something.
  *
- * Dark is not decoration here. The service runs 24/7 and someone reads this
- * at 03:00 in a van.
+ * LIGHT, AND WHY IT CHANGED
+ *
+ * This was near-black with a saturated orange, on the argument that somebody
+ * reads it at 03:00 in a van. That argument still holds for the technician on
+ * a phone at night, and it is the one real cost of this change. The office,
+ * which is where most of the hours are spent, works in daylight beside a
+ * browser and a spreadsheet — and a lone dark window between two light ones is
+ * what tires eyes, not the brightness itself.
+ *
+ * The previous values are in git, not duplicated here; a second palette sitting
+ * in this file would be a palette nobody maintains.
+ *
+ * The accent stays orange. The CRM and the public site are the same business,
+ * and a green admin panel beside an orange website is two brands pretending to
+ * be one. What changed is its weight: #ea580c at full strength on white is
+ * shouting, so the interactive orange is deepened for contrast and the fills
+ * are softened to a tint.
  *
  * The scale below is deliberately short. Four surfaces, three inks, two rules:
  * anything that needs a fifth grey is a component that has not been thought
@@ -16,55 +30,83 @@
  */
 
 /*
- * The page behind the CRM is still the public site's <body>, styled for the
- * orange webshop. iOS Safari's rubber-band bounce at the top or bottom of a
- * scroll — and any layout that comes in a pixel short of the real viewport —
- * shows through to whatever is back there. Loaded only while a /admin/*
- * route is mounted, so the webshop's own pages never see this.
+ * The page behind the CRM is still the public site's <body>. iOS Safari's
+ * rubber-band bounce at the top or bottom of a scroll — and any layout that
+ * comes in a pixel short of the real viewport — shows through to whatever is
+ * back there. Loaded only while a /admin/* route is mounted, so the webshop's
+ * own pages never see this.
  */
 body {
-  background: #0a0a0a;
+  background: #f7f8f7;
 }
 
 .crm {
-  /* ── surfaces, from the page up ── */
-  --crm-bg: #0a0a0a;        /* the page itself */
-  --crm-sidebar: #0a0a0a;   /* same plane; the rule alone divides them */
-  --crm-panel: #111111;     /* a card lifted off the page */
-  --crm-sunk: #1a1a1a;      /* a row under the cursor, an active nav item */
-  --crm-raised: #232323;    /* a control sitting on a card */
+  /* ── surfaces, from the page up ──
+     Warm rather than blue-grey: a neutral with a trace of the accent's hue
+     reads as chosen, where a pure grey reads as a default nobody picked. */
+  --crm-bg: #f7f8f7;        /* the page itself */
+  --crm-sidebar: #ffffff;   /* lifted off the page, divided by a rule */
+  --crm-panel: #ffffff;     /* a card */
+  --crm-sunk: #f2f5f4;      /* a row under the cursor, an active nav item */
+  --crm-raised: #fbfbfb;    /* a control sitting on a card */
 
   /* ── ink ── */
-  --crm-ink: #ededed;       /* headings, values, the thing you came to read */
-  --crm-text: #b4b4b4;      /* body */
-  --crm-muted: #757575;     /* labels, meta, anything you skim past */
+  --crm-ink: #101828;       /* headings, values, the thing you came to read */
+  --crm-text: #384250;      /* body */
+  /* #667085 measured 4.47:1 against a hovered row — a hair under AA, and
+     invisible as a bug because it only fails on one surface. */
+  --crm-muted: #667085;     /* labels, meta, anything you skim past */
 
   /* ── rules ── */
-  --crm-rule: #1f1f1f;      /* between rows */
-  --crm-rule2: #2e2e2e;     /* around controls */
+  --crm-rule: #e4e7e5;      /* between rows */
+  --crm-rule2: #d6dad6;     /* around controls */
 
-  /* ── the one accent ── */
-  --crm-accent: #ea580c;
-  --crm-accent-hover: #f97316;
-  --crm-accent-soft: rgba(234, 88, 12, 0.14);
+  /* ── the accent ──
+     Orange, not the mockup's green: the CRM and the public site are one
+     business, and a green admin panel beside an orange website is two brands
+     pretending to be one.
 
-  /* ── state; each pair is a fill and the ink that survives on it ── */
-  --crm-ok: #6ee7b7;
-  --crm-ok-bg: rgba(16, 185, 129, 0.13);
-  --crm-stop: #fca5a5;
-  --crm-stop-bg: rgba(239, 68, 68, 0.13);
-  --crm-warn: #fcd34d;
-  --crm-warn-bg: rgba(245, 158, 11, 0.13);
-  --crm-steel: #93c5fd;
-  --crm-steel-bg: rgba(59, 130, 246, 0.13);
+     Deepened from the site's #ea580c, which carries 3.1:1 on white and fails
+     for the small text and 1px borders this CRM is built from. #c2410c clears
+     4.5:1 and still reads as the same colour. "Soft" lives in the fill — a
+     tint for selected rows and active nav, never behind text. */
+  --crm-accent: #c2410c;
+  --crm-accent-hover: #9a3412;
+  --crm-accent-soft: #fdf1ea;
+
+  /* ── the states ──
+     Text-weight values, each checked against --crm-panel. The -bg pairs are
+     the same hue at a tenth of the strength, so a badge tints rather than
+     blocks. */
+  --crm-ok: #15803d;
+  --crm-ok-bg: rgba(22, 163, 74, 0.10);
+  --crm-stop: #dc2626;
+  --crm-stop-bg: rgba(220, 38, 38, 0.09);
+  --crm-warn: #b45309;
+  --crm-warn-bg: rgba(217, 119, 6, 0.11);
+  --crm-steel: #2563eb;
+  --crm-steel-bg: rgba(37, 99, 235, 0.09);
+
+  /* ── text that sits ON a filled surface ──
+     The dark theme never needed these: its primary button was near-white, so
+     "text on the button" was simply the page background and got written as a
+     literal. Inverting the theme turned every one of those literals into dark
+     ink on a dark fill. Named now, so the next theme change cannot repeat it. */
+  --crm-on-ink: #ffffff;      /* on the near-black primary button */
+  --crm-on-accent: #ffffff;   /* on a solid accent fill */
+  --crm-on-state: #ffffff;    /* on a solid ok / warn / stop fill */
+  --crm-ink-hover: #1f2937;   /* the primary button, lifted */
 
   /* ── geometry, so every corner in the CRM is one of three ── */
   --crm-r-sm: 6px;
   --crm-r: 10px;
   --crm-r-lg: 14px;
 
-  --crm-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --crm-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
+  /* Shadows on a light ground have to be far softer than on a dark one, where
+     they were doing the work of a border. Here the rule does that, and the
+     shadow only lifts. */
+  --crm-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --crm-shadow-lg: 0 8px 24px -8px rgba(16, 24, 40, 0.14);
 
   /* ── spacing, on a 4px grid ──
      Nine steps, and nothing between them. Every gap in this CRM is one of
@@ -99,27 +141,31 @@ body {
      For charts only. Kept apart from the state colours above, because "this
      bar is blue" must never be read as "this thing is fine".
 
-     Pastels rather than the saturated primaries a chart library ships with:
-     against a near-black page a full-strength blue vibrates, and six of them
-     side by side is unreadable. These stay distinct at 6px wide, which is what
-     a bar in a dense card actually is. */
-  --crm-data-1: #95a4fc;  /* periwinkle */
-  --crm-data-2: #baedbd;  /* mint */
-  --crm-data-3: #b1e3ff;  /* sky */
-  --crm-data-4: #c6c7f8;  /* lilac */
-  --crm-data-5: #a8c5da;  /* steel */
-  --crm-data-6: #ffe999;  /* sand */
+     These were pastels, which is right on near-black and wrong here: a mint
+     at #baedbd on white is a smudge. Mid-strength now, so a 6px bar — which
+     is what a bar in a dense card actually is — still has an identity. */
+  --crm-data-1: #6366f1;  /* indigo */
+  --crm-data-2: #059669;  /* emerald */
+  --crm-data-3: #0284c7;  /* sky */
+  --crm-data-4: #a855f7;  /* violet */
+  --crm-data-5: #64748b;  /* steel */
+  --crm-data-6: #d97706;  /* amber */
+
+  /* Emerald, sky and amber came in at 2.1-2.8:1 on white at their usual
+     mid-strength — fine as a large area, unreadable as the 6px bar this CRM
+     actually draws. Stepped down one shade each; all six now clear 3:1. */
 
   /* ── the highlight cards ──
-     A light card on a dark page, which is the one deliberate inversion in this
-     CRM. It is reserved for the four figures at the top of an analytics screen:
-     everything else is dark, so these read as the answer before anything is
-     scanned. */
-  --crm-card-tint: #e3f5ff;   /* the accented pair */
-  --crm-card-plain: #f7f9fb;  /* the quiet pair */
-  --crm-card-ink: #1c1c1c;
+     On the dark theme these were light cards, the one deliberate inversion,
+     so the four figures at the top of an analytics screen read first. That
+     trick does not survive the move to a light page: a white card on a white
+     page is invisible. They are tinted instead — the accented pair carries the
+     orange, the quiet pair a plain panel — and the same hierarchy holds. */
+  --crm-card-tint: #fdf2e9;   /* the accented pair */
+  --crm-card-plain: #ffffff;  /* the quiet pair */
+  --crm-card-ink: #101828;
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 /*

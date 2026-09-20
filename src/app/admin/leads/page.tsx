@@ -252,33 +252,16 @@ export default async function LeadsPage({
 
   return (
     <>
-      {/*
-        Shared header, so Leads opens the way every other screen does. The
-        keyboard hints stay in the actions slot rather than under the title:
-        they are a tool for the person working the queue, not a description of
-        the page.
-      */}
       <PageHead
-        title="Leads"
-        sub={`${total} ${total === 1 ? 'lead' : 'leads'}${
-          range !== 'all' ? ` · laatste ${range} ${range === '1' ? 'dag' : 'dagen'}` : ''
-        }`}
-        actions={
-          <span className={styles.hint}>
-            <span className={styles.kbd}>/</span> zoeken
-            <span className={styles.kbd}>j</span>
-            <span className={styles.kbd}>k</span> navigeren
-            <span className={styles.kbd}>e</span> bewerken
-          </span>
-        }
+        title="Leads / Klussen"
+        sub="Beheer alle leads en klussen op één plek."
       />
 
       {lateCount > 0 && (
         <p className={styles.warning}>
           <strong>{lateCount}</strong>{' '}
           {lateCount === 1 ? 'lead staat' : 'leads staan'} langer dan{' '}
-          {STALE_MINUTES} minuten op <em>nieuw</em>. Bij spoedwerk is een late
-          lead een verloren lead.
+          {STALE_MINUTES} minuten op <em>nieuw</em>.
         </p>
       )}
 
@@ -289,80 +272,40 @@ export default async function LeadsPage({
             href={buildHref(currentParams, { status: tab.value || undefined })}
             className={
               (status ?? '') === tab.value
-                ? `${styles.tab} ${styles.tabActive}`
+                ? `${styles.tab} ${styles.active}`
                 : styles.tab
             }
           >
             {tab.label}
-            {tab.value && (
-              <span className={styles.tabCount}>{counts[tab.value] ?? 0}</span>
-            )}
           </Link>
         ))}
       </nav>
 
-      <form className={styles.filters} method="get" action="/admin/leads">
+      <form className={styles.filtersBar} method="get" action="/admin/leads">
         {status && <input type="hidden" name="status" value={status} />}
-        <div className={`${styles.field} ${styles.fieldWide}`}>
-          <label className={styles.fieldLabel} htmlFor="q">
-            Zoek op naam, telefoon of kenteken
-          </label>
+        
+        <div className={styles.searchBox}>
           <input
             id="q"
             name="q"
             type="search"
-            className={styles.control}
+            className={styles.searchInput}
             defaultValue={search}
-            placeholder="06-… · Jansen · XX-123-X"
+            placeholder="Zoek op klant, kenteken, auto, telefoon of klus nr..."
           />
         </div>
 
-        <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor="bron">
-            Bron
-          </label>
-          <select id="bron" name="bron" className={styles.control} defaultValue={source ?? ''}>
-            <option value="">Alle bronnen</option>
-            {SOURCES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor="pc">
-            Postcode
-          </label>
-          <input
-            id="pc"
-            name="pc"
-            className={styles.control}
-            defaultValue={postcode ?? ''}
-            placeholder="3512"
-            size={6}
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor="dagen">
-            Periode
-          </label>
-          <select id="dagen" name="dagen" className={styles.control} defaultValue={range}>
-            <option value="1">Vandaag</option>
-            <option value="7">7 dagen</option>
-            <option value="30">30 dagen</option>
-            <option value="all">Alles</option>
-          </select>
-        </div>
-
-        <button className={styles.apply} type="submit">
-          Filter
+        <button type="submit" className={styles.btnSecondary} style={{flex: 'none', padding: '6px 16px', height: 'auto'}}>
+          Ara
         </button>
-        <Link className={styles.reset} href="/admin/leads">
-          Wissen
-        </Link>
+
+        {/*
+          * "Tabel" and "Kaart" were buttons for views that do not exist —
+          * clicking them did nothing at all. A control that looks available
+          * and is not teaches people to distrust the ones that work, so they
+          * are gone until there is something behind them. (Kaart also needs
+          * the Maps Static API, which is still not switched on.)
+          */}
       </form>
 
       <LeadsTable
@@ -373,24 +316,22 @@ export default async function LeadsPage({
 
       {pages > 1 && (
         <div className={styles.pager}>
-          <span>
-            Pagina {page} van {pages}
-          </span>
-          {page > 1 && (
-            <Link
-              className={styles.pageLink}
-              href={buildHref(currentParams, {}, page - 1)}
-            >
-              Vorige
+          {page > 1 ? (
+            <Link href={buildHref(currentParams, { page: String(page - 1) })} className={styles.pageLink}>
+              &larr; Vorige
             </Link>
+          ) : (
+            <span>&larr; Vorige</span>
           )}
-          {page < pages && (
-            <Link
-              className={styles.pageLink}
-              href={buildHref(currentParams, {}, page + 1)}
-            >
-              Volgende
+          <span>
+            {page} / {pages}
+          </span>
+          {page < pages ? (
+            <Link href={buildHref(currentParams, { page: String(page + 1) })} className={styles.pageLink}>
+              Volgende &rarr;
             </Link>
+          ) : (
+            <span>Volgende &rarr;</span>
           )}
         </div>
       )}

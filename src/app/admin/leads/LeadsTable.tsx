@@ -1,9 +1,12 @@
 'use client';
 
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { Fragment, useState } from 'react';
+import { getBrandLogo } from '@/lib/brandLogos';
 import styles from './leads.module.css';
+import Link from 'next/link';
 import { waLink } from '@/lib/whatsapp';
+import { PageHead, Badge } from '../_ui';
+import { MoreHorizontal, Phone, MessageCircle, UserPlus, CheckSquare, MapPin, Check, X, AlertTriangle, Loader2 } from 'lucide-react';
 
 export interface LeadRow {
   id: string;
@@ -27,568 +30,260 @@ export interface LeadRow {
   first_contact_at: string | null;
 }
 
-interface Repeat {
-  count: number;
-  last: string;
-}
-
 const STATUS_LABELS: Record<string, string> = {
   new: 'Nieuw',
   qualified: 'Gekwalificeerd',
-  contacted: 'Gebeld',
-  sold: 'Verkocht',
+  contacted: 'In Behandeling',
+  sold: 'Afgerond',
   rejected: 'Afgewezen',
-  duplicate: 'Dubbel',
   spam: 'Spam',
+  duplicate: 'Dubbel',
 };
 
-const STATUS_CLASS: Record<string, string> = {
-  new: styles.stNew,
-  qualified: styles.stQualified,
-  contacted: styles.stContacted,
-  sold: styles.stSold,
-  rejected: styles.stRejected,
-  duplicate: styles.stDuplicate,
-  spam: styles.stSpam,
-};
+function leadTone(status: string): 'ok' | 'warn' | 'stop' | 'info' | undefined {
+  if (status === 'sold') return 'ok';
+  if (status === 'contacted' || status === 'qualified') return 'warn';
+  if (status === 'new') return 'info';
+  /* rejected, spam and duplicate all read as 'info' before this — a rejected
+     lead looked exactly like one waiting to be handled. */
+  return undefined;
+}
 
 /**
- * A quick, non-authoritative check — this never blocks a submission or
- * auto-rejects a lead, it only tells the office which rows are worth a
- * second look before marking one spam. A real customer with an unusual but
- * valid number should never be silently dropped by a regex.
+ * How long a lead has been sitting at 'new'.
+ *
+ * The row used to put a red "Spoed" badge on every new lead regardless of age,
+ * which makes the label meaningless: a lead that arrived four minutes ago and
+ * one that has been ignored for three weeks looked identical, and the office
+ * has 151 of the latter. Urgency is about the clock, not the status.
  */
-function hasNoValidContact(lead: { phone_e164: string | null; email: string | null }): boolean {
-  const phoneOk = !!lead.phone_e164 && /^\+31\d{9}$/.test(lead.phone_e164);
-  const emailOk = !!lead.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email);
-  return !phoneOk && !emailOk;
+function staleness(createdAt: string, staleBefore: string | null) {
+  if (!staleBefore || createdAt >= staleBefore) return null;
+  const hours = Math.floor((Date.now() - new Date(createdAt).getTime()) / 3_600_000);
+  if (hours >= 48) return { label: `${Math.floor(hours / 24)} dagen oud`, tone: 'stop' as const };
+  return { label: `${hours} uur oud`, tone: 'warn' as const };
 }
 
-/*
- * Timezone is pinned so the server render and the client render agree — a
- * hydration mismatch on a timestamp column is otherwise guaranteed for anyone
- * whose laptop is not on Amsterdam time.
- */
-const TIME = new Intl.DateTimeFormat('nl-NL', {
-  hour: '2-digit',
-  minute: '2-digit',
-  timeZone: 'Europe/Amsterdam',
-});
+/** The triage a lead can move to from the row, in the order the office uses. */
+const TRIAGE: { value: string; label: string; tone: 'ok' | 'warn' | 'stop' }[] = [
+  { value: 'qualified', label: 'Gekwalificeerd', tone: 'ok' },
+  { value: 'contacted', label: 'Gebeld', tone: 'warn' },
+  { value: 'rejected', label: 'Afgewezen', tone: 'stop' },
+  { value: 'duplicate', label: 'Dubbel', tone: 'stop' },
+];
 
-const DATE = new Intl.DateTimeFormat('nl-NL', {
-  day: '2-digit',
-  month: '2-digit',
-  timeZone: 'Europe/Amsterdam',
-});
-
-const MONEY = new Intl.NumberFormat('nl-NL', {
-  style: 'currency',
-  currency: 'EUR',
-});
-
-function daysAgo(iso: string): number {
-  return Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
+function timeAgo(dateStr: string) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const mins = Math.floor((now.getTime() - d.getTime()) / 60000);
+  if (mins < 60) return `${mins} min geleden`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs} uur geleden`;
+  return `${Math.floor(hrs / 24)} dagen geleden`;
 }
 
-/** Dutch mobile numbers read as 06-1234 5678; anything else is left alone. */
-function prettyPhone(raw: string | null, e164: string | null): string {
-  const source = e164 ?? raw;
-  if (!source) return '—';
-  const local = source.startsWith('+31') ? `0${source.slice(3)}` : source;
-  const digits = local.replace(/\D/g, '');
-  if (digits.length === 10 && digits.startsWith('06')) {
-    return `${digits.slice(0, 2)}-${digits.slice(2, 6)} ${digits.slice(6)}`;
-  }
-  return local;
+function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => void }) {
+  const [tab, setTab] = useState('Algemeen');
+
+  return (
+    <div className={styles.drawerCard}>
+      <div className={styles.drawerHead}>
+        <div className={styles.drawerTitleRow}>
+          <div>
+            <div className={styles.drawerCar}>{lead.brand || 'Auto'} {lead.model}</div>
+            <div className={styles.drawerSub}>
+              {[lead.year, lead.kenteken].filter(Boolean).join(' • ') || 'Geen voertuig details'} 
+              {' '}• Klus #{lead.id.slice(0, 5)}
+            </div>
+          </div>
+          <div>
+            <div className={styles.drawerPrice}>{lead.quoted_price ? `€${lead.quoted_price}` : (lead.sale_price ? `€${lead.sale_price}` : 'Prijs onbekend')}</div>
+            <div className={styles.drawerPriceSub}>Geschatte waarde</div>
+          </div>
+        </div>
+        <div style={{fontSize: '13px', fontWeight: 600, color: 'var(--crm-ink)', marginBottom: '8px'}}>{lead.service || 'Geen service opgegeven'}</div>
+        <div className={styles.rowLocation} style={{marginBottom: '12px'}}>
+          <MapPin size={12}/> {lead.postcode || ''} {lead.location || 'Geen locatie'}
+        </div>
+      </div>
+      
+      <div className={styles.drawerNav}>
+        {['Algemeen', 'Notities'].map(t => (
+          <div key={t} className={`${styles.drawerTab} ${tab === t ? styles.active : ''}`} onClick={() => setTab(t)}>
+            {t}
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.drawerBody}>
+        {tab === 'Algemeen' && (
+          <>
+            <div className={styles.drawerSection}>
+              <div style={{fontWeight: 600, fontSize: '13px', color: 'var(--crm-ink)'}}>Klant & Voertuig</div>
+              <div className={styles.drawerRow}>
+                <CheckSquare size={16} color="var(--crm-muted)"/> {lead.name || 'Geen naam'}
+              </div>
+              <div className={styles.drawerRow}>
+                <Phone size={16} color="var(--crm-muted)"/> {lead.phone_e164 || lead.phone || 'Geen nummer'} 
+              </div>
+              <div className={styles.drawerRow} style={{alignItems: 'flex-start'}}>
+                <div style={{marginTop: '2px'}}>
+                  <div className={styles.avatar}>{lead.brand ? lead.brand.substring(0,3).toUpperCase() : 'OTO'}</div>
+                </div> 
+                <div>
+                  {[lead.brand, lead.model, lead.year].filter(Boolean).join(' ') || 'Geen auto details'}<br/>
+                  {lead.kenteken && <span style={{color: 'var(--crm-muted)', fontSize: '11px'}}>Kenteken: {lead.kenteken}</span>}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className={styles.drawerFoot}>
+        <Link href={`/admin/jobs/nieuw?lead=${lead.id}`} className={styles.btnPrimary} style={{textDecoration: 'none'}}>
+          <UserPlus size={16} /> Monteur Toewijzen
+        </Link>
+        <a href={`tel:${lead.phone_e164 || lead.phone}`} className={styles.btnSecondary} style={{textDecoration: 'none'}}>
+          <Phone size={16} /> Klant Bellen
+        </a>
+        <a href={waLink(lead.phone_e164 || '', "Hallo, we bellen u over uw autosleutel aanvraag.") || '#'} target="_blank" rel="noopener noreferrer" className={styles.btnSecondary} style={{textDecoration: 'none'}}>
+          <MessageCircle size={16} color="#25D366" /> WhatsApp
+        </a>
+      </div>
+    </div>
+  );
 }
 
-export default function LeadsTable({
-  rows,
-  staleBefore,
-  repeats,
-}: {
-  rows: LeadRow[];
-  staleBefore: string;
-  repeats: Record<string, Repeat>;
-}) {
-  // Server data is the starting point; saved edits are folded in here so the
-  // row updates without a full page round trip.
-  const [patched, setPatched] = useState<Record<string, Partial<LeadRow>>>({});
-  const [focused, setFocused] = useState<number>(-1);
-  const [editing, setEditing] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const view = rows.map((row) => ({ ...row, ...patched[row.id] }));
-
-  const applyPatch = useCallback((id: string, change: Partial<LeadRow>) => {
-    setPatched((prev) => ({ ...prev, [id]: { ...prev[id], ...change } }));
-  }, []);
+export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadRow[]; staleBefore: string | null; repeats: Record<string, { count: number; last: string }> }) {
+  const [selectedLead, setSelectedLead] = useState<LeadRow | null>(null);
 
   /*
-   * Keyboard first: the office does this all day and reaching for the mouse
-   * between every lead is the slow path.
+   * Status is held here, not read straight from `rows`.
+   *
+   * The redesign dropped the status control entirely: /api/admin/leads/[id]
+   * accepts a PATCH, and nothing in the UI called it. 151 of 199 leads sit at
+   * 'new' partly because the office has had no way to move them.
+   *
+   * Local overrides keep the click instant — the row changes before the round
+   * trip — and roll back if the server refuses, so a failed save is visible
+   * rather than a lie that survives until the next refresh.
    */
-  useEffect(() => {
-    function onKey(event: KeyboardEvent) {
-      const target = event.target as HTMLElement | null;
-      const typing =
-        target &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'SELECT' ||
-          target.tagName === 'TEXTAREA' ||
-          target.isContentEditable);
+  const [statusOverride, setStatusOverride] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState<string | null>(null);
+  const [failed, setFailed] = useState<string | null>(null);
 
-      if (event.key === 'Escape') {
-        if (typing) (target as HTMLElement).blur();
-        setEditing(null);
-        return;
-      }
+  const statusOf = (row: LeadRow) => statusOverride[row.id] ?? row.status;
 
-      if (typing || event.metaKey || event.ctrlKey || event.altKey) return;
-
-      if (event.key === '/') {
-        event.preventDefault();
-        document.getElementById('q')?.focus();
-        return;
-      }
-
-      if (event.key === 'j' || event.key === 'k') {
-        event.preventDefault();
-        setFocused((current) => {
-          const next = event.key === 'j' ? current + 1 : current - 1;
-          return Math.max(0, Math.min(rows.length - 1, next));
-        });
-        return;
-      }
-
-      if (event.key === 'e' && focused >= 0 && rows[focused]) {
-        event.preventDefault();
-        setEditing(rows[focused].id);
-      }
+  async function triage(row: LeadRow, status: string) {
+    const previous = statusOf(row);
+    if (previous === status) return;
+    setStatusOverride(o => ({ ...o, [row.id]: status }));
+    setSaving(row.id);
+    setFailed(null);
+    try {
+      const res = await fetch(`/api/admin/leads/${row.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+    } catch {
+      setStatusOverride(o => ({ ...o, [row.id]: previous }));
+      setFailed(row.id);
+    } finally {
+      setSaving(null);
     }
-
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [focused, rows]);
-
-  useEffect(() => {
-    if (focused < 0) return;
-    containerRef.current
-      ?.querySelectorAll('tbody tr[data-lead]')
-      [focused]?.scrollIntoView({ block: 'nearest' });
-  }, [focused]);
-
-  if (rows.length === 0) {
-    return (
-      <div className={styles.wrap}>
-        <p className={styles.empty}>Geen leads met deze filters.</p>
-      </div>
-    );
   }
 
   return (
     <>
-    <div className={styles.wrap} ref={containerRef}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Tijd</th>
-            <th>Klant</th>
-            <th>Plaats</th>
-            <th>Voertuig</th>
-            <th>Dienst</th>
-            <th>Bron</th>
-            <th>Status</th>
-            <th style={{ textAlign: 'right' }}>Waarde</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {view.map((lead, index) => {
-            const isLate = lead.status === 'new' && lead.created_at < staleBefore;
-            const repeat = lead.phone_e164 ? repeats[lead.phone_e164] : undefined;
-            const price =
-              lead.sale_price === null || lead.sale_price === ''
-                ? null
-                : Number(lead.sale_price);
-            const quoted =
-              lead.quoted_price === null || lead.quoted_price === ''
-                ? null
-                : Number(lead.quoted_price);
-            // Same normalisation everywhere: a "06…" number has to become
-            // "316…" before wa.me will open the right chat.
-            const whatsapp = waLink(lead.phone_e164 ?? lead.phone, '');
-
+      <div className={styles.layout}>
+        <div className={styles.listCol}>
+          {rows.map(row => {
+            const isSelected = selectedLead?.id === row.id;
+            const status = statusOf(row);
+            const stale = status === 'new' ? staleness(row.created_at, staleBefore) : null;
+            const repeat = row.phone_e164 ? repeats[row.phone_e164] : undefined;
             return (
-              <Fragment key={lead.id}>
-                <tr
-                  data-lead={lead.id}
-                  className={[
-                    styles.row,
-                    isLate ? styles.rowStale : '',
-                    index === focused ? styles.rowFocused : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  onClick={() => setFocused(index)}
-                >
-                  <td className={styles.time}>
-                    {TIME.format(new Date(lead.created_at))}
-                    <span className={styles.dateSmall}>
-                      {DATE.format(new Date(lead.created_at))}
-                    </span>
-                  </td>
-
-                  <td>
-                    <span className={styles.strong}>
-                      {prettyPhone(lead.phone, lead.phone_e164)}
-                    </span>
-                    <span className={styles.sub}>
-                      {lead.name ?? 'geen naam'}
-                      {lead.consent_marketing === false && (
-                        <span className={styles.consentNo}> · geen marketing</span>
-                      )}
-                    </span>
-                  </td>
-
-                  <td>
-                    <span className={styles.strong}>{lead.postcode ?? '—'}</span>
-                    <span className={styles.sub}>{lead.location ?? ''}</span>
-                  </td>
-
-                  <td>
-                    <span className={styles.strong}>
-                      {[lead.brand, lead.model].filter(Boolean).join(' ') || '—'}
-                    </span>
-                    <span className={styles.sub}>
-                      {lead.kenteken && (
-                        <span className={styles.plate}>{lead.kenteken}</span>
-                      )}
-                      {lead.year ? ` ${lead.year}` : ''}
-                    </span>
-                  </td>
-
-                  <td>{lead.service ?? '—'}</td>
-                  <td className={styles.time}>{lead.source ?? 'unknown'}</td>
-
-                  <td>
-                    <span
-                      className={`${styles.badge} ${
-                        STATUS_CLASS[lead.status] ?? styles.stNew
-                      }`}
-                    >
-                      {STATUS_LABELS[lead.status] ?? lead.status}
-                    </span>
-                    {isLate && <span className={styles.flag}>te laat</span>}
-                    {repeat && (
-                      <span
-                        className={styles.repeat}
-                        title={`Dit nummer belde ${repeat.count} keer; vorige aanvraag ${daysAgo(
-                          repeat.last
-                        )} dagen geleden.`}
-                      >
-                        {repeat.count}×
-                      </span>
+              <div key={row.id} className={`${styles.richRow} ${isSelected ? styles.selected : ''}`} onClick={() => setSelectedLead(row)}>
+                <input type="checkbox" onClick={e => e.stopPropagation()} />
+                <div style={{width: '40px', textAlign: 'center'}}>
+                  {getBrandLogo(row.brand) ? (
+                    <img src={getBrandLogo(row.brand)!} alt={row.brand || ''} style={{width: '32px', height: '32px', objectFit: 'contain'}} />
+                  ) : (
+                    <div className={styles.avatar}>{row.brand?.substring(0,3).toUpperCase() || 'OTO'}</div>
+                  )}
+                </div>
+                
+                <div className={styles.rowInfo}>
+                  <div className={styles.rowTitle}>
+                    {[row.brand, row.model].filter(Boolean).join(' ') || 'Nieuwe Aanvraag'}
+                    {/* Age, not status. Every new lead used to be "Spoed". */}
+                    {stale && <Badge tone={stale.tone}>{stale.label}</Badge>}
+                    {/* repeats was passed in and never used — a returning
+                        customer is the one row worth answering first. */}
+                    {repeat && repeat.count > 1 && (
+                      <Badge tone="warn">{repeat.count}e aanvraag</Badge>
                     )}
-                    {hasNoValidContact(lead) && (
-                      <span
-                        className={styles.flag}
-                        title="Geen geldig Nederlands telefoonnummer of e-mailadres — controleer voordat u belt of dit als spam markeert."
-                      >
-                        geen contact
-                      </span>
-                    )}
-                  </td>
+                  </div>
+                  <div className={styles.rowMeta}>{[row.year, row.kenteken].filter(Boolean).join(' • ') || 'Geen voertuig info'}</div>
+                  <div className={styles.rowLocation}><MapPin size={12}/> {row.location || 'Onbekend'}</div>
+                </div>
 
-                  <td className={price === null ? styles.moneyEmpty : styles.money}>
-                    {price === null ? '—' : MONEY.format(price)}
-                    {price === null && quoted !== null && (
-                      <span className={styles.sub}>geschat {MONEY.format(quoted)}</span>
-                    )}
-                  </td>
+                <div className={styles.rowPrice}>
+                  <span>{row.quoted_price ? `€${row.quoted_price}` : (row.sale_price ? `€${row.sale_price}` : '—')}</span>
+                  <div style={{fontSize: '11px', color: 'var(--crm-muted)', fontWeight: 400}}>{row.source || 'Website'}</div>
+                </div>
 
-                  <td>
-                    <div className={styles.actions}>
-                      {lead.phone_e164 && (
-                        <a className={styles.act} href={`tel:${lead.phone_e164}`}>
-                          Bel
-                        </a>
-                      )}
-                      {whatsapp && (
-                        <a
-                          className={styles.act}
-                          href={whatsapp}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                <div className={styles.rowStatus}>
+                  <Badge tone={leadTone(status)}>{STATUS_LABELS[status] || status}</Badge>
+                  <div style={{fontSize: '11px', color: 'var(--crm-muted)', margin: 0}}>{timeAgo(row.created_at)}</div>
+                </div>
+
+                {/*
+                  * This said "Niet toegewezen" on every row, always, whatever
+                  * the truth was. Replaced with the thing the office actually
+                  * needs here: moving the lead out of 'new' without opening
+                  * anything. stopPropagation so triaging does not also open
+                  * the drawer.
+                  */}
+                <div className={styles.rowAssignee} onClick={e => e.stopPropagation()}>
+                  {saving === row.id ? (
+                    <span className={styles.triageBusy}><Loader2 size={14} /> opslaan…</span>
+                  ) : failed === row.id ? (
+                    <span className={styles.triageFailed}><AlertTriangle size={14} /> niet opgeslagen</span>
+                  ) : (
+                    <div className={styles.triage}>
+                      {TRIAGE.map(t => (
+                        <button
+                          key={t.value}
+                          type="button"
+                          title={t.label}
+                          aria-label={t.label}
+                          className={`${styles.triageBtn} ${status === t.value ? styles.triageOn : ''}`}
+                          onClick={() => triage(row, t.value)}
                         >
-                          App
-                        </a>
-                      )}
-                      {/*
-                        * Straight to the planner rather than a modal here: the
-                        * planner needs the day's technician load to suggest
-                        * anyone, and that is a server read.
-                        */}
-                      <Link
-                        className={`${styles.act} ${styles.actPrimary}`}
-                        href={`/admin/jobs/nieuw?lead=${lead.id}`}
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        Plan in
-                      </Link>
-                      <button
-                        className={styles.act}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          setFocused(index);
-                          setEditing(editing === lead.id ? null : lead.id);
-                        }}
-                      >
-                        {editing === lead.id ? 'Sluit' : 'Bewerk'}
-                      </button>
+                          {t.value === 'qualified' ? <Check size={14} />
+                            : t.value === 'contacted' ? <Phone size={14} />
+                            : t.value === 'rejected' ? <X size={14} />
+                            : <MoreHorizontal size={14} />}
+                        </button>
+                      ))}
                     </div>
-                  </td>
-                </tr>
-
-                {editing === lead.id && (
-                  <LeadEditor
-                    lead={lead}
-                    onSaved={(change) => {
-                      applyPatch(lead.id, change);
-                      setEditing(null);
-                    }}
-                    onCancel={() => setEditing(null)}
-                  />
-                )}
-              </Fragment>
+                  )}
+                </div>
+              </div>
             );
           })}
-        </tbody>
-      </table>
-    </div>
-
-    {/*
-      * The desktop table has nine columns because a planner scans them all
-      * at once; nine columns is also exactly what does not fit a phone.
-      * Rather than let the table squeeze into illegible slivers or hide the
-      * rest behind an unmarked horizontal scroll, this is the same data as
-      * a stack of cards — everything a lead needs read top to bottom
-      * instead of left to right. Desktop never sees this; mobile never sees
-      * the table (leads.module.css). Inline editing (status, sale price)
-      * stays a desktop action — Bel/App/Plan in cover what a phone is for.
-      */}
-    <div className={styles.cards}>
-      {view.map((lead) => {
-        const isLate = lead.status === 'new' && lead.created_at < staleBefore;
-        const repeat = lead.phone_e164 ? repeats[lead.phone_e164] : undefined;
-        const price =
-          lead.sale_price === null || lead.sale_price === '' ? null : Number(lead.sale_price);
-        const quoted =
-          lead.quoted_price === null || lead.quoted_price === '' ? null : Number(lead.quoted_price);
-        const whatsapp = waLink(lead.phone_e164 ?? lead.phone, '');
-
-        return (
-          <div key={lead.id} className={`${styles.card} ${isLate ? styles.cardStale : ''}`}>
-            <div className={styles.cardHead}>
-              <div>
-                <span className={styles.time}>{TIME.format(new Date(lead.created_at))}</span>
-                <span className={styles.dateSmall}>{DATE.format(new Date(lead.created_at))}</span>
-              </div>
-              <span className={`${styles.badge} ${STATUS_CLASS[lead.status] ?? styles.stNew}`}>
-                {STATUS_LABELS[lead.status] ?? lead.status}
-              </span>
-            </div>
-
-            <div className={styles.cardMain}>
-              <span className={styles.strong}>{prettyPhone(lead.phone, lead.phone_e164)}</span>
-              <span className={styles.sub}>
-                {lead.name ?? 'geen naam'}
-                {lead.consent_marketing === false && (
-                  <span className={styles.consentNo}> · geen marketing</span>
-                )}
-              </span>
-            </div>
-
-            <div className={styles.cardGrid}>
-              <div>
-                <span className={styles.cardLabel}>Plaats</span>
-                <span className={styles.strong}>{lead.postcode ?? '—'}</span>
-                <span className={styles.sub}>{lead.location ?? ''}</span>
-              </div>
-              <div>
-                <span className={styles.cardLabel}>Voertuig</span>
-                <span className={styles.strong}>
-                  {[lead.brand, lead.model].filter(Boolean).join(' ') || '—'}
-                </span>
-                <span className={styles.sub}>
-                  {lead.kenteken && <span className={styles.plate}>{lead.kenteken}</span>}
-                  {lead.year ? ` ${lead.year}` : ''}
-                </span>
-              </div>
-              <div>
-                <span className={styles.cardLabel}>Dienst</span>
-                <span className={styles.strong}>{lead.service ?? '—'}</span>
-              </div>
-              <div>
-                <span className={styles.cardLabel}>Bron</span>
-                <span className={styles.strong}>{lead.source ?? 'unknown'}</span>
-              </div>
-              <div>
-                <span className={styles.cardLabel}>Waarde</span>
-                <span className={price === null ? styles.moneyEmpty : styles.money}>
-                  {price === null ? '—' : MONEY.format(price)}
-                </span>
-                {price === null && quoted !== null && (
-                  <span className={styles.sub}>geschat {MONEY.format(quoted)}</span>
-                )}
-              </div>
-            </div>
-
-            {(isLate || repeat) && (
-              <div className={styles.cardFlags}>
-                {isLate && <span className={styles.flag}>te laat</span>}
-                {repeat && (
-                  <span
-                    className={styles.repeat}
-                    title={`Dit nummer belde ${repeat.count} keer; vorige aanvraag ${daysAgo(repeat.last)} dagen geleden.`}
-                  >
-                    {repeat.count}× eerder
-                  </span>
-                )}
-              </div>
-            )}
-
-            <div className={styles.actions}>
-              {lead.phone_e164 && (
-                <a className={styles.act} href={`tel:${lead.phone_e164}`}>
-                  Bel
-                </a>
-              )}
-              {whatsapp && (
-                <a className={styles.act} href={whatsapp} target="_blank" rel="noopener noreferrer">
-                  App
-                </a>
-              )}
-              <Link className={`${styles.act} ${styles.actPrimary}`} href={`/admin/jobs/nieuw?lead=${lead.id}`}>
-                Plan in
-              </Link>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-    </>
-  );
-}
-
-/**
- * Status and value, in one row-level form.
- *
- * `sold` is the one status that demands a real amount: /api/export-conversions
- * sends `sale_price` to Google Ads as the conversion value, so a sold lead with
- * a blank or invented figure teaches the bidding algorithm the wrong lesson.
- * The API refuses it too — this is the message, not the guard.
- */
-function LeadEditor({
-  lead,
-  onSaved,
-  onCancel,
-}: {
-  lead: LeadRow;
-  onSaved: (change: Partial<LeadRow>) => void;
-  onCancel: () => void;
-}) {
-  const [status, setStatus] = useState(lead.status);
-  const [price, setPrice] = useState(
-    lead.sale_price === null ? '' : String(lead.sale_price)
-  );
-  const [error, setError] = useState('');
-  const [saving, setSaving] = useState(false);
-
-  async function save() {
-    setSaving(true);
-    setError('');
-
-    const response = await fetch(`/api/admin/leads/${lead.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        status,
-        sale_price: price.trim() === '' ? null : price.trim(),
-      }),
-    }).catch(() => null);
-
-    if (!response || !response.ok) {
-      const body = await response?.json().catch(() => null);
-      setError(body?.error ?? 'Opslaan mislukt. Probeer opnieuw.');
-      setSaving(false);
-      return;
-    }
-
-    const body = await response.json();
-    onSaved({
-      status: body.lead.status,
-      sale_price: body.lead.sale_price,
-      first_contact_at: body.lead.first_contact_at,
-    });
-  }
-
-  return (
-    <tr className={styles.editRow}>
-      <td colSpan={9}>
-        <div className={styles.editGrid}>
-          <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor={`st-${lead.id}`}>
-              Status
-            </label>
-            <select
-              id={`st-${lead.id}`}
-              className={styles.control}
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              autoFocus
-            >
-              {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor={`pr-${lead.id}`}>
-              Werkelijk bedrag (€)
-            </label>
-            <input
-              id={`pr-${lead.id}`}
-              className={styles.control}
-              inputMode="decimal"
-              value={price}
-              placeholder="249.00"
-              onChange={(e) => setPrice(e.target.value)}
-              size={10}
-            />
-          </div>
-
-          <button className={styles.apply} onClick={save} disabled={saving}>
-            {saving ? 'Opslaan…' : 'Opslaan'}
-          </button>
-          <button className={styles.act} onClick={onCancel} disabled={saving}>
-            Annuleren
-          </button>
-
-          {error && <div className={styles.editError}>{error}</div>}
-
-          {status === 'sold' && (
-            <p className={styles.editNote}>
-              Dit bedrag gaat als conversiewaarde naar Google Ads. Vul het
-              werkelijk gefactureerde bedrag in — een geschat getal stuurt de
-              biedingen de verkeerde kant op.
-            </p>
-          )}
         </div>
-      </td>
-    </tr>
+
+        {selectedLead && (
+          <div className={styles.drawerCol}>
+            <LeadDetailDrawer lead={selectedLead} onClose={() => setSelectedLead(null)} />
+          </div>
+        )}
+      </div>
+    </>
   );
 }

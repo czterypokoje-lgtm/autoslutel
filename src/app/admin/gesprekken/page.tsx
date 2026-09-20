@@ -1,67 +1,28 @@
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { PageHead, Card, Empty, Badge } from '../_ui';
-import styles from './gesprekken.module.css';
+import { PageHead, Empty, Notice } from '../_ui';
+import { toE164NL } from '@/lib/phone';
+import ConversationConsole, { type Conversation } from './ConversationConsole';
 
 export const dynamic = 'force-dynamic';
 
-const PAGE_SIZE = 50;
-
-interface TranscriptTurn {
-  role?: string;
-  message?: string | null;
-}
-
-interface ConversationRow {
-  id: string;
-  conversation_id: string;
-  channel: string;
-  phone: string | null;
-  outcome: string | null;
-  duration_secs: number | null;
-  summary: string | null;
-  transcript: TranscriptTurn[] | null;
-  created_at: string;
-}
-
-const CHANNEL_LABEL: Record<string, string> = {
-  phone: '📞 Telefoon',
-  whatsapp: '💬 WhatsApp',
-  unknown: '— Onbekend',
-};
-
-/* Badge's own vocabulary — ok / warn / stop / info — not colour names. */
-const OUTCOME_TONE: Record<string, 'ok' | 'warn' | 'stop' | 'info'> = {
-  success: 'ok',
-  failure: 'stop',
-  unknown: 'info',
-};
-
-function duration(secs: number | null) {
-  if (!secs) return '—';
-  return `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
-}
-
-function when(iso: string) {
-  return new Date(iso).toLocaleString('nl-NL', {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Europe/Amsterdam',
-  });
-}
+const PAGE_SIZE = 100;
 
 /**
  * Everything the AI agent has said and heard, phone and WhatsApp together.
  *
- * Before this the transcripts only existed in Telegram, which meant they could
- * be read once and never searched. The list is deliberately flat and newest
- * first — the office question is almost always "what did we just miss", not
- * "find me a call from March".
+ * Laid out as a console rather than a feed of cards: a list to pick from, the
+ * conversation itself, and — the part that makes it a CRM screen instead of a
+ * log viewer — who this caller already is. A number on its own is not an
+ * answer to "should I ring them back"; the lead they filled in two hours ago
+ * and the job already in the agenda are.
+ *
+ * The matching is done here, on the server, because it is two extra queries
+ * against columns that are already indexed, and doing it in the browser would
+ * mean shipping every lead and job to the page to find two of them.
  */
 export default async function GesprekkenPage() {
-  await requireOfficeUser();
+  await requireOfficeUser('/admin/gesprekken');
   const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
@@ -70,79 +31,151 @@ export default async function GesprekkenPage() {
     .order('created_at', { ascending: false })
     .limit(PAGE_SIZE);
 
-  const rows = (data ?? []) as ConversationRow[];
+  const rows = data ?? [];
+
+  /*
+   * Match on E.164 through the shared normaliser, never on the raw string:
+   * the agent reports "+31611751231" and a web form stores whatever the
+   * customer typed, so a literal comparison finds nothing and the console
+   * would quietly claim every caller is a stranger.
+   */
+  const numbers = [...new Set(rows.map((r) => toE164NL(r.phone)).filter((n): n is string => Boolean(n)))];
+
+  interface LeadMatch {
+    id: string | number;
+    name: string | null;
+    phone_e164: string | null;
+    brand: string | null;
+    model: string | null;
+    year: string | null;
+    service: string | null;
+    postcode: string | null;
+    status: string | null;
+    created_at: string;
+  }
+
+  interface JobMatch {
+    id: string | number;
+    customer_phone: string | null;
+    scheduled_date: string | null;
+    slot_start: string | null;
+    status: string | null;
+    service_type: string | null;
+    car_make: string | null;
+    car_model: string | null;
+    city: string | null;
+  }
+
+  let leads: LeadMatch[] = [];
+  let jobs: JobMatch[] = [];
+
+  if (numbers.length) {
+    const [leadResult, jobResult] = await Promise.all([
+      supabase
+        .from('leads')
+        .select('id, name, phone_e164, brand, model, year, service, postcode, status, created_at')
+        .in('phone_e164', numbers)
+        .order('created_at', { ascending: false }),
+      /*
+       * jobs has no phone index and stores the number as it was typed, so it
+       * cannot be filtered with .in() on the E.164 list the way leads can —
+       * the normalisation has to happen in JS. Bounded to the most recent 300
+       * rather than the whole table.
+       */
+      supabase
+        .from('jobs')
+        .select('id, customer_phone, scheduled_date, slot_start, status, service_type, car_make, car_model, city')
+        .order('scheduled_date', { ascending: false })
+        .limit(300),
+    ]);
+    leads = (leadResult.data ?? []) as LeadMatch[];
+    jobs = (jobResult.data ?? []) as JobMatch[];
+  }
+
+  /* Newest first above, so the first hit for a number is its latest. */
+  const leadByPhone = new Map<string, LeadMatch>();
+  for (const lead of leads) {
+    const key = lead.phone_e164;
+    if (key && !leadByPhone.has(key)) leadByPhone.set(key, lead);
+  }
+
+  const jobByPhone = new Map<string, JobMatch>();
+  for (const job of jobs) {
+    const key = toE164NL(job.customer_phone);
+    if (key && !jobByPhone.has(key)) jobByPhone.set(key, job);
+  }
+
+  /*
+   * The journey rail needs every conversation this number has had, not just
+   * the selected one — so the phone is normalised onto each row here and the
+   * grouping happens in the client, which already holds the whole list.
+   */
+  const conversations: Conversation[] = rows.map((row) => {
+    const key = toE164NL(row.phone);
+    const lead = key ? leadByPhone.get(key) ?? null : null;
+    const job = key ? jobByPhone.get(key) ?? null : null;
+    return {
+      id: row.id,
+      channel: row.channel,
+      phone: row.phone,
+      phoneKey: key,
+      outcome: row.outcome,
+      durationSecs: row.duration_secs,
+      summary: row.summary,
+      turns: (Array.isArray(row.transcript) ? row.transcript : [])
+        .map((t: { role?: string; message?: string | null }) => ({
+          role: (t.role === 'agent' ? 'agent' : 'user') as 'agent' | 'user',
+          message: t.message ?? '',
+        }))
+        .filter((t) => t.message),
+      createdAt: row.created_at,
+      lead: lead
+        ? {
+            id: String(lead.id),
+            name: lead.name,
+            car: [lead.brand, lead.model, lead.year].filter(Boolean).join(' ') || null,
+            service: lead.service,
+            postcode: lead.postcode,
+            status: lead.status,
+            createdAt: lead.created_at,
+          }
+        : null,
+      job: job
+        ? {
+            id: String(job.id),
+            date: job.scheduled_date,
+            slot: job.slot_start ? String(job.slot_start).slice(0, 5) : null,
+            status: job.status,
+            service: job.service_type,
+            car: [job.car_make, job.car_model].filter(Boolean).join(' ') || null,
+            city: job.city,
+          }
+        : null,
+    };
+  });
 
   return (
     <>
       <PageHead
         title="Gesprekken"
-        sub="Telefoon- en WhatsApp-gesprekken van de AI-assistent, met samenvatting en volledig transcript."
+        sub="Telefoon en WhatsApp van de AI-assistent, met samenvatting, transcript en wie de beller al is."
       />
 
       {error && (
-        <Card>
-          <p className={styles.error}>
-            Kon de gesprekken niet laden: {error.message}
-            <br />
-            <span className={styles.hint}>
-              Staat migratie 0044_agent_conversations.sql al in de database?
-            </span>
-          </p>
-        </Card>
+        <Notice tone="bad">
+          Kon de gesprekken niet laden: {error.message}
+        </Notice>
       )}
 
-      {!error && rows.length === 0 && (
+      {!error && conversations.length === 0 && (
         <Empty>
           Nog geen gesprekken opgeslagen. Ze verschijnen hier zodra de assistent
-          een gesprek afrondt.
+          een gesprek afrondt — bij WhatsApp pas als het gesprek is afgelopen,
+          niet na elk bericht.
         </Empty>
       )}
 
-      <div className={styles.list}>
-        {rows.map((row) => {
-          const turns = Array.isArray(row.transcript) ? row.transcript : [];
-          return (
-            <Card key={row.id}>
-              <div className={styles.meta}>
-                <span className={styles.channel}>
-                  {CHANNEL_LABEL[row.channel] ?? row.channel}
-                </span>
-                {row.phone ? (
-                  <a className={styles.phone} href={`/admin/klanten/${encodeURIComponent(row.phone)}`}>
-                    {row.phone}
-                  </a>
-                ) : (
-                  <span className={styles.noPhone}>geen nummer</span>
-                )}
-                <span className={styles.when}>{when(row.created_at)}</span>
-                <span className={styles.duration}>{duration(row.duration_secs)}</span>
-                {row.outcome && (
-                  <Badge tone={OUTCOME_TONE[row.outcome] ?? 'info'}>{row.outcome}</Badge>
-                )}
-              </div>
-
-              {row.summary && <p className={styles.summary}>{row.summary}</p>}
-
-              {turns.length > 0 && (
-                <details className={styles.transcript}>
-                  <summary>Transcript ({turns.length} berichten)</summary>
-                  <div className={styles.turns}>
-                    {turns.map((turn, i) => (
-                      <p
-                        key={i}
-                        className={turn.role === 'agent' ? styles.agent : styles.user}
-                      >
-                        <strong>{turn.role === 'agent' ? 'Assistent' : 'Klant'}</strong>
-                        {turn.message}
-                      </p>
-                    ))}
-                  </div>
-                </details>
-              )}
-            </Card>
-          );
-        })}
-      </div>
+      {conversations.length > 0 && <ConversationConsole conversations={conversations} />}
     </>
   );
 }

@@ -24,10 +24,18 @@ interface PostCallPayload {
      */
     metadata?: {
       call_duration_secs?: number;
-      phone_call?: { external_number?: string; direction?: string };
+      phone_call?: { external_number?: string; direction?: string } | null;
+      whatsapp?: {
+        /* International digits, no plus: "48500312292". Not external_number —
+           that key belongs to phone_call and does not exist here. */
+        whatsapp_user_id?: string;
+        whatsapp_phone_number_id?: string;
+        direction?: string;
+      } | null;
+      sms?: unknown;
+      conversation_initiation_source?: string;
       phone_number?: string;
       from_number?: string;
-      channel?: string;
       [key: string]: unknown;
     };
     conversation_initiation_client_data?: { dynamic_variables?: Record<string, unknown> };
@@ -43,20 +51,60 @@ interface PostCallPayload {
  * when someone later filters the list by channel.
  */
 function detectChannel(data: NonNullable<PostCallPayload['data']>): string {
-  const raw = String(data.metadata?.channel ?? '').toLowerCase();
-  if (raw.includes('whatsapp')) return 'whatsapp';
-  if (raw.includes('phone') || raw.includes('voice')) return 'phone';
-  if (data.metadata?.phone_call) return 'phone';
+  const meta = data.metadata;
+  if (!meta) return 'unknown';
+
+  /*
+   * Read from the real payload, which the first stored call settled:
+   * `metadata.channel` does not exist at all. What ElevenLabs actually sends
+   * is one populated sub-object per channel and null for the rest —
+   *
+   *   phone_call: { type: 'twilio', call_sid, direction, external_number, … }
+   *   whatsapp:   null
+   *   sms:        null
+   *
+   * The previous version led with `metadata.channel`, which was dead code,
+   * and then fell through to `phone_call` — right for a call by luck, and
+   * wrong for WhatsApp, which would have been stored as 'unknown' because
+   * nothing here ever looked at `metadata.whatsapp`.
+   */
+  if (meta.whatsapp) return 'whatsapp';
+  if (meta.phone_call) return 'phone';
+  if (meta.sms) return 'sms';
+
+  /* Last resort, and a real one: the source that opened the conversation. */
+  const source = String(meta.conversation_initiation_source ?? '').toLowerCase();
+  if (source.includes('whatsapp')) return 'whatsapp';
+  if (source.includes('twilio') || source.includes('phone')) return 'phone';
+
   return 'unknown';
 }
 
 /** The customer's number, from whichever key this payload happens to use. */
 function detectPhone(data: NonNullable<PostCallPayload['data']>): string | null {
-  const candidate =
-    data.metadata?.phone_call?.external_number ??
-    data.metadata?.from_number ??
-    data.metadata?.phone_number;
-  return typeof candidate === 'string' && candidate.trim() ? candidate.trim() : null;
+  const meta = data.metadata;
+
+  /*
+   * A call gives "+31611751231" under phone_call.external_number. WhatsApp
+   * gives "48500312292" under whatsapp.whatsapp_user_id — international
+   * digits, no plus, and a different key entirely. The first version of this
+   * guessed at external_number/phone_number inside the whatsapp object; the
+   * first stored WhatsApp conversation showed neither exists, which is why
+   * that row landed with no number at all.
+   */
+  const fromCall = meta?.phone_call?.external_number;
+  if (typeof fromCall === 'string' && fromCall.trim()) return fromCall.trim();
+
+  const waUser = meta?.whatsapp?.whatsapp_user_id;
+  if (typeof waUser === 'string' && waUser.trim()) {
+    const digits = waUser.replace(/\D/g, '');
+    /* Prefixed here rather than stored bare: every other number in this
+       database is E.164, and a bare "48500312292" joins against nothing. */
+    return digits ? `+${digits}` : null;
+  }
+
+  const fallback = meta?.from_number ?? meta?.phone_number;
+  return typeof fallback === 'string' && fallback.trim() ? fallback.trim() : null;
 }
 
 const CALL_OUTCOME: Record<string, string> = {

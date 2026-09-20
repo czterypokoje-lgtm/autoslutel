@@ -239,7 +239,7 @@
   min-height: 64px;
   border: none;
   background: var(--crm-accent);
-  color: #fff;
+  color: var(--crm-on-accent);
   font-size: 18px;
 }
 
@@ -248,7 +248,7 @@
   min-height: 64px;
   border: none;
   background: var(--crm-ok);
-  color: #fff;
+  color: var(--crm-on-accent);
   font-size: 18px;
 }
 
