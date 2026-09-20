@@ -37,17 +37,17 @@
  * own pages never see this.
  */
 body {
-  background: #f6f7f6;
+  background: #f7f8f7;
 }
 
 .crm {
   /* ── surfaces, from the page up ──
      Warm rather than blue-grey: a neutral with a trace of the accent's hue
      reads as chosen, where a pure grey reads as a default nobody picked. */
-  --crm-bg: #f6f7f6;        /* the page itself */
+  --crm-bg: #f7f8f7;        /* the page itself */
   --crm-sidebar: #ffffff;   /* lifted off the page, divided by a rule */
   --crm-panel: #ffffff;     /* a card */
-  --crm-sunk: #f2f3f2;      /* a row under the cursor, an active nav item */
+  --crm-sunk: #f2f5f4;      /* a row under the cursor, an active nav item */
   --crm-raised: #fbfbfb;    /* a control sitting on a card */
 
   /* ── ink ── */
@@ -55,10 +55,10 @@ body {
   --crm-text: #384250;      /* body */
   /* #667085 measured 4.47:1 against a hovered row — a hair under AA, and
      invisible as a bug because it only fails on one surface. */
-  --crm-muted: #5d6b7e;     /* labels, meta, anything you skim past */
+  --crm-muted: #667085;     /* labels, meta, anything you skim past */
 
   /* ── rules ── */
-  --crm-rule: #e8eae8;      /* between rows */
+  --crm-rule: #e4e7e5;      /* between rows */
   --crm-rule2: #d6dad6;     /* around controls */
 
   /* ── the accent ──
@@ -67,9 +67,9 @@ body {
      from. #c2410c clears 4.5:1 and still reads as the same orange.
      The soft fill is where the "soft" in soft-orange lives — a tint for
      selected rows and active nav, never for text. */
-  --crm-accent: #c2410c;
-  --crm-accent-hover: #9a3412;
-  --crm-accent-soft: rgba(234, 88, 12, 0.10);
+  --crm-accent: #0f7a4a;
+  --crm-accent-hover: #0b5c37;
+  --crm-accent-soft: #e6f2ec;
 
   /* ── the states ──
      Text-weight values, each checked against --crm-panel. The -bg pairs are
@@ -77,11 +77,11 @@ body {
      blocks. */
   --crm-ok: #15803d;
   --crm-ok-bg: rgba(22, 163, 74, 0.10);
-  --crm-stop: #b91c1c;
+  --crm-stop: #dc2626;
   --crm-stop-bg: rgba(220, 38, 38, 0.09);
-  --crm-warn: #b45309;
+  --crm-warn: #d97706;
   --crm-warn-bg: rgba(217, 119, 6, 0.11);
-  --crm-steel: #1d4ed8;
+  --crm-steel: #2563eb;
   --crm-steel-bg: rgba(37, 99, 235, 0.09);
 
   /* ── text that sits ON a filled surface ──

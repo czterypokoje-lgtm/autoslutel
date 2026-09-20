@@ -1,51 +1,270 @@
 /*
- * Overview homepage — only what `_ui`/`charts` don't already cover: the
- * spacing between stacked standalone cards (that kit leaves to the grid
- * wrappers, which this page doesn't always use) and the "next job" hero.
+ * Overview homepage operations centre styles.
  */
 
-.stack {
-  margin-bottom: var(--sp-6);
+.dashboardGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  padding-bottom: var(--sp-12);
 }
 
-.activeStrip {
-  padding: var(--sp-4) var(--sp-5);
+.kpiStrip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+}
+
+@media (max-width: 1024px) {
+  .kpiStrip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kpiStrip {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpiCard {
+  background: var(--crm-panel);
+  border-radius: var(--crm-r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--crm-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  border: 1px solid var(--crm-rule);
+}
+
+.kpiTop {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.kpiIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--crm-r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--crm-sunk);
+}
+
+.kpiIcon.green {
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
+}
+
+.kpiTitle {
+  font-size: var(--fs-sm);
+  color: var(--crm-ink);
+  font-weight: var(--fw-semibold);
+}
+
+.kpiMain {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.kpiSub {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.middleRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .middleRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.actionCenterCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.actionItem {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
   border-bottom: 1px solid var(--crm-rule);
 }
 
-.cardLabel {
-  display: block;
-  color: var(--crm-ink);
+.actionItem:last-child {
+  border-bottom: none;
+}
+
+.actionIcon {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.actionTitle {
   font-size: var(--fs-sm);
-  margin-bottom: var(--sp-5);
+  font-weight: var(--fw-medium);
+  color: var(--crm-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actionSub {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.actionBtn {
+  flex: none;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+  padding: 4px 10px;
+  border-radius: 99px;
+  text-decoration: none;
+}
+
+.timelineItem {
+  display: flex;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-bottom: 1px solid var(--crm-rule);
+}
+.timelineItem:last-child {
+  border-bottom: none;
+}
+
+.timelineTime {
+  flex: none;
+  font-size: var(--fs-sm);
+  color: var(--crm-ink);
+  font-weight: var(--fw-semibold);
+  width: 50px;
+}
+
+.timelineContent {
+  flex: 1;
+}
+
+.timelineBrand {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--crm-ink);
+}
+
+.timelineDetails {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.timelineBadge {
+  flex: none;
+}
+
+.techItem {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-bottom: 1px solid var(--crm-rule);
+}
+.techItem:last-child {
+  border-bottom: none;
+}
+
+.techAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--crm-sunk);
+  color: var(--crm-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+}
+
+.techAvatar.ok {
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
+}
+
+.techInfo {
+  flex: 1;
+}
+
+.techName {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--crm-ink);
+}
+
+.techLocation {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.techActions {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.techBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--crm-rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--crm-ink);
+  background: var(--crm-panel);
 }
 
 /* ── the "next job" hero, monteur overview ── */
-
 .heroWrap {
   margin-bottom: var(--sp-6);
 }
-
-/* Two classes for specificity over Card's own single-class border rule,
-   regardless of which stylesheet the bundler happens to place first. */
 .heroWrap .hero {
   border-left: 4px solid var(--hero-accent, var(--crm-rule));
 }
-
 .heroBody {
   padding: var(--sp-5) var(--sp-5) var(--sp-3);
   display: flex;
   flex-direction: column;
   gap: var(--sp-2);
 }
-
 .heroSlot {
   font-size: 15px;
   font-weight: 700;
   color: var(--crm-ink);
   font-variant-numeric: tabular-nums;
 }
-
 .heroLine {
   display: flex;
   align-items: center;
@@ -53,12 +272,10 @@
   font-size: 15px;
   color: var(--crm-text);
 }
-
 .heroIcon {
   flex: none;
   color: var(--crm-muted);
 }
-
 .heroBadge {
   margin-left: auto;
   flex: none;
@@ -71,18 +288,15 @@
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
-
 .heroCount {
   margin-left: var(--sp-1);
   color: var(--crm-muted);
   font-weight: 500;
   font-size: var(--fs-sm);
 }
-
 .heroUpcoming {
   border-top: 1px solid var(--crm-rule);
 }
-
 .heroLink {
   display: block;
   padding: var(--sp-4) var(--sp-5);
@@ -92,7 +306,6 @@
   font-weight: 600;
   text-decoration: none;
 }
-
 .heroLink:active {
   background: var(--crm-sunk);
 }
