@@ -115,12 +115,20 @@
   box-shadow: var(--crm-shadow-lg);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 48px);
+  /*
+   * Was `height: calc(100vh - 48px)` — a fixed full-viewport panel whatever
+   * it contained. A lead with a number, a car and no notes filled the top
+   * fifth and left a half-metre of empty white above three buttons pinned to
+   * the bottom of the screen. It now sizes to its content and only starts
+   * scrolling when there is genuinely more than fits.
+   */
+  height: auto;
+  max-height: calc(100vh - 48px);
   overflow: hidden;
 }
 
 .drawerHead {
-  padding: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
   border-bottom: 1px solid var(--crm-rule);
 }
 
@@ -132,7 +140,7 @@
 }
 
 .drawerCar {
-  font-size: var(--fs-lg);
+  font-size: var(--fs-md, 15px);
   font-weight: var(--fw-bold);
   color: var(--crm-ink);
 }
@@ -144,7 +152,7 @@
 
 .drawerPrice {
   text-align: right;
-  font-size: var(--fs-lg);
+  font-size: var(--fs-md, 15px);
   font-weight: var(--fw-bold);
   color: var(--crm-ink);
 }
@@ -164,7 +172,7 @@
 .drawerTab {
   flex: 1;
   text-align: center;
-  padding: var(--sp-3) 0;
+  padding: var(--sp-2) 0;
   font-size: var(--fs-sm);
   color: var(--crm-muted);
   cursor: pointer;
@@ -178,7 +186,8 @@
 
 .drawerBody {
   padding: var(--sp-4);
-  flex: 1;
+  /* min-height:0 lets this shrink; flex:1 alone would hold the old height. */
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -200,7 +209,7 @@
 }
 
 .drawerFoot {
-  padding: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
   border-top: 1px solid var(--crm-rule);
   display: flex;
   gap: var(--sp-2);
@@ -244,7 +253,9 @@
   background: var(--crm-panel);
   border: 1px solid var(--crm-rule);
   border-radius: var(--crm-r-lg);
-  padding: var(--sp-4);
+  /* Roughly 24px shorter per row, so about two more leads fit on a laptop
+     screen without anything becoming harder to read or to tap. */
+  padding: var(--sp-3) var(--sp-4);
   display: flex;
   align-items: center;
   gap: var(--sp-4);
@@ -343,11 +354,15 @@
     bottom: 0;
     top: auto;
     left: 0;
-    height: 85vh;
+    /* Same fault as the desktop panel: a short lead should not open a sheet
+       covering 85% of the phone. It grows to its content and stops at 85vh. */
+    height: auto;
+    max-height: 85vh;
     z-index: 1000;
   }
   .drawerCard {
-    height: 100%;
+    height: auto;
+    max-height: 85vh;
     border-radius: var(--crm-r-lg) var(--crm-r-lg) 0 0;
     box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
   }
