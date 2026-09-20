@@ -81,7 +81,12 @@ export default function ContactForm() {
         if (typeof window.gtag === 'function') {
           window.gtag('event', 'generate_lead', { event_category: 'contact_form' });
         }
-        window.oaiq?.('track', 'lead_created', { content_name: 'contact_form' });
+        window.oaiq?.('track', 'lead_created', { 
+          content_name: 'contact_form',
+          email: data.get('email') as string,
+          phone_number: data.get('phone') as string,
+          external_id: data.get('email') as string // often used as fallback if backend generates no ID
+        });
       } else {
         setStatus('error');
       }

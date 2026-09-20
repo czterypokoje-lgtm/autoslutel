@@ -120,7 +120,11 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));
-    window.oaiq?.('track', 'lead_created', { content_name: city ? 'city_form' : 'hero_form' });
+    window.oaiq?.('track', 'lead_created', { 
+      content_name: city ? 'city_form' : 'hero_form',
+      phone_number: phoneState,
+      external_id: phoneState
+    });
 
     // Open WhatsApp synchronously, inside the click's call stack. Doing this
     // from a setTimeout put it outside the user-gesture chain, so popup
