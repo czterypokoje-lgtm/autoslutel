@@ -546,3 +546,165 @@
   line-height: 1.5;
   margin: 10px 0 0;
 }
+
+/* ── phone schedule ──────────────────────────────────────────────────────
+ *
+ * The hour boards and this list are the same rows rendered twice; exactly one
+ * is displayed at any width. See the comment above <AgendaList> in page.tsx
+ * for why a phone gets a list rather than a narrower grid.
+ */
+.agenda {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .boardOnly {
+    display: none;
+  }
+
+  .agenda {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
+  }
+}
+
+.agendaDay {
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  background: var(--crm-panel);
+  overflow: hidden;
+}
+
+.agendaDayHead {
+  position: sticky;
+  /* Under the shell's own sticky top bar, so the day you are scrolling
+     through stays named without covering the page header. */
+  top: 0;
+  z-index: 2;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 10px 14px;
+  background: var(--crm-sunk);
+  border-bottom: 1px solid var(--crm-rule);
+  font-size: var(--fs-sm);
+}
+
+.agendaDayHeadToday {
+  box-shadow: inset 3px 0 0 var(--crm-accent);
+}
+
+.agendaDayName {
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  text-transform: capitalize;
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.agendaToday {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--crm-accent);
+  color: var(--crm-on-accent);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.agendaCount {
+  flex: none;
+  color: var(--crm-muted);
+  font-size: var(--fs-micro);
+  font-variant-numeric: tabular-nums;
+}
+
+.agendaItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.agendaItems li + li .agendaItem {
+  border-top: 1px solid var(--crm-rule);
+}
+
+.agendaItem {
+  display: flex;
+  gap: var(--sp-3);
+  /* 3px of technician colour, the same cue the board's blocks carry. */
+  border-left: 3px solid transparent;
+  padding: 12px 14px;
+  text-decoration: none;
+  /* Comfortably past the 44px minimum touch target. */
+  min-height: 60px;
+  align-items: flex-start;
+}
+
+.agendaItem:active {
+  background: var(--crm-sunk);
+}
+
+.agendaTime {
+  flex: none;
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+
+.agendaStart {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+}
+
+.agendaEnd {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.agendaBody {
+  /* min-width: 0 is what lets the ellipsis below actually engage inside a
+     flex child rather than the row growing to fit the longest line. */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.agendaTitle {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agendaMeta {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agendaEmpty {
+  margin: 0;
+  padding: var(--sp-8) var(--sp-4);
+  text-align: center;
+  color: var(--crm-muted);
+  font-size: var(--fs-sm);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  background: var(--crm-panel);
+}

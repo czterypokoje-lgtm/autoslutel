@@ -351,6 +351,11 @@ textarea.input { height: auto; padding: var(--sp-2) var(--sp-3); line-height: 1.
 
 @media (max-width: 720px) {
   .row { flex-wrap: wrap; padding: var(--sp-3) var(--sp-4); }
-  .actions { margin-left: 0; width: 100%; }
+  /*
+     width:100% without wrapping only widened the row the buttons overflowed
+     from. Agenda puts five controls here — Dag/Week, three nav buttons and
+     "Nieuwe klus" — which is well past a phone's width on one line, so the
+     segmented switch was rendering clipped mid-word. */
+  .actions { margin-left: 0; width: 100%; flex-wrap: wrap; }
   .table th, .table td { padding: var(--sp-2) var(--sp-3); }
 }

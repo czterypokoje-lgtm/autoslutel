@@ -333,6 +333,31 @@
     padding: 12px;
   }
 
+  /*
+   * Five controls — back, status, Bewerken, "Afdrukken / Opslaan als PDF",
+   * Verwijderen — on one non-wrapping row, with the longest label of the set
+   * last. It was being cut mid-word at the right edge. The back link takes
+   * its own line and the actions wrap under it.
+   */
+  .bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .barRight {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .printBtn,
+  .editBtn,
+  .statusSelect,
+  .deleteBtn {
+    /* Full-height taps rather than 38px slivers, and no label clipping. */
+    min-height: 40px;
+  }
+
   .sheet {
     padding: 24px 20px;
   }

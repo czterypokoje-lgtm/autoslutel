@@ -169,11 +169,30 @@ export default async function JobsPage({
         </p>
       )}
 
-      {view === 'dag' ? (
-        <DayBoard jobs={rows} technicians={techs} date={date} today={today} />
-      ) : (
-        <WeekBoard jobs={rows} technicians={techs} from={from} today={today} />
-      )}
+      {/*
+        Two renderings of the same rows, one shown at a time by a media query
+        in the stylesheet.
+
+        The boards are hour grids: 44px of gutter plus a column per technician
+        or per weekday, each with a min-width, because a job block has to be
+        positioned against a shared time axis to mean anything. The week board
+        is therefore ~1100px wide at its narrowest, and no breakpoint changes
+        that — a time grid squeezed into 375px is not a smaller time grid, it
+        is an unreadable one. Google Calendar and Fantastical both answer this
+        the same way: keep the grid on desktop, and give a phone a schedule.
+
+        AgendaList is that schedule. Same rows, same links, ordered by day and
+        start time, with nothing positioned absolutely.
+      */}
+      <div className={styles.boardOnly}>
+        {view === 'dag' ? (
+          <DayBoard jobs={rows} technicians={techs} date={date} today={today} />
+        ) : (
+          <WeekBoard jobs={rows} technicians={techs} from={from} today={today} />
+        )}
+      </div>
+
+      <AgendaList jobs={rows} technicians={techs} today={today} />
     </>
   );
 }
@@ -501,6 +520,115 @@ function WeekBoard({
       })}
 
       <GridAutoScroll key={from} gridId={GRID_ID} hour={7} hourHeight={HOUR_H} />
+    </div>
+  );
+}
+
+
+/**
+ * The phone rendering of the agenda: days in order, jobs in order, grouped
+ * under a sticky day header. Empty days are left out rather than drawn as
+ * blank space — a schedule answers "what is next", and a day with nothing in
+ * it is not an answer, it is scrolling.
+ *
+ * Server-rendered and link-only, same as the boards: no client JavaScript
+ * joins the bundle to show a list.
+ */
+function AgendaList({
+  jobs,
+  technicians,
+  today,
+}: {
+  jobs: JobRow[];
+  technicians: TechRow[];
+  today: string;
+}) {
+  const colourOf = new Map(technicians.map((t) => [t.id, technicianColour(t.color)]));
+  const nameOf = new Map(technicians.map((t) => [t.id, t.name]));
+
+  const byDay = new Map<string, JobRow[]>();
+  for (const job of jobs) {
+    const day = job.scheduled_date;
+    if (!day) continue;
+    const list = byDay.get(day);
+    if (list) list.push(job);
+    else byDay.set(day, [job]);
+  }
+
+  const days = [...byDay.keys()].sort();
+  for (const day of days) {
+    byDay.get(day)!.sort((a, b) => minutesOf(a.slot_start) - minutesOf(b.slot_start));
+  }
+
+  if (days.length === 0) {
+    return (
+      <div className={styles.agenda}>
+        <p className={styles.agendaEmpty}>Geen klussen in deze periode.</p>
+      </div>
+    );
+  }
+
+  const dayLabel = new Intl.DateTimeFormat('nl-NL', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'Europe/Amsterdam',
+  });
+
+  return (
+    <div className={styles.agenda}>
+      {days.map((day) => {
+        const dayJobs = byDay.get(day)!;
+        const isToday = day === today;
+        return (
+          <section key={day} className={styles.agendaDay}>
+            <h2 className={`${styles.agendaDayHead} ${isToday ? styles.agendaDayHeadToday : ''}`}>
+              <span className={styles.agendaDayName}>
+                {dayLabel.format(new Date(`${day}T12:00:00Z`))}
+                {isToday && <span className={styles.agendaToday}>vandaag</span>}
+              </span>
+              <span className={styles.agendaCount}>
+                {dayJobs.length} {dayJobs.length === 1 ? 'klus' : 'klussen'}
+              </span>
+            </h2>
+
+            <ul className={styles.agendaItems}>
+              {dayJobs.map((job) => {
+                const colour = job.technician_id ? colourOf.get(job.technician_id) ?? '#6b7280' : '#9d201c';
+                const car = carLine(job);
+                return (
+                  <li key={job.id}>
+                    <Link
+                      href={`/admin/jobs/${job.id}`}
+                      className={styles.agendaItem}
+                      style={{ borderLeftColor: colour }}
+                    >
+                      <span className={styles.agendaTime}>
+                        <span className={styles.agendaStart}>{(job.slot_start ?? '').slice(0, 5) || '--:--'}</span>
+                        <span className={styles.agendaEnd}>{(job.slot_end ?? '').slice(0, 5) || ''}</span>
+                      </span>
+
+                      <span className={styles.agendaBody}>
+                        {/* The car is the line that identifies the job at a glance;
+                            the service and plate qualify it, so they sit under. */}
+                        <span className={styles.agendaTitle}>{car ?? job.service_type ?? 'Klus'}</span>
+                        <span className={styles.agendaMeta}>
+                          {job.service_type ?? 'geen dienst'}
+                          {job.kenteken ? ` · ${job.kenteken}` : ''}
+                        </span>
+                        <span className={styles.agendaMeta}>
+                          {job.technician_id ? nameOf.get(job.technician_id) ?? '—' : 'Niet toegewezen'}
+                          {job.city ? ` · ${job.city}` : ''}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        );
+      })}
     </div>
   );
 }
