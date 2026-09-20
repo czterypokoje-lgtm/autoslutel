@@ -102,8 +102,8 @@ export default function MonteurWorden() {
               * image.)
               */}
             <Image
-              src="/images/seo/autosleutel24_monteur_worden_specialist_op_locatie.webp"
-              alt="Autosleutelspecialist van Autosleutel24 in bedrijfskleding voor de vestiging, met servicebus op de achtergrond"
+              src="/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp"
+              alt="Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond"
               width={800}
               height={560}
               priority

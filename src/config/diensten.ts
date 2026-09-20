@@ -205,8 +205,8 @@ export const DIENSTEN: Service[] = [
     /* Already had this photo, in a hand-written split hero of its own that
        SplitHero now replaces. */
     heroImage: {
-      src: '/images/service_kwijt.webp',
-      alt: 'Alle autosleutels kwijt — nieuwe sleutel gemaakt en ingeleerd op locatie',
+      src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
+      alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
     },
     directAnswer:
       'Alle sleutels kwijt (All Keys Lost) lossen wij ter plaatse op vanaf €299, meestal binnen 60 tot 120 minuten. Wij openen de auto, lezen de sleutelcode uit de boordcomputer, frezen een nieuwe sleutel en leren die in. De verloren sleutels worden daarbij uit het geheugen gewist, zodat er met de oude sleutels niet meer gestart kan worden.',

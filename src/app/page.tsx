@@ -130,8 +130,8 @@ export default function HomePage() {
 
           <div className={styles.heroImageContent}>
             <Image 
-              src="/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp" 
-              alt="Autosleutel bijmaken door mobiele specialist"
+              src="/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp" 
+              alt="Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond"
               width={800}
               height={450}
               style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
@@ -143,8 +143,8 @@ export default function HomePage() {
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "ImageObject",
-                "contentUrl": "https://www.autosleutel24.nl/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp",
-                "name": "Autosleutel bijmaken Utrecht & Amsterdam mobiele specialist",
+                "contentUrl": "https://www.autosleutel24.nl/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp",
+                "name": "Autosleutelspecialist van Autosleutel24 op locatie",
                 "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht, Amsterdam en Midden-Nederland door Autosleutel24.",
                 "contentLocation": {
                   "@type": "Place",

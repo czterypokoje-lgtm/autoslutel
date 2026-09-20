@@ -7,8 +7,11 @@ const BASE = 'https://www.autosleutel24.nl';
 // ── Core SEO images with descriptive alt/title metadata ──
 const CORE_IMAGES = [
   {
-    url: '/autosleutel-bijmaken-utrecht-amsterdam-mobiel.webp',
-    title: 'Autosleutel Bijmaken Utrecht en Amsterdam',
+    /* The home page hero. Swapped when the hero changed — an image sitemap is
+       meant to list images that actually appear on a page, and the previous
+       entry pointed at a file the site no longer displays anywhere. */
+    url: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
+    title: 'Autosleutelspecialist van Autosleutel24 op locatie',
     caption: 'Autosleutel24 — mobiele autosleutelspecialist in Utrecht, Amsterdam en Midden-Nederland',
     geo_location: 'Utrecht en Amsterdam, Nederland',
   },
