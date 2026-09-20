@@ -90,9 +90,17 @@ export default function MonteurWorden() {
             </div>
           </div>
           <div className={styles.heroImage}>
+            {/*
+              * A real technician at the bench, chosen after actually looking at
+              * it. The first pick here was
+              * auto-autoslotenmaker-werkplaats-hilversum-autosleutel24.webp,
+              * which the filename says is a workshop and which is in fact a
+              * screenshot of a badge from this very site — cropped page
+              * furniture, shipped as a hero. Filenames are not captions.
+              */}
             <Image
-              src="/images/seo/auto-autoslotenmaker-werkplaats-hilversum-autosleutel24.webp"
-              alt="Autosleutelspecialist aan het werk met diagnoseapparatuur"
+              src="/images/seo/autosleutels-repareren-werkplaats-utrecht.webp"
+              alt="Autosleutelspecialist soldeert een printplaat van een autosleutel aan de werkbank"
               width={800}
               height={560}
               priority
