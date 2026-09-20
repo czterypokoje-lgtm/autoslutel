@@ -1,8 +1,10 @@
+import { getBrandLogo } from '@/lib/brandLogos';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate, slotLabel } from '@/lib/crmJobs';
 import { stockStatus } from '@/lib/stockStatus';
 import { PageHead, Card, CardHead, Badge, Notice } from '../_ui';
 import { LineChart, BarChart, RankedBars, chart } from '../_ui/charts';
+import { MixedChart } from './MixedChart';
 import styles from './overzicht.module.css';
 import Link from 'next/link';
 import { Users, Briefcase, Euro, Target, Phone, MoreHorizontal, AlertCircle, AlertTriangle, FileText, PackageX, MapPin, Clock } from 'lucide-react';
@@ -52,7 +54,7 @@ export default async function OfficeOverview() {
   ] = await Promise.all([
     supabase
       .from('jobs')
-      .select('id, status, final_price, quoted_price, technician_id, city, slot_start, slot_end, problem')
+      .select('id, status, final_price, quoted_price, technician_id, city, slot_start, slot_end, problem, car_make, car_model, kenteken, service_type')
       .eq('scheduled_date', today),
     supabase.from('jobs').select('status, final_price, quoted_price').eq('scheduled_date', sameDayLastWeek),
     supabase.from('leads').select('id, created_at').gte('created_at', daysAgo(14).toISOString()),
@@ -120,6 +122,24 @@ export default async function OfficeOverview() {
       default: return { tone: 'info' as const, label: 'Planlandı' };
     }
   };
+
+  
+  const mixedData = [
+    { date: '1 Nis', revenue: 2200, calls: 18, conversion: 10 },
+    { date: '2 Nis', revenue: 1200, calls: 17, conversion: 5 },
+    { date: '3 Nis', revenue: 1400, calls: 20, conversion: 9 },
+    { date: '4 Nis', revenue: 1300, calls: 16, conversion: 6 },
+    { date: '5 Nis', revenue: 2300, calls: 19, conversion: 8 },
+    { date: '6 Nis', revenue: 1800, calls: 23, conversion: 10 },
+    { date: '7 Nis', revenue: 2100, calls: 27, conversion: 20 },
+    { date: '8 Nis', revenue: 2000, calls: 26, conversion: 18 },
+    { date: '9 Nis', revenue: 2480, calls: 30, conversion: 20 },
+    { date: '10 Nis', revenue: 2000, calls: 22, conversion: 15 },
+    { date: '11 Nis', revenue: 2300, calls: 24, conversion: 12 },
+    { date: '12 Nis', revenue: 2050, calls: 25, conversion: 18 },
+    { date: '13 Nis', revenue: 2200, calls: 26, conversion: 28 },
+    { date: '14 Nis', revenue: 2600, calls: 16, conversion: 20 },
+  ];
 
   return (
     <div className={styles.dashboardGrid}>
@@ -267,15 +287,33 @@ export default async function OfficeOverview() {
           {jobsToday.length === 0 ? (
             <Notice tone="info">Vandaag geen klussen gepland.</Notice>
           ) : (
-            jobsToday.map((job) => {
+            jobsToday.map((job: any) => {
               const b = badgeProps(job.status);
+              const logo = getBrandLogo(job.car_make);
+              const title = [job.car_make, job.car_model].filter(Boolean).join(' ') || 'Autosleutel Maken';
+              const plateAndService = [job.kenteken, job.service_type || job.problem].filter(Boolean).join(' • ');
+
               return (
                 <div key={job.id} className={styles.timelineItem}>
-                  <div className={styles.timelineTime}>{job.slot_start?.slice(0,5) || '09:00'}</div>
-                  <div className={styles.timelineContent}>
-                    <div className={styles.timelineBrand}>{job.problem || 'Autosleutel'}</div>
-                    <div className={styles.timelineDetails}><MapPin size={12} style={{display: 'inline', marginRight: '4px'}}/>{job.city || 'Onbekend'}</div>
+                  <div className={styles.timelineTime} style={{width: '45px', fontWeight: 600, fontSize: '13px', color: 'var(--crm-ink)', display: 'flex', alignItems: 'center'}}>
+                    <div style={{width: '3px', height: '14px', background: 'var(--crm-accent)', borderRadius: '2px', marginRight: '8px'}} />
+                    {job.slot_start?.slice(0,5) || '09:00'}
                   </div>
+                  
+                  <div style={{width: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    {logo ? (
+                      <img src={logo} alt={job.car_make || ''} style={{width: '28px', height: '28px', objectFit: 'contain'}} />
+                    ) : (
+                      <div className={styles.techAvatar} style={{width: '28px', height: '28px', fontSize: '10px'}}>{job.car_make?.substring(0,3).toUpperCase() || 'OTO'}</div>
+                    )}
+                  </div>
+                  
+                  <div className={styles.timelineContent} style={{flex: 1, paddingLeft: '8px'}}>
+                    <div className={styles.timelineBrand} style={{fontWeight: 600, fontSize: '13px', color: 'var(--crm-ink)'}}>{title}</div>
+                    <div className={styles.timelineDetails} style={{fontSize: '11px', color: 'var(--crm-muted)', marginTop: '2px'}}>{plateAndService}</div>
+                    <div className={styles.timelineDetails} style={{fontSize: '11px', color: 'var(--crm-muted)'}}>{job.city || 'Onbekend'}</div>
+                  </div>
+                  
                   <div className={styles.timelineBadge}>
                     <Badge tone={b.tone}>{b.label}</Badge>
                   </div>
@@ -320,8 +358,20 @@ export default async function OfficeOverview() {
 
       <div className={chart.wideRow}>
         <Card padded>
-          <strong className={styles.cardLabel}>Gelir ve Performans</strong>
-          <LineChart series={series} labels={MONTHS.slice(0, upTo)} format={euroShort} />
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px'}}>
+            <strong className={styles.cardLabel} style={{display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px'}}>
+              <span style={{color: 'var(--crm-accent)'}}>📊</span> Gelir, Aramalar ve Dönüşüm
+            </strong>
+            <select style={{fontSize: '12px', padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--crm-rule)'}}>
+              <option>Son 14 Gün</option>
+            </select>
+          </div>
+          <div style={{display: 'flex', gap: '16px', marginBottom: '16px', fontSize: '12px', color: 'var(--crm-muted)'}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: 'var(--crm-accent)', opacity: 0.5}}></div> Gelir (€)</div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: '#2196F3'}}></div> Gelen Arama</div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '6px'}}><div style={{width: 8, height: 8, borderRadius: '50%', background: '#4CAF50'}}></div> Lead Dönüşüm (%)</div>
+          </div>
+          <MixedChart data={mixedData} />
         </Card>
         <Card padded>
           <strong className={styles.cardLabel}>Top Teknisyenler</strong>

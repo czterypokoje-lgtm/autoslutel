@@ -1,6 +1,7 @@
 'use client';
 
 import { Fragment, useState } from 'react';
+import { getBrandLogo } from '@/lib/brandLogos';
 import styles from './leads.module.css';
 import { waLink } from '@/lib/whatsapp';
 import { PageHead, Badge } from '../_ui';
@@ -140,7 +141,13 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
             return (
               <div key={row.id} className={`${styles.richRow} ${isSelected ? styles.selected : ''}`} onClick={() => setSelectedLead(row)}>
                 <input type="checkbox" onClick={e => e.stopPropagation()} />
-                <div style={{width: '40px', textAlign: 'center'}}><div className={styles.avatar}>{row.brand?.substring(0,3).toUpperCase() || 'OTO'}</div></div>
+                <div style={{width: '40px', textAlign: 'center'}}>
+                  {getBrandLogo(row.brand) ? (
+                    <img src={getBrandLogo(row.brand)!} alt={row.brand || ''} style={{width: '32px', height: '32px', objectFit: 'contain'}} />
+                  ) : (
+                    <div className={styles.avatar}>{row.brand?.substring(0,3).toUpperCase() || 'OTO'}</div>
+                  )}
+                </div>
                 
                 <div className={styles.rowInfo}>
                   <div className={styles.rowTitle}>
