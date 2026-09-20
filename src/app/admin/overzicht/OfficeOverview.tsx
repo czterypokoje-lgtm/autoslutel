@@ -7,7 +7,7 @@ import { LineChart, BarChart, RankedBars, chart } from '../_ui/charts';
 import { MixedChart } from './MixedChart';
 import styles from './overzicht.module.css';
 import Link from 'next/link';
-import { Users, Briefcase, Euro, Target, Phone, MoreHorizontal, AlertCircle, AlertTriangle, FileText, PackageX, MapPin, Clock } from 'lucide-react';
+import { Users, Briefcase, Euro, Target, CheckCircle, Phone, MoreHorizontal, AlertCircle, AlertTriangle, FileText, PackageX, MapPin, Clock } from 'lucide-react';
 
 const euro = (value: number) => `€ ${value.toFixed(2).replace('.', ',')}`;
 const euroShort = (value: number) =>
