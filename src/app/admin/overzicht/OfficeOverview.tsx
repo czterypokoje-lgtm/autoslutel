@@ -15,6 +15,24 @@ const euroShort = (value: number) =>
 
 const MONTHS = ['jan', 'feb', 'mrt', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
 
+const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const money = (value: number) => MONEY.format(value);
+
+/*
+ * A delta of null means there is no previous period to compare against, which
+ * is not the same as "no change" — so it renders as a plain dash rather than
+ * an arrow pointing nowhere.
+ */
+function trend(pct: number | null, suffix: string) {
+  if (pct === null) return `— ${suffix}`;
+  const up = pct >= 0;
+  return (
+    <span style={{ color: up ? 'var(--crm-ok)' : 'var(--crm-stop)' }}>
+      {up ? '↑' : '↓'} {Math.abs(Math.round(pct))}% {suffix}
+    </span>
+  );
+}
+
 function daysAgo(n: number): Date {
   const d = new Date();
   d.setDate(d.getDate() - n);
@@ -38,6 +56,11 @@ export default async function OfficeOverview() {
   const sameDayLastWeek = isoDate(daysAgo(7));
   const startOfThisYear = `${new Date().getFullYear() - 1}-01-01`;
 
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const startOfLastMonth = isoDate(lastMonthStart);
+
   const [
     { data: todayJobs },
     { data: lastWeekJobs },
@@ -52,6 +75,7 @@ export default async function OfficeOverview() {
     { data: openLeads },
     { data: reportSource },
     { data: marketingCosts },
+    { data: invoices },
   ] = await Promise.all([
     supabase
       .from('jobs')
@@ -68,7 +92,10 @@ export default async function OfficeOverview() {
     supabase.from('crm_report_technician').select('*').order('omzet', { ascending: false }).limit(5),
     supabase.from('leads').select('status').in('status', ['new', 'qualified', 'contacted']),
     supabase.from('crm_report_source').select('*'),
-    supabase.from('crm_marketing_costs').select('*').gte('date', daysAgo(14).toISOString().split('T')[0]),
+    supabase.from('crm_marketing_costs').select('*').gte('date', startOfLastMonth),
+    /* Every figure in the financial row used to be a literal in the JSX.
+       These are the rows those literals were standing in for. */
+    supabase.from('sales_invoices').select('total, status, issue_date'),
   ]);
 
   const jobsToday = todayJobs ?? [];
@@ -127,6 +154,64 @@ export default async function OfficeOverview() {
 
   
   
+  /*
+   * ── Financial row ──
+   *
+   * Everything below was a hardcoded literal in the JSX until now: 12 quotes,
+   * 14 invoices, EUR 4.320 paid, EUR 9.156 outstanding, EUR 3.420 overdue,
+   * EUR 12.480 revenue, EUR 2.830 spend, EUR 9.650 gross, "77% marge", and a
+   * period label reading "1 - 26 Feb 2025" on a dashboard headed "Vandaag".
+   * None of it was read from anything. It is the kind of number somebody
+   * budgets against a month later without ever learning it was decoration.
+   *
+   * Invoice payment terms are 14 days here, same rule FacturenTable applies.
+   */
+  const invoiceRows = invoices ?? [];
+  const PAYMENT_TERM_DAYS = 14;
+  const totalOf = (i: { total: number | string | null }) => Number(i.total) || 0;
+  const isOverdue = (issueDate: string) =>
+    new Date(new Date(issueDate).getTime() + PAYMENT_TERM_DAYS * 86400000) < now;
+
+  const unpaid = invoiceRows.filter((i) => i.status !== 'betaald');
+  const outstanding = unpaid.reduce((sum, i) => sum + totalOf(i), 0);
+  const overdueRows = unpaid.filter((i) => isOverdue(i.issue_date));
+  const overdue = overdueRows.reduce((sum, i) => sum + totalOf(i), 0);
+
+  const paidIn = (from: Date, to: Date) =>
+    invoiceRows
+      .filter((i) => i.status === 'betaald')
+      .filter((i) => {
+        const d = new Date(i.issue_date);
+        return d >= from && d < to;
+      })
+      .reduce((sum, i) => sum + totalOf(i), 0);
+
+  const revenueThisMonth = paidIn(monthStart, now);
+  const revenueLastMonth = paidIn(lastMonthStart, monthStart);
+  const revenueMonthDelta = delta(revenueThisMonth, revenueLastMonth);
+
+  const spendIn = (from: Date, to: Date) =>
+    (marketingCosts ?? [])
+      .filter((c) => {
+        const d = new Date(c.date as string);
+        return d >= from && d < to;
+      })
+      .reduce((sum, c) => sum + (Number(c.spend) || 0), 0);
+
+  /* null, not 0: no ad network is connected yet, so "we spent nothing" is a
+     claim the data cannot support. The card says so instead of showing EUR 0. */
+  const hasSpendData = (marketingCosts ?? []).length > 0;
+  const spendThisMonth = hasSpendData ? spendIn(monthStart, now) : null;
+  const spendDelta = hasSpendData ? delta(spendThisMonth ?? 0, spendIn(lastMonthStart, monthStart)) : null;
+
+  const grossProfit = spendThisMonth === null ? null : revenueThisMonth - spendThisMonth;
+  const margin =
+    grossProfit === null || revenueThisMonth === 0 ? null : Math.round((grossProfit / revenueThisMonth) * 100);
+
+  const periodLabel = `1 ${MONTHS[now.getMonth()]} \u2013 ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+
+  const openLeadCount = (openLeads ?? []).length;
+
   // Aggregate real marketing data and revenue for the chart
   const mixedData = Array.from({ length: 14 }).map((_, i) => {
     const d = daysAgo(13 - i);
@@ -181,104 +266,112 @@ export default async function OfficeOverview() {
       </div>
 
       
-      {/* 1. Top KPI Row (5 Cards) */}
-      <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', marginBottom: '24px'}}>
-        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
-            <div style={{background: '#E8F5E9', padding: '6px', borderRadius: '50%'}}><Target size={16} color="var(--crm-ok)"/></div> Leads
+      {/* 1. Top KPI row. Five self-sizing cards: 5-up on desktop, 2-up on a phone. */}
+      <div className={styles.statGrid}>
+        <Card padded>
+          <div className={styles.statLabel}>
+            <span className={styles.statDot} style={{ background: 'var(--crm-ok-bg)' }}><Target size={16} color="var(--crm-ok)" /></span> Leads (7d)
           </div>
-          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>{last7}</div>
-          <div style={{fontSize: '12px', color: 'var(--crm-ok)'}}>↑ 2 vandaag</div>
-        </div></Card>
-        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
-            <div style={{background: '#F3E5F5', padding: '6px', borderRadius: '50%'}}><FileText size={16} color="#9C27B0"/></div> Quotes
+          <div className={styles.statValue}>{last7}</div>
+          <div className={styles.statSub}>{trend(leadDelta, 'tov vorige 7 dagen')}</div>
+        </Card>
+
+        <Card padded>
+          <div className={styles.statLabel}>
+            <span className={styles.statDot} style={{ background: 'var(--crm-warn-bg)' }}><AlertCircle size={16} color="var(--crm-warn)" /></span> Open leads
           </div>
-          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>12</div>
-          <div style={{fontSize: '12px', color: 'var(--crm-ok)'}}>↑ 3 deze week</div>
-        </div></Card>
-        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
-            <div style={{background: '#E3F2FD', padding: '6px', borderRadius: '50%'}}><Briefcase size={16} color="#2196F3"/></div> Jobs
+          <div className={styles.statValue}>{openLeadCount}</div>
+          <div className={styles.statSub}>nieuw, gekwalificeerd of gebeld</div>
+        </Card>
+
+        <Card padded>
+          <div className={styles.statLabel}>
+            <span className={styles.statDot} style={{ background: 'var(--crm-steel-bg)' }}><Briefcase size={16} color="var(--crm-steel)" /></span> Klussen vandaag
           </div>
-          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>{jobsToday.length}</div>
-          <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>{jobsToday.length - doneToday.length} in uitvoering</div>
-        </div></Card>
-        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
-            <div style={{background: '#E3F2FD', padding: '6px', borderRadius: '50%'}}><FileText size={16} color="#2196F3"/></div> Invoices
+          <div className={styles.statValue}>{jobsToday.length}</div>
+          <div className={styles.statSub}>{jobsToday.length - doneToday.length} in uitvoering</div>
+        </Card>
+
+        <Card padded>
+          <div className={styles.statLabel}>
+            <span className={styles.statDot} style={{ background: 'var(--crm-steel-bg)' }}><FileText size={16} color="var(--crm-steel)" /></span> Openstaande facturen
           </div>
-          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>14</div>
-          <div style={{fontSize: '12px', color: 'var(--crm-stop)'}}>↓ 6 openstaand</div>
-        </div></Card>
-        <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
-            <div style={{background: '#E8F5E9', padding: '6px', borderRadius: '50%'}}><CheckCircle size={16} color="var(--crm-ok)"/></div> Betaald
+          <div className={styles.statValue}>{unpaid.length}</div>
+          <div className={styles.statSub} style={overdueRows.length ? { color: 'var(--crm-stop)' } : undefined}>
+            {overdueRows.length} vervallen
           </div>
-          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€4.320</div>
-          <div style={{fontSize: '12px', color: 'var(--crm-ok)'}}>↑ 12% deze maand</div>
-        </div></Card>
+        </Card>
+
+        <Card padded>
+          <div className={styles.statLabel}>
+            <span className={styles.statDot} style={{ background: 'var(--crm-ok-bg)' }}><CheckCircle size={16} color="var(--crm-ok)" /></span> Betaald deze maand
+          </div>
+          <div className={styles.statValue}>{money(revenueThisMonth)}</div>
+          <div className={styles.statSub}>{trend(revenueMonthDelta, 'tov vorige maand')}</div>
+        </Card>
       </div>
 
-      {/* 2. Financieel Overzicht */}
-      <div style={{marginBottom: '24px'}}>
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px'}}>
+      {/* 2. Financieel overzicht */}
+      <div>
+        <div className={styles.sectionHead}>
           <div>
-            <h2 style={{fontSize: '18px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>Financieel Overzicht</h2>
-            <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>1 - 26 Feb 2025</div>
+            <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--crm-ink)' }}>Financieel Overzicht</h2>
+            <div className={styles.statSub}>{periodLabel}</div>
           </div>
-          <select style={{fontSize: '13px', padding: '6px 12px', borderRadius: '4px', border: '1px solid var(--crm-rule)', background: 'var(--crm-bg)'}}>
-            <option>Deze maand</option>
-          </select>
         </div>
-        
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px'}}>
-          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Openstaand</div>
-              <FileText size={14} color="var(--crm-warn)"/>
-            </div>
-            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€9.156</div>
-            <div style={{fontSize: '11px', color: 'var(--crm-muted)'}}>12 facturen</div>
-          </div></Card>
-          
-          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Vervallen</div>
-              <Clock size={14} color="var(--crm-stop)"/>
-            </div>
-            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€3.420</div>
-            <div style={{fontSize: '11px', color: 'var(--crm-muted)'}}>6 facturen</div>
-          </div></Card>
 
-          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Omzet (Deze maand)</div>
-              <div style={{background: '#E8F5E9', padding: '2px 4px', borderRadius: '4px'}}><Target size={12} color="var(--crm-ok)"/></div>
+        <div className={styles.statGrid}>
+          <Card padded>
+            <div className={styles.statHead}>
+              <div className={styles.statLabel}>Openstaand</div>
+              <FileText size={14} color="var(--crm-warn)" />
             </div>
-            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€12.480</div>
-            <div style={{fontSize: '11px', color: 'var(--crm-ok)'}}>↑ 18% tov vorige maand</div>
-          </div></Card>
+            <div className={styles.statValue}>{money(outstanding)}</div>
+            <div className={styles.statSub}>{unpaid.length} facturen</div>
+          </Card>
 
-          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Uitgaven</div>
-              <div style={{background: '#E8F5E9', padding: '2px 4px', borderRadius: '4px'}}><Target size={12} color="var(--crm-ok)"/></div>
+          <Card padded>
+            <div className={styles.statHead}>
+              <div className={styles.statLabel}>Vervallen</div>
+              <Clock size={14} color="var(--crm-stop)" />
             </div>
-            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€2.830</div>
-            <div style={{fontSize: '11px', color: 'var(--crm-ok)'}}>↑ 6% tov vorige maand</div>
-          </div></Card>
+            <div className={styles.statValue}>{money(overdue)}</div>
+            <div className={styles.statSub}>{overdueRows.length} facturen</div>
+          </Card>
 
-          <Card padded><div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <div style={{fontSize: '12px', color: 'var(--crm-muted)', fontWeight: 600}}>Brutowinst</div>
-              <Euro size={14} color="var(--crm-ok)"/>
+          <Card padded>
+            <div className={styles.statHead}>
+              <div className={styles.statLabel}>Omzet</div>
+              <Target size={14} color="var(--crm-ok)" />
             </div>
-            <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>€9.650</div>
-            <div style={{fontSize: '11px', color: 'var(--crm-muted)'}}>77% marge</div>
-          </div></Card>
+            <div className={styles.statValue}>{money(revenueThisMonth)}</div>
+            <div className={styles.statSub}>{trend(revenueMonthDelta, 'tov vorige maand')}</div>
+          </Card>
+
+          <Card padded>
+            <div className={styles.statHead}>
+              <div className={styles.statLabel}>Advertentiekosten</div>
+              <Euro size={14} color="var(--crm-muted)" />
+            </div>
+            <div className={styles.statValue}>{spendThisMonth === null ? '—' : money(spendThisMonth)}</div>
+            <div className={styles.statSub}>
+              {spendThisMonth === null ? 'geen advertentiekoppeling actief' : trend(spendDelta, 'tov vorige maand')}
+            </div>
+          </Card>
+
+          <Card padded>
+            <div className={styles.statHead}>
+              <div className={styles.statLabel}>Brutowinst</div>
+              <Euro size={14} color="var(--crm-ok)" />
+            </div>
+            <div className={styles.statValue}>{grossProfit === null ? '—' : money(grossProfit)}</div>
+            <div className={styles.statSub}>
+              {margin === null ? 'wacht op advertentiekosten' : `${margin}% marge`}
+            </div>
+          </Card>
         </div>
       </div>
+
       <div className={styles.kpiStrip}>
 <Card className={styles.actionCenterCard}>
           <CardHead>

@@ -309,3 +309,79 @@
 .heroLink:active {
   background: var(--crm-sunk);
 }
+
+/*
+ * ── Responsive stat grid ──
+ *
+ * Replaces two inline `gridTemplateColumns: 'repeat(5, 1fr)'` rows that had no
+ * breakpoint at all: on a 375px phone each of the five cards got ~67px, so the
+ * values rendered as "€4", "€9" and the captions as "vanda", "uitvoe", "opens".
+ * Inline styles cannot carry a media query, which is why this lives here.
+ *
+ * auto-fit rather than fixed counts: the cards are self-sizing, so one rule
+ * gives 5-up on desktop, 3-up on a tablet and 2-up on a phone without three
+ * separate breakpoints that drift apart.
+ */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--sp-4);
+}
+
+@media (max-width: 380px) {
+  /* Below this, two columns squeeze a "€12.480" into an ellipsis. One wins. */
+  .statGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--crm-muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  /* The label is the part that was being clipped; let it wrap instead. */
+  min-width: 0;
+}
+
+.statValue {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  font-variant-numeric: tabular-nums;
+  /* Long euro amounts must shrink, never overflow the card. */
+  overflow-wrap: anywhere;
+}
+
+.statSub {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.statHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--sp-2);
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.statDot {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
