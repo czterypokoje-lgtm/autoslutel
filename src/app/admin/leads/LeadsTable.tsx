@@ -3,6 +3,7 @@
 import { Fragment, useState } from 'react';
 import { getBrandLogo } from '@/lib/brandLogos';
 import styles from './leads.module.css';
+import Link from 'next/link';
 import { waLink } from '@/lib/whatsapp';
 import { PageHead, Badge } from '../_ui';
 import { Search, MoreHorizontal, List, LayoutGrid, Map, Phone, MessageCircle, UserPlus, CheckSquare, Clock, MapPin, CheckCircle2, AlertCircle } from 'lucide-react';
@@ -64,20 +65,25 @@ function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => voi
       <div className={styles.drawerHead}>
         <div className={styles.drawerTitleRow}>
           <div>
-            <div className={styles.drawerCar}>{lead.brand} {lead.model}</div>
-            <div className={styles.drawerSub}>{lead.year || '2021'} • {lead.kenteken || '34 ABC 123'} • İş No: #{lead.id.slice(0, 5)}</div>
+            <div className={styles.drawerCar}>{lead.brand || 'Auto'} {lead.model}</div>
+            <div className={styles.drawerSub}>
+              {[lead.year, lead.kenteken].filter(Boolean).join(' • ') || 'Geen voertuig details'} 
+              {' '}• Klus #{lead.id.slice(0, 5)}
+            </div>
           </div>
           <div>
-            <div className={styles.drawerPrice}>₺12.000 - 15.000</div>
+            <div className={styles.drawerPrice}>{lead.quoted_price ? `€${lead.quoted_price}` : (lead.sale_price ? `€${lead.sale_price}` : 'Prijs onbekend')}</div>
             <div className={styles.drawerPriceSub}>Geschatte waarde</div>
           </div>
         </div>
-        <div style={{fontSize: '13px', fontWeight: 600, color: 'var(--crm-ink)', marginBottom: '8px'}}>{lead.service || 'Smart key kwijt'}</div>
-        <div className={styles.rowLocation} style={{marginBottom: '12px'}}><MapPin size={12}/> {lead.location || 'İstanbul, Beşiktaş'} <a href="#" style={{color: 'var(--crm-accent-hover)', marginLeft: '8px', textDecoration: 'none'}}>Bekijk op kaart</a></div>
+        <div style={{fontSize: '13px', fontWeight: 600, color: 'var(--crm-ink)', marginBottom: '8px'}}>{lead.service || 'Geen service opgegeven'}</div>
+        <div className={styles.rowLocation} style={{marginBottom: '12px'}}>
+          <MapPin size={12}/> {lead.postcode || ''} {lead.location || 'Geen locatie'}
+        </div>
       </div>
       
       <div className={styles.drawerNav}>
-        {['Algemeen', 'Klant & Voertuig', 'Notities', 'Bestanden'].map(t => (
+        {['Algemeen', 'Notities'].map(t => (
           <div key={t} className={`${styles.drawerTab} ${tab === t ? styles.active : ''}`} onClick={() => setTab(t)}>
             {t}
           </div>
@@ -89,26 +95,19 @@ function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => voi
           <>
             <div className={styles.drawerSection}>
               <div style={{fontWeight: 600, fontSize: '13px', color: 'var(--crm-ink)'}}>Klant & Voertuig</div>
-              <div className={styles.drawerRow}><CheckSquare size={16} color="var(--crm-muted)"/> {lead.name || 'Burak Demir'}</div>
-              <div className={styles.drawerRow}><Phone size={16} color="var(--crm-muted)"/> {lead.phone || '+90 532 111 22 33'} <div style={{width: '24px', height: '24px', background: '#25D366', borderRadius: '50%', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><MessageCircle size={14}/></div></div>
-              <div className={styles.drawerRow} style={{alignItems: 'flex-start'}}><div style={{marginTop: '2px'}}><div className={styles.avatar}>BMW</div></div> <div>{lead.brand} {lead.model} {lead.year}<br/><span style={{color: 'var(--crm-muted)', fontSize: '11px'}}>VIN: WBAJU71060V9E12345</span></div></div>
-            </div>
-
-            <div style={{borderTop: '1px solid var(--crm-rule)', margin: '10px 0'}}></div>
-
-            <div className={styles.drawerSection}>
-              <div style={{fontWeight: 600, fontSize: '13px', color: 'var(--crm-ink)'}}>Voorgestelde Monteur</div>
-              <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
-                  <div className={styles.avatar}>MK</div>
-                  <div>
-                    <div style={{fontWeight: 600, fontSize: '13px'}}>Mert Kaya</div>
-                    <div style={{fontSize: '11px', color: 'var(--crm-muted)'}}><MapPin size={10} style={{display: 'inline'}}/> 12 km ver • 12 dk</div>
-                  </div>
-                </div>
-                <div style={{textAlign: 'right'}}>
-                  <div style={{fontSize: '11px', color: 'var(--crm-muted)'}}>Slagingskans</div>
-                  <Badge tone="ok">%92 Match</Badge>
+              <div className={styles.drawerRow}>
+                <CheckSquare size={16} color="var(--crm-muted)"/> {lead.name || 'Geen naam'}
+              </div>
+              <div className={styles.drawerRow}>
+                <Phone size={16} color="var(--crm-muted)"/> {lead.phone_e164 || lead.phone || 'Geen nummer'} 
+              </div>
+              <div className={styles.drawerRow} style={{alignItems: 'flex-start'}}>
+                <div style={{marginTop: '2px'}}>
+                  <div className={styles.avatar}>{lead.brand ? lead.brand.substring(0,3).toUpperCase() : 'OTO'}</div>
+                </div> 
+                <div>
+                  {[lead.brand, lead.model, lead.year].filter(Boolean).join(' ') || 'Geen auto details'}<br/>
+                  {lead.kenteken && <span style={{color: 'var(--crm-muted)', fontSize: '11px'}}>Kenteken: {lead.kenteken}</span>}
                 </div>
               </div>
             </div>
@@ -117,9 +116,15 @@ function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => voi
       </div>
 
       <div className={styles.drawerFoot}>
-        <button className={styles.btnPrimary}><UserPlus size={16} /> Monteur Toewijzen</button>
-        <button className={styles.btnSecondary}><Phone size={16} /> Klant Bellen</button>
-        <button className={styles.btnSecondary}><MessageCircle size={16} color="#25D366" /> WhatsApp</button>
+        <Link href={`/admin/jobs/nieuw?lead=${lead.id}`} className={styles.btnPrimary} style={{textDecoration: 'none'}}>
+          <UserPlus size={16} /> Monteur Toewijzen
+        </Link>
+        <a href={`tel:${lead.phone_e164 || lead.phone}`} className={styles.btnSecondary} style={{textDecoration: 'none'}}>
+          <Phone size={16} /> Klant Bellen
+        </a>
+        <a href={waLink(lead.phone_e164 || '', "Hallo, we bellen u over uw autosleutel aanvraag.") || '#'} target="_blank" rel="noopener noreferrer" className={styles.btnSecondary} style={{textDecoration: 'none'}}>
+          <MessageCircle size={16} color="#25D366" /> WhatsApp
+        </a>
       </div>
     </div>
   );
@@ -151,16 +156,16 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
                 
                 <div className={styles.rowInfo}>
                   <div className={styles.rowTitle}>
-                    {row.brand} {row.model}
+                    {[row.brand, row.model].filter(Boolean).join(' ') || 'Nieuwe Aanvraag'}
                     {row.status === 'new' && <Badge tone="stop">Spoed</Badge>}
                   </div>
-                  <div className={styles.rowMeta}>{row.year || '2021'} • {row.kenteken || '34 ABC 123'}</div>
-                  <div className={styles.rowLocation}><MapPin size={12}/> {row.location || 'İstanbul'}</div>
+                  <div className={styles.rowMeta}>{[row.year, row.kenteken].filter(Boolean).join(' • ') || 'Geen voertuig info'}</div>
+                  <div className={styles.rowLocation}><MapPin size={12}/> {row.location || 'Onbekend'}</div>
                 </div>
 
                 <div className={styles.rowPrice}>
-                  {row.sale_price ? `€${row.sale_price}` : '₺12.000 - 15.000'}
-                  <div style={{fontSize: '11px', color: 'var(--crm-muted)', fontWeight: 400}}>{row.source || 'Google'}</div>
+                  {row.quoted_price ? `€${row.quoted_price}` : (row.sale_price ? `€${row.sale_price}` : '—')}
+                  <div style={{fontSize: '11px', color: 'var(--crm-muted)', fontWeight: 400}}>{row.source || 'Website'}</div>
                 </div>
 
                 <div className={styles.rowStatus}>
@@ -169,17 +174,7 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
                 </div>
 
                 <div className={styles.rowAssignee}>
-                  {row.status !== 'new' ? (
-                    <>
-                      <div className={styles.avatar}>MK</div>
-                      <div>
-                        <div className={styles.assigneeName}>Mert Kaya</div>
-                        <div className={styles.fitScore}>%92 match</div>
-                      </div>
-                    </>
-                  ) : (
-                    <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>Niet toegewezen</div>
-                  )}
+                  <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>Niet toegewezen</div>
                   <MoreHorizontal size={16} color="var(--crm-muted)" style={{marginLeft: 'auto'}} />
                 </div>
               </div>
