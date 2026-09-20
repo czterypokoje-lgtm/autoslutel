@@ -63,7 +63,7 @@ export default async function OfficeOverview() {
     supabase.from('payout_requests').select('amount').eq('status', 'pending'),
     supabase.from('stock_items').select('technician_id, quantity, min_quantity'),
     supabase.from('unmet_requests').select('id', { count: 'exact', head: true }).gte('created_at', daysAgo(7).toISOString()),
-    supabase.from('technicians').select('id, name, online, active, city'),
+    supabase.from('technicians').select('id, name, online, active, city, phone'),
     supabase.from('jobs').select('scheduled_date, final_price, quoted_price').eq('status', 'afgerond').gte('scheduled_date', startOfThisYear),
     supabase.from('crm_report_technician').select('*').order('omzet', { ascending: false }).limit(5),
     supabase.from('leads').select('status').in('status', ['new', 'qualified', 'contacted']),
@@ -415,9 +415,36 @@ export default async function OfficeOverview() {
                   <div className={styles.techLocation}>{tech.city || 'Nederland'}</div>
                 </div>
                 <div style={{flex: 'none'}}><Badge tone={tech.online ? 'ok' : 'info'}>{tech.online ? 'Beschikbaar' : 'Offline'}</Badge></div>
+                {/*
+                  * Both of these were <button> with no handler. The phone one
+                  * is a link now — the query did not even select the number,
+                  * so there was nothing to dial. The second opened a menu that
+                  * does not exist, and is replaced by a link to the person's
+                  * own page, which does.
+                  */}
                 <div className={styles.techActions}>
-                  <button className={styles.techBtn}><Phone size={14} /></button>
-                  <button className={styles.techBtn}><MoreHorizontal size={14} /></button>
+                  {tech.phone ? (
+                    <a
+                      className={styles.techBtn}
+                      href={`tel:${tech.phone}`}
+                      title={`Bel ${tech.name}`}
+                      aria-label={`Bel ${tech.name}`}
+                    >
+                      <Phone size={14} />
+                    </a>
+                  ) : (
+                    <span className={styles.techBtn} title="Geen nummer bekend" aria-hidden="true">
+                      <Phone size={14} opacity={0.35} />
+                    </span>
+                  )}
+                  <Link
+                    className={styles.techBtn}
+                    href={`/admin/monteurs/${tech.id}`}
+                    title={`Open ${tech.name}`}
+                    aria-label={`Open ${tech.name}`}
+                  >
+                    <MoreHorizontal size={14} />
+                  </Link>
                 </div>
               </div>
             ))

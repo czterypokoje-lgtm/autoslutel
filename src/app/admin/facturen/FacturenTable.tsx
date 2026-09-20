@@ -41,8 +41,35 @@ function isOverdue(issueDate: string) {
 
 function InvoiceDetailDrawer({ invoice, onClose }: { invoice: InvoiceRow; onClose: () => void }) {
   const [tab, setTab] = useState('Details');
+
+  /* Held locally so the drawer reflects the change immediately; `invoice` is a
+     server-rendered row and will not update until the page is refetched. */
+  const [status, setStatusLocal] = useState(invoice.status);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState(false);
+
+  async function setStatus(next: InvoiceRow['status']) {
+    const previous = status;
+    setStatusLocal(next);
+    setBusy(next);
+    setSaveError(false);
+    try {
+      const res = await fetch(`/api/admin/invoices/${invoice.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: next }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+    } catch {
+      setStatusLocal(previous);
+      setSaveError(true);
+    } finally {
+      setBusy(null);
+    }
+  }
+
   const dueDate = getDueDate(invoice.issue_date);
-  const overdue = invoice.status === 'verzonden' && isOverdue(invoice.issue_date);
+  const overdue = status === 'verzonden' && isOverdue(invoice.issue_date);
 
   return (
     <div className={styles.drawerCard}>
@@ -52,17 +79,55 @@ function InvoiceDetailDrawer({ invoice, onClose }: { invoice: InvoiceRow; onClos
         </div>
         <div>
           {invoice.status === 'betaald' && <Badge tone="ok">Betaald</Badge>}
-          {invoice.status === 'concept' && <Badge tone="info">Concept</Badge>}
-          {invoice.status === 'verzonden' && !overdue && <Badge tone="warn">Openstaand</Badge>}
+          {status === 'concept' && <Badge tone="info">Concept</Badge>}
+          {status === 'verzonden' && !overdue && <Badge tone="warn">Openstaand</Badge>}
           {overdue && <Badge tone="stop">Vervallen</Badge>}
         </div>
       </div>
       
+      {/*
+        * All three of these shipped with no handler at all: the drawer looked
+        * finished and did nothing. /api/admin/invoices/[id] already accepts a
+        * status PATCH ('concept' | 'verzonden' | 'betaald'), and the invoice
+        * page at /admin/facturen/[id] is the printable document — so each
+        * button had somewhere real to go the whole time.
+        *
+        * Optimistic, and rolled back on failure, for the same reason as lead
+        * triage: a button that appears to work and silently did not is worse
+        * than one that is obviously missing.
+        */}
       <div style={{padding: '16px', display: 'flex', gap: '8px', background: 'var(--crm-bg)'}}>
-        <button className={styles.btnPrimary} style={{flex: 1, padding: '8px', fontSize: '13px'}}><Send size={14}/> Verzenden</button>
-        <button className={styles.btnSecondary} style={{flex: 1, padding: '8px', fontSize: '13px'}}><CheckCircle size={14}/> Betaald</button>
-        <button className={styles.btnSecondary} style={{flex: 1, padding: '8px', fontSize: '13px'}}><Download size={14}/> PDF</button>
+        <button
+          type="button"
+          className={styles.btnPrimary}
+          style={{flex: 1, padding: '8px', fontSize: '13px'}}
+          disabled={busy !== null || status === 'betaald'}
+          onClick={() => setStatus('verzonden')}
+        >
+          <Send size={14}/> {busy === 'verzonden' ? 'Bezig…' : 'Verzenden'}
+        </button>
+        <button
+          type="button"
+          className={styles.btnSecondary}
+          style={{flex: 1, padding: '8px', fontSize: '13px'}}
+          disabled={busy !== null || status === 'betaald'}
+          onClick={() => setStatus('betaald')}
+        >
+          <CheckCircle size={14}/> {busy === 'betaald' ? 'Bezig…' : 'Betaald'}
+        </button>
+        <Link
+          href={`/admin/facturen/${invoice.id}`}
+          className={styles.btnSecondary}
+          style={{flex: 1, padding: '8px', fontSize: '13px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px'}}
+        >
+          <Download size={14}/> PDF
+        </Link>
       </div>
+      {saveError && (
+        <div style={{padding: '0 16px 12px', color: 'var(--crm-stop)', fontSize: '12px'}}>
+          Opslaan mislukt — status ongewijzigd.
+        </div>
+      )}
 
       <div className={styles.drawerNav}>
         {['Details', 'Betalingen', 'Activiteit'].map(t => (
@@ -124,7 +189,7 @@ function InvoiceDetailDrawer({ invoice, onClose }: { invoice: InvoiceRow; onClos
             <div style={{background: 'var(--crm-bg)', padding: '16px', borderRadius: '8px', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
               <div style={{color: overdue ? 'var(--crm-stop)' : 'var(--crm-ink)'}}>
                 <div style={{fontWeight: 'bold', fontSize: '16px'}}>Totaal openstaand</div>
-                <div style={{fontSize: '12px'}}>{invoice.status === 'betaald' ? 'Volledig betaald' : `Vervaldatum: ${DATE.format(dueDate)}`}</div>
+                <div style={{fontSize: '12px'}}>{status === 'betaald' ? 'Volledig betaald' : `Vervaldatum: ${DATE.format(dueDate)}`}</div>
               </div>
               <div style={{fontWeight: 'bold', fontSize: '20px', color: invoice.status === 'betaald' ? 'var(--crm-ok)' : (overdue ? 'var(--crm-stop)' : 'var(--crm-ink)')}}>
                 {invoice.status === 'betaald' ? '€0,00' : MONEY.format(Number(invoice.total))}

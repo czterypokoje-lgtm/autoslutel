@@ -299,11 +299,13 @@ export default async function LeadsPage({
           Ara
         </button>
 
-        <div className={styles.toggles}>
-          <button type="button" className={`${styles.toggleBtn} ${styles.active}`}>Lijst</button>
-          <button type="button" className={styles.toggleBtn}>Tabel</button>
-          <button type="button" className={styles.toggleBtn}>Kaart</button>
-        </div>
+        {/*
+          * "Tabel" and "Kaart" were buttons for views that do not exist —
+          * clicking them did nothing at all. A control that looks available
+          * and is not teaches people to distrust the ones that work, so they
+          * are gone until there is something behind them. (Kaart also needs
+          * the Maps Static API, which is still not switched on.)
+          */}
       </form>
 
       <LeadsTable
