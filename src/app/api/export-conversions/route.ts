@@ -72,18 +72,51 @@ export async function GET(request: Request) {
   }
 
   try {
-    const { data, error } = await supabase
-      .from('leads')
-      .select(EXPORT_COLUMNS)
-      .or('gclid.not.is.null,wbraid.not.is.null,gbraid.not.is.null')
-      .is('exported_at', null)
-      .in('status', ['qualified', 'sold', 'spam', 'duplicate'])
-      .order('created_at', { ascending: false })
-      .limit(500);
+    /*
+     * Two queries, because the two halves need opposite filters — and the
+     * single query they used to share had the negative half exactly backwards.
+     *
+     * A conversion is sent once: `exported_at is null`.
+     *
+     * A RETRACT is not a conversion, it is an instruction about one Google
+     * already holds. Sending it for a lead that was never exported asks
+     * Google to cancel something that does not exist, and it answers exactly
+     * that — all four rows of the first retraction upload came back with
+     * "This conversion does not exist. Double-check all the parameters."
+     *
+     * So a retraction requires the opposite: the lead WAS exported as a good
+     * conversion, and has since been marked spam or duplicate. That is the
+     * only case where there is something on Google's side to withdraw.
+     */
+    const clickIdFilter = 'gclid.not.is.null,wbraid.not.is.null,gbraid.not.is.null';
 
+    const [positiveResult, negativeResult] = await Promise.all([
+      supabase
+        .from('leads')
+        .select(EXPORT_COLUMNS)
+        .or(clickIdFilter)
+        .is('exported_at', null)
+        .in('status', ['qualified', 'sold'])
+        .order('created_at', { ascending: false })
+        .limit(500),
+
+      supabase
+        .from('leads')
+        .select(EXPORT_COLUMNS)
+        .or(clickIdFilter)
+        .not('exported_at', 'is', null)
+        .is('retracted_at', null)
+        .in('status', ['spam', 'duplicate'])
+        .order('created_at', { ascending: false })
+        .limit(500),
+    ]);
+
+    const error = positiveResult.error ?? negativeResult.error;
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    const data = [...(positiveResult.data ?? []), ...(negativeResult.data ?? [])];
 
     /*
      * What this lead actually earned. Null, never 0, when we do not know:
