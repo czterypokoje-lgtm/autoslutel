@@ -395,3 +395,88 @@
     flex-direction: row;
   }
 }
+
+/* ── TRIAGE ───────────────────────────────────────────────────────────────
+ *
+ * Four buttons on the row, so a lead can be moved out of 'new' without
+ * opening anything. The redesign had removed every way to change a status,
+ * which is part of why 151 of 199 leads are sitting there.
+ *
+ * Icon-only by design: this column is narrow and the row is scanned, not
+ * read. Each button carries title and aria-label, so the meaning is one
+ * hover or one screen-reader stop away.
+ */
+.triage {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.triageBtn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.triageBtn:hover {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+  border-color: var(--crm-rule2);
+}
+
+/* The current status, so the row says what it is as well as what it can do. */
+.triageOn {
+  background: var(--crm-accent);
+  border-color: var(--crm-accent);
+  color: var(--crm-on-accent);
+}
+
+.triageOn:hover {
+  background: var(--crm-accent-hover);
+  border-color: var(--crm-accent-hover);
+  color: var(--crm-on-accent);
+}
+
+.triageBtn:focus-visible {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: 2px;
+}
+
+.triageBusy,
+.triageFailed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  font-size: var(--fs-micro);
+  white-space: nowrap;
+}
+
+.triageBusy {
+  color: var(--crm-muted);
+}
+
+.triageBusy svg {
+  animation: triageSpin 0.9s linear infinite;
+}
+
+@keyframes triageSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* A failed save has to be visible on the row. The optimistic update is rolled
+   back underneath this, so what is shown is the truth again. */
+.triageFailed {
+  color: var(--crm-stop);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .triageBusy svg { animation: none; }
+}

@@ -6,7 +6,7 @@ import styles from './leads.module.css';
 import Link from 'next/link';
 import { waLink } from '@/lib/whatsapp';
 import { PageHead, Badge } from '../_ui';
-import { Search, MoreHorizontal, List, LayoutGrid, Map, Phone, MessageCircle, UserPlus, CheckSquare, Clock, MapPin, CheckCircle2, AlertCircle } from 'lucide-react';
+import { MoreHorizontal, Phone, MessageCircle, UserPlus, CheckSquare, MapPin, Check, X, AlertTriangle, Loader2 } from 'lucide-react';
 
 export interface LeadRow {
   id: string;
@@ -40,12 +40,37 @@ const STATUS_LABELS: Record<string, string> = {
   duplicate: 'Dubbel',
 };
 
-function leadTone(status: string) {
-  if (status === 'new') return 'info';
-  if (status === 'contacted') return 'warn';
+function leadTone(status: string): 'ok' | 'warn' | 'stop' | 'info' | undefined {
   if (status === 'sold') return 'ok';
-  return 'info';
+  if (status === 'contacted' || status === 'qualified') return 'warn';
+  if (status === 'new') return 'info';
+  /* rejected, spam and duplicate all read as 'info' before this — a rejected
+     lead looked exactly like one waiting to be handled. */
+  return undefined;
 }
+
+/**
+ * How long a lead has been sitting at 'new'.
+ *
+ * The row used to put a red "Spoed" badge on every new lead regardless of age,
+ * which makes the label meaningless: a lead that arrived four minutes ago and
+ * one that has been ignored for three weeks looked identical, and the office
+ * has 151 of the latter. Urgency is about the clock, not the status.
+ */
+function staleness(createdAt: string, staleBefore: string | null) {
+  if (!staleBefore || createdAt >= staleBefore) return null;
+  const hours = Math.floor((Date.now() - new Date(createdAt).getTime()) / 3_600_000);
+  if (hours >= 48) return { label: `${Math.floor(hours / 24)} dagen oud`, tone: 'stop' as const };
+  return { label: `${hours} uur oud`, tone: 'warn' as const };
+}
+
+/** The triage a lead can move to from the row, in the order the office uses. */
+const TRIAGE: { value: string; label: string; tone: 'ok' | 'warn' | 'stop' }[] = [
+  { value: 'qualified', label: 'Gekwalificeerd', tone: 'ok' },
+  { value: 'contacted', label: 'Gebeld', tone: 'warn' },
+  { value: 'rejected', label: 'Afgewezen', tone: 'stop' },
+  { value: 'duplicate', label: 'Dubbel', tone: 'stop' },
+];
 
 function timeAgo(dateStr: string) {
   const d = new Date(dateStr);
@@ -133,9 +158,43 @@ function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => voi
 export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadRow[]; staleBefore: string | null; repeats: Record<string, { count: number; last: string }> }) {
   const [selectedLead, setSelectedLead] = useState<LeadRow | null>(null);
 
-  const newLeads = rows.filter(r => r.status === 'new').length;
-  const contacted = rows.filter(r => r.status === 'contacted').length;
-  const sold = rows.filter(r => r.status === 'sold').length;
+  /*
+   * Status is held here, not read straight from `rows`.
+   *
+   * The redesign dropped the status control entirely: /api/admin/leads/[id]
+   * accepts a PATCH, and nothing in the UI called it. 151 of 199 leads sit at
+   * 'new' partly because the office has had no way to move them.
+   *
+   * Local overrides keep the click instant — the row changes before the round
+   * trip — and roll back if the server refuses, so a failed save is visible
+   * rather than a lie that survives until the next refresh.
+   */
+  const [statusOverride, setStatusOverride] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState<string | null>(null);
+  const [failed, setFailed] = useState<string | null>(null);
+
+  const statusOf = (row: LeadRow) => statusOverride[row.id] ?? row.status;
+
+  async function triage(row: LeadRow, status: string) {
+    const previous = statusOf(row);
+    if (previous === status) return;
+    setStatusOverride(o => ({ ...o, [row.id]: status }));
+    setSaving(row.id);
+    setFailed(null);
+    try {
+      const res = await fetch(`/api/admin/leads/${row.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+    } catch {
+      setStatusOverride(o => ({ ...o, [row.id]: previous }));
+      setFailed(row.id);
+    } finally {
+      setSaving(null);
+    }
+  }
 
   return (
     <>
@@ -143,6 +202,9 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
         <div className={styles.listCol}>
           {rows.map(row => {
             const isSelected = selectedLead?.id === row.id;
+            const status = statusOf(row);
+            const stale = status === 'new' ? staleness(row.created_at, staleBefore) : null;
+            const repeat = row.phone_e164 ? repeats[row.phone_e164] : undefined;
             return (
               <div key={row.id} className={`${styles.richRow} ${isSelected ? styles.selected : ''}`} onClick={() => setSelectedLead(row)}>
                 <input type="checkbox" onClick={e => e.stopPropagation()} />
@@ -157,7 +219,13 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
                 <div className={styles.rowInfo}>
                   <div className={styles.rowTitle}>
                     {[row.brand, row.model].filter(Boolean).join(' ') || 'Nieuwe Aanvraag'}
-                    {row.status === 'new' && <Badge tone="stop">Spoed</Badge>}
+                    {/* Age, not status. Every new lead used to be "Spoed". */}
+                    {stale && <Badge tone={stale.tone}>{stale.label}</Badge>}
+                    {/* repeats was passed in and never used — a returning
+                        customer is the one row worth answering first. */}
+                    {repeat && repeat.count > 1 && (
+                      <Badge tone="warn">{repeat.count}e aanvraag</Badge>
+                    )}
                   </div>
                   <div className={styles.rowMeta}>{[row.year, row.kenteken].filter(Boolean).join(' • ') || 'Geen voertuig info'}</div>
                   <div className={styles.rowLocation}><MapPin size={12}/> {row.location || 'Onbekend'}</div>
@@ -169,13 +237,41 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
                 </div>
 
                 <div className={styles.rowStatus}>
-                  <Badge tone={leadTone(row.status)}>{STATUS_LABELS[row.status] || row.status}</Badge>
+                  <Badge tone={leadTone(status)}>{STATUS_LABELS[status] || status}</Badge>
                   <div style={{fontSize: '11px', color: 'var(--crm-muted)', margin: 0}}>{timeAgo(row.created_at)}</div>
                 </div>
 
-                <div className={styles.rowAssignee}>
-                  <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>Niet toegewezen</div>
-                  <MoreHorizontal size={16} color="var(--crm-muted)" style={{marginLeft: 'auto'}} />
+                {/*
+                  * This said "Niet toegewezen" on every row, always, whatever
+                  * the truth was. Replaced with the thing the office actually
+                  * needs here: moving the lead out of 'new' without opening
+                  * anything. stopPropagation so triaging does not also open
+                  * the drawer.
+                  */}
+                <div className={styles.rowAssignee} onClick={e => e.stopPropagation()}>
+                  {saving === row.id ? (
+                    <span className={styles.triageBusy}><Loader2 size={14} /> opslaan…</span>
+                  ) : failed === row.id ? (
+                    <span className={styles.triageFailed}><AlertTriangle size={14} /> niet opgeslagen</span>
+                  ) : (
+                    <div className={styles.triage}>
+                      {TRIAGE.map(t => (
+                        <button
+                          key={t.value}
+                          type="button"
+                          title={t.label}
+                          aria-label={t.label}
+                          className={`${styles.triageBtn} ${status === t.value ? styles.triageOn : ''}`}
+                          onClick={() => triage(row, t.value)}
+                        >
+                          {t.value === 'qualified' ? <Check size={14} />
+                            : t.value === 'contacted' ? <Phone size={14} />
+                            : t.value === 'rejected' ? <X size={14} />
+                            : <MoreHorizontal size={14} />}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             );
