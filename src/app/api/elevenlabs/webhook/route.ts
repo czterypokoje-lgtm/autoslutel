@@ -25,7 +25,13 @@ interface PostCallPayload {
     metadata?: {
       call_duration_secs?: number;
       phone_call?: { external_number?: string; direction?: string } | null;
-      whatsapp?: { external_number?: string; phone_number?: string } | null;
+      whatsapp?: {
+        /* International digits, no plus: "48500312292". Not external_number —
+           that key belongs to phone_call and does not exist here. */
+        whatsapp_user_id?: string;
+        whatsapp_phone_number_id?: string;
+        direction?: string;
+      } | null;
       sms?: unknown;
       conversation_initiation_source?: string;
       phone_number?: string;
@@ -77,14 +83,28 @@ function detectChannel(data: NonNullable<PostCallPayload['data']>): string {
 /** The customer's number, from whichever key this payload happens to use. */
 function detectPhone(data: NonNullable<PostCallPayload['data']>): string | null {
   const meta = data.metadata;
-  const candidate =
-    meta?.phone_call?.external_number ??
-    /* WhatsApp carries the customer under its own object, not phone_call. */
-    meta?.whatsapp?.external_number ??
-    meta?.whatsapp?.phone_number ??
-    meta?.from_number ??
-    meta?.phone_number;
-  return typeof candidate === 'string' && candidate.trim() ? candidate.trim() : null;
+
+  /*
+   * A call gives "+31611751231" under phone_call.external_number. WhatsApp
+   * gives "48500312292" under whatsapp.whatsapp_user_id — international
+   * digits, no plus, and a different key entirely. The first version of this
+   * guessed at external_number/phone_number inside the whatsapp object; the
+   * first stored WhatsApp conversation showed neither exists, which is why
+   * that row landed with no number at all.
+   */
+  const fromCall = meta?.phone_call?.external_number;
+  if (typeof fromCall === 'string' && fromCall.trim()) return fromCall.trim();
+
+  const waUser = meta?.whatsapp?.whatsapp_user_id;
+  if (typeof waUser === 'string' && waUser.trim()) {
+    const digits = waUser.replace(/\D/g, '');
+    /* Prefixed here rather than stored bare: every other number in this
+       database is E.164, and a bare "48500312292" joins against nothing. */
+    return digits ? `+${digits}` : null;
+  }
+
+  const fallback = meta?.from_number ?? meta?.phone_number;
+  return typeof fallback === 'string' && fallback.trim() ? fallback.trim() : null;
 }
 
 const CALL_OUTCOME: Record<string, string> = {
