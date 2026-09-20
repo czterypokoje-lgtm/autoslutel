@@ -62,14 +62,17 @@ body {
   --crm-rule2: #d6dad6;     /* around controls */
 
   /* ── the accent ──
-     Deepened from the public site's #ea580c: that value carries 3.1:1 on
-     white, which fails for the small text and 1px borders this CRM is built
-     from. #c2410c clears 4.5:1 and still reads as the same orange.
-     The soft fill is where the "soft" in soft-orange lives — a tint for
-     selected rows and active nav, never for text. */
-  --crm-accent: #0f7a4a;
-  --crm-accent-hover: #0b5c37;
-  --crm-accent-soft: #e6f2ec;
+     Orange, not the mockup's green: the CRM and the public site are one
+     business, and a green admin panel beside an orange website is two brands
+     pretending to be one.
+
+     Deepened from the site's #ea580c, which carries 3.1:1 on white and fails
+     for the small text and 1px borders this CRM is built from. #c2410c clears
+     4.5:1 and still reads as the same colour. "Soft" lives in the fill — a
+     tint for selected rows and active nav, never behind text. */
+  --crm-accent: #c2410c;
+  --crm-accent-hover: #9a3412;
+  --crm-accent-soft: #fdf1ea;
 
   /* ── the states ──
      Text-weight values, each checked against --crm-panel. The -bg pairs are
@@ -79,7 +82,7 @@ body {
   --crm-ok-bg: rgba(22, 163, 74, 0.10);
   --crm-stop: #dc2626;
   --crm-stop-bg: rgba(220, 38, 38, 0.09);
-  --crm-warn: #d97706;
+  --crm-warn: #b45309;
   --crm-warn-bg: rgba(217, 119, 6, 0.11);
   --crm-steel: #2563eb;
   --crm-steel-bg: rgba(37, 99, 235, 0.09);

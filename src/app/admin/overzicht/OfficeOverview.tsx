@@ -145,17 +145,30 @@ export default async function OfficeOverview() {
     const dayLeads = (leadDates || []).filter(l => l.created_at.startsWith(dateStr));
     const leads = dayLeads.length;
     
-    // Conversion: Leads / Clicks (If zero clicks but got leads, assume 100% organic, but let's cap at 100%)
-    const conversion = clicks > 0 ? Math.min(Math.round((leads / clicks) * 100), 100) : (leads > 0 ? 100 : 0);
-
-    // Fallback visually if no marketing API data is present yet
-    const finalCalls = clicks > 0 ? clicks : leads * 2; // Dummy estimate if API not set up
+    /*
+     * Both of these used to be invented when no marketing data existed, which
+     * is still the case today:
+     *
+     *   calls      = leads * 2      ("dummy estimate if API not set up")
+     *   conversion = 100            when clicks were zero but leads were not
+     *
+     * The chart therefore drew a call volume derived from an unrelated count,
+     * and a flat 100% conversion, with nothing on screen saying so. A gap in a
+     * chart prompts someone to connect the source; a plausible line does not.
+     *
+     * null rather than 0: zero is a measurement ("nobody clicked"), and the
+     * chart renders a break instead of a floor.
+     */
+    const hasCostData = dayCosts.length > 0;
+    const conversion = hasCostData && clicks > 0
+      ? Math.min(Math.round((leads / clicks) * 100), 100)
+      : null;
 
     return {
       date: displayDate,
       revenue,
-      calls: finalCalls,
-      conversion
+      calls: hasCostData ? clicks : null,
+      conversion,
     };
   });
   
