@@ -495,3 +495,125 @@
 @media (prefers-reduced-motion: reduce) {
   .triageBusy svg { animation: none; }
 }
+
+/* ── lead notes ──────────────────────────────────────────────────────── */
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.noteCompose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.noteInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 72px;
+}
+
+.noteInput:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+  border-color: var(--crm-accent);
+}
+
+.noteActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+
+.noteHint {
+  font-size: 10.5px;
+  color: var(--crm-muted);
+}
+
+.noteSave {
+  min-height: 34px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent);
+  color: var(--crm-on-accent);
+  font: inherit;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+}
+
+.noteSave:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.noteList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.note {
+  padding: 10px 12px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-sunk);
+  /* The accent edge marks a note as something a person wrote, distinct from
+     the read-only facts on the Algemeen tab. */
+  border-left: 3px solid var(--crm-accent);
+}
+
+.noteMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  font-size: 10.5px;
+  color: var(--crm-muted);
+  margin-bottom: 3px;
+}
+
+.noteAuthor {
+  font-weight: var(--fw-semibold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.noteBody {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--crm-text);
+  /* Notes are typed with line breaks and must keep them. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.noteEmpty {
+  margin: 0;
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.noteError {
+  margin: 0;
+  font-size: var(--fs-micro);
+  color: var(--crm-stop);
+  line-height: 1.5;
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { getBrandLogo } from '@/lib/brandLogos';
 import styles from './leads.module.css';
 import Link from 'next/link';
@@ -85,6 +85,70 @@ function timeAgo(dateStr: string) {
 function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => void }) {
   const [tab, setTab] = useState('Algemeen');
 
+  /*
+   * Notes.
+   *
+   * Loaded when the tab is opened rather than with the drawer: most leads are
+   * opened to read a number and call it, and a request per row for a panel
+   * nobody looked at is a request for nothing.
+   */
+  const [notes, setNotes] = useState<LeadNote[]>([]);
+  /* Starts at 'loading' so the effect never has to announce the load — the
+     first paint of the tab is already the loading state, and nothing sets
+     state synchronously inside the effect. */
+  const [notesState, setNotesState] = useState<'loading' | 'idle' | 'error'>('loading');
+  const [draft, setDraft] = useState('');
+  const [posting, setPosting] = useState(false);
+  const [postError, setPostError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (tab !== 'Notities') return;
+
+    /* Guards against the response of an abandoned tab switch landing after a
+       newer one and overwriting it. */
+    let cancelled = false;
+
+    fetch(`/api/admin/leads/${lead.id}/notes`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error(String(res.status));
+        const json = await res.json();
+        if (cancelled) return;
+        setNotes(json.notes ?? []);
+        setNotesState('idle');
+      })
+      .catch(() => {
+        if (!cancelled) setNotesState('error');
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [tab, lead.id]);
+
+  async function addNote() {
+    const body = draft.trim();
+    if (!body || posting) return;
+    setPosting(true);
+    setPostError(null);
+    try {
+      const res = await fetch(`/api/admin/leads/${lead.id}/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ body }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error ?? 'Opslaan mislukt');
+      /* Prepend the row the server actually stored, not the draft — so the
+         timestamp and author on screen are the ones in the database. */
+      setNotes((current) => [json.note, ...current]);
+      setDraft('');
+    } catch (err) {
+      setPostError(err instanceof Error ? err.message : 'Opslaan mislukt');
+    } finally {
+      setPosting(false);
+    }
+  }
+
   return (
     <div className={styles.drawerCard}>
       <div className={styles.drawerHead}>
@@ -116,6 +180,66 @@ function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => voi
       </div>
 
       <div className={styles.drawerBody}>
+        {tab === 'Notities' && (
+          <div className={styles.notes}>
+            <div className={styles.noteCompose}>
+              <textarea
+                className={styles.noteInput}
+                placeholder="Wat is er afgesproken? Bijv. &quot;gebeld, belt morgen zelf terug&quot;"
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                rows={3}
+                maxLength={4000}
+                onKeyDown={(e) => {
+                  /* Ctrl/Cmd+Enter saves; a plain Enter has to stay a new
+                     line, because these notes are often two sentences. */
+                  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') addNote();
+                }}
+              />
+              <div className={styles.noteActions}>
+                <span className={styles.noteHint}>&#8984;/Ctrl + Enter</span>
+                <button
+                  type="button"
+                  className={styles.noteSave}
+                  onClick={addNote}
+                  disabled={!draft.trim() || posting}
+                >
+                  {posting ? 'Opslaan…' : 'Notitie opslaan'}
+                </button>
+              </div>
+              {postError && <p className={styles.noteError}>{postError}</p>}
+            </div>
+
+            {notesState === 'loading' && <p className={styles.noteEmpty}>Laden…</p>}
+            {notesState === 'error' && (
+              <p className={styles.noteError}>
+                Notities konden niet worden geladen. Staat migratie
+                0047_lead_notes.sql al in de database?
+              </p>
+            )}
+            {notesState === 'idle' && notes.length === 0 && (
+              <p className={styles.noteEmpty}>Nog geen notities bij deze lead.</p>
+            )}
+
+            <ul className={styles.noteList}>
+              {notes.map((note) => (
+                <li key={note.id} className={styles.note}>
+                  <div className={styles.noteMeta}>
+                    <span className={styles.noteAuthor}>{note.author_email ?? 'onbekend'}</span>
+                    <span>
+                      {new Date(note.created_at).toLocaleString('nl-NL', {
+                        day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+                        timeZone: 'Europe/Amsterdam',
+                      })}
+                    </span>
+                  </div>
+                  <p className={styles.noteBody}>{note.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {tab === 'Algemeen' && (
           <>
             <div className={styles.drawerSection}>
@@ -153,6 +277,13 @@ function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => voi
       </div>
     </div>
   );
+}
+
+interface LeadNote {
+  id: string;
+  body: string;
+  author_email: string | null;
+  created_at: string;
 }
 
 export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadRow[]; staleBefore: string | null; repeats: Record<string, { count: number; last: string }> }) {
@@ -280,7 +411,19 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
 
         {selectedLead && (
           <div className={styles.drawerCol}>
-            <LeadDetailDrawer lead={selectedLead} onClose={() => setSelectedLead(null)} />
+            {/*
+              Keyed by lead id so React remounts the drawer when the selection
+              changes. Without it, a half-typed note stays in the box under
+              the next lead's name — which is how a note ends up on the wrong
+              customer. A remount also removes the need for a reset effect,
+              which is what tripped the "setState synchronously within an
+              effect" rule here.
+            */}
+            <LeadDetailDrawer
+              key={selectedLead.id}
+              lead={selectedLead}
+              onClose={() => setSelectedLead(null)}
+            />
           </div>
         )}
       </div>
