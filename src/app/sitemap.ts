@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
+import { ZAKELIJK_SEGMENTS } from '@/config/zakelijk';
 import { DIENSTEN } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
@@ -19,7 +20,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/autosleutel-kwijt', '/autosleutel-bestellen-op-kenteken',
     // Linked from the footer of every page and indexable, but was never
     // listed here — the only orphan left after the model pages came out.
-    '/algemene-voorwaarden'
+    '/algemene-voorwaarden',
+    // B2B and recruitment. Different audience and different queries from the
+    // consumer pages, so they earn their own entries rather than riding along.
+    '/zakelijk', '/monteur-worden'
   ].map(p => ({
     url: `${base}${p}`,
     lastModified: lastModifiedFor(
@@ -98,11 +102,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: [`${base}/og-image.png`],
     }));
 
+  const zakelijkPages = ZAKELIJK_SEGMENTS.map((seg) => ({
+    url: `${base}/zakelijk/${seg.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    /* Below the consumer service pages: fewer searches, but each enquiry is
+       worth several jobs rather than one. */
+    priority: 0.7,
+  }));
+
   return [
     ...corePages,
     ...servicePages,
     ...cityPages,
     ...brandPages,
+    ...zakelijkPages,
     ...blogPages
   ];
 }

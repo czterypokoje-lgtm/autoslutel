@@ -116,6 +116,8 @@ export default function Footer() {
                 <li key={b.slug}><Link href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}>{b.name} sleutel bijmaken</Link></li>
               ))}
               <li><Link href="/merken">Alle {BRAND_COUNT} merken →</Link></li>
+              <li><Link href="/zakelijk">Zakelijk &amp; partners</Link></li>
+              <li><Link href="/monteur-worden">Monteur worden</Link></li>
             </ul>
             <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Blog &amp; Advies</h4>
             <ul className={styles.linkList}>
