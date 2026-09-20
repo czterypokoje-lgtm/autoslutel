@@ -104,6 +104,16 @@ export default async function LeadsPage({
   const range = one('dagen') && one('dagen')! in RANGES ? one('dagen')! : '30';
   const search = sanitiseSearch(one('q') ?? '');
   const page = Math.max(1, Number.parseInt(one('p') ?? '1', 10) || 1);
+  /*
+   * "Only leads that came from a paid click."
+   *
+   * These are the only leads Google Ads can ever be told about: the offline
+   * conversion import is keyed on the click id, so a lead without one is
+   * invisible to bidding no matter how it is triaged. With 149 leads waiting
+   * and 88 carrying a click, triaging in this order is what turns the backlog
+   * into conversion data fastest — hence a filter rather than a sort.
+   */
+  const adsOnly = one('ads') === '1';
 
   const currentParams = {
     status,
@@ -111,6 +121,9 @@ export default async function LeadsPage({
     pc: postcode,
     dagen: range,
     q: search || undefined,
+    /* Carried here too, or clicking a status chip would silently drop the
+       ads filter and drop the office back into all 201 leads. */
+    ads: adsOnly ? '1' : undefined,
   };
 
   const supabase = await createSupabaseServerClient();
@@ -130,6 +143,7 @@ export default async function LeadsPage({
     if (source) q = q.eq('source', source);
     if (postcode) q = q.ilike('postcode', `${postcode}%`);
     if (since) q = q.gte('created_at', since);
+    if (adsOnly) q = q.or('gclid.not.is.null,wbraid.not.is.null,gbraid.not.is.null');
     if (search) {
       const plate = search.replace(/[-\s]/g, '');
       q = q.or(
@@ -154,7 +168,7 @@ export default async function LeadsPage({
     supabase
       .from('leads')
       .select(
-        'id, created_at, name, phone, phone_e164, email, postcode, location, brand, model, year, kenteken, service, source, status, sale_price, quoted_price, consent_marketing, first_contact_at',
+        'id, created_at, name, phone, phone_e164, email, postcode, location, brand, model, year, kenteken, service, source, status, sale_price, quoted_price, consent_marketing, first_contact_at, gclid, wbraid, gbraid',
         { count: 'exact' }
       )
   )
@@ -279,10 +293,27 @@ export default async function LeadsPage({
             {tab.label}
           </Link>
         ))}
+
+        {/*
+          Sits with the status chips rather than in the filter bar below,
+          because it answers the same question they do — "which leads am I
+          looking at" — and because it is the one filter the office should
+          reach for first while a backlog exists.
+        */}
+        <Link
+          href={buildHref(currentParams, { ads: adsOnly ? undefined : '1' })}
+          className={adsOnly ? `${styles.tab} ${styles.active}` : styles.tab}
+          title="Alleen leads met een Google Ads-klik — de enige die als conversie geteld kunnen worden"
+        >
+          {adsOnly ? '✓ ' : ''}Uit Google Ads
+        </Link>
       </nav>
 
       <form className={styles.filtersBar} method="get" action="/admin/leads">
         {status && <input type="hidden" name="status" value={status} />}
+        {/* A GET form submits only its own fields — without this, searching
+            while filtered to Google Ads leads quietly returns all of them. */}
+        {adsOnly && <input type="hidden" name="ads" value="1" />}
         
         <div className={styles.searchBox}>
           <input
