@@ -40,7 +40,33 @@ export const dynamic = 'force-dynamic';
  * a number.
  */
 const EXPORT_COLUMNS =
-  'id, created_at, service, status, gclid, wbraid, gbraid, jobs (status, final_price, quoted_price, completed_at)';
+  'id, created_at, service, status, gclid, wbraid, gbraid, jobs (status, final_price, completed_at)';
+
+/*
+ * A conversion is a finished job, not a hopeful lead.
+ *
+ * This export used to emit a conversion for every lead at `qualified` or
+ * `sold`. The office's account of what those statuses mean in practice:
+ * "customer is not accept most of them and some of them we miss and dont
+ * reply". So `qualified` means the job was possible, which is a long way from
+ * the customer saying yes.
+ *
+ * Measured at the time of the change: 16 leads with a click id sat at
+ * qualified/sold, 2 had a job at all, and 0 had a completed paid one. Ten had
+ * already been reported to Google under a conversion action literally named
+ * "Job Completed". Smart Bidding was being taught that a person who asks for
+ * a price and walks away is the outcome to find more of.
+ *
+ * So the money event is the source now: a job at `afgerond` with a
+ * final_price, attributed through its lead's click id. That yields far fewer
+ * conversions — one, when this was written — and every one of them is revenue
+ * that actually arrived.
+ */
+const POSITIVE_FROM_JOBS =
+  'id, final_price, completed_at, scheduled_date, lead_id, leads!inner(id, gclid, wbraid, gbraid, created_at)';
+
+/* Google will not accept a conversion for a click older than this. */
+const CLICK_WINDOW_DAYS = 90;
 
 function unauthorized() {
   // 404 rather than 401: do not confirm that this endpoint exists.
@@ -92,12 +118,14 @@ export async function GET(request: Request) {
 
     const [positiveResult, negativeResult] = await Promise.all([
       supabase
-        .from('leads')
-        .select(EXPORT_COLUMNS)
-        .or(clickIdFilter)
-        .is('exported_at', null)
-        .in('status', ['qualified', 'sold'])
-        .order('created_at', { ascending: false })
+        .from('jobs')
+        .select(POSITIVE_FROM_JOBS)
+        .eq('status', 'afgerond')
+        /* !inner above already drops jobs with no lead; this drops the ones
+           whose lead never carried a click — there is nothing for Google to
+           attribute them to, however real the work was. */
+        .not('lead_id', 'is', null)
+        .order('completed_at', { ascending: false })
         .limit(500),
 
       supabase
@@ -116,49 +144,59 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const data = [...(positiveResult.data ?? []), ...(negativeResult.data ?? [])];
-
     /*
-     * What this lead actually earned. Null, never 0, when we do not know:
-     * the office can still type a figure, but nothing here guesses one, and
-     * a lead with no finished job is reported as a conversion without a
-     * value rather than as a conversion worth nothing.
+     * The two halves no longer share a shape: positives come from jobs,
+     * negatives from leads. Mapped separately rather than merged and sorted
+     * apart again, which is the arrangement that let a lead masquerade as a
+     * completed job in the first place.
      */
-    const withValue = (data ?? []).map((lead) => {
-      const jobs = (Array.isArray(lead.jobs) ? lead.jobs : lead.jobs ? [lead.jobs] : []) as {
-        status?: string;
-        final_price?: number | string | null;
-        quoted_price?: number | string | null;
-        completed_at?: string | null;
-      }[];
-      const done = jobs.filter((j) => j.status === 'afgerond');
-      /*
-       * final_price only — never a quote.
-       *
-       * The office reports that the estimate shown on the public form runs
-       * 25-30% high on some jobs: it is produced before anyone knows the real
-       * location or has verified what the customer typed about the car. A
-       * quote is what was hoped for; final_price is what was charged, and
-       * Smart Bidding optimises against whatever number it is given.
-       *
-       * A completed job with no final_price therefore contributes nothing
-       * rather than its quote, and the conversion uploads with an empty value
-       * — which Google reads as "no value supplied" instead of a figure
-       * nobody collected.
-       */
-      const earned = done.reduce((total, j) => total + Number(j.final_price ?? 0), 0);
-      const { jobs: _dropped, ...rest } = lead as Record<string, unknown> & { jobs?: unknown };
-      return {
-        ...(rest as { id: string; status: string; created_at: string }),
-        job_value: done.length && earned > 0 ? Math.round(earned * 100) / 100 : null,
-        job_count: done.length,
-        /* Google wants the time the conversion happened, not the click. */
-        conversion_time: done[0]?.completed_at ?? null,
-      };
-    });
+    interface JobRow {
+      id: string;
+      final_price: number | string | null;
+      completed_at: string | null;
+      scheduled_date: string | null;
+      lead_id: string;
+      leads: { id: string; gclid: string | null; wbraid: string | null; gbraid: string | null; created_at: string } | null;
+    }
 
-    const positive = withValue.filter((l) => l.status === 'qualified' || l.status === 'sold');
-    const negative = withValue.filter((l) => l.status === 'spam' || l.status === 'duplicate');
+    const cutoff = Date.now() - CLICK_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+
+    const positive = ((positiveResult.data ?? []) as unknown as JobRow[])
+      .map((job) => {
+        const lead = job.leads;
+        const clickId = lead?.gclid ?? lead?.wbraid ?? lead?.gbraid ?? null;
+        const value = Number(job.final_price ?? 0);
+        return { job, lead, clickId, value };
+      })
+      /* Three reasons a finished job is not reportable, none of them faults:
+         no click paid for it, no money was recorded, or the click has aged
+         out of Google's window. */
+      .filter((r) => r.clickId && r.value > 0 && r.lead && new Date(r.lead.created_at).getTime() >= cutoff)
+      .map((r) => ({
+        id: r.lead!.id,
+        job_id: r.job.id,
+        status: 'afgerond',
+        gclid: r.lead!.gclid,
+        wbraid: r.lead!.wbraid,
+        gbraid: r.lead!.gbraid,
+        created_at: r.lead!.created_at,
+        job_value: Math.round(r.value * 100) / 100,
+        job_count: 1,
+        /* The conversion happened when the work finished, not when the form
+           was submitted. Falls back to the scheduled day at midday when a job
+           was closed without a completion timestamp. */
+        conversion_time: r.job.completed_at ?? (r.job.scheduled_date ? `${r.job.scheduled_date}T12:00:00Z` : null),
+      }));
+
+    const negative = ((negativeResult.data ?? []) as unknown as {
+      id: string; status: string; created_at: string;
+      gclid: string | null; wbraid: string | null; gbraid: string | null;
+    }[]).map((lead) => ({
+      ...lead,
+      job_value: null,
+      job_count: 0,
+      conversion_time: null,
+    }));
 
     return NextResponse.json(
       { success: true, positive, negative },
