@@ -5,7 +5,9 @@ import { usePathname } from 'next/navigation';
 import {
   BadgeCheck,
   BarChart3,
+  Boxes,
   CalendarDays,
+  Database,
   Euro,
   Handshake,
   CircleUser,
@@ -56,6 +58,13 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
       { href: '/admin/netwerk', label: 'Netwerk', icon: MessageSquare },
       { href: '/admin/tarieven', label: 'Tarieven', icon: Euro },
+    ],
+  },
+  {
+    group: 'Voorraad (ERP)',
+    items: [
+      { href: '/admin/pim', label: 'Master Ürünler (PIM)', icon: Database },
+      { href: '/admin/voorraad', label: 'Stok & Lokasyonlar', icon: Boxes },
     ],
   },
   {
