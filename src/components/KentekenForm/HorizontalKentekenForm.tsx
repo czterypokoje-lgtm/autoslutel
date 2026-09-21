@@ -1,5 +1,7 @@
 'use client';
 
+import { reportLeadConversion } from '@/lib/leadTracking';
+
 import React, { useState } from 'react';
 import styles from './HorizontalKentekenForm.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
@@ -15,7 +17,8 @@ export default function HorizontalKentekenForm() {
   const [kenteken, setKenteken] = useState('');
   const [postcode, setPostcode] = useState('');
   const [phone, setPhone] = useState('');
-  const [vehicle, setVehicle] = useState<any>(null);
+  /* The three fields the RDW lookup returns that this form actually reads. */
+  const [vehicle, setVehicle] = useState<{ merk: string; model: string; bouwjaar: string } | null>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [workingKey, setWorkingKey] = useState<WorkingKeyType | null>(null);
   const [startType, setStartType] = useState<StartType | null>(null);
@@ -119,6 +122,12 @@ export default function HorizontalKentekenForm() {
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));
+
+    reportLeadConversion({
+      source: 'kenteken_form',
+      phone,
+      postcode,
+    });
     window.oaiq?.('track', 'lead_created', { content_name: 'kenteken_form' });
 
     (e.currentTarget as HTMLAnchorElement).href = buildWhatsappUrl();

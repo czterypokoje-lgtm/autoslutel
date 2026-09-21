@@ -1,5 +1,7 @@
 'use client';
 
+import { reportLeadConversion } from '@/lib/leadTracking';
+
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styles from './VehicleWizard.module.css';
 import { serviceLimit } from '@/lib/serviceLimits';
@@ -207,6 +209,12 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       }),
       keepalive: true,
     }).catch((err) => console.error('Error saving lead', err));
+
+    reportLeadConversion({
+      source: 'hero_wizard',
+      phone,
+      postcode,
+    });
 
     // Synchronous, inside the click's call stack — a setTimeout here would be
     // treated as an unrequested popup and silently blocked on iOS Safari.

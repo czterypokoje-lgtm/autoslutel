@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from "react";
 import { CAR_MODELS, BRANDS_LIST, SERVICES_LIST, YEARS_LIST } from "@/data/carModels";
 import { SITE_CONFIG } from "@/config/site.config";
 import { toWebp } from "@/lib/toWebp";
+import { reportLeadConversion } from "@/lib/leadTracking";
 import styles from "./LeadCaptureForm.module.css";
 
 declare global {
@@ -120,10 +121,21 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));
-    window.oaiq?.('track', 'lead_created', { 
-      content_name: city ? 'city_form' : 'hero_form',
-      phone_number: phoneState,
-      external_id: phoneState
+    /*
+     * Reported here, synchronously, rather than from the fetch's .then —
+     * the WhatsApp handoff two statements below can navigate this page away
+     * before any promise resolves, and a conversion that only fires when the
+     * visitor happens to stay is not a conversion you can bid on. Same reason
+     * the fetch above carries keepalive.
+     *
+     * The cost is that a submission the API later rejects still reports. The
+     * fields are validated before this point, and the honeypot answers 200 by
+     * design, so waiting for the response would not have caught those either.
+     */
+    reportLeadConversion({
+      source: city ? 'city_form' : 'hero_form',
+      phone: phoneState,
+      city: location,
     });
 
     // Open WhatsApp synchronously, inside the click's call stack. Doing this

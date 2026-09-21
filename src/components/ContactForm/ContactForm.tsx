@@ -1,5 +1,7 @@
 'use client';
 
+import { reportLeadConversion } from '@/lib/leadTracking';
+
 import React, { useState } from 'react';
 
 declare global {
@@ -88,15 +90,21 @@ export default function ContactForm() {
             external_id: data.get('email') || data.get('phone') || undefined
           }
         });
-        if (typeof window.gtag === 'function') {
-          window.gtag('event', 'generate_lead', { event_category: 'contact_form' });
-        }
-        window.oaiq?.('track', 'lead_created', { 
-          content_name: 'contact_form',
-          email: data.get('email') as string,
-          phone_number: data.get('phone') as string,
-          external_id: data.get('email') as string // often used as fallback if backend generates no ID
+        /*
+         * Also pushed through the shared reporter, so a single GTM trigger on
+         * `lead_form_submit` catches all five lead forms. The
+         * `contact_form_submit` push above stays exactly as it is — a tag in
+         * the container is already listening for that name, and renaming it
+         * would quietly break something that currently works.
+         */
+        reportLeadConversion({
+          source: 'contact_form',
+          email: String(data.get('email') || '') || null,
+          phone: String(data.get('phone') || '') || null,
+          postcode: String(data.get('postcode') || '') || null,
+          city: String(data.get('location') || '') || null,
         });
+
       } else {
         setStatus('error');
       }

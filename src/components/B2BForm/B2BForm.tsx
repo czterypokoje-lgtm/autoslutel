@@ -1,5 +1,7 @@
 'use client';
 
+import { reportLeadConversion } from '@/lib/leadTracking';
+
 import React, { useState } from 'react';
 import styles from './B2BForm.module.css';
 
@@ -61,6 +63,16 @@ export default function B2BForm({
         }),
       });
       if (!res.ok) throw new Error('mislukt');
+
+      /* Unlike the consumer forms, this one stays on the page and shows a
+         confirmation — so it can wait for the response and only report a
+         lead the API actually accepted. */
+      reportLeadConversion({
+        source: `b2b-${segment}`,
+        email: String(form.get('email') || '') || null,
+        phone: String(form.get('phone') || '') || null,
+      });
+
       setDone(true);
     } catch {
       setError('Versturen lukte niet. Belt u ons gerust direct — dat gaat sneller.');
