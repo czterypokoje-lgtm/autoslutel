@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 declare global {
   interface Window {
     dataLayer?: unknown[];
+    uetq?: unknown[];
     oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
   }
 }
@@ -40,6 +41,15 @@ export default function PhoneConversionTracker() {
 
       if (target.href.startsWith('tel:')) {
         window.dataLayer.push({ event: 'click_to_call', link_url: target.href });
+        /*
+         * Microsoft Advertising. UET has no dataLayer and reads nothing GTM
+         * receives, so a call reported to Google was invisible to Bing — and
+         * for this business a phone call is the majority of real leads, so
+         * Bing was optimising against almost nothing. The goal in the Bing
+         * account must listen for this exact event action.
+         */
+        window.uetq = window.uetq || [];
+        window.uetq.push('event', 'click_to_call', { event_category: 'phone' });
         // OpenAI Ads "Lead created" conversion — a phone call is the
         // majority of this business's real leads, so it counts the same as
         // a web form submit. window.oaiq only exists once marketing consent
@@ -64,6 +74,17 @@ export default function PhoneConversionTracker() {
         target.href.startsWith('https://api.whatsapp.com')
       ) {
         window.dataLayer.push({ event: 'click_to_whatsapp', link_url: target.href });
+
+        window.uetq = window.uetq || [];
+        window.uetq.push('event', 'click_to_whatsapp', { event_category: 'whatsapp' });
+
+        /*
+         * The OpenAI pixel was told about phone calls and not about WhatsApp,
+         * though both are the same act — a customer reaching out. Reported
+         * now, with the same guard: window.oaiq only exists once marketing
+         * consent was granted and the pixel actually loaded.
+         */
+        window.oaiq?.('track', 'lead_created', { content_name: 'whatsapp_click' });
       }
     };
 

@@ -1,4 +1,11 @@
 "use client";
+
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    uetq?: unknown[];
+  }
+}
 import { useState, useMemo, useEffect } from "react";
 import { CAR_MODELS, BRANDS_LIST, SERVICES_LIST, YEARS_LIST } from "@/data/carModels";
 import { SITE_CONFIG } from "@/config/site.config";
@@ -142,6 +149,17 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
     // Open WhatsApp synchronously, inside the click's call stack. Doing this
     // from a setTimeout put it outside the user-gesture chain, so popup
     // blockers (iOS Safari by default) silently swallowed the handoff.
+    /*
+     * The WhatsApp handoff is opened programmatically, so the delegated
+     * click listener in PhoneConversionTracker never sees it — it only
+     * watches real anchor clicks. Without this the busiest WhatsApp path on
+     * the site reported no WhatsApp event at all.
+     */
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'click_to_whatsapp', link_url: 'form_handoff' });
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'click_to_whatsapp', { event_category: 'whatsapp' });
+
     const win = window.open(buildWhatsAppUrl(), "_blank", "noopener,noreferrer");
     if (!win) {
       // Blocked anyway — navigate in place rather than losing the customer.

@@ -1,5 +1,12 @@
 'use client';
 
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    uetq?: unknown[];
+  }
+}
+
 import { reportLeadConversion } from '@/lib/leadTracking';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
@@ -219,6 +226,17 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
 
     // Synchronous, inside the click's call stack — a setTimeout here would be
     // treated as an unrequested popup and silently blocked on iOS Safari.
+    /*
+     * The WhatsApp handoff is opened programmatically, so the delegated
+     * click listener in PhoneConversionTracker never sees it — it only
+     * watches real anchor clicks. Without this the busiest WhatsApp path on
+     * the site reported no WhatsApp event at all.
+     */
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'click_to_whatsapp', link_url: 'form_handoff' });
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'click_to_whatsapp', { event_category: 'whatsapp' });
+
     const win = window.open(buildWhatsAppUrl(), '_blank', 'noopener,noreferrer');
     if (!win) window.location.href = buildWhatsAppUrl();
     setSending(false);
