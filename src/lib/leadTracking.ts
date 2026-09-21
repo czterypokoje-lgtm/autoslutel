@@ -37,6 +37,10 @@ declare global {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
     oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
+    /* Microsoft Advertising's UET queue. An array until bat.js loads and
+       replaces it with a UET instance — both accept .push(), which is all
+       any caller here needs. */
+    uetq?: unknown[];
   }
 }
 
@@ -85,6 +89,17 @@ export function reportLeadConversion(lead: LeadConversion): void {
     if (typeof window.gtag === 'function') {
       window.gtag('event', 'generate_lead', { event_category: lead.source });
     }
+
+    /*
+     * Microsoft Advertising. UET reports a conversion as a named event, and
+     * the goal in the Bing account has to be configured to listen for this
+     * same name — `lead_form_submit`, deliberately identical to the GTM
+     * trigger so there is one name to remember rather than two.
+     */
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'lead_form_submit', {
+      event_category: lead.source,
+    });
 
     window.oaiq?.('track', 'lead_created', {
       content_name: lead.source,

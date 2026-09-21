@@ -178,6 +178,46 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
         {/* End Google Tag Manager */}
+
+        {/*
+          ── MICROSOFT ADVERTISING UET (ti 97270067) ──
+
+          Same production-hostname guard as GTM above: every Vercel preview
+          and every localhost session renders this layout, and staff clicking
+          around the admin panel must not register as Bing traffic.
+
+          Consent is pushed BEFORE the loader, for the same reason the Google
+          defaults are: ad_storage starts denied and is raised only when the
+          visitor accepts marketing cookies. Microsoft requires this for EEA
+          visitors under the ePrivacy Directive and the GDPR, and the real
+          "granted" comes from applyConsent() in src/lib/consent.ts — the same
+          function that already updates Google, so one banner decision drives
+          both and they cannot disagree.
+        */}
+        <Script id="uet-consent-default" strategy="beforeInteractive">
+          {`
+            window.uetq = window.uetq || [];
+            window.uetq.push('consent', 'default', { ad_storage: 'denied' });
+          `}
+        </Script>
+        <Script id="uet-tag">
+          {`
+            if (window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') {
+              (function(w,d,t,u,o){
+                w[u]=w[u]||[],o.ts=(new Date).getTime();
+                var n=d.createElement(t);
+                n.src="https://bat.bing.net/bat.js?ti="+o.ti+("uetq"!=u?"&q="+u:""),
+                n.async=1,
+                n.onload=n.onreadystatechange=function(){
+                  var s=this.readyState;
+                  s&&"loaded"!==s&&"complete"!==s||(o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad"),n.onload=n.onreadystatechange=null)
+                };
+                var i=d.getElementsByTagName(t)[0];
+                i.parentNode.insertBefore(n,i);
+              })(window, document, "script", "uetq", { ti:"97270067", enableAutoSpaTracking:true });
+            }
+          `}
+        </Script>
         {/*
           GA4 (G-C4WR7TYCTV) is no longer loaded here directly — it's now
           configured as a "Google Tag" inside the GTM container itself

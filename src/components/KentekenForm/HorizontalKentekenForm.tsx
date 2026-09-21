@@ -118,7 +118,8 @@ export default function HorizontalKentekenForm() {
         quotedPrice: quote ? quote.from : null,
         gclid: getCookie('gclid'),
         wbraid: getCookie('wbraid'),
-        gbraid: getCookie('gbraid')
+        gbraid: getCookie('gbraid'),
+        msclkid: getCookie('msclkid'),
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));

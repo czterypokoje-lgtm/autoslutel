@@ -117,7 +117,8 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         company: honeypot, // honeypot — must stay empty
         gclid: getCookie('gclid'),
         wbraid: getCookie('wbraid'),
-        gbraid: getCookie('gbraid')
+        gbraid: getCookie('gbraid'),
+        msclkid: getCookie('msclkid'),
       }),
       keepalive: true
     }).catch(err => console.error("Error saving lead", err));

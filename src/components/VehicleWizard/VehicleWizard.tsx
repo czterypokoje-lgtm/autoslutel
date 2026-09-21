@@ -206,6 +206,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         gclid: cookie('gclid'),
         wbraid: cookie('wbraid'),
         gbraid: cookie('gbraid'),
+        msclkid: cookie('msclkid'),
       }),
       keepalive: true,
     }).catch((err) => console.error('Error saving lead', err));

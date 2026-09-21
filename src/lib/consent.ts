@@ -36,6 +36,7 @@ declare global {
     gtag?: (...args: unknown[]) => void;
     clarity?: unknown;
     oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
+    uetq?: unknown[];
   }
 }
 
@@ -142,6 +143,20 @@ export function applyConsent(state: ConsentState | null): void {
     ad_storage: marketing ? 'granted' : 'denied',
     ad_user_data: marketing ? 'granted' : 'denied',
     ad_personalization: marketing ? 'granted' : 'denied',
+  });
+
+  /*
+   * Microsoft Advertising, from the same decision.
+   *
+   * UET has its own consent channel and does not read Google's, so without
+   * this the Bing tag would sit on the 'denied' default forever and every
+   * conversion it measured would be unattributed. Pushed here rather than in
+   * its own listener so one banner choice can never leave the two networks
+   * disagreeing about what the visitor allowed.
+   */
+  window.uetq = window.uetq || [];
+  window.uetq.push('consent', 'update', {
+    ad_storage: marketing ? 'granted' : 'denied',
   });
 
   // Let GTM trigger tags that wait for a decision.

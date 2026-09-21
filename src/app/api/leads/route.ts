@@ -82,6 +82,13 @@ export async function POST(request: Request) {
     const gclid = clean(body.gclid, MAX.clickId);
     const wbraid = clean(body.wbraid, MAX.clickId);
     const gbraid = clean(body.gbraid, MAX.clickId);
+    /*
+     * Microsoft Advertising's click id. The column has existed since 0045 and
+     * the forms now send it, but this route never read it — so it arrived in
+     * the request body and was dropped, and every Bing click stayed
+     * unattributable exactly the way Google's did before gclid was stored.
+     */
+    const msclkid = clean(body.msclkid, MAX.clickId);
 
     // What the visitor chose (working key vs. all lost) and the indicative
     // price shown for it, from forms that ask (see publicQuote.ts). Never
@@ -156,6 +163,9 @@ export async function POST(request: Request) {
       consent_at: body.consentMarketing === true ? new Date().toISOString() : null,
       scenario,
       quoted_price: quotedPrice,
+      /* Enriched row only — the legacy fallback shape predates this column,
+         and adding it there would break the very fallback it exists for. */
+      msclkid,
       ...(initialStatus ? { status: initialStatus } : {}),
     };
 
