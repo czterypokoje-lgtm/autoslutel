@@ -71,7 +71,7 @@ export default async function UitgavenPage() {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
                   <span style={{ fontWeight: 600, color: '#0f172a' }}>{CATEGORIES[exp.category] || exp.category}</span>
-                  <Badge tone={exp.status === 'approved' || exp.status === 'paid' ? 'ok' : exp.status === 'rejected' ? 'bad' : 'warn'}>
+                  <Badge tone={exp.status === 'approved' || exp.status === 'paid' ? 'ok' : exp.status === 'rejected' ? 'stop' : 'warn'}>
                     {exp.status}
                   </Badge>
                   {exp.is_reimbursable && <Badge>Declaratie</Badge>}
