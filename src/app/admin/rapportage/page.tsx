@@ -1,4 +1,47 @@
-import { requireOfficeUser } from '@/lib/crmSession';
+import { requireOfficeUser } 
+      <header className={styles.head}>
+        <h1 className={styles.title}>ERP Financiële Rapportage (Job Costing)</h1>
+      </header>
+
+      <div className={styles.tableWrap} style={{ marginBottom: 48 }}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Maand</th>
+              <th style={{ textAlign: 'right' }}>Afg. Klussen</th>
+              <th style={{ textAlign: 'right' }}>Omzet</th>
+              <th style={{ textAlign: 'right' }}>Kosten (Mat.)</th>
+              <th style={{ textAlign: 'right' }}>Kosten (Loon)</th>
+              <th style={{ textAlign: 'right' }}>Kosten (Overig)</th>
+              <th style={{ textAlign: 'right', fontWeight: 700 }}>Brutowinst (Gross Margin)</th>
+              <th style={{ textAlign: 'right', fontWeight: 700 }}>Marge %</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(finance.data || []).map((row: any) => {
+              const rev = Number(row.total_revenue) || 0;
+              const margin = Number(row.total_gross_margin) || 0;
+              const pct = rev > 0 ? Math.round((margin / rev) * 100) : 0;
+              return (
+                <tr key={row.month}>
+                  <td>{row.month}</td>
+                  <td style={{ textAlign: 'right' }}>{row.completed_jobs}</td>
+                  <td style={{ textAlign: 'right' }}>{MONEY.format(rev)}</td>
+                  <td style={{ textAlign: 'right', color: '#dc2626' }}>{MONEY.format(row.total_material_cost)}</td>
+                  <td style={{ textAlign: 'right', color: '#dc2626' }}>{MONEY.format(row.total_labor_cost)}</td>
+                  <td style={{ textAlign: 'right', color: '#dc2626' }}>{MONEY.format(row.total_travel_cost + row.total_other_costs)}</td>
+                  <td style={{ textAlign: 'right', fontWeight: 700, color: margin > 0 ? '#059669' : '#dc2626' }}>{MONEY.format(margin)}</td>
+                  <td style={{ textAlign: 'right', fontWeight: 700, color: pct >= 50 ? '#059669' : pct >= 30 ? '#d97706' : '#dc2626' }}>{pct}%</td>
+                </tr>
+              );
+            })}
+            {(!finance.data || finance.data.length === 0) && (
+              <tr><td colSpan={8} style={{ textAlign: 'center', padding: 24, color: '#64748b' }}>Nog geen afgeronde ERP-klussen met kostprijsgegevens.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
 
@@ -24,7 +67,8 @@ export default async function RapportagePage() {
 
   const supabase = await createSupabaseServerClient();
 
-  const [source, service, response, technician, region, make, makeRegion, commission, capabilityGap] = await Promise.all([
+  const [source, service, response, technician, region, make, makeRegion, commission, capabilityGap, finance] = await Promise.all([
+    supabase.from('erp_report_finance_monthly').select('*').order('month', { ascending: false }).limit(12),
     supabase.from('crm_report_source').select('*'),
     supabase.from('crm_report_service').select('*').order('klussen', { ascending: false }),
     supabase.from('crm_report_response').select('*').order('week', { ascending: false }).limit(8),
@@ -54,6 +98,7 @@ export default async function RapportagePage() {
     makeRegion,
     commission,
     capabilityGap,
+    finance,
   ].find((r) => r.error);
   if (failed?.error) {
     const missing = /does not exist|relation|permission denied/i.test(failed.error.message);
