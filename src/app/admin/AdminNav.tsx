@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BadgeCheck,
+  Banknote,
   BarChart3,
   Boxes,
   CalendarDays,
@@ -79,6 +80,8 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
     items: [
       { href: '/admin/klanten', label: 'Klanten', icon: Users },
       { href: '/admin/facturen', label: 'Facturen', icon: Receipt },
+      { href: '/admin/uitgaven', label: 'Mijn uitgaven', icon: Banknote },
+      { href: '/admin/uitgaven', label: 'Uitgaven', icon: Banknote },
       { href: '/admin/kas', label: 'Kas', icon: Wallet },
       { href: '/admin/rapportage', label: 'Rapportage', icon: BarChart3 },
       { href: '/admin/monteurs', label: 'Monteurs', icon: Wrench },
