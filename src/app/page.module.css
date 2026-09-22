@@ -1,449 +1,286 @@
-/* HOMEPAGE STYLES — Navy + Orange classic automotive */
-
-/* ---- HERO ---- */
-/* ---- HERO SPLIT LAYOUT ---- */
-.heroSplit {
-  background: #ffffff;
-  padding: 3rem 2rem 3rem;
-  border-bottom: 1px solid var(--gray-200);
-}
-.heroSplitInner {
-  max-width: 1200px;
-  margin: 0 auto;
+.heroDeadbolt {
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--color-night-navy, #0c1422);
+  color: var(--color-frost, #eef0f3);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  align-items: stretch;
-}
-
-.heroTopContent {
-  order: 1;
-}
-
-.heroImageContent {
-  order: 2;
-  width: 100%;
-}
-
-.heroBottomContent {
-  order: 3;
-}
-
-@media (min-width: 992px) {
-  .heroSplitInner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas: 
-      "top image"
-      "bottom image";
-    gap: 2rem 3rem;
-    align-items: center;
-  }
-  .heroTopContent { 
-    grid-area: top; 
-    order: initial;
-    align-self: end;
-  }
-  .heroImageContent { 
-    grid-area: image; 
-    order: initial;
-    align-self: center;
-  }
-  .heroBottomContent { 
-    grid-area: bottom; 
-    order: initial;
-    align-self: start;
-  }
-}
-.heroSplitLabel {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--orange-600);
-  margin-bottom: 0.75rem;
-}
-.heroSplit h1 {
-  color: var(--navy-900);
-  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-  margin-bottom: 1rem;
-}
-.heroSplitLead {
-  color: var(--gray-700);
-  font-size: 1.05rem;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-  max-width: 620px;
-}
-.heroSplitLead strong {
-  color: var(--navy-900);
-}
-
-/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */
-.featuresSection { justify-content: space-between;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-/* ---- EMERGENCY STRIP ---- */
-.emergencyStrip {
-  background: var(--navy-800);
-  border-top: 3px solid var(--orange-500);
-  padding: 0.75rem 2rem;
-}
-.emergencyInner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-.emergencyItem {
-  display: flex; align-items: center; gap: 0.6rem;
-  color: rgba(255,255,255,0.8); font-size: 0.875rem;
-}
-.emergencyItem svg { color: var(--orange-400); flex-shrink: 0; }
-.emergencyItem a { color: #fff; text-decoration: none; }
-.emergencyItem a:hover { color: var(--orange-400); }
-.emergencyItem strong { color: #fff; }
-.emergencyPhone {
-  font-size: 1.05rem; font-weight: 700; color: var(--orange-400);
-  text-decoration: none; border: 2px solid var(--orange-500);
-  padding: 0.4rem 1rem; border-radius: var(--radius-md); white-space: nowrap;
-  transition: all 0.15s;
-}
-.emergencyPhone:hover { background: var(--orange-500); color: #fff; text-decoration: none; }
-
-/* ---- SERVICES ---- */
-.services { padding: 4rem 0; background: #fff; }
-.sectionHead { margin-bottom: 2.5rem; text-align: center; }
-.servicesGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-.serviceCard {
-  display: flex; flex-direction: column;
-  background: #fff;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-lg);
+  justify-content: flex-end;
+  padding: 2rem;
   overflow: hidden;
-  text-decoration: none;
 }
-.serviceCard:hover {
-  border-color: var(--navy-300);
-  text-decoration: none;
+
+.heroBg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  opacity: 0.6; /* Darkened background */
 }
-.serviceImgBox {
-  width: 100%;
-  height: 160px;
-  position: relative;
-  overflow: hidden;
-  background: var(--navy-900);
-}
-.serviceImg {
+
+.heroBg img {
+  object-fit: cover;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.serviceCard:hover .serviceImg {
-  transform: scale(1.06);
-}
-.serviceBody {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.serviceTitleRow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-.serviceIconBox {
-  width: 40px; height: 40px; flex-shrink: 0;
-  background: var(--navy-50); border-radius: var(--radius-md);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--navy-600);
-  transition: background 0.15s, color 0.15s;
-}
-.serviceCard:hover .serviceIconBox {
-  background: var(--navy-800); color: #fff;
-}
-.serviceImgLink {
-  display: block;
-  overflow: hidden;
-}
-.serviceTitle { font-size: 1.15rem; font-weight: 700; color: #d32f2f; margin: 0 0 0.75rem 0; }
-.serviceTitleLink {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-.serviceTitleLink:hover {
-  color: #a72323;
-}
-.serviceDesc { font-size: 0.95rem; color: #4b5563; margin: 0 0 1.5rem 0; line-height: 1.6; flex: 1; }
-.serviceActionBtn {
-  background: #0066cc;
-  color: #fff;
-  padding: 0.75rem 1.25rem;
-  border-radius: 6px;
-  font-weight: 600;
-  display: inline-block;
-  text-decoration: none;
-  text-align: center;
-  align-self: flex-start;
-  transition: background 0.2s ease;
-}
-.serviceActionBtn:hover {
-  background: #0052a3;
-}
-.serviceFooter {
-  padding-top: 1rem;
-  border-top: 1px solid var(--gray-100);
-}
-.serviceCardBtn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--navy-800);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-.serviceCardBtn:hover {
-  color: var(--orange-500);
-}
-.serviceArrow { font-size: 1.1rem; color: var(--gray-400); transition: transform 0.2s, color 0.15s; }
-.serviceCard:hover .serviceArrow,
-.serviceCardBtn:hover .serviceArrow { color: var(--orange-500); transform: translateX(4px); }
-.servicesCta { text-align: center; margin-top: 2.5rem; }
 
-
-/* ---- SERVICE AREA & MAP PREVIEW ---- */
-.serviceAreaSection {
-  padding: 4.5rem 0;
-  background: #fff;
-  border-bottom: 1px solid var(--gray-200);
-}
-.serviceAreaGrid {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 3rem;
-  align-items: flex-start;
-  margin-top: 2rem;
-}
-.serviceAreaText {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-.serviceAreaLead {
-  font-size: 1.05rem;
-  line-height: 1.65;
-  color: var(--gray-700);
-  margin: 0;
-}
-.serviceAreaSub {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--gray-600);
-  margin: 0;
-}
-.serviceAreaPills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 0.5rem;
-}
-.cityPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.95rem;
-  background: var(--navy-50);
-  border: 1px solid var(--navy-200);
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--navy-900);
-  text-decoration: none;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.cityPill:hover {
-  background: var(--orange-500);
-  border-color: var(--orange-500);
-  color: #fff;
-  text-decoration: none;
-}
-.cityPillTime {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--gray-500);
-  background: #fff;
-  padding: 0.1rem 0.45rem;
-  border-radius: 999px;
-}
-.cityPill:hover .cityPillTime {
-  background: rgba(255, 255, 255, 0.25);
-  color: #fff;
-}
-.mapContainerWrap {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-height: 480px;
-  height: 480px;
-}
-.mapBox {
-  width: 100%;
-  height: 480px;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  border: 1px solid var(--gray-200);
-  background: var(--gray-100);
+.heroContent {
   position: relative;
+  z-index: 10;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding-bottom: 4rem;
 }
-.mapLiveBanner {
+
+.heroTopIndicator {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1.25rem;
-  background: var(--navy-900);
-  color: #fff;
-  border-radius: var(--radius-md);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-.liveIndicator {
-  display: inline-flex;
-  align-items: center;
   gap: 0.5rem;
-  color: #10b981;
+  font-family: var(--font-eyebrow-family, "Inter", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4rem;
 }
-.liveDot {
+
+.dot {
   width: 8px;
   height: 8px;
-  background: #10b981;
+  background-color: var(--color-signal-orange, #ff6a2b);
   border-radius: 50%;
-  display: inline-block;
+  animation: pulse 2s infinite;
 }
 
-/* ---- COMPARE ---- */
-.compare { padding: 4rem 0; background: var(--gray-50); }
-.compareGrid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: center; }
-.checkList { list-style: none; padding: 0; margin: 1rem 0 1.5rem; }
-.checkItem { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; font-size: 0.9rem; color: var(--gray-700); border-bottom: 1px solid var(--gray-200); }
-.checkIcon { color: var(--color-success); flex-shrink: 0; }
-.compareTableWrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); overflow: hidden; }
-
-/* ---- REVIEWS ---- */
-.reviews { padding: 4rem 0; }
-.ratingBig { display: flex; align-items: center; gap: 1rem; margin-top: 0.75rem; }
-.ratingNum { font-size: 3rem; font-weight: 700; color: var(--gray-900); line-height: 1; }
-.reviewGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2rem; }
-.reviewCard { background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
-.reviewText { font-size: 0.875rem; color: var(--gray-600); line-height: 1.7; font-style: italic; flex: 1; margin: 0; }
-.reviewMeta { display: flex; align-items: center; gap: 0.75rem; }
-.reviewAvatar { width: 36px; height: 36px; border-radius: 50%; background: var(--navy-800); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; flex-shrink: 0; }
-.reviewMeta strong { display: block; font-size: 0.85rem; color: var(--gray-900); }
-.reviewMeta span { font-size: 0.75rem; color: var(--gray-400); }
-
-/* ---- FAQ ---- */
-.faqSection { padding: 4rem 0; background: var(--gray-50); }
-.faqGrid { display: grid; grid-template-columns: 280px 1fr; gap: 3rem; align-items: start; }
-
-/* ---- FINAL CTA ---- */
-.finalCta { background: var(--navy-900); padding: 4rem 2rem; }
-.finalCtaInner { max-width: 700px; margin: 0 auto; text-align: center; }
-.finalCtaInner h2 { color: #fff; font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 0.75rem; }
-.finalCtaInner p { color: rgba(255,255,255,0.7); margin-bottom: 2rem; }
-.finalCtaBtns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-.waBtn {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  background: #128c7e; color: #fff;
-  padding: 0.85rem 2rem; border-radius: var(--radius-md);
-  font-weight: 700; font-size: 1rem;
-  text-decoration: none; min-height: 52px;
-  transition: background 0.15s;
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 106, 43, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 106, 43, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 106, 43, 0); }
 }
-.waBtn:hover { background: #0d6b5e; color: #fff; text-decoration: none; }
 
-/* ---- RESPONSIVE ---- */
+.heroTitle {
+  font-family: var(--font-statement-family, "Big Shoulders", sans-serif);
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 900;
+  line-height: 0.85;
+  text-transform: uppercase;
+  max-width: 900px;
+  margin-bottom: 4rem;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.heroInfoGrid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.heroSubtitle {
+  font-family: var(--font-body-family, sans-serif);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  max-width: 400px;
+  color: var(--color-mist, #a3adbd);
+}
+
+.heroLink {
+  color: var(--color-frost, #fff);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-signal-orange);
+  padding-bottom: 2px;
+  transition: opacity 0.2s;
+}
+.heroLink:hover {
+  opacity: 0.8;
+}
+
+.heroPhoneWrapper {
+  width: 100%;
+}
+
+.heroPhone {
+  font-family: var(--font-statement-family, "Big Shoulders", sans-serif);
+  font-size: clamp(5rem, 16vw, 15rem);
+  font-weight: 900;
+  color: var(--color-signal-orange, #ff6a2b);
+  line-height: 0.75;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  display: block;
+}
+
+/* 25 MIN SECTION */
+.section25 {
+  background-color: var(--color-signal-orange, #ff6a2b);
+  color: var(--color-night-navy, #0c1422);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+.section25Left {
+  padding: 4rem;
+  border-right: 1px solid rgba(12, 20, 34, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.section25Right {
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bigImage {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.2);
+  margin-bottom: 1rem;
+}
+
+.section25Title {
+  font-family: var(--font-index-title-family, "Big Shoulders", sans-serif);
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 900;
+  line-height: 0.85;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  text-align: right;
+}
+
+.section25Text {
+  font-family: var(--font-body-family, sans-serif);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: right;
+  max-width: 400px;
+  margin-left: auto;
+}
+
+.huge25 {
+  font-family: var(--font-mega-figure-family, "Big Shoulders", sans-serif);
+  font-size: clamp(10rem, 30vw, 25rem);
+  font-weight: 900;
+  line-height: 0.75;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.04em;
+  color: var(--color-night-navy, #0c1422);
+  position: relative;
+  top: 2rem;
+}
+
+/* LEISTUNGEN / DIENSTEN SECTION */
+.servicesSection {
+  background-color: var(--color-night-navy, #0c1422);
+  color: var(--color-frost, #eef0f3);
+  padding: 6rem 4rem;
+}
+
+.servicesHeader {
+  font-family: var(--font-statement-family, "Big Shoulders", sans-serif);
+  font-size: clamp(4rem, 12vw, 10rem);
+  font-weight: 900;
+  line-height: 0.85;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.servicesSub {
+  font-size: 1.25rem;
+  color: var(--color-mist, #a3adbd);
+  max-width: 400px;
+  margin-bottom: 4rem;
+  line-height: 1.6;
+}
+
+.serviceRow {
+  display: grid;
+  grid-template-columns: 200px 1fr 300px auto;
+  align-items: center;
+  padding: 3rem 0;
+  border-top: 1px solid var(--color-line-strong, #3a4862);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.3s;
+}
+
+.serviceRow:hover {
+  background-color: var(--color-navy-surface, #0f1826);
+}
+
+.serviceCategory {
+  font-family: var(--font-eyebrow-family, sans-serif);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  color: var(--color-mist);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.serviceTitle {
+  font-family: var(--font-index-title-family, "Big Shoulders", sans-serif);
+  font-size: clamp(2rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 0.85;
+  text-transform: uppercase;
+}
+
+.serviceDesc {
+  color: var(--color-mist);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.servicePriceLabel {
+  font-family: var(--font-eyebrow-family, sans-serif);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--color-mist);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.servicePrice {
+  font-family: var(--font-heading-2-family, "Big Shoulders", sans-serif);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--color-signal-orange);
+}
+
+.serviceArrow {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--color-line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2rem;
+  transition: all 0.3s;
+}
+
+.serviceRow:hover .serviceArrow {
+  background-color: var(--color-frost);
+  color: var(--color-night-navy);
+}
+
 @media (max-width: 1024px) {
-  .heroCard { max-width: 480px; padding: 2.5rem; }
-  .compareGrid { grid-template-columns: 1fr; }
-  .faqGrid { grid-template-columns: 1fr; }
-  .serviceAreaGrid { grid-template-columns: 1fr; gap: 2rem; }
-  .servicesGrid { grid-template-columns: repeat(2, 1fr); }
-  .mapBox { height: 400px; }
-}
-@media (max-width: 900px) {
-  .reviewGrid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 768px) {
-  /* No changes for 768px as 1024px handles the 2-col switch */
-}
-@media (max-width: 640px) {
-  .heroSplit { padding: 1.5rem 1.25rem 2.5rem; }
-  .hero { padding: 0; min-height: auto; flex-direction: column; align-items: stretch; }
-  .hero::before { display: none; }
-  .heroBackground { position: relative !important; height: 280px !important; }
-  .heroInner { padding: 1rem; }
-  .heroCard { margin-top: -60px; max-width: 100%; border-radius: 12px; padding: 2rem 1.5rem; }
-  .heroTrust { justify-content: center; }
-  
-  .heroCtas { flex-direction: column; }
-  .heroPhoneBtn, .heroWaBtn, .heroUrgentBtn { width: 100%; justify-content: center; }
-  .emergencyInner { flex-direction: column; gap: 0.75rem; }
-  .reviewGrid { grid-template-columns: 1fr; }
-  .finalCtaBtns { flex-direction: column; }
-  .mapBox { height: 340px; }
-  .mapLiveBanner { flex-direction: column; text-align: center; gap: 0.5rem; }
-
-  /*
-   * Six full-height cards stacked stretched this section to several
-   * screens of scrolling on a phone. A horizontal swipe carousel keeps
-   * one card (plus a teaser of the next) in view at a time instead —
-   * scroll-snap only, no JS, so it degrades to plain scroll if disabled.
-   */
-  .services { padding: 2.5rem 0; }
-  .servicesGrid {
-    display: flex;
-    grid-template-columns: none;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    gap: 0.85rem;
-    padding: 0 1.25rem 0.75rem;
-    margin: 0 -1.25rem;
-    scrollbar-width: none;
+  .section25 {
+    grid-template-columns: 1fr;
   }
-  .servicesGrid::-webkit-scrollbar { display: none; }
-  .serviceCard {
-    flex: 0 0 82%;
-    scroll-snap-align: start;
+  .serviceRow {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
-  .serviceImgBox { height: 120px; }
-  .serviceBody { padding: 1rem; }
-  .serviceTitle { font-size: 1rem; margin-bottom: 0.4rem; }
-  .serviceDesc {
-    font-size: 0.87rem;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
+  .serviceArrow {
+    display: none;
   }
-  .serviceActionBtn { padding: 0.6rem 1rem; font-size: 0.9rem; }
 }
-
-
