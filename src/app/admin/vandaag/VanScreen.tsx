@@ -126,7 +126,7 @@ export default function VanScreen({
   jobs: VanJob[];
   technicianName: string | null;
   today: string;
-  vanStock: { id: string; description: string; quantity: number }[];
+  pimProducts: { id: string; internal_sku: string; car_make: string; car_model: string; fcc_id: string; average_cost: number; standard_price: number }[];
 }) {
   const [rows, setRows] = useState(jobs);
 
@@ -537,13 +537,18 @@ function FinishPanel({
 
     setBusy(true);
 
-    const stockItem = vanStock.find(s => s.description === description);
-    const stock_item_id = stockItem ? stockItem.id : undefined;
+    const product = pimProducts.find(p => 
+      p.internal_sku === description || 
+      [p.car_make, p.car_model, p.fcc_id].filter(Boolean).join(' ') === description
+    );
+
+    const inventory_product_id = product ? product.id : undefined;
+    const unit_cost = product ? product.average_cost : undefined;
 
     const ok = await fetch(`/api/admin/jobs/${job.id}/materials`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description, quantity: 1, stock_item_id }),
+      body: JSON.stringify({ description, quantity: 1, inventory_product_id, unit_cost }),
     })
       .then((r) => r.ok)
       .catch(() => false);

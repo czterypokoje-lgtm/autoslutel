@@ -94,17 +94,17 @@ export default async function VandaagPage({
   }
 
   const { data: vanStock } = await supabase
-    .from('stock_items')
-    .select('id, description, quantity')
-    .eq('technician_id', technicianId || '00000000-0000-0000-0000-000000000000')
-    .order('description');
+    .from('inventory_products')
+    .select('id, internal_sku, product_type, car_make, car_model, fcc_id, average_cost, standard_price')
+    .eq('active', true)
+    .order('internal_sku');
 
   return (
     <VanScreen
       jobs={(data ?? []) as unknown as VanJob[]}
       technicianName={me?.name ?? null}
       today={today}
-      vanStock={vanStock || []}
+      pimProducts={vanStock || []}
     />
   );
 }

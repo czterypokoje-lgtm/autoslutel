@@ -70,9 +70,26 @@ export default function InvoiceForm({
   /** Present only when editing an existing invoice. */
   invoiceId?: string;
   initial?: InvoiceFormValues;
+  previousClients?: any[];
 }) {
   const router = useRouter();
   const isEdit = Boolean(invoiceId);
+
+  function handleClientSelect(e: React.ChangeEvent<HTMLSelectElement>) {
+    const val = e.target.value;
+    if (!val) return;
+    const client = previousClients?.find(c => c.client_name === val);
+    if (client) {
+      setClientName(client.client_name || '');
+      setClientStreet(client.client_street || '');
+      setClientPostcode(client.client_postcode || '');
+      setClientCity(client.client_city || '');
+      setClientEmail(client.client_email || '');
+      setClientPhone(client.client_phone || '');
+      setClientBtw(client.client_btw || '');
+    }
+  }
+
 
   const [billerName, setBillerName] = useState(initial?.billerName ?? biller.name);
   const [billerStreet, setBillerStreet] = useState(initial?.billerStreet ?? '');

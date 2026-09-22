@@ -76,6 +76,7 @@ export async function POST(
       product_slug:
         typeof body.product_slug === 'string' ? body.product_slug.slice(0, 200) : null,
       stock_item_id: stockItemId,
+      inventory_product_id: typeof body.inventory_product_id === 'string' && UUID.test(body.inventory_product_id) ? body.inventory_product_id : null,
       created_by: user.id,
     })
     .select('id, description, quantity, unit_cost, stock_item_id')

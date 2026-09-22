@@ -12,6 +12,19 @@ export default async function NieuweFactuurPage() {
 
   /* The office may bill on any technician's behalf; a monteur only ever
      files their own — same split the invoice-upload route already uses. */
+  
+  const { data: clients } = await supabase
+    .from('sales_invoices')
+    .select('client_name, client_street, client_postcode, client_city, client_email, client_phone, client_btw')
+    .not('client_name', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(200);
+
+  const uniqueClients = Array.from(new Map(
+    (clients || []).map(c => [c.client_name, c])
+  ).values());
+
+
   const technicians =
     user.role === 'monteur'
       ? []
@@ -35,6 +48,7 @@ export default async function NieuweFactuurPage() {
           btw: SITE_CONFIG.btw,
           iban: SITE_CONFIG.iban,
         }}
+        previousClients={uniqueClients}
       />
     </>
   );
