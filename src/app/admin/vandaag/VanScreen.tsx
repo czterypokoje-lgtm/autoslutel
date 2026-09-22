@@ -121,7 +121,7 @@ export default function VanScreen({
   jobs,
   technicianName,
   today,
-  vanStock,
+  pimProducts,
 }: {
   jobs: VanJob[];
   technicianName: string | null;
@@ -239,7 +239,7 @@ export default function VanScreen({
         <p className={styles.empty}>Geen klussen vandaag.</p>
       ) : (
         rows.map((job) => (
-          <JobCard key={job.id} job={job} onPatch={patchJob} vanStock={vanStock} />
+          <JobCard key={job.id} job={job} onPatch={patchJob} pimProducts={pimProducts} />
         ))
       )}
     </div>
@@ -249,11 +249,11 @@ export default function VanScreen({
 function JobCard({
   job,
   onPatch,
-  vanStock,
+  pimProducts,
 }: {
   job: VanJob;
   onPatch: (id: string, patch: Record<string, unknown>) => Promise<boolean>;
-  vanStock: { id: string; description: string; quantity: number }[];
+  pimProducts: { id: string; internal_sku: string; car_make: string; car_model: string; fcc_id: string; average_cost: number; standard_price: number }[];
 }) {
   const [finishing, setFinishing] = useState(false);
   const next = NEXT_STATUS[job.status] ?? null;
@@ -378,7 +378,7 @@ function JobCard({
           job={job}
           onPatch={onPatch}
           onDone={() => setFinishing(false)}
-          vanStock={vanStock}
+          pimProducts={pimProducts}
         />
       )}
     </div>
@@ -396,12 +396,12 @@ function FinishPanel({
   job,
   onPatch,
   onDone,
-  vanStock,
+  pimProducts,
 }: {
   job: VanJob;
   onPatch: (id: string, patch: Record<string, unknown>) => Promise<boolean>;
   onDone: () => void;
-  vanStock: { id: string; description: string; quantity: number }[];
+  pimProducts: { id: string; internal_sku: string; car_make: string; car_model: string; fcc_id: string; average_cost: number; standard_price: number }[];
 }) {
   const [price, setPrice] = useState(
     job.final_price === null
@@ -676,8 +676,8 @@ function FinishPanel({
             onChange={(e) => setMaterial(e.target.value)}
           />
           <datalist id="van-stock-list">
-            {vanStock.filter(s => s.quantity > 0).map(s => (
-              <option key={s.id} value={s.description} />
+            {pimProducts.slice(0, 50).map(s => (
+              <option key={s.id} value={s.internal_sku} />
             ))}
           </datalist>
           <button className={styles.tap} onClick={addMaterial} disabled={busy}>
