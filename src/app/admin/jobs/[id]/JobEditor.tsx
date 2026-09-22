@@ -29,6 +29,16 @@ export interface JobDetail {
   notes: string | null;
   started_at: string | null;
   completed_at: string | null;
+  revenue_callout: number | null;
+  revenue_materials: number | null;
+  revenue_labor: number | null;
+  revenue_discount: number | null;
+  cost_materials: number | null;
+  cost_technician: number | null;
+  cost_travel: number | null;
+  cost_payment_fee: number | null;
+  cost_other: number | null;
+  gross_margin: number | null;
 }
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -69,6 +79,18 @@ export default function JobEditor({
     job.keyless === null ? '' : job.keyless ? 'true' : 'false'
   );
   const [scenarioChoice, setScenarioChoice] = useState(job.scenario ?? '');
+
+  const [revCallout, setRevCallout] = useState(job.revenue_callout === null ? '' : String(job.revenue_callout));
+  const [revMaterials, setRevMaterials] = useState(job.revenue_materials === null ? '' : String(job.revenue_materials));
+  const [revLabor, setRevLabor] = useState(job.revenue_labor === null ? '' : String(job.revenue_labor));
+  const [revDiscount, setRevDiscount] = useState(job.revenue_discount === null ? '' : String(job.revenue_discount));
+  
+  const [costMaterials, setCostMaterials] = useState(job.cost_materials === null ? '' : String(job.cost_materials));
+  const [costTech, setCostTech] = useState(job.cost_technician === null ? '' : String(job.cost_technician));
+  const [costTravel, setCostTravel] = useState(job.cost_travel === null ? '' : String(job.cost_travel));
+  const [costFee, setCostFee] = useState(job.cost_payment_fee === null ? '' : String(job.cost_payment_fee));
+  const [costOther, setCostOther] = useState(job.cost_other === null ? '' : String(job.cost_other));
+
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -105,6 +127,17 @@ export default function JobEditor({
         slot_start: window?.start ?? slot,
         slot_end: window?.end ?? trimTime(job.slot_end),
         final_price: finalPrice.trim() === '' ? null : finalPrice.trim(),
+
+        revenue_callout: revCallout.trim() === '' ? null : revCallout.trim(),
+        revenue_materials: revMaterials.trim() === '' ? null : revMaterials.trim(),
+        revenue_labor: revLabor.trim() === '' ? null : revLabor.trim(),
+        revenue_discount: revDiscount.trim() === '' ? null : revDiscount.trim(),
+        cost_materials: costMaterials.trim() === '' ? null : costMaterials.trim(),
+        cost_technician: costTech.trim() === '' ? null : costTech.trim(),
+        cost_travel: costTravel.trim() === '' ? null : costTravel.trim(),
+        cost_payment_fee: costFee.trim() === '' ? null : costFee.trim(),
+        cost_other: costOther.trim() === '' ? null : costOther.trim(),
+
         commission_pct: commissionPct.trim() === '' ? null : commissionPct.trim(),
         commission_amount: commissionAmount.trim() === '' ? null : commissionAmount.trim(),
         notes,
@@ -344,6 +377,65 @@ export default function JobEditor({
             onChange={(e) => setNotes(e.target.value)}
           />
         </div>
+
+
+        <h2 style={{ marginTop: 24, borderTop: '1px solid #e2e8f0', paddingTop: 24 }}>ERP: Financiën & Kosten (Job Costing)</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+          <div style={{ background: '#f8fafc', padding: 16, borderRadius: 8 }}>
+            <h3 style={{ fontSize: 14, marginTop: 0, marginBottom: 12 }}>Omzet (Revenue)</h3>
+            
+            <div className={styles.field} style={{ marginBottom: 8 }}>
+              <label className={styles.fieldLabel}>Oproep / Voorrijkosten (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={revCallout} onChange={e => setRevCallout(e.target.value)} />
+            </div>
+            <div className={styles.field} style={{ marginBottom: 8 }}>
+              <label className={styles.fieldLabel}>Materialen (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={revMaterials} onChange={e => setRevMaterials(e.target.value)} />
+            </div>
+            <div className={styles.field} style={{ marginBottom: 8 }}>
+              <label className={styles.fieldLabel}>Arbeid / Programmeren (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={revLabor} onChange={e => setRevLabor(e.target.value)} />
+            </div>
+            <div className={styles.field} style={{ marginBottom: 0 }}>
+              <label className={styles.fieldLabel}>Korting (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={revDiscount} onChange={e => setRevDiscount(e.target.value)} />
+            </div>
+          </div>
+
+          <div style={{ background: '#fef2f2', padding: 16, borderRadius: 8 }}>
+            <h3 style={{ fontSize: 14, marginTop: 0, marginBottom: 12 }}>Kosten (Costs)</h3>
+            
+            <div className={styles.field} style={{ marginBottom: 8 }}>
+              <label className={styles.fieldLabel}>Kostprijs Materialen (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={costMaterials} onChange={e => setCostMaterials(e.target.value)} />
+            </div>
+            <div className={styles.field} style={{ marginBottom: 8 }}>
+              <label className={styles.fieldLabel}>Monteur / Loon (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={costTech} onChange={e => setCostTech(e.target.value)} />
+            </div>
+            <div className={styles.field} style={{ marginBottom: 8 }}>
+              <label className={styles.fieldLabel}>Reis / Brandstof (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={costTravel} onChange={e => setCostTravel(e.target.value)} />
+            </div>
+            <div className={styles.field} style={{ marginBottom: 8 }}>
+              <label className={styles.fieldLabel}>Transactiekosten (Mollie/Pin) (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={costFee} onChange={e => setCostFee(e.target.value)} />
+            </div>
+            <div className={styles.field} style={{ marginBottom: 0 }}>
+              <label className={styles.fieldLabel}>Overige Kosten (€)</label>
+              <input className={styles.control} type="number" step="0.01" value={costOther} onChange={e => setCostOther(e.target.value)} />
+            </div>
+          </div>
+        </div>
+
+        {job.gross_margin !== null && (
+          <div style={{ background: job.gross_margin > 0 ? '#ecfdf5' : '#fef2f2', border: '1px solid', borderColor: job.gross_margin > 0 ? '#10b981' : '#ef4444', padding: 16, borderRadius: 8, marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontWeight: 600, color: job.gross_margin > 0 ? '#065f46' : '#991b1b' }}>Gross Margin (Brutowinst)</span>
+            <span style={{ fontSize: 20, fontWeight: 700, color: job.gross_margin > 0 ? '#059669' : '#dc2626' }}>
+              {job.gross_margin > 0 ? '+' : ''}€{Number(job.gross_margin).toFixed(2)}
+            </span>
+          </div>
+        )}
 
         <div className={styles.actions}>
           <button className={styles.primary} onClick={save} disabled={saving}>

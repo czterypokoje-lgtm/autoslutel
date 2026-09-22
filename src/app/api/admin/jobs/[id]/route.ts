@@ -133,6 +133,79 @@ export async function PATCH(
     }
   }
 
+
+  if ('revenue_callout' in body) {
+    const value = price(body.revenue_callout);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor revenue_callout' }, { status: 400 });
+    }
+    patch.revenue_callout = value;
+  }
+
+  if ('revenue_materials' in body) {
+    const value = price(body.revenue_materials);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor revenue_materials' }, { status: 400 });
+    }
+    patch.revenue_materials = value;
+  }
+
+  if ('revenue_labor' in body) {
+    const value = price(body.revenue_labor);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor revenue_labor' }, { status: 400 });
+    }
+    patch.revenue_labor = value;
+  }
+
+  if ('revenue_discount' in body) {
+    const value = price(body.revenue_discount);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor revenue_discount' }, { status: 400 });
+    }
+    patch.revenue_discount = value;
+  }
+
+  if ('cost_materials' in body) {
+    const value = price(body.cost_materials);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor cost_materials' }, { status: 400 });
+    }
+    patch.cost_materials = value;
+  }
+
+  if ('cost_technician' in body) {
+    const value = price(body.cost_technician);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor cost_technician' }, { status: 400 });
+    }
+    patch.cost_technician = value;
+  }
+
+  if ('cost_travel' in body) {
+    const value = price(body.cost_travel);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor cost_travel' }, { status: 400 });
+    }
+    patch.cost_travel = value;
+  }
+
+  if ('cost_payment_fee' in body) {
+    const value = price(body.cost_payment_fee);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor cost_payment_fee' }, { status: 400 });
+    }
+    patch.cost_payment_fee = value;
+  }
+
+  if ('cost_other' in body) {
+    const value = price(body.cost_other);
+    if (value === 'invalid') {
+      return NextResponse.json({ error: 'Ongeldig bedrag voor cost_other' }, { status: 400 });
+    }
+    patch.cost_other = value;
+  }
+
   if ('final_price' in body) {
     const value = price(body.final_price);
     if (value === 'invalid') {
@@ -197,7 +270,7 @@ export async function PATCH(
     .update(patch)
     .eq('id', id)
     .select(
-      'id, status, technician_id, scheduled_date, slot_start, slot_end, final_price, notes, started_at, completed_at'
+      'id, status, technician_id, scheduled_date, slot_start, slot_end, final_price, notes, started_at, completed_at, gross_margin'
     )
     .maybeSingle();
 
