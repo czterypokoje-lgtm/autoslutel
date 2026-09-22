@@ -63,6 +63,7 @@ export default function InvoiceForm({
   biller,
   invoiceId,
   initial,
+  previousClients,
 }: {
   technicians: { id: string; name: string }[];
   showTechnicianPicker: boolean;
