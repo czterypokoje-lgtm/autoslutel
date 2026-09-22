@@ -1,6 +1,6 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { PageHead, Card, Badge, Empty, MONEY } from '../_ui';
+import { PageHead, Card, Badge, Empty } from '../_ui';
 import Link from 'next/link';
 import { Plus, Check, X, Building2, Wrench } from 'lucide-react';
 import styles from '../admin.module.css';
@@ -11,6 +11,8 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Uitgaven | Autosleutel24',
 };
+
+const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 
 const CATEGORIES: Record<string, string> = {
   fuel: 'Brandstof',
