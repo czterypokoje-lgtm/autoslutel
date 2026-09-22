@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
-export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const user = await requireCrmUser();
   if (user.role === 'monteur') return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
 
@@ -16,7 +15,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       status: body.status, 
       approved_by: user.id 
     })
-    .eq('id', id);
+    .eq('id', params.id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
