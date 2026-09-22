@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './framer-theme.css';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import ConsentBanner from '@/components/ConsentBanner/ConsentBanner';
@@ -127,7 +128,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ── FONTS ── */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Big+Shoulders+Display:wght@900&family=Chivo:wght@500&display=swap" rel="stylesheet" />
         {/* ── STRUCTURED DATA ── */}
         <script
           id="schema-website"

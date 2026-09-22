@@ -1,0 +1,392 @@
+/* GENERATED FROM FRAMER THEME (styles-2026-09-22.json) */
+
+:root {
+  /* Colors */
+  --color-night-navy: rgb(12, 20, 34);
+  --color-navy-surface: rgb(15, 24, 38);
+  --color-raised-navy: rgb(19, 29, 46);
+  --color-line: rgb(42, 54, 80);
+  --color-frost: rgb(238, 240, 243);
+  --color-mist: rgb(163, 173, 189);
+  --color-signal-orange: rgb(255, 106, 43);
+  --color-on-orange: rgb(12, 20, 34);
+  --color-faint: rgb(138, 148, 166);
+  --color-line-strong: rgb(58, 72, 98);
+  --color-live: rgb(255, 106, 43);
+  --color-navy-band: rgb(16, 26, 43);
+  --color-navy-deep: rgb(8, 14, 25);
+  --color-navy-raised: rgb(26, 37, 56);
+  --color-navy-line: rgb(47, 59, 82);
+  --color-frost-on-band: rgb(238, 240, 243);
+  --color-mist-on-band: rgb(163, 173, 189);
+  --color-orange-text: rgb(255, 125, 69);
+  --color-orange-tint: rgb(41, 30, 35);
+  --color-orange-hover: rgb(255, 132, 80);
+  --color-check: rgb(255, 125, 69);
+
+  /* Typography Variables */
+  --font-display-family: "Big Shoulders", sans-serif;
+  --font-display-size: 100px;
+  --font-display-weight: 900;
+  --font-display-lh: 0.9;
+  --font-heading-2-family: "Big Shoulders", sans-serif;
+  --font-heading-2-size: 76px;
+  --font-heading-2-weight: 800;
+  --font-heading-2-lh: 0.9;
+  --font-heading-3-family: "Big Shoulders", sans-serif;
+  --font-heading-3-size: 32px;
+  --font-heading-3-weight: 800;
+  --font-heading-3-lh: 1;
+  --font-body-family: "Chivo", sans-serif;
+  --font-body-size: 18px;
+  --font-body-weight: 400;
+  --font-body-lh: 1.55;
+  --font-body-small-family: "Chivo", sans-serif;
+  --font-body-small-size: 15px;
+  --font-body-small-weight: 400;
+  --font-body-small-lh: 1.5;
+  --font-label-family: "Chivo", sans-serif;
+  --font-label-size: 15px;
+  --font-label-weight: 600;
+  --font-label-lh: 1.2;
+  --font-eyebrow-family: "Chivo", sans-serif;
+  --font-eyebrow-size: 13px;
+  --font-eyebrow-weight: 600;
+  --font-eyebrow-lh: 1.4;
+  --font-stat-figure-family: "Big Shoulders", sans-serif;
+  --font-stat-figure-size: 104px;
+  --font-stat-figure-weight: 900;
+  --font-stat-figure-lh: 0.9;
+  --font-heading-4-family: "Chivo", sans-serif;
+  --font-heading-4-size: 19px;
+  --font-heading-4-weight: 700;
+  --font-heading-4-lh: 1.3;
+  --font-quote-family: "Chivo", sans-serif;
+  --font-quote-size: 21px;
+  --font-quote-weight: 500;
+  --font-quote-lh: 1.45;
+  --font-mono-family: "Chivo Mono", sans-serif;
+  --font-mono-size: 13px;
+  --font-mono-weight: 400;
+  --font-mono-lh: 1.45;
+  --font-list-family: "Chivo", sans-serif;
+  --font-list-size: 17px;
+  --font-list-weight: 400;
+  --font-list-lh: 1.55;
+  --font-rt-h1-family: "Big Shoulders", sans-serif;
+  --font-rt-h1-size: 56px;
+  --font-rt-h1-weight: 800;
+  --font-rt-h1-lh: 0.95;
+  --font-rt-h2-family: "Big Shoulders", sans-serif;
+  --font-rt-h2-size: 44px;
+  --font-rt-h2-weight: 800;
+  --font-rt-h2-lh: 1;
+  --font-rt-h3-family: "Chivo", sans-serif;
+  --font-rt-h3-size: 22px;
+  --font-rt-h3-weight: 700;
+  --font-rt-h3-lh: 1.25;
+  --font-lead-family: "Chivo", sans-serif;
+  --font-lead-size: 21px;
+  --font-lead-weight: 400;
+  --font-lead-lh: 1.5;
+  --font-display-page-family: "Big Shoulders", sans-serif;
+  --font-display-page-size: 136px;
+  --font-display-page-weight: 900;
+  --font-display-page-lh: 0.86;
+  --font-price-family: "Big Shoulders", sans-serif;
+  --font-price-size: 56px;
+  --font-price-weight: 800;
+  --font-price-lh: 1;
+  --font-mono-caps-family: "Chivo", sans-serif;
+  --font-mono-caps-size: 13px;
+  --font-mono-caps-weight: 600;
+  --font-mono-caps-lh: 1.4;
+  --font-call-number-family: "Big Shoulders", sans-serif;
+  --font-call-number-size: 36px;
+  --font-call-number-weight: 800;
+  --font-call-number-lh: 1;
+  --font-eta-figure-family: "Big Shoulders", sans-serif;
+  --font-eta-figure-size: 132px;
+  --font-eta-figure-weight: 900;
+  --font-eta-figure-lh: 0.86;
+  --font-hero-line-family: "Big Shoulders", sans-serif;
+  --font-hero-line-size: 104px;
+  --font-hero-line-weight: 900;
+  --font-hero-line-lh: 0.9;
+  --font-mega-figure-family: "Big Shoulders", sans-serif;
+  --font-mega-figure-size: 380px;
+  --font-mega-figure-weight: 900;
+  --font-mega-figure-lh: 0.8;
+  --font-index-title-family: "Big Shoulders", sans-serif;
+  --font-index-title-size: 116px;
+  --font-index-title-weight: 900;
+  --font-index-title-lh: 0.86;
+  --font-poster-family: "Big Shoulders", sans-serif;
+  --font-poster-size: 180px;
+  --font-poster-weight: 900;
+  --font-poster-lh: 0.84;
+  --font-quote-large-family: "Chivo", sans-serif;
+  --font-quote-large-size: 44px;
+  --font-quote-large-weight: 500;
+  --font-quote-large-lh: 1.18;
+  --font-board-row-family: "Chivo", sans-serif;
+  --font-board-row-size: 20px;
+  --font-board-row-weight: 500;
+  --font-board-row-lh: 1.3;
+  --font-index-compact-family: "Big Shoulders", sans-serif;
+  --font-index-compact-size: 72px;
+  --font-index-compact-weight: 900;
+  --font-index-compact-lh: 0.9;
+  --font-statement-family: "Big Shoulders", sans-serif;
+  --font-statement-size: 112px;
+  --font-statement-weight: 900;
+  --font-statement-lh: 0.9;
+}
+
+/* Typography Classes */
+.display {
+  font-family: var(--font-display-family);
+  font-size: var(--font-display-size);
+  font-weight: var(--font-display-weight);
+  line-height: var(--font-display-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.heading-2 {
+  font-family: var(--font-heading-2-family);
+  font-size: var(--font-heading-2-size);
+  font-weight: var(--font-heading-2-weight);
+  line-height: var(--font-heading-2-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.heading-3 {
+  font-family: var(--font-heading-3-family);
+  font-size: var(--font-heading-3-size);
+  font-weight: var(--font-heading-3-weight);
+  line-height: var(--font-heading-3-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.body {
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-weight);
+  line-height: var(--font-body-lh);
+  color: var(--color-frost);
+}
+
+.body-small {
+  font-family: var(--font-body-small-family);
+  font-size: var(--font-body-small-size);
+  font-weight: var(--font-body-small-weight);
+  line-height: var(--font-body-small-lh);
+  color: var(--color-mist);
+}
+
+.label {
+  font-family: var(--font-label-family);
+  font-size: var(--font-label-size);
+  font-weight: var(--font-label-weight);
+  line-height: var(--font-label-lh);
+  color: var(--color-frost);
+}
+
+.eyebrow {
+  font-family: var(--font-eyebrow-family);
+  font-size: var(--font-eyebrow-size);
+  font-weight: var(--font-eyebrow-weight);
+  line-height: var(--font-eyebrow-lh);
+  text-transform: uppercase;
+  color: var(--color-mist);
+}
+
+.stat-figure {
+  font-family: var(--font-stat-figure-family);
+  font-size: var(--font-stat-figure-size);
+  font-weight: var(--font-stat-figure-weight);
+  line-height: var(--font-stat-figure-lh);
+  color: var(--color-frost);
+}
+
+.heading-4 {
+  font-family: var(--font-heading-4-family);
+  font-size: var(--font-heading-4-size);
+  font-weight: var(--font-heading-4-weight);
+  line-height: var(--font-heading-4-lh);
+  color: var(--color-frost);
+}
+
+.quote {
+  font-family: var(--font-quote-family);
+  font-size: var(--font-quote-size);
+  font-weight: var(--font-quote-weight);
+  line-height: var(--font-quote-lh);
+  color: var(--color-frost);
+}
+
+.mono {
+  font-family: var(--font-mono-family);
+  font-size: var(--font-mono-size);
+  font-weight: var(--font-mono-weight);
+  line-height: var(--font-mono-lh);
+  color: var(--color-mist);
+}
+
+.list {
+  font-family: var(--font-list-family);
+  font-size: var(--font-list-size);
+  font-weight: var(--font-list-weight);
+  line-height: var(--font-list-lh);
+  color: var(--color-frost);
+}
+
+.rt-h1 {
+  font-family: var(--font-rt-h1-family);
+  font-size: var(--font-rt-h1-size);
+  font-weight: var(--font-rt-h1-weight);
+  line-height: var(--font-rt-h1-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.rt-h2 {
+  font-family: var(--font-rt-h2-family);
+  font-size: var(--font-rt-h2-size);
+  font-weight: var(--font-rt-h2-weight);
+  line-height: var(--font-rt-h2-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.rt-h3 {
+  font-family: var(--font-rt-h3-family);
+  font-size: var(--font-rt-h3-size);
+  font-weight: var(--font-rt-h3-weight);
+  line-height: var(--font-rt-h3-lh);
+  color: var(--color-frost);
+}
+
+.lead {
+  font-family: var(--font-lead-family);
+  font-size: var(--font-lead-size);
+  font-weight: var(--font-lead-weight);
+  line-height: var(--font-lead-lh);
+  color: var(--color-mist);
+}
+
+.display-page {
+  font-family: var(--font-display-page-family);
+  font-size: var(--font-display-page-size);
+  font-weight: var(--font-display-page-weight);
+  line-height: var(--font-display-page-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.price {
+  font-family: var(--font-price-family);
+  font-size: var(--font-price-size);
+  font-weight: var(--font-price-weight);
+  line-height: var(--font-price-lh);
+  color: var(--color-frost);
+}
+
+.mono-caps {
+  font-family: var(--font-mono-caps-family);
+  font-size: var(--font-mono-caps-size);
+  font-weight: var(--font-mono-caps-weight);
+  line-height: var(--font-mono-caps-lh);
+  text-transform: uppercase;
+  color: var(--color-mist);
+}
+
+.call-number {
+  font-family: var(--font-call-number-family);
+  font-size: var(--font-call-number-size);
+  font-weight: var(--font-call-number-weight);
+  line-height: var(--font-call-number-lh);
+  color: var(--color-frost);
+}
+
+.eta-figure {
+  font-family: var(--font-eta-figure-family);
+  font-size: var(--font-eta-figure-size);
+  font-weight: var(--font-eta-figure-weight);
+  line-height: var(--font-eta-figure-lh);
+  color: var(--color-frost);
+}
+
+.hero-line {
+  font-family: var(--font-hero-line-family);
+  font-size: var(--font-hero-line-size);
+  font-weight: var(--font-hero-line-weight);
+  line-height: var(--font-hero-line-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.mega-figure {
+  font-family: var(--font-mega-figure-family);
+  font-size: var(--font-mega-figure-size);
+  font-weight: var(--font-mega-figure-weight);
+  line-height: var(--font-mega-figure-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.index-title {
+  font-family: var(--font-index-title-family);
+  font-size: var(--font-index-title-size);
+  font-weight: var(--font-index-title-weight);
+  line-height: var(--font-index-title-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.poster {
+  font-family: var(--font-poster-family);
+  font-size: var(--font-poster-size);
+  font-weight: var(--font-poster-weight);
+  line-height: var(--font-poster-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.quote-large {
+  font-family: var(--font-quote-large-family);
+  font-size: var(--font-quote-large-size);
+  font-weight: var(--font-quote-large-weight);
+  line-height: var(--font-quote-large-lh);
+  color: var(--color-frost);
+}
+
+.board-row {
+  font-family: var(--font-board-row-family);
+  font-size: var(--font-board-row-size);
+  font-weight: var(--font-board-row-weight);
+  line-height: var(--font-board-row-lh);
+  color: var(--color-frost);
+}
+
+.index-compact {
+  font-family: var(--font-index-compact-family);
+  font-size: var(--font-index-compact-size);
+  font-weight: var(--font-index-compact-weight);
+  line-height: var(--font-index-compact-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
+.statement {
+  font-family: var(--font-statement-family);
+  font-size: var(--font-statement-size);
+  font-weight: var(--font-statement-weight);
+  line-height: var(--font-statement-lh);
+  text-transform: uppercase;
+  color: var(--color-frost);
+}
+
