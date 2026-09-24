@@ -23,6 +23,209 @@ import {
   WhatsAppIcon,
 } from './icons';
 
+/**
+ * Four-step booking wizard for the hero.
+ *
+ * Replaces a six-field form (make, model, year, service, phone, city) with
+ * four one-decision screens. The reasoning: a driver standing next to a locked
+ * car knows the licence plate by heart but often not the exact trim or year,
+ * so the plate plus an RDW lookup removes three fields and a moment of doubt.
+ *
+ * The two icon questions are not filler — together they determine the key type
+ * and therefore the price, which lets the last step show a real figure instead
+ * of asking for a phone number in exchange for nothing.
+ *
+ * Anyone without a Dutch plate (foreign car, helping a friend) can skip
+ * straight to the plain form via the escape link, so the lookup never becomes
+ * a dead end.
+ */
+
+type StartType = 'push' | 'key';
+type RemoteType = 'yes' | 'no';
+type WorkingKeyType = 'yes' | 'no';
+
+interface Vehicle {
+  merk: string;
+  model: string;
+  bouwjaar: string;
+}
+
+interface Props {
+  /** Rendered when the visitor says they do not have a plate to hand. */
+  fallback?: React.ReactNode;
+  city?: string;
+}
+
+const TOTAL_STEPS = 5;
+
+/** Key type follows from the two icon answers, and the price follows from that. */
+function quoteFor(start: StartType | null, remote: RemoteType | null, workingKey: WorkingKeyType | null) {
+  if (workingKey === 'no') {
+    return {
+      service: 'Alle sleutels kwijt (noodaanmaak)',
+      from: SITE_CONFIG.prices.allKeysLost,
+    };
+  }
+  if (start === 'push') {
+    return {
+      service: 'Smart key / keyless bijmaken',
+      from: SITE_CONFIG.prices.smartKey,
+    };
+  }
+  if (remote === 'yes') {
+    return {
+      service: 'Afstandsbediening-sleutel bijmaken',
+      from: SITE_CONFIG.prices.remote,
+    };
+  }
+  return {
+    service: 'Transpondersleutel bijmaken',
+    from: SITE_CONFIG.prices.transponder,
+  };
+}
+
+export default function VehicleWizard({ fallback, city = '' }: Props) {
+  const [step, setStep] = useState<number | 'success'>(1);
+  const [goingBack, setGoingBack] = useState(false);
+  const [showFallback, setShowFallback] = useState(false);
+
+  const [kenteken, setKenteken] = useState('');
+  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [lookupState, setLookupState] = useState<'idle' | 'busy' | 'fail'>('idle');
+
+  const [startType, setStartType] = useState<StartType | null>(null);
+  const [remote, setRemote] = useState<RemoteType | null>(null);
+  const [workingKey, setWorkingKey] = useState<WorkingKeyType | null>(null);
+
+  const [phone, setPhone] = useState('');
+  const [postcode, setPostcode] = useState(city);
+  const [honeypot, setHoneypot] = useState('');
+  const [sending, setSending] = useState(false);
+
+  const lastLookup = useRef('');
+
+  const go = useCallback((next: number) => {
+    setGoingBack(next < step);
+    setStep(next);
+  }, [step]);
+
+  const plateDigits = kenteken.replace(/[^A-Za-z0-9]/g, '');
+
+  /**
+   * RDW lookup. Never blocks progress: a failure or a timeout just means the
+   * vehicle box stays empty and the visitor carries on.
+   */
+  const lookup = useCallback(async () => {
+    const q = plateDigits.toUpperCase();
+    if (q.length < 4 || q === lastLookup.current) return;
+    lastLookup.current = q;
+    setLookupState('busy');
+    try {
+      const res = await fetch(`/api/kenteken?q=${encodeURIComponent(q)}`);
+      const json = await res.json();
+      if (json.success && json.data?.merk) {
+        setVehicle({
+          merk: json.data.merk,
+          model: json.data.model,
+          bouwjaar: json.data.bouwjaar,
+        });
+        setLookupState('idle');
+      } else {
+        setVehicle(null);
+        setLookupState('fail');
+      }
+    } catch {
+      setVehicle(null);
+      setLookupState('fail');
+    }
+  }, [plateDigits]);
+
+  /**
+   * Look the plate up while the visitor is still typing, rather than only on
+   * blur. A Dutch plate is six characters, so as soon as six are entered we
+   * have enough to ask. This matters because the confirmation ("SKODA FABIA,
+   * 2022") is the moment that earns trust — waiting for blur means anyone who
+   * taps "Verder" straight away never sees it.
+   */
+  useEffect(() => {
+    if (plateDigits.length < 6) return;
+    const t = setTimeout(() => { void lookup(); }, 450);
+    return () => clearTimeout(t);
+  }, [plateDigits, lookup]);
+
+  const quote = quoteFor(startType, remote, workingKey);
+
+  /*
+   * What we can actually do for this car.
+   *
+   * Shown before the price rather than after it: a visitor who reads "vanaf
+   * €249" and only then learns we cannot key their 2016 Mercedes has already
+   * cost us the click and is about to cost us the phone call. `workingKey`
+   * decides the scenario — no working key is all-keys-lost, which is the
+   * harder job and has stricter limits.
+   */
+  const limit = serviceLimit(
+    vehicle?.merk,
+    vehicle?.bouwjaar,
+    workingKey === 'no' ? 'akl' : 'add-key',
+  );
+
+  function buildWhatsAppUrl() {
+    const lines = [
+      'Hallo Autosleutel24!',
+      '',
+      `Kenteken: ${kenteken || 'niet ingevuld'}`,
+      vehicle ? `Auto: ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar})` : null,
+      `Sleuteltype: ${quote.service}`,
+      `Werkende sleutel: ${workingKey === 'yes' ? 'Ja' : 'Nee, alle sleutels kwijt'}`, 
+      `Start met: ${startType === 'push' ? 'Startknop' : 'Sleutel in contact'}`,
+      postcode ? `Postcode: ${postcode}` : null,
+      phone ? `Telefoon: ${phone}` : null,
+      '',
+      'Graag hoor ik de prijs en de aankomsttijd.',
+    ].filter(Boolean);
+    return `https://wa.me/${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`;
+  }
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setSending(true);
+
+    const cookie = (name: string) => {
+      const m = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return m ? m[2] : null;
+    };
+
+    fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        brand: vehicle?.merk || 'Onbekend',
+        model: vehicle ? `${kenteken} — ${vehicle.model}` : kenteken,
+        year: vehicle?.bouwjaar || '',
+        service: quote.service,
+        workingKey: workingKey === 'yes' ? 'Ja' : 'Nee',
+        location: postcode,
+        postcode,
+        phone,
+        source: 'hero_wizard',
+        company: honeypot,
+        gclid: cookie('gclid'),
+        wbraid: cookie('wbraid'),
+        gbraid: cookie('gbraid'),
+        msclkid: cookie('msclkid'),
+      }),
+      keepalive: true,
+    }).catch((err) => console.error('Error saving lead', err));
+
+    reportLeadConversion({
+      source: 'hero_wizard',
+      phone,
+      postcode,
+    });
+
+
+
 
     setStep('success');
     setSending(false);
