@@ -20,6 +20,8 @@ export default function HorizontalKentekenForm() {
   /* The three fields the RDW lookup returns that this form actually reads. */
   const [vehicle, setVehicle] = useState<{ merk: string; model: string; bouwjaar: string } | null>(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [workingKey, setWorkingKey] = useState<WorkingKeyType | null>(null);
   const [startType, setStartType] = useState<StartType | null>(null);
 
@@ -75,64 +77,70 @@ export default function HorizontalKentekenForm() {
     }
   };
 
-  const buildWhatsappUrl = () => {
-    let msg = `Hallo, ik wil graag een prijsopgave voor een autosleutel.\n\n`;
-    msg += `*Kenteken:* ${kenteken || 'Niet ingevuld'}\n`;
-    if (vehicle) {
-      msg += `*Auto:* ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar})\n`;
-    }
-    if (quote) msg += `*Dienst:* ${quote.service} (vanaf €${quote.from})\n`;
-    if (postcode) msg += `*Locatie/Postcode:* ${postcode}\n`;
-    if (phone) msg += `*Telefoon:* ${phone}\n`;
-    return `https://wa.me/${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
-  };
-
-  const handleSubmit = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!kenteken) {
-      e.preventDefault();
-      alert('Vul alstublieft minimaal uw kenteken in om een exacte prijs te ontvangen.');
+    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!kenteken || !phone) {
+      alert('Vul alstublieft uw kenteken en telefoonnummer in.');
       return;
     }
+    
+    setIsSubmitting(true);
     
     const getCookie = (name: string) => {
       const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return match ? match[2] : null;
     };
     
-    fetch('/api/leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        brand: vehicle ? vehicle.merk : 'KENTEKEN AANVRAAG',
-        model: vehicle ? `${kenteken} - ${vehicle.model}` : kenteken,
-        year: vehicle ? vehicle.bouwjaar : 'N/A',
-        service: quote ? `Prijsopgave via kenteken — ${quote.service}` : 'Prijsopgave via kenteken',
-        // phone and postcode as their own fields: postcode is what routes a
-        // lead to the right partner, phone is what deduplicates it.
-        location: postcode,
-        postcode,
-        phone,
-        photoUrl: '',
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brand: vehicle ? vehicle.merk : 'KENTEKEN AANVRAAG',
+          model: vehicle ? `${kenteken} - ${vehicle.model}` : kenteken,
+          year: vehicle ? vehicle.bouwjaar : 'N/A',
+          service: quote ? `Prijsopgave via kenteken — ${quote.service}` : 'Prijsopgave via kenteken',
+          location: postcode,
+          postcode,
+          phone,
+          photoUrl: '',
+          source: 'kenteken_form',
+          scenario: quote?.scenario ?? null,
+          quotedPrice: quote ? quote.from : null,
+          gclid: getCookie('gclid'),
+          wbraid: getCookie('wbraid'),
+          gbraid: getCookie('gbraid'),
+          msclkid: getCookie('msclkid'),
+        }),
+      });
+
+      reportLeadConversion({
         source: 'kenteken_form',
-        scenario: quote?.scenario ?? null,
-        quotedPrice: quote ? quote.from : null,
-        gclid: getCookie('gclid'),
-        wbraid: getCookie('wbraid'),
-        gbraid: getCookie('gbraid'),
-        msclkid: getCookie('msclkid'),
-      }),
-      keepalive: true
-    }).catch(err => console.error("Error saving lead", err));
-
-    reportLeadConversion({
-      source: 'kenteken_form',
-      phone,
-      postcode,
-    });
-    window.oaiq?.('track', 'lead_created', { content_name: 'kenteken_form' });
-
-    (e.currentTarget as HTMLAnchorElement).href = buildWhatsappUrl();
+        phone,
+        postcode,
+      });
+      window.oaiq?.('track', 'lead_created', { content_name: 'kenteken_form' });
+      
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error("Error saving lead", err);
+      alert('Er ging iets mis. Probeer het opnieuw of bel ons direct.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (isSubmitted) {
+    return (
+      <div className={styles.card} style={{ textAlign: 'center', padding: '3rem 2rem' }}>
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--color-navy-surface)' }}>Aanvraag Ontvangen!</h3>
+        <p style={{ color: '#475569', fontSize: '1.1rem', maxWidth: '400px', margin: '0 auto' }}>Bedankt voor uw aanvraag. We hebben uw gegevens ontvangen en bellen u binnen 5 minuten met de exacte prijs.</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.card}>
@@ -213,16 +221,16 @@ export default function HorizontalKentekenForm() {
 
         {/* Submit */}
         <div className={styles.actionGroup}>
-          <a
-            href={`https://wa.me/${SITE_CONFIG.whatsapp}`}
+          <button
+            type="button"
             onClick={handleSubmit}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
             className={styles.btnSubmit}
+            disabled={isSubmitting}
+            style={{ cursor: 'pointer', border: 'none', fontFamily: 'inherit', fontSize: '1rem', fontWeight: 600 }}
           >
-            Prijs opvragen
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </a>
+            {isSubmitting ? 'Verzenden...' : 'Prijs opvragen'}
+            {!isSubmitting && <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>}
+          </button>
         </div>
 
       </div>
