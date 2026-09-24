@@ -105,7 +105,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
   const lastLookup = useRef('');
 
   const go = useCallback((next: number) => {
-    setGoingBack(next < step);
+    setGoingBack(typeof step === 'number' ? typeof step === 'number' && next < step : false);
     setStep(next);
   }, [step]);
 
@@ -262,7 +262,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {Array.from({ length: TOTAL_STEPS }, (_, i) => (
           <span
             key={i}
-            className={`${styles.tick} ${i < step ? styles.tickDone : ''}`}
+            className={`${styles.tick} ${typeof step === 'number' && i < step ? styles.tickDone : ''}`}
           >
             <span className={styles.tickFill} />
           </span>
@@ -270,9 +270,9 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       </div>
 
       <div className={styles.stepMeta}>
-        <span>Stap {step} van {TOTAL_STEPS}</span>
-        {step > 1 && (
-          <button type="button" className={styles.back} onClick={() => go(step - 1)}>
+        <span>Stap {step === 'success' ? TOTAL_STEPS : step} van {TOTAL_STEPS}</span>
+        {typeof step === 'number' && step > 1 && (
+          <button type="button" className={styles.back} onClick={() => go((step as number) - 1)}>
             Terug
           </button>
         )}
