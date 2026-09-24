@@ -178,6 +178,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }
           `}
         </Script>
+
+        {/* Google Ads Standalone gtag.js (AW-18315813515) - Added to guarantee conversions bypassing GTM complexity */}
+        <Script id="google-ads-script" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=AW-18315813515" />
+        <Script id="google-ads-config">
+          {`
+            if (window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') {
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              // Prevent duplicate pageviews if GA4 in GTM already tracks them
+              gtag('config', 'AW-18315813515', { send_page_view: false });
+            }
+          `}
+        </Script>
         {/* End Google Tag Manager */}
 
         {/*

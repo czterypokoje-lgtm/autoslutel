@@ -4,62 +4,51 @@ import { useEffect } from 'react';
 declare global {
   interface Window {
     dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
     uetq?: unknown[];
     oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
   }
 }
 
-/**
- * Every tel: and WhatsApp link on the site, wherever it sits — the hero's
- * "Bel direct", the sticky call bar, a footer link — is caught by this one
- * document-level listener, so there is no "wrong button" to wire up
- * separately. It only ever pushes to the dataLayer and lets the click
- * proceed untouched.
- *
- * It used to also call a global gtag_report_conversion() directly, with
- * preventDefault() first and the actual dial only happening inside that
- * call's callback. That is backwards for a phone click: if the callback
- * never fires — and it silently stopped after the standalone gtag.js script
- * was removed in favour of GTM's own Google Tag — the click did nothing at
- * all, no call, no error, nothing to see in Tag Assistant either. A missed
- * conversion ping costs nothing; a customer who tapped "Bel direct" and
- * nothing happened costs the job.
- *
- * The actual Google Ads "Click to call" tag already exists in GTM,
- * correctly configured — it only needs a Custom Event trigger listening for
- * click_to_call, which this file has always sent. GTM does the reporting;
- * this file's only job is the dataLayer push and staying out of the way of
- * the click itself.
- */
 export default function PhoneConversionTracker() {
   useEffect(() => {
     const handlePhoneClick = (e: MouseEvent) => {
       const target = (e.target as Element).closest('a');
       if (!target || !target.href) return;
 
-      window.dataLayer = window.dataLayer || [];
+      const isTel = target.href.startsWith('tel:');
+      const isWhatsApp = target.href.startsWith('https://wa.me') || target.href.includes('/whatsapp') || target.href.startsWith('https://api.whatsapp.com');
 
-      if (target.href.startsWith('tel:')) {
-        window.dataLayer.push({ event: 'click_to_call', link_url: target.href });
-        /*
-         * Microsoft Advertising. UET has no dataLayer and reads nothing GTM
-         * receives, so a call reported to Google was invisible to Bing — and
-         * for this business a phone call is the majority of real leads, so
-         * Bing was optimising against almost nothing. The goal in the Bing
-         * account must listen for this exact event action.
-         */
-        window.uetq = window.uetq || [];
-        window.uetq.push('event', 'click_to_call', { event_category: 'phone' });
-        // OpenAI Ads "Lead created" conversion — a phone call is the
-        // majority of this business's real leads, so it counts the same as
-        // a web form submit. window.oaiq only exists once marketing consent
-        // was granted and the pixel actually loaded (see src/lib/consent.ts);
-        // calling it beforehand would throw, hence the guard.
-        window.oaiq?.('track', 'lead_created', { content_name: 'phone_call' });
-        // Belt-and-suspenders server-side send — a phone click has no other
-        // server round-trip, so nothing else can catch it if a tracking
-        // blocker silently drops the client beacon above. No-ops server-side
-        // until OPENAI_ADS_API_KEY is configured (see the route itself).
+      if (!isTel && !isWhatsApp) return;
+
+      // Prevent immediate navigation so the tracking beacon has time to fire
+      e.preventDefault();
+      const destination = target.href;
+
+      // 1. DataLayer for GTM
+      window.dataLayer = window.dataLayer || [];
+      if (isTel) {
+        window.dataLayer.push({ event: 'click_to_call', link_url: destination });
+      } else {
+        window.dataLayer.push({ event: 'click_to_whatsapp', link_url: destination });
+      }
+
+      // 2. Direct Google Ads Conversion Ping (Guaranteed!)
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'conversion', {
+          'send_to': 'AW-18315813515/FoiPCLLl7NocEIvF1J1E'
+        });
+      }
+
+      // 3. Microsoft UET
+      window.uetq = window.uetq || [];
+      window.uetq.push('event', isTel ? 'click_to_call' : 'click_to_whatsapp', { event_category: isTel ? 'phone' : 'whatsapp' });
+
+      // 4. OpenAI Ads
+      window.oaiq?.('track', 'lead_created', { content_name: isTel ? 'phone_call' : 'whatsapp_click' });
+
+      // 5. Server-side fallback for tel:
+      if (isTel) {
         fetch('/api/track-call-conversion', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -68,24 +57,10 @@ export default function PhoneConversionTracker() {
         }).catch(() => {});
       }
 
-      if (
-        target.href.startsWith('https://wa.me') ||
-        target.href.includes('/whatsapp') ||
-        target.href.startsWith('https://api.whatsapp.com')
-      ) {
-        window.dataLayer.push({ event: 'click_to_whatsapp', link_url: target.href });
-
-        window.uetq = window.uetq || [];
-        window.uetq.push('event', 'click_to_whatsapp', { event_category: 'whatsapp' });
-
-        /*
-         * The OpenAI pixel was told about phone calls and not about WhatsApp,
-         * though both are the same act — a customer reaching out. Reported
-         * now, with the same guard: window.oaiq only exists once marketing
-         * consent was granted and the pixel actually loaded.
-         */
-        window.oaiq?.('track', 'lead_created', { content_name: 'whatsapp_click' });
-      }
+      // Proceed with navigation after 300ms to guarantee network request completion
+      setTimeout(() => {
+        window.location.href = destination;
+      }, 300);
     };
 
     document.addEventListener('click', handlePhoneClick);

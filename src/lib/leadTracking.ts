@@ -87,7 +87,14 @@ export function reportLeadConversion(lead: LeadConversion): void {
        normal path, but a standalone gtag.js has existed on this site before
        and this costs nothing if no gtag is present. */
     if (typeof window.gtag === 'function') {
-      window.gtag('event', 'generate_lead', { event_category: lead.source });
+      // Send directly to Google Ads via the explicit gtag.js loaded in layout.tsx
+      window.gtag('event', 'generate_lead', {
+        event_category: lead.source,
+        send_to: 'AW-18315813515',
+        // Enhanced Conversions for Leads user data
+        email: email,
+        phone_number: phone
+      });
     }
 
     /*
