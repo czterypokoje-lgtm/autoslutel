@@ -40,7 +40,7 @@
   flex-direction: column;
   justify-content: flex-end;
   padding-bottom: 6rem;
-  background-image: linear-gradient(to top, #0d121c 0%, rgba(13, 18, 28, 0.6) 50%, rgba(13, 18, 28, 0.4) 100%), url('/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp'); /* Assuming we have a car image or we'll use a placeholder */
+  background-image: linear-gradient(to top, #0d121c 0%, rgba(13, 18, 28, 0.7) 40%, rgba(13, 18, 28, 0.2) 100%), url('/images/seo/audi_forest_hero.webp'); /* Assuming we have a car image or we'll use a placeholder */
   background-size: cover;
   background-position: center;
 }
@@ -61,8 +61,8 @@
 
 .heroTitle {
   font-family: 'Anton', sans-serif;
-  font-size: clamp(3rem, 8vw, 6rem);
-  line-height: 0.9;
+  font-size: clamp(3.5rem, 8.5vw, 7.5rem);
+  line-height: 0.85;
   text-transform: uppercase;
   margin: 0;
   max-width: 800px;
@@ -70,17 +70,16 @@
 }
 
 .heroRight {
-  max-width: 400px;
-  background: rgba(13, 18, 28, 0.8);
-  padding: 1.5rem;
-  border-radius: 8px;
-  backdrop-filter: blur(4px);
+  max-width: 420px;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0;
 }
 
 .heroDesc {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #cbd5e1;
+  color: #f1f5f9;
+  font-weight: 500;
   margin-bottom: 1.5rem;
 }
 
@@ -98,7 +97,7 @@
 
 .btnOrange {
   background-color: #f97316;
-  color: #fff;
+  color: #0f172a;
   font-weight: 700;
   text-align: center;
   padding: 1rem 1.5rem;
@@ -116,7 +115,7 @@
 }
 
 .btnOutline {
-  background-color: transparent;
+  background-color: #111827;
   color: #fff;
   font-weight: 700;
   text-align: center;
