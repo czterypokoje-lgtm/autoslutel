@@ -380,6 +380,9 @@ export default function JobEditor({
 
 
         <h2 style={{ marginTop: 24, borderTop: '1px solid #e2e8f0', paddingTop: 24 }}>ERP: Financiën & Kosten (Job Costing)</h2>
+        <p style={{ fontSize: 12, color: '#b45309', background: '#fffbeb', padding: 8, borderRadius: 6, marginTop: 8 }}>
+          Let op: de velden onder &quot;Omzet&quot; worden nu alleen opgeslagen — ze tellen nog niet mee in de Brutowinst hieronder. Brutowinst gebruikt alleen de Definitieve Prijs.
+        </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
           <div style={{ background: '#f8fafc', padding: 16, borderRadius: 8 }}>
             <h3 style={{ fontSize: 14, marginTop: 0, marginBottom: 12 }}>Omzet (Revenue)</h3>
