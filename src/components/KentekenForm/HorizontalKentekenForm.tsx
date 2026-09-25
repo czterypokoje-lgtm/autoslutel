@@ -1,6 +1,7 @@
 'use client';
 
 import { reportLeadConversion } from '@/lib/leadTracking';
+import { tagLeadClaritySession } from '@/lib/clarity';
 
 import React, { useState } from 'react';
 import styles from './HorizontalKentekenForm.module.css';
@@ -92,7 +93,7 @@ export default function HorizontalKentekenForm() {
     };
     
     try {
-      await fetch('/api/leads', {
+      const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -113,6 +114,8 @@ export default function HorizontalKentekenForm() {
           msclkid: getCookie('msclkid'),
         }),
       });
+      const json = await res.json().catch(() => null);
+      tagLeadClaritySession(json?.data?.id);
 
       reportLeadConversion({
         source: 'kenteken_form',

@@ -1,6 +1,7 @@
 'use client';
 
 import { reportLeadConversion } from '@/lib/leadTracking';
+import { tagLeadClaritySession } from '@/lib/clarity';
 
 import React, { useState } from 'react';
 
@@ -45,7 +46,10 @@ export default function ContactForm() {
         gbraid: getCookie('gbraid'),
       }),
       keepalive: true,
-    }).catch(err => console.error('Error saving lead', err));
+    })
+      .then((r) => r.json())
+      .then((d) => tagLeadClaritySession(d?.data?.id))
+      .catch(err => console.error('Error saving lead', err));
 
     try {
       const response = await fetch('https://formspree.io/f/mgavvqvd', {

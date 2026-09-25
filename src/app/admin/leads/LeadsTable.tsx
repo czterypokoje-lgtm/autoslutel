@@ -82,6 +82,17 @@ function timeAgo(dateStr: string) {
   return `${Math.floor(hrs / 24)} dagen geleden`;
 }
 
+/** "25 sep 14:32" — the actual moment, for when "2 uur geleden" isn't precise enough. */
+function exactTime(dateStr: string) {
+  return new Date(dateStr).toLocaleString('nl-NL', {
+    timeZone: 'Europe/Amsterdam',
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => void }) {
   const [tab, setTab] = useState('Algemeen');
 
@@ -369,7 +380,9 @@ export default function LeadsTable({ rows, staleBefore, repeats }: { rows: LeadR
 
                 <div className={styles.rowStatus}>
                   <Badge tone={leadTone(status)}>{STATUS_LABELS[status] || status}</Badge>
-                  <div style={{fontSize: '11px', color: 'var(--crm-muted)', margin: 0}}>{timeAgo(row.created_at)}</div>
+                  <div style={{fontSize: '11px', color: 'var(--crm-muted)', margin: 0}} title={timeAgo(row.created_at)}>
+                    {exactTime(row.created_at)}
+                  </div>
                 </div>
 
                 {/*

@@ -11,6 +11,7 @@ import { CAR_MODELS, BRANDS_LIST, SERVICES_LIST, YEARS_LIST } from "@/data/carMo
 import { SITE_CONFIG } from "@/config/site.config";
 import { toWebp } from "@/lib/toWebp";
 import { reportLeadConversion } from "@/lib/leadTracking";
+import { tagLeadClaritySession } from "@/lib/clarity";
 import styles from "./LeadCaptureForm.module.css";
 
 declare global {
@@ -128,7 +129,10 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         msclkid: getCookie('msclkid'),
       }),
       keepalive: true
-    }).catch(err => console.error("Error saving lead", err));
+    })
+      .then((r) => r.json())
+      .then((d) => tagLeadClaritySession(d?.data?.id))
+      .catch(err => console.error("Error saving lead", err));
     /*
      * Reported here, synchronously, rather than from the fetch's .then —
      * the WhatsApp handoff two statements below can navigate this page away

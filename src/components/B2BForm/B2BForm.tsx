@@ -1,6 +1,7 @@
 'use client';
 
 import { reportLeadConversion } from '@/lib/leadTracking';
+import { tagLeadClaritySession } from '@/lib/clarity';
 
 import React, { useState } from 'react';
 import styles from './B2BForm.module.css';
@@ -63,6 +64,8 @@ export default function B2BForm({
         }),
       });
       if (!res.ok) throw new Error('mislukt');
+      const json = await res.json().catch(() => null);
+      tagLeadClaritySession(json?.data?.id);
 
       /* Unlike the consumer forms, this one stays on the page and shows a
          confirmation — so it can wait for the response and only report a

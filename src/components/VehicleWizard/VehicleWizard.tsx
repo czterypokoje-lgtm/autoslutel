@@ -8,6 +8,7 @@ declare global {
 }
 
 import { reportLeadConversion } from '@/lib/leadTracking';
+import { tagLeadClaritySession } from '@/lib/clarity';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styles from './VehicleWizard.module.css';
@@ -216,7 +217,10 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         msclkid: cookie('msclkid'),
       }),
       keepalive: true,
-    }).catch((err) => console.error('Error saving lead', err));
+    })
+      .then((r) => r.json())
+      .then((d) => tagLeadClaritySession(d?.data?.id))
+      .catch((err) => console.error('Error saving lead', err));
 
     reportLeadConversion({
       source: 'hero_wizard',

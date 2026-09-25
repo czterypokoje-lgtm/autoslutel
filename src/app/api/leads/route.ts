@@ -169,7 +169,13 @@ export async function POST(request: Request) {
       ...(initialStatus ? { status: initialStatus } : {}),
     };
 
-    let { data, error } = await supabase.from('leads').insert([enrichedRow]);
+    /*
+     * .select('id') so the response can hand the id back to the browser —
+     * without it Supabase returns no row at all on insert, and the client
+     * has no way to tag this exact lead in anything (Clarity's custom tags,
+     * a "thanks, we'll call you" reference number, etc).
+     */
+    let { data, error } = await supabase.from('leads').insert([enrichedRow]).select('id').single();
 
     // PGRST204 / 42703 = column not found. The migration has not been run yet;
     // fall back to the shape the current table does have.
@@ -178,7 +184,7 @@ export async function POST(request: Request) {
         'leads table is missing the new columns — falling back to legacy insert. ' +
           'Run supabase/migrations/0001_leads_sellable.sql to enable phone/consent capture.'
       );
-      ({ data, error } = await supabase.from('leads').insert([legacyRow]));
+      ({ data, error } = await supabase.from('leads').insert([legacyRow]).select('id').single());
     }
 
     if (error) {

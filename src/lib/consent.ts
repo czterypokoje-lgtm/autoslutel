@@ -34,7 +34,7 @@ declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
-    clarity?: unknown;
+    clarity?: (...args: unknown[]) => void;
     oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
     uetq?: unknown[];
   }
