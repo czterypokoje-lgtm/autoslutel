@@ -1,25 +1,29 @@
 import { NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
+import { createClient } from '@supabase/supabase-js';
+import { AD_CLICK_PARAMS } from '@/lib/adClickId';
 
 /**
- * Server-side OpenAI Ads conversion for phone calls.
+ * Two unrelated jobs share this route because they share a trigger (a tel:/
+ * WhatsApp click) and a reason to exist server-side (an ad blocker or
+ * tracking-protection browser can silently drop the client-side beacons in
+ * PhoneConversionTracker):
  *
- * The browser pixel (src/lib/consent.ts loadOpenAIPixel + PhoneConversionTracker)
- * already sends this same event client-side. This route exists because a
- * phone click has no other server round-trip at all — nothing here can double
- * with the web-form leads, which get their own client-side `oaiq('track', ...)`
- * call and are not sent through this route. A tracking-protection browser or
- * an ad blocker can silently drop the client beacon; this survives that,
- * the same reasoning as Google Ads' "Enhanced conversions for leads".
+ *  1. Server-side OpenAI Ads conversion for phone calls — consent-gated,
+ *     unchanged from before (see the gate below).
+ *  2. Anonymous click-id capture into call_clicks, always, regardless of
+ *     consent or whether OPENAI_ADS_API_KEY is even set — this is what lets
+ *     api/admin/jobs later attribute a phone-only completed job back to an
+ *     ad click. Nothing here is sent to Google/OpenAI; it only becomes part
+ *     of a real export once a job claims it and that export runs through
+ *     its own consent-gated pipeline (api/export-conversions). See
+ *     supabase/migrations/0053_call_click_attribution.sql.
  *
- * Consent is read from the same first-party cookie the ConsentBanner already
- * writes (src/lib/consent.ts), not from anything the client claims in the
- * request body — sending lead data to an ad platform without marketing
- * consent is the same AVG violation whether it happens in the browser or on
- * the server.
- *
- * Silently a no-op (200, does nothing) until OPENAI_ADS_API_KEY is set, so
- * this is safe to deploy before that key exists.
+ * Consent for (1) is read from the same first-party cookie the ConsentBanner
+ * already writes (src/lib/consent.ts), not from anything the client claims
+ * in the request body — sending lead data to an ad platform without
+ * marketing consent is the same AVG violation whether it happens in the
+ * browser or on the server.
  */
 
 export const dynamic = 'force-dynamic';
@@ -35,7 +39,48 @@ function hasMarketingConsent(request: Request): boolean {
   return /^[01]{2}$/.test(value) && value[1] === '1';
 }
 
+function clean(value: unknown, max = 200): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed.slice(0, max) : null;
+}
+
+/** Best-effort only: a visitor clicking a phone number must never see this fail. */
+async function recordCallClick(body: Record<string, unknown>): Promise<void> {
+  const hasAnyClickId = AD_CLICK_PARAMS.some((key) => clean(body[key]));
+  if (!hasAnyClickId) return;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.storage_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.storage_SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !supabaseKey) return;
+
+  try {
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    await supabase.from('call_clicks').insert({
+      gclid: clean(body.gclid),
+      wbraid: clean(body.wbraid),
+      gbraid: clean(body.gbraid),
+      msclkid: clean(body.msclkid),
+      source_url: clean(body.sourceUrl, 500),
+    });
+  } catch (err) {
+    console.error('[call-click] failed to record click', err);
+  }
+}
+
 export async function POST(request: Request) {
+  let body: Record<string, unknown> = {};
+  try {
+    body = await request.json();
+  } catch {
+    // No body is fine — everything read from it below is optional.
+  }
+  const sourceUrl = clean(body.sourceUrl, 500) ?? '';
+
+  // Always, regardless of consent or configuration below.
+  await recordCallClick(body);
+
   const apiKey = process.env.OPENAI_ADS_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ skipped: true, reason: 'not_configured' });
@@ -43,14 +88,6 @@ export async function POST(request: Request) {
 
   if (!hasMarketingConsent(request)) {
     return NextResponse.json({ skipped: true, reason: 'no_consent' });
-  }
-
-  let sourceUrl = '';
-  try {
-    const body = await request.json();
-    sourceUrl = typeof body?.sourceUrl === 'string' ? body.sourceUrl.slice(0, 500) : '';
-  } catch {
-    // No body is fine — sourceUrl is optional context, not required.
   }
 
   try {

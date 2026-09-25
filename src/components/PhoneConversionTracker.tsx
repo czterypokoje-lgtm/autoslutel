@@ -1,5 +1,6 @@
 'use client';
 import { useEffect } from 'react';
+import { captureAdClickIdFromUrl, readAdClickId } from '@/lib/adClickId';
 
 declare global {
   interface Window {
@@ -11,6 +12,13 @@ declare global {
 }
 
 export default function PhoneConversionTracker() {
+  // If this landing carries an ad click id, remember it — a phone call from
+  // this visitor never touches /api/leads, so this is the only place that id
+  // can be captured before it's gone. See src/lib/adClickId.ts.
+  useEffect(() => {
+    captureAdClickIdFromUrl();
+  }, []);
+
   useEffect(() => {
     const handlePhoneClick = (e: MouseEvent) => {
       const target = (e.target as Element).closest('a');
@@ -47,15 +55,16 @@ export default function PhoneConversionTracker() {
       // 4. OpenAI Ads
       window.oaiq?.('track', 'lead_created', { content_name: isTel ? 'phone_call' : 'whatsapp_click' });
 
-      // 5. Server-side fallback for tel:
-      if (isTel) {
-        fetch('/api/track-call-conversion', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ sourceUrl: window.location.href }),
-          keepalive: true,
-        }).catch(() => {});
-      }
+      // 5. Server-side fallback (survives an ad blocker dropping the client
+      // pixels above) — also anonymously records the click id so a phone
+      // call that never fills in the web form can still be attributed to a
+      // completed job later. See src/lib/adClickId.ts.
+      fetch('/api/track-call-conversion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sourceUrl: window.location.href, ...readAdClickId() }),
+        keepalive: true,
+      }).catch(() => {});
 
       // Proceed with navigation after 300ms to guarantee network request completion
       setTimeout(() => {

@@ -4,6 +4,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { TIME_SLOTS, trimTime } from '@/lib/crmJobs';
 import { jobBriefing } from '@/lib/whatsapp';
 import { sendTelegram } from '@/lib/telegram';
+import { CALL_CLICK_WINDOW_MINUTES } from '@/lib/adClickId';
 
 export const dynamic = 'force-dynamic';
 
@@ -139,6 +140,47 @@ export async function POST(request: Request) {
       ? Math.round(quoted * commissionPct) / 100
       : null);
 
+  let supabase;
+  try {
+    supabase = await createSupabaseServerClient();
+  } catch {
+    return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
+  }
+
+  /*
+   * A job with no lead_id came in by phone — it never touched /api/leads, so
+   * it carries no click id. The closest unclaimed tel:/WhatsApp click within
+   * CALL_CLICK_WINDOW_MINUTES is, in practice, almost always the one that
+   * caused this call (one phone line, one business). A job that already has
+   * a lead_id got its click id (if any) from that lead instead — see
+   * api/export-conversions, which reads both sources.
+   */
+  let claimedClick: {
+    id: string;
+    gclid: string | null;
+    wbraid: string | null;
+    gbraid: string | null;
+    msclkid: string | null;
+    created_at: string;
+  } | null = null;
+
+  if (!leadId) {
+    const windowStart = new Date(Date.now() - CALL_CLICK_WINDOW_MINUTES * 60_000).toISOString();
+    const { data: candidate, error: candidateError } = await supabase
+      .from('call_clicks')
+      .select('id, gclid, wbraid, gbraid, msclkid, created_at')
+      .is('claimed_by_job_id', null)
+      .gte('created_at', windowStart)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (candidateError) {
+      console.error('call_clicks lookup failed:', candidateError.message);
+    } else {
+      claimedClick = candidate;
+    }
+  }
+
   const row = {
     lead_id: leadId,
     order_id: orderId,
@@ -164,6 +206,11 @@ export async function POST(request: Request) {
     status: 'gepland',
     lat: null as number | null,
     lng: null as number | null,
+    gclid: claimedClick?.gclid ?? null,
+    wbraid: claimedClick?.wbraid ?? null,
+    gbraid: claimedClick?.gbraid ?? null,
+    msclkid: claimedClick?.msclkid ?? null,
+    click_captured_at: claimedClick?.created_at ?? null,
   };
 
   if (row.postcode && row.city) {
@@ -188,18 +235,31 @@ export async function POST(request: Request) {
     }
   }
 
-  let supabase;
-  try {
-    supabase = await createSupabaseServerClient();
-  } catch {
-    return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
-  }
-
   const { data, error } = await supabase.from('jobs').insert(row).select('id').single();
 
   if (error) {
     console.error('CRM job insert failed:', error.message);
     return NextResponse.json({ error: 'Inplannen mislukt' }, { status: 500 });
+  }
+
+  /*
+   * Claimed only now that the job actually exists — an insert that fails
+   * above must leave the click available for the next attempt or the next
+   * real job, not burn it on a job that was never created.
+   *
+   * The `is('claimed_by_job_id', null)` guard is the same race-safety as the
+   * lookup above: if two jobs were somehow created back to back, only the
+   * first to reach this line keeps the click.
+   */
+  if (claimedClick) {
+    const { error: claimError } = await supabase
+      .from('call_clicks')
+      .update({ claimed_by_job_id: data.id })
+      .eq('id', claimedClick.id)
+      .is('claimed_by_job_id', null);
+    if (claimError) {
+      console.error('call_clicks claim failed:', claimError.message);
+    }
   }
 
   /*

@@ -17,18 +17,28 @@ interface ExportLead {
   conversion_time?: string | null;
 }
 
-const mapServiceToConversion = (service: string) => {
+/**
+ * The Google Ads account has exactly one offline-conversion action, named
+ * literally "Job Completed" (id 7780523985, type UPLOAD_CLICKS) — Google
+ * matches an import by exact name, so this is the only string that may ever
+ * go in the CSV's Conversion Name column. It used to be suffixed per service
+ * ("Job Completed - AKL" etc.), which meant every row failed to import.
+ */
+const GOOGLE_ADS_CONVERSION_NAME = 'Job Completed';
+
+/** Internal-only categorisation, used purely to suggest a starting job value below. */
+const categorizeService = (service: string) => {
   const s = service.toLowerCase();
-  if (s.includes('kwijt') || s.includes('akl')) return 'Job Completed - AKL';
-  if (s.includes('open') || s.includes('dichtgevallen')) return 'Job Completed - Open Door';
-  if (s.includes('contact') || s.includes('ignition')) return 'Job Completed - Ignition';
-  return 'Job Completed - Extra Key';
+  if (s.includes('kwijt') || s.includes('akl')) return 'AKL';
+  if (s.includes('open') || s.includes('dichtgevallen')) return 'Open Door';
+  if (s.includes('contact') || s.includes('ignition')) return 'Ignition';
+  return 'Extra Key';
 };
 
-const getSuggestedValue = (conversionName: string) => {
-  if (conversionName === 'Job Completed - AKL') return 310;
-  if (conversionName === 'Job Completed - Open Door') return 182;
-  if (conversionName === 'Job Completed - Ignition') return 320;
+const getSuggestedValue = (category: string) => {
+  if (category === 'AKL') return 310;
+  if (category === 'Open Door') return 182;
+  if (category === 'Ignition') return 320;
   return 206; // Extra Key
 };
 
@@ -72,7 +82,6 @@ export default function OfflineConversionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [jobValues, setJobValues] = useState<Record<string, number>>({});
-  const [conversionNames, setConversionNames] = useState<Record<string, string>>({});
   const [marking, setMarking] = useState(false);
 
   useEffect(() => {
@@ -84,7 +93,6 @@ export default function OfflineConversionsPage() {
           setNegative(data.negative || []);
 
           const vals: Record<string, number> = {};
-          const names: Record<string, string> = {};
           /*
            * Prefill the value from what the job actually earned.
            *
@@ -106,15 +114,13 @@ export default function OfflineConversionsPage() {
            * estimates as revenue.
            */
           (data.positive || []).forEach((lead: ExportLead) => {
-            const cName = mapServiceToConversion(lead.service || '');
-            names[lead.id] = cName;
+            const category = categorizeService(lead.service || '');
             vals[lead.id] =
               lead.job_value != null && lead.job_value > 0
                 ? lead.job_value
-                : getSuggestedValue(cName);
+                : getSuggestedValue(category);
           });
           setJobValues(vals);
-          setConversionNames(names);
         } else {
           setError(data.error || 'Onbekende fout');
         }
@@ -126,16 +132,17 @@ export default function OfflineConversionsPage() {
       });
   }, []);
 
-  // Marks leads exported_at so a re-run of the export never reports the same
-  // click to Google Ads twice, for either the positive or negative CSV.
-  const markExported = async (ids: string[]) => {
+  // Marks rows exported_at so a re-run of the export never reports the same
+  // click to Google Ads twice. `kind` tells the route which table the ids
+  // belong to — positive ids are jobs, negative ids are leads.
+  const markExported = async (ids: string[], kind: 'positive' | 'negative') => {
     if (!ids.length) return;
     setMarking(true);
     try {
       await fetch('/api/export-conversions', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids }),
+        body: JSON.stringify({ ids, kind }),
       });
     } finally {
       setMarking(false);
@@ -150,7 +157,6 @@ export default function OfflineConversionsPage() {
     positive.forEach((lead) => {
       const gclid = clickId(lead);
       if (!gclid) return;
-      const cName = conversionNames[lead.id] || 'Job Completed - Extra Key';
       /*
        * An unknown value is left blank, not written as 0. Google treats an
        * empty Conversion Value as "no value supplied" and a 0 as "this was
@@ -160,12 +166,12 @@ export default function OfflineConversionsPage() {
       const cValue = Number.isFinite(known) && known > 0 ? String(known) : '';
       /* The conversion happened when the work finished, not when the form came in. */
       const when = formatDate(lead.conversion_time || lead.created_at);
-      csv += `${gclid},${cName},${when},${cValue},EUR\n`;
+      csv += `${gclid},${GOOGLE_ADS_CONVERSION_NAME},${when},${cValue},EUR\n`;
       exportedIds.push(lead.id);
     });
 
     downloadCsv(`google-ads-conversions-${new Date().toISOString().split('T')[0]}.csv`, csv);
-    await markExported(exportedIds);
+    await markExported(exportedIds, 'positive');
     setPositive((prev) => prev.filter((l) => !exportedIds.includes(l.id)));
   };
 
@@ -177,7 +183,6 @@ export default function OfflineConversionsPage() {
     negative.forEach((lead) => {
       const gclid = clickId(lead);
       if (!gclid) return;
-      const cName = mapServiceToConversion(lead.service || '');
       const now = formatDate(new Date().toISOString());
       /*
        * RETRACT, not RETRACTION. Google's adjustment types are RETRACT,
@@ -185,12 +190,12 @@ export default function OfflineConversionsPage() {
        * — "The value 'RETRACTION' in column 'Adjustment Type' is invalid."
        * It went unnoticed because no adjustments file had ever been uploaded.
        */
-      csv += `${gclid},${cName},${formatDate(lead.created_at)},RETRACT,${now}\n`;
+      csv += `${gclid},${GOOGLE_ADS_CONVERSION_NAME},${formatDate(lead.created_at)},RETRACT,${now}\n`;
       exportedIds.push(lead.id);
     });
 
     downloadCsv(`google-ads-adjustments-${new Date().toISOString().split('T')[0]}.csv`, csv);
-    await markExported(exportedIds);
+    await markExported(exportedIds, 'negative');
     setNegative((prev) => prev.filter((l) => !exportedIds.includes(l.id)));
   };
 
@@ -234,7 +239,6 @@ export default function OfflineConversionsPage() {
                   <th style={{ padding: '1rem' }}>Datum</th>
                   <th style={{ padding: '1rem' }}>Dienst</th>
                   <th style={{ padding: '1rem' }}>Status</th>
-                  <th style={{ padding: '1rem' }}>Google Ads Conversion Name</th>
                   <th style={{ padding: '1rem' }}>Omzet (€)</th>
                 </tr>
               </thead>
@@ -247,18 +251,6 @@ export default function OfflineConversionsPage() {
                     </td>
                     <td style={{ padding: '1rem' }}>{lead.service}</td>
                     <td style={{ padding: '1rem', textTransform: 'capitalize' }}>{lead.status}</td>
-                    <td style={{ padding: '1rem' }}>
-                      <select
-                        value={conversionNames[lead.id]}
-                        onChange={(e) => setConversionNames({ ...conversionNames, [lead.id]: e.target.value })}
-                        style={{ padding: '0.5rem', border: '1px solid #cbd5e1', borderRadius: '4px', width: '100%' }}
-                      >
-                        <option value="Job Completed - AKL">Job Completed - AKL</option>
-                        <option value="Job Completed - Open Door">Job Completed - Open Door</option>
-                        <option value="Job Completed - Extra Key">Job Completed - Extra Key</option>
-                        <option value="Job Completed - Ignition">Job Completed - Ignition</option>
-                      </select>
-                    </td>
                     <td style={{ padding: '1rem' }}>
                       <input
                         type="number"

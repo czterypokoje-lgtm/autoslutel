@@ -61,9 +61,17 @@ const EXPORT_COLUMNS =
  * final_price, attributed through its lead's click id. That yields far fewer
  * conversions — one, when this was written — and every one of them is revenue
  * that actually arrived.
+ *
+ * `leads` is a left join, not `!inner`, on purpose: a job created "by hand"
+ * (see api/admin/jobs) for a phone-in customer has no lead_id at all, and
+ * carries its own gclid/wbraid/gbraid/msclkid/click_captured_at instead,
+ * claimed from call_clicks at creation time. See supabase/migrations/
+ * 0053_call_click_attribution.sql for why that table exists.
  */
 const POSITIVE_FROM_JOBS =
-  'id, final_price, completed_at, scheduled_date, lead_id, leads!inner(id, gclid, wbraid, gbraid, created_at)';
+  'id, final_price, completed_at, scheduled_date, lead_id, ' +
+  'gclid, wbraid, gbraid, msclkid, click_captured_at, ' +
+  'leads (id, gclid, wbraid, gbraid, created_at)';
 
 /* Google will not accept a conversion for a click older than this. */
 const CLICK_WINDOW_DAYS = 90;
@@ -121,10 +129,14 @@ export async function GET(request: Request) {
         .from('jobs')
         .select(POSITIVE_FROM_JOBS)
         .eq('status', 'afgerond')
-        /* !inner above already drops jobs with no lead; this drops the ones
-           whose lead never carried a click — there is nothing for Google to
-           attribute them to, however real the work was. */
-        .not('lead_id', 'is', null)
+        /*
+         * jobs.exported_at, not leads.exported_at: positives are read from
+         * jobs (see the comment above), so that is also where "already
+         * reported" has to live. Before this column existed nothing filtered
+         * a positive row out once exported, so every completed job with a
+         * value was re-offered on every visit to this page, forever.
+         */
+        .is('exported_at', null)
         .order('completed_at', { ascending: false })
         .limit(500),
 
@@ -155,7 +167,12 @@ export async function GET(request: Request) {
       final_price: number | string | null;
       completed_at: string | null;
       scheduled_date: string | null;
-      lead_id: string;
+      lead_id: string | null;
+      gclid: string | null;
+      wbraid: string | null;
+      gbraid: string | null;
+      msclkid: string | null;
+      click_captured_at: string | null;
       leads: { id: string; gclid: string | null; wbraid: string | null; gbraid: string | null; created_at: string } | null;
     }
 
@@ -164,22 +181,28 @@ export async function GET(request: Request) {
     const positive = ((positiveResult.data ?? []) as unknown as JobRow[])
       .map((job) => {
         const lead = job.leads;
-        const clickId = lead?.gclid ?? lead?.wbraid ?? lead?.gbraid ?? null;
+        /* Prefer the lead's click id (the original, form-based path); fall
+           back to the job's own, claimed from call_clicks for a phone-only
+           job that never had a lead at all. */
+        const clickId = lead?.gclid ?? lead?.wbraid ?? lead?.gbraid ?? job.gclid ?? job.wbraid ?? job.gbraid ?? null;
+        /* When did that click happen? A lead's created_at if there is one,
+           otherwise the moment call_clicks recorded it. */
+        const clickedAt = lead?.created_at ?? job.click_captured_at ?? null;
         const value = Number(job.final_price ?? 0);
-        return { job, lead, clickId, value };
+        return { job, lead, clickId, clickedAt, value };
       })
-      /* Three reasons a finished job is not reportable, none of them faults:
-         no click paid for it, no money was recorded, or the click has aged
-         out of Google's window. */
-      .filter((r) => r.clickId && r.value > 0 && r.lead && new Date(r.lead.created_at).getTime() >= cutoff)
+      /* Four reasons a finished job is not reportable, none of them faults:
+         no click paid for it, no money was recorded, the click has aged out
+         of Google's window, or (should not happen, but the data can't prove
+         a click's age without a timestamp) there is no time to check. */
+      .filter((r) => r.clickId && r.value > 0 && r.clickedAt && new Date(r.clickedAt).getTime() >= cutoff)
       .map((r) => ({
-        id: r.lead!.id,
-        job_id: r.job.id,
+        id: r.job.id,
         status: 'afgerond',
-        gclid: r.lead!.gclid,
-        wbraid: r.lead!.wbraid,
-        gbraid: r.lead!.gbraid,
-        created_at: r.lead!.created_at,
+        gclid: r.lead?.gclid ?? r.job.gclid,
+        wbraid: r.lead?.wbraid ?? r.job.wbraid,
+        gbraid: r.lead?.gbraid ?? r.job.gbraid,
+        created_at: r.clickedAt!,
         job_value: Math.round(r.value * 100) / 100,
         job_count: 1,
         /* The conversion happened when the work finished, not when the form
@@ -215,14 +238,19 @@ export async function GET(request: Request) {
 }
 
 /**
- * Marks leads as exported once their CSV has actually been downloaded, so
- * the next export run never reports the same click to Google Ads twice.
+ * Marks rows as exported once their CSV has actually been downloaded, so the
+ * next export run never reports the same click to Google Ads twice.
+ *
+ * `kind` picks the table: positive ids are jobs (see POSITIVE_FROM_JOBS
+ * above), negative ids are leads — the two halves come from different
+ * tables and always have, this just makes the PATCH say so explicitly
+ * instead of assuming every id it's ever given is a lead.
  */
 export async function PATCH(request: Request) {
   if (!adminAuthConfigured()) return unauthorized();
   if (!isAuthorized(request)) return unauthorized();
 
-  let body: { ids?: unknown };
+  let body: { ids?: unknown; kind?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -233,6 +261,7 @@ export async function PATCH(request: Request) {
   if (!ids.length) {
     return NextResponse.json({ error: 'Geen ids opgegeven' }, { status: 400 });
   }
+  const table = body.kind === 'positive' ? 'jobs' : 'leads';
 
   const supabase = supabaseClient();
   if (!supabase) {
@@ -240,7 +269,7 @@ export async function PATCH(request: Request) {
   }
 
   const { error } = await supabase
-    .from('leads')
+    .from(table)
     .update({ exported_at: new Date().toISOString() })
     .in('id', ids);
 
