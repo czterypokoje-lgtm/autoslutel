@@ -246,11 +246,11 @@ export default function AutosleutelKwijt() {
       {/* DEKKING PER MERK */}
       <section className={styles.brandsSection}>
         <div className={styles.container}>
-          <span className={styles.eyebrow}>Dekking per merk</span>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>Autosleutel bijmaken voor deze merken</h2>
+          <span className={styles.eyebrow} style={{ color: "#94a3b8" }}>Dekking per merk</span>
+          <h2 style={{ fontSize: "1.25rem", marginBottom: "2rem", color: "#ffffff" }}>Autosleutel bijmaken voor deze merken</h2>
           <div className={styles.brandsGrid}>
             {[
-  { id: 'alfa-romeo', url: 'https://cdn.simpleicons.org/alfaromeo/000000' },
+  { id: 'bmw', url: 'https://cdn.simpleicons.org/bmw/000000' },
   { id: 'audi', url: 'https://cdn.simpleicons.org/audi/000000' },
   { id: 'chevrolet', url: 'https://cdn.simpleicons.org/chevrolet/000000' },
   { id: 'citroen', url: 'https://cdn.simpleicons.org/citroen/000000' },
@@ -261,9 +261,9 @@ export default function AutosleutelKwijt() {
   { id: 'hyundai', url: 'https://cdn.simpleicons.org/hyundai/000000' },
   { id: 'jeep', url: 'https://cdn.simpleicons.org/jeep/000000' },
   { id: 'kia', url: 'https://cdn.simpleicons.org/kia/000000' },
-  { id: 'land-rover', url: 'https://cdn.simpleicons.org/landrover/000000' },
+  { id: 'mini', url: 'https://cdn.simpleicons.org/mini/000000' },
   { id: 'mazda', url: 'https://cdn.simpleicons.org/mazda/000000' },
-  { id: 'mercedes', url: 'https://cdn.simpleicons.org/mercedes/000000' },
+  { id: 'volvo', url: 'https://cdn.simpleicons.org/volvo/000000' },
   { id: 'mitsubishi', url: 'https://cdn.simpleicons.org/mitsubishi/000000' },
   { id: 'nissan', url: 'https://cdn.simpleicons.org/nissan/000000' },
   { id: 'opel', url: 'https://cdn.simpleicons.org/opel/000000' },
@@ -280,7 +280,7 @@ export default function AutosleutelKwijt() {
               </div>
             ))}
           </div>
-          <p className={styles.brandsDisclaimer}>
+          <p className={styles.brandsDisclaimer} style={{ color: "#64748b" }}>
             Alle merklogo's zijn eigendom van de respectievelijke fabrikanten. Autosleutel24 is een onafhankelijk technici-netwerk en geen erkende dealer of licentiehouder van deze merken.
           </p>
         </div>
@@ -289,7 +289,7 @@ export default function AutosleutelKwijt() {
       {/* FAQs (PRESERVED FROM ORIGINAL) */}
       <section className={styles.faqSection}>
         <div className={styles.container} style={{ maxWidth: 900 }}>
-          <h2 className={anton.className}>Veelgestelde Vragen — Autosleutel Kwijt</h2>
+          <h2 className={`${anton.className} ${styles.sectionTitle}`} style={{ color: "#ffffff" }}>Veelgestelde Vragen — Autosleutel Kwijt</h2>
           {faqItems.map((f, i) => (
             <details key={i} className="faq-item" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
               <summary className="faq-question" style={{ color: '#fff' }}>
