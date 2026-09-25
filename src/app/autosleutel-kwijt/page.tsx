@@ -91,134 +91,217 @@ const howToSchema = {
   })),
 };
 
+
+import styles from './DeadboltTheme.module.css';
+import { Anton } from 'next/font/google';
+import Image from 'next/image';
+
+const anton = Anton({ weight: '400', subsets: ['latin'] });
+
 export default function AutosleutelKwijt() {
   return (
-    <>
-      <script id="akl-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <script id="akl-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <script id="akl-howto-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
-      <main>
-        {/* EMERGENCY HERO — CTA absolute top priority */}
-        <section style={{ background:'var(--color-danger)', padding:'2rem', textAlign:'center' }}>
-          <p style={{ color:'rgba(255,255,255,0.9)', fontSize:'0.875rem', fontWeight:600, margin:'0 0 0.5rem' }}>
-            NOODGEVAL — DIRECTE HULP BESCHIKBAAR
-          </p>
-          <a href={`tel:${SITE_CONFIG.phoneTel}`} id="akl-emergency-phone"
-            style={{ display:'inline-flex', alignItems:'center', gap:'0.5rem', background:'#fff', color:'var(--color-danger)', padding:'1rem 2.5rem', borderRadius:'4px', fontWeight:700, fontSize:'1.3rem', textDecoration:'none' }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-            Bel Nu: {SITE_CONFIG.phone}
-          </a>
-          <p style={{ color:'rgba(255,255,255,0.8)', fontSize:'0.875rem', marginTop:'0.75rem', marginBottom:0 }}>
-            Gemiddeld {SITE_CONFIG.responseTime} · 24/7 · Alle merken
-          </p>
-        </section>
-
-        {/* Hero */}
-        <section style={{ background:'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding:'3rem 2rem' }}>
-          <div style={{ maxWidth:1000, margin:'0 auto' }}>
-            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
-              <HeroTrustBadge />
+    <div className={styles.wrapper}>
+      {/* HERO */}
+      <section className={styles.hero}>
+        <div className={styles.container}>
+          <div className={styles.heroInner}>
+            <div>
+              <h1 className={`${styles.heroTitle} ${anton.className}`}>
+                AUTOSLEUTEL KWIJT OF<br/>VERLOREN? WE MAKEN<br/>EEN NIEUWE AAN.
+              </h1>
             </div>
-            <h1 style={{ color:'#fff', fontSize:'clamp(1.6rem, 3.5vw, 2.4rem)', marginBottom:'1rem' }}>
-              Autosleutel Kwijt? Direct Hulp — 24/7 Mobiele Service
-            </h1>
-            <p style={{ color:'rgba(255,255,255,0.75)', fontSize:'1rem', lineHeight:1.7, marginBottom:'1.5rem', maxWidth:680 }}>
-              Autosleutel kwijt? Wij programmeren een nieuwe sleutel ter plaatse — thuis, op het werk, of langs de weg.
-              Alle merken. Gestolen sleutel wordt uitgeschakeld. Verzekeringsklare factuur.
-            </p>
-            <div style={{ display:'flex', gap:'0.75rem', flexWrap:'wrap' }}>
-              <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg" id="akl-hero-phone">{SITE_CONFIG.phone}</a>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ display:'inline-flex', alignItems:'center', background:'#25d366', color:'#fff', padding:'0.85rem 1.5rem', borderRadius:'4px', fontWeight:700, textDecoration:'none', fontSize:'1rem' }} id="akl-hero-wa">WhatsApp</a>
+            <div className={styles.heroRight}>
+              <p className={styles.heroDesc}>
+                Sleutel kwijt is vervelend, maar geen reden om de auto te laten wegslepen. Wij programmeren een volledig nieuwe sleutel, ook als er geen reservesleutel meer is.
+              </p>
+              <div className={styles.buttonGroup}>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnOrange} id="akl-hero-phone">
+                  Bel {SITE_CONFIG.phone}
+                </a>
+                <a href="#wat-we-doen" className={styles.btnOutline}>
+                  Boek deze dienst
+                </a>
+              </div>
             </div>
-          </div>
-        </section>
-
-        <BrandsMarquee />
-
-        {/* 3 steps HowTo */}
-        <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
-          <div className="container">
-            <HowItWorks variant="akl" />
           </div>
         </div>
+      </section>
 
-        {/* Pricing by brand */}
-        <section style={{ padding:'3.5rem 0', background:'var(--gray-50)' }}>
-          <div className="container">
-            <h2>Kosten Nieuwe Sleutel Per Merk</h2>
-            <p>Indicatieve prijzen. Exacte prijs na telefonische diagnose. Altijd vaste prijs vóór aanvang.</p>
-            <div style={{ overflowX:'auto', borderRadius:'6px', overflow:'hidden', boxShadow:'var(--shadow-md)', marginTop:'1.5rem' }}>
-              <table className="price-table">
-                <thead><tr><th>Merk</th><th>Systeem</th><th>AKL Startprijs</th><th>Dealer Schatting</th></tr></thead>
-                <tbody>
-                  {brandPrices.map(b => (
-                    <tr key={b.slug}>
-                      <td><Link href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} style={{ fontWeight:600, color:'var(--navy-600)' }}>{b.name}</Link></td>
-                      <td style={{ fontSize:'0.82rem', color:'var(--gray-400)' }}>{b.system.split('/')[0]}</td>
-                      <td className="price-col">Bel voor prijs</td>
-                      <td style={{ color:'var(--gray-400)', fontSize:'0.85rem' }}>+40–60%</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      {/* STATS BAR */}
+      <section className={styles.statsBar}>
+        <div className={styles.container}>
+          <div className={styles.statsGrid}>
+            <div className={styles.statItem}>
+              <span className={styles.eyebrow}>Prijs vanaf</span>
+              <div className={`${styles.statValue} ${styles.orange} ${anton.className}`}>€300</div>
+            </div>
+            <div className={styles.statItem}>
+              <span className={styles.eyebrow}>Tijd ter plekke</span>
+              <div className={`${styles.statValue} ${anton.className}`}>30-60 MIN</div>
+            </div>
+            <div className={styles.statItem}>
+              <span className={styles.eyebrow}>Gem. aankomst</span>
+              <div className={`${styles.statValue} ${anton.className}`}>35 MIN</div>
+            </div>
+            <div className={styles.statItem}>
+              <span className={styles.eyebrow}>Elke klus</span>
+              <div className={`${styles.statValue} ${anton.className}`}>GECERTIFICEERD &<br/>VERZEKERD</div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* FAQ */}
-        <section style={{ padding:'3.5rem 0' }}>
-          <div className="container" style={{ maxWidth:900 }}>
-            <h2>Veelgestelde Vragen — Autosleutel Kwijt</h2>
-            {faqItems.map((f, i) => (
-              <details key={i} className="faq-item">
-                <summary className="faq-question">
-                  {f.q}
-                  <svg className="faq-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-                </summary>
-                <p className="faq-answer">{f.a}</p>
-              </details>
+      {/* WAT WE DOEN */}
+      <section id="wat-we-doen" className={styles.splitSection}>
+        <div className={styles.container}>
+          <div className={styles.splitGrid}>
+            <div>
+              <h2 className={`${styles.sectionTitle} ${anton.className}`}>WAT WE DOEN</h2>
+              <ul className={styles.list}>
+                <li className={styles.listItem}>
+                  <span className={styles.redArrow}>→</span>
+                  Nieuwe sleutel aangemaakt zonder dat u een bestaande sleutel nodig heeft
+                </li>
+                <li className={styles.listItem}>
+                  <span className={styles.redArrow}>→</span>
+                  Oude sleutel wordt uit het systeem van de auto verwijderd voor uw veiligheid
+                </li>
+                <li className={styles.listItem}>
+                  <span className={styles.redArrow}>→</span>
+                  Legitimatie en kentekencontrole ter plekke, geen gedoe achteraf
+                </li>
+                <li className={styles.listItem}>
+                  <span className={styles.redArrow}>→</span>
+                  Ook 's nachts en in het weekend bereikbaar
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div className={styles.priceCard}>
+                <span className={styles.eyebrow}>Nu beschikbaar, 24/7</span>
+                <div className={`${styles.priceTitle} ${anton.className}`}>Prijs vanaf<br/>€300</div>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnOrange} style={{ width: '100%' }}>Bel {SITE_CONFIG.phone}</a>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnDark}>WhatsApp direct hulp</a>
+                <p className={styles.priceCardText}>
+                  Prijs telefonisch bevestigd voordat we beginnen. Zegt u nee, dan betaalt u niets.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TRANSPONDER EN SMART KEY */}
+      <section className={styles.transponderSection}>
+        <div className={styles.container}>
+          <h2 className={`${styles.sectionTitle} ${anton.className}`}>TRANSPONDER- EN SMART KEY PROGRAMMEREN</h2>
+          <p className={styles.transponderText}>
+            Moderne autosleutels zijn meer dan een stukje metaal. De transponderchip communiceert met de startonderbreker, en smart keys regelen keyless entry en start-stop. Wij programmeren dit alles op locatie, afgestemd op uw merk, model en bouwjaar.
+          </p>
+          <div className={styles.checkGrid}>
+            <div className={styles.checkItem}><span className={styles.checkIcon}>✓</span> Standaard transpondersleutels</div>
+            <div className={styles.checkItem}><span className={styles.checkIcon}>✓</span> Klapsleutels met centrale vergrendeling</div>
+            <div className={styles.checkItem}><span className={styles.checkIcon}>✓</span> Smart keys met keyless entry</div>
+            <div className={styles.checkItem}><span className={styles.checkIcon}>✓</span> Afgestemd op het systeem van uw auto</div>
+          </div>
+        </div>
+      </section>
+
+      {/* PHOTO GRID */}
+      <section className={styles.photoSection}>
+        <div className={styles.container}>
+          <div className={styles.photoGrid}>
+            <div className={styles.photoCard}>
+              <div className={styles.photoWrap}>
+                <Image src="/images/seo/reserve_autosleutel_transponder_programmeren_utrecht.webp" alt="Transpondersleutel" fill style={{ objectFit: 'cover' }} />
+              </div>
+              <div className={styles.photoContent}>
+                <h3 className={styles.photoTitle}>Transpondersleutel</h3>
+                <p className={styles.photoDesc}>Een sleutel met een ingebouwde chip die communiceert met de startonderbreker van de auto. Meestal vanaf €150 bij te maken.</p>
+              </div>
+            </div>
+            <div className={styles.photoCard}>
+              <div className={styles.photoWrap}>
+                <Image src="/images/seo/smart-key-keyless-programmeren-autosleutel24-utrecht.webp" alt="Smart key" fill style={{ objectFit: 'cover' }} />
+              </div>
+              <div className={styles.photoContent}>
+                <h3 className={styles.photoTitle}>Smart key / keyless start</h3>
+                <p className={styles.photoDesc}>Sleutel met startknop-functie — de auto start zodra de sleutel in de buurt is, zonder hem uit uw zak te halen.</p>
+              </div>
+            </div>
+            <div className={styles.photoCard}>
+              <div className={styles.photoWrap}>
+                <Image src="/images/keys/volkswagen-autosleutel-bijmaken-2.webp" alt="Sleutels" fill style={{ objectFit: 'cover' }} />
+              </div>
+            </div>
+            <div className={styles.photoCard}>
+              <div className={styles.photoWrap}>
+                <Image src="/images/keys/mercedes-autosleutel-bijmaken-2.webp" alt="Lederen sleutel" fill style={{ objectFit: 'cover' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DEKKING PER MERK */}
+      <section className={styles.brandsSection}>
+        <div className={styles.container}>
+          <span className={styles.eyebrow}>Dekking per merk</span>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>Autosleutel bijmaken voor deze merken</h2>
+          <div className={styles.brandsGrid}>
+            {[
+  { id: 'alfa-romeo', url: 'https://cdn.simpleicons.org/alfaromeo/000000' },
+  { id: 'audi', url: 'https://cdn.simpleicons.org/audi/000000' },
+  { id: 'chevrolet', url: 'https://cdn.simpleicons.org/chevrolet/000000' },
+  { id: 'citroen', url: 'https://cdn.simpleicons.org/citroen/000000' },
+  { id: 'dacia', url: 'https://cdn.simpleicons.org/dacia/000000' },
+  { id: 'fiat', url: 'https://cdn.simpleicons.org/fiat/000000' },
+  { id: 'ford', url: 'https://cdn.simpleicons.org/ford/000000' },
+  { id: 'honda', url: 'https://cdn.simpleicons.org/honda/000000' },
+  { id: 'hyundai', url: 'https://cdn.simpleicons.org/hyundai/000000' },
+  { id: 'jeep', url: 'https://cdn.simpleicons.org/jeep/000000' },
+  { id: 'kia', url: 'https://cdn.simpleicons.org/kia/000000' },
+  { id: 'land-rover', url: 'https://cdn.simpleicons.org/landrover/000000' },
+  { id: 'mazda', url: 'https://cdn.simpleicons.org/mazda/000000' },
+  { id: 'mercedes', url: 'https://cdn.simpleicons.org/mercedes/000000' },
+  { id: 'mitsubishi', url: 'https://cdn.simpleicons.org/mitsubishi/000000' },
+  { id: 'nissan', url: 'https://cdn.simpleicons.org/nissan/000000' },
+  { id: 'opel', url: 'https://cdn.simpleicons.org/opel/000000' },
+  { id: 'peugeot', url: 'https://cdn.simpleicons.org/peugeot/000000' },
+  { id: 'renault', url: 'https://cdn.simpleicons.org/renault/000000' },
+  { id: 'seat', url: 'https://cdn.simpleicons.org/seat/000000' },
+  { id: 'skoda', url: 'https://cdn.simpleicons.org/skoda/000000' },
+  { id: 'suzuki', url: 'https://cdn.simpleicons.org/suzuki/000000' },
+  { id: 'toyota', url: 'https://cdn.simpleicons.org/toyota/000000' },
+  { id: 'volkswagen', url: 'https://cdn.simpleicons.org/volkswagen/000000' }
+].map(brand => (
+              <div key={brand.id} className={styles.brandBox}>
+                <Image src={brand.url} alt={brand.id} width={70} height={40} style={{ objectFit: 'contain' }} unoptimized={true} />
+              </div>
             ))}
           </div>
-        </section>
+          <p className={styles.brandsDisclaimer}>
+            Alle merklogo's zijn eigendom van de respectievelijke fabrikanten. Autosleutel24 is een onafhankelijk technici-netwerk en geen erkende dealer of licentiehouder van deze merken.
+          </p>
+        </div>
+      </section>
 
-        {/* ── COMPREHENSIVE AKL SEO GUIDE ARTICLE ── */}
-        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
-          <div className="container">
-            <div className="seo-article-block" style={{ marginTop: 0 }}>
-              <h2>Alle Autosleutels Kwijt (All Keys Lost): Hoe Wij U Direct Helpen Zonder Wegslepen</h2>
-              <p>
-                Het verliezen van uw enige of laatste autosleutel is een stressvolle situatie. Bij de meeste autodealers betekent dit dat u uw auto per takelwagen moet laten wegslepen naar de garage, waarna u dagen tot weken moet wachten op nieuwe sleutels uit de fabriek. Bovendien worden er vaak complete slotensets en ECU-modules vervangen tegen kosten die kunnen oplopen tot boven de duizend euro. <strong>{SITE_CONFIG.name}</strong> lost dit probleem volledig mobiel en op uw locatie op.
-              </p>
-              <h3>100% Schadevrije Deuropening &amp; Mechanische Decodering</h3>
-              <p>
-                Onze monteurs openen uw afgesloten auto zonder enige schade aan uw lak of slotmechanisme via professioneel Lishi-gereedschap. Vervolgens lezen wij de pinnen in het portierslot uit om de exacte snijcode van uw sleutelbaard te bepalen. Met onze computergestuurde CNC-lasersnijmachine frezen wij direct ter plaatse een perfect passende mechanische sleutel.
-              </p>
-              <h3>Startonderbreker Inleren en Verloren Sleutels Wissen</h3>
-              <p>
-                Via de OBD2-diagnosepoort koppelen wij ons diagnosestation aan de boordcomputer (ECU, BSI of immobiliser module) van uw auto. Wij programmeren de nieuwe transponderchip en eventuele Keyless Go afstandsbediening direct in. Cruciaal voor uw veiligheid: wij wissen onmiddellijk alle verloren sleutels uit het geheugen van de auto. Mocht iemand uw verloren sleutel vinden, dan kan diegene uw auto niet meer starten of openen.
-              </p>
-              <h3>Verzekering, Garantie en Dekking in Heel Nederland</h3>
-              <p>
-                Onze All Keys Lost service wordt door heel Nederland aangeboden. U ontvangt standaard 12 maanden schriftelijke garantie en een officiële factuur. In veel gevallen vergoedt uw autoverzekering (onder Beperkt Casco of Allrisk dekking) de vervanging van verloren of gestolen autosleutels.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Bottom emergency CTA */}
-        <section style={{ background:'var(--color-danger)', padding:'3rem 2rem', textAlign:'center' }}>
-          <h2 style={{ color:'#fff', marginBottom:'0.5rem' }}>Autosleutel Kwijt? Bel Direct</h2>
-          <p style={{ color:'rgba(255,255,255,0.8)', marginBottom:'1.5rem' }}>Wij zijn 24/7 bereikbaar. Gemiddeld {SITE_CONFIG.responseTime} bij u ter plaatse.</p>
-          <div style={{ display:'flex', gap:'0.75rem', justifyContent:'center', flexWrap:'wrap' }}>
-            <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background:'#fff', color:'var(--color-danger)', padding:'1rem 2.5rem', borderRadius:'4px', fontWeight:700, fontSize:'1.1rem', textDecoration:'none', display:'inline-flex', alignItems:'center' }} id="akl-bottom-phone">
-              {SITE_CONFIG.phone}
-            </a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" style={{ background:'#25d366', color:'#fff', padding:'1rem 2rem', borderRadius:'4px', fontWeight:700, fontSize:'1rem', textDecoration:'none', display:'inline-flex', alignItems:'center' }} id="akl-bottom-wa">
-              WhatsApp
-            </a>
-          </div>
-        </section>
-      </main>
-    </>
+      {/* FAQs (PRESERVED FROM ORIGINAL) */}
+      <section className={styles.faqSection}>
+        <div className={styles.container} style={{ maxWidth: 900 }}>
+          <h2 className={anton.className}>Veelgestelde Vragen — Autosleutel Kwijt</h2>
+          {faqItems.map((f, i) => (
+            <details key={i} className="faq-item" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+              <summary className="faq-question" style={{ color: '#fff' }}>
+                {f.q}
+                <svg className="faq-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </summary>
+              <p className="faq-answer" style={{ color: '#cbd5e1' }}>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+      
+    </div>
   );
 }
