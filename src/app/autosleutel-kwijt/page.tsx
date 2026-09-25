@@ -93,10 +93,10 @@ const howToSchema = {
 
 
 import styles from './DeadboltTheme.module.css';
-import { Anton } from 'next/font/google';
+import { Bebas_Neue } from 'next/font/google';
 import Image from 'next/image';
 
-const anton = Anton({ weight: '400', subsets: ['latin'] });
+const anton = Bebas_Neue({ weight: '400', subsets: ['latin'] });
 
 export default function AutosleutelKwijt() {
   return (
