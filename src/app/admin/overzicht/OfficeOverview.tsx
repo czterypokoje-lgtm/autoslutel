@@ -5,9 +5,12 @@ import { stockStatus } from '@/lib/stockStatus';
 import { PageHead, Card, CardHead, Badge, Notice } from '../_ui';
 import { LineChart, BarChart, RankedBars, chart } from '../_ui/charts';
 import { MixedChart } from './MixedChart';
+import DayAgenda, { type AgendaJob } from './DayAgenda';
+import LeadFunnel, { countFunnel } from './LeadFunnel';
+import AtRiskLeads, { pickAtRisk, type RiskLead } from './AtRiskLeads';
 import styles from './overzicht.module.css';
 import Link from 'next/link';
-import { Users, Briefcase, Euro, Target, CheckCircle, Phone, MoreHorizontal, AlertCircle, AlertTriangle, FileText, PackageX, MapPin, Clock } from 'lucide-react';
+import { Users, Briefcase, Euro, Target, CheckCircle, Phone, MoreHorizontal, AlertCircle, AlertTriangle, FileText, PackageX, MapPin, Clock, CalendarDays } from 'lucide-react';
 
 const euro = (value: number) => `€ ${value.toFixed(2).replace('.', ',')}`;
 const euroShort = (value: number) =>
@@ -79,7 +82,7 @@ export default async function OfficeOverview() {
   ] = await Promise.all([
     supabase
       .from('jobs')
-      .select('id, status, final_price, quoted_price, technician_id, city, slot_start, slot_end, car_make, car_model, kenteken, service_type')
+      .select('id, status, final_price, quoted_price, technician_id, city, slot_start, slot_end, car_make, car_model, kenteken, service_type, customer_name')
       .eq('scheduled_date', today),
     supabase.from('jobs').select('status, final_price, quoted_price').eq('scheduled_date', sameDayLastWeek),
     supabase.from('leads').select('id, created_at').gte('created_at', daysAgo(14).toISOString()),
@@ -87,10 +90,10 @@ export default async function OfficeOverview() {
     supabase.from('payout_requests').select('amount').eq('status', 'pending'),
     supabase.from('stock_items').select('technician_id, quantity, min_quantity'),
     supabase.from('unmet_requests').select('id', { count: 'exact', head: true }).gte('created_at', daysAgo(7).toISOString()),
-    supabase.from('technicians').select('id, name, online, active, city, phone'),
+    supabase.from('technicians').select('id, name, online, active, city, phone, color'),
     supabase.from('jobs').select('scheduled_date, final_price, quoted_price').eq('status', 'afgerond').gte('scheduled_date', startOfThisYear),
     supabase.from('crm_report_technician').select('*').order('omzet', { ascending: false }).limit(5),
-    supabase.from('leads').select('status').in('status', ['new', 'qualified', 'contacted']),
+    supabase.from('leads').select('id, name, brand, model, postcode, status, created_at, first_contact_at, quoted_price, sale_price'),
     supabase.from('crm_report_source').select('*'),
     supabase.from('crm_marketing_costs').select('*').gte('date', startOfLastMonth),
     /* Every figure in the financial row used to be a literal in the JSX.
@@ -116,6 +119,24 @@ export default async function OfficeOverview() {
   const pendingPayoutCount = (pendingPayouts ?? []).length;
   const ordersWaiting = ordersToPlan ?? 0;
   const unmetThisWeek = unmetCount ?? 0;
+
+  /*
+   * Colour per technician for the day column. The seeded default (#3b3b3b)
+   * would paint every job the same grey, which defeats the point, so an
+   * untouched colour falls back to the chart palette by position.
+   */
+  const DEFAULT_COLOUR = '#3b3b3b';
+  const PALETTE = ['var(--crm-data-1)', 'var(--crm-data-2)', 'var(--crm-data-3)', 'var(--crm-data-4)', 'var(--crm-data-5)', 'var(--crm-data-6)'];
+  const technicianColours = new Map(
+    (technicians ?? []).map((t, index) => [
+      t.id as string,
+      !t.color || t.color === DEFAULT_COLOUR ? PALETTE[index % PALETTE.length]! : (t.color as string),
+    ])
+  );
+
+  const allLeads = (openLeads ?? []) as RiskLead[];
+  const funnel = countFunnel(allLeads.map((l) => l.status));
+  const atRisk = pickAtRisk(allLeads);
 
   const techs = technicians ?? [];
   const onlineCount = techs.filter((t) => t.online && t.active).length;
@@ -210,7 +231,7 @@ export default async function OfficeOverview() {
 
   const periodLabel = `1 ${MONTHS[now.getMonth()]} \u2013 ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
 
-  const openLeadCount = (openLeads ?? []).length;
+  const openLeadCount = funnel.new + funnel.working;
 
   // Aggregate real marketing data and revenue for the chart
   const mixedData = Array.from({ length: 14 }).map((_, i) => {
@@ -371,6 +392,54 @@ export default async function OfficeOverview() {
           </Card>
         </div>
       </div>
+
+      {/*
+        * Today beside the funnel: what is happening now, and what is coming
+        * in. The two questions an office opens this screen to answer.
+        */}
+      <div className={chart.splitRow}>
+        <Card>
+          <CardHead>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <CalendarDays size={18} color="var(--crm-steel)" /> Vandaag
+              </span>
+              <Link href="/admin/jobs" style={{ color: 'var(--crm-accent-hover)', fontSize: '12px', textDecoration: 'none' }}>
+                Hele agenda &rarr;
+              </Link>
+            </div>
+          </CardHead>
+          <DayAgenda jobs={jobsToday as AgendaJob[]} colours={technicianColours} />
+        </Card>
+
+        <Card>
+          <CardHead>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+              <span>Leads</span>
+              <Link href="/admin/leads" style={{ color: 'var(--crm-accent-hover)', fontSize: '12px', textDecoration: 'none' }}>
+                Bekijk leads &rarr;
+              </Link>
+            </div>
+          </CardHead>
+          <div style={{ padding: '0 16px 16px' }}>
+            <LeadFunnel counts={funnel} />
+          </div>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHead>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle size={18} color="var(--crm-warn)" /> Leads die koud worden
+            </span>
+            <span style={{ color: 'var(--crm-muted)', fontSize: '12px' }}>
+              langst wachtend eerst
+            </span>
+          </div>
+        </CardHead>
+        <AtRiskLeads leads={atRisk} />
+      </Card>
 
       <div className={styles.kpiStrip}>
 <Card className={styles.actionCenterCard}>
