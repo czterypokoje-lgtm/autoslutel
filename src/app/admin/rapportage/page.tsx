@@ -102,7 +102,7 @@ export default async function RapportagePage() {
       {/*
         * Job costing moved to /admin/winst, which groups the same rows with a
         * date range and an Excel download. The view this block read
-        * (erp_report_finance_monthly) was dropped in 0058: it was granted to
+        * (erp_report_finance_monthly) is dropped at the top of 0057: it was granted to
         * anon, and its cost columns did not reconcile with its own margin.
         */}
 

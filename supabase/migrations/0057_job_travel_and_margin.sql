@@ -11,6 +11,25 @@
 -- numbers could disagree with themselves.
 -- ============================================================================
 
+-- 0. De view die op gross_margin leunt ---------------------------------------
+/*
+ * This has to happen before section 2 touches gross_margin: a generated
+ * column cannot be dropped while a view selects it, and Postgres refuses the
+ * whole migration rather than half of it.
+ *
+ * erp_report_finance_monthly is going regardless. It was granted to `anon`
+ * with no crm_visible() guard and no security_invoker — unlike all sixteen
+ * crm_* views — so the monthly revenue, cost and margin of the business were
+ * readable by anyone holding the public key that ships in every page of the
+ * website. Its own cost columns did not reconcile with its own margin either.
+ *
+ * /admin/winst groups the same rows by month, with a date filter a view
+ * cannot have, so nothing is lost. Its only reader was rapportage/page.tsx,
+ * removed in the same commit.
+ */
+drop view if exists public.erp_report_finance_monthly;
+
+
 -- 1. Brandstof per klus --------------------------------------------------------
 /*
  * How far the van went for this job, so the euro figure beside it can be
