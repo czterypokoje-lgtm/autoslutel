@@ -27,6 +27,7 @@ export interface JobDetail {
   commission_pct: number | string | null;
   commission_amount: number | string | null;
   notes: string | null;
+  travel_km: number | null;
   started_at: string | null;
   completed_at: string | null;
   revenue_callout: number | null;
@@ -419,6 +420,12 @@ export default function JobEditor({
             <div className={styles.field} style={{ marginBottom: 8 }}>
               <label className={styles.fieldLabel}>Reis / Brandstof (€)</label>
               <input className={styles.control} type="number" step="0.01" value={costTravel} onChange={e => setCostTravel(e.target.value)} />
+              {/* Where the number came from, so it can be checked instead of believed. */}
+              {job.travel_km !== null && (
+                <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+                  {Number(job.travel_km).toFixed(1)} km heen en terug, automatisch berekend. Overschrijf gerust.
+                </div>
+              )}
             </div>
             <div className={styles.field} style={{ marginBottom: 8 }}>
               <label className={styles.fieldLabel}>Transactiekosten (Mollie/Pin) (€)</label>

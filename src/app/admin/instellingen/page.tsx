@@ -139,11 +139,29 @@ export default async function InstellingenPage() {
     vars: ['BING_ADS_DEVELOPER_TOKEN', 'BING_ADS_REFRESH_TOKEN'],
   };
 
+  /*
+   * The one row here whose value is worth showing rather than hiding. The rate
+   * is not a secret — it is a business decision, and reading it back is the
+   * only way to check that production is costing jobs at what you think.
+   */
+  const fuel: Integration = {
+    name: 'Brandstof per klus',
+    what: 'Rekent na afronding de reiskosten van een klus uit: heen en terug maal het tarief per kilometer.',
+    state: has('GOOGLE_MAPS_API_KEY') ? 'live' : 'off',
+    detail: has('GOOGLE_MAPS_API_KEY')
+      ? `Tarief: € ${(Number(process.env.FUEL_EUR_PER_KM) > 0 ? Number(process.env.FUEL_EUR_PER_KM) : 0.23)
+          .toFixed(2)
+          .replace('.', ',')} per km${process.env.FUEL_EUR_PER_KM ? '' : ' (standaard — FUEL_EUR_PER_KM is niet gezet)'}.`
+      : 'Zonder Maps-sleutel wordt er geen afstand gemeten en blijft Reis/Brandstof leeg — nooit nul.',
+    vars: ['GOOGLE_MAPS_API_KEY', 'FUEL_EUR_PER_KM'],
+  };
+
   const groups: { title: string; items: Integration[] }[] = [
     { title: 'Leads', items: [leadAlert, mail] },
     { title: 'Communicatie', items: [whatsapp, telegram] },
     { title: 'Advertenties', items: [googleAds, bing] },
     { title: 'Betalingen', items: [payments] },
+    { title: 'Kosten', items: [fuel] },
   ];
 
   const leadsReachNobody = leadAlert.state !== 'live' && mail.state === 'off';

@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { getCrmUser } from '@/lib/crmSession';
+import { fillTravelCost } from '@/lib/jobTravelCost';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isJobStatus, trimTime } from '@/lib/crmJobs';
 
@@ -283,6 +284,17 @@ export async function PATCH(
   // answer either way — do not confirm which.
   if (!data) {
     return NextResponse.json({ error: 'Klus niet gevonden' }, { status: 404 });
+  }
+
+  /*
+   * Fuel, measured once the job is done.
+   *
+   * Here rather than in VanScreen or JobEditor because this route is the one
+   * gate both of them pass through — and anything added later will too. In
+   * after() so the monteur's phone is not waiting on Google to answer.
+   */
+  if (patch.status === 'afgerond') {
+    after(() => fillTravelCost(supabase, id));
   }
 
   return NextResponse.json(
