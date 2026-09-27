@@ -80,7 +80,6 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
     items: [
       { href: '/admin/klanten', label: 'Klanten', icon: Users },
       { href: '/admin/facturen', label: 'Facturen', icon: Receipt },
-      { href: '/admin/uitgaven', label: 'Mijn uitgaven', icon: Banknote },
       { href: '/admin/uitgaven', label: 'Uitgaven', icon: Banknote },
       { href: '/admin/kas', label: 'Kas', icon: Wallet },
       { href: '/admin/rapportage', label: 'Rapportage', icon: BarChart3 },
@@ -109,6 +108,7 @@ const MONTEUR_LINKS: { group: string; items: NavItem[] }[] = [
       { href: '/admin/mijn-vak', label: 'Mijn vak', icon: BadgeCheck },
       { href: '/admin/mijn-bus', label: 'Mijn bus', icon: Package },
       { href: '/admin/facturen', label: 'Facturen', icon: Receipt },
+      { href: '/admin/uitgaven', label: 'Mijn uitgaven', icon: Banknote },
       { href: '/admin/mijn-saldo', label: 'Saldo', icon: Wallet },
       { href: '/admin/mijn-profiel', label: 'Profiel', icon: CircleUser },
     ],
