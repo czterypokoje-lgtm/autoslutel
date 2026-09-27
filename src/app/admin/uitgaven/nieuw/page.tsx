@@ -12,7 +12,7 @@ export default async function NieuweUitgavePage() {
 
   let myTechId = null;
   if (!isOffice) {
-    const me = await supabase.from('technicians').select('id').eq('email', user.email).single();
+    const me = await supabase.from('technicians').select('id').eq('user_id', user.id).single();
     if (me.data) myTechId = me.data.id;
   }
 

@@ -2,9 +2,10 @@ import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, Badge, Empty } from '../_ui';
 import Link from 'next/link';
-import { Plus, Check, X, Building2, Wrench } from 'lucide-react';
+import { Plus, Building2, Wrench, Receipt } from 'lucide-react';
 import styles from '../admin.module.css';
 import ExpenseActions from './ExpenseActions';
+import { EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,23 +14,6 @@ export const metadata = {
 };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
-
-const CATEGORIES: Record<string, string> = {
-  fuel: 'Brandstof',
-  parking: 'Parkeren',
-  toll: 'Tol',
-  meals: 'Eten & Drinken',
-  vehicle_maintenance: 'Voertuig Onderhoud',
-  tool_subscription: 'Gereedschap Abonnement',
-  phone: 'Telefonie',
-  advertising: 'Advertenties',
-  supplier: 'Leverancier',
-  office: 'Kantoor',
-  insurance: 'Verzekeringen',
-  rent: 'Huur',
-  training: 'Training',
-  other: 'Overig'
-};
 
 export default async function UitgavenPage() {
   const user = await requireCrmUser('/admin/uitgaven');
@@ -43,11 +27,26 @@ export default async function UitgavenPage() {
     .limit(100);
 
   if (!isOffice) {
-    const me = await supabase.from('technicians').select('id').eq('email', user.email).single();
+    const me = await supabase.from('technicians').select('id').eq('user_id', user.id).single();
     if (me.data) query = query.eq('technician_id', me.data.id);
   }
 
   const { data: expenses } = await query;
+
+  /*
+   * The `facturen` bucket is private on purpose — a bon carries a supplier, a
+   * place and what somebody paid. One signed link per receipt, made here and
+   * valid for the hour this page is likely to stay open, rather than a public
+   * URL that would outlive the page in a browser history.
+   */
+  const paths = (expenses ?? []).map(e => e.receipt_url).filter(Boolean) as string[];
+  const receipts = new Map<string, string>();
+  if (paths.length) {
+    const { data: signed } = await supabase.storage.from('facturen').createSignedUrls(paths, 3600);
+    for (const entry of signed ?? []) {
+      if (entry.path && entry.signedUrl) receipts.set(entry.path, entry.signedUrl);
+    }
+  }
 
   return (
     <>
@@ -70,7 +69,7 @@ export default async function UitgavenPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1.25rem' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                  <span style={{ fontWeight: 600, color: '#0f172a' }}>{CATEGORIES[exp.category] || exp.category}</span>
+                  <span style={{ fontWeight: 600, color: '#0f172a' }}>{EXPENSE_CATEGORIES[exp.category] || exp.category}</span>
                   <Badge tone={exp.status === 'approved' || exp.status === 'paid' ? 'ok' : exp.status === 'rejected' ? 'stop' : 'warn'}>
                     {exp.status}
                   </Badge>
@@ -79,6 +78,16 @@ export default async function UitgavenPage() {
                 <div style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '0.5rem' }}>
                   {exp.date_incurred} • {exp.description}
                 </div>
+                {exp.receipt_url && receipts.has(exp.receipt_url) && (
+                  <a
+                    href={receipts.get(exp.receipt_url)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.875rem', color: '#2563eb', marginBottom: '0.5rem' }}
+                  >
+                    <Receipt size={14} /> Bon bekijken
+                  </a>
+                )}
                 <div style={{ display: 'flex', gap: '1rem', fontSize: '0.875rem', color: '#475569' }}>
                   {exp.technician && (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
