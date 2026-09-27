@@ -8,7 +8,6 @@ import {
   BarChart3,
   Boxes,
   CalendarDays,
-  Database,
   Euro,
   Handshake,
   CircleUser,
@@ -62,9 +61,8 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
     ],
   },
   {
-    group: 'Voorraad (ERP)',
+    group: 'Voorraad',
     items: [
-      { href: '/admin/pim', label: 'Master Ürünler (PIM)', icon: Database },
       { href: '/admin/voorraad', label: 'Stok & Lokasyonlar', icon: Boxes },
     ],
   },

@@ -93,18 +93,26 @@ export default async function VandaagPage({
     );
   }
 
+  /*
+   * What is actually in this van, for the materials picker.
+   *
+   * `quantity > 0` on purpose: a picker that offers a part the van does not
+   * hold is how a job gets charged for something that was never fitted, and
+   * how the count goes wrong without anyone noticing until a stocktake.
+   */
   const { data: vanStock } = await supabase
-    .from('inventory_products')
-    .select('id, internal_sku, product_type, car_make, car_model, fcc_id, average_cost, standard_price')
-    .eq('active', true)
-    .order('internal_sku');
+    .from('stock_items')
+    .select('id, description, quantity, unit_cost')
+    .eq('technician_id', technicianId || '00000000-0000-0000-0000-000000000000')
+    .gt('quantity', 0)
+    .order('description');
 
   return (
     <VanScreen
       jobs={(data ?? []) as unknown as VanJob[]}
       technicianName={me?.name ?? null}
       today={today}
-      pimProducts={vanStock || []}
+      vanStock={vanStock || []}
     />
   );
 }

@@ -121,12 +121,12 @@ export default function VanScreen({
   jobs,
   technicianName,
   today,
-  pimProducts,
+  vanStock,
 }: {
   jobs: VanJob[];
   technicianName: string | null;
   today: string;
-  pimProducts: { id: string; internal_sku: string; car_make: string; car_model: string; fcc_id: string; average_cost: number; standard_price: number }[];
+  vanStock: { id: string; description: string; quantity: number; unit_cost: number | null }[];
 }) {
   const [rows, setRows] = useState(jobs);
 
@@ -239,7 +239,7 @@ export default function VanScreen({
         <p className={styles.empty}>Geen klussen vandaag.</p>
       ) : (
         rows.map((job) => (
-          <JobCard key={job.id} job={job} onPatch={patchJob} pimProducts={pimProducts} />
+          <JobCard key={job.id} job={job} onPatch={patchJob} vanStock={vanStock} />
         ))
       )}
     </div>
@@ -249,11 +249,11 @@ export default function VanScreen({
 function JobCard({
   job,
   onPatch,
-  pimProducts,
+  vanStock,
 }: {
   job: VanJob;
   onPatch: (id: string, patch: Record<string, unknown>) => Promise<boolean>;
-  pimProducts: { id: string; internal_sku: string; car_make: string; car_model: string; fcc_id: string; average_cost: number; standard_price: number }[];
+  vanStock: { id: string; description: string; quantity: number; unit_cost: number | null }[];
 }) {
   const [finishing, setFinishing] = useState(false);
   const next = NEXT_STATUS[job.status] ?? null;
@@ -378,7 +378,7 @@ function JobCard({
           job={job}
           onPatch={onPatch}
           onDone={() => setFinishing(false)}
-          pimProducts={pimProducts}
+          vanStock={vanStock}
         />
       )}
     </div>
@@ -396,12 +396,12 @@ function FinishPanel({
   job,
   onPatch,
   onDone,
-  pimProducts,
+  vanStock,
 }: {
   job: VanJob;
   onPatch: (id: string, patch: Record<string, unknown>) => Promise<boolean>;
   onDone: () => void;
-  pimProducts: { id: string; internal_sku: string; car_make: string; car_model: string; fcc_id: string; average_cost: number; standard_price: number }[];
+  vanStock: { id: string; description: string; quantity: number; unit_cost: number | null }[];
 }) {
   const [price, setPrice] = useState(
     job.final_price === null
@@ -537,18 +537,23 @@ function FinishPanel({
 
     setBusy(true);
 
-    const product = pimProducts.find(p => 
-      p.internal_sku === description || 
-      [p.car_make, p.car_model, p.fcc_id].filter(Boolean).join(' ') === description
-    );
+    /*
+     * Exact match only. A fuzzy match on the wrong row takes the part out of
+     * the wrong pile, and nobody finds out until a count comes up short weeks
+     * later. Typing something that is not in the van is still allowed — it
+     * just records the material without touching stock, which is honest.
+     */
+    const item = vanStock.find((s) => s.description === description);
 
-    const inventory_product_id = product ? product.id : undefined;
-    const unit_cost = product ? product.average_cost : undefined;
-
+    /*
+     * No unit_cost is sent. What a part cost is on the stock row, put there by
+     * crm_confirm_invoice from a real supplier invoice; the phone in a van has
+     * no business asserting it. The server reads it from there.
+     */
     const ok = await fetch(`/api/admin/jobs/${job.id}/materials`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description, quantity: 1, inventory_product_id, unit_cost }),
+      body: JSON.stringify({ description, quantity: 1, stock_item_id: item?.id }),
     })
       .then((r) => r.ok)
       .catch(() => false);
@@ -676,8 +681,8 @@ function FinishPanel({
             onChange={(e) => setMaterial(e.target.value)}
           />
           <datalist id="van-stock-list">
-            {pimProducts.slice(0, 50).map(s => (
-              <option key={s.id} value={s.internal_sku} />
+            {vanStock.slice(0, 50).map(s => (
+              <option key={s.id} value={s.description} />
             ))}
           </datalist>
           <button className={styles.tap} onClick={addMaterial} disabled={busy}>

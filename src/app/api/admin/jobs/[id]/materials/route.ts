@@ -66,17 +66,40 @@ export async function POST(
    */
   const before = stockItemId ? await readStockStatusById(supabase, stockItemId) : null;
 
+  /*
+   * What the part cost, read from the stock row rather than taken from the
+   * caller.
+   *
+   * crm_confirm_invoice (0019) writes stock_items.unit_cost from a real
+   * supplier invoice, and that is the only number in this system that reflects
+   * what was actually paid. Looking it up here means every caller of this
+   * route gets a cost without having to know where costs live — which is the
+   * whole reason jobs.cost_materials sat empty while the van screen was
+   * sending its own guess.
+   *
+   * An explicit unit_cost in the body still wins: the office correcting a
+   * line knows something the stock row does not.
+   */
+  let cost = unitCost;
+  if (cost === null && stockItemId) {
+    const { data: stockRow } = await supabase
+      .from('stock_items')
+      .select('unit_cost')
+      .eq('id', stockItemId)
+      .maybeSingle();
+    cost = stockRow?.unit_cost ?? null;
+  }
+
   const { data, error } = await supabase
     .from('job_materials')
     .insert({
       job_id: id,
       description,
       quantity: quantity ?? 1,
-      unit_cost: unitCost,
+      unit_cost: cost,
       product_slug:
         typeof body.product_slug === 'string' ? body.product_slug.slice(0, 200) : null,
       stock_item_id: stockItemId,
-      inventory_product_id: typeof body.inventory_product_id === 'string' && UUID.test(body.inventory_product_id) ? body.inventory_product_id : null,
       created_by: user.id,
     })
     .select('id, description, quantity, unit_cost, stock_item_id')
