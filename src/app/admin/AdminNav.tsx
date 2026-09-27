@@ -63,7 +63,7 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
   {
     group: 'Voorraad',
     items: [
-      { href: '/admin/voorraad', label: 'Stok & Lokasyonlar', icon: Boxes },
+      { href: '/admin/voorraad', label: 'Voorraad', icon: Boxes },
     ],
   },
   {

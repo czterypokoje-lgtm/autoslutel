@@ -33,7 +33,14 @@ export async function POST(request: Request) {
 
   const quantity = number(body.quantity, 0);
   const min = number(body.min_quantity, 0);
-  if (quantity === 'invalid' || min === 'invalid') {
+  /*
+   * -1 means "not sent", which is not the same as 0. An upsert that omitted
+   * the cost must leave a known purchase price alone — a part that quietly
+   * became free is worse than one with no price at all, because it looks like
+   * an answer.
+   */
+  const unitCost = number(body.unit_cost, -1);
+  if (quantity === 'invalid' || min === 'invalid' || unitCost === 'invalid') {
     return NextResponse.json({ error: 'Ongeldig aantal' }, { status: 400 });
   }
 
@@ -57,11 +64,12 @@ export async function POST(request: Request) {
         description,
         quantity,
         min_quantity: min,
+        ...(unitCost !== -1 ? { unit_cost: unitCost } : {}),
         updated_at: new Date().toISOString(),
       },
       { onConflict: 'technician_id,description' }
     )
-    .select('id, description, quantity')
+    .select('id, description, quantity, unit_cost')
     .single();
 
   if (error) {
