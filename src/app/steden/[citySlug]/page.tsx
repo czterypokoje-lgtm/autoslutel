@@ -8,6 +8,9 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
+import { createClient } from '@supabase/supabase-js';
+import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/supabase/env';
+import { findCityTechnician, arrivalWindow, type PublicTechnician } from '@/lib/cityTechnician';
 import { DIENSTEN } from '@/config/diensten';
 const BrandsLogoGrid = dynamic(() => import('@/components/BrandsLogoGrid/BrandsLogoGrid'));
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
@@ -54,6 +57,66 @@ function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon
   return R * c;
 }
 
+/*
+ * Partner rosters change when someone joins, leaves or takes on a region —
+ * rarely, but not never, and not on a deploy schedule. An hour keeps a page
+ * from naming someone who left this morning without rebuilding 62 pages on
+ * every request.
+ */
+export const revalidate = 3600;
+
+/**
+ * The technicians a public page may name.
+ *
+ * Reads public_technicians (0058_technician_public_profile.sql), a view that
+ * exposes ten columns and rounds the base coordinate to about a kilometre —
+ * not the `technicians` table, which carries iban, kvk and a telegram id and
+ * is granted to `authenticated` only. A marketing page should not hold a key
+ * that can read any of that.
+ *
+ * Returns [] rather than throwing: a deployment without Supabase credentials,
+ * or a Supabase that is down mid-build, must still produce a city page. The
+ * page degrades to naming nobody, which is the honest failure — the previous
+ * behaviour was to name the same person everywhere, which is the other kind.
+ */
+/**
+ * A technician photo as a first-party URL.
+ *
+ * Photos live in Vercel Blob (/api/admin/profiel/foto). next.config.ts rewrites
+ * `/f/monteurs/*` onto the blob store, exactly as it already does for lead
+ * photos, so the page can reference its own domain instead of putting a third
+ * party into images.remotePatterns.
+ *
+ * Anything that is not a blob URL under that prefix returns null and the photo
+ * is simply not rendered: an <Image> pointed at an unconfigured remote host is
+ * a build failure, and a missing face is not worth one.
+ */
+function localTechnicianPhoto(url: string | null): string | null {
+  if (!url) return null;
+  if (url.startsWith('/')) return url;
+  const prefix = `${SITE_CONFIG.blobStorageDomain}/monteurs/`;
+  return url.startsWith(prefix) ? `/f/monteurs/${url.slice(prefix.length)}` : null;
+}
+
+async function loadPublicTechnicians(): Promise<PublicTechnician[]> {
+  if (!supabaseAuthConfigured()) return [];
+  try {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data, error } = await supabase
+      .from('public_technicians')
+      .select('id, name, werkgebied, base_lat, base_lng, base_city, certifications, gbp_url, photo_url, phone');
+    if (error) throw error;
+    /* The view already filters to active; the flag is what findCityTechnician
+       reads, so it is set rather than selected. */
+    return (data ?? []).map((t) => ({ ...t, active: true })) as PublicTechnician[];
+  } catch (err) {
+    console.warn('[steden] could not load technicians, pages will name nobody:', err);
+    return [];
+  }
+}
+
 export async function generateStaticParams() {
   return CITIES.map(c => ({ citySlug: c.slug }));
 }
@@ -82,7 +145,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     },
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Binnen 30–60 min ter plaatse, vanaf €${SITE_CONFIG.prices.transponder}. Alle merken, 12 maanden garantie.`
+        `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Mobiele specialist ter plaatse, vanaf €${SITE_CONFIG.prices.transponder}. Alle merken, 12 maanden garantie.`
     ),
     alternates: {
       canonical: pageUrl,
@@ -95,7 +158,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
       type: 'website',
       url: pageUrl,
       title: city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
-      description: `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Wij zijn er binnen 30-60 min ter plaatse. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
+      description: `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Onze monteur komt naar u toe. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
     other: {
@@ -113,6 +176,22 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   if (!city) notFound();
   const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
 
+  /* Who actually covers this city, and how far away they really are. Null
+     only when the roster could not be read at all. */
+  const match = findCityTechnician(city, await loadPublicTechnicians());
+  const technician = match?.technician ?? null;
+  const arrival = arrivalWindow(match?.distanceKm ?? null);
+  const technicianPhoto = localTechnicianPhoto(technician?.photo_url ?? null);
+  /*
+   * Every arrival claim on this page reads from these two, and both collapse
+   * to a promise with no number in it when the distance is unknown. The old
+   * `city.travelTime` said "30-60 min" on 61 of 62 records, which made it a
+   * constant wearing a data field's clothes — and made it wrong for every
+   * region further out than the Randstad.
+   */
+  const arrivalText = arrival ?? 'zo snel mogelijk';
+  const arrivalPhrase = arrival ? `gemiddeld binnen ${arrival}` : 'zo snel mogelijk';
+
   // Find 3 geographically closest cities
   const closestCities = CITIES
     .filter(c => c.slug !== citySlug && c.geo && city.geo)
@@ -126,15 +205,37 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     .sort((a, b) => a.distance - b.distance)
     .slice(0, 3);
 
+  /*
+   * The local entity for this page.
+   *
+   * This used to override `geo` with the city's coordinates and leave
+   * `address` untouched, so the Maastricht page described a business at
+   * 50.85/5.69 whose addressLocality was Bussum — two places 210 km apart, in
+   * one entity, on 62 pages. Google reads geo and address together.
+   *
+   * Both now describe the same real operator: where the covering technician
+   * works from, with the city in areaServed. With no technician we override
+   * neither and the page inherits head office, which is at least coherent.
+   */
+  const base = getBaseLocalBusinessSchema();
+  const techGeo =
+    technician && technician.base_lat !== null && technician.base_lng !== null
+      ? { '@type': 'GeoCoordinates', latitude: String(technician.base_lat), longitude: String(technician.base_lng) }
+      : null;
+
   const schema = {
-    ...getBaseLocalBusinessSchema(),
+    ...base,
     '@id': `${SITE_CONFIG.domain}/steden/${citySlug}#locksmith`,
     url: `${SITE_CONFIG.domain}/steden/${citySlug}`,
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: city.geo.lat,
-      longitude: city.geo.lng,
-    },
+    ...(techGeo ? { geo: techGeo } : {}),
+    ...(technician?.base_city
+      ? { address: { ...base.address, addressLocality: technician.base_city } }
+      : {}),
+    /* The partner's own Google Business Profile. It is the listing that can
+       actually rank in this region — proximity decides the map pack — so the
+       page and the profile should point at each other rather than stand as
+       two unconnected claims. */
+    ...(technician?.gbp_url ? { sameAs: [technician.gbp_url] } : {}),
     areaServed: {
       '@type': 'City',
       name: city.city,
@@ -151,7 +252,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     ],
   };
 
-  const cityFaqs = getFaqForCity(city.city);
+  const cityFaqs = getFaqForCity(city.city, arrival);
   const mappedFaqs = cityFaqs.map(f => ({ question: f.q, answer: f.a }));
 
   // Generate deterministic E-E-A-T local data
@@ -200,7 +301,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   )}
                 </h1>
                 <p className={styles.heroUtrechtLead}>
-                  Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
+                  Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>zo snel mogelijk</>} bij u in {city.city}.
                   Alle merken, ter plaatse geprogrammeerd.
                 </p>
               </div>
@@ -233,7 +334,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </div>
               <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
               <p className={styles.heroLead}>
-                Wij zijn gemiddeld binnen <strong>{city.travelTime}</strong> bij u in {city.city}.
+                Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>zo snel mogelijk</>} bij u in {city.city}.
                 Alle merken, ter plaatse geprogrammeerd.
               </p>
               <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
@@ -296,35 +397,68 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         <HowItWorks cityName={city.city} />
 
 
-        {/* Technician trust card — placed high for mobile conversions */}
+        {/* ── TECHNICIAN TRUST CARD ─────────────────────────────────────
+            The person who actually covers this city, from the partner roster.
+
+            This block used to hardcode one name, one photo and one set of
+            certifications onto all 62 pages — Maastricht included, ~210 km
+            from the Bussum base. Everything here now comes from the matched
+            technician, and every claim is dropped rather than defaulted when
+            the data behind it is missing: an unknown arrival time prints no
+            arrival time. Defaulting is what produced "binnen 30-60 min" on a
+            page about a city two hours away.
+
+            The CTA stays on the central number on purpose. Leads route
+            through the CRM, which is what assigns and tracks the job; the
+            partner's own line would bypass dispatch and attribution both. */}
+        {technician && (
         <section style={{ padding: '2.5rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
           <div className="container">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '2rem', alignItems: 'center' }}>
               <div>
-                <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>UW MONTEUR IN {city.city.toUpperCase()}</p>
-                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>Berkan Acarol — Gecertificeerd Hoofdtechnicus</h2>
+                <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>
+                  {match?.covered
+                    ? `UW MONTEUR IN ${city.city.toUpperCase()}`
+                    : `DICHTSTBIJZIJNDE MONTEUR VOOR ${city.city.toUpperCase()}`}
+                </p>
+                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>
+                  {technician.name}{technician.base_city ? ` — Autosleutelspecialist uit ${technician.base_city}` : ''}
+                </h2>
                 <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1rem', fontSize: '0.9rem' }}>
-                  Uw sleutelprobleem in {city.city} wordt persoonlijk opgelost door Berkan. Gecertificeerd op Autel IM608 Pro&nbsp;II en AVDI Abrites — dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.
+                  Uw sleutelprobleem in {city.city} wordt persoonlijk opgelost door {technician.name.split(' ')[0]}
+                  {technician.base_city ? `, die vanuit ${technician.base_city} werkt` : ''}
+                  {arrival ? ` en gemiddeld binnen ${arrival} bij u is` : ''}.
+                  {technician.certifications && technician.certifications.length > 0
+                    ? ` Gecertificeerd op ${technician.certifications.join(' en ')} — dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.`
+                    : ' Dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.'}
                 </p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.25rem', fontSize: '0.875rem', color: 'var(--gray-700)', lineHeight: 1.7 }}>
-                  <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Autel IM608 Pro II &amp; AVDI Abrites</strong> — dealer-niveau apparatuur</span></li>
+                  {technician.certifications && technician.certifications.length > 0 && (
+                    <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>{technician.certifications.join(' & ')}</strong> — dealer-niveau apparatuur</span></li>
+                  )}
+                  {arrival && (
+                    <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Gemiddeld {arrival} ter plaatse</strong>{technician.base_city ? ` vanuit ${technician.base_city}` : ''}</span></li>
+                  )}
                   <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Schadevrij werken</strong> — 12 maanden garantie op elk onderdeel</span></li>
                   <li style={{ display: 'flex', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Vaste prijs vooraf</strong> — nooit een verrassingsrekening</span></li>
                 </ul>
-                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id={`city-berkan-phone-${city.slug}`}>📞 Bel Berkan: {SITE_CONFIG.phone}</a>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id={`city-technician-phone-${city.slug}`}>📞 Bel direct: {SITE_CONFIG.phone}</a>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Image
-                  src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
-                  alt={`Berkan Acarol — Autosleutelspecialist ${city.city}`}
-                  width={300}
-                  height={200}
-                  style={{ width: '100%', maxWidth: '300px', height: '200px', objectFit: 'cover', objectPosition: 'top', borderRadius: '8px', border: '1px solid #cbd5e1' }}
-                />
-              </div>
+              {technicianPhoto && (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <Image
+                    src={technicianPhoto}
+                    alt={`${technician.name} — autosleutelspecialist${technician.base_city ? ` uit ${technician.base_city}` : ''}, werkt in ${city.city}`}
+                    width={300}
+                    height={200}
+                    style={{ width: '100%', maxWidth: '300px', height: '200px', objectFit: 'cover', objectPosition: 'top', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </section>
+        )}
 
         {/* Local context — real per-city detail that used to be written into
             the data (cities.ts) but never actually reached the page. */}
@@ -485,7 +619,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h2>Waarom Onze Autosleutelspecialist in {city.city}?</h2>
                 <ul className={styles.checkList}>
                   {[
-                    `${city.travelTime} reactietijd in ${city.city}`,
+                    arrival ? `${arrival} reactietijd in ${city.city}` : `Snelle reactietijd in ${city.city}`,
                     'Geen sleepkosten — volledig mobiel',
                     'Zelfde dag service, ook weekend',
                     `Goedkoper dan ${city.city} dealer — gegarandeerd`,
@@ -523,7 +657,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <div className="container">
             <h2>Waar Komen Wij voor Auto Slotenmaker in {city.city}?</h2>
             <p className={styles.seoIntro}>
-              Als dé mobiele <strong>auto slotenmaker</strong> zijn wij actief in regio {city.region} en omstreken. Heeft u uw <strong>sleutel in auto</strong> laten liggen, heeft u hulp nodig bij het <strong>autodeur openen</strong> zonder schade, of moeten we een <strong>autosleutel bijmaken</strong> of <strong>autosleutels repareren</strong>? Binnen gemiddeld {city.travelTime} staan wij voor u klaar in:
+              Als dé mobiele <strong>auto slotenmaker</strong> zijn wij actief in regio {city.region} en omstreken. Heeft u uw <strong>sleutel in auto</strong> laten liggen, heeft u hulp nodig bij het <strong>autodeur openen</strong> zonder schade, of moeten we een <strong>autosleutel bijmaken</strong> of <strong>autosleutels repareren</strong>? Wij staan {arrivalPhrase} voor u klaar in:
             </p>
             <ul className={styles.seoList}>
               {city.subAreas.length > 0 ? (
@@ -594,7 +728,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {/* ── COMPREHENSIVE CITY SEO GUIDE ARTICLE ── */}
         <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
           <div className="container">
-            <CitySeoText cityName={city.city} travelTime={city.travelTime} />
+            <CitySeoText cityName={city.city} travelTime={arrivalText} />
           </div>
         </section>
 
@@ -620,7 +754,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         <section className={styles.cta}>
           <div className="container">
             <h2>Autosleutel Probleem in {city.city}?</h2>
-            <p>Bel of WhatsApp ons &mdash; gemiddeld {city.travelTime} bij u ter plaatse.</p>
+            <p>Bel of WhatsApp ons &mdash; {arrivalPhrase} bij u ter plaatse.</p>
             <div className={styles.ctaBtns}>
               <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg" id={`cta-city-${citySlug}-phone`}>{SITE_CONFIG.phone}</a>
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.waBtn} id={`cta-city-${citySlug}-wa`}>WhatsApp Direct</a>

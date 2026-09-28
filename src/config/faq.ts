@@ -326,7 +326,14 @@ export const FAQ_AKL: FaqItem[] = [
 ];
 
 // ── CITY-SPECIFIC FAQs (dynamisch gegenereerd op stadspage) ──
-export function getFaqForCity(cityName: string): FaqItem[] {
+/**
+ * @param arrival Real arrival window for this city ("35-50 min"), from the
+ *   technician who covers it. Omitted when no distance is known — the answer
+ *   then makes no timing claim at all rather than repeating the old blanket
+ *   "30 tot 60 minuten", which was published for Maastricht as readily as for
+ *   Bussum despite 210 km between them.
+ */
+export function getFaqForCity(cityName: string, arrival?: string | null): FaqItem[] {
   return [
     {
       q: `Autosleutel bijmaken in ${cityName}: wat zijn de exacte kosten?`,
@@ -350,7 +357,7 @@ export function getFaqForCity(cityName: string): FaqItem[] {
     },
     {
       q: `Hoe snel is de mobiele autosleutelmaker ter plaatse in ${cityName}?`,
-      a: `Bij noodgevallen in ${cityName}, zoals alle autosleutels kwijt of buitengesloten, is onze mobiele autosleutelmaker gemiddeld binnen 30 tot 60 minuten op uw locatie aanwezig. Autosleutel24 opereert 24 uur per dag, 7 dagen per week in de regio ${cityName}, zodat u direct weer op weg geholpen wordt.`,
+      a: `Bij noodgevallen in ${cityName}, zoals alle autosleutels kwijt of buitengesloten, is onze mobiele autosleutelmaker ${arrival ? `gemiddeld binnen ${arrival}` : 'zo snel mogelijk'} op uw locatie aanwezig. Autosleutel24 opereert 24 uur per dag, 7 dagen per week in de regio ${cityName}, zodat u direct weer op weg geholpen wordt.`,
     },
   ];
 }

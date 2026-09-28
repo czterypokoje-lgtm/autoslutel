@@ -3,8 +3,14 @@ import { CITIES } from '@/config/cities';
 
 /**
  * Returns a standardized Locksmith (LocalBusiness) schema object.
- * This guarantees consistent NAP data (Utrecht) and a full areaServed list
+ * This guarantees consistent NAP data and a full areaServed list
  * across all pages (City, Service, and Brand pages).
+ *
+ * Callers that override `geo` must override `address` with it: a page that
+ * pairs one city's coordinates with another city's addressLocality describes
+ * a business in two places at once. The city pages did exactly that — every
+ * one of them shipped its own geo beside "Bussum" — until the partner lookup
+ * gave them a real locality to name.
  *
  * Deliberately carries NO aggregateRating. This schema is embedded on ~800
  * city/brand/model/service pages, where a rating would assert a per-page or
@@ -20,11 +26,17 @@ export function getBaseLocalBusinessSchema() {
     url: SITE_CONFIG.domain,
     telephone: SITE_CONFIG.phoneTel,
     image: `${SITE_CONFIG.domain}/og-image.png`,
+    /* streetAddress and postalCode are omitted when empty rather than shipped
+       as "". SITE_CONFIG.address has no street or postal code — this is a
+       mobile business with no walk-in counter — and an empty string is a
+       claim that the field exists and is blank, which is worse than silence.
+       LocalBusinessSchema.tsx has always guarded these; this builder did not,
+       so every city, brand and service page carried two empty fields. */
     address: {
       '@type': 'PostalAddress',
-      streetAddress: SITE_CONFIG.address.street,
+      ...(SITE_CONFIG.address.street ? { streetAddress: SITE_CONFIG.address.street } : {}),
       addressLocality: SITE_CONFIG.address.city,
-      postalCode: SITE_CONFIG.address.postal,
+      ...(SITE_CONFIG.address.postal ? { postalCode: SITE_CONFIG.address.postal } : {}),
       addressRegion: SITE_CONFIG.address.region,
       addressCountry: SITE_CONFIG.address.country,
     },

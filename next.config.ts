@@ -338,13 +338,52 @@ const nextConfig: NextConfig = {
     ];
   },
   async rewrites() {
+    /*
+     * ── AD LANDING ZONE (/lp) ─────────────────────────────────────────────
+     *
+     * Google Ads requires the final URL to be on the same domain as the
+     * display URL: an ad showing autosleutel24.nl whose final URL redirects
+     * to autosleutelnamaken.nl is disapproved as a destination mismatch. So
+     * the higher-converting design cannot be linked to — it has to be served
+     * from this domain. It is a separate Next app (Desktop/Namaken) deployed
+     * on its own, proxied in here as a multi-zone: basePath '/lp' and
+     * assetPrefix '/lp-assets' over there, these three rewrites over here.
+     *
+     * Unset LP_ZONE_ORIGIN and nothing is added — the zone is inert until the
+     * Namaken deploy has a URL, rather than rewriting /lp/* into a 404.
+     *
+     * The /lp pages send X-Robots-Tag: noindex themselves, so they cannot
+     * cannibalise the /diensten/* and /steden/* URLs they duplicate. They are
+     * deliberately NOT blocked in robots.ts: a Disallow reaching AdsBot-Google
+     * is what makes a URL ineligible as an ad destination — the mechanism used
+     * there on purpose for /blog/.
+     */
+    const lpOrigin = process.env.LP_ZONE_ORIGIN;
+    const lpZone = lpOrigin
+      ? [
+          { source: '/lp', destination: `${lpOrigin}/lp` },
+          { source: '/lp/:path*', destination: `${lpOrigin}/lp/:path*` },
+          { source: '/lp-assets/_next/:path*', destination: `${lpOrigin}/lp-assets/_next/:path*` },
+        ]
+      : [];
+
     return [
+      ...lpZone,
       {
         // Serves customer lead photos from our own domain.
         // Scoped to the `leads/` prefix that /api/upload writes, so the blob
         // store cannot be used to host arbitrary paths under autosleutel24.nl.
         source: '/f/leads/:filename',
         destination: `${SITE_CONFIG.blobStorageDomain}/leads/:filename`,
+      },
+      {
+        /* Technician profile photos, same reasoning as the lead photos above:
+           served from our own domain so a city page's images are first-party
+           and no third-party host has to be listed in images.remotePatterns.
+           Scoped to the `monteurs/` prefix that /api/admin/profiel/foto
+           writes, so the blob store cannot host arbitrary paths here either. */
+        source: '/f/monteurs/:path*',
+        destination: `${SITE_CONFIG.blobStorageDomain}/monteurs/:path*`,
       },
       {
         // Legacy photos uploaded before the `leads/` prefix existed, so links
