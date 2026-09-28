@@ -90,7 +90,9 @@ export default async function OfficeOverview() {
     supabase.from('payout_requests').select('amount').eq('status', 'pending'),
     supabase.from('stock_items').select('technician_id, quantity, min_quantity'),
     supabase.from('unmet_requests').select('id', { count: 'exact', head: true }).gte('created_at', daysAgo(7).toISOString()),
-    supabase.from('technicians').select('id, name, online, active, city, phone, color'),
+    /* No `city` column on technicians — selecting it failed the whole query, so
+       this list has been silently empty. Werkgebied is the real location field. */
+    supabase.from('technicians').select('id, name, online, active, phone, color, werkgebied'),
     supabase.from('jobs').select('scheduled_date, final_price, quoted_price').eq('status', 'afgerond').gte('scheduled_date', startOfThisYear),
     supabase.from('crm_report_technician').select('*').order('omzet', { ascending: false }).limit(5),
     supabase.from('leads').select('id, name, brand, model, postcode, status, created_at, first_contact_at, quoted_price, sale_price'),
@@ -574,7 +576,7 @@ export default async function OfficeOverview() {
                 </div>
                 <div className={styles.techInfo}>
                   <div className={styles.techName}>{tech.name}</div>
-                  <div className={styles.techLocation}>{tech.city || 'Nederland'}</div>
+                  <div className={styles.techLocation}>{tech.werkgebied?.[0] || 'Nederland'}</div>
                 </div>
                 <div style={{flex: 'none'}}><Badge tone={tech.online ? 'ok' : 'info'}>{tech.online ? 'Beschikbaar' : 'Offline'}</Badge></div>
                 {/*
