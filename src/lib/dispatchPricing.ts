@@ -52,5 +52,12 @@ export function priceFor(
   // and a keyless-agnostic row for the same model) — the narrower keyless match wins.
   const row = deciding.find((r) => r.keyless != null) ?? deciding[0];
 
-  return { price: row.price, confidence: strongest === 2 ? 'model' : 'merk' };
+  /*
+   * `strongest === 2` here was a leftover from when specificity() returned
+   * small integers. It now returns 0/146/1000/1146 — the model term alone is
+   * worth 1000 — so the test was never true and every quote came back 'merk',
+   * including exact model-and-year matches, all the way out to the voice
+   * agent. The model term is the thing being asked about, so read it.
+   */
+  return { price: row.price, confidence: row.model ? 'model' : 'merk' };
 }

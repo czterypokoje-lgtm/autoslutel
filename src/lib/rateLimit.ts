@@ -27,12 +27,27 @@ export interface RateLimitResult {
 }
 
 /**
- * Reads the caller IP from the proxy headers Vercel sets. Falls back to a
- * constant so a missing header cannot be used to bypass the limiter entirely.
+ * The caller's IP, from a header the caller cannot choose.
+ *
+ * `x-forwarded-for` is a list, and a proxy APPENDS to it — so anything the
+ * client sent arrives first. Reading `[0]` meant reading attacker-supplied
+ * data: `X-Forwarded-For: 1.2.3.<random>` on every request produced a fresh
+ * bucket each time and defeated the limiter completely, on lead submission,
+ * blob uploads and RDW lookups alike.
+ *
+ * `x-vercel-forwarded-for` is set by the platform and cannot be spoofed from
+ * outside, so it is preferred. Falling back to XFF we take the LAST entry,
+ * which is the address our own proxy observed, rather than the first.
  */
 export function getClientIp(request: Request): string {
+  const trusted = request.headers.get('x-vercel-forwarded-for');
+  if (trusted) return trusted.split(',').pop()!.trim();
+
   const fwd = request.headers.get('x-forwarded-for');
-  if (fwd) return fwd.split(',')[0]!.trim();
+  if (fwd) {
+    const hops = fwd.split(',').map((h) => h.trim()).filter(Boolean);
+    if (hops.length) return hops[hops.length - 1]!;
+  }
   return request.headers.get('x-real-ip') || 'unknown';
 }
 

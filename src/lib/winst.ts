@@ -1,6 +1,7 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { SCENARIO_INFO, type Scenario } from './scenarios';
+import { isoDate } from './crmJobs';
 
 /**
  * The numbers behind Winst & verbruik, in one place.
@@ -58,8 +59,20 @@ export const num = (value: unknown): number => {
  * the planned date is not a shortcut — it is the only way most of the work
  * lands in a period at all.
  */
-export const dayOf = (job: JobRow): string =>
-  (job.completed_at ?? job.scheduled_date ?? '').slice(0, 10);
+export const dayOf = (job: JobRow): string => {
+  /*
+   * completed_at is a timestamptz serialised in UTC, and slicing it raw put a
+   * job finished at 00:30 Amsterdam into the previous day — and, on the first
+   * of a month, the previous month's revenue. During CEST that is every job
+   * after 22:00 local. scheduled_date is already a plain date and is left
+   * alone. isoDate() does the Amsterdam conversion the rest of the CRM uses.
+   */
+  if (job.completed_at) {
+    const at = new Date(job.completed_at);
+    return Number.isNaN(at.getTime()) ? job.completed_at.slice(0, 10) : isoDate(at);
+  }
+  return (job.scheduled_date ?? '').slice(0, 10);
+};
 
 function group<T>(rows: T[], key: (row: T) => string, value: (row: T) => number): Bucket[] {
   const totals = new Map<string, Bucket>();
@@ -97,6 +110,39 @@ export interface Winst {
   gaps: { price: number; city: number; fuel: number; parts: number; times: number };
 }
 
+/**
+ * Reads a whole table, in pages.
+ *
+ * PostgREST caps a response at db-max-rows (1000 on Supabase) and truncates
+ * SILENTLY — no error, the array just stops. These selects are unfiltered by
+ * date because the day a job counts towards is `completed_at ?? scheduled_date`,
+ * which is awkward to express server-side; so the row count grows with the
+ * business, and at the 1001st finished job the revenue and margin on this
+ * screen would quietly have started reading low, with the Excel export
+ * agreeing with it. A finance number that is wrong and confident is worse than
+ * one that is missing.
+ */
+const PAGE = 1000;
+
+async function readAll<T>(
+  supabase: SupabaseClient,
+  table: string,
+  columns: string,
+  eq?: { column: string; value: string },
+): Promise<{ data: T[]; error: string | null }> {
+  const rows: T[] = [];
+  for (let page = 0; ; page++) {
+    const base = supabase.from(table).select(columns).range(page * PAGE, page * PAGE + PAGE - 1);
+    const { data, error } = await (eq ? base.eq(eq.column, eq.value) : base);
+    if (error) return { data: rows, error: error.message };
+    const batch = (data ?? []) as T[];
+    rows.push(...batch);
+    /* A short page is the last page. An exactly-full final page costs one
+       extra empty request, which is the cheap side of the trade. */
+    if (batch.length < PAGE) return { data: rows, error: null };
+  }
+}
+
 /** Everything the screen and the spreadsheet need, for one period. */
 export async function readWinst(
   supabase: SupabaseClient,
@@ -104,27 +150,25 @@ export async function readWinst(
   to: string
 ): Promise<Winst | { error: string }> {
   const [jobResult, materialResult, techResult] = await Promise.all([
-    supabase.from('jobs').select(JOB_COLUMNS).eq('status', 'afgerond'),
-    supabase.from('job_materials').select('job_id, description, quantity, unit_cost'),
-    supabase.from('technicians').select('id, name'),
+    readAll<JobRow>(supabase, 'jobs', JOB_COLUMNS, { column: 'status', value: 'afgerond' }),
+    readAll<MaterialRow>(supabase, 'job_materials', 'job_id, description, quantity, unit_cost'),
+    readAll<{ id: string; name: string }>(supabase, 'technicians', 'id, name'),
   ]);
 
-  if (jobResult.error) return { error: jobResult.error.message };
+  if (jobResult.error) return { error: jobResult.error };
 
   /*
    * Filtered here rather than in the query: the date that matters is
    * `completed_at ?? scheduled_date`, which takes an or() across two ranges to
    * express in PostgREST. At this volume the readable version wins.
    */
-  const jobs = ((jobResult.data ?? []) as JobRow[]).filter((job) => {
+  const jobs = jobResult.data.filter((job) => {
     const day = dayOf(job);
     return day >= from && day <= to;
   });
   const ids = new Set(jobs.map((job) => job.id));
-  const materials = ((materialResult.data ?? []) as MaterialRow[]).filter((line) =>
-    ids.has(line.job_id)
-  );
-  const technicianName = new Map((techResult.data ?? []).map((t) => [t.id, t.name]));
+  const materials = materialResult.data.filter((line) => ids.has(line.job_id));
+  const technicianName = new Map(techResult.data.map((t) => [t.id, t.name]));
 
   const revenue = jobs.reduce((t, j) => t + num(j.final_price), 0);
   const parts = jobs.reduce((t, j) => t + num(j.cost_materials), 0);

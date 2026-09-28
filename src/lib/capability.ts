@@ -16,8 +16,7 @@
  * call-out, the customer, and the review.
  */
 
-import type { Scenario } from './scenarios';
-import { getProducts } from './catalog';
+import type { Scenario } from './scenarios.ts';
 
 export interface CoverageRow {
   technician_id: string;
@@ -210,49 +209,4 @@ export function whoCanDo(rows: CoverageRow[], car: Car, scenario: Scenario, keyl
   return [...byTechnician(rows)]
     .filter(([, list]) => coversCar(list, car, scenario, keyless))
     .map(([id]) => id);
-}
-
-/* ── seeding from the tools we sell ──────────────────────────────────── */
-
-export interface ToolSuggestion {
-  make: string;
-  model: string;
-  from: number | null;
-  to: number | null;
-}
-
-/**
- * The cars an article in our own catalogue says it covers.
- *
- * Used to offer a technician a starting list rather than an empty form: they
- * tick the tool they own, we propose the cars, they correct it. The OBDSTAR
- * C1022 kit alone names 49, with the year each one starts.
- */
-export function carsCoveredByTool(articleCode: string): ToolSuggestion[] {
-  const product = getProducts('all').find(
-    (p) => p.articleCode && p.articleCode.toLowerCase() === articleCode.toLowerCase()
-  );
-  if (!product) return [];
-
-  return product.fitment
-    .filter((f) => f.model)
-    .map((f) => ({
-      make: f.make,
-      model: f.model as string,
-      from: f.from && f.from > 1950 ? f.from : null,
-      to: f.to && f.to < 9000 ? f.to : null,
-    }));
-}
-
-/** Every article we sell that names cars — the pick list for the tool form. */
-export function toolsWithCoverage(): { code: string; title: string; cars: number }[] {
-  const WORKSHOP = ['programmeerapparatuur', 'accessoires', 'sleutelmachines', 'gereedschap'];
-  return getProducts('all')
-    .filter((p) => WORKSHOP.includes(p.category ?? '') && p.fitment.some((f) => f.model))
-    .map((p) => ({
-      code: p.articleCode ?? p.slug,
-      title: p.titleNl,
-      cars: p.fitment.filter((f) => f.model).length,
-    }))
-    .sort((a, b) => b.cars - a.cars);
 }

@@ -13,10 +13,10 @@
  * technician entirely. The score only orders the ones who are left.
  */
 
-import { coversCar, type Car, type CoverageRow } from './capability';
-import { coversPostcode, postcodeDigits } from './crmJobs';
-import { TIER_TERMS, type Tier } from './subscription';
-import type { Scenario } from './scenarios';
+import { coversCar, type Car, type CoverageRow } from './capability.ts';
+import { coversPostcode, postcodeDigits } from './crmJobs.ts';
+import { TIER_TERMS, type Tier } from './subscription.ts';
+import type { Scenario } from './scenarios.ts';
 
 export interface Candidate {
   id: string;
@@ -171,13 +171,25 @@ function scoreOf(
 export async function planDispatch(candidates: Candidate[], request: DispatchRequest): Promise<DispatchPlan> {
   const rejected: Rejection[] = [];
   const passed: Candidate[] = [];
+  /** Declared no working area at all — a last resort, not a national licence. */
+  const undeclared: Candidate[] = [];
 
   for (const candidate of candidates) {
     if (!coversCar(candidate.coverage, request.car, request.scenario, request.keyless)) {
       rejected.push({ id: candidate.id, name: candidate.name, gate: 'kan_auto_niet' });
       continue;
     }
-    if (request.postcode && candidate.werkgebied.length) {
+    /*
+     * An empty werkgebied used to skip this gate entirely, so a technician who
+     * had declared no area at all was offered every job in the country — the
+     * opposite of what an unanswered question should mean. They are held back
+     * here instead, and only used if nobody who declared an area passes.
+     */
+    if (!candidate.werkgebied.length) {
+      undeclared.push(candidate);
+      continue;
+    }
+    if (request.postcode) {
       const covers = candidate.werkgebied.some((range) => coversPostcode(range, request.postcode));
       if (!covers) {
         rejected.push({ id: candidate.id, name: candidate.name, gate: 'buiten_gebied' });
@@ -187,20 +199,45 @@ export async function planDispatch(candidates: Candidate[], request: DispatchReq
     passed.push(candidate);
   }
 
+  /*
+   * Fall back rather than fail. Making "no werkgebied" a hard rejection is the
+   * honest rule, but applied alone it would offer nothing at all while the
+   * roster is still being filled in — every technician currently has an empty
+   * werkgebied. So they are used only when no one with a declared area
+   * qualifies, and they are marked so the office can see why.
+   */
+  const usingUndeclared = passed.length === 0 && undeclared.length > 0;
+  if (usingUndeclared) passed.push(...undeclared);
+  else rejected.push(...undeclared.map((c) => ({ id: c.id, name: c.name, gate: 'buiten_gebied' as const })));
+
   if (!passed.length) return { offers: [], rejected, empty: true };
 
-  // Resolve drive times for those who passed
-  let driveTimes: (number | null)[] = passed.map(() => null);
-  if (request.lat && request.lng) {
+  /*
+   * Drive times, only for technicians we can actually locate.
+   *
+   * This used to fall back to `c.base_lat ?? request.lat`, which set the origin
+   * to the job's own address for anyone without a base — a zero-second drive,
+   * the full 25 proximity points and a "binnen half uur rijden" note the office
+   * had no reason to doubt. Absent coordinates scored better than real ones.
+   *
+   * Unplaceable technicians now keep a null drive time and fall through to the
+   * postcode proxy in scoreOf, which is what that fallback is for.
+   */
+  const driveTimes: (number | null)[] = passed.map(() => null);
+  const located = passed
+    .map((c, idx) => ({ idx, lat: c.base_lat, lng: c.base_lng }))
+    .filter((c): c is { idx: number; lat: number; lng: number } => c.lat !== null && c.lng !== null);
+
+  if (request.lat !== null && request.lng !== null && located.length) {
     const { getDriveTimes } = await import('@/lib/googleMaps');
-    const origins = passed.map(c => ({
-      lat: c.base_lat ?? request.lat!, 
-      lng: c.base_lng ?? request.lng!
-    }));
-    
-    // Batch fetch from Maps API
-    const results = await getDriveTimes(origins, { lat: request.lat, lng: request.lng });
-    driveTimes = results.map(r => r ? r.durationSeconds : null);
+    const results = await getDriveTimes(
+      located.map((c) => ({ lat: c.lat, lng: c.lng })),
+      { lat: request.lat, lng: request.lng }
+    );
+    // getDriveTimes preserves order and length, so results line up with `located`.
+    located.forEach((c, i) => {
+      driveTimes[c.idx] = results[i] ? results[i]!.durationSeconds : null;
+    });
   }
 
   const scored = passed
