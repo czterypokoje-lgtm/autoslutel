@@ -13,6 +13,12 @@ export const dynamic = 'force-dynamic';
  * `phone` should be wired in the ElevenLabs tool config to {{system__caller_id}}
  * — on a WhatsApp conversation this is the sender's WhatsApp user id, which
  * is the phone number itself, not a name the agent could get wrong.
+ *
+ * `offer_id` is optional, and on WhatsApp always absent: the Meta template
+ * carries auto, plaats en bedrag, never the id, so there is nothing in the
+ * thread for the agent to read it from. Without it the RPC resolves the
+ * technician's single open offer from `phone`, and refuses ('meerdere_open')
+ * when there is more than one — see migration 0055.
  */
 
 const OUTCOME: Record<string, string> = {
@@ -20,7 +26,9 @@ const OUTCOME: Record<string, string> = {
   afgewezen: 'Genoteerd, de klus is afgewezen.',
   al_vergeven: 'Deze klus is helaas al door iemand anders aangenomen.',
   verlopen: 'Deze aanbieding is verlopen.',
-  niet_gevonden: 'Kon deze aanbieding niet vinden.',
+  niet_gevonden: 'Kon geen openstaande aanbieding voor deze monteur vinden.',
+  meerdere_open:
+    'Er staan meerdere aanbiedingen open bij deze monteur, dus het is niet duidelijk welke klus hij bedoelt. Laat hem reageren via Aanbod in het monteursportaal of via de Telegram-bot.',
   geen_monteur: 'Kon geen monteur vinden bij dit nummer.',
 };
 
@@ -39,8 +47,8 @@ export async function POST(request: Request) {
   const phone = asText(body.phone, 40);
   const accept = body.accept === true;
 
-  if (!offerId || !phone) {
-    return NextResponse.json({ error: 'offer_id en phone zijn verplicht' }, { status: 400 });
+  if (!phone) {
+    return NextResponse.json({ error: 'phone is verplicht' }, { status: 400 });
   }
 
   const supabase = createSupabaseAdminClient();

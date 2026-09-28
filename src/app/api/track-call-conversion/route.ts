@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { AD_CLICK_PARAMS } from '@/lib/adClickId';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 /**
  * Two unrelated jobs share this route because they share a trigger (a tel:/
@@ -69,7 +70,23 @@ async function recordCallClick(body: Record<string, unknown>): Promise<void> {
   }
 }
 
+/*
+ * Generous, because a real visitor can legitimately click call and WhatsApp a
+ * few times while deciding. It is not here to stop a person — it is here
+ * because this endpoint is unauthenticated by necessity and writes into
+ * call_clicks, which api/admin/jobs later reads to attribute a completed job
+ * back to an ad click. Flooded with forged click ids, that table stops being
+ * evidence and starts feeding invented conversions into the Google Ads export.
+ */
+const RATE_LIMIT = 30;
+const RATE_WINDOW = 60;
+
 export async function POST(request: Request) {
+  const limit = await rateLimit(`callconv:${getClientIp(request)}`, RATE_LIMIT, RATE_WINDOW);
+  /* 204, not 429: this is a fire-and-forget beacon behind a tel: link and the
+     visitor is already dialling. Dropping the write is the whole response. */
+  if (!limit.ok) return new NextResponse(null, { status: 204 });
+
   let body: Record<string, unknown> = {};
   try {
     body = await request.json();

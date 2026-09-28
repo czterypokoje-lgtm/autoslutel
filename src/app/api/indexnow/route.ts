@@ -1,7 +1,20 @@
 import { NextResponse } from 'next/server';
 import sitemap from '../../sitemap';
+import { isAuthorized } from '@/lib/adminAuth';
 
-export async function GET() {
+/**
+ * Pushes the sitemap to IndexNow. An operator action, not a public one.
+ *
+ * It was unauthenticated: anyone could call it, and every call submits ~190
+ * URLs under our own IndexNow key. Repeated at speed that is our key being
+ * used to spam the endpoint, and the penalty for that lands on this domain.
+ * Gated on the same credential the other ops endpoints use.
+ */
+export async function GET(request: Request) {
+  if (!isAuthorized(request)) {
+    return NextResponse.json({ error: 'Geen toegang' }, { status: 401 });
+  }
+
   // Get all URLs from the sitemap dynamically
   const sitemapData = sitemap();
   const urls = sitemapData.map(item => item.url);
