@@ -1,8 +1,10 @@
 import { SITE_CONFIG } from '@/config/site.config';
 import { BLOG_POSTS } from '@/config/services';
 import { CITIES } from '@/config/cities';
+import fs from 'fs';
+import path from 'path';
 
-const BASE = 'https://www.autosleutel24.nl';
+const BASE = SITE_CONFIG.domain;
 
 // ── Core SEO images with descriptive alt/title metadata ──
 const CORE_IMAGES = [
@@ -196,16 +198,30 @@ const PAGE_ENTRIES = [
     images: [BLOG_IMAGES[0]],
   })),
 
-  // Dynamically add all 8 gallery images for each city
+  /*
+   * City gallery images — only the ones that exist on disk.
+   *
+   * This block used to emit 8 URLs per city unconditionally. 17 cities have
+   * no image directory at all, so 136 of the URLs handed to Google were 404s,
+   * concentrated in the newest regions — exactly the pages that most need to
+   * be crawled cleanly. sitemap.ts has always guarded with existsSync
+   * (sitemap.ts:66); this file never did.
+   *
+   * A city left with no images drops out entirely: an <url> entry in an image
+   * sitemap that lists no image is not telling Google anything.
+   */
   ...CITIES.map((city) => ({
     loc: `${BASE}/steden/${city.slug}`,
-    images: Array.from({ length: 8 }).map((_, i) => ({
-      url: `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i + 1}.webp`,
-      title: `Autosleutel Bijmaken ${city.city} - Foto ${i + 1}`,
-      caption: `Professioneel autosleutel bijmaken en programmeren in ${city.city}`,
-      geo_location: `${city.city}, ${city.region}, Nederland`,
-    })),
-  })),
+    images: Array.from({ length: 8 })
+      .map((_, i) => `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i + 1}.webp`)
+      .filter((url) => fs.existsSync(path.join(process.cwd(), 'public', url)))
+      .map((url, i) => ({
+        url,
+        title: `Autosleutel Bijmaken ${city.city} - Foto ${i + 1}`,
+        caption: `Professioneel autosleutel bijmaken en programmeren in ${city.city}`,
+        geo_location: `${city.city}, ${city.region}, Nederland`,
+      })),
+  })).filter((entry) => entry.images.length > 0),
 ];
 
 function escapeXml(str: string) {
