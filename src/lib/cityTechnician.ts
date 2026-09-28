@@ -93,7 +93,23 @@ export function findCityTechnician(
   city: { postcode: string; geo: { lat: string; lng: string } },
   technicians: PublicTechnician[],
 ): CityMatch | null {
-  const active = technicians.filter((t) => t.active);
+  /*
+   * Publishable means placeable: this person either declares a werkgebied we
+   * can test against a postcode, or has a base we can measure a distance
+   * from. Someone with neither cannot be claimed to serve anywhere.
+   *
+   * This guard is not theoretical. At the time it was written the CRM held 66
+   * active technicians, 56 of them named "[TEST] …" (34 of those German
+   * DE-* rows), and not one had a werkgebied or a base coordinate. Without
+   * this filter every candidate tied at unknown distance and the sort simply
+   * returned the first row — putting "[TEST] NL-01" on all 62 city pages, with
+   * a German test row one ordering away from the same fate.
+   *
+   * Incomplete data must produce no claim, never an arbitrary one.
+   */
+  const active = technicians.filter(
+    (t) => t.active && ((t.werkgebied ?? []).length > 0 || (t.base_lat !== null && t.base_lng !== null)),
+  );
   if (active.length === 0) return null;
 
   const cityLat = parseFloat(city.geo.lat);

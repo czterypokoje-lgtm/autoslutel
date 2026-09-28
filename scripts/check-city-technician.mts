@@ -84,4 +84,24 @@ assert.ok(low(far) > low(near), `far window (${far}) must exceed near (${near})`
 assert.ok(low(far) > 60, `a 200km drive cannot start with "30-60 min", got ${far}`);
 assert.equal(arrivalWindow(null), null, 'unknown distance must promise nothing');
 
+// THE OTHER REGRESSION THIS FILE EXISTS FOR: a roster of technicians that
+// carry no werkgebied and no base coordinates — which is exactly what the CRM
+// held when this was written, 56 of 66 rows named "[TEST] ..." — must name
+// NOBODY. Returning the first row would publish a test account on 62 pages.
+const unplaceable = [
+  tech({ id: 't1', name: '[TEST] NL-01' }),
+  tech({ id: 't2', name: '[TEST] DE-07' }),
+  tech({ id: 't3', name: 'Onze Yusuf Utrecht' }),
+];
+assert.equal(
+  findCityTechnician(city('utrecht'), unplaceable),
+  null,
+  'technicians with no werkgebied and no base must never be published',
+);
+
+// One placeable technician among unplaceable ones wins regardless of order.
+const placeable = tech({ id: 'ok', name: 'Echte monteur', werkgebied: ['3500-3599'], base_lat: 52.09, base_lng: 5.12 });
+assert.equal(findCityTechnician(city('utrecht'), [...unplaceable, placeable])!.technician.id, 'ok');
+assert.equal(findCityTechnician(city('utrecht'), [placeable, ...unplaceable])!.technician.id, 'ok');
+
 console.log('check-city-technician: all assertions passed');
