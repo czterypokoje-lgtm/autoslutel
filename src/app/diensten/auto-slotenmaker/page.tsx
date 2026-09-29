@@ -160,7 +160,7 @@ export default function AutoSlotenmakerPage() {
               Buitengesloten of slot defect? <strong>Schadevrij geopend binnen 30 min</strong> — direct nieuwe sleutel ter plaatse.
             </p>
             <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
+              <LeadCaptureForm phone={SITE_CONFIG.phone} />
             </div>
           </div>
         </section>

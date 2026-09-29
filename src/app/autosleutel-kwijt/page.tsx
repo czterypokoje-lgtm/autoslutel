@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '@/config/brands';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 
@@ -175,6 +176,34 @@ export default function AutosleutelKwijt() {
               <span className={styles.eyebrow}>Elke klus</span>
               <div className={`${styles.statValue} ${anton.className}`}>GECERTIFICEERD &<br/>VERZEKERD</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── LEAD FORM ────────────────────────────────────────────────────
+          Placed directly under the stats bar, high on the page.
+
+          This is the highest-intent query on the site and it was the only
+          money page with no form at all — every /diensten/* page has one.
+          Someone standing next to a locked car at 23:00 will phone, but the
+          ones comparing options at 14:00 want to leave details and be called
+          back, and there was no way for them to do that here. It is also what
+          gives the ad campaign a measurable conversion on this page rather
+          than only a tel: click. */}
+      <section style={{ padding: '3.5rem 0', background: '#111827' }}>
+        <div className={styles.container}>
+          <div style={{ maxWidth: 560, margin: '0 auto' }}>
+            <h2
+              className={`${styles.sectionTitle} ${anton.className}`}
+              style={{ textAlign: 'center', marginBottom: '0.75rem' }}
+            >
+              STUUR UW GEGEVENS
+            </h2>
+            <p style={{ textAlign: 'center', color: '#9ca3af', marginBottom: '1.75rem', lineHeight: 1.6 }}>
+              Liever teruggebeld? Laat uw merk, model en locatie achter — u krijgt een
+              vaste prijs voordat wij vertrekken.
+            </p>
+            <LeadCaptureForm phone={SITE_CONFIG.phone} />
           </div>
         </div>
       </section>

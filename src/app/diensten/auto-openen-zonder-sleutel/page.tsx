@@ -186,7 +186,7 @@ export default function AutoOpenenZonderSleutelPage() {
               Buitengesloten? Wij openen uw auto <strong>100% schadevrij</strong>, gemiddeld binnen 30 min ter plaatse.
             </p>
             <div style={{ marginTop: '2rem' }}>
-              <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
+              <LeadCaptureForm phone={SITE_CONFIG.phone} />
             </div>
           </div>
         </section>

@@ -296,7 +296,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
               )}
 
               <div style={{ marginTop: '2rem' }}>
-                <LeadCaptureForm phone={SITE_CONFIG.phoneTel} />
+                <LeadCaptureForm phone={SITE_CONFIG.phone} />
               </div>
             </div>
           </section>
