@@ -28,7 +28,15 @@
 --    the code that reads it.
 -- ============================================================================
 
-create or replace view public.public_technicians
+/*
+ * Dropped and recreated rather than replaced: CREATE OR REPLACE VIEW can add
+ * columns but never remove one (Postgres 42P16), and removing `phone` is half
+ * the point of this migration. Nothing depends on the view except the city
+ * page, which reads it over PostgREST, so there is nothing to cascade.
+ */
+drop view if exists public.public_technicians;
+
+create view public.public_technicians
 with (security_invoker = false) as
   select
     id,
