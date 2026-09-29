@@ -24,7 +24,13 @@ interface GoogleReviewsCtaProps {
  * from SITE_CONFIG, the one place they're meant to be kept true, instead
  * of a second, different, invented number living only in this file.
  */
-const REVIEWS = [
+/*
+ * Exported so /beoordelingen can build Review markup from the same array the
+ * cards render. It must be marked up THERE and nowhere else: this component
+ * is on all 62 city pages, and emitting the same review nodes 62 times is the
+ * per-page duplication utils/schema.ts already warns about.
+ */
+export const REVIEWS = [
   {
     name: 'Roy',
     when: 'een week geleden',

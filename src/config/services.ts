@@ -15,6 +15,17 @@ export const REDIRECTED_BLOG_SLUGS = new Set([
   'auto-openen-zonder-sleutel-schadevrij',
   'autosleutel-bijmaken-tips-snel-veilig',
   'sleutel-bijmaken-auto-mobiele-service',
+  /*
+   * Five posts that competed head-on with the page meant to own the query —
+   * 100% title-token overlap each. They 301 to that page in next.config.ts,
+   * and are listed here so the sitemap stops offering Google a URL that
+   * immediately redirects.
+   */
+  'autosleutel-bestellen-op-kenteken',
+  'autosleutel-batterij-vervangen-stappenplan',
+  'sleutel-in-auto-laten-liggen-oplossingen',
+  'autosleutel-kwijt-wat-nu-stappenplan',
+  'auto-slotenmaker-ultieme-gids-snel-hulp',
 ]);
 
 export const BLOG_POSTS = [

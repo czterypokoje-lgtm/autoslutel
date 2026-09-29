@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
+import GoogleReviewsCta, { REVIEWS } from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
@@ -12,9 +12,52 @@ export const metadata: Metadata = {
 };
 
 export default function BeoordelingenPage() {
-  // NOTE: no Review/AggregateRating schema here on purpose. Marking up reviews
-  // requires the actual review text on the page, and this page only links out
-  // to the Google profile. Add the real review bodies first, then the markup.
+  /*
+   * Review and AggregateRating markup, on this page ONLY.
+   *
+   * The old note here said the markup had to wait for real review bodies to
+   * be on the page. They are now — GoogleReviewsCta renders eight, copied
+   * from the Google profile — so the condition is met and the same array is
+   * marked up rather than a second, retyped copy of it.
+   *
+   * What this will NOT do is put stars in Google's results. Reviews a
+   * business publishes about itself on LocalBusiness or Organization are
+   * self-serving and ineligible for the star rich result; that is why
+   * LocalBusinessSchema.tsx deliberately carries no aggregateRating. The
+   * value here is for answer engines that read structured data directly. The
+   * stars customers see come from the Google Business Profile.
+   *
+   * Two rules kept honest:
+   *   - the two reviews Google itself truncates with "…" are left out. A
+   *     marked-up body that stops mid-sentence misrepresents what the person
+   *     wrote.
+   *   - no datePublished. The source has "2 weken geleden" and nothing more;
+   *     a date derived from that would be invented, and an invented date in
+   *     structured data is worse than an absent one.
+   */
+  const reviewSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    '@id': `${SITE_CONFIG.domain}/#localbusiness`,
+    name: SITE_CONFIG.fullName,
+    url: SITE_CONFIG.domain,
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: SITE_CONFIG.rating,
+      /* Ten, not eight: two five-star reviews on the profile carry no written
+         text, so they are counted but not quoted. */
+      reviewCount: SITE_CONFIG.reviewCount,
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: REVIEWS.filter((r) => !r.text.includes('…')).map((r) => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r.name },
+      reviewBody: r.text,
+      reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5', worstRating: '1' },
+    })),
+  };
+
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -26,6 +69,11 @@ export default function BeoordelingenPage() {
 
   return (
     <main>
+      <script
+        id="beoordelingen-review-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}

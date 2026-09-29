@@ -61,6 +61,61 @@ const surcharges = [
   { time: 'Zondag & feestdagen',       label: '+25% toeslag',       color: 'var(--color-danger)' },
 ];
 
+/**
+ * '€ 149' -> 149.
+ *
+ * Derived from the string the table already renders rather than hand-typed
+ * beside it: two copies of the same price drift, and the one nobody looks at
+ * is the one in the schema. This way the number Google reads is by
+ * construction the number on the page.
+ */
+const euro = (value: string): number | null => {
+  const n = Number(value.replace(/[^0-9.,]/g, '').replace(',', '.'));
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
+
+/*
+ * The price list, machine-readable.
+ *
+ * Every row is a range, so each Offer carries a PriceSpecification with
+ * minPrice and maxPrice rather than a single `price` — quoting €149 flat for
+ * a service the page itself advertises as €149–199 would be a cheaper number
+ * than we actually charge, published in a form Google may surface.
+ *
+ * valueAddedTaxIncluded: false, because the page says so twice ("Alle prijzen
+ * zijn exclusief btw"). Leaving it out lets a consumer-facing surface read
+ * these as gross prices, which they are not.
+ */
+const offerCatalogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'OfferCatalog',
+  '@id': `${SITE_CONFIG.domain}/prijzen#tarieven`,
+  name: 'Tarieven Autosleutel24',
+  url: `${SITE_CONFIG.domain}/prijzen`,
+  itemListElement: priceRows.flatMap((row) => {
+    if (!row.service) return [];
+    const min = euro(row.from);
+    const max = euro(row.to);
+    if (min === null) return [];
+    return [{
+      '@type': 'Offer',
+      name: row.service,
+      description: row.note,
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/InStock',
+      areaServed: 'NL',
+      itemOffered: { '@type': 'Service', name: row.service, provider: { '@id': `${SITE_CONFIG.domain}/#localbusiness` } },
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'EUR',
+        minPrice: min,
+        ...(max !== null && max !== min ? { maxPrice: max } : {}),
+        valueAddedTaxIncluded: false,
+      },
+    }];
+  }),
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -74,6 +129,7 @@ export default function PrijzenPage() {
   return (
     <>
       <script id="prijzen-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="prijzen-offers-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offerCatalogSchema) }} />
       <main>
       {/* Hero */}
       <section className={styles.hero}>

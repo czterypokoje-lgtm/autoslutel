@@ -113,22 +113,22 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/blog/sleutel-kwijt-utrecht-stappenplan",
-        destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
+        destination: "/autosleutel-kwijt",
         permanent: true,
       },
       {
         source: "/blog/alle-sleutels-kwijt-wat-nu-utrecht",
-        destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
+        destination: "/autosleutel-kwijt",
         permanent: true,
       },
       {
         source: "/blog/sleutel-kwijt-auto-hulp-oplossingen",
-        destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
+        destination: "/autosleutel-kwijt",
         permanent: true,
       },
       {
         source: "/blog/sleutel-kwijt-auto-vind-snel-oplossingen",
-        destination: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
+        destination: "/autosleutel-kwijt",
         permanent: true,
       },
       {
@@ -139,6 +139,42 @@ const nextConfig: NextConfig = {
       {
         source: "/blog/auto-herkent-sleutel-niet-meer-oorzaken-oplossingen",
         destination: "/blog/auto-herkent-sleutel-niet-meer",
+        permanent: true,
+      },
+      /*
+       * Cannibalisation: five pairs measured at 100% title-token overlap, each
+       * a blog post competing with the page that should own the query. The
+       * blog side loses in every case — a thin article against a service page
+       * with schema, pricing and a conversion path.
+       *
+       * The four older redirects above pointed at
+       * /blog/autosleutel-kwijt-wat-nu-stappenplan, which now moves on to
+       * /autosleutel-kwijt; they were repointed at the final destination in
+       * the same edit rather than left to chain through it.
+       */
+      {
+        source: "/blog/autosleutel-bestellen-op-kenteken",
+        destination: "/autosleutel-bestellen-op-kenteken",
+        permanent: true,
+      },
+      {
+        source: "/blog/autosleutel-batterij-vervangen-stappenplan",
+        destination: "/diensten/batterij-vervangen",
+        permanent: true,
+      },
+      {
+        source: "/blog/sleutel-in-auto-laten-liggen-oplossingen",
+        destination: "/diensten/sleutel-in-auto",
+        permanent: true,
+      },
+      {
+        source: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/auto-slotenmaker-ultieme-gids-snel-hulp",
+        destination: "/diensten/auto-slotenmaker",
         permanent: true,
       },
       {
