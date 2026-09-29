@@ -2,6 +2,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 import { BLOG_POSTS } from '@/config/services';
 import { CITIES } from '@/config/cities';
 import fs from 'fs';
+import crypto from 'crypto';
 import path from 'path';
 
 const BASE = SITE_CONFIG.domain;
@@ -161,6 +162,42 @@ const BLOG_IMAGES = [
   },
 ];
 
+/** Files whose bytes appear under exactly one city. */
+function cityOwnImages(): Set<string> {
+  const seen = new Map<string, string[]>();
+  for (const city of CITIES) {
+    for (let i = 1; i <= 8; i++) {
+      const rel = `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i}.webp`;
+      const abs = path.join(process.cwd(), 'public', rel);
+      if (!fs.existsSync(abs)) continue;
+      const hash = crypto.createHash('md5').update(fs.readFileSync(abs)).digest('hex');
+      seen.set(hash, [...(seen.get(hash) ?? []), rel]);
+    }
+  }
+  const own = new Set<string>();
+  for (const paths of seen.values()) if (paths.length === 1) own.add(paths[0]!);
+  return own;
+}
+
+let ownCache: Set<string> | null = null;
+
+function cityImageEntries() {
+  ownCache ??= cityOwnImages();
+  const own = ownCache;
+  return CITIES.map((city) => ({
+    loc: `${BASE}/steden/${city.slug}`,
+    images: Array.from({ length: 8 })
+      .map((_, i) => `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i + 1}.webp`)
+      .filter((url) => own.has(url))
+      .map((url, i) => ({
+        url,
+        title: `Autosleutel Bijmaken ${city.city} - Foto ${i + 1}`,
+        caption: `Professioneel autosleutel bijmaken en programmeren in ${city.city}`,
+        geo_location: `${city.city}, ${city.region}, Nederland`,
+      })),
+  })).filter((entry) => entry.images.length > 0);
+}
+
 // ── Page entries: url → its image(s) ──
 const PAGE_ENTRIES = [
   {
@@ -199,29 +236,27 @@ const PAGE_ENTRIES = [
   })),
 
   /*
-   * City gallery images — only the ones that exist on disk.
+   * City gallery images — only the ones that belong to that city.
    *
-   * This block used to emit 8 URLs per city unconditionally. 17 cities have
-   * no image directory at all, so 136 of the URLs handed to Google were 404s,
-   * concentrated in the newest regions — exactly the pages that most need to
-   * be crawled cleanly. sitemap.ts has always guarded with existsSync
-   * (sitemap.ts:66); this file never did.
+   * Two filters, and the second is the point.
    *
-   * A city left with no images drops out entirely: an <url> entry in an image
-   * sitemap that lists no image is not telling Google anything.
+   * It exists on disk: this block used to emit 8 URLs per city regardless,
+   * and 17 cities have no directory at all, so 136 of the URLs handed to
+   * Google were 404s — concentrated in the newest regions, exactly the pages
+   * that most need to be crawled cleanly.
+   *
+   * And it is not the same photograph as another city's: 384 files across 48
+   * cities were 8 stock images copied and renamed per city. Telling Google
+   * "Autosleutel Bijmaken Breda - Foto 1" about a picture also filed as
+   * Gouda's, Bussum's and forty-five others' is an image-duplication signal
+   * laid on top of the text one. A shared photo can stay on the page as
+   * decoration; it has no business being declared as that city's.
+   *
+   * Computed once per process rather than per request — 394 small reads at
+   * module load, none afterwards — and self-maintaining: as real job photos
+   * replace stock, coverage grows with no list to keep up to date.
    */
-  ...CITIES.map((city) => ({
-    loc: `${BASE}/steden/${city.slug}`,
-    images: Array.from({ length: 8 })
-      .map((_, i) => `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i + 1}.webp`)
-      .filter((url) => fs.existsSync(path.join(process.cwd(), 'public', url)))
-      .map((url, i) => ({
-        url,
-        title: `Autosleutel Bijmaken ${city.city} - Foto ${i + 1}`,
-        caption: `Professioneel autosleutel bijmaken en programmeren in ${city.city}`,
-        geo_location: `${city.city}, ${city.region}, Nederland`,
-      })),
-  })).filter((entry) => entry.images.length > 0),
+  ...cityImageEntries(),
 ];
 
 function escapeXml(str: string) {
