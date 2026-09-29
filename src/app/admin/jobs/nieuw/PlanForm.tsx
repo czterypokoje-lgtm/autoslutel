@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from '../jobs.module.css';
@@ -80,6 +80,45 @@ export default function PlanForm({
    */
   const [customerName, setCustomerName] = useState(lead?.name ?? '');
   const [customerPhone, setCustomerPhone] = useState(lead?.phone_e164 ?? lead?.phone ?? '');
+
+  /*
+   * Linking a phone-in back to the lead it came from.
+   *
+   * A job planned without arriving via ?lead= carries no lead_id, and the
+   * click id that paid for the customer lives on the lead. 39 of 65 finished
+   * jobs are in that state. The office already types the number; this is what
+   * turns it into the link, without asking them to go and look.
+   *
+   * Only offered — never applied on its own. Two people share a number more
+   * often than a CRM expects, and a wrongly linked job would report someone
+   * else's ad click as the cause of this sale.
+   */
+  const [linkedLeadId, setLinkedLeadId] = useState<string | null>(lead?.id ?? null);
+  const [matches, setMatches] = useState<
+    { id: string; name: string | null; service: string | null; created_at: string; hasClickId: boolean }[]
+  >([]);
+  const [dismissed, setDismissed] = useState(false);
+
+  /* Enough of a number to be worth looking up. Derived, not stored: the
+     effect below must not clear state synchronously, so whether to SHOW a
+     match is computed at render instead of being another setState. */
+  const phoneDigits = customerPhone.replace(/\D/g, '');
+  const lookupWorthIt = !linkedLeadId && !order && !dismissed && phoneDigits.length >= 9;
+
+  useEffect(() => {
+    if (!lookupWorthIt) return;
+
+    let cancelled = false;
+    /* Debounced: this fires while somebody is still typing the number. */
+    const timer = setTimeout(() => {
+      fetch(`/api/admin/leads/by-phone?phone=${encodeURIComponent(customerPhone)}`)
+        .then((r) => (r.ok ? r.json() : { leads: [] }))
+        .then((json) => { if (!cancelled) setMatches(json.leads ?? []); })
+        .catch(() => { if (!cancelled) setMatches([]); });
+    }, 400);
+
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [customerPhone, lookupWorthIt]);
   // A webshop order is already paid, so the agreed price is known exactly.
   const [quoted, setQuoted] = useState(order ? String(order.total_inc) : '');
   /*
@@ -166,7 +205,7 @@ export default function PlanForm({
       body: JSON.stringify({
         // One or the other, never both: the id is the same value in the
         // order case and would otherwise be written into a lead column.
-        lead_id: order ? null : (lead?.id ?? null),
+        lead_id: order ? null : linkedLeadId,
         order_id: order?.id ?? null,
         customer_name: customerName.trim() || null,
         customer_phone: customerPhone.trim() || null,
@@ -270,6 +309,50 @@ export default function PlanForm({
               value={customerPhone}
               onChange={(e) => setCustomerPhone(e.target.value)}
             />
+            {linkedLeadId && !lead && (
+              <p style={{ fontSize: '0.8rem', color: '#059669', marginTop: '0.35rem' }}>
+                Gekoppeld aan een eerdere aanvraag — de klus telt mee in de advertentierapportage.{' '}
+                <button
+                  type="button"
+                  onClick={() => setLinkedLeadId(null)}
+                  style={{ border: 'none', background: 'none', padding: 0, color: '#64748b', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  ontkoppelen
+                </button>
+              </p>
+            )}
+            {lookupWorthIt && matches.length > 0 && (
+              <div style={{ marginTop: '0.5rem', padding: '0.6rem 0.75rem', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 8 }}>
+                <div style={{ fontSize: '0.82rem', color: '#0f172a', marginBottom: '0.4rem' }}>
+                  Dit nummer stond al bij {matches.length === 1 ? 'een eerdere aanvraag' : `${matches.length} eerdere aanvragen`}:
+                </div>
+                {matches.map((m) => (
+                  <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
+                    <span style={{ fontSize: '0.82rem', color: '#334155' }}>
+                      {m.created_at.slice(0, 10)}
+                      {m.name ? ` · ${m.name}` : ''}
+                      {m.service ? ` · ${m.service}` : ''}
+                      {/* The only reason the office should care which one to pick. */}
+                      {m.hasClickId ? ' · via advertentie' : ''}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => { setLinkedLeadId(m.id); setMatches([]); }}
+                      style={{ fontSize: '0.78rem', border: '1px solid #0284c7', background: '#fff', color: '#0284c7', borderRadius: 6, padding: '0.15rem 0.5rem', cursor: 'pointer' }}
+                    >
+                      Koppelen
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setDismissed(true)}
+                  style={{ fontSize: '0.78rem', border: 'none', background: 'none', padding: 0, color: '#64748b', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  Nieuwe klant, niet koppelen
+                </button>
+              </div>
+            )}
           </div>
 
           <div className={styles.field}>
