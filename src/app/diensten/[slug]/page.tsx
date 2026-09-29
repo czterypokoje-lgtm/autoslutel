@@ -584,15 +584,20 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <h2>In Welke Regio&apos;s Bieden Wij {service.title}?</h2>
                   <p>
-                    Met onze centrale ligging en meerdere mobiele service-eenheden bedienen wij dagelijks een groot werkgebied in Nederland. Wij zijn razendsnel ter plaatse in onder meer:
+                    Met een netwerk van aangesloten autosleutelspecialisten bedienen wij dagelijks een groot werkgebied in Nederland. Wij komen onder meer in:
                   </p>
+                  {/* No arrival time per city here. city.travelTime read "30-60 min"
+                      on 61 of 62 records — a constant wearing a data field's clothes,
+                      and false for every region beyond the Randstad. The real figure
+                      depends on which partner covers the city, which only the city
+                      page knows; this list links there rather than guessing. */}
                   <ul className={styles.bulletList}>
                     {CITIES.map((c) => (
                       <li key={c.slug}>
                         <Link href={`/steden/${c.slug}`}>
                           {c.city}
                         </Link>
-                        {` — Directe mobiele noodservice ter plaatse binnen ${c.travelTime}`}
+                        {` — ${c.region}`}
                       </li>
                     ))}
                   </ul>
