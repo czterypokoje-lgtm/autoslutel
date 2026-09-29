@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronDown, Lock, Menu, Settings2, ShoppingBag, X } from 'lucide-react';
+import { ChevronDown, Menu, Settings2, ShoppingBag, X } from 'lucide-react';
 import styles from './netwerk.module.css';
 
 interface Server {
@@ -46,7 +46,6 @@ export default function NetworkSidebar({
   servers,
   isOffice,
   presence = {},
-  canEnter = true,
   groups,
   channels,
 }: {
@@ -55,7 +54,6 @@ export default function NetworkSidebar({
   /** Real online/member counts per server id, from chat_server_presence. */
   presence?: Record<string, { online: number; members: number }>;
   /** False for a starter monteur: channels are listed but not openable. */
-  canEnter?: boolean;
   groups: Group[];
   channels: Channel[];
 }) {
@@ -190,42 +188,11 @@ export default function NetworkSidebar({
               </div>
             )}
 
-            {!canEnter && (
-              /*
-                Shown once, above the list, rather than on every locked row:
-                twenty repetitions of the same notice reads as a broken page,
-                not an offer.
-              */
-              <div className={styles.proNotice}>
-                <Lock size={13} strokeWidth={2.2} aria-hidden="true" />
-                <div>
-                  <strong>Alleen voor Pro en geverifieerde monteurs</strong>
-                  <p>
-                    U ziet welke kanalen er zijn en wie er online is. Meelezen en meepraten
-                    hoort bij een Pro-account — vraag het kantoor om toegang.
-                  </p>
-                </div>
-              </div>
-            )}
-
             <div className={styles.channelGroup}>
               <div className={styles.groupTitle}>Marktplaats</div>
-              {canEnter ? (
-                <Link href="/admin/netwerk/marktplaats" className={styles.channelLink} onClick={() => setOpen(false)}>
-                  <ShoppingBag size={14} strokeWidth={2} style={{ marginRight: 6 }} /> Tools &amp; onderdelen
-                </Link>
-              ) : (
-                /* Behind the same door as the channels — buying and selling
-                   between monteurs is part of what Pro is for. */
-                <span
-                  className={styles.channelLocked}
-                  title="Alleen voor Pro en geverifieerde monteurs"
-                >
-                  <ShoppingBag size={14} strokeWidth={2} style={{ marginRight: 6 }} /> Tools &amp;
-                  onderdelen
-                  <Lock size={11} strokeWidth={2.2} aria-hidden="true" />
-                </span>
-              )}
+              <Link href="/admin/netwerk/marktplaats" className={styles.channelLink} onClick={() => setOpen(false)}>
+                <ShoppingBag size={14} strokeWidth={2} style={{ marginRight: 6 }} /> Tools &amp; onderdelen
+              </Link>
             </div>
 
             {groups.map((group) => {
@@ -250,28 +217,16 @@ export default function NetworkSidebar({
                     <span className={styles.groupCount}>{inGroup.length}</span>
                   </button>
                   {!collapsed &&
-                    inGroup.map((channel) =>
-                      canEnter ? (
-                        <Link
-                          key={channel.id}
-                          href={`/admin/netwerk/${channel.id}`}
-                          className={styles.channelLink}
-                          onClick={() => setOpen(false)}
-                        >
-                          <span className={styles.hash}>{group.prefix}</span> {channel.name}
-                        </Link>
-                      ) : (
-                        /* Visible, and deliberately not a link. */
-                        <span
-                          key={channel.id}
-                          className={styles.channelLocked}
-                          title="Alleen voor Pro en geverifieerde monteurs"
-                        >
-                          <span className={styles.hash}>{group.prefix}</span> {channel.name}
-                          <Lock size={11} strokeWidth={2.2} aria-hidden="true" />
-                        </span>
-                      )
-                    )}
+                    inGroup.map((channel) => (
+                      <Link
+                        key={channel.id}
+                        href={`/admin/netwerk/${channel.id}`}
+                        className={styles.channelLink}
+                        onClick={() => setOpen(false)}
+                      >
+                        <span className={styles.hash}>{group.prefix}</span> {channel.name}
+                      </Link>
+                    ))}
                 </div>
               );
             })}

@@ -80,10 +80,6 @@ export default async function NetwerkLayout({
   const isOffice = true;
   const mine = channels ?? [];
 
-  /* Nobody reaches this line who is not office, so the tier and badge checks
-     that used to gate it are gone with them. */
-  const canEnter = true;
-
   const presenceById: Record<string, { online: number; members: number }> = {};
   for (const row of presence ?? []) {
     presenceById[row.server_id as string] = {
@@ -113,7 +109,6 @@ export default async function NetwerkLayout({
         groups={groups}
         channels={mine}
         presence={presenceById}
-        canEnter={canEnter}
       />
       <div className={styles.main}>{children}</div>
     </div>
