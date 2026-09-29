@@ -106,8 +106,22 @@ export default async function UitgavenPage() {
                   {MONEY.format(exp.amount)}
                 </div>
                 
-                {isOffice && exp.status === 'pending' && (
-                  <ExpenseActions id={exp.id} />
+                {/* Whatever the status. An approved expense with a wrong
+                    amount was previously untouchable — the row showed the
+                    mistake and offered nothing to do about it. */}
+                {isOffice && (
+                  <ExpenseActions
+                    expense={{
+                      id: exp.id,
+                      category: exp.category,
+                      description: exp.description,
+                      amount: exp.amount,
+                      date_incurred: exp.date_incurred,
+                      supplier_name: exp.supplier_name ?? null,
+                      is_reimbursable: exp.is_reimbursable === true,
+                      status: exp.status,
+                    }}
+                  />
                 )}
               </div>
             </div>
