@@ -70,8 +70,8 @@ const EXPORT_COLUMNS =
  */
 const POSITIVE_FROM_JOBS =
   'id, final_price, completed_at, scheduled_date, lead_id, ' +
-  'gclid, wbraid, gbraid, msclkid, click_captured_at, ' +
-  'leads (id, gclid, wbraid, gbraid, msclkid, created_at)';
+  'gclid, wbraid, gbraid, msclkid, click_captured_at, customer_phone, ' +
+  'leads (id, gclid, wbraid, gbraid, msclkid, email, phone, phone_e164, created_at)';
 
 /* Google will not accept a conversion for a click older than this. */
 const CLICK_WINDOW_DAYS = 90;
@@ -173,10 +173,32 @@ export async function GET(request: Request) {
       gbraid: string | null;
       msclkid: string | null;
       click_captured_at: string | null;
-      leads: { id: string; gclid: string | null; wbraid: string | null; gbraid: string | null; msclkid: string | null; created_at: string } | null;
+      customer_phone: string | null;
+      leads: { id: string; gclid: string | null; wbraid: string | null; gbraid: string | null; msclkid: string | null; email: string | null; phone: string | null; phone_e164: string | null; created_at: string } | null;
     }
 
     const cutoff = Date.now() - CLICK_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+
+    /*
+     * E.164, strictly — no spaces, no separators.
+     *
+     * Google matches an enhanced conversion on a SHA-256 hash of this string,
+     * so "+316 1175 1231" and "+31611751231" are two different customers as
+     * far as the match is concerned, and the first one matches nobody.
+     * phone_e164 is right on 225 of 228 rows but is not guaranteed, and the
+     * raw `phone` column is whatever the visitor typed.
+     */
+    const toE164 = (...candidates: (string | null | undefined)[]): string | null => {
+      for (const raw of candidates) {
+        if (!raw) continue;
+        let d = String(raw).replace(/[^\d+]/g, '');
+        if (d.startsWith('00')) d = `+${d.slice(2)}`;
+        else if (d.startsWith('0')) d = `+31${d.slice(1)}`;
+        else if (!d.startsWith('+')) d = `+31${d}`;
+        if (/^\+[1-9]\d{7,14}$/.test(d)) return d;
+      }
+      return null;
+    };
 
     const positive = ((positiveResult.data ?? []) as unknown as JobRow[])
       .map((job) => {
@@ -195,7 +217,15 @@ export async function GET(request: Request) {
            invisible, because nothing propagates a lead's msclkid onto its
            job. It has been stored all along and reported nowhere. */
         const msclkid = lead?.msclkid ?? job.msclkid ?? null;
-        return { job, lead, clickId, msclkid, clickedAt, value };
+        /*
+         * The identity fallback. 57 of 59 jobs with revenue carry no click id
+         * at all, but most carry a phone number — and Google can match an
+         * enhanced conversion on a hashed phone or email when the click id is
+         * gone. This is what turns 2 reportable conversions into 26.
+         */
+        const email = (lead?.email ?? '').trim().toLowerCase() || null;
+        const phone = toE164(lead?.phone_e164, lead?.phone, job.customer_phone);
+        return { job, lead, clickId, msclkid, email, phone, clickedAt, value };
       })
       /* Four reasons a finished job is not reportable, none of them faults:
          no click paid for it, no money was recorded, the click has aged out
@@ -204,7 +234,10 @@ export async function GET(request: Request) {
       /* Either network's click id makes the job reportable. Requiring
          Google's meant a job whose only trace was an msclkid was dropped here
          and never reached the Microsoft export at all. */
-      .filter((r) => (r.clickId || r.msclkid) && r.value > 0 && r.clickedAt && new Date(r.clickedAt).getTime() >= cutoff)
+      /* A click id, a Microsoft click id, or an identity Google can match on.
+         Requiring a click id meant 57 of 59 paid jobs were dropped here and
+         never offered to any export. */
+      .filter((r) => (r.clickId || r.msclkid || r.email || r.phone) && r.value > 0 && r.clickedAt && new Date(r.clickedAt).getTime() >= cutoff)
       .map((r) => ({
         id: r.job.id,
         status: 'afgerond',
@@ -212,6 +245,8 @@ export async function GET(request: Request) {
         wbraid: r.lead?.wbraid ?? r.job.wbraid,
         gbraid: r.lead?.gbraid ?? r.job.gbraid,
         msclkid: r.msclkid,
+        email: r.email,
+        phone: r.phone,
         created_at: r.clickedAt!,
         job_value: Math.round(r.value * 100) / 100,
         job_count: 1,
@@ -227,6 +262,8 @@ export async function GET(request: Request) {
     }[]).map((lead) => ({
       ...lead,
       msclkid: null,
+      email: null,
+      phone: null,
       job_value: null,
       job_count: 0,
       conversion_time: null,

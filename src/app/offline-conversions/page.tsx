@@ -12,6 +12,9 @@ interface ExportLead {
   gbraid: string | null;
   /** Microsoft's click id. Captured and stored all along, never exported. */
   msclkid: string | null;
+  /** Identity Google can match on when the click id is gone. Already normalised server-side. */
+  email: string | null;
+  phone: string | null;
   /** Revenue from finished jobs on this lead. Null when there is none yet. */
   job_value?: number | null;
   job_count?: number;
@@ -215,6 +218,62 @@ export default function OfflineConversionsPage() {
    * also belongs in. The two uploads overlap by design and Microsoft
    * de-duplicates on click id.
    */
+  /**
+   * Enhanced conversions for leads — the recovery path.
+   *
+   * 57 of the 59 finished jobs carrying revenue have no click id. The click
+   * happened, the lead form was filled in, the job was done and paid, and
+   * then the gclid was lost somewhere between the lead and the job. Those
+   * conversions are not gone: Google can match one on a hashed email or phone
+   * belonging to the person who submitted the form, and credit it to whatever
+   * click it came from.
+   *
+   * That turns 2 reportable conversions into 26, and EUR 775 of reported
+   * revenue into EUR 8,285.
+   *
+   * Hashed here, in the browser, with SHA-256 over a normalised value —
+   * lowercase trimmed email, strict E.164 phone. Google's importer expects
+   * exactly that and nothing raw ever reaches the file. The normalisation is
+   * the part that silently fails if it is wrong: "+316 1175 1231" hashes to
+   * something that matches nobody.
+   *
+   * THIS IS TIME-LIMITED. Google will not accept a conversion for a click
+   * older than 90 days, and the oldest of these is 48 days. Every week this
+   * waits, some of it expires for good.
+   */
+  const handleDownloadEnhanced = async () => {
+    const sha256 = async (value: string) => {
+      const bytes = new TextEncoder().encode(value);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+    };
+
+    let csv = `Parameters:TimeZone=Europe/Amsterdam\n`;
+    csv += `Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency\n`;
+
+    let rows = 0;
+    for (const lead of positive) {
+      /* A row already carrying a click id belongs in the click upload, which
+         matches more precisely. This file is only for the ones that cannot. */
+      if (clickId(lead)) continue;
+      if (!lead.email && !lead.phone) continue;
+      const when = formatDate(lead.conversion_time || lead.created_at);
+      if (!when) continue;
+      const known = jobValues[lead.id];
+      const cValue = Number.isFinite(known) && known > 0 ? String(known) : '';
+      const hEmail = lead.email ? await sha256(lead.email) : '';
+      const hPhone = lead.phone ? await sha256(lead.phone) : '';
+      csv += `${hEmail},${hPhone},${GOOGLE_ADS_CONVERSION_NAME},${when},${cValue},EUR\n`;
+      rows++;
+    }
+
+    if (!rows) {
+      window.alert('Geen leads zonder click id maar mét e-mail of telefoon.');
+      return;
+    }
+    downloadCsv(`google-ads-enhanced-${new Date().toISOString().split('T')[0]}.csv`, csv);
+  };
+
   const handleDownloadMicrosoft = () => {
     let csv = `Parameters:TimeZone=Europe/Amsterdam\n`;
     csv += `Microsoft Click ID,Conversion Name,Conversion Time,Conversion Value,Conversion Currency\n`;
@@ -344,6 +403,23 @@ export default function OfflineConversionsPage() {
               }}
             >
               Download conversie-CSV
+            </button>
+
+            <button
+              onClick={handleDownloadEnhanced}
+              style={{
+                padding: '1rem 2rem',
+                marginLeft: '0.75rem',
+                background: '#7c3aed',
+                color: '#fff',
+                fontWeight: 'bold',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '1.1rem',
+              }}
+            >
+              Download enhanced-CSV ({positive.filter((l) => !clickId(l) && (l.email || l.phone)).length})
             </button>
 
             <button
