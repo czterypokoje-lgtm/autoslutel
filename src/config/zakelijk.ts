@@ -20,6 +20,8 @@ export type ZakelijkSegment = {
   /** Nav and card label. */
   label: string;
   title: string;
+  /* Kept under 44 characters: layout.tsx appends ' | Autosleutel24', and all
+     four of these were running to 74-79 in results. */
   metaTitle: string;
   metaDesc: string;
   h1Top: string;
@@ -42,7 +44,7 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
     slug: 'garages',
     label: 'Garages',
     title: 'Autosleutels voor garagebedrijven',
-    metaTitle: 'Autosleutel Service voor Garages | Wij Komen naar Uw Werkplaats',
+    metaTitle: 'Autosleutelservice voor Garages op Locatie',
     metaDesc:
       'Klant met een verloren of defecte autosleutel in uw werkplaats? Wij komen naar u toe, maken en coderen de sleutel ter plaatse. Geen investering in apparatuur, u houdt de klus.',
     h1Top: 'Uw klant staat met een sleutelprobleem in de werkplaats.',
@@ -105,7 +107,7 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
     slug: 'autobedrijven',
     label: 'Autobedrijven & dealers',
     title: 'Tweede sleutel voor uw occasions',
-    metaTitle: 'Autosleutel Bijmaken voor Autobedrijven | Bij U op de Zaak',
+    metaTitle: 'Autosleutel Bijmaken voor Autobedrijven',
     metaDesc:
       'Occasions met maar één sleutel? Wij maken tweede sleutels bij u op locatie, meerdere auto’s per bezoek. Hogere verkoopprijs, minder discussie bij aflevering.',
     h1Top: 'Een occasion met één sleutel verkoopt moeilijker.',
@@ -168,7 +170,7 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
     slug: 'import-export',
     label: 'Import & export',
     title: 'Sleutels voor import- en exportauto’s',
-    metaTitle: 'Autosleutels voor Import & Export | Op Locatie, Meerdere Auto’s',
+    metaTitle: 'Autosleutels voor Import en Export',
     metaDesc:
       'Importauto’s met één of geen sleutel? Wij maken en coderen sleutels op uw eigen terrein of in de loods, ook bij volledig sleutelverlies. Alle Europese merken.',
     h1Top: 'Importauto’s komen zelden met twee sleutels binnen.',
@@ -231,7 +233,7 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
     slug: 'wagenpark-en-verhuur',
     label: 'Wagenpark & verhuur',
     title: 'Sleutelservice voor wagenparken en verhuurbedrijven',
-    metaTitle: 'Autosleutel Service Wagenpark & Autoverhuur | 24/7 op Locatie',
+    metaTitle: 'Autosleutelservice Wagenpark en Verhuur',
     metaDesc:
       'Bus, bestelbus of huurauto zonder sleutel staat stil en verdient niets. Wij maken reservesleutels voor uw hele wagenpark en komen 24/7 bij storing of verlies.',
     h1Top: 'Een voertuig zonder sleutel verdient niets.',

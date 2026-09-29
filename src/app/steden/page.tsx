@@ -32,8 +32,39 @@ const groups = [
 ];
 
 export default function Steden() {
+  /*
+   * Thinnest hub on the site — 516 words and, until now, no structured data
+   * whatsoever, while all 62 children carry a Locksmith graph each. The
+   * ItemList is what makes this page the index of the network rather than a
+   * page that merely links to it.
+   */
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${SITE_CONFIG.domain}/steden#lijst`,
+    name: 'Werkgebied per stad',
+    numberOfItems: CITIES.length,
+    itemListElement: CITIES.map((city, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: city.city,
+      url: `${SITE_CONFIG.domain}/steden/${city.slug}`,
+    })),
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Steden', item: `${SITE_CONFIG.domain}/steden` },
+    ],
+  };
+
   return (
     <main>
+      <script id="steden-itemlist" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      <script id="steden-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <section style={{ background:'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding:'4rem 2rem', textAlign:'center' }}>
         <p style={{ fontSize:'0.72rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', color:'var(--orange-400)', marginBottom:'0.75rem' }}>SERVICEDEKKING</p>
         <h1 style={{ color:'#fff', marginBottom:'1rem' }}>Alle Steden — {CITIES.length} Locaties</h1>

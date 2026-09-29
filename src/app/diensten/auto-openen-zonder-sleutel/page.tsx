@@ -15,7 +15,9 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Auto Openen Zonder Sleutel | 24/7 Schadevrij | Autosleutel24',
   },
-  description: 'Auto openen zonder sleutel nodig? Onze mobiele locksmith opent uw auto 100% schadevrij binnen 30 min. Vaste prijs vanaf €149. Actief in Utrecht, Amsterdam, Almere & Amersfoort. Bel 24/7!',
+  // 186 characters truncated in results, and what Google cut was the price
+  // and the call to action — the two things that earn the click.
+  description: 'Auto openen zonder sleutel? Wij openen uw auto 100% schadevrij op locatie, vaste prijs vanaf €149. 24/7 bereikbaar in heel Nederland. Bel direct!',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
 };
 

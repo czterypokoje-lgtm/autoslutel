@@ -6,7 +6,9 @@ import B2BForm from '@/components/B2BForm/B2BForm';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Autosleutelspecialist Worden | Aansluiten bij Autosleutel24',
+  // 75 characters once the template appended the brand — which it also said
+  // twice. Base is now 43, landing at 59.
+  title: 'Autosleutelspecialist Worden bij Ons Netwerk',
   description:
     'Zelfstandig autosleutelspecialist in Noord-Brabant of Limburg? Wij zoeken partners in onder andere Eindhoven en Maastricht. Klussen, CRM en facturatie geregeld.',
   alternates: { canonical: `${SITE_CONFIG.domain}/monteur-worden` },

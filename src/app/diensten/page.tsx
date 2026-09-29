@@ -16,8 +16,39 @@ export const metadata: Metadata = {
 };
 
 export default function DienstenOverviewPage() {
+  /*
+   * The hub emitted no structured data at all — not even a breadcrumb — while
+   * every one of its 19 children carries a full Service graph. An ItemList
+   * tells a crawler this page IS the index of those services rather than
+   * another page that happens to link to them.
+   */
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${SITE_CONFIG.domain}/diensten#lijst`,
+    name: 'Autosleutel diensten',
+    numberOfItems: DIENSTEN.length,
+    itemListElement: DIENSTEN.map((dienst, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: dienst.title,
+      url: `${SITE_CONFIG.domain}/diensten/${dienst.slug}`,
+    })),
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Diensten', item: `${SITE_CONFIG.domain}/diensten` },
+    ],
+  };
+
   return (
     <main>
+      <script id="diensten-itemlist" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      <script id="diensten-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <span className={styles.label}>ONZE DIENSTEN</span>

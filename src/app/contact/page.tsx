@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { SITE_CONFIG } from '@/config/site.config';
 import ContactForm from '@/components/ContactForm/ContactForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -16,6 +15,39 @@ export const metadata: Metadata = {
   },
 };
 
+/*
+ * ContactPage, with the business attached by @id rather than restated.
+ *
+ * The page had a breadcrumb and nothing else. ContactPage is what tells a
+ * crawler this is the place to reach the business — and the contactPoint is
+ * how the phone number becomes machine-readable rather than a string in a
+ * link. Referencing #localbusiness keeps one entity for the company instead
+ * of a second, slightly different copy of its details living here.
+ */
+const contactPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  '@id': `${SITE_CONFIG.domain}/contact#contactpage`,
+  url: `${SITE_CONFIG.domain}/contact`,
+  name: 'Contact — Autosleutel24',
+  inLanguage: 'nl-NL',
+  mainEntity: {
+    '@type': 'LocalBusiness',
+    '@id': `${SITE_CONFIG.domain}/#localbusiness`,
+    name: SITE_CONFIG.fullName,
+    telephone: SITE_CONFIG.phoneTel,
+    email: SITE_CONFIG.email,
+    url: SITE_CONFIG.domain,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: SITE_CONFIG.phoneTel,
+      contactType: 'customer service',
+      areaServed: 'NL',
+      availableLanguage: ['nl', 'en'],
+    },
+  },
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -28,10 +60,19 @@ const breadcrumbSchema = {
 export default function ContactPage() {
   return (
     <>
-      <Script
+      {/* Plain <script>, not next/script's <Script>. The latter defaults to
+          afterInteractive and injects client-side, so this breadcrumb was
+          absent from the server-rendered HTML entirely — structured data a
+          crawler has to run JavaScript to find, for no benefit. */}
+      <script
         id="breadcrumb-schema-contact"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        id="contact-page-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }}
       />
       <main style={{ width: '100%', overflowX: 'hidden', background: '#fff' }}>
         
@@ -44,7 +85,7 @@ export default function ContactPage() {
         }}>
           <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
              <div style={{ display: 'inline-flex', alignItems: 'center', background: '#e0ebf6', color: 'var(--color-primary)', padding: '0.4rem 1.25rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1.5rem' }}>
-                Contact Us
+                Neem contact op
              </div>
              <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, color: 'var(--navy-900)', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
                 Probleem met uw autosleutel?<br/>Wij kunnen helpen!

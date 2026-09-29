@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
+import { DEEP_DIVE } from '@/config/deepDives';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import FaqSection from '@/components/FaqSection/FaqSection';
 import { getFaqForBrand } from '@/config/faq';
@@ -620,6 +621,31 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             </div>
           </div>
         </section>
+
+        {/* ── TECHNICAL DEEP DIVE ──────────────────────────────────────
+            The three posts carrying the site's real technical authority —
+            BDC2, SFD and Ghost — had three inbound links each, while generic
+            pages had 178. Linked here from the brands they actually describe,
+            so the relevance is genuine rather than a link farm: a BMW owner
+            reading about BDC2 is the intended reader. */}
+        {DEEP_DIVE[brand.name] && (
+          <section style={{ padding: '3rem 0', background: '#ffffff' }}>
+            <div className="container" style={{ maxWidth: 760 }}>
+              <h2 style={{ fontSize: 'clamp(1.2rem, 2.4vw, 1.6rem)', marginBottom: '0.75rem' }}>
+                Technische achtergrond bij {brand.name}
+              </h2>
+              <p style={{ color: 'var(--gray-700)', lineHeight: 1.65, marginBottom: '1rem' }}>
+                {DEEP_DIVE[brand.name]!.blurb}
+              </p>
+              <Link
+                href={`/blog/${DEEP_DIVE[brand.name]!.slug}`}
+                style={{ fontWeight: 700, color: 'var(--color-primary)' }}
+              >
+                {DEEP_DIVE[brand.name]!.title} →
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* ── CTA CONTACT BANNER ── */}
         <section style={{ padding: '4.5rem 0', background: 'var(--navy-900)', color: '#fff', textAlign: 'center' }}>

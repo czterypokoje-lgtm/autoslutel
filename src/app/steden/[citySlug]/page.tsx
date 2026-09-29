@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
+import { DEEP_DIVE, RELAY_THEFT_MAKES, GHOST_ARTICLE } from '@/config/deepDives';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/supabase/env';
 import { findCityTechnician, arrivalWindow, type PublicTechnician } from '@/lib/cityTechnician';
@@ -458,6 +459,39 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             </div>
           </div>
         </section>
+        )}
+
+        {/* ── TECHNICAL DEEP DIVES FOR THIS CITY'S COMMON MAKES ────────
+            Linked off popularBrands, so a Gooi page that sees BMW and Audi
+            all day points at BDC2 and SFD, and a page that does not, does
+            not. The three posts had three inbound links each while the
+            footer handed boilerplate pages 178. */}
+        {(city.popularBrands ?? []).some((b) => DEEP_DIVE[b]) && (
+          <section style={{ padding: '2.5rem 0', background: '#ffffff' }}>
+            <div className="container" style={{ maxWidth: 760 }}>
+              <h2 style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.45rem)', marginBottom: '0.75rem' }}>
+                Veelvoorkomende merken in {city.city}
+              </h2>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, lineHeight: 1.9 }}>
+                {[...new Set((city.popularBrands ?? []).filter((b) => DEEP_DIVE[b]))].map((brand) => (
+                  <li key={brand}>
+                    <Link href={`/blog/${DEEP_DIVE[brand]!.slug}`} style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
+                      {brand}: {DEEP_DIVE[brand]!.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              {(city.popularBrands ?? []).some((b) => RELAY_THEFT_MAKES.has(b)) && (
+                <p style={{ marginTop: '1rem', color: 'var(--gray-700)', lineHeight: 1.65 }}>
+                  Deze merken worden in Nederland het vaakst gestolen via een relay-aanval op
+                  het keyless systeem.{' '}
+                  <Link href={`/blog/${GHOST_ARTICLE.slug}`} style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
+                    {GHOST_ARTICLE.title} →
+                  </Link>
+                </p>
+              )}
+            </div>
+          </section>
         )}
 
         {/* Local context — real per-city detail that used to be written into

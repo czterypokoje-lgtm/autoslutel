@@ -5,7 +5,9 @@ import { SITE_CONFIG } from '@/config/site.config';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Zakelijke Sleutelservice | Garages, Autobedrijven & Wagenparken',
+  // The layout template appends ' | Autosleutel24' (16 chars), so a base over
+  // 44 characters is cut in results. This one ran to 79.
+  title: 'Zakelijke Autosleutelservice voor Bedrijven',
   description:
     'Autosleutels voor garages, autobedrijven, import & export en wagenparken. Wij komen naar uw werkplaats of terrein, meerdere voertuigen per bezoek, één factuur.',
   alternates: { canonical: `${SITE_CONFIG.domain}/zakelijk` },
