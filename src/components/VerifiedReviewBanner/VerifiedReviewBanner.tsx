@@ -1,5 +1,7 @@
 import React from 'react';
 import styles from './VerifiedReviewBanner.module.css';
+import { REVIEWS } from '../GoogleReviewsCta/GoogleReviewsCta';
+import { SITE_CONFIG } from '@/config/site.config';
 
 export interface BannerReview {
   /** As the reviewer signs it on Google. */
@@ -13,17 +15,31 @@ export interface BannerReview {
 /**
  * The review shown when a page does not name one of its own.
  *
+ * Taken from REVIEWS — the same array transcribed from the Google Business
+ * Profile that /beoordelingen renders — and not written here. The default
+ * used to be a "Sanne V., Local Guide • 12 reviews" who appears nowhere on
+ * that profile: placeholder copy that arrived with a contact-page redesign
+ * (d6d3c4a) and survived the fabricated-review cleanup in 5c54b6e, because
+ * that cleanup went through GoogleReviewsCta and this is a different
+ * component. No caller passes a review, so she was on the home page, /contact,
+ * /diensten and all nineteen service pages.
+ *
  * NOTE FOR WHOEVER ADDS THE NEXT ONE: these must be real reviews, quoted from
- * the Google profile. A service page showing an invented testimonial is a
- * misleading commercial practice under BW 6:193c, and it is the kind of thing
- * that costs a Google Business Profile its reviews outright. If there is no
- * real review about a given service yet, leave the page on this default rather
- * than writing one that fits.
+ * the profile. A service page showing an invented testimonial is a misleading
+ * commercial practice under BW 6:193c, and it is the kind of thing that costs
+ * a Google Business Profile its reviews outright. If there is no real review
+ * about a given service yet, leave the page on this default rather than
+ * writing one that fits.
+ *
+ * Reviews Google itself truncates with "…" are skipped: a quote that stops
+ * mid-sentence misrepresents what the person wrote.
  */
+const SOURCE = REVIEWS.find((review) => !review.text.includes('…')) ?? REVIEWS[0];
+
 const DEFAULT_REVIEW: BannerReview = {
-  name: 'Sanne V.',
-  meta: 'Local Guide • 12 reviews',
-  text: 'Snel en vakkundig geholpen! Ik was al mijn sleutels kwijt. Nieuwe sleutel geprogrammeerd in no-time. Na wat rondbellen was Autosleutel24 de enige die binnen 2 uur ter plaatse kon zijn, en met de beste prijs. 👍',
+  name: SOURCE.name,
+  meta: `Google · ${SOURCE.when}`,
+  text: SOURCE.text,
 };
 
 /**
@@ -68,6 +84,18 @@ export default function VerifiedReviewBanner({ review }: { review?: BannerReview
 
         {/* Right Section (Logos) */}
         <div className={styles.logosSection}>
+          {/* The rating and the way out to the profile, so the one quote above
+              is never the whole claim. Both read from SITE_CONFIG, which is
+              the single place the real figures live. */}
+          <a
+            href={SITE_CONFIG.social.google}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: '0.8rem', fontWeight: 600, color: 'inherit', textDecoration: 'none', textAlign: 'center', lineHeight: 1.35 }}
+          >
+            <span style={{ display: 'block', fontSize: '1.1rem' }}>{SITE_CONFIG.rating} ★</span>
+            Bekijk alle {SITE_CONFIG.reviewCount} reviews op Google
+          </a>
           {/* Google Logo Circle */}
           <a href="https://share.google/3qBeXHp6tQ6mdOa4B" target="_blank" rel="noopener noreferrer" className={styles.logoCircle} aria-label="Bekijk onze Google reviews">
             <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
