@@ -6,6 +6,7 @@ import { HighlightCard, LineChart, Legend, BarChart, Donut, chart } from '../../
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import { priceOf } from '@/lib/technicianBalance';
 import Link from 'next/link';
+import CoverageEditor from './CoverageEditor';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,7 +57,7 @@ export default async function MonteurDetailPage({ params }: { params: Promise<{ 
 
   const { data: tech } = await supabase
     .from('technicians')
-    .select('id, name, phone, active, werkgebied')
+    .select('id, name, phone, active, werkgebied, base_city, base_lat, base_lng, certifications, gbp_url')
     .eq('id', id)
     .maybeSingle();
 
@@ -267,6 +268,28 @@ export default async function MonteurDetailPage({ params }: { params: Promise<{ 
             ))}
           </Table>
         )}
+      </Card>
+
+      <Card>
+        <CardHead>
+          <h2>Werkgebied en profiel</h2>
+          <span className={ui.sub}>
+            Waar hij komt, waar hij vandaan rijdt, en wat er op de stadspagina over hem staat.
+            Zonder werkgebied of standplaats krijgt hij geen klussen aangeboden buiten de
+            handmatige planning, en noemt geen enkele stadspagina zijn naam.
+          </span>
+        </CardHead>
+        <CoverageEditor
+          technicianId={tech.id}
+          initial={{
+            werkgebied: tech.werkgebied as string[] | null,
+            base_city: (tech.base_city as string | null) ?? null,
+            base_lat: (tech.base_lat as number | null) ?? null,
+            base_lng: (tech.base_lng as number | null) ?? null,
+            certifications: (tech.certifications as string[] | null) ?? null,
+            gbp_url: (tech.gbp_url as string | null) ?? null,
+          }}
+        />
       </Card>
 
       <Card>

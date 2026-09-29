@@ -10,6 +10,7 @@
  */
 import assert from 'node:assert/strict';
 import { CITIES } from '../src/config/cities.ts';
+import { parseWerkgebied, coversPostcode } from '../src/lib/crmJobs.ts';
 import {
   findCityTechnician,
   arrivalWindow,
@@ -103,5 +104,28 @@ assert.equal(
 const placeable = tech({ id: 'ok', name: 'Echte monteur', werkgebied: ['3500-3599'], base_lat: 52.09, base_lng: 5.12 });
 assert.equal(findCityTechnician(city('utrecht'), [...unplaceable, placeable])!.technician.id, 'ok');
 assert.equal(findCityTechnician(city('utrecht'), [placeable, ...unplaceable])!.technician.id, 'ok');
+
+// THE CHAIN THE ADMIN SCREEN DEPENDS ON: the office ticks towns, and what
+// gets stored must be a werkgebied that dispatch and the city pages actually
+// match against. Ticking Maastricht and finding it uncovered would be
+// invisible in the UI — it saves, it just never takes effect.
+const ticked = ['maastricht', 'venlo', 'heerlen'];
+const derived = [...new Set(CITIES.filter((c) => ticked.includes(c.slug)).map((c) => c.postcode))].sort();
+const stored = parseWerkgebied(derived.join(', '));
+assert.deepEqual(stored, derived, 'parseWerkgebied must keep every bare four-digit prefix');
+
+for (const slug of ticked) {
+  const c = city(slug);
+  assert.ok(stored.some((r) => coversPostcode(r, c.postcode)), `${slug} must be covered by what was saved`);
+}
+assert.ok(
+  !stored.some((r) => coversPostcode(r, city('utrecht').postcode)),
+  'a town nobody ticked must not end up covered',
+);
+
+const limburgPartner = tech({ id: 'lp', name: 'Limburg partner', werkgebied: stored, base_lat: 50.85, base_lng: 5.69 });
+const resolved = findCityTechnician(city('maastricht'), [limburgPartner])!;
+assert.equal(resolved.technician.id, 'lp');
+assert.equal(resolved.covered, true, 'a ticked town must report as covered, not as a nearest-fallback');
 
 console.log('check-city-technician: all assertions passed');

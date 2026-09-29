@@ -51,6 +51,44 @@ export async function PATCH(
   }
   if ('active' in body) patch.active = body.active === true;
   if ('werkgebied' in body) patch.werkgebied = parseWerkgebied(body.werkgebied);
+
+  /*
+   * The public half of a technician's profile (0058). Until these are filled
+   * a city page can name nobody, the dispatch geography gate has nothing to
+   * test, and fillTravelCost bails before it measures anything — three
+   * separate symptoms of the same empty columns.
+   */
+  if ('base_city' in body) patch.base_city = text(body.base_city, 120);
+  if ('gbp_url' in body) {
+    const url = text(body.gbp_url, 500);
+    if (url && !/^https:\/\//i.test(url)) {
+      return NextResponse.json({ error: 'Google-profiel moet met https:// beginnen' }, { status: 400 });
+    }
+    patch.gbp_url = url;
+  }
+  if ('certifications' in body) {
+    /* A comma-separated string from the form, or an array from an API caller.
+       Blank entries dropped so a trailing comma does not store an empty
+       certification and publish it on 62 city pages. */
+    const raw = Array.isArray(body.certifications)
+      ? body.certifications
+      : String(body.certifications ?? '').split(',');
+    patch.certifications = raw
+      .map((v) => String(v).trim())
+      .filter(Boolean)
+      .slice(0, 12);
+  }
+  for (const key of ['base_lat', 'base_lng'] as const) {
+    if (!(key in body)) continue;
+    const value = body[key];
+    if (value === null || value === '') { patch[key] = null; continue; }
+    const n = Number(value);
+    const limit = key === 'base_lat' ? 90 : 180;
+    if (!Number.isFinite(n) || Math.abs(n) > limit) {
+      return NextResponse.json({ error: 'Ongeldige coördinaat' }, { status: 400 });
+    }
+    patch[key] = n;
+  }
   if ('color' in body) {
     const colour = text(body.color, 7);
     if (colour && !HEX_COLOUR.test(colour)) {
@@ -74,7 +112,7 @@ export async function PATCH(
     .from('technicians')
     .update(patch)
     .eq('id', id)
-    .select('id, name, phone, active, werkgebied, color, user_id')
+    .select('id, name, phone, active, werkgebied, color, user_id, base_city, base_lat, base_lng, certifications, gbp_url')
     .maybeSingle();
 
   if (error) {
