@@ -217,7 +217,8 @@
   right: 3px;
   overflow: hidden;
   border-radius: var(--crm-r-sm);
-  border-left: 3px solid var(--crm-rule2);
+  border-left: none;
+  
   background: var(--crm-bg);
   color: var(--crm-text);
   text-decoration: none;

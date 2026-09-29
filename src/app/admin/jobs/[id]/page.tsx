@@ -5,6 +5,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { waLink, jobBriefing } from '@/lib/whatsapp';
 import styles from '../jobs.module.css';
 import JobEditor, { type JobDetail } from './JobEditor';
+import AdClickPanel from './AdClickPanel';
 import PaymentPanel, { type PaymentRow } from './PaymentPanel';
 import OfferHistory, { type OfferRow } from './OfferHistory';
 import DeleteJobButton from './DeleteJobButton';
@@ -148,6 +149,10 @@ export default async function JobPage({
         job={job as unknown as JobDetail}
         technicians={crew.filter((t) => t.active)}
       />
+
+      {/* Renders itself away unless this job has no attribution and an
+          unclaimed click landed near its date. */}
+      <AdClickPanel jobId={job.id as string} />
 
       <OfferHistory offers={offerRows} />
     </>
