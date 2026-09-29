@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Handshake, MessageSquare, Package, Truck } from 'lucide-react';
+import { CalendarDays, Handshake, Package, Truck } from 'lucide-react';
 import styles from './admin.module.css';
 
 /**
@@ -44,12 +44,15 @@ export default function MobileTabBar() {
         </span>
       </Link>
 
+      {/* Was Netwerk, which is office-only now — a tab that only ever led to
+          /admin/geen-toegang is worse than no tab. Mijn agenda is the thing a
+          monteur opens next most often after Vandaag. */}
       <Link
-        href="/admin/netwerk"
-        className={`${styles.tabItem} ${isActive('/admin/netwerk') ? styles.tabItemActive : ''}`}
+        href="/admin/mijn-agenda"
+        className={`${styles.tabItem} ${isActive('/admin/mijn-agenda') ? styles.tabItemActive : ''}`}
       >
-        <MessageSquare size={22} strokeWidth={1.9} aria-hidden="true" />
-        <span>Netwerk</span>
+        <CalendarDays size={22} strokeWidth={1.9} aria-hidden="true" />
+        <span>Mijn agenda</span>
       </Link>
     </nav>
   );

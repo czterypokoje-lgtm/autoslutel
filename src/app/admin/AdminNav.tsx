@@ -99,7 +99,6 @@ const MONTEUR_LINKS: { group: string; items: NavItem[] }[] = [
       { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
       { href: '/admin/mijn-agenda', label: 'Mijn agenda', icon: CalendarDays },
       { href: '/admin/mijn-klussen', label: 'Mijn klussen', icon: History },
-      { href: '/admin/netwerk', label: 'Netwerk', icon: MessageSquare },
     ],
   },
   {

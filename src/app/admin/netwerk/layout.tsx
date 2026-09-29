@@ -1,4 +1,4 @@
-import { requireCrmUser } from '@/lib/crmSession';
+import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from './netwerk.module.css';
 import NetworkSidebar from './NetworkSidebar';
@@ -25,7 +25,18 @@ export default async function NetwerkLayout({
   children: React.ReactNode;
   params: Promise<Record<string, string>>;
 }) {
-  const user = await requireCrmUser('/admin/netwerk');
+  /*
+   * Office only.
+   *
+   * This used to admit any signed-in monteur who had a paid tier or a
+   * verified badge. The network section carries the other servers, the
+   * marktplaats and the cross-region channels — company-side surfaces, not
+   * something a subcontractor's subscription should buy access to.
+   * requireOfficeUser sends anyone else to /admin/geen-toegang rather than
+   * rendering an empty shell, and it is enforced here in the layout so every
+   * route beneath it inherits the check.
+   */
+  const user = await requireOfficeUser('/admin/netwerk');
   const supabase = await createSupabaseServerClient();
   await params;
 
@@ -64,15 +75,14 @@ export default async function NetwerkLayout({
    * channels. The full list goes down instead and the client component, which
    * can read the query string, does the filtering.
    */
-  const isOffice = user.role === 'owner' || user.role === 'kantoor';
+  /* Always true past requireOfficeUser; kept because the children still take
+     it as a prop and a lie there would be worse than a redundant constant. */
+  const isOffice = true;
   const mine = channels ?? [];
 
-  const tier =
-    (me?.technician_subscription as { tier?: string } | { tier?: string }[] | null) ?? null;
-  const tierName = Array.isArray(tier) ? tier[0]?.tier : tier?.tier;
-  /* Office always in; a monteur needs a paid tier or a verified badge. */
-  const canEnter =
-    isOffice || me?.verified === true || tierName === 'pro' || tierName === 'premium';
+  /* Nobody reaches this line who is not office, so the tier and badge checks
+     that used to gate it are gone with them. */
+  const canEnter = true;
 
   const presenceById: Record<string, { online: number; members: number }> = {};
   for (const row of presence ?? []) {
