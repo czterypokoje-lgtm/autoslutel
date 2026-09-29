@@ -208,7 +208,11 @@ export default function PriceTree({
       return 'De prijskolom bestaat nog niet — voer supabase/migrations/0038_technician_pricing.sql uit.';
     }
     if (/duplicate key|unique/i.test(message)) {
-      return 'Je hebt al een prijs voor deze combinatie van model, scenario en sleuteltype.';
+      /* Mentions the bouwjaar because it is part of the key from 0061 on. A
+         monteur who reads the old wording, sees two rows differing only by
+         year, and concludes the screen is broken is reading it correctly —
+         it was, until the index included the years. */
+      return 'Je hebt al een prijs voor deze combinatie van model, bouwjaar, scenario en sleuteltype.';
     }
     /* technician_coverage_years_check: to_year >= from_year. Should be caught
        before the save now, but a raw Postgres constraint name on screen tells
