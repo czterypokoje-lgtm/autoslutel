@@ -210,6 +210,12 @@ export default function PriceTree({
     if (/duplicate key|unique/i.test(message)) {
       return 'Je hebt al een prijs voor deze combinatie van model, scenario en sleuteltype.';
     }
+    /* technician_coverage_years_check: to_year >= from_year. Should be caught
+       before the save now, but a raw Postgres constraint name on screen tells
+       a monteur nothing about which car to fix. */
+    if (/technician_coverage_years_check|years_check/i.test(message)) {
+      return 'Het tot-bouwjaar ligt vóór het van-bouwjaar. Draai ze om, of laat er één leeg.';
+    }
     return message;
   }
 
@@ -218,6 +224,15 @@ export default function PriceTree({
     const priceValue = Number(draft.price.replace(',', '.'));
     if (!draft.price.trim() || !Number.isFinite(priceValue) || priceValue <= 0) {
       setError('Vul een geldige prijs in.');
+      return;
+    }
+
+    /* Same guard as saveAll: the database refuses to_year < from_year, and the
+       raw constraint name it returns tells a monteur nothing. */
+    const draftFrom = toIntOrNull(draft.fromYear);
+    const draftTo = toIntOrNull(draft.toYear);
+    if (draftFrom != null && draftTo != null && draftTo < draftFrom) {
+      setError('Het tot-bouwjaar ligt vóór het van-bouwjaar. Draai ze om, of laat er één leeg.');
       return;
     }
 
@@ -334,8 +349,37 @@ export default function PriceTree({
    * need every column of every row resent. A failure stops there and says so,
    * leaving the rows it has not reached still marked as pending.
    */
+  /**
+   * Rows whose bouwjaren are the wrong way round.
+   *
+   * The database refuses these (technician_coverage_years_check) and the save
+   * loop stops at the first failure, so one inverted pair silently threw away
+   * every other price typed in the same session and showed a raw constraint
+   * name. Caught here instead, by name, before anything is written.
+   */
+  function invertedYears(): PriceEntry[] {
+    return rows.filter((r) => {
+      if (!savableIds.includes(r.id)) return false;
+      return r.from_year != null && r.to_year != null && r.to_year < r.from_year;
+    });
+  }
+
   async function saveAll() {
     if (savableIds.length === 0) return;
+
+    const bad = invertedYears();
+    if (bad.length > 0) {
+      const naming = bad
+        .map((r) => `${r.make}${r.model ? ` ${r.model}` : ''} (${r.from_year}–${r.to_year})`)
+        .join(', ');
+      setError(
+        bad.length === 1
+          ? `Bij ${naming} ligt het tot-bouwjaar vóór het van-bouwjaar. Draai ze om, of laat er één leeg.`
+          : `Bij deze auto's ligt het tot-bouwjaar vóór het van-bouwjaar: ${naming}. Draai ze om, of laat er één leeg.`
+      );
+      return;
+    }
+
     setBusy(true);
     setError(null);
 
