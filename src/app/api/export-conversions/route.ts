@@ -71,7 +71,7 @@ const EXPORT_COLUMNS =
 const POSITIVE_FROM_JOBS =
   'id, final_price, completed_at, scheduled_date, lead_id, ' +
   'gclid, wbraid, gbraid, msclkid, click_captured_at, ' +
-  'leads (id, gclid, wbraid, gbraid, created_at)';
+  'leads (id, gclid, wbraid, gbraid, msclkid, created_at)';
 
 /* Google will not accept a conversion for a click older than this. */
 const CLICK_WINDOW_DAYS = 90;
@@ -173,7 +173,7 @@ export async function GET(request: Request) {
       gbraid: string | null;
       msclkid: string | null;
       click_captured_at: string | null;
-      leads: { id: string; gclid: string | null; wbraid: string | null; gbraid: string | null; created_at: string } | null;
+      leads: { id: string; gclid: string | null; wbraid: string | null; gbraid: string | null; msclkid: string | null; created_at: string } | null;
     }
 
     const cutoff = Date.now() - CLICK_WINDOW_DAYS * 24 * 60 * 60 * 1000;
@@ -189,19 +189,29 @@ export async function GET(request: Request) {
            otherwise the moment call_clicks recorded it. */
         const clickedAt = lead?.created_at ?? job.click_captured_at ?? null;
         const value = Number(job.final_price ?? 0);
-        return { job, lead, clickId, clickedAt, value };
+        /* Microsoft's click id travels the same two paths as Google's — the
+           lead's first, then the job's own from a claimed call click. Reading
+           only the job's meant the five leads that actually carry one were
+           invisible, because nothing propagates a lead's msclkid onto its
+           job. It has been stored all along and reported nowhere. */
+        const msclkid = lead?.msclkid ?? job.msclkid ?? null;
+        return { job, lead, clickId, msclkid, clickedAt, value };
       })
       /* Four reasons a finished job is not reportable, none of them faults:
          no click paid for it, no money was recorded, the click has aged out
          of Google's window, or (should not happen, but the data can't prove
          a click's age without a timestamp) there is no time to check. */
-      .filter((r) => r.clickId && r.value > 0 && r.clickedAt && new Date(r.clickedAt).getTime() >= cutoff)
+      /* Either network's click id makes the job reportable. Requiring
+         Google's meant a job whose only trace was an msclkid was dropped here
+         and never reached the Microsoft export at all. */
+      .filter((r) => (r.clickId || r.msclkid) && r.value > 0 && r.clickedAt && new Date(r.clickedAt).getTime() >= cutoff)
       .map((r) => ({
         id: r.job.id,
         status: 'afgerond',
         gclid: r.lead?.gclid ?? r.job.gclid,
         wbraid: r.lead?.wbraid ?? r.job.wbraid,
         gbraid: r.lead?.gbraid ?? r.job.gbraid,
+        msclkid: r.msclkid,
         created_at: r.clickedAt!,
         job_value: Math.round(r.value * 100) / 100,
         job_count: 1,
@@ -216,6 +226,7 @@ export async function GET(request: Request) {
       gclid: string | null; wbraid: string | null; gbraid: string | null;
     }[]).map((lead) => ({
       ...lead,
+      msclkid: null,
       job_value: null,
       job_count: 0,
       conversion_time: null,

@@ -10,6 +10,8 @@ interface ExportLead {
   gclid: string | null;
   wbraid: string | null;
   gbraid: string | null;
+  /** Microsoft's click id. Captured and stored all along, never exported. */
+  msclkid: string | null;
   /** Revenue from finished jobs on this lead. Null when there is none yet. */
   job_value?: number | null;
   job_count?: number;
@@ -25,6 +27,9 @@ interface ExportLead {
  * ("Job Completed - AKL" etc.), which meant every row failed to import.
  */
 const GOOGLE_ADS_CONVERSION_NAME = 'Job Completed';
+
+/** Must match a conversion goal created in Microsoft Advertising, exactly. */
+const MICROSOFT_CONVERSION_NAME = 'Job Completed';
 
 /** Internal-only categorisation, used purely to suggest a starting job value below. */
 const categorizeService = (service: string) => {
@@ -56,8 +61,20 @@ const getSuggestedValue = (category: string) => {
  * toLocaleString, and it honours the timeZone option, so the value matches the
  * header instead of contradicting it.
  */
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleString('sv-SE', { timeZone: 'Europe/Amsterdam' });
+function formatDate(iso: string | null | undefined): string | null {
+  /*
+   * Null in, null out — never 1970.
+   *
+   * `new Date(null)` is the Unix epoch, so a missing timestamp used to be
+   * reported to Google as 01/01/1970 01:00:00 rather than as missing. 33 rows
+   * of the last upload carried that date. A conversion stamped 56 years
+   * before the click it belongs to is not attributed to anything; it is
+   * either rejected or silently useless, and it looks like data.
+   */
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleString('sv-SE', { timeZone: 'Europe/Amsterdam' });
 }
 
 function clickId(lead: ExportLead) {
@@ -166,6 +183,9 @@ export default function OfflineConversionsPage() {
       const cValue = Number.isFinite(known) && known > 0 ? String(known) : '';
       /* The conversion happened when the work finished, not when the form came in. */
       const when = formatDate(lead.conversion_time || lead.created_at);
+      /* No usable timestamp means no row. Uploading one with a fabricated
+         date is worse than leaving the conversion unreported. */
+      if (!when) return;
       csv += `${gclid},${GOOGLE_ADS_CONVERSION_NAME},${when},${cValue},EUR\n`;
       exportedIds.push(lead.id);
     });
@@ -173,6 +193,48 @@ export default function OfflineConversionsPage() {
     downloadCsv(`google-ads-conversions-${new Date().toISOString().split('T')[0]}.csv`, csv);
     await markExported(exportedIds, 'positive');
     setPositive((prev) => prev.filter((l) => !exportedIds.includes(l.id)));
+  };
+
+  /**
+   * Microsoft Advertising offline conversions.
+   *
+   * msclkid has been captured by AdParameterTracker, cookied for 90 days,
+   * written to call_clicks and stored on every lead since the tracker went
+   * in — and selected by the export query — but the CSV builder only ever
+   * emitted a Google column, so not one Bing conversion has ever been
+   * reported. The clicks were already paid for.
+   *
+   * Microsoft's importer wants its own header ("Microsoft Click ID",
+   * "Conversion Name", "Conversion Time", "Conversion Value",
+   * "Conversion Currency") and its own conversion goal, which has to exist in
+   * the account under exactly the name below before the first upload.
+   *
+   * Deliberately NOT marked as exported: exported_at is one flag shared with
+   * the Google export, and a lead can legitimately carry both a gclid and an
+   * msclkid. Stamping it here would hide the row from the Google export it
+   * also belongs in. The two uploads overlap by design and Microsoft
+   * de-duplicates on click id.
+   */
+  const handleDownloadMicrosoft = () => {
+    let csv = `Parameters:TimeZone=Europe/Amsterdam\n`;
+    csv += `Microsoft Click ID,Conversion Name,Conversion Time,Conversion Value,Conversion Currency\n`;
+
+    let rows = 0;
+    positive.forEach((lead) => {
+      if (!lead.msclkid) return;
+      const when = formatDate(lead.conversion_time || lead.created_at);
+      if (!when) return;
+      const known = jobValues[lead.id];
+      const cValue = Number.isFinite(known) && known > 0 ? String(known) : '';
+      csv += `${lead.msclkid},${MICROSOFT_CONVERSION_NAME},${when},${cValue},EUR\n`;
+      rows++;
+    });
+
+    if (!rows) {
+      window.alert('Geen leads met een Microsoft click id in deze lijst.');
+      return;
+    }
+    downloadCsv(`microsoft-ads-conversions-${new Date().toISOString().split('T')[0]}.csv`, csv);
   };
 
   const handleDownloadNegative = async () => {
@@ -184,13 +246,15 @@ export default function OfflineConversionsPage() {
       const gclid = clickId(lead);
       if (!gclid) return;
       const now = formatDate(new Date().toISOString());
+      const originally = formatDate(lead.created_at);
+      if (!now || !originally) return;
       /*
        * RETRACT, not RETRACTION. Google's adjustment types are RETRACT,
        * RESTATE and ENHANCEMENT; the longer word was rejected on every row
        * — "The value 'RETRACTION' in column 'Adjustment Type' is invalid."
        * It went unnoticed because no adjustments file had ever been uploaded.
        */
-      csv += `${gclid},${GOOGLE_ADS_CONVERSION_NAME},${formatDate(lead.created_at)},RETRACT,${now}\n`;
+      csv += `${gclid},${GOOGLE_ADS_CONVERSION_NAME},${originally},RETRACT,${now}\n`;
       exportedIds.push(lead.id);
     });
 
@@ -280,6 +344,23 @@ export default function OfflineConversionsPage() {
               }}
             >
               Download conversie-CSV
+            </button>
+
+            <button
+              onClick={handleDownloadMicrosoft}
+              style={{
+                padding: '1rem 2rem',
+                marginLeft: '0.75rem',
+                background: '#0f766e',
+                color: '#fff',
+                fontWeight: 'bold',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '1.1rem',
+              }}
+            >
+              Download Microsoft-CSV ({positive.filter((l) => l.msclkid).length})
             </button>
           </>
         )}
