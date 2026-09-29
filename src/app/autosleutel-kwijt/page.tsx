@@ -99,8 +99,36 @@ import Image from 'next/image';
 const anton = Bebas_Neue({ weight: '400', subsets: ['latin'] });
 
 export default function AutosleutelKwijt() {
+  /*
+   * All three of these were defined above and rendered nowhere: the file had
+   * no <script type="application/ld+json"> at all, so a 1,453-word page for
+   * one of the highest-intent queries on the site was emitting nothing but
+   * the sitewide WebSite node. The objects were correct; they were simply
+   * never attached to the tree.
+   *
+   * Service is added alongside them so the page states what is being sold
+   * rather than only answering questions about it.
+   */
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Autosleutel kwijt — nieuwe sleutel op locatie',
+    serviceType: 'Autosleutel vervangen bij verlies of diefstal',
+    provider: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
+    areaServed: { '@type': 'Country', name: 'Nederland' },
+    availableChannel: {
+      '@type': 'ServiceChannel',
+      servicePhone: SITE_CONFIG.phoneTel,
+      serviceUrl: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
+    },
+  };
+
   return (
     <div className={styles.wrapper}>
+      <script id="kwijt-faq" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script id="kwijt-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="kwijt-howto" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      <script id="kwijt-service" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       {/* HERO */}
       <section className={styles.hero}>
         <div className={styles.container}>
