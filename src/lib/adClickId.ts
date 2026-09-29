@@ -28,7 +28,31 @@ const COOKIE_MAX_AGE_DAYS = 90;
  * click stealing the attribution). Widen it if the office reports jobs are
  * going unmatched; narrow it if a match looks wrong.
  */
-export const CALL_CLICK_WINDOW_MINUTES = 45;
+export const CALL_CLICK_WINDOW_MINUTES = (() => {
+  const raw = Number(process.env.CALL_CLICK_WINDOW_MINUTES);
+  return Number.isFinite(raw) && raw > 0 ? raw : 45;
+})();
+
+/*
+ * MEASURED, 29 September 2026: this window has never once matched.
+ *
+ * 17 call_clicks exist, 14 carrying a gclid, and `claimed_by_job_id` is null
+ * on every one of them. For each click, the nearest job created afterwards was
+ * between 1,826 and 3,814 minutes later — 30 to 63 hours. Not one fell inside
+ * 45 minutes. The mechanism assumes the office books the job while the caller
+ * is still on the phone; in practice the job is entered a day or two later.
+ *
+ * Tunable now via CALL_CLICK_WINDOW_MINUTES so the number can be moved without
+ * a deploy, but DO NOT simply widen it and walk away. Over three days, "the
+ * nearest unclaimed click" stops being evidence and becomes a coin toss
+ * between a dozen candidates, and a wrong gclid uploaded to Google teaches
+ * Smart Bidding to buy the wrong traffic. That account has already been
+ * through this once — ten conversions retracted against one kept.
+ *
+ * The durable fix is a person, not a bigger number: show the office the
+ * unclaimed clicks around a job's date and let them confirm which call it was,
+ * the same way invoiceLines.ts proposes stock lines and never writes them.
+ */
 
 function fromSearch(search: string): AdClickIds | null {
   const params = new URLSearchParams(search);

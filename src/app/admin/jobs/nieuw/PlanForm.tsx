@@ -70,6 +70,16 @@ export default function PlanForm({
   const [carModel, setCarModel] = useState(lead?.model ?? '');
   const [carYear, setCarYear] = useState(lead?.year ?? '');
   const [keylessChoice, setKeylessChoice] = useState<'' | 'true' | 'false'>('');
+  /*
+   * Customer name and phone used to be read straight off the lead, with no
+   * field to type them. A job planned without a lead — the phone-in, which is
+   * most of them — therefore reached the database with no lead_id AND no
+   * customer_phone: nothing to call the customer on, and nothing to attribute
+   * the job by. 39 of 65 finished jobs are in that state, which is most of
+   * why ad attribution sits at 2%.
+   */
+  const [customerName, setCustomerName] = useState(lead?.name ?? '');
+  const [customerPhone, setCustomerPhone] = useState(lead?.phone_e164 ?? lead?.phone ?? '');
   // A webshop order is already paid, so the agreed price is known exactly.
   const [quoted, setQuoted] = useState(order ? String(order.total_inc) : '');
   /*
@@ -158,8 +168,8 @@ export default function PlanForm({
         // order case and would otherwise be written into a lead column.
         lead_id: order ? null : (lead?.id ?? null),
         order_id: order?.id ?? null,
-        customer_name: lead?.name ?? null,
-        customer_phone: lead?.phone_e164 ?? lead?.phone ?? null,
+        customer_name: customerName.trim() || null,
+        customer_phone: customerPhone.trim() || null,
         technician_id: technicianId || null,
         scheduled_date: scheduledDate,
         slot_start: window?.start ?? slot,
@@ -230,6 +240,36 @@ export default function PlanForm({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="klantnaam">
+              Naam klant
+            </label>
+            <input
+              id="klantnaam"
+              className={styles.control}
+              autoComplete="off"
+              placeholder="Naam van de klant"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="klanttelefoon">
+              Telefoon klant
+            </label>
+            <input
+              id="klanttelefoon"
+              className={styles.control}
+              type="tel"
+              inputMode="tel"
+              autoComplete="off"
+              placeholder="06 12 34 56 78"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+            />
           </div>
 
           <div className={styles.field}>
