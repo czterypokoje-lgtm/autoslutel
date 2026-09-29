@@ -19,7 +19,7 @@ import {
 
 const tech = (over: Partial<PublicTechnician> & { id: string; name: string }): PublicTechnician => ({
   active: true, werkgebied: [], base_lat: null, base_lng: null, base_city: null,
-  photo_url: null, certifications: null, gbp_url: null, phone: null, ...over,
+  photo_url: null, certifications: null, gbp_url: null, ...over,
 });
 
 const city = (slug: string) => {

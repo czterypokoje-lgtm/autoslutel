@@ -33,7 +33,6 @@ export interface PublicTechnician {
   photo_url: string | null;
   certifications: string[] | null;
   gbp_url: string | null;
-  phone: string | null;
 }
 
 /*

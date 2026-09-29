@@ -106,7 +106,7 @@ async function loadPublicTechnicians(): Promise<PublicTechnician[]> {
     });
     const { data, error } = await supabase
       .from('public_technicians')
-      .select('id, name, werkgebied, base_lat, base_lng, base_city, certifications, gbp_url, photo_url, phone');
+      .select('id, name, werkgebied, base_lat, base_lng, base_city, certifications, gbp_url, photo_url');
     if (error) throw error;
     /* The view already filters to active; the flag is what findCityTechnician
        reads, so it is set rather than selected. */

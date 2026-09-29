@@ -1,5 +1,5 @@
 /**
- * Walks the agent's four endpoints, the way ElevenLabs will.
+ * Walks the agent's five endpoints, the way ElevenLabs will.
  *
  *   AGENT_API_TOKEN=… node scripts/test-agent.mjs https://your-preview.vercel.app
  *
@@ -156,5 +156,22 @@ if (reallyBook) {
 } else {
   console.log('  – echt boeken overgeslagen. Draai met --book om een testklus aan te maken.');
 }
+
+/* ── 5. doorverbinden ── */
+console.log('\n5 · escalate');
+const urgent = await call('escalate', {
+  reason: 'noodgeval',
+  summary: 'Kind in de auto, Nijmegen centrum.',
+  customer_phone: '0611751231',
+  channel: 'whatsapp',
+  dry_run: true,
+});
+ok('noodgeval is urgent (belt het kantoor)', urgent.json?.urgent === true, urgent.json?.message?.split('\n')[0] ?? '');
+
+const callback = await call('escalate', { reason: 'terugbelverzoek', summary: 'Geen prijs paraat.', dry_run: true });
+ok('terugbelverzoek belt niemand', callback.json?.urgent === false, `${callback.ms}ms`);
+
+const madeUp = await call('escalate', { reason: 'heel_erg_dringend', summary: 'x', dry_run: true });
+ok('weigert een verzonnen reden', madeUp.status === 400, madeUp.json?.error ?? '');
 
 console.log('\nKlaar. Alles met een ✓ doet ElevenLabs straks precies zo.\n');
