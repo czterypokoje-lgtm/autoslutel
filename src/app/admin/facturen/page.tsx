@@ -11,7 +11,7 @@ export default async function FacturenPage() {
   const supabase = await createSupabaseServerClient();
 
   // Fetch invoices with job vehicle data
-  let query = supabase
+  const query = supabase
     .from('sales_invoices')
     .select(`
       id, 
@@ -34,10 +34,22 @@ export default async function FacturenPage() {
     .order('created_at', { ascending: false })
     .limit(300);
 
-  // Apply RLS-like logic for monteur if needed (monteurs should only see their own)
-  if (user.role === 'monteur') {
-    query = query.eq('created_by', user.id);
-  }
+  /*
+   * No extra filter for a monteur. This used to add
+   * `.eq('created_by', user.id)`, which is NARROWER than the table's own RLS
+   * policy (0032):
+   *
+   *   crm_role() in ('owner','kantoor')
+   *   or technician_id = my_technician_id()
+   *   or created_by = auth.uid()
+   *
+   * The policy already lets a monteur see an invoice addressed to them —
+   * `technician_id` — and the app filter threw that half away. So an invoice
+   * the office raised FOR Garage NRD was invisible to Garage NRD, and the
+   * screen told them it was only ever going to show their own. Duplicating an
+   * access rule in the query is how the two drift; the policy is the guard,
+   * and it is the only one.
+   */
 
   const { data, error } = await query;
 
@@ -62,7 +74,7 @@ export default async function FacturenPage() {
       )}
       
       {user.role === 'monteur' && (
-        <div style={{marginTop: "24px"}}><Notice tone="info">U ziet hier alleen de facturen die u zelf heeft opgesteld.</Notice></div>
+        <div style={{marginTop: "24px"}}><Notice tone="info">U ziet de facturen die u zelf heeft opgesteld en de facturen die het kantoor aan u heeft gericht.</Notice></div>
       )}
     </>
   );

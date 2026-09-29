@@ -305,7 +305,9 @@ export default function InvoiceForm({
             <Field label="BTW-nummer" value={clientBtw} onChange={setClientBtw} />
             {showTechnicianPicker && (
               <label className={styles.field}>
-                <span className={styles.fieldLabel}>Monteur (optioneel)</span>
+                {/* Not "who made this" — who it is FOR. Setting it is what puts
+                    the invoice in that monteur's eigen Facturen-scherm. */}
+                <span className={styles.fieldLabel}>Op naam van monteur (optioneel)</span>
                 <select
                   className={styles.control}
                   value={technicianId}
