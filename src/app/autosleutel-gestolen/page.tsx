@@ -29,7 +29,7 @@ import { CITIES } from '@/config/cities';
 
 export const metadata: Metadata = {
   title: { absolute: 'Autosleutel Gestolen? Direct Blokkeren en Nieuwe Sleutel' },
-  description: `Autosleutel gestolen? De dief kan uw auto starten. Wij wissen de gestolen sleutel uit de boordcomputer en maken ter plaatse een nieuwe, vanaf €${SITE_CONFIG.prices.allKeysLost}. 24/7.`,
+  description: `Autosleutel gestolen? De dief kan uw auto starten. Wij wissen de gestolen sleutel uit de auto en maken ter plaatse een nieuwe. Binnen 30-60 min bij u, 24/7.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-gestolen`,
     languages: {

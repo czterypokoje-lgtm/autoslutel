@@ -29,7 +29,7 @@ import { CITIES } from '@/config/cities';
 
 export const metadata: Metadata = {
   title: { absolute: 'Mobiele Sleutelmaker voor Auto’s | Komt Naar U Toe' },
-  description: `Mobiele sleutelmaker of slotenmaker nodig voor uw auto? Wij komen naar uw locatie, openen schadevrij en maken sleutels ter plaatse. Vanaf €${SITE_CONFIG.prices.transponder}, 24/7.`,
+  description: `Mobiele sleutelmaker of slotenmaker nodig voor uw auto? Wij komen naar uw locatie, openen schadevrij en maken sleutels ter plaatse. Binnen 30-60 min bij u.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/mobiele-sleutelmaker`,
     languages: {

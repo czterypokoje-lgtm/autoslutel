@@ -8,6 +8,7 @@ import path from 'path';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
 import { isNoindexBrand } from '@/config/thinPages';
+import { ARRIVAL_TITLE } from '@/config/arrival';
 import { DEEP_DIVE } from '@/config/deepDives';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import FaqSection from '@/components/FaqSection/FaqSection';
@@ -28,6 +29,19 @@ export async function generateStaticParams() {
 
 /* Renault and Dacia ship a card, not a key, and the card is what people search for. */
 const KEYCARD_BRANDS = new Set(['renault', 'dacia']);
+
+/*
+ * The arrival time, not a price, in the title: someone searching for a key wants to know how
+ * soon. The shorter forms are for the longer brand names, so none passes 60 characters.
+ */
+function brandTitle(name: string): string {
+  const candidates = [
+    `${name} Autosleutel Bijmaken | ${ARRIVAL_TITLE}`,
+    `${name} Autosleutel Bijmaken | 30-60 Min`,
+    `${name} Autosleutel Bijmaken | Op Locatie`,
+  ];
+  return candidates.find((t) => t.length <= 60) ?? candidates[candidates.length - 1];
+}
 
 export async function generateMetadata(props: { params: Promise<{ merkSlug: string }> }): Promise<Metadata> {
   const params = await props.params;
@@ -61,7 +75,7 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
         brand.customMetaTitle ||
         (KEYCARD_BRANDS.has(brand.nameSlug.toLowerCase())
           ? `${brand.name} Autosleutel & Sleutelkaart Bijmaken | Op Locatie`
-          : `${brand.name} Autosleutel Bijmaken | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`),
+          : brandTitle(brand.name)),
     },
     description: clampMeta(
       KEYCARD_BRANDS.has(brand.nameSlug.toLowerCase())

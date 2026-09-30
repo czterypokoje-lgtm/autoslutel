@@ -366,7 +366,7 @@ export const DIENSTEN: Service[] = [
   {
     slug: 'afstandsbediening-bijmaken',
     title: 'Afstandsbediening Bijmaken',
-    metaTitle: `Autosleutel met Afstandsbediening Bijmaken | Vanaf €${SITE_CONFIG.prices.remote}`,
+    metaTitle: 'Autosleutel met Afstandsbediening Bijmaken | 30-60 Min',
     metaDesc: 'Wat is de prijs autosleutel bijmaken met afstandsbediening? Bekijk onze tarieven. Wij programmeren elk type autosleutel op locatie. 12 mnd garantie.',
     h1: 'Wat is de Prijs Autosleutel Bijmaken met Afstandsbediening?',
     intro: 'Afstandsbediening bijmaken of sleutel met knoppen? Wij programmeren ter plaatse voor alle merken — goedkoper dan de dealer.',
@@ -468,8 +468,8 @@ export const DIENSTEN: Service[] = [
   {
     slug: 'batterij-vervangen',
     title: 'Batterij Vervangen',
-    metaTitle: 'Autosleutel Batterij Vervangen | Vaste Prijs €15–€20',
-    metaDesc: 'Autosleutel batterij leeg? Wij vervangen uw autosleutel batterij op locatie voor een vaste prijs van €15 tot €20. Varta, Panasonic, Duracell. Bel!',
+    metaTitle: 'Autosleutel Batterij Vervangen | Binnen 30-60 Min',
+    metaDesc: 'Autosleutel batterij leeg? Wij vervangen uw autosleutel batterij op locatie voor een vaste prijs, vooraf afgesproken. Varta, Panasonic, Duracell. Bel!',
     h1: 'Batterij Autosleutel Vervangen — Vaste Prijs op Locatie',
     intro: 'Sleutelbatterij leeg of reageert traag? Wij vervangen hem op locatie met A-merk batterij voor een vaste prijs van €15–20.',
     system: 'Knoopcellen: CR2032, CR2025, CR1620, CR1616, CR2450 (Duracell, Panasonic, Varta)',
@@ -496,7 +496,7 @@ export const DIENSTEN: Service[] = [
   {
     slug: 'autosleutels-repareren',
     title: 'Autosleutels Repareren',
-    metaTitle: `Autosleutel Kapot? Repareren op Locatie | Vanaf €${SITE_CONFIG.prices.casing}`,
+    metaTitle: 'Autosleutel Kapot? Repareren op Locatie | Binnen 30-60 Min',
     metaDesc: 'Autosleutel kapot? Wij repareren uw autosleutel op locatie in Utrecht en omstreken. Nieuwe behuizing, knoppen solderen, batterij vervangen. Bel direct!',
     h1: 'Autosleutels Repareren — Bespaar op een Nieuwe Autosleutel',
     intro: 'Waterschade, lamme knoppen of transponder defect? Wij repareren uw sleutel op locatie — bespaar tot 70% t.o.v. een nieuwe sleutel.',

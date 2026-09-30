@@ -12,7 +12,8 @@
  *   - every page has one H1, a self-referencing canonical, a title of at most 60
  *     characters and a description of 100-160
  *   - one phone number everywhere
- *   - "vanaf EUR x" prices are among the ones in SITE_CONFIG.prices
+ *   - no price in a title or description
+ *   - "vanaf EUR x" prices on the page are among the ones in SITE_CONFIG.prices
  *   - no stale rating or review count (4.9 / 247) survives
  *
  * It prints a summary and the offending URLs. Exit code 1 when something fails, so it
@@ -78,6 +79,8 @@ async function audit(url) {
   const desc = decode((html.match(/name="description" content="([^"]*)"/) || [])[1] || '');
   if (title.length > 60) add('title over 60', path, String(title.length));
   if (desc.length < 100 || desc.length > 160) add('description outside 100-160', path, String(desc.length));
+  // Prices stay out of titles and descriptions: the arrival time converts better there, the prices live on the page.
+  if (title.includes('€') || desc.includes('€')) add('price in title or description', path);
   const canon = (html.match(/rel="canonical" href="([^"]*)"/) || [])[1];
   if (!canon) add('no canonical', path);
   else if (canon.replace(DOMAIN, '').replace(/\/$/, '') !== path.replace(/\/$/, '').replace(/#.*/, '')) add('canonical is not the page', path, canon);

@@ -28,7 +28,7 @@ const REGIONS = Array.from(new Set(CITIES.map((c) => c.region))).sort();
 
 export const metadata: Metadata = {
   title: { absolute: 'Autosleutel Bijmaken in de Buurt | Wij Komen Naar U Toe' },
-  description: `Autosleutel bijmaken in de buurt? Onze monteur rijdt naar uw locatie in heel Nederland en maakt de sleutel ter plaatse, vanaf €${SITE_CONFIG.prices.transponder}. Bel of app direct.`,
+  description: `Autosleutel bijmaken in de buurt? Onze monteur is binnen 30-60 min bij u in Utrecht, de Randstad en Gelderland en maakt de sleutel ter plaatse. Bel direct.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-bijmaken-in-de-buurt`,
     languages: {

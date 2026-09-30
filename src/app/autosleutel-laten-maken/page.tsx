@@ -28,7 +28,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 
 export const metadata: Metadata = {
   title: { absolute: 'Autosleutel Laten Maken: Dealer, Slotenmaker of Mobiel?' },
-  description: `Autosleutel laten maken? Vergelijk dealer, slotenmaker en mobiele specialist op prijs en tijd. Bij ons vanaf €${SITE_CONFIG.prices.transponder}, op locatie, met 12 maanden garantie.`,
+  description: `Autosleutel laten maken? Vergelijk dealer, slotenmaker en mobiele specialist op prijs en tijd. Bij ons op locatie, met de prijs vooraf en 12 maanden garantie.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-laten-maken`,
     languages: {

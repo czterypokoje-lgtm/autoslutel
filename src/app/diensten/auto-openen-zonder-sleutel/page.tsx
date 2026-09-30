@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   // 186 characters truncated in results, and what Google cut was the price
   // and the call to action — the two things that earn the click.
-  description: `Auto openen zonder sleutel? Binnen ${ARRIVAL} ter plaatse, 100% schadevrij, vaste prijs vanaf €${SITE_CONFIG.prices.unlock}. 24/7 bereikbaar. Bel direct!`,
+  description: `Auto openen zonder sleutel? Binnen ${ARRIVAL} ter plaatse, 100% schadevrij, prijs vooraf. 24/7 bereikbaar. Bel direct!`,
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
 };
 

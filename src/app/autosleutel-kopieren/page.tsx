@@ -26,7 +26,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 
 export const metadata: Metadata = {
   title: { absolute: 'Autosleutel Kopiëren: Wanneer Kan Het en Wanneer Niet?' },
-  description: `Autosleutel kopiëren? Bij een auto van na 1998 past de kopie wel, maar start de motor niet zonder de chip in te leren. Wat wél werkt, vanaf €${SITE_CONFIG.prices.transponder}.`,
+  description: `Autosleutel kopiëren? Bij een auto van na 1998 past de kopie wel, maar start de motor niet zonder de chip in te leren. Wat wél werkt, met de prijs vooraf.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-kopieren`,
     languages: {

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
   },
-  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Vaste prijzen vanaf €149. Bel nu 24/7.',
+  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Binnen 30-60 min, prijs vooraf. Bel 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-slotenmaker` },
 };
 

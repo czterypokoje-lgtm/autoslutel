@@ -26,8 +26,8 @@ import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
 const SERVICE_SLUG = 'alle-sleutels-kwijt-auto';
 
 export const metadata: Metadata = {
-  title: { absolute: `Autosleutel Kwijt? Binnen ${ARRIVAL_TITLE} | Vanaf €${SITE_CONFIG.prices.allKeysLost}` },
-  description: `Autosleutel kwijt, beide sleutels weg of geen reservesleutel? Binnen ${ARRIVAL} ter plaatse, nieuwe sleutel vanaf €${SITE_CONFIG.prices.allKeysLost}. 24/7, alle merken.`,
+  title: { absolute: `Autosleutel Kwijt? Binnen ${ARRIVAL_TITLE} | 24/7` },
+  description: `Autosleutel kwijt, beide sleutels weg of geen reservesleutel? Binnen ${ARRIVAL} ter plaatse, nieuwe sleutel ter plaatse gemaakt. Prijs vooraf, 24/7, alle merken.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
     languages: {
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
-    title: `Autosleutel Kwijt? Binnen ${ARRIVAL_TITLE} | Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
-    description: `Autosleutel kwijt en geen reserve? Nieuwe sleutel ter plaatse, vanaf €${SITE_CONFIG.prices.allKeysLost}. Alle merken, 24/7.`,
+    title: `Autosleutel Kwijt? Binnen ${ARRIVAL_TITLE} | 24/7`,
+    description: `Autosleutel kwijt en geen reserve? Binnen ${ARRIVAL} ter plaatse, prijs vooraf. Alle merken, 24/7.`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel Kwijt — Autosleutel24' }],
   },
 };

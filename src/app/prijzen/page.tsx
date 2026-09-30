@@ -13,9 +13,9 @@ export const metadata: Metadata = {
      * "kosten" and "prijs" query families are 5,947 impressions between them
      * and the old title led with "Prijzen", which is not the word they use.
      */
-    absolute: `Autosleutel Bijmaken Kosten | Vaste Prijs vanaf €${SITE_CONFIG.prices.transponder}`,
+    absolute: `Autosleutel Bijmaken Kosten | Vaste Prijs Vooraf`,
   },
-  description: `Wat kost een autosleutel bijmaken? Vaste prijzen per type: transponder vanaf €${SITE_CONFIG.prices.transponder}, klapsleutel en smart key. Geen verrassingen achteraf.`,
+  description: `Wat kost een autosleutel bijmaken? Vaste prijzen per type sleutel: transponder, klapsleutel en smart key. Geen verrassingen achteraf.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/prijzen`,
     languages: {

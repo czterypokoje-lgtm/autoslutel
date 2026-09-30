@@ -115,7 +115,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'faraday-pouch-bescherming-relay-attack',
-    title: 'Faraday Pouch: €50 Bescherming tegen Relay-diefstal',
+    title: 'Faraday Pouch: Bescherming tegen Relay-diefstal',
     excerpt: 'Werkt een Faraday pouch tegen relay-diefstal van keyless auto\'s? Lees wat het doet, wat het kost en welke pouch werkt. Bescherm uw autosleutel vandaag.',
     keywords: ['faraday pouch bescherming', 'relay attack voorkomen'],
     publishDate: '2026-03-05',
@@ -131,8 +131,8 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'case-study-bmw-besparing',
-    title: 'Hoe Wij een BMW Eigenaar €1.200 Bespaarden',
-    excerpt: 'Echte case: hoe een BMW-eigenaar €1.200 bespaarde op een nieuwe sleutel via onze mobiele service. Lees de offerte-vergelijking en het resultaat.',
+    title: 'Case Study: BMW Sleutel Zonder Dealer Bijmaken',
+    excerpt: 'Echte case: hoe een BMW-eigenaar flink bespaarde op een nieuwe sleutel via onze mobiele service. Lees de offerte-vergelijking en het resultaat.',
     keywords: ['BMW besparing casus', 'BMW alle sleutels kwijt utrecht'],
     publishDate: '2026-03-19',
     readTime: '4 min',

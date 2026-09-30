@@ -15,21 +15,22 @@ import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import Image from 'next/image';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
+import { ARRIVAL_TITLE } from '@/config/arrival';
 
 export const metadata: Metadata = {
   title: {
-    absolute: `Autosleutel Bijmaken of Namaken vanaf €${SITE_CONFIG.prices.transponder} | 24/7`,
+    absolute: `Autosleutel Bijmaken of Namaken | ${ARRIVAL_TITLE}`,
   },
-  description: 'Autosleutel bijmaken, namaken of een reservesleutel laten maken? 24/7 op locatie, vaste prijs vanaf €125 — goedkoper dan de dealer. Binnen 30 min ter plaatse.',
+  description: 'Autosleutel bijmaken, namaken of een reservesleutel laten maken? 24/7 op locatie, prijs vooraf, goedkoper dan de dealer. Binnen 30-60 min ter plaatse.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` },
   openGraph: {
-    title: `Autosleutel Bijmaken & Kopiëren vanaf €${SITE_CONFIG.prices.transponder} | Autosleutel24`,
+    title: `Autosleutel Bijmaken & Kopiëren | ${ARRIVAL_TITLE}`,
     url: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: `Autosleutel Bijmaken & Kopiëren vanaf €${SITE_CONFIG.prices.transponder} | Autosleutel24`,
+    title: `Autosleutel Bijmaken & Kopiëren | ${ARRIVAL_TITLE}`,
   },
 };
 
