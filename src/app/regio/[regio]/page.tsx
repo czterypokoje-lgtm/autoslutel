@@ -12,6 +12,7 @@ import SplitHero from '@/components/SplitHero/SplitHero';
 import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+import ServiceAreaMyMap from '@/components/ServiceAreaMyMap/ServiceAreaMyMap';
 
 /*
  * One page per province the business wants to be found in.
@@ -145,6 +146,8 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
       </SplitHero>
 
       <VerifiedReviewBanner />
+
+      <ServiceAreaMyMap title={`Ons werkgebied, ook in ${region.name}`} />
 
       <section className="section">
         <div className="container" style={{ maxWidth: 960 }}>

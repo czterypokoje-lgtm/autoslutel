@@ -1,0 +1,46 @@
+.wrap {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1.25rem;
+}
+
+.title {
+  margin: 0 0 1rem;
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e8eef4;
+  border: 1px solid var(--gray-200, #e5e7eb);
+}
+
+.frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: linear-gradient(160deg, #e8eef4, #d3dee9);
+  color: #0d2137;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .frame {
+    height: 360px;
+  }
+}
