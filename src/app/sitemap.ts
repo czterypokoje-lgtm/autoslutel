@@ -18,6 +18,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/over-ons', '/galerij', '/beoordelingen', '/veelgestelde-vragen',
     '/contact', '/privacybeleid', '/cookiebeleid',
     '/autosleutel-kwijt', '/autosleutel-bestellen-op-kenteken',
+    /*
+     * Two pages built from the Search Console export rather than from a
+     * guess: "gestolen" is 612 impressions sitting at position 50 against a
+     * blog post that sells nothing, and the sleutelmaker/slotenmaker family
+     * is 708 impressions of people looking for a trade rather than a task.
+     */
+    '/autosleutel-gestolen', '/mobiele-sleutelmaker',
     // Linked from the footer of every page and indexable, but was never
     // listed here — the only orphan left after the model pages came out.
     '/algemene-voorwaarden',

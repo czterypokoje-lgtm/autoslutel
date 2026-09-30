@@ -520,6 +520,8 @@ export default function AutosleutelKwijt() {
               <div>
                 <div className="seo-hub-title">Andere diensten</div>
                 <div className="seo-hub-col">
+                  <Link href="/autosleutel-gestolen" className="seo-hub-link">Autosleutel gestolen →</Link>
+                  <Link href="/mobiele-sleutelmaker" className="seo-hub-link">Mobiele sleutelmaker →</Link>
                   {DIENSTEN.filter((d) => !REDIRECTED_SERVICE_SLUGS.has(d.slug)).map((d) => (
                     <Link key={d.slug} href={`/diensten/${d.slug}`} className="seo-hub-link">
                       {`${d.title} →`}
