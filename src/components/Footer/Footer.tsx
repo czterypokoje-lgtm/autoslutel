@@ -13,6 +13,15 @@ const diensten = [
   ['Contactslot Auto Vervangen', '/diensten/contactslot-auto-vervangen'],
   ['Reservesleutel Maken', '/diensten/reservesleutel-maken'],
   ['Autosleutels Repareren', '/diensten/autosleutels-repareren'],
+  /*
+   * These three were live, in the sitemap, and linked from nowhere. A page
+   * nothing points at is one Google finds and nobody else does -- and the
+   * queries behind them are 708, 798 and a position-8 local term, which is
+   * exactly the traffic an orphan cannot collect.
+   */
+  ['Autosleutel Kopiëren', '/autosleutel-kopieren'],
+  ['Mobiele Sleutelmaker', '/mobiele-sleutelmaker'],
+  ['Bijmaken in de Buurt', '/autosleutel-bijmaken-in-de-buurt'],
   ['Alle diensten →', '/diensten'],
 ];
 
@@ -42,6 +51,8 @@ const steden = [
 
 const spoed = [
   ['Autosleutel Kwijt', '/autosleutel-kwijt'],
+  /* Stolen sits beside lost because it is the same panic with a thief in it. */
+  ['Autosleutel Gestolen', '/autosleutel-gestolen'],
   ['Auto Openen Zonder Sleutel', '/diensten/auto-openen-zonder-sleutel'],
   ['24/7 Spoedhulp', '/diensten/auto-slotenmaker'],
 ];

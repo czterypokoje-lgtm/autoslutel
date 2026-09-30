@@ -38,6 +38,7 @@ const DienstenStructure = [
       { href: '/diensten/kofferbak-openen', label: 'Kofferbak Openen' },
       { href: '/diensten/sleutel-afgebroken-in-slot', label: 'Sleutel Afgebroken in Slot' },
       { href: '/diensten/contactslot-auto-vervangen', label: 'Contactslot Vervangen' },
+      { href: '/mobiele-sleutelmaker', label: 'Mobiele Sleutelmaker' },
     ]
   },
   {
@@ -49,6 +50,7 @@ const DienstenStructure = [
       { href: '/diensten/smart-key-programmeren', label: 'Smart Key / Keyless' },
       { href: '/diensten/reservesleutel-maken', label: 'Reservesleutel Maken' },
       { href: '/autosleutel-bestellen-op-kenteken', label: 'Bestellen op Kenteken' },
+      { href: '/autosleutel-kopieren', label: 'Autosleutel Kopiëren' },
     ]
   },
   {
@@ -56,6 +58,7 @@ const DienstenStructure = [
     href: '/autosleutel-kwijt',
     subs: [
       { href: '/diensten/noodopening-auto', label: 'Noodopening' },
+      { href: '/autosleutel-gestolen', label: 'Autosleutel Gestolen' },
     ]
   },
   {

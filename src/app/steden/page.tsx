@@ -71,6 +71,21 @@ export default function Steden() {
         <p style={{ color:'rgba(255,255,255,0.7)', fontSize:'1rem', maxWidth:580, margin:'0 auto' }}>
           Mobiele autosleutel service in Midden-Nederland en de Randstad. Klik op uw stad voor reactietijden en specifieke info.
         </p>
+        {/*
+          * This hub answers "which cities", and it has been ranking for
+          * "autosleutel bijmaken in de buurt" -- a question about where the
+          * reader is, which now has its own page. Pointing at it from here is
+          * how someone who does not see their town on the list gets an answer
+          * instead of a back button.
+          */}
+        <p style={{ marginTop:'1.25rem' }}>
+          <Link
+            href="/autosleutel-bijmaken-in-de-buurt"
+            style={{ color:'var(--orange-400)', fontWeight:600, textDecoration:'none' }}
+          >
+            Staat uw plaats er niet bij? Zoek wie er bij u in de buurt is →
+          </Link>
+        </p>
       </section>
 
       <div className="container" style={{ padding:'3.5rem 2rem' }}>
