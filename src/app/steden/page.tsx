@@ -2,13 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CITIES } from '@/config/cities';
 import { SITE_CONFIG } from '@/config/site.config';
+import { SERVICE_REGIONS } from '@/config/regions';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
     absolute: 'Autosleutel Bijmaken per Stad | 24/7 Mobiel | Autosleutel24',
   },
-  description: `Mobiele autosleutelspecialist in ${CITIES.length} steden, van Amsterdam tot Maastricht. Wij komen naar u toe en maken de sleutel ter plaatse. Bel ${SITE_CONFIG.phone}.`,
+  description: `Mobiele autosleutelspecialist in Utrecht, Noord-Holland, Zuid-Holland, Gelderland en Flevoland. Wij komen naar u toe. Bel ${SITE_CONFIG.phone}.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/steden`,
     languages: {
@@ -19,16 +20,24 @@ export const metadata: Metadata = {
   openGraph: {
     url: `${SITE_CONFIG.domain}/steden`,
     type: 'website',
-    title: `Autosleutel Bijmaken in ${CITIES.length} Steden | Heel Nederland`,
-    description: `Mobiele autosleutelspecialist in ${CITIES.length} steden. Zelfde dag service. Bel ${SITE_CONFIG.phone}`,
+    title: 'Autosleutel Bijmaken in de Randstad en Gelderland',
+    description: `Mobiele autosleutelspecialist in Utrecht, Zuid-Holland, Noord-Holland, Gelderland en Flevoland. Bel ${SITE_CONFIG.phone}`,
     images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Autosleutel24 — Mobiele autosleutelspecialist in Midden-Nederland en de Randstad' }],
   },
 };
 
 const groups = [
-  { title: 'Noord-Brabant & Limburg', filter: (c: typeof CITIES[0]) => ['Noord-Brabant','Limburg'].includes(c.region) },
-  { title: 'West & Randstad', filter: (c: typeof CITIES[0]) => ['Noord-Holland','Zuid-Holland','Utrecht','Flevoland'].includes(c.region) },
-  { title: 'Oost & Noord Nederland', filter: (c: typeof CITIES[0]) => ['Gelderland','Overijssel','Groningen','Friesland'].includes(c.region) },
+  ...SERVICE_REGIONS.map((r) => ({
+    title: r.label,
+    href: `/regio/${r.slug}`,
+    filter: (c: typeof CITIES[0]) => c.region === r.name,
+  })),
+  // Outside the provinces we serve. The pages exist but are kept out of the index.
+  {
+    title: 'Overige regio\'s',
+    href: undefined as string | undefined,
+    filter: (c: typeof CITIES[0]) => !SERVICE_REGIONS.some((r) => r.name === c.region),
+  },
 ];
 
 export default function Steden() {
@@ -69,7 +78,7 @@ export default function Steden() {
         <p style={{ fontSize:'0.72rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', color:'var(--orange-400)', marginBottom:'0.75rem' }}>SERVICEDEKKING</p>
         <h1 style={{ color:'#fff', marginBottom:'1rem' }}>Alle Steden — {CITIES.length} Locaties</h1>
         <p style={{ color:'rgba(255,255,255,0.7)', fontSize:'1rem', maxWidth:580, margin:'0 auto' }}>
-          Mobiele autosleutel service in Midden-Nederland en de Randstad. Klik op uw stad voor reactietijden en specifieke info.
+          Mobiele autosleutelservice in Utrecht, Zuid-Holland, Noord-Holland, Gelderland en Flevoland: de hele Randstad en Gelderland. Kies uw provincie of stad.
         </p>
         {/*
           * This hub answers "which cities", and it has been ranking for
@@ -94,7 +103,7 @@ export default function Steden() {
           if (!cities.length) return null;
           return (
             <div key={g.title} style={{ marginBottom:'3rem' }}>
-              <h2 style={{ fontSize:'1.15rem', fontWeight:700, paddingBottom:'0.75rem', marginBottom:'1rem', borderBottom:'2px solid var(--gray-200)' }}>{g.title}</h2>
+              <h2 style={{ fontSize:'1.15rem', fontWeight:700, paddingBottom:'0.75rem', marginBottom:'1rem', borderBottom:'2px solid var(--gray-200)' }}>{g.href ? <Link href={g.href} style={{ color: 'inherit' }}>{g.title} →</Link> : g.title}</h2>
 
               <ul className={styles.seoList}>
                 {cities.map(c => (

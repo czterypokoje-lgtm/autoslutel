@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { isNoindexCity } from '@/config/thinPages';
 import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
+import { SERVICE_REGIONS } from '@/config/regions';
 import { BRANDS } from '@/config/brands';
 import { DEEP_DIVE, RELAY_THEFT_MAKES, GHOST_ARTICLE } from '@/config/deepDives';
 import { createClient } from '@supabase/supabase-js';
@@ -731,6 +732,13 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                       </Link>
                     </li>
                   ))}
+                  {SERVICE_REGIONS.some((r) => r.name === city.region) && (
+                    <li>
+                      <Link href={`/regio/${SERVICE_REGIONS.find((r) => r.name === city.region)!.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 700 }}>
+                        Alle steden in {city.region} &rarr;
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               </div>
               <div style={{ flex: '1 1 300px' }}>

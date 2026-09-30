@@ -29,6 +29,10 @@ const diensten = [
 ];
 
 const steden = [
+  ['Regio Zuid-Holland', '/regio/zuid-holland'],
+  ['Regio Gelderland', '/regio/gelderland'],
+  ['Regio Utrecht', '/regio/utrecht'],
+  ['Regio Noord-Holland', '/regio/noord-holland'],
   ['Amsterdam', '/steden/amsterdam'],
   ['Den Haag', '/steden/den-haag'],
   ['Utrecht', '/steden/utrecht'],

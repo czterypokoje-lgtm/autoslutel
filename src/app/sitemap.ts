@@ -5,6 +5,7 @@ import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import { isNoindexBrand, isNoindexCity } from '@/config/thinPages';
+import { SERVICE_REGIONS } from '@/config/regions';
 import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
 import { lastModifiedFor } from '@/lib/contentDates';
 import fs from 'fs';
@@ -98,6 +99,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
+  // 3b. Province hubs: Utrecht, Noord-Holland, Zuid-Holland, Gelderland, Flevoland.
+  const regionPages = SERVICE_REGIONS.map(r => ({
+    url: `${base}/regio/${r.slug}`,
+    lastModified: lastModifiedFor(`/regio/${r.slug}`, 'steden'),
+    changeFrequency: 'monthly' as const,
+    priority: 0.85,
+  }));
+
   // 4. Brand Pages
   const brandPages = BRANDS.filter(b => !isNoindexBrand(b.nameSlug)).map(b => ({
     url: `${base}/merken/${b.nameSlug}-autosleutel-bijmaken`,
@@ -137,6 +146,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...corePages,
     ...servicePages,
+    ...regionPages,
     ...cityPages,
     ...brandPages,
     ...zakelijkPages,

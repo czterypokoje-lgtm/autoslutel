@@ -25,7 +25,9 @@
 
 export const NOINDEX_CITY_SLUGS: ReadonlySet<string> = new Set([
   // beyond the serving radius
-  'breda', 'dordrecht', 'eindhoven', 'helmond', 'roermond',
+  // Noord-Brabant and Limburg are outside the provinces served (Zuid-Holland, Utrecht, Noord-Holland,
+  // Gelderland, Flevoland). Dordrecht is Zuid-Holland and is indexed.
+  'breda', 'eindhoven', 'helmond', 'roermond',
   'venlo', 'sittard-geleen', 'heerlen', 'maastricht',
   // districts that duplicate their parent city
   'utrecht-centrum', 'utrecht-zuid', 'amsterdam-centrum', 'amsterdam-zuid', 'amsterdam-oost',
