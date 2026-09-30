@@ -193,9 +193,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   /* Who actually covers this city, and how far away they really are. Null
      only when the roster could not be read at all. */
   const match = findCityTechnician(city, await loadPublicTechnicians());
-  const technician = match?.technician ?? null;
   const arrival = arrivalWindow(match?.distanceKm ?? null);
-  const technicianPhoto = localTechnicianPhoto(technician?.photo_url ?? null);
   /*
    * Every arrival claim on this page reads from these two, and both collapse
    * to a promise with no number in it when the distance is unknown. The old
@@ -227,29 +225,26 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
    * 50.85/5.69 whose addressLocality was Bussum — two places 210 km apart, in
    * one entity, on 62 pages. Google reads geo and address together.
    *
-   * Both now describe the same real operator: where the covering technician
-   * works from, with the city in areaServed. With no technician we override
-   * neither and the page inherits head office, which is at least coherent.
+   * Resolved by not claiming a local address at all: the node is head office,
+   * and areaServed names the city it serves.
    */
   const base = getBaseLocalBusinessSchema();
-  const techGeo =
-    technician && technician.base_lat !== null && technician.base_lng !== null
-      ? { '@type': 'GeoCoordinates', latitude: String(technician.base_lat), longitude: String(technician.base_lng) }
-      : null;
 
+  /*
+   * The node describes Autosleutel24 and inherits head office, unchanged.
+   *
+   * It briefly carried the covering partner's coordinates, their town as
+   * addressLocality and their Google Business Profile in sameAs. All three
+   * publish a partner's identity on a public page, which is the owner's call
+   * and was not agreed with the partners, so all three are gone with the name.
+   *
+   * areaServed is what makes the page local, and it is the honest way to say
+   * it: this is one business that serves this city, not a branch in it.
+   */
   const schema = {
     ...base,
     '@id': `${SITE_CONFIG.domain}/steden/${citySlug}#locksmith`,
     url: `${SITE_CONFIG.domain}/steden/${citySlug}`,
-    ...(techGeo ? { geo: techGeo } : {}),
-    ...(technician?.base_city
-      ? { address: { ...base.address, addressLocality: technician.base_city } }
-      : {}),
-    /* The partner's own Google Business Profile. It is the listing that can
-       actually rank in this region — proximity decides the map pack — so the
-       page and the profile should point at each other rather than stand as
-       two unconnected claims. */
-    ...(technician?.gbp_url ? { sameAs: [technician.gbp_url] } : {}),
     areaServed: {
       '@type': 'City',
       name: city.city,
@@ -412,67 +407,46 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
 
         {/* ── TECHNICIAN TRUST CARD ─────────────────────────────────────
-            The person who actually covers this city, from the partner roster.
+            Berkan, on every city page, by the owner's decision.
 
-            This block used to hardcode one name, one photo and one set of
-            certifications onto all 62 pages — Maastricht included, ~210 km
-            from the Bussum base. Everything here now comes from the matched
-            technician, and every claim is dropped rather than defaulted when
-            the data behind it is missing: an unknown arrival time prints no
-            arrival time. Defaulting is what produced "binnen 30-60 min" on a
-            page about a city two hours away.
+            This block briefly rendered whichever partner covered the city,
+            from the technicians table. That was mine to build and not mine to
+            decide: naming a partner on a public page is a co-branding
+            commitment -- what appears where, and what happens to sixty-two
+            pages when a partnership ends -- and it was never agreed with the
+            partners. Reverted on instruction.
 
-            The CTA stays on the central number on purpose. Leads route
-            through the CRM, which is what assigns and tracks the job; the
-            partner's own line would bypass dispatch and attribution both. */}
-        {technician && (
+            The dynamic lookup stays in src/lib/cityTechnician.ts and is still
+            what dispatch uses to route a job. It just does not put a name on
+            a public page any more. */}
         <section style={{ padding: '2.5rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
           <div className="container">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '2rem', alignItems: 'center' }}>
               <div>
-                <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>
-                  {match?.covered
-                    ? `UW MONTEUR IN ${city.city.toUpperCase()}`
-                    : `DICHTSTBIJZIJNDE MONTEUR VOOR ${city.city.toUpperCase()}`}
-                </p>
-                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>
-                  {technician.name}{technician.base_city ? ` — Autosleutelspecialist uit ${technician.base_city}` : ''}
-                </h2>
+                <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>UW MONTEUR IN {city.city.toUpperCase()}</p>
+                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>Berkan Acarol — Gecertificeerd Hoofdtechnicus</h2>
                 <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1rem', fontSize: '0.9rem' }}>
-                  Uw sleutelprobleem in {city.city} wordt persoonlijk opgelost door {technician.name.split(' ')[0]}
-                  {technician.base_city ? `, die vanuit ${technician.base_city} werkt` : ''}
-                  {arrival ? ` en gemiddeld binnen ${arrival} bij u is` : ''}.
-                  {technician.certifications && technician.certifications.length > 0
-                    ? ` Gecertificeerd op ${technician.certifications.join(' en ')} — dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.`
-                    : ' Dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.'}
+                  Uw sleutelprobleem in {city.city} wordt persoonlijk opgelost door Berkan. Gecertificeerd op Autel IM608 Pro&nbsp;II en AVDI Abrites — dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.
                 </p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.25rem', fontSize: '0.875rem', color: 'var(--gray-700)', lineHeight: 1.7 }}>
-                  {technician.certifications && technician.certifications.length > 0 && (
-                    <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>{technician.certifications.join(' & ')}</strong> — dealer-niveau apparatuur</span></li>
-                  )}
-                  {arrival && (
-                    <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Gemiddeld {arrival} ter plaatse</strong>{technician.base_city ? ` vanuit ${technician.base_city}` : ''}</span></li>
-                  )}
+                  <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Autel IM608 Pro II &amp; AVDI Abrites</strong> — dealer-niveau apparatuur</span></li>
                   <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Schadevrij werken</strong> — 12 maanden garantie op elk onderdeel</span></li>
                   <li style={{ display: 'flex', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Vaste prijs vooraf</strong> — nooit een verrassingsrekening</span></li>
                 </ul>
-                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id={`city-technician-phone-${city.slug}`}>📞 Bel direct: {SITE_CONFIG.phone}</a>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id={`city-berkan-phone-${city.slug}`}>📞 Bel Berkan: {SITE_CONFIG.phone}</a>
               </div>
-              {technicianPhoto && (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Image
-                    src={technicianPhoto}
-                    alt={`${technician.name} — autosleutelspecialist${technician.base_city ? ` uit ${technician.base_city}` : ''}, werkt in ${city.city}`}
-                    width={300}
-                    height={200}
-                    style={{ width: '100%', maxWidth: '300px', height: '200px', objectFit: 'cover', objectPosition: 'top', borderRadius: '8px', border: '1px solid #cbd5e1' }}
-                  />
-                </div>
-              )}
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Image
+                  src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+                  alt={`Berkan Acarol — Autosleutelspecialist ${city.city}`}
+                  width={300}
+                  height={200}
+                  style={{ width: '100%', maxWidth: '300px', height: '200px', objectFit: 'cover', objectPosition: 'top', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                />
+              </div>
             </div>
           </div>
         </section>
-        )}
 
         {/* ── TECHNICAL DEEP DIVES FOR THIS CITY'S COMMON MAKES ────────
             Linked off popularBrands, so a Gooi page that sees BMW and Audi
