@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: {
     absolute: `Contact & 24/7 Spoedhulp Autosleutel | ${SITE_CONFIG.phone}`,
   },
-  description: `Neem contact op met ${SITE_CONFIG.fullName}. Bel of stuur een bericht. 24/7 bereikbaar. Reactietijd: ${SITE_CONFIG.responseTime}.`,
+  description: `Sleutel kwijt of auto op slot? Bel of app ${SITE_CONFIG.fullName} op ${SITE_CONFIG.phone}, 24/7 bereikbaar. Reactietijd ${SITE_CONFIG.responseTime}. Ook voor offertes en afspraken.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/contact`,
   },

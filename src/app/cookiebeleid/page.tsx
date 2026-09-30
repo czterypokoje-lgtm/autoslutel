@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     absolute: 'Cookiebeleid | Autosleutel24',
   },
   description:
-    'Welke cookies Autosleutel24 gebruikt, waarvoor, hoe lang ze bewaard blijven en hoe u uw toestemming wijzigt of intrekt.',
+    'Welke cookies Autosleutel24 gebruikt, waarvoor, hoe lang ze bewaard blijven en hoe u uw toestemming op elk moment wijzigt of intrekt.',
   alternates: { canonical: `${SITE_CONFIG.domain}/cookiebeleid` },
 };
 

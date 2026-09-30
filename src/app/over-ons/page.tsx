@@ -4,7 +4,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Over Ons | Autosleutel24: Gecertificeerd Autosleutel Specialist',
+    absolute: 'Over Autosleutel24 | Gecertificeerde Specialist',
   },
   description: `Maak kennis met Autosleutel24. Onder leiding van Berkan Acarol bieden wij professionele, mobiele autosleutelservice in de gehele Randstad en Midden-Nederland.`,
   alternates: {

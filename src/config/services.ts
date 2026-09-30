@@ -68,7 +68,7 @@ export const BLOG_POSTS = [
   {
     slug: 'autosleutel-kosten-per-merk-2026',
     title: 'Autosleutel Vervangingskosten per Merk 2026',
-    excerpt: 'BMW, Mercedes, Audi, VW, Toyota — wat kost een nieuwe autosleutel echt?',
+    excerpt: 'Wat kost een nieuwe autosleutel per merk in 2026? Vergelijk prijzen voor BMW, VW, Mercedes, Audi en meer, dealer versus mobiele specialist. Zie de tabel.',
     keywords: ['autosleutel kosten', 'prijs autosleutel per merk 2026'],
     publishDate: '2026-01-22',
     readTime: '7 min',
@@ -76,7 +76,7 @@ export const BLOG_POSTS = [
   {
     slug: 'dealer-vs-slotenmaker-kostenverschil',
     title: 'Dealer vs Slotenmaker: Het Echte Kostenverschil',
-    excerpt: 'Zelf onderzoek gedaan: dealer vs mobiele specialist. De cijfers zijn verbluffend.',
+    excerpt: 'Dealer of slotenmaker voor uw autosleutel? Wij vergeleken echte offertes en laten zien hoeveel u bespaart per merk. Lees de cijfers voor u kiest.',
     keywords: ['dealer vs slotenmaker kosten', 'autosleutel dealer vergelijking'],
     publishDate: '2026-01-29',
     readTime: '6 min',
@@ -84,7 +84,7 @@ export const BLOG_POSTS = [
   {
     slug: 'verzekering-dekt-autosleutel-vervangen',
     title: 'Vergoedt Uw Verzekering het Vervangen van een Autosleutel?',
-    excerpt: 'All Risk, WA+, of WA? Wij leggen uit welke polissen vergoeden en hoe u claimt.',
+    excerpt: 'Vergoedt uw autoverzekering het vervangen van een autosleutel? Lees wanneer WA, allrisk of inboedel dekt en hoe u de vergoeding aanvraagt.',
     keywords: ['verzekering dekt autosleutel', 'autosleutel verzekering claim'],
     publishDate: '2026-02-05',
     readTime: '5 min',
@@ -92,7 +92,7 @@ export const BLOG_POSTS = [
   {
     slug: 'sfd-lock-vw-golf-8-uitleg',
     title: 'Wat Is SFD Lock op VW Golf 8? (En Hoe Wij Het Ontgrendelen)',
-    excerpt: 'SFD is de reden waarom uw Golf 8 sleutel zo duur is — maar niet bij ons.',
+    excerpt: 'Wat is SFD Lock op de VW Golf 8, en waarom blokkeert het sleutel programmeren? Lees de uitleg en hoe wij het oplossen. Bel voor uw Golf 8 sleutel.',
     keywords: ['SFD lock VW Golf 8', 'SFD unlock utrecht'],
     publishDate: '2026-02-12',
     readTime: '8 min',
@@ -100,7 +100,7 @@ export const BLOG_POSTS = [
   {
     slug: 'bmw-bdc2-sleutel-bijmaken-2026',
     title: 'BMW BDC2 Autosleutel Bijmaken: Is Het Mogelijk in 2026?',
-    excerpt: 'BDC2 is de moeilijkste BMW. Wij leggen uit wat kan en wat niet.',
+    excerpt: 'Kan een BMW met BDC2 nog een sleutel laten bijmaken zonder dealer? Lees wat mogelijk is, wat het kost en hoe wij het op locatie doen. Bel voor advies.',
     keywords: ['BMW BDC2 autosleutel bijmaken', 'BMW G chassis sleutel'],
     publishDate: '2026-02-19',
     readTime: '6 min',
@@ -108,7 +108,7 @@ export const BLOG_POSTS = [
   {
     slug: 'ghost-immobiliser-utrecht',
     title: 'Ghost Immobiliser: Bescherming voor Elke Keyless Auto',
-    excerpt: 'Relay attacks in Utrecht en omgeving nemen toe. Ghost immobiliser is de definitieve oplossing.',
+    excerpt: 'Ghost immobiliser tegen relay-diefstal van keyless auto\'s: hoe het werkt, wat het kost en waar u het laat installeren in Utrecht. Lees de uitleg.',
     keywords: ['ghost immobiliser utrecht', 'relay attack bescherming'],
     publishDate: '2026-02-26',
     readTime: '5 min',
@@ -116,7 +116,7 @@ export const BLOG_POSTS = [
   {
     slug: 'faraday-pouch-bescherming-relay-attack',
     title: 'Faraday Pouch: €50 Bescherming tegen Relay-diefstal',
-    excerpt: 'Keyless entry is handig maar gevaarlijk. Faraday pouch + Ghost = maximale bescherming.',
+    excerpt: 'Werkt een Faraday pouch tegen relay-diefstal van keyless auto\'s? Lees wat het doet, wat het kost en welke pouch werkt. Bescherm uw autosleutel vandaag.',
     keywords: ['faraday pouch bescherming', 'relay attack voorkomen'],
     publishDate: '2026-03-05',
     readTime: '4 min',
@@ -124,7 +124,7 @@ export const BLOG_POSTS = [
   {
     slug: 'toyota-hybride-sleutel-vervangen',
     title: 'Toyota Hybride Sleutel Vervangen: Wat Maakt Het Anders',
-    excerpt: 'Hybride systemen vereisen extra voorzorgsmaatregelen. Onze specialist legt het uit.',
+    excerpt: 'Toyota hybride sleutel kwijt of kapot? Lees wat een nieuwe sleutel kost, waarom de programmering anders is en hoe u dealerkosten bespaart. Bel voor advies.',
     keywords: ['Toyota hybride sleutel', 'Prius Corolla sleutel vervangen'],
     publishDate: '2026-03-12',
     readTime: '6 min',
@@ -132,7 +132,7 @@ export const BLOG_POSTS = [
   {
     slug: 'case-study-bmw-besparing',
     title: 'Hoe Wij een BMW Eigenaar €1.200 Bespaarden',
-    excerpt: 'Echte casus: BMW X5, alle sleutels kwijt. Dealer: €1.800. Wij: €650. Zelfde dag.',
+    excerpt: 'Echte case: hoe een BMW-eigenaar €1.200 bespaarde op een nieuwe sleutel via onze mobiele service. Lees de offerte-vergelijking en het resultaat.',
     keywords: ['BMW besparing casus', 'BMW alle sleutels kwijt utrecht'],
     publishDate: '2026-03-19',
     readTime: '4 min',

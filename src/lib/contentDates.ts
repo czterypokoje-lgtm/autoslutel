@@ -15,15 +15,15 @@ export const TEMPLATE_REVISED = '2026-08-31';
 
 /** Per-section content revisions. Update the date when you edit that section. */
 export const SECTION_REVISED: Record<string, string> = {
-  home: '2026-08-31',
-  diensten: '2026-08-31',
-  steden: '2026-08-31',
-  merken: '2026-08-26',
-  blog: '2026-08-26',
-  prijzen: '2026-08-26',
-  kennisbank: '2026-08-26',
-  legal: '2026-08-31', // privacybeleid, cookiebeleid
-  static: '2026-08-20', // over-ons, galerij, beoordelingen, contact, faq
+  home: '2026-09-30',
+  diensten: '2026-09-30', // meta titles and descriptions rewritten from Search Console data
+  steden: '2026-09-30',
+  merken: '2026-09-30',
+  blog: '2026-09-30', // nine short descriptions lengthened
+  prijzen: '2026-09-30',
+  kennisbank: '2026-09-30',
+  legal: '2026-09-30', // privacybeleid, cookiebeleid, algemene voorwaarden
+  static: '2026-09-30', // over-ons, galerij, beoordelingen, contact, faq
 };
 
 /**

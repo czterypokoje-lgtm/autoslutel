@@ -21,7 +21,7 @@ import { VAT_RATE } from '@/lib/catalog';
 export const metadata: Metadata = {
   title: { absolute: 'Algemene voorwaarden | Autosleutel24' },
   description:
-    'De voorwaarden waaronder Autosleutel24 een autosleutel bijmaakt of monteert aan huis.',
+    'De voorwaarden waaronder Autosleutel24 een autosleutel bijmaakt of monteert aan huis: prijs, betaling, garantie, annulering en aansprakelijkheid.',
   alternates: { canonical: `${SITE_CONFIG.domain}/algemene-voorwaarden` },
 };
 

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Privacybeleid (AVG conform) | Autosleutel24',
   },
-  description: `Privacybeleid van ${SITE_CONFIG.fullName}. GDPR/AVG conform.`,
+  description: `Privacybeleid van ${SITE_CONFIG.fullName}: welke persoonsgegevens wij bewaren, waarom en hoe lang. Wij voldoen aan de AVG en delen uw gegevens niet zonder toestemming.`,
   alternates: { canonical: `${SITE_CONFIG.domain}/privacybeleid` },
 };
 

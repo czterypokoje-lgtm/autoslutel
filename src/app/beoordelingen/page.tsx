@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Autosleutel24 Reviews | 5,0★ Klantbeoordelingen',
   },
-  description: `Klantbeoordelingen van ${SITE_CONFIG.fullName}. Lees onze reviews rechtstreeks op ons Google-bedrijfsprofiel.`,
+  description: `Lees echte reviews van klanten over ${SITE_CONFIG.fullName}. Sleutel bijgemaakt of kwijt? Zie de beoordelingen op ons Google-bedrijfsprofiel en bel voor uw eigen oplossing.`,
   alternates: { canonical: `${SITE_CONFIG.domain}/beoordelingen` },
 };
 
