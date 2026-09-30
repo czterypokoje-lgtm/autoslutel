@@ -1,6 +1,6 @@
 .wrapper {
-  background-color: #0d121c; /* Very dark blue matching screenshots */
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #0f172a;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   overflow-x: hidden;
 }
@@ -16,7 +16,7 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #94a3b8;
+  color: #64748b;
   font-weight: 700;
   margin-bottom: 0.5rem;
   display: block;
@@ -33,68 +33,16 @@
 }
 
 /* Hero Section */
-.hero {
-  position: relative;
-  min-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding-bottom: 6rem;
-  background-image: linear-gradient(to top, #0d121c 0%, rgba(13, 18, 28, 0.7) 40%, rgba(13, 18, 28, 0.2) 100%), url('/images/seo/audi_forest_hero.webp'); /* Assuming we have a car image or we'll use a placeholder */
-  background-size: cover;
-  background-position: center;
-}
 
-.heroInner {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
 
 @media (min-width: 1024px) {
-  .heroInner {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
 }
 
-.heroTitle {
-  color: #ffffff !important;
-  
-  font-size: clamp(3.5rem, 8.5vw, 7.5rem);
-  line-height: 0.85;
-  text-transform: uppercase;
-  margin: 0;
-  max-width: 800px;
-  letter-spacing: -0.02em;
-}
 
-.heroRight {
-  max-width: 420px;
-  padding-bottom: 0.5rem;
-  margin-bottom: 0;
-}
 
-.heroDesc {
-  color: #f1f5f9 !important;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: #f1f5f9;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
-}
 
-.buttonGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
 
 @media (min-width: 640px) {
-  .buttonGroup {
-    flex-direction: row;
-  }
 }
 
 .btnOrange {
@@ -117,29 +65,29 @@
 }
 
 .btnOutline {
-  background-color: #111827;
-  color: #fff;
+  background-color: #f8fafc;
+  color: #0f172a;
   font-weight: 700;
   text-align: center;
   padding: 1rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
   font-size: 0.95rem;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(15,23,42,0.18);
   transition: background 0.2s;
   display: inline-block;
   cursor: pointer;
 }
 
 .btnOutline:hover {
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(15,23,42,0.10);
 }
 
 /* Stats Bar */
 .statsBar {
-  background-color: #111827;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background-color: #f8fafc;
+  border-top: 1px solid rgba(15,23,42,0.08);
+  border-bottom: 1px solid rgba(15,23,42,0.08);
 }
 
 .statsGrid {
@@ -162,7 +110,7 @@
 }
 
 .statItem {
-  border-left: 1px solid rgba(255,255,255,0.1);
+  border-left: 1px solid rgba(15,23,42,0.10);
   padding-left: 1.5rem;
 }
 
@@ -172,7 +120,7 @@
 }
 
 .statValue {
-  color: #ffffff !important;
+  color: #0f172a !important;
   
   font-size: 2rem;
   text-transform: uppercase;
@@ -203,7 +151,7 @@
 }
 
 .sectionTitle {
-  color: #ffffff !important;
+  color: #0f172a !important;
   
   font-size: 2.5rem;
   text-transform: uppercase;
@@ -224,19 +172,19 @@
   display: flex;
   align-items: flex-start;
   font-size: 1rem;
-  color: #e2e8f0;
+  color: #475569;
   line-height: 1.5;
 }
 
 .priceCard {
-  background-color: #111827;
-  border: 1px solid rgba(255,255,255,0.1);
+  background-color: #f8fafc;
+  border: 1px solid rgba(15,23,42,0.10);
   border-radius: 8px;
   padding: 2.5rem 2rem;
 }
 
 .priceTitle {
-  color: #ffffff !important;
+  color: #0f172a !important;
   
   font-size: 3rem;
   margin: 0.5rem 0 1.5rem 0;
@@ -244,16 +192,16 @@
 }
 
 .priceCardText {
-  color: #94a3b8 !important;
+  color: #64748b !important;
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: #64748b;
   margin-top: 1.5rem;
   line-height: 1.5;
 }
 
 .btnDark {
-  background-color: #1e293b;
-  color: #fff;
+  background-color: #111827;
+  color: #ffffff;
   font-weight: 700;
   text-align: center;
   padding: 1rem 1.5rem;
@@ -263,25 +211,25 @@
   transition: background 0.2s;
   display: block;
   width: 100%;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(15,23,42,0.10);
   margin-top: 0.75rem;
 }
 
 .btnDark:hover {
-  background-color: #334155;
+  background-color: #1e293b;
 }
 
 /* Transponder Section */
 .transponderSection {
-  background-color: #111827;
+  background-color: #f8fafc;
   padding: 5rem 0;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(15,23,42,0.08);
+  border-bottom: 1px solid rgba(15,23,42,0.08);
 }
 
 .transponderText {
-  color: #cbd5e1 !important;
-  color: #cbd5e1;
+  color: #475569 !important;
+  color: #475569;
   line-height: 1.6;
   max-width: 800px;
   margin-bottom: 2rem;
@@ -304,7 +252,7 @@
   align-items: center;
   gap: 0.75rem;
   font-size: 0.95rem;
-  color: #e2e8f0;
+  color: #475569;
 }
 
 .checkIcon {
@@ -330,8 +278,8 @@
 }
 
 .photoCard {
-  background-color: #111827;
-  border: 1px solid rgba(255,255,255,0.05);
+  background-color: #f8fafc;
+  border: 1px solid rgba(15,23,42,0.08);
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -342,7 +290,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16/10;
-  background-color: #1e293b;
+  background-color: #f1f5f9;
 }
 
 .photoContent {
@@ -350,23 +298,23 @@
 }
 
 .photoTitle {
-  color: #ffffff !important;
+  color: #0f172a !important;
   font-weight: 700;
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
 
 .photoDesc {
-  color: #94a3b8 !important;
+  color: #64748b !important;
   font-size: 0.9rem;
-  color: #94a3b8;
+  color: #64748b;
   line-height: 1.5;
 }
 
 /* Brands Grid */
 .brandsSection {
   padding: 5rem 0;
-  background-color: #0b1121;
+  background-color: #f8fafc;
 }
 
 .brandsGrid {
@@ -414,10 +362,10 @@
 /* FAQ Section Override */
 .faqSection {
   padding: 5rem 0;
-  background-color: #0d121c;
+  background-color: #ffffff;
 }
 .faqSection h2 {
-  color: #ffffff !important;
+  color: #0f172a !important;
   
   font-size: 2.5rem;
   text-transform: uppercase;
@@ -427,7 +375,7 @@
 
 /* The band the video sits in. The player itself is VideoEmbed's. */
 .videoSection {
-  background-color: #0b1220;
+  background-color: #f8fafc;
   padding: 4.5rem 0;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(15,23,42,0.08);
 }

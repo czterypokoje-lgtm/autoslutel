@@ -89,7 +89,7 @@ export const DIENSTEN: Service[] = [
   {
     slug: 'sleutel-in-auto',
     title: 'Sleutel in Auto',
-    metaTitle: 'Sleutel in Auto Laten Liggen? | Auto Schadevrij Openen | 24/7 Mobiel',
+    metaTitle: 'Sleutel in Auto Laten Liggen? | Schadevrij Openen | 24/7',
     metaDesc: 'Autosleutel in de auto laten liggen en deuren op slot? Wij openen uw gesloten auto 100% schadevrij op locatie. 24/7 spoedhulp. Bel nu!',
     h1: 'Sleutel in Auto Laten Liggen? — Wij Openen Uw Auto Schadevrij',
     intro: 'Sleutel in de auto laten liggen? Geen paniek — wij openen uw auto ter plaatse zonder enige schade.',
@@ -170,7 +170,7 @@ export const DIENSTEN: Service[] = [
   {
     slug: 'sleutel-afgebroken-in-slot',
     title: 'Sleutel Afgebroken in Slot',
-    metaTitle: 'Autosleutel Afgebroken in Slot of Contact? | Verwijderen & Nieuwe Sleutel',
+    metaTitle: 'Autosleutel Afgebroken in Slot? | Verwijderen & Nieuwe Sleutel',
     metaDesc: 'Autosleutel afgebroken in het deurslot of contactslot? Wij halen de afgebroken sleutel schadevrij uit het slot en maken direct een nieuwe sleutel ter plaatse.',
     h1: 'Autosleutel Afgebroken in Slot of Contactslot? — Wij Lossen Het Op',
     intro: 'Sleutel afgebroken in het slot? Niet zelf peuteren — wij verwijderen het schadevrij en snijden direct een nieuwe sleutel op locatie.',
@@ -230,7 +230,7 @@ export const DIENSTEN: Service[] = [
   {
     slug: 'sleutel-bijmaken',
     title: 'Autosleutel Bijmaken',
-    metaTitle: 'Autosleutel Bijmaken | Reserve Autosleutel Namaken | 12 Mnd Garantie',
+    metaTitle: 'Autosleutel Bijmaken & Namaken | 12 Maanden Garantie',
     metaDesc: 'Autosleutel bijmaken op locatie? Reserve sleutel programmeren voor alle merken. Goedkoper dan de dealer, direct klaar met 12 maanden garantie. Bel nu!',
     h1: 'Autosleutel Bijmaken & Programmeren — Mobiele Service op Locatie',
     intro: 'Reservesleutel laten maken? Wij programmeren een nieuwe sleutel op locatie voor alle merken — goedkoper dan de dealer, 12 mnd garantie.',
@@ -496,7 +496,7 @@ export const DIENSTEN: Service[] = [
   {
     slug: 'contactslot-auto-vervangen',
     title: 'Auto Contactslot Vervangen',
-    metaTitle: 'Auto Contactslot Vervangen of Repareren op Locatie | Autosleutel24',
+    metaTitle: 'Auto Contactslot Vervangen of Repareren | Autosleutel24',
     metaDesc: 'Auto contactslot defect of sleutel draait niet meer? Blijft uw sleutel zitten in het slot? Wij kunnen uw auto contactslot vervangen of repareren ter plaatse.',
     h1: 'Auto Contactslot Vervangen & Reparatie — Direct ter Plaatse',
     intro: 'Contactslot defect of sleutel draait niet meer? Wij vervangen of repareren uw contactslot ter plaatse — ook Mercedes EIS/ELV specialist.',

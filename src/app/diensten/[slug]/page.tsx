@@ -38,17 +38,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const pageUrl = `${SITE_CONFIG.domain}/diensten/${slug}`;
   return {
     /*
-     * Two suffixes fit behind most of the 19 service titles and not behind
-     * the longest, which pushed the brand name past where Google truncates.
-     * "24/7 Mobiel" is the one that carries no brand, so it is the one that
-     * gives way -- for whichever titles are long, now and later, rather than
-     * by special-casing today's longest.
+     * metaTitle first. All 17 services carry a hand-written one and this
+     * template ignored every single one of them, generating a title from
+     * `title` instead -- which is the short NAV label, not a page title.
+     *
+     * That was not only wasted copy. alle-sleutels-kwijt-auto has
+     * title: 'Autosleutel Kwijt', so it published "Autosleutel Kwijt | 24/7
+     * Mobiel | Autosleutel24" and competed with /autosleutel-kwijt for the
+     * exact query that page exists to win, while its own metaTitle -- "Alle
+     * Autosleutels Kwijt? | AKL Specialist op Locatie" -- sat unused.
+     *
+     * The generated form stays as the fallback for a service added without
+     * one. There, two suffixes fit behind a short title and not a long one,
+     * so "24/7 Mobiel" gives way rather than the brand being truncated off.
      */
     title: {
       absolute:
-        service.title.length > 30
+        service.metaTitle ??
+        (service.title.length > 30
           ? `${service.title} | Autosleutel24`
-          : `${service.title} | 24/7 Mobiel | Autosleutel24`,
+          : `${service.title} | 24/7 Mobiel | Autosleutel24`),
     },
     description: clampMeta(service.metaDesc),
     alternates: {

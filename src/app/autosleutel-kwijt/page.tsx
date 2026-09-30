@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '@/config/brands';
-import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VideoEmbed, { videoSchema } from '@/components/VideoEmbed/VideoEmbed';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import SplitHero from '@/components/SplitHero/SplitHero';
+import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 
 export const metadata: Metadata = {
   title: {
@@ -139,31 +139,54 @@ export default function AutosleutelKwijt() {
       <script id="kwijt-howto" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script id="kwijt-service" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <script id="kwijt-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }} />
-      {/* HERO */}
-      <section className={styles.hero}>
-        <div className={styles.container}>
-          <div className={styles.heroInner}>
-            <div>
-              <h1 className={`${styles.heroTitle} ${anton.className}`}>
-                AUTOSLEUTEL KWIJT OF<br/>VERLOREN? WE MAKEN<br/>EEN NIEUWE AAN.
-              </h1>
-            </div>
-            <div className={styles.heroRight}>
-              <p className={styles.heroDesc}>
-                Sleutel kwijt is vervelend, maar geen reden om de auto te laten wegslepen. Wij programmeren een volledig nieuwe sleutel, ook als er geen reservesleutel meer is.
-              </p>
-              <div className={styles.buttonGroup}>
-                <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnOrange} id="akl-hero-phone">
-                  Bel {SITE_CONFIG.phone}
-                </a>
-                <a href="#wat-we-doen" className={styles.btnOutline}>
-                  Boek deze dienst
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/*
+        * The same hero every other landing page uses.
+        *
+        * This page had a dark "Deadbolt" theme of its own (ffdad94), which
+        * made the site's highest-intent query the one page that looked like a
+        * different company -- and the only money page whose hero asked for
+        * nothing. It now runs SplitHero with the kenteken wizard, exactly as
+        * /diensten/alle-sleutels-kwijt-auto does.
+        *
+        * The photograph is the workshop key wall: several hundred real blanks
+        * on pegboard. It answers the question the visitor actually has -- do
+        * you have a key for my car -- and no other page uses it, so this page
+        * still looks like itself.
+        */}
+      <SplitHero
+        crumbs={[{ label: 'Home', href: '/' }, { label: 'Autosleutel kwijt' }]}
+        titleTop="Autosleutel Kwijt of Verloren?"
+        titleAccent="Wij Maken een Nieuwe op Locatie"
+        lead="Sleutel kwijt is vervelend, maar geen reden om de auto te laten wegslepen. Wij programmeren een volledig nieuwe sleutel bij uw auto, ook als er geen reservesleutel meer is."
+        image={{
+          src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
+          alt: 'Sleutelwand in de werkplaats van Autosleutel24 met honderden transpondersleutels en sleutelbehuizingen per automerk',
+        }}
+      >
+        <p
+          data-direct-answer
+          style={{
+            marginBottom: '1.5rem',
+            padding: '1rem 1.15rem',
+            background: 'var(--gray-50)',
+            borderLeft: '3px solid var(--orange-500)',
+            borderRadius: '8px',
+            fontSize: '0.98rem',
+            lineHeight: 1.65,
+            color: 'var(--gray-700)',
+          }}
+        >
+          Autosleutel kwijt? Wij maken en programmeren een nieuwe sleutel bij u op locatie,
+          vanaf €149 en meestal binnen 30 tot 60 minuten. Is er geen enkele sleutel meer,
+          dan lezen wij de sleutelcode uit de boordcomputer en wissen wij de verloren
+          sleutel uit het geheugen, vanaf €{SITE_CONFIG.prices.allKeysLost}.
+        </p>
+        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+      </SplitHero>
+
+      <VerifiedReviewBanner />
+
+      <BrandsMarquee />
 
       {/* STATS BAR */}
       <section className={styles.statsBar}>
@@ -171,48 +194,20 @@ export default function AutosleutelKwijt() {
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
               <span className={styles.eyebrow}>Prijs vanaf</span>
-              <div className={`${styles.statValue} ${styles.orange} ${anton.className}`}>€300</div>
+              <div className={`${styles.statValue} ${styles.orange} ${anton.className}`}>€149</div>
+            </div>
+            <div className={styles.statItem}>
+              <span className={styles.eyebrow}>Alle sleutels kwijt</span>
+              <div className={`${styles.statValue} ${anton.className}`}>VANAF €{SITE_CONFIG.prices.allKeysLost}</div>
             </div>
             <div className={styles.statItem}>
               <span className={styles.eyebrow}>Tijd ter plekke</span>
               <div className={`${styles.statValue} ${anton.className}`}>30-60 MIN</div>
             </div>
             <div className={styles.statItem}>
-              <span className={styles.eyebrow}>Gem. aankomst</span>
-              <div className={`${styles.statValue} ${anton.className}`}>35 MIN</div>
-            </div>
-            <div className={styles.statItem}>
               <span className={styles.eyebrow}>Elke klus</span>
               <div className={`${styles.statValue} ${anton.className}`}>GECERTIFICEERD &<br/>VERZEKERD</div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── LEAD FORM ────────────────────────────────────────────────────
-          Placed directly under the stats bar, high on the page.
-
-          This is the highest-intent query on the site and it was the only
-          money page with no form at all — every /diensten/* page has one.
-          Someone standing next to a locked car at 23:00 will phone, but the
-          ones comparing options at 14:00 want to leave details and be called
-          back, and there was no way for them to do that here. It is also what
-          gives the ad campaign a measurable conversion on this page rather
-          than only a tel: click. */}
-      <section style={{ padding: '3.5rem 0', background: '#111827' }}>
-        <div className={styles.container}>
-          <div style={{ maxWidth: 560, margin: '0 auto' }}>
-            <h2
-              className={`${styles.sectionTitle} ${anton.className}`}
-              style={{ textAlign: 'center', marginBottom: '0.75rem' }}
-            >
-              STUUR UW GEGEVENS
-            </h2>
-            <p style={{ textAlign: 'center', color: '#9ca3af', marginBottom: '1.75rem', lineHeight: 1.6 }}>
-              Liever teruggebeld? Laat uw merk, model en locatie achter — u krijgt een
-              vaste prijs voordat wij vertrekken.
-            </p>
-            <LeadCaptureForm phone={SITE_CONFIG.phone} />
           </div>
         </div>
       </section>
@@ -322,8 +317,8 @@ export default function AutosleutelKwijt() {
       {/* DEKKING PER MERK */}
       <section className={styles.brandsSection}>
         <div className={styles.container}>
-          <span className={styles.eyebrow} style={{ color: "#94a3b8" }}>Dekking per merk</span>
-          <h2 style={{ fontSize: "1.25rem", marginBottom: "2rem", color: "#ffffff" }}>Autosleutel bijmaken voor deze merken</h2>
+          <span className={styles.eyebrow} style={{ color: "#64748b" }}>Dekking per merk</span>
+          <h2 style={{ fontSize: "1.25rem", marginBottom: "2rem", color: "#0f172a" }}>Autosleutel bijmaken voor deze merken</h2>
           <div className={styles.brandsGrid}>
             {[
   { id: 'bmw', url: 'https://cdn.simpleicons.org/bmw/000000' },
@@ -365,14 +360,14 @@ export default function AutosleutelKwijt() {
       {/* FAQs (PRESERVED FROM ORIGINAL) */}
       <section className={styles.faqSection}>
         <div className={styles.container} style={{ maxWidth: 900 }}>
-          <h2 className={`${anton.className} ${styles.sectionTitle}`} style={{ color: "#ffffff" }}>Veelgestelde Vragen — Autosleutel Kwijt</h2>
+          <h2 className={`${anton.className} ${styles.sectionTitle}`} style={{ color: "#0f172a" }}>Veelgestelde Vragen — Autosleutel Kwijt</h2>
           {faqItems.map((f, i) => (
-            <details key={i} className="faq-item" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-              <summary className="faq-question" style={{ color: '#fff' }}>
+            <details key={i} className="faq-item" style={{ borderColor: 'rgba(15,23,42,0.10)' }}>
+              <summary className="faq-question" style={{ color: '#0f172a' }}>
                 {f.q}
                 <svg className="faq-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
               </summary>
-              <p className="faq-answer" style={{ color: '#cbd5e1' }}>{f.a}</p>
+              <p className="faq-answer" style={{ color: '#475569' }}>{f.a}</p>
             </details>
           ))}
         </div>
