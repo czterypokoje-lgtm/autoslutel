@@ -6,6 +6,31 @@ import styles from './Navigation.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
 import { BRAND_COUNT } from '@/config/brands';
 
+/*
+ * The services menu.
+ *
+ * Four columns, each with something under it. It was six, two of which were a
+ * heading over an empty space because the service has no children -- and one
+ * of those, Batterij Vervangen, carried "(EUR 15 - EUR 20)" in the heading
+ * itself: a price in a navigation label, and a fourth place a price lived
+ * outside site.config.
+ *
+ * Batterij Vervangen and Contactslot Vervangen are both repairs, so they sit
+ * under Autosleutels Repareren, which fills that column and empties no other.
+ *
+ * /diensten/sleutel-bijmaken is deliberately NOT here. It and the
+ * Autosleutel Bijmaken heading above it are two pages for one query --
+ * 2,340 and 3,260 words, both titled Autosleutel Bijmaken -- and listing
+ * both side by side in the menu would advertise the duplication rather
+ * than fix it. Which of the two survives is a call to make on the pages,
+ * not in the navigation.
+ *
+ * The Autosleutel Kwijt column also listed "Alle Sleutels Kwijt (AKL)" under
+ * itself. That was one page linked twice: the AKL service 301s to
+ * /autosleutel-kwijt now, so the child and its own heading pointed at the
+ * same URL under two different names -- exactly the confusion the redirect
+ * was meant to end.
+ */
 const DienstenStructure = [
   {
     title: 'Auto Slotenmaker',
@@ -34,14 +59,7 @@ const DienstenStructure = [
     href: '/autosleutel-kwijt',
     subs: [
       { href: '/diensten/noodopening-auto', label: 'Noodopening' },
-      { href: '/autosleutel-kwijt', label: 'Alle Sleutels Kwijt (AKL)' },
     ]
-  },
-  {
-    title: 'Batterij Vervangen',
-    href: '/diensten/batterij-vervangen',
-    price: '€15 - €20',
-    subs: []
   },
   {
     title: 'Autosleutels Repareren',
@@ -49,12 +67,9 @@ const DienstenStructure = [
     subs: [
       { href: '/diensten/behuizing-vervangen', label: 'Behuizing Vervangen' },
       { href: '/diensten/knoppen-repareren', label: 'Knoppen Repareren' },
+      { href: '/diensten/batterij-vervangen', label: 'Batterij Vervangen' },
+      { href: '/diensten/contactslot-auto-vervangen', label: 'Contactslot Vervangen' },
     ]
-  },
-  {
-    title: 'Contactslot Auto Vervangen',
-    href: '/diensten/contactslot-auto-vervangen',
-    subs: []
   },
 ];
 
@@ -114,7 +129,7 @@ export default function Navigation() {
                 {DienstenStructure.map(pillar => (
                   <div key={pillar.title} className={styles.dropColumn}>
                     <Link href={pillar.href} className={styles.pillarTitle}>
-                      {pillar.title} {pillar.price ? ` (${pillar.price})` : ''}
+                      {pillar.title}
                     </Link>
                     {pillar.subs.length > 0 && (
                       <div className={styles.subList}>
@@ -201,7 +216,7 @@ export default function Navigation() {
                 {DienstenStructure.map(pillar => (
                   <div key={pillar.title} className={styles.mobilePillarBlock}>
                     <Link href={pillar.href} className={styles.mobilePillarLink} onClick={() => setMobileOpen(false)}>
-                      {pillar.title} {pillar.price ? ` (${pillar.price})` : ''}
+                      {pillar.title}
                     </Link>
                     {pillar.subs.map(sub => (
                       <Link key={sub.href} href={sub.href} className={styles.mobileSubLink} onClick={() => setMobileOpen(false)}>
