@@ -88,8 +88,10 @@ any database yet.** Run it first; every screen below fails with a clear
 
 ### The agent API (built; ElevenLabs not yet connected)
 
-`/api/agent/car` · `quote` · `slots` · `book`. Bearer auth via
-`AGENT_API_TOKEN` (set it, or the routes return 503 by design).
+`/api/agent/car` · `quote` · `slots` · `book` · `escalate`. Bearer auth via
+`AGENT_API_TOKEN` (set it, or the routes return 503 by design). Console-side
+setup — three agents, transfer rules, WhatsApp — is
+`docs/elevenlabs-console-setup.md`.
 
 Two rules that must not be relaxed: **the agent never composes a price** (it
 gets a number or a sentence it can say aloud), and **`/book` re-computes the

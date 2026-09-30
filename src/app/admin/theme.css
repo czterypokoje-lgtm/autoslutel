@@ -44,11 +44,11 @@ body {
   /* ── surfaces, from the page up ──
      Warm rather than blue-grey: a neutral with a trace of the accent's hue
      reads as chosen, where a pure grey reads as a default nobody picked. */
-  --crm-bg: #f7f8f7;        /* the page itself */
+  --crm-bg: #fcfcfc;        /* the page itself */
   --crm-sidebar: #ffffff;   /* lifted off the page, divided by a rule */
   --crm-panel: #ffffff;     /* a card */
-  --crm-sunk: #f2f5f4;      /* a row under the cursor, an active nav item */
-  --crm-raised: #fbfbfb;    /* a control sitting on a card */
+  --crm-sunk: #f8f9fa;      /* a row under the cursor, an active nav item */
+  --crm-raised: #ffffff;    /* a control sitting on a card */
 
   /* ── ink ── */
   --crm-ink: #101828;       /* headings, values, the thing you came to read */
@@ -58,8 +58,8 @@ body {
   --crm-muted: #667085;     /* labels, meta, anything you skim past */
 
   /* ── rules ── */
-  --crm-rule: #e4e7e5;      /* between rows */
-  --crm-rule2: #d6dad6;     /* around controls */
+  --crm-rule: #e5e7eb;      /* between rows */
+  --crm-rule2: #d1d5db;     /* around controls */
 
   /* ── the accent ──
      Orange, not the mockup's green: the CRM and the public site are one
@@ -99,14 +99,14 @@ body {
 
   /* ── geometry, so every corner in the CRM is one of three ── */
   --crm-r-sm: 6px;
-  --crm-r: 10px;
-  --crm-r-lg: 14px;
+  --crm-r: 12px;
+  --crm-r-lg: 16px;
 
   /* Shadows on a light ground have to be far softer than on a dark one, where
      they were doing the work of a border. Here the rule does that, and the
      shadow only lifts. */
-  --crm-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
-  --crm-shadow-lg: 0 8px 24px -8px rgba(16, 24, 40, 0.14);
+  --crm-shadow: none;
+  --crm-shadow-lg: none;
 
   /* ── spacing, on a 4px grid ──
      Nine steps, and nothing between them. Every gap in this CRM is one of

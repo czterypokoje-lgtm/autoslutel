@@ -100,6 +100,35 @@ const howToSchema = {
 };
 
 
+/*
+ * The explainer video, and the one place its facts live.
+ *
+ * uploadDate and duration are what a VideoObject needs to be eligible for a
+ * video result; both are read off YouTube rather than guessed. thumbnailUrl
+ * points at YouTube's own still, so it cannot drift from the video.
+ */
+const VIDEO = {
+  id: 'LTlKCZnjzH4',
+  name: 'Autosleutel Kwijt? Zo Regel Je Snel een Nieuwe Autosleutel',
+  uploadDate: '2026-09-29',
+  duration: 'PT40S',
+} as const;
+
+const videoSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: VIDEO.name,
+  description:
+    'Uw autosleutel kwijt? In veertig seconden ziet u hoe wij op locatie een nieuwe sleutel maken en programmeren, wat het kost en hoe snel wij er zijn.',
+  thumbnailUrl: [`https://i.ytimg.com/vi/${VIDEO.id}/maxresdefault.jpg`],
+  uploadDate: VIDEO.uploadDate,
+  duration: VIDEO.duration,
+  embedUrl: `https://www.youtube.com/embed/${VIDEO.id}`,
+  contentUrl: `https://www.youtube.com/watch?v=${VIDEO.id}`,
+  publisher: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
+};
+
+
 import styles from './DeadboltTheme.module.css';
 import { Bebas_Neue } from 'next/font/google';
 import Image from 'next/image';
@@ -137,6 +166,7 @@ export default function AutosleutelKwijt() {
       <script id="kwijt-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script id="kwijt-howto" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <script id="kwijt-service" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <script id="kwijt-video" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }} />
       {/* HERO */}
       <section className={styles.hero}>
         <div className={styles.container}>
@@ -252,6 +282,28 @@ export default function AutosleutelKwijt() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* VIDEO */}
+      <section className={styles.videoSection}>
+        <div className={styles.container}>
+          <h2 className={`${styles.sectionTitle} ${anton.className}`}>ZO WERKT HET — IN 40 SECONDEN</h2>
+          <div className={styles.videoFrame}>
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${VIDEO.id}?rel=0&modestbranding=1`}
+              title={VIDEO.name}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
+          </div>
+          <p className={styles.videoCaption}>
+            Onze eigen monteur, een echte auto, geen animatie. Bel{' '}
+            <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: '#f97316' }}>{SITE_CONFIG.phone}</a>{' '}
+            als u nu naast uw auto staat.
+          </p>
         </div>
       </section>
 

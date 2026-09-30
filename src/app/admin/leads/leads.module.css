@@ -112,7 +112,7 @@
   background: var(--crm-panel);
   border-radius: var(--crm-r-lg);
   border: 1px solid var(--crm-rule);
-  box-shadow: var(--crm-shadow-lg);
+  
   display: flex;
   flex-direction: column;
   /*

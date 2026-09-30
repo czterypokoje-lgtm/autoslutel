@@ -569,7 +569,7 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
   border: 1px solid var(--crm-rule);
   border-radius: var(--crm-r-lg);
   padding: 28px;
-  box-shadow: var(--crm-shadow-lg);
+  
 }
 
 .card h1 {

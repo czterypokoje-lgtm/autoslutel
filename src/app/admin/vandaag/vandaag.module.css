@@ -51,10 +51,10 @@
 .card {
   background: var(--crm-panel);
   border: 1px solid var(--crm-rule);
-  border-left: 4px solid var(--crm-rule);
   border-radius: var(--crm-r-lg);
   margin-bottom: 14px;
   overflow: hidden;
+  
 }
 
 .cardHead {

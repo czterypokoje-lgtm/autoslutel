@@ -265,7 +265,7 @@ function JobCard({
   const car = [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ');
 
   return (
-    <div className={styles.card} style={{ borderLeftColor: STATUS_ACCENT[job.status] ?? 'var(--crm-rule)' }}>
+    <div className={styles.card} >
       <div className={styles.cardHead}>
         <span className={styles.slot}>
           {slotLabel(job.slot_start, job.slot_end)}
