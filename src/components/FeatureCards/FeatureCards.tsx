@@ -24,9 +24,11 @@ type FeatureCardsProps = {
    * them, so the outline does not jump from H1 to H3.
    */
   cardTitleAs?: 'h2' | 'h3';
+  /** Heading above the embedded video. Pages pass one with their own keyword so it is not the same H2 on every page. */
+  videoHeading?: string;
 };
 
-export default function FeatureCards({ title, subtitle, features, cardTitleAs: CardTitle = 'h3' }: FeatureCardsProps) {
+export default function FeatureCards({ title, subtitle, features, cardTitleAs: CardTitle = 'h3', videoHeading = 'Zo werkt het — in 40 seconden' }: FeatureCardsProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -100,7 +102,7 @@ export default function FeatureCards({ title, subtitle, features, cardTitleAs: C
         * video travels and the markup stays on /autosleutel-kwijt.
         */}
       <div className={styles.videoWrapper}>
-        <VideoEmbed heading="Zo werkt het — in 40 seconden" caption={false} />
+        <VideoEmbed heading={videoHeading} caption={false} />
       </div>
     </section>
   );

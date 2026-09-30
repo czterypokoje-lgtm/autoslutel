@@ -366,6 +366,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>
           <FeatureCards 
             cardTitleAs="h2"
+            videoHeading={`Autosleutel laten maken in ${city.city}: zo werkt het in 40 seconden`}
             features={[
               {
                 id: 'feature-1',

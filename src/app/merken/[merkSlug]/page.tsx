@@ -187,8 +187,10 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 <HeroTrustBadge />
               </div>
               <h1 style={{ color: '#fff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: '1.2rem' }}>
-                {brand.customH1 || <>{brand.name} Autosleutel Bijmaken &amp; Programmeren</>} <br />
-                <span style={{ color: 'var(--orange-400)' }}>Alle Modellen &amp; Bouwjaren • Mobiel Ter Plaatse</span>
+                {brand.customH1 || (KEYCARD_BRANDS.has(brand.nameSlug.toLowerCase())
+                  ? <>{brand.name} Autosleutel &amp; Sleutelkaart Bijmaken</>
+                  : <>{brand.name} Autosleutel Bijmaken of Laten Maken</>)} <br />
+                <span style={{ color: 'var(--orange-400)' }}>Kwijt of kapot? Alle modellen, direct op locatie</span>
               </h1>
               <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.08rem', lineHeight: 1.7, marginBottom: '2.2rem' }}>
                 Bent u uw {brand.name} autosleutel kwijt, is de sleutel afgebroken of reageert de Smart Key afstandsbediening niet meer?
@@ -208,7 +210,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             in the same slot: directly under the hero. No VideoObject -- the
             watch page is /autosleutel-kwijt. */}
         <section style={{ padding: '3.5rem 0', background: '#fff' }}>
-          <VideoEmbed heading="Zo werkt het — in 40 seconden" />
+          <VideoEmbed heading={`${brand.name} sleutel laten maken: zo werkt het in 40 seconden`} />
         </section>
 
         {/* ── HOW IT WORKS ── */}
