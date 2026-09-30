@@ -114,23 +114,6 @@ export default function RenaultSleutelkaart() {
           alt: 'Autosleutelspecialist programmeert een Renault sleutelkaart bij een geparkeerde auto',
         }}
       >
-        <p
-          data-direct-answer
-          style={{
-            marginBottom: '1.5rem',
-            padding: '1rem 1.15rem',
-            background: 'var(--gray-50)',
-            borderLeft: '3px solid var(--orange-500)',
-            borderRadius: '8px',
-            fontSize: '0.98rem',
-            lineHeight: 1.65,
-            color: 'var(--gray-700)',
-          }}
-        >
-          Een Renault sleutelkaart die kwijt of kapot is, vervangen wij op locatie: wij lezen de
-          code uit de auto en programmeren een nieuwe kaart in, met een vaste prijs vooraf en 12
-          maanden garantie. Bel {SITE_CONFIG.phone} of geef uw kenteken door.
-        </p>
         <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 

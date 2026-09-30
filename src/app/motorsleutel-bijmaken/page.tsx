@@ -126,23 +126,6 @@ export default function MotorsleutelBijmaken() {
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
         }}
       >
-        <p
-          data-direct-answer
-          style={{
-            marginBottom: '1.5rem',
-            padding: '1rem 1.15rem',
-            background: 'var(--gray-50)',
-            borderLeft: '3px solid var(--orange-500)',
-            borderRadius: '8px',
-            fontSize: '0.98rem',
-            lineHeight: 1.65,
-            color: 'var(--gray-700)',
-          }}
-        >
-          Een motorsleutel laten bijmaken kan op locatie: wij komen binnen {ARRIVAL} naar uw motor,
-          frezen de sleutel en leren hem in als er een chip in zit. U hoort de prijs telefonisch
-          voordat wij vertrekken.
-        </p>
         <LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />
       </SplitHero>
 

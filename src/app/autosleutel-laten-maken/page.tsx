@@ -110,23 +110,6 @@ export default function AutosleutelLatenMaken() {
           alt: 'Sleutelwand met autosleutels per merk in de servicebus van Autosleutel24',
         }}
       >
-        <p
-          data-direct-answer
-          style={{
-            marginBottom: '1.5rem',
-            padding: '1rem 1.15rem',
-            background: 'var(--gray-50)',
-            borderLeft: '3px solid var(--orange-500)',
-            borderRadius: '8px',
-            fontSize: '0.98rem',
-            lineHeight: 1.65,
-            color: 'var(--gray-700)',
-          }}
-        >
-          Een autosleutel laten maken kan bij de dealer, een slotenmaker of een mobiele
-          specialist. Wij komen naar uw locatie, frezen en programmeren de sleutel ter plekke, vanaf
-          €{SITE_CONFIG.prices.transponder}, met 12 maanden garantie.
-        </p>
         <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 

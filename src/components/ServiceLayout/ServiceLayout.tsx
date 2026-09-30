@@ -217,29 +217,6 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
             facts={<HeroQuickFacts price={service.priceFrom} />}
             image={service.heroImage}
           >
-            {service.directAnswer && (
-              /*
-               * Restyled for the white hero. The dark version painted this in
-               * rgba(255,255,255,0.08) with white text — carried onto a light
-               * ground unchanged it was near-invisible grey on white, which is
-               * how it already looked on the dark band in the report.
-               */
-              <p
-                data-direct-answer
-                style={{
-                  marginBottom: '1.5rem',
-                  padding: '1rem 1.15rem',
-                  background: 'var(--gray-50)',
-                  borderLeft: '3px solid var(--orange-500)',
-                  borderRadius: '8px',
-                  fontSize: '0.98rem',
-                  lineHeight: 1.65,
-                  color: 'var(--gray-700)',
-                }}
-              >
-                {service.directAnswer}
-              </p>
-            )}
             <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
           </SplitHero>
         ) : (
@@ -276,22 +253,6 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
               <HeroQuickFacts price={service.priceFrom} tone="dark" />
 
-              {service.directAnswer && (
-                <p
-                  data-direct-answer
-                  style={{
-                    marginTop: '1.25rem',
-                    padding: '1rem 1.15rem',
-                    background: 'rgba(255,255,255,0.08)',
-                    borderLeft: '3px solid #e2620f',
-                    borderRadius: '8px',
-                    fontSize: '1rem',
-                    lineHeight: 1.65,
-                  }}
-                >
-                  {service.directAnswer}
-                </p>
-              )}
 
               <div style={{ marginTop: '2rem' }}>
                 <LeadCaptureForm phone={SITE_CONFIG.phone} hideDirect />
@@ -388,6 +349,8 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 {/* Section 1: Wanneer Heeft U Dienst Nodig */}
                 <div>
                   <h2>Wanneer Heeft U {service.title} Nodig?</h2>
+                  {/* The direct answer, as ordinary text in the body. It used to be a boxed block in the hero, which pushed the call buttons down; here it still answers the question for anyone (or anything) reading the page. */}
+                  {service.directAnswer && <p>{service.directAnswer}</p>}
                   <p>
                     Problemen met autovergrendeling of autosleutels doen zich altijd op een ongelegen moment voor. Bij {SITE_CONFIG.name} begrijpen wij hoe frustrerend en stressvol dit is. Onze gespecialiseerde monteurs staan dag en nacht voor u klaar en lossen onderstaande situaties dagelijks schadevrij voor u op:
                   </p>

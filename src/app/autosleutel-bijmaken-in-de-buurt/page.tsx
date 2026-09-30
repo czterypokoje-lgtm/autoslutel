@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import SplitHero from '@/components/SplitHero/SplitHero';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import NearestCity from '@/components/NearestCity/NearestCity';
@@ -97,29 +98,13 @@ export default function InDeBuurt() {
         titleTop="Autosleutel Bijmaken in de Buurt?"
         titleAccent="Er Hoeft Niemand Ergens Heen — Behalve Wij"
         lead="Wij hebben geen winkel waar u naartoe rijdt. De werkplaats zit in de bus en die komt naar uw auto, waar die ook staat."
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
           src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 met servicebus op locatie',
         }}
       >
-        <p
-          data-direct-answer
-          style={{
-            marginBottom: '1.5rem',
-            padding: '1rem 1.15rem',
-            background: 'var(--gray-50)',
-            borderLeft: '3px solid var(--orange-500)',
-            borderRadius: '8px',
-            fontSize: '0.98rem',
-            lineHeight: 1.65,
-            color: 'var(--gray-700)',
-          }}
-        >
-          Wij maken autosleutels bij u op locatie, vanaf €{SITE_CONFIG.prices.transponder}, in{' '}
-          {CITIES.length} servicegebieden verspreid over Nederland. Voorrijden zit bij de prijs in en
-          u hoort het bedrag telefonisch voordat de monteur vertrekt.
-        </p>
-        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+        <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 
       <section className="section">

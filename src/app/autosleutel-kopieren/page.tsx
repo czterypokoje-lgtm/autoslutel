@@ -106,24 +106,6 @@ export default function AutosleutelKopieren() {
           alt: 'Sleutelwand met honderden sleutelbaarden en transponderbehuizingen per automerk',
         }}
       >
-        <p
-          data-direct-answer
-          style={{
-            marginBottom: '1.5rem',
-            padding: '1rem 1.15rem',
-            background: 'var(--gray-50)',
-            borderLeft: '3px solid var(--orange-500)',
-            borderRadius: '8px',
-            fontSize: '0.98rem',
-            lineHeight: 1.65,
-            color: 'var(--gray-700)',
-          }}
-        >
-          Een autosleutel kopiëren kan, maar bij een auto van na 1998 opent de kopie alleen het
-          portier: zonder de transponderchip in te leren start de motor niet. Wij frezen én
-          programmeren in één bezoek op uw locatie, vanaf €{SITE_CONFIG.prices.transponder}, met 12
-          maanden garantie.
-        </p>
         <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 

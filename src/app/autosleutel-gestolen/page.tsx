@@ -140,25 +140,6 @@ export default function AutosleutelGestolen() {
           alt: 'Sleutelwand in de werkplaats van Autosleutel24 met transpondersleutels per automerk',
         }}
       >
-        <p
-          data-direct-answer
-          style={{
-            marginBottom: '1.5rem',
-            padding: '1rem 1.15rem',
-            background: 'var(--gray-50)',
-            borderLeft: '3px solid var(--orange-500)',
-            borderRadius: '8px',
-            fontSize: '0.98rem',
-            lineHeight: 1.65,
-            color: 'var(--gray-700)',
-          }}
-        >
-          Is uw autosleutel gestolen, doe dan aangifte en laat de sleutel zo snel mogelijk uit de
-          boordcomputer wissen — tot dat moment kan wie hem heeft de auto gewoon starten. Met een
-          tweede werkende sleutel kost dat vanaf €{SITE_CONFIG.prices.transponder}; was de gestolen
-          sleutel uw enige, dan lezen wij de sleutelcode uit de auto en begint het bij €
-          {SITE_CONFIG.prices.allKeysLost}. Wij werken 24/7 op locatie.
-        </p>
         <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 

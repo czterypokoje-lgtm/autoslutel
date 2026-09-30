@@ -3,6 +3,7 @@ import { getBaseLocalBusinessSchema, serviceRegionNodes } from '@/utils/schema';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import SplitHero from '@/components/SplitHero/SplitHero';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -122,31 +123,13 @@ export default function MobieleSleutelmaker() {
         titleTop="Mobiele Sleutelmaker voor Auto’s"
         titleAccent="Geen Winkel — Wij Komen Naar U Toe"
         lead="Zoekt u een sleutelmaker of slotenmaker voor uw auto? Onze werkplaats zit in de bus: frezen, programmeren en schadevrij openen gebeuren bij uw auto, niet achter een toonbank."
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
           src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
         }}
       >
-        <p
-          data-direct-answer
-          style={{
-            marginBottom: '1.5rem',
-            padding: '1rem 1.15rem',
-            background: 'var(--gray-50)',
-            borderLeft: '3px solid var(--orange-500)',
-            borderRadius: '8px',
-            fontSize: '0.98rem',
-            lineHeight: 1.65,
-            color: 'var(--gray-700)',
-          }}
-        >
-          Een mobiele sleutelmaker komt naar uw auto in plaats van andersom. Wij openen schadevrij
-          vanaf €{SITE_CONFIG.prices.unlock}, maken en programmeren een sleutel vanaf €
-          {SITE_CONFIG.prices.transponder}, en werken ook als er geen enkele sleutel meer is vanaf €
-          {SITE_CONFIG.prices.allKeysLost}. Voorrijden zit bij de prijs in en u betaalt geen
-          sleepkosten, want de auto blijft staan waar hij staat.
-        </p>
-        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+        <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 
       <VerifiedReviewBanner />
