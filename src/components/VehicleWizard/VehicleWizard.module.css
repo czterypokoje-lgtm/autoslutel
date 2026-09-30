@@ -132,7 +132,7 @@
   text-transform: uppercase;
   text-align: center;
   color: #1a1a1a;
-  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-family: var(--ff-body), system-ui, sans-serif;
 }
 .plateInput:focus { outline: none; }
 .plateInput::placeholder { color: rgba(26, 26, 26, .34); letter-spacing: .08em; }

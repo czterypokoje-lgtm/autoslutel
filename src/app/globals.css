@@ -20,7 +20,7 @@ html {
 /* ---- DESIGN TOKENS ---- */
 :root {
   /* Typography */
-  --font-main: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-main: var(--ff-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   /* Navy palette — classic automotive */
   --navy-900:  #071525;

@@ -25,6 +25,17 @@
   --color-check: rgb(255, 125, 69);
 
   /* Typography Variables */
+  /*
+   * "Big Shoulders" is not a family this site has ever loaded. The <link>
+   * in layout.tsx requested "Big Shoulders Display" -- a different family
+   * name -- so every token below has been falling back to sans-serif since
+   * it was written, while the woff2 was downloaded on all 190 pages.
+   *
+   * The download is gone. The fallback is left exactly as it renders today
+   * ON PURPOSE: naming the real family here would change the typeface of
+   * every heading on the site at once, which is a design decision to make
+   * deliberately and look at, not a side effect of removing dead weight.
+   */
   --font-display-family: "Big Shoulders", sans-serif;
   --font-display-size: 100px;
   --font-display-weight: 900;
@@ -37,19 +48,19 @@
   --font-heading-3-size: 32px;
   --font-heading-3-weight: 800;
   --font-heading-3-lh: 1;
-  --font-body-family: "Chivo", sans-serif;
+  --font-body-family: var(--ff-accent), sans-serif;
   --font-body-size: 18px;
   --font-body-weight: 400;
   --font-body-lh: 1.55;
-  --font-body-small-family: "Chivo", sans-serif;
+  --font-body-small-family: var(--ff-accent), sans-serif;
   --font-body-small-size: 15px;
   --font-body-small-weight: 400;
   --font-body-small-lh: 1.5;
-  --font-label-family: "Chivo", sans-serif;
+  --font-label-family: var(--ff-accent), sans-serif;
   --font-label-size: 15px;
   --font-label-weight: 600;
   --font-label-lh: 1.2;
-  --font-eyebrow-family: "Chivo", sans-serif;
+  --font-eyebrow-family: var(--ff-accent), sans-serif;
   --font-eyebrow-size: 13px;
   --font-eyebrow-weight: 600;
   --font-eyebrow-lh: 1.4;
@@ -57,11 +68,11 @@
   --font-stat-figure-size: 104px;
   --font-stat-figure-weight: 900;
   --font-stat-figure-lh: 0.9;
-  --font-heading-4-family: "Chivo", sans-serif;
+  --font-heading-4-family: var(--ff-accent), sans-serif;
   --font-heading-4-size: 19px;
   --font-heading-4-weight: 700;
   --font-heading-4-lh: 1.3;
-  --font-quote-family: "Chivo", sans-serif;
+  --font-quote-family: var(--ff-accent), sans-serif;
   --font-quote-size: 21px;
   --font-quote-weight: 500;
   --font-quote-lh: 1.45;
@@ -69,7 +80,7 @@
   --font-mono-size: 13px;
   --font-mono-weight: 400;
   --font-mono-lh: 1.45;
-  --font-list-family: "Chivo", sans-serif;
+  --font-list-family: var(--ff-accent), sans-serif;
   --font-list-size: 17px;
   --font-list-weight: 400;
   --font-list-lh: 1.55;
@@ -81,11 +92,11 @@
   --font-rt-h2-size: 44px;
   --font-rt-h2-weight: 800;
   --font-rt-h2-lh: 1;
-  --font-rt-h3-family: "Chivo", sans-serif;
+  --font-rt-h3-family: var(--ff-accent), sans-serif;
   --font-rt-h3-size: 22px;
   --font-rt-h3-weight: 700;
   --font-rt-h3-lh: 1.25;
-  --font-lead-family: "Chivo", sans-serif;
+  --font-lead-family: var(--ff-accent), sans-serif;
   --font-lead-size: 21px;
   --font-lead-weight: 400;
   --font-lead-lh: 1.5;
@@ -97,7 +108,7 @@
   --font-price-size: 56px;
   --font-price-weight: 800;
   --font-price-lh: 1;
-  --font-mono-caps-family: "Chivo", sans-serif;
+  --font-mono-caps-family: var(--ff-accent), sans-serif;
   --font-mono-caps-size: 13px;
   --font-mono-caps-weight: 600;
   --font-mono-caps-lh: 1.4;
@@ -125,11 +136,11 @@
   --font-poster-size: 180px;
   --font-poster-weight: 900;
   --font-poster-lh: 0.84;
-  --font-quote-large-family: "Chivo", sans-serif;
+  --font-quote-large-family: var(--ff-accent), sans-serif;
   --font-quote-large-size: 44px;
   --font-quote-large-weight: 500;
   --font-quote-large-lh: 1.18;
-  --font-board-row-family: "Chivo", sans-serif;
+  --font-board-row-family: var(--ff-accent), sans-serif;
   --font-board-row-size: 20px;
   --font-board-row-weight: 500;
   --font-board-row-lh: 1.3;

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { IBM_Plex_Sans, Chivo } from 'next/font/google';
 import './globals.css';
 import './framer-theme.css';
 import Script from 'next/script';
@@ -10,6 +11,36 @@ import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
 
 
 import { SITE_CONFIG } from '@/config/site.config';
+
+/*
+ * The two fonts the stylesheet actually uses, self-hosted.
+ *
+ * They were pulled from fonts.googleapis.com with a plain <link>: a
+ * render-blocking stylesheet on a third-party origin, on all 190 pages,
+ * needing two preconnects to soften a round trip that next/font removes
+ * entirely by serving the woff2 from our own origin.
+ *
+ * A third family, Big Shoulders Display weight 900, was being downloaded
+ * with them and is NOT loaded here, because it never rendered: every
+ * font-family token in framer-theme.css asks for "Big Shoulders", and
+ * "Big Shoulders Display" is a different family name, so every heading has
+ * been falling back to sans-serif while paying for the download. Turning it
+ * on is a visible change to every heading on the site and is a design
+ * decision, not a cleanup one -- see the token comment in framer-theme.css.
+ */
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--ff-body',
+});
+
+const chivo = Chivo({
+  subsets: ['latin'],
+  weight: ['500'],
+  display: 'swap',
+  variable: '--ff-accent',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.domain),
@@ -88,7 +119,7 @@ import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl">
+    <html lang="nl" className={`${ibmPlexSans.variable} ${chivo.variable}`}>
       <head>
         {/*
           ── CONSENT MODE v2 DEFAULTS ──
@@ -125,10 +156,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ── GOOGLE BUSINESS PROFILE LINK ── */}
         <link rel="me" href={SITE_CONFIG.social.google} />
 
-        {/* ── FONTS ── */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Big+Shoulders+Display:wght@900&family=Chivo:wght@500&display=swap" rel="stylesheet" />
         {/* ── STRUCTURED DATA ── */}
         <script
           id="schema-website"
