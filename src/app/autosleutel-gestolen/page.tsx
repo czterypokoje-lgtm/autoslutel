@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import SplitHero from '@/components/SplitHero/SplitHero';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -133,6 +134,7 @@ export default function AutosleutelGestolen() {
         titleTop="Autosleutel Gestolen?"
         titleAccent="Blokkeer Hem Voordat Iemand Anders Rijdt"
         lead="Bij diefstal telt iets anders dan bij verlies: iemand heeft uw sleutel. Wij komen naar uw auto toe, wissen de gestolen sleutel uit de startonderbreker en leveren ter plaatse een nieuwe."
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.allKeysLost}`} />}
         image={{
           src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
           alt: 'Sleutelwand in de werkplaats van Autosleutel24 met transpondersleutels per automerk',

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
 import SplitHero from '@/components/SplitHero/SplitHero';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 
@@ -119,6 +120,7 @@ export default function MotorsleutelBijmaken() {
         titleTop="Motorsleutel Bijmaken of Kwijt?"
         titleAccent="Wij Komen Naar Uw Motor Toe"
         lead="Sleutel van uw motor of scooter kwijt of kapot, of een reserve nodig? Wij maken hem op locatie bij en leren hem in, zodat u niet hoeft te slepen of dagen te wachten."
+        facts={<HeroQuickFacts />}
         image={{
           src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',

@@ -4,6 +4,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 import { BRANDS } from '@/config/brands';
 import { isNoindexBrand } from '@/config/thinPages';
 import SplitHero from '@/components/SplitHero/SplitHero';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -103,6 +104,7 @@ export default function AutosleutelLatenMaken() {
         titleTop="Autosleutel Laten Maken?"
         titleAccent="Kies de Route die bij Uw Situatie Past"
         lead="Een nieuwe autosleutel laat u maken bij de dealer, bij een slotenmaker of bij een specialist die naar u toe komt. Het verschil zit in tijd, prijs en of uw auto ergens naartoe moet."
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
           src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
           alt: 'Sleutelwand met autosleutels per merk in de servicebus van Autosleutel24',

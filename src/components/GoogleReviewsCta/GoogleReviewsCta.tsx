@@ -7,6 +7,8 @@ interface GoogleReviewsCtaProps {
   title?: string;
   /** Optional intro line shown under the heading. */
   intro?: string;
+  /** Show only the first N reviews; the link below goes to all of them on Google. */
+  limit?: number;
 }
 
 /**
@@ -30,26 +32,21 @@ interface GoogleReviewsCtaProps {
  * is on all 62 city pages, and emitting the same review nodes 62 times is the
  * per-page duplication utils/schema.ts already warns about.
  */
+/*
+ * Display order is ours; the reviews themselves are quoted as Google shows them.
+ * Dutch reviews lead because the customer reading this is usually Dutch and in a hurry,
+ * and the one that opens with a remark about the owner speaking only English goes last.
+ */
 export const REVIEWS = [
-  {
-    name: 'Roy',
-    when: 'een week geleden',
-    text: 'Exceptional service and a great company. Was a little bit starteld at first by talking to a only English speaking owner, but they came as promised very late at night and helped us make our car save again. Were fast and nice too. Great service.',
-  },
   {
     name: 'Stijn Van Arkel',
     when: '2 weken geleden',
     text: 'De monteur kwam netjes bij mij op locatie en heeft binnen één uur twee nieuwe autosleutels ingeleerd op de auto. Alles werkte direct en de service was snel en …',
   },
   {
-    name: 'Cahit Keskin',
-    when: 'een maand geleden',
-    text: 'Their workmanship was excellent and fast; I was very pleased',
-  },
-  {
-    name: 'Lal',
-    when: 'een maand geleden',
-    text: 'Premium service they are very gentle and professional',
+    name: 'Julia Van Doorn',
+    when: '2 maanden geleden',
+    text: 'Uitstekende service! Autosleutel voor Mercedes, twee uur later klaar. …',
   },
   {
     name: 'Baran Kaya',
@@ -67,13 +64,23 @@ export const REVIEWS = [
     text: 'Very friendly and competent service. They were able to make two complete replacement keys for a 2011 Mercedes Vito W639 at a fair and transparent price. I recommend.',
   },
   {
-    name: 'Julia Van Doorn',
-    when: '2 maanden geleden',
-    text: 'Uitstekende service! Autosleutel voor Mercedes, twee uur later klaar. …',
+    name: 'Cahit Keskin',
+    when: 'een maand geleden',
+    text: 'Their workmanship was excellent and fast; I was very pleased',
+  },
+  {
+    name: 'Lal',
+    when: 'een maand geleden',
+    text: 'Premium service they are very gentle and professional',
+  },
+  {
+    name: 'Roy',
+    when: 'een week geleden',
+    text: 'Exceptional service and a great company. Was a little bit starteld at first by talking to a only English speaking owner, but they came as promised very late at night and helped us make our car save again. Were fast and nice too. Great service.',
   },
 ] as const;
 
-export default function GoogleReviewsCta({ title, intro }: GoogleReviewsCtaProps) {
+export default function GoogleReviewsCta({ title, intro, limit }: GoogleReviewsCtaProps) {
   const profileUrl = SITE_CONFIG.social.google;
 
   return (
@@ -89,7 +96,7 @@ export default function GoogleReviewsCta({ title, intro }: GoogleReviewsCtaProps
         </div>
       </div>
       <div className={styles.reviewGrid}>
-        {REVIEWS.map((r) => (
+        {REVIEWS.slice(0, limit ?? REVIEWS.length).map((r) => (
           <div key={r.name} className={styles.reviewCard}>
             <div className="stars">★★★★★</div>
             <p className={styles.reviewText}>&ldquo;{r.text}&rdquo;</p>

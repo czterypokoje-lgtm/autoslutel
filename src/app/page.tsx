@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
@@ -127,6 +128,7 @@ export default function HomePage() {
             <p className={styles.heroSplitLead}>
               Buitengesloten of sleutel kwijt? <strong>Binnen 30–60 min</strong> ter plaatse — goedkoper dan de dealer, geen wegsleepkosten.
             </p>
+            <HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />
           </div>
 
           <div className={styles.heroImageContent}>

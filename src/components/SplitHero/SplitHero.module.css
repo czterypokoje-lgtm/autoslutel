@@ -131,7 +131,27 @@
 }
 
 @media (max-width: 600px) {
+  /* Tighter on phones so the price, the arrival time and the call button are
+     inside the first screen, above the cookie strip, instead of below the fold. */
   .heroSplit {
-    padding: 2rem 1.25rem;
+    padding: 1rem 1.25rem 1.5rem;
+  }
+
+  .breadcrumb {
+    margin-bottom: 0.6rem;
+  }
+
+  .badgeWrap {
+    margin-bottom: 0.75rem;
+  }
+
+  .heroSplit h1 {
+    margin-bottom: 0.6rem;
+  }
+
+  .heroSplitLead {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0.9rem;
   }
 }

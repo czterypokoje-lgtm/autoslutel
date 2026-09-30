@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import SplitHero from '@/components/SplitHero/SplitHero';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -99,6 +100,7 @@ export default function AutosleutelKopieren() {
         titleTop="Autosleutel Kopiëren?"
         titleAccent="De Baard Is het Makkelijke Deel"
         lead="Een autosleutel kopiëren klinkt als het naslijpen van een stuk metaal. Bij een moderne auto is dat hooguit de helft van het werk — de andere helft zit in een chip ter grootte van een rijstkorrel."
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
           src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
           alt: 'Sleutelwand met honderden sleutelbaarden en transponderbehuizingen per automerk',

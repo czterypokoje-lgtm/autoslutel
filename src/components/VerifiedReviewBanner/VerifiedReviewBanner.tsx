@@ -42,6 +42,12 @@ const DEFAULT_REVIEW: BannerReview = {
   text: SOURCE.text,
 };
 
+/** A real review from REVIEWS, by the reviewer's name, in the shape the banner takes. */
+export function bannerReviewFor(name: string): BannerReview | undefined {
+  const r = REVIEWS.find((review) => review.name === name);
+  return r ? { name: r.name, meta: `Google · ${r.when}`, text: r.text } : undefined;
+}
+
 /**
  * @param review A review relevant to this particular page. A contactslot page
  *   showing a review about lost keys is a weaker proof than one about a
@@ -58,7 +64,7 @@ export default function VerifiedReviewBanner({ review }: { review?: BannerReview
         <div className={styles.leftSection}>
           <div className={styles.supertitle}>NEDERLAND&apos;S TOP AUTOSLOTENMAKER</div>
           <h2 className={styles.title}>
-            Wat Geverifieerde Klanten<br/>Zeggen Over Onze Service
+            Wat Geverifieerde Klanten{' '}<br/>Zeggen Over Onze Service
           </h2>
         </div>
 

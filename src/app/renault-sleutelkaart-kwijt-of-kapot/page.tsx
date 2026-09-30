@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import SplitHero from '@/components/SplitHero/SplitHero';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -107,6 +108,7 @@ export default function RenaultSleutelkaart() {
         titleTop="Renault Sleutelkaart Kwijt of Kapot?"
         titleAccent="Nieuwe Kaart, Ter Plekke Geprogrammeerd"
         lead="Zonder kaart start uw Renault niet en past de dealer-afspraak meestal niet in uw dag. Wij komen naar uw auto, lezen de code uit en leren een nieuwe kaart in."
+        facts={<HeroQuickFacts />}
         image={{
           src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
           alt: 'Autosleutelspecialist programmeert een Renault sleutelkaart bij een geparkeerde auto',

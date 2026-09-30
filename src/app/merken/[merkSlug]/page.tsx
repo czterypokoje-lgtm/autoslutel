@@ -641,7 +641,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             "autosleutel kwijt <merk>" is its own query family in Search Console
             (audi 210 impressions, mercedes 251, both around position 45-57) and
             none of the sections above answered it under that wording. */}
-        <section style={{ padding: '3.5rem 0', background: 'var(--gray-50)' }}>
+        <section id="sleutel-kwijt" style={{ padding: '3.5rem 0', background: 'var(--gray-50)' }}>
           <div className="container">
             <div className="seo-article-block" style={{ marginTop: 0 }}>
               <h2>{brand.name} sleutel kwijt of kapot? Dit zijn uw opties</h2>

@@ -31,6 +31,7 @@ export default function SplitHero({
   titleTop,
   titleAccent,
   lead,
+  facts,
   image,
   children,
 }: {
@@ -40,6 +41,8 @@ export default function SplitHero({
   /** The second line, in orange. */
   titleAccent?: React.ReactNode;
   lead: React.ReactNode;
+  /** Price, arrival time and call buttons, shown right under the lead so they are on the first screen. */
+  facts?: React.ReactNode;
   image: { src: string; alt: string };
   /** The wizard or form. Anything, so a page can supply its own. */
   children: React.ReactNode;
@@ -76,6 +79,8 @@ export default function SplitHero({
           </h1>
 
           <p className={styles.heroSplitLead}>{lead}</p>
+
+          {facts}
         </div>
 
         <div className={styles.heroImageContent}>
@@ -86,7 +91,8 @@ export default function SplitHero({
             height={450}
             className={styles.heroImage}
             priority
-            quality={80}
+            fetchPriority="high"
+            quality={75}
             sizes="(max-width: 992px) 100vw, 50vw"
           />
         </div>

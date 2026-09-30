@@ -13,9 +13,11 @@ import Image from 'next/image';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+import VerifiedReviewBanner, { bannerReviewFor } from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 
 import { CITIES } from '@/config/cities';
+import { ARRIVAL } from '@/config/arrival';
 import { BRANDS } from '@/config/brands';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
@@ -48,6 +50,12 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
   const popularBrands = BRANDS.filter(b => b.priority === 'P1').slice(0, 8);
 
   const isOpening = ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto', 'auto-openen-zonder-sleutel'].includes(slug);
+  /*
+   * The lost-key page is not a bijmaken page. It renders this same layout, and the
+   * isKey copy (reserve sleutel laten bijmaken, extra sleutel, behuizing) told someone who
+   * had lost every key that they were in the wrong place. isLost swaps those sections.
+   */
+  const isLost = ['autosleutel-kwijt', 'alle-sleutels-kwijt-auto'].includes(slug);
   const isKey = ['sleutel-bijmaken', 'autosleutel-kwijt', 'alle-sleutels-kwijt-auto', 'reserve-autosleutel', 'transponder-programmeren', 'smart-key-programmeren', 'autosleutel-bijmaken'].includes(slug);
 
   let howItWorksVariant: 'default' | 'akl' | 'ignition' | 'lockout' = 'default';
@@ -68,7 +76,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
       const files = fs.readdirSync(imagesDirMerken);
       const matched = files.filter(f => {
         if (isOpening && f.includes('auto-openen-zonder-sleutel')) return true;
-        if (isKey && f.includes('autosleutel-bijmaken')) return true;
+        if (isKey && !isLost && f.includes('autosleutel-bijmaken')) return true;
         return false;
       });
       // Mix up the array to get a variety
@@ -77,14 +85,20 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
     }
     
     // Fallback/fill with general equipment if needed
-    if (fs.existsSync(imagesDirDiensten) && serviceImages.length < 4) {
+    if (!isLost && fs.existsSync(imagesDirDiensten) && serviceImages.length < 4) {
       const equipFiles = fs.readdirSync(imagesDirDiensten);
       serviceImages.push(...equipFiles.slice(0, 4 - serviceImages.length).map(f => `/images/diensten/${f}`));
     }
   } catch (e) {}
 
   // Dynamic scenarios for better SEO & human tone
-  const bulletItems = isOpening ? [
+  const bulletItems = isLost ? [
+    { strong: 'Alle sleutels kwijt en geen reservesleutel:', text: 'Wij openen de auto schadevrij als hij op slot zit, lezen de sleutelcode uit en maken ter plaatse een nieuwe sleutel. Slepen naar de dealer is niet nodig.' },
+    { strong: 'Sleutel verloren of gestolen:', text: 'De verloren sleutel wordt uit het geheugen van de auto gewist, zodat niemand er nog mee kan starten of rijden.' },
+    { strong: 'Sleutel kwijt op straat, bij uw werk of in een parkeergarage:', text: 'Wij komen naar de plek waar de auto staat. U hoeft niet terug te lopen of de auto te laten wegslepen.' },
+    { strong: 'Smart key of keyless sleutel kwijt:', text: 'Ook proximity- en keyless-sleutels maken en programmeren wij ter plaatse.' },
+    { strong: 'Sleutel in de auto opgesloten en nergens een reserve:', text: 'Eerst openen wij de auto schadevrij, daarna maken wij zo nodig meteen een nieuwe sleutel.' }
+  ] : isOpening ? [
     { strong: 'Sleutel op de autostoel of in het contact laten liggen:', text: 'U stapt even uit en de centrale deurvergrendeling springt automatisch dicht terwijl de sleutel nog binnen ligt.' },
     { strong: 'Sleutel in de kofferbak beland:', text: 'Tijdens het inladen van boodschappen, sportspullen of bagage klapt de klep dicht terwijl uw sleutel nog in de laadruimte ligt.' },
     { strong: 'Batterij afstandsbediening of smart key leeg:', text: 'De auto reageert niet meer op het signaal en de mechanische noodsleutel in de portiergreep draait niet door vuil of vorst.' },
@@ -200,6 +214,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
             titleTop={service.h1.includes('—') ? service.h1.split('—')[0].trim() : service.h1}
             titleAccent={service.h1.includes('—') ? service.h1.split('—').slice(1).join('—').trim() : undefined}
             lead={service.intro}
+            facts={<HeroQuickFacts price={service.priceFrom} />}
             image={service.heroImage}
           >
             {service.directAnswer && (
@@ -259,6 +274,8 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
               <p className={styles.heroLead}>{service.intro}</p>
 
+              <HeroQuickFacts price={service.priceFrom} tone="dark" />
+
               {service.directAnswer && (
                 <p
                   data-direct-answer
@@ -307,7 +324,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
           />
         )}
 
-        <VerifiedReviewBanner />
+        <VerifiedReviewBanner review={isOpening ? bannerReviewFor('ışıl güvercin') : undefined} />
 
         <BrandsMarquee />
 
@@ -466,11 +483,17 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   </div>
                 )}
 
+                <div className={styles.callout}>
+                  <strong>Direct hulp nodig?</strong> Bel{' '}
+                  <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ fontWeight: 800 }}>{SITE_CONFIG.phone}</a>
+                  {' '}of <a href={WHATSAPP_URL} style={{ fontWeight: 800 }}>stuur een WhatsApp</a>: binnen {ARRIVAL} ter plaatse, prijs vooraf.
+                </div>
+
                 {/* Section 2.5: SEO Image & Expert Description */}
                 <div>
                   <h2>Professionele Mobiele Service — Direct Ter Plaatse</h2>
                   
-                  {slug === 'auto-openen-zonder-sleutel' ? (
+                  {isLost ? null : slug === 'auto-openen-zonder-sleutel' ? (
                     <img 
                       src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
                       alt="Autodeur schadevrij openen door monteur" 
@@ -554,12 +577,13 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
 
                 {/* Section 4: Welke Merken Bedienen Wij */}
-                <div style={{ margin: '3rem 0' }}>
+                <details style={{ margin: '2rem 0' }}>
+                  <summary style={{ cursor: 'pointer', fontSize: '1.3rem', fontWeight: 800 }}>{`Voor welke merken bieden wij ${service.title}?`}</summary>
                   <BrandsLogoGrid
-                    title={`Voor Welke Merken Bieden Wij ${service.title}?`}
+                    title={isLost ? 'Uw merk? Wij maken de sleutel ter plaatse' : `Voor Welke Merken Bieden Wij ${service.title}?`}
                     subtitle="Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:"
                   />
-                </div>
+                </details>
 
                 {/* Section 5: Waar Komen Wij */}
                 <div>
@@ -572,24 +596,36 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                       and false for every region beyond the Randstad. The real figure
                       depends on which partner covers the city, which only the city
                       page knows; this list links there rather than guessing. */}
-                  <ul className={styles.bulletList}>
-                    {CITIES.map((c) => (
-                      <li key={c.slug}>
-                        <Link href={`/steden/${c.slug}`}>
-                          {c.city}
-                        </Link>
-                        {` — ${c.region}`}
-                      </li>
+                  <p>
+                    {CITIES.filter((c) => c.priority === 'P1').map((c, i, all) => (
+                      <span key={c.slug}>
+                        <Link href={`/steden/${c.slug}`}>{c.city}</Link>
+                        {i < all.length - 1 ? ' · ' : ''}
+                      </span>
                     ))}
-                  </ul>
+                  </p>
+                  {/* The other towns stay in the page, collapsed: a 60-item list was a large part of a 28,000px page. */}
+                  <details>
+                    <summary style={{ cursor: 'pointer', fontWeight: 700, margin: '0.5rem 0' }}>Alle overige steden</summary>
+                    <ul className={styles.bulletList}>
+                      {CITIES.filter((c) => c.priority !== 'P1').map((c) => (
+                        <li key={c.slug}>
+                          <Link href={`/steden/${c.slug}`}>
+                            {c.city}
+                          </Link>
+                          {` — ${c.region}`}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
                   <p>
                     <Link href="/steden" style={{ fontWeight: 700, color: '#f97316' }}>Bekijk ons volledige werkgebied per provincie en stad →</Link>
                   </p>
                 </div>
 
                 {/* Section 5.5: Comprehensive Dutch SEO Guide */}
-                <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
-                  <h2>Alles over {service.title}: Mobiele Service, Techniek en Verzekering</h2>
+                <details className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
+                  <summary style={{ cursor: 'pointer', fontSize: '1.4rem', fontWeight: 800 }}>Alles over {service.title}: Mobiele Service, Techniek en Verzekering</summary>
                   <p>
                     Wanneer u hulp nodig heeft met <strong>{service.title.toLowerCase()}</strong>, wilt u niet afhankelijk zijn van lange wachttijden of dure wegsleepservices van traditionele garages. Onze gecertificeerde mobiele slotenmakers komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw auto toe in heel Nederland. Of u nu thuis op de oprit staat, op uw werk, of langs de weg bent gestrand: binnen gemiddeld 30 minuten zijn wij ter plaatse.
                   </p>
@@ -601,12 +637,12 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   <p>
                     Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €{SITE_CONFIG.prices.transponder} tot €299. Bij "alle sleutels kwijt" betaalt u €299 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
                   </p>
-                </div>
+                </details>
 
                 {/* Section 6: FAQ Accordion */}
                 <div>
                   <h2>Veelgestelde Vragen over {service.title}</h2>
-                  {service.faq.map((f, i) => (
+                  {service.faq.slice(0, 6).map((f, i) => (
                     <details key={i} className={styles.faqItem}>
                       <summary className={styles.faqQuestion}>
                         {f.q}
@@ -617,6 +653,22 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                       </p>
                     </details>
                   ))}
+                  {service.faq.length > 6 && (
+                    <details style={{ margin: '0.75rem 0' }}>
+                      <summary style={{ cursor: 'pointer', fontWeight: 700 }}>{`Nog ${service.faq.length - 6} vragen`}</summary>
+                      {service.faq.slice(6).map((f, i) => (
+                    <details key={i} className={styles.faqItem}>
+                      <summary className={styles.faqQuestion}>
+                        {f.q}
+                        <span className={styles.faqChevron}>+</span>
+                      </summary>
+                      <p className={styles.faqAnswer}>
+                        {f.a}
+                      </p>
+                    </details>
+                  ))}
+                    </details>
+                  )}
                 </div>
 
               </div>
@@ -708,12 +760,12 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
               <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2rem 0', textAlign: 'center' }}>
                 Wat Onze Klanten Zeggen over {service.title}
               </h2>
-              <GoogleReviewsCta />
+              <GoogleReviewsCta limit={3} />
             </section>
 
             {/* ── COMPREHENSIVE SERVICE TECHNICAL SEO GUIDE ── */}
-            <div className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem', background: '#ffffff', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--gray-200)' }}>
-              <h2>Alles over {service.title} door Onze Gecertificeerde Slotenmakers</h2>
+            <details className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem', background: '#ffffff', padding: '1.5rem 2.5rem', borderRadius: '16px', border: '1px solid var(--gray-200)' }}>
+              <summary style={{ cursor: 'pointer', fontSize: '1.4rem', fontWeight: 800 }}>Alles over {service.title} door Onze Gecertificeerde Slotenmakers</summary>
               <p>
                 Het vakkundig uitvoeren van <strong>{service.title.toLowerCase()}</strong> vereist nauwkeurigheid, gespecialiseerde gereedschappen en actuele kennis van voertuigelektronica. Bij moderne personenauto&apos;s en bedrijfswagens is elk onderdeel — van het contactslot en het portierslot tot de afstandsbediening en transponderchip — naadloos verbonden met de centrale boordcomputer (ECU, BSI of CAS module). Waar conventionele garages of algemene pechhulpdiensten vaak niet over de juiste specialistische apparatuur beschikken, is <strong>{SITE_CONFIG.name}</strong> uitgerust om direct op locatie in te grijpen.
               </p>
@@ -725,10 +777,11 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
               <p>
                 Wij hanteren vooraf altijd een vaste en heldere prijsafspraak, zodat u nooit wordt geconfronteerd met onverwachte kosten of hoge sleepkosten naar een dealer. Bovendien ontvangt u op al onze geleverde sleutels, onderdelen en reparaties standaard 12 maanden schriftelijke garantie. Veel verzekeringsmaatschappijen vergoeden onze factuur onder uw WA Extra of Allrisk autoverzekering.
               </p>
-            </div>
+            </details>
 
             {/* ── INTERNAL LINKING NETWORK SECTION ── */}
-            <div className="seo-hub-box" style={{ marginTop: '4rem' }}>
+            <details className="seo-hub-box" style={{ marginTop: '4rem' }}>
+              <summary style={{ cursor: 'pointer', fontWeight: 800, fontSize: '1.15rem' }}>Meer diensten, automerken en steden</summary>
               <div className="seo-hub-grid">
                 <div>
                   <div className="seo-hub-title">Andere Diensten</div>
@@ -744,8 +797,8 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   <div className="seo-hub-title">Automerken voor {service.title}</div>
                   <div className="seo-hub-col">
                     {BRANDS.map(b => (
-                      <Link key={b.slug} href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken`} className="seo-hub-link">
-                        {`${b.name} Autosleutel Bijmaken →`}
+                      <Link key={b.slug} href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken${isLost ? '#sleutel-kwijt' : ''}`} className="seo-hub-link">
+                        {isLost ? `${b.name} sleutel kwijt →` : `${b.name} Autosleutel Bijmaken →`}
                       </Link>
                     ))}
                   </div>
@@ -764,7 +817,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   </div>
                 </div>
               </div>
-            </div>
+            </details>
 
           </div>
         </section>

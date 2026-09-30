@@ -228,7 +228,7 @@ export const DIENSTEN: Service[] = [
     title: 'Autosleutel Kwijt',
     metaTitle: 'Alle Autosleutels Kwijt? | AKL Specialist op Locatie | 24/7',
     metaDesc: 'Alle autosleutels kwijt? Laat uw auto niet wegslepen naar de dealer! Wij maken nieuwe sleutels ter plaatse op locatie. Inclusief programmering. Bel nu!',
-    h1: 'Autosleutel Kwijt of Verloren? Binnen 30–60 Min Ter Plaatse, ook zonder Reservesleutel',
+    h1: 'Autosleutel Kwijt of Verloren? Binnen 30–60 Min Ter Plaatse',
     intro: 'Alle sleutels kwijt? Geen sleeptruck nodig — wij programmeren nieuwe sleutels vandaag nog direct bij uw auto op locatie.',
     system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
     priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
@@ -239,6 +239,32 @@ export const DIENSTEN: Service[] = [
       src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
       alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
     },
+    pricing: [
+      {
+        service: 'Alle sleutels kwijt (All Keys Lost)',
+        features: 'Sleutelcode uit de auto lezen, nieuwe sleutel frezen en inleren',
+        ours: `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`,
+        dealer: '€ 500 - € 1500 (1-2 wk levertijd)',
+      },
+      {
+        service: 'Smart key of keyless sleutel kwijt',
+        features: 'Nieuwe proximity-sleutel, volledig geprogrammeerd',
+        ours: `Vanaf € ${SITE_CONFIG.prices.smartKey},-`,
+        dealer: '€ 500 - € 1500 (1-2 wk levertijd)',
+      },
+      {
+        service: 'Klapsleutel met afstandsbediening kwijt',
+        features: 'Nieuwe sleutel, afstandsbediening gekoppeld',
+        ours: `Vanaf € ${SITE_CONFIG.prices.klapsleutel},-`,
+        dealer: '€ 500 - € 1500 (1-2 wk levertijd)',
+      },
+      {
+        service: 'Sleutel kwijt, nog één werkende sleutel',
+        features: 'Een tweede sleutel: de goedkoopste route',
+        ours: `Vanaf € ${SITE_CONFIG.prices.transponder},-`,
+        dealer: '€ 400 - € 800 (1-2 wk levertijd)',
+      },
+    ],
     steps: [
       'We verifiëren uw identiteit en eigendomspapieren',
       'De auto wordt schadevrij geopend',

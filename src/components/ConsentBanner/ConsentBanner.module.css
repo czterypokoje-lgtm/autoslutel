@@ -48,6 +48,11 @@
   margin: 0 0 0.85rem;
 }
 
+.brief {
+  display: none;
+}
+
+
 .text a {
   color: #0d5f70;
   text-decoration: underline;
@@ -169,5 +174,54 @@
 @media (prefers-reduced-motion: reduce) {
   .panel {
     transition: none;
+  }
+}
+
+/* Phones: a slim strip (kept at the end of the file so it wins over the base .btn and .link rules) instead of a card. The title stays for screen readers
+   (aria-labelledby points at it) but is not painted, the copy is one line, and
+   Weigeren / Accepteren / Instellingen share a row. Both choices keep the same
+   size and weight, which the AVG requires. */
+@media (max-width: 767px) {
+  .panel {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .full {
+    display: none;
+  }
+
+  .brief {
+    display: inline;
+  }
+
+  .text {
+    margin: 0 0 0.5rem;
+  }
+
+  .actions {
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+  }
+
+  .btn {
+    min-width: 0;
+    padding: 0.5rem 0.4rem;
+    font-size: 0.8125rem;
+  }
+
+  .link {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.75rem;
   }
 }
