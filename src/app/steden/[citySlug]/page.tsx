@@ -317,7 +317,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   {city.customH1 ? (
                     city.customH1
                   ) : (
-                    <>Autosleutel Bijmaken & Sleutelmaker {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Service</span></>
+                    <>Autosleutel Bijmaken of Laten Maken in {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Sleutelmaker</span></>
                   )}
                 </h1>
                 <p className={styles.heroUtrechtLead}>
@@ -352,7 +352,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                 <HeroTrustBadge />
               </div>
-              <h1>{city.customH1 || `Autosleutel Bijmaken & Sleutelmaker ${city.city} — 24/7 Service`}</h1>
+              <h1>{city.customH1 || `Autosleutel Bijmaken of Laten Maken in ${city.city} — 24/7 Sleutelmaker`}</h1>
               <p className={styles.heroLead}>
                 Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>zo snel mogelijk</>} bij u in {city.city}.
                 Alle merken, ter plaatse geprogrammeerd.

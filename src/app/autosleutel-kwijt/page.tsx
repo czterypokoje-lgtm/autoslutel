@@ -25,8 +25,8 @@ import { videoSchema } from '@/components/VideoEmbed/video';
 const SERVICE_SLUG = 'alle-sleutels-kwijt-auto';
 
 export const metadata: Metadata = {
-  title: { absolute: 'Autosleutel Kwijt? Ook Alle Sleutels | 24/7 op Locatie' },
-  description: `Autosleutel kwijt en geen reserve? Wij openen uw auto schadevrij en programmeren ter plaatse een nieuwe sleutel, vanaf €${SITE_CONFIG.prices.allKeysLost}. Alle merken, 24/7.`,
+  title: { absolute: `Autosleutel Kwijt? Ook Zonder Reservesleutel | Vanaf €${SITE_CONFIG.prices.allKeysLost}` },
+  description: `Autosleutel kwijt, beide sleutels weg of geen reservesleutel? Wij openen schadevrij en maken ter plaatse een nieuwe sleutel, vanaf €${SITE_CONFIG.prices.allKeysLost}. 24/7.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
     languages: {
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
-    title: 'Autosleutel Kwijt? Ook Alle Sleutels | 24/7 op Locatie',
+    title: `Autosleutel Kwijt? Ook Zonder Reservesleutel | Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
     description: `Autosleutel kwijt en geen reserve? Nieuwe sleutel ter plaatse, vanaf €${SITE_CONFIG.prices.allKeysLost}. Alle merken, 24/7.`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel Kwijt — Autosleutel24' }],
   },

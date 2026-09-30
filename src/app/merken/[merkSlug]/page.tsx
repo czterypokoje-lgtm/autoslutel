@@ -186,12 +186,15 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                 <HeroTrustBadge />
               </div>
-              <h1 style={{ color: '#fff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: '1.2rem' }}>
+              <h1 style={{ color: '#fff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 800, lineHeight: 1.2, marginBottom: '0.5rem' }}>
                 {brand.customH1 || (KEYCARD_BRANDS.has(brand.nameSlug.toLowerCase())
                   ? <>{brand.name} Autosleutel &amp; Sleutelkaart Bijmaken</>
-                  : <>{brand.name} Autosleutel Bijmaken of Laten Maken</>)} <br />
-                <span style={{ color: 'var(--orange-400)' }}>Kwijt of kapot? Alle modellen, direct op locatie</span>
+                  : <>{brand.name} Autosleutel Bijmaken of Laten Maken</>)}
               </h1>
+              {/* Outside the H1 on purpose: the heading stays the short phrase people search, the subtitle is for the reader. */}
+              <p style={{ color: 'var(--orange-400)', fontSize: 'clamp(1.2rem, 2.6vw, 1.75rem)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 1.2rem' }}>
+                Kwijt of kapot? Alle modellen, direct op locatie
+              </p>
               <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.08rem', lineHeight: 1.7, marginBottom: '2.2rem' }}>
                 Bent u uw {brand.name} autosleutel kwijt, is de sleutel afgebroken of reageert de Smart Key afstandsbediening niet meer?
                 Wij komen met onze volledig uitgeruste mobiele werkplaats naar u toe en programmeren direct een originele dealer-sleutel in de boordcomputer.
@@ -630,6 +633,32 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   <p>{brand.customSeoBlurb}</p>
                 </>
               )}
+            </div>
+          </div>
+        </section>
+
+        {/* ── KWIJT OF KAPOT ──
+            "autosleutel kwijt <merk>" is its own query family in Search Console
+            (audi 210 impressions, mercedes 251, both around position 45-57) and
+            none of the sections above answered it under that wording. */}
+        <section style={{ padding: '3.5rem 0', background: 'var(--gray-50)' }}>
+          <div className="container">
+            <div className="seo-article-block" style={{ marginTop: 0 }}>
+              <h2>{brand.name} sleutel kwijt of kapot? Dit zijn uw opties</h2>
+              <p>
+                Bent u uw <strong>{brand.name} sleutel kwijt</strong> maar heeft u nog één werkende sleutel, dan laten wij daar een
+                tweede van maken: de goedkoopste route. Heeft u <strong>geen enkele {brand.name} sleutel</strong> meer, dan lezen wij de sleutelcode
+                uit de auto en maken wij ter plaatse een nieuwe, vanaf €{SITE_CONFIG.prices.allKeysLost}. Is de sleutel alleen <strong>kapot</strong>,
+                kijk dan eerst naar{' '}
+                <Link href="/diensten/batterij-vervangen">een nieuwe batterij</Link>,{' '}
+                <Link href="/diensten/behuizing-vervangen">een nieuwe behuizing</Link> of{' '}
+                <Link href="/diensten/autosleutels-repareren">reparatie van de knoppen</Link>; dat scheelt vaak de helft.
+              </p>
+              <p>
+                Alles over een verloren of gestolen sleutel, wat u moet regelen en wat het kost, staat op{' '}
+                <Link href="/autosleutel-kwijt">autosleutel kwijt</Link>. Bij diefstal gaat u naar{' '}
+                <Link href="/autosleutel-gestolen">autosleutel gestolen</Link>.
+              </p>
             </div>
           </div>
         </section>

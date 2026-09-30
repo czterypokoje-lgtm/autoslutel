@@ -228,7 +228,7 @@ export const DIENSTEN: Service[] = [
     title: 'Autosleutel Kwijt',
     metaTitle: 'Alle Autosleutels Kwijt? | AKL Specialist op Locatie | 24/7',
     metaDesc: 'Alle autosleutels kwijt? Laat uw auto niet wegslepen naar de dealer! Wij maken nieuwe sleutels ter plaatse op locatie. Inclusief programmering. Bel nu!',
-    h1: 'Autosleutel Kwijt of Alle Sleutels Kwijt? — Nieuwe Sleutel ter Plaatse',
+    h1: 'Autosleutel Kwijt of Verloren? Nieuwe Sleutel ter Plaatse, ook zonder Reservesleutel',
     intro: 'Alle sleutels kwijt? Geen sleeptruck nodig — wij programmeren nieuwe sleutels vandaag nog direct bij uw auto op locatie.',
     system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
     priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
@@ -262,6 +262,15 @@ export const DIENSTEN: Service[] = [
      * and the structured data cannot disagree with what is rendered.
      */
     faq: [
+      /*
+       * Three questions added from Search Console (13 Jul - 30 Sep 2026). The
+       * "geen reserve" wording is 514 impressions across five queries, "beide
+       * / alle autosleutels kwijt" another 434, and the page had no question
+       * phrased either way. All sit around positions 35-52 today.
+       */
+      { q: 'Autosleutel kwijt en geen reservesleutel: wat nu?', a: `Dan is het een All Keys Lost-situatie en begint de prijs bij €${SITE_CONFIG.prices.allKeysLost}. Wij komen naar uw auto, openen hem schadevrij als hij op slot zit, lezen de sleutelcode uit en leren een nieuwe sleutel in. U hoeft niet te slepen en niet dagen op de dealer te wachten. Houd merk, kenteken, uw legitimatiebewijs en het kentekenbewijs bij de hand.` },
+      { q: 'Beide autosleutels kwijt: wat kost dat?', a: `Zijn al uw sleutels weg, dan is dat dezelfde klus als hierboven en begint de prijs bij €${SITE_CONFIG.prices.allKeysLost}, inclusief frezen en programmeren. U hoort de exacte prijs telefonisch voordat wij vertrekken. Wilt u meteen een reservesleutel erbij, dan noemen wij die prijs ook vooraf, zodat u niet nog eens in deze situatie komt.` },
+      { q: 'Is een gestolen sleutel iets anders dan een verloren sleutel?', a: 'Voor de auto niet, voor de veiligheid wel. Bij diefstal moet de gestolen sleutel direct uit het geheugen van de auto worden gewist, omdat iemand anders hem kan gebruiken. Wij doen dat bij het inleren van de nieuwe sleutel. Lees ook wat u verder moet regelen op de pagina over een gestolen autosleutel.' },
       { q: 'Ik ben mijn autosleutel kwijt — wat moet ik nu doen?', a: 'Laat de auto op een veilige plek staan en kijk eerst of er nog een reservesleutel is. Is die er niet, verzamel dan merk, model, bouwjaar en kenteken en bel ons. Onze monteur komt naar uw locatie, opent de auto 100% schadevrij, leest de startonderbreker uit, blokkeert de verloren sleutel en programmeert ter plekke een nieuwe. U rijdt dezelfde dag weer.' },
       { q: 'Wat kost een nieuwe autosleutel?', a: `Tussen €${SITE_CONFIG.prices.transponder} en €350, afhankelijk van merk, bouwjaar en of het om een transpondersleutel, klapsleutel of smart key gaat. Bent u álle sleutels kwijt en is er geen reserve, dan begint het bij €${SITE_CONFIG.prices.allKeysLost}: het deurslot moet dan eerst gedecodeerd worden voordat er geprogrammeerd kan worden. U hoort de exacte prijs telefonisch, vóór wij vertrekken. Een dealer rekent voor hetzelfde werk doorgaans het dubbele, plus sleepkosten.` },
       { q: 'Hoe snel heb ik een nieuwe sleutel?', a: 'Meestal binnen 30 tot 60 minuten na aankomst, ter plekke klaar en ingeleerd. Bij de dealer duurt dit doorgaans 3 tot 10 werkdagen, omdat de sleutel op chassisnummer besteld moet worden. Wij zijn 24/7 bereikbaar, ook \'s nachts en in het weekend.' },
