@@ -4,6 +4,7 @@ import { ZAKELIJK_SEGMENTS } from '@/config/zakelijk';
 import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
+import { isNoindexBrand, isNoindexCity } from '@/config/thinPages';
 import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
 import { lastModifiedFor } from '@/lib/contentDates';
 import fs from 'fs';
@@ -32,6 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
      * a 404.
      */
     '/autosleutel-bijmaken-in-de-buurt', '/autosleutel-kopieren',
+    /*
+     * "laten maken" (17,314 impressions across 212 queries, pos 47) and the
+     * Renault sleutelkaart queries (about 425 impressions, no clicks) had no
+     * page to land on.
+     */
+    '/autosleutel-laten-maken', '/renault-sleutelkaart-kwijt-of-kapot',
     // Linked from the footer of every page and indexable, but was never
     // listed here — the only orphan left after the model pages came out.
     '/algemene-voorwaarden',
@@ -75,7 +82,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // 3. City Pages
-  const cityPages = CITIES.map(c => {
+  const cityPages = CITIES.filter(c => !isNoindexCity(c.slug)).map(c => {
     const images = [];
     if (fs.existsSync(path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${c.slug}.webp`))) {
       images.push(`${base}/images/autosleutel-bijmaken-${c.slug}.webp`);
@@ -90,7 +97,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   // 4. Brand Pages
-  const brandPages = BRANDS.map(b => ({
+  const brandPages = BRANDS.filter(b => !isNoindexBrand(b.nameSlug)).map(b => ({
     url: `${base}/merken/${b.nameSlug}-autosleutel-bijmaken`,
     lastModified: lastModifiedFor(`/merken/${b.nameSlug}-autosleutel-bijmaken`, 'merken'),
     changeFrequency: 'monthly' as const,

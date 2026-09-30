@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
+import { isNoindexBrand } from '@/config/thinPages';
 import { DEEP_DIVE } from '@/config/deepDives';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import FaqSection from '@/components/FaqSection/FaqSection';
@@ -67,6 +68,7 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
         ? `${brand.name} sleutelkaart (keycard) of autosleutel kwijt of kapot? Wij maken en programmeren hem op locatie, ook zonder origineel. Goedkoper dan de dealer. Bel nu!`
         : `${brand.name} autosleutel laten maken of bijmaken? Wij programmeren op locatie, ook als alle sleutels kwijt zijn. Goedkoper dan de dealer. Bel nu!`
     ),
+    ...(isNoindexBrand(brand.nameSlug) && { robots: { index: false, follow: true } }),
     alternates: {
       canonical: pageUrl,
       languages: {

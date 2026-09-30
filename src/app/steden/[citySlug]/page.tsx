@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { CITIES } from '@/config/cities';
+import { isNoindexCity } from '@/config/thinPages';
 import { BRANDS } from '@/config/brands';
 import { DEEP_DIVE, RELAY_THEFT_MAKES, GHOST_ARTICLE } from '@/config/deepDives';
 import { createClient } from '@supabase/supabase-js';
@@ -122,6 +123,17 @@ export async function generateStaticParams() {
   return CITIES.map(c => ({ citySlug: c.slug }));
 }
 
+/*
+ * A 60-character title is roughly what Google shows before cutting. The price
+ * version overflows for the longer town names (Alphen aan den Rijn, Wijk bij
+ * Duurstede), so those fall back to the shorter form rather than losing
+ * "Op Locatie" to an ellipsis.
+ */
+function cityTitle(name: string): string {
+  const withPrice = `Autosleutel Bijmaken ${name} | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`;
+  return withPrice.length <= 60 ? withPrice : `Autosleutel Bijmaken ${name} | Op Locatie`;
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ citySlug: string }> }): Promise<Metadata> {
   const { citySlug } = await params;
   const city = CITIES.find(c => c.slug === citySlug);
@@ -153,10 +165,9 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
      * description, which is the most-read sentence on the page.
      */
     title: {
-      absolute:
-        city.customMetaTitle ||
-        `Autosleutel Bijmaken ${city.city} | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`,
+      absolute: city.customMetaTitle || cityTitle(city.city),
     },
+    ...(isNoindexCity(citySlug) && { robots: { index: false, follow: true } }),
     description: clampMeta(
       city.customMetaDesc ||
         `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}. Bel nu!`
@@ -171,7 +182,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     openGraph: {
       type: 'website',
       url: pageUrl,
-      title: city.customMetaTitle || `Autosleutel Bijmaken ${city.city} | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`,
+      title: city.customMetaTitle || cityTitle(city.city),
       description: `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
@@ -354,6 +365,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
         <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>
           <FeatureCards 
+            cardTitleAs="h2"
             features={[
               {
                 id: 'feature-1',
