@@ -212,6 +212,21 @@ const nextConfig: NextConfig = {
         destination: "/blog/:blogSlug-utrecht",
         permanent: true,
       },
+      /*
+       * Alle sleutels kwijt → /autosleutel-kwijt.
+       *
+       * Not a rename: two pages were competing for one intent. Somebody
+       * searching "autosleutel kwijt" has almost always lost the only working
+       * key, which IS the all-keys-lost case, so the service page and the
+       * landing page were the same job written twice -- and the service page
+       * published the title "Autosleutel Kwijt" while doing it.
+       */
+      {
+        source: '/diensten/alle-sleutels-kwijt-auto',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
+
       // ── Autodeur openen → Auto openen zonder sleutel (rename) ────
       {
         source: '/diensten/autodeur-openen',

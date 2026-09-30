@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { clampMeta } from '@/lib/meta';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { DIENSTEN } from '@/config/diensten';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
@@ -28,7 +28,7 @@ import fs from 'fs';
 import path from 'path';
 
 export async function generateStaticParams() {
-  return DIENSTEN.map(s => ({ slug: s.slug }));
+  return DIENSTEN.filter(s => !REDIRECTED_SERVICE_SLUGS.has(s.slug)).map(s => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -771,7 +771,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <div className="seo-hub-title">Andere Diensten</div>
                   <div className="seo-hub-col">
-                    {DIENSTEN.filter(s => s.slug !== service.slug).map(s => (
+                    {DIENSTEN.filter(s => s.slug !== service.slug && !REDIRECTED_SERVICE_SLUGS.has(s.slug)).map(s => (
                       <Link key={s.slug} href={`/diensten/${s.slug}`} className="seo-hub-link">
                         {`${s.title} →`}
                       </Link>

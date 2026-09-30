@@ -50,6 +50,24 @@ export type Service = {
   relatedSlugs: string[];
 };
 
+/*
+ * Services that now 301 elsewhere (see next.config.ts).
+ *
+ * alle-sleutels-kwijt-auto is folded into /autosleutel-kwijt. The two were
+ * written as different jobs -- "lost one key, spare exists" against "all keys
+ * lost" -- but that is not how the query is used: somebody searching
+ * "autosleutel kwijt" has almost always lost the only working key, which is
+ * the all-keys-lost case. Two pages were therefore competing for one intent,
+ * and the weaker signal of the two was being split.
+ *
+ * The entry stays in DIENSTEN: the redirect needs the slug to have existed,
+ * and /autosleutel-kwijt reads this record's content. Everything that
+ * ENUMERATES services -- the sitemap, generateStaticParams, the hub, the
+ * related-services list -- filters on this set, so nothing offers a URL that
+ * immediately redirects.
+ */
+export const REDIRECTED_SERVICE_SLUGS = new Set(['alle-sleutels-kwijt-auto']);
+
 export const DIENSTEN: Service[] = [
   // ── 1. AUTODEUR OPENEN ─────────────────────────────────────
   {

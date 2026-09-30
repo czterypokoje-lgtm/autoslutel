@@ -221,7 +221,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               </Link>
 
               {/* Card 2: Kwijt */}
-              <Link href="/diensten/alle-sleutels-kwijt-auto" className={styles.dienstCard} id={`brand-dienst-kwijt-${brand.slug}`}>
+              <Link href="/autosleutel-kwijt" className={styles.dienstCard} id={`brand-dienst-kwijt-${brand.slug}`}>
                 <div className={styles.dienstCardImg}>
                   <Image src="/images/service_kwijt_illustration.webp" alt={`${brand.name} autosleutels kwijt`} fill style={{ objectFit: 'contain' }} />
                 </div>

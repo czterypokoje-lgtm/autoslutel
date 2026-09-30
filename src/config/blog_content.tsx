@@ -1168,7 +1168,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <ul>
         <li><strong>Autodeur schadevrij openen:</strong> Vanaf €149.</li>
         <li><strong>Autosleutel bijmaken (met werkend origineel):</strong> Vanaf €149.</li>
-        <li><strong>Alle autosleutels verloren (All Keys Lost):</strong> Vanaf €190 tot €350, aangezien de slotenmaker het slot handmatig moet decoderen en de startonderbreker via EEPROM of OBD2 moet programmeren.</li>
+        <li><strong>Alle autosleutels verloren (All Keys Lost):</strong> Vanaf €299 tot €350, aangezien de slotenmaker het slot handmatig moet decoderen en de startonderbreker via EEPROM of OBD2 moet programmeren.</li>
       </ul>
 
       <h3>De rol van geavanceerde technologie</h3>

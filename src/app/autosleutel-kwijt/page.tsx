@@ -10,9 +10,9 @@ import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedRevi
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Kwijt? | 24/7 Mobiele Service | Autosleutel24',
+    absolute: 'Autosleutel Kwijt? Ook Alle Sleutels | 24/7 op Locatie',
   },
-  description: `Autosleutel kwijt? Wij helpen direct. Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel: ${SITE_CONFIG.phone}`,
+  description: `Autosleutel kwijt en geen reserve? Wij openen uw auto schadevrij en programmeren ter plaatse een nieuwe sleutel, vanaf €${SITE_CONFIG.prices.allKeysLost}. Alle merken, 24/7.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
     languages: {
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
-    title: 'Autosleutel Kwijt? | 24/7 Mobiele Service | Autosleutel24',
-    description: `Autosleutel kwijt? Wij helpen direct. Nieuwe sleutel programmeren aan huis. Alle merken. 24/7. Bel: ${SITE_CONFIG.phone}`,
+    title: 'Autosleutel Kwijt? Ook Alle Sleutels | 24/7 op Locatie',
+    description: `Autosleutel kwijt en geen reserve? Nieuwe sleutel ter plaatse, vanaf €${SITE_CONFIG.prices.allKeysLost}. Alle merken, 24/7.`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel Kwijt — Autosleutel24' }],
   },
 };
@@ -47,12 +47,12 @@ export const metadata: Metadata = {
  *
  * Each of the ten is a distinct thing a person standing next to a locked car
  * actually asks, answered once and properly. The substance from the
- * duplicates is merged in rather than dropped — the price range, the €190
+ * duplicates is merged in rather than dropped — the price range, the
  * all-keys-lost floor, the insurance detail, the BDC2/SFD caveat.
  */
 const faqItems = [
   { q: 'Ik ben mijn autosleutel kwijt — wat moet ik nu doen?', a: 'Laat de auto op een veilige plek staan en kijk eerst of er nog een reservesleutel is. Is die er niet, verzamel dan merk, model, bouwjaar en kenteken en bel ons. Onze monteur komt naar uw locatie, opent de auto 100% schadevrij, leest de startonderbreker uit, blokkeert de verloren sleutel en programmeert ter plekke een nieuwe. U rijdt dezelfde dag weer.' },
-  { q: 'Wat kost een nieuwe autosleutel?', a: 'Tussen €149 en €350, afhankelijk van merk, bouwjaar en of het om een transpondersleutel, klapsleutel of smart key gaat. Bent u álle sleutels kwijt en is er geen reserve, dan begint het bij €190: het deurslot moet dan eerst gedecodeerd worden voordat er geprogrammeerd kan worden. U hoort de exacte prijs telefonisch, vóór wij vertrekken. Een dealer rekent voor hetzelfde werk doorgaans het dubbele, plus sleepkosten.' },
+  { q: 'Wat kost een nieuwe autosleutel?', a: `Tussen €149 en €350, afhankelijk van merk, bouwjaar en of het om een transpondersleutel, klapsleutel of smart key gaat. Bent u álle sleutels kwijt en is er geen reserve, dan begint het bij €${SITE_CONFIG.prices.allKeysLost}: het deurslot moet dan eerst gedecodeerd worden voordat er geprogrammeerd kan worden. U hoort de exacte prijs telefonisch, vóór wij vertrekken. Een dealer rekent voor hetzelfde werk doorgaans het dubbele, plus sleepkosten.` },
   { q: 'Hoe snel heb ik een nieuwe sleutel?', a: 'Meestal binnen 30 tot 60 minuten na aankomst, ter plekke klaar en ingeleerd. Bij de dealer duurt dit doorgaans 3 tot 10 werkdagen, omdat de sleutel op chassisnummer besteld moet worden. Wij zijn 24/7 bereikbaar, ook \'s nachts en in het weekend.' },
   { q: 'Kan er een sleutel gemaakt worden zonder dat ik er nog één heb?', a: 'Ja. De mechanische insnijding bepalen wij door de cilinder van het deurslot te decoderen. De transponder en de afstandsbediening koppelen we daarna via de OBD2-poort aan de boordcomputer. Er hoeft dus geen originele sleutel te zijn — dat is precies het geval waarvoor wij bestaan.' },
   { q: 'Wordt mijn verloren sleutel onbruikbaar gemaakt?', a: 'Ja, en dat is het belangrijkste deel van het werk. Wij wissen de codes van de verloren sleutel uit de startonderbreker, zodat wie hem vindt de auto niet meer kan starten. Een nieuwe sleutel laten maken zonder de oude te blokkeren laat uw auto open staan voor de vinder.' },
@@ -146,7 +146,7 @@ export default function AutosleutelKwijt() {
         * made the site's highest-intent query the one page that looked like a
         * different company -- and the only money page whose hero asked for
         * nothing. It now runs SplitHero with the kenteken wizard, exactly as
-        * /diensten/alle-sleutels-kwijt-auto does.
+        * every other landing page does.
         *
         * The photograph is the workshop key wall: several hundred real blanks
         * on pegboard. It answers the question the visitor actually has -- do
@@ -157,7 +157,7 @@ export default function AutosleutelKwijt() {
         crumbs={[{ label: 'Home', href: '/' }, { label: 'Autosleutel kwijt' }]}
         titleTop="Autosleutel Kwijt of Verloren?"
         titleAccent="Wij Maken een Nieuwe op Locatie"
-        lead="Sleutel kwijt is vervelend, maar geen reden om de auto te laten wegslepen. Wij programmeren een volledig nieuwe sleutel bij uw auto, ook als er geen reservesleutel meer is."
+        lead="Geen werkende sleutel meer? Dat is geen reden om de auto te laten wegslepen. Wij komen naar uw auto toe, openen hem schadevrij en programmeren ter plaatse een volledig nieuwe sleutel — ook als er geen enkele sleutel meer over is."
         image={{
           src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
           alt: 'Sleutelwand in de werkplaats van Autosleutel24 met honderden transpondersleutels en sleutelbehuizingen per automerk',
@@ -176,10 +176,13 @@ export default function AutosleutelKwijt() {
             color: 'var(--gray-700)',
           }}
         >
-          Autosleutel kwijt? Wij maken en programmeren een nieuwe sleutel bij u op locatie,
-          vanaf €149 en meestal binnen 30 tot 60 minuten. Is er geen enkele sleutel meer,
-          dan lezen wij de sleutelcode uit de boordcomputer en wissen wij de verloren
-          sleutel uit het geheugen, vanaf €{SITE_CONFIG.prices.allKeysLost}.
+          Autosleutel kwijt en geen reservesleutel? Wij maken en programmeren een volledig
+          nieuwe sleutel bij uw auto op locatie, vanaf €{SITE_CONFIG.prices.allKeysLost} en
+          meestal binnen 60 tot 120 minuten. Wij openen de auto schadevrij, lezen de
+          sleutelcode uit de boordcomputer, frezen een nieuwe sleutel en leren die in — de
+          verloren sleutel wordt daarbij uit het geheugen gewist, zodat er met de oude sleutel
+          niet meer gestart kan worden. Heeft u nog wél een werkende reservesleutel, dan is
+          bijmaken goedkoper: vanaf €{SITE_CONFIG.prices.transponder}.
         </p>
         <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
       </SplitHero>
@@ -193,12 +196,12 @@ export default function AutosleutelKwijt() {
         <div className={styles.container}>
           <div className={styles.statsGrid}>
             <div className={styles.statItem}>
-              <span className={styles.eyebrow}>Prijs vanaf</span>
-              <div className={`${styles.statValue} ${styles.orange} ${anton.className}`}>€149</div>
+              <span className={styles.eyebrow}>Geen sleutel meer over</span>
+              <div className={`${styles.statValue} ${styles.orange} ${anton.className}`}>VANAF €{SITE_CONFIG.prices.allKeysLost}</div>
             </div>
             <div className={styles.statItem}>
-              <span className={styles.eyebrow}>Alle sleutels kwijt</span>
-              <div className={`${styles.statValue} ${anton.className}`}>VANAF €{SITE_CONFIG.prices.allKeysLost}</div>
+              <span className={styles.eyebrow}>Met reservesleutel</span>
+              <div className={`${styles.statValue} ${anton.className}`}>VANAF €{SITE_CONFIG.prices.transponder}</div>
             </div>
             <div className={styles.statItem}>
               <span className={styles.eyebrow}>Tijd ter plekke</span>

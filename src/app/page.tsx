@@ -68,7 +68,7 @@ const services = [
   { 
     title: 'Alle Autosleutels Kwijt', 
     desc: 'Bent u al uw autosleutels kwijt of zijn deze gestolen? Wij komen naar uw locatie, openen de auto schadevrij, frezen een nieuwe sleutel en wissen oude sleutels uit het systeem.',
-    href: '/diensten/alle-sleutels-kwijt-auto',
+    href: '/autosleutel-kwijt',
     src: '/images/service_kwijt.webp',
     alt: 'Monteur programmeert autosleutel via OBD diagnostiek in de auto op locatie',
     btnText: 'Direct hulp bij kwijt'

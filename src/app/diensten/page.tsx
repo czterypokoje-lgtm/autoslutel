@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { DIENSTEN } from '@/config/diensten';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -22,6 +22,15 @@ export default function DienstenOverviewPage() {
    * tells a crawler this page IS the index of those services rather than
    * another page that happens to link to them.
    */
+  /*
+   * Where a service actually lives. alle-sleutels-kwijt-auto 301s to
+   * /autosleutel-kwijt, so both the table and the ItemList below have to
+   * point at the destination -- a redirecting URL declared in structured
+   * data hands a crawler a hop it did not need to take.
+   */
+  const hrefFor = (slug: string) =>
+    REDIRECTED_SERVICE_SLUGS.has(slug) ? '/autosleutel-kwijt' : `/diensten/${slug}`;
+
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -32,7 +41,7 @@ export default function DienstenOverviewPage() {
       '@type': 'ListItem',
       position: i + 1,
       name: dienst.title,
-      url: `${SITE_CONFIG.domain}/diensten/${dienst.slug}`,
+      url: `${SITE_CONFIG.domain}${hrefFor(dienst.slug)}`,
     })),
   };
 
@@ -77,7 +86,7 @@ export default function DienstenOverviewPage() {
             </thead>
             <tbody>
               {DIENSTEN.map((s, i) => {
-                const href = s.slug === 'alle-sleutels-kwijt-auto' ? '/autosleutel-kwijt' : `/diensten/${s.slug}`;
+                const href = hrefFor(s.slug);
                 return (
                   <tr key={i}>
                     <td className={styles.serviceCell}>

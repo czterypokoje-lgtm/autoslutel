@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
 import { ZAKELIJK_SEGMENTS } from '@/config/zakelijk';
-import { DIENSTEN } from '@/config/diensten';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
 import { BRANDS } from '@/config/brands';
 import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
@@ -50,7 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const STANDALONE_SERVICES = ['auto-slotenmaker', 'autosleutel-bijmaken'];
 
   const serviceSlugs = Array.from(
-    new Set([...DIENSTEN.map(s => s.slug), ...STANDALONE_SERVICES])
+    new Set([...DIENSTEN.filter(s => !REDIRECTED_SERVICE_SLUGS.has(s.slug)).map(s => s.slug), ...STANDALONE_SERVICES])
   );
 
   const servicePages = serviceSlugs.map(slug => ({
