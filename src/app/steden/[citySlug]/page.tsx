@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { isNoindexCity } from '@/config/thinPages';
-import { ARRIVAL, ARRIVAL_TITLE, ARRIVAL_CITY_SLUGS } from '@/config/arrival';
+import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
 import { BRANDS } from '@/config/brands';
 import { DEEP_DIVE, RELAY_THEFT_MAKES, GHOST_ARTICLE } from '@/config/deepDives';
 import { createClient } from '@supabase/supabase-js';
@@ -130,14 +130,15 @@ export async function generateStaticParams() {
  * Duurstede), so those fall back to the shorter form rather than losing
  * "Op Locatie" to an ellipsis.
  */
-function cityTitle(name: string, slug?: string): string {
-  // Towns a van can honestly reach in an hour lead with the arrival time, which is what converted best.
-  if (slug && ARRIVAL_CITY_SLUGS.has(slug)) {
-    const timed = `Autosleutel Bijmaken ${name} | ${ARRIVAL_TITLE}`;
-    if (timed.length <= 60) return timed;
-  }
-  const withPrice = `Autosleutel Bijmaken ${name} | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`;
-  return withPrice.length <= 60 ? withPrice : `Autosleutel Bijmaken ${name} | Op Locatie`;
+function cityTitle(name: string): string {
+  // Every city leads with the arrival time, which is what converted best. The shorter
+  // "30-60 Min" form is for the longer town names (Alphen aan den Rijn) that overflow 60.
+  const candidates = [
+    `Autosleutel Bijmaken ${name} | ${ARRIVAL_TITLE}`,
+    `Autosleutel Bijmaken ${name} | 30-60 Min`,
+    `Autosleutel Bijmaken ${name} | Op Locatie`,
+  ];
+  return candidates.find((t) => t.length <= 60) ?? candidates[candidates.length - 1];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ citySlug: string }> }): Promise<Metadata> {
@@ -171,14 +172,12 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
      * description, which is the most-read sentence on the page.
      */
     title: {
-      absolute: city.customMetaTitle || cityTitle(city.city, city.slug),
+      absolute: city.customMetaTitle || cityTitle(city.city),
     },
     ...(isNoindexCity(citySlug) && { robots: { index: false, follow: true } }),
     description: clampMeta(
       city.customMetaDesc ||
-        (ARRIVAL_CITY_SLUGS.has(city.slug)
-          ? `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} ter plaatse, dag en nacht. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}. Bel nu!`
-          : `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}. Bel nu!`)
+        `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} ter plaatse, dag en nacht. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}. Bel nu!`
     ),
     alternates: {
       canonical: pageUrl,
@@ -190,7 +189,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     openGraph: {
       type: 'website',
       url: pageUrl,
-      title: city.customMetaTitle || cityTitle(city.city, city.slug),
+      title: city.customMetaTitle || cityTitle(city.city),
       description: `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
@@ -220,8 +219,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
    * constant wearing a data field's clothes — and made it wrong for every
    * region further out than the Randstad.
    */
-  const arrivalText = arrival ?? 'zo snel mogelijk';
-  const arrivalPhrase = arrival ? `gemiddeld binnen ${arrival}` : 'zo snel mogelijk';
+  const arrivalText = arrival ?? ARRIVAL;
+  const arrivalPhrase = arrival ? `gemiddeld binnen ${arrival}` : `binnen ${ARRIVAL}`;
 
   // Find 3 geographically closest cities
   const closestCities = CITIES
@@ -329,7 +328,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   )}
                 </h1>
                 <p className={styles.heroUtrechtLead}>
-                  Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>zo snel mogelijk</>} bij u in {city.city}.
+                  Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>binnen <strong>{ARRIVAL}</strong></>} bij u in {city.city}.
                   Alle merken, ter plaatse geprogrammeerd.
                 </p>
               </div>
@@ -362,7 +361,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </div>
               <h1>{city.customH1 || `Autosleutel Bijmaken of Laten Maken in ${city.city} — 24/7 Sleutelmaker`}</h1>
               <p className={styles.heroLead}>
-                Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>zo snel mogelijk</>} bij u in {city.city}.
+                Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>binnen <strong>{ARRIVAL}</strong></>} bij u in {city.city}.
                 Alle merken, ter plaatse geprogrammeerd.
               </p>
               <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
