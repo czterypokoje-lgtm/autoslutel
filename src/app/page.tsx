@@ -165,8 +165,7 @@ export default function HomePage() {
                 fields. LeadCaptureForm stays as the fallback for anyone who
                 does not have a Dutch plate to hand. */}
             <VehicleWizard
-              hideContact
-              fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" hideDirect />}
+              fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />}
             />
           </div>
 

@@ -329,12 +329,3 @@
 .light .fileUploadText {
   color: var(--navy-900);
 }
-
-/* Below 768px the fixed Bel Nu / WhatsApp bar is always on screen; repeating it under the form
-   only doubles the buttons. */
-@media (max-width: 767px) {
-  .urgency,
-  .directBtns {
-    display: none;
-  }
-}

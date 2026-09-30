@@ -1,8 +1,6 @@
 .facts {
   margin-top: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
+  margin-bottom: 0.25rem;
 }
 
 .list {
@@ -23,52 +21,7 @@
   margin-right: 0.4rem;
 }
 
-.buttons {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-}
-
-.call,
-.wa {
-  flex: 1 1 110px;
-  min-height: 50px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  font-weight: 800;
-  font-size: 1.05rem;
-  text-decoration: none;
-}
-
-.call {
-  flex: 2 1 190px;
-  background: #e2620f;
-  color: #ffffff;
-}
-
-.wa {
-  background: #ffffff;
-  color: #0d2137;
-  border: 2px solid #0d2137;
-}
-
-/* On the navy hero band the list must be light and the WhatsApp button inverted. */
+/* On the navy hero band the list must be light. */
 .dark .list {
   color: #ffffff;
-}
-
-.dark .wa {
-  background: transparent;
-  color: #ffffff;
-  border-color: #ffffff;
-}
-
-/* The fixed Bel Nu / WhatsApp bar is on screen below 768px, so the same two buttons in the hero
-   would be a second, identical set on the same screen. The facts stay; the buttons are for desktop. */
-@media (max-width: 767px) {
-  .buttons {
-    display: none;
-  }
 }

@@ -26,11 +26,9 @@ interface Props {
   theme?: 'dark' | 'light';
   initialBrand?: string;
   initialModel?: string;
-  /** Leave out the "Noodgeval" line and the Bel/WhatsApp buttons under the form, for a hero that already shows them above. */
-  hideDirect?: boolean;
 }
 
-export default function LeadCaptureForm({ city = "", phone, theme = 'dark', initialBrand = "", initialModel = "", hideDirect = false }: Props) {
+export default function LeadCaptureForm({ city = "", phone, theme = 'dark', initialBrand = "", initialModel = "" }: Props) {
   const [brand, setBrand] = useState(initialBrand);
   const [model, setModel] = useState(initialModel);
   const [year, setYear] = useState("");
@@ -346,8 +344,6 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         </button>
       </form>
 
-      {!hideDirect && (
-        <>
       <p className={styles.urgency}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         Noodgeval of spoed? Contacteer ons direct:
@@ -373,8 +369,6 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
           WhatsApp
         </a>
       </div>
-        </>
-      )}
     </div>
   );
 }

@@ -110,7 +110,7 @@ export default function AutosleutelLatenMaken() {
           alt: 'Sleutelwand met autosleutels per merk in de servicebus van Autosleutel24',
         }}
       >
-        <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
+        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
       </SplitHero>
 
       <VerifiedReviewBanner />

@@ -126,7 +126,7 @@ export default function MotorsleutelBijmaken() {
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
         }}
       >
-        <LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />
+        <LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />
       </SplitHero>
 
       <VerifiedReviewBanner />

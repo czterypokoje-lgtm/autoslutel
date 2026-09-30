@@ -382,10 +382,3 @@
 .limitDetail {
   opacity: 0.95;
 }
-
-/* Below 768px the fixed Bel Nu / WhatsApp bar is always on screen; this row would repeat it. */
-@media (max-width: 767px) {
-  .urgent {
-    display: none;
-  }
-}

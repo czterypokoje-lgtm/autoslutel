@@ -217,7 +217,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
             facts={<HeroQuickFacts price={service.priceFrom} />}
             image={service.heroImage}
           >
-            <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
+            <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
           </SplitHero>
         ) : (
           <section
@@ -255,7 +255,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
 
               <div style={{ marginTop: '2rem' }}>
-                <LeadCaptureForm phone={SITE_CONFIG.phone} hideDirect />
+                <LeadCaptureForm phone={SITE_CONFIG.phone} />
               </div>
             </div>
           </section>

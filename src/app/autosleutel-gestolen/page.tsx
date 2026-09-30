@@ -140,7 +140,7 @@ export default function AutosleutelGestolen() {
           alt: 'Sleutelwand in de werkplaats van Autosleutel24 met transpondersleutels per automerk',
         }}
       >
-        <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
+        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
       </SplitHero>
 
       <VerifiedReviewBanner />
