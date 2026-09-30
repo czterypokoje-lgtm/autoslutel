@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CITIES } from '@/config/cities';
 import { SITE_CONFIG } from '@/config/site.config';
 import { SERVICE_REGIONS } from '@/config/regions';
-import ServiceAreaMyMap from '@/components/ServiceAreaMyMap/ServiceAreaMyMap';
+import InstantServiceMap from '@/components/InstantServiceMap';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -98,7 +98,9 @@ export default function Steden() {
         </p>
       </section>
 
-      <ServiceAreaMyMap />
+      <section style={{ maxWidth: 1100, margin: '2rem auto 0', padding: '0 1.25rem' }} aria-label="Kaart van ons werkgebied">
+        <InstantServiceMap />
+      </section>
 
       <div className="container" style={{ padding:'3.5rem 2rem' }}>
         {groups.map(g => {

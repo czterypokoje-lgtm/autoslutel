@@ -217,7 +217,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
             facts={<HeroQuickFacts price={service.priceFrom} />}
             image={service.heroImage}
           >
-            <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+            <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />} />
           </SplitHero>
         ) : (
           <section

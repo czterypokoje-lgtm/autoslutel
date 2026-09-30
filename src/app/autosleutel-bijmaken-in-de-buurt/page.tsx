@@ -104,7 +104,7 @@ export default function InDeBuurt() {
           alt: 'Autosleutelspecialist van Autosleutel24 met servicebus op locatie',
         }}
       >
-        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />} />
       </SplitHero>
 
       <section className="section">

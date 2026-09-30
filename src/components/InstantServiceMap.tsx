@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './InstantServiceMap.module.css';
+import { MY_MAPS_EMBED_URL } from '@/config/myMaps';
 
 /**
  * The service-area map, behind a facade.
@@ -53,7 +54,7 @@ export default function InstantServiceMap() {
       <div className={styles.mapRoot}>
         <iframe
           className={styles.googleMapIframe}
-          src="https://www.google.com/maps/d/embed?mid=1M3Pmk5vzguoPL4qS81XLU_gz5OiXDF4&ehbc=2E312F"
+          src={MY_MAPS_EMBED_URL}
           allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
           title="Autosleutel24 servicegebied — Utrecht, Randstad en omstreken"

@@ -114,7 +114,7 @@ export default function RenaultSleutelkaart() {
           alt: 'Autosleutelspecialist programmeert een Renault sleutelkaart bij een geparkeerde auto',
         }}
       >
-        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />} />
       </SplitHero>
 
       <VerifiedReviewBanner />

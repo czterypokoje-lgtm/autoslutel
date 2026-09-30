@@ -12,7 +12,7 @@ import SplitHero from '@/components/SplitHero/SplitHero';
 import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
-import ServiceAreaMyMap from '@/components/ServiceAreaMyMap/ServiceAreaMyMap';
+import InstantServiceMap from '@/components/InstantServiceMap';
 
 /*
  * One page per province the business wants to be found in.
@@ -142,12 +142,15 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
         }}
       >
-        <LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />
+        <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
       </SplitHero>
 
       <VerifiedReviewBanner />
 
-      <ServiceAreaMyMap title={`Ons werkgebied, ook in ${region.name}`} />
+      <section style={{ maxWidth: 1100, margin: '2rem auto 0', padding: '0 1.25rem' }} aria-label={`Kaart van ons werkgebied, ook in ${region.name}`}>
+        <h2 style={{ marginBottom: '1rem' }}>Ons werkgebied, ook in {region.name}</h2>
+        <InstantServiceMap />
+      </section>
 
       <section className="section">
         <div className="container" style={{ maxWidth: 960 }}>

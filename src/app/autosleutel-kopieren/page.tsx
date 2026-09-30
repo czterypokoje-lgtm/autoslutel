@@ -106,7 +106,7 @@ export default function AutosleutelKopieren() {
           alt: 'Sleutelwand met honderden sleutelbaarden en transponderbehuizingen per automerk',
         }}
       >
-        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />} />
       </SplitHero>
 
       <VerifiedReviewBanner />
