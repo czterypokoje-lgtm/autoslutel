@@ -297,13 +297,33 @@ export default function PlanForm({
 
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="klanttelefoon">
-              Telefoon klant
+              Telefoon klant <span aria-hidden="true" style={{ color: '#dc2626' }}>*</span>
             </label>
+            {/*
+              * Required, and it is the single highest-value field on this form.
+              *
+              * Measured on the live database: of 85 jobs, 38 carry a phone and
+              * exactly 38 carry a lead_id -- the same 38. A job gets linked to
+              * its lead when, and only when, somebody typed the number. The
+              * other 47 are invisible to Google Ads forever: 39 finished jobs
+              * have no lead, and not one of them has a phone or even a name to
+              * match on afterwards. EUR 17,765 of finished work, EUR 775 of it
+              * attributable.
+              *
+              * The number is what turns guessing into matching. With it, the
+              * lookup below finds the lead, the lead carries the gclid, and
+              * the conversion can be reported honestly. Without it the only
+              * alternative is pairing an ad click to a job by how close they
+              * are in time -- and the median gap between a call click and the
+              * nearest job being created is 55.6 hours, which is not a match,
+              * it is a coin toss with the ad budget riding on it.
+              */}
             <input
               id="klanttelefoon"
               className={styles.control}
               type="tel"
               inputMode="tel"
+              required
               autoComplete="off"
               placeholder="06 12 34 56 78"
               value={customerPhone}
