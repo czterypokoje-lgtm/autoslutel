@@ -24,6 +24,7 @@ const diensten = [
   ['Bijmaken in de Buurt', '/autosleutel-bijmaken-in-de-buurt'],
   ['Autosleutel Laten Maken', '/autosleutel-laten-maken'],
   ['Renault Sleutelkaart', '/renault-sleutelkaart-kwijt-of-kapot'],
+  ['Motorsleutel Bijmaken', '/motorsleutel-bijmaken'],
   ['Alle diensten →', '/diensten'],
 ];
 

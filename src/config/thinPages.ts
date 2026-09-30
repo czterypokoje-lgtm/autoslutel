@@ -11,7 +11,11 @@
  *  - The five districts are near-copies of their parent city page and drew no
  *    impressions of their own. Amsterdam Noord is NOT here: it answers a real
  *    query ("autosleutel bijmaken amsterdam noord", 175 impressions, pos 12.6).
- *  - The brands below had zero impressions and no query naming them.
+ *  - Brands: the twelve the brand audit marked "Cut" (Oldsmobile, Buick, Cadillac, Chrysler, Cobra,
+ *    Ferrari, GMC, Holden, Lada, Lincoln, McLaren, Proton) were deleted and redirect to /merken. The
+ *    fourteen marked "Hold 60 days" (Infiniti, Isuzu, Chery, Dacia, Daewoo, DAF, Dodge, Iveco,
+ *    Jaguar, Lancia, Saab, SsangYong, Subaru, Suzuki) stay indexed so the hold can be judged on
+ *    real impressions. Only the three left below are noindex.
  *
  * `noindex, follow` rather than a redirect or a deletion: visitors and internal
  * links keep working, the dispatch and CRM code that reads CITIES and BRANDS is
@@ -28,9 +32,8 @@ export const NOINDEX_CITY_SLUGS: ReadonlySet<string> = new Set([
 ]);
 
 export const NOINDEX_BRAND_SLUGS: ReadonlySet<string> = new Set([
-  'buick', 'cadillac', 'chery', 'chrysler', 'cobra', 'daewoo', 'daf', 'daihatsu',
-  'ferrari', 'holden', 'infiniti', 'isuzu', 'iveco', 'lada', 'lancia', 'lincoln',
-  'mclaren', 'oldsmobile', 'proton', 'rolls-royce', 'saab', 'ssangyong', 'gmc', 'bentley',
+  // Not in the brand audit's cut or hold lists, and no impressions: stays out of the index for now.
+  'daihatsu', 'rolls-royce', 'bentley',
 ]);
 
 export const isNoindexCity = (slug: string) => NOINDEX_CITY_SLUGS.has(slug);

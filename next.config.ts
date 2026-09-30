@@ -6,7 +6,7 @@ const brands = [
   'opel', 'volvo', 'skoda', 'nissan', 'kia', 'hyundai', 'honda', 'fiat', 'citroen', 
   'seat', 'mazda', 'suzuki', 'mitsubishi', 'mini', 'dacia', 'land-rover', 'porsche', 
   'lexus', 'jaguar', 'alfa-romeo', 'smart', 'jeep', 'chevrolet', 'subaru', 'lancia', 
-  'ds', 'chrysler', 'saab', 'dodge', 'ssangyong'
+  'ds', 'saab', 'dodge', 'ssangyong'
 ];
 
 const brandRedirects = brands.map(brand => ({
@@ -14,6 +14,20 @@ const brandRedirects = brands.map(brand => ({
   destination: `/merken/${brand}-autosleutel-bijmaken`,
   permanent: true,
 }));
+
+/*
+ * Brands removed after the brand audit (no NL market or dealer-only key
+ * programming, and no impressions). Both URL shapes go to the overview rather
+ * than 404 so old links and any indexed copy resolve.
+ */
+const removedBrands = [
+  'oldsmobile', 'buick', 'cadillac', 'chrysler', 'cobra', 'ferrari',
+  'gmc', 'holden', 'lada', 'lincoln', 'mclaren', 'proton',
+];
+const removedBrandRedirects = removedBrands.flatMap(brand => [
+  { source: `/merken/${brand}-autosleutel-bijmaken`, destination: '/merken', permanent: true },
+  { source: `/merken/${brand}`, destination: '/merken', permanent: true },
+]);
 
 const nextConfig: NextConfig = {
   /*
@@ -106,6 +120,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...brandRedirects,
+      ...removedBrandRedirects,
       /*
        * Search-term URLs people (and old links) guess. All were 404s while
        * the phrase behind them has real demand, so each goes to the one page

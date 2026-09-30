@@ -1,5 +1,5 @@
 // ============================================================
-// BRANDS CONFIG — 59 Car Brands
+// BRANDS CONFIG — Car Brands (BRAND_COUNT below is the real number)
 // Each brand: slug, name, priority, system, models
 // Expanded with Year Ranges for SEO
 // ============================================================
@@ -804,29 +804,6 @@ export const BRANDS: Brand[] = [
     ],
   },
   {
-    slug: 'buick', name: 'Buick', nameSlug: 'buick', priority: 'P3',
-    system: 'GM PASS-Key / PK3 / Global A',
-    excerpt: 'Buick autosleutel programmering op locatie. Encore, Envision, Regal.',
-    customSeoBlurb: 'Heeft u een nieuwe Buick autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Buick. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Encore; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'encore', name: 'Encore', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'envision', name: 'Envision', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'regal', name: 'Regal', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
-    slug: 'cadillac', name: 'Cadillac', nameSlug: 'cadillac', priority: 'P3',
-    system: 'GM Global A / Global B / PK3',
-    excerpt: 'Cadillac autosleutel programmering op locatie. Escalade, CTS, XT5, ATS.',
-    customSeoBlurb: 'Heeft u een nieuwe Cadillac autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Cadillac. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Escalade; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'escalade', name: 'Escalade', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'cts', name: 'CTS', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'xt5', name: 'XT5', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'ats', name: 'ATS', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
     slug: 'chery', name: 'Chery', nameSlug: 'chery', priority: 'P3',
     system: 'Chery Immo / Smart Key',
     excerpt: 'Chery autosleutel programmering op locatie. Tiggo, QQ, Arrizo.',
@@ -848,26 +825,6 @@ export const BRANDS: Brand[] = [
       { slug: 'captiva', name: 'Captiva', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
       { slug: 'cruze', name: 'Cruze', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
       { slug: 'corvette', name: 'Corvette', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
-    slug: 'chrysler', name: 'Chrysler', nameSlug: 'chrysler', priority: 'P3',
-    system: 'FOBIK / SKIM / SKREEM',
-    excerpt: 'Chrysler autosleutel programmering op locatie. 300C, Voyager, PT Cruiser.',
-    customSeoBlurb: 'Heeft u een nieuwe Chrysler autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Chrysler. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw 300C; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: '300c', name: '300C', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'voyager', name: 'Voyager', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'pt-cruiser', name: 'PT Cruiser', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
-    slug: 'cobra', name: 'Cobra', nameSlug: 'cobra', priority: 'P3',
-    system: 'Aftermarket Immo / Basic',
-    excerpt: 'Cobra autosleutel programmering op locatie. AC Cobra.',
-    customSeoBlurb: 'Heeft u een nieuwe Cobra autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Cobra. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw AC Cobra; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'ac-cobra', name: 'AC Cobra', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
     ],
   },
   {
@@ -928,28 +885,6 @@ export const BRANDS: Brand[] = [
     ],
   },
   {
-    slug: 'ferrari', name: 'Ferrari', nameSlug: 'ferrari', priority: 'P3',
-    system: 'Marelli / CODE / Keyless',
-    excerpt: 'Ferrari autosleutel programmering op locatie. 458, 488, California, F430.',
-    customSeoBlurb: 'Heeft u een nieuwe Ferrari autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Ferrari. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw 458; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: '458', name: '458', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: '488', name: '488', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'california', name: 'California', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'f430', name: 'F430', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
-    slug: 'holden', name: 'Holden', nameSlug: 'holden', priority: 'P3',
-    system: 'GM Global A',
-    excerpt: 'Holden autosleutel programmering op locatie. Commodore, Colorado.',
-    customSeoBlurb: 'Heeft u een nieuwe Holden autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Holden. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Commodore; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'commodore', name: 'Commodore', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'colorado', name: 'Colorado', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
     slug: 'infiniti', name: 'Infiniti', nameSlug: 'infiniti', priority: 'P3',
     system: 'Nissan NATS / BCM',
     excerpt: 'Infiniti autosleutel programmering op locatie. Q50, Q30, FX35.',
@@ -993,16 +928,6 @@ export const BRANDS: Brand[] = [
     ],
   },
   {
-    slug: 'lada', name: 'Lada', nameSlug: 'lada', priority: 'P3',
-    system: 'Renault UCH / Basic',
-    excerpt: 'Lada autosleutel programmering op locatie. Niva, Vesta.',
-    customSeoBlurb: 'Heeft u een nieuwe Lada autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Lada. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Niva; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'niva', name: 'Niva', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'vesta', name: 'Vesta', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
     slug: 'lancia', name: 'Lancia', nameSlug: 'lancia', priority: 'P3',
     system: 'Fiat CODE / BSI',
     excerpt: 'Lancia autosleutel programmering op locatie. Ypsilon, Delta.',
@@ -1010,17 +935,6 @@ export const BRANDS: Brand[] = [
     models: [
       { slug: 'ypsilon', name: 'Ypsilon', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
       { slug: 'delta', name: 'Delta', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
-    slug: 'lincoln', name: 'Lincoln', nameSlug: 'lincoln', priority: 'P3',
-    system: 'Ford PATS / BCM',
-    excerpt: 'Lincoln autosleutel programmering op locatie. Navigator, Aviator, MKX.',
-    customSeoBlurb: 'Heeft u een nieuwe Lincoln autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Lincoln. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Navigator; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'navigator', name: 'Navigator', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'aviator', name: 'Aviator', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'mkx', name: 'MKX', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
     ],
   },
   {
@@ -1035,17 +949,6 @@ export const BRANDS: Brand[] = [
     ],
   },
   {
-    slug: 'mclaren', name: 'McLaren', nameSlug: 'mclaren', priority: 'P3',
-    system: 'McLaren Smart Key',
-    excerpt: 'McLaren autosleutel programmering op locatie. 570S, 720S, MP4-12C.',
-    customSeoBlurb: 'Heeft u een nieuwe McLaren autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw McLaren. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw 570S; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: '570s', name: '570S', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: '720s', name: '720S', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'mp4-12c', name: 'MP4-12C', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
     slug: 'mitsubishi', name: 'Mitsubishi', nameSlug: 'mitsubishi', priority: 'P3',
     system: 'ETACS / KOS',
     excerpt: 'Mitsubishi autosleutel programmering op locatie. Outlander, Space Star, Colt, ASX.',
@@ -1055,26 +958,6 @@ export const BRANDS: Brand[] = [
       { slug: 'space-star', name: 'Space Star', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
       { slug: 'colt', name: 'Colt', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
       { slug: 'asx', name: 'ASX', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
-    slug: 'oldsmobile', name: 'Oldsmobile', nameSlug: 'oldsmobile', priority: 'P3',
-    system: 'GM PASS-Key',
-    excerpt: 'Oldsmobile autosleutel programmering op locatie. Aurora, Alero.',
-    customSeoBlurb: 'Heeft u een nieuwe Oldsmobile autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Oldsmobile. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Aurora; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'aurora', name: 'Aurora', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'alero', name: 'Alero', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  },
-  {
-    slug: 'proton', name: 'Proton', nameSlug: 'proton', priority: 'P3',
-    system: 'Bosch / Megamos',
-    excerpt: 'Proton autosleutel programmering op locatie. Wira, Gen-2.',
-    customSeoBlurb: 'Heeft u een nieuwe Proton autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw Proton. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Wira; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'wira', name: 'Wira', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'gen-2', name: 'Gen-2', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
     ],
   },
   {
@@ -1153,18 +1036,6 @@ export const BRANDS: Brand[] = [
       { slug: 'ignis', name: 'Ignis', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
     ],
   },
-  {
-    slug: 'gmc', name: 'GMC', nameSlug: 'gmc', priority: 'P3',
-    system: 'GM Global A / PK3',
-    excerpt: 'GMC autosleutel programmering op locatie. Sierra, Yukon, Acadia.',
-    customSeoBlurb: 'Heeft u een nieuwe GMC autosleutel nodig? Wij maken direct ter plaatse een nieuwe sleutel of smart key voor uw GMC. Of u nu al uw sleutels kwijt bent of gewoon een reservesleutel zoekt voor uw Sierra; wij bieden dealer-kwaliteit voor een lagere prijs.',
-    models: [
-      { slug: 'sierra', name: 'Sierra', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'yukon', name: 'Yukon', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' },
-      { slug: 'acadia', name: 'Acadia', years: '2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022' }
-    ],
-  }
-,
   {
     slug: 'bentley', name: 'Bentley', nameSlug: 'bentley', priority: 'P3',
     system: 'VW Group / KESSY',

@@ -39,6 +39,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
      * page to land on.
      */
     '/autosleutel-laten-maken', '/renault-sleutelkaart-kwijt-of-kapot',
+    // Replaces the twelve cut car brands with the ten motorcycle brands on Dutch roads, as one page.
+    '/motorsleutel-bijmaken',
     // Linked from the footer of every page and indexable, but was never
     // listed here — the only orphan left after the model pages came out.
     '/algemene-voorwaarden',

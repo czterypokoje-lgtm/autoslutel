@@ -53,6 +53,7 @@ const DienstenStructure = [
       { href: '/autosleutel-kopieren', label: 'Autosleutel Kopiëren' },
       { href: '/autosleutel-bijmaken-in-de-buurt', label: 'Bijmaken in de Buurt' },
       { href: '/autosleutel-laten-maken', label: 'Autosleutel Laten Maken' },
+      { href: '/motorsleutel-bijmaken', label: 'Motorsleutel Bijmaken' },
     ]
   },
   {
