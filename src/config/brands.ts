@@ -1,3 +1,4 @@
+import { SITE_CONFIG } from '@/config/site.config';
 // ============================================================
 // BRANDS CONFIG — Car Brands (BRAND_COUNT below is the real number)
 // Each brand: slug, name, priority, system, models
@@ -375,7 +376,7 @@ export const BRANDS: Brand[] = [
     customFaqs: [
       {
         q: 'Wat zijn de Peugeot 206 sleutel bijmaken kosten?',
-        a: 'De Peugeot 206 sleutel bijmaken kosten vallen bij ons aanzienlijk lager uit dan bij de dealer. Voor een standaard mechanische transpondersleutel bent u bij ons al vanaf €120,- klaar. Een klapsleutel met afstandsbediening is iets duurder, maar nog steeds tot wel 50% goedkoper dan de dealerprijs. Neem contact op voor een vaste prijsopgave.'
+        a: `De Peugeot 206 sleutel bijmaken kosten vallen bij ons aanzienlijk lager uit dan bij de dealer. Voor een standaard mechanische transpondersleutel bent u bij ons al vanaf €${SITE_CONFIG.prices.transponder},- klaar. Een klapsleutel met afstandsbediening is iets duurder, maar nog steeds tot wel 50% goedkoper dan de dealerprijs. Neem contact op voor een vaste prijsopgave.`
       },
       {
         q: 'Kan ik een Peugeot 406 autosleutel bijmaken als ik alle sleutels kwijt ben?',

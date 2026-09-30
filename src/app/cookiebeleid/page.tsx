@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import ConsentPreferencesButton from '@/components/ConsentBanner/ConsentPreferencesButton';
@@ -66,6 +67,7 @@ const cell: React.CSSProperties = {
 export default function CookiePage() {
   return (
     <main>
+      <script id="bc-cookie" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Cookiebeleid', path: '/cookiebeleid' }])) }} />
       <section
         style={{
           background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)',

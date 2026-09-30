@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <main>
+      <script id="bc-privacy" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Privacybeleid', path: '/privacybeleid' }])) }} />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '4rem 2rem' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <h1 style={{ color: '#fff' }}>Privacybeleid</h1>

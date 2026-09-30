@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
 import Link from 'next/link';
 import { getRelatedBlogPosts } from '@/config/services';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import { getBaseLocalBusinessSchema, serviceRegionNodes } from '@/utils/schema';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
@@ -24,16 +26,8 @@ export default function AutoSlotenmakerPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Auto Slotenmaker",
-    "provider": {
-      "@type": "Locksmith",
-      "name": "Autosleutel24",
-      "telephone": SITE_CONFIG.phoneTel,
-      "url": SITE_CONFIG.domain
-    },
-    "areaServed": {
-      "@type": "State",
-      "name": "Utrecht"
-    },
+    "provider": getBaseLocalBusinessSchema(),
+    "areaServed": serviceRegionNodes(),
     "serviceType": "Auto slotenmaker, autodeur openen, autoslot reparatie, reservesleutel bijmaken",
     "priceRange": "€€",
     "hasOfferCatalog": {
@@ -143,6 +137,7 @@ export default function AutoSlotenmakerPage() {
 
   return (
     <>
+      <script id="bc-slotenmaker" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Diensten', path: '/diensten' }, { name: 'Auto slotenmaker', path: '/diensten/auto-slotenmaker' }])) }} />
       <script id="auto-slotenmaker-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <script id="auto-slotenmaker-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema) }} />
       <main>

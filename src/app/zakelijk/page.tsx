@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
 import Link from 'next/link';
 import { ZAKELIJK_SEGMENTS } from '@/config/zakelijk';
 import { SITE_CONFIG } from '@/config/site.config';
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 export default function ZakelijkHub() {
   return (
     <main>
+      <script id="bc-zakelijk" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Zakelijk', path: '/zakelijk' }])) }} />
       <section className={styles.hero}>
         <div className={styles.inner}>
           <nav className={styles.crumbs} aria-label="Breadcrumb">

@@ -1,4 +1,4 @@
-import { SITE_CONFIG } from '@/config/site.config';
+import { getBaseLocalBusinessSchema, serviceRegionNodes } from '@/utils/schema';
 
 interface ServiceSchemaProps {
   name: string;
@@ -13,17 +13,10 @@ export default function ServiceSchema({ name, description, url, image }: Service
     '@type': 'Service',
     name,
     description,
-    provider: {
-      '@type': 'LocalBusiness',
-      name: SITE_CONFIG.name,
-      url: SITE_CONFIG.domain,
-    },
+    provider: getBaseLocalBusinessSchema(),
     url,
     ...(image && { image }),
-    areaServed: {
-      '@type': 'Country',
-      name: 'Netherlands',
-    },
+    areaServed: serviceRegionNodes(),
   };
 
   return (

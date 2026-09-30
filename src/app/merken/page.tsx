@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BRANDS, BRAND_COUNT } from '@/config/brands';
@@ -25,6 +26,7 @@ export default function MerkenPage() {
 
   return (
     <main>
+      <script id="bc-merken" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Merken', path: '/merken' }])) }} />
       {/* Hero */}
       <section style={{ background: 'var(--navy-900)', padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden', position: 'relative' }}>
         <Image

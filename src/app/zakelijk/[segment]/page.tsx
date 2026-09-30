@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -46,6 +47,18 @@ export default async function ZakelijkSegmentPage(props: {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        id={`bc-zakelijk-${s.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbSchema([
+              { name: 'Zakelijk', path: '/zakelijk' },
+              { name: s.label, path: `/zakelijk/${s.slug}` },
+            ])
+          ),
+        }}
       />
       <main>
         {/* ── HERO ── */}

@@ -1,10 +1,11 @@
 import { SITE_CONFIG } from '@/config/site.config';
+import { BIZ_ID, serviceRegionNodes } from '@/utils/schema';
 
 export default function LocalBusinessSchema() {
   const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': ['LocalBusiness', 'AutomotiveBusiness', 'Locksmith'],
-    '@id': `${SITE_CONFIG.domain}/#localbusiness`,
+    '@id': BIZ_ID,
     name: SITE_CONFIG.name,
     alternateName: 'Autosleutel24',
     description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Werkzaam in Midden-Nederland en de Randstad.',
@@ -30,6 +31,13 @@ export default function LocalBusinessSchema() {
       latitude: parseFloat(SITE_CONFIG.geo.lat),
       longitude: parseFloat(SITE_CONFIG.geo.lng),
     },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: SITE_CONFIG.phoneTel,
+      contactType: 'customer service',
+      areaServed: 'NL',
+      availableLanguage: ['nl', 'en'],
+    },
     hasMap: `https://maps.google.com/?q=${SITE_CONFIG.geo.lat},${SITE_CONFIG.geo.lng}`,
     openingHoursSpecification: [
       {
@@ -47,6 +55,8 @@ export default function LocalBusinessSchema() {
      * the office is adding them to GBP separately.
      */
     areaServed: [
+      // The provinces first: one statement of where the business works, shared with every Service node.
+      ...serviceRegionNodes(),
       { '@type': 'City', 'name': 'Utrecht', 'sameAs': 'https://en.wikipedia.org/wiki/Utrecht' },
       { '@type': 'City', 'name': 'Amsterdam', 'sameAs': 'https://en.wikipedia.org/wiki/Amsterdam' },
       { '@type': 'City', 'name': 'Almere' },

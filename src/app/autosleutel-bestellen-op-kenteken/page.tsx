@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getBaseLocalBusinessSchema, serviceRegionNodes } from '@/utils/schema';
 import Link from 'next/link';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
@@ -39,15 +40,16 @@ export default function KentekenBestellenPage() {
     ],
   };
 
+  // A Service of the business (see utils/schema.ts), not a second business named after this page.
   const localBusinessSchema = {
     "@context": "https://schema.org",
-    "@type": "AutomotiveBusiness",
-    "name": SITE_CONFIG.name,
-    "description": "Specialist in autosleutels bijmaken, car key duplication en programmeren op locatie.",
+    "@type": "Service",
+    "name": "Autosleutel bestellen op kenteken",
+    "description": "Autosleutel bijmaken en programmeren op locatie, met de prijs vooraf op basis van uw kenteken.",
     "url": `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken`,
-    "telephone": SITE_CONFIG.phone,
     "image": `${SITE_CONFIG.domain}/images/autosleutel-bestellen-op-kenteken.webp`,
-    "knowsAbout": ["Autosleutel bijmaken", "Car key duplication", "Autosleutel programmeren", "Sleutel kwijt"]
+    "provider": getBaseLocalBusinessSchema(),
+    "areaServed": serviceRegionNodes(),
   };
 
   const howToSchema = {

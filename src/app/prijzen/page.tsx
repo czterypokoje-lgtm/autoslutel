@@ -33,28 +33,28 @@ const priceRows: PriceItem[] = [
   { category: 'Autosleutel Bijmaken (Reserve)' },
   { service: 'Standaard transpondersleutel', from: `€ ${SITE_CONFIG.prices.transponder}`, to: '€ 199', note: 'Meeste oudere modellen' },
   { service: 'Klap-/flipsleutel met afstandsbediening', from: `€ ${SITE_CONFIG.prices.klapsleutel}`, to: '€ 249', note: 'VW, Audi, Seat, Skoda, Ford' },
-  { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 349', note: 'BMW, Mercedes, Toyota, Mazda' },
-  { service: 'Proximity key met start-stop', from: '€ 249', to: '€ 349', note: 'Premium merken' },
+  { service: 'Smart key / Keyless entry', from: `€ ${SITE_CONFIG.prices.smartKey}`, to: '€ 349', note: 'BMW, Mercedes, Toyota, Mazda' },
+  { service: 'Proximity key met start-stop', from: `€ ${SITE_CONFIG.prices.smartKey}`, to: '€ 349', note: 'Premium merken' },
   
   { category: 'Autosleutel Kwijt (Alle sleutels verloren)' },
-  { service: 'Standaard transpondersleutel', from: '€ 299', to: '€ 399', note: 'Inclusief programmeren' },
-  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 299', to: '€ 399', note: 'Inclusief code uitlezen' },
+  { service: 'Standaard transpondersleutel', from: `€ ${SITE_CONFIG.prices.allKeysLost}`, to: '€ 399', note: 'Inclusief programmeren' },
+  { service: 'Klap-/flipsleutel met afstandsbediening', from: `€ ${SITE_CONFIG.prices.allKeysLost}`, to: '€ 399', note: 'Inclusief code uitlezen' },
   { service: 'Smart key / Keyless entry', from: '€ 349', to: '€ 449', note: 'Inclusief noodprocedure' },
   { service: 'Proximity key met start-stop', from: '€ 399', to: '€ 500', note: 'Premium systemen' },
   
   { category: 'Auto Openen (Buitengesloten)' },
-  { service: 'Standaard auto openen', from: '€ 150', to: '€ 200', note: 'Schadevrij, 5-15 minuten' },
+  { service: 'Standaard auto openen', from: `€ ${SITE_CONFIG.prices.unlock}`, to: '€ 200', note: 'Schadevrij, 5-15 minuten' },
 
   { service: 'Noodopening (keyless systeem)', from: '€ 175', to: '€ 250', note: 'Speciale techniek vereist' },
   
   { category: 'Reparatie & Onderhoud (Sleutel kapot)' },
-  { service: 'Behuizing vervangen', from: '€ 45', to: '€ 89', note: 'Nieuw ombouw-setje' },
-  { service: 'Batterij vervangen', from: '€ 15', to: '€ 35', note: 'Inclusief test' },
+  { service: 'Behuizing vervangen', from: `€ ${SITE_CONFIG.prices.casing}`, to: '€ 89', note: 'Nieuw ombouw-setje' },
+  { service: 'Batterij vervangen', from: '€ 15', to: '€ 20', note: 'Inclusief test' },
   { service: 'Afstandsbediening herprogrammeren', from: '€ 49', to: '€ 99', note: 'Werkt niet meer' },
   { service: 'Transponder chip vervangen', from: '€ 89', to: '€ 149', note: 'Chip defect' },
   
   { category: 'Contactslot & Stuurslot (Mechanische problemen)' },
-  { service: 'Contactslot vervangen (standaard)', from: '€ 299', to: '€ 399', note: 'VW, Audi, Seat, Skoda' },
+  { service: 'Contactslot vervangen (standaard)', from: `€ ${SITE_CONFIG.prices.ignition}`, to: '€ 399', note: 'VW, Audi, Seat, Skoda' },
   { service: 'Contactslot vervangen (premium)', from: '€ 399', to: '€ 599', note: 'Mercedes, BMW' },
   { service: 'Stuurslot reparatie/vervanging', from: '€ 199', to: '€ 349', note: 'ELV/ESL systemen' },
   { service: 'Immobilizer reset', from: '€ 149', to: '€ 299', note: 'Software herstel' }
@@ -322,7 +322,7 @@ export default function PrijzenPage() {
           </p>
           <h3>Verschil in Prijs tussen Mechanische Sleutels, Klapsleutels en Smart Keys</h3>
           <p>
-            Een mechanische reservesleutel met transponderchip start uw auto en opent uw deuren handmatig; dit is de voordeligste optie (vanaf €125). Een klapsleutel met afstandsbediening heeft extra RF-elektronica om uw centrale deurvergrendeling op afstand te bedienen (vanaf €150). Keyless Entry en Keyless Go smart keys (zoals bij BMW, Mercedes en Volkswagen) vereisen cryptografische Eeprom- of Bench-programmering en liggen in het luxere segment (vanaf €195).
+            Een mechanische reservesleutel met transponderchip start uw auto en opent uw deuren handmatig; dit is de voordeligste optie (vanaf €{SITE_CONFIG.prices.transponder}). Een klapsleutel met afstandsbediening heeft extra RF-elektronica om uw centrale deurvergrendeling op afstand te bedienen (vanaf €{SITE_CONFIG.prices.klapsleutel}). Keyless Entry en Keyless Go smart keys (zoals bij BMW, Mercedes en Volkswagen) vereisen cryptografische Eeprom- of Bench-programmering en liggen in het luxere segment (vanaf €{SITE_CONFIG.prices.smartKey}).
           </p>
           <h3>Kosten bij All Keys Lost (Alle Sleutels Kwijt) ten opzichte van Reservesleutel</h3>
           <p>

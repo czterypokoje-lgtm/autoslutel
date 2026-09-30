@@ -5,6 +5,7 @@ import './framer-theme.css';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import ConsentBanner from '@/components/ConsentBanner/ConsentBanner';
+import LocalBusinessSchema from '@/components/Schema/LocalBusinessSchema';
 
 
 import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
@@ -164,6 +165,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        {/* The one full description of the business; every other page's markup refers to it by @id. */}
+        <LocalBusinessSchema />
         <Script id="consent-defaults">
           {`
             window.dataLayer = window.dataLayer || [];

@@ -11,6 +11,7 @@ import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import Image from 'next/image';
 import styles from './page.module.css';
 import { ARRIVAL } from '@/config/arrival';
+import { getBaseLocalBusinessSchema, serviceRegionNodes } from '@/utils/schema';
 
 export const metadata: Metadata = {
   title: {
@@ -26,32 +27,9 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "Service",
   "name": "Auto Openen Zonder Sleutel",
-  "provider": {
-    "@type": "Locksmith",
-    "name": "Autosleutel24",
-    "telephone": SITE_CONFIG.phoneTel,
-    "url": SITE_CONFIG.domain,
-    /*
-     * Bussum, from site.config, not Utrecht.
-     *
-     * This node said Utrecht while the other 139 pages carrying an address
-     * said Bussum -- one business claiming two head offices, which is exactly
-     * the contradiction the city pages were just cleaned of. Bussum is what
-     * the Google Business Profile holds, and a NAP mismatch works against
-     * local ranking rather than for it.
-     */
-    "address": {
-      "@type": "PostalAddress",
-      "addressRegion": SITE_CONFIG.address.region,
-      "addressCountry": SITE_CONFIG.address.country
-    }
-  },
-  "areaServed": [
-    { "@type": "City", "name": "Utrecht" },
-    { "@type": "City", "name": "Amsterdam" },
-    { "@type": "City", "name": "Almere" },
-    { "@type": "City", "name": "Amersfoort" }
-  ],
+  // The business is described once, in the root layout; this refers to it.
+  "provider": getBaseLocalBusinessSchema(),
+  "areaServed": serviceRegionNodes(),
   "serviceType": "Auto openen zonder sleutel, schadevrij buitensluiting, kofferbak openen",
   "offers": {
     "@type": "Offer",

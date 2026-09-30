@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
 import Link from 'next/link';
 import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
 import { SITE_CONFIG } from '@/config/site.config';
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <main>
+      <script id="bc-blog" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Blog', path: '/blog' }])) }} />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
         <span className="section-label">BLOG & TIPS</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Autosleutel Tips & Nieuws</h1>

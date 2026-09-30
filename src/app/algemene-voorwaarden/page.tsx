@@ -1,4 +1,5 @@
 import React from 'react';
+import { breadcrumbSchema } from '@/utils/schema';
 import type { Metadata } from 'next';
 import { SITE_CONFIG, isBtwConfigured } from '@/config/site.config';
 import { VAT_RATE } from '@/lib/catalog';
@@ -37,6 +38,7 @@ const p: React.CSSProperties = { color: '#334155', lineHeight: 1.7, margin: '0 0
 export default function TermsPage() {
   return (
     <main style={{ background: '#fff' }}>
+      <script id="bc-voorwaarden" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Algemene voorwaarden', path: '/algemene-voorwaarden' }])) }} />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '4rem 1.5rem', textAlign: 'center' }}>
         <h1 style={{ color: '#fff', margin: 0, fontSize: 'clamp(1.6rem, 5vw, 2.4rem)' }}>
           Algemene voorwaarden

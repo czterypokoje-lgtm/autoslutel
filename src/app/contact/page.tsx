@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { businessRef } from '@/utils/schema';
 import { SITE_CONFIG } from '@/config/site.config';
 import ContactForm from '@/components/ContactForm/ContactForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -31,21 +32,8 @@ const contactPageSchema = {
   url: `${SITE_CONFIG.domain}/contact`,
   name: 'Contact — Autosleutel24',
   inLanguage: 'nl-NL',
-  mainEntity: {
-    '@type': 'LocalBusiness',
-    '@id': `${SITE_CONFIG.domain}/#localbusiness`,
-    name: SITE_CONFIG.fullName,
-    telephone: SITE_CONFIG.phoneTel,
-    email: SITE_CONFIG.email,
-    url: SITE_CONFIG.domain,
-    contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: SITE_CONFIG.phoneTel,
-      contactType: 'customer service',
-      areaServed: 'NL',
-      availableLanguage: ['nl', 'en'],
-    },
-  },
+  // The ContactPoint lives on the business node in the root layout.
+  mainEntity: businessRef,
 };
 
 const breadcrumbSchema = {

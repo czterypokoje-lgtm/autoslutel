@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import { SECTION_REVISED } from '@/lib/contentDates';
 import Link from 'next/link';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
@@ -26,8 +28,13 @@ export default function KennisbankPage() {
     '@type': 'Article',
     headline: 'Uitgebreide Kennisbank: Autosleutel Programmering, Transpondertechnologie & Mobiele Slotenmaker Service',
     description: 'Technische gids voor transponders, OBD2 programmeerprotocollen, CNC laser frezen en autobeveiliging.',
-    author: { '@type': 'Organization', name: SITE_CONFIG.fullName },
-    publisher: { '@type': 'Organization', name: SITE_CONFIG.fullName },
+    // Article markup needs dates and an image to be eligible. The dates are the ones the sitemap
+    // records for this section (src/lib/contentDates.ts); bump them there when the page changes.
+    datePublished: '2026-08-26',
+    dateModified: SECTION_REVISED.kennisbank,
+    image: `${SITE_CONFIG.domain}/og-image.png`,
+    author: getBaseLocalBusinessSchema(),
+    publisher: getBaseLocalBusinessSchema(),
     mainEntityOfPage: `${SITE_CONFIG.domain}/kennisbank`,
   };
 

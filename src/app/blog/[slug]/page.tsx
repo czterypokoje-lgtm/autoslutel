@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { BLOG_POSTS } from '@/config/services';
@@ -61,22 +62,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       name: 'Berkan Acarol',
       jobTitle: 'Eigenaar & Autosleutelspecialist',
       url: `${SITE_CONFIG.domain}/over-ons`,
-      worksFor: {
-        '@type': 'LocalBusiness',
-        name: SITE_CONFIG.fullName,
-        url: SITE_CONFIG.domain,
-      },
+      worksFor: getBaseLocalBusinessSchema(),
     },
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_CONFIG.fullName,
-      url: SITE_CONFIG.domain,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${SITE_CONFIG.domain}/logo.png`,
-      },
-    },
-    image: `${SITE_CONFIG.domain}/og-image.jpg`,
+    publisher: getBaseLocalBusinessSchema(),
+    // og-image.jpg does not exist; the file is og-image.png.
+    image: `${SITE_CONFIG.domain}/og-image.png`,
   };
 
   const breadcrumbSchema = {

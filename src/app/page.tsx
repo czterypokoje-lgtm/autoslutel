@@ -10,7 +10,6 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '../config/brands';
 import FaqSection from '@/components/FaqSection/FaqSection';
 import ServiceAreaMap from '@/components/ServiceAreaMap/ServiceAreaMap';
-import LocalBusinessSchema from '@/components/Schema/LocalBusinessSchema';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
@@ -113,7 +112,6 @@ const services = [
 export default function HomePage() {
   return (
     <>
-      <LocalBusinessSchema />
       <script id="home-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
       <section className={styles.heroSplit}>

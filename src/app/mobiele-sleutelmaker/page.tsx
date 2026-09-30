@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getBaseLocalBusinessSchema, serviceRegionNodes } from '@/utils/schema';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import SplitHero from '@/components/SplitHero/SplitHero';
@@ -91,21 +92,23 @@ export default function MobieleSleutelmaker() {
     ],
   };
   /*
-   * Locksmith rather than Service: this page is about the trade and the
-   * people, which is the node that carries `sameAs` to the Google Business
-   * Profile and can be matched against a "sleutelmaker in de buurt" search.
+   * A Service of the business, referring to it. This used to be a second
+   * Locksmith node (with a "#locksmith" @id and only a parentOrganization link), so
+   * the site described two locksmiths. The business, its sameAs and its Google
+   * Business Profile link are on the one node in the root layout; this page only
+   * says which service it is about.
    */
   const businessSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Locksmith',
-    '@id': `${SITE_CONFIG.domain}/mobiele-sleutelmaker#locksmith`,
-    name: `${SITE_CONFIG.fullName} — mobiele sleutelmaker`,
+    '@type': 'Service',
+    '@id': `${SITE_CONFIG.domain}/mobiele-sleutelmaker#service`,
+    name: 'Mobiele sleutelmaker en autoslotenmaker',
+    serviceType: 'Mobiele sleutelmaker, autoslotenmaker, auto openen, autosleutel bijmaken',
     description:
       'Mobiele sleutelmaker en autoslotenmaker: wij komen naar de auto toe, openen schadevrij en frezen en programmeren sleutels ter plaatse.',
-    telephone: SITE_CONFIG.phoneTel,
     url: `${SITE_CONFIG.domain}/mobiele-sleutelmaker`,
-    areaServed: { '@type': 'Country', name: 'Nederland' },
-    parentOrganization: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
+    provider: getBaseLocalBusinessSchema(),
+    areaServed: serviceRegionNodes(),
   };
 
   return (

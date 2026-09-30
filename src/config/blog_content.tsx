@@ -522,7 +522,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
       <ul>
         <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €125 tot €249. Ideaal als goedkope noodoplossing.</li>
-        <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €199 tot €349 voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
+        <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €{SITE_CONFIG.prices.klapsleutel} tot €349 voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
         <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €249 tot €349 voor premium merken (BMW, Audi, Toyota, Volvo).</li>
         <li><strong>Complexe immobilizers (o.a. Mercedes FBS4 of nieuwe VAG MQB48):</strong> Vanaf €299 tot €599 vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren.</li>
       </ul>
@@ -1060,7 +1060,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Een basis autosleutel, uitgerust met een transponder chip maar zonder knoppen. Voldoende om de deuren handmatig te openen en de motor te starten. Vaak gekozen als noodsleutel.
       </p>
 
-      <h4>2. Klapsleutel met Afstandsbediening (Vanaf €199 - €349)</h4>
+      <h4>2. Klapsleutel met Afstandsbediening (Vanaf €{SITE_CONFIG.prices.klapsleutel} - €349)</h4>
       <p>
         De meest voorkomende sleutel voor auto's vanaf ongeveer 2005. Voorzien van een inklapbare baard en drukknoppen voor de centrale vergrendeling. We programmeren zowel de startonderbreker als de afstandsbediening.
       </p>

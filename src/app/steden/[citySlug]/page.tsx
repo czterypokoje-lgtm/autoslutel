@@ -236,36 +236,27 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     .slice(0, 3);
 
   /*
-   * The local entity for this page.
+   * What this page is: a service offered in this city by the one business.
    *
-   * This used to override `geo` with the city's coordinates and leave
-   * `address` untouched, so the Maastricht page described a business at
-   * 50.85/5.69 whose addressLocality was Bussum — two places 210 km apart, in
-   * one entity, on 62 pages. Google reads geo and address together.
-   *
-   * Resolved by not claiming a local address at all: the node is head office,
-   * and areaServed names the city it serves.
-   */
-  const base = getBaseLocalBusinessSchema();
-
-  /*
-   * The node describes Autosleutel24 and inherits head office, unchanged.
-   *
-   * It briefly carried the covering partner's coordinates, their town as
-   * addressLocality and their Google Business Profile in sameAs. All three
-   * publish a partner's identity on a public page, which is the owner's call
-   * and was not agreed with the partners, so all three are gone with the name.
-   *
-   * areaServed is what makes the page local, and it is the honest way to say
-   * it: this is one business that serves this city, not a branch in it.
+   * It was a full Locksmith record per city -- 62 "#locksmith" nodes, each a
+   * complete copy of the business with its own areaServed -- which tells a crawler
+   * there are 62 businesses. The business is described once, in the root layout,
+   * under BIZ_ID; this node says "that business serves this city" and nothing more.
+   * No local address is claimed: there is no branch here, and areaServed is the
+   * honest way to say where the van goes.
    */
   const schema = {
-    ...base,
-    '@id': `${SITE_CONFIG.domain}/steden/${citySlug}#locksmith`,
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${SITE_CONFIG.domain}/steden/${citySlug}#service`,
+    name: `Autosleutel bijmaken en kwijt in ${city.city}`,
+    serviceType: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
     url: `${SITE_CONFIG.domain}/steden/${citySlug}`,
+    provider: getBaseLocalBusinessSchema(),
     areaServed: {
       '@type': 'City',
       name: city.city,
+      containedInPlace: { '@type': 'AdministrativeArea', name: city.region },
     },
   };
 
