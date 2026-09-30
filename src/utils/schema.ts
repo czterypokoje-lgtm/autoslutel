@@ -31,11 +31,15 @@ export function getBaseLocalBusinessSchema() {
        mobile business with no walk-in counter — and an empty string is a
        claim that the field exists and is blank, which is worse than silence.
        LocalBusinessSchema.tsx has always guarded these; this builder did not,
-       so every city, brand and service page carried two empty fields. */
+       so every city, brand and service page carried two empty fields.
+
+       addressLocality is omitted for the same reason, by instruction: there
+       is no counter in Bussum or anywhere else, and naming a town as the
+       address of a business that drives to the customer says something that
+       is not true of it. areaServed is what states where the work happens. */
     address: {
       '@type': 'PostalAddress',
       ...(SITE_CONFIG.address.street ? { streetAddress: SITE_CONFIG.address.street } : {}),
-      addressLocality: SITE_CONFIG.address.city,
       ...(SITE_CONFIG.address.postal ? { postalCode: SITE_CONFIG.address.postal } : {}),
       addressRegion: SITE_CONFIG.address.region,
       addressCountry: SITE_CONFIG.address.country,

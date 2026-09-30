@@ -41,7 +41,6 @@ const schema = {
      */
     "address": {
       "@type": "PostalAddress",
-      "addressLocality": SITE_CONFIG.address.city,
       "addressRegion": SITE_CONFIG.address.region,
       "addressCountry": SITE_CONFIG.address.country
     }

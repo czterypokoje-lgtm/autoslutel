@@ -21,7 +21,6 @@ export default function LocalBusinessSchema() {
     address: {
       '@type': 'PostalAddress',
       ...(SITE_CONFIG.address.street ? { streetAddress: SITE_CONFIG.address.street } : {}),
-      addressLocality: SITE_CONFIG.address.city,
       addressRegion: SITE_CONFIG.address.region,
       ...(SITE_CONFIG.address.postal ? { postalCode: SITE_CONFIG.address.postal } : {}),
       addressCountry: SITE_CONFIG.address.country,
