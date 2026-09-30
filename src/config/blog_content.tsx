@@ -298,7 +298,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           <tr>
             <td><strong>Volkswagen / Audi / Seat</strong></td>
             <td>Transponder / Smart Key (MQB)</td>
-            <td>€149 - €199</td>
+            <td>€125 - €199</td>
             <td>€300 - €450</td>
           </tr>
           <tr>
@@ -521,7 +521,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         De kosten voor het bijmaken van een sleutel bij verlies van alle sleutels (All Keys Lost) liggen logischerwijs hoger dan wanneer u een reservesleutel laat kopiëren op basis van een werkend origineel. Dit komt door de benodigde noodopening en het decodeerwerk. Gemiddeld kunt u uitgaan van de volgende tarieven:
       </p>
       <ul>
-        <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €149 tot €249. Ideaal als goedkope noodoplossing.</li>
+        <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €125 tot €249. Ideaal als goedkope noodoplossing.</li>
         <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €199 tot €349 voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
         <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €249 tot €349 voor premium merken (BMW, Audi, Toyota, Volvo).</li>
         <li><strong>Complexe immobilizers (o.a. Mercedes FBS4 of nieuwe VAG MQB48):</strong> Vanaf €299 tot €599 vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren.</li>
@@ -540,7 +540,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <details style={{ borderBottom: '1px solid #e2e8f0', padding: '1rem 0' }}>
         <summary style={{ fontWeight: 700, cursor: 'pointer' }}>Wat kost een autosleutel bijmaken zonder origineel?</summary>
         <p style={{ marginTop: '0.5rem', color: '#475569' }}>
-          De tarieven starten vanaf €149 voor oudere auto&apos;s en eenvoudige sleutels. Voor moderne smart keys ligt de prijs gemiddeld tussen de €299 en €499. Dit is inclusief de noodopening ter plaatse, het decoderen van het slot en het inleren van de chip.
+          De tarieven starten vanaf €125 voor oudere auto&apos;s en eenvoudige sleutels. Voor moderne smart keys ligt de prijs gemiddeld tussen de €299 en €499. Dit is inclusief de noodopening ter plaatse, het decoderen van het slot en het inleren van de chip.
         </p>
       </details>
 
@@ -651,7 +651,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Volkswagen Golf 7 (Klapsleutel)</strong></td>
               <td style={{ padding: '1rem' }}>€280 - €360</td>
-              <td style={{ padding: '1rem' }}>€149 - €179</td>
+              <td style={{ padding: '1rem' }}>€125 - €179</td>
               <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>45% - 50% besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
@@ -1055,7 +1055,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <h3>Drie soorten autosleutels en hun prijskaartje</h3>
-      <h4>1. Standaard Transpondersleutel (Vanaf €149)</h4>
+      <h4>1. Standaard Transpondersleutel (Vanaf €125)</h4>
       <p>
         Een basis autosleutel, uitgerust met een transponder chip maar zonder knoppen. Voldoende om de deuren handmatig te openen en de motor te starten. Vaak gekozen als noodsleutel.
       </p>
@@ -1167,7 +1167,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
       <ul>
         <li><strong>Autodeur schadevrij openen:</strong> Vanaf €149.</li>
-        <li><strong>Autosleutel bijmaken (met werkend origineel):</strong> Vanaf €149.</li>
+        <li><strong>Autosleutel bijmaken (met werkend origineel):</strong> Vanaf €125.</li>
         <li><strong>Alle autosleutels verloren (All Keys Lost):</strong> Vanaf €299 tot €350, aangezien de slotenmaker het slot handmatig moet decoderen en de startonderbreker via EEPROM of OBD2 moet programmeren.</li>
       </ul>
 
@@ -2210,7 +2210,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <p>
-        Als we in de basis puur kijken naar de kosten reservesleutel bij laten maken, dan is een conventionele mechanische sleutel met transponderchip (maar dus volledig zonder afstandsbediening voor de deuren) veruit de voordeligste keuze. Hier betaal je rond de €149 voor. Het is een perfecte, no-nonsense optie voor een extra reservesleutel in de la thuis.
+        Als we in de basis puur kijken naar de kosten reservesleutel bij laten maken, dan is een conventionele mechanische sleutel met transponderchip (maar dus volledig zonder afstandsbediening voor de deuren) veruit de voordeligste keuze. Hier betaal je rond de €125 voor. Het is een perfecte, no-nonsense optie voor een extra reservesleutel in de la thuis.
       </p>
 
       <p>

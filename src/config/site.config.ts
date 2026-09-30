@@ -35,7 +35,19 @@ export const SITE_CONFIG = {
 
   prices: {
     unlock: '149',
-    transponder: '149',
+    /*
+     * Bijmaken starts at 125, not 149.
+     *
+     * These two were the same number and are not the same job: `unlock` is
+     * opening a car you are locked out of, `transponder` is cutting and
+     * programming a spare. Every "vanaf" on the site reads from here, so the
+     * meta titles, the wizard, the quote engine and the price table move
+     * together -- the EUR 190 that once sat in a FAQ while the wizard said
+     * EUR 299 is what happens when one of them is typed by hand instead.
+     */
+    transponder: '125',
+    /* Klap-/flipsleutel with remote: the step above a plain transponder. */
+    klapsleutel: '149',
     remote: '220',
     smartKey: '249',
     allKeysLost: '299',

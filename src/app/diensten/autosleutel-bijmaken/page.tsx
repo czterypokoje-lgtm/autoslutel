@@ -18,18 +18,18 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bijmaken of Namaken vanaf €149 | 24/7',
+    absolute: `Autosleutel Bijmaken of Namaken vanaf €${SITE_CONFIG.prices.transponder} | 24/7`,
   },
-  description: 'Autosleutel bijmaken, namaken of een reservesleutel laten maken? 24/7 op locatie, vaste prijs vanaf €149 — goedkoper dan de dealer. Binnen 30 min ter plaatse.',
+  description: 'Autosleutel bijmaken, namaken of een reservesleutel laten maken? 24/7 op locatie, vaste prijs vanaf €125 — goedkoper dan de dealer. Binnen 30 min ter plaatse.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` },
   openGraph: {
-    title: 'Autosleutel Bijmaken & Kopiëren vanaf €149 | Autosleutel24',
+    title: `Autosleutel Bijmaken & Kopiëren vanaf €${SITE_CONFIG.prices.transponder} | Autosleutel24`,
     url: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken`,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Autosleutel Bijmaken & Kopiëren vanaf €149 | Autosleutel24',
+    title: `Autosleutel Bijmaken & Kopiëren vanaf €${SITE_CONFIG.prices.transponder} | Autosleutel24`,
   },
 };
 
@@ -40,7 +40,7 @@ export default function SleutelBijmakenPage() {
     "name": "Autosleutel Bijmaken",
     "provider": getBaseLocalBusinessSchema(),
     "serviceType": "Autosleutel bijmaken, autosleutel kopiëren, transponder programmeren, smart key inleren",
-    "priceRange": "€149 - €500",
+    "priceRange": "€125 - €500",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "Autosleutel Bijmaken Diensten",
@@ -96,7 +96,7 @@ export default function SleutelBijmakenPage() {
       {
         "@type": "Question",
         "name": "Is het goedkoper dan bij de dealer?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €149 tot €299. Bij \"alle sleutels kwijt\" rekenen we €299 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!)." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €125 tot €299. Bij \"alle sleutels kwijt\" rekenen we €299 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!)." }
       },
       {
         "@type": "Question",
@@ -134,7 +134,7 @@ export default function SleutelBijmakenPage() {
   const trustItems = [
     '24/7 Beschikbaar',
     'Binnen 30 min in Utrecht',
-    'Vaste prijs vanaf €149',
+    `Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}`,
     'Vaste prijs vooraf',
     'Verzekerd & Gecertificeerd'
   ];
@@ -278,7 +278,7 @@ return (
                         <tr>
                           <td>Standaard sleutel (met transponder chip)</td>
                           <td>Oudere auto's, basis modellen</td>
-                          <td><strong>€149 - €249</strong></td>
+                          <td><strong>€125 - €249</strong></td>
                           <td>15 min</td>
                         </tr>
                         <tr>
@@ -304,7 +304,7 @@ return (
                   </div>
                   <ul className={styles.bulletList}>
                     <li>
-                      <strong>Wat kost een sleutel bijmaken?</strong> Een nieuwe reservesleutel kost bij ons tussen de €149 en €299, afhankelijk van het merk en of het een smart key is. Bent u alle sleutels kwijt? Dan liggen de kosten tussen de €299 en €500. Dit is altijd inclusief programmeren op locatie!
+                      <strong>Wat kost een sleutel bijmaken?</strong> Een nieuwe reservesleutel kost bij ons tussen de €125 en €299, afhankelijk van het merk en of het een smart key is. Bent u alle sleutels kwijt? Dan liggen de kosten tussen de €299 en €500. Dit is altijd inclusief programmeren op locatie!
                     </li>
                     <li>
                       <strong>Dealer vs. Slotenmaker:</strong> De dealer is gemiddeld 50% duurder dan Autosleutel24 voor exact dezelfde sleutel. Bovendien bespaart u bij ons op wegsleepkosten, want wij komen naar u toe (geen wegsleepkosten!). U ontvangt altijd <strong>gecertificeerde sleutels</strong> met 12 maanden garantie.
@@ -410,7 +410,7 @@ return (
                       <span className={styles.faqChevron}>+</span>
                     </summary>
                     <p className={styles.faqAnswer}>
-                      Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €149 tot €299. Bij "alle sleutels kwijt" rekenen we €299 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!).
+                      Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €125 tot €299. Bij "alle sleutels kwijt" rekenen we €299 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!).
                     </p>
                   </details>
 

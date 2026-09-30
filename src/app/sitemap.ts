@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/algemene-voorwaarden',
     // B2B and recruitment. Different audience and different queries from the
     // consumer pages, so they earn their own entries rather than riding along.
-    '/zakelijk', '/monteur-worden'
+    '/zakelijk'
   ].map(p => ({
     url: `${base}${p}`,
     lastModified: lastModifiedFor(

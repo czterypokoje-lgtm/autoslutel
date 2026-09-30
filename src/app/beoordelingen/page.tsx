@@ -5,7 +5,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Klantbeoordelingen (5.0★) | Autosleutel24',
+    absolute: 'Autosleutel24 Reviews | 5,0★ Klantbeoordelingen',
   },
   description: `Klantbeoordelingen van ${SITE_CONFIG.fullName}. Lees onze reviews rechtstreeks op ons Google-bedrijfsprofiel.`,
   alternates: { canonical: `${SITE_CONFIG.domain}/beoordelingen` },

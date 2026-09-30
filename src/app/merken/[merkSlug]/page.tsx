@@ -25,6 +25,9 @@ export async function generateStaticParams() {
   return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
 }
 
+/* Renault and Dacia ship a card, not a key, and the card is what people search for. */
+const KEYCARD_BRANDS = new Set(['renault', 'dacia']);
+
 export async function generateMetadata(props: { params: Promise<{ merkSlug: string }> }): Promise<Metadata> {
   const params = await props.params;
   const merkSlug = params.merkSlug;
@@ -40,12 +43,29 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
   // Always use the long SEO slug for the canonical URL
   const pageUrl = `${SITE_CONFIG.domain}/merken/${brand.nameSlug.toLowerCase()}-autosleutel-bijmaken`;
   return {
+    /*
+     * "Alle Modellen & Bouwjaren" said nothing anyone searches for. Search
+     * Console shows 55 brand pages sitting at position 38-73 with click
+     * rates between 0.06% and 1%, while "laten maken" alone is 17,314
+     * impressions across the site. The title now carries the price and the
+     * description carries "laten maken" and the all-keys-lost case, which is
+     * what the brand queries actually ask ("autosleutel kwijt mercedes",
+     * "autosleutel bijmaken bmw").
+     *
+     * Renault and Dacia sell a sleutelkaart rather than a key, and people
+     * search for the card by name, so those two say so.
+     */
     title: {
-      absolute: brand.customMetaTitle || `${brand.name} Autosleutel Bijmaken | Alle Modellen & Bouwjaren`,
+      absolute:
+        brand.customMetaTitle ||
+        (KEYCARD_BRANDS.has(brand.nameSlug.toLowerCase())
+          ? `${brand.name} Autosleutel & Sleutelkaart Bijmaken | Op Locatie`
+          : `${brand.name} Autosleutel Bijmaken | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`),
     },
-    // Benefit first: price and speed are what earn the click in this category.
     description: clampMeta(
-      `${brand.name} sleutel bijmaken vanaf €${SITE_CONFIG.prices.transponder} — binnen 30–60 min bij u op locatie. Alle modellen en bouwjaren, 12 maanden garantie.`
+      KEYCARD_BRANDS.has(brand.nameSlug.toLowerCase())
+        ? `${brand.name} sleutelkaart (keycard) of autosleutel kwijt of kapot? Wij maken en programmeren hem op locatie, ook zonder origineel. Goedkoper dan de dealer. Bel nu!`
+        : `${brand.name} autosleutel laten maken of bijmaken? Wij programmeren op locatie, ook als alle sleutels kwijt zijn. Goedkoper dan de dealer. Bel nu!`
     ),
     alternates: {
       canonical: pageUrl,
@@ -215,7 +235,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   Extra of reserve {brand.name} sleutel nodig? Wij frezen en programmeren een nieuwe sleutel direct bij u op locatie, vaak de helft goedkoper dan de {brand.name}-dealer.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €149,- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.transponder},- ex</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -249,7 +269,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   Sleutel in de {brand.name} laten liggen? Wij openen uw auto 100% schadevrij met professioneel gereedschap, zonder krassen of beschadigingen.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €149,- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.unlock},- ex</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>

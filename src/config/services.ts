@@ -10,6 +10,21 @@
  * One list, used by the index and the sitemap alike, so the two cannot
  * disagree about which posts are live.
  */
+/*
+ * Three posts came OUT of this set once Search Console was joined to it.
+ *
+ * They were redirected for being near-duplicates of a service page, which
+ * read correctly from the content alone. The ranking data says otherwise:
+ * each of the three outranks the page it was being folded into, by 12 to 26
+ * places, and the biggest carries 3,747 impressions at position 18.6 into a
+ * page sitting at 32.1. The redirect was handing a better-ranking URL to a
+ * worse-ranking one.
+ *
+ * They are also not duplicates on inspection: the posts answer "how do I do
+ * this myself", the service pages sell "we come and do it". Different intent,
+ * different searcher, and the informational query is the larger of the two.
+ * Each post links to its service page instead.
+ */
 export const REDIRECTED_BLOG_SLUGS = new Set([
   'auto-openen-zonder-sleutel-tips-hulp',
   'auto-openen-zonder-sleutel-schadevrij',
@@ -22,10 +37,7 @@ export const REDIRECTED_BLOG_SLUGS = new Set([
    * immediately redirects.
    */
   'autosleutel-bestellen-op-kenteken',
-  'autosleutel-batterij-vervangen-stappenplan',
-  'sleutel-in-auto-laten-liggen-oplossingen',
   'autosleutel-kwijt-wat-nu-stappenplan',
-  'auto-slotenmaker-ultieme-gids-snel-hulp',
 ]);
 
 export const BLOG_POSTS = [

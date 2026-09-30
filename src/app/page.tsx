@@ -24,7 +24,7 @@ import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bijmaken of Kwijt? 24/7 Service | Autosleutel24',
+    absolute: 'Autosleutel Bijmaken of Kwijt? Op Locatie | Autosleutel24',
   },
   description: `Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!`,
   alternates: {
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: SITE_CONFIG.domain,
-    title: 'Autosleutel Bijmaken of Kwijt? 24/7 Service | Autosleutel24',
+    title: 'Autosleutel Bijmaken of Kwijt? Op Locatie | Autosleutel24',
     description: 'Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel24 mobiele autosleutelspecialist' }],
   },

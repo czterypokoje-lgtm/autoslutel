@@ -6,9 +6,9 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: `Alle ${BRAND_COUNT} Automerken | Sleutelprogrammering | Autosleutel24`,
+    absolute: 'Autosleutel Bijmaken per Merk | BMW, VW, Mercedes & Meer',
   },
-  description: `Autosleutel programmering voor alle ${BRAND_COUNT} merken. BMW, Mercedes, VW, Audi, Toyota, Ford, Volvo, Renault, Peugeot, Tesla en meer. Mobiel, 24/7.`,
+  description: 'Autosleutel bijmaken voor elk merk: BMW, Volkswagen, Mercedes, Audi, Peugeot, Ford en meer. Wij programmeren op locatie, goedkoper dan de dealer. Bel nu!',
   alternates: { canonical: `${SITE_CONFIG.domain}/merken` },
 };
 

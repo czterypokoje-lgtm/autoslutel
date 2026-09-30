@@ -9,9 +9,9 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Alle Autosleutel Diensten 24/7 | Autosleutel24',
+    absolute: 'Autosleutel Diensten: Bijmaken, Kwijt, Openen | 24/7',
   },
-  description: 'Overzicht van al onze autosleutel diensten: bijmaken, programmeren, reparatie en beveiliging. Mobiele service aan huis.',
+  description: 'Alle autosleutel diensten op locatie: bijmaken, alle sleutels kwijt, transponder, smart key, auto openen en reparatie. Vaste prijs vooraf. Bel direct!',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten` },
 };
 

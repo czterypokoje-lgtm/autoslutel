@@ -637,7 +637,7 @@ export default async function DienstPage({ params }: { params: Promise<{ slug: s
                   </p>
                   <h3>Kosten Besparen t.o.v. de Dealer & 12 Maanden Garantie</h3>
                   <p>
-                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €149 tot €299. Bij "alle sleutels kwijt" betaalt u €299 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
+                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €{SITE_CONFIG.prices.transponder} tot €299. Bij "alle sleutels kwijt" betaalt u €299 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
                   </p>
                 </div>
 

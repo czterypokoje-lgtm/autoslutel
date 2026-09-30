@@ -269,7 +269,7 @@ export const DIENSTEN: Service[] = [
     priceFrom: `Vanaf €${SITE_CONFIG.prices.transponder}`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een autosleutel bijmaken kost bij Autosleutel24 vanaf €149 voor een transpondersleutel en vanaf €249 voor een smart key. Wij komen naar u toe en het werk duurt gemiddeld 30 tot 60 minuten. U hoeft niet naar de dealer en betaalt doorgaans tot 50% minder, met 12 maanden garantie op sleutel en programmering.',
+      'Een autosleutel bijmaken kost bij Autosleutel24 vanaf €125 voor een transpondersleutel en vanaf €249 voor een smart key. Wij komen naar u toe en het werk duurt gemiddeld 30 tot 60 minuten. U hoeft niet naar de dealer en betaalt doorgaans tot 50% minder, met 12 maanden garantie op sleutel en programmering.',
     steps: [
       'Geef uw merk, model en bouwjaar door via telefoon of WhatsApp',
       'Wij plannen een moment in dat u uitkomt op uw locatie',
@@ -278,7 +278,7 @@ export const DIENSTEN: Service[] = [
       'Volledige test van alle functies (deuren, kofferbak, motor starten)'
     ],
     faq: [
-      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een standaard transpondersleutel begint bij €149. Een klapsleutel met afstandsbediening kost gemiddeld €199 tot €349. Een Smart Key is beschikbaar vanaf €249. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
+      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een standaard transpondersleutel begint bij €125. Een klapsleutel met afstandsbediening kost gemiddeld €199 tot €349. Een Smart Key is beschikbaar vanaf €249. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
       { q: 'Krijg ik garantie op de nieuwe autosleutel?', a: 'Ja, u ontvangt 12 maanden volledige garantie op de programmering en de elektronische componenten van de sleutel.' },
       { q: 'Moet ik met de auto langskomen?', a: 'Nee. Onze specialist komt met een volledig uitgeruste mobiele werkplaats naar u toe in Utrecht of Amsterdam.' }
     ],
@@ -295,7 +295,7 @@ export const DIENSTEN: Service[] = [
     priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een transpondersleutel programmeren kost vanaf €149 en duurt 20 tot 40 minuten op locatie. De transponder is de chip in de sleutelkop die met de startonderbreker communiceert; zonder correcte programmering opent de auto wel, maar start hij niet. Wij lezen de startonderbreker via de OBD-poort uit en leren de chip in.',
+      'Een transpondersleutel programmeren kost vanaf €125 en duurt 20 tot 40 minuten op locatie. De transponder is de chip in de sleutelkop die met de startonderbreker communiceert; zonder correcte programmering opent de auto wel, maar start hij niet. Wij lezen de startonderbreker via de OBD-poort uit en leren de chip in.',
     steps: [
       'We lezen het startonderbreker-systeem uit met OBD-diagnosetools',
       'De juiste transponderchip (zoals ID48 of PCF7936) wordt geselecteerd',
@@ -367,7 +367,7 @@ export const DIENSTEN: Service[] = [
     priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een reservesleutel laten maken kost vanaf €149 en duurt 30 tot 60 minuten bij u op locatie. Zolang u nog één werkende sleutel heeft is dit de goedkoopste route. Bent u álle sleutels kwijt, dan is een All Keys Lost procedure nodig en liggen de kosten vanaf €299 — een tweede sleutel op tijd laten maken scheelt dus honderden euro\'s.',
+      'Een reservesleutel laten maken kost vanaf €125 en duurt 30 tot 60 minuten bij u op locatie. Zolang u nog één werkende sleutel heeft is dit de goedkoopste route. Bent u álle sleutels kwijt, dan is een All Keys Lost procedure nodig en liggen de kosten vanaf €299 — een tweede sleutel op tijd laten maken scheelt dus honderden euro\'s.',
     steps: [
       'U kiest of u een eenvoudige reservesleutel (zonder knoppen) of een afstandsbediening wilt',
       'We slijpen de mechanische sleutel op basis van uw huidige sleutel',
@@ -375,7 +375,7 @@ export const DIENSTEN: Service[] = [
       'De nieuwe sleutel wordt direct op werking getest'
     ],
     faq: [
-      { q: 'Kan ik ook een eenvoudige reservesleutel zonder knoppen krijgen?', a: 'Ja, dat is een uitstekende budgetoptie. Deze sleutel kan de deuren mechanisch openen en bevat de juiste transponder chip om de motor te starten. Dit kan al vanaf €149.' },
+      { q: 'Kan ik ook een eenvoudige reservesleutel zonder knoppen krijgen?', a: 'Ja, dat is een uitstekende budgetoptie. Deze sleutel kan de deuren mechanisch openen en bevat de juiste transponder chip om de motor te starten. Dit kan al vanaf €125.' },
       { q: 'Hoe lang duurt het maken van een reservesleutel?', a: 'Binnen 30 tot 60 minuten is uw nieuwe reservesleutel klaar en volledig geprogrammeerd.' }
     ],
     relatedSlugs: ['sleutel-bijmaken', 'transponder-programmeren', 'afstandsbediening-bijmaken', 'smart-key-programmeren']
@@ -403,7 +403,7 @@ export const DIENSTEN: Service[] = [
       { q: 'Kunnen jullie ook auto\'s openen die op "deadlock" staan?', a: 'Ja. Deadlock betekent dat de deurgrepen aan de binnenkant elektronisch zijn uitgeschakeld. Wij openen deze voertuigen via de mechanische slotcilinder met Lishi decoders, waardoor de auto denkt dat de originele sleutel wordt gebruikt.' },
       { q: 'Hoe snel bent u bij mij bij een noodgeval?', a: 'Bij noodgevallen (zoals een kind of dier in de auto) geven wij absolute prioriteit en zijn we meestal binnen 15 tot 20 minuten op locatie.' },
       { q: 'Wat is het verschil met een gewone opening?', a: 'Alleen de prioriteit. Bij een noodopening rijdt de dichtstbijzijnde monteur direct naar u toe in plaats van op volgorde van planning; de techniek en het tarief voor de opening zijn hetzelfde.' },
-      { q: 'Komen jullie ook \'s nachts en in het weekend?', a: 'Ja, wij zijn 24 uur per dag en zeven dagen per week bereikbaar voor spoed. Buiten kantoortijden geldt wel een toeslag; die hoort u vooraf aan de telefoon.' },
+      { q: 'Komen jullie ook \'s nachts en in het weekend?', a: 'Ja, wij zijn 24 uur per dag en zeven dagen per week bereikbaar voor spoed, ook \'s nachts, in het weekend en op feestdagen. U hoort de prijs vooraf aan de telefoon en die geldt ongeacht het tijdstip.' },
       { q: 'Komen jullie ook naar een parkeergarage of de snelweg?', a: 'Ja. Wij werken dagelijks in parkeergarages en rijden ook naar auto\'s die langs de weg zijn gestrand. Geef bij het bellen de verdieping of het hectometerpaal door.' }
     ],
     relatedSlugs: ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'autosleutel-kwijt']

@@ -158,23 +158,8 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/blog/autosleutel-batterij-vervangen-stappenplan",
-        destination: "/diensten/batterij-vervangen",
-        permanent: true,
-      },
-      {
-        source: "/blog/sleutel-in-auto-laten-liggen-oplossingen",
-        destination: "/diensten/sleutel-in-auto",
-        permanent: true,
-      },
-      {
         source: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
         destination: "/autosleutel-kwijt",
-        permanent: true,
-      },
-      {
-        source: "/blog/auto-slotenmaker-ultieme-gids-snel-hulp",
-        destination: "/diensten/auto-slotenmaker",
         permanent: true,
       },
       {

@@ -267,7 +267,7 @@ export default function AutoSlotenmakerPage() {
                         <tr>
                           <td>Nieuwe reservesleutel maken</td>
                           <td>Inclusief programmeren transponder</td>
-                          <td><strong>€149 - €299</strong></td>
+                          <td><strong>€{SITE_CONFIG.prices.transponder} - €299</strong></td>
                           <td>20-30 min</td>
                         </tr>
                         <tr>

@@ -25,8 +25,8 @@ type PriceItem =
 
 const priceRows: PriceItem[] = [
   { category: 'Autosleutel Bijmaken (Reserve)' },
-  { service: 'Standaard transpondersleutel', from: '€ 149', to: '€ 199', note: 'Meeste oudere modellen' },
-  { service: 'Klap-/flipsleutel met afstandsbediening', from: '€ 199', to: '€ 249', note: 'VW, Audi, Seat, Skoda, Ford' },
+  { service: 'Standaard transpondersleutel', from: `€ ${SITE_CONFIG.prices.transponder}`, to: '€ 199', note: 'Meeste oudere modellen' },
+  { service: 'Klap-/flipsleutel met afstandsbediening', from: `€ ${SITE_CONFIG.prices.klapsleutel}`, to: '€ 249', note: 'VW, Audi, Seat, Skoda, Ford' },
   { service: 'Smart key / Keyless entry', from: '€ 249', to: '€ 349', note: 'BMW, Mercedes, Toyota, Mazda' },
   { service: 'Proximity key met start-stop', from: '€ 249', to: '€ 349', note: 'Premium merken' },
   
@@ -54,13 +54,17 @@ const priceRows: PriceItem[] = [
   { service: 'Immobilizer reset', from: '€ 149', to: '€ 299', note: 'Software herstel' }
 ];
 
-const surcharges = [
-  { time: 'Ma t/m Vr  08:00 – 16:00', label: 'Standaard tarief', color: 'var(--color-success)' },
-  { time: 'Ma t/m Vr  16:00 – 22:00', label: '+15% avondtoeslag', color: 'var(--orange-500)' },
-  { time: 'Ma t/m Vr  22:00 – 08:00', label: '+25% nachttoeslag', color: 'var(--color-danger)' },
-  { time: 'Zaterdag  08:00 – 22:00',  label: '+15% weekendtoeslag', color: 'var(--orange-500)' },
-  { time: 'Zondag & feestdagen',       label: '+25% toeslag',       color: 'var(--color-danger)' },
-];
+/*
+ * The out-of-hours surcharge table is gone.
+ *
+ * It advertised +15% evenings and Saturdays and +25% nights and Sundays --
+ * charges nothing in the codebase applies. SERVICE_SURCHARGE in
+ * src/lib/services.ts is about how the key reaches the customer (post, send
+ * in, technician out), not what time it is; no quote, invoice or wizard path
+ * reads the clock. So the table was a price the site promised to charge and
+ * the system never did, on the page a customer checks before calling at
+ * 23:00.
+ */
 
 /**
  * '€ 149' -> 149.
@@ -205,30 +209,6 @@ export default function PrijzenPage() {
           </table>
         </div>
         <p className={styles.tableNote}>* Prijzen zijn exclusief btw en gelden voor diensten binnen Nederland. Exacte prijs na telefonische diagnose.</p>
-
-        {/* Surcharge table */}
-        <h2 className={styles.tableTitle} style={{ marginTop: '3rem' }}>Toeslagen buiten kantoortijden</h2>
-        <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
-          Wij zijn 24/7 beschikbaar. Buiten de standaard werktijden geldt een toeslag op het basistarief.
-        </p>
-        <div className={styles.tableWrap}>
-          <table className={styles.priceTable}>
-            <thead>
-              <tr>
-                <th>Tijdstip</th>
-                <th>Toeslag</th>
-              </tr>
-            </thead>
-            <tbody>
-              {surcharges.map((s, i) => (
-                <tr key={i}>
-                  <td style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.88rem' }}>{s.time}</td>
-                  <td style={{ fontWeight: 700, color: s.color }}>{s.label}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
 
         {/* Trust Gallery: Onze Mobiele Werkplaats & Apparatuur */}
         <div className={styles.trustSection}>

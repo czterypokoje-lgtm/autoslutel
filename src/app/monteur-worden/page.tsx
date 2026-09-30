@@ -6,6 +6,12 @@ import B2BForm from '@/components/B2BForm/B2BForm';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
+  /*
+   * Recruitment, not a service. It was in the sitemap alongside the money
+   * pages, competing for crawl budget it cannot repay: 0 impressions in
+   * three months. Partners find it from a link or a conversation.
+   */
+  robots: { index: false, follow: true },
   // 75 characters once the template appended the brand — which it also said
   // twice. Base is now 43, landing at 59.
   title: 'Autosleutelspecialist Worden bij Ons Netwerk',

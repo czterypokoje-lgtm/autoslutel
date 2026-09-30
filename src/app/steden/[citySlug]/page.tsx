@@ -140,13 +140,26 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
      * Google was taking it from. This is not a guess about intent; it is the
      * word Google and the searchers both chose over ours.
      */
+    /*
+     * "laten maken" is in the title and the description because Search
+     * Console says it is the biggest keyword family on the site: 17,314
+     * impressions across 212 queries, average position 47. The old wording
+     * ("kopiëren", "Sleutelmaker") carried none of it.
+     *
+     * The price stays; the arrival time does NOT come back. The previous
+     * generation of this copy promised "binnen 30-60 min" on all 62 cities
+     * including Maastricht, about 210 km from the Bussum base. It was
+     * removed for being false and the fix is not to retype it in a meta
+     * description, which is the most-read sentence on the page.
+     */
     title: {
       absolute:
-        city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
+        city.customMetaTitle ||
+        `Autosleutel Bijmaken ${city.city} | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`,
     },
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Mobiele specialist ter plaatse, vanaf €${SITE_CONFIG.prices.transponder}. Alle merken, 12 maanden garantie.`
+        `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}. Bel nu!`
     ),
     alternates: {
       canonical: pageUrl,
@@ -158,8 +171,8 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     openGraph: {
       type: 'website',
       url: pageUrl,
-      title: city.customMetaTitle || `Autosleutel Bijmaken & Sleutelmaker ${city.city} | 24/7`,
-      description: `Autosleutel kwijt, bijmaken of kopiëren in ${city.city}? Onze monteur komt naar u toe. Alle automerken. Bel: ${SITE_CONFIG.phone}`,
+      title: city.customMetaTitle || `Autosleutel Bijmaken ${city.city} | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`,
+      description: `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
     other: {
@@ -570,7 +583,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h3>Autosleutel Bijmaken in {city.city}</h3>
                 <p>Heeft u een extra autosleutel nodig? Wij maken een nieuwe sleutel op locatie, vaak de helft goedkoper dan de dealer.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €149,- ex</span>
+                  <span className={styles.serviceCardPrice}>Vanaf €{SITE_CONFIG.prices.transponder},- ex</span>
                   <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -594,7 +607,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h3>Autodeur Openen in {city.city}</h3>
                 <p>Sleutel in de auto laten liggen? Wij openen uw auto 100% schadevrij met speciaal gereedschap, zonder krassen.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €149,- ex</span>
+                  <span className={styles.serviceCardPrice}>Vanaf €{SITE_CONFIG.prices.unlock},- ex</span>
                   <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
