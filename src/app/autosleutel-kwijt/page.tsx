@@ -2,7 +2,13 @@ import type { Metadata } from 'next';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import { BRANDS } from '@/config/brands';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
-import VideoEmbed, { videoSchema } from '@/components/VideoEmbed/VideoEmbed';
+import { videoSchema } from '@/components/VideoEmbed/VideoEmbed';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import Image from 'next/image';
+import Link from 'next/link';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { CITIES } from '@/config/cities';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import SplitHero from '@/components/SplitHero/SplitHero';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
@@ -103,7 +109,6 @@ const howToSchema = {
 
 import styles from './DeadboltTheme.module.css';
 import { Bebas_Neue } from 'next/font/google';
-import Image from 'next/image';
 
 const anton = Bebas_Neue({ weight: '400', subsets: ['latin'] });
 
@@ -191,6 +196,66 @@ export default function AutosleutelKwijt() {
 
       <BrandsMarquee />
 
+      {/*
+        * The trust cards and the three steps, back where the AKL service page
+        * had them. This page lost both when it was given a theme of its own;
+        * they are the blocks a visitor reads between "can you help" and
+        * "what does it cost".
+        *
+        * FeatureCards carries the video, which is why the standalone video
+        * section further down is gone -- otherwise the page would show the
+        * same player twice. The VideoObject markup stays in the head: this is
+        * still the watch page.
+        */}
+      <FeatureCards
+        title="Specialist in Autosleutel Kwijt"
+        subtitle={<><span style={{ color: '#f97316' }}>AutoSleutel24</span> lost het snel voor u op, direct op locatie.</>}
+        features={[
+          {
+            id: 'kwijt-1',
+            icon: <Image src="/images/icon_van.webp" alt="Mobiele service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+            title: 'Geen sleutel meer? Direct hulp',
+            description: 'Wij komen naar uw auto toe en maken de nieuwe sleutel ter plaatse.',
+            linkText: 'Meer over mobiele service',
+            linkUrl: '/diensten',
+          },
+          {
+            id: 'kwijt-2',
+            icon: <Image src="/images/icon_map.webp" alt="Lokale monteur" width={90} height={90} style={{ borderRadius: '12px' }} />,
+            title: 'Auto op slot? Schadevrij openen',
+            description: `Binnen ${SITE_CONFIG.responseTime} minuten ter plaatse. Onze lokale monteur is altijd in de buurt.`,
+            linkText: 'Bekijk waar wij werken',
+            linkUrl: '/steden',
+          },
+          {
+            id: 'kwijt-3',
+            icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+            title: 'Vaste prijs vooraf',
+            description: 'U hoort de prijs telefonisch voordat wij vertrekken. Zegt u nee, dan betaalt u niets.',
+            linkText: 'Bekijk onze tarieven',
+            linkUrl: '/prijzen',
+          },
+          {
+            id: 'kwijt-4',
+            icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+            title: '12 maanden garantie',
+            description: 'Standaard 12 maanden volledige garantie op elke sleutel die wij leveren.',
+            linkText: 'Lees onze voorwaarden',
+            linkUrl: '/algemene-voorwaarden',
+          },
+          {
+            id: 'kwijt-5',
+            icon: <Image src="/images/icon_insurance.webp" alt="24/7 spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+            title: '24/7 spoedhulp, bel nu',
+            description: 'Dag en nacht bereikbaar, ook in het weekend. U bent volledig verzekerd.',
+            linkText: 'Bel direct',
+            linkUrl: `tel:${SITE_CONFIG.phoneTel}`,
+          },
+        ]}
+      />
+
+      <HowItWorks variant="akl" />
+
       {/* STATS BAR */}
       <section className={styles.statsBar}>
         <div className={styles.container}>
@@ -255,16 +320,6 @@ export default function AutosleutelKwijt() {
         </div>
       </section>
 
-      {/* VIDEO — this is the watch page, so the markup lives here */}
-      <section className={styles.videoSection}>
-        <div className={styles.container}>
-          <VideoEmbed
-            heading="ZO WERKT HET — IN 40 SECONDEN"
-            headingClassName={`${styles.sectionTitle} ${anton.className}`}
-          />
-        </div>
-      </section>
-
       {/* TRANSPONDER EN SMART KEY */}
       <section className={styles.transponderSection}>
         <div className={styles.container}>
@@ -317,6 +372,96 @@ export default function AutosleutelKwijt() {
         </div>
       </section>
 
+      {/* ── WANNEER + WAT KOST ─────────────────────────────────────────
+          The two prose sections the AKL service page carried, which this
+          page never had. Both are written for the reader who has already
+          decided we can help and is now checking whether their situation is
+          one of ours, and what it will cost.
+
+          Every price here reads from site.config. The EUR 190 that used to
+          sit in this page's FAQ while the wizard quoted EUR 299 is exactly
+          what happens when a number is typed into prose instead. */}
+      <section className={styles.splitSection}>
+        <div className={styles.container} style={{ maxWidth: 900 }}>
+          <h2 className={`${styles.sectionTitle} ${anton.className}`}>
+            Wanneer heeft u ons nodig bij een autosleutel kwijt?
+          </h2>
+          <p className={styles.transponderText}>
+            Problemen met autovergrendeling of autosleutels doen zich altijd op een ongelegen
+            moment voor. Bij {SITE_CONFIG.fullName} begrijpen wij hoe frustrerend en stressvol
+            dat is. Onze gespecialiseerde monteurs staan dag en nacht voor u klaar en lossen
+            onderstaande situaties dagelijks schadevrij op:
+          </p>
+          <ul className={styles.list} style={{ marginTop: '1.5rem' }}>
+            <li className={styles.listItem}>
+              <span className={styles.redArrow}>→</span>
+              <span><strong>U heeft nog één werkende sleutel over.</strong> Voorkom acute stress en
+              hoge wegsleepkosten door tijdig een reservesleutel met startonderbreker te laten
+              bijmaken — vanaf €{SITE_CONFIG.prices.transponder}.</span>
+            </li>
+            <li className={styles.listItem}>
+              <span className={styles.redArrow}>→</span>
+              <span><strong>Autosleutel kwijtgeraakt of gestolen.</strong> Wij wissen de verloren of
+              gestolen sleutel uit de boordcomputer (ECU), zodat er met die sleutel niet meer
+              gestart kan worden en uw auto beveiligd blijft.</span>
+            </li>
+            <li className={styles.listItem}>
+              <span className={styles.redArrow}>→</span>
+              <span><strong>Behuizing versleten of knoppen ingedrukt.</strong> Het sleutelblad is krom
+              of de rubberen drukknoppen zijn kapot, waardoor vocht bij de printplaat kan komen.</span>
+            </li>
+            <li className={styles.listItem}>
+              <span className={styles.redArrow}>→</span>
+              <span><strong>Transponder of chip wordt niet meer herkend.</strong> De startmotor draait
+              wel, maar de motor slaat niet aan omdat het signaal naar de startonderbreker niet
+              doorkomt.</span>
+            </li>
+            <li className={styles.listItem}>
+              <span className={styles.redArrow}>→</span>
+              <span><strong>Extra sleutel nodig voor partner of gezinslid.</strong> Direct ter plaatse
+              ingeleerd en getest op alle portieren en het contactslot.</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section className={styles.transponderSection}>
+        <div className={styles.container} style={{ maxWidth: 900 }}>
+          <h2 className={`${styles.sectionTitle} ${anton.className}`}>
+            Wat kost een autosleutel kwijt? — transparante prijzen
+          </h2>
+          <p className={styles.transponderText}>
+            Wij werken met heldere tarieven zonder verborgen kosten achteraf. Omdat onze monteurs
+            rechtstreeks vanuit een volledig uitgeruste servicebus werken, bespaart u tot ongeveer
+            de helft ten opzichte van de merkdealer — en u betaalt geen wegsleepkosten, omdat uw
+            auto niet van zijn plek hoeft.
+          </p>
+          <div className={styles.checkGrid} style={{ marginTop: '2rem' }}>
+            <div className={styles.checkItem}>
+              <span className={styles.checkIcon}>✓</span>
+              Geen sleutel meer over (all keys lost) — vanaf €{SITE_CONFIG.prices.allKeysLost}
+            </div>
+            <div className={styles.checkItem}>
+              <span className={styles.checkIcon}>✓</span>
+              Reservesleutel bijmaken met transponder — vanaf €{SITE_CONFIG.prices.transponder}
+            </div>
+            <div className={styles.checkItem}>
+              <span className={styles.checkIcon}>✓</span>
+              Smart key / keyless programmeren — vanaf €{SITE_CONFIG.prices.smartKey}
+            </div>
+            <div className={styles.checkItem}>
+              <span className={styles.checkIcon}>✓</span>
+              Vaste prijs telefonisch bevestigd voordat wij vertrekken
+            </div>
+          </div>
+          <p className={styles.priceCardText} style={{ marginTop: '1.5rem' }}>
+            Genoemde bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer} en afhankelijk van merk,
+            model en bouwjaar. U ontvangt een gespecificeerde factuur die u bij een WA+ of
+            All Risk polis bij uw verzekeraar kunt indienen.
+          </p>
+        </div>
+      </section>
+
       {/* DEKKING PER MERK */}
       <section className={styles.brandsSection}>
         <div className={styles.container}>
@@ -357,6 +502,60 @@ export default function AutosleutelKwijt() {
           <p className={styles.brandsDisclaimer} style={{ color: "#64748b" }}>
             Alle merklogo's zijn eigendom van de respectievelijke fabrikanten. Autosleutel24 is een onafhankelijk technici-netwerk en geen erkende dealer of licentiehouder van deze merken.
           </p>
+        </div>
+      </section>
+
+      {/* ── INTERNAL LINKING NETWORK ──────────────────────────────────
+          The same hub block every /diensten/* page carries, which this page
+          did not. It is how a crawler gets from the money page to the 16
+          services, the brand pages and the eight biggest city pages -- and
+          how a reader whose situation is slightly different finds the right
+          page instead of bouncing.
+
+          Retired slugs are filtered out, so nothing here is a redirect. */}
+      <section style={{ padding: '4rem 0', background: '#f8fafc' }}>
+        <div className={styles.container}>
+          <div className="seo-hub-box">
+            <div className="seo-hub-grid">
+              <div>
+                <div className="seo-hub-title">Andere diensten</div>
+                <div className="seo-hub-col">
+                  {DIENSTEN.filter((d) => !REDIRECTED_SERVICE_SLUGS.has(d.slug)).map((d) => (
+                    <Link key={d.slug} href={`/diensten/${d.slug}`} className="seo-hub-link">
+                      {`${d.title} →`}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="seo-hub-title">Automerken voor autosleutel kwijt</div>
+                <div className="seo-hub-col">
+                  {BRANDS.filter((b) => b.priority === 'P1').map((b) => (
+                    <Link
+                      key={b.slug}
+                      href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken`}
+                      className="seo-hub-link"
+                    >
+                      {`${b.name} autosleutel bijmaken →`}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="seo-hub-title">Autosleutel kwijt in de regio</div>
+                <div className="seo-hub-col">
+                  <Link href="/steden" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
+                    Bekijk alle steden →
+                  </Link>
+                  {CITIES.filter((c) => c.priority === 'P1').slice(0, 8).map((c) => (
+                    <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
+                      {`Autosleutel kwijt ${c.city} →`}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

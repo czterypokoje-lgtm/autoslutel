@@ -18,13 +18,6 @@ import { BRAND_COUNT } from '@/config/brands';
  * Batterij Vervangen and Contactslot Vervangen are both repairs, so they sit
  * under Autosleutels Repareren, which fills that column and empties no other.
  *
- * /diensten/sleutel-bijmaken is deliberately NOT here. It and the
- * Autosleutel Bijmaken heading above it are two pages for one query --
- * 2,340 and 3,260 words, both titled Autosleutel Bijmaken -- and listing
- * both side by side in the menu would advertise the duplication rather
- * than fix it. Which of the two survives is a call to make on the pages,
- * not in the navigation.
- *
  * The Autosleutel Kwijt column also listed "Alle Sleutels Kwijt (AKL)" under
  * itself. That was one page linked twice: the AKL service 301s to
  * /autosleutel-kwijt now, so the child and its own heading pointed at the

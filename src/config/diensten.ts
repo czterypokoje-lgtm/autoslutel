@@ -66,7 +66,20 @@ export type Service = {
  * related-services list -- filters on this set, so nothing offers a URL that
  * immediately redirects.
  */
-export const REDIRECTED_SERVICE_SLUGS = new Set(['alle-sleutels-kwijt-auto']);
+export const REDIRECTED_SERVICE_SLUGS = new Set([
+  'alle-sleutels-kwijt-auto',
+  /*
+   * sleutel-bijmaken folded into /diensten/autosleutel-bijmaken.
+   *
+   * Same story as the one above, on the other head term. Two pages for
+   * "autosleutel bijmaken" -- 3,260 and 2,340 words -- with the same
+   * headings in the same order, both titled Autosleutel Bijmaken. The
+   * standalone page is the keeper: its slug carries the query verbatim and
+   * its H2 already owns "Nieuwe Autosleutel Laten Maken", which was the only
+   * page on the site using that phrasing at all.
+   */
+  'sleutel-bijmaken',
+]);
 
 export const DIENSTEN: Service[] = [
   // ── 1. AUTODEUR OPENEN ─────────────────────────────────────

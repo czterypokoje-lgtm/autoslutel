@@ -213,6 +213,18 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       /*
+       * sleutel-bijmaken → /diensten/autosleutel-bijmaken.
+       *
+       * Two pages for "autosleutel bijmaken", same headings in the same
+       * order. The destination's slug carries the query verbatim.
+       */
+      {
+        source: '/diensten/sleutel-bijmaken',
+        destination: '/diensten/autosleutel-bijmaken',
+        permanent: true,
+      },
+
+      /*
        * Alle sleutels kwijt → /autosleutel-kwijt.
        *
        * Not a rename: two pages were competing for one intent. Somebody

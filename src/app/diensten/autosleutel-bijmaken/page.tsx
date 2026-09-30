@@ -18,9 +18,9 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bijmaken vanaf €149 | Autosleutel24',
+    absolute: 'Autosleutel Bijmaken of Namaken vanaf €149 | 24/7',
   },
-  description: 'Autosleutel bijmaken of kopiëren nodig? 24/7 op locatie, vaste prijs vanaf €149 — goedkoper dan de dealer. Binnen 30 min ter plaatse. Bel of WhatsApp nu!',
+  description: 'Autosleutel bijmaken, namaken of een reservesleutel laten maken? 24/7 op locatie, vaste prijs vanaf €149 — goedkoper dan de dealer. Binnen 30 min ter plaatse.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken` },
   openGraph: {
     title: 'Autosleutel Bijmaken & Kopiëren vanaf €149 | Autosleutel24',
@@ -183,7 +183,7 @@ return (
 
         {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
         <FeatureCards 
-          title="Nieuwe Autosleutel Laten Maken."
+          title="Autosleutel Laten Maken of Namaken."
           subtitle={<>Goedkoper en sneller dan de autodealer, <span style={{ color: '#f97316' }}>direct op locatie.</span></>}
           features={[
               {
