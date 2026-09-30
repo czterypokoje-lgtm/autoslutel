@@ -7,9 +7,15 @@ import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Prijzen Autosleutel Bijmaken & Programmeren | Autosleutel24',
+    /*
+     * 10,607 impressions at average position 69 and 14 clicks -- the second
+     * biggest leak on the site after /diensten/autosleutel-bijmaken. The
+     * "kosten" and "prijs" query families are 5,947 impressions between them
+     * and the old title led with "Prijzen", which is not the word they use.
+     */
+    absolute: `Autosleutel Bijmaken Kosten | Vaste Prijs vanaf €${SITE_CONFIG.prices.transponder}`,
   },
-  description: 'Indicatieve prijzen voor autosleutel bijmaken en programmeren. Exacte prijs altijd vooraf afgesproken. Bespaar 30–50% vs dealer. Bel voor offerte.',
+  description: `Wat kost een autosleutel bijmaken? Vaste prijzen per type: transponder vanaf €${SITE_CONFIG.prices.transponder}, klapsleutel en smart key. Geen verrassingen achteraf.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/prijzen`,
     languages: {
