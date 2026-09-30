@@ -30,11 +30,20 @@ const schema = {
     "name": "Autosleutel24",
     "telephone": SITE_CONFIG.phoneTel,
     "url": SITE_CONFIG.domain,
+    /*
+     * Bussum, from site.config, not Utrecht.
+     *
+     * This node said Utrecht while the other 139 pages carrying an address
+     * said Bussum -- one business claiming two head offices, which is exactly
+     * the contradiction the city pages were just cleaned of. Bussum is what
+     * the Google Business Profile holds, and a NAP mismatch works against
+     * local ranking rather than for it.
+     */
     "address": {
       "@type": "PostalAddress",
-      "addressLocality": "Utrecht",
-      "addressRegion": "Utrecht",
-      "addressCountry": "NL"
+      "addressLocality": SITE_CONFIG.address.city,
+      "addressRegion": SITE_CONFIG.address.region,
+      "addressCountry": SITE_CONFIG.address.country
     }
   },
   "areaServed": [
