@@ -51,6 +51,7 @@ const DienstenStructure = [
       { href: '/diensten/reservesleutel-maken', label: 'Reservesleutel Maken' },
       { href: '/autosleutel-bestellen-op-kenteken', label: 'Bestellen op Kenteken' },
       { href: '/autosleutel-kopieren', label: 'Autosleutel Kopiëren' },
+      { href: '/autosleutel-bijmaken-in-de-buurt', label: 'Bijmaken in de Buurt' },
     ]
   },
   {
