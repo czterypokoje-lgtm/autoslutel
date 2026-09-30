@@ -1,49 +1,10 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
 import { SITE_CONFIG } from '@/config/site.config';
+import { VIDEO } from './video';
 import styles from './VideoEmbed.module.css';
-
-/*
- * The explainer video, and the one place its facts live.
- *
- * uploadDate and duration are read off YouTube rather than guessed; they are
- * what a VideoObject needs to be eligible for a video result. thumbnailUrl
- * points at YouTube's own still so it cannot drift from the video.
- */
-export const VIDEO = {
-  id: 'LTlKCZnjzH4',
-  name: 'Autosleutel Kwijt? Zo Regel Je Snel een Nieuwe Autosleutel',
-  uploadDate: '2026-09-29',
-  duration: 'PT40S',
-  description:
-    'Uw autosleutel kwijt? In veertig seconden ziet u hoe wij op locatie een nieuwe sleutel maken en programmeren, wat het kost en hoe snel wij er zijn.',
-} as const;
-
-/*
- * VideoObject belongs on ONE page, and that page is /autosleutel-kwijt.
- *
- * Google indexes a video from its "watch page" — the page whose primary
- * purpose is that video — and explicitly lists a blog post or product page
- * where the video merely complements the text as NOT a watch page. Declaring
- * VideoObject on all 96 pages that embed this would not produce 96 video
- * results; it would produce one, plus 95 "Video isn't on a watch page" rows
- * in the video indexing report, burying any real problem there.
- *
- * The embed still earns its keep on those 95: Google states a non-watch page
- * carrying the video stays eligible for a text result with a video badge, and
- * that multiple embeds of one video do not create a duplicate-content problem.
- * So the video travels everywhere and the markup stays home.
- */
-export const videoSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'VideoObject',
-  name: VIDEO.name,
-  description: VIDEO.description,
-  thumbnailUrl: [`https://i.ytimg.com/vi/${VIDEO.id}/maxresdefault.jpg`],
-  uploadDate: VIDEO.uploadDate,
-  duration: VIDEO.duration,
-  embedUrl: `https://www.youtube.com/embed/${VIDEO.id}`,
-  contentUrl: `https://www.youtube.com/watch?v=${VIDEO.id}`,
-  publisher: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
-};
 
 export default function VideoEmbed({
   heading,
@@ -55,6 +16,8 @@ export default function VideoEmbed({
   /** The line under the player. Pass false where a call to action already sits next to it. */
   caption?: boolean;
 }) {
+  const [playing, setPlaying] = useState(false);
+
   return (
     <>
       {heading ? (
@@ -62,22 +25,58 @@ export default function VideoEmbed({
       ) : null}
 
       <div className={styles.frame}>
-        {/*
-          * youtube-nocookie sets nothing until the viewer presses play, which
-          * keeps the embed out of the consent banner's way.
-          *
-          * loading="lazy" matters more than it looks: the YouTube player is
-          * roughly 700KB of JavaScript, and every one of these sections sits
-          * below the fold. Someone who calls from the hero never pays for it.
-          */}
-        <iframe
-          src={`https://www.youtube-nocookie.com/embed/${VIDEO.id}?rel=0&modestbranding=1`}
-          title={VIDEO.name}
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-        />
+        {playing ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${VIDEO.id}?rel=0&modestbranding=1&autoplay=1`}
+            title={VIDEO.name}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        ) : (
+          /*
+           * A poster and a play button, not the player.
+           *
+           * The iframe used to render on load behind loading="lazy", which
+           * produced the two things it was least supposed to: a black
+           * rectangle while roughly 700KB of YouTube JavaScript arrived, and
+           * a late arrival at that, because lazy defers until the frame is
+           * near the viewport — and this block now sits one screen below the
+           * hero, which is exactly where "near" starts to fight you.
+           *
+           * The poster is one optimised image from our own origin, marked
+           * priority so it is fetched with the page rather than after it. The
+           * player is built only when somebody presses play, and then with
+           * autoplay so the press is the only one needed.
+           *
+           * youtube-nocookie still sets nothing until that press, which keeps
+           * the embed out of the consent banner's way.
+           */
+          <button
+            type="button"
+            className={styles.poster}
+            onClick={() => setPlaying(true)}
+            aria-label={`Video afspelen: ${VIDEO.name}`}
+          >
+            <Image
+              src={VIDEO.poster}
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 960px) 100vw, 960px"
+              style={{ objectFit: 'cover' }}
+            />
+            <span className={styles.play} aria-hidden="true">
+              <svg viewBox="0 0 68 48" width="68" height="48" focusable="false">
+                <path
+                  className={styles.playBg}
+                  d="M66.52 7.74a8.57 8.57 0 0 0-6-6C55.2.24 34 .24 34 .24s-21.2 0-26.52 1.5a8.57 8.57 0 0 0-6 6A89.3 89.3 0 0 0 0 24a89.3 89.3 0 0 0 1.48 16.26 8.57 8.57 0 0 0 6 6C12.8 47.76 34 47.76 34 47.76s21.2 0 26.52-1.5a8.57 8.57 0 0 0 6-6A89.3 89.3 0 0 0 68 24a89.3 89.3 0 0 0-1.48-16.26z"
+                />
+                <path d="M45 24 27 14v20" fill="#fff" />
+              </svg>
+            </span>
+          </button>
+        )}
       </div>
 
       {caption ? (

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
 import ServiceLayout from '@/components/ServiceLayout/ServiceLayout';
-import { videoSchema } from '@/components/VideoEmbed/VideoEmbed';
+import { videoSchema } from '@/components/VideoEmbed/video';
 
 /*
  * This page IS the AKL service page, at the URL the query wants.
