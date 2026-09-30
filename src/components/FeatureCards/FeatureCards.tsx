@@ -18,9 +18,15 @@ type FeatureCardsProps = {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   features: FeatureCardProps[];
+  /**
+   * Heading level of each card's title. Defaults to h3, which is right under
+   * a section title. Pass 'h2' where the cards follow the H1 with no H2 above
+   * them, so the outline does not jump from H1 to H3.
+   */
+  cardTitleAs?: 'h2' | 'h3';
 };
 
-export default function FeatureCards({ title, subtitle, features }: FeatureCardsProps) {
+export default function FeatureCards({ title, subtitle, features, cardTitleAs: CardTitle = 'h3' }: FeatureCardsProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -64,7 +70,7 @@ export default function FeatureCards({ title, subtitle, features }: FeatureCards
               <div className={styles.iconWrapper}>
                 {feature.icon}
               </div>
-              <h3 className={styles.title}>{feature.title}</h3>
+              <CardTitle className={styles.title}>{feature.title}</CardTitle>
               <p className={styles.description}>{feature.description}</p>
               {feature.linkText && feature.linkUrl && (
                 <div className={styles.linkWrapper}>

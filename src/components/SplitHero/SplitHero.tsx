@@ -67,6 +67,8 @@ export default function SplitHero({
             {titleTop}
             {titleAccent && (
               <>
+                {/* A space before the break: without it the H1 reads "Gestolen?Blokkeer" to anything that strips tags. */}
+                {' '}
                 <br />
                 <span className={styles.accent}>{titleAccent}</span>
               </>

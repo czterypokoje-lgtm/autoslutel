@@ -286,7 +286,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {/* ── 1. Licence plate ── */}
         {step === 1 && (
           <div className={stepClass} key="s1">
-            <h3 className={styles.q}>Wat is uw kenteken?</h3>
+            <p className={styles.q}>Wat is uw kenteken?</p>
             <p className={styles.hint}>
               Wij halen merk, model en bouwjaar automatisch op bij de RDW — u hoeft
               verder niets op te zoeken.
@@ -362,7 +362,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {/* ── 2. How does the car start ── */}
         {step === 2 && (
           <div className={stepClass} key="s2">
-            <h3 className={styles.q}>Hoe start u uw auto?</h3>
+            <p className={styles.q}>Hoe start u uw auto?</p>
             <p className={styles.hint}>
               Hiermee weten wij welk type sleutel u nodig heeft.
             </p>
@@ -400,7 +400,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {/* ── 3. Remote buttons ── */}
         {step === 3 && (
           <div className={stepClass} key="s3">
-            <h3 className={styles.q}>Zitten er knoppen op uw sleutel?</h3>
+            <p className={styles.q}>Zitten er knoppen op uw sleutel?</p>
             <p className={styles.hint}>
               Bedoeld zijn de knoppen voor openen en sluiten op afstand.
             </p>
@@ -439,7 +439,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {/* ── 4. Werkende sleutel ── */}
         {step === 4 && (
           <div className={stepClass} key="s4">
-            <h3 className={styles.q}>Heeft u nog een werkende sleutel?</h3>
+            <p className={styles.q}>Heeft u nog een werkende sleutel?</p>
             <p className={styles.hint}>
               Als u alle sleutels kwijt bent, moeten wij de auto openen zonder schade en een nieuwe sleutel vanaf nul inleren.
             </p>
@@ -477,7 +477,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {/* ── 5. Contact ── */}
         {step === 5 && (
           <form className={stepClass} key="s5" onSubmit={submit}>
-            <h3 className={styles.q}>Waar mogen wij naartoe komen?</h3>
+            <p className={styles.q}>Waar mogen wij naartoe komen?</p>
             <p className={styles.hint}>
               U krijgt direct de exacte prijs en aankomsttijd via WhatsApp.
             </p>
