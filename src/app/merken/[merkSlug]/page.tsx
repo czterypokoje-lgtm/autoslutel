@@ -19,6 +19,7 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import styles from './page.module.css';
+import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 
 export async function generateStaticParams() {
   return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
@@ -178,6 +179,14 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" initialBrand={brand.name} />
             </div>
           </div>
+        </section>
+
+        {/* Video. Brand pages carry no FeatureCards, so the embed that every
+            other template inherits from that component is placed by hand here,
+            in the same slot: directly under the hero. No VideoObject -- the
+            watch page is /autosleutel-kwijt. */}
+        <section style={{ padding: '3.5rem 0', background: '#fff' }}>
+          <VideoEmbed heading="Zo werkt het — in 40 seconden" />
         </section>
 
         {/* ── HOW IT WORKS ── */}

@@ -153,6 +153,11 @@ export default function PrijzenPage() {
 
       <div className="container" style={{ padding: '3rem 2rem', maxWidth: 1000, margin: '0 auto' }}>
 
+        {/* Video — no VideoObject here; the watch page is /autosleutel-kwijt */}
+        <section style={{ padding: '3.5rem 0' }}>
+          <VideoEmbed heading="Zo werkt het — in 40 seconden" />
+        </section>
+
         {/* Important disclaimer */}
         <div className={styles.disclaimer}>
           <div className={styles.disclaimerIcon}>
@@ -342,11 +347,6 @@ export default function PrijzenPage() {
             Wanneer u uw autosleutel bent verloren of als deze is gestolen, valt het vervangen van uw sleutelset en het wissen van de oude sleutelcodes vaak onder de dekking van uw WA Extra (Beperkt Casco) of Allrisk autoverzekering. U ontvangt van ons altijd een officiële en gespecificeerde KVK-factuur die u direct kunt indienen bij uw verzekeraar. Bovendien krijgt u op alle geleverde autosleutels 12 maanden schriftelijke garantie.
           </p>
         </div>
-
-        {/* Video — no VideoObject here; the watch page is /autosleutel-kwijt */}
-        <section style={{ padding: '3.5rem 0' }}>
-          <VideoEmbed heading="Zo werkt het — in 40 seconden" />
-        </section>
 
         {/* CTA */}
         <div className={styles.cta}>

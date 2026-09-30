@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styles from './FeatureCards.module.css';
 import Link from 'next/link';
+import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 
 export type FeatureCardProps = {
   id: string;
@@ -75,6 +76,25 @@ export default function FeatureCards({ title, subtitle, features }: FeatureCards
             </div>
           ))}
         </div>
+      </div>
+
+      {/*
+        * The video, directly under the cards -- one screen below the hero,
+        * where someone is still deciding whether to call rather than three
+        * scrolls down where only the already-convinced arrive.
+        *
+        * Deliberately without VideoObject markup. Google indexes a video from
+        * its watch page -- the page whose primary purpose is the video -- and
+        * names a page where the video complements the text as explicitly not
+        * one. Marking this up on every page that renders these cards would
+        * win the same single video result and fill the video indexing report
+        * with "isn't on a watch page" rows. A non-watch page keeps its text
+        * result with a video badge either way, and Google states repeat
+        * embeds of one video are not a duplicate-content problem. So the
+        * video travels and the markup stays on /autosleutel-kwijt.
+        */}
+      <div className={styles.videoWrapper}>
+        <VideoEmbed heading="Zo werkt het — in 40 seconden" caption={false} />
       </div>
     </section>
   );

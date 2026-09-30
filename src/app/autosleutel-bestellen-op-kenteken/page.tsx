@@ -139,6 +139,11 @@ export default function KentekenBestellenPage() {
           </div>
         </div>
 
+        {/* Video — no VideoObject here; the watch page is /autosleutel-kwijt */}
+        <div style={{ padding: '3rem 0' }}>
+          <VideoEmbed heading="Zo werkt het — in 40 seconden" />
+        </div>
+
         {/* Content Section */}
         <section className={styles.section}>
           <div className={styles.container}>
@@ -269,11 +274,6 @@ export default function KentekenBestellenPage() {
                   </div>
                 </div>
               </aside>
-            </div>
-
-            {/* Video — no VideoObject here; the watch page is /autosleutel-kwijt */}
-            <div style={{ padding: '3rem 0' }}>
-              <VideoEmbed heading="Zo werkt het — in 40 seconden" />
             </div>
 
             {/* Bottom CTA block */}

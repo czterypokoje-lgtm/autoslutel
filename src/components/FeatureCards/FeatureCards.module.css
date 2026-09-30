@@ -231,3 +231,10 @@
 .activeDot {
   background: #f97316;
 }
+
+/* The video sits under the cards, inside the same horizontal gutter. */
+.videoWrapper {
+  margin: 3.5rem auto 0;
+  padding: 0 1.5rem;
+  max-width: 1200px;
+}
