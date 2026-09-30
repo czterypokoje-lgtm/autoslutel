@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { isNoindexCity } from '@/config/thinPages';
+import { ARRIVAL, ARRIVAL_TITLE, ARRIVAL_CITY_SLUGS } from '@/config/arrival';
 import { BRANDS } from '@/config/brands';
 import { DEEP_DIVE, RELAY_THEFT_MAKES, GHOST_ARTICLE } from '@/config/deepDives';
 import { createClient } from '@supabase/supabase-js';
@@ -129,7 +130,12 @@ export async function generateStaticParams() {
  * Duurstede), so those fall back to the shorter form rather than losing
  * "Op Locatie" to an ellipsis.
  */
-function cityTitle(name: string): string {
+function cityTitle(name: string, slug?: string): string {
+  // Towns a van can honestly reach in an hour lead with the arrival time, which is what converted best.
+  if (slug && ARRIVAL_CITY_SLUGS.has(slug)) {
+    const timed = `Autosleutel Bijmaken ${name} | ${ARRIVAL_TITLE}`;
+    if (timed.length <= 60) return timed;
+  }
   const withPrice = `Autosleutel Bijmaken ${name} | Op Locatie vanaf €${SITE_CONFIG.prices.transponder}`;
   return withPrice.length <= 60 ? withPrice : `Autosleutel Bijmaken ${name} | Op Locatie`;
 }
@@ -165,12 +171,14 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
      * description, which is the most-read sentence on the page.
      */
     title: {
-      absolute: city.customMetaTitle || cityTitle(city.city),
+      absolute: city.customMetaTitle || cityTitle(city.city, city.slug),
     },
     ...(isNoindexCity(citySlug) && { robots: { index: false, follow: true } }),
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}. Bel nu!`
+        (ARRIVAL_CITY_SLUGS.has(city.slug)
+          ? `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} ter plaatse, dag en nacht. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}. Bel nu!`
+          : `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}. Bel nu!`)
     ),
     alternates: {
       canonical: pageUrl,
@@ -182,7 +190,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     openGraph: {
       type: 'website',
       url: pageUrl,
-      title: city.customMetaTitle || cityTitle(city.city),
+      title: city.customMetaTitle || cityTitle(city.city, city.slug),
       description: `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },

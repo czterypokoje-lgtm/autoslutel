@@ -10,14 +10,15 @@ import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import Image from 'next/image';
 import styles from './page.module.css';
+import { ARRIVAL } from '@/config/arrival';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Auto Openen Zonder Sleutel | 24/7 Schadevrij | Autosleutel24',
+    absolute: 'Auto Openen Zonder Sleutel? 30-60 Min Ter Plaatse | 24/7',
   },
   // 186 characters truncated in results, and what Google cut was the price
   // and the call to action — the two things that earn the click.
-  description: 'Auto openen zonder sleutel? Wij openen uw auto 100% schadevrij op locatie, vaste prijs vanaf €149. 24/7 bereikbaar in heel Nederland. Bel direct!',
+  description: `Auto openen zonder sleutel? Binnen ${ARRIVAL} ter plaatse, 100% schadevrij, vaste prijs vanaf €${SITE_CONFIG.prices.unlock}. 24/7 bereikbaar. Bel direct!`,
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
 };
 
@@ -189,7 +190,7 @@ export default function AutoOpenenZonderSleutelPage() {
             <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
               <HeroTrustBadge />
             </div>
-            <h1>Auto Openen Zonder Sleutel — 100% Schadevrij &amp; 24/7 Mobiel</h1>
+            <h1>Auto Openen Zonder Sleutel — Binnen 30–60 Min Ter Plaatse &amp; 100% Schadevrij</h1>
             <p className={styles.heroLead}>
               Buitengesloten? Wij openen uw auto <strong>100% schadevrij</strong>, gemiddeld binnen 30 min ter plaatse.
             </p>

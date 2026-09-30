@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
 import ServiceLayout from '@/components/ServiceLayout/ServiceLayout';
 import { videoSchema } from '@/components/VideoEmbed/video';
+import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
 
 /*
  * This page IS the AKL service page, at the URL the query wants.
@@ -25,8 +26,8 @@ import { videoSchema } from '@/components/VideoEmbed/video';
 const SERVICE_SLUG = 'alle-sleutels-kwijt-auto';
 
 export const metadata: Metadata = {
-  title: { absolute: `Autosleutel Kwijt? Ook Zonder Reservesleutel | Vanaf €${SITE_CONFIG.prices.allKeysLost}` },
-  description: `Autosleutel kwijt, beide sleutels weg of geen reservesleutel? Wij openen schadevrij en maken ter plaatse een nieuwe sleutel, vanaf €${SITE_CONFIG.prices.allKeysLost}. 24/7.`,
+  title: { absolute: `Autosleutel Kwijt? Binnen ${ARRIVAL_TITLE} | Vanaf €${SITE_CONFIG.prices.allKeysLost}` },
+  description: `Autosleutel kwijt, beide sleutels weg of geen reservesleutel? Binnen ${ARRIVAL} ter plaatse, nieuwe sleutel vanaf €${SITE_CONFIG.prices.allKeysLost}. 24/7, alle merken.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
     languages: {
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
-    title: `Autosleutel Kwijt? Ook Zonder Reservesleutel | Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
+    title: `Autosleutel Kwijt? Binnen ${ARRIVAL_TITLE} | Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
     description: `Autosleutel kwijt en geen reserve? Nieuwe sleutel ter plaatse, vanaf €${SITE_CONFIG.prices.allKeysLost}. Alle merken, 24/7.`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel Kwijt — Autosleutel24' }],
   },

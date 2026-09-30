@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
@@ -24,9 +25,9 @@ import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bijmaken of Kwijt? Op Locatie | Autosleutel24',
+    absolute: `Autosleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE} | 24/7`,
   },
-  description: `Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!`,
+  description: `Autosleutel bijmaken of alle sleutels kwijt? Binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
   alternates: {
     canonical: SITE_CONFIG.domain,
     languages: {
@@ -37,8 +38,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: SITE_CONFIG.domain,
-    title: 'Autosleutel Bijmaken of Kwijt? Op Locatie | Autosleutel24',
-    description: 'Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!',
+    title: `Autosleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE} | 24/7`,
+    description: `Autosleutel bijmaken of alle sleutels kwijt? Binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel24 mobiele autosleutelspecialist' }],
   },
 };
@@ -121,7 +122,7 @@ export default function HomePage() {
             <HeroTrustBadge />
             <h1>
               Autosleutel Kwijt of Bijmaken?<br />
-              <span style={{ color: 'var(--orange-500)' }}>Wij Helpen Direct op Locatie!</span>
+              <span style={{ color: 'var(--orange-500)' }}>Binnen 30–60 Min Ter Plaatse!</span>
             </h1>
             <p className={styles.heroSplitLead}>
               Buitengesloten of sleutel kwijt? <strong>Binnen 30–60 min</strong> ter plaatse — goedkoper dan de dealer, geen wegsleepkosten.
