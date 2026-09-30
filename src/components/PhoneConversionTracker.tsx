@@ -29,22 +29,25 @@ export default function PhoneConversionTracker() {
 
       if (!isTel && !isWhatsApp) return;
 
-      // Prevent immediate navigation so the tracking beacon has time to fire
-      e.preventDefault();
-      const destination = target.href;
-
+      // The link is left alone: a tel: link never unloads the page, so the
+      // pings below finish on their own, and the call starts on the tap
+      // itself (iOS can refuse a dial fired later from a timer).
       // 1. DataLayer for GTM
       window.dataLayer = window.dataLayer || [];
       if (isTel) {
-        window.dataLayer.push({ event: 'click_to_call', link_url: destination });
+        window.dataLayer.push({ event: 'click_to_call', link_url: target.href });
       } else {
-        window.dataLayer.push({ event: 'click_to_whatsapp', link_url: destination });
+        window.dataLayer.push({ event: 'click_to_whatsapp', link_url: target.href });
       }
 
       // 2. Direct Google Ads Conversion Ping (Guaranteed!)
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'conversion', {
-          'send_to': 'AW-18315813515/FoiPCLLl7NocEIvF1J1E'
+          send_to: isTel
+            ? 'AW-18315813515/FoiPCLLl7NocEIvF1J1E' // Click to call
+            : 'AW-18315813515/eQj3CNPYoYwdEIvF1J1E', // WhatsApp click
+          ...(isTel ? { value: 50, currency: 'EUR' } : {}),
+          transport_type: 'beacon',
         });
       }
 
@@ -66,10 +69,6 @@ export default function PhoneConversionTracker() {
         keepalive: true,
       }).catch(() => {});
 
-      // Proceed with navigation after 300ms to guarantee network request completion
-      setTimeout(() => {
-        window.location.href = destination;
-      }, 300);
     };
 
     document.addEventListener('click', handlePhoneClick);

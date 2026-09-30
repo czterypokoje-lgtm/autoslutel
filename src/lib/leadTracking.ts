@@ -88,6 +88,13 @@ export function reportLeadConversion(lead: LeadConversion): void {
        and this costs nothing if no gtag is present. */
     if (typeof window.gtag === 'function') {
       // Send directly to Google Ads via the explicit gtag.js loaded in layout.tsx
+      // The Google Ads action "Website lead form - submitted".
+      window.gtag('event', 'conversion', {
+        send_to: 'AW-18315813515/-RCqCNDYoYwdEIvF1J1E',
+        value: 40,
+        currency: 'EUR',
+        transport_type: 'beacon',
+      });
       window.gtag('event', 'generate_lead', {
         event_category: lead.source,
         send_to: 'AW-18315813515',
