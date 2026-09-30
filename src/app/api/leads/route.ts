@@ -4,6 +4,7 @@ import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 import { isScenario } from '@/lib/scenarios';
 import { notifyNewLead } from '@/lib/leadNotify';
 import { toE164NL } from '@/lib/phone';
+import { sendOpenAiEvent } from '@/lib/openaiAds';
 
 /**
  * Lead capture.
@@ -214,6 +215,27 @@ export async function POST(request: Request) {
       });
     } catch (notifyError) {
       console.error('[leads] lead saved but the alert failed', notifyError);
+    }
+
+    /*
+     * OpenAI Ads Server-Side Event
+     * Sends a highly valuable lead_created event with hashed email/phone to 
+     * maximize match rates (Email/External ID coverage).
+     */
+    if (body.consentMarketing === true) {
+      try {
+        await sendOpenAiEvent({
+          eventName: 'lead_created',
+          email: email,
+          phone: phone,
+          ip: ip,
+          userAgent: request.headers.get('user-agent') || undefined,
+          amount: quotedPrice || undefined,
+          currency: quotedPrice ? 'EUR' : undefined,
+        });
+      } catch (e) {
+        console.error('[leads] OpenAI Ads event failed', e);
+      }
     }
 
     return NextResponse.json({ success: true, data }, { status: 200 });

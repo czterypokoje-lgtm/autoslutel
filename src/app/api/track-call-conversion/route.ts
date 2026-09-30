@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { randomUUID } from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { AD_CLICK_PARAMS } from '@/lib/adClickId';
 import { rateLimit, getClientIp } from '@/lib/rateLimit';
+import { sendOpenAiEvent } from '@/lib/openaiAds';
 
 /**
  * Two unrelated jobs share this route because they share a trigger (a tel:/
@@ -28,9 +28,6 @@ import { rateLimit, getClientIp } from '@/lib/rateLimit';
  */
 
 export const dynamic = 'force-dynamic';
-
-const EVENTS_ENDPOINT = 'https://bzr.openai.com/v1/events';
-const PIXEL_ID = 'NgrU53SbdM3WdR4Kjvyp6Z';
 
 function hasMarketingConsent(request: Request): boolean {
   const cookie = request.headers.get('cookie') || '';
@@ -70,19 +67,12 @@ async function recordCallClick(body: Record<string, unknown>): Promise<void> {
   }
 }
 
-/*
- * Generous, because a real visitor can legitimately click call and WhatsApp a
- * few times while deciding. It is not here to stop a person — it is here
- * because this endpoint is unauthenticated by necessity and writes into
- * call_clicks, which api/admin/jobs later reads to attribute a completed job
- * back to an ad click. Flooded with forged click ids, that table stops being
- * evidence and starts feeding invented conversions into the Google Ads export.
- */
 const RATE_LIMIT = 30;
 const RATE_WINDOW = 60;
 
 export async function POST(request: Request) {
-  const limit = await rateLimit(`callconv:${getClientIp(request)}`, RATE_LIMIT, RATE_WINDOW);
+  const ip = getClientIp(request);
+  const limit = await rateLimit(`callconv:${ip}`, RATE_LIMIT, RATE_WINDOW);
   /* 204, not 429: this is a fire-and-forget beacon behind a tel: link and the
      visitor is already dialling. Dropping the write is the whole response. */
   if (!limit.ok) return new NextResponse(null, { status: 204 });
@@ -107,37 +97,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ skipped: true, reason: 'no_consent' });
   }
 
-  try {
-    const response = await fetch(`${EVENTS_ENDPOINT}?pid=${PIXEL_ID}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        validate_only: false,
-        events: [
-          {
-            id: randomUUID(),
-            type: 'lead_created',
-            timestamp_ms: Date.now(),
-            source_url: sourceUrl || undefined,
-            action_source: 'web',
-            data: { type: 'customer_action' },
-          },
-        ],
-      }),
-    });
+  const success = await sendOpenAiEvent({
+    eventName: 'lead_created',
+    sourceUrl: sourceUrl || undefined,
+    ip: ip,
+    userAgent: request.headers.get('user-agent') || undefined,
+  });
 
-    if (!response.ok) {
-      const text = await response.text().catch(() => '');
-      console.error('OpenAI Ads event send failed', response.status, text);
-      return NextResponse.json({ success: false }, { status: 502 });
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error('OpenAI Ads event send error', err);
-    return NextResponse.json({ success: false }, { status: 500 });
+  if (!success) {
+    return NextResponse.json({ success: false }, { status: 502 });
   }
+
+  return NextResponse.json({ success: true });
 }
