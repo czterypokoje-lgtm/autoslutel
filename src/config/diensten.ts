@@ -249,9 +249,31 @@ export const DIENSTEN: Service[] = [
       'Nieuwe transpondersleutels worden direct in het geheugen geschreven',
       'De verloren sleutels worden definitief geblokkeerd'
     ],
+    /*
+     * Twelve questions, and the ten long ones are not decoration.
+     *
+     * They were written for this page and then lost when it started
+     * rendering ServiceLayout: the layout draws its FAQ from the service
+     * record, which had two. Ten answers that a person standing next to a
+     * locked car actually asks -- and that an AI assistant can quote -- went
+     * from the page and from its FAQPage markup in one commit.
+     *
+     * They live here rather than in the page so there is one FAQ per service
+     * and the structured data cannot disagree with what is rendered.
+     */
     faq: [
+      { q: 'Ik ben mijn autosleutel kwijt — wat moet ik nu doen?', a: 'Laat de auto op een veilige plek staan en kijk eerst of er nog een reservesleutel is. Is die er niet, verzamel dan merk, model, bouwjaar en kenteken en bel ons. Onze monteur komt naar uw locatie, opent de auto 100% schadevrij, leest de startonderbreker uit, blokkeert de verloren sleutel en programmeert ter plekke een nieuwe. U rijdt dezelfde dag weer.' },
+      { q: 'Wat kost een nieuwe autosleutel?', a: `Tussen €${SITE_CONFIG.prices.transponder} en €350, afhankelijk van merk, bouwjaar en of het om een transpondersleutel, klapsleutel of smart key gaat. Bent u álle sleutels kwijt en is er geen reserve, dan begint het bij €${SITE_CONFIG.prices.allKeysLost}: het deurslot moet dan eerst gedecodeerd worden voordat er geprogrammeerd kan worden. U hoort de exacte prijs telefonisch, vóór wij vertrekken. Een dealer rekent voor hetzelfde werk doorgaans het dubbele, plus sleepkosten.` },
+      { q: 'Hoe snel heb ik een nieuwe sleutel?', a: 'Meestal binnen 30 tot 60 minuten na aankomst, ter plekke klaar en ingeleerd. Bij de dealer duurt dit doorgaans 3 tot 10 werkdagen, omdat de sleutel op chassisnummer besteld moet worden. Wij zijn 24/7 bereikbaar, ook \'s nachts en in het weekend.' },
+      { q: 'Kan er een sleutel gemaakt worden zonder dat ik er nog één heb?', a: 'Ja. De mechanische insnijding bepalen wij door de cilinder van het deurslot te decoderen. De transponder en de afstandsbediening koppelen we daarna via de OBD2-poort aan de boordcomputer. Er hoeft dus geen originele sleutel te zijn — dat is precies het geval waarvoor wij bestaan.' },
+      { q: 'Wordt mijn verloren sleutel onbruikbaar gemaakt?', a: 'Ja, en dat is het belangrijkste deel van het werk. Wij wissen de codes van de verloren sleutel uit de startonderbreker, zodat wie hem vindt de auto niet meer kan starten. Een nieuwe sleutel laten maken zonder de oude te blokkeren laat uw auto open staan voor de vinder.' },
+      { q: 'Vergoedt mijn verzekering een verloren autosleutel?', a: 'Bij WA+ (beperkt casco) en All Risk is verlies of diefstal van autosleutels vaak gedekt; bij alleen WA niet. Het eigen risico verschilt per polis. U krijgt van ons een officiële, gespecificeerde factuur die u rechtstreeks bij uw verzekeraar kunt indienen.' },
+      { q: 'Wat gebeurt er als ik álle sleutels kwijt ben?', a: 'Dan zijn er twee wegen. De auto laten wegslepen naar de dealer, wat duur is en dagen duurt. Of ons bellen: wij komen naar de auto toe, openen hem schadevrij, slijpen een nieuwe sleutelbaard en programmeren de transponder ter plaatse. De auto hoeft niet van zijn plek.' },
+      { q: 'Hoe werkt het programmeren precies?', a: 'De monteur sluit een programmeercomputer aan op de OBD-poort. Daarmee worden de oude sleutelcodes uit de startonderbreker gewist en worden de transponderchip en de afstandsbediening van de nieuwe sleutel aan de auto gekoppeld. Bij sommige modellen — onder meer BMW met BDC2 en de VAG-groep met SFD — is er een extra vrijgave nodig; dat vertellen wij vooraf.' },
+      { q: 'Kan ik zelf online een sleutel bestellen en laten programmeren?', a: 'Een behuizing of een universele sleutel kunt u online kopen, maar een werkende transpondersleutel is meer dan het plastic: de chip moet aan úw auto gekoppeld worden. Veel online sleutels zijn bovendien niet te programmeren voor het betreffende model. Wij leveren en programmeren OEM-kwaliteit sleutels in één bezoek, met 12 maanden garantie op het onderdeel.' },
+      { q: 'Kunnen jullie de auto ook openen als de sleutel erin ligt?', a: 'Ja, 100% schadevrij. Wij werken met professionele Lishi-decoders op het slot zelf — geen wig, geen luchtkussen, geen schade aan lak of rubbers. Hetzelfde gereedschap waarmee we daarna de sleutel kunnen namaken.' },
       { q: 'Moet de auto worden weggesleept als ik alle sleutels kwijt ben?', a: 'Nee. In tegenstelling tot de dealer (die vaak de auto in hun werkplaats wil hebben) doen wij alles op de plek waar de auto geparkeerd staat. Dit bespaart u dure sleepkosten.' },
-      { q: 'Kan dit voor elk automerk?', a: 'Wij kunnen reservesleutels maken bij verlies van alle sleutels voor 98% van de merken op de weg, inclusief complexe VAG MQB48 (VW Golf 8, Audi A3 8Y) en Mercedes FBS3 systemen.' }
+      { q: 'Kan dit voor elk automerk?', a: 'Wij kunnen reservesleutels maken bij verlies van alle sleutels voor 98% van de merken op de weg, inclusief complexe VAG MQB48 (VW Golf 8, Audi A3 8Y) en Mercedes FBS3 systemen.' },
     ],
     relatedSlugs: ['noodopening-auto', 'reservesleutel-maken', 'smart-key-programmeren', 'contactslot-auto-vervangen']
   },
