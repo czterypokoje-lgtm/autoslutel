@@ -22,6 +22,8 @@ const diensten = [
   ['Autosleutel Kopiëren', '/autosleutel-kopieren'],
   ['Mobiele Sleutelmaker', '/mobiele-sleutelmaker'],
   ['Bijmaken in de Buurt', '/autosleutel-bijmaken-in-de-buurt'],
+  ['Autosleutel Laten Maken', '/autosleutel-laten-maken'],
+  ['Renault Sleutelkaart', '/renault-sleutelkaart-kwijt-of-kapot'],
   ['Alle diensten →', '/diensten'],
 ];
 
@@ -109,11 +111,11 @@ export default function Footer() {
 
           {/* Diensten & Spoed */}
           <div>
-            <h4 className={styles.colTitle}>Spoedhulp</h4>
+            <h3 className={styles.colTitle}>Spoedhulp</h3>
             <ul className={styles.linkList}>
               {spoed.map(([label, href]) => <li key={href}><Link href={href} style={{ color: 'var(--orange-400)' }}>{label}</Link></li>)}
             </ul>
-            <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Diensten</h4>
+            <h3 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Diensten</h3>
             <ul className={styles.linkList}>
               {diensten.map(([label, href]) => <li key={href}><Link href={href}>{label}</Link></li>)}
             </ul>
@@ -121,7 +123,7 @@ export default function Footer() {
 
           {/* Merken */}
           <div>
-            <h4 className={styles.colTitle}>Merken</h4>
+            <h3 className={styles.colTitle}>Merken</h3>
             <ul className={styles.linkList}>
               {BRANDS.filter(b => b.priority === 'P1').map(b => (
                 <li key={b.slug}><Link href={`/merken/${b.nameSlug}-autosleutel-bijmaken`}>{b.name} sleutel bijmaken</Link></li>
@@ -130,7 +132,7 @@ export default function Footer() {
               <li><Link href="/zakelijk">Zakelijk &amp; partners</Link></li>
               <li><Link href="/monteur-worden">Monteur worden</Link></li>
             </ul>
-            <h4 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Blog &amp; Advies</h4>
+            <h3 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Blog &amp; Advies</h3>
             <ul className={styles.linkList}>
               <li><Link href="/blog/autosleutel-batterij-vervangen-stappenplan">Batterij Vervangen</Link></li>
               <li><Link href="/blog/autosleutel-gestolen-wat-te-doen">Sleutel Gestolen?</Link></li>
@@ -150,7 +152,7 @@ export default function Footer() {
               visitors they are actually there for. The city name is what
               someone is looking for in a list of cities.
             */}
-            <h4 className={styles.colTitle}>Autosleutel bijmaken per stad</h4>
+            <h3 className={styles.colTitle}>Autosleutel bijmaken per stad</h3>
             <ul className={styles.linkList}>
               {steden.map(([label, href]) => (
                 <li key={href}>
@@ -162,14 +164,14 @@ export default function Footer() {
 
           {/* Over Ons & Openingstijden */}
           <div>
-            <h4 className={styles.colTitle}>Over Ons</h4>
+            <h3 className={styles.colTitle}>Over Ons</h3>
             <ul className={styles.linkList} style={{ marginBottom: '1.5rem' }}>
               <li><Link href="/beoordelingen">Klantbeoordelingen</Link></li>
               <li><Link href="/galerij">Onze Galerij</Link></li>
               <li><Link href="/over-ons">Over Ons</Link></li>
             </ul>
 
-            <h4 className={styles.colTitle}>Openingstijden</h4>
+            <h3 className={styles.colTitle}>Openingstijden</h3>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', color: 'rgba(255,255,255,0.65)' }}>
               <tbody>
                 {[

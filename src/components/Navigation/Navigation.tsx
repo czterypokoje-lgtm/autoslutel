@@ -52,6 +52,7 @@ const DienstenStructure = [
       { href: '/autosleutel-bestellen-op-kenteken', label: 'Bestellen op Kenteken' },
       { href: '/autosleutel-kopieren', label: 'Autosleutel Kopiëren' },
       { href: '/autosleutel-bijmaken-in-de-buurt', label: 'Bijmaken in de Buurt' },
+      { href: '/autosleutel-laten-maken', label: 'Autosleutel Laten Maken' },
     ]
   },
   {
@@ -60,6 +61,7 @@ const DienstenStructure = [
     subs: [
       { href: '/diensten/noodopening-auto', label: 'Noodopening' },
       { href: '/autosleutel-gestolen', label: 'Autosleutel Gestolen' },
+      { href: '/renault-sleutelkaart-kwijt-of-kapot', label: 'Renault Sleutelkaart' },
     ]
   },
   {

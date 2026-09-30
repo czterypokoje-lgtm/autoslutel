@@ -107,6 +107,17 @@ const nextConfig: NextConfig = {
     return [
       ...brandRedirects,
       /*
+       * Search-term URLs people (and old links) guess. All were 404s while
+       * the phrase behind them has real demand, so each goes to the one page
+       * that answers it rather than to the homepage.
+       */
+      { source: "/autosleutel-bijmaken", destination: "/diensten/autosleutel-bijmaken", permanent: true },
+      { source: "/autosleutel-laten-bijmaken", destination: "/autosleutel-laten-maken", permanent: true },
+      { source: "/autosleutel-namaken", destination: "/autosleutel-kopieren", permanent: true },
+      { source: "/autosleutel-verloren", destination: "/autosleutel-kwijt", permanent: true },
+      { source: "/renault-sleutelkaart", destination: "/renault-sleutelkaart-kwijt-of-kapot", permanent: true },
+      { source: "/renault-keycard", destination: "/renault-sleutelkaart-kwijt-of-kapot", permanent: true },
+      /*
        * The per-model pages are gone — 664 routes that measured 94-97%
        * identical to each other, which is scaled content abuse and is
        * penalised across the whole domain rather than page by page. The model
