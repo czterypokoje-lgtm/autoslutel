@@ -46,7 +46,7 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
     title: 'Autosleutels voor garagebedrijven',
     metaTitle: 'Autosleutelservice voor Garages op Locatie',
     metaDesc:
-      'Klant met een verloren of defecte autosleutel in uw werkplaats? Wij komen naar u toe, maken en coderen de sleutel ter plaatse. Geen investering in apparatuur, u houdt de klus.',
+      'Sleutelklus in uw werkplaats? Wij komen naar u toe en coderen de sleutel ter plaatse. Geen investering in apparatuur nodig, en u houdt de klant.',
     h1Top: 'Uw klant staat met een sleutelprobleem in de werkplaats.',
     h1Accent: 'Wij komen naar u toe.',
     intro:

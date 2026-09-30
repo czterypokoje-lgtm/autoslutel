@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Autosleutel Bijmaken per Stad | 24/7 Mobiel | Autosleutel24',
   },
-  description: `Mobiele autosleutelspecialist in ${CITIES.length} steden in Nederland. Utrecht, Amsterdam, Almere, Amersfoort, Hilversum, Bussum en meer. Zelfde dag ter plaatse. Bel ${SITE_CONFIG.phone}`,
+  description: `Mobiele autosleutelspecialist in ${CITIES.length} steden, van Amsterdam tot Maastricht. Wij komen naar u toe en maken de sleutel ter plaatse. Bel ${SITE_CONFIG.phone}.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/steden`,
     languages: {

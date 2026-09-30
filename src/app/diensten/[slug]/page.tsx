@@ -37,8 +37,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!service) return {};
   const pageUrl = `${SITE_CONFIG.domain}/diensten/${slug}`;
   return {
+    /*
+     * Two suffixes fit behind most of the 19 service titles and not behind
+     * the longest, which pushed the brand name past where Google truncates.
+     * "24/7 Mobiel" is the one that carries no brand, so it is the one that
+     * gives way -- for whichever titles are long, now and later, rather than
+     * by special-casing today's longest.
+     */
     title: {
-      absolute: `${service.title} | 24/7 Mobiel | Autosleutel24`,
+      absolute:
+        service.title.length > 30
+          ? `${service.title} | Autosleutel24`
+          : `${service.title} | 24/7 Mobiel | Autosleutel24`,
     },
     description: clampMeta(service.metaDesc),
     alternates: {

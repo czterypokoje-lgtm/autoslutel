@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.domain),
   title: {
     template: '%s | Autosleutel24',
-    default: 'Autosleutel Bijmaken of Kwijt? 24/7 Mobiele Service | Autosleutel24',
+    default: 'Autosleutel Bijmaken of Kwijt? 24/7 Service | Autosleutel24',
   },
   description: `Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!`,
   alternates: {

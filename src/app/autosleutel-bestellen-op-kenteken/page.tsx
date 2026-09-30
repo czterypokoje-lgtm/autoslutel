@@ -9,9 +9,9 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bestellen op Kenteken? | Direct Prijs & Hulp op Locatie',
+    absolute: 'Autosleutel Bestellen op Kenteken | Prijs & Hulp op Locatie',
   },
-  description: 'Wilt u een autosleutel bestellen op kenteken? Geen technisch gedoe! App uw kenteken naar Autosleutel24 en ontvang direct een vaste prijs. Wij komen op locatie in de Randstad.',
+  description: 'Autosleutel bestellen op kenteken? App uw kenteken en ontvang direct een vaste prijs. Wij maken en programmeren de sleutel bij u op locatie.',
   alternates: { canonical: `${SITE_CONFIG.domain}/autosleutel-bestellen-op-kenteken` },
 };
 
