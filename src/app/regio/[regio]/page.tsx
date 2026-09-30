@@ -112,7 +112,12 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
     areaServed: {
       '@type': 'AdministrativeArea',
       name: region.name,
-      containsPlace: cities.map((c) => ({ '@type': 'City', name: c.city })),
+      containsPlace: cities.map((c) => ({
+        '@type': 'City',
+        name: c.city,
+        url: `${SITE_CONFIG.domain}/steden/${c.slug}`,
+        geo: { '@type': 'GeoCoordinates', latitude: c.geo.lat, longitude: c.geo.lng },
+      })),
     },
   };
   const faqSchema = {

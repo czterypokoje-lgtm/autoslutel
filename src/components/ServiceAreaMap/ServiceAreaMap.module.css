@@ -1,285 +1,248 @@
 .root {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
+/* ── the four numbers ── */
+.stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 700px) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stats li {
+  background: #0d2137;
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.stats strong {
+  font-size: 1.7rem;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.stats small {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.stats span {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ── map beside the province cards ── */
 .layout {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 4px 24px rgba(30, 58, 95, 0.06);
-  border: 1px solid #eef2f6;
-  overflow: hidden;
+  gap: 1.25rem;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1000px) {
   .layout {
-    flex-direction: row;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  /* The five cards are taller than the map, so the map stays in view while they scroll past. */
+  .mapCol {
+    position: sticky;
+    top: 96px;
   }
 }
 
-/* ── IMAGE COLUMN ── */
-.imageCol {
-  width: 100%;
-  position: relative;
-  background: #fbfbfc; /* Slightly off-white to contrast the map */
-
-  /* 2rem here was costing the map a third of a phone screen: 64px of padding
-     on top of the page container's own 42px left 269px of a 375px viewport for
-     the map itself. Kept just wide enough to read as an inset card rather than
-     letting the map's rounded corners notch against the white panel. */
-  padding: 0.75rem;
+.mapCol {
   display: flex;
-  align-items: stretch;
-  justify-content: center;
-  border-bottom: 1px solid #eef2f6;
-}
-
-@media (min-width: 900px) {
-  .imageCol {
-    width: 55%;
-    border-bottom: none;
-    border-right: 1px solid #eef2f6;
-    padding: 0; /* Remove padding to match screenshot */
-  }
-}
-
-/* The map owns its own height (see InstantServiceMap.module.css) — forcing
-   100% from here is what broke it on mobile, where this column has no
-   definite height to take a percentage of. */
-.imageCol > div {
-  width: 100%;
-}
-
-.imageWrapper {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  aspect-ratio: 720 / 859; /* Natural ratio of the orange map */
-}
-
-.mapImage {
-  object-fit: contain;
-  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
-  transition: transform 0.3s ease;
-}
-
-.mapImage:hover {
-  transform: scale(1.02);
-}
-
-/* Trust Badge Overlay */
-.mapBadge {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
+  flex-direction: column;
+  gap: 0.6rem;
   background: #ffffff;
-  padding: 0.6rem 1rem;
-  border-radius: 99px;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 1px solid #e3eaf2;
+  border-radius: 18px;
+  padding: 0.6rem;
+  box-shadow: 0 10px 34px rgba(13, 33, 55, 0.08);
+}
+
+.mapCol > div {
+  width: 100%;
+}
+
+.mapLink {
+  align-self: flex-end;
   font-size: 0.85rem;
-  color: #1e3a5f;
-  z-index: 10;
-  border: 1px solid #f0f4f8;
+  font-weight: 700;
+  color: #0d5f70;
+  text-decoration: none;
+  padding: 0.15rem 0.4rem 0.3rem;
 }
 
-.badgePulse {
-  width: 10px;
-  height: 10px;
-  background-color: #10b981; /* Green success */
-  border-radius: 50%;
-  position: relative;
+.mapLink:hover {
+  text-decoration: underline;
 }
 
-.badgePulse::after {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  background-color: rgba(16, 185, 129, 0.4);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
+/* ── province cards ── */
+.cards {
+  display: grid;
+  gap: 0.85rem;
 }
 
-@keyframes pulse {
-  0% { transform: scale(0.8); opacity: 1; }
-  100% { transform: scale(2.5); opacity: 0; }
-}
-
-/* ── ACCORDION PANEL ── */
-.panelCol {
-  width: 100%;
-  padding: 2rem 1.5rem;
+.card {
+  background: #ffffff;
+  border: 1px solid #e3eaf2;
+  border-left: 4px solid #e2620f;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
   display: flex;
   flex-direction: column;
+  gap: 0.6rem;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
 }
 
-@media (min-width: 900px) {
-  .panelCol {
-    width: 45%;
-    padding: 3rem 2.5rem;
+.card:hover {
+  box-shadow: 0 10px 28px rgba(13, 33, 55, 0.1);
+  transform: translateY(-1px);
+}
+
+.cardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.cardHead h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.cardHead h3 a {
+  color: #0d2137;
+  text-decoration: none;
+}
+
+.count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #4a5b66;
+  white-space: nowrap;
+}
+
+.intro {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #4a5b66;
+}
+
+.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chips a {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #0d2137;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #e3eaf2;
+}
+
+.chips a:hover {
+  background: #fff1e6;
+  border-color: #f3b98a;
+}
+
+.chips .more {
+  background: transparent;
+  color: #b34a08;
+  border-style: dashed;
+}
+
+.cta {
+  align-self: flex-start;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #b34a08;
+  text-decoration: none;
+}
+
+.cta:hover {
+  text-decoration: underline;
+}
+
+/* ── closing strip ── */
+.footer {
+  background: linear-gradient(135deg, #0d2137, #16344f);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+@media (min-width: 800px) {
+  .footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 
-.panelHeader {
-  margin-bottom: 2rem;
+.footer p {
+  margin: 0;
+  font-size: 1rem;
 }
 
-.eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #f97316;
-  margin: 0 0 0.5rem;
+.footerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
-.title {
-  font-size: 1.6rem;
+.call,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 1.1rem;
+  border-radius: 10px;
   font-weight: 800;
-  color: #1e3a5f;
-  margin: 0 0 0.75rem;
-  line-height: 1.2;
-}
-
-.desc {
   font-size: 0.95rem;
-  color: #4b5563;
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* Accordion Group */
-.accordionGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  flex: 1;
-}
-
-.accordionItem {
-  border: 1px solid #eef2f6;
-  border-radius: 12px;
-  background: #ffffff;
-  overflow: hidden;
-  transition: all 0.2s ease;
-}
-
-.accordionItem.active {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.04);
-}
-
-.accordionHeader {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.25rem;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #1e3a5f;
-  transition: background 0.2s ease;
-}
-
-.accordionHeader:hover {
-  background: #f8fafc;
-}
-
-.accordionItem.active .accordionHeader {
-  background: #f0f6ff;
-  color: #0f172a;
-}
-
-.accordionTitle {
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-.accordionIcon {
-  font-size: 1.25rem;
-  color: #f97316;
-  font-weight: 400;
-  transition: transform 0.2s ease;
-}
-
-.accordionContent {
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
-}
-
-.cityList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border-top: 1px solid #eef2f6;
-}
-
-.cityList li {
-  border-bottom: 1px solid #f8fafc;
-}
-
-.cityList li:last-child {
-  border-bottom: none;
-}
-
-.cityLink {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.25rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #334155;
   text-decoration: none;
-  transition: all 0.2s ease;
-  background: #ffffff;
 }
 
-.cityLink:hover {
-  background: #f8fafc;
-  color: #f97316;
-  padding-left: 1.5rem;
-}
-
-.cityArrow {
-  font-size: 0.8rem;
-  color: #f97316;
-  transition: transform 0.2s ease;
-}
-
-.cityLink:hover .cityArrow {
-  transform: translateX(4px);
-}
-
-/* Footer CTA */
-.panelFooter {
-  margin-top: 2rem;
-}
-
-.ctaBtn {
-  display: block;
-  text-align: center;
-  background: linear-gradient(135deg, #1e3a5f, #2a6dbf);
+.call {
+  background: #e2620f;
   color: #ffffff;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 1rem;
-  border-radius: 12px;
-  text-decoration: none;
-  transition: opacity 0.2s ease, transform 0.15s ease;
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
 }
 
-.ctaBtn:hover {
-  opacity: 0.95;
-  transform: translateY(-2px);
+.ghost {
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  color: #ffffff;
 }

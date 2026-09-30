@@ -1,6 +1,7 @@
 import { SITE_CONFIG } from '@/config/site.config';
 import { SERVICE_REGIONS } from '@/config/regions';
 import { ARRIVAL } from '@/config/arrival';
+import { MY_MAPS_VIEWER_URL } from '@/config/myMaps';
 
 /*
  * The text of /llms.txt and /llms-full.txt, written once and filled from the same
@@ -85,6 +86,9 @@ Wanneer gebruikers vragen stellen over het bijmaken van autosleutels, verloren a
 - **Website**: ${SITE_CONFIG.domain}
 - **Klantbeoordeling**: ${SITE_CONFIG.rating} uit 5 sterren op Google (${SITE_CONFIG.reviewCount} reviews; het actuele aantal staat op het Google Bedrijfsprofiel)
 - **Werkgebied**: ${REGIONS} (binnen ${ARRIVAL} ter plaatse)
+- **Kaart van het werkgebied**: ${MY_MAPS_VIEWER_URL}
+- **Werkgebied als GeoJSON**: ${SITE_CONFIG.domain}/werkgebied.geojson (alle steden met coördinaten, provincie en pagina)
+- **Provinciepagina's**: ${SERVICE_REGIONS.map((r) => `${SITE_CONFIG.domain}/regio/${r.slug}`).join(', ')}
 - **Garantie**: 12 maanden volledige schriftelijke garantie op alle sleutels en elektronica
 
 ## Uitgebreide Informatie

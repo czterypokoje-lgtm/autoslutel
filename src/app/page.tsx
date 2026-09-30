@@ -373,7 +373,7 @@ export default function HomePage() {
           <div className="text-center" style={{ marginBottom: '2rem' }}>
             <p className="section-eyebrow">WERKGEBIED</p>
             <h2 className="section-title">Waar Wij Naartoe Komen</h2>
-            <p className="section-lead">Klik op een provincie op de kaart voor directe links naar uw stad.</p>
+            <p className="section-lead">Wij komen binnen {ARRIVAL} naar uw auto in Utrecht, de Randstad en Gelderland. Kies uw provincie of tik op de kaart.</p>
           </div>
           <ServiceAreaMap />
         </div>

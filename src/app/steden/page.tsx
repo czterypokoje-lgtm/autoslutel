@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CITIES } from '@/config/cities';
 import { SITE_CONFIG } from '@/config/site.config';
 import { SERVICE_REGIONS } from '@/config/regions';
+import { isNoindexCity } from '@/config/thinPages';
 import InstantServiceMap from '@/components/InstantServiceMap';
 import styles from './page.module.css';
 
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
   description: `Mobiele autosleutelspecialist in Utrecht, Noord-Holland, Zuid-Holland, Gelderland en Flevoland. Wij komen naar u toe. Bel ${SITE_CONFIG.phone}.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/steden`,
+    // The service area as GeoJSON, for mapping tools and crawlers.
+    types: { 'application/geo+json': '/werkgebied.geojson' },
     languages: {
       'nl-NL': `${SITE_CONFIG.domain}/steden`,
       'x-default': `${SITE_CONFIG.domain}/steden`,
@@ -48,17 +51,24 @@ export default function Steden() {
    * ItemList is what makes this page the index of the network rather than a
    * page that merely links to it.
    */
+  // Indexed towns in the provinces served: the same set as the map, the province pages and the sitemap.
+  const listed = CITIES.filter((c) => SERVICE_REGIONS.some((r) => r.name === c.region) && !isNoindexCity(c.slug));
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     '@id': `${SITE_CONFIG.domain}/steden#lijst`,
     name: 'Werkgebied per stad',
-    numberOfItems: CITIES.length,
-    itemListElement: CITIES.map((city, i) => ({
+    numberOfItems: listed.length,
+    itemListElement: listed.map((city, i) => ({
       '@type': 'ListItem',
       position: i + 1,
-      name: city.city,
-      url: `${SITE_CONFIG.domain}/steden/${city.slug}`,
+      item: {
+        '@type': 'Place',
+        name: city.city,
+        url: `${SITE_CONFIG.domain}/steden/${city.slug}`,
+        geo: { '@type': 'GeoCoordinates', latitude: city.geo.lat, longitude: city.geo.lng },
+        containedInPlace: { '@type': 'AdministrativeArea', name: city.region },
+      },
     })),
   };
 

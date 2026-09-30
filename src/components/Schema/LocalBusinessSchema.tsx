@@ -1,5 +1,6 @@
 import { SITE_CONFIG } from '@/config/site.config';
 import { BIZ_ID, serviceRegionNodes } from '@/utils/schema';
+import { MY_MAPS_VIEWER_URL } from '@/config/myMaps';
 
 export default function LocalBusinessSchema() {
   const localBusinessSchema = {
@@ -38,7 +39,8 @@ export default function LocalBusinessSchema() {
       areaServed: 'NL',
       availableLanguage: ['nl', 'en'],
     },
-    hasMap: `https://maps.google.com/?q=${SITE_CONFIG.geo.lat},${SITE_CONFIG.geo.lng}`,
+    // The service-area map the site embeds, not a pin on the head office.
+    hasMap: MY_MAPS_VIEWER_URL,
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
