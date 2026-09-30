@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import styles from './HowItWorks.module.css';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 
 interface HowItWorksProps {
   cityName?: string;
@@ -136,6 +137,25 @@ export default function HowItWorks({ cityName, brandName, variant = 'default' }:
         ))}
       </div>
       
+      {/*
+        * The forty-second version of the three steps above, on every page that
+        * explains the process: the homepage, 62 city pages, 14 brand pages and
+        * the service pages. /autosleutel-kwijt does not render this component
+        * and carries its own copy, so no page shows the video twice.
+        *
+        * Deliberately without VideoObject markup. Google indexes a video from
+        * its watch page — the page whose primary purpose is the video — and
+        * names a page where the video complements the text as explicitly not
+        * one. Marking this up everywhere would win the same single video
+        * result and fill the video indexing report with 95 "isn't on a watch
+        * page" rows. A non-watch page keeps its text result with a video
+        * badge either way, and Google states repeat embeds of one video are
+        * not a duplicate-content problem. The markup stays on the watch page.
+        */}
+      <div className={styles.videoWrapper}>
+        <VideoEmbed heading="Zo werkt het — in 40 seconden" caption={false} />
+      </div>
+
       <div className={styles.ctaWrapper}>
         <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg">
           Direct Hulp Bellen

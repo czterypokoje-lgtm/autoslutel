@@ -148,3 +148,9 @@
   box-shadow: 0 6px 8px -1px rgba(18, 140, 126, 0.3);
   color: white;
 }
+
+/* The video band between the steps and the call buttons. */
+.videoWrapper {
+  margin: 3rem auto 0;
+  padding: 0 1.5rem;
+}

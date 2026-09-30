@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
+import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 
 export const metadata: Metadata = {
   title: {
@@ -341,6 +342,11 @@ export default function PrijzenPage() {
             Wanneer u uw autosleutel bent verloren of als deze is gestolen, valt het vervangen van uw sleutelset en het wissen van de oude sleutelcodes vaak onder de dekking van uw WA Extra (Beperkt Casco) of Allrisk autoverzekering. U ontvangt van ons altijd een officiële en gespecificeerde KVK-factuur die u direct kunt indienen bij uw verzekeraar. Bovendien krijgt u op alle geleverde autosleutels 12 maanden schriftelijke garantie.
           </p>
         </div>
+
+        {/* Video — no VideoObject here; the watch page is /autosleutel-kwijt */}
+        <section style={{ padding: '3.5rem 0' }}>
+          <VideoEmbed heading="Zo werkt het — in 40 seconden" />
+        </section>
 
         {/* CTA */}
         <div className={styles.cta}>

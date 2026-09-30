@@ -6,6 +6,7 @@ import HorizontalKentekenForm from '@/components/KentekenForm/HorizontalKenteken
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import styles from './page.module.css';
+import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 
 export const metadata: Metadata = {
   title: {
@@ -268,6 +269,11 @@ export default function KentekenBestellenPage() {
                   </div>
                 </div>
               </aside>
+            </div>
+
+            {/* Video — no VideoObject here; the watch page is /autosleutel-kwijt */}
+            <div style={{ padding: '3rem 0' }}>
+              <VideoEmbed heading="Zo werkt het — in 40 seconden" />
             </div>
 
             {/* Bottom CTA block */}
