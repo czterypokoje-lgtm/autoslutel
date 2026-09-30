@@ -47,7 +47,7 @@ export default function AutoSlotenmakerPage() {
             "name": "Autodeur Schadevrij Openen",
             "description": "Auto openen zonder sleutel bij buitensluiting"
           },
-          "price": "149",
+          "price": SITE_CONFIG.prices.unlock,
           "priceCurrency": "EUR"
         },
         {
@@ -57,7 +57,7 @@ export default function AutoSlotenmakerPage() {
             "name": "Autoslot Reparatie",
             "description": "Deurslot of contactslot repareren na inbraakschade of slijtage"
           },
-          "price": "299",
+          "price": SITE_CONFIG.prices.ignition,
           "priceCurrency": "EUR"
         },
         {
@@ -67,7 +67,7 @@ export default function AutoSlotenmakerPage() {
             "name": "Nieuwe Autosleutel Maken",
             "description": "Autosleutel ter plaatse frezen en programmeren"
           },
-          "price": "149",
+          "price": SITE_CONFIG.prices.transponder,
           "priceCurrency": "EUR"
         }
       ]

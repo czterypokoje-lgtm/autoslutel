@@ -54,7 +54,7 @@ const schema = {
   "serviceType": "Auto openen zonder sleutel, schadevrij buitensluiting, kofferbak openen",
   "offers": {
     "@type": "Offer",
-    "price": "149",
+    "price": SITE_CONFIG.prices.unlock,
     "priceCurrency": "EUR",
     "priceSpecification": {
       "@type": "PriceSpecification",

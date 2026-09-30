@@ -50,10 +50,8 @@ export default function SleutelBijmakenPage() {
           "itemOffered": {
             "@type": "Service",
             "name": "Standaard Autosleutel Bijmaken",
-            "description": "Reserve sleutel voor oudere modellen zonder chip"
-          },
-          "price": "149",
-          "priceCurrency": "EUR"
+            "description": "Reserve sleutel voor oudere modellen zonder chip. Prijs wordt telefonisch vooraf genoemd."
+          }
         },
         {
           "@type": "Offer",
@@ -62,7 +60,7 @@ export default function SleutelBijmakenPage() {
             "name": "Transponder Autosleutel Bijmaken",
             "description": "Sleutel met chip voor merken als Volkswagen, Opel, Ford"
           },
-          "price": "149",
+          "price": SITE_CONFIG.prices.transponder,
           "priceCurrency": "EUR"
         },
         {
@@ -72,7 +70,7 @@ export default function SleutelBijmakenPage() {
             "name": "Smart Key Programmeren",
             "description": "Keyless entry sleutel voor BMW, Mercedes, Audi, Toyota"
           },
-          "price": "199",
+          "price": SITE_CONFIG.prices.smartKey,
           "priceCurrency": "EUR"
         }
       ]
