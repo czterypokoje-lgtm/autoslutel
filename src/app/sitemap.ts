@@ -25,6 +25,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
      * is 708 impressions of people looking for a trade rather than a task.
      */
     '/autosleutel-gestolen', '/mobiele-sleutelmaker',
+    /*
+     * "in de buurt" is already at position 8.4 with the best click rate of
+     * any local query in the export, ranking against the city hub because
+     * nothing answered it directly. "kopieren" is 798 impressions landing on
+     * a 404.
+     */
+    '/autosleutel-bijmaken-in-de-buurt', '/autosleutel-kopieren',
     // Linked from the footer of every page and indexable, but was never
     // listed here — the only orphan left after the model pages came out.
     '/algemene-voorwaarden',
