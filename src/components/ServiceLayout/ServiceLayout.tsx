@@ -1,0 +1,774 @@
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { getRelatedBlogPosts } from '@/config/services';
+import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import SplitHero from '@/components/SplitHero/SplitHero';
+import GalleryMarquee from '@/components/GallerySlider/GalleryMarquee';
+import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
+import GallerySlider from '@/components/GallerySlider/GallerySlider';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import Image from 'next/image';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+
+import { CITIES } from '@/config/cities';
+import { BRANDS } from '@/config/brands';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import { captionFromFilename } from '@/lib/imageCaption';
+import styles from '@/app/diensten/[slug]/page.module.css';
+import fs from 'fs';
+import path from 'path';
+
+/*
+ * The whole service page, as a component two routes can render.
+ *
+ * It was the body of /diensten/[slug]. /autosleutel-kwijt needs exactly the
+ * same page -- the gallery, the brand grid, the regions, both long articles,
+ * the emergency CTA and the related posts -- because that is the page the
+ * merged AKL service had and the one people were reading. Hand-copying six
+ * hundred lines into a second route would guarantee the two drift apart, and
+ * the drift would be invisible until a price or a claim changed on one of
+ * them and not the other.
+ *
+ * `basePath` is why this is a parameter and not a constant: every canonical,
+ * breadcrumb and element id has to name the URL the reader is actually on,
+ * not the slug the content is filed under.
+ */
+export default function ServiceLayout({ slug, basePath }: { slug: string; basePath: string }) {
+  const service = DIENSTEN.find(s => s.slug === slug);
+  if (!service) notFound();
+
+  const p1Cities = CITIES.filter(c => c.priority === 'P1').slice(0, 8);
+  const popularBrands = BRANDS.filter(b => b.priority === 'P1').slice(0, 8);
+
+  const isOpening = ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto', 'auto-openen-zonder-sleutel'].includes(slug);
+  const isKey = ['sleutel-bijmaken', 'autosleutel-kwijt', 'alle-sleutels-kwijt-auto', 'reserve-autosleutel', 'transponder-programmeren', 'smart-key-programmeren', 'autosleutel-bijmaken'].includes(slug);
+
+  let howItWorksVariant: 'default' | 'akl' | 'ignition' | 'lockout' = 'default';
+  if (['autosleutel-kwijt', 'alle-sleutels-kwijt-auto'].includes(slug)) {
+    howItWorksVariant = 'akl';
+  } else if (['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'noodopening-auto', 'auto-slotenmaker'].includes(slug)) {
+    howItWorksVariant = 'lockout';
+  } else if (['contactslot-auto-vervangen', 'sleutel-afgebroken-in-slot', 'contactslot-vervangen'].includes(slug)) {
+    howItWorksVariant = 'ignition';
+  }
+
+  // Load recent work images for this service
+  const imagesDirMerken = path.join(process.cwd(), 'public', 'images', 'merken');
+  const imagesDirDiensten = path.join(process.cwd(), 'public', 'images', 'diensten');
+  let serviceImages: string[] = [];
+  try {
+    if (fs.existsSync(imagesDirMerken)) {
+      const files = fs.readdirSync(imagesDirMerken);
+      const matched = files.filter(f => {
+        if (isOpening && f.includes('auto-openen-zonder-sleutel')) return true;
+        if (isKey && f.includes('autosleutel-bijmaken')) return true;
+        return false;
+      });
+      // Mix up the array to get a variety
+      const shuffled = matched.sort(() => 0.5 - Math.random());
+      serviceImages.push(...shuffled.slice(0, 4).map(f => `/images/merken/${f}`));
+    }
+    
+    // Fallback/fill with general equipment if needed
+    if (fs.existsSync(imagesDirDiensten) && serviceImages.length < 4) {
+      const equipFiles = fs.readdirSync(imagesDirDiensten);
+      serviceImages.push(...equipFiles.slice(0, 4 - serviceImages.length).map(f => `/images/diensten/${f}`));
+    }
+  } catch (e) {}
+
+  // Dynamic scenarios for better SEO & human tone
+  const bulletItems = isOpening ? [
+    { strong: 'Sleutel op de autostoel of in het contact laten liggen:', text: 'U stapt even uit en de centrale deurvergrendeling springt automatisch dicht terwijl de sleutel nog binnen ligt.' },
+    { strong: 'Sleutel in de kofferbak beland:', text: 'Tijdens het inladen van boodschappen, sportspullen of bagage klapt de klep dicht terwijl uw sleutel nog in de laadruimte ligt.' },
+    { strong: 'Batterij afstandsbediening of smart key leeg:', text: 'De auto reageert niet meer op het signaal en de mechanische noodsleutel in de portiergreep draait niet door vuil of vorst.' },
+    { strong: 'Kind of huisdier per ongeluk ingesloten:', text: 'Een acute noodsituatie waarin wij direct met de hoogste prioriteit én gegarandeerd schadevrij ingrijpen.' },
+    { strong: 'Elektronische storing in de centrale vergrendeling:', text: 'Het slot weigert dienst of de keyless-entry module detecteert de sleutel niet meer na een spanningsdip.' }
+  ] : isKey ? [
+    { strong: 'U heeft slechts één werkende sleutel over:', text: 'Voorkom acute stress en hoge wegsleepkosten door tijdig een reserve autosleutel met startonderbreker te laten bijmaken.' },
+    { strong: 'Autosleutel kwijtgeraakt of gestolen:', text: 'Wij wissen direct de verloren of gestolen sleutels uit de boordcomputer (ECU) zodat uw auto 100% beveiligd blijft tegen diefstal.' },
+    { strong: 'Behuizing versleten of knoppen ingedrukt:', text: 'Het sleutelblad is krom of de rubberen drukknoppen zijn kapot waardoor vocht de printplaat kan beschadigen.' },
+    { strong: 'Transponder of chip wordt niet meer herkend:', text: 'De startmotor draait wel, maar de motor slaat niet aan omdat het startblokkeringssignaal niet doorkomt.' },
+    { strong: 'Extra sleutel nodig voor partner of gezinslid:', text: 'Direct ter plaatse ingeleerd en getest op alle portieren en het contactslot.' }
+  ] : [
+    { strong: 'Contactslot draait niet of zit muurvast:', text: 'De sleutel wil niet meer draaien in het stuurslot door interne slijtage van de cilinder of het stuurkolomscharnier.' },
+    { strong: 'Sleutel afgebroken in het contact of portierslot:', text: 'Wij verwijderen het afgebroken sleutelstuk met speciale extractietools zonder het slot te beschadigen.' },
+    { strong: 'Elektronische storing of communicatiefout:', text: 'De startonderbreker of BCM-module blokkeert de startvrijgave van uw voertuig.' },
+    { strong: 'Slijtage aan sleutelblad of sleutelbaard:', text: 'Door jarenlang gebruik is het metaal afgesleten waardoor de sleutel hakt of blijft hangen.' }
+  ];
+
+  /*
+   * Photographs of this service, read off disk rather than listed in code:
+   * drop a file into public/images/<slug>/ and it appears. The filename is the
+   * caption and the alt text, so it has to read like one —
+   * auto_contactslot_vervangen_mercedes_eis_utrecht.webp, not IMG_4821.
+   */
+  let servicePhotos: string[] = [];
+  try {
+    servicePhotos = fs
+      .readdirSync(path.join(process.cwd(), 'public', 'images', slug))
+      .filter((f) => /\.(webp|jpe?g|png)$/i.test(f))
+      .sort();
+  } catch {
+    // No folder for this service yet.
+  }
+
+  const pricingHeaders = ['Dienst / Sleuteltype', 'Kenmerken', 'Onze Tarieven (excl. btw)', 'Dealer Prijs'];
+
+  /*
+   * A service with its own price rows shows only those. The generic table
+   * below is the fallback for services that have not been given one — on the
+   * contactslot page it meant five of its six rows were about smart keys and
+   * behuizingen, which is not what the visitor came for.
+   */
+  const genericPricingRows = [
+    ['Standaard autosleutel (mechanisch)', 'Zonder afstandsbediening, incl. transponder chip', `Vanaf € ${SITE_CONFIG.prices.transponder},-`, '€ 400 - € 800 (1-2 wk levertijd)'],
+    ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € ${SITE_CONFIG.prices.remote},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
+    ['Smart Key / Keyless Entry', 'Proximity start, volledig geprogrammeerd', `Vanaf € ${SITE_CONFIG.prices.smartKey},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
+    ['Sleutel behuizing / batterij vervangen', 'Nieuwe behuizing, micro-switches & batterij', `Vanaf € ${SITE_CONFIG.prices.casing},-`, 'Vaak hele sleutel (€ 200+)'],
+    ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
+    ['Contactslot reparatie / vervanging', 'Reviseren of nieuw slot incl. sleutels', `Vanaf € ${SITE_CONFIG.prices.ignition},-`, 'Vaak hele stuurkolom (€ 600+)']
+  ];
+
+  const pricingRows = service.pricing
+    ? service.pricing.map((r) => [r.service, r.features, r.ours, r.dealer])
+    : genericPricingRows;
+
+  const howToSchema = {
+    '@context': 'https://schema.org', '@type': 'HowTo',
+    name: service.h1, description: service.intro,
+    step: service.steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, text: s })),
+  };
+  const faqSchema = {
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: service.faq.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  };
+  const serviceSchema = {
+    '@context': 'https://schema.org', '@type': 'Service',
+    name: service.title,
+    provider: getBaseLocalBusinessSchema(),
+    description: service.metaDesc,
+    ...(service.priceFrom && { offers: { '@type': 'Offer', priceCurrency: 'EUR', description: service.priceFrom } }),
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Diensten', item: `${SITE_CONFIG.domain}/diensten` },
+      { '@type': 'ListItem', position: 3, name: service.title, item: `${SITE_CONFIG.domain}${basePath}` },
+    ],
+  };
+
+  return (
+    <>
+      <script id={`howto-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      <script id={`faq-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script id={`svc-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <script id={`bc-${slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <main>
+        {/* ── HERO ─────────────────────────────────────────────────────
+          *
+          * Two layouts, chosen by whether the service has a photograph.
+          *
+          * With one, it gets SplitHero — the same white hero as the home page
+          * and /diensten/autosleutel-bijmaken, with the kenteken wizard beside
+          * the picture. Somebody arriving here from an ad used to meet a dark
+          * navy band and a flat row of fields: visibly a different site from
+          * the one the same campaign shows on the home page.
+          *
+          * Without one, the dark band stays. The split hero has a picture in
+          * it, so a page with no picture cannot use it — most services have no
+          * photo of their own yet, and filling the gap with a generic stock
+          * image would be worse than the honest dark band. Add a heroImage to
+          * a service in diensten.ts and that page upgrades on its own.
+          */}
+        {service.heroImage ? (
+          <SplitHero
+            crumbs={[
+              { label: 'Home', href: '/' },
+              { label: 'Diensten', href: '/diensten' },
+              { label: service.title },
+            ]}
+            titleTop={service.h1.includes('—') ? service.h1.split('—')[0].trim() : service.h1}
+            titleAccent={service.h1.includes('—') ? service.h1.split('—').slice(1).join('—').trim() : undefined}
+            lead={service.intro}
+            image={service.heroImage}
+          >
+            {service.directAnswer && (
+              /*
+               * Restyled for the white hero. The dark version painted this in
+               * rgba(255,255,255,0.08) with white text — carried onto a light
+               * ground unchanged it was near-invisible grey on white, which is
+               * how it already looked on the dark band in the report.
+               */
+              <p
+                data-direct-answer
+                style={{
+                  marginBottom: '1.5rem',
+                  padding: '1rem 1.15rem',
+                  background: 'var(--gray-50)',
+                  borderLeft: '3px solid var(--orange-500)',
+                  borderRadius: '8px',
+                  fontSize: '0.98rem',
+                  lineHeight: 1.65,
+                  color: 'var(--gray-700)',
+                }}
+              >
+                {service.directAnswer}
+              </p>
+            )}
+            <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+          </SplitHero>
+        ) : (
+          <section
+            className={styles.hero}
+            style={slug === 'autosleutels-repareren' ? {
+              backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%), url('/images/seo/autosleutel_reparatie_hero.webp')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            } : undefined}
+          >
+            <div className={styles.heroInner}>
+              <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+                <Link href="/">Home</Link> <span>/</span>
+                <Link href="/diensten">Diensten</Link> <span>/</span>
+                <span>{service.title}</span>
+              </nav>
+
+              <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+                <HeroTrustBadge />
+              </div>
+
+              <h1>
+                {service.h1.includes('—') ? (
+                  <>
+                    {service.h1.split('—')[0]} — <span style={{ color: 'var(--orange-500)' }}>{service.h1.split('—').slice(1).join('—')}</span>
+                  </>
+                ) : (
+                  service.h1
+                )}
+              </h1>
+
+              <p className={styles.heroLead}>{service.intro}</p>
+
+              {service.directAnswer && (
+                <p
+                  data-direct-answer
+                  style={{
+                    marginTop: '1.25rem',
+                    padding: '1rem 1.15rem',
+                    background: 'rgba(255,255,255,0.08)',
+                    borderLeft: '3px solid #e2620f',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    lineHeight: 1.65,
+                  }}
+                >
+                  {service.directAnswer}
+                </p>
+              )}
+
+              <div style={{ marginTop: '2rem' }}>
+                <LeadCaptureForm phone={SITE_CONFIG.phone} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/*
+          * The home page's sliding photo wall, for services that have enough
+          * photographs of their own to fill it.
+          *
+          * SIX IS NOT ARBITRARY. GalleryMarquee splits the list across two rows
+          * travelling in opposite directions and repeats a row until it is long
+          * enough to loop. Below six that repetition is visible — the same
+          * photo passing three times in one row reads as a bug, and a wall of
+          * work you have not done yet is worse than no wall. Drop more files
+          * into public/images/<slug>/ and the grid further down becomes this.
+          */}
+        {servicePhotos.length >= 6 && (
+          <GalleryMarquee
+            images={servicePhotos.map((file) => ({
+              src: `/images/${slug}/${file}`,
+              caption: captionFromFilename(file),
+              width: 1000,
+              height: 750,
+            }))}
+            title={`${service.title} — Recent Werk`}
+            subtitle="Elke dag op locatie, door heel Nederland."
+          />
+        )}
+
+        <VerifiedReviewBanner />
+
+        <BrandsMarquee />
+
+        {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+        <FeatureCards 
+          title={`Specialist in ${service.title}`}
+          subtitle={<><span style={{ color: '#f97316' }}>AutoSleutel24</span> lost het snel voor u op, direct op locatie.</>}
+          features={[
+              {
+                id: 'feature-1',
+                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Autosleutel Kwijt? Direct Hulp',
+                description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
+                linkText: 'Meer over mobiele service',
+                linkUrl: '/diensten'
+              },
+              {
+                id: 'feature-2',
+                icon: <Image src="/images/icon_map.webp" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Auto Op Slot? Schadevrij openen',
+                description: `Binnen ${SITE_CONFIG.responseTime} minuten ter plaatse. Onze lokale monteur is altijd in de buurt.`,
+                linkText: 'Vind een monteur',
+                linkUrl: '#contact'
+              },
+              {
+                id: 'feature-3',
+                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Vaste prijs vooraf',
+                description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
+                linkText: 'Bekijk onze tarieven',
+                linkUrl: '/prijzen'
+              },
+              {
+                id: 'feature-4',
+                icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '12 Maanden Garantie',
+                description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
+                linkText: 'Bekijk waar wij service verlenen',
+                linkUrl: '/steden'
+              },
+              {
+                id: 'feature-5',
+                icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '24/7 Spoedhulp Bel Nu',
+                description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
+                linkText: 'Bel direct',
+                linkUrl: `tel:${SITE_CONFIG.phoneTel}`
+              }
+            ]}
+          />
+
+        {/* ── HOW IT WORKS (Full width under hero) ── */}
+        <HowItWorks variant={howItWorksVariant} />
+
+        {/* ── CONTENT SECTION ─────────────────────────────────────── */}
+        <section className={styles.section}>
+          <div className={styles.container}>
+            <div className={styles.contentGrid}>
+              <div className={styles.mainContent}>
+
+                {/* Section 1: Wanneer Heeft U Dienst Nodig */}
+                <div>
+                  <h2>Wanneer Heeft U {service.title} Nodig?</h2>
+                  <p>
+                    Problemen met autovergrendeling of autosleutels doen zich altijd op een ongelegen moment voor. Bij {SITE_CONFIG.name} begrijpen wij hoe frustrerend en stressvol dit is. Onze gespecialiseerde monteurs staan dag en nacht voor u klaar en lossen onderstaande situaties dagelijks schadevrij voor u op:
+                  </p>
+                  <ul className={styles.bulletList}>
+                    {bulletItems.map((item, idx) => (
+                      <li key={idx}>
+                        <strong>{item.strong}</strong> {item.text}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Section 2: Prijzen Tabel of Openingsmethoden */}
+                {isOpening ? (
+                  <div>
+                    <h2>Schadevrije Openingsmethoden & Garantie</h2>
+                    <p>
+                      Onze monteurs maken uitsluitend gebruik van geavanceerd, merkspecifiek slotenmakersgereedschap. In tegenstelling tot traditionele garages of bergingdiensten openen wij uw voertuig 100% schadevrij. Wij verbuigen geen deurstijlen, veroorzaken geen lakbeschadigingen en breken nooit ruiten in.
+                    </p>
+                    <div className={styles.tableWrapper} style={{ marginBottom: '2rem' }}>
+                      <table className={styles.pricingTable}>
+                        <thead>
+                          <tr>
+                            <th>Techniek / Gereedschap</th>
+                            <th>Toepassing & Situatie</th>
+                            <th>Schadevrij Garantie</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><strong>Air Wedge + Long Reach Tool</strong></td>
+                            <td>Standaard bij 95% van alle moderne personenauto&apos;s</td>
+                            <td>100% schadevrij, geen druk op lak of rubber</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Lishi 2-in-1 Pick / Decoder</strong></td>
+                            <td>Rechtstreeks via het portierslot lockpicken en uitlezen</td>
+                            <td>100% mechanische precisie zonder geweld</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Turbo Decoder</strong></td>
+                            <td>Hoogbeveiligde sloten (zoals BMW, VAG en Porsche)</td>
+                            <td>Veilig en bliksemsnel zonder braaksporen</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Extractie & Cilinder Bypass</strong></td>
+                            <td>Bij afgebroken sleutelstukjes in het contact of portierslot</td>
+                            <td>Behoud van uw originele slotcilinder</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className={styles.callout}>
+                      <strong>Schadevrije garantie:</strong> Wij garanderen 100% schadevrije opening of herstel. Mocht er in een uitzonderlijk geval vooraf een risico zijn, dan bespreekt onze monteur dit altijd transparant met u vóór aanvang van de werkzaamheden.
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <h2>Wat Kost {service.title}? — Transparante Prijzen</h2>
+                    <p>
+                      Wij geloven in eerlijke en heldere tarieven zonder verborgen kosten achteraf. Omdat wij rechtstreeks vanuit onze volledig uitgeruste mobiele servicebussen werken, bespaart u bij ons tot wel 50% vergeleken met de officiële merkdealer — én u hoeft geen dure wegsleepkosten te betalen!
+                    </p>
+                    <div className={styles.tableWrapper}>
+                      <table className={styles.pricingTable}>
+                        <thead>
+                          <tr>
+                            {pricingHeaders.map((h, i) => (
+                              <th key={i}>{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {/*
+                            * data-label carries the column heading down to the
+                            * phone layout, where the <thead> is hidden and each
+                            * row becomes a card — otherwise "€ 300 - € 500"
+                            * would sit there with nothing saying what it is.
+                            */}
+                          {pricingRows.map((row, idx) => (
+                            <tr key={idx}>
+                              <td data-label={pricingHeaders[0]}>{row[0]}</td>
+                              <td data-label={pricingHeaders[1]}>{row[1]}</td>
+                              <td data-label={pricingHeaders[2]}><strong>{row[2]}</strong></td>
+                              <td data-label={pricingHeaders[3]}>{row[3]}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className={styles.callout}>
+                      <strong>Transparantie vooraf:</strong> De exacte prijs is afhankelijk van uw automerk, model, bouwjaar en sleuteltype. Neem direct contact op via telefoon of WhatsApp en u ontvangt van ons direct een vaste prijsopgave zonder verrassingen achteraf.
+                    </div>
+                  </div>
+                )}
+
+                {/* Section 2.5: SEO Image & Expert Description */}
+                <div>
+                  <h2>Professionele Mobiele Service — Direct Ter Plaatse</h2>
+                  
+                  {slug === 'auto-openen-zonder-sleutel' ? (
+                    <img 
+                      src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
+                      alt="Autodeur schadevrij openen door monteur" 
+                      style={{ width: '100%', borderRadius: '12px', margin: '1.25rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', objectFit: 'cover', aspectRatio: '16/9' }}
+                    />
+                  ) : slug === 'autosleutels-repareren' ? (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(2, 1fr)',
+                      gap: '1rem',
+                      margin: '1.25rem 0'
+                    }}>
+                      <img 
+                        src="/images/seo/autosleutels-repareren-werkplaats-utrecht.webp" 
+                        alt="SMD-solderen van microswitches en knoppen onder microscoop" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                      <img 
+                        src="/images/seo/autosleutels-repareren-inventaris-amsterdam.webp" 
+                        alt="Voorraad van OEM behuizingen en reservesleutel onderdelen" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                      <img 
+                        src="/images/seo/autosleutels-repareren-onderdelen-almere.webp" 
+                        alt="Reservesleutel printplaten, transponders en spoelen" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                      <img 
+                        src="/images/seo/autosleutels-repareren-service-amersfoort.webp" 
+                        alt="Monteur repareert sleutels ter plaatse" 
+                        style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                      />
+                    </div>
+                  ) : servicePhotos.length > 0 ? (
+                    /*
+                     * Photos of this service from public/images/<slug>/. Two
+                     * hard-coded <img> tags used to sit here repeating the
+                     * same files the hero already shows.
+                     */
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
+                      gap: '1rem',
+                      margin: '1.25rem 0'
+                    }}>
+                      {servicePhotos.map((file) => (
+                        <Image
+                          key={file}
+                          src={`/images/${slug}/${file}`}
+                          alt={captionFromFilename(file)}
+                          width={480}
+                          height={360}
+                          style={{ width: '100%', height: 'auto', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
+                          loading="lazy"
+                        />
+                      ))}
+                    </div>
+                  ) : serviceImages.length > 0 ? (
+                    <GallerySlider 
+                      images={serviceImages.map(src => ({
+                        src,
+                        caption: captionFromFilename(src),
+                      }))}
+                      title="Onze service in de hele regio — Galerij"
+                    />
+                  ) : (
+                    <img 
+                      src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
+                      alt={`Professionele mobiele service voor ${service.title.toLowerCase()} - direct ter plaatse en 100% schadevrij`} 
+                      style={{ width: '100%', borderRadius: '12px', margin: '1.25rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', objectFit: 'cover', aspectRatio: '16/9' }}
+                    />
+                  )}
+                  <p>
+                    Wanneer u te maken krijgt met een autovergrendelingsprobleem of een kapotte sleutel, is een snelle en deskundige oplossing van vitaal belang. Onze mobiele servicebussen fungeren als rijdende high-tech werkplaatsen. Ze zijn uitgerust met dezelfde geavanceerde diagnoseapparatuur en sleutelslijpmachines als de officiële merkdealers. Hierdoor hoeft u uw voertuig niet op te laten slepen; wij voeren de volledige service direct op uw eigen oprit, op uw werkplek of langs de snelweg uit.
+                  </p>
+                  <p>
+                    Onze werkwijze is gebaseerd op snelheid, vakmanschap en betrouwbaarheid. Waar een garage vaak meerdere werkdagen tot zelfs weken levertijd heeft voor het bestellen en inleren van een nieuwe autosleutel of contactslot, regelen wij dit in vrijwel alle gevallen dezelfde dag nog. Wij lezen de beveiligingscodes uit via de OBD2-diagnosepoort, frezen het sleutelblad met laserprecisie en programmeren de startonderbreker (transponder) direct in het motorregelsysteem van uw auto.
+                  </p>
+                </div>
+
+
+
+                {/* Section 4: Welke Merken Bedienen Wij */}
+                <div style={{ margin: '3rem 0' }}>
+                  <BrandsLogoGrid
+                    title={`Voor Welke Merken Bieden Wij ${service.title}?`}
+                    subtitle="Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:"
+                  />
+                </div>
+
+                {/* Section 5: Waar Komen Wij */}
+                <div>
+                  <h2>In Welke Regio&apos;s Bieden Wij {service.title}?</h2>
+                  <p>
+                    Met een netwerk van aangesloten autosleutelspecialisten bedienen wij dagelijks een groot werkgebied in Nederland. Wij komen onder meer in:
+                  </p>
+                  {/* No arrival time per city here. city.travelTime read "30-60 min"
+                      on 61 of 62 records — a constant wearing a data field's clothes,
+                      and false for every region beyond the Randstad. The real figure
+                      depends on which partner covers the city, which only the city
+                      page knows; this list links there rather than guessing. */}
+                  <ul className={styles.bulletList}>
+                    {CITIES.map((c) => (
+                      <li key={c.slug}>
+                        <Link href={`/steden/${c.slug}`}>
+                          {c.city}
+                        </Link>
+                        {` — ${c.region}`}
+                      </li>
+                    ))}
+                  </ul>
+                  <p>
+                    <Link href="/steden" style={{ fontWeight: 700, color: '#f97316' }}>Bekijk ons volledige werkgebied per provincie en stad →</Link>
+                  </p>
+                </div>
+
+                {/* Section 5.5: Comprehensive Dutch SEO Guide */}
+                <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
+                  <h2>Alles over {service.title}: Mobiele Service, Techniek en Verzekering</h2>
+                  <p>
+                    Wanneer u hulp nodig heeft met <strong>{service.title.toLowerCase()}</strong>, wilt u niet afhankelijk zijn van lange wachttijden of dure wegsleepservices van traditionele garages. Onze gecertificeerde mobiele slotenmakers komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw auto toe in heel Nederland. Of u nu thuis op de oprit staat, op uw werk, of langs de weg bent gestrand: binnen gemiddeld 30 minuten zijn wij ter plaatse.
+                  </p>
+                  <h3>Geavanceerde Apparatuur &amp; 100% Schadevrije Garantie</h3>
+                  <p>
+                    Wij werken uitsluitend met hightech diagnoseapparatuur en originele dealer-tokens. Voor het openen van autodeuren gebruiken wij speciale Lishi 2-in-1 lock decoders waarmee we het slot schadevrij openen via de cilinder. Moet er een nieuwe sleutel worden ingeleerd? Via de OBD2-diagnosepoort koppelen wij de nieuwe transponderchip of Keyless Go smart key rechtstreeks aan de startonderbreker van uw auto.
+                  </p>
+                  <h3>Kosten Besparen t.o.v. de Dealer & 12 Maanden Garantie</h3>
+                  <p>
+                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €{SITE_CONFIG.prices.transponder} tot €299. Bij "alle sleutels kwijt" betaalt u €299 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
+                  </p>
+                </div>
+
+                {/* Section 6: FAQ Accordion */}
+                <div>
+                  <h2>Veelgestelde Vragen over {service.title}</h2>
+                  {service.faq.map((f, i) => (
+                    <details key={i} className={styles.faqItem}>
+                      <summary className={styles.faqQuestion}>
+                        {f.q}
+                        <span className={styles.faqChevron}>+</span>
+                      </summary>
+                      <p className={styles.faqAnswer}>
+                        {f.a}
+                      </p>
+                    </details>
+                  ))}
+                </div>
+
+              </div>
+
+              {/* Sidebar */}
+              <aside className={styles.sidebar}>
+                <div className={styles.sideCard}>
+                  <h3>Direct Hulp Nodig?</h3>
+                  <p>Bel of WhatsApp ons direct. Wij zijn 24/7 bereikbaar en gemiddeld binnen {SITE_CONFIG.responseTime} bij u op locatie.</p>
+                  <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.sidePhone} id={`svc-sidebar-${slug}-phone`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                    Bel: {SITE_CONFIG.phone}
+                  </a>
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.sideWa} id={`svc-sidebar-${slug}-wa`}>WhatsApp Direct</a>
+                  <div className={styles.sideList}>
+                    {['Geen sleepkosten', 'Vaste prijs vooraf', 'Verzekeringsklare factuur', '12 maanden garantie', '24/7 beschikbaar'].map(item => (
+                      <div key={item} className={styles.sideListItem}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{ color: '#22c55e', flexShrink: 0 }} aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </aside>
+
+            </div>
+
+            {/* Bottom CTA block */}
+            <div className={styles.ctaBlock}>
+              <h2>{service.title} Nodig? Bel Onze Mobiele Spoedservice</h2>
+              <p>Geen lange wachttijden, geen dure sleepkosten naar de garage. Wij zijn 24 uur per dag, 7 dagen per week beschikbaar en komen direct naar u toe.</p>
+              <div className={styles.ctaBtnsGrid}>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary} id={`svc-cta-${slug}-phone`}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                  Bel: {SITE_CONFIG.phone}
+                </a>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWhatsapp} id={`svc-cta-${slug}-wa`}>WhatsApp Direct</a>
+              </div>
+              <div className={styles.microText}>
+                <span>✓ Direct contact met monteur</span>
+                <span>✓ Vaste prijs vooraf, geen verrassingen</span>
+                <span>✓ 100% Schadevrije garantie</span>
+              </div>
+            </div>
+
+            {/* ── RELATED BLOGS SECTION ────────────────────────────────── */}
+            {(() => {
+              const relatedPosts = getRelatedBlogPosts(slug);
+              if (!relatedPosts || relatedPosts.length === 0) return null;
+              return (
+                <section className={styles.relatedBlogsSection} style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                  <div className={styles.relatedBlogsContainer} style={{ padding: 0 }}>
+                    <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+                      GERELATEERDE KENNIS &amp; ADVIES
+                    </p>
+                    <h2 className={styles.relatedBlogsTitle}>
+                      Handige artikelen over {service.title}
+                    </h2>
+                    <div className={styles.relatedBlogsGrid}>
+                      {relatedPosts.map((post) => (
+                        <Link
+                          key={post.slug}
+                          href={`/blog/${post.slug}`}
+                          className={styles.blogPostCard}
+                          id={`related-blog-${post.slug}`}
+                        >
+                          <div className={styles.blogPostMeta}>
+                            <span className={styles.blogPostReadTime}>{post.readTime} lezen</span>
+                            <span className={styles.blogPostDate}>
+                              {new Date(post.publishDate).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            </span>
+                          </div>
+                          <h3 className={styles.blogPostTitle}>{post.title}</h3>
+                          <p className={styles.blogPostExcerpt}>{post.excerpt}</p>
+                          <span className={styles.blogPostLink}>Lees artikel →</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              );
+            })()}
+
+            {/* ── REVIEWS SECTION ────────────────────────────────────── */}
+            <section className={styles.reviews}>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem', textAlign: 'center' }}>
+                KLANTBEOORDELINGEN
+              </p>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2rem 0', textAlign: 'center' }}>
+                Wat Onze Klanten Zeggen over {service.title}
+              </h2>
+              <GoogleReviewsCta />
+            </section>
+
+            {/* ── COMPREHENSIVE SERVICE TECHNICAL SEO GUIDE ── */}
+            <div className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem', background: '#ffffff', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--gray-200)' }}>
+              <h2>Alles over {service.title} door Onze Gecertificeerde Slotenmakers</h2>
+              <p>
+                Het vakkundig uitvoeren van <strong>{service.title.toLowerCase()}</strong> vereist nauwkeurigheid, gespecialiseerde gereedschappen en actuele kennis van voertuigelektronica. Bij moderne personenauto&apos;s en bedrijfswagens is elk onderdeel — van het contactslot en het portierslot tot de afstandsbediening en transponderchip — naadloos verbonden met de centrale boordcomputer (ECU, BSI of CAS module). Waar conventionele garages of algemene pechhulpdiensten vaak niet over de juiste specialistische apparatuur beschikken, is <strong>{SITE_CONFIG.name}</strong> uitgerust om direct op locatie in te grijpen.
+              </p>
+              <h3>Waarom professionele mobiele hulp essentieel is</h3>
+              <p>
+                Wanneer u te maken heeft met een buitensluiting, een kapotte sleutel of een storing in uw startonderbreker, wilt u voorkomen dat er schade ontstaat aan uw autolak, portier of elektronica. Onze monteurs werken met schadevrije Lishi 2-in-1 lockdecoders, OEM-gecertificeerde diagnosecomputers en hightech CNC lasermachines. Wij lossen het probleem direct bij u voor de deur op — of u nu thuis bent, op het werk staat of onderweg langs de weg.
+              </p>
+              <h3>Transparante All-In Prijzen, Verzekering en 12 Maanden Garantie</h3>
+              <p>
+                Wij hanteren vooraf altijd een vaste en heldere prijsafspraak, zodat u nooit wordt geconfronteerd met onverwachte kosten of hoge sleepkosten naar een dealer. Bovendien ontvangt u op al onze geleverde sleutels, onderdelen en reparaties standaard 12 maanden schriftelijke garantie. Veel verzekeringsmaatschappijen vergoeden onze factuur onder uw WA Extra of Allrisk autoverzekering.
+              </p>
+            </div>
+
+            {/* ── INTERNAL LINKING NETWORK SECTION ── */}
+            <div className="seo-hub-box" style={{ marginTop: '4rem' }}>
+              <div className="seo-hub-grid">
+                <div>
+                  <div className="seo-hub-title">Andere Diensten</div>
+                  <div className="seo-hub-col">
+                    {DIENSTEN.filter(s => s.slug !== service.slug && !REDIRECTED_SERVICE_SLUGS.has(s.slug)).map(s => (
+                      <Link key={s.slug} href={`/diensten/${s.slug}`} className="seo-hub-link">
+                        {`${s.title} →`}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="seo-hub-title">Automerken voor {service.title}</div>
+                  <div className="seo-hub-col">
+                    {BRANDS.map(b => (
+                      <Link key={b.slug} href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken`} className="seo-hub-link">
+                        {`${b.name} Autosleutel Bijmaken →`}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="seo-hub-title">{service.title} in de Regio</div>
+                  <div className="seo-hub-col">
+                    <Link href="/steden" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
+                      Bekijk alle steden →
+                    </Link>
+                    {p1Cities.map(c => (
+                      <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
+                        {`${service.title} ${c.city} →`}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </main>
+    </>
+  );
+}

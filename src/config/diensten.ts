@@ -228,7 +228,7 @@ export const DIENSTEN: Service[] = [
     title: 'Autosleutel Kwijt',
     metaTitle: 'Alle Autosleutels Kwijt? | AKL Specialist op Locatie | 24/7',
     metaDesc: 'Alle autosleutels kwijt? Laat uw auto niet wegslepen naar de dealer! Wij maken nieuwe sleutels ter plaatse op locatie. Inclusief programmering. Bel nu!',
-    h1: 'Alle Autosleutels Kwijt? — Mobiele Sleutelmaker ter Plaatse',
+    h1: 'Autosleutel Kwijt of Alle Sleutels Kwijt? — Nieuwe Sleutel ter Plaatse',
     intro: 'Alle sleutels kwijt? Geen sleeptruck nodig — wij programmeren nieuwe sleutels vandaag nog direct bij uw auto op locatie.',
     system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
     priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
