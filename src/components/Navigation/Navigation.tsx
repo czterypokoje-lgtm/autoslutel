@@ -15,8 +15,11 @@ import { BRAND_COUNT } from '@/config/brands';
  * itself: a price in a navigation label, and a fourth place a price lived
  * outside site.config.
  *
- * Batterij Vervangen and Contactslot Vervangen are both repairs, so they sit
- * under Autosleutels Repareren, which fills that column and empties no other.
+ * Batterij Vervangen is a repair to the key and sits under Autosleutels
+ * Repareren. Contactslot Vervangen is NOT: replacing a car's ignition lock is
+ * a mechanical job on the vehicle, EUR 299-599, and has nothing to do with
+ * mending a key housing or a rubber button. It belongs with the other lock
+ * work under Auto Slotenmaker -- a contactslot is a lock.
  *
  * The Autosleutel Kwijt column also listed "Alle Sleutels Kwijt (AKL)" under
  * itself. That was one page linked twice: the AKL service 301s to
@@ -34,6 +37,7 @@ const DienstenStructure = [
       { href: '/diensten/deur-dichtgevallen', label: 'Deur Dichtgevallen' },
       { href: '/diensten/kofferbak-openen', label: 'Kofferbak Openen' },
       { href: '/diensten/sleutel-afgebroken-in-slot', label: 'Sleutel Afgebroken in Slot' },
+      { href: '/diensten/contactslot-auto-vervangen', label: 'Contactslot Vervangen' },
     ]
   },
   {
@@ -61,7 +65,6 @@ const DienstenStructure = [
       { href: '/diensten/behuizing-vervangen', label: 'Behuizing Vervangen' },
       { href: '/diensten/knoppen-repareren', label: 'Knoppen Repareren' },
       { href: '/diensten/batterij-vervangen', label: 'Batterij Vervangen' },
-      { href: '/diensten/contactslot-auto-vervangen', label: 'Contactslot Vervangen' },
     ]
   },
 ];
