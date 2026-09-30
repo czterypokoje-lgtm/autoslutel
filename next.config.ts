@@ -76,6 +76,17 @@ const nextConfig: NextConfig = {
      * escapes them the same way.
      */
     '/diensten/\\[slug\\]': ['./public/**/*'],
+    /*
+     * Same route, second URL. The body of /diensten/[slug] became
+     * ServiceLayout so /autosleutel-kwijt could render the identical page,
+     * and the readdirSync came with it — so the tracer pulled all 322 MB of
+     * public/images into this function too and the build failed at 308.81 MB.
+     *
+     * The reasoning above applies unchanged: the page is prerendered, the
+     * filenames are baked into the HTML at build time, and the photographs
+     * are served from the CDN and never from the function.
+     */
+    '/autosleutel-kwijt': ['./public/**/*'],
   },
   images: {
     dangerouslyAllowSVG: true,
