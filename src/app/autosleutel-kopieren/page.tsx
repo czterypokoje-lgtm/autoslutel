@@ -124,7 +124,7 @@ export default function AutosleutelKopieren() {
           programmeren in één bezoek op uw locatie, vanaf €{SITE_CONFIG.prices.transponder}, met 12
           maanden garantie.
         </p>
-        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+        <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 
       <VerifiedReviewBanner />

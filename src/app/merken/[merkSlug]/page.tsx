@@ -203,7 +203,11 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
 
             </div>
             <div style={{ flex: '1 1 400px', maxWidth: '450px', width: '100%', margin: '0 auto' }}>
-              <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" initialBrand={brand.name} />
+              {/* The light-theme form has dark text, so it gets a white card. Straight on the dark photo,
+                  "Voeg sleutelfoto toe" and "Noodgeval of spoed?" could not be read. */}
+              <div style={{ background: '#ffffff', borderRadius: 16, padding: '1rem', boxShadow: '0 12px 40px rgba(0,0,0,0.35)' }}>
+                <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" initialBrand={brand.name} />
+              </div>
             </div>
           </div>
         </section>

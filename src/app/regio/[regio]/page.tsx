@@ -141,7 +141,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
         }}
       >
-        <LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />
+        <LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />
       </SplitHero>
 
       <VerifiedReviewBanner />

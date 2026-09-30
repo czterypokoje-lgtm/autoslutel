@@ -143,7 +143,7 @@ export default function MotorsleutelBijmaken() {
           frezen de sleutel en leren hem in als er een chip in zit. U hoort de prijs telefonisch
           voordat wij vertrekken.
         </p>
-        <LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />
+        <LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />
       </SplitHero>
 
       <VerifiedReviewBanner />

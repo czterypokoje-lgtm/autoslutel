@@ -159,7 +159,7 @@ export default function AutosleutelGestolen() {
           sleutel uw enige, dan lezen wij de sleutelcode uit de auto en begint het bij €
           {SITE_CONFIG.prices.allKeysLost}. Wij werken 24/7 op locatie.
         </p>
-        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+        <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 
       <VerifiedReviewBanner />

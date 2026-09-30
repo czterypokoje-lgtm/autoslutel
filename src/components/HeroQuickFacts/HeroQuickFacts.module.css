@@ -64,3 +64,11 @@
   color: #ffffff;
   border-color: #ffffff;
 }
+
+/* The fixed Bel Nu / WhatsApp bar is on screen below 768px, so the same two buttons in the hero
+   would be a second, identical set on the same screen. The facts stay; the buttons are for desktop. */
+@media (max-width: 767px) {
+  .buttons {
+    display: none;
+  }
+}

@@ -131,7 +131,7 @@ export default function RenaultSleutelkaart() {
           code uit de auto en programmeren een nieuwe kaart in, met een vaste prijs vooraf en 12
           maanden garantie. Bel {SITE_CONFIG.phone} of geef uw kenteken door.
         </p>
-        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+        <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
       </SplitHero>
 
       <VerifiedReviewBanner />

@@ -13,7 +13,7 @@ import Image from 'next/image';
 import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import VerifiedReviewBanner, { bannerReviewFor } from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 
 import { CITIES } from '@/config/cities';
@@ -240,7 +240,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 {service.directAnswer}
               </p>
             )}
-            <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" />} />
+            <VehicleWizard hideContact fallback={<LeadCaptureForm phone={SITE_CONFIG.phoneTel} theme="light" hideDirect />} />
           </SplitHero>
         ) : (
           <section
@@ -294,7 +294,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
               )}
 
               <div style={{ marginTop: '2rem' }}>
-                <LeadCaptureForm phone={SITE_CONFIG.phone} />
+                <LeadCaptureForm phone={SITE_CONFIG.phone} hideDirect />
               </div>
             </div>
           </section>
@@ -324,7 +324,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
           />
         )}
 
-        <VerifiedReviewBanner review={isOpening ? bannerReviewFor('ışıl güvercin') : undefined} />
+        <VerifiedReviewBanner />
 
         <BrandsMarquee />
 

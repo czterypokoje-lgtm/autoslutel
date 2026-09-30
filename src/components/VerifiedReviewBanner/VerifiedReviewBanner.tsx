@@ -31,22 +31,41 @@ export interface BannerReview {
  * about a given service yet, leave the page on this default rather than
  * writing one that fits.
  *
- * Reviews Google itself truncates with "…" are skipped: a quote that stops
- * mid-sentence misrepresents what the person wrote.
+ * Reviews Google itself truncates with "…" are quoted only up to their last
+ * complete sentence (see completeSentences): a quote that stops mid-sentence
+ * misrepresents what the person wrote.
  */
-const SOURCE = REVIEWS.find((review) => !review.text.includes('…')) ?? REVIEWS[0];
-
-const DEFAULT_REVIEW: BannerReview = {
-  name: SOURCE.name,
-  meta: `Google · ${SOURCE.when}`,
-  text: SOURCE.text,
-};
+/*
+ * Google cuts long reviews with "…". Quote only the complete sentences before the
+ * cut: a quote that stops mid-sentence misrepresents what the person wrote, but the
+ * first sentence or two of a review, quoted whole, is an honest excerpt.
+ */
+function completeSentences(text: string): string | null {
+  if (!text.includes('…')) return text;
+  const head = text.split('…')[0].trim();
+  const m = head.match(/^([\s\S]*[.!?])(?:\s|$)/);
+  return m ? m[1].trim() : null;
+}
 
 /** A real review from REVIEWS, by the reviewer's name, in the shape the banner takes. */
 export function bannerReviewFor(name: string): BannerReview | undefined {
   const r = REVIEWS.find((review) => review.name === name);
-  return r ? { name: r.name, meta: `Google · ${r.when}`, text: r.text } : undefined;
+  const text = r ? completeSentences(r.text) : null;
+  return r && text ? { name: r.name, meta: `Google · ${r.when}`, text } : undefined;
 }
+
+/*
+ * The default is a Dutch review, on every page that does not name its own: the person
+ * reading this is a Dutch customer in a hurry. The first Dutch one is Stijn's, which
+ * Google truncates, so it is quoted up to its last complete sentence.
+ */
+const DEFAULT_REVIEW: BannerReview =
+  bannerReviewFor('Stijn Van Arkel') ??
+  bannerReviewFor('Julia Van Doorn') ?? {
+    name: REVIEWS[0].name,
+    meta: `Google · ${REVIEWS[0].when}`,
+    text: REVIEWS[0].text,
+  };
 
 /**
  * @param review A review relevant to this particular page. A contactslot page

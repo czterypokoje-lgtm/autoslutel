@@ -54,6 +54,8 @@ interface Vehicle {
 interface Props {
   /** Rendered when the visitor says they do not have a plate to hand. */
   fallback?: React.ReactNode;
+  /** Leave out the Bel direct / WhatsApp row, for a hero that already shows those buttons above. */
+  hideContact?: boolean;
   city?: string;
 }
 
@@ -85,7 +87,7 @@ function quoteFor(start: StartType | null, remote: RemoteType | null, workingKey
   };
 }
 
-export default function VehicleWizard({ fallback, city = '' }: Props) {
+export default function VehicleWizard({ fallback, city = '', hideContact = false }: Props) {
   const [step, setStep] = useState<number | 'success'>(1);
   const [goingBack, setGoingBack] = useState(false);
   const [showFallback, setShowFallback] = useState(false);
@@ -245,6 +247,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
     <div className={styles.shell}>
       {/* Someone genuinely locked out will call, not fill in a form. Keep both
           routes above the wizard rather than below it. */}
+      {!hideContact && (
       <div className={styles.urgent}>
         <a
           href={`tel:${SITE_CONFIG.phoneTel}`}
@@ -261,6 +264,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
           <WhatsAppIcon /> WhatsApp
         </a>
       </div>
+      )}
 
       <div className={styles.progress} aria-hidden="true">
         {Array.from({ length: TOTAL_STEPS }, (_, i) => (
