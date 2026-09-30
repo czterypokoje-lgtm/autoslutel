@@ -33,9 +33,27 @@ export default function robots(): MetadataRoute.Robots {
          * URL expansion back on. The immediate half lives in the Google Ads
          * campaign settings.
          */
+        /*
+         * The two locksmith pages are blocked from AdsBot for a different
+         * reason than /blog/, and a harder one.
+         *
+         * Google prohibits advertising locksmith services in the Netherlands
+         * outright -- not advanced verification as in the US and Canada, a
+         * blanket ban, shared with Germany, Belgium and Sweden. Our ads run on
+         * key-duplication terms, which are allowed; these two pages are about
+         * the locksmith trade itself, in the title and throughout.
+         *
+         * They stay indexed and they earn their place organically: the
+         * sleutelmaker/slotenmaker family is 1,299 impressions in Search
+         * Console and "sleutelmaker" alone sits at position 10. Organic is in
+         * fact the ONLY channel available for those queries, which makes the
+         * pages more valuable, not less. What must not happen is an ad landing
+         * on one of them -- through final-URL expansion, dynamic search ads or
+         * a broad campaign -- and being read as a locksmith advertisement.
+         */
         userAgent: ['AdsBot-Google', 'AdsBot-Google-Mobile'],
         allow: '/',
-        disallow: ['/api/', '/blog/'],
+        disallow: ['/api/', '/blog/', '/mobiele-sleutelmaker', '/diensten/auto-slotenmaker'],
       },
       {
         // Allow AI bots to index content for LLM citations & AI search visibility
