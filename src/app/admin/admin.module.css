@@ -15,7 +15,7 @@
   min-height: 100vh;
   background: var(--crm-bg);
   color: var(--crm-text);
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--ff-body), 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-size: 14px;
   line-height: 1.5;
   letter-spacing: -0.006em;
@@ -26,48 +26,62 @@
   flex-direction: row;
 }
 
-/* ── sidebar ─────────────────────────────────────────────────────────── */
+/* ── sidebar ───────────────────────────────────────────────────────────
+ * Navy, always. The menu is the one dark surface in the CRM, so the white
+ * work area beside it reads as "the page" without any further framing.
+ */
 
 .sidebar {
-  width: 248px;
-  background: var(--crm-sidebar);
-  border-right: 1px solid var(--crm-rule);
+  width: 256px;
+  background: var(--crm-nav);
+  color: var(--crm-nav-text);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   height: 100vh;
   position: sticky;
   top: 0;
-  padding: 14px 10px 12px;
   box-sizing: border-box;
 }
 
-/** Brand, search and account on one line, the way an app bar reads. */
 .brandRow {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 6px 0;
-  margin-bottom: 18px;
+  height: 64px;
+  padding: 0 16px 0 18px;
+  background: var(--crm-nav-deep);
+  flex-shrink: 0;
 }
 
 .brand {
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--crm-ink);
-  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  font-size: 19px;
   margin-right: auto;
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
+  min-width: 0;
 }
 
-/** The mark: a key's bow, so the sidebar says what shop this is. */
+.brand24 { color: #fb923c; }
+
+.brandRole {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--crm-nav-muted);
+  margin-left: 2px;
+}
+
 .brandMark {
-  width: 22px;
-  height: 22px;
-  border-radius: 7px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   background: var(--crm-accent);
   color: var(--crm-on-accent);
   display: grid;
@@ -76,11 +90,11 @@
 }
 
 .iconGhost {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   border: none;
   background: none;
-  color: var(--crm-muted);
+  color: var(--crm-nav-muted);
   border-radius: var(--crm-r-sm);
   display: grid;
   place-items: center;
@@ -89,49 +103,27 @@
   flex-shrink: 0;
 }
 
-.iconGhost:hover {
-  background: var(--crm-sunk);
-  color: var(--crm-ink);
-}
+.iconGhost:hover { background: var(--crm-nav-hover); color: #ffffff; }
 
-/** The signed-in user, as a round mark with a presence dot. */
 .avatar {
   position: relative;
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--crm-raised);
-  color: var(--crm-ink);
+  background: #fb923c;
+  color: var(--crm-nav-deep);
   display: grid;
   place-items: center;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   flex-shrink: 0;
   text-decoration: none;
-  border: 1px solid var(--crm-rule2);
 }
 
-.avatar::after {
-  content: '';
-  position: absolute;
-  right: -1px;
-  bottom: -1px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--crm-ok);
-  border: 2px solid var(--crm-bg);
-}
+/* Desktop has the top bar for search and the avatar. */
+.mobileOnly { display: none; }
 
-/*
- * On desktop this is a plain wrapper standing between .sidebar and
- * .navWrapper — invisible, but it has to pass .sidebar's flex column down
- * to .navWrapper's own flex:1, or the scroll area below stops sizing itself
- * against the remaining height and just grows with its content instead.
- * The mobile media query below replaces every one of these rules with the
- * fixed-position drawer.
- */
 .navDrawer {
   display: flex;
   flex-direction: column;
@@ -143,88 +135,126 @@
   flex: 1;
   overflow-y: auto;
   scrollbar-width: none;
+  padding: 8px 0;
 }
 .navWrapper::-webkit-scrollbar { display: none; }
 
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 1px;
 }
 
+/* Kept for pages that still render a group label of their own. */
 .groupLabel {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--crm-muted);
-  padding: 0 10px;
-  margin: 18px 0 6px;
+  color: var(--crm-nav-muted);
+  padding: 0 20px;
+  margin: 16px 0 6px;
 }
-.groupLabel:first-child { margin-top: 0; }
 
 .navLink {
-  padding: 7px 10px;
-  border-radius: var(--crm-r-sm);
-  color: var(--crm-text);
+  width: 100%;
+  min-height: 46px;
+  padding: 0 18px 0 20px;
+  border: none;
+  background: none;
+  color: var(--crm-nav-text);
   text-decoration: none;
+  font: inherit;
   font-weight: 500;
-  font-size: 13.5px;
+  font-size: 15px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  position: relative;
+  gap: 14px;
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
 }
 
-.navLink svg {
-  flex-shrink: 0;
-  color: var(--crm-muted);
-}
+.navLink svg { flex-shrink: 0; color: var(--crm-nav-muted); }
 
-.navLink:hover {
-  background: var(--crm-sunk);
-  color: var(--crm-ink);
-}
-.navLink:hover svg { color: var(--crm-text); }
+.navLink:hover { background: var(--crm-nav-hover); color: #ffffff; }
+.navLink:hover svg { color: #ffffff; }
 
 .navLinkActive,
 .navLinkActive:hover {
-  background: var(--crm-sunk);
-  color: var(--crm-ink);
+  background: var(--crm-nav-deep);
+  color: #ffffff;
   font-weight: 600;
 }
 
 /* The one place the brand colour appears in navigation. */
-.navLinkActive svg { color: var(--crm-accent); }
+.navLinkActive svg,
+.navLinkActive:hover svg { color: #fb923c; }
+
+.navLabel { flex: 1; }
+
+.navChevron { color: var(--crm-nav-muted) !important; }
+
+/* Marks a screen filled by the AI agent. */
+.navAi {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #c9bcff;
+  border: 1px solid rgba(201, 188, 255, 0.45);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.navSub {
+  background: var(--crm-nav-deep);
+  padding: 4px 0 8px;
+}
+
+.navSubLink {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 16px 0 53px;
+  color: var(--crm-nav-muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.navSubLink:hover { color: #ffffff; }
+
+.navSubLinkActive,
+.navSubLinkActive:hover {
+  color: #ffffff;
+  font-weight: 600;
+}
 
 /** A count sitting at the right of a nav item. */
 .navCount {
   margin-left: auto;
   font-size: 11px;
   font-weight: 600;
-  color: var(--crm-muted);
-  background: var(--crm-raised);
+  color: #ffffff;
+  background: var(--crm-accent);
   border-radius: 999px;
-  padding: 1px 6px;
-  min-width: 8px;
+  padding: 1px 7px;
   text-align: center;
 }
 
 .sidebarBottom {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--crm-rule);
+  padding: 10px 0 12px;
+  border-top: 1px solid var(--crm-nav-rule);
   display: flex;
   flex-direction: column;
-  gap: 1px;
 }
+
+.sidebarBottom .navLink { min-height: 40px; font-size: 14px; }
 
 .who {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 10px 4px;
-  color: var(--crm-muted);
+  padding: 8px 20px 0;
+  color: var(--crm-nav-muted);
   font-size: 12px;
   min-width: 0;
 }
@@ -236,9 +266,9 @@
 }
 
 .role {
-  padding: 1px 6px;
+  padding: 1px 7px;
   border-radius: 999px;
-  border: 1px solid var(--crm-rule2);
+  border: 1px solid var(--crm-nav-rule);
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -249,37 +279,137 @@
 .signout {
   background: none;
   border: none;
-  color: var(--crm-text);
-  border-radius: var(--crm-r-sm);
-  padding: 7px 10px;
+  color: var(--crm-nav-text);
+  min-height: 40px;
+  padding: 0 18px 0 20px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   text-align: left;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   width: 100%;
 }
 
-.signout:hover {
-  color: var(--crm-ink);
-  background: var(--crm-sunk);
-}
+.signout svg { color: var(--crm-nav-muted); }
+.signout:hover { color: #ffffff; background: var(--crm-nav-hover); }
 
 .version {
   font-size: 10.5px;
-  color: var(--crm-muted);
-  padding: 8px 10px 0;
-  opacity: 0.7;
+  color: var(--crm-nav-muted);
+  padding: 8px 20px 0;
+}
+
+/* ── top bar ─────────────────────────────────────────────────────────── */
+
+.column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topBar {
+  height: 64px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 0 0 28px;
+  background: var(--crm-nav);
+}
+
+.topSearch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  width: min(460px, 100%);
+  padding: 0 14px;
+  border-radius: 8px;
+  background: var(--crm-nav-deep);
+  color: var(--crm-nav-muted);
+}
+
+.topSearch input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+}
+
+.topSearch input::placeholder { color: var(--crm-nav-muted); }
+.topSearch:focus-within { box-shadow: 0 0 0 2px #fb923c; }
+
+.topRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+}
+
+.topAgent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  padding-left: 16px;
+  color: #ddd5ff;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.topAgentDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+}
+
+.topAgentIcon {
+  width: 64px;
+  height: 100%;
+  margin-left: 6px;
+  background: var(--crm-ai);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+}
+
+.topAgent:hover .topAgentIcon { background: #5b3fd6; }
+
+.topAvatar {
+  width: 38px;
+  height: 38px;
+  margin-right: 22px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fb923c;
+  color: var(--crm-nav-deep);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
 /* ── content column ──────────────────────────────────────────────────── */
 
 .main {
   flex: 1;
-  padding: 26px 30px 60px;
+  padding: 30px 40px 60px;
   min-width: 0;
 }
 
@@ -557,7 +687,7 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
   padding: 24px;
   background: var(--crm-bg);
   color: var(--crm-text);
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--ff-body), 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
 }
@@ -701,12 +831,12 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     top: 0;
     z-index: 20;
     padding: 0;
-    border-right: none;
-    border-bottom: 1px solid var(--crm-rule);
-    background: var(--crm-bg);
   }
 
-  .brandRow { margin-bottom: 0; padding: 10px 12px; }
+  .brandRow { height: 56px; padding: 0 12px; }
+  .mobileOnly { display: grid; }
+  .topBar { display: none; }
+  .brand { font-size: 17px; }
 
   .mobileMenuBtn {
     display: flex;
@@ -717,12 +847,12 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     flex-shrink: 0;
     border: none;
     background: none;
-    color: var(--crm-text);
+    color: #ffffff;
     border-radius: var(--crm-r-sm);
     cursor: pointer;
   }
 
-  .mobileMenuBtn:hover { background: var(--crm-sunk); color: var(--crm-ink); }
+  .mobileMenuBtn:hover { background: var(--crm-nav-hover); }
 
   /*
    * Everything desktop shows permanently — every group, every label, the
@@ -736,8 +866,7 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     z-index: 60;
     width: min(84vw, 300px);
     height: 100vh;
-    background: var(--crm-sidebar);
-    border-right: 1px solid var(--crm-rule);
+    background: var(--crm-nav);
     /*
      * Bottom padding reserves the fixed .tabBar's own height (62px + its
      * safe-area inset) so "Webshop bekijken" and sign-out never end up
@@ -745,7 +874,7 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
      * z-index beats the tab bar's, but that only decides who paints on top
      * where they overlap; it does not stop the overlap from looking wrong.
      */
-    padding: 14px 10px calc(74px + env(safe-area-inset-bottom, 0px));
+    padding: 12px 0 calc(74px + env(safe-area-inset-bottom, 0px));
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -823,8 +952,7 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     z-index: 50;
     height: 62px;
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: var(--crm-sidebar);
-    border-top: 1px solid var(--crm-rule);
+    background: var(--crm-nav);
   }
 
   .tabItem {
@@ -834,14 +962,14 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     align-items: center;
     justify-content: center;
     gap: 2px;
-    color: var(--crm-muted);
+    color: var(--crm-nav-text);
     text-decoration: none;
     font-size: 11px;
     font-weight: 500;
   }
 
   .tabItemActive {
-    color: var(--crm-accent);
+    color: #fb923c;
   }
 
   .tabCenter {
@@ -861,7 +989,7 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
     border-radius: 50%;
     background: var(--crm-accent);
     color: var(--crm-on-accent);
-    border: 4px solid var(--crm-sidebar);
+    border: 4px solid var(--crm-nav);
     transform: translateY(-16px);
     box-shadow: 0 4px 16px rgba(234, 88, 12, 0.5);
   }
@@ -875,4 +1003,21 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* Local read-only copy only (NEXT_PUBLIC_CRM_READONLY=1). */
+.readonlyBanner {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #fff4ec;
+  border: 1px solid #f6c9ad;
+  color: #9a3412;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
 }

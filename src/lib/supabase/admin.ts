@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { readonlyClientOptions } from '@/lib/readonly';
 
 /**
  * A client that answers to nobody's session.
@@ -26,6 +27,7 @@ export function createSupabaseAdminClient(): SupabaseClient {
   }
 
   return createClient(url, key, {
+    ...readonlyClientOptions,
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }

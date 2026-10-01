@@ -27,16 +27,16 @@
 
 .title {
   margin: 0;
-  font-size: var(--fs-xl);
-  font-weight: var(--fw-bold);
-  letter-spacing: -0.025em;
-  color: var(--crm-ink);
+  font-size: 28px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.015em;
+  color: var(--crm-nav);
 }
 
 .sub {
-  margin: var(--sp-1) 0 0;
+  margin: 6px 0 0;
   color: var(--crm-muted);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
   max-width: 68ch;
 }
 
@@ -358,4 +358,132 @@ textarea.input { height: auto; padding: var(--sp-2) var(--sp-3); line-height: 1.
      segmented switch was rendering clipped mid-word. */
   .actions { margin-left: 0; width: 100%; flex-wrap: wrap; }
   .table th, .table td { padding: var(--sp-2) var(--sp-3); }
+}
+
+
+/* ── LocalFalcon-style blocks ─────────────────────────────────────────── */
+
+/** Small capitals above a group of tiles: QUICK START, NU DOEN … */
+.label {
+  margin: 0 0 var(--sp-3);
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--crm-muted);
+}
+
+.tileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-8);
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  min-height: 76px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.tile:hover { border-color: var(--crm-rule2); }
+
+.tileIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: var(--crm-sunk);
+  color: var(--crm-nav);
+}
+
+.tileTitle {
+  display: block;
+  font-size: 16px;
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+}
+
+.tileSub {
+  display: block;
+  font-size: 13px;
+  color: var(--crm-muted);
+}
+
+/* The three big coloured tiles at the top of the dashboard. */
+.tileBig {
+  min-height: 112px;
+  padding: 22px;
+  border: 0;
+  color: #ffffff;
+}
+.tileBig .tileIcon { width: 56px; height: 56px; background: rgba(255, 255, 255, 0.14); color: #ffffff; }
+.tileBig .tileTitle { color: #ffffff; font-size: 19px; }
+.tileBig .tileSub { color: rgba(255, 255, 255, 0.82); }
+.tileBig:hover { filter: brightness(1.06); }
+
+.toneNavy { background: var(--crm-nav); }
+.toneAccent { background: var(--crm-accent); }
+.toneBlue { background: var(--crm-blue); }
+
+/* Tones for a small tile's icon. */
+.iconOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.iconWarn { background: var(--crm-warn-bg); color: var(--crm-warn); }
+.iconStop { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.iconSteel { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.iconAi { background: var(--crm-ai-bg); color: var(--crm-ai); }
+
+.tileAi { border-color: #d9cffc; background: #faf8ff; }
+
+/** "Hoe werkt het?" — numbered steps, folded away once you know them. */
+.help {
+  margin: 0 0 var(--sp-6);
+  padding: 14px 18px;
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+}
+
+.help summary {
+  cursor: pointer;
+  font-weight: var(--fw-semibold);
+  color: var(--crm-accent);
+  list-style: none;
+}
+.help summary::-webkit-details-marker { display: none; }
+
+.helpSteps {
+  margin: 14px 0 2px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.helpSteps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.helpNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--crm-rule2);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: var(--crm-muted);
+  flex-shrink: 0;
 }

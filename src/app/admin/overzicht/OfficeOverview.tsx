@@ -2,7 +2,7 @@ import { getBrandLogo } from '@/lib/brandLogos';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate, slotLabel } from '@/lib/crmJobs';
 import { stockStatus } from '@/lib/stockStatus';
-import { PageHead, Card, CardHead, Badge, Notice } from '../_ui';
+import { PageHead, Card, CardHead, Badge, Notice, Label, TileGrid, Tile } from '../_ui';
 import { LineChart, BarChart, RankedBars, chart } from '../_ui/charts';
 import { MixedChart } from './MixedChart';
 import DayAgenda, { type AgendaJob } from './DayAgenda';
@@ -10,7 +10,17 @@ import LeadFunnel, { countFunnel } from './LeadFunnel';
 import AtRiskLeads, { pickAtRisk, type RiskLead } from './AtRiskLeads';
 import styles from './overzicht.module.css';
 import Link from 'next/link';
-import { Users, Briefcase, Euro, Target, CheckCircle, Phone, MoreHorizontal, AlertCircle, AlertTriangle, FileText, PackageX, MapPin, Clock, CalendarDays } from 'lucide-react';
+import { Users, Briefcase, Euro, Target, CheckCircle, Phone, MoreHorizontal, AlertCircle, AlertTriangle, FileText, PackageX, MapPin, Clock, CalendarDays, CalendarPlus, FilePlus2, PhoneCall, Boxes, Wrench, BarChart3, Wallet } from 'lucide-react';
+
+/** Goedemorgen / Goedemiddag / Goedenavond, by the clock in the Netherlands. */
+function greeting(now: Date): string {
+  const hour = Number(
+    new Intl.DateTimeFormat('nl-NL', { hour: 'numeric', hour12: false, timeZone: 'Europe/Amsterdam' }).format(now)
+  );
+  if (hour < 12) return 'Goedemorgen';
+  if (hour < 18) return 'Goedemiddag';
+  return 'Goedenavond';
+}
 
 const euro = (value: number) => `€ ${value.toFixed(2).replace('.', ',')}`;
 const euroShort = (value: number) =>
@@ -284,8 +294,29 @@ export default async function OfficeOverview() {
   return (
     <div className={styles.dashboardGrid}>
       <div>
-        <div style={{color: 'var(--crm-muted)', fontSize: '13px', marginBottom: '4px'}}>Goedendag 👋</div>
-        <PageHead title="Operatiecentrum Vandaag" sub={`Operaties verlopen normaal. ${jobsToday.length - doneToday.length} actieve klussen, ${last7} nieuwe leads wachten.`} />
+        <PageHead
+          title={greeting(new Date())}
+          sub={`${new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Amsterdam' }).format(new Date())} · ${jobsToday.length} klussen vandaag, ${jobsToday.length - doneToday.length} nog bezig · ${openLeadCount} open leads`}
+        />
+
+        <Label>Quick start</Label>
+        <TileGrid>
+          <Tile big tone="navy" href="/admin/jobs/nieuw" icon={<CalendarPlus size={26} strokeWidth={1.8} />} title="Klus inplannen" sub="Lead of bestelling naar een monteur" />
+          <Tile big tone="accent" href="/admin/leads" icon={<Phone size={26} strokeWidth={1.8} />} title="Leads bellen" sub={`${openLeadCount} open leads`} />
+          <Tile big tone="blue" href="/admin/facturen/nieuw" icon={<FilePlus2 size={26} strokeWidth={1.8} />} title="Factuur maken" sub="Voor een afgeronde klus" />
+        </TileGrid>
+
+        <Label>Snel naar</Label>
+        <TileGrid>
+          <Tile href="/admin/gesprekken" ai iconTone="ai" icon={<PhoneCall size={20} strokeWidth={1.8} />} title="Gesprekken" sub="Wat de AI-agent deed" />
+          <Tile href="/admin/jobs" iconTone="steel" icon={<CalendarDays size={20} strokeWidth={1.8} />} title="Agenda" sub="Wie is waar vandaag" />
+          <Tile href="/admin/voorraad" iconTone="warn" icon={<Boxes size={20} strokeWidth={1.8} />} title="Voorraad" sub="Wat raakt op" />
+          <Tile href="/admin/kas" iconTone="ok" icon={<Wallet size={20} strokeWidth={1.8} />} title="Kas & uitbetalingen" sub="Wie krijgt nog geld" />
+          <Tile href="/admin/monteurs" icon={<Wrench size={20} strokeWidth={1.8} />} title="Monteurs" sub="Team en dekking" />
+          <Tile href="/admin/rapportage" icon={<BarChart3 size={20} strokeWidth={1.8} />} title="Rapporten" sub="Wat levert geld op" />
+        </TileGrid>
+
+        <Label>Cijfers</Label>
       </div>
 
       
@@ -460,7 +491,7 @@ export default async function OfficeOverview() {
                 <Briefcase size={16} />
               </div>
               <div className={styles.actionContent}>
-                <div className={styles.actionTitle}>Bestelling ohne Monteur</div>
+                <div className={styles.actionTitle}>Bestelling zonder monteur</div>
                 <div className={styles.actionSub}>{ordersWaiting} bestellingen wachten</div>
               </div>
               <Link href="/admin/orders" className={styles.actionBtn} style={{background: 'var(--crm-stop-bg)', color: 'var(--crm-stop)'}}>Monteur Toewijzen</Link>

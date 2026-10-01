@@ -37,21 +37,21 @@
  * own pages never see this.
  */
 body {
-  background: #f7f8f7;
+  background: #f6f8fb;
 }
 
 .crm {
   /* ── surfaces, from the page up ──
      Warm rather than blue-grey: a neutral with a trace of the accent's hue
      reads as chosen, where a pure grey reads as a default nobody picked. */
-  --crm-bg: #fcfcfc;        /* the page itself */
+  --crm-bg: #f6f8fb;        /* the page itself: a cool off-white so white cards lift */
   --crm-sidebar: #ffffff;   /* lifted off the page, divided by a rule */
   --crm-panel: #ffffff;     /* a card */
   --crm-sunk: #f8f9fa;      /* a row under the cursor, an active nav item */
   --crm-raised: #ffffff;    /* a control sitting on a card */
 
   /* ── ink ── */
-  --crm-ink: #101828;       /* headings, values, the thing you came to read */
+  --crm-ink: #16233a;       /* headings, values, the thing you came to read */
   --crm-text: #384250;      /* body */
   /* #667085 measured 4.47:1 against a hovered row — a hair under AA, and
      invisible as a bug because it only fails on one surface. */
@@ -70,6 +70,24 @@ body {
      for the small text and 1px borders this CRM is built from. #c2410c clears
      4.5:1 and still reads as the same colour. "Soft" lives in the fill — a
      tint for selected rows and active nav, never behind text. */
+  /* ── the menu ──
+     Navy for the sidebar and top bar: the only dark surface in the CRM. */
+  --crm-nav: #24364f;
+  --crm-nav-deep: #1c2c43;   /* brand row, active item, open group */
+  --crm-nav-hover: #2d4361;
+  --crm-nav-text: #dde3ee;
+  --crm-nav-muted: #9fb0c9;
+  --crm-nav-rule: #34496a;
+
+  /* ── the AI agent ──
+     Violet marks anything the voice/WhatsApp agent said or did, and nothing else. */
+  --crm-ai: #6d4aff;
+  --crm-ai-bg: #efeaff;
+  --crm-ai-ink: #5b3fd6;
+
+  /* ── second action colour ── blue for "make a document" (invoice, export). */
+  --crm-blue: #2563eb;
+
   --crm-accent: #c2410c;
   --crm-accent-hover: #9a3412;
   --crm-accent-soft: #fdf1ea;

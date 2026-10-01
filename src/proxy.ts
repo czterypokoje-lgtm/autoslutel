@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { isAuthorized, adminAuthConfigured } from '@/lib/adminAuth';
 import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/supabase/env';
+import { CRM_READONLY, READONLY_MESSAGE, isSafeMethod } from '@/lib/readonly';
 
 /**
  * Next 16 renamed the `middleware` file convention to `proxy`.
@@ -118,6 +119,15 @@ async function handleCrm(request: NextRequest): Promise<NextResponse> {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Local read-only copy: nothing may write — no CRM save, no server action,
+  // no public form posting a real lead. Signing in talks to Supabase directly.
+  if (CRM_READONLY && !isSafeMethod(request.method) && !pathname.startsWith('/admin/auth/')) {
+    return NextResponse.json(
+      { error: READONLY_MESSAGE },
+      { status: 423, headers: { 'Cache-Control': 'no-store' } }
+    );
+  }
 
   if (!pathname.startsWith('/api/')) {
     const country = request.headers.get('x-vercel-ip-country') ?? '';

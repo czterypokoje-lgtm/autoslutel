@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { requireSupabaseAuthConfig } from './env';
+import { readonlyClientOptions } from '@/lib/readonly';
 
 /**
  * Supabase client bound to the caller's session cookies.
@@ -14,6 +15,7 @@ export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
 
   return createServerClient(url, anonKey, {
+    ...readonlyClientOptions,
     cookies: {
       getAll() {
         return cookieStore.getAll();

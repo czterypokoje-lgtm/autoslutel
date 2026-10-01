@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 import styles from './ui.module.css';
 
 /**
@@ -192,6 +193,87 @@ export function Table({ head, children }: { head: ReactNode; children: ReactNode
         <tbody>{children}</tbody>
       </table>
     </div>
+  );
+}
+
+/* ── tiles (dashboard, quick start, tools) ────────────────────────────── */
+
+/** Small capitals above a group of tiles. */
+export function Label({ children }: { children: ReactNode }) {
+  return <p className={styles.label}>{children}</p>;
+}
+
+export function TileGrid({ children }: { children: ReactNode }) {
+  return <div className={styles.tileGrid}>{children}</div>;
+}
+
+type TileTone = 'navy' | 'accent' | 'blue';
+type IconTone = 'ok' | 'warn' | 'stop' | 'steel' | 'ai';
+
+/**
+ * One clickable tile: icon, title, one line of explanation.
+ * `big` + `tone` gives the coloured Quick start tile.
+ */
+export function Tile({
+  href,
+  icon,
+  title,
+  sub,
+  big = false,
+  tone,
+  iconTone,
+  ai = false,
+}: {
+  href: string;
+  icon: ReactNode;
+  title: ReactNode;
+  sub?: ReactNode;
+  big?: boolean;
+  tone?: TileTone;
+  iconTone?: IconTone;
+  ai?: boolean;
+}) {
+  const toneClass =
+    tone === 'navy' ? styles.toneNavy : tone === 'accent' ? styles.toneAccent : tone === 'blue' ? styles.toneBlue : null;
+  const iconClass =
+    iconTone === 'ok'
+      ? styles.iconOk
+      : iconTone === 'warn'
+        ? styles.iconWarn
+        : iconTone === 'stop'
+          ? styles.iconStop
+          : iconTone === 'steel'
+            ? styles.iconSteel
+            : iconTone === 'ai'
+              ? styles.iconAi
+              : null;
+  return (
+    <Link href={href} className={join(styles.tile, big && styles.tileBig, toneClass, ai && styles.tileAi)}>
+      <span className={join(styles.tileIcon, iconClass)} aria-hidden="true">
+        {icon}
+      </span>
+      <span>
+        <span className={styles.tileTitle}>{title}</span>
+        {sub && <span className={styles.tileSub}>{sub}</span>}
+      </span>
+    </Link>
+  );
+}
+
+/** "Hoe werkt het?" — numbered steps in a fold, closed by default. */
+export function HelpSteps({ steps, open = false }: { steps: ReactNode[]; open?: boolean }) {
+  return (
+    <details className={styles.help} open={open}>
+      <summary>Hoe werkt het?</summary>
+      <ol className={styles.helpSteps}>
+        {steps.map((step, i) => (
+          <li key={i}>
+            <span className={styles.helpNum}>{i + 1}</span>
+            <span>{step}</span>
+          </li>
+        ))}
+      </ol>
+    </details>
   );
 }
 

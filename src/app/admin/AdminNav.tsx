@@ -1,29 +1,27 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BadgeCheck,
-  Banknote,
   BarChart3,
   Boxes,
   CalendarDays,
+  ChevronDown,
+  ChevronRight,
+  CircleUser,
   Euro,
   Handshake,
-  CircleUser,
   History,
   Inbox,
-  PhoneCall,
   LayoutDashboard,
   MessageSquare,
   Package,
-  Receipt,
+  PhoneCall,
   Settings,
-  Tag,
-  TrendingUp,
   Truck,
   Users,
-  Wallet,
   Wrench,
   type LucideIcon,
 } from 'lucide-react';
@@ -31,121 +29,173 @@ import styles from './admin.module.css';
 import type { CrmRole } from '@/lib/crmSession';
 
 /**
- * The sidebar.
+ * The sidebar menu.
  *
- * Every item had the same three-line hamburger glyph before this, which is the
- * same as having no icons at all: the eye cannot use them to find anything, so
- * eleven identical marks just made the list longer. Each item now carries the
- * icon for the thing it is — a van for the day's route, a wallet for the cash
- * book, a wrench for the technicians — and the shape becomes the fastest way
- * to hit the right screen without reading.
+ * Flat for the things opened every day, folded into a group for the things
+ * that belong together (Planning, Geld, Rapporten). A group opens by itself
+ * when you are on one of its pages, so the menu always shows where you are.
+ *
+ * The webshop pages (/admin/orders, /admin/producten) still exist but are no
+ * longer in the menu: the webshop was removed.
  */
 
-interface NavItem {
+interface Leaf {
   href: string;
   label: string;
-  icon: LucideIcon;
 }
 
-const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
+interface NavItem {
+  label: string;
+  icon: LucideIcon;
+  href?: string;
+  /** Marks a screen whose content comes from the AI agent. */
+  ai?: boolean;
+  children?: Leaf[];
+}
+
+const OFFICE_NAV: NavItem[] = [
+  { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/overzicht' },
+  { label: 'Leads', icon: Inbox, href: '/admin/leads' },
+  { label: 'Gesprekken', icon: PhoneCall, href: '/admin/gesprekken', ai: true },
   {
-    group: 'Werk',
-    items: [
-      { href: '/admin/overzicht', label: 'Overzicht', icon: LayoutDashboard },
-      { href: '/admin/leads', label: 'Leads', icon: Inbox },
-      { href: '/admin/gesprekken', label: 'Gesprekken', icon: PhoneCall },
-      { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
-      { href: '/admin/jobs', label: 'Agenda', icon: CalendarDays },
-      { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
-      { href: '/admin/netwerk', label: 'Netwerk', icon: MessageSquare },
-      { href: '/admin/tarieven', label: 'Tarieven', icon: Euro },
+    label: 'Planning',
+    icon: CalendarDays,
+    children: [
+      { href: '/admin/jobs', label: 'Agenda' },
+      { href: '/admin/jobs/nieuw', label: 'Klus inplannen' },
+      { href: '/admin/aanbod', label: 'Aanbod' },
+      { href: '/admin/vandaag', label: 'Vandaag (monteurscherm)' },
+    ],
+  },
+  { label: 'Klanten', icon: Users, href: '/admin/klanten' },
+  { label: 'Monteurs', icon: Wrench, href: '/admin/monteurs' },
+  { label: 'Voorraad', icon: Boxes, href: '/admin/voorraad' },
+  {
+    label: 'Geld',
+    icon: Euro,
+    children: [
+      { href: '/admin/facturen', label: 'Facturen' },
+      { href: '/admin/uitgaven', label: 'Uitgaven' },
+      { href: '/admin/kas', label: 'Kas & uitbetalingen' },
+      { href: '/admin/tarieven', label: 'Tarieven' },
     ],
   },
   {
-    group: 'Voorraad',
-    items: [
-      { href: '/admin/voorraad', label: 'Voorraad', icon: Boxes },
+    label: 'Rapporten',
+    icon: BarChart3,
+    children: [
+      { href: '/admin/winst', label: 'Winst & verbruik' },
+      { href: '/admin/rapportage', label: 'Rapportage' },
     ],
   },
-  {
-    group: 'Winkel',
-    items: [
-      { href: '/admin/orders', label: 'Bestellingen', icon: Package },
-      { href: '/admin/producten', label: 'Producten', icon: Tag },
-    ],
-  },
-  {
-    group: 'Beheer',
-    items: [
-      { href: '/admin/klanten', label: 'Klanten', icon: Users },
-      { href: '/admin/facturen', label: 'Facturen', icon: Receipt },
-      { href: '/admin/uitgaven', label: 'Uitgaven', icon: Banknote },
-      { href: '/admin/kas', label: 'Kas', icon: Wallet },
-      { href: '/admin/winst', label: 'Winst & verbruik', icon: TrendingUp },
-      { href: '/admin/rapportage', label: 'Rapportage', icon: BarChart3 },
-      { href: '/admin/monteurs', label: 'Monteurs', icon: Wrench },
-      { href: '/admin/instellingen', label: 'Instellingen', icon: Settings },
-      { href: '/admin/mijn-profiel', label: 'Profiel', icon: CircleUser },
-    ],
-  },
+  { label: 'Netwerk', icon: MessageSquare, href: '/admin/netwerk' },
+  { label: 'Instellingen', icon: Settings, href: '/admin/instellingen' },
 ];
 
-const MONTEUR_LINKS: { group: string; items: NavItem[] }[] = [
+const MONTEUR_NAV: NavItem[] = [
+  { label: 'Overzicht', icon: LayoutDashboard, href: '/admin/overzicht' },
+  { label: 'Vandaag', icon: Truck, href: '/admin/vandaag' },
+  { label: 'Aanbod', icon: Handshake, href: '/admin/aanbod' },
+  { label: 'Mijn agenda', icon: CalendarDays, href: '/admin/mijn-agenda' },
+  { label: 'Mijn klussen', icon: History, href: '/admin/mijn-klussen' },
+  { label: 'Mijn bus', icon: Package, href: '/admin/mijn-bus' },
   {
-    group: 'Werk',
-    items: [
-      { href: '/admin/overzicht', label: 'Overzicht', icon: LayoutDashboard },
-      { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
-      { href: '/admin/vandaag', label: 'Vandaag', icon: Truck },
-      { href: '/admin/mijn-agenda', label: 'Mijn agenda', icon: CalendarDays },
-      { href: '/admin/mijn-klussen', label: 'Mijn klussen', icon: History },
+    label: 'Geld',
+    icon: Euro,
+    children: [
+      { href: '/admin/mijn-saldo', label: 'Saldo' },
+      { href: '/admin/facturen', label: 'Facturen' },
+      { href: '/admin/uitgaven', label: 'Mijn uitgaven' },
     ],
   },
-  {
-    group: 'Mijzelf',
-    items: [
-      { href: '/admin/mijn-vak', label: 'Mijn vak', icon: BadgeCheck },
-      { href: '/admin/mijn-bus', label: 'Mijn bus', icon: Package },
-      { href: '/admin/facturen', label: 'Facturen', icon: Receipt },
-      { href: '/admin/uitgaven', label: 'Mijn uitgaven', icon: Banknote },
-      { href: '/admin/mijn-saldo', label: 'Saldo', icon: Wallet },
-      { href: '/admin/mijn-profiel', label: 'Profiel', icon: CircleUser },
-    ],
-  },
+  { label: 'Mijn vak', icon: BadgeCheck, href: '/admin/mijn-vak' },
+  { label: 'Profiel', icon: CircleUser, href: '/admin/mijn-profiel' },
 ];
+
+function allHrefs(nav: NavItem[]): string[] {
+  return nav.flatMap((i) => (i.children ? i.children.map((c) => c.href) : i.href ? [i.href] : []));
+}
 
 export default function AdminNav({ role }: { role: CrmRole | null }) {
-  const pathname = usePathname();
-  const groups = role === 'monteur' ? MONTEUR_LINKS : OFFICE_LINKS;
+  const pathname = usePathname() ?? '';
+  const nav = role === 'monteur' ? MONTEUR_NAV : OFFICE_NAV;
 
   /*
-   * "Starts with" would light up both /admin/jobs and /admin/jobs/nieuw, which
-   * is right, but it would also light up nothing at all on /admin itself. An
-   * exact match plus a trailing slash keeps a detail page attached to its
-   * section without one section claiming another's prefix.
+   * The most specific match wins, so /admin/jobs/nieuw lights up
+   * "Klus inplannen" and not "Agenda", while /admin/jobs/123 still lights up
+   * "Agenda".
    */
-  const isActive = (href: string) => pathname === href || pathname?.startsWith(`${href}/`);
+  const active =
+    allHrefs(nav)
+      .filter((h) => pathname === h || pathname.startsWith(`${h}/`))
+      .sort((a, b) => b.length - a.length)[0] ?? null;
+
+  const [toggled, setToggled] = useState<Record<string, boolean>>({});
 
   return (
-    <>
-      {groups.map((group) => (
-        <div key={group.group}>
-          <div className={styles.groupLabel}>{group.group}</div>
-          <nav className={styles.nav}>
-            {group.items.map(({ href, label, icon: Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                aria-current={isActive(href) ? 'page' : undefined}
-                className={isActive(href) ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}
-              >
-                <Icon size={16} strokeWidth={1.9} aria-hidden="true" />
-                {label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      ))}
-    </>
+    <nav className={styles.nav} aria-label="Hoofdmenu">
+      {nav.map((item) => {
+        const Icon = item.icon;
+
+        if (!item.children) {
+          const on = item.href === active;
+          return (
+            <Link
+              key={item.label}
+              href={item.href!}
+              aria-current={on ? 'page' : undefined}
+              className={on ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}
+            >
+              <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
+              <span className={styles.navLabel}>{item.label}</span>
+              {item.ai && <span className={styles.navAi}>AI</span>}
+            </Link>
+          );
+        }
+
+        const childOn = item.children.some((c) => c.href === active);
+        const open = toggled[item.label] ?? childOn;
+        return (
+          <div key={item.label}>
+            <button
+              type="button"
+              className={childOn ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}
+              aria-expanded={open}
+              onClick={(e) => {
+                // The mobile drawer closes on any click inside it; opening a
+                // group is not a navigation, so keep the drawer open.
+                e.stopPropagation();
+                setToggled((t) => ({ ...t, [item.label]: !open }));
+              }}
+            >
+              <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
+              <span className={styles.navLabel}>{item.label}</span>
+              {open ? (
+                <ChevronDown size={16} className={styles.navChevron} aria-hidden="true" />
+              ) : (
+                <ChevronRight size={16} className={styles.navChevron} aria-hidden="true" />
+              )}
+            </button>
+            {open && (
+              <div className={styles.navSub}>
+                {item.children.map((c) => {
+                  const on = c.href === active;
+                  return (
+                    <Link
+                      key={c.href}
+                      href={c.href}
+                      aria-current={on ? 'page' : undefined}
+                      className={on ? `${styles.navSubLink} ${styles.navSubLinkActive}` : styles.navSubLink}
+                    >
+                      {c.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </nav>
   );
 }

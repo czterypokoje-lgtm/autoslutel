@@ -48,20 +48,23 @@ export default function Sidebar({
 
         <Link href="/admin" className={styles.brand}>
           <span className={styles.brandMark} aria-hidden="true">
-            <KeyRound size={13} strokeWidth={2.2} />
+            <KeyRound size={16} strokeWidth={2.2} />
           </span>
-          Autosleutel24
+          <span>
+            Autosleutel<span className={styles.brand24}>24</span>
+          </span>
+          <span className={styles.brandRole}>{role === 'monteur' ? 'Monteur' : 'CRM'}</span>
         </Link>
 
         
         {/* Only office roles have the global search to Klanten */}
         {(role === 'owner' || role === 'kantoor') && (
-          <Link href="/admin/klanten" className={styles.iconGhost} title="Zoeken">
+          <Link href="/admin/klanten" className={`${styles.iconGhost} ${styles.mobileOnly}`} title="Zoeken">
             <Search size={16} strokeWidth={1.9} aria-hidden="true" />
           </Link>
         )}
 
-        <Link href="/admin/mijn-profiel" className={styles.avatar} title={email ?? 'Profiel'}>
+        <Link href="/admin/mijn-profiel" className={`${styles.avatar} ${styles.mobileOnly}`} title={email ?? 'Profiel'}>
           {photoUrl ? (
             /*
               Plain <img>, not next/image: the file sits in blob storage under

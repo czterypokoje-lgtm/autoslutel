@@ -29,7 +29,21 @@ const removedBrandRedirects = removedBrands.flatMap(brand => [
   { source: `/merken/${brand}`, destination: '/merken', permanent: true },
 ]);
 
+/*
+ * The CRM redesign is reviewed on the `integrate` / `redesign` branches, whose
+ * Vercel previews share the production database. Those builds are read-only
+ * (src/lib/readonly.ts): real data on screen, every save refused. main and
+ * production are unaffected. An explicit NEXT_PUBLIC_CRM_READONLY wins.
+ */
+const READONLY_BRANCHES = ['integrate', 'redesign'];
+const crmReadonly =
+  process.env.NEXT_PUBLIC_CRM_READONLY ??
+  (READONLY_BRANCHES.includes(process.env.VERCEL_GIT_COMMIT_REF ?? '') ? '1' : '0');
+
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_CRM_READONLY: crmReadonly,
+  },
   /*
    * pdf-parse pulls in @napi-rs/canvas, a native compiled binary — the class
    * of dependency Next's bundler cannot package into a serverless function

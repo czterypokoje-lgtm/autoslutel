@@ -2,6 +2,7 @@
 
 import { createBrowserClient } from '@supabase/ssr';
 import { requireSupabaseAuthConfig } from './env';
+import { readonlyClientOptions } from '@/lib/readonly';
 
 /**
  * Supabase client for the browser. Used only to start a magic-link sign-in and
@@ -9,5 +10,5 @@ import { requireSupabaseAuthConfig } from './env';
  */
 export function createSupabaseBrowserClient() {
   const { url, anonKey } = requireSupabaseAuthConfig();
-  return createBrowserClient(url, anonKey);
+  return createBrowserClient(url, anonKey, readonlyClientOptions);
 }

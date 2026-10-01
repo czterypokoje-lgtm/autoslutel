@@ -5,6 +5,8 @@ import { getCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import Sidebar from './Sidebar';
 import MobileTabBar from './MobileTabBar';
+import TopBar from './TopBar';
+import { CRM_READONLY, READONLY_MESSAGE } from '@/lib/readonly';
 
 /**
  * The CRM shell.
@@ -79,10 +81,20 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {user && (
         <Sidebar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
       )}
-      <main className={user ? `${styles.main} ${isMonteur ? styles.mainWithTabBar : ''}` : undefined}>
-        {children}
-      </main>
+      <div className={styles.column}>
+        {user && (
+          <TopBar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
+        )}
+        <main className={user ? `${styles.main} ${isMonteur ? styles.mainWithTabBar : ''}` : undefined}>
+          {children}
+        </main>
+      </div>
       {isMonteur && <MobileTabBar />}
+      {CRM_READONLY && (
+        <div role="status" className={styles.readonlyBanner}>
+          {READONLY_MESSAGE}
+        </div>
+      )}
     </div>
   );
 }
