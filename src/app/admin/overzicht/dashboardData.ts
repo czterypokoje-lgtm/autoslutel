@@ -69,8 +69,16 @@ export interface TechnicianDay {
   weekMargin: number;
 }
 
+export interface DayPoint {
+  day: string;
+  revenue: number;
+  margin: number;
+  leads: number;
+}
+
 export interface TodayJob {
   id: string;
+  make: string | null;
   slot: string;
   car: string;
   place: string;
@@ -80,6 +88,7 @@ export interface TodayJob {
 
 export interface SpareKeyChance {
   jobId: string;
+  make: string | null;
   name: string | null;
   phone: string;
   car: string;
@@ -88,6 +97,7 @@ export interface SpareKeyChance {
 
 export interface FollowUp {
   id: string;
+  make: string | null;
   name: string | null;
   car: string;
   quoted: number | null;
@@ -130,6 +140,8 @@ export interface Dashboard {
   followUps: FollowUp[];
   sources: SourceRow[];
   hasAdData: boolean;
+  /** Revenue, profit and leads per day, for the sales chart. */
+  series: DayPoint[];
 }
 
 interface Job extends WinstJob {
@@ -180,7 +192,9 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
   const { cur, prev } = ranges(period, today);
   const mon = weekStart(today);
   /* Enough history for both the current and previous period, plus the week. */
-  const earliest = [prev.from, mon].sort()[0];
+  const chartDays = period === 'maand' ? 30 : 14;
+  const chartFrom = addDays(today, -(chartDays - 1));
+  const earliest = [prev.from, mon, chartFrom].sort()[0];
   const yearAgo = addDays(today, -365);
   const twoWeeksAgo = new Date(Date.now() - 14 * 86_400_000).toISOString();
 
@@ -209,7 +223,7 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
     supabase
       .from('leads')
       .select('id, name, brand, model, status, source, created_at, first_contact_at, quoted_price, sale_price')
-      .gte('created_at', `${prev.from < cur.from ? prev.from : cur.from}T00:00:00`),
+      .gte('created_at', `${earliest}T00:00:00`),
     supabase
       .from('leads')
       .select('id, name, brand, model, status, source, created_at, first_contact_at, quoted_price, sale_price')
@@ -286,6 +300,7 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
 
   const today_: TodayJob[] = todayJobs.map((j) => ({
     id: j.id,
+    make: j.car_make ?? null,
     slot: slot(j.slot_start, j.slot_end),
     car: [j.car_make, j.car_model].filter(Boolean).join(' ') || 'Auto onbekend',
     place: j.city ?? '',
@@ -315,6 +330,7 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
     .sort((a, b) => String(b.scheduled_date).localeCompare(String(a.scheduled_date)))
     .map((j) => ({
       jobId: j.id as string,
+      make: (j.car_make as string) ?? null,
       name: (j.customer_name as string) ?? null,
       phone: j.customer_phone as string,
       car: [j.car_make, j.car_model].filter(Boolean).join(' ') || 'uw auto',
@@ -332,6 +348,7 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
     .slice(0, 8)
     .map((l) => ({
       id: l.id,
+      make: l.brand ?? null,
       name: l.name,
       car: [l.brand, l.model].filter(Boolean).join(' ') || 'Auto onbekend',
       quoted: l.quoted_price ?? null,
@@ -348,6 +365,13 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
     if (l.status === 'sold') row.sold += 1;
     bySource.set(key, row);
   }
+
+  const series: DayPoint[] = Array.from({ length: chartDays }, (_, i) => {
+    const day = addDays(chartFrom, i);
+    const r = { from: day, to: day };
+    const dayJobs = done(r);
+    return { day, revenue: revenueOf(dayJobs), margin: marginOf(dayJobs), leads: leadsIn(r).length };
+  });
 
   const stock = stockData ?? [];
   const payouts = payoutData ?? [];
@@ -384,5 +408,6 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
     followUps,
     sources: [...bySource.values()].sort((a, b) => b.leads - a.leads),
     hasAdData,
+    series,
   };
 }

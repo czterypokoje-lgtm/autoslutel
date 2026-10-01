@@ -176,3 +176,26 @@ a.listRow:hover { background: var(--crm-sunk); }
 @media (max-width: 1100px) {
   .twoCol { grid-template-columns: 1fr; }
 }
+
+/* ── sales chart ── */
+.chartWrap { padding: 14px 18px 8px; }
+.chartLegend { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; font-size: 13px; font-weight: var(--fw-semibold); color: var(--crm-ink); margin-bottom: 6px; }
+.chartLegend span { display: inline-flex; align-items: center; gap: 7px; }
+.legendBar { width: 12px; height: 12px; border-radius: 3px; background: #c2410c; display: inline-block; }
+.legendLine { width: 16px; height: 3px; border-radius: 2px; background: #24364f; display: inline-block; }
+.chart { width: 100%; height: auto; display: block; }
+
+/* ── brand logo ── */
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--crm-sunk);
+  border: 1px solid var(--crm-rule);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.logo img { width: 24px; height: 24px; object-fit: contain; }
+.logo span { font-size: 10px; font-weight: 700; color: var(--crm-muted); }

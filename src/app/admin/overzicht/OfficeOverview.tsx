@@ -18,6 +18,8 @@ import { waLink } from '@/lib/whatsapp';
 import { PageHead, Label, TileGrid, Tile, Badge } from '../_ui';
 import { readDashboard, PERIOD_LABEL, sourceLabel, type Kpi, type Period } from './dashboardData';
 import styles from './dashboard.module.css';
+import SalesChart from './SalesChart';
+import BrandLogo from './BrandLogo';
 
 /**
  * The office home screen. Four questions, top to bottom:
@@ -157,6 +159,14 @@ export default async function OfficeOverview({ period }: { period: Period }) {
         <KpiCard strong label="Netto over" value={money(d.net.value)} k={d.net} foot="brutowinst − advertenties − uitgaven" />
       </div>
 
+      <section className={styles.card}>
+        <header className={styles.cardHead}>
+          <span>Verkoop per dag · laatste {d.series.length} dagen</span>
+          <Link href="/admin/winst">Winst & verbruik →</Link>
+        </header>
+        <SalesChart data={d.series} />
+      </section>
+
       <div className={styles.twoCol}>
         <section className={styles.card}>
           <header className={styles.cardHead}>
@@ -217,6 +227,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
                   <li key={j.id}>
                     <Link href={`/admin/jobs/${j.id}`} className={styles.listRow}>
                       <span className={styles.slot}>{j.slot}</span>
+                      <BrandLogo make={j.make} />
                       <span className={styles.grow}>
                         <b>{j.car}</b>
                         <span className={styles.muted}>
@@ -257,6 +268,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
                 );
                 return (
                   <li key={c.jobId} className={styles.listRow}>
+                    <BrandLogo make={c.make} />
                     <span className={styles.grow}>
                       <b>{c.name ?? 'Klant'}</b>
                       <span className={styles.muted}>
@@ -291,6 +303,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
               {d.followUps.map((f) => (
                 <li key={f.id}>
                   <Link href="/admin/leads" className={styles.listRow}>
+                    <BrandLogo make={f.make} />
                     <span className={styles.grow}>
                       <b>{f.name ?? 'Naam onbekend'}</b>
                       <span className={styles.muted}>
