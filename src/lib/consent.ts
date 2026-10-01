@@ -198,7 +198,7 @@ export function loadClarity(): void {
  * so it must not load at all until marketing consent is actually granted —
  * loading it under "denied" would defeat the point of asking.
  */
-const OPENAI_PIXEL_ID = 'NgrU53SbdM3WdR4Kjvyp6Z';
+const OPENAI_PIXEL_ID = '88ci7ALEwxU73NJc95KEpo';
 let openaiPixelRequested = false;
 
 export function loadOpenAIPixel(): void {

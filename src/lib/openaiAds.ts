@@ -1,7 +1,7 @@
 import { randomUUID, createHash } from 'crypto';
 
 const EVENTS_ENDPOINT = 'https://bzr.openai.com/v1/events';
-const PIXEL_ID = 'NgrU53SbdM3WdR4Kjvyp6Z';
+const PIXEL_ID = '88ci7ALEwxU73NJc95KEpo';
 
 function hash(value: string): string {
   return createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
