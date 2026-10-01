@@ -2,6 +2,8 @@ import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, Empty } from '../_ui';
 import { slotLabel } from '@/lib/crmJobs';
+import { getBrandLogo } from '@/lib/brandLogos';
+import { SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import JobHistoryList, { type HistoryRow, type ToolOption } from './JobHistoryList';
 import styles from './klussen.module.css';
 
@@ -19,6 +21,18 @@ export const dynamic = 'force-dynamic';
  * Read is unrestricted by date (0022); a job stays editable for 30 days after
  * it happened, which is when a note actually gets added — not a year later.
  */
+/**
+ * A readable service name. Older jobs stored the raw scenario key
+ * ("alle_sleutels_kwijt", "bijmaken") as their service — those get the label.
+ */
+function serviceLabel(serviceType: string | null, scenario: string | null): string {
+  const raw = (serviceType ?? '').trim();
+  const fromKey = (key: string) => SCENARIO_INFO[key.toLowerCase() as Scenario]?.label;
+  if (raw) return fromKey(raw) ?? raw.charAt(0).toUpperCase() + raw.slice(1);
+  if (scenario) return fromKey(scenario) ?? scenario;
+  return 'Klus';
+}
+
 export default async function MijnKlussenPage({
   searchParams,
 }: {
@@ -87,9 +101,11 @@ export default async function MijnKlussenPage({
     date: j.scheduled_date,
     slot: slotLabel(j.slot_start, j.slot_end),
     place: [j.postcode, j.city].filter(Boolean).join(' '),
-    car: [j.car_make, j.car_model, j.car_year].filter(Boolean).join(' ') || 'Onbekende auto',
-    scenario: j.scenario,
-    serviceType: j.service_type,
+    car: [j.car_make, j.car_model].filter(Boolean).join(' ') || 'Onbekende auto',
+    year: j.car_year ? String(j.car_year) : null,
+    make: j.car_make,
+    logo: getBrandLogo(j.car_make),
+    service: serviceLabel(j.service_type, j.scenario),
     price: j.final_price ?? j.quoted_price,
     toolUsedId: j.tool_used_id,
     keyUsed: j.key_used,
@@ -102,24 +118,44 @@ export default async function MijnKlussenPage({
     label: [t.brand, t.model].filter(Boolean).join(' '),
   }));
 
+  const doneRows = rows.filter((r) => r.status === 'afgerond');
+  const turnover = doneRows.reduce((t, r) => t + (Number(r.price) || 0), 0);
+  const planned = rows.filter((r) => r.status === 'gepland' || r.status === 'onderweg' || r.status === 'bezig').length;
+  const withNotes = rows.filter((r) => r.toolUsedId || r.keyUsed || r.adapterUsed || r.techNote).length;
+  const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
   return (
     <>
       <PageHead
         title="Mijn klussen"
-        sub={`${rows.length} klus${rows.length === 1 ? '' : 'sen'}${q ? ` · zoekterm "${q}"` : ''}`}
+        sub="Al je klussen, nieuwste eerst. Klik een klus open om op te schrijven welk gereedschap, welke sleutel en welke adapter werkte. Zo vind je het de volgende keer terug."
       />
 
-      <form className={styles.search} action="/admin/mijn-klussen">
+      <div className={styles.stats}>
+        <div className={styles.stat}><span>Klussen</span><b>{rows.length}</b></div>
+        <div className={styles.stat}><span>Afgerond</span><b>{doneRows.length}</b></div>
+        <div className={styles.stat}><span>Gepland</span><b>{planned}</b></div>
+        <div className={styles.stat}><span>Omzet afgerond</span><b>{EUR.format(turnover)}</b></div>
+        <div className={styles.stat}><span>Met notitie</span><b>{withNotes}</b></div>
+      </div>
+
+      <form className={styles.search} action="/admin/mijn-klussen" role="search">
         <input
-          type="text"
+          type="search"
           name="q"
           defaultValue={q}
+          aria-label="Zoek op merk of model"
           placeholder="Zoek op merk of model, bijv. Toyota of Prius"
           className={styles.searchInput}
         />
         <button type="submit" className={styles.searchBtn}>
           Zoeken
         </button>
+        {q && (
+          <a href="/admin/mijn-klussen" className={styles.searchClear}>
+            Wis zoekterm
+          </a>
+        )}
       </form>
 
       {rows.length === 0 ? (
