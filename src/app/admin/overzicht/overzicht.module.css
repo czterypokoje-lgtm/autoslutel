@@ -386,3 +386,19 @@
   align-items: center;
   justify-content: center;
 }
+
+/* The one big button on the technician's home: go to Vandaag. Thumb-sized. */
+.heroStart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  margin: 4px 16px 16px;
+  border-radius: 12px;
+  background: var(--crm-accent);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.heroStart:hover { background: var(--crm-accent-hover); }

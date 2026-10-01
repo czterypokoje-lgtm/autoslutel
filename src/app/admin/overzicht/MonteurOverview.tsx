@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
-import { Car, MapPin, Wrench } from 'lucide-react';
+import { CalendarDays, Car, Handshake, MapPin, Package, Wallet, Wrench } from 'lucide-react';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate, slotLabel, JOB_STATUS_LABELS, type JobStatus } from '@/lib/crmJobs';
 import { earnedOn, computeAvailable } from '@/lib/technicianBalance';
 import { stockStatus } from '@/lib/stockStatus';
-import { PageHead, Card, CardHead, Row, Notice, Empty } from '../_ui';
+import { PageHead, Card, CardHead, Row, Notice, Empty, Label, TileGrid, Tile } from '../_ui';
+import BrandLogo from './BrandLogo';
 import { HighlightCard, BarChart, chart } from '../_ui/charts';
 import styles from './overzicht.module.css';
 import type { CrmUser } from '@/lib/crmSession';
@@ -148,7 +149,10 @@ export default async function MonteurOverview({ user }: { user: CrmUser }) {
 
   return (
     <>
-      <PageHead title="Overzicht" sub={`Hallo ${tech.name.split(' ')[0]}, dit is uw dag.`} />
+      <PageHead
+        title={`Hallo ${tech.name.split(' ')[0]}`}
+        sub={`${jobsToday.length} ${jobsToday.length === 1 ? 'klus' : 'klussen'} vandaag · ${finishedToday.length} afgerond`}
+      />
 
       <div
         className={styles.heroWrap}
@@ -176,7 +180,7 @@ export default async function MonteurOverview({ user }: { user: CrmUser }) {
             </div>
             {car && (
               <div className={styles.heroLine}>
-                <Car size={18} strokeWidth={2} className={styles.heroIcon} />
+                {next.car_make ? <BrandLogo make={next.car_make} /> : <Car size={18} strokeWidth={2} className={styles.heroIcon} />}
                 {car}
                 {next.keyless !== null && (
                   <span className={styles.heroBadge}>{next.keyless ? 'Keyless' : 'Sleutel'}</span>
@@ -205,11 +209,26 @@ export default async function MonteurOverview({ user }: { user: CrmUser }) {
             ))}
           </div>
         )}
-        <Link href="/admin/vandaag" className={styles.heroLink}>
-          Bekijk alle klussen vandaag →
+        <Link href="/admin/vandaag" className={styles.heroStart}>
+          {next?.status === 'gepland' ? 'Start: ik ga rijden' : 'Open Vandaag'}
         </Link>
       </Card>
       </div>
+
+      <Label>Snel naar</Label>
+      <TileGrid>
+        <Tile
+          big
+          tone="accent"
+          href="/admin/aanbod"
+          icon={<Handshake size={26} strokeWidth={1.8} />}
+          title="Aanbod"
+          sub={offerCount ? `${offerCount} nieuwe klus${offerCount === 1 ? '' : 'sen'} aangeboden` : 'Nu geen aanbod'}
+        />
+        <Tile href="/admin/mijn-agenda" iconTone="steel" icon={<CalendarDays size={20} strokeWidth={1.8} />} title="Mijn agenda" sub={`${thisWeekCount} klussen deze week`} />
+        <Tile href="/admin/mijn-bus" iconTone={outOfStock || lowStock ? 'warn' : undefined} icon={<Package size={20} strokeWidth={1.8} />} title="Mijn bus" sub={outOfStock || lowStock ? `${outOfStock + lowStock} bijna op` : 'Voorraad in orde'} />
+        <Tile href="/admin/mijn-saldo" iconTone="ok" icon={<Wallet size={20} strokeWidth={1.8} />} title="Saldo" sub={`${euroHeadline(available)} beschikbaar`} />
+      </TileGrid>
 
       <div className={chart.highlights}>
         <HighlightCard label="Vandaag verdiend" value={euroHeadline(earnedToday)} delta={null} tint />
