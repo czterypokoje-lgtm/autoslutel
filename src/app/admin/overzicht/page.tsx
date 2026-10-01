@@ -17,10 +17,10 @@ export default async function OverzichtPage({
 }) {
   const user = await requireCrmUser('/admin/overzicht');
 
+  const { periode } = await searchParams;
   if (user.role && OFFICE_ROLES.includes(user.role)) {
-    const { periode } = await searchParams;
     return <OfficeOverview period={parsePeriod(periode)} />;
   }
 
-  return <MonteurOverview user={user} />;
+  return <MonteurOverview user={user} period={parsePeriod(periode)} />;
 }

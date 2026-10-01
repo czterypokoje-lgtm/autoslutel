@@ -14,7 +14,18 @@ function niceMax(v: number): number {
  * number of leads that came in that day printed under each bar. Plain SVG,
  * drawn on the server, so it costs nothing to load.
  */
-export default function SalesChart({ data }: { data: DayPoint[] }) {
+export default function SalesChart({
+  data,
+  barLabel = 'Omzet',
+  lineLabel = 'Brutowinst',
+  countLabel = 'leads',
+}: {
+  data: DayPoint[];
+  barLabel?: string;
+  lineLabel?: string;
+  /** What the small number under each bar counts (leads, klussen …). */
+  countLabel?: string;
+}) {
   const W = 960;
   const H = 280;
   const pad = { l: 60, r: 16, t: 16, b: 52 };
@@ -40,11 +51,11 @@ export default function SalesChart({ data }: { data: DayPoint[] }) {
   return (
     <div className={styles.chartWrap}>
       <div className={styles.chartLegend}>
-        <span><i className={styles.legendBar} /> Omzet {EUR.format(totalRevenue)}</span>
-        <span><i className={styles.legendLine} /> Brutowinst {EUR.format(totalMargin)}</span>
-        <span className={styles.muted}>Getal onder de balk = leads die dag · totaal {totalLeads}</span>
+        <span><i className={styles.legendBar} /> {barLabel} {EUR.format(totalRevenue)}</span>
+        <span><i className={styles.legendLine} /> {lineLabel} {EUR.format(totalMargin)}</span>
+        <span className={styles.muted}>Getal onder de balk = {countLabel} die dag · totaal {totalLeads}</span>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className={styles.chart} role="img" aria-label={`Omzet en winst per dag, laatste ${data.length} dagen`}>
+      <svg viewBox={`0 0 ${W} ${H}`} className={styles.chart} role="img" aria-label={`${barLabel} en ${lineLabel.toLowerCase()} per dag, laatste ${data.length} dagen`}>
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
           <g key={f}>
             <line x1={pad.l} x2={W - pad.r} y1={y(top * f)} y2={y(top * f)} stroke="#eef1f5" />
@@ -63,7 +74,7 @@ export default function SalesChart({ data }: { data: DayPoint[] }) {
               rx="4"
               fill={i === data.length - 1 ? '#c2410c' : '#f0a77f'}
             >
-              <title>{`${label(d.day)}: omzet ${EUR.format(d.revenue)}, winst ${EUR.format(d.margin)}, ${d.leads} leads`}</title>
+              <title>{`${label(d.day)}: ${barLabel.toLowerCase()} ${EUR.format(d.revenue)}, ${lineLabel.toLowerCase()} ${EUR.format(d.margin)}, ${d.leads} ${countLabel}`}</title>
             </rect>
             {i % every === 0 && (
               <text x={x(i)} y={H - pad.b + 18} textAnchor="middle" fontSize="11" fill="#5b6880">
