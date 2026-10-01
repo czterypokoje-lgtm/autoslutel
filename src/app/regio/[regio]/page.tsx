@@ -53,7 +53,11 @@ export async function generateMetadata(props: { params: Promise<{ regio: string 
   if (!region) return {};
   const towns = citiesIn(region.name).slice(0, 3).map((c) => c.city).join(', ');
   const url = `${SITE_CONFIG.domain}/regio/${region.slug}`;
-  const title = `Autosleutel Bijmaken ${region.name} | ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`;
+  // /steden/utrecht already owns "Autosleutel Bijmaken Utrecht | …"; the province page must not repeat it.
+  const title =
+    region.slug === 'utrecht'
+      ? `Autosleutel Provincie Utrecht | ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`
+      : `Autosleutel Bijmaken ${region.name} | ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`;
   return {
     title: { absolute: title },
     description: clampMeta(
