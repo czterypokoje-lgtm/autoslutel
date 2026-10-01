@@ -90,14 +90,28 @@ export default function PhoneConversionTracker() {
       // 1. DataLayer for GTM. This is a phone-button tap, not a sale: no value,
       // no currency, no purchase event. Language and ad source ride along so the
       // visit's origin is not lost.
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: isTel ? 'click_to_call' : 'click_to_whatsapp',
+      const details = {
         link_url: target.href,
         page_language: document.documentElement.lang || 'nl',
         browser_language: navigator.language || undefined,
         ...readAdSource(),
-      });
+      };
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: isTel ? 'click_to_call' : 'click_to_whatsapp', ...details });
+
+      // 1b. Google Analytics 4, once. The GTM container (version 10) only carries the
+      // Google tag config, a conversion linker and Clarity: nothing in it turns the
+      // dataLayer event above into a GA4 event, so GA4 never saw a phone tap. Sent
+      // straight to the GA4 property through the same consent mode as every other
+      // Google tag. If a GA4 event tag for click_to_call is ever added in GTM, remove
+      // this call, or every tap will be counted twice.
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', isTel ? 'click_to_call' : 'click_to_whatsapp', {
+          send_to: 'G-C4WR7TYCTV',
+          transport_type: 'beacon',
+          ...details,
+        });
+      }
 
       // 2. Direct Google Ads conversion ping, counted as one tap (no value).
       if (typeof window.gtag === 'function') {
