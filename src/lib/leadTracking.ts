@@ -115,12 +115,7 @@ export function reportLeadConversion(lead: LeadConversion): void {
       event_category: lead.source,
     });
 
-    window.oaiq?.('track', 'lead_created', {
-      content_name: lead.source,
-      email,
-      phone_number: phone,
-      external_id: email ?? phone,
-    });
+    window.oaiq?.('measure', 'lead_created', { type: 'customer_action' });
   } catch {
     /* Deliberately silent. The lead is already stored; a tracking failure is
        not the visitor's problem and must never reach their screen. */

@@ -68,7 +68,7 @@ export default function KentekenForm() {
         phone,
         city,
       });
-      window.oaiq?.('track', 'lead_created', { content_name: 'kenteken_form_vertical' });
+      window.oaiq?.('measure', 'lead_created', { type: 'customer_action' });
       
       setIsSubmitted(true);
     } catch (err) {

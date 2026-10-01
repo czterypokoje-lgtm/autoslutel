@@ -128,7 +128,7 @@ export default function PhoneConversionTracker() {
       window.uetq.push('event', isTel ? 'click_to_call' : 'click_to_whatsapp', { event_category: isTel ? 'phone' : 'whatsapp' });
 
       // 4. OpenAI Ads
-      window.oaiq?.('track', 'lead_created', { content_name: isTel ? 'phone_call' : 'whatsapp_click' });
+      window.oaiq?.('measure', 'lead_created', { type: 'customer_action' });
 
       // 5. Server-side fallback (survives an ad blocker dropping the client
       // pixels above) — also anonymously records the click id so a phone

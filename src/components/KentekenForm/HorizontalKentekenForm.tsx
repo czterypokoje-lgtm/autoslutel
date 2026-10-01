@@ -122,7 +122,7 @@ export default function HorizontalKentekenForm() {
         phone,
         postcode,
       });
-      window.oaiq?.('track', 'lead_created', { content_name: 'kenteken_form' });
+      window.oaiq?.('measure', 'lead_created', { type: 'customer_action' });
       
       setIsSubmitted(true);
     } catch (err) {
