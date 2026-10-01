@@ -12,7 +12,12 @@
  */
 
 .shell {
-  min-height: 100vh;
+  /* A fixed frame: the menu always runs full height and the page scrolls
+     inside .column. The public site's body has overflow-x: hidden, which
+     breaks position: sticky, so a sticky sidebar stopped halfway down. */
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   background: var(--crm-bg);
   color: var(--crm-text);
   font-family: var(--ff-body), 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -38,9 +43,7 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  height: 100vh;
-  position: sticky;
-  top: 0;
+  height: 100%;
   box-sizing: border-box;
 }
 
@@ -307,6 +310,8 @@
 .column {
   flex: 1;
   min-width: 0;
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -822,7 +827,9 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
 }
 
 @media (max-width: 860px) {
-  .shell { flex-direction: column; }
+  /* A phone scrolls the whole page; the drawer covers the menu. */
+  .shell { flex-direction: column; height: auto; overflow: visible; }
+  .column { height: auto; overflow: visible; }
 
   .sidebar {
     width: 100%;

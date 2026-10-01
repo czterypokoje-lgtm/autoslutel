@@ -1,292 +1,178 @@
-/*
- * The three blocks the overview was missing: a day column, a funnel and an
- * at-risk list.
- *
- * Built on the same tokens as everything else in theme.css rather than a new
- * palette, so these sit beside the existing cards instead of looking bolted
- * on. Nothing here hard-codes a colour that theme.css already names.
- */
+/* The office dashboard. Plain cards, one table idiom, no decorative charts. */
 
-/* ── Day agenda ─────────────────────────────────────────────────────────── */
-
-.agenda {
+.page {
   display: flex;
   flex-direction: column;
-  max-height: 420px;
-  overflow-y: auto;
+  padding-bottom: var(--sp-12);
+  max-width: 1400px;
 }
 
-/*
- * One row per quarter hour, with the time in a fixed gutter. A job spans the
- * rows it covers rather than sitting in one, so a two-hour klus reads as two
- * hours at a glance — which is the whole point of a day column over a list.
- */
-.slot {
-  display: grid;
-  grid-template-columns: 52px 1fr;
-  gap: 12px;
-  min-height: 34px;
-  border-top: 1px solid var(--crm-rule);
-  padding-top: 2px;
+.allClear {
+  margin: 0 0 var(--sp-8);
+  padding: 14px 18px;
+  border-radius: var(--crm-r);
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
+  font-weight: var(--fw-semibold);
 }
 
-.slot:first-child {
-  border-top: none;
-}
-
-/* Only the hour is labelled; the quarters are rules, like a real day view. */
-.slotTime {
-  font-size: 12px;
-  color: var(--crm-muted);
-  font-variant-numeric: tabular-nums;
-  padding-top: 2px;
-}
-
-.slotQuarter {
-  color: transparent;
-}
-
-.slotBody {
-  min-width: 0;
-}
-
-.event {
-  border-radius: var(--crm-r-sm);
-  padding: 8px 10px;
-  background: var(--crm-sunk);
-  /* The technician's own colour, so a day reads by person without a legend. */
-  border-left: 3px solid var(--crm-steel);
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  transition: background 120ms ease;
-}
-
-.event:hover {
-  background: var(--crm-raised);
-}
-
-.eventTitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--crm-ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.eventMeta {
-  font-size: 12px;
-  color: var(--crm-muted);
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.eventFoot {
+/* ── KPIs ── */
+.kpiHead {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 6px;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.kpiHead p { margin-bottom: 0; }
+
+.periods {
+  display: inline-flex;
+  border: 1px solid var(--crm-accent);
+  border-radius: 6px;
+  overflow: hidden;
 }
 
-.agendaEmpty {
-  padding: 2.5rem 1rem;
-  text-align: center;
-  color: var(--crm-muted);
-  font-size: 14px;
+.period,
+.periodOn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  color: var(--crm-accent);
+  background: var(--crm-panel);
+  border-right: 1px solid #f1c3ab;
 }
+.period:last-child, .periodOn:last-child { border-right: 0; }
+.periodOn { background: var(--crm-accent); color: #ffffff; }
 
-/* ── Funnel ─────────────────────────────────────────────────────────────── */
-
-.funnel {
+.kpis {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--crm-rule);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--sp-4);
+  margin: var(--sp-3) 0 var(--sp-8);
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+}
+
+.kpiStrong { background: var(--crm-nav); border-color: var(--crm-nav); }
+.kpiStrong .kpiLabel, .kpiStrong .kpiFoot { color: var(--crm-nav-muted); }
+.kpiStrong .kpiValue { color: #ffffff; }
+.kpiStrong .trendUp { color: #86efac; }
+.kpiStrong .trendDown { color: #fca5a5; }
+.kpiStrong .trendNone { color: var(--crm-nav-muted); }
+
+.kpiLabel {
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--crm-muted);
+}
+
+.kpiValue { font-size: 26px; font-weight: var(--fw-semibold); color: var(--crm-ink); line-height: 1.2; }
+.kpiFoot { font-size: 12.5px; color: var(--crm-muted); }
+
+.trendUp { font-size: 12.5px; font-weight: var(--fw-semibold); color: var(--crm-ok); }
+.trendDown { font-size: 12.5px; font-weight: var(--fw-semibold); color: var(--crm-stop); }
+.trendNone { font-size: 12.5px; color: var(--crm-muted); }
+
+/* ── cards ── */
+.twoCol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+
+.card {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
   border-radius: var(--crm-r);
   overflow: hidden;
+  margin-bottom: var(--sp-4);
 }
+.twoCol .card { margin-bottom: 0; }
 
-.funnelStage {
-  background: var(--crm-panel);
-  padding: 18px 14px 16px;
-  text-align: center;
-  position: relative;
-}
+.cardChance { border-color: #f6c9ad; }
 
-.funnelCount {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--crm-ink);
-  font-variant-numeric: tabular-nums;
-}
-
-.funnelPct {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: var(--crm-sunk);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--crm-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.funnelLabel {
-  margin-top: 10px;
-  font-size: 12px;
-  color: var(--crm-muted);
-}
-
-/*
- * The taper. A bar whose height is the share still in play, so the shape of
- * the drop-off is visible before any number is read.
- */
-.funnelBar {
-  height: 46px;
+.cardHead {
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  margin-top: 12px;
-}
-
-.funnelFill {
-  width: 100%;
-  border-radius: 3px 3px 0 0;
-  background: var(--crm-steel);
-  opacity: 0.18;
-  min-height: 3px;
-}
-
-/* ── At-risk list ───────────────────────────────────────────────────────── */
-
-.riskRow {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) 110px minmax(0, 1.4fr) 90px;
-  gap: 14px;
   align-items: center;
-  padding: 12px 16px;
-  border-top: 1px solid var(--crm-rule);
-}
-
-.riskRow:first-of-type {
-  border-top: none;
-}
-
-.riskName {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--crm-ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.riskSub {
-  font-size: 12px;
-  color: var(--crm-muted);
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.riskIdle {
-  display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  color: var(--crm-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-/* How long it has been sitting, as a bar that fills towards "too long". */
-.riskTrack {
-  height: 4px;
-  border-radius: 999px;
-  background: var(--crm-rule);
-  margin-top: 6px;
-  overflow: hidden;
-}
-
-.riskFill {
-  height: 100%;
-  border-radius: 999px;
-}
-
-.riskValue {
-  text-align: right;
-  font-size: 14px;
-  font-weight: 600;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--crm-rule);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-base);
   color: var(--crm-ink);
-  font-variant-numeric: tabular-nums;
 }
+.cardHead > span:first-child { display: inline-flex; align-items: center; gap: 8px; }
+.cardHead a { font-size: 13px; font-weight: var(--fw-medium); color: var(--crm-accent); text-decoration: none; }
 
-.riskHead {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) 110px minmax(0, 1.4fr) 90px;
-  gap: 14px;
-  padding: 10px 16px;
-  font-size: 12px;
-  font-weight: 600;
+.explain { margin: 0; padding: 12px 18px 0; font-size: 13px; color: var(--crm-muted); }
+.empty { margin: 0; padding: 18px; color: var(--crm-muted); }
+
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th {
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--crm-muted);
+  padding: 10px 18px;
+  background: var(--crm-sunk);
   border-bottom: 1px solid var(--crm-rule);
 }
+.table td { padding: 11px 18px; border-bottom: 1px solid var(--crm-rule); color: var(--crm-text); }
+.table tr:last-child td { border-bottom: 0; }
+.num { text-align: right !important; white-space: nowrap; }
 
-.riskHead > :last-child {
-  text-align: right;
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 9px; }
+.muted { color: var(--crm-muted); font-size: 13px; }
+.warnText { color: var(--crm-warn); font-weight: var(--fw-semibold); }
+
+.list { list-style: none; margin: 0; padding: 4px 0; }
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  color: inherit;
+  text-decoration: none;
 }
+a.listRow:hover { background: var(--crm-sunk); }
+.grow { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.grow b { color: var(--crm-ink); font-weight: var(--fw-semibold); }
+.slot { width: 92px; flex-shrink: 0; font-weight: var(--fw-semibold); color: var(--crm-nav); font-size: 13px; }
 
-/* ── Phone ──────────────────────────────────────────────────────────────── */
+.actionBtn,
+.ghostBtn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.actionBtn { background: var(--crm-accent); color: #ffffff; }
+.ghostBtn { border: 1px solid var(--crm-rule2); color: var(--crm-ink); }
 
-@media (max-width: 720px) {
-  /*
-   * The at-risk grid becomes a stack: five columns at 360px wide is five
-   * columns of nothing. Name and how long it has been waiting are what
-   * matter on a phone; stage and value ride along underneath.
-   */
-  .riskHead {
-    display: none;
-  }
-
-  .riskRow {
-    grid-template-columns: 1fr auto;
-    gap: 8px 12px;
-    padding: 14px 16px;
-  }
-
-  .riskRow > :nth-child(2) {
-    grid-column: 1;
-    font-size: 12px;
-  }
-
-  .riskRow > :nth-child(3) {
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: end;
-  }
-
-  .riskRow > :nth-child(4) {
-    grid-column: 1 / -1;
-  }
-
-  .riskValue {
-    grid-column: 2;
-    grid-row: 2;
-  }
-
-  .funnel {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .agenda {
-    max-height: none;
-  }
-
-  .slot {
-    grid-template-columns: 44px 1fr;
-    gap: 8px;
-  }
+@media (max-width: 1100px) {
+  .twoCol { grid-template-columns: 1fr; }
 }

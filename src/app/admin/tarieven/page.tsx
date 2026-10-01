@@ -1,7 +1,8 @@
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import PriceForm from './PriceForm';
-import PriceRow, { type PriceRowData } from './PriceRow';
+import { type PriceRowData } from './PriceRow';
+import TarievenList from './TarievenList';
 import styles from './tarieven.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -43,39 +44,22 @@ export default async function TarievenPage() {
         <div>
           <h1 className={styles.title}>Tarieven</h1>
           <p className={styles.sub}>
-            De prijzen die de spraakassistent en het kantoor gebruiken voor een rijdende monteur — los van de
-            webshopprijzen in Producten.
+            Eén prijslijst: de AI-agent en het kantoor rekenen met deze bedragen. Een wijziging geldt direct
+            voor nieuwe offertes. Klik een merk open om de prijzen te zien of aan te passen.
           </p>
         </div>
       </div>
 
-      <PriceForm />
+      <details className={styles.addFold}>
+        <summary className={styles.addSummary}>+ Tarief toevoegen</summary>
+        <PriceForm />
+      </details>
 
-      <div className={styles.wrap}>
-        {rows.length === 0 ? (
-          <p className={styles.empty}>Nog geen tarieven ingesteld.</p>
-        ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Merk</th>
-                <th>Model</th>
-                <th>Scenario</th>
-                <th>Bouwjaar</th>
-                <th>Sleutel</th>
-                <th style={{ textAlign: 'right' }}>Prijs</th>
-                <th>Notitie</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <PriceRow key={row.id} row={row} />
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      {rows.length === 0 ? (
+        <p className={styles.empty}>Nog geen tarieven ingesteld.</p>
+      ) : (
+        <TarievenList rows={rows} />
+      )}
     </>
   );
 }

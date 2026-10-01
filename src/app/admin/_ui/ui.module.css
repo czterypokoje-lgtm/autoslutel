@@ -81,9 +81,23 @@
 
 .cardTitle {
   margin: 0;
-  font-size: var(--fs-sm);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-base);
   font-weight: var(--fw-semibold);
   color: var(--crm-ink);
+}
+
+/* A "Bekijk alles →" link inside a card title sits on the right, not glued
+   to the title text. */
+.cardTitle a {
+  margin-left: auto;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--crm-accent);
+  text-decoration: none;
 }
 
 /* ── row ─────────────────────────────────────────────────────────────── */

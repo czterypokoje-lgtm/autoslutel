@@ -261,3 +261,108 @@
   font-weight: 600;
   color: var(--crm-stop);
 }
+
+/* ── short list: filter bar + one fold per brand ── */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  width: min(320px, 100%);
+  padding: 0 12px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: 8px;
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+}
+
+.searchField input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  color: var(--crm-ink);
+}
+
+.chips { display: inline-flex; border: 1px solid var(--crm-accent); border-radius: 8px; overflow: hidden; }
+
+.chipBtn,
+.chipOn {
+  border: 0;
+  border-right: 1px solid #f1c3ab;
+  height: 36px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--crm-panel);
+  color: var(--crm-accent);
+}
+.chipBtn:last-child, .chipOn:last-child { border-right: 0; }
+.chipOn { background: var(--crm-accent); color: #ffffff; }
+
+.count { margin-left: auto; color: var(--crm-muted); font-size: 13px; }
+
+.groups { display: flex; flex-direction: column; gap: 8px; }
+
+.group {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+  overflow: hidden;
+}
+
+.groupHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 18px;
+  cursor: pointer;
+  list-style: none;
+}
+.groupHead::-webkit-details-marker { display: none; }
+.groupHead::before { content: '›'; font-size: 20px; color: var(--crm-muted); transition: transform 0.15s; }
+.group[open] .groupHead::before { transform: rotate(90deg); }
+.group[open] .groupHead { border-bottom: 1px solid var(--crm-rule); }
+
+.groupName { font-weight: 600; color: var(--crm-ink); font-size: 15px; }
+.groupMeta { color: var(--crm-muted); font-size: 13px; }
+.groupRange { margin-left: auto; font-weight: 600; color: var(--crm-ink); }
+
+.group .wrap { border: 0; border-radius: 0; margin: 0; }
+
+/* Long notes stay on one line; the full text is in the tooltip. */
+.noteCell {
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.addFold { margin: 0 0 18px; }
+.addSummary {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: var(--crm-accent);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.addSummary::-webkit-details-marker { display: none; }
+.addFold[open] .addSummary { margin-bottom: 14px; }

@@ -95,7 +95,7 @@ export default function PriceRow({ row }: { row: PriceRowData }) {
           {row.keyless === true ? 'Keyless' : row.keyless === false ? 'Baard/contact' : 'Beide'}
         </td>
         <td className={styles.money}>{MONEY.format(row.price)}</td>
-        <td className={styles.muted}>{row.note ?? ''}</td>
+        <td className={`${styles.muted} ${styles.noteCell}`} title={row.note ?? undefined}>{row.note ?? ''}</td>
         <td className={styles.rowActions}>
           <button className={styles.ghostBtn} onClick={() => setEditing(true)}>
             Bewerken
