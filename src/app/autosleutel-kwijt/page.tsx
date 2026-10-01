@@ -26,7 +26,7 @@ import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
 const SERVICE_SLUG = 'alle-sleutels-kwijt-auto';
 
 export const metadata: Metadata = {
-  title: { absolute: `Autosleutel Kwijt? Binnen ${ARRIVAL_TITLE} | 24/7` },
+  title: { absolute: `Autosleutel Kwijt? Nieuwe Sleutel in ${ARRIVAL.replace('min', 'Min')} | Alle Merken` },
   description: `Autosleutel kwijt, beide sleutels weg of geen reservesleutel? Binnen ${ARRIVAL} ter plaatse, nieuwe sleutel ter plaatse gemaakt. Prijs vooraf, 24/7, alle merken.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${SITE_CONFIG.domain}/autosleutel-kwijt`,
-    title: `Autosleutel Kwijt? Binnen ${ARRIVAL_TITLE} | 24/7`,
+    title: `Autosleutel Kwijt? Nieuwe Sleutel in ${ARRIVAL.replace('min', 'Min')} | Alle Merken`,
     description: `Autosleutel kwijt en geen reserve? Binnen ${ARRIVAL} ter plaatse, prijs vooraf. Alle merken, 24/7.`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel Kwijt — Autosleutel24' }],
   },
