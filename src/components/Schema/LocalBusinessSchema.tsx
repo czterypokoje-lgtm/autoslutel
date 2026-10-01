@@ -9,7 +9,7 @@ export default function LocalBusinessSchema() {
     '@id': BIZ_ID,
     name: SITE_CONFIG.name,
     alternateName: 'Autosleutel24',
-    description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Werkzaam in Midden-Nederland en de Randstad.',
+    description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Binnen 30-60 min ter plaatse in Utrecht, Noord-Holland, Zuid-Holland, Gelderland en Flevoland, 24/7.',
     url: SITE_CONFIG.domain,
     logo: {
       '@type': 'ImageObject',
