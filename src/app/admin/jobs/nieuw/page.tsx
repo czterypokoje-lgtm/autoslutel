@@ -5,6 +5,8 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate, suggestTechnicians, type TechnicianLike } from '@/lib/crmJobs';
 import styles from '../jobs.module.css';
 import PlanForm, { type PlanLead } from './PlanForm';
+import { catalogTree } from '@/lib/carCatalog';
+import type { PickerMake } from './CarPicker';
 
 export const dynamic = 'force-dynamic';
 
@@ -166,6 +168,12 @@ export default async function NewJobPage({
     commissionPct: commissionByTechnician[s.technician.id] ?? null,
   }));
 
+  /* The full catalogue, slimmed to what the pickers need. */
+  const cars: PickerMake[] = catalogTree().map((c) => ({
+    make: c.make,
+    models: c.models.map((m) => ({ model: m.model, from: m.fromYear, to: m.toYear, keyless: m.keyless, blade: m.nonKeyless })),
+  }));
+
   return (
     <>
       <div className={styles.head}>
@@ -210,6 +218,7 @@ export default async function NewJobPage({
         suggestions={suggestions}
         initialSlot={slot && /^\d{2}:\d{2}$/.test(slot) ? slot : undefined}
         initialTechnicianId={monteur}
+        cars={cars}
       />
     </>
   );

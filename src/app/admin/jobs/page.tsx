@@ -7,6 +7,7 @@ import { technicianColour } from '@/lib/crmColours';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { PageHead, ui } from '../_ui';
 import GridAutoScroll from './GridAutoScroll';
+import { getBrandLogo } from '@/lib/brandLogos';
 
 export const dynamic = 'force-dynamic';
 
@@ -91,9 +92,14 @@ export default async function JobsPage({
   const prev = view === 'week' ? addDays(from, -7) : addDays(date, -1);
   const next = view === 'week' ? addDays(from, 7) : addDays(date, 1);
 
+  const unassignedCount = rows.filter((j) => !j.technician_id && j.status !== 'geannuleerd').length;
+  const doneCount = rows.filter((j) => j.status === 'afgerond').length;
+
+  const shortDay = (iso: string) =>
+    new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', timeZone: 'Europe/Amsterdam' }).format(new Date(`${iso}T12:00:00Z`));
   const heading =
     view === 'week'
-      ? `Week van ${from}`
+      ? `Week ${shortDay(from)} – ${shortDay(to)}`
       : new Intl.DateTimeFormat('nl-NL', {
           weekday: 'long',
           day: 'numeric',
@@ -111,52 +117,90 @@ export default async function JobsPage({
       */}
       <PageHead
         title="Agenda"
-        sub={`${heading} · ${rows.length} ${rows.length === 1 ? 'klus' : 'klussen'}`}
-        actions={
-          <>
-            <div className={styles.viewSwitch}>
-              <Link
-                href={`/admin/jobs?datum=${date}`}
-                className={view === 'dag' ? `${styles.viewLink} ${styles.viewLinkActive}` : styles.viewLink}
-              >
-                Dag
-              </Link>
-              <Link
-                href={`/admin/jobs?datum=${date}&weergave=week`}
-                className={view === 'week' ? `${styles.viewLink} ${styles.viewLinkActive}` : styles.viewLink}
-              >
-                Week
-              </Link>
-            </div>
-
-            <Link
-              className={`${ui.btn} ${ui.btnIcon}`}
-              href={`/admin/jobs?datum=${prev}${view === 'week' ? '&weergave=week' : ''}`}
-              aria-label="Vorige"
-            >
-              <ChevronLeft size={16} strokeWidth={2} />
-            </Link>
-            <Link
-              className={ui.btn}
-              href={`/admin/jobs?datum=${today}${view === 'week' ? '&weergave=week' : ''}`}
-            >
-              Vandaag
-            </Link>
-            <Link
-              className={`${ui.btn} ${ui.btnIcon}`}
-              href={`/admin/jobs?datum=${next}${view === 'week' ? '&weergave=week' : ''}`}
-              aria-label="Volgende"
-            >
-              <ChevronRight size={16} strokeWidth={2} />
-            </Link>
-
-            <Link className={`${ui.btn} ${ui.btnPrimary}`} href="/admin/jobs/nieuw">
-              <Plus size={15} strokeWidth={2.2} />
-              Nieuwe klus
-            </Link>
-          </>
-        }
+        sub={`${heading} · ${rows.length} ${rows.length === 1 ? 'klus' : 'klussen'}${unassignedCount ? ` · ${unassignedCount} zonder monteur` : ''}${doneCount ? ` · ${doneCount} afgerond` : ''}`}
       />
+
+      <div className={styles.agendaLayout}>
+      <aside className={styles.side}>
+        <Link className={styles.sideNew} href={`/admin/jobs/nieuw?datum=${date}`}>
+          <Plus size={17} strokeWidth={2.2} />
+          Klus inplannen
+        </Link>
+
+        <MiniMonth date={date} today={today} view={view} from={from} to={to} />
+
+        <div className={styles.sideBlock}>
+          <span className={styles.sideLabel}>Monteurs</span>
+          {techs.map((t) => {
+            const count = rows.filter((j) => j.technician_id === t.id && j.status !== 'geannuleerd').length;
+            return (
+              <div key={t.id} className={styles.sideTech}>
+                <span className={styles.sideDot} style={{ background: technicianColour(t.color) }} />
+                <span className={styles.sideName}>{t.name}</span>
+                <span className={styles.sideCount}>{count}</span>
+              </div>
+            );
+          })}
+          {unassignedCount > 0 && (
+            <div className={styles.sideTech}>
+              <span className={styles.sideDot} style={{ background: '#9d201c' }} />
+              <span className={styles.sideName}>Zonder monteur</span>
+              <span className={`${styles.sideCount} ${styles.sideCountWarn}`}>{unassignedCount}</span>
+            </div>
+          )}
+        </div>
+
+        <div className={styles.sideBlock}>
+          <span className={styles.sideLabel}>Status</span>
+          {(['gepland', 'onderweg', 'afgerond', 'geannuleerd'] as const).map((st) => (
+            <div key={st} className={`${styles.sideTech} ${statusClass(st)}`}>
+              <span className={styles.statusDot} />
+              <span className={styles.sideName}>
+                {STATUS_LABEL[st]}
+                {st === 'onderweg' ? ' / bezig' : ''}
+              </span>
+            </div>
+          ))}
+          <p className={styles.sideHint}>Klik een leeg vak in de agenda om daar een klus in te plannen.</p>
+        </div>
+      </aside>
+
+      <div className={styles.agendaMain}>
+        <div className={styles.toolbar}>
+          <Link className={ui.btn} href={`/admin/jobs?datum=${today}${view === 'week' ? '&weergave=week' : ''}`}>
+            Vandaag
+          </Link>
+          <Link
+            className={`${ui.btn} ${ui.btnIcon}`}
+            href={`/admin/jobs?datum=${prev}${view === 'week' ? '&weergave=week' : ''}`}
+            aria-label="Vorige"
+          >
+            <ChevronLeft size={16} strokeWidth={2} />
+          </Link>
+          <Link
+            className={`${ui.btn} ${ui.btnIcon}`}
+            href={`/admin/jobs?datum=${next}${view === 'week' ? '&weergave=week' : ''}`}
+            aria-label="Volgende"
+          >
+            <ChevronRight size={16} strokeWidth={2} />
+          </Link>
+          <span className={styles.toolbarTitle}>{heading}</span>
+          <span className={styles.toolbarGrow} />
+          <div className={styles.viewSwitch}>
+            <Link
+              href={`/admin/jobs?datum=${date}`}
+              className={view === 'dag' ? `${styles.viewLink} ${styles.viewLinkActive}` : styles.viewLink}
+            >
+              Dag
+            </Link>
+            <Link
+              href={`/admin/jobs?datum=${date}&weergave=week`}
+              className={view === 'week' ? `${styles.viewLink} ${styles.viewLinkActive}` : styles.viewLink}
+            >
+              Week
+            </Link>
+          </div>
+        </div>
 
       {techs.length === 0 && (
         <p className={styles.warning}>
@@ -193,7 +237,83 @@ export default async function JobsPage({
       </div>
 
       <AgendaList jobs={rows} technicians={techs} today={today} />
+      </div>
+      </div>
     </>
+  );
+}
+
+const STATUS_LABEL: Record<string, string> = {
+  gepland: 'Gepland',
+  onderweg: 'Onderweg',
+  bezig: 'Bezig',
+  afgerond: 'Afgerond',
+  geannuleerd: 'Geannuleerd',
+};
+
+/** The class that colours a job's status dot (and fades a cancelled job). */
+function statusClass(status: string): string {
+  if (status === 'afgerond') return styles.stDone;
+  if (status === 'onderweg' || status === 'bezig') return styles.stBusy;
+  if (status === 'geannuleerd') return styles.stCancel;
+  return styles.stPlanned;
+}
+
+/** The car maker's logo, tiny, at the right of the time line. */
+function BrandMark({ make }: { make: string | null }) {
+  const src = getBrandLogo(make);
+  if (!src) return null;
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt="" className={styles.eventLogo} />;
+}
+
+const MONTHS_NL = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+
+/**
+ * The month around the shown date, as links. Today is ringed, the shown day
+ * (or week) is filled. Clicking a day keeps the current Dag/Week view.
+ */
+function MiniMonth({ date, today, view, from, to }: { date: string; today: string; view: string; from: string; to: string }) {
+  const first = `${date.slice(0, 7)}-01`;
+  const gridStart = weekStart(first);
+  const month = date.slice(0, 7);
+  const days = Array.from({ length: 42 }, (_, i) => addDays(gridStart, i));
+  const prevMonth = addDays(first, -1).slice(0, 7) + '-01';
+  const nextMonth = addDays(first, 32).slice(0, 7) + '-01';
+  const q = view === 'week' ? '&weergave=week' : '';
+  return (
+    <div className={styles.mini}>
+      <div className={styles.miniHead}>
+        <Link href={`/admin/jobs?datum=${prevMonth}${q}`} aria-label="Vorige maand" className={styles.miniNav}>
+          <ChevronLeft size={15} />
+        </Link>
+        <span>
+          {MONTHS_NL[Number(date.slice(5, 7)) - 1]} {date.slice(0, 4)}
+        </span>
+        <Link href={`/admin/jobs?datum=${nextMonth}${q}`} aria-label="Volgende maand" className={styles.miniNav}>
+          <ChevronRight size={15} />
+        </Link>
+      </div>
+      <div className={styles.miniGrid}>
+        {['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].map((d) => (
+          <span key={d} className={styles.miniDow}>
+            {d}
+          </span>
+        ))}
+        {days.map((d) => {
+          const inMonth = d.startsWith(month);
+          const selected = d >= from && d <= to;
+          const cls = [styles.miniDay, !inMonth && styles.miniOut, selected && styles.miniSel, d === today && styles.miniToday]
+            .filter(Boolean)
+            .join(' ');
+          return (
+            <Link key={d} href={`/admin/jobs?datum=${d}${q}`} className={cls}>
+              {Number(d.slice(8))}
+            </Link>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -386,18 +506,22 @@ function DayBoard({
                 <Link
                   key={job.id}
                   href={`/admin/jobs/${job.id}`}
-                  className={`${styles.event} ${col.key === 'unassigned' ? styles.eventUnassigned : ''}`}
+                  className={`${styles.event} ${col.key === 'unassigned' ? styles.eventUnassigned : ''} ${statusClass(job.status)}`}
                   style={{
                     top: (start / 60) * HOUR_H,
                     height: ((end - start) / 60) * HOUR_H - 2,
-                    borderLeftColor: col.color,
+                    ['--c' as string]: col.color,
                     ...(cols > 1
                       ? { left: `calc(${colIdx} * (100% / ${cols}) + 3px)`, width: `calc(100% / ${cols} - 6px)`, right: 'auto' }
                       : {}),
                   }}
                   title={`${slotLabel(job.slot_start, job.slot_end)} · ${job.service_type ?? 'geen dienst'}`}
                 >
-                  <span className={styles.eventTime}>{slotLabel(job.slot_start, job.slot_end)}</span>
+                  <span className={styles.eventTime}>
+                    <span className={styles.statusDot} aria-hidden="true" />
+                    {slotLabel(job.slot_start, job.slot_end)}
+                    <BrandMark make={job.car_make} />
+                  </span>
                   {carLine(job) && <span className={styles.eventCar}>{carLine(job)}</span>}
                   <span className={styles.eventLine}>
                     {job.service_type ?? 'geen dienst'}
@@ -489,18 +613,22 @@ function WeekBoard({
                   <Link
                     key={job.id}
                     href={`/admin/jobs/${job.id}`}
-                    className={`${styles.event} ${!job.technician_id ? styles.eventUnassigned : ''}`}
+                    className={`${styles.event} ${!job.technician_id ? styles.eventUnassigned : ''} ${statusClass(job.status)}`}
                     style={{
                       top: (start / 60) * HOUR_H,
                       height: ((end - start) / 60) * HOUR_H - 2,
-                      borderLeftColor: colour,
+                      ['--c' as string]: colour,
                       ...(cols > 1
                         ? { left: `calc(${colIdx} * (100% / ${cols}) + 3px)`, width: `calc(100% / ${cols} - 6px)`, right: 'auto' }
                         : {}),
                     }}
                     title={`${slotLabel(job.slot_start, job.slot_end)} · ${job.service_type ?? 'geen dienst'}`}
                   >
-                    <span className={styles.eventTime}>{slotLabel(job.slot_start, job.slot_end)}</span>
+                    <span className={styles.eventTime}>
+                    <span className={styles.statusDot} aria-hidden="true" />
+                    {slotLabel(job.slot_start, job.slot_end)}
+                    <BrandMark make={job.car_make} />
+                  </span>
                     {carLine(job) && <span className={styles.eventCar}>{carLine(job)}</span>}
                     <span className={styles.eventLine}>
                       {job.technician_id ? nameOf.get(job.technician_id) ?? '—' : 'Niet toegewezen'}

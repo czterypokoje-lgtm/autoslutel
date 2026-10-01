@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from '../jobs.module.css';
 import { TIME_SLOTS } from '@/lib/crmJobs';
+import { CarPicker, ServicePicker, clean, type PickerMake } from './CarPicker';
 
 export interface PlanLead {
   id: string;
@@ -41,6 +42,7 @@ export default function PlanForm({
   suggestions,
   initialSlot,
   initialTechnicianId,
+  cars,
 }: {
   lead: PlanLead | null;
   order: { id: string; order_number: string; total_inc: number } | null;
@@ -49,6 +51,8 @@ export default function PlanForm({
   /** Set when this form opened from a click on an empty hour in the calendar. */
   initialSlot?: string;
   initialTechnicianId?: string;
+  /** Every make and model in the catalogue, for the pickers. */
+  cars: PickerMake[];
 }) {
   const router = useRouter();
 
@@ -217,11 +221,11 @@ export default function PlanForm({
         postcode,
         city,
         kenteken,
-        car_make: carMake || null,
-        car_model: carModel || null,
-        car_year: carYear || null,
+        car_make: clean(carMake) || null,
+        car_model: clean(carModel) || null,
+        car_year: clean(carYear) || null,
         keyless: keylessChoice === '' ? null : keylessChoice === 'true',
-        service_type: service,
+        service_type: clean(service),
         quoted_price: quoted,
         // Both, because the office may have agreed a flat euro amount that is
         // not a round percentage of the price — sending only one would make
@@ -375,17 +379,7 @@ export default function PlanForm({
             )}
           </div>
 
-          <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor="dienst">
-              Dienst
-            </label>
-            <input
-              id="dienst"
-              className={styles.control}
-              value={service}
-              onChange={(e) => setService(e.target.value)}
-            />
-          </div>
+          <ServicePicker value={service} onChange={setService} />
 
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="prijs">
@@ -500,45 +494,16 @@ export default function PlanForm({
             />
           </div>
 
-          <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor="merk">
-              Automerk
-            </label>
-            <input
-              id="merk"
-              className={styles.control}
-              placeholder="bijv. Toyota"
-              value={carMake}
-              onChange={(e) => setCarMake(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor="model">
-              Model
-            </label>
-            <input
-              id="model"
-              className={styles.control}
-              placeholder="bijv. Aygo"
-              value={carModel}
-              onChange={(e) => setCarModel(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor="bouwjaar">
-              Bouwjaar
-            </label>
-            <input
-              id="bouwjaar"
-              className={styles.control}
-              inputMode="numeric"
-              placeholder="bijv. 2018"
-              value={carYear}
-              onChange={(e) => setCarYear(e.target.value.replace(/\D/g, '').slice(0, 4))}
-            />
-          </div>
+          <CarPicker
+            cars={cars}
+            make={carMake}
+            model={carModel}
+            year={carYear}
+            onMake={setCarMake}
+            onModel={setCarModel}
+            onYear={setCarYear}
+            onKeyType={setKeylessChoice}
+          />
 
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="keyless">
