@@ -403,22 +403,27 @@
 }
 .heroStart:hover { background: var(--crm-accent-hover); }
 
-/* ── the technician's investment: €500 in, how far earned back ── */
+/* ── the technician's monthly investment: one quiet line ── */
 .invest {
-  margin: 0 0 var(--sp-8);
-  padding: 20px 22px;
+  margin: 0 0 var(--sp-6);
+  padding: 12px 16px;
+  border: 1px solid var(--crm-rule);
   border-radius: var(--crm-r);
-  background: var(--crm-nav);
-  color: #ffffff;
+  background: var(--crm-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.investTop { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.investRight { text-align: right; }
-.investLabel { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--crm-nav-muted); }
-.investBig { display: block; font-size: 30px; font-weight: 600; }
-.investWin { display: block; font-size: 30px; font-weight: 700; color: #86efac; }
-.investBar { margin: 14px 0 10px; height: 12px; border-radius: 6px; background: var(--crm-nav-deep); overflow: hidden; }
-.investBar span { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, #fb923c, #16a34a); }
-.investFoot { margin: 0; color: var(--crm-nav-text); font-size: 14px; }
+.investRow { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.investTitle { font-size: 13.5px; color: var(--crm-muted); text-transform: none; }
+.investTitle::first-letter { text-transform: uppercase; }
+.investTitle b { color: var(--crm-ink); font-weight: 600; margin-left: 4px; }
+.investWin { font-size: 14px; font-weight: 600; color: var(--crm-ok); }
+.investTodo { font-size: 14px; font-weight: 600; color: var(--crm-ink); }
+.investBar { height: 6px; border-radius: 3px; background: var(--crm-sunk); overflow: hidden; }
+.investBar span { display: block; height: 100%; border-radius: 3px; background: var(--crm-accent); }
+.investBar .investBarDone { background: var(--crm-ok); }
+.investFoot { font-size: 12.5px; color: var(--crm-muted); }
 
 .jobCell { display: inline-flex; align-items: center; gap: 10px; }
 .jobCell b { color: var(--crm-ink); }

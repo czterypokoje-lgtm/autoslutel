@@ -9,14 +9,16 @@ import { SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import { PageHead, Card, CardHead, Row, Notice, Empty, Label, TileGrid, Tile } from '../_ui';
 import BrandLogo from './BrandLogo';
 import SalesChart from './SalesChart';
+import InvestmentBar from './InvestmentBar';
 import { PERIOD_LABEL, type Period } from './dashboardData';
 import styles from './overzicht.module.css';
 import dash from './dashboard.module.css';
 import type { CrmUser } from '@/lib/crmSession';
 
 /**
- * What every technician puts in when they join. Not stored per person yet:
- * when amounts start to differ, this becomes a column on technicians.
+ * What every technician puts in each month, earned back from that month's
+ * jobs (1st to end of month). Not stored per person yet: when amounts start
+ * to differ, this becomes a column on technicians.
  */
 const START_INVESTMENT = 500;
 
@@ -141,12 +143,11 @@ export default async function MonteurOverview({ user, period }: { user: CrmUser;
   const lowStock = (stock ?? []).filter((s) => stockStatus(s) === 'low').length;
   const weekCount = (weekJobs ?? []).length;
 
-  /* ── investment: earned back from everything ever finished ── */
-  const earnedAll = done.reduce((s, j) => s + earnedOn(j), 0);
-  const backPct = Math.min(100, Math.round((earnedAll / START_INVESTMENT) * 100));
-  const beyond = earnedAll - START_INVESTMENT;
-  const avgEarn = done.length ? earnedAll / done.length : 0;
-  const jobsToGo = beyond < 0 && avgEarn > 0 ? Math.ceil(-beyond / avgEarn) : null;
+  /* ── investment: this calendar month only, from the 1st ── */
+  const monthStart = `${today.slice(0, 7)}-01`;
+  const monthJobs = done.filter((j) => dayOf(j) >= monthStart && dayOf(j) <= today);
+  const earnedMonth = monthJobs.reduce((s, j) => s + earnedOn(j), 0);
+  const monthName = new Intl.DateTimeFormat('nl-NL', { month: 'long', timeZone: 'Europe/Amsterdam' }).format(now);
 
   /* ── this period vs the one before ── */
   const { cur, prev } = ranges(period, today);
@@ -243,28 +244,7 @@ export default async function MonteurOverview({ user, period }: { user: CrmUser;
         </Card>
       </div>
 
-      <section className={styles.invest} aria-label="Jouw investering">
-        <div className={styles.investTop}>
-          <div>
-            <span className={styles.investLabel}>Jouw investering</span>
-            <span className={styles.investBig}>{EUR.format(START_INVESTMENT)}</span>
-          </div>
-          <div className={styles.investRight}>
-            <span className={styles.investLabel}>{beyond >= 0 ? 'Winst boven je investering' : 'Terugverdiend'}</span>
-            <span className={beyond >= 0 ? styles.investWin : styles.investBig}>
-              {beyond >= 0 ? `+ ${EUR.format(beyond)}` : EUR.format(earnedAll)}
-            </span>
-          </div>
-        </div>
-        <div className={styles.investBar} role="progressbar" aria-valuenow={backPct} aria-valuemin={0} aria-valuemax={100}>
-          <span style={{ width: `${backPct}%` }} />
-        </div>
-        <p className={styles.investFoot}>
-          {beyond >= 0
-            ? `Terugverdiend in ${done.length} klussen. Alles wat je nu verdient is winst: ${EUR.format(earnedAll)} totaal verdiend.`
-            : `${backPct}% terugverdiend · nog ${EUR.format(-beyond)} te gaan${jobsToGo ? `, ongeveer ${jobsToGo} ${jobsToGo === 1 ? 'klus' : 'klussen'}` : ''}.`}
-        </p>
-      </section>
+      <InvestmentBar investment={START_INVESTMENT} earned={earnedMonth} jobs={monthJobs.length} monthName={monthName} />
 
       <Label>Snel naar</Label>
       <TileGrid>
