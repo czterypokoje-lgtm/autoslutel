@@ -117,7 +117,7 @@ export default function LoginForm({ next }: { next: string }) {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <label className={styles.label} htmlFor="crm-password" style={{ marginTop: 14 }}>
+      <label className={`${styles.label} ${styles.labelSpaced}`} htmlFor="crm-password">
         Wachtwoord
       </label>
       <input

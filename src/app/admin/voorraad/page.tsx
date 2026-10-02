@@ -207,7 +207,7 @@ export default async function VoorraadPage() {
               <tr key={move.id}>
                 <td>{String(move.changed_at).slice(0, 16).replace('T', ' ')}</td>
                 <td>{move.description}</td>
-                <td style={{ color: Number(move.delta) < 0 ? '#dc2626' : '#059669' }}>
+                <td style={{ color: Number(move.delta) < 0 ? 'var(--crm-stop)' : 'var(--crm-ok)' }}>
                   {Number(move.delta) > 0 ? '+' : ''}
                   {move.delta}
                 </td>

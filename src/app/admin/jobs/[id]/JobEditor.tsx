@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../jobs.module.css';
+import jd from './job-detail.module.css';
 import { JOB_STATUSES, JOB_STATUS_LABELS, TIME_SLOTS, trimTime } from '@/lib/crmJobs';
 
 export interface JobDetail {
@@ -368,7 +369,7 @@ export default function JobEditor({
           </div>
         </div>
 
-        <div className={styles.field} style={{ marginTop: 12 }}>
+        <div className={`${styles.field} ${jd.mt}`}>
           <label className={styles.fieldLabel} htmlFor="nt">Notitie</label>
           <textarea
             id="nt"
@@ -380,70 +381,70 @@ export default function JobEditor({
         </div>
 
 
-        <h2 style={{ marginTop: 24, borderTop: '1px solid #e2e8f0', paddingTop: 24 }}>ERP: Financiën & Kosten (Job Costing)</h2>
-        <p style={{ fontSize: 12, color: '#b45309', background: '#fffbeb', padding: 8, borderRadius: 6, marginTop: 8 }}>
+        <h2 className={jd.costTitle}>Omzet en kosten van deze klus</h2>
+        <p className={jd.costNote}>
           Let op: de velden onder &quot;Omzet&quot; worden nu alleen opgeslagen — ze tellen nog niet mee in de Brutowinst hieronder. Brutowinst gebruikt alleen de Definitieve Prijs.
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-          <div style={{ background: '#f8fafc', padding: 16, borderRadius: 8 }}>
-            <h3 style={{ fontSize: 14, marginTop: 0, marginBottom: 12 }}>Omzet (Revenue)</h3>
+        <div className={jd.costGrid}>
+          <div className={jd.costIn}>
+            <h3 className={jd.costHead}>Omzet</h3>
             
-            <div className={styles.field} style={{ marginBottom: 8 }}>
+            <div className={`${styles.field} ${jd.mb}`}>
               <label className={styles.fieldLabel}>Oproep / Voorrijkosten (€)</label>
               <input className={styles.control} type="number" step="0.01" value={revCallout} onChange={e => setRevCallout(e.target.value)} />
             </div>
-            <div className={styles.field} style={{ marginBottom: 8 }}>
+            <div className={`${styles.field} ${jd.mb}`}>
               <label className={styles.fieldLabel}>Materialen (€)</label>
               <input className={styles.control} type="number" step="0.01" value={revMaterials} onChange={e => setRevMaterials(e.target.value)} />
             </div>
-            <div className={styles.field} style={{ marginBottom: 8 }}>
+            <div className={`${styles.field} ${jd.mb}`}>
               <label className={styles.fieldLabel}>Arbeid / Programmeren (€)</label>
               <input className={styles.control} type="number" step="0.01" value={revLabor} onChange={e => setRevLabor(e.target.value)} />
             </div>
-            <div className={styles.field} style={{ marginBottom: 0 }}>
+            <div className={styles.field}>
               <label className={styles.fieldLabel}>Korting (€)</label>
               <input className={styles.control} type="number" step="0.01" value={revDiscount} onChange={e => setRevDiscount(e.target.value)} />
             </div>
           </div>
 
-          <div style={{ background: '#fef2f2', padding: 16, borderRadius: 8 }}>
-            <h3 style={{ fontSize: 14, marginTop: 0, marginBottom: 12 }}>Kosten (Costs)</h3>
+          <div className={jd.costOut}>
+            <h3 className={jd.costHead}>Kosten</h3>
             
-            <div className={styles.field} style={{ marginBottom: 8 }}>
-              <label className={styles.fieldLabel}>Kostprijs Materialen (€)</label>
+            <div className={`${styles.field} ${jd.mb}`}>
+              <label className={styles.fieldLabel}>Inkoop materialen (€)</label>
               <input className={styles.control} type="number" step="0.01" value={costMaterials} onChange={e => setCostMaterials(e.target.value)} />
             </div>
-            <div className={styles.field} style={{ marginBottom: 8 }}>
-              <label className={styles.fieldLabel}>Monteur / Loon (€)</label>
+            <div className={`${styles.field} ${jd.mb}`}>
+              <label className={styles.fieldLabel}>Monteur (€)</label>
               <input className={styles.control} type="number" step="0.01" value={costTech} onChange={e => setCostTech(e.target.value)} />
             </div>
-            <div className={styles.field} style={{ marginBottom: 8 }}>
+            <div className={`${styles.field} ${jd.mb}`}>
               <label className={styles.fieldLabel}>Reis / Brandstof (€)</label>
               <input className={styles.control} type="number" step="0.01" value={costTravel} onChange={e => setCostTravel(e.target.value)} />
               {/* Where the number came from, so it can be checked instead of believed. */}
               {job.travel_km !== null && (
-                <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+                <div className={jd.hint}>
                   {Number(job.travel_km).toFixed(1)} km heen en terug, automatisch berekend. Overschrijf gerust.
                 </div>
               )}
             </div>
-            <div className={styles.field} style={{ marginBottom: 8 }}>
-              <label className={styles.fieldLabel}>Transactiekosten (Mollie/Pin) (€)</label>
+            <div className={`${styles.field} ${jd.mb}`}>
+              <label className={styles.fieldLabel}>Transactiekosten Mollie/pin (€)</label>
               <input className={styles.control} type="number" step="0.01" value={costFee} onChange={e => setCostFee(e.target.value)} />
             </div>
-            <div className={styles.field} style={{ marginBottom: 0 }}>
-              <label className={styles.fieldLabel}>Overige Kosten (€)</label>
+            <div className={styles.field}>
+              <label className={styles.fieldLabel}>Overige kosten (€)</label>
               <input className={styles.control} type="number" step="0.01" value={costOther} onChange={e => setCostOther(e.target.value)} />
             </div>
           </div>
         </div>
 
         {job.gross_margin !== null && (
-          <div style={{ background: job.gross_margin > 0 ? '#ecfdf5' : '#fef2f2', border: '1px solid', borderColor: job.gross_margin > 0 ? '#10b981' : '#ef4444', padding: 16, borderRadius: 8, marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontWeight: 600, color: job.gross_margin > 0 ? '#065f46' : '#991b1b' }}>Gross Margin (Brutowinst)</span>
-            <span style={{ fontSize: 20, fontWeight: 700, color: job.gross_margin > 0 ? '#059669' : '#dc2626' }}>
-              {job.gross_margin > 0 ? '+' : ''}€{Number(job.gross_margin).toFixed(2)}
-            </span>
+          <div className={job.gross_margin > 0 ? jd.marginOk : jd.marginBad}>
+            <span>Brutowinst</span>
+            <b>
+              {job.gross_margin > 0 ? '+ ' : ''}€ {Number(job.gross_margin).toFixed(2).replace('.', ',')}
+            </b>
           </div>
         )}
 

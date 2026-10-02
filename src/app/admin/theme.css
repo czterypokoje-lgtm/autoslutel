@@ -191,3 +191,20 @@ body {
  * flips to light mode at sunrise is a CRM whose state badges have to be legible
  * twice over; these are legible once, on this ground.
  */
+
+/*
+ * Page titles. Each section's stylesheet once set its own size and colour for
+ * the h1 at the top of the page; this makes every CRM page open the same way
+ * (navy, 28px, semibold) without touching thirty stylesheets. An inline style
+ * on a heading inside a card still wins.
+ */
+.crm main h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--crm-nav);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+@media (max-width: 640px) {
+  .crm main h1 { font-size: 24px; }
+}

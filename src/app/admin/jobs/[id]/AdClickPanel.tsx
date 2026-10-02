@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MousePointerClick } from 'lucide-react';
 import { ui } from '../../_ui';
+import jd from './job-detail.module.css';
 
 /**
  * Which ad click paid for this phone-in.
@@ -85,40 +86,33 @@ export default function AdClickPanel({ jobId }: { jobId: string }) {
       : `${hours} uur ná de klus`;
 
   return (
-    <section className={ui.card} style={{ padding: '1.25rem', marginTop: '1rem' }}>
-      <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', marginBottom: '0.35rem' }}>
+    <section className={`${ui.card} ${jd.panel}`}>
+      <h2 className={jd.panelTitle}>
         <MousePointerClick size={16} /> Kwam deze klus uit een advertentie?
       </h2>
-      <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '0.9rem' }}>
+      <p className={jd.panelNote}>
         Deze klus heeft geen aanvraag en geen advertentieklik. Rond deze datum is er wel op
-        het telefoonnummer geklikt vanuit een advertentie. Weet u welke het was, koppel hem —
-        dan telt de omzet mee in Google Ads. Weet u het niet zeker, laat het staan: een
+        het telefoonnummer geklikt vanuit een advertentie. Weet je welke het was, koppel hem —
+        dan telt de omzet mee in Google Ads. Weet je het niet zeker, laat het staan: een
         verkeerde koppeling stuurt de advertenties de verkeerde kant op. Hieronder staan
         de kliks die het dichtst bij deze klus liggen.
       </p>
 
-      {error && <p style={{ fontSize: '0.85rem', color: '#dc2626', marginBottom: '0.6rem' }}>{error}</p>}
+      {error && <p className={jd.panelErr}>{error}</p>}
 
-      <div style={{ display: 'grid', gap: '0.4rem' }}>
+      <div className={jd.clickList}>
         {clicks.map((click) => (
-          <div
-            key={click.id}
-            style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              gap: '0.75rem', padding: '0.5rem 0.7rem',
-              border: '1px solid #e2e8f0', borderRadius: 8,
-            }}
-          >
-            <div style={{ fontSize: '0.85rem' }}>
+          <div key={click.id} className={jd.click}>
+            <div className={jd.clickMain}>
               <strong>{WHEN.format(new Date(click.created_at))}</strong>
-              <span style={{ color: '#64748b' }}> · {ago(click.hoursFromJob)} · {click.network}</span>
+              <span className={jd.clickMeta}> · {ago(click.hoursFromJob)} · {click.network}</span>
               {click.source_url && (
-                <div style={{ color: '#94a3b8', fontSize: '0.78rem' }}>
+                <div className={jd.clickSub}>
                   {click.source_url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 60)}
                 </div>
               )}
             </div>
-            <button className={ui.btn} style={{ padding: '0.25rem 0.6rem', fontSize: '0.8rem' }} disabled={busy} onClick={() => void claim(click.id)}>
+            <button className={`${ui.btn} ${jd.smallBtn}`} disabled={busy} onClick={() => void claim(click.id)}>
               Dit was het
             </button>
           </div>

@@ -10,6 +10,9 @@ import PaymentPanel, { type PaymentRow } from './PaymentPanel';
 import OfferHistory, { type OfferRow } from './OfferHistory';
 import DeleteJobButton from './DeleteJobButton';
 import { Badge } from '../../_ui';
+import { getBrandLogo } from '@/lib/brandLogos';
+import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
+import jd from './job-detail.module.css';
 
 const SOURCE_LABEL: Record<string, string> = {
   autosleutel24: 'Kantoor',
@@ -94,16 +97,52 @@ export default async function JobPage({
   });
 
   const car = [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ');
+  const logo = getBrandLogo(job.car_make as string | null);
+  const work = isScenario(job.scenario) ? SCENARIO_INFO[job.scenario].label : (job.service_type as string | null);
+  const when = new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(
+    new Date(`${job.scheduled_date}T12:00:00Z`)
+  );
+  const STEPS = ['gepland', 'onderweg', 'bezig', 'afgerond'] as const;
+  const STEP_LABEL: Record<string, string> = { gepland: 'Gepland', onderweg: 'Onderweg', bezig: 'Bezig', afgerond: 'Afgerond' };
+  const stepAt = STEPS.indexOf(job.status as (typeof STEPS)[number]);
 
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Klus</h1>
-        <span className={styles.count}>
-          {job.scheduled_date} · {String(job.slot_start).slice(0, 5)}
-          {car && <> · {car}</>}
-          {job.scenario && <> · {job.scenario}</>}
+      <div className={jd.hero}>
+        <span className={jd.heroLogo} aria-hidden="true">
+          {logo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logo} alt="" />
+          ) : (
+            <span>{String(job.car_make ?? '?').slice(0, 3).toUpperCase()}</span>
+          )}
         </span>
+        <div className={jd.heroText}>
+          <h1 className={jd.heroTitle}>{car || 'Klus'}</h1>
+          <span className={jd.heroSub}>
+            {when} · {String(job.slot_start).slice(0, 5)}
+            {job.slot_end && <>–{String(job.slot_end).slice(0, 5)}</>}
+            {work && <> · {work}</>}
+            {job.kenteken && <> · {job.kenteken}</>}
+            {assigned && <> · {assigned.name}</>}
+          </span>
+        </div>
+      </div>
+
+      {job.status === 'geannuleerd' ? (
+        <p className={jd.cancelled}>Deze klus is geannuleerd.</p>
+      ) : (
+        <ol className={jd.steps} aria-label="Status">
+          {STEPS.map((st, i) => (
+            <li key={st} className={i < stepAt ? jd.stepDone : i === stepAt ? jd.stepNow : jd.stepTodo}>
+              <span className={jd.stepDot}>{i < stepAt ? '✓' : i + 1}</span>
+              {STEP_LABEL[st]}
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <div className={styles.head}>
         {job.job_source && (
           <Badge tone={job.job_source === 'agent' ? 'info' : undefined}>
             {SOURCE_LABEL[job.job_source] ?? job.job_source}

@@ -1,0 +1,59 @@
+/* Klus detail — the cost block and side panels, without inline colours. */
+.mt { margin-top: 12px; }
+.mb { margin-bottom: 8px; }
+.costTitle { margin: 24px 0 0; padding-top: 24px; border-top: 1px solid var(--crm-rule); font-size: 17px; font-weight: 600; color: var(--crm-ink); }
+.costNote { margin: 8px 0 14px; padding: 8px 10px; border-radius: 6px; font-size: 12.5px; background: var(--crm-warn-bg); color: var(--crm-warn); }
+.costGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.costIn, .costOut { padding: 16px; border-radius: var(--crm-r); border: 1px solid var(--crm-rule); }
+.costIn { background: var(--crm-sunk); }
+.costOut { background: #fdf6f6; }
+.costHead { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: var(--crm-ink); }
+.hint { margin-top: 4px; font-size: 12px; color: var(--crm-muted); }
+.marginOk, .marginBad { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: var(--crm-r); margin-bottom: 20px; font-weight: 600; }
+.marginOk { background: var(--crm-ok-bg); color: var(--crm-ok); border: 1px solid #a7dcb6; }
+.marginBad { background: var(--crm-stop-bg); color: var(--crm-stop); border: 1px solid #f2c1c1; }
+.marginOk b, .marginBad b { font-size: 20px; }
+
+/* side panels */
+.panel { padding: 20px; margin-top: 16px; }
+.panelTitle { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 16px; font-weight: 600; color: var(--crm-ink); }
+.panelNote { margin: 0 0 14px; font-size: 13.5px; color: var(--crm-muted); }
+.panelErr { margin: 0 0 10px; font-size: 13.5px; color: var(--crm-stop); }
+.clickList { display: grid; gap: 6px; }
+.click { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--crm-rule); border-radius: 8px; }
+.clickMain { font-size: 13.5px; color: var(--crm-ink); }
+.clickMeta { color: var(--crm-muted); }
+.clickSub { font-size: 12.5px; color: var(--crm-muted); }
+.smallBtn { padding: 4px 10px !important; font-size: 12.5px !important; }
+.payPad { padding: var(--sp-4) var(--sp-5) 0; }
+.wrapRow { gap: var(--sp-2); flex-wrap: wrap; }
+.wrapRowWide { gap: var(--sp-3); flex-wrap: wrap; }
+.danger { color: var(--crm-stop) !important; border-color: var(--crm-stop) !important; }
+
+@media (max-width: 720px) {
+  .costGrid { grid-template-columns: 1fr; }
+}
+
+/* header: car, when, status steps */
+.hero { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.heroLogo { width: 56px; height: 56px; flex: none; border-radius: 50%; border: 1px solid var(--crm-rule); background: #ffffff; display: grid; place-items: center; overflow: hidden; }
+.heroLogo img { width: 36px; height: 36px; object-fit: contain; }
+.heroLogo span { font-size: 12px; font-weight: 700; color: var(--crm-muted); }
+.heroText { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.heroTitle { margin: 0; font-size: 28px; font-weight: 600; color: var(--crm-nav); letter-spacing: -0.015em; }
+.heroSub { color: var(--crm-muted); font-size: 15px; }
+.heroSub::first-letter { text-transform: uppercase; }
+
+.steps { list-style: none; margin: 0 0 16px; padding: 12px 16px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r); }
+.steps li { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--crm-muted); }
+.stepDot { width: 28px; height: 28px; flex: none; border-radius: 50%; display: grid; place-items: center; font-size: 13px; background: var(--crm-sunk); }
+.stepDone { color: var(--crm-ok) !important; }
+.stepDone .stepDot { background: var(--crm-ok); color: #ffffff; }
+.stepNow { color: var(--crm-ink) !important; }
+.stepNow .stepDot { background: var(--crm-accent); color: #ffffff; }
+.cancelled { margin: 0 0 16px; padding: 12px 16px; border-radius: var(--crm-r); background: #eef1f5; color: #475569; font-weight: 600; }
+
+@media (max-width: 640px) {
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .heroTitle { font-size: 22px; }
+}

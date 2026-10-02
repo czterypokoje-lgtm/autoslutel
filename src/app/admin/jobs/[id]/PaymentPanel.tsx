@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Banknote, CreditCard, FileText, QrCode, RefreshCw } from 'lucide-react';
 import { ui, Card, CardHead, Row, Badge, Empty, Notice } from '../../_ui';
+import jd from './job-detail.module.css';
 
 export interface PaymentRow {
   id: string;
@@ -87,7 +88,7 @@ export default function PaymentPanel({
         <CardHead>Betaling</CardHead>
 
         {notice && (
-          <div style={{ padding: 'var(--sp-4) var(--sp-5) 0' }}>
+          <div className={jd.payPad}>
             <Notice tone={notice.tone}>{notice.text}</Notice>
           </div>
         )}
@@ -109,7 +110,7 @@ export default function PaymentPanel({
         </div>
 
         {outstanding > 0 && (
-          <div className={ui.row} style={{ gap: 'var(--sp-2)', flexWrap: 'wrap' }}>
+          <div className={`${ui.row} ${jd.wrapRow}`}>
             <button
               className={`${ui.btn} ${ui.btnPrimary}`}
               onClick={() => take('ideal')}
@@ -140,7 +141,7 @@ export default function PaymentPanel({
           customer scans, and it is Mollie's problem to keep working.
         */}
         {link && (
-          <div className={ui.row} style={{ gap: 'var(--sp-3)', flexWrap: 'wrap' }}>
+          <div className={`${ui.row} ${jd.wrapRowWide}`}>
             <div className={ui.rowMain}>
               <div className={ui.rowTitleLine}>
                 <span className={ui.rowTitle}>Laat de klant dit scannen</span>

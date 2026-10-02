@@ -75,7 +75,7 @@ export default function StockForm({
         <button className={`${ui.btn} ${ui.btnPrimary}`} onClick={() => setOpen(true)}>
           Artikel toevoegen of bijwerken
         </button>
-        {done && <span style={{ marginLeft: '1rem', color: '#059669', fontSize: 14 }}>{done}</span>}
+        {done && <span style={{ marginLeft: '1rem', color: 'var(--crm-ok)', fontSize: 14 }}>{done}</span>}
       </div>
     );
   }
@@ -85,7 +85,7 @@ export default function StockForm({
       <CardHead>Artikel toevoegen of bijwerken</CardHead>
       <form onSubmit={save} style={{ padding: '1.25rem', display: 'grid', gap: '1rem' }}>
         <label>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>
             Waar ligt het
           </div>
           <select value={holder} onChange={(e) => setHolder(e.target.value)} className={ui.input}>
@@ -99,7 +99,7 @@ export default function StockForm({
         </label>
 
         <label>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>
             Omschrijving
           </div>
           <input
@@ -110,7 +110,7 @@ export default function StockForm({
             required
             placeholder="bijv. Smart key Mercedes W205"
           />
-          <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+          <div style={{ fontSize: 12, color: 'var(--crm-muted)', marginTop: 4 }}>
             Exact dezelfde omschrijving werkt het bestaande artikel bij in plaats van een tweede
             regel te maken.
           </div>
@@ -118,7 +118,7 @@ export default function StockForm({
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
           <label>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>
               Aantal
             </div>
             <input
@@ -132,7 +132,7 @@ export default function StockForm({
             />
           </label>
           <label>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>
               Waarschuwen onder
             </div>
             <input
@@ -146,7 +146,7 @@ export default function StockForm({
             />
           </label>
           <label>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>
               Kostprijs (€)
             </div>
             <input
@@ -161,8 +161,8 @@ export default function StockForm({
           </label>
         </div>
 
-        {error && <div style={{ color: '#dc2626', fontSize: 14 }}>{error}</div>}
-        {done && <div style={{ color: '#059669', fontSize: 14 }}>{done}</div>}
+        {error && <div style={{ color: 'var(--crm-stop)', fontSize: 14 }}>{error}</div>}
+        {done && <div style={{ color: 'var(--crm-ok)', fontSize: 14 }}>{done}</div>}
 
         <div style={{ display: 'flex', gap: '1rem' }}>
           <button type="button" className={ui.btn} onClick={() => setOpen(false)} disabled={busy}>

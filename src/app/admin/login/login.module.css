@@ -1,0 +1,25 @@
+/* Login — navy brand panel, white card. Used by Geen toegang too. */
+.split { min-height: 100vh; min-height: 100dvh; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); font-family: var(--ff-body), 'IBM Plex Sans', system-ui, sans-serif; }
+.brand { background: var(--crm-nav); color: #ffffff; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
+.logo { font-size: 24px; font-weight: 600; }
+.logo span { color: #fb923c; }
+.logo small { margin-left: 8px; font-size: 12px; letter-spacing: 0.08em; color: var(--crm-nav-muted); }
+.pitch { font-size: 34px; font-weight: 600; line-height: 1.2; max-width: 420px; }
+.pitchSub { margin-top: 14px; font-size: 16px; color: var(--crm-nav-text); max-width: 380px; }
+.foot { font-size: 13px; color: var(--crm-nav-muted); }
+.side { background: var(--crm-bg); display: flex; align-items: center; justify-content: center; padding: 32px 20px; }
+.card { width: 100%; max-width: 420px; background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r-lg); padding: 32px; display: flex; flex-direction: column; gap: 14px; }
+.card h1 { margin: 0; font-size: 26px; font-weight: 600; color: var(--crm-nav); }
+.card p { margin: 0; color: var(--crm-muted); font-size: 14.5px; line-height: 1.5; }
+.back { display: inline-flex; align-items: center; justify-content: center; height: 46px; border-radius: 10px; background: var(--crm-accent); color: #ffffff; font-weight: 600; text-decoration: none; }
+.back:hover { background: var(--crm-accent-hover); }
+@media (max-width: 860px) {
+  .split { grid-template-columns: 1fr; }
+  .brand { padding: 24px 20px; }
+  .pitch, .pitchSub, .foot { display: none; }
+}
+
+/* The sign-out button is styled for the navy menu; on a white card it needs dark text. */
+.signout button { color: var(--crm-ink); border: 1px solid var(--crm-rule2); border-radius: 10px; justify-content: center; height: 42px; }
+.signout button svg { color: var(--crm-muted); }
+.signout button:hover { background: var(--crm-sunk); color: var(--crm-ink); }

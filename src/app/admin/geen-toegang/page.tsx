@@ -1,4 +1,5 @@
-import styles from '../admin.module.css';
+import Link from 'next/link';
+import lg from '../login/login.module.css';
 import SignOutButton from '../SignOutButton';
 import { getCrmUser } from '@/lib/crmSession';
 
@@ -11,18 +12,32 @@ export default async function GeenToegangPage() {
   const user = await getCrmUser();
 
   return (
-    <div className={`crm ${styles.centre}`}>
-      <div className={styles.card}>
-        <h1>Geen toegang</h1>
-        <p>
-          Je bent ingelogd als <strong>{user?.email ?? 'onbekend'}</strong>
-          {user?.role ? ` met de rol ${user.role}` : ' zonder rol'}. Deze
-          schermen zijn voor kantoor en eigenaar.
-        </p>
-        <p>
-          Klopt dit niet? Vraag de eigenaar om je rol in te stellen.
-        </p>
-        <SignOutButton />
+    <div className={`crm ${lg.split}`}>
+      <div className={lg.brand}>
+        <span className={lg.logo}>
+          Autosleutel<span>24</span>
+          <small>CRM</small>
+        </span>
+      </div>
+      <div className={lg.side}>
+        <div className={lg.card}>
+          <h1>Geen toegang</h1>
+          <p>
+            Je bent ingelogd als <strong>{user?.email ?? 'onbekend'}</strong>
+            {user?.role ? ` (${user.role === 'monteur' ? 'monteur' : user.role})` : ' zonder rol'}. Dit scherm is alleen
+            voor kantoor.
+          </p>
+          {user?.role ? (
+            <Link href="/admin/overzicht" className={lg.back}>
+              Terug naar je overzicht
+            </Link>
+          ) : (
+            <p>Klopt dit niet? Vraag kantoor om je rol in te stellen.</p>
+          )}
+          <div className={lg.signout}>
+            <SignOutButton />
+          </div>
+        </div>
       </div>
     </div>
   );

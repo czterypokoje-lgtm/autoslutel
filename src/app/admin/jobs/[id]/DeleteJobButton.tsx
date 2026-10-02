@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { deleteJob } from './actions';
 import styles from '../jobs.module.css';
+import jd from './job-detail.module.css';
 
 export default function DeleteJobButton({ jobId }: { jobId: string }) {
   const router = useRouter();
@@ -26,8 +27,7 @@ export default function DeleteJobButton({ jobId }: { jobId: string }) {
     <button
       onClick={handleDelete}
       disabled={busy}
-      className={styles.navBtn}
-      style={{ color: 'var(--crm-stop)', borderColor: 'var(--crm-stop)' }}
+      className={`${styles.navBtn} ${jd.danger}`}
     >
       {busy ? 'Verwijderen...' : 'Klus verwijderen'}
     </button>

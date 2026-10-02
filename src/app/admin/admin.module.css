@@ -1028,3 +1028,5 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
   font-weight: 600;
   pointer-events: none;
 }
+
+.labelSpaced { margin-top: 14px; }

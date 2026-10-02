@@ -51,11 +51,11 @@ export default function Filters({ from, to }: { from: string; to: string }) {
       style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: '1.5rem' }}
     >
       <label>
-        <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Van</div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>Van</div>
         <input type="date" value={van} onChange={(e) => setVan(e.target.value)} className={ui.input} />
       </label>
       <label>
-        <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Tot</div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>Tot</div>
         <input type="date" value={tot} onChange={(e) => setTot(e.target.value)} className={ui.input} />
       </label>
 
@@ -71,7 +71,7 @@ export default function Filters({ from, to }: { from: string; to: string }) {
         <RefreshCw size={16} /> {busy ? 'Bezig…' : 'Brandstof aanvullen'}
       </button>
 
-      {note && <span style={{ fontSize: 13, color: '#475569' }}>{note}</span>}
+      {note && <span style={{ fontSize: 13, color: 'var(--crm-text)' }}>{note}</span>}
     </form>
   );
 }
