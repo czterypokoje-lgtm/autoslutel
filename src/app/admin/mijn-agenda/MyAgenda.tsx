@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
+import { CalendarCheck, CalendarX, ChevronLeft, ChevronRight, Copy, MapPin, Wrench } from 'lucide-react';
 import styles from './Calendar.module.css';
 
 export interface AgendaDay {
@@ -22,16 +22,44 @@ export interface AgendaDay {
   }[];
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const DAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+const MONTHS = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+const DOW = ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'];
+const STATUS: Record<string, string> = { gepland: 'Gepland', onderweg: 'Onderweg', bezig: 'Bezig', afgerond: 'Afgerond', geannuleerd: 'Geannuleerd' };
+const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
-export default function MyAgenda({ days, name, icalToken, currentMonth }: { days: AgendaDay[]; name: string; icalToken: string; currentMonth: string; }) {
+/** ISO week number of a yyyy-mm-dd date. */
+function isoWeek(iso: string): number {
+  const d = new Date(`${iso}T12:00:00Z`);
+  const day = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - day + 3);
+  const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  return 1 + Math.round(((d.getTime() - firstThursday.getTime()) / 86_400_000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+}
+
+const longDate = (iso: string) =>
+  new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+
+/**
+ * The technician's month: jobs per day, days off, and a side panel for the
+ * chosen day where a day can be blocked or freed again.
+ */
+export default function MyAgenda({
+  days,
+  name,
+  icalToken,
+  currentMonth,
+}: {
+  days: AgendaDay[];
+  name: string;
+  icalToken: string | null;
+  currentMonth: string;
+}) {
   const router = useRouter();
-
-  // Navigation state
-  const [selectedDate, setSelectedDate] = useState<string | null>(new Date().toISOString().split('T')[0]);
-  const activeDay = days.find(d => d.date === selectedDate);
+  const today = days.find((d) => d.isToday)?.date ?? days.find((d) => d.date.startsWith(currentMonth))?.date ?? days[0]?.date;
+  const [selected, setSelected] = useState<string | undefined>(today);
   const [busy, setBusy] = useState('');
+  const [copied, setCopied] = useState(false);
+  const active = days.find((d) => d.date === selected);
 
   async function toggleAway(day: AgendaDay) {
     setBusy(day.date);
@@ -44,212 +72,175 @@ export default function MyAgenda({ days, name, icalToken, currentMonth }: { days
     router.refresh();
   }
 
-  // Month navigation logic
-  const [yearStr, monthStr] = currentMonth.split('-');
-  const dateObj = new Date(parseInt(yearStr), parseInt(monthStr) - 1, 1);
-  const currentMonthIdx = dateObj.getMonth();
-  const currentYear = dateObj.getFullYear();
-
-  const handlePrevMonth = () => {
-    const prev = new Date(currentYear, currentMonthIdx - 1, 1);
-    const m = prev.toISOString().substring(0, 7);
-    router.push(`?month=${m}`);
+  const [y, m] = currentMonth.split('-').map(Number);
+  const shift = (delta: number) => {
+    const d = new Date(Date.UTC(y, m - 1 + delta, 1));
+    router.push(`?month=${d.toISOString().slice(0, 7)}`);
   };
 
-  const handleNextMonth = () => {
-    const next = new Date(currentYear, currentMonthIdx + 1, 1);
-    const m = next.toISOString().substring(0, 7);
-    router.push(`?month=${m}`);
-  };
+  const monthDays = days.filter((d) => d.date.startsWith(currentMonth));
+  const monthJobs = monthDays.reduce((t, d) => t + d.jobs.filter((j) => j.status !== 'geannuleerd').length, 0);
+  const monthValue = monthDays.reduce((t, d) => t + d.jobs.reduce((s, j) => s + (j.price || 0), 0), 0);
+  const daysOff = monthDays.filter((d) => d.away).length;
 
-  // View toggle state
-  const [viewMode, setViewMode] = useState<'standaard' | 'heatmap'>('heatmap');
-
-  const handleAdjustScheduleClick = () => {
-    alert("Klik op een dag in de kalender (links of in het overzicht) en gebruik vervolgens de knop 'Vrij nemen' of 'Zet op beschikbaar' in het zijpaneel.");
-  };
+  // The host is only known in the browser; until then the buttons wait.
+  const host = useSyncExternalStore(
+    () => () => {},
+    () => window.location.host,
+    () => ''
+  );
+  const feed = icalToken && host ? `${host}/api/agenda/${icalToken}` : null;
 
   return (
-    <div className={styles.calendarContainer}>
-      
-      {/* SIDEBAR */}
-      <div className={styles.sidebar}>
-        <div className={styles.sidebarTitle}>Agenda: {name}</div>
-        
-        <div className={styles.miniCalendar}>
-          <div className={styles.miniCalendarHeader}>
-            <button onClick={handlePrevMonth} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '1rem' }}>&lt;</button>
-            <span>{MONTHS[currentMonthIdx]} {currentYear}</span>
-            <button onClick={handleNextMonth} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '1rem' }}>&gt;</button>
-          </div>
-          <div className={styles.miniGrid}>
-            {DAYS.map(d => <div key={d} className={styles.miniDayHeader}>{d}</div>)}
-            {days.map((d, i) => {
-              const dNum = new Date(d.date).getDate();
-              const isSelected = d.date === selectedDate;
-              return (
-                <div 
-                  key={d.date} 
-                  className={`${styles.miniDay} ${isSelected ? styles.miniDayActive : ''}`}
-                  onClick={() => setSelectedDate(d.date)}
-                >
-                  {dNum}
-                </div>
-              );
-            })}
-          </div>
+    <div className={styles.page}>
+      <header className={styles.head}>
+        <div>
+          <h1 className={styles.title}>Mijn agenda</h1>
+          <p className={styles.sub}>
+            {name} · tik een dag om je klussen te zien of de dag vrij te nemen.
+          </p>
         </div>
-
-        {/* Selected Day Details Panel */}
-        <div className={styles.filters} style={{ flex: 1 }}>
-          <div className={styles.filterHeader}>
-            Details voor {selectedDate ? new Date(selectedDate).toLocaleDateString('nl-NL') : ''}
+        {feed && (
+          <div className={styles.feed}>
+            <a className={styles.feedBtn} href={`webcal://${feed}`}>
+              <CalendarCheck size={16} aria-hidden="true" />
+              Zet in je telefoon-agenda
+            </a>
+            <button
+              type="button"
+              className={styles.feedCopy}
+              onClick={() => {
+                void navigator.clipboard?.writeText(`https://${feed}`);
+                setCopied(true);
+              }}
+            >
+              <Copy size={14} aria-hidden="true" />
+              {copied ? 'Gekopieerd' : 'Kopieer link'}
+            </button>
           </div>
-          
-          {!activeDay ? (
-            <div style={{ fontSize: '0.875rem', color: 'var(--crm-muted)' }}>Klik op een dag in de kalender.</div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%', overflowY: 'auto', paddingRight: '0.5rem' }}>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button
-                  className={styles.outlinedButton}
-                  style={{ width: '100%', justifyContent: 'center' }}
-                  onClick={() => toggleAway(activeDay)}
-                  disabled={busy === activeDay.date}
-                >
-                  {busy === activeDay.date
-                    ? '...'
-                    : activeDay.away
-                      ? 'Zet op beschikbaar'
-                      : 'Vrij nemen (blokkeren)'}
-                </button>
-              </div>
+        )}
+      </header>
 
-              {activeDay.away && (
-                <div style={{ color: 'var(--crm-stop)', fontSize: '0.875rem', fontWeight: 500 }}>🔴 Niet beschikbaar ({activeDay.reason || 'Vrij'})</div>
-              )}
-              
-              {activeDay.jobs.length === 0 ? (
-                <div style={{ fontSize: '0.875rem', color: 'var(--crm-muted)' }}>Geen klussen ingepland.</div>
-              ) : (
-                activeDay.jobs.map(job => (
-                  <div key={job.id} style={{ background: 'var(--crm-sunk)', border: '1px solid var(--crm-rule2)', padding: '0.75rem', borderRadius: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                      <strong style={{ fontSize: '0.875rem' }}>{job.slot_start.substring(0, 5)} - {job.slot_end.substring(0, 5)}</strong>
-                      <span className={`${styles.badge} ${styles[`badge_${job.status}`] || styles.badge_gepland}`}>{job.status}</span>
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: 'var(--crm-text)', marginBottom: '0.25rem' }}>
-                      📍 {job.place}
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: 'var(--crm-text)', marginBottom: '0.25rem' }}>
-                      🔧 {job.service || 'Geen dienst'}
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: 'var(--crm-text)' }}>
-                      🚗 {job.kenteken || 'Onbekend'}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
+      <div className={styles.stats}>
+        <div><span>Klussen in {MONTHS[m - 1]}</span><b>{monthJobs}</b></div>
+        <div><span>Verwachte omzet</span><b>{EUR.format(monthValue)}</b></div>
+        <div><span>Vrije dagen</span><b>{daysOff}</b></div>
       </div>
 
-      {/* MAIN CONTENT */}
-      <div className={styles.main}>
-        <div className={styles.topBar}>
-          <div className={styles.topBarLeft}>
-            <h1>Mijn agenda</h1>
-          </div>
-          <div className={styles.topBarRight}>
-            <div className={styles.buttonGroup}>
-              <button 
-                className={`${styles.button} ${viewMode === 'standaard' ? styles.buttonActive : ''}`}
-                onClick={() => setViewMode('standaard')}
-              >
-                Standaard
-              </button>
-              <button 
-                className={`${styles.button} ${viewMode === 'heatmap' ? styles.buttonActive : ''}`}
-                onClick={() => setViewMode('heatmap')}
-              >
-                Omzet Heatmap
-              </button>
-            </div>
-            <button className={styles.outlinedButton} onClick={handleAdjustScheduleClick}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-              Mijn rooster aanpassen
+      <div className={styles.layout}>
+        <section className={styles.cal} aria-label="Maand">
+          <div className={styles.calHead}>
+            <button type="button" className={styles.nav} onClick={() => shift(-1)} aria-label="Vorige maand">
+              <ChevronLeft size={18} />
             </button>
-            {/* "Maand v" had no handler and there is no month view to switch
-                to. Removed rather than left as decoration. */}
+            <span className={styles.month}>
+              {MONTHS[m - 1]} {y}
+            </span>
+            <button type="button" className={styles.nav} onClick={() => shift(1)} aria-label="Volgende maand">
+              <ChevronRight size={18} />
+            </button>
           </div>
-        </div>
 
-        <div className={styles.calendarGrid}>
-          {/* Header Row */}
-          <div className={styles.weekHeader} style={{ background: 'transparent' }}>W</div>
-          {['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].map(day => (
-            <div key={day} className={styles.weekHeader}>{day}</div>
-          ))}
+          <div className={styles.grid}>
+            <span className={styles.wk}>wk</span>
+            {DOW.map((d) => (
+              <span key={d} className={styles.dow}>
+                {d}
+              </span>
+            ))}
+            {Array.from({ length: Math.ceil(days.length / 7) }, (_, w) => (
+              <div key={w} className={styles.week}>
+                <span className={styles.wkNum}>{days[w * 7] ? isoWeek(days[w * 7].date) : ''}</span>
+                {days.slice(w * 7, w * 7 + 7).map((d) => {
+                  const live = d.jobs.filter((j) => j.status !== 'geannuleerd');
+                  const cls = [
+                    styles.day,
+                    !d.date.startsWith(currentMonth) && styles.dayOut,
+                    d.away && styles.dayAway,
+                    d.isToday && styles.dayToday,
+                    d.date === selected && styles.daySel,
+                  ]
+                    .filter(Boolean)
+                    .join(' ');
+                  return (
+                    <button key={d.date} type="button" className={cls} onClick={() => setSelected(d.date)}>
+                      <span className={styles.dayNum}>{Number(d.date.slice(8))}</span>
+                      {d.away ? (
+                        <span className={styles.awayTag}>vrij</span>
+                      ) : live.length > 0 ? (
+                        <span className={styles.jobs}>
+                          {live.slice(0, 3).map((j) => (
+                            <span key={j.id} className={`${styles.pip} ${styles[`pip_${j.status}`] ?? ''}`} />
+                          ))}
+                          <span className={styles.jobCount}>{live.length}</span>
+                        </span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
 
-          {/* Grid Cells */}
-          {Array.from({ length: 5 }).map((_, weekIdx) => (
-            <div style={{ display: 'contents' }} key={`w${weekIdx}`}>
-              {/* Week Number Col */}
-              <div className={styles.weekNumber}>{44 + weekIdx}</div>
-              
-              {/* 7 Days per week */}
-              {Array.from({ length: 7 }).map((_, dayIdx) => {
-                const cellIndex = weekIdx * 7 + dayIdx;
-                const realDay = days[cellIndex];
-                
-                if (!realDay) return <div key={`empty-${cellIndex}`} className={styles.dayCell} />;
+          <div className={styles.legend}>
+            <span><i className={`${styles.pip} ${styles.pip_gepland}`} /> gepland</span>
+            <span><i className={`${styles.pip} ${styles.pip_bezig}`} /> onderweg / bezig</span>
+            <span><i className={`${styles.pip} ${styles.pip_afgerond}`} /> afgerond</span>
+            <span><i className={styles.awaySwatch} /> vrij</span>
+          </div>
+        </section>
 
-                const dateNum = new Date(realDay.date).getDate();
-                const totalJobs = realDay.jobs.length;
-                const revenue = realDay.jobs.reduce((sum, j) => sum + (j.price || 0), 0);
-                const isBlue = viewMode === 'heatmap' && totalJobs > 0;
-                
-                return (
-                  <div 
-                    key={realDay.date} 
-                    className={`${styles.dayCell} ${isBlue ? styles.dayCellActive : ''}`}
-                    onClick={() => setSelectedDate(realDay.date)}
-                    style={{ cursor: 'pointer', outline: realDay.date === selectedDate ? '2px solid var(--crm-steel)' : 'none' }}
-                  >
-                    <div className={styles.dayHeader}>
-                      <span className={realDay.isToday ? styles.dayHeaderCurrent : ''}>{dateNum}</span>
-                    </div>
-                    
-                    <div className={styles.dayContent}>
-                      {/* List out actual jobs inside the cell */}
-                      <div className={styles.jobList}>
-                        {realDay.jobs.map(job => (
-                          <div key={job.id} className={`${styles.jobChip} ${styles[`jobChip_${job.status}`] || styles.jobChip_default}`} title={`${job.service} - ${job.place}`}>
-                            <span className={styles.jobTime}>{job.slot_start.substring(0, 5)}</span>
-                            <span className={styles.jobDesc}>{job.kenteken || job.place}</span>
-                          </div>
-                        ))}
+        <aside className={styles.side} aria-label="Gekozen dag">
+          {!active ? (
+            <p className={styles.muted}>Tik een dag in de kalender.</p>
+          ) : (
+            <>
+              <h2 className={styles.sideTitle}>{longDate(active.date)}</h2>
+
+              <button
+                type="button"
+                className={active.away ? styles.freeBtn : styles.blockBtn}
+                onClick={() => toggleAway(active)}
+                disabled={busy === active.date}
+              >
+                {active.away ? <CalendarCheck size={17} /> : <CalendarX size={17} />}
+                {busy === active.date ? 'Bezig…' : active.away ? 'Toch beschikbaar' : 'Deze dag vrij nemen'}
+              </button>
+              {active.away && (
+                <p className={styles.awayNote}>Je staat vrij{active.reason ? `: ${active.reason}` : ''}. Je krijgt deze dag geen aanbod.</p>
+              )}
+
+              {active.jobs.length === 0 ? (
+                <p className={styles.muted}>Geen klussen op deze dag.</p>
+              ) : (
+                <ul className={styles.jobList}>
+                  {active.jobs.map((job) => (
+                    <li key={job.id} className={styles.job}>
+                      <div className={styles.jobTop}>
+                        <b>
+                          {job.slot_start.slice(0, 5)}–{job.slot_end.slice(0, 5)}
+                        </b>
+                        <span className={`${styles.status} ${styles[`st_${job.status}`] ?? ''}`}>{STATUS[job.status] ?? job.status}</span>
                       </div>
-
-                      {totalJobs > 0 && viewMode === 'heatmap' && (
-                        <div className={styles.dayFooter}>
-                          <div className={styles.statRow}>Verwachte Omzet</div>
-                          <div className={styles.statValue} style={{ fontSize: '1rem' }}>
-                            €{revenue}
-                          </div>
-                        </div>
+                      <span className={styles.jobLine}>
+                        <Wrench size={14} aria-hidden="true" />
+                        {job.service || 'Geen dienst'}
+                        {job.kenteken && <span className={styles.plate}>{job.kenteken}</span>}
+                      </span>
+                      {job.place && (
+                        <span className={styles.jobLine}>
+                          <MapPin size={14} aria-hidden="true" />
+                          {job.place}
+                        </span>
                       )}
-                      {realDay.away && (
-                        <div className={styles.statRow} style={{ color: 'var(--crm-stop)' }}>Vrij/Afwezig</div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+                      {job.price ? <span className={styles.jobPrice}>{EUR.format(job.price)}</span> : null}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </aside>
       </div>
     </div>
   );

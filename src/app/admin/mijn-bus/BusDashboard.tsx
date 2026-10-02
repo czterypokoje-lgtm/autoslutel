@@ -4,7 +4,39 @@ import { useState } from 'react';
 import { adjustOwnStock } from './actions';
 import { stockStatus } from '@/lib/stockStatus';
 import { GROUP_INFO, STOCK_GROUPS, type StockGroup } from '@/lib/stockCategory';
+import {
+  Battery,
+  CircleHelp,
+  Cpu,
+  House,
+  Key,
+  KeyRound,
+  Lock,
+  Package,
+  Shell,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
 import styles from './BusDashboard.module.css';
+
+/** A line icon per stock group, in the same style as the menu. */
+const GROUP_ICON: Record<string, LucideIcon> = {
+  sleutels: KeyRound,
+  behuizingen: Shell,
+  sleutelbaarden: Key,
+  elektronica: Cpu,
+  batterijen: Battery,
+  gereedschap: Wrench,
+  sloten: Lock,
+  accessoires: Package,
+  woningsleutels: House,
+  overig: CircleHelp,
+};
+
+function GroupIcon({ group, size = 16 }: { group: string | null | undefined; size?: number }) {
+  const Icon = GROUP_ICON[group ?? 'overig'] ?? Package;
+  return <Icon size={size} strokeWidth={1.8} aria-hidden="true" />;
+}
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 
@@ -136,18 +168,7 @@ export default function BusDashboard({
   return (
     <div className={styles.container}>
       {notice && (
-        <p
-          style={{
-            margin: '0 0 14px',
-            padding: '10px 12px',
-            borderRadius: 'var(--crm-r-sm)',
-            background: 'var(--crm-stop-bg)',
-            color: 'var(--crm-stop)',
-            fontSize: 13,
-          }}
-        >
-          {notice}
-        </p>
+        <p className={styles.notice}>{notice}</p>
       )}
 
       {/*
@@ -189,7 +210,7 @@ export default function BusDashboard({
                 onClick={() => setGroup(group === g.id ? null : g.id)}
                 title={`${g.units} stuks · ${MONEY.format(g.value)}`}
               >
-                <span aria-hidden="true">{g.icon}</span>
+                <GroupIcon group={g.id} size={14} />
                 {g.label}
                 <span className={styles.chipCount}>{g.count}</span>
                 {g.short > 0 && <span className={styles.chipShort} title="bijna op of op" />}
@@ -202,9 +223,6 @@ export default function BusDashboard({
         <table className={styles.table}>
           <thead>
             <tr>
-              <th style={{ width: '40px', paddingLeft: '1.5rem' }}>
-                <input type="checkbox" style={{ borderRadius: '4px', border: '1px solid var(--crm-rule2)' }} />
-              </th>
               <th>
                 <div className={styles.thContent}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
@@ -244,9 +262,6 @@ export default function BusDashboard({
 
               return (
                 <tr key={item.id}>
-                  <td style={{ paddingLeft: '1.5rem' }}>
-                    <input type="checkbox" style={{ borderRadius: '4px', border: '1px solid var(--crm-rule2)' }} />
-                  </td>
                   <td>
                     <div className={styles.productCell}>
                       {/* The kind of part, so the eye can sort the list before
@@ -255,7 +270,7 @@ export default function BusDashboard({
                         className={styles.groupIcon}
                         title={GROUP_INFO[(item.group as StockGroup) ?? 'overig']?.label}
                       >
-                        {GROUP_INFO[(item.group as StockGroup) ?? 'overig']?.icon ?? '📦'}
+                        <GroupIcon group={item.group} />
                       </div>
                       {item.description}
                       <StockBadge status={stockStatus(item)} />
@@ -268,21 +283,16 @@ export default function BusDashboard({
                       <button 
                         className={styles.qtyBtn} 
                         onClick={() => handleRemoveStock(item.description, 1)}
+                        aria-label={`Eén ${item.description} minder`}
                         disabled={pending.has(item.description) || item.quantity === 0}
                       >−</button>
                       <input type="text" className={styles.qtyInput} value={item.quantity} readOnly />
                       <button
                         className={styles.qtyBtn}
                         onClick={() => handleAddStock(item.description, 1)}
+                        aria-label={`Eén ${item.description} erbij`}
                         disabled={pending.has(item.description)}
                       >+</button>
-                      <button
-                        className={styles.addBtn}
-                        onClick={() => handleAddStock(item.description, 1)}
-                        disabled={pending.has(item.description)}
-                      >
-                        Add
-                      </button>
                     </div>
                   </td>
                 </tr>
@@ -291,8 +301,8 @@ export default function BusDashboard({
             
             {filteredStock.length === 0 && (
               <tr>
-                <td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: 'var(--crm-muted)' }}>
-                  Niets in uw bus dat hierop lijkt.
+                <td colSpan={4} className={styles.emptyCell}>
+                  Niets in je bus dat hierop lijkt.
                 </td>
               </tr>
             )}
@@ -316,8 +326,8 @@ export default function BusDashboard({
             return (
               <div key={item.id} className={styles.stockCard}>
                 <div className={styles.stockCardHead}>
-                  <span style={{ fontSize: '1.3rem' }}>
-                    {GROUP_INFO[(item.group as StockGroup) ?? 'overig']?.icon ?? '📦'}
+                  <span className={styles.groupIcon} title={GROUP_INFO[(item.group as StockGroup) ?? 'overig']?.label}>
+                    <GroupIcon group={item.group} size={18} />
                   </span>
                   <span className={styles.stockCardName}>{item.description}</span>
                   <StockBadge status={stockStatus(item)} />
@@ -334,29 +344,24 @@ export default function BusDashboard({
                   <button
                     className={styles.qtyBtn}
                     onClick={() => handleRemoveStock(item.description, 1)}
+                        aria-label={`Eén ${item.description} minder`}
                     disabled={pending.has(item.description) || item.quantity === 0}
                   >−</button>
                   <input type="text" className={styles.qtyInput} value={item.quantity} readOnly />
                   <button
                     className={styles.qtyBtn}
                     onClick={() => handleAddStock(item.description, 1)}
+                        aria-label={`Eén ${item.description} erbij`}
                     disabled={pending.has(item.description)}
                   >+</button>
-                  <button
-                    className={styles.addBtn}
-                    onClick={() => handleAddStock(item.description, 1)}
-                    disabled={pending.has(item.description)}
-                  >
-                    Add
-                  </button>
                 </div>
               </div>
             );
           })}
 
           {filteredStock.length === 0 && (
-            <p style={{ textAlign: 'center', padding: '2rem', color: 'var(--crm-muted)' }}>
-              Niets in uw bus dat hierop lijkt.
+            <p className={styles.emptyCell}>
+              Niets in je bus dat hierop lijkt.
             </p>
           )}
         </div>
@@ -396,7 +401,7 @@ export default function BusDashboard({
                   return (
                     <div key={g.id} className={styles.barRow}>
                       <span className={styles.barLabel}>
-                        <span aria-hidden="true">{g.icon}</span> {g.label}
+                        <GroupIcon group={g.id} size={14} /> {g.label}
                       </span>
                       <span className={styles.barTrack}>
                         <span

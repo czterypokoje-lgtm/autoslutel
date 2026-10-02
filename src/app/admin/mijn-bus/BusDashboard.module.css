@@ -625,3 +625,7 @@
     grid-column: 2 / -1;
   }
 }
+
+/* notices and empty states, without inline styles */
+.notice { margin: 0 0 14px; padding: 10px 12px; border-radius: var(--crm-r-sm); background: var(--crm-stop-bg); color: var(--crm-stop); font-size: 13px; }
+.emptyCell { text-align: center; padding: 2rem; color: var(--crm-muted); }

@@ -1,7 +1,7 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { addDays, isoDate, weekStart } from '@/lib/crmJobs';
-import styles from '../vandaag/vandaag.module.css';
+import { PageHead, Notice } from '../_ui';
 import MyAgenda, { type AgendaDay } from './MyAgenda';
 
 export const dynamic = 'force-dynamic';
@@ -23,11 +23,10 @@ export default async function MijnAgendaPage({ searchParams }: { searchParams: P
 
   if (!me) {
     return (
-      <div className={styles.wrap}>
-        <p className={styles.warning}>
-          Je account is nog niet aan een monteur gekoppeld.
-        </p>
-      </div>
+      <>
+        <PageHead title="Mijn agenda" />
+        <Notice tone="bad">Je account is nog niet aan een monteur gekoppeld.</Notice>
+      </>
     );
   }
 
@@ -85,7 +84,7 @@ export default async function MijnAgendaPage({ searchParams }: { searchParams: P
     <MyAgenda
       days={days}
       name={me.name as string}
-      icalToken={me.ical_token as string}
+      icalToken={(me.ical_token as string) ?? null}
       currentMonth={displayMonthStr.substring(0, 7)}
     />
   );

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Banknote } from 'lucide-react';
 import { requestPayout } from './actions';
-import { ui } from '../_ui';
+import styles from './saldo.module.css';
 
 /**
  * Asking for the balance to be paid out.
@@ -32,36 +32,27 @@ export default function PayoutForm({ available }: { available: number }) {
     setMessage(
       'error' in result && result.error
         ? { text: result.error, ok: false }
-        : { text: 'Aangevraagd. Het kantoor handelt het af.', ok: true }
+        : { text: 'Aangevraagd. Kantoor betaalt het uit.', ok: true }
     );
     router.refresh();
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
-      {message && (
-        <span
-          style={{
-            fontSize: 'var(--fs-label)',
-            color: message.ok ? 'var(--crm-ok)' : 'var(--crm-stop)',
-          }}
-        >
-          {message.text}
-        </span>
-      )}
+    <div className={styles.payout}>
       <button
-        className={`${ui.btn} ${ui.btnPrimary}`}
+        className={styles.payoutBtn}
         onClick={submit}
         disabled={busy || nothingToDraw || (message?.ok ?? false)}
-        title={nothingToDraw ? 'U heeft op dit moment niets openstaan' : undefined}
+        title={nothingToDraw ? 'Je hebt op dit moment niets openstaan' : undefined}
       >
-        <Banknote size={15} strokeWidth={2} />
+        <Banknote size={18} strokeWidth={2} />
         {busy
           ? 'Bezig…'
           : nothingToDraw
             ? 'Niets op te nemen'
-            : `${available.toFixed(2).replace('.', ',')} opnemen`}
+            : `€ ${available.toFixed(2).replace('.', ',')} opnemen`}
       </button>
+      {message && <span className={message.ok ? styles.msgOk : styles.msgBad}>{message.text}</span>}
     </div>
   );
 }

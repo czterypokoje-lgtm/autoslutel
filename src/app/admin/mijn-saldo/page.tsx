@@ -5,6 +5,8 @@ import { HighlightCard, LineChart, Legend, BarChart, RankedBars, Donut, chart } 
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import { priceOf, earnedOn, computeAvailable } from '@/lib/technicianBalance';
 import PayoutForm from './PayoutForm';
+import { getBrandLogo } from '@/lib/brandLogos';
+import styles from './saldo.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -72,6 +74,9 @@ export default async function MijnSaldoPage() {
 
   const revenue = done.reduce((total, job) => total + priceOf(job), 0);
   const available = computeAvailable(done, payouts ?? []);
+  const earnedTotal = done.reduce((total, job) => total + earnedOn(job), 0);
+  const paidOut = (payouts ?? []).filter((p) => p.status === 'paid').reduce((t, p) => t + Number(p.amount), 0);
+  const pending = (payouts ?? []).filter((p) => p.status === 'pending').reduce((t, p) => t + Number(p.amount), 0);
 
   /* ── periods ── */
   const now = new Date();
@@ -134,11 +139,19 @@ export default async function MijnSaldoPage() {
 
   return (
     <>
-      <PageHead
-        title="Mijn saldo"
-        sub="Wat u verdiende op klussen via Autosleutel24, en waar het vandaan kwam."
-        actions={<PayoutForm available={available} />}
-      />
+      <PageHead title="Mijn saldo" sub="Wat je verdiende op klussen via Autosleutel24, en waar het vandaan kwam." />
+
+      <section className={styles.hero} aria-label="Saldo">
+        <div className={styles.heroMain}>
+          <span className={styles.heroLabel}>Beschikbaar om op te nemen</span>
+          <span className={styles.heroValue}>{euro(available)}</span>
+          <span className={styles.heroSub}>
+            Verdiend {euro(earnedTotal)} · uitbetaald {euro(paidOut)}
+            {pending > 0 && <> · aangevraagd {euro(pending)}</>}
+          </span>
+        </div>
+        <PayoutForm available={available} />
+      </section>
 
       <div className={chart.highlights}>
         <HighlightCard label="Beschikbaar" value={euroHeadline(available)} delta={null} tint />
@@ -158,9 +171,9 @@ export default async function MijnSaldoPage() {
       {/* ── the year, and where the work came from ── */}
       <div className={chart.wideRow}>
         <Card padded>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-4)', flexWrap: 'wrap', marginBottom: 'var(--sp-5)' }}>
-            <strong style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)' }}>Omzet per maand</strong>
-            <div style={{ marginLeft: 'auto' }}>
+          <div className={styles.chartHead}>
+            <strong className={styles.cardTitle}>Omzet per maand</strong>
+            <div className={styles.push}>
               <Legend
                 items={[
                   { label: `${year}` },
@@ -173,7 +186,7 @@ export default async function MijnSaldoPage() {
         </Card>
 
         <Card padded>
-          <strong style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)', display: 'block', marginBottom: 'var(--sp-5)' }}>
+          <strong className={styles.cardTitleBlock}>
             Automerken
           </strong>
           <RankedBars rows={makes} format={euro} />
@@ -183,15 +196,15 @@ export default async function MijnSaldoPage() {
       {/* ── what kind of work, and where ── */}
       <div className={chart.splitRow}>
         <Card padded>
-          <strong style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)', display: 'block', marginBottom: 'var(--sp-4)' }}>
+          <strong className={styles.cardTitleBlock}>
             Soort werk
           </strong>
           <BarChart bars={kinds} format={euroShort} />
         </Card>
 
         <Card padded>
-          <strong style={{ color: 'var(--crm-ink)', fontSize: 'var(--fs-sm)', display: 'block', marginBottom: 'var(--sp-4)' }}>
-            Waar u werkte
+          <strong className={styles.cardTitleBlock}>
+            Waar je werkte
           </strong>
           <Donut slices={places} format={euro} />
         </Card>
@@ -201,7 +214,7 @@ export default async function MijnSaldoPage() {
       <Card>
         <CardHead>Afgeronde klussen</CardHead>
         {done.length === 0 ? (
-          <Empty>Zodra u een klus afrondt, verschijnt hij hier.</Empty>
+          <Empty>Zodra je een klus afrondt, verschijnt hij hier.</Empty>
         ) : (
           <Table
             head={
@@ -211,7 +224,7 @@ export default async function MijnSaldoPage() {
                 <th>Werk</th>
                 <th className={ui.numeric}>Klus</th>
                 <th className={ui.numeric}>Commissie</th>
-                <th className={ui.numeric}>Voor u</th>
+                <th className={ui.numeric}>Voor jou</th>
               </>
             }
           >
@@ -226,8 +239,14 @@ export default async function MijnSaldoPage() {
                       })
                     : '—'}
                 </td>
-                <td style={{ color: 'var(--crm-ink)' }}>
-                  {[job.car_make, job.car_model].filter(Boolean).join(' ') || '—'}
+                <td>
+                  <span className={styles.car}>
+                    {getBrandLogo(job.car_make) && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={getBrandLogo(job.car_make)!} alt="" className={styles.logo} />
+                    )}
+                    {[job.car_make, job.car_model].filter(Boolean).join(' ') || '—'}
+                  </span>
                 </td>
                 <td>
                   <Badge>
@@ -244,10 +263,10 @@ export default async function MijnSaldoPage() {
                   percentage still drives the sum — it is just not the thing
                   on screen.
                 */}
-                <td className={ui.numeric} style={{ color: 'var(--crm-muted)' }}>
+                <td className={`${ui.numeric} ${styles.muted}`}>
                   {euro(priceOf(job) - earnedOn(job))}
                 </td>
-                <td className={ui.numeric} style={{ color: 'var(--crm-ink)', fontWeight: 600 }}>
+                <td className={`${ui.numeric} ${styles.strong}`}>
                   {euro(earnedOn(job))}
                 </td>
               </tr>

@@ -2,14 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Clock, MapPin, X } from 'lucide-react';
-import styles from '../admin.module.css';
+import { Check, Clock, KeyRound, MapPin, Timer, X } from 'lucide-react';
+import styles from './aanbod.module.css';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 
 export interface OfferRow {
   id: string;
   reason: string;
   expiresAt: string;
+  offeredAt: string;
+  logo: string | null;
+  make: string | null;
   car: string;
   work: string;
   minutes: number | null;
@@ -26,12 +29,37 @@ function secondsLeft(iso: string, now: number): number | null {
 }
 
 const mmss = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+
+/** The time left as a ring that empties, so urgency reads without reading. */
+function Countdown({ left, total }: { left: number; total: number }) {
+  const r = 26;
+  const c = 2 * Math.PI * r;
+  const frac = total > 0 ? Math.max(0, Math.min(1, left / total)) : 0;
+  const urgent = left < 60;
+  return (
+    <div className={styles.ring} aria-label={`Nog ${mmss(left)}`}>
+      <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r={r} className={styles.ringTrack} />
+        <circle
+          cx="32"
+          cy="32"
+          r={r}
+          className={urgent ? styles.ringUrgent : styles.ringLive}
+          strokeDasharray={`${c * frac} ${c}`}
+          transform="rotate(-90 32 32)"
+        />
+      </svg>
+      <span className={urgent ? styles.ringTextUrgent : styles.ringText}>{mmss(left)}</span>
+    </div>
+  );
+}
 
 export default function OfferList({ offers }: { offers: OfferRow[] }) {
   const router = useRouter();
   const [now, setNow] = useState(() => Date.now());
   const [busy, setBusy] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ text: string; good: boolean } | null>(null);
 
   /*
    * A second hand, because an offer with a window needs one. Refreshing the
@@ -61,35 +89,39 @@ export default function OfferList({ offers }: { offers: OfferRow[] }) {
     setBusy(null);
 
     if (error) {
-      setMessage(
-        /does not exist|function/i.test(error.message)
+      setMessage({
+        good: false,
+        text: /does not exist|function/i.test(error.message)
           ? 'Voer supabase/migrations/0013_technician_platform.sql uit.'
-          : error.message
-      );
+          : error.message,
+      });
       return;
     }
 
     const said: Record<string, string> = {
-      geaccepteerd: 'Klus is van u. U vindt hem bij Vandaag.',
+      geaccepteerd: 'De klus is van jou. Je vindt hem bij Vandaag.',
       afgewezen: 'Afgewezen.',
-      al_vergeven: 'Net te laat — een collega was er eerder bij.',
+      al_vergeven: 'Net te laat: een collega was er eerder bij.',
       verlopen: 'Dit aanbod is verlopen.',
       niet_gevonden: 'Dit aanbod bestaat niet meer.',
-      geen_monteur: 'Uw login is niet aan een monteur gekoppeld.',
+      geen_monteur: 'Je login is niet aan een monteur gekoppeld.',
     };
-    setMessage(said[String(data)] ?? String(data));
+    setMessage({ good: String(data) === 'geaccepteerd', text: said[String(data)] ?? String(data) });
     router.refresh();
   }
+
+  const note = message && <p className={message.good ? styles.msgOk : styles.msg}>{message.text}</p>;
 
   if (!live.length) {
     return (
       <>
-        {message && <p className={`${styles.note} ${styles.noteOk}`}>{message}</p>}
-        <div className={styles.listCard}>
-          <div className={styles.empty}>
-            Op dit moment geen aanbod. Zorg dat bij <strong>Mijn vak</strong> staat welke auto’s u
-            aankunt — wat daar niet staat, krijgt u niet aangeboden.
-          </div>
+        {note}
+        <div className={styles.empty}>
+          <b>Op dit moment geen aanbod.</b>
+          <span>
+            Nieuwe klussen verschijnen hier en via Telegram. Zet bij <a href="/admin/mijn-vak">Mijn vak</a> welke
+            auto&apos;s je aankunt: wat daar niet staat, krijg je niet aangeboden.
+          </span>
         </div>
       </>
     );
@@ -97,63 +129,64 @@ export default function OfferList({ offers }: { offers: OfferRow[] }) {
 
   return (
     <>
-      {message && <p className={`${styles.note} ${styles.noteOk}`}>{message}</p>}
-
-      <div className={styles.listCard}>
+      {note}
+      <div className={styles.list}>
         {live.map((offer) => {
           const left = secondsLeft(offer.expiresAt, now) ?? 0;
-          // Comparing the formatted string would have made "10:00" urgent and
-          // "9:00" not; compare the seconds.
-          const urgent = left < 30;
-
+          const total = Math.max(1, Math.floor((new Date(offer.expiresAt).getTime() - new Date(offer.offeredAt).getTime()) / 1000));
           return (
-            <div className={styles.row} key={offer.id}>
-              <div className={styles.rowMain}>
-                <div className={styles.rowTitleLine}>
-                  <span className={styles.rowTitle}>{offer.car}</span>
-                  <span className={styles.rowSlug}>{offer.work}</span>
-                </div>
-                <div className={styles.rowMeta}>
-                  <span className={styles.chip}>
-                    <Clock size={13} strokeWidth={2} />
-                    {offer.when}
-                  </span>
-                  <span className={styles.chip}>
-                    <MapPin size={13} strokeWidth={2} />
-                    {offer.where}
-                  </span>
-                  {offer.price != null && (
-                    <span className={`${styles.chip} ${styles.chipOk}`}>
-                      € {offer.price.toFixed(2).replace('.', ',')}
-                    </span>
+            <article className={styles.card} key={offer.id}>
+              <div className={styles.top}>
+                <span className={styles.logo} aria-hidden="true">
+                  {offer.logo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={offer.logo} alt="" />
+                  ) : (
+                    <span>{(offer.make ?? '?').slice(0, 3).toUpperCase()}</span>
                   )}
-                  {offer.minutes && <span className={styles.chip}>± {offer.minutes} min</span>}
-                  {offer.keyless === true && <span className={styles.chip}>keyless</span>}
-                  <span className={`${styles.chip} ${urgent ? styles.chipStop : styles.chipWarn}`}>
-                    nog {mmss(left)}
-                  </span>
+                </span>
+                <div className={styles.what}>
+                  <h2 className={styles.car}>{offer.car}</h2>
+                  <span className={styles.work}>{offer.work}</span>
                 </div>
+                <Countdown left={left} total={total} />
               </div>
 
-              <div className={styles.rowActions}>
-                <button
-                  className={styles.ghostBtn}
-                  onClick={() => respond(offer.id, false)}
-                  disabled={busy === offer.id}
-                >
-                  <X size={15} strokeWidth={2} />
+              <ul className={styles.facts}>
+                <li>
+                  <Clock size={15} aria-hidden="true" />
+                  {offer.when}
+                </li>
+                <li>
+                  <MapPin size={15} aria-hidden="true" />
+                  {offer.where}
+                </li>
+                {offer.minutes && (
+                  <li>
+                    <Timer size={15} aria-hidden="true" />± {offer.minutes} min
+                  </li>
+                )}
+                {offer.keyless === true && (
+                  <li>
+                    <KeyRound size={15} aria-hidden="true" />
+                    Keyless
+                  </li>
+                )}
+                {offer.price != null && <li className={styles.price}>{EUR.format(offer.price)}</li>}
+              </ul>
+              {offer.reason && <p className={styles.reason}>{offer.reason}</p>}
+
+              <div className={styles.actions}>
+                <button className={styles.no} onClick={() => respond(offer.id, false)} disabled={busy === offer.id}>
+                  <X size={18} strokeWidth={2} />
                   Nee
                 </button>
-                <button
-                  className={styles.primaryBtn}
-                  onClick={() => respond(offer.id, true)}
-                  disabled={busy === offer.id}
-                >
-                  <Check size={15} strokeWidth={2.2} />
-                  {busy === offer.id ? '…' : 'Aannemen'}
+                <button className={styles.yes} onClick={() => respond(offer.id, true)} disabled={busy === offer.id}>
+                  <Check size={18} strokeWidth={2.4} />
+                  {busy === offer.id ? 'Bezig…' : 'Accepteren'}
                 </button>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>

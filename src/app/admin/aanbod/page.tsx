@@ -1,6 +1,7 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import styles from '../admin.module.css';
+import { PageHead, Notice, HelpSteps } from '../_ui';
+import { getBrandLogo } from '@/lib/brandLogos';
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import { slotLabel } from '@/lib/crmJobs';
 import OfferList, { type OfferRow } from './OfferList';
@@ -32,14 +33,8 @@ export default async function AanbodPage() {
   if (!me) {
     return (
       <>
-        <div className={styles.pageHead}>
-          <div>
-            <h1 className={styles.pageTitle}>Aanbod</h1>
-          </div>
-        </div>
-        <p className={`${styles.note} ${styles.noteBad}`}>
-          Uw login is nog niet aan een monteur gekoppeld.
-        </p>
+        <PageHead title="Aanbod" />
+        <Notice tone="bad">Je login is nog niet aan een monteur gekoppeld.</Notice>
       </>
     );
   }
@@ -56,16 +51,12 @@ export default async function AanbodPage() {
   if (error) {
     return (
       <>
-        <div className={styles.pageHead}>
-          <div>
-            <h1 className={styles.pageTitle}>Aanbod</h1>
-          </div>
-        </div>
-        <p className={`${styles.note} ${styles.noteBad}`}>
+        <PageHead title="Aanbod" />
+        <Notice tone="bad">
           {/does not exist|relation/i.test(error.message)
             ? 'Voer supabase/migrations/0013_technician_platform.sql uit.'
             : error.message}
-        </p>
+        </Notice>
       </>
     );
   }
@@ -88,11 +79,14 @@ export default async function AanbodPage() {
           id: row.id,
           reason: row.reason ?? '',
           expiresAt: row.expires_at,
+          offeredAt: row.offered_at,
+          logo: getBrandLogo(job.car_make),
+          make: job.car_make ?? null,
           car: [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ') || 'Onbekende auto',
           work: scenario ? SCENARIO_INFO[scenario].label : 'Werk aan de sleutel',
           minutes: scenario ? SCENARIO_INFO[scenario].minutes : null,
           keyless: job.keyless,
-          when: `${job.scheduled_date} · ${slotLabel(job.slot_start, job.slot_end)}`,
+          when: `${new Intl.DateTimeFormat('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/Amsterdam' }).format(new Date(`${job.scheduled_date}T12:00:00Z`))} · ${slotLabel(job.slot_start, job.slot_end)}`,
           where: [job.postcode, job.city].filter(Boolean).join(' ') || 'Onbekend',
           price: job.quoted_price == null ? null : Number(job.quoted_price),
         },
@@ -101,16 +95,17 @@ export default async function AanbodPage() {
 
   return (
     <>
-      <div className={styles.pageHead}>
-        <div>
-          <h1 className={styles.pageTitle}>Aanbod</h1>
-          <p className={styles.pageSub}>
-            Klussen die bij uw vak en uw gebied passen. Afwijzen kost u niets en telt niet mee —
-            wie het eerst accepteert, krijgt de klus.
-          </p>
-        </div>
-      </div>
-
+      <PageHead
+        title="Aanbod"
+        sub="Klussen die bij jouw vak en gebied passen. Wie het eerst accepteert, krijgt de klus. Nee zeggen kost niets."
+      />
+      <HelpSteps
+        steps={[
+          'Kijk naar de auto, de plaats en de tijd.',
+          'Accepteren: de klus staat meteen in Vandaag, met het volledige adres.',
+          'Geen tijd of niet jouw vak? Tik Nee, de volgende monteur krijgt hem.',
+        ]}
+      />
       <OfferList offers={offers} />
     </>
   );
