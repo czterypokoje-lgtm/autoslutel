@@ -20,6 +20,8 @@ const BrandsLogoGrid = dynamic(() => import('@/components/BrandsLogoGrid/BrandsL
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 const GallerySlider = dynamic(() => import('@/components/GallerySlider/GallerySlider'));
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
+import { isFlyer } from '@/lib/jobPhotos';
+import { captionFromFilename } from '@/lib/imageCaption';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
@@ -535,7 +537,12 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               // with a different city's name on this page.
               const namesAnyCity = (p: (typeof REAL_GALLERY_PROJECTS)[number]) =>
                 CITIES.some(c => p.alt.toLowerCase().includes(c.city.toLowerCase()));
-              const genericPool = REAL_GALLERY_PROJECTS.filter(p => !namesAnyCity(p));
+              // Real job photos from /images/merken, captioned without the
+              // "-utrecht-N" their filenames carry.
+              const jobPhotos = fs.readdirSync(path.join(process.cwd(), 'public', 'images', 'merken'))
+                .filter(f => f.includes('-utrecht-') && !isFlyer(f))
+                .map(f => ({ src: `/images/merken/${f}`, alt: captionFromFilename(f.replace(/-utrecht-\d+/, '')) }));
+              const genericPool = [...REAL_GALLERY_PROJECTS.filter(p => !namesAnyCity(p)), ...jobPhotos];
               // Always show at least 3 images: use the city-specific ones first,
               // then pad out with neutral (no-city-named) photos if there aren't enough.
               const pool = citySpecific.length >= 3

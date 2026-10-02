@@ -6,7 +6,10 @@ import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 
 export const metadata: Metadata = {
   title: `Galerij | ${SITE_CONFIG.name}`,
-  description: 'Galerij van autosleutel werkzaamheden. 26 echte praktijk projecten: BMW, Mercedes, VW, Audi, Porsche, Toyota met GPS geolocatie.',
+  /* Counted, not typed: the flyers left this gallery (see lib/jobPhotos.ts)
+     and a hand-written "26" was already wrong before they did. Brands named
+     are only ones still pictured. */
+  description: `Galerij van autosleutel werkzaamheden: ${REAL_GALLERY_PROJECTS.length} echte praktijkprojecten, o.a. BMW, Audi en Mercedes — sleutels bijmaken, programmeren en schadevrij openen op locatie.`,
   alternates: { canonical: `${SITE_CONFIG.domain}/galerij` },
 };
 
@@ -52,7 +55,7 @@ export default function GalerijPage() {
         <span className="section-label">GALERIJ & PROJECTEN</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Ons Werk in Beelden</h1>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, margin: '0 auto' }}>
-          Bekijk onze 26 recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link> en heel Nederland.
+          Bekijk onze {REAL_GALLERY_PROJECTS.length} recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link> en heel Nederland.
         </p>
       </section>
 
@@ -77,11 +80,11 @@ export default function GalerijPage() {
           </div>
         </div>
 
-        {/* 26 REAL PHOTOS SHOWCASE */}
+        {/* REAL PHOTOS SHOWCASE */}
         <div style={{ marginBottom: '3rem' }}>
-          <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem', textAlign: 'center' }}>Alle 26 Projectfoto&apos;s uit Onze Praktijk</h2>
+          <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem', textAlign: 'center' }}>Alle {REAL_GALLERY_PROJECTS.length} Projectfoto&apos;s uit Onze Praktijk</h2>
           <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)', marginBottom: '2rem' }}>
-            Bekijk alle praktijkprojecten uit Utrecht, Amsterdam, Almere, Amersfoort en heel Nederland.
+            Bekijk onze praktijkprojecten, uitgevoerd op locatie bij de klant.
           </p>
           <GallerySlider 
             images={REAL_GALLERY_PROJECTS.map(p => ({ src: p.src, caption: p.alt }))} 

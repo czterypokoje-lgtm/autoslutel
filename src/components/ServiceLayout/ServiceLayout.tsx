@@ -23,6 +23,7 @@ import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import { captionFromFilename } from '@/lib/imageCaption';
+import { isFlyer } from '@/lib/jobPhotos';
 import styles from '@/app/diensten/[slug]/page.module.css';
 import fs from 'fs';
 import path from 'path';
@@ -75,6 +76,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
     if (fs.existsSync(imagesDirMerken)) {
       const files = fs.readdirSync(imagesDirMerken);
       const matched = files.filter(f => {
+        if (isFlyer(f)) return false;
         if (isOpening && f.includes('auto-openen-zonder-sleutel')) return true;
         if (isKey && !isLost && f.includes('autosleutel-bijmaken')) return true;
         return false;
