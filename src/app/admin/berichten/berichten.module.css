@@ -1,0 +1,257 @@
+/*
+ * Only what the postvak adds.
+ *
+ * The three-pane layout, the thread list, the day groups, the turn rows and
+ * the journey rail all come from gesprekken.module.css, which this screen
+ * imports alongside this file. Duplicating 571 lines of grid to change four
+ * things is how two screens that are meant to look identical stop looking
+ * identical six months later.
+ *
+ * What is genuinely new: a channel colour per channel (that file only knew
+ * phone and WhatsApp), the composer, and the assistant toggle.
+ */
+
+/* ── status tabs ──────────────────────────────────────────────────────── */
+
+.tabs {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tab:hover { color: var(--crm-text); border-color: var(--crm-rule2); }
+
+.tabActive {
+  background: var(--crm-accent-soft);
+  border-color: var(--crm-accent);
+  color: var(--crm-accent);
+}
+
+.tabCount {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+/* ── channel colours ──────────────────────────────────────────────────── */
+/*
+ * One per channel, so the list reads by colour before it reads by text. The
+ * two Meta channels share the accent on purpose: they are one webhook and one
+ * approval, and the office thinks of them as "social".
+ */
+.ch_email     { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.ch_whatsapp  { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.ch_phone     { background: var(--crm-sunk); color: var(--crm-muted); }
+.ch_sms       { background: var(--crm-sunk); color: var(--crm-muted); }
+.ch_instagram { background: var(--crm-accent-soft); color: var(--crm-accent); }
+.ch_messenger { background: var(--crm-accent-soft); color: var(--crm-accent); }
+
+/* An unanswered thread, marked by shape rather than by a word. */
+.unreadDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--crm-accent);
+  flex: none;
+}
+
+/* ── header actions ───────────────────────────────────────────────────── */
+
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+  margin-left: auto;
+}
+
+.toggle,
+.miniBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.toggle:hover,
+.miniBtn:hover:not(:disabled) { color: var(--crm-text); border-color: var(--crm-rule2); }
+
+.miniBtn:disabled { cursor: default; opacity: 0.6; }
+
+/* On is the loud state: the assistant answering is the thing worth noticing. */
+.toggleOn {
+  background: var(--crm-accent-soft);
+  border-color: var(--crm-accent);
+  color: var(--crm-accent);
+}
+
+.subject {
+  margin: 0 0 var(--sp-3);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--crm-ink);
+}
+
+/* ── attachments ──────────────────────────────────────────────────────── */
+
+.attachment {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  padding: 4px 9px;
+  border-radius: 7px;
+  background: var(--crm-sunk);
+  border: 1px solid var(--crm-rule);
+  color: var(--crm-text);
+  font-size: 12px;
+  text-decoration: none;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment:hover { border-color: var(--crm-accent); color: var(--crm-accent); }
+
+/* ── composer ─────────────────────────────────────────────────────────── */
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: 14px;
+}
+
+.composerInput {
+  width: 100%;
+  resize: vertical;
+  min-height: 72px;
+  padding: var(--sp-3);
+  border-radius: 10px;
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.composerInput:focus {
+  outline: none;
+  border-color: var(--crm-accent);
+}
+
+.sendBtn {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 9px;
+  background: var(--crm-accent);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sendBtn:hover:not(:disabled) { background: var(--crm-accent-hover); }
+.sendBtn:disabled { opacity: 0.5; cursor: default; }
+
+/* Errors land inline: this CRM has no toast, by design. */
+.sendError,
+.sendOk {
+  margin: var(--sp-2) 0 0;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sendError { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.sendOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+
+/*
+ * Why there is no box to type in, said plainly. A disabled textarea with no
+ * explanation is the version of this that generates a phone call to ask.
+ */
+.notReplyable {
+  margin: var(--sp-3) 0 0;
+  padding: var(--sp-3);
+  border: 1px dashed var(--crm-rule2);
+  border-radius: 12px;
+  color: var(--crm-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── linking a thread to a lead by hand ───────────────────────────────── */
+
+.linkForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
+  background: var(--crm-sunk);
+  border: 1px solid var(--crm-rule);
+  border-radius: 12px;
+}
+
+.linkLabel {
+  flex: 1 1 100%;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--crm-muted);
+}
+
+.linkInput {
+  flex: 1 1 220px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+}
+
+.linkInput:focus { outline: none; border-color: var(--crm-accent); }
+
+/* One column on a phone, matching gesprekken.module.css's own breakpoint. */
+@media (max-width: 1100px) {
+  .heroActions { flex-direction: row; flex-wrap: wrap; }
+}

@@ -16,6 +16,7 @@ import {
   PhoneCall,
   LayoutDashboard,
   MessageSquare,
+  MessagesSquare,
   Package,
   Receipt,
   Settings,
@@ -53,6 +54,7 @@ const OFFICE_LINKS: { group: string; items: NavItem[] }[] = [
     items: [
       { href: '/admin/overzicht', label: 'Overzicht', icon: LayoutDashboard },
       { href: '/admin/leads', label: 'Leads', icon: Inbox },
+      { href: '/admin/berichten', label: 'Berichten', icon: MessagesSquare },
       { href: '/admin/gesprekken', label: 'Gesprekken', icon: PhoneCall },
       { href: '/admin/aanbod', label: 'Aanbod', icon: Handshake },
       { href: '/admin/jobs', label: 'Agenda', icon: CalendarDays },

@@ -101,6 +101,31 @@ export default async function InstellingenPage() {
     vars: ['ELEVENLABS_API_KEY', 'ELEVENLABS_WHATSAPP_PHONE_NUMBER_ID', 'ELEVENLABS_WEBHOOK_SECRET'],
   };
 
+  /*
+   * Inbound mail, which is a different thing from outbound and fails
+   * differently: without the webhook secret the route refuses every request,
+   * including real ones, so "sleutel aanwezig" is not the same as "post komt
+   * binnen". Split from `mail` for the same reason the lead alert is split
+   * from the bot token.
+   */
+  const inbound: Integration = {
+    name: 'E-mail ontvangen (Resend)',
+    what: 'Mail aan info@autosleutel24.nl komt in het postvak bij Berichten.',
+    state:
+      has('RESEND_WEBHOOK_SECRET') && has('RESEND_API_KEY')
+        ? 'live'
+        : has('RESEND_WEBHOOK_SECRET') || has('RESEND_API_KEY')
+          ? 'partial'
+          : 'off',
+    detail:
+      has('RESEND_WEBHOOK_SECRET') && has('RESEND_API_KEY')
+        ? 'Zet in de webmail van de host een doorstuurregel naar het Resend-adres, dan landt elke mail hier.'
+        : has('RESEND_API_KEY')
+          ? 'RESEND_WEBHOOK_SECRET ontbreekt — de webhook weigert alles, ook echte mail.'
+          : 'Niet ingesteld. Mail blijft in de mailbox en het CRM weet niet dat iemand geschreven heeft.',
+    vars: ['RESEND_WEBHOOK_SECRET', 'RESEND_API_KEY'],
+  };
+
   const payments: Integration = {
     name: 'Betalingen (Mollie)',
     what: 'iDEAL-betalingen in de webshop.',
@@ -158,7 +183,7 @@ export default async function InstellingenPage() {
 
   const groups: { title: string; items: Integration[] }[] = [
     { title: 'Leads', items: [leadAlert, mail] },
-    { title: 'Communicatie', items: [whatsapp, telegram] },
+    { title: 'Communicatie', items: [inbound, whatsapp, telegram] },
     { title: 'Advertenties', items: [googleAds, bing] },
     { title: 'Betalingen', items: [payments] },
     { title: 'Kosten', items: [fuel] },

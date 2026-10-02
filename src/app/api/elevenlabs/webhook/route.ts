@@ -2,6 +2,8 @@ import { NextResponse, after } from 'next/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { sendTelegram } from '@/lib/telegram';
 import { verifyElevenLabsSignature } from '@/lib/elevenlabsWebhook';
+import { upsertConversation, recordMessage } from '@/lib/berichtenStore';
+import type { InboxChannel } from '@/lib/berichten';
 
 export const dynamic = 'force-dynamic';
 
@@ -215,6 +217,48 @@ export async function POST(request: Request) {
       );
     if (storeError) {
       console.error('Storing agent conversation failed:', storeError.message);
+    }
+
+    /*
+     * The same conversation again, in the shared postvak.
+     *
+     * Written beside agent_conversations rather than instead of it: that table
+     * is what /admin/gesprekken reads and what ElevenLabs' own shape maps onto
+     * cleanly, and rewriting it would be a migration of live data for no gain.
+     * This is the half that puts phone and WhatsApp in the same list as
+     * e-mail, so the office has one place to look instead of two.
+     *
+     * Only the channels the postvak understands. 'unknown' is a real outcome
+     * here (detectChannel returns it rather than guessing) and a thread keyed
+     * on a channel nobody can reply to is noise in the list.
+     */
+    const channel = detectChannel(data);
+    const phone = detectPhone(data);
+
+    if (phone && (channel === 'phone' || channel === 'whatsapp' || channel === 'sms')) {
+      const conversationId = await upsertConversation(admin, {
+        channel: channel as InboxChannel,
+        externalId: phone,
+      });
+
+      if (conversationId) {
+        /*
+         * One row per turn, with the conversation id in the provider field so
+         * a redelivered webhook lands on the unique constraint instead of
+         * appending the whole transcript a second time. Turns have no ids of
+         * their own, so the index makes them distinct.
+         */
+        const turns = (data.transcript ?? []).filter((turn) => turn.message);
+        for (const [index, turn] of turns.entries()) {
+          await recordMessage(admin, {
+            conversationId,
+            direction: turn.role === 'agent' ? 'out' : 'in',
+            author: turn.role === 'agent' ? 'ai' : 'customer',
+            body: turn.message,
+            providerMessageId: `${data.conversation_id ?? 'onbekend'}:${index}`,
+          });
+        }
+      }
     }
 
     const { data: recipients, error: recipientsError } = await admin
