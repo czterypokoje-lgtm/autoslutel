@@ -98,6 +98,10 @@ export default function PhoneConversionTracker() {
     const lastFired = new Map<string, number>();
 
     const handlePhoneClick = (e: MouseEvent) => {
+      // The CRM has its own WhatsApp and phone buttons for staff contacting
+      // customers. Those are work, not leads: never report them anywhere.
+      if (window.location.pathname.startsWith('/admin')) return;
+
       const target = (e.target as Element | null)?.closest?.('a') as HTMLAnchorElement | null | undefined;
       if (!target || !target.href) return;
 

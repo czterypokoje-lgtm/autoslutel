@@ -22,9 +22,10 @@
  * WHAT IS SENT
  *
  * Only what the visitor just typed into the form they submitted, and only on
- * a genuinely successful submission. email and phone ride along for Google
- * Ads' Enhanced conversions for leads: GTM's own tag hashes them in the
- * browser before anything is transmitted, so this just has to hand them over.
+ * a genuinely successful submission. email and phone reach Google Ads'
+ * Enhanced conversions for leads through gtag('set', 'user_data') below —
+ * gtag hashes them in the browser. The dataLayer copy is for other tags;
+ * nothing in the GTM container reads it for Google Ads.
  * Consent Mode is configured in layout.tsx and gates what actually leaves.
  *
  * Never throws. A blocked or missing tag manager is normal — an ad blocker,

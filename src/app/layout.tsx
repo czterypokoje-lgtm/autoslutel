@@ -196,10 +196,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Checked client-side (not via next/headers) because reading the
           request Host header in this root layout would force every page in
           the site out of static generation.
+
+          The hostname alone never covered the CRM itself: /admin on the
+          production domain loaded every tag, so staff opening leads and
+          tapping a customer's WhatsApp button counted as visitors and taps.
+          The /admin path check is on all three loaders (GTM, Google Ads, UET).
         */}
         <Script id="gtm-script">
           {`
-            if (window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') {
+            if ((window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') && !window.location.pathname.startsWith('/admin')) {
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -213,7 +218,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="google-ads-script" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=AW-18315813515" />
         <Script id="google-ads-config">
           {`
-            if (window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') {
+            if ((window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') && !window.location.pathname.startsWith('/admin')) {
               window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               // Prevent duplicate pageviews if GA4 in GTM already tracks them
@@ -246,7 +251,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
         <Script id="uet-tag">
           {`
-            if (window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') {
+            if ((window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') && !window.location.pathname.startsWith('/admin')) {
               (function(w,d,t,u,o){
                 w[u]=w[u]||[],o.ts=(new Date).getTime();
                 var n=d.createElement(t);
