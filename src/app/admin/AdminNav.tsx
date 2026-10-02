@@ -84,6 +84,7 @@ const OFFICE_NAV: NavItem[] = [
     label: 'Rapporten',
     icon: BarChart3,
     children: [
+      { href: '/admin/rapport', label: 'Prestaties' },
       { href: '/admin/winst', label: 'Winst & verbruik' },
       { href: '/admin/rapportage', label: 'Rapportage' },
     ],

@@ -355,7 +355,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
       <TileGrid>
         <Tile href="/admin/gesprekken" ai iconTone="ai" icon={<PhoneCall size={20} strokeWidth={1.8} />} title="Gesprekken" sub="Wat de AI-agent deed" />
         <Tile href="/admin/jobs" iconTone="steel" icon={<CalendarDays size={20} strokeWidth={1.8} />} title="Agenda" sub="Wie is waar" />
-        <Tile href="/admin/winst" iconTone="ok" icon={<BarChart3 size={20} strokeWidth={1.8} />} title="Winst & verbruik" sub="Per klus, merk en monteur" />
+        <Tile href="/admin/rapport" iconTone="ok" icon={<BarChart3 size={20} strokeWidth={1.8} />} title="Prestaties" sub="Week, maand, jaar en per monteur" />
         <Tile href="/admin/monteurs" icon={<Wrench size={20} strokeWidth={1.8} />} title="Monteurs" sub="Team en dekking" />
       </TileGrid>
     </div>

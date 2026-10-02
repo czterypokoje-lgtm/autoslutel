@@ -20,7 +20,8 @@ export default function SalesChart({
   lineLabel = 'Brutowinst',
   countLabel = 'leads',
 }: {
-  data: DayPoint[];
+  /** A point may carry its own axis label ("wk 41", "okt"); otherwise its date is shown. */
+  data: (DayPoint & { label?: string })[];
   barLabel?: string;
   lineLabel?: string;
   /** What the small number under each bar counts (leads, klussen …). */
@@ -42,7 +43,10 @@ export default function SalesChart({
   const totalRevenue = data.reduce((t, d) => t + d.revenue, 0);
   const totalMargin = data.reduce((t, d) => t + d.margin, 0);
   const totalLeads = data.reduce((t, d) => t + d.leads, 0);
+  const byDay = new Map(data.map((d) => [d.day, d.label]));
   const label = (day: string) => {
+    const own = byDay.get(day);
+    if (own) return own;
     const date = new Date(`${day}T12:00:00Z`);
     return `${date.getUTCDate()}/${date.getUTCMonth() + 1}`;
   };
@@ -53,7 +57,7 @@ export default function SalesChart({
       <div className={styles.chartLegend}>
         <span><i className={styles.legendBar} /> {barLabel} {EUR.format(totalRevenue)}</span>
         <span><i className={styles.legendLine} /> {lineLabel} {EUR.format(totalMargin)}</span>
-        <span className={styles.muted}>Getal onder de balk = {countLabel} die dag · totaal {totalLeads}</span>
+        <span className={styles.muted}>Getal onder de balk = {countLabel} · totaal {totalLeads}</span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className={styles.chart} role="img" aria-label={`${barLabel} en ${lineLabel.toLowerCase()} per dag, laatste ${data.length} dagen`}>
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
