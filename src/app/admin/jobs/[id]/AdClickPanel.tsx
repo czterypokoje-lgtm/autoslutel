@@ -25,6 +25,7 @@ interface Click {
   id: string;
   created_at: string;
   source_url: string | null;
+  ref: string | null;
   network: string;
   hoursFromJob: number;
 }
@@ -40,6 +41,7 @@ export default function AdClickPanel({ jobId }: { jobId: string }) {
   const [attributed, setAttributed] = useState<boolean | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [code, setCode] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -54,10 +56,28 @@ export default function AdClickPanel({ jobId }: { jobId: string }) {
     return () => { cancelled = true; };
   }, [jobId]);
 
-  /* Nothing to decide: either it is already attributed, or no unclaimed click
-     landed anywhere near this job. Showing an empty panel on every job would
-     make the one that matters harder to notice. */
-  if (attributed === null || attributed || clicks.length === 0) return null;
+  /* Nothing to decide once it is attributed. Without nearby clicks the panel
+     still shows, but only the code field: a WhatsApp code is exact, whatever
+     the date. */
+  if (attributed === null || attributed) return null;
+
+  /* The customer's WhatsApp message starts with "[K7F2]" when they came from
+     an ad. That code finds its click directly — no list to weigh. */
+  async function findByCode() {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/jobs/${jobId}/call-clicks?ref=${encodeURIComponent(code.trim().toUpperCase())}`);
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error ?? 'Zoeken mislukt');
+      if (!json.clicks?.length) throw new Error('Geen open advertentieklik met deze code.');
+      setClicks(json.clicks);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Zoeken mislukt');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function claim(clickId: string) {
     setBusy(true);
@@ -91,12 +111,32 @@ export default function AdClickPanel({ jobId }: { jobId: string }) {
         <MousePointerClick size={16} /> Kwam deze klus uit een advertentie?
       </h2>
       <p className={jd.panelNote}>
-        Deze klus heeft geen aanvraag en geen advertentieklik. Rond deze datum is er wel op
-        het telefoonnummer geklikt vanuit een advertentie. Weet je welke het was, koppel hem —
-        dan telt de omzet mee in Google Ads. Weet je het niet zeker, laat het staan: een
-        verkeerde koppeling stuurt de advertenties de verkeerde kant op. Hieronder staan
-        de kliks die het dichtst bij deze klus liggen.
+        Deze klus heeft geen aanvraag en geen advertentieklik. Begint het WhatsApp-bericht
+        van de klant met een code tussen haken, bijvoorbeeld <strong>[K7F2]</strong>? Vul die
+        hieronder in — dan telt de omzet mee in Google Ads.
+        {clicks.length > 0 && (
+          <> Geen code? Hieronder staan de kliks die het dichtst bij deze klus liggen. Weet je
+          het niet zeker, laat het staan: een verkeerde koppeling stuurt de advertenties de
+          verkeerde kant op.</>
+        )}
       </p>
+
+      <form
+        onSubmit={(e) => { e.preventDefault(); void findByCode(); }}
+        style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.9rem' }}
+      >
+        <input
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="Code, bijv. K7F2"
+          maxLength={6}
+          aria-label="WhatsApp-code"
+          style={{ padding: '0.35rem 0.6rem', border: '1px solid #cbd5e1', borderRadius: 6, width: '10rem', textTransform: 'uppercase' }}
+        />
+        <button type="submit" className={`${ui.btn} ${jd.smallBtn}`} disabled={busy || !code.trim()}>
+          Zoek
+        </button>
+      </form>
 
       {error && <p className={jd.panelErr}>{error}</p>}
 
@@ -106,6 +146,7 @@ export default function AdClickPanel({ jobId }: { jobId: string }) {
             <div className={jd.clickMain}>
               <strong>{WHEN.format(new Date(click.created_at))}</strong>
               <span className={jd.clickMeta}> · {ago(click.hoursFromJob)} · {click.network}</span>
+              {click.ref && <span className={jd.clickMeta} style={{ color: '#16a34a', fontWeight: 600 }}> · code {click.ref}</span>}
               {click.source_url && (
                 <div className={jd.clickSub}>
                   {click.source_url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 60)}

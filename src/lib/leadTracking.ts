@@ -32,6 +32,8 @@
  * database must not surface an error because a pixel was unavailable.
  */
 
+import { toE164NL } from '@/lib/phone';
+
 declare global {
   interface Window {
     dataLayer?: unknown[];
@@ -89,7 +91,9 @@ export function reportLeadConversion(lead: LeadConversion): void {
     if (typeof window.gtag === 'function') {
       /* Enhanced conversions for leads: user data is set before the
          conversion so Google hashes it and attaches it to that ping. */
-      window.gtag('set', 'user_data', { email, phone_number: phone });
+      // The phone must be E.164 ("+31611751231"): gtag hashes it as given, and
+      // "06 11 75 12 31" hashes to something that matches nobody's upload.
+      window.gtag('set', 'user_data', { email, phone_number: toE164NL(phone) ?? undefined });
 
       // The Google Ads action "Website lead form - submitted". No value here:
       // the action's own default value (set in Google Ads) is the one source

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { AD_CLICK_PARAMS } from '@/lib/adClickId';
+import { AD_CLICK_PARAMS, WHATSAPP_REF_PATTERN } from '@/lib/adClickId';
 import { rateLimit, getClientIp } from '@/lib/rateLimit';
 import { sendOpenAiEvent } from '@/lib/openaiAds';
 
@@ -55,13 +55,19 @@ async function recordCallClick(body: Record<string, unknown>): Promise<void> {
 
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
-    await supabase.from('call_clicks').insert({
+    const row = {
       gclid: clean(body.gclid),
       wbraid: clean(body.wbraid),
       gbraid: clean(body.gbraid),
       msclkid: clean(body.msclkid),
       source_url: clean(body.sourceUrl, 500),
-    });
+    };
+    /* The code the visitor's WhatsApp message now starts with — see 0063_call_click_whatsapp_ref.sql. */
+    const ref = typeof body.ref === 'string' && WHATSAPP_REF_PATTERN.test(body.ref) ? body.ref : null;
+    const { error } = await supabase.from('call_clicks').insert({ ...row, ref });
+    /* Without the code rather than not at all: a code collision, or this
+       deploy running before migration 0062, must not cost the click itself. */
+    if (error && ref) await supabase.from('call_clicks').insert(row);
   } catch (err) {
     console.error('[call-click] failed to record click', err);
   }
