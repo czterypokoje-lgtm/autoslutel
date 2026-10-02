@@ -217,7 +217,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               // Prevent duplicate pageviews if GA4 in GTM already tracks them
-              gtag('config', 'AW-18315813515', { send_page_view: false });
+              gtag('config', 'AW-18315813515', { send_page_view: false, allow_enhanced_conversions: true });
             }
           `}
         </Script>

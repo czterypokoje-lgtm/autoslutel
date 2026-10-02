@@ -362,7 +362,7 @@ export default function OfflineConversionsPage() {
                   <th style={{ padding: '1rem' }}>Datum</th>
                   <th style={{ padding: '1rem' }}>Dienst</th>
                   <th style={{ padding: '1rem' }}>Status</th>
-                  <th style={{ padding: '1rem' }}>Omzet (€)</th>
+                  <th style={{ padding: '1rem' }}>Marge (€)</th>
                 </tr>
               </thead>
               <tbody>
