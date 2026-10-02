@@ -2,6 +2,7 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../jobs/jobs.module.css';
 import MonteursPanel, { type Technician } from './MonteursPanel';
+import { PageHead } from '../_ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,7 @@ export default async function MonteursPage() {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('technicians')
-    .select('id, name, phone, active, werkgebied, color, user_id')
+    .select('id, name, phone, active, werkgebied, color, user_id, photo_url, online, employment_type')
     .order('name');
 
   if (error) {
@@ -30,15 +31,18 @@ export default async function MonteursPage() {
     );
   }
 
+  const list = (data ?? []) as unknown as Technician[];
+  const active = list.filter((t) => t.active).length;
+  const onDuty = list.filter((t) => t.active && t.online).length;
+  const noLogin = list.filter((t) => t.active && !t.user_id).length;
+
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Monteurs</h1>
-        <span className={styles.count}>
-          {(data ?? []).length} {(data ?? []).length === 1 ? 'monteur' : 'monteurs'}
-        </span>
-      </div>
-      <MonteursPanel technicians={(data ?? []) as unknown as Technician[]} />
+      <PageHead
+        title="Monteurs"
+        sub={`${active} actief · ${onDuty} nu op dienst${noLogin ? ` · ${noLogin} zonder login` : ''}. Klik Open voor dekking, prijzen en logboek.`}
+      />
+      <MonteursPanel technicians={list} />
     </>
   );
 }

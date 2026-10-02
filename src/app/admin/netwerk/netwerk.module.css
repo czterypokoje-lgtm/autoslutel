@@ -405,3 +405,9 @@
   margin-left: auto;
   flex: none;
 }
+
+/* Empty state when no channel is open. */
+.welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 40px 20px; text-align: center; color: var(--crm-muted); }
+.welcome h2 { margin: 0; font-size: 20px; font-weight: 600; color: var(--crm-ink); }
+.welcome p { margin: 0; max-width: 380px; font-size: 14.5px; line-height: 1.5; }
+.welcomeIcon { width: 60px; height: 60px; border-radius: 16px; display: grid; place-items: center; background: var(--crm-sunk); color: var(--crm-nav); margin-bottom: 6px; }

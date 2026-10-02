@@ -3,18 +3,34 @@ import { notFound } from 'next/navigation';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { slotLabel } from '@/lib/crmJobs';
-import styles from '../klanten.module.css';
+import { CalendarPlus, MessageCircle, Phone } from 'lucide-react';
+import { waLink } from '@/lib/whatsapp';
+import { getBrandLogo } from '@/lib/brandLogos';
+import { sourceLabel } from '../../overzicht/dashboardData';
+import k from '../klanten-v2.module.css';
 import EraseButton from './EraseButton';
 
 export const dynamic = 'force-dynamic';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
-const DATE = new Intl.DateTimeFormat('nl-NL', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  timeZone: 'Europe/Amsterdam',
-});
+const DATE = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/Amsterdam' });
+
+const LEAD_STATUS: Record<string, { label: string; cls: string }> = {
+  new: { label: 'Nieuw', cls: 'info' },
+  qualified: { label: 'Gekwalificeerd', cls: 'mute' },
+  contacted: { label: 'Gebeld', cls: 'warn' },
+  sold: { label: 'Verkocht', cls: 'ok' },
+  rejected: { label: 'Afgewezen', cls: 'stop' },
+  duplicate: { label: 'Dubbel', cls: 'mute' },
+  spam: { label: 'Spam', cls: 'mute' },
+};
+const JOB_STATUS: Record<string, { label: string; cls: string }> = {
+  gepland: { label: 'Gepland', cls: 'info' },
+  onderweg: { label: 'Onderweg', cls: 'warn' },
+  bezig: { label: 'Bezig', cls: 'warn' },
+  afgerond: { label: 'Afgerond', cls: 'ok' },
+  geannuleerd: { label: 'Geannuleerd', cls: 'mute' },
+};
 
 export default async function KlantPage({
   params,
@@ -53,148 +69,143 @@ export default async function KlantPage({
 
   if (!customer) notFound();
 
+  type Event = { key: string; at: string; kind: 'lead' | 'job'; title: string; sub: string; status: { label: string; cls: string }; href?: string };
+  const events: Event[] = [
+    ...(leads ?? []).map((l) => ({
+      key: `l${l.id}`,
+      at: String(l.created_at),
+      kind: 'lead' as const,
+      title: `Aanvraag · ${(l.service as string) ?? 'geen dienst'}`,
+      sub: [sourceLabel(l.source as string | null), [l.brand, l.model].filter(Boolean).join(' '), l.kenteken].filter(Boolean).join(' · '),
+      status: LEAD_STATUS[l.status as string] ?? { label: String(l.status), cls: 'mute' },
+    })),
+    ...(jobs ?? []).map((j) => ({
+      key: `j${j.id}`,
+      at: `${j.scheduled_date}T${String(j.slot_start ?? '12:00').slice(0, 5)}:00`,
+      kind: 'job' as const,
+      title: `Klus · ${(j.service_type as string) ?? 'geen dienst'}`,
+      sub: [
+        slotLabel(j.slot_start as string, j.slot_end as string),
+        (j.final_price ?? j.quoted_price) !== null ? MONEY.format(Number(j.final_price ?? j.quoted_price)) : null,
+      ]
+        .filter(Boolean)
+        .join(' · '),
+      status: JOB_STATUS[j.status as string] ?? { label: String(j.status), cls: 'mute' },
+      href: `/admin/jobs/${j.id}`,
+    })),
+  ].sort((a, b) => b.at.localeCompare(a.at));
+
+  const name = (customer.name as string) ?? 'Klant zonder naam';
+  const wa = waLink(phone, `Goedendag${customer.name ? ` ${String(customer.name).split(' ')[0]}` : ''}, hier Autosleutel24. `);
+  const jobsDone = (jobs ?? []).filter((j) => j.status === 'afgerond').length;
+
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>{customer.name ?? 'Klant zonder naam'}</h1>
-        <span className={styles.count}>{phone}</span>
-        <span className={styles.search}>
-          <Link className={styles.link} href="/admin/klanten">
-            Terug naar klanten
-          </Link>
+      <Link href="/admin/klanten" className={k.backLink}>‹ Alle klanten</Link>
+
+      <header className={k.hero}>
+        <span className={k.avatarBig}>
+          {name.split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('')}
         </span>
+        <div className={k.heroText}>
+          <h1>{name}</h1>
+          <span>
+            {phone}
+            {customer.postcode && ` · ${customer.postcode}`}
+            {customer.email && ` · ${customer.email}`}
+          </span>
+        </div>
+        <div className={k.heroActions}>
+          <a href={`tel:${phone}`} className={k.btnGhost}><Phone size={16} /> Bellen</a>
+          {wa && <a href={wa} target="_blank" rel="noopener noreferrer" className={k.btnGhost}><MessageCircle size={16} /> WhatsApp</a>}
+          <Link href="/admin/jobs/nieuw" className={k.btnPrimary}><CalendarPlus size={16} /> Klus inplannen</Link>
+        </div>
+      </header>
+
+      <div className={k.stats}>
+        <div><span>Klant sinds</span><b>{DATE.format(new Date(customer.first_seen as string))}</b></div>
+        <div><span>Aanvragen</span><b>{(leads ?? []).length}</b></div>
+        <div><span>Klussen afgerond</span><b>{jobsDone}</b></div>
+        <div><span>Omzet</span><b>{MONEY.format(Number(customer.total_value ?? 0))}</b></div>
       </div>
 
-      <div className={styles.cols}>
-        <div>
-          <div className={styles.panel}>
-            <h2>Voertuigen</h2>
+      <div className={k.cols}>
+        <section className={k.card}>
+          <h2>Tijdlijn</h2>
+          {events.length === 0 ? (
+            <p className={k.note}>Nog geen aanvragen of klussen.</p>
+          ) : (
+            <ol className={k.timeline}>
+              {events.map((e) => (
+                <li key={e.key} className={e.kind === 'job' ? k.evJob : k.evLead}>
+                  <span className={k.evDot} aria-hidden="true" />
+                  <div className={k.evBody}>
+                    <div className={k.evTop}>
+                      {e.href ? <Link href={e.href}>{e.title}</Link> : <b>{e.title}</b>}
+                      <span className={`${k.pill} ${k[e.status.cls]}`}>{e.status.label}</span>
+                    </div>
+                    <small>
+                      {DATE.format(new Date(e.at))}
+                      {e.sub && ` · ${e.sub}`}
+                    </small>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
+        </section>
+
+        <div className={k.side}>
+          <section className={k.card}>
+            <h2>Auto&apos;s</h2>
             {(vehicles ?? []).length === 0 ? (
-              <p className={styles.note}>
-                Geen kenteken bekend. Kentekens worden pas sinds migratie 0003 in
-                een eigen kolom bewaard; oudere aanvragen hebben hem alleen in de
-                modelnaam staan.
-              </p>
+              <p className={k.note}>Nog geen kenteken bekend voor deze klant.</p>
             ) : (
-              (vehicles ?? []).map((v) => (
-                <div key={v.kenteken as string} className={styles.item}>
-                  <span className={styles.plate}>{v.kenteken as string}</span>{' '}
-                  <span className={styles.strong}>
-                    {[v.brand, v.model, v.year].filter(Boolean).join(' ')}
-                  </span>
-                  <span className={styles.sub}>
-                    {v.aanvragen as number} aanvraag/aanvragen · laatst{' '}
-                    {DATE.format(new Date(v.last_seen as string))}
-                  </span>
-                </div>
-              ))
+              <ul className={k.cars}>
+                {(vehicles ?? []).map((v) => {
+                  const logo = getBrandLogo(v.brand as string | null);
+                  return (
+                    <li key={v.kenteken as string}>
+                      {logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={logo} alt="" />
+                      ) : (
+                        <i aria-hidden="true" />
+                      )}
+                      <span>
+                        <b>{[v.brand, v.model, v.year].filter(Boolean).join(' ') || 'Auto'}</b>
+                        <small>
+                          <span className={k.plate}>{v.kenteken as string}</span> · {v.aanvragen as number}× · laatst{' '}
+                          {DATE.format(new Date(v.last_seen as string))}
+                        </small>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
-            <p className={styles.note}>
-              Komt dezelfde auto terug voor een tweede sleutel, dan staat hier
-              wat de vorige keer is gebruikt — dat scheelt tijd op de oprit.
+          </section>
+
+          <section className={k.card}>
+            <h2>Privacy (AVG)</h2>
+            <p className={k.note}>
+              Marketing:{' '}
+              <span className={`${k.pill} ${customer.consent_marketing ? k.ok : k.mute}`}>
+                {customer.consent_marketing ? 'toestemming' : 'geen toestemming'}
+              </span>
+              {customer.consent_at && <> sinds {DATE.format(new Date(customer.consent_at as string))}</>}
             </p>
-          </div>
+            <p className={k.note}>Zet deze klant alleen op een mailinglijst als hier &ldquo;toestemming&rdquo; staat.</p>
+          </section>
 
-          <div className={styles.panel}>
-            <h2>Aanvragen ({(leads ?? []).length})</h2>
-            {(leads ?? []).map((l) => (
-              <div key={l.id as string} className={styles.item}>
-                <span className={styles.strong}>
-                  {DATE.format(new Date(l.created_at as string))} ·{' '}
-                  {(l.service as string) ?? 'geen dienst'}
-                </span>
-                <span className={styles.sub}>
-                  {(l.source as string) ?? 'unknown'} · {l.status as string}
-                  {l.sale_price !== null &&
-                    ` · ${MONEY.format(Number(l.sale_price))}`}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.panel}>
-            <h2>Klussen ({(jobs ?? []).length})</h2>
-            {(jobs ?? []).length === 0 ? (
-              <p className={styles.note}>Nog geen klus ingepland.</p>
-            ) : (
-              (jobs ?? []).map((j) => (
-                <div key={j.id as string} className={styles.item}>
-                  <Link className={styles.link} href={`/admin/jobs/${j.id as string}`}>
-                    <span className={styles.strong}>
-                      {j.scheduled_date as string}{' '}
-                      {slotLabel(j.slot_start as string, j.slot_end as string)}
-                    </span>
-                  </Link>
-                  <span className={styles.sub}>
-                    {(j.service_type as string) ?? 'geen dienst'} · {j.status as string}
-                    {(j.final_price ?? j.quoted_price) !== null &&
-                      ` · ${MONEY.format(Number(j.final_price ?? j.quoted_price))}`}
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        <div>
-          <div className={styles.panel}>
-            <h2>Overzicht</h2>
-            <div className={styles.summary}>
-              <span className={styles.summaryKey}>Telefoon</span>
-              <span className={styles.summaryVal}>
-                <a href={`tel:${phone}`}>{phone}</a>
-              </span>
-              <span className={styles.summaryKey}>E-mail</span>
-              <span className={styles.summaryVal}>{customer.email ?? '—'}</span>
-              <span className={styles.summaryKey}>Postcode</span>
-              <span className={styles.summaryVal}>{customer.postcode ?? '—'}</span>
-              <span className={styles.summaryKey}>Klant sinds</span>
-              <span className={styles.summaryVal}>
-                {DATE.format(new Date(customer.first_seen as string))}
-              </span>
-              <span className={styles.summaryKey}>Omzet</span>
-              <span className={styles.summaryVal}>
-                {MONEY.format(Number(customer.total_value ?? 0))}
-              </span>
-            </div>
-          </div>
-
-          <div className={styles.panel}>
-            <h2>AVG</h2>
-            <div className={styles.summary}>
-              <span className={styles.summaryKey}>Marketing</span>
-              <span className={styles.summaryVal}>
-                <span
-                  className={`${styles.badge} ${
-                    customer.consent_marketing ? styles.ok : styles.no
-                  }`}
-                >
-                  {customer.consent_marketing ? 'toestemming' : 'geen toestemming'}
-                </span>
-              </span>
-              <span className={styles.summaryKey}>Gegeven op</span>
-              <span className={styles.summaryVal}>
-                {customer.consent_at
-                  ? DATE.format(new Date(customer.consent_at as string))
-                  : '—'}
-              </span>
-            </div>
-            <p className={styles.note}>
-              Zet deze klant alleen op een mailinglijst als hierboven
-              &ldquo;toestemming&rdquo; staat.
-            </p>
-          </div>
-
-          <div className={`${styles.panel} ${styles.danger}`}>
-            <h2 className={styles.dangerTitle}>Gegevens verwijderen</h2>
-            <p className={styles.note}>
-              Verwijdert alle aanvragen van dit nummer en haalt naam, telefoon,
-              adres en notities van de klussen af. De klussen zelf blijven
-              bestaan: het werk is gedaan en de administratie daarvan moet zeven
-              jaar bewaard blijven. Dit kan niet ongedaan worden gemaakt.
+          <section className={`${k.card} ${k.danger}`}>
+            <h2>Gegevens wissen</h2>
+            <p className={k.note}>
+              Verwijdert alle aanvragen van dit nummer en haalt naam, telefoon, adres en notities van de klussen af. De klussen
+              zelf blijven bestaan voor de administratie (7 jaar). Dit kan niet ongedaan worden gemaakt.
             </p>
             <EraseButton phone={phone} />
-          </div>
+          </section>
         </div>
       </div>
     </>

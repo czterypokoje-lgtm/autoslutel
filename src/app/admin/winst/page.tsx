@@ -136,7 +136,7 @@ export default async function WinstPage({
 
           <Card>
             <CardHead>Per stad</CardHead>
-            <Table head={<tr><th>Stad</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></tr>}>
+            <Table head={<><th>Stad</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></>}>
               {byCity.map((row) => (
                 <tr key={row.label}>
                   <td>{row.label}</td>
@@ -150,7 +150,7 @@ export default async function WinstPage({
 
           <Card>
             <CardHead>Per automerk</CardHead>
-            <Table head={<tr><th>Merk</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></tr>}>
+            <Table head={<><th>Merk</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></>}>
               {byMake.map((row) => (
                 <tr key={row.label}>
                   <td>{row.label}</td>
@@ -164,7 +164,7 @@ export default async function WinstPage({
 
           <Card>
             <CardHead>Per soort werk</CardHead>
-            <Table head={<tr><th>Soort</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></tr>}>
+            <Table head={<><th>Soort</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></>}>
               {byScenario.map((row) => (
                 <tr key={row.label}>
                   <td>{row.label}</td>
@@ -178,7 +178,7 @@ export default async function WinstPage({
 
           <Card>
             <CardHead>Per monteur</CardHead>
-            <Table head={<tr><th>Monteur</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></tr>}>
+            <Table head={<><th>Monteur</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></>}>
               {byTechnician.map((row) => (
                 <tr key={row.label}>
                   <td>{row.label}</td>
@@ -198,7 +198,7 @@ export default async function WinstPage({
                 busscherm, bij de klus.
               </Empty>
             ) : (
-              <Table head={<tr><th>Onderdeel</th><th>Stuks</th><th>Klussen</th><th>Inkoopwaarde</th></tr>}>
+              <Table head={<><th>Onderdeel</th><th>Stuks</th><th>Klussen</th><th>Inkoopwaarde</th></>}>
                 {byProduct.map((row) => (
                   <tr key={row.label}>
                     <td>{row.label}</td>

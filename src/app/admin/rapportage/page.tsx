@@ -1,6 +1,10 @@
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
+import { PageHead } from '../_ui';
+import { sourceLabel } from '../overzicht/dashboardData';
+import { SCENARIO_INFO, isScenario, type Scenario } from '@/lib/scenarios';
+import r from './rapportage.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -90,24 +94,41 @@ export default async function RapportagePage() {
 
   const latestWeek = (response.data ?? [])[0];
 
+  const allLeads = sources.reduce((t, [, x]) => t + x.leads, 0);
+  const allSold = sources.reduce((t, [, x]) => t + x.verkocht, 0);
+  const missed = (capabilityGap.data ?? []).reduce((t, row) => t + Number(row.gemiste_leads ?? 0), 0);
+  const REPORTS = [
+    { id: 'bron', n: 1, title: 'Lead → klus per bron', value: `${percent(allSold, allLeads)} verkocht · beste: ${sources[0] ? sourceLabel(sources[0][0]) : '—'}` },
+    { id: 'dienst', n: 2, title: 'Kluswaarde per dienst', value: `${(service.data ?? []).length} diensten` },
+    { id: 'reactie', n: 3, title: 'Reactietijd', value: latestWeek ? `mediaan ${show(latestWeek.mediaan_minuten, (n) => `${n} min`)}` : 'nog niet gemeten' },
+    { id: 'monteur', n: 4, title: 'Klussen per monteur', value: `${(technician.data ?? []).length} monteurs` },
+    { id: 'regio', n: 5, title: 'Vraag per regio', value: (region.data ?? [])[0] ? `meeste: ${(region.data ?? [])[0].postcode4}` : '—' },
+    { id: 'merk', n: 6, title: 'Omzet per automerk', value: (make.data ?? [])[0] ? `beste: ${(make.data ?? [])[0].merk}` : '—' },
+    { id: 'merkregio', n: 7, title: 'Merk × regio', value: 'top 20 op omzet' },
+    { id: 'commissie', n: 8, title: 'Commissie per monteur', value: 'afgesproken vs. echt' },
+    { id: 'capaciteit', n: 9, title: 'Leads buiten capaciteit', value: missed ? `${missed} gemist` : 'niets gemist' },
+  ];
+
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Rapportage</h1>
-        <span className={styles.count}>
-          vijf getallen die een beslissing veranderen
-        </span>
-      </div>
+      <PageHead
+        title="Rapportage"
+        sub="Negen rapporten die een beslissing veranderen. Tik een tegel om ernaartoe te springen."
+      />
 
-      {/*
-        * Job costing moved to /admin/winst, which groups the same rows with a
-        * date range and an Excel download. The view this block read
-        * (erp_report_finance_monthly) is dropped at the top of 0057: it was granted to
-        * anon, and its cost columns did not reconcile with its own margin.
-        */}
+      <nav className={r.tiles} aria-label="Rapporten">
+        {REPORTS.map((t) => (
+          <a key={t.id} href={`#${t.id}`} className={r.tile}>
+            <span className={r.tileNum}>{t.n}</span>
+            <span className={r.tileText}>
+              <b>{t.title}</b>
+              <small>{t.value}</small>
+            </span>
+          </a>
+        ))}
+      </nav>
 
-
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="bron">
         <h2>1 · Lead → klus, per bron</h2>
         <div className={styles.wrap}>
           <table className={styles.table}>
@@ -129,7 +150,7 @@ export default async function RapportagePage() {
               ) : (
                 sources.map(([name, s]) => (
                   <tr key={name}>
-                    <td className={styles.strong}>{name}</td>
+                    <td className={styles.strong}>{sourceLabel(name)}</td>
                     <td>{s.leads}</td>
                     <td>{s.klussen}</td>
                     <td>{s.verkocht}</td>
@@ -148,7 +169,7 @@ export default async function RapportagePage() {
             sources.map(([name, s]) => (
               <div key={name} className={styles.card}>
                 <div className={styles.cardHead}>
-                  <span className={`${styles.strong} ${styles.cardTitle}`}>{name}</span>
+                  <span className={`${styles.strong} ${styles.cardTitle}`}>{sourceLabel(name)}</span>
                 </div>
                 <div className={styles.cardRow}>
                   <span className={styles.cardLabel}>Leads / klussen / verkocht</span>
@@ -173,7 +194,7 @@ export default async function RapportagePage() {
         </p>
       </div>
 
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="dienst">
         <h2>2 · Gemiddelde kluswaarde, per dienst</h2>
         <div className={styles.wrap}>
           <table className={styles.table}>
@@ -237,7 +258,7 @@ export default async function RapportagePage() {
         <p className={styles.note}>Stuurt prijsstelling en advertentiebudget.</p>
       </div>
 
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="reactie">
         <h2>3 · Reactietijd — lead tot eerste contact</h2>
         {latestWeek ? (
           <div className={styles.summary}>
@@ -267,7 +288,7 @@ export default async function RapportagePage() {
         </p>
       </div>
 
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="monteur">
         <h2>4 · Klussen per monteur per dag</h2>
         <div className={styles.wrap}>
           <table className={styles.table}>
@@ -325,7 +346,7 @@ export default async function RapportagePage() {
         <p className={styles.note}>Capaciteit, en de vraag of er iemand bij moet.</p>
       </div>
 
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="regio">
         <h2>5 · Vraag per regio</h2>
         <div className={styles.wrap}>
           <table className={styles.table}>
@@ -381,7 +402,7 @@ export default async function RapportagePage() {
         </p>
       </div>
 
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="merk">
         <h2>6 · Omzet en annuleringen per automerk</h2>
         <div className={styles.wrap}>
           <table className={styles.table}>
@@ -444,7 +465,7 @@ export default async function RapportagePage() {
         </p>
       </div>
 
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="merkregio">
         <h2>7 · Welk merk verkoopt waar (top 20 op omzet)</h2>
         <div className={styles.wrap}>
           <table className={styles.table}>
@@ -505,7 +526,7 @@ export default async function RapportagePage() {
         </p>
       </div>
 
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="commissie">
         <h2>8 · Commissie per monteur — afgesproken vs. echt</h2>
         <div className={styles.wrap}>
           <table className={styles.table}>
@@ -567,7 +588,7 @@ export default async function RapportagePage() {
         </p>
       </div>
 
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${r.anchor}`} id="capaciteit">
         <h2>9 · Leads buiten capaciteit</h2>
         <div className={styles.wrap}>
           <table className={styles.table}>
@@ -593,7 +614,7 @@ export default async function RapportagePage() {
                   <tr key={i}>
                     <td className={styles.strong}>{row.brand as string}</td>
                     <td>{show(row.year)}</td>
-                    <td>{row.scenario as string}</td>
+                    <td>{isScenario(row.scenario as string) ? SCENARIO_INFO[row.scenario as Scenario].label : (row.scenario as string)}</td>
                     <td>{show(row.gemiste_leads)}</td>
                     <td>
                       {row.laatste
@@ -617,7 +638,7 @@ export default async function RapportagePage() {
               <div key={i} className={styles.card}>
                 <div className={styles.cardHead}>
                   <span className={`${styles.strong} ${styles.cardTitle}`}>
-                    {row.brand as string} {show(row.year)} · {row.scenario as string}
+                    {row.brand as string} {show(row.year)} · {isScenario(row.scenario as string) ? SCENARIO_INFO[row.scenario as Scenario].label : (row.scenario as string)}
                   </span>
                 </div>
                 <div className={styles.cardRow}>

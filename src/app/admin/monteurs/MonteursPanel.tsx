@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { waLink } from '@/lib/whatsapp';
 import { useRouter } from 'next/navigation';
 import styles from '../jobs/jobs.module.css';
+import m from './monteurs.module.css';
 import { TECHNICIAN_COLOURS, technicianColour } from '@/lib/crmColours';
 
 export interface Technician {
@@ -14,6 +15,9 @@ export interface Technician {
   werkgebied: string[] | null;
   color: string | null;
   user_id: string | null;
+  photo_url?: string | null;
+  online?: boolean | null;
+  employment_type?: string | null;
 }
 
 interface CrmUser {
@@ -245,9 +249,8 @@ export default function MonteursPanel({
   }
 
   return (
-    <div className={styles.planWrap}>
-      <div className={styles.panel}>
-        <h2>Team</h2>
+    <div className={m.layout}>
+      <div className={m.team}>
         {technicians.length === 0 ? (
           <p className={styles.note}>
             Nog geen monteurs. Zonder monteurs heeft de dagweergave geen kolommen
@@ -256,7 +259,7 @@ export default function MonteursPanel({
         ) : (
           technicians.map((t) =>
             editingId === t.id ? (
-              <div key={t.id} className={styles.suggestion} style={{ flexDirection: 'column', alignItems: 'stretch', gap: 8 }}>
+              <div key={t.id} className={`${m.card} ${m.editCard}`}>
                 <div className={styles.field}>
                   <label className={styles.fieldLabel}>Naam</label>
                   <input
@@ -284,21 +287,16 @@ export default function MonteursPanel({
                 </div>
                 <div className={styles.field}>
                   <span className={styles.fieldLabel}>Kleur</span>
-                  <div style={{ display: 'flex', gap: 6 }}>
+                  <div className={m.swatches}>
                     {COLOURS.map((c) => (
                       <button
                         key={c}
                         type="button"
                         aria-label={`Kleur ${c}`}
+                        aria-pressed={editColour === c}
                         onClick={() => setEditColour(c)}
-                        style={{
-                          width: 26,
-                          height: 26,
-                          borderRadius: 6,
-                          background: c,
-                          border: editColour === c ? '2px solid var(--crm-ink)' : '1px solid var(--crm-rule2)',
-                          cursor: 'pointer',
-                        }}
+                        className={editColour === c ? m.swatchOn : m.swatch}
+                        style={{ background: c }}
                       />
                     ))}
                   </div>
@@ -323,97 +321,99 @@ export default function MonteursPanel({
                 </div>
               </div>
             ) : (
-              <div key={t.id} className={styles.suggestion}>
-                <span
-                  className={styles.dot}
-                  style={{ background: technicianColour(t.color) }}
-                />
-                <span>
-                  <a className={styles.suggestionName} href={`/admin/monteurs/${t.id}`}>
-                    {t.name}
+              <div key={t.id} className={t.active ? m.card : `${m.card} ${m.cardOff}`}>
+                <div className={m.cardTop}>
+                  {t.photo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={t.photo_url} alt="" className={m.avatar} />
+                  ) : (
+                    <span className={m.avatarInitial} style={{ background: technicianColour(t.color) }}>
+                      {t.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <div className={m.name}>
+                    <a href={`/admin/monteurs/${t.id}`}>{t.name}</a>
+                    <span>{t.phone ?? 'geen telefoon'}</span>
+                  </div>
+                  <span className={m.colourDot} style={{ background: technicianColour(t.color) }} title="Kleur in de agenda" />
+                </div>
+
+                <div className={m.badges}>
+                  {!t.active && <span className={`${m.badge} ${m.badgeOff}`}>Non-actief</span>}
+                  {t.active && t.online && <span className={`${m.badge} ${m.badgeOn}`}>Op dienst</span>}
+                  {t.employment_type && <span className={m.badge}>{t.employment_type === 'zzp' ? 'ZZP' : 'Loondienst'}</span>}
+                  <span className={t.user_id ? m.badge : `${m.badge} ${m.badgeWarn}`}>{t.user_id ? 'Kan inloggen' : 'Geen login'}</span>
+                </div>
+
+                <div className={m.areas}>
+                  {t.werkgebied && t.werkgebied.length > 0 ? (
+                    t.werkgebied.slice(0, 6).map((w) => (
+                      <span key={w} className={m.area}>
+                        {w}
+                      </span>
+                    ))
+                  ) : (
+                    <span className={m.noArea}>Geen werkgebied: krijgt geen aanbod</span>
+                  )}
+                  {t.werkgebied && t.werkgebied.length > 6 && <span className={m.area}>+{t.werkgebied.length - 6}</span>}
+                </div>
+
+                <div className={m.actions}>
+                  <a className={m.btnPrimary} href={`/admin/monteurs/${t.id}`}>
+                    Open
                   </a>
-                  <span className={styles.suggestionWhy}>
-                    {t.phone ?? 'geen telefoon'} ·{' '}
-                    {t.werkgebied && t.werkgebied.length > 0
-                      ? t.werkgebied.join(', ')
-                      : 'geen werkgebied'}
-                  </span>
-                </span>
-                <span className={styles.suggestionActions}>
                   {/*
-                    Opens WhatsApp on the monteur's number. A link rather than an
-                    integration: the Business Platform wants a verified Meta
-                    business, a number that is not in the WhatsApp app, and a fee
-                    per conversation. This works today and costs nothing.
+                    WhatsApp on the monteur's number: a link, not an integration.
+                    The Business Platform wants a verified Meta business and a
+                    fee per conversation; this works today and costs nothing.
                   */}
                   {waLink(t.phone, 'Hoi ') && (
-                    <a
-                      className={styles.control}
-                      style={{ width: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                      href={waLink(t.phone, 'Hoi ')!}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={`WhatsApp ${t.name}`}
-                    >
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                      </svg>
+                    <a className={m.btn} href={waLink(t.phone, 'Hoi ')!} target="_blank" rel="noopener noreferrer">
                       App
                     </a>
                   )}
-                  <select
-                    className={styles.control}
-                    style={{ width: 'auto', minWidth: 150 }}
-                    value={t.user_id ?? ''}
-                    onChange={(e) => link(t.id, e.target.value)}
-                    aria-label={`Login koppelen aan ${t.name}`}
-                  >
-                    <option value="">Geen login</option>
-                    {users.map((u) => (
-                      <option key={u.id} value={u.id}>
-                        {u.email}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="button"
-                    className={styles.secondary}
-                    onClick={() => toggle(t)}
-                  >
-                    {t.active ? 'Non-actief' : 'Activeren'}
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.secondary}
-                    onClick={() => startEdit(t)}
-                  >
+                  <button type="button" className={m.btn} onClick={() => startEdit(t)}>
                     Bewerken
                   </button>
-                  {t.user_id && (
-                    <button
-                      type="button"
-                      className={styles.secondary}
-                      onClick={() => {
-                        setResetId(t.id);
-                        setResetPassword('');
-                        setResetError('');
-                        setResetDone(null);
-                      }}
-                    >
-                      Wachtwoord
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className={styles.secondary}
-                    disabled={deletingId === t.id}
-                    onClick={() => remove(t)}
-                  >
-                    {deletingId === t.id ? 'Verwijderen…' : 'Verwijderen'}
-                  </button>
-                </span>
+                  <details className={m.more}>
+                    <summary>Meer</summary>
+                    <div className={m.menu}>
+                      <label className={m.menuField}>
+                        <span>Login</span>
+                        <select value={t.user_id ?? ''} onChange={(e) => link(t.id, e.target.value)} aria-label={`Login koppelen aan ${t.name}`}>
+                          <option value="">Geen login</option>
+                          {users.map((u) => (
+                            <option key={u.id} value={u.id}>
+                              {u.email}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      {t.user_id && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setResetId(t.id);
+                            setResetPassword('');
+                            setResetError('');
+                            setResetDone(null);
+                          }}
+                        >
+                          Nieuw wachtwoord instellen
+                        </button>
+                      )}
+                      <button type="button" onClick={() => toggle(t)}>
+                        {t.active ? 'Op non-actief zetten' : 'Weer activeren'}
+                      </button>
+                      <button type="button" className={m.danger} disabled={deletingId === t.id} onClick={() => remove(t)}>
+                        {deletingId === t.id ? 'Verwijderen…' : 'Verwijderen'}
+                      </button>
+                    </div>
+                  </details>
+                </div>
+
                 {resetId === t.id && (
-                  <div className={styles.field} style={{ flexBasis: '100%', marginTop: 8 }}>
+                  <div className={m.inlineForm}>
                     <label className={styles.fieldLabel}>Nieuw wachtwoord voor {t.name}</label>
                     <input
                       type="text"
@@ -424,35 +424,20 @@ export default function MonteursPanel({
                       autoFocus
                     />
                     {resetError && <div className={styles.error}>{resetError}</div>}
-                    <div className={styles.actions} style={{ marginTop: 6 }}>
-                      <button
-                        type="button"
-                        className={styles.primary}
-                        disabled={resetSaving}
-                        onClick={() => setTechnicianPassword(t.id)}
-                      >
+                    <div className={styles.actions}>
+                      <button type="button" className={styles.primary} disabled={resetSaving} onClick={() => setTechnicianPassword(t.id)}>
                         {resetSaving ? 'Opslaan…' : 'Wachtwoord instellen'}
                       </button>
-                      <button
-                        type="button"
-                        className={styles.secondary}
-                        onClick={() => setResetId(null)}
-                      >
+                      <button type="button" className={styles.secondary} onClick={() => setResetId(null)}>
                         Annuleren
                       </button>
                     </div>
                   </div>
                 )}
                 {resetDone?.id === t.id && (
-                  <div className={styles.note} style={{ flexBasis: '100%', marginTop: 8, display: 'grid', gap: 6 }}>
-                    <strong>Nieuw wachtwoord — geef dit door aan {t.name}.</strong>
-                    <input
-                      className={styles.control}
-                      readOnly
-                      value={resetDone.password}
-                      onFocus={(event) => event.currentTarget.select()}
-                      style={{ width: '100%', fontFamily: 'ui-monospace, monospace', fontSize: 12 }}
-                    />
+                  <div className={m.secret}>
+                    <strong>Nieuw wachtwoord: geef dit door aan {t.name}.</strong>
+                    <input readOnly value={resetDone.password} onFocus={(event) => event.currentTarget.select()} />
                   </div>
                 )}
               </div>
@@ -461,7 +446,7 @@ export default function MonteursPanel({
         )}
       </div>
 
-      <form className={styles.panel} onSubmit={add}>
+      <form className={`${styles.panel} ${m.invite}`} onSubmit={add}>
         <h2>Monteur uitnodigen</h2>
 
         <div className={styles.field}>
@@ -475,7 +460,7 @@ export default function MonteursPanel({
           />
         </div>
 
-        <div className={styles.field} style={{ marginTop: 10 }}>
+        <div className={`${styles.field} ${m.mt}`}>
           <label className={styles.fieldLabel} htmlFor="em">E-mailadres</label>
           <input
             id="em"
@@ -487,7 +472,7 @@ export default function MonteursPanel({
           />
         </div>
 
-        <div className={styles.field} style={{ marginTop: 10 }}>
+        <div className={`${styles.field} ${m.mt}`}>
           <label className={styles.fieldLabel} htmlFor="pw">
             Wachtwoord (optioneel — leeg voor een link per e-mail/WhatsApp)
           </label>
@@ -499,30 +484,24 @@ export default function MonteursPanel({
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <span style={{ fontSize: 12, color: 'var(--crm-muted)' }}>
+          <span className={m.hint}>
             Ingevuld? Dan wordt de link overgeslagen en kan de monteur direct
             inloggen met dit wachtwoord — handig als de link-e-mail niet aankomt.
           </span>
         </div>
 
-        <div className={styles.field} style={{ marginTop: 10 }}>
+        <div className={`${styles.field} ${m.mt}`}>
           <span className={styles.fieldLabel}>Kleur in de agenda</span>
-          <div style={{ display: 'flex', gap: 6 }}>
+          <div className={m.swatches}>
             {COLOURS.map((c) => (
               <button
                 key={c}
                 type="button"
                 aria-label={`Kleur ${c}`}
+                aria-pressed={colour === c}
                 onClick={() => setColour(c)}
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 6,
-                  background: c,
-                  border:
-                    colour === c ? '2px solid var(--crm-ink)' : '1px solid var(--crm-rule2)',
-                  cursor: 'pointer',
-                }}
+                className={colour === c ? m.swatchOn : m.swatch}
+                style={{ background: c }}
               />
             ))}
           </div>
@@ -536,43 +515,39 @@ export default function MonteursPanel({
         </div>
 
         {passwordConfirmed && (
-          <div className={styles.note} style={{ display: 'grid', gap: 8 }}>
+          <div className={m.secret}>
             <strong>Account aangemaakt — geef dit wachtwoord door aan de monteur.</strong>
             <input
               className={styles.control}
               readOnly
               value={passwordConfirmed}
               onFocus={(event) => event.currentTarget.select()}
-              style={{ width: '100%', fontFamily: 'ui-monospace, monospace', fontSize: 12 }}
             />
-            <span style={{ fontSize: 12, color: 'var(--crm-muted)' }}>
+            <span className={m.hint}>
               Ook dit wordt nergens bewaard — na deze melding is het weg.
             </span>
           </div>
         )}
 
         {inviteLink && (
-          <div className={styles.note} style={{ display: 'grid', gap: 8 }}>
+          <div className={m.secret}>
             <strong>Uitnodiging klaar — stuur deze link naar de monteur.</strong>
             <input
               className={styles.control}
               readOnly
               value={inviteLink}
               onFocus={(event) => event.currentTarget.select()}
-              style={{ width: '100%', fontFamily: 'ui-monospace, monospace', fontSize: 12 }}
             />
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <div className={m.rowWrap}>
               <button
                 type="button"
-                className={styles.control}
-                style={{ width: 'auto', cursor: 'pointer' }}
+                className={m.btn}
                 onClick={() => navigator.clipboard?.writeText(inviteLink)}
               >
                 Link kopiëren
               </button>
               <a
-                className={styles.control}
-                style={{ width: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+                className={m.btn}
                 href={`https://wa.me/?text=${encodeURIComponent(
                   `Welkom bij Autosleutel24. Stel hier je wachtwoord in en vul je gegevens aan: ${inviteLink}`
                 )}`}
@@ -582,7 +557,7 @@ export default function MonteursPanel({
                 Via WhatsApp sturen
               </a>
             </div>
-            <span style={{ fontSize: 12, color: 'var(--crm-muted)' }}>
+            <span className={m.hint}>
               De link is eenmalig en wordt nergens bewaard. Kwijt? Nodig opnieuw uit.
             </span>
           </div>
@@ -596,7 +571,7 @@ export default function MonteursPanel({
       </form>
 
       {users.length > 0 && (
-        <div className={styles.panel}>
+        <div className={`${styles.panel} ${m.logins}`}>
           <h2>Logins</h2>
           <p className={styles.note}>
             Elke monteur-login, gekoppeld of niet. Een e-mailadres kan pas opnieuw

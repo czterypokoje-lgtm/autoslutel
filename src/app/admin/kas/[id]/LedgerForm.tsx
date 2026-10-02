@@ -67,7 +67,7 @@ export default function LedgerForm({ technicianId }: { technicianId: string }) {
       </div>
 
       {entryType === 'correctie' && (
-        <div className={jobStyles.field} style={{ marginTop: 10 }}>
+        <div className={jobStyles.field}>
           <label className={jobStyles.fieldLabel} htmlFor="dir">Richting</label>
           <select
             id="dir"
@@ -81,7 +81,7 @@ export default function LedgerForm({ technicianId }: { technicianId: string }) {
         </div>
       )}
 
-      <div className={jobStyles.field} style={{ marginTop: 10 }}>
+      <div className={jobStyles.field}>
         <label className={jobStyles.fieldLabel} htmlFor="bedrag">Bedrag (€)</label>
         <input
           id="bedrag"
@@ -93,7 +93,7 @@ export default function LedgerForm({ technicianId }: { technicianId: string }) {
         />
       </div>
 
-      <div className={jobStyles.field} style={{ marginTop: 10 }}>
+      <div className={jobStyles.field}>
         <label className={jobStyles.fieldLabel} htmlFor="reden">
           Reden {entryType === 'correctie' && '(verplicht)'}
         </label>

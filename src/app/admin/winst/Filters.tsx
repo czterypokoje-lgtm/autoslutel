@@ -4,6 +4,23 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Download, RefreshCw } from 'lucide-react';
 import { ui } from '../_ui';
+import w from './winst.module.css';
+
+const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+/** One-tap periods; the date fields stay for anything else. */
+function presets(): { label: string; from: string; to: string }[] {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  const q = Math.floor(m / 3) * 3;
+  return [
+    { label: 'Deze maand', from: iso(new Date(y, m, 1)), to: iso(now) },
+    { label: 'Vorige maand', from: iso(new Date(y, m - 1, 1)), to: iso(new Date(y, m, 0)) },
+    { label: 'Dit kwartaal', from: iso(new Date(y, q, 1)), to: iso(now) },
+    { label: 'Dit jaar', from: iso(new Date(y, 0, 1)), to: iso(now) },
+  ];
+}
 
 /**
  * The period, the download and the repair button.
@@ -46,16 +63,25 @@ export default function Filters({ from, to }: { from: string; to: string }) {
   }
 
   return (
-    <form
-      onSubmit={apply}
-      style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: '1.5rem' }}
-    >
+    <form onSubmit={apply} className={w.bar}>
+      <div className={w.presets} role="group" aria-label="Periode">
+        {presets().map((p) => (
+          <button
+            key={p.label}
+            type="button"
+            className={p.from === from && p.to === to ? w.presetOn : w.preset}
+            onClick={() => router.push(`/admin/winst?van=${p.from}&tot=${p.to}`)}
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
       <label>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>Van</div>
+        <div className={w.label}>Van</div>
         <input type="date" value={van} onChange={(e) => setVan(e.target.value)} className={ui.input} />
       </label>
       <label>
-        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>Tot</div>
+        <div className={w.label}>Tot</div>
         <input type="date" value={tot} onChange={(e) => setTot(e.target.value)} className={ui.input} />
       </label>
 
@@ -71,7 +97,7 @@ export default function Filters({ from, to }: { from: string; to: string }) {
         <RefreshCw size={16} /> {busy ? 'Bezig…' : 'Brandstof aanvullen'}
       </button>
 
-      {note && <span style={{ fontSize: 13, color: 'var(--crm-text)' }}>{note}</span>}
+      {note && <span className={w.note}>{note}</span>}
     </form>
   );
 }

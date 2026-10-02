@@ -4,6 +4,7 @@ import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Empty, Notice }
 import { Boxes, Euro, TriangleAlert, CircleHelp } from 'lucide-react';
 import { stockStatus } from '@/lib/stockStatus';
 import StockForm from './StockForm';
+import v from './voorraad.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,14 +86,21 @@ export default async function VoorraadPage() {
    * where a van gets restocked from, so it is the row an office user is
    * usually looking for.
    */
-  const holders: { id: string | null; name: string; rows: StockRow[] }[] = [
+  const SEVERITY = { out: 0, low: 1, ok: 2 } as const;
+  const byUrgency = (a: StockRow, b: StockRow) =>
+    SEVERITY[stockStatus(a)] - SEVERITY[stockStatus(b)] || a.description.localeCompare(b.description, 'nl');
+  const allHolders: { id: string | null; name: string; rows: StockRow[] }[] = [
     { id: null, name: 'Magazijn', rows: stock.filter((row) => row.technician_id === null) },
     ...technicians.map((tech) => ({
       id: tech.id,
       name: `Bus — ${tech.name}`,
       rows: stock.filter((row) => row.technician_id === tech.id),
     })),
-  ];
+  ].map((h) => ({ ...h, rows: [...h.rows].sort(byUrgency) }));
+  /* The warehouse always shows; a van with nothing registered is one line, not an empty card. */
+  const holders = allHolders.filter((h) => h.id === null || h.rows.length > 0);
+  const emptyVans = allHolders.filter((h) => h.id !== null && h.rows.length === 0).map((h) => h.name.replace('Bus — ', ''));
+  const WHEN = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' });
 
   return (
     <>
@@ -134,7 +142,10 @@ export default async function VoorraadPage() {
         </Notice>
       )}
 
-      <StockForm technicians={technicians} />
+      <details className={v.addFold}>
+        <summary className={v.addSummary}>+ Artikel toevoegen of bijboeken</summary>
+        <StockForm technicians={technicians} />
+      </details>
 
       {holders.map((holder) => (
         <Card key={holder.id ?? 'magazijn'}>
@@ -149,13 +160,13 @@ export default async function VoorraadPage() {
           ) : (
             <Table
               head={
-                <tr>
+                <>
                   <th>Omschrijving</th>
                   <th>Aantal</th>
                   <th>Minimum</th>
                   <th>Kostprijs</th>
                   <th>Waarde</th>
-                </tr>
+                </>
               }
             >
               {holder.rows.map((row) => {
@@ -187,6 +198,10 @@ export default async function VoorraadPage() {
         </Card>
       ))}
 
+      {emptyVans.length > 0 && (
+        <p className={v.emptyVans}>Nog niets geregistreerd in de bus van: {emptyVans.join(', ')}.</p>
+      )}
+
       <Card>
         <CardHead>Laatste mutaties</CardHead>
         {!moves.length ? (
@@ -194,20 +209,20 @@ export default async function VoorraadPage() {
         ) : (
           <Table
             head={
-              <tr>
+              <>
                 <th>Wanneer</th>
                 <th>Artikel</th>
                 <th>Verandering</th>
                 <th>Daarna</th>
                 <th>Reden</th>
-              </tr>
+              </>
             }
           >
             {moves.map((move) => (
               <tr key={move.id}>
-                <td>{String(move.changed_at).slice(0, 16).replace('T', ' ')}</td>
+                <td>{WHEN.format(new Date(move.changed_at as string))}</td>
                 <td>{move.description}</td>
-                <td style={{ color: Number(move.delta) < 0 ? 'var(--crm-stop)' : 'var(--crm-ok)' }}>
+                <td className={Number(move.delta) < 0 ? v.minus : v.plus}>
                   {Number(move.delta) > 0 ? '+' : ''}
                   {move.delta}
                 </td>

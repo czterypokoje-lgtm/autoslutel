@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
+import { PageHead, HelpSteps } from '../_ui';
+import k from './kas.module.css';
 import PayoutActions from './PayoutActions';
 
 export const dynamic = 'force-dynamic';
@@ -45,117 +47,101 @@ export default async function KasPage() {
     .filter((r) => Number(r.saldo) < 0)
     .reduce((sum, r) => sum - Number(r.saldo), 0);
 
+  const pending = pendingPayouts ?? [];
+  const pendingSum = pending.reduce((t, p) => t + Number(p.amount), 0);
+
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Kas &amp; saldi</h1>
-        <span className={styles.count}>
-          Openstaand bij monteurs {MONEY.format(owedToUs)} · nog uit te betalen{' '}
-          {MONEY.format(owedByUs)}
-        </span>
+      <PageHead
+        title="Kas & uitbetalingen"
+        sub="Wie heeft nog geld van klanten, en wie moet er nog betaald worden. Klik een monteur voor het logboek."
+      />
+
+      <div className={k.stats}>
+        <div className={owedToUs > 0 ? k.statWarn : undefined}>
+          <span>Nog bij monteurs</span>
+          <b>{MONEY.format(owedToUs)}</b>
+          <small>contant of pin geïnd, nog niet afgedragen</small>
+        </div>
+        <div>
+          <span>Nog uit te betalen</span>
+          <b>{MONEY.format(owedByUs)}</b>
+          <small>verdiend door monteurs</small>
+        </div>
+        <div className={pending.length ? k.statAccent : undefined}>
+          <span>Uitbetalingsverzoeken</span>
+          <b>{pending.length}</b>
+          <small>{pending.length ? `${MONEY.format(pendingSum)} aangevraagd` : 'geen open verzoeken'}</small>
+        </div>
       </div>
 
-      {(pendingPayouts ?? []).length > 0 && (
-        <div className={styles.panel} style={{ marginBottom: 16 }}>
+      {pending.length > 0 && (
+        <section className={k.requests}>
           <h2>Uitbetalingsverzoeken</h2>
-          {(pendingPayouts ?? []).map((payout) => (
-            <div
-              key={payout.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 12,
-                padding: '10px 0',
-                borderBottom: '1px solid var(--crm-rule)',
-              }}
-            >
-              <div>
-                <strong>{nameOf.get(payout.technician_id) ?? 'Onbekend'}</strong>
-                <span className={styles.sub} style={{ marginLeft: 8 }}>
-                  {MONEY.format(Number(payout.amount))}
+          <ul>
+            {pending.map((payout) => (
+              <li key={payout.id}>
+                <span className={k.reqWho}>
+                  <b>{nameOf.get(payout.technician_id) ?? 'Onbekend'}</b>
+                  <small>aangevraagd {new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', timeZone: 'Europe/Amsterdam' }).format(new Date(payout.created_at))}</small>
                 </span>
-              </div>
-              <PayoutActions id={payout.id} />
-            </div>
-          ))}
-        </div>
+                <span className={k.reqAmount}>{MONEY.format(Number(payout.amount))}</span>
+                <PayoutActions id={payout.id} />
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
-      <div className={styles.wrap}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Monteur</th>
-              <th>Soort</th>
-              <th style={{ textAlign: 'right' }}>Geïnd</th>
-              <th style={{ textAlign: 'right' }}>Afgedragen</th>
-              <th style={{ textAlign: 'right' }}>Verdiend</th>
-              <th style={{ textAlign: 'right' }}>Uitbetaald</th>
-              <th style={{ textAlign: 'right' }}>Saldo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.length === 0 ? (
-              <tr>
-                <td colSpan={7} className={styles.empty}>Nog geen monteurs.</td>
-              </tr>
-            ) : (
-              rows.map((r) => {
-                const saldo = Number(r.saldo ?? 0);
-                return (
-                  <tr key={r.technician_id as string}>
-                    <td>
-                      <Link
-                        className={`${styles.strong} ${styles.link}`}
-                        href={`/admin/kas/${r.technician_id as string}`}
-                      >
-                        {r.name as string}
-                      </Link>
-                      <span className={styles.sub}>{(r.iban as string) ?? 'geen IBAN'}</span>
-                    </td>
-                    <td>
-                      <span
-                        className={`${styles.badge} ${
-                          r.employment_type === 'zzp' ? styles.ok : styles.no
-                        }`}
-                      >
-                        {r.employment_type as string}
-                      </span>
-                    </td>
-                    <td className={styles.money}>{MONEY.format(Number(r.totaal_geind ?? 0))}</td>
-                    <td className={styles.money}>{MONEY.format(Number(r.totaal_afgedragen ?? 0))}</td>
-                    <td className={styles.money}>{MONEY.format(Number(r.totaal_verdiend ?? 0))}</td>
-                    <td className={styles.money}>{MONEY.format(Number(r.totaal_uitbetaald ?? 0))}</td>
-                    <td
-                      className={styles.money}
-                      style={{ color: saldo > 0 ? 'var(--crm-stop)' : saldo < 0 ? 'var(--crm-ok)' : undefined }}
-                    >
-                      {MONEY.format(saldo)}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+      <section className={k.table}>
+        <div className={`${k.row} ${k.head}`}>
+          <span>Monteur</span>
+          <span className={k.num}>Geïnd</span>
+          <span className={k.num}>Afgedragen</span>
+          <span className={k.num}>Verdiend</span>
+          <span className={k.num}>Uitbetaald</span>
+          <span className={k.num}>Saldo</span>
+        </div>
+        {rows.length === 0 && <p className={k.empty}>Nog geen monteurs.</p>}
+        {rows.map((r) => {
+          const saldo = Number(r.saldo ?? 0);
+          return (
+            <Link key={r.technician_id as string} href={`/admin/kas/${r.technician_id as string}`} className={k.row}>
+              <span className={k.who}>
+                <b>{r.name as string}</b>
+                <small>
+                  {r.employment_type === 'zzp' ? 'ZZP' : 'Loondienst'} · {(r.iban as string) ?? 'geen IBAN'}
+                </small>
+              </span>
+              <span className={k.num}>{MONEY.format(Number(r.totaal_geind ?? 0))}</span>
+              <span className={k.num}>{MONEY.format(Number(r.totaal_afgedragen ?? 0))}</span>
+              <span className={k.num}>{MONEY.format(Number(r.totaal_verdiend ?? 0))}</span>
+              <span className={k.num}>{MONEY.format(Number(r.totaal_uitbetaald ?? 0))}</span>
+              <span className={`${k.num} ${k.saldo}`}>
+                {saldo > 0 ? (
+                  <span className={k.owes}>moet {MONEY.format(saldo)} afdragen</span>
+                ) : saldo < 0 ? (
+                  <span className={k.gets}>krijgt {MONEY.format(-saldo)}</span>
+                ) : (
+                  <span className={k.even}>niets open</span>
+                )}
+              </span>
+            </Link>
+          );
+        })}
+      </section>
 
-      <div className={styles.panel} style={{ marginTop: 16 }}>
-        <h2>Hoe je dit leest</h2>
-        <p className={styles.note}>
-          <strong>Saldo boven nul</strong> betekent dat de monteur geld van de
-          klant heeft geïnd dat nog niet is afgedragen — dat bedrag staat bij
-          hem in de bus, niet op de rekening.{' '}
-          <strong>Saldo onder nul</strong> betekent dat het bedrijf hem nog moet
-          betalen. Nul is niets open.
-        </p>
-        <p className={styles.note}>
-          Contant en pin aan de deur belanden bij de monteur en komen dus op zijn
-          saldo. Tikkie, iDEAL, bank en factuur gaan rechtstreeks naar het
-          bedrijf en raken zijn saldo niet.
-        </p>
-      </div>
+      <HelpSteps
+        steps={[
+          <>
+            <b>Moet afdragen</b>: de monteur heeft contant of pin van klanten geïnd dat nog bij hem is.
+          </>,
+          <>
+            <b>Krijgt</b>: het bedrijf moet de monteur nog betalen voor zijn klussen.
+          </>,
+          'Tikkie, iDEAL, bank en factuur gaan rechtstreeks naar het bedrijf en raken het saldo niet.',
+        ]}
+      />
     </>
   );
 }

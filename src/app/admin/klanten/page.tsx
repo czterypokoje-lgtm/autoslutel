@@ -1,17 +1,15 @@
 import Link from 'next/link';
+import { MessageCircle, Phone, Search } from 'lucide-react';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import styles from './klanten.module.css';
+import { waLink } from '@/lib/whatsapp';
+import { PageHead, Notice } from '../_ui';
+import k from './klanten-v2.module.css';
 
 export const dynamic = 'force-dynamic';
 
-const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
-const DATE = new Intl.DateTimeFormat('nl-NL', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  timeZone: 'Europe/Amsterdam',
-});
+const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const DATE = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/Amsterdam' });
 
 interface CustomerRow {
   phone_e164: string;
@@ -26,34 +24,34 @@ interface CustomerRow {
   postcode: string | null;
 }
 
-export default async function KlantenPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) {
+const initials = (name: string | null) =>
+  (name ?? '?')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]!.toUpperCase())
+    .join('') || '?';
+
+/**
+ * Every customer once, keyed on the phone number (crm_customers): who they
+ * are, how often they asked, what they bought, and a call or WhatsApp away.
+ */
+export default async function KlantenPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   await requireOfficeUser('/admin/klanten');
 
   const { q } = await searchParams;
   const search = (q ?? '').replace(/[,()%*\\]/g, ' ').trim().slice(0, 60);
-
   const supabase = await createSupabaseServerClient();
 
   let query = supabase
     .from('crm_customers')
-    .select(
-      'phone_e164, name, email, first_seen, last_seen, lead_count, sold_count, total_value, consent_marketing, postcode'
-    )
+    .select('phone_e164, name, email, first_seen, last_seen, lead_count, sold_count, total_value, consent_marketing, postcode')
     .order('last_seen', { ascending: false })
     .limit(200);
 
   if (search) {
     query = query.or(
-      [
-        `name.ilike.%${search}%`,
-        `email.ilike.%${search}%`,
-        `phone_e164.ilike.%${search}%`,
-        `postcode.ilike.%${search}%`,
-      ].join(',')
+      [`name.ilike.%${search}%`, `email.ilike.%${search}%`, `phone_e164.ilike.%${search}%`, `postcode.ilike.%${search}%`].join(',')
     );
   }
 
@@ -62,139 +60,85 @@ export default async function KlantenPage({
   if (error) {
     const missing = /does not exist|relation|permission denied/i.test(error.message);
     return (
-      <div className={styles.warning}>
-        Klanten konden niet worden geladen: {error.message}
-        {missing && (
-          <>
-            <br />
-            Voer <code>supabase/migrations/0006_customers_reports.sql</code> uit.
-          </>
-        )}
-      </div>
+      <>
+        <PageHead title="Klanten" />
+        <Notice tone="bad">
+          Klanten konden niet worden geladen: {error.message}
+          {missing && ' — voer supabase/migrations/0006_customers_reports.sql uit.'}
+        </Notice>
+      </>
     );
   }
 
   const rows = (data ?? []) as unknown as CustomerRow[];
+  const buyers = rows.filter((c) => c.sold_count > 0).length;
+  const turnover = rows.reduce((t, c) => t + Number(c.total_value ?? 0), 0);
+  const consent = rows.filter((c) => c.consent_marketing).length;
 
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Klanten</h1>
-        <span className={styles.count}>
-          {rows.length} {rows.length === 1 ? 'klant' : 'klanten'}
-          {search && ' gevonden'}
-        </span>
-        <form className={styles.search} method="get" action="/admin/klanten">
-          <input
-            className={styles.control}
-            type="search"
-            name="q"
-            defaultValue={search}
-            placeholder="naam, telefoon, postcode"
-          />
-          <button className={styles.apply} type="submit">
-            Zoek
-          </button>
-        </form>
+      <PageHead
+        title="Klanten"
+        sub="Iedere klant één keer, herkend aan het telefoonnummer. Klik een naam voor alle aanvragen, klussen en auto's."
+      />
+
+      <form className={k.search} method="get" action="/admin/klanten" role="search">
+        <Search size={18} aria-hidden="true" />
+        <input type="search" name="q" defaultValue={search} placeholder="Zoek op naam, telefoon, e-mail of postcode" aria-label="Zoek klant" />
+        <button type="submit">Zoeken</button>
+        {search && (
+          <Link href="/admin/klanten" className={k.clear}>
+            Wis
+          </Link>
+        )}
+      </form>
+
+      <div className={k.stats}>
+        <div><span>{search ? 'Gevonden' : 'Klanten'}</span><b>{rows.length}</b></div>
+        <div><span>Kochten iets</span><b>{buyers}</b></div>
+        <div><span>Omzet</span><b>{MONEY.format(turnover)}</b></div>
+        <div><span>Mag gemaild worden</span><b>{consent}</b></div>
       </div>
 
       {rows.length === 0 ? (
-        <>
-          <div className={styles.wrap}>
-            <p className={styles.empty}>
-              {search ? 'Geen klant gevonden.' : 'Nog geen klanten met een telefoonnummer.'}
-            </p>
-          </div>
-          <div className={styles.cards}>
-            <p className={styles.empty}>
-              {search ? 'Geen klant gevonden.' : 'Nog geen klanten met een telefoonnummer.'}
-            </p>
-          </div>
-        </>
+        <p className={k.empty}>{search ? 'Geen klant gevonden met deze zoekterm.' : 'Nog geen klanten met een telefoonnummer.'}</p>
       ) : (
-        <>
-          <div className={styles.wrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Klant</th>
-                  <th>Plaats</th>
-                  <th>Aanvragen</th>
-                  <th>Verkocht</th>
-                  <th style={{ textAlign: 'right' }}>Omzet</th>
-                  <th>Laatste</th>
-                  <th>Marketing</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((c) => (
-                  <tr key={c.phone_e164}>
-                    <td>
-                      <Link
-                        className={`${styles.strong} ${styles.link}`}
-                        href={`/admin/klanten/${encodeURIComponent(c.phone_e164)}`}
-                      >
-                        {c.name ?? 'geen naam'}
-                      </Link>
-                      <span className={styles.sub}>{c.phone_e164}</span>
-                    </td>
-                    <td>{c.postcode ?? '—'}</td>
-                    <td>{c.lead_count}</td>
-                    <td>{c.sold_count}</td>
-                    <td className={styles.money}>
-                      {MONEY.format(Number(c.total_value ?? 0))}
-                    </td>
-                    <td>{DATE.format(new Date(c.last_seen))}</td>
-                    <td>
-                      <span
-                        className={`${styles.badge} ${
-                          c.consent_marketing ? styles.ok : styles.no
-                        }`}
-                      >
-                        {c.consent_marketing ? 'ja' : 'nee'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className={styles.cards}>
-            {rows.map((c) => (
-              <div key={c.phone_e164} className={styles.card}>
-                <div className={styles.cardHead}>
-                  <Link
-                    className={`${styles.strong} ${styles.link} ${styles.cardTitle}`}
-                    href={`/admin/klanten/${encodeURIComponent(c.phone_e164)}`}
-                  >
-                    {c.name ?? 'geen naam'}
-                    <span className={styles.sub}>{c.phone_e164}</span>
-                  </Link>
-                  <span className={`${styles.badge} ${c.consent_marketing ? styles.ok : styles.no}`}>
-                    {c.consent_marketing ? 'marketing ja' : 'marketing nee'}
+        <ul className={k.list}>
+          {rows.map((c) => {
+            const href = `/admin/klanten/${encodeURIComponent(c.phone_e164)}`;
+            const wa = waLink(c.phone_e164, `Goedendag${c.name ? ` ${c.name.split(' ')[0]}` : ''}, hier Autosleutel24. `);
+            return (
+              <li key={c.phone_e164} className={k.row}>
+                <Link href={href} className={k.who}>
+                  <span className={k.avatar}>{initials(c.name)}</span>
+                  <span className={k.whoText}>
+                    <b>{c.name ?? 'Naam onbekend'}</b>
+                    <small>
+                      {c.phone_e164}
+                      {c.postcode && ` · ${c.postcode}`}
+                    </small>
                   </span>
-                </div>
-                <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Plaats</span>
-                  <span className={styles.cardValue}>{c.postcode ?? '—'}</span>
-                </div>
-                <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Aanvragen / verkocht</span>
-                  <span className={styles.cardValue}>{c.lead_count} / {c.sold_count}</span>
-                </div>
-                <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Omzet</span>
-                  <span className={styles.cardValue}>{MONEY.format(Number(c.total_value ?? 0))}</span>
-                </div>
-                <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Laatste contact</span>
-                  <span className={styles.cardValue}>{DATE.format(new Date(c.last_seen))}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
+                </Link>
+                <span className={k.counts}>
+                  <span className={k.chip}>{c.lead_count} aanvra{c.lead_count === 1 ? 'ag' : 'gen'}</span>
+                  {c.sold_count > 0 && <span className={`${k.chip} ${k.chipOk}`}>{c.sold_count} verkocht</span>}
+                </span>
+                <span className={k.money}>{MONEY.format(Number(c.total_value ?? 0))}</span>
+                <span className={k.last}>{DATE.format(new Date(c.last_seen))}</span>
+                <span className={k.actions}>
+                  <a href={`tel:${c.phone_e164}`} className={k.iconBtn} aria-label={`Bel ${c.name ?? c.phone_e164}`}>
+                    <Phone size={16} />
+                  </a>
+                  {wa && (
+                    <a href={wa} target="_blank" rel="noopener noreferrer" className={k.iconBtn} aria-label={`WhatsApp ${c.name ?? c.phone_e164}`}>
+                      <MessageCircle size={16} />
+                    </a>
+                  )}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </>
   );
