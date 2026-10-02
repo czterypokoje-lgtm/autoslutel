@@ -4,6 +4,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate } from '@/lib/crmJobs';
 import styles from './vandaag.module.css';
 import VanScreen, { type VanJob } from './VanScreen';
+import { getBrandLogo } from '@/lib/brandLogos';
 
 export const dynamic = 'force-dynamic';
 
@@ -109,7 +110,7 @@ export default async function VandaagPage({
 
   return (
     <VanScreen
-      jobs={(data ?? []) as unknown as VanJob[]}
+      jobs={((data ?? []) as unknown as VanJob[]).map((j) => ({ ...j, logo: getBrandLogo(j.car_make) }))}
       technicianName={me?.name ?? null}
       today={today}
       vanStock={vanStock || []}

@@ -14,18 +14,17 @@
 
 .head {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin: 0 0 22px;
+  flex-direction: column;
+  gap: 2px;
+  margin: 4px 0 16px;
 }
 
 .title {
   margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--crm-ink);
-  letter-spacing: -0.025em;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--crm-nav);
+  letter-spacing: -0.015em;
 }
 
 .sub {
@@ -51,24 +50,23 @@
 .card {
   background: var(--crm-panel);
   border: 1px solid var(--crm-rule);
+  border-top: 4px solid var(--accent, var(--crm-rule));
   border-radius: var(--crm-r-lg);
   margin-bottom: 14px;
   overflow: hidden;
-  
 }
 
 .cardHead {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--crm-rule);
+  padding: 12px 14px 8px;
   flex-wrap: wrap;
 }
 
 .slot {
   font-size: 19px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--crm-ink);
   font-variant-numeric: tabular-nums;
 }
@@ -126,10 +124,10 @@
 .car {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 18px;
-  font-weight: 800;
-  color: var(--crm-accent-hover);
+  font-weight: 600;
+  color: var(--crm-ink);
   line-height: 1.35;
   margin-bottom: 6px;
   letter-spacing: -0.01em;
@@ -151,8 +149,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--crm-ink);
   line-height: 1.35;
 }
@@ -172,11 +170,11 @@
 }
 
 .car .rowIcon {
-  color: var(--crm-accent-hover);
+  color: var(--crm-muted);
 }
 
 .address .rowIcon {
-  color: var(--crm-ink);
+  color: var(--crm-accent);
 }
 
 .plate {
@@ -391,3 +389,77 @@
   outline: none;
   box-shadow: 0 0 0 3px var(--crm-accent-soft);
 }
+
+
+/* ── day progress: "1 van 3 klaar" ── */
+.dayProgress {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+.dayProgressText { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 14px; color: var(--crm-muted); }
+.dayProgressText b { font-size: 16px; color: var(--crm-ink); font-weight: 600; }
+.dayBar { margin-top: 8px; height: 8px; border-radius: 4px; background: var(--crm-sunk); overflow: hidden; }
+.dayBar span { display: block; height: 100%; border-radius: 4px; background: var(--crm-ok); }
+
+/* ── card head extras ── */
+.price { margin-left: auto; font-size: 17px; font-weight: 600; color: var(--crm-ink); }
+.fold {
+  border: 0;
+  background: var(--crm-sunk);
+  color: var(--crm-muted);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.logo { width: 26px; height: 26px; object-fit: contain; flex: none; }
+
+/* ── status steps: Gepland → Onderweg → Bezig → Klaar ── */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 2px 14px 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  border-bottom: 1px solid var(--crm-rule);
+}
+.steps li {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--crm-muted);
+}
+.stepDot { display: block; height: 5px; border-radius: 3px; background: var(--crm-sunk); }
+.stepDone .stepDot { background: var(--crm-ok); }
+.stepDone { color: var(--crm-ok) !important; }
+.stepNow .stepDot { background: var(--accent, var(--crm-accent)); }
+.stepNow { color: var(--crm-ink) !important; }
+.cancelled { padding: 2px 14px 12px; font-weight: 600; color: var(--crm-muted); border-bottom: 1px solid var(--crm-rule); }
+
+/* ── a finished job, folded to one line ── */
+.cardDone {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-left: 4px solid var(--crm-ok);
+  border-radius: var(--crm-r);
+  cursor: pointer;
+}
+.cardDone .slot { font-size: 15px; color: var(--crm-muted); }
+.doneCar { flex: 1; min-width: 0; font-weight: 600; color: var(--crm-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.doneTick { font-size: 12.5px; font-weight: 600; color: var(--crm-ok); }

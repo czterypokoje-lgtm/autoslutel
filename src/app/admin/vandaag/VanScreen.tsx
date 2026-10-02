@@ -11,7 +11,16 @@ import styles from './vandaag.module.css';
 import { JOB_STATUS_LABELS, slotLabel, type JobStatus } from '@/lib/crmJobs';
 import { waLink, onTheWayMessage } from '@/lib/whatsapp';
 import { toWebp } from '@/lib/toWebp';
-import { Car, MapPin, User, Wrench } from 'lucide-react';
+import { Car, ChevronDown, ChevronRight, MapPin, User, Wrench } from 'lucide-react';
+
+const STEPS: { key: string; label: string }[] = [
+  { key: 'gepland', label: 'Gepland' },
+  { key: 'onderweg', label: 'Onderweg' },
+  { key: 'bezig', label: 'Bezig' },
+  { key: 'afgerond', label: 'Klaar' },
+];
+
+const EURO = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
 /** The colour a monteur reads a job's status from before they've read a word of it. */
 const STATUS_ACCENT: Record<string, string> = {
@@ -43,6 +52,8 @@ export interface VanJob {
   car_model: string | null;
   car_year: number | null;
   keyless: boolean | null;
+  /** Brand logo URL, worked out on the server. */
+  logo?: string | null;
 }
 
 const STATUS_CLASS: Record<string, string> = {
@@ -211,6 +222,9 @@ export default function VanScreen({
   }).format(new Date(`${today}T12:00:00Z`));
 
   const open = rows.filter((j) => j.status !== 'afgerond' && j.status !== 'geannuleerd');
+  const live = rows.filter((j) => j.status !== 'geannuleerd');
+  const doneCount = live.filter((j) => j.status === 'afgerond').length;
+  const pct = live.length ? Math.round((doneCount / live.length) * 100) : 0;
 
   return (
     <div className={styles.wrap}>
@@ -218,9 +232,23 @@ export default function VanScreen({
         <h1 className={styles.title}>Vandaag</h1>
         <span className={styles.sub}>
           {technicianName ? `${technicianName} · ` : ''}
-          {dateLabel} · {open.length} open
+          {dateLabel}
         </span>
       </div>
+
+      {live.length > 0 && (
+        <div className={styles.dayProgress}>
+          <div className={styles.dayProgressText}>
+            <b>
+              {doneCount} van {live.length} klaar
+            </b>
+            <span>{open.length === 0 ? 'Alles gedaan vandaag' : `${open.length} nog te gaan`}</span>
+          </div>
+          <div className={styles.dayBar} role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+            <span style={{ width: `${pct}%` }} />
+          </div>
+        </div>
+      )}
 
       {!online && (
         <div className={styles.offline}>
@@ -256,7 +284,11 @@ function JobCard({
   vanStock: { id: string; description: string; quantity: number; unit_cost: number | null }[];
 }) {
   const [finishing, setFinishing] = useState(false);
+  // A finished job folds to one line, so the open ones stand out.
+  const [expanded, setExpanded] = useState(job.status !== 'afgerond');
   const next = NEXT_STATUS[job.status] ?? null;
+  const stepIndex = STEPS.findIndex((s) => s.key === job.status);
+  const price = Number(job.final_price ?? job.quoted_price) || 0;
 
   const address = [job.street, job.postcode, job.city].filter(Boolean).join(', ');
   const mapsUrl = address
@@ -264,23 +296,60 @@ function JobCard({
     : null;
   const car = [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ');
 
+  const logo = job.logo ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={job.logo} alt="" className={styles.logo} />
+  ) : (
+    <Car size={18} strokeWidth={2} className={styles.rowIcon} />
+  );
+
+  if (!expanded) {
+    return (
+      <button type="button" className={`${styles.card} ${styles.cardDone}`} onClick={() => setExpanded(true)}>
+        <span className={styles.slot}>{slotLabel(job.slot_start, job.slot_end)}</span>
+        {logo}
+        <span className={styles.doneCar}>{car || job.service_type || 'Klus'}</span>
+        <span className={styles.doneTick}>Klaar</span>
+        <ChevronRight size={18} className={styles.rowIcon} />
+      </button>
+    );
+  }
+
   return (
-    <div className={styles.card} >
+    <div className={styles.card} style={{ ['--accent' as string]: STATUS_ACCENT[job.status] ?? 'var(--crm-rule)' }}>
       <div className={styles.cardHead}>
         <span className={styles.slot}>
           {slotLabel(job.slot_start, job.slot_end)}
         </span>
-        <span
-          className={`${styles.badge} ${STATUS_CLASS[job.status] ?? styles.stGepland}`}
-        >
-          {JOB_STATUS_LABELS[job.status as JobStatus] ?? job.status}
-        </span>
+        {price > 0 && <span className={styles.price}>{EURO.format(price)}</span>}
+        {job.status === 'afgerond' && (
+          <button type="button" className={styles.fold} onClick={() => setExpanded(false)} aria-label="Inklappen">
+            <ChevronDown size={18} />
+          </button>
+        )}
       </div>
+
+      {job.status === 'geannuleerd' ? (
+        <div className={styles.cancelled}>Geannuleerd</div>
+      ) : (
+        <ol className={styles.steps} aria-label="Status">
+          {STEPS.map((step, i) => (
+            <li
+              key={step.key}
+              className={i < stepIndex ? styles.stepDone : i === stepIndex ? styles.stepNow : styles.stepTodo}
+              aria-current={i === stepIndex ? 'step' : undefined}
+            >
+              <span className={styles.stepDot} />
+              {step.label}
+            </li>
+          ))}
+        </ol>
+      )}
 
       <div className={styles.body}>
         {car && (
           <div className={styles.car}>
-            <Car size={18} strokeWidth={2} className={styles.rowIcon} />
+            {logo}
             {car}
             {job.keyless !== null && (
               <span className={styles.keylessBadge}>{job.keyless ? 'Keyless' : 'Sleutel'}</span>
