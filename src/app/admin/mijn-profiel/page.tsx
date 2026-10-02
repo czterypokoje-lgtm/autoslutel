@@ -1,7 +1,8 @@
 import { requireCrmUser, OFFICE_ROLES } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../vandaag/vandaag.module.css';
-import ProfileForm, { type Profile } from './ProfileForm';
+import pf from './profiel.module.css';
+import ProfileForm, { type Profile, type Business } from './ProfileForm';
 import { technicianColour } from '@/lib/crmColours';
 
 function telegramConnectUrl(startPayload: string): string | null {
@@ -72,8 +73,7 @@ export default async function MijnProfielPage() {
                 <>
                   <p className={styles.meta}>Nog niet gekoppeld.</p>
                   <a
-                    className={`${styles.tap} ${styles.tapPrimary}`}
-                    style={{ gridColumn: 'auto', width: '100%', textDecoration: 'none' }}
+                    className={`${styles.tap} ${styles.tapPrimary} ${pf.full}`}
                     href={telegramConnectUrl(`admin_${user.id}`)!}
                     target="_blank"
                     rel="noreferrer"
@@ -104,6 +104,39 @@ export default async function MijnProfielPage() {
     );
   }
 
+  /*
+   * Business details live in columns added by 0062 (and 0007/0058). Read
+   * separately so the rest of the profile still works on a database that has
+   * not run 0062 yet — the Bedrijf tab then says so instead of failing.
+   */
+  const { data: biz, error: bizError } = await supabase
+    .from('technicians')
+    .select(
+      'company_name, kvk_nummer, btw_nummer, iban, business_street, business_postcode, business_city, contact_email, insurance_company, insurance_policy, insurance_valid_until, base_city, certifications, gbp_url'
+    )
+    .eq('id', data.id as string)
+    .maybeSingle();
+
+  const business: Business | null =
+    bizError || !biz
+      ? null
+      : {
+          company_name: (biz.company_name as string) ?? '',
+          kvk_nummer: (biz.kvk_nummer as string) ?? '',
+          btw_nummer: (biz.btw_nummer as string) ?? '',
+          iban: (biz.iban as string) ?? '',
+          business_street: (biz.business_street as string) ?? '',
+          business_postcode: (biz.business_postcode as string) ?? '',
+          business_city: (biz.business_city as string) ?? '',
+          contact_email: (biz.contact_email as string) ?? '',
+          insurance_company: (biz.insurance_company as string) ?? '',
+          insurance_policy: (biz.insurance_policy as string) ?? '',
+          insurance_valid_until: (biz.insurance_valid_until as string) ?? '',
+          base_city: (biz.base_city as string) ?? '',
+          certifications: Array.isArray(biz.certifications) ? (biz.certifications as string[]) : [],
+          gbp_url: (biz.gbp_url as string) ?? '',
+        };
+
   const profile: Profile = {
     name: (data.name as string) ?? '',
     phone: (data.phone as string) ?? '',
@@ -117,6 +150,7 @@ export default async function MijnProfielPage() {
     email: user.email ?? '',
     telegramConnected: Boolean(data.telegram_chat_id),
     telegramConnectUrl: telegramConnectUrl(data.id as string),
+    business,
   };
 
   return <ProfileForm profile={profile} />;

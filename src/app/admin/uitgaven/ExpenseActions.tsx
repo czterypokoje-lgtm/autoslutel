@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, X, Pencil, Trash2 } from 'lucide-react';
 import { ui } from '../_ui';
+import x from './uitgaven.module.css';
 import { EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
 
 /**
@@ -66,38 +67,32 @@ export default function ExpenseActions({ expense }: { expense: ExpenseRow }) {
     if (ok) void send('DELETE');
   }
 
-  const small: React.CSSProperties = { padding: '0.25rem 0.5rem', fontSize: '0.8rem' };
-  const input: React.CSSProperties = {
-    width: '100%', padding: '0.35rem 0.5rem', fontSize: '0.85rem',
-    border: '1px solid var(--color-border, #cbd5e1)', borderRadius: 6,
-  };
 
   if (editing) {
     return (
-      <div style={{ marginTop: '0.75rem', display: 'grid', gap: '0.5rem', minWidth: 260, textAlign: 'left' }}>
-        <select style={input} value={category} onChange={(e) => setCategory(e.target.value)}>
+      <div className={x.editBox}>
+        <select className={x.input} value={category} onChange={(e) => setCategory(e.target.value)}>
           {Object.entries(EXPENSE_CATEGORIES).map(([key, label]) => (
             <option key={key} value={key}>{label}</option>
           ))}
         </select>
-        <input style={input} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Omschrijving" />
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <input style={input} inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Bedrag" />
-          <input style={input} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        <input className={x.input} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Omschrijving" />
+        <div className={x.pair}>
+          <input className={x.input} inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Bedrag" />
+          <input className={x.input} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
         </div>
-        <input style={input} value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder="Leverancier (optioneel)" />
-        <label style={{ fontSize: '0.8rem', display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+        <input className={x.input} value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder="Leverancier (optioneel)" />
+        <label className={x.checkLabel}>
           <input type="checkbox" checked={reimbursable} onChange={(e) => setReimbursable(e.target.checked)} />
           Declaratie — de monteur heeft dit zelf betaald
         </label>
-        {error && <span style={{ fontSize: '0.8rem', color: '#dc2626' }}>{error}</span>}
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-          <button className={ui.btn} style={small} onClick={() => { setEditing(false); setError(null); }} disabled={busy}>
+        {error && <span className={x.err}>{error}</span>}
+        <div className={x.btnRow}>
+          <button className={`${ui.btn} ${x.small}`} onClick={() => { setEditing(false); setError(null); }} disabled={busy}>
             Annuleren
           </button>
           <button
-            className={ui.btn}
-            style={{ ...small, color: '#2563eb', borderColor: '#bfdbfe' }}
+            className={`${ui.btn} ${x.small} ${x.save}`}
             disabled={busy}
             onClick={() => void send('PATCH', {
               category,
@@ -116,15 +111,15 @@ export default function ExpenseActions({ expense }: { expense: ExpenseRow }) {
   }
 
   return (
-    <div style={{ marginTop: '0.5rem', textAlign: 'right' }}>
-      {error && <div style={{ fontSize: '0.8rem', color: '#dc2626', marginBottom: '0.35rem' }}>{error}</div>}
-      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+    <div className={x.actions}>
+      {error && <div className={x.err}>{error}</div>}
+      <div className={x.btnRow}>
         {expense.status === 'pending' && (
           <>
-            <button className={ui.btn} style={{ ...small, color: '#059669', borderColor: '#a7f3d0' }} onClick={() => void send('PATCH', { status: 'approved' })} disabled={busy}>
+            <button className={`${ui.btn} ${x.small} ${x.ok}`} onClick={() => void send('PATCH', { status: 'approved' })} disabled={busy}>
               <Check size={14} /> Goedkeuren
             </button>
-            <button className={ui.btn} style={{ ...small, color: '#dc2626', borderColor: '#fecaca' }} onClick={() => void send('PATCH', { status: 'rejected' })} disabled={busy}>
+            <button className={`${ui.btn} ${x.small} ${x.bad}`} onClick={() => void send('PATCH', { status: 'rejected' })} disabled={busy}>
               <X size={14} /> Afwijzen
             </button>
           </>
@@ -132,14 +127,14 @@ export default function ExpenseActions({ expense }: { expense: ExpenseRow }) {
         {expense.status !== 'pending' && (
           /* Approving is not the end of the story: a wrong figure stays wrong,
              and someone has to be able to put it back. */
-          <button className={ui.btn} style={small} onClick={() => void send('PATCH', { status: 'pending' })} disabled={busy}>
+          <button className={`${ui.btn} ${x.small}`} onClick={() => void send('PATCH', { status: 'pending' })} disabled={busy}>
             Terug naar open
           </button>
         )}
-        <button className={ui.btn} style={small} onClick={() => setEditing(true)} disabled={busy}>
+        <button className={`${ui.btn} ${x.small}`} onClick={() => setEditing(true)} disabled={busy}>
           <Pencil size={14} /> Bewerken
         </button>
-        <button className={ui.btn} style={{ ...small, color: '#dc2626', borderColor: '#fecaca' }} onClick={remove} disabled={busy}>
+        <button className={`${ui.btn} ${x.small} ${x.bad}`} onClick={remove} disabled={busy}>
           <Trash2 size={14} /> Verwijderen
         </button>
       </div>

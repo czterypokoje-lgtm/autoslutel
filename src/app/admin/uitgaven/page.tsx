@@ -1,9 +1,9 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { PageHead, Card, Badge, Empty } from '../_ui';
+import { PageHead, Badge, Empty, ui } from '../_ui';
 import Link from 'next/link';
 import { Plus, Building2, Wrench, Receipt } from 'lucide-react';
-import styles from '../admin.module.css';
+import x from './uitgaven.module.css';
 import ExpenseActions from './ExpenseActions';
 import { EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
 
@@ -48,86 +48,113 @@ export default async function UitgavenPage() {
     }
   }
 
+  const STATUS: Record<string, { label: string; tone: 'ok' | 'warn' | 'stop' | 'info' }> = {
+    pending: { label: 'Te keuren', tone: 'warn' },
+    approved: { label: 'Goedgekeurd', tone: 'info' },
+    paid: { label: 'Betaald', tone: 'ok' },
+    rejected: { label: 'Afgewezen', tone: 'stop' },
+  };
+  const list = expenses ?? [];
+  const sumOf = (st: string) => list.filter((e) => e.status === st).reduce((t, e) => t + Number(e.amount || 0), 0);
+  const countOf = (st: string) => list.filter((e) => e.status === st).length;
+  const shortDate = (iso: string) =>
+    new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+
   return (
     <>
       <PageHead
-        title={isOffice ? "Alle Uitgaven" : "Mijn Uitgaven"}
-        sub={isOffice ? "Beheer en keur bedrijfskosten, abonnementen en declaraties goed." : "Dien bonnetjes in en volg de status van je declaraties."}
+        title={isOffice ? 'Uitgaven' : 'Mijn uitgaven'}
+        sub={
+          isOffice
+            ? 'Bonnetjes, abonnementen en declaraties. Keur goed of wijs af; bonnetjes van monteurs komen ook via Telegram binnen.'
+            : 'Stuur je bonnetjes in en zie of ze zijn goedgekeurd en betaald. Een foto via Telegram werkt ook.'
+        }
         actions={
-          <Link href="/admin/uitgaven/nieuw" className="btn btn-primary">
+          <Link href="/admin/uitgaven/nieuw" className={`${ui.btn} ${ui.btnPrimary}`}>
             <Plus size={16} />
             Nieuwe uitgave
           </Link>
         }
       />
 
-      <div className={styles.cards}>
-        {!expenses?.length && <Empty>Nog geen uitgaven geregistreerd.</Empty>}
-
-        {expenses?.map(exp => (
-          <Card key={exp.id}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1.25rem' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                  <span style={{ fontWeight: 600, color: '#0f172a' }}>{EXPENSE_CATEGORIES[exp.category] || exp.category}</span>
-                  <Badge tone={exp.status === 'approved' || exp.status === 'paid' ? 'ok' : exp.status === 'rejected' ? 'stop' : 'warn'}>
-                    {exp.status}
-                  </Badge>
-                  {exp.is_reimbursable && <Badge>Declaratie</Badge>}
-                </div>
-                <div style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '0.5rem' }}>
-                  {exp.date_incurred} • {exp.description}
-                </div>
-                {exp.receipt_url && receipts.has(exp.receipt_url) && (
-                  <a
-                    href={receipts.get(exp.receipt_url)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.875rem', color: '#2563eb', marginBottom: '0.5rem' }}
-                  >
-                    <Receipt size={14} /> Bon bekijken
-                  </a>
-                )}
-                <div style={{ display: 'flex', gap: '1rem', fontSize: '0.875rem', color: '#475569' }}>
-                  {exp.technician && (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <Wrench size={14} /> {exp.technician.name}
-                    </span>
-                  )}
-                  {!exp.technician && isOffice && (
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <Building2 size={14} /> Kantoor
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontWeight: 700, fontSize: '1.25rem', color: '#0f172a' }}>
-                  {MONEY.format(exp.amount)}
-                </div>
-                
-                {/* Whatever the status. An approved expense with a wrong
-                    amount was previously untouchable — the row showed the
-                    mistake and offered nothing to do about it. */}
-                {isOffice && (
-                  <ExpenseActions
-                    expense={{
-                      id: exp.id,
-                      category: exp.category,
-                      description: exp.description,
-                      amount: exp.amount,
-                      date_incurred: exp.date_incurred,
-                      supplier_name: exp.supplier_name ?? null,
-                      is_reimbursable: exp.is_reimbursable === true,
-                      status: exp.status,
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-          </Card>
-        ))}
+      <div className={x.stats}>
+        <div className={countOf('pending') ? x.statWarn : undefined}>
+          <span>Te keuren</span>
+          <b>{MONEY.format(sumOf('pending'))}</b>
+          <small>{countOf('pending')} bonnetjes</small>
+        </div>
+        <div>
+          <span>Goedgekeurd, nog te betalen</span>
+          <b>{MONEY.format(sumOf('approved'))}</b>
+          <small>{countOf('approved')} bonnetjes</small>
+        </div>
+        <div>
+          <span>Betaald</span>
+          <b>{MONEY.format(sumOf('paid'))}</b>
+          <small>{countOf('paid')} bonnetjes</small>
+        </div>
       </div>
+
+      {!list.length ? (
+        <Empty>Nog geen uitgaven geregistreerd.</Empty>
+      ) : (
+        <ul className={x.list}>
+          {list.map((exp) => {
+            const st = STATUS[exp.status] ?? { label: exp.status, tone: 'info' as const };
+            return (
+              <li key={exp.id} className={x.item}>
+                <div className={x.itemMain}>
+                  <div className={x.itemTop}>
+                    <b>{EXPENSE_CATEGORIES[exp.category] || exp.category}</b>
+                    <Badge tone={st.tone}>{st.label}</Badge>
+                    {exp.is_reimbursable && <Badge>Declaratie</Badge>}
+                  </div>
+                  <div className={x.itemMeta}>
+                    {shortDate(exp.date_incurred)} · {exp.description}
+                  </div>
+                  <div className={x.itemMeta}>
+                    {exp.technician ? (
+                      <span className={x.who}>
+                        <Wrench size={14} /> {exp.technician.name}
+                      </span>
+                    ) : (
+                      isOffice && (
+                        <span className={x.who}>
+                          <Building2 size={14} /> Kantoor
+                        </span>
+                      )
+                    )}
+                    {exp.receipt_url && receipts.has(exp.receipt_url) && (
+                      <a href={receipts.get(exp.receipt_url)} target="_blank" rel="noopener noreferrer" className={x.receipt}>
+                        <Receipt size={14} /> Bon bekijken
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <div className={x.itemRight}>
+                  <span className={x.amount}>{MONEY.format(exp.amount)}</span>
+                  {/* Whatever the status: an approved expense with a wrong
+                      amount must still be correctable. */}
+                  {isOffice && (
+                    <ExpenseActions
+                      expense={{
+                        id: exp.id,
+                        category: exp.category,
+                        description: exp.description,
+                        amount: exp.amount,
+                        date_incurred: exp.date_incurred,
+                        supplier_name: exp.supplier_name ?? null,
+                        is_reimbursable: exp.is_reimbursable === true,
+                        status: exp.status,
+                      }}
+                    />
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </>
   );
 }

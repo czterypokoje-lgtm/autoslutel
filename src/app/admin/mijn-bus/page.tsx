@@ -49,7 +49,16 @@ export default async function MijnBusPage() {
     await Promise.all([
       supabase.from('stock_items').select('*').eq('technician_id', tech.id).order('description'),
       supabase.from('stock_items').select('*').is('technician_id', null).order('description'),
-      supabase.from('technicians').select('id, name').neq('id', tech.id).order('name'),
+      /* Colleagues, names only (0062). Falls back to the table on a database
+         that has not run 0062 yet, where the old policy still allows it. */
+      supabase
+        .from('crm_technician_directory')
+        .select('id, name')
+        .neq('id', tech.id)
+        .order('name')
+        .then(async (res) =>
+          res.error ? supabase.from('technicians').select('id, name').neq('id', tech.id).order('name') : res
+        ),
       supabase
         .from('purchase_invoices')
         .select(

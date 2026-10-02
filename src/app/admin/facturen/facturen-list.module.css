@@ -1,0 +1,116 @@
+/* Facturen list — three figures, filters, one clean table, a detail drawer. */
+
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+.metric, .metricOn {
+  all: unset; box-sizing: border-box; cursor: pointer;
+  display: flex; flex-direction: column; gap: 4px; padding: 16px 18px;
+  background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r);
+}
+.metricOn { border-color: var(--crm-accent); box-shadow: 0 0 0 1px var(--crm-accent); }
+.metric:hover { border-color: var(--crm-rule2); }
+.metricLabel { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--crm-muted); }
+.metric b, .metricOn b { font-size: 24px; font-weight: 600; color: var(--crm-ink); }
+.metric > span:last-child, .metricOn > span:last-child { font-size: 12.5px; color: var(--crm-muted); }
+
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 14px; }
+.filters { display: inline-flex; border: 1px solid var(--crm-accent); border-radius: 8px; overflow: hidden; }
+.filter, .filterOn {
+  display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px;
+  border: 0; border-right: 1px solid #f1c3ab; background: var(--crm-panel); color: var(--crm-accent);
+  font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+}
+.filter:last-child, .filterOn:last-child { border-right: 0; }
+.filterOn { background: var(--crm-accent); color: #ffffff; }
+.count { min-width: 20px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--crm-sunk); color: var(--crm-ink); font-size: 11.5px; display: inline-grid; place-items: center; }
+.countLate { background: var(--crm-stop); color: #ffffff; }
+.search { margin-left: auto; display: flex; align-items: center; gap: 8px; height: 38px; width: min(320px, 100%); padding: 0 12px; border: 1px solid var(--crm-rule2); border-radius: 8px; background: var(--crm-panel); color: var(--crm-muted); }
+.search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: var(--crm-ink); }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+.layoutOpen { grid-template-columns: minmax(0, 1fr) 360px; }
+
+.table { background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r); overflow: hidden; }
+.row {
+  all: unset; box-sizing: border-box; width: 100%;
+  display: grid; grid-template-columns: 96px minmax(140px, 1.3fr) minmax(160px, 1.5fr) 110px 110px 104px;
+  align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--crm-rule); cursor: pointer;
+}
+.withTech { grid-template-columns: 96px minmax(130px, 1.2fr) minmax(150px, 1.4fr) minmax(100px, 0.8fr) 110px 110px 104px; }
+.row:last-child { border-bottom: 0; }
+button.row:hover { background: var(--crm-sunk); }
+.rowOn { background: var(--crm-accent-soft) !important; }
+.head { cursor: default; background: var(--crm-sunk); font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--crm-muted); padding-top: 10px; padding-bottom: 10px; }
+.num { text-align: right; }
+.nr { font-weight: 600; color: var(--crm-ink); font-size: 13.5px; }
+.client, .car > span { display: flex; flex-direction: column; min-width: 0; }
+.client b, .car b { font-weight: 600; color: var(--crm-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.client small, .car small { color: var(--crm-muted); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.car { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.car img, .car i { width: 24px; height: 24px; flex: none; object-fit: contain; }
+.tech { font-size: 13.5px; color: var(--crm-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.amount { font-weight: 600; color: var(--crm-ink); }
+.due { font-size: 13px; color: var(--crm-muted); }
+.lateText { color: var(--crm-stop) !important; font-weight: 600; }
+.empty { margin: 0; padding: 28px; text-align: center; color: var(--crm-muted); }
+
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pillPaid { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.pillDraft { background: #eef1f5; color: #475569; }
+.pillOpen { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.pillLate { background: var(--crm-stop-bg); color: var(--crm-stop); }
+
+/* ── drawer ── */
+.drawer { position: sticky; top: 0; background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r); padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.drawerHead { display: flex; align-items: center; gap: 10px; }
+.drawerHead > div { flex: 1; }
+.drawerLabel { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--crm-muted); }
+.drawerTitle { margin: 0; font-size: 20px; font-weight: 600; color: var(--crm-ink); }
+.close { width: 34px; height: 34px; border: 0; border-radius: 8px; background: var(--crm-sunk); color: var(--crm-muted); display: grid; place-items: center; cursor: pointer; }
+.drawerActions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.btnPrimary, .btnOk, .btnGhost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 38px;
+  border-radius: 8px; font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-decoration: none;
+}
+.btnPrimary { border: 0; background: var(--crm-accent); color: #ffffff; }
+.btnOk { border: 0; background: var(--crm-ok); color: #ffffff; }
+.btnGhost { border: 1px solid var(--crm-rule2); background: var(--crm-panel); color: var(--crm-ink); }
+.btnPrimary:disabled, .btnOk:disabled { opacity: 0.45; cursor: default; }
+.error { margin: 0; font-size: 13px; color: var(--crm-stop); }
+
+.facts { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.facts > div { display: grid; grid-template-columns: 120px 1fr; gap: 10px; }
+.facts dt { font-size: 13px; color: var(--crm-muted); }
+.facts dd { margin: 0; display: flex; flex-direction: column; font-weight: 600; color: var(--crm-ink); font-size: 14px; }
+.facts dd span { font-weight: 400; color: var(--crm-muted); font-size: 13px; }
+
+.total { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: var(--crm-r); background: var(--crm-sunk); }
+.total span { font-weight: 600; color: var(--crm-ink); }
+.total b { font-size: 22px; font-weight: 600; color: var(--crm-ink); }
+.totalLate { background: var(--crm-stop-bg); }
+.totalLate b, .totalLate span { color: var(--crm-stop); }
+.editLink { font-size: 13.5px; font-weight: 600; color: var(--crm-accent); text-decoration: none; }
+
+/* Drawer open: the drawer shows monteur and due date, so the table drops them. */
+.layoutOpen .row, .layoutOpen .withTech { grid-template-columns: 90px minmax(0, 1.2fr) minmax(0, 1.3fr) 100px 100px; }
+.layoutOpen .colTech, .layoutOpen .colDue { display: none; }
+
+@media (max-width: 1100px) {
+  .layoutOpen { grid-template-columns: minmax(0, 1fr); }
+  .drawer { position: static; }
+}
+@media (max-width: 760px) {
+  .metrics { grid-template-columns: 1fr; }
+  .search { margin-left: 0; width: 100%; }
+  .filters { width: 100%; overflow-x: auto; }
+  .head { display: none; }
+  .row, .withTech { grid-template-columns: 1fr auto; gap: 4px 12px; }
+  .nr { grid-column: 1; font-size: 12.5px; color: var(--crm-muted); }
+  .client { grid-column: 1; }
+  .car { grid-column: 1; }
+  .tech { display: none; }
+  .layoutOpen .colDue { display: block; }
+  .amount { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .due { grid-column: 1; font-size: 12.5px; }
+  .row > span:last-child { grid-column: 2; }
+}

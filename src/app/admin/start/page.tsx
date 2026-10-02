@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import styles from '../jobs/jobs.module.css';
+import { PageHead, Notice } from '../_ui';
 import Wizard from './Wizard';
 
 export const dynamic = 'force-dynamic';
@@ -23,9 +23,7 @@ export default async function StartPage() {
 
   if (!me) {
     return (
-      <div className={styles.warning}>
-        Je account is nog niet aan een monteur gekoppeld. Vraag kantoor om dit te doen.
-      </div>
+      <Notice tone="bad">Je account is nog niet aan een monteur gekoppeld. Vraag kantoor om dit te doen.</Notice>
     );
   }
 
@@ -42,12 +40,10 @@ export default async function StartPage() {
 
   return (
     <>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Welkom, {me.name}</h1>
-      </div>
-      <p className={styles.note} style={{ marginBottom: 20 }}>
-        Voordat je klussen kunt ontvangen, moeten we weten waar je werkt en wat je kunt.
-      </p>
+      <PageHead
+        title={`Welkom, ${me.name.split(' ')[0]}`}
+        sub="Vier korte stappen. Daarna weten we waar je werkt en wat je kunt, en krijg je klussen aangeboden."
+      />
       <Wizard technicianId={me.id} />
     </>
   );

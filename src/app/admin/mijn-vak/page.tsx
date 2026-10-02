@@ -1,6 +1,7 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import styles from '../admin.module.css';
+import { PageHead, Notice, HelpSteps, Label } from '../_ui';
+import vak from './vak.module.css';
 import { TIER_TERMS, breakEven, monthlyCost, type Tier } from '@/lib/subscription';
 import { catalogTree } from '@/lib/carCatalog';
 import CoveragePanel, { type CoverageEntry, type ToolEntry } from './CoveragePanel';
@@ -30,15 +31,8 @@ export default async function MijnVakPage() {
   if (!me) {
     return (
       <>
-        <div className={styles.pageHead}>
-          <div>
-            <h1 className={styles.pageTitle}>Mijn vak</h1>
-            <p className={styles.pageSub}>Wat u kunt, en waarmee.</p>
-          </div>
-        </div>
-        <p className={`${styles.note} ${styles.noteBad}`}>
-          Uw login is nog niet aan een monteur gekoppeld. Vraag het kantoor dit te doen.
-        </p>
+        <PageHead title="Mijn vak" sub="Wat je kunt, en waarmee." />
+        <Notice tone="bad">Je login is nog niet aan een monteur gekoppeld. Vraag het kantoor dit te doen.</Notice>
       </>
     );
   }
@@ -82,72 +76,55 @@ export default async function MijnVakPage() {
   const catalog = catalogTree();
   const coverageRows = (coverage ?? []) as CoverageEntry[];
 
+  const fee = Number(sub?.monthly_fee ?? terms.monthlyFee);
+  const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  const upgrade = (() => {
+    if (tier === 'premium') return null;
+    const next: Tier = tier === 'starter' ? 'pro' : 'premium';
+    const at = breakEven(next, tier);
+    if (at == null) return null;
+    return revenue >= at
+      ? { good: true, text: `${TIER_TERMS[next].label} is nu goedkoper voor jou: ${EUR.format(monthlyCost(tier, revenue) - monthlyCost(next, revenue))} per maand minder.` }
+      : { good: false, text: `${TIER_TERMS[next].label} loont vanaf ${EUR.format(at)} omzet per maand.` };
+  })();
+
   return (
     <>
-      <div className={styles.pageHead}>
-        <div>
-          <h1 className={styles.pageTitle}>Mijn vak</h1>
-          <p className={styles.pageSub}>
-            Welke auto’s u aankunt en met welk gereedschap. Hier bepaalt u zelf welk werk u
-            aangeboden krijgt — wat hier niet staat, krijgt u niet.
-          </p>
-        </div>
-      </div>
+      <PageHead
+        title="Mijn vak"
+        sub="Welke auto's je aankunt, wat je rekent en met welk gereedschap. Wat hier niet staat, krijg je niet aangeboden."
+      />
+      <HelpSteps
+        steps={[
+          'Klik bij Mijn prijzen een merk open.',
+          'Zet een prijs bij de auto\'s die je doet. Model leeg = het hele merk.',
+          'Zet je gereedschap erbij, dan krijg je klussen die daarbij passen.',
+        ]}
+      />
 
-      {/* ── what this costs, and what it replaced ── */}
-      <div className={styles.listCard} style={{ marginBottom: 22 }}>
-        <div className={styles.row}>
-          <div className={styles.rowMain}>
-            <div className={styles.rowTitleLine}>
-              <span className={styles.rowTitle}>{terms.label}</span>
-              {/*
-                The fee, not the rate. What a monteur needs from this line is
-                what the month costs; the commission is already shown below as
-                the euro figure they actually paid, which is the number that
-                answers the same question without inviting arithmetic.
-              */}
-              <span className={styles.rowSlug}>
-                € {Number(sub?.monthly_fee ?? terms.monthlyFee).toFixed(0)} p/m
-              </span>
-            </div>
-            <div className={styles.rowMeta}>
-              <span className={styles.chip}>{jobs} klussen · 30 dagen</span>
-              <span className={styles.chip}>omzet € {revenue.toFixed(2)}</span>
-              <span className={styles.chip}>u betaalde € {paid.toFixed(2)}</span>
-              {tier !== 'premium' && (
-                <span className={`${styles.chip} ${styles.chipWarn}`}>
-                  {(() => {
-                    const next: Tier = tier === 'starter' ? 'pro' : 'premium';
-                    const at = breakEven(next, tier);
-                    if (at == null) return null;
-                    const monthly = revenue;
-                    return monthly >= at
-                      ? `${TIER_TERMS[next].label} is voor u nu goedkoper — € ${(
-                          monthlyCost(tier, monthly) - monthlyCost(next, monthly)
-                        ).toFixed(0)} per maand`
-                      : `${TIER_TERMS[next].label} loont vanaf € ${at.toLocaleString('nl-NL')} omzet p/m`;
-                  })()}
-                </span>
-              )}
-            </div>
-          </div>
+      <section className={vak.plan} aria-label="Abonnement">
+        <div className={vak.planMain}>
+          <span className={vak.planLabel}>Abonnement</span>
+          <span className={vak.planName}>
+            {terms.label} <span className={vak.planFee}>{EUR.format(fee)} per maand</span>
+          </span>
         </div>
-      </div>
+        <div className={vak.planStats}>
+          <div><span>Klussen (30 dagen)</span><b>{jobs}</b></div>
+          <div><span>Omzet (30 dagen)</span><b>{EUR.format(revenue)}</b></div>
+          <div><span>Je betaalde</span><b>{EUR.format(paid)}</b></div>
+        </div>
+        {upgrade && <p className={upgrade.good ? vak.planTipGood : vak.planTip}>{upgrade.text}</p>}
+      </section>
 
-      <h2 style={{ fontSize: 15, fontWeight: 700, color: 'var(--crm-ink)', margin: '0 0 10px' }}>
-        Uw prijzen
-      </h2>
-      <p className={styles.pageSub} style={{ marginBottom: 12 }}>
-        Klik een merk open en zet erbij wat u voor die auto rekent. Een prijs is tegelijk uw
-        opgave dat u het werk doet: alleen auto&rsquo;s die hier staan worden u aangeboden.
-        Laat het model leeg om het hele merk te dekken.
+      <Label>Mijn prijzen</Label>
+      <p className={vak.intro}>
+        Een prijs is ook je opgave dat je het werk doet: alleen auto&rsquo;s die hier staan worden je aangeboden.
       </p>
-
       <PriceTree technicianId={me.id} catalog={catalog} rows={coverageRows as PriceEntry[]} />
 
-      <p className={styles.pageSub} style={{ margin: '26px 0 0' }}>
-        Gereedschap, en geavanceerd: uitzonderingen op een merk, of een jaartal beperken.
-      </p>
+      <div className={vak.gap} />
+      <Label>Gereedschap en uitzonderingen</Label>
       <CoveragePanel technicianId={me.id} tools={(tools ?? []) as ToolEntry[]} />
     </>
   );

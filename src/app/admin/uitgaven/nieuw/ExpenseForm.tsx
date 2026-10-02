@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ui } from '../../_ui';
+import x from '../uitgaven.module.css';
 
 const CATEGORIES = [
   { id: 'fuel', label: 'Brandstof' },
@@ -70,11 +71,11 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
   }
 
   return (
-    <form onSubmit={save} style={{ maxWidth: 600, background: '#fff', padding: '2rem', borderRadius: 8, border: '1px solid #e2e8f0' }}>
-      <div style={{ display: 'grid', gap: '1.5rem' }}>
+    <form onSubmit={save} className={x.form}>
+      <div className={x.formGrid}>
         
         <label>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Categorie</div>
+          <div className={x.formLabel}>Categorie</div>
           <select value={category} onChange={e => setCategory(e.target.value)} className={ui.input} required>
             {CATEGORIES.map(c => (
               <option key={c.id} value={c.id}>{c.label}</option>
@@ -83,25 +84,25 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
         </label>
 
         <label>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Bedrag (€)</div>
+          <div className={x.formLabel}>Bedrag (€)</div>
           <input type="number" step="0.01" value={amount} onChange={e => setAmount(e.target.value)} className={ui.input} required placeholder="0.00" />
         </label>
 
         <label>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Datum</div>
+          <div className={x.formLabel}>Datum</div>
           <input type="date" value={dateIncurred} onChange={e => setDateIncurred(e.target.value)} className={ui.input} required />
         </label>
 
         <label>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Omschrijving</div>
+          <div className={x.formLabel}>Omschrijving</div>
           <input type="text" value={description} onChange={e => setDescription(e.target.value)} className={ui.input} required placeholder="bijv. Tanken BP, Google Ads factuur..." />
         </label>
 
         {isOffice && (
           <label>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Gekoppelde Monteur (optioneel)</div>
+            <div className={x.formLabel}>Monteur (optioneel)</div>
             <select value={technicianId} onChange={e => setTechnicianId(e.target.value)} className={ui.input}>
-              <option value="">-- Algemeen / Kantoor --</option>
+              <option value="">Algemeen / kantoor</option>
               {technicians.map(t => (
                 <option key={t.id} value={t.id}>{t.name}</option>
               ))}
@@ -109,16 +110,16 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
           </label>
         )}
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+        <label className={x.checkLabel}>
           <input type="checkbox" checked={isReimbursable} onChange={e => setIsReimbursable(e.target.checked)} />
-          <span style={{ fontSize: 14, color: '#334155' }}>
+          <span>
             Dit is een declaratie (ik heb dit privé voorgeschoten en wil het terug).
           </span>
         </label>
 
-        {error && <div style={{ color: '#dc2626', fontSize: 14 }}>{error}</div>}
+        {error && <div className={x.err}>{error}</div>}
 
-        <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+        <div className={x.formActions}>
           <button type="button" onClick={() => router.back()} className={ui.btn} disabled={busy}>Annuleren</button>
           <button type="submit" className={`${ui.btn} ${ui.btnPrimary}`} disabled={busy}>
             {busy ? 'Opslaan...' : 'Opslaan'}

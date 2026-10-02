@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Badge, Card } from '../_ui';
-import styles from '../leads/leads.module.css'; // Reusing layout styles
-import { FileText, Clock, CheckCircle, Search, Download, Send, Phone, MessageCircle, MapPin, CheckSquare, MoreHorizontal } from 'lucide-react';
+import { CheckCircle, Clock, Download, FileText, Search, Send, X } from 'lucide-react';
+import styles from './facturen-list.module.css';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
-const DATE = new Intl.DateTimeFormat('nl-NL', { day: '2-digit', month: 'short', year: 'numeric' });
+const DATE = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' });
 
 interface InvoiceRow {
   id: string;
@@ -19,31 +18,39 @@ interface InvoiceRow {
   client_phone: string | null;
   total: number | string;
   status: 'concept' | 'verzonden' | 'betaald';
+  technician_name: string | null;
+  logo: string | null;
   job?: {
     id: string;
     car_make: string | null;
     car_model: string | null;
     kenteken: string | null;
     service_type: string | null;
-    
   } | null;
 }
 
-function getDueDate(issueDate: string) {
+/** Payment term: 14 days after the invoice date. */
+function dueDate(issueDate: string) {
   const d = new Date(issueDate);
   d.setDate(d.getDate() + 14);
   return d;
 }
+const isOverdue = (row: { status: string; issue_date: string }) => row.status === 'verzonden' && dueDate(row.issue_date) < new Date();
 
-function isOverdue(issueDate: string) {
-  return getDueDate(issueDate) < new Date();
+function StatusPill({ row, status }: { row: InvoiceRow; status?: InvoiceRow['status'] }) {
+  const st = status ?? row.status;
+  if (st === 'betaald') return <span className={`${styles.pill} ${styles.pillPaid}`}>Betaald</span>;
+  if (st === 'concept') return <span className={`${styles.pill} ${styles.pillDraft}`}>Concept</span>;
+  if (isOverdue({ status: st, issue_date: row.issue_date })) return <span className={`${styles.pill} ${styles.pillLate}`}>Te laat</span>;
+  return <span className={`${styles.pill} ${styles.pillOpen}`}>Openstaand</span>;
 }
 
-function InvoiceDetailDrawer({ invoice, onClose }: { invoice: InvoiceRow; onClose: () => void }) {
-  const [tab, setTab] = useState('Details');
+const carOf = (row: InvoiceRow) => (row.job ? [row.job.car_make, row.job.car_model].filter(Boolean).join(' ') || 'Auto' : null);
 
-  /* Held locally so the drawer reflects the change immediately; `invoice` is a
-     server-rendered row and will not update until the page is refetched. */
+/** The selected invoice: status buttons, PDF, and the essentials. */
+function Drawer({ invoice, onClose, showTechnician }: { invoice: InvoiceRow; onClose: () => void; showTechnician: boolean }) {
+  /* Held locally so the drawer reflects the change at once; the list row is
+     server-rendered and updates on the next load. Rolled back on failure. */
   const [status, setStatusLocal] = useState(invoice.status);
   const [busy, setBusy] = useState<string | null>(null);
   const [saveError, setSaveError] = useState(false);
@@ -68,302 +75,221 @@ function InvoiceDetailDrawer({ invoice, onClose }: { invoice: InvoiceRow; onClos
     }
   }
 
-  const dueDate = getDueDate(invoice.issue_date);
-  const overdue = status === 'verzonden' && isOverdue(invoice.issue_date);
+  const overdue = isOverdue({ status, issue_date: invoice.issue_date });
+  const car = carOf(invoice);
 
   return (
-    <div className={styles.drawerCard}>
-      <div className={styles.drawerHead} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+    <aside className={styles.drawer} aria-label={`Factuur ${invoice.invoice_number}`}>
+      <div className={styles.drawerHead}>
         <div>
-          <div style={{fontSize: '18px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>Factuur {invoice.invoice_number}</div>
+          <span className={styles.drawerLabel}>Factuur</span>
+          <h2 className={styles.drawerTitle}>{invoice.invoice_number}</h2>
         </div>
-        <div>
-          {invoice.status === 'betaald' && <Badge tone="ok">Betaald</Badge>}
-          {status === 'concept' && <Badge tone="info">Concept</Badge>}
-          {status === 'verzonden' && !overdue && <Badge tone="warn">Openstaand</Badge>}
-          {overdue && <Badge tone="stop">Vervallen</Badge>}
-        </div>
+        <StatusPill row={invoice} status={status} />
+        <button type="button" className={styles.close} onClick={onClose} aria-label="Sluiten">
+          <X size={18} />
+        </button>
       </div>
-      
-      {/*
-        * All three of these shipped with no handler at all: the drawer looked
-        * finished and did nothing. /api/admin/invoices/[id] already accepts a
-        * status PATCH ('concept' | 'verzonden' | 'betaald'), and the invoice
-        * page at /admin/facturen/[id] is the printable document — so each
-        * button had somewhere real to go the whole time.
-        *
-        * Optimistic, and rolled back on failure, for the same reason as lead
-        * triage: a button that appears to work and silently did not is worse
-        * than one that is obviously missing.
-        */}
-      <div style={{padding: '16px', display: 'flex', gap: '8px', background: 'var(--crm-bg)'}}>
-        <button
-          type="button"
-          className={styles.btnPrimary}
-          style={{flex: 1, padding: '8px', fontSize: '13px'}}
-          disabled={busy !== null || status === 'betaald'}
-          onClick={() => setStatus('verzonden')}
-        >
-          <Send size={14}/> {busy === 'verzonden' ? 'Bezig…' : 'Verzenden'}
+
+      <div className={styles.drawerActions}>
+        <button type="button" className={styles.btnPrimary} disabled={busy !== null || status !== 'concept'} onClick={() => setStatus('verzonden')}>
+          <Send size={15} /> {busy === 'verzonden' ? 'Bezig…' : 'Verzonden'}
         </button>
-        <button
-          type="button"
-          className={styles.btnSecondary}
-          style={{flex: 1, padding: '8px', fontSize: '13px'}}
-          disabled={busy !== null || status === 'betaald'}
-          onClick={() => setStatus('betaald')}
-        >
-          <CheckCircle size={14}/> {busy === 'betaald' ? 'Bezig…' : 'Betaald'}
+        <button type="button" className={styles.btnOk} disabled={busy !== null || status === 'betaald'} onClick={() => setStatus('betaald')}>
+          <CheckCircle size={15} /> {busy === 'betaald' ? 'Bezig…' : 'Betaald'}
         </button>
-        <Link
-          href={`/admin/facturen/${invoice.id}`}
-          className={styles.btnSecondary}
-          style={{flex: 1, padding: '8px', fontSize: '13px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px'}}
-        >
-          <Download size={14}/> PDF
+        <Link href={`/admin/facturen/${invoice.id}`} className={styles.btnGhost}>
+          <Download size={15} /> PDF
         </Link>
       </div>
-      {saveError && (
-        <div style={{padding: '0 16px 12px', color: 'var(--crm-stop)', fontSize: '12px'}}>
-          Opslaan mislukt — status ongewijzigd.
+      {saveError && <p className={styles.error}>Opslaan mislukt, de status is niet veranderd.</p>}
+
+      <dl className={styles.facts}>
+        <div>
+          <dt>Klant</dt>
+          <dd>
+            {invoice.client_name}
+            {invoice.client_city && <span>{invoice.client_city}</span>}
+            {invoice.client_phone && <span>{invoice.client_phone}</span>}
+          </dd>
         </div>
-      )}
-
-      <div className={styles.drawerNav}>
-        {['Details', 'Betalingen', 'Activiteit'].map(t => (
-          <div key={t} className={`${styles.drawerTab} ${tab === t ? styles.active : ''}`} onClick={() => setTab(t)}>
-            {t}
+        {car && (
+          <div>
+            <dt>Auto</dt>
+            <dd>
+              {car}
+              <span>
+                {[invoice.job?.kenteken, invoice.job?.service_type].filter(Boolean).join(' · ') || '—'}
+              </span>
+            </dd>
           </div>
-        ))}
-      </div>
-
-      <div className={styles.drawerBody}>
-        {tab === 'Details' && (
-          <>
-            <div className={styles.drawerSection}>
-              <div style={{fontWeight: 600, fontSize: '13px', color: 'var(--crm-ink)'}}>Klant</div>
-              <div className={styles.drawerRow}>
-                <div className={styles.avatar}>{invoice.client_name?.substring(0,2).toUpperCase()}</div>
-                <div>
-                  <div style={{fontWeight: 500, color: 'var(--crm-ink)'}}>{invoice.client_name}</div>
-                  <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>{invoice.client_phone || 'Geen telefoon'}</div>
-                </div>
-              </div>
-            </div>
-
-            {invoice.job && (
-              <>
-                <div style={{borderTop: '1px solid var(--crm-rule)', margin: '4px 0'}}></div>
-                <div className={styles.drawerSection}>
-                  <div style={{fontWeight: 600, fontSize: '13px', color: 'var(--crm-ink)'}}>Voertuig</div>
-                  <div className={styles.drawerRow}>
-                    <div className={styles.avatar} style={{background: 'transparent', border: '1px solid var(--crm-rule)'}}>🚗</div>
-                    <div>
-                      <div style={{fontWeight: 500, color: 'var(--crm-ink)'}}>{[invoice.job.car_make, invoice.job.car_model].filter(Boolean).join(' ') || 'Auto'} • {invoice.job.kenteken || ''}</div>
-                      <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>{invoice.job.service_type || 'Service'}</div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-
-            <div style={{borderTop: '1px solid var(--crm-rule)', margin: '4px 0'}}></div>
-
-            <div className={styles.drawerSection}>
-              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--crm-muted)', paddingBottom: '8px'}}>
-                <div>Item</div>
-                <div style={{display: 'flex', gap: '32px'}}>
-                  <div style={{width: '20px'}}>Aantal</div>
-                  <div style={{width: '60px', textAlign: 'right'}}>Totaal</div>
-                </div>
-              </div>
-              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--crm-ink)', borderTop: '1px solid var(--crm-rule2)', paddingTop: '8px'}}>
-                <div>Diensten & Onderdelen</div>
-                <div style={{display: 'flex', gap: '32px'}}>
-                  <div style={{width: '20px', textAlign: 'center'}}>1</div>
-                  <div style={{width: '60px', textAlign: 'right'}}>{MONEY.format(Number(invoice.total))}</div>
-                </div>
-              </div>
-            </div>
-            
-            <div style={{background: 'var(--crm-bg)', padding: '16px', borderRadius: '8px', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <div style={{color: overdue ? 'var(--crm-stop)' : 'var(--crm-ink)'}}>
-                <div style={{fontWeight: 'bold', fontSize: '16px'}}>Totaal openstaand</div>
-                <div style={{fontSize: '12px'}}>{status === 'betaald' ? 'Volledig betaald' : `Vervaldatum: ${DATE.format(dueDate)}`}</div>
-              </div>
-              <div style={{fontWeight: 'bold', fontSize: '20px', color: invoice.status === 'betaald' ? 'var(--crm-ok)' : (overdue ? 'var(--crm-stop)' : 'var(--crm-ink)')}}>
-                {invoice.status === 'betaald' ? '€0,00' : MONEY.format(Number(invoice.total))}
-              </div>
-            </div>
-          </>
         )}
+        {showTechnician && (
+          <div>
+            <dt>Op naam van monteur</dt>
+            <dd>{invoice.technician_name ?? <span>geen</span>}</dd>
+          </div>
+        )}
+        <div>
+          <dt>Factuurdatum</dt>
+          <dd>{DATE.format(new Date(invoice.issue_date))}</dd>
+        </div>
+        <div>
+          <dt>Vervaldatum</dt>
+          <dd className={overdue ? styles.lateText : undefined}>{DATE.format(dueDate(invoice.issue_date))}</dd>
+        </div>
+      </dl>
+
+      <div className={overdue ? `${styles.total} ${styles.totalLate}` : styles.total}>
+        <span>{status === 'betaald' ? 'Betaald' : 'Openstaand'}</span>
+        <b>{MONEY.format(Number(invoice.total))}</b>
       </div>
-    </div>
+
+      <Link href={`/admin/facturen/${invoice.id}/bewerken`} className={styles.editLink}>
+        Factuur bewerken →
+      </Link>
+    </aside>
   );
 }
 
-export default function FacturenTable({ rows }: { rows: InvoiceRow[] }) {
-  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceRow | null>(null);
-  /* One source for the tab values, so the array and the state cannot drift —
-     which is what forced the `as any` cast below. */
-  const FILTERS = ['All', 'Draft', 'Sent', 'Due', 'Overdue', 'Paid'] as const;
-  type Filter = (typeof FILTERS)[number];
-  const [filter, setFilter] = useState<Filter>('All');
+type Filter = 'alle' | 'concept' | 'open' | 'laat' | 'betaald';
+const FILTERS: { id: Filter; label: string }[] = [
+  { id: 'alle', label: 'Alle' },
+  { id: 'concept', label: 'Concept' },
+  { id: 'open', label: 'Openstaand' },
+  { id: 'laat', label: 'Te laat' },
+  { id: 'betaald', label: 'Betaald' },
+];
+
+export default function FacturenTable({ rows, showTechnician = false }: { rows: InvoiceRow[]; showTechnician?: boolean }) {
+  const [selected, setSelected] = useState<InvoiceRow | null>(null);
+  const [filter, setFilter] = useState<Filter>('alle');
   const [search, setSearch] = useState('');
 
-  // Calculate Metrics
-  const metrics = useMemo(() => {
-    let outstandingCount = 0;
-    let outstandingSum = 0;
-    let overdueCount = 0;
-    let overdueSum = 0;
-    let paidThisMonthSum = 0;
-    
+  const m = useMemo(() => {
     const now = new Date();
-    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
-    rows.forEach(r => {
-      const val = Number(r.total) || 0;
-      if (r.status === 'betaald') {
-        const issue = new Date(r.issue_date);
-        if (issue >= firstDayOfMonth) paidThisMonthSum += val;
-      } else if (r.status === 'verzonden') {
-        if (isOverdue(r.issue_date)) {
-          overdueCount++;
-          overdueSum += val;
-        } else {
-          outstandingCount++;
-          outstandingSum += val;
-        }
-      }
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const prevStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const sum = (list: InvoiceRow[]) => list.reduce((t, r) => t + (Number(r.total) || 0), 0);
+    const open = rows.filter((r) => r.status === 'verzonden' && !isOverdue(r));
+    const late = rows.filter((r) => isOverdue(r));
+    const paid = rows.filter((r) => r.status === 'betaald');
+    const paidThis = paid.filter((r) => new Date(r.issue_date) >= monthStart);
+    const paidPrev = paid.filter((r) => {
+      const d = new Date(r.issue_date);
+      return d >= prevStart && d < monthStart;
     });
-
-    return { outstandingCount, outstandingSum, overdueCount, overdueSum, paidThisMonthSum };
+    return {
+      open: { n: open.length, sum: sum(open) },
+      late: { n: late.length, sum: sum(late) },
+      concept: rows.filter((r) => r.status === 'concept').length,
+      paidThis: sum(paidThis),
+      paidPrev: sum(paidPrev),
+    };
   }, [rows]);
 
-  // Filter rows
-  const filteredRows = rows.filter(r => {
-    if (search && !r.invoice_number.toLowerCase().includes(search.toLowerCase()) && !r.client_name?.toLowerCase().includes(search.toLowerCase())) {
-      return false;
-    }
-    if (filter === 'Draft' && r.status !== 'concept') return false;
-    if (filter === 'Sent' && r.status !== 'verzonden') return false;
-    if (filter === 'Due' && (r.status !== 'verzonden' || isOverdue(r.issue_date))) return false;
-    if (filter === 'Overdue' && (r.status !== 'verzonden' || !isOverdue(r.issue_date))) return false;
-    if (filter === 'Paid' && r.status !== 'betaald') return false;
+  const change = m.paidPrev > 0 ? Math.round(((m.paidThis - m.paidPrev) / m.paidPrev) * 100) : null;
+
+  const term = search.trim().toLowerCase();
+  const list = rows.filter((r) => {
+    if (term && !`${r.invoice_number} ${r.client_name ?? ''} ${r.client_city ?? ''}`.toLowerCase().includes(term)) return false;
+    if (filter === 'concept') return r.status === 'concept';
+    if (filter === 'open') return r.status === 'verzonden' && !isOverdue(r);
+    if (filter === 'laat') return isOverdue(r);
+    if (filter === 'betaald') return r.status === 'betaald';
     return true;
   });
 
   return (
     <>
-      {/* Metric Cards */}
-      <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px'}}>
-        <div onClick={() => setFilter("Due")}><Card padded><div style={{display: "flex", flexDirection: "column", gap: "8px", cursor: "pointer", border: filter === "Due" ? "1px solid var(--crm-accent)" : undefined}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
-            <FileText size={16} color="var(--crm-warn)"/> Openstaand
-          </div>
-          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>{MONEY.format(metrics.outstandingSum)}</div>
-          <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>{metrics.outstandingCount} facturen open</div>
-        </div></Card></div>
-        
-        <div onClick={() => setFilter("Overdue")}><Card padded><div style={{display: "flex", flexDirection: "column", gap: "8px", cursor: "pointer", border: filter === "Overdue" ? "1px solid var(--crm-accent)" : undefined}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
-            <Clock size={16} color="var(--crm-stop)"/> Vervallen
-          </div>
-          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-stop)'}}>{MONEY.format(metrics.overdueSum)}</div>
-          <div style={{fontSize: '12px', color: 'var(--crm-muted)'}}>{metrics.overdueCount} facturen verlopen</div>
-        </div></Card></div>
-
-        <div onClick={() => setFilter("Paid")}><Card padded><div style={{display: "flex", flexDirection: "column", gap: "8px", cursor: "pointer", border: filter === "Paid" ? "1px solid var(--crm-accent)" : undefined}}>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--crm-muted)', fontSize: '13px', fontWeight: 600}}>
-            <CheckCircle size={16} color="var(--crm-ok)"/> Deze Maand Betaald
-          </div>
-          <div style={{fontSize: '24px', fontWeight: 'bold', color: 'var(--crm-ink)'}}>{MONEY.format(metrics.paidThisMonthSum)}</div>
-          <div style={{fontSize: '12px', color: 'var(--crm-ok)'}}>+18% tov vorige maand</div>
-        </div></Card></div>
+      <div className={styles.metrics}>
+        <button type="button" className={filter === 'open' ? styles.metricOn : styles.metric} onClick={() => setFilter('open')}>
+          <span className={styles.metricLabel}><FileText size={15} /> Openstaand</span>
+          <b>{MONEY.format(m.open.sum)}</b>
+          <span>{m.open.n} facturen</span>
+        </button>
+        <button type="button" className={filter === 'laat' ? styles.metricOn : styles.metric} onClick={() => setFilter('laat')}>
+          <span className={styles.metricLabel}><Clock size={15} /> Te laat</span>
+          <b className={m.late.n ? styles.lateText : undefined}>{MONEY.format(m.late.sum)}</b>
+          <span>{m.late.n ? `${m.late.n} facturen · bel of stuur een herinnering` : 'niets te laat'}</span>
+        </button>
+        <button type="button" className={filter === 'betaald' ? styles.metricOn : styles.metric} onClick={() => setFilter('betaald')}>
+          <span className={styles.metricLabel}><CheckCircle size={15} /> Betaald deze maand</span>
+          <b>{MONEY.format(m.paidThis)}</b>
+          <span>
+            {change === null ? 'geen vergelijking met vorige maand' : `${change >= 0 ? '↑' : '↓'} ${Math.abs(change)}% vs vorige maand`}
+          </span>
+        </button>
       </div>
 
-      {/* Tabs & Search */}
-      <div className={styles.filtersBar}>
-        <div className={styles.tabs} style={{marginBottom: 0, paddingBottom: 0}}>
-          {FILTERS.map(t => (
-            <div key={t} className={`${styles.tab} ${filter === t ? styles.active : ''}`} onClick={() => setFilter(t)}>
-              {t === 'All' ? 'Alles' : t === 'Draft' ? 'Concept' : t === 'Sent' ? 'Verzonden' : t === 'Due' ? 'Openstaand' : t === 'Overdue' ? 'Vervallen' : 'Betaald'}
-            </div>
+      <div className={styles.toolbar}>
+        <div className={styles.filters} role="group" aria-label="Filter">
+          {FILTERS.map((f) => (
+            <button key={f.id} type="button" className={filter === f.id ? styles.filterOn : styles.filter} onClick={() => setFilter(f.id)}>
+              {f.label}
+              {f.id === 'concept' && m.concept > 0 && <span className={styles.count}>{m.concept}</span>}
+              {f.id === 'laat' && m.late.n > 0 && <span className={`${styles.count} ${styles.countLate}`}>{m.late.n}</span>}
+            </button>
           ))}
         </div>
-        <div className={styles.searchBox} style={{maxWidth: '300px', marginLeft: 'auto'}}>
-          <Search size={16} color="var(--crm-muted)" />
-          <input 
-            type="text" 
-            placeholder="Factuurnr of klant..." 
-            className={styles.searchInput}
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
+        <label className={styles.search}>
+          <Search size={16} aria-hidden="true" />
+          <input type="search" placeholder="Factuurnummer, klant of plaats" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Zoek factuur" />
+        </label>
       </div>
 
-      {/* List Layout */}
-      <div className={styles.layout}>
-        <div className={styles.listCol}>
-          {/* Table Header (Desktop) */}
-          <div className={styles.richRow} style={{background: 'transparent', border: 'none', paddingBottom: '8px', paddingTop: 0, color: 'var(--crm-muted)', fontSize: '12px', fontWeight: 600}}>
-            <div style={{flex: '0 0 100px'}}>Factuur #</div>
-            <div style={{flex: 2}}>Klant</div>
-            <div style={{flex: 2}}>Voertuig / Klus</div>
-            <div style={{flex: 1, textAlign: 'right'}}>Bedrag</div>
-            <div style={{flex: 1, textAlign: 'right'}}>Vervaldatum</div>
-            <div style={{flex: 1, textAlign: 'right'}}>Status</div>
+      <div className={selected ? `${styles.layout} ${styles.layoutOpen}` : styles.layout}>
+        <div className={styles.table} role="table" aria-label="Facturen">
+          <div className={`${styles.row} ${styles.head} ${showTechnician ? styles.withTech : ''}`} role="row">
+            <span role="columnheader">Nummer</span>
+            <span role="columnheader">Klant</span>
+            <span role="columnheader">Auto / klus</span>
+            {showTechnician && <span role="columnheader" className={styles.colTech}>Monteur</span>}
+            <span role="columnheader" className={styles.num}>Bedrag</span>
+            <span role="columnheader" className={styles.colDue}>Vervalt</span>
+            <span role="columnheader">Status</span>
           </div>
-
-          {filteredRows.length === 0 && (
-            <div style={{padding: '32px', textAlign: 'center', color: 'var(--crm-muted)'}}>Geen facturen gevonden.</div>
-          )}
-
-          {filteredRows.map(row => {
-            const isSelected = selectedInvoice?.id === row.id;
-            const overdue = row.status === 'verzonden' && isOverdue(row.issue_date);
-            const due = getDueDate(row.issue_date);
-            
+          {list.length === 0 && <p className={styles.empty}>Geen facturen gevonden.</p>}
+          {list.map((row) => {
+            const car = carOf(row);
+            const late = isOverdue(row);
             return (
-              <div key={row.id} className={`${styles.richRow} ${isSelected ? styles.selected : ''}`} onClick={() => setSelectedInvoice(row)} style={{padding: '12px 16px', gap: '16px'}}>
-                <div style={{flex: '0 0 100px', fontWeight: 600, color: 'var(--crm-ink)', fontSize: '13px'}}>{row.invoice_number}</div>
-                
-                <div style={{flex: 2, display: 'flex', flexDirection: 'column'}}>
-                  <span style={{fontWeight: 500, fontSize: '14px', color: 'var(--crm-ink)'}}>{row.client_name}</span>
-                  <span style={{fontSize: '11px', color: 'var(--crm-muted)'}}>{row.client_city || 'Onbekend'}</span>
-                </div>
-
-                <div style={{flex: 2, display: 'flex', flexDirection: 'column'}}>
-                  <span style={{fontSize: '13px', color: 'var(--crm-ink)'}}>{row.job ? ([row.job.car_make, row.job.car_model].filter(Boolean).join(' ') || 'Auto') : 'Dienst'}</span>
-                  <span style={{fontSize: '11px', color: 'var(--crm-muted)'}}>{row.job?.service_type || '—'}</span>
-                </div>
-
-                <div style={{flex: 1, textAlign: 'right', fontWeight: 600, fontSize: '14px', color: 'var(--crm-ink)'}}>
-                  {MONEY.format(Number(row.total))}
-                </div>
-
-                <div style={{flex: 1, textAlign: 'right', fontSize: '12px', color: overdue ? 'var(--crm-stop)' : 'var(--crm-muted)'}}>
-                  {DATE.format(due)}
-                </div>
-
-                <div style={{flex: 1, textAlign: 'right'}}>
-                  {row.status === 'betaald' && <Badge tone="ok">Betaald</Badge>}
-                  {row.status === 'concept' && <Badge tone="info">Concept</Badge>}
-                  {row.status === 'verzonden' && !overdue && <Badge tone="warn">Openstaand</Badge>}
-                  {overdue && <Badge tone="stop">Vervallen</Badge>}
-                </div>
-              </div>
+              <button
+                key={row.id}
+                type="button"
+                role="row"
+                className={`${styles.row} ${showTechnician ? styles.withTech : ''} ${selected?.id === row.id ? styles.rowOn : ''}`}
+                onClick={() => setSelected(row)}
+              >
+                <span className={styles.nr}>{row.invoice_number}</span>
+                <span className={styles.client}>
+                  <b>{row.client_name}</b>
+                  <small>{row.client_city || '—'}</small>
+                </span>
+                <span className={styles.car}>
+                  {row.logo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={row.logo} alt="" />
+                  ) : (
+                    <i aria-hidden="true" />
+                  )}
+                  <span>
+                    <b>{car ?? 'Dienst'}</b>
+                    <small>{row.job?.service_type || '—'}</small>
+                  </span>
+                </span>
+                {showTechnician && <span className={`${styles.tech} ${styles.colTech}`}>{row.technician_name ?? '—'}</span>}
+                <span className={`${styles.num} ${styles.amount}`}>{MONEY.format(Number(row.total))}</span>
+                <span className={`${late ? styles.lateText : styles.due} ${styles.colDue}`}>{DATE.format(dueDate(row.issue_date))}</span>
+                <span>
+                  <StatusPill row={row} />
+                </span>
+              </button>
             );
           })}
         </div>
 
-        {selectedInvoice && (
-          <div className={styles.drawerCol}>
-            <InvoiceDetailDrawer invoice={selectedInvoice} onClose={() => setSelectedInvoice(null)} />
-          </div>
-        )}
+        {selected && <Drawer key={selected.id} invoice={selected} onClose={() => setSelected(null)} showTechnician={showTechnician} />}
       </div>
     </>
   );

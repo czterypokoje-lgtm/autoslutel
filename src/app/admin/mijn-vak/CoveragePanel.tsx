@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Trash2, Wrench } from 'lucide-react';
 import styles from '../admin.module.css';
+import vak from './vak.module.css';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import type { Scenario } from '@/lib/scenarios';
 
@@ -87,8 +88,8 @@ export default function CoveragePanel({
       {error && <p className={`${styles.note} ${styles.noteBad}`}>{error}</p>}
 
       {/* ── tools ── */}
-      <h2 style={{ fontSize: 15, fontWeight: 700, color: 'var(--crm-ink)', margin: '26px 0 10px' }}>
-        <Wrench size={15} strokeWidth={2} style={{ verticalAlign: -2, marginRight: 7 }} />
+      <h2 className={vak.sectionTitle}>
+        <Wrench size={16} strokeWidth={2} aria-hidden="true" />
         Gereedschap in de bus
       </h2>
 
@@ -106,8 +107,8 @@ export default function CoveragePanel({
             </div>
             <div className={styles.rowActions}>
               <button
-                className={styles.iconBtn}
-                style={{ borderRadius: 'var(--crm-r)', border: '1px solid var(--crm-rule2)' }}
+                className={`${styles.iconBtn} ${vak.iconBtn}`}
+                aria-label={`${tool.brand} verwijderen`}
                 onClick={() => removeTool(tool.id)}
                 disabled={busy}
                 title="Verwijderen"
@@ -118,15 +119,15 @@ export default function CoveragePanel({
           </div>
         ))}
 
-        <div className={styles.row} style={{ gap: 8, flexWrap: 'wrap' }}>
-          <select className={styles.input} style={{ width: 150 }} value={toolBrand} onChange={(e) => setToolBrand(e.target.value)}>
+        <div className={`${styles.row} ${vak.addRow}`}>
+          <select className={`${styles.input} ${vak.brandSelect}`} aria-label="Merk gereedschap" value={toolBrand} onChange={(e) => setToolBrand(e.target.value)}>
             {TOOL_BRANDS.map((b) => (
               <option key={b}>{b}</option>
             ))}
           </select>
           <input
-            className={styles.input}
-            style={{ width: 200 }}
+            className={`${styles.input} ${vak.modelInput}`}
+            aria-label="Model gereedschap"
             placeholder="Model, bijv. IM608 Pro"
             value={toolModel}
             onChange={(e) => setToolModel(e.target.value)}

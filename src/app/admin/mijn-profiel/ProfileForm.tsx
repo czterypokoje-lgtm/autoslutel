@@ -2,7 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '../vandaag/vandaag.module.css';
+import { BadgeCheck, Bell, Building2, CalendarClock, KeyRound, User } from 'lucide-react';
+import pf from './profiel.module.css';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { TECHNICIAN_COLOURS } from '@/lib/crmColours';
 import { toWebp } from '@/lib/toWebp';
@@ -21,9 +22,48 @@ export interface Profile {
   telegramConnected: boolean;
   /** null when TELEGRAM_BOT_USERNAME isn't configured on this deployment yet. */
   telegramConnectUrl: string | null;
+  /** null until migration 0062 has run on this database. */
+  business: Business | null;
 }
 
+export interface Business {
+  company_name: string;
+  kvk_nummer: string;
+  btw_nummer: string;
+  iban: string;
+  business_street: string;
+  business_postcode: string;
+  business_city: string;
+  contact_email: string;
+  insurance_company: string;
+  insurance_policy: string;
+  insurance_valid_until: string;
+  base_city: string;
+  certifications: string[];
+  gbp_url: string;
+}
+
+type Tab = 'profiel' | 'bedrijf' | 'beschikbaar' | 'meldingen' | 'inloggen';
+const TABS: { id: Tab; label: string; icon: typeof User }[] = [
+  { id: 'profiel', label: 'Profiel', icon: User },
+  { id: 'bedrijf', label: 'Bedrijf', icon: Building2 },
+  { id: 'beschikbaar', label: 'Beschikbaarheid', icon: CalendarClock },
+  { id: 'meldingen', label: 'Meldingen', icon: Bell },
+  { id: 'inloggen', label: 'Inloggen', icon: KeyRound },
+];
+
 const COLOURS = TECHNICIAN_COLOURS;
+
+/** A labelled field with an optional hint underneath. */
+function Field({ id, label, children, hint }: { id: string; label: string; children: React.ReactNode; hint?: string }) {
+  return (
+    <div className={pf.field}>
+      <label htmlFor={id}>{label}</label>
+      {children}
+      {hint && <small>{hint}</small>}
+    </div>
+  );
+}
 
 export default function ProfileForm({ profile }: { profile: Profile }) {
   const router = useRouter();
@@ -44,6 +84,50 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
   const [busy, setBusy] = useState(false);
 
   const photoInput = useRef<HTMLInputElement>(null);
+  const [tab, setTab] = useState<Tab>('profiel');
+
+  const [biz, setBiz] = useState<Business | null>(profile.business);
+  const [certText, setCertText] = useState((profile.business?.certifications ?? []).join(', '));
+  const setB = (key: keyof Business, value: string) => setBiz((b) => (b ? { ...b, [key]: value } : b));
+
+  async function saveBusiness() {
+    if (!biz) return;
+    setBusy(true);
+    setError('');
+    setSaved('');
+    const response = await fetch('/api/admin/profiel/bedrijf', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...biz,
+        certifications: certText.split(',').map((c) => c.trim()).filter(Boolean),
+      }),
+    }).catch(() => null);
+    if (!response || !response.ok) {
+      const payload = await response?.json().catch(() => null);
+      setError(payload?.error ?? 'Opslaan mislukt.');
+      setBusy(false);
+      return;
+    }
+    setSaved('Bedrijfsgegevens opgeslagen.');
+    setBusy(false);
+    router.refresh();
+  }
+
+  /** How complete the profile is, so it is obvious what is still missing. */
+  const checks = [
+    Boolean(name),
+    Boolean(phone),
+    Boolean(photo),
+    Boolean(werkgebied.trim()),
+    Boolean(biz?.kvk_nummer),
+    Boolean(biz?.iban),
+    Boolean(biz?.insurance_company),
+    profile.telegramConnected,
+  ];
+  const completeness = Math.round((checks.filter(Boolean).length / checks.length) * 100);
+  const insuranceExpired =
+    Boolean(biz?.insurance_valid_until) && new Date(`${biz!.insurance_valid_until}T23:59:59`) < new Date();
 
   async function patch(body: Record<string, unknown>, done: string) {
     setBusy(true);
@@ -169,227 +253,290 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
   }
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.head}>
-        <h1 className={styles.title}>Mijn profiel</h1>
-        <span className={styles.sub}>
-          {profile.employmentType === 'zzp' ? 'zzp' : 'loondienst'}
-          {!profile.active && ' · op non-actief gezet door kantoor'}
-        </span>
-      </div>
-
-      {/* ---- Duty ---- */}
-      <div className={styles.card}>
-        <div className={styles.body}>
-          <span className={styles.label}>Beschikbaarheid nu</span>
-          <p className={styles.meta}>
-            {online
-              ? profile.onlineSince
-                ? `Op dienst sinds ${profile.onlineSince.slice(11, 16)}.`
-                : 'Je staat op dienst.'
-              : 'Je staat uit dienst — kantoor plant je nu niet in voor spoed.'}
-          </p>
-          <button
-            className={`${styles.tap} ${online ? styles.tapDone : styles.tapPrimary}`}
-            style={{ gridColumn: 'auto', width: '100%' }}
-            onClick={toggleOnline}
-            disabled={busy}
-          >
-            {online ? 'Op dienst — zet uit' : 'Uit dienst — zet aan'}
-          </button>
-          <p className={styles.note}>
-            Dit is voor vandaag, nu. Een hele dag vrij nemen doe je bij{' '}
-            <strong>Mijn agenda</strong>.
-          </p>
-        </div>
-      </div>
-
-      {/* ---- Telegram ---- */}
-      <div className={styles.card}>
-        <div className={styles.body}>
-          <span className={styles.label}>Meldingen via Telegram</span>
-          {profile.telegramConnected ? (
-            <p className={styles.meta}>Gekoppeld — nieuwe klussen, voorraad en berichten komen hier binnen.</p>
-          ) : profile.telegramConnectUrl ? (
-            <>
-              <p className={styles.meta}>Nog niet gekoppeld.</p>
-              <a
-                className={`${styles.tap} ${styles.tapPrimary}`}
-                style={{ gridColumn: 'auto', width: '100%', textDecoration: 'none' }}
-                href={profile.telegramConnectUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open Telegram en druk op Start
-              </a>
-              <p className={styles.note}>
-                Opent de Autosleutel24-bot in Telegram. Druk daar op <strong>Start</strong> — daarna
-                komen meldingen hier automatisch binnen.
-              </p>
-            </>
+    <div className={pf.page}>
+      <header className={pf.head}>
+        <div className={pf.who}>
+          {photo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={photo} alt="" className={pf.avatar} />
           ) : (
-            <p className={styles.note}>Nog niet beschikbaar op deze omgeving.</p>
+            <span className={pf.avatarInitial} style={{ background: colour }}>
+              {(name || '?').charAt(0).toUpperCase()}
+            </span>
           )}
+          <div>
+            <h1 className={pf.title}>Mijn profiel</h1>
+            <p className={pf.sub}>
+              {name || 'Monteur'} · {profile.employmentType === 'zzp' ? 'zzp' : 'loondienst'}
+              {!profile.active && ' · op non-actief gezet door kantoor'}
+            </p>
+          </div>
         </div>
-      </div>
+        <div className={pf.complete} aria-label={`Profiel ${completeness}% compleet`}>
+          <span>Profiel {completeness}% compleet</span>
+          <span className={pf.completeBar}>
+            <span style={{ width: `${completeness}%` }} />
+          </span>
+        </div>
+      </header>
 
-      {/* ---- Photo ---- */}
-      <div className={styles.card}>
-        <div className={styles.body}>
-          <span className={styles.label}>Profielfoto</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 8 }}>
+      <nav className={pf.tabs} role="tablist" aria-label="Onderdelen">
+        {TABS.map((t) => {
+          const Icon = t.icon;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={tab === t.id}
+              className={tab === t.id ? pf.tabOn : pf.tab}
+              onClick={() => {
+                setTab(t.id);
+                setSaved('');
+                setError('');
+              }}
+            >
+              <Icon size={16} aria-hidden="true" />
+              {t.label}
+            </button>
+          );
+        })}
+      </nav>
+
+      {(saved || error) && <p className={error ? pf.msgBad : pf.msgOk}>{error || saved}</p>}
+
+      {tab === 'profiel' && (
+        <section className={pf.card}>
+          <h2 className={pf.h2}>Jouw gegevens</h2>
+          <div className={pf.photoRow}>
             {photo ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={photo}
-                alt=""
-                style={{
-                  width: 84,
-                  height: 84,
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  border: '2px solid var(--crm-rule2)',
-                }}
-              />
+              <img src={photo} alt="" className={pf.photo} />
             ) : (
-              <span
-                style={{
-                  width: 84,
-                  height: 84,
-                  borderRadius: '50%',
-                  background: colour,
-                  color: '#fff',
-                  display: 'grid',
-                  placeItems: 'center',
-                  fontSize: 30,
-                  fontWeight: 800,
-                }}
-              >
+              <span className={pf.initial} style={{ background: colour }}>
                 {(name || '?').charAt(0).toUpperCase()}
               </span>
             )}
-            <button
-              className={styles.tap}
-              style={{ flex: 1 }}
-              onClick={() => photoInput.current?.click()}
-              disabled={busy}
-            >
-              {photo ? 'Foto vervangen' : 'Foto toevoegen'}
-            </button>
-          </div>
-          <input
-            ref={photoInput}
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              e.target.value = '';
-              if (file) uploadPhoto(file);
-            }}
-          />
-        </div>
-      </div>
-
-      {/* ---- Details ---- */}
-      <div className={styles.card}>
-        <div className={styles.body}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="pnaam">Naam</label>
-            <input id="pnaam" className={styles.input} value={name}
-              onChange={(e) => setName(e.target.value)} />
+            <div className={pf.photoText}>
+              <b>Profielfoto</b>
+              <span>Klanten zien deze foto als je onderweg bent. Een duidelijke foto van je gezicht werkt het best.</span>
+              <button type="button" className={pf.ghostBtn} onClick={() => photoInput.current?.click()} disabled={busy}>
+                {photo ? 'Foto vervangen' : 'Foto toevoegen'}
+              </button>
+            </div>
+            <input
+              ref={photoInput}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                e.target.value = '';
+                if (file) uploadPhoto(file);
+              }}
+            />
           </div>
 
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="ptel">Telefoon</label>
-            <input id="ptel" className={styles.input} type="tel" value={phone}
-              onChange={(e) => setPhone(e.target.value)} />
+          <div className={pf.grid}>
+            <Field id="pnaam" label="Naam">
+              <input id="pnaam" value={name} onChange={(e) => setName(e.target.value)} />
+            </Field>
+            <Field id="ptel" label="Telefoon">
+              <input id="ptel" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </Field>
           </div>
 
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="pwg">Werkgebied</label>
-            <input id="pwg" className={styles.input} value={werkgebied}
-              placeholder="3500-3599, 1000-1099"
-              onChange={(e) => setWerkgebied(e.target.value)} />
-            <span className={styles.meta}>
-              Postcodereeksen, gescheiden door komma&apos;s. De eerste vier
-              cijfers bepalen de regio; hierop stelt kantoor jou voor bij nieuwe
-              klussen.
-            </span>
-          </div>
-
-          <div className={styles.field}>
-            <span className={styles.label}>Kleur in de agenda</span>
-            <div style={{ display: 'flex', gap: 8 }}>
+          <div className={pf.field}>
+            <span className={pf.fakeLabel}>Kleur in de agenda</span>
+            <div className={pf.swatches}>
               {COLOURS.map((c) => (
                 <button
                   key={c}
                   type="button"
                   aria-label={`Kleur ${c}`}
+                  aria-pressed={colour === c}
                   onClick={() => setColour(c)}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 10,
-                    background: c,
-                    border: colour === c ? '3px solid var(--crm-ink)' : '1px solid var(--crm-rule2)',
-                    cursor: 'pointer',
-                  }}
+                  className={colour === c ? pf.swatchOn : pf.swatch}
+                  style={{ background: c }}
                 />
               ))}
             </div>
           </div>
 
-          <button
-            className={`${styles.tap} ${styles.tapPrimary}`}
-            style={{ gridColumn: 'auto', width: '100%' }}
-            onClick={saveProfile}
-            disabled={busy}
+          <div className={pf.actions}>
+            <button type="button" className={pf.primary} onClick={saveProfile} disabled={busy}>
+              {busy ? 'Opslaan…' : 'Profiel opslaan'}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {tab === 'bedrijf' && (
+        <section className={pf.card}>
+          <h2 className={pf.h2}>Bedrijfsgegevens</h2>
+          {!biz ? (
+            <p className={pf.note}>
+              Bedrijfsgegevens zijn nog niet geactiveerd. Kantoor moet eerst de database-update (0062) uitvoeren.
+            </p>
+          ) : (
+            <>
+              <p className={pf.note}>Deze gegevens komen op je facturen en zijn alleen zichtbaar voor jou en kantoor.</p>
+              <div className={pf.grid}>
+                <Field id="bnaam" label="Bedrijfsnaam">
+                  <input id="bnaam" value={biz.company_name} onChange={(e) => setB('company_name', e.target.value)} placeholder="Bijv. Garage NRD" />
+                </Field>
+                <Field id="bmail" label="Zakelijk e-mailadres" hint="Voor facturen en post van kantoor. Je login-adres verander je bij Inloggen.">
+                  <input id="bmail" type="email" value={biz.contact_email} onChange={(e) => setB('contact_email', e.target.value)} />
+                </Field>
+                <Field id="bkvk" label="KVK-nummer" hint="8 cijfers">
+                  <input id="bkvk" inputMode="numeric" value={biz.kvk_nummer} onChange={(e) => setB('kvk_nummer', e.target.value)} />
+                </Field>
+                <Field id="bbtw" label="BTW-nummer">
+                  <input id="bbtw" value={biz.btw_nummer} onChange={(e) => setB('btw_nummer', e.target.value)} placeholder="NL123456789B01" />
+                </Field>
+                <Field id="biban" label="IBAN" hint="Hierop betaalt kantoor je saldo uit.">
+                  <input id="biban" value={biz.iban} onChange={(e) => setB('iban', e.target.value)} placeholder="NL91 ABNA 0417 1643 00" />
+                </Field>
+                <Field id="bbase" label="Vestigingsplaats" hint="De plaats waar je vandaan rijdt.">
+                  <input id="bbase" value={biz.base_city} onChange={(e) => setB('base_city', e.target.value)} />
+                </Field>
+                <Field id="bstraat" label="Straat en huisnummer">
+                  <input id="bstraat" value={biz.business_street} onChange={(e) => setB('business_street', e.target.value)} />
+                </Field>
+                <div className={pf.pair}>
+                  <Field id="bpc" label="Postcode">
+                    <input id="bpc" value={biz.business_postcode} onChange={(e) => setB('business_postcode', e.target.value)} />
+                  </Field>
+                  <Field id="bplaats" label="Plaats">
+                    <input id="bplaats" value={biz.business_city} onChange={(e) => setB('business_city', e.target.value)} />
+                  </Field>
+                </div>
+              </div>
+
+              <h3 className={pf.h3}>Verzekering</h3>
+              {insuranceExpired && <p className={pf.msgBad}>Je verzekering is verlopen. Werk de gegevens bij.</p>}
+              <div className={pf.grid3}>
+                <Field id="vmij" label="Verzekeraar">
+                  <input id="vmij" value={biz.insurance_company} onChange={(e) => setB('insurance_company', e.target.value)} placeholder="Bijv. Centraal Beheer" />
+                </Field>
+                <Field id="vpol" label="Polisnummer">
+                  <input id="vpol" value={biz.insurance_policy} onChange={(e) => setB('insurance_policy', e.target.value)} />
+                </Field>
+                <Field id="vtot" label="Geldig tot">
+                  <input id="vtot" type="date" value={biz.insurance_valid_until} onChange={(e) => setB('insurance_valid_until', e.target.value)} />
+                </Field>
+              </div>
+
+              <h3 className={pf.h3}>Vakmanschap</h3>
+              <div className={pf.grid}>
+                <Field id="bcert" label="Certificaten" hint="Gescheiden door komma's, bijv. Autel IM608, AVDI Abrites">
+                  <input id="bcert" value={certText} onChange={(e) => setCertText(e.target.value)} />
+                </Field>
+                <Field id="bgbp" label="Google-bedrijfsprofiel" hint="Link naar je eigen Google-profiel (https://…)">
+                  <input id="bgbp" type="url" value={biz.gbp_url} onChange={(e) => setB('gbp_url', e.target.value)} />
+                </Field>
+              </div>
+
+              <div className={pf.actions}>
+                <button type="button" className={pf.primary} onClick={saveBusiness} disabled={busy}>
+                  {busy ? 'Opslaan…' : 'Bedrijfsgegevens opslaan'}
+                </button>
+              </div>
+            </>
+          )}
+        </section>
+      )}
+
+      {tab === 'beschikbaar' && (
+        <section className={pf.card}>
+          <h2 className={pf.h2}>Beschikbaarheid</h2>
+          <div className={online ? pf.dutyOn : pf.duty}>
+            <div>
+              <b>{online ? 'Je staat op dienst' : 'Je staat uit dienst'}</b>
+              <span>
+                {online
+                  ? profile.onlineSince
+                    ? `Sinds ${profile.onlineSince.slice(11, 16)}. Kantoor kan je inplannen voor spoed.`
+                    : 'Kantoor kan je inplannen voor spoed.'
+                  : 'Kantoor plant je nu niet in voor spoed.'}
+              </span>
+            </div>
+            <button type="button" className={online ? pf.ghostBtn : pf.primary} onClick={toggleOnline} disabled={busy}>
+              {online ? 'Uit dienst gaan' : 'Op dienst gaan'}
+            </button>
+          </div>
+
+          <Field
+            id="pwg"
+            label="Werkgebied (postcodes)"
+            hint="Postcodereeksen gescheiden door komma's, bijv. 3500-3599, 1000-1099. Hierop krijg je klussen aangeboden."
           >
-            {busy ? 'Opslaan…' : 'Opslaan'}
-          </button>
-        </div>
-      </div>
-
-      {/* ---- Login ---- */}
-      <div className={styles.card}>
-        <div className={styles.body}>
-          <span className={styles.label}>Inloggegevens</span>
-
-          <div className={styles.field} style={{ marginTop: 8 }}>
-            <label className={styles.label} htmlFor="pmail">E-mailadres</label>
-            <input id="pmail" className={styles.input} type="email" value={email}
-              autoComplete="username" onChange={(e) => setEmail(e.target.value)} />
-            <button className={styles.tap} onClick={changeEmail}
-              disabled={busy || email.trim() === profile.email}>
-              E-mailadres wijzigen
-            </button>
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="ppw">Nieuw wachtwoord</label>
-            <input id="ppw" className={styles.input} type="password" value={password}
-              autoComplete="new-password" onChange={(e) => setPassword(e.target.value)} />
-            <input className={styles.input} type="password" value={passwordAgain}
-              autoComplete="new-password" placeholder="Nog een keer"
-              onChange={(e) => setPasswordAgain(e.target.value)} />
-            <button className={styles.tap} onClick={changePassword}
-              disabled={busy || password.length === 0}>
-              Wachtwoord wijzigen
-            </button>
-          </div>
-
-          <p className={styles.note}>
-            Een nieuw e-mailadres gaat pas in nadat je de bevestigingsmail hebt
-            geopend. Komt die niet aan, vraag kantoor dan om het adres te
-            wijzigen — de mailserver van dit project verstuurt nog niet naar
-            elk adres.
+            <input id="pwg" value={werkgebied} placeholder="3500-3599, 1000-1099" onChange={(e) => setWerkgebied(e.target.value)} />
+          </Field>
+          <p className={pf.note}>
+            Een hele dag vrij nemen doe je bij <a href="/admin/mijn-agenda">Mijn agenda</a>. Welke auto&apos;s je doet zet je bij{' '}
+            <a href="/admin/mijn-vak">Mijn vak</a>.
           </p>
-        </div>
-      </div>
+          <div className={pf.actions}>
+            <button type="button" className={pf.primary} onClick={saveProfile} disabled={busy}>
+              {busy ? 'Opslaan…' : 'Werkgebied opslaan'}
+            </button>
+          </div>
+        </section>
+      )}
 
-      {error && <p className={styles.error}>{error}</p>}
-      {saved && <p className={styles.ok}>{saved}</p>}
+      {tab === 'meldingen' && (
+        <section className={pf.card}>
+          <h2 className={pf.h2}>Meldingen via Telegram</h2>
+          {profile.telegramConnected ? (
+            <p className={pf.okLine}>
+              <BadgeCheck size={18} aria-hidden="true" /> Gekoppeld. Nieuwe klussen, aanbod, voorraad en berichten komen hier binnen.
+            </p>
+          ) : profile.telegramConnectUrl ? (
+            <>
+              <p className={pf.note}>
+                Nog niet gekoppeld. Zonder Telegram mis je nieuw aanbod als je niet in het CRM kijkt.
+              </p>
+              <a className={pf.primary} href={profile.telegramConnectUrl} target="_blank" rel="noreferrer">
+                Open Telegram en druk op Start
+              </a>
+              <p className={pf.note}>De Autosleutel24-bot opent in Telegram. Druk daar op Start, dan komen meldingen vanzelf binnen.</p>
+            </>
+          ) : (
+            <p className={pf.note}>Nog niet beschikbaar op deze omgeving.</p>
+          )}
+        </section>
+      )}
+
+      {tab === 'inloggen' && (
+        <section className={pf.card}>
+          <h2 className={pf.h2}>Inloggegevens</h2>
+          <div className={pf.grid}>
+            <div className={pf.field}>
+              <label htmlFor="pmail">E-mailadres om in te loggen</label>
+              <input id="pmail" type="email" value={email} autoComplete="username" onChange={(e) => setEmail(e.target.value)} />
+              <button type="button" className={pf.ghostBtn} onClick={changeEmail} disabled={busy || email.trim() === profile.email}>
+                E-mailadres wijzigen
+              </button>
+            </div>
+            <div className={pf.field}>
+              <label htmlFor="ppw">Nieuw wachtwoord</label>
+              <input id="ppw" type="password" value={password} autoComplete="new-password" onChange={(e) => setPassword(e.target.value)} />
+              <input
+                aria-label="Nieuw wachtwoord nog een keer"
+                type="password"
+                value={passwordAgain}
+                autoComplete="new-password"
+                placeholder="Nog een keer"
+                onChange={(e) => setPasswordAgain(e.target.value)}
+              />
+              <button type="button" className={pf.ghostBtn} onClick={changePassword} disabled={busy || password.length === 0}>
+                Wachtwoord wijzigen
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
