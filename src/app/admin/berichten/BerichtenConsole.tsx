@@ -10,7 +10,8 @@ import {
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { waLink } from '@/lib/whatsapp';
 import {
-  CHANNEL_LABELS, conversationInitial, isPhoneChannel, type InboxChannel,
+  CHANNEL_LABELS, conversationInitial, isPhoneChannel, metaWindowOpen,
+  type InboxChannel,
 } from '@/lib/berichten';
 import {
   replyToConversation, setConversationAi, assignConversationToMe,
@@ -31,6 +32,7 @@ export interface Thread {
   unread: boolean;
   snippet: string | null;
   lastMessageAt: string;
+  lastInboundAt: string | null;
   createdAt: string;
   lead: {
     id: string;
@@ -387,8 +389,17 @@ export default function BerichtenConsole({ threads }: { threads: Thread[] }) {
       ].sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime())
     : [];
 
-  /* WhatsApp and phone are answered on a handset — see berichtenStore. */
-  const replyable = selected ? selected.channel === 'email' : false;
+  /*
+   * Whether there is a box to type in, and why not when there isn't.
+   *
+   * E-mail is always open. Instagram and Messenger are open only inside Meta's
+   * 24-hour window — greyed out rather than hidden, so nobody writes three
+   * paragraphs that Meta will refuse. WhatsApp and phone are answered on a
+   * handset; see berichtenStore for that one.
+   */
+  const isMeta = selected?.channel === 'instagram' || selected?.channel === 'messenger';
+  const windowOpen = isMeta && metaWindowOpen(selected?.lastInboundAt);
+  const replyable = selected ? selected.channel === 'email' || windowOpen : false;
   const phone = selected?.lead?.phone ?? (selected && isPhoneChannel(selected.channel) ? selected.externalId : null);
   const title = selected
     ? selected.displayName || selected.lead?.name || selected.externalId
@@ -593,7 +604,9 @@ export default function BerichtenConsole({ threads }: { threads: Thread[] }) {
               <p className={own.notReplyable}>
                 {isPhoneChannel(selected.channel)
                   ? 'WhatsApp en telefoon lopen via de assistent. Antwoord zelf met de WhatsApp-knop hieronder.'
-                  : 'Dit kanaal is nog niet aangesloten — antwoorden kan zodra Meta de app heeft goedgekeurd.'}
+                  : selected.lastInboundAt
+                    ? 'Het antwoordvenster van 24 uur is verlopen. Meta staat alleen een bericht toe binnen een dag nadat de klant zelf geschreven heeft — bel of mail in plaats daarvan.'
+                    : 'Nog geen bericht van de klant op dit kanaal, dus Meta staat nog geen antwoord toe.'}
               </p>
             )}
 

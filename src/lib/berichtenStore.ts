@@ -1,8 +1,10 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { sendMail } from './email.ts';
+import { sendMetaMessage } from './metaSend.ts';
 import {
   isPhoneChannel,
+  metaWindowOpen,
   normaliseExternalId,
   replySubject,
   type InboxChannel,
@@ -207,6 +209,7 @@ export type SendResult =
 
 const MAX_BODY = 4000;
 
+
 /**
  * Send a reply on whichever channel the thread came in on, then store it.
  *
@@ -229,7 +232,7 @@ export async function sendInboxMessage(
 
   const { data: conversation, error } = await supabase
     .from('inbox_conversations')
-    .select('id, channel, external_id, subject')
+    .select('id, channel, external_id, subject, last_inbound_at')
     .eq('id', conversationId)
     .single();
 
@@ -238,6 +241,10 @@ export async function sendInboxMessage(
   }
 
   const channel = conversation.channel as InboxChannel;
+
+  /* Only Meta hands back an id worth storing; Resend's goes unused because
+     nothing in this phase reads delivery events for e-mail. */
+  let providerMessageId: string | null = null;
 
   switch (channel) {
     case 'email': {
@@ -271,11 +278,20 @@ export async function sendInboxMessage(
       };
 
     case 'instagram':
-    case 'messenger':
-      return {
-        ok: false,
-        error: 'Instagram en Facebook zijn nog niet aangesloten.',
-      };
+    case 'messenger': {
+      if (!metaWindowOpen(conversation.last_inbound_at)) {
+        return {
+          ok: false,
+          error:
+            'Het antwoordvenster van 24 uur is verlopen. Meta staat alleen een bericht toe binnen een dag nadat de klant zelf geschreven heeft.',
+        };
+      }
+
+      const sent = await sendMetaMessage(channel, String(conversation.external_id), text);
+      if (!sent.ok) return { ok: false, error: sent.error };
+      providerMessageId = sent.messageId;
+      break;
+    }
   }
 
   const stored = await recordMessage(supabase, {
@@ -283,6 +299,7 @@ export async function sendInboxMessage(
     direction: 'out',
     author: 'human',
     body: text,
+    providerMessageId,
     sentBy,
   });
 

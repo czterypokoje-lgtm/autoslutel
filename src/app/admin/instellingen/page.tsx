@@ -126,6 +126,23 @@ export default async function InstellingenPage() {
     vars: ['RESEND_WEBHOOK_SECRET', 'RESEND_API_KEY'],
   };
 
+  /*
+   * Instagram and Messenger are one app, one token and one review — which is
+   * why they are one row here rather than two. The thing this row cannot see,
+   * and the thing that actually blocks going live, is whether Meta has granted
+   * Advanced Access: the credentials look identical before and after.
+   */
+  const meta: Integration = {
+    name: 'Instagram & Facebook (Meta)',
+    what: 'DM\u2019s van Instagram en Messenger komen in het postvak bij Berichten.',
+    state: stateOf(['META_APP_SECRET', 'META_VERIFY_TOKEN', 'META_PAGE_ID', 'META_PAGE_ACCESS_TOKEN']),
+    detail:
+      stateOf(['META_APP_SECRET', 'META_VERIFY_TOKEN', 'META_PAGE_ID', 'META_PAGE_ACCESS_TOKEN']) === 'live'
+        ? 'Gegevens compleet. Werkt pas echt zodra Meta App Review Advanced Access heeft gegeven — tot die tijd komen alleen berichten binnen van mensen met een rol op de app.'
+        : 'Niet gekoppeld. DM\u2019s blijven in de Meta Business Suite en het CRM weet er niets van.',
+    vars: ['META_APP_SECRET', 'META_VERIFY_TOKEN', 'META_PAGE_ID', 'META_PAGE_ACCESS_TOKEN'],
+  };
+
   const payments: Integration = {
     name: 'Betalingen (Mollie)',
     what: 'iDEAL-betalingen in de webshop.',
@@ -183,7 +200,7 @@ export default async function InstellingenPage() {
 
   const groups: { title: string; items: Integration[] }[] = [
     { title: 'Leads', items: [leadAlert, mail] },
-    { title: 'Communicatie', items: [inbound, whatsapp, telegram] },
+    { title: 'Communicatie', items: [inbound, meta, whatsapp, telegram] },
     { title: 'Advertenties', items: [googleAds, bing] },
     { title: 'Betalingen', items: [payments] },
     { title: 'Kosten', items: [fuel] },

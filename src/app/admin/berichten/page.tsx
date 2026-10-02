@@ -51,6 +51,7 @@ export default async function BerichtenPage({
     ai_enabled: boolean;
     subject: string | null;
     last_message_at: string | null;
+    last_inbound_at: string | null;
     last_snippet: string | null;
     unread: boolean;
     created_at: string;
@@ -59,7 +60,7 @@ export default async function BerichtenPage({
   const listQuery = supabase
     .from('inbox_conversations')
     .select(
-      'id, channel, external_id, display_name, lead_id, assigned_to, state, ai_enabled, subject, last_message_at, last_snippet, unread, created_at',
+      'id, channel, external_id, display_name, lead_id, assigned_to, state, ai_enabled, subject, last_message_at, last_inbound_at, last_snippet, unread, created_at',
     )
     /* Nulls last: a thread with no message yet should not head the list. */
     .order('last_message_at', { ascending: false, nullsFirst: false })
@@ -156,6 +157,7 @@ export default async function BerichtenPage({
       unread: row.unread,
       snippet: row.last_snippet,
       lastMessageAt: row.last_message_at ?? row.created_at,
+      lastInboundAt: row.last_inbound_at,
       createdAt: row.created_at,
       lead: lead
         ? {

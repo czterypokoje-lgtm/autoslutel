@@ -159,3 +159,96 @@ export function htmlToText(html: string | null | undefined): string {
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
+
+/*
+ * Meta's standard messaging window: 24 hours from the customer's last message,
+ * on Instagram and on Messenger alike.
+ *
+ * Lives here, browser-safe, because both halves need the same answer — the
+ * server refuses the send, and the console greys the composer out with the
+ * reason showing. Two copies of this rule would eventually disagree, and the
+ * version that disagrees in the browser is the one that lets somebody type a
+ * long reply that is rejected the moment they press send.
+ */
+export const META_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+export function metaWindowOpen(lastInboundAt: string | null | undefined): boolean {
+  if (!lastInboundAt) return false;
+  const since = Date.now() - new Date(lastInboundAt).getTime();
+  return Number.isFinite(since) && since >= 0 && since < META_WINDOW_MS;
+}
+
+/* ── Meta webhook events ────────────────────────────────────────────────── */
+
+export interface MetaMessagingEvent {
+  sender?: { id?: string };
+  recipient?: { id?: string };
+  message?: {
+    mid?: string;
+    text?: string;
+    attachments?: { type?: string; payload?: { url?: string } | null }[];
+    is_echo?: boolean;
+    is_deleted?: boolean;
+    is_unsupported?: boolean;
+  };
+  read?: unknown;
+  delivery?: unknown;
+  reaction?: unknown;
+  postback?: unknown;
+}
+
+export interface InboundMetaMessage {
+  senderId: string;
+  text: string;
+  attachments: { url: string; name: string | null; type: string | null }[];
+  providerMessageId: string | null;
+}
+
+/**
+ * Whether one entry in Meta's `messaging[]` array is a customer message, and
+ * what it says.
+ *
+ * Pure, and separated from the route, because this is the part that fails
+ * quietly. Read receipts, delivery confirmations, reactions and postbacks all
+ * arrive in the same array as real messages, and — the one that actually
+ * corrupts the postvak — so do our own replies. Messenger flags those
+ * `is_echo`; Instagram does not, and instead sends them with the account's own
+ * id as the sender. Miss either and every answer the office sends is stored a
+ * second time as though the customer had written it.
+ *
+ * `entryId` is `entry[].id`: the Page id for Messenger, the Instagram account
+ * id for Instagram. Either way it is us.
+ */
+export function readMetaMessage(
+  event: MetaMessagingEvent,
+  entryId: string | null | undefined,
+): InboundMetaMessage | null {
+  const message = event.message;
+  const senderId = event.sender?.id;
+
+  /* Not a message at all. */
+  if (!message || !senderId) return null;
+
+  /* Our own reply, coming back at us. Both shapes. */
+  if (message.is_echo) return null;
+  if (entryId && senderId === entryId) return null;
+
+  if (message.is_deleted) return null;
+
+  const text = message.is_unsupported
+    ? '[bericht dat Meta niet doorgeeft]'
+    : (message.text ?? '');
+
+  const attachments = (message.attachments ?? [])
+    .filter((file) => file.payload?.url)
+    .map((file) => ({
+      url: file.payload?.url as string,
+      name: file.type ?? 'bijlage',
+      type: file.type ?? null,
+    }));
+
+  /* A message with neither words nor a file is nothing to show. */
+  if (!text && attachments.length === 0) return null;
+
+  return { senderId, text, attachments, providerMessageId: message.mid ?? null };
+}

@@ -14,6 +14,7 @@ import {
   conversationInitial,
   parseAddress,
   htmlToText,
+  metaWindowOpen,
 } from '../src/lib/berichten.ts';
 
 // A Dutch mobile, however it was typed, is one thread.
@@ -84,5 +85,21 @@ assert.equal(htmlToText(null), '');
 // Markup from a sender arrives as text, so the console cannot be injected.
 assert.equal(htmlToText('<script>alert(1)</script>Hallo'), 'Hallo');
 assert.ok(!htmlToText('<img src=x onerror=alert(1)>Hallo').includes('onerror'));
+
+/*
+ * Meta's 24-hour window. Wrong in one direction the office is told it cannot
+ * reply when it can; wrong in the other they type an answer Meta then refuses.
+ */
+const agoHours = (h: number) => new Date(Date.now() - h * 3600_000).toISOString();
+assert.equal(metaWindowOpen(agoHours(1)), true);
+assert.equal(metaWindowOpen(agoHours(23.5)), true);
+assert.equal(metaWindowOpen(agoHours(24.5)), false);
+assert.equal(metaWindowOpen(agoHours(72)), false);
+// Never written to us at all, so there is no window to be inside.
+assert.equal(metaWindowOpen(null), false);
+assert.equal(metaWindowOpen(undefined), false);
+// Garbage and future stamps are closed, not accidentally open.
+assert.equal(metaWindowOpen('geen datum'), false);
+assert.equal(metaWindowOpen(agoHours(-5)), false);
 
 console.log('check-berichten: alle controles geslaagd');
