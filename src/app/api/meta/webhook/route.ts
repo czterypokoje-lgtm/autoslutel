@@ -4,6 +4,7 @@ import { sendTelegram } from '@/lib/telegram';
 import { verifyMetaSignature, readVerificationChallenge } from '@/lib/metaWebhook';
 import { upsertConversation, recordMessage } from '@/lib/berichtenStore';
 import { readMetaMessage, type MetaMessagingEvent } from '@/lib/berichten';
+import { maybeAnswer } from '@/lib/berichtenAgent';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const dynamic = 'force-dynamic';
@@ -170,6 +171,12 @@ export async function POST(request: Request) {
   after(async () => {
     for (const arrival of arrivals) {
       await fillDisplayName(admin, arrival.conversationId, arrival.senderId);
+    }
+
+    /* Then the assistant, once the thread knows who it is talking to —
+       the name is in her opening context. */
+    for (const conversationId of new Set(arrivals.map((a) => a.conversationId))) {
+      await maybeAnswer(admin, conversationId);
     }
 
     const officeChat = process.env.TELEGRAM_OFFICE_CHAT_ID;

@@ -223,6 +223,10 @@ export async function sendInboxMessage(
   conversationId: string,
   body: string,
   sentBy: string | null,
+  /* Who is speaking. 'ai' is the assistant answering on a text channel; the
+     thread renders the two differently, and the first question after a
+     conversation goes wrong is always which of them said it. */
+  author: 'human' | 'ai' = 'human',
 ): Promise<SendResult> {
   const text = String(body ?? '').trim();
   if (!text) return { ok: false, error: 'Een leeg bericht wordt niet verstuurd.' };
@@ -297,7 +301,7 @@ export async function sendInboxMessage(
   const stored = await recordMessage(supabase, {
     conversationId,
     direction: 'out',
-    author: 'human',
+    author,
     body: text,
     providerMessageId,
     sentBy,

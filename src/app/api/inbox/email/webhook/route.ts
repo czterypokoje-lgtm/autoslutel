@@ -4,6 +4,7 @@ import { sendTelegram } from '@/lib/telegram';
 import { verifyResendSignature } from '@/lib/resendWebhook';
 import { upsertConversation, recordMessage, type MessageAttachment } from '@/lib/berichtenStore';
 import { htmlToText, parseAddress } from '@/lib/berichten';
+import { maybeAnswer } from '@/lib/berichtenAgent';
 import { SITE_CONFIG } from '@/config/site.config';
 
 export const dynamic = 'force-dynamic';
@@ -196,6 +197,11 @@ export async function POST(request: Request) {
    * about an e-mail is one forwarding rule away from a loop.
    */
   after(async () => {
+    /* The assistant answers first, when the thread is still hers. It no-ops
+       without ANTHROPIC_API_KEY, so this is safe to ship before the key is
+       set — and the office is told either way. */
+    await maybeAnswer(admin, conversationId);
+
     const officeChat = process.env.TELEGRAM_OFFICE_CHAT_ID;
     if (!officeChat) return;
 

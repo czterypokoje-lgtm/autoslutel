@@ -15,6 +15,8 @@ import {
   parseAddress,
   htmlToText,
   metaWindowOpen,
+  shouldAnswer,
+  MAX_AI_REPLIES,
 } from '../src/lib/berichten.ts';
 
 // A Dutch mobile, however it was typed, is one thread.
@@ -101,5 +103,51 @@ assert.equal(metaWindowOpen(undefined), false);
 // Garbage and future stamps are closed, not accidentally open.
 assert.equal(metaWindowOpen('geen datum'), false);
 assert.equal(metaWindowOpen(agoHours(-5)), false);
+
+/*
+ * When the assistant may answer.
+ *
+ * The first case is the one that pays for this whole function. The assistant
+ * is triggered by a message being stored, and its own reply is also a stored
+ * message — so an answer to itself would trigger another answer, and another.
+ * That failure raises nothing and looks like a chatty assistant until the bill
+ * arrives.
+ */
+const thread = (over: Partial<Parameters<typeof shouldAnswer>[0]> = {}) => ({
+  channel: 'email' as const,
+  ai_enabled: true,
+  assigned_to: null,
+  ...over,
+});
+const from = (who: 'customer' | 'ai' | 'human') =>
+  who === 'customer'
+    ? { direction: 'in' as const, author: 'customer' as const }
+    : { direction: 'out' as const, author: who };
+
+// Answers a customer who spoke last.
+assert.equal(shouldAnswer(thread(), [from('customer')]), 'answer');
+assert.equal(shouldAnswer(thread(), [from('customer'), from('ai'), from('customer')]), 'answer');
+
+// NEVER answers its own message, or a colleague's. This is the loop guard.
+assert.equal(shouldAnswer(thread(), [from('customer'), from('ai')]), 'skip');
+assert.equal(shouldAnswer(thread(), [from('customer'), from('human')]), 'skip');
+assert.equal(shouldAnswer(thread(), []), 'skip');
+
+// Stays out of the channels ElevenLabs already answers.
+assert.equal(shouldAnswer(thread({ channel: 'whatsapp' }), [from('customer')]), 'skip');
+assert.equal(shouldAnswer(thread({ channel: 'phone' }), [from('customer')]), 'skip');
+assert.equal(shouldAnswer(thread({ channel: 'sms' }), [from('customer')]), 'skip');
+assert.equal(shouldAnswer(thread({ channel: 'instagram' }), [from('customer')]), 'answer');
+assert.equal(shouldAnswer(thread({ channel: 'messenger' }), [from('customer')]), 'answer');
+
+// The toggle in the console, and somebody having claimed the thread.
+assert.equal(shouldAnswer(thread({ ai_enabled: false }), [from('customer')]), 'skip');
+assert.equal(shouldAnswer(thread({ assigned_to: 'een-uuid' }), [from('customer')]), 'skip');
+
+// The cap hands over rather than going quiet, so a stuck thread gets a person.
+const longThread = [...Array(MAX_AI_REPLIES)].flatMap(() => [from('customer'), from('ai')]);
+assert.equal(shouldAnswer(thread(), [...longThread, from('customer')]), 'hand-over');
+const justUnder = [...Array(MAX_AI_REPLIES - 1)].flatMap(() => [from('customer'), from('ai')]);
+assert.equal(shouldAnswer(thread(), [...justUnder, from('customer')]), 'answer');
 
 console.log('check-berichten: alle controles geslaagd');

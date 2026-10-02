@@ -252,3 +252,62 @@ export function readMetaMessage(
 
   return { senderId, text, attachments, providerMessageId: message.mid ?? null };
 }
+
+/* ── when the assistant may answer ──────────────────────────────────────── */
+
+/** How many replies the assistant will carry alone before a person is needed. */
+export const MAX_AI_REPLIES = 10;
+
+/** The channels where ElevenLabs does not already answer. */
+export const AI_CHANNELS: readonly InboxChannel[] = ['email', 'instagram', 'messenger'];
+
+export interface AnswerableConversation {
+  channel: InboxChannel;
+  ai_enabled: boolean;
+  assigned_to?: string | null;
+}
+
+export interface AnswerableMessage {
+  direction: 'in' | 'out';
+  author: 'customer' | 'ai' | 'human';
+}
+
+export type AnswerDecision = 'answer' | 'skip' | 'hand-over';
+
+/**
+ * Whether the assistant should answer this thread, given the thread and its
+ * history oldest-first.
+ *
+ * Pure, and lifted out of the agent for one reason: the first guard below.
+ * The assistant is triggered by a message being stored, and its own reply is
+ * also a stored message — so if "the newest message is from the customer"
+ * were ever wrong, it would answer itself, and each answer would trigger
+ * another. Nothing about that failure looks like an error; it looks like a
+ * very chatty assistant and an API bill.
+ *
+ * 'hand-over' means the cap is reached: stop answering and switch the thread
+ * to a person.
+ */
+export function shouldAnswer(
+  conversation: AnswerableConversation,
+  history: AnswerableMessage[],
+): AnswerDecision {
+  /* WhatsApp and phone already have an assistant. */
+  if (!AI_CHANNELS.includes(conversation.channel)) return 'skip';
+
+  /* The toggle, and the stronger signal that somebody has taken this over. */
+  if (!conversation.ai_enabled) return 'skip';
+  if (conversation.assigned_to) return 'skip';
+
+  if (history.length === 0) return 'skip';
+
+  /* Only ever answer a customer, and only when they spoke last. */
+  const newest = history[history.length - 1];
+  if (newest.direction !== 'in' || newest.author !== 'customer') return 'skip';
+
+  if (history.filter((row) => row.author === 'ai').length >= MAX_AI_REPLIES) {
+    return 'hand-over';
+  }
+
+  return 'answer';
+}

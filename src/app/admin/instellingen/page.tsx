@@ -143,6 +143,30 @@ export default async function InstellingenPage() {
     vars: ['META_APP_SECRET', 'META_VERIFY_TOKEN', 'META_PAGE_ID', 'META_PAGE_ACCESS_TOKEN'],
   };
 
+  /*
+   * The assistant on the text channels. Separate from the WhatsApp row above
+   * because they are different assistants on different infrastructure: that
+   * one is ElevenLabs, this one is the Claude API answering e-mail, Instagram
+   * and Messenger through the same /api/agent/* tools.
+   */
+  const textAgent: Integration = {
+    name: 'Assistent op tekst (Claude)',
+    what: 'Beantwoordt e-mail, Instagram en Messenger zelf, tot iemand het gesprek overneemt.',
+    state:
+      has('ANTHROPIC_API_KEY') && has('AGENT_API_TOKEN') && (has('SITE_URL') || has('NEXT_PUBLIC_SITE_URL'))
+        ? 'live'
+        : has('ANTHROPIC_API_KEY')
+          ? 'partial'
+          : 'off',
+    detail:
+      has('ANTHROPIC_API_KEY') && has('AGENT_API_TOKEN') && (has('SITE_URL') || has('NEXT_PUBLIC_SITE_URL'))
+        ? 'Actief. Zet de assistent per gesprek uit bij Berichten om zelf over te nemen.'
+        : has('ANTHROPIC_API_KEY')
+          ? 'Sleutel aanwezig, maar AGENT_API_TOKEN of SITE_URL ontbreekt — zonder die twee kan de assistent geen prijs of tijdslot ophalen.'
+          : 'Niet ingesteld. Berichten blijven staan tot iemand ze zelf beantwoordt.',
+    vars: ['ANTHROPIC_API_KEY', 'AGENT_API_TOKEN', 'SITE_URL'],
+  };
+
   const payments: Integration = {
     name: 'Betalingen (Mollie)',
     what: 'iDEAL-betalingen in de webshop.',
@@ -200,7 +224,7 @@ export default async function InstellingenPage() {
 
   const groups: { title: string; items: Integration[] }[] = [
     { title: 'Leads', items: [leadAlert, mail] },
-    { title: 'Communicatie', items: [inbound, meta, whatsapp, telegram] },
+    { title: 'Communicatie', items: [inbound, meta, whatsapp, textAgent, telegram] },
     { title: 'Advertenties', items: [googleAds, bing] },
     { title: 'Betalingen', items: [payments] },
     { title: 'Kosten', items: [fuel] },
