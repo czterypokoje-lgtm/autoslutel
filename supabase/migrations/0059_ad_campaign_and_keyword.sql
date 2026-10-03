@@ -11,11 +11,16 @@
 -- captured clicks could not even name a campaign, and not one lead of 286
 -- carried any campaign information at all.
 --
--- What makes these columns fill is a tracking template on the Google Ads
--- account, appending the ValueTrack parameters to every final URL:
+-- What makes these columns fill is a Final URL suffix on the Google Ads
+-- account (Settings -> Account settings -> Tracking), which appends the
+-- ValueTrack parameters to whatever URL the ad already points at:
 --
---   {lpurl}?gclid={gclid}&gad_campaignid={campaignid}
---          &adgroupid={adgroupid}&kw={keyword}&mt={matchtype}
+--   gad_campaignid={campaignid}&kw={keyword}&mt={matchtype}
+--
+-- A suffix rather than a tracking template on purpose. A template rewrites
+-- the destination through {lpurl}, so a malformed one can stop ads serving
+-- account-wide; a suffix can only add parameters. And no {gclid}: the account
+-- has auto-tagging on, which appends it already.
 --
 -- Two columns, not six. Campaign answers "which campaign pays for itself" and
 -- keyword answers "which search term does"; ad group, match type and device
@@ -43,7 +48,7 @@ alter table public.leads       add column if not exists campaign_id text;
 alter table public.leads       add column if not exists keyword      text;
 
 comment on column public.call_clicks.campaign_id is
-  'Google Ads campaign id, from {campaignid} on the landing URL. Null when the tracking template was not set at the time of the click.';
+  'Google Ads campaign id, from {campaignid} on the landing URL. Null for clicks captured before the Final URL suffix was set, and for every non-paid visit.';
 comment on column public.leads.keyword is
   'The search term the visitor actually typed, from {keyword}. Null for organic, direct and pre-template traffic.';
 
