@@ -95,3 +95,36 @@ export function readAdClickId(): AdClickIds | null {
     return null;
   }
 }
+
+/**
+ * What a captured click says about where it came from.
+ *
+ * `call_clicks.source_url` is the full landing URL the visitor was on when
+ * they tapped the phone number, so the campaign id and the page they were
+ * reading are both sitting in it already — no extra tracking, no join. Both
+ * are what makes a click recognisable to a person: "Arnhem page, 19:39"
+ * is something the office can weigh against their memory of the call in a
+ * way that a 90-character gclid never will be.
+ */
+export interface ClickOrigin {
+  /** Google's numeric campaign id, as `gad_campaignid` on the landing URL. */
+  campaignId: string | null;
+  /** The page they were on, path only — the full URL is unreadable at a glance. */
+  page: string | null;
+}
+
+export function readClickOrigin(sourceUrl: string | null | undefined): ClickOrigin {
+  if (!sourceUrl) return { campaignId: null, page: null };
+  try {
+    const url = new URL(sourceUrl);
+    const campaignId =
+      url.searchParams.get('gad_campaignid') ??
+      url.searchParams.get('campaignid') ??
+      url.searchParams.get('utm_campaign');
+    /* A trailing slash reads as a missing page; the homepage is "/" on purpose. */
+    const page = url.pathname === '/' ? '/' : url.pathname.replace(/\/$/, '');
+    return { campaignId: campaignId || null, page };
+  } catch {
+    return { campaignId: null, page: null };
+  }
+}

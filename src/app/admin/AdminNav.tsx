@@ -87,6 +87,7 @@ const OFFICE_NAV: NavItem[] = [
       { href: '/admin/rapport', label: 'Prestaties' },
       { href: '/admin/winst', label: 'Winst & verbruik' },
       { href: '/admin/rapportage', label: 'Rapportage' },
+      { href: '/admin/attributie', label: 'Advertentieklikken' },
     ],
   },
   { label: 'Netwerk', icon: MessageSquare, href: '/admin/netwerk' },
