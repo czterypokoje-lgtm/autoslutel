@@ -5,6 +5,7 @@ import { MousePointerClick, Link2, Euro, CircleHelp } from 'lucide-react';
 import { readClickOrigin } from '@/lib/adClickId';
 import { isoDate } from '@/lib/crmJobs';
 import MatchPanel, { type ClickRow, type JobRow } from './MatchPanel';
+import CampaignNames, { type CampaignSeen } from './CampaignNames';
 
 export const dynamic = 'force-dynamic';
 
@@ -146,6 +147,47 @@ export default async function AttributiePage({
     attributed: Boolean(job.gclid || job.wbraid || job.gbraid || job.msclkid || job.lead_id),
   }));
 
+  /*
+   * Names, and the roster to name. Both read across ALL time, not just the day
+   * on screen: a campaign is named once and the list would otherwise change
+   * shape every time the date moved, which is a strange thing for a settings
+   * list to do.
+   */
+  const [nameResult, allClicksResult] = await Promise.all([
+    supabase.from('ad_campaigns').select('campaign_id, name'),
+    supabase.from('call_clicks').select('source_url, campaign_id'),
+  ]);
+
+  const names = new Map<string, string>(
+    (nameResult.data ?? []).map((row) => [row.campaign_id as string, row.name as string])
+  );
+
+  const seen = new Map<string, { clicks: number; pages: Map<string, number> }>();
+  for (const row of (allClicksResult.data ?? []) as { source_url: string | null; campaign_id?: string | null }[]) {
+    const origin = readClickOrigin(row.source_url);
+    const id = row.campaign_id ?? origin.campaignId;
+    if (!id) continue;
+    const entry = seen.get(id) ?? { clicks: 0, pages: new Map<string, number>() };
+    entry.clicks += 1;
+    if (origin.page) entry.pages.set(origin.page, (entry.pages.get(origin.page) ?? 0) + 1);
+    seen.set(id, entry);
+  }
+
+  const campaigns: CampaignSeen[] = [...seen.entries()]
+    .map(([id, entry]) => ({
+      id,
+      name: names.get(id) ?? null,
+      clicks: entry.clicks,
+      topPage: [...entry.pages.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null,
+    }))
+    .sort((a, b) => b.clicks - a.clicks);
+
+  /* The number stays visible beside the name: the office reads this screen
+     next to the Ads tab, where the number is what they can search on. */
+  for (const click of clicks) {
+    if (click.campaignId) click.campaignName = names.get(click.campaignId) ?? null;
+  }
+
   const open = clicks.filter((c) => !c.claimed && c.hasClickId);
   const unattributed = jobs.filter((j) => !j.attributed && j.scheduledDate === date);
   const value = unattributed.reduce((total, job) => total + (job.value ?? 0), 0);
@@ -185,6 +227,8 @@ export default async function AttributiePage({
           tone={value > 0 ? 'warn' : 'ok'}
         />
       </StatGrid>
+
+      <CampaignNames campaigns={campaigns} />
 
       <MatchPanel date={date} today={today} clicks={clicks} jobs={jobs} />
     </>
