@@ -53,13 +53,25 @@ export default async function AttributiePage({
   const dayStart = new Date(`${date}T00:00:00`);
   const dayEnd = new Date(`${date}T23:59:59.999`);
 
-  const [clickResult, jobResult] = await Promise.all([
+  /*
+   * campaign_id and keyword arrive with 0059, and migrations here are applied
+   * by hand in the Supabase editor. Asking for a column that does not exist
+   * fails the whole query in PostgREST, which would turn this screen — the one
+   * the office is using right now — into an error message because of a
+   * migration nobody has run yet. So it asks, and falls back to reading both
+   * out of the landing URL, which is where they came from anyway.
+   */
+  const CLICK_COLUMNS = 'id, created_at, gclid, wbraid, gbraid, msclkid, source_url, ref, claimed_by_job_id';
+  const clicksFor = (columns: string) =>
     supabase
       .from('call_clicks')
-      .select('id, created_at, gclid, wbraid, gbraid, msclkid, source_url, ref, claimed_by_job_id')
+      .select(columns)
       .gte('created_at', dayStart.toISOString())
       .lte('created_at', dayEnd.toISOString())
-      .order('created_at', { ascending: false }),
+      .order('created_at', { ascending: false });
+
+  const [clickAttempt, jobResult] = await Promise.all([
+    clicksFor(`${CLICK_COLUMNS}, campaign_id, keyword`),
     /*
      * This day's jobs and the next day's.
      *
@@ -80,6 +92,10 @@ export default async function AttributiePage({
       .order('slot_start', { ascending: true }),
   ]);
 
+  const clickResult = clickAttempt.error && /campaign_id|keyword/.test(clickAttempt.error.message)
+    ? await clicksFor(CLICK_COLUMNS)
+    : clickAttempt;
+
   if (clickResult.error) {
     return (
       <>
@@ -89,13 +105,22 @@ export default async function AttributiePage({
     );
   }
 
-  const clicks: ClickRow[] = (clickResult.data ?? []).map((click) => {
+  type RawClick = {
+    id: string; created_at: string; source_url: string | null; ref: string | null;
+    gclid: string | null; wbraid: string | null; gbraid: string | null; msclkid: string | null;
+    claimed_by_job_id: string | null; campaign_id?: string | null; keyword?: string | null;
+  };
+
+  const clicks: ClickRow[] = ((clickResult.data ?? []) as unknown as RawClick[]).map((click) => {
     const origin = readClickOrigin(click.source_url);
     return {
       id: click.id,
       at: click.created_at,
       network: click.msclkid && !click.gclid ? 'Microsoft' : 'Google',
-      campaignId: origin.campaignId,
+      /* The stored column once 0059 is in and the template is set; the
+         landing URL for every click captured before that. */
+      campaignId: click.campaign_id ?? origin.campaignId,
+      keyword: click.keyword ?? origin.keyword,
       page: origin.page,
       ref: click.ref,
       claimed: Boolean(click.claimed_by_job_id),

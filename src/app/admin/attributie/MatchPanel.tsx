@@ -11,6 +11,7 @@ export interface ClickRow {
   at: string;
   network: string;
   campaignId: string | null;
+  keyword: string | null;
   page: string | null;
   ref: string | null;
   claimed: boolean;
@@ -158,6 +159,7 @@ export default function MatchPanel({
                   <th>Tijd</th>
                   <th>Netwerk</th>
                   <th>Campagne</th>
+                  <th>Zoekterm</th>
                   <th>Pagina</th>
                   <th>Code</th>
                   <th>Koppel aan klus</th>
@@ -173,6 +175,9 @@ export default function MatchPanel({
                       </Badge>
                     </td>
                     <td className={styles.mono}>{click.campaignId ?? '—'}</td>
+                    {/* What they actually typed into Google. Null until the
+                        tracking template is set on the account. */}
+                    <td className={styles.page} title={click.keyword ?? ''}>{click.keyword ?? '—'}</td>
                     <td className={styles.page} title={click.page ?? ''}>
                       {click.page ?? '—'}
                     </td>

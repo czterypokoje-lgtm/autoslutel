@@ -109,22 +109,38 @@ export function readAdClickId(): AdClickIds | null {
 export interface ClickOrigin {
   /** Google's numeric campaign id, as `gad_campaignid` on the landing URL. */
   campaignId: string | null;
+  /** What the visitor actually typed, from a {keyword} tracking template. */
+  keyword: string | null;
   /** The page they were on, path only — the full URL is unreadable at a glance. */
   page: string | null;
 }
 
+/** Trimmed and length-capped: these land in text columns and in a UI table. */
+const param = (url: URL, ...names: string[]): string | null => {
+  for (const name of names) {
+    const value = url.searchParams.get(name)?.trim();
+    if (value) return value.slice(0, 200);
+  }
+  return null;
+};
+
 export function readClickOrigin(sourceUrl: string | null | undefined): ClickOrigin {
-  if (!sourceUrl) return { campaignId: null, page: null };
+  if (!sourceUrl) return { campaignId: null, keyword: null, page: null };
   try {
     const url = new URL(sourceUrl);
-    const campaignId =
-      url.searchParams.get('gad_campaignid') ??
-      url.searchParams.get('campaignid') ??
-      url.searchParams.get('utm_campaign');
-    /* A trailing slash reads as a missing page; the homepage is "/" on purpose. */
-    const page = url.pathname === '/' ? '/' : url.pathname.replace(/\/$/, '');
-    return { campaignId: campaignId || null, page };
+    return {
+      /*
+       * `gad_campaignid` is what Google's own auto-tagging adds, sometimes.
+       * `campaignid` is what a {campaignid} tracking template adds, always.
+       * Reading both means the template improves coverage without breaking
+       * the clicks captured before it was set.
+       */
+      campaignId: param(url, 'gad_campaignid', 'campaignid', 'utm_campaign'),
+      keyword: param(url, 'kw', 'keyword', 'utm_term'),
+      /* A trailing slash reads as a missing page; the homepage is "/" on purpose. */
+      page: url.pathname === '/' ? '/' : url.pathname.replace(/\/$/, ''),
+    };
   } catch {
-    return { campaignId: null, page: null };
+    return { campaignId: null, keyword: null, page: null };
   }
 }

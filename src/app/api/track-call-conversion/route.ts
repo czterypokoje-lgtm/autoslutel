@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { AD_CLICK_PARAMS } from '@/lib/adClickId';
+import { AD_CLICK_PARAMS, readClickOrigin } from '@/lib/adClickId';
 import { rateLimit, getClientIp } from '@/lib/rateLimit';
 import { sendOpenAiEvent } from '@/lib/openaiAds';
 
@@ -55,12 +55,24 @@ async function recordCallClick(body: Record<string, unknown>): Promise<void> {
 
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
+    const sourceUrl = clean(body.sourceUrl, 500);
+    /*
+     * Which campaign paid and what they searched for, pulled off the landing
+     * URL at write time rather than parsed back out of it on every report.
+     * Both stay null until the Google Ads tracking template is set — the
+     * click id, which is what a conversion upload needs, does not depend on
+     * either of them.
+     */
+    const origin = readClickOrigin(sourceUrl);
+
     await supabase.from('call_clicks').insert({
       gclid: clean(body.gclid),
       wbraid: clean(body.wbraid),
       gbraid: clean(body.gbraid),
       msclkid: clean(body.msclkid),
-      source_url: clean(body.sourceUrl, 500),
+      source_url: sourceUrl,
+      campaign_id: origin.campaignId,
+      keyword: origin.keyword,
     });
   } catch (err) {
     console.error('[call-click] failed to record click', err);
