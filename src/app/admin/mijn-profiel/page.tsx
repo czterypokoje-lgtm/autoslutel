@@ -4,11 +4,19 @@ import styles from '../vandaag/vandaag.module.css';
 import pf from './profiel.module.css';
 import ProfileForm, { type Profile, type Business } from './ProfileForm';
 import { technicianColour } from '@/lib/crmColours';
+import { connectToken } from '@/lib/telegramConnect';
 
-function telegramConnectUrl(startPayload: string): string | null {
-  return process.env.TELEGRAM_BOT_USERNAME
-    ? `https://t.me/${process.env.TELEGRAM_BOT_USERNAME}?start=${startPayload}`
-    : null;
+/**
+ * The connect link.
+ *
+ * Carries a one-time code, never an id. The old version put the technician's
+ * or office user's own uuid in the link, and the bot connected whichever chat
+ * sent it back — so the link was a password that never changed and that
+ * anyone who saw a uuid could forge.
+ */
+function telegramConnectUrl(token: string | null): string | null {
+  if (!token || !process.env.TELEGRAM_BOT_USERNAME) return null;
+  return `https://t.me/${process.env.TELEGRAM_BOT_USERNAME}?start=${token}`;
 }
 
 export const dynamic = 'force-dynamic';
@@ -56,6 +64,13 @@ export default async function MijnProfielPage() {
         .eq('user_id', user.id)
         .maybeSingle();
 
+      /* Only minted when it is going to be shown — a code written on every
+         page view would be a row per refresh and a link in the history of
+         anyone who ever opened this page. */
+      const adminConnect = adminTelegram?.telegram_chat_id
+        ? null
+        : telegramConnectUrl(await connectToken(supabase, 'admin', user.id));
+
       return (
         <div className={styles.wrap}>
           <div className={styles.head}>
@@ -69,12 +84,12 @@ export default async function MijnProfielPage() {
                 <p className={styles.meta}>
                   Gekoppeld — nieuwe klantgesprekken en meldingen komen hier binnen.
                 </p>
-              ) : telegramConnectUrl(`admin_${user.id}`) ? (
+              ) : adminConnect ? (
                 <>
                   <p className={styles.meta}>Nog niet gekoppeld.</p>
                   <a
                     className={`${styles.tap} ${styles.tapPrimary} ${pf.full}`}
-                    href={telegramConnectUrl(`admin_${user.id}`)!}
+                    href={adminConnect}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -149,7 +164,11 @@ export default async function MijnProfielPage() {
     employmentType: (data.employment_type as string) ?? 'zzp',
     email: user.email ?? '',
     telegramConnected: Boolean(data.telegram_chat_id),
-    telegramConnectUrl: telegramConnectUrl(data.id as string),
+    /* Same one-time code as the office card above: never the technician's
+       own id, which is public enough to appear in storage paths. */
+    telegramConnectUrl: data.telegram_chat_id
+      ? null
+      : telegramConnectUrl(await connectToken(supabase, 'technician', data.id as string)),
     business,
   };
 

@@ -27,8 +27,6 @@ export const dynamic = 'force-dynamic';
 /** Buffer and the storage upload below are Node, not edge. */
 export const runtime = 'nodejs';
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 
 /** 12 MB, the cap the `facturen` bucket itself enforces (0020_invoice_storage.sql). */
@@ -57,34 +55,75 @@ interface TelegramUpdate {
   };
 }
 
-/** `/start <technician_id>` — the deep link from Mijn profiel, connecting this chat. */
-async function handleTechnicianStart(chatId: number | string, technicianId: string) {
+/**
+ * `/start <code>` — connecting this chat to a person.
+ *
+ * The code comes from Mijn profiel, is good for half an hour and for one
+ * chat. What it replaced took the person's own uuid straight off the link and
+ * connected whoever sent it back: technician ids appear in CRM URLs and in
+ * receipt storage paths, so that link was a password that never changed and
+ * that anybody who had seen a uuid could forge. Connecting as a technician
+ * would have given their jobs, balance, van, invoices and expenses; as an
+ * office user, the ability to award and create jobs and approve spending.
+ *
+ * Spending the code and reading what it points at is one statement
+ * (crm_use_connect_token), so the same code cannot connect two chats.
+ */
+async function handleConnect(chatId: number | string, token: string) {
   const supabase = createSupabaseAdminClient();
-  const { error } = await supabase
+
+  const { data, error } = await supabase.rpc('crm_use_connect_token', {
+    p_token: token,
+    p_chat: String(chatId),
+  });
+
+  if (error) {
+    console.error('Connect token lookup failed:', error.message);
+    await sendTelegram(String(chatId), 'Koppelen lukte niet. Probeer het zo nog eens.');
+    return;
+  }
+
+  const claim = Array.isArray(data) ? data[0] : data;
+  if (!claim) {
+    /* Unknown, expired or already used — all the same answer, because which
+       of the three it was is not the sender's business. */
+    await sendTelegram(
+      String(chatId),
+      'Deze koppelcode is niet meer geldig. Open Mijn profiel in de CRM en gebruik de knop opnieuw.'
+    );
+    return;
+  }
+
+  if (claim.kind === 'admin') {
+    const { error: linkError } = await supabase
+      .from('admin_telegram')
+      .upsert(
+        { user_id: claim.subject_id, telegram_chat_id: String(chatId) },
+        { onConflict: 'user_id' }
+      );
+    if (linkError) {
+      console.error('Admin link failed:', linkError.message);
+      await sendTelegram(String(chatId), 'Koppelen mislukt.');
+      return;
+    }
+    await sendTelegram(
+      String(chatId),
+      'Gekoppeld als kantoor. Typ /menu voor leads, biedingen, de dag en de cijfers.'
+    );
+    return;
+  }
+
+  const { error: linkError } = await supabase
     .from('technicians')
     .update({ telegram_chat_id: String(chatId) })
-    .eq('id', technicianId);
-  if (error) {
-    console.error('Telegram chat id link failed:', error.message);
-    return;
-  }
-  await sendTelegram(
-    String(chatId),
-    'Gekoppeld! U ontvangt hier voortaan meldingen van Autosleutel24.\n\n' + HELP
-  );
-}
+    .eq('id', claim.subject_id);
 
-/** `/start admin_<user_id>` — the same connect link, from an office user's Mijn profiel instead. */
-async function handleAdminStart(chatId: number | string, userId: string) {
-  const supabase = createSupabaseAdminClient();
-  const { error } = await supabase
-    .from('admin_telegram')
-    .upsert({ user_id: userId, telegram_chat_id: String(chatId) }, { onConflict: 'user_id' });
-  if (error) {
-    console.error('Telegram admin chat id link failed:', error.message);
+  if (linkError) {
+    console.error('Technician link failed:', linkError.message);
+    await sendTelegram(String(chatId), 'Koppelen mislukt.');
     return;
   }
-  await sendTelegram(String(chatId), 'Gekoppeld! U ontvangt hier voortaan meldingen van Autosleutel24.');
+  await sendTelegram(String(chatId), 'Gekoppeld! U ontvangt hier voortaan meldingen van Autosleutel24.\n\n' + HELP);
 }
 
 /** Same wording as OfferList.tsx's own respond() — one set of outcomes, two surfaces. */
@@ -1261,14 +1300,15 @@ export async function POST(request: Request) {
   }
 
   const text = message?.text ?? '';
-  const match = /^\/start(?:@\w+)?\s+(admin_)?([0-9a-f-]{36})/i.exec(text);
+  /*
+   * A connect code is 32 hex characters. A uuid is 36 with dashes, so an old
+   * link cannot be mistaken for a code — it simply stops working, which is
+   * the point.
+   */
+  const connect = /^\/start(?:@\w+)?\s+([0-9a-f]{32})\s*$/i.exec(text);
 
-  if (match && UUID.test(match[2]!)) {
-    if (match[1]) {
-      await handleAdminStart(chatId, match[2]!);
-    } else {
-      await handleTechnicianStart(chatId, match[2]!);
-    }
+  if (connect) {
+    await handleConnect(chatId, connect[1]!.toLowerCase());
   } else if (/^\/nieuw\b/i.test(text.trim())) {
     await handleNewJob(chatId, text);
   } else if (/^\/menu|^\/start$|^menu$/i.test(text.trim())) {
