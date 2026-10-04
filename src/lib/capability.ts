@@ -210,3 +210,52 @@ export function whoCanDo(rows: CoverageRow[], car: Car, scenario: Scenario, keyl
     .filter(([, list]) => coversCar(list, car, scenario, keyless))
     .map(([id]) => id);
 }
+
+/** A coverage row that also carries what this technician charges for it. */
+export interface PricedCoverageRow extends CoverageRow {
+  price: number | string | null;
+}
+
+/**
+ * What this technician charges for this car, from their own list.
+ *
+ * The same matching as coversCar — same make, model family, year range and
+ * keyless rule, most specific row winning — so a price can never come from a
+ * row that would not have covered the car in the first place.
+ *
+ * Null means "they never said", not "free". An exclusion at the deciding
+ * level is also null: a technician who said no to this car has no price for
+ * it, and inventing one from a broader row would quote work they refused.
+ *
+ * Where two equally specific rows both match and disagree on price, the
+ * lower one wins. That is the conservative direction: quoting under their
+ * own list costs the technician a few euro and is correctable, quoting over
+ * it means a customer was told a number nobody agreed to.
+ */
+export function priceFor(
+  rows: PricedCoverageRow[],
+  car: Car,
+  scenario: Scenario,
+  keyless?: boolean | null
+): number | null {
+  const make = norm(car.make);
+  const matches = rows.filter(
+    (row) =>
+      row.scenario === scenario &&
+      norm(row.make) === make &&
+      modelMatches(row.model, car.model) &&
+      yearMatches(row, car.year) &&
+      keylessMatches(row, keyless)
+  );
+  if (!matches.length) return null;
+
+  const strongest = Math.max(...matches.map(specificity));
+  const deciding = matches.filter((row) => specificity(row) === strongest);
+  if (deciding.some((row) => row.excluded)) return null;
+
+  const prices = deciding
+    .map((row) => Number(row.price))
+    .filter((price) => Number.isFinite(price) && price > 0);
+
+  return prices.length ? Math.min(...prices) : null;
+}

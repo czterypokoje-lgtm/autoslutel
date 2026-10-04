@@ -15,7 +15,8 @@ import {
   BID_SLOTS,
 } from '@/lib/telegram';
 import { parseExpenseCaption, readAmount, EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
-import { SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
+import { SCENARIO_INFO, scenarioFromLabel, type Scenario } from '@/lib/scenarios';
+import { priceFor, type PricedCoverageRow } from '@/lib/capability';
 
 export const dynamic = 'force-dynamic';
 /** Buffer and the storage upload below are Node, not edge. */
@@ -453,6 +454,85 @@ async function handleBidDay(query: NonNullable<TelegramUpdate['callback_query']>
   await editToSlotChoice(chatId, messageId, offerId, dayLabel(dayIndex));
 }
 
+/**
+ * What this technician already said this car costs, from mijn-vak.
+ *
+ * Null when they never priced it, when they excluded the car, or when the
+ * job has no scenario — a Peugeot 107 is EUR 120 to copy a key and EUR 250
+ * when every key is lost, and without knowing which, guessing is picking the
+ * customer's price by coin toss.
+ */
+async function listPriceFor(
+  supabase: SupabaseClient,
+  technicianId: string,
+  jobId: string
+): Promise<number | null> {
+  const { data: job } = await supabase
+    .from('jobs')
+    .select('car_make, car_model, car_year, scenario, service_type, keyless')
+    .eq('id', jobId)
+    .maybeSingle();
+  if (!job?.car_make) return null;
+
+  /* Same derivation as the offer route: most open jobs carry the scenario
+     only in their service text, and both ends must read it the same way or a
+     technician is quoted one price and offered another. */
+  const scenario = (job.scenario as Scenario | null) ?? scenarioFromLabel(job.service_type);
+  if (!scenario) return null;
+
+  const { data: rows } = await supabase
+    .from('technician_coverage')
+    .select('technician_id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+    .eq('technician_id', technicianId);
+
+  return priceFor(
+    (rows ?? []) as PricedCoverageRow[],
+    { make: job.car_make, model: job.car_model, year: job.car_year },
+    scenario,
+    job.keyless
+  );
+}
+
+/** Writes the bid, tells the technician, tells the office. One path, two callers. */
+async function completeBid(
+  supabase: SupabaseClient,
+  offerId: string,
+  technician: { id: string; name: string },
+  chatId: number | string,
+  amount: number,
+  fromList: boolean
+): Promise<boolean> {
+  const { data: offer, error } = await supabase
+    .from('job_offers')
+    .update({ bid_price: amount, bid_at: new Date().toISOString() })
+    .eq('id', offerId)
+    .is('bid_price', null)
+    .select('id, job_id, bid_date, bid_start, bid_end')
+    .maybeSingle();
+
+  if (error || !offer) {
+    if (error) console.error('Bid write failed:', error.message);
+    return false;
+  }
+
+  const what = await jobLine(supabase, offer.job_id);
+  const when = `${offer.bid_date} · ${String(offer.bid_start).slice(0, 5)}–${String(offer.bid_end).slice(0, 5)}`;
+
+  await sendTelegram(
+    String(chatId),
+    `✅ Uw bod staat genoteerd.\n\n${what}\n${when}\n${MONEY_EUR.format(amount)}${fromList ? ' (uw tarief)' : ''}\n\nKantoor laat weten of de klus naar u gaat.`
+  );
+
+  const { data: recipients } = await supabase.from('admin_telegram').select('telegram_chat_id');
+  for (const recipient of recipients ?? []) {
+    await sendTelegram(
+      recipient.telegram_chat_id,
+      `💶 Bod van ${technician.name}\n${what}\n${when}\n${MONEY_EUR.format(amount)}${fromList ? ' (eigen tarief)' : ''}\n\nGunnen doet u bij Biedingen in de CRM.`
+    );
+  }
+  return true;
+}
+
 /** Hour tapped: store the window and ask for the money. */
 async function handleBidHour(query: NonNullable<TelegramUpdate['callback_query']>, offerId: string, slotIndex: number) {
   const chatId = query.message?.chat?.id;
@@ -477,6 +557,28 @@ async function handleBidHour(query: NonNullable<TelegramUpdate['callback_query']
 
   const what = await jobLine(supabase, offer.job_id);
   await answerTelegramCallback(query.id);
+
+  /*
+   * If they already priced this car in mijn-vak, that is the bid. Asking
+   * again would be asking the same person the same question twice and
+   * inviting a different answer — and it is two more taps on a phone held in
+   * one hand.
+   */
+  const technician = await technicianFor(supabase, chatId);
+  const mine = technician ? await listPriceFor(supabase, technician.id, offer.job_id) : null;
+
+  if (technician && mine !== null) {
+    const done = await completeBid(supabase, offerId, technician, chatId, mine, true);
+    if (done) {
+      await editTelegramMessage(
+        chatId,
+        messageId,
+        `${what}\n${offer.bid_date} · ${slot[0]}–${slot[1]}\n${MONEY_EUR.format(mine)} — uw eigen tarief`
+      );
+      return;
+    }
+  }
+
   await editTelegramMessage(
     chatId,
     messageId,
@@ -564,30 +666,11 @@ async function handleBidPrice(chatId: number | string, text: string): Promise<bo
 
   if (!waiting) return false;
 
-  const { error } = await supabase
-    .from('job_offers')
-    .update({ bid_price: amount, bid_at: new Date().toISOString() })
-    .eq('id', waiting.id);
-
-  if (error) {
-    console.error('Bid price write failed:', error.message);
+  /* Same write, same confirmations as the automatic path — one function, so a
+     typed bid and a bid from their own list can never report differently. */
+  const done = await completeBid(supabase, waiting.id, technician, chatId, amount, false);
+  if (!done) {
     await sendTelegram(String(chatId), 'Uw bod vastleggen mislukte. Probeer het nog een keer.');
-    return true;
-  }
-
-  const what = await jobLine(supabase, waiting.job_id);
-  await sendTelegram(
-    String(chatId),
-    `✅ Uw bod staat genoteerd.\n\n${what}\n${waiting.bid_date} · ${String(waiting.bid_start).slice(0, 5)}–${String(waiting.bid_end).slice(0, 5)}\n${MONEY_EUR.format(amount)}\n\nKantoor laat weten of de klus naar u gaat.`
-  );
-
-  /* The office hears about it where they already read everything else. */
-  const { data: recipients } = await supabase.from('admin_telegram').select('telegram_chat_id');
-  for (const recipient of recipients ?? []) {
-    await sendTelegram(
-      recipient.telegram_chat_id,
-      `💶 Bod van ${technician.name}\n${what}\n${waiting.bid_date} · ${String(waiting.bid_start).slice(0, 5)}–${String(waiting.bid_end).slice(0, 5)}\n${MONEY_EUR.format(amount)}\n\nGunnen doet u bij Aanbod in de CRM.`
-    );
   }
   return true;
 }

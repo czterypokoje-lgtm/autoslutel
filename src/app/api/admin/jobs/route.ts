@@ -1,3 +1,4 @@
+import { isScenario, scenarioFromLabel } from '@/lib/scenarios';
 import { NextResponse, after } from 'next/server';
 import { requireOfficeUserApi } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -199,6 +200,11 @@ export async function POST(request: Request) {
     customer_name: text(body.customer_name, 120),
     customer_phone: text(body.customer_phone, 40),
     service_type: text(body.service_type, 120),
+    /* The office picks "Sleutel bijmaken" from a list; that IS the scenario,
+       and without storing it as one no price list can be read for this job. */
+    scenario: body.scenario && isScenario(body.scenario)
+      ? body.scenario
+      : scenarioFromLabel(text(body.service_type, 120)),
     quoted_price: quoted,
     commission_pct: commissionPct,
     commission_amount: commissionAmount,

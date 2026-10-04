@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { requireOfficeUserApi } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { sendTelegramBidOffer } from '@/lib/telegram';
-import { SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
+import { SCENARIO_INFO, scenarioFromLabel, type Scenario } from '@/lib/scenarios';
+import { priceFor, type PricedCoverageRow } from '@/lib/capability';
 
 export const dynamic = 'force-dynamic';
 
@@ -67,6 +68,38 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
     );
   }
 
+  /*
+   * Their own price lists.
+   *
+   * A technician who has already said what a Peugeot 107 costs them should not
+   * be asked again — mijn-vak is where they wrote it down, and asking a second
+   * time invites a different answer for the same work.
+   */
+  const { data: coverage } = await supabase
+    .from('technician_coverage')
+    .select('technician_id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+    .in('technician_id', technicians.map((t) => t.id));
+
+  /*
+   * Derived, not stored. Fifteen of the twenty open jobs carry the scenario
+   * only in their free-text service ("Reservesleutel bijmaken"), and reading
+   * it here means their technicians get quoted from their own list today
+   * rather than after a backfill. Nothing is written: we inferred it, we did
+   * not confirm it, and the job should keep saying so.
+   */
+  const scenario = (job.scenario as Scenario | null) ?? scenarioFromLabel(job.service_type);
+
+  const listPrice = (technicianId: string): number | null => {
+    if (!scenario || !job.car_make) return null;
+    const rows = ((coverage ?? []) as PricedCoverageRow[]).filter((r) => r.technician_id === technicianId);
+    return priceFor(
+      rows,
+      { make: job.car_make, model: job.car_model, year: job.car_year },
+      scenario,
+      job.keyless
+    );
+  };
+
   /* Already offered to someone and still open: send it to whoever is new,
      and leave the existing offers alone rather than resetting their clock. */
   const { data: existing } = await supabase
@@ -125,19 +158,22 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
   const car = [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ');
   const where = job.city ?? job.postcode ?? 'onbekend';
 
-  const text = [
-    `🔧 ${what}`,
-    car || null,
-    `📍 ${where}${job.postcode && job.city ? ` (${job.postcode})` : ''}`,
-    job.keyless ? '🔑 Keyless' : null,
-    /* The office's own figure, shown as a guide and nothing more — the
-       monteur names his own price, which is the point of bidding. */
-    job.quoted_price ? `Richtprijs: € ${Number(job.quoted_price).toFixed(2)}` : null,
-    '',
-    'Wanneer kunt u?',
-  ]
-    .filter((line) => line !== null)
-    .join('\n');
+  const describe = (mine: number | null) =>
+    [
+      `🔧 ${what}`,
+      car || null,
+      `📍 ${where}${job.postcode && job.city ? ` (${job.postcode})` : ''}`,
+      job.keyless ? '🔑 Keyless' : null,
+      /* The office's own figure, a guide and nothing more. */
+      job.quoted_price ? `Richtprijs: € ${Number(job.quoted_price).toFixed(2)}` : null,
+      /* Theirs, from mijn-vak. Said out loud so nobody bids blind against a
+         number they set months ago and have forgotten. */
+      mine !== null ? `Uw tarief: € ${mine.toFixed(2)}` : null,
+      '',
+      mine !== null ? 'Wanneer kunt u? Uw tarief wordt automatisch meegestuurd.' : 'Wanneer kunt u?',
+    ]
+      .filter((line) => line !== null)
+      .join('\n');
 
   /* Sent one at a time, after the rows exist: a technician who taps a button
      on a message whose offer was never written would get "already answered"
@@ -146,7 +182,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
   for (const offer of inserted) {
     const tech = fresh.find((t) => t.id === offer.technician_id);
     if (!tech?.telegram_chat_id) continue;
-    await sendTelegramBidOffer(tech.telegram_chat_id, text, offer.id);
+    await sendTelegramBidOffer(tech.telegram_chat_id, describe(listPrice(tech.id)), offer.id);
     sent += 1;
   }
 

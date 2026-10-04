@@ -88,3 +88,46 @@ export const INTAKE_QUESTIONS = [
   },
   { key: 'postcode', ask: 'Wat is de postcode waar de auto staat?' },
 ] as const;
+
+/**
+ * The scenario behind a service name the office typed or picked.
+ *
+ * The four labels in SERVICE_OPTIONS (jobs/nieuw/CarPicker.tsx) are the four
+ * scenario labels verbatim, so the office has been choosing the scenario all
+ * along — it just landed in `service_type` as text and never became the enum
+ * that pricing, coverage and dispatch all read. The result was 0 of 20 open
+ * jobs carrying a scenario, and every technician being asked for a price they
+ * had already published in mijn-vak.
+ *
+ * Only an exact label match counts. "Auto openen zonder sleutel" is a real
+ * service with no scenario of its own, and guessing one for it would quote a
+ * customer from the wrong row of somebody's price list.
+ */
+export function scenarioFromLabel(label: string | null | undefined): Scenario | null {
+  const wanted = String(label ?? '').trim().toLowerCase();
+  if (!wanted) return null;
+  for (const [key, info] of Object.entries(SCENARIO_INFO)) {
+    if (info.label.toLowerCase() === wanted) return key as Scenario;
+  }
+
+  /*
+   * Free text from the website and from older jobs: "Reservesleutel
+   * bijmaken", "Alle sleutel Kwijt", "Smart key / keyless bijmaken". The
+   * wording varies, the meaning does not.
+   *
+   * Only where one reading is possible. "Contactslot reparatie" is both a
+   * lock and a repair, and a wrong scenario here does not produce a wrong
+   * label — it produces a wrong price quoted to a customer out of somebody's
+   * price list. Ambiguous stays null, and the office sets it by hand.
+   */
+  const lost = /\bkwijt\b|\ball keys lost\b/.test(wanted);
+  const copy = /bijmaken|reserve|extra sleutel/.test(wanted);
+  const lock = /cilinder|contactslot|\bslot\b/.test(wanted);
+  const repair = /reparatie|repareren|\brepair\b/.test(wanted);
+
+  if (lost && !copy) return 'alle_sleutels_kwijt';
+  if (copy && !lost && !lock) return 'bijmaken';
+  if (lock && !repair && !copy && !lost) return 'slot';
+  if (repair && !lock && !copy && !lost) return 'reparatie';
+  return null;
+}
