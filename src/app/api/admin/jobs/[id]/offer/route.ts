@@ -102,7 +102,21 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
 
   if (insertError || !inserted) {
     console.error('Offer insert failed:', insertError?.message);
-    return NextResponse.json({ error: 'Aanbieden mislukt' }, { status: 500 });
+    /*
+     * "Aanbieden mislukt" on its own sent the office looking at Telegram, the
+     * technicians and the job, when the cause was a missing grant on a table
+     * — 0013 gave `authenticated` only select and update, because until there
+     * was a button for this nothing but the service-role agent ever inserted.
+     */
+    const denied = /permission denied|row-level security|violates/i.test(insertError?.message ?? '');
+    return NextResponse.json(
+      {
+        error: denied
+          ? 'Geen recht om aan te bieden — voer supabase/migrations/0067_office_may_offer_a_job.sql uit.'
+          : `Aanbieden mislukt: ${insertError?.message ?? 'onbekend'}`,
+      },
+      { status: 500 }
+    );
   }
 
   const what = job.scenario
