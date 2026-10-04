@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { sendTelegramBidOffer } from './telegram';
 import { SCENARIO_INFO, scenarioFromLabel, type Scenario } from './scenarios';
 import { priceFor, type PricedCoverageRow } from './capability';
+import { b, esc, euro } from './telegramText';
 
 /**
  * Putting a job out to the monteurs.
@@ -131,23 +132,23 @@ export async function offerJobToTechnicians(
 
   const describe = (mine: number | null) =>
     [
-      `🔧 ${what}`,
-      car || null,
-      `📍 ${where}${job.postcode && job.city ? ` (${job.postcode})` : ''}`,
+      `🔧 ${b(what)}`,
+      car ? esc(car) : null,
+      `📍 ${esc(where)}${job.postcode && job.city ? ` · ${esc(job.postcode)}` : ''}`,
       job.keyless ? '🔑 Keyless' : null,
+      '',
       /*
        * Their number, never ours.
        *
        * The job's quoted_price is what the customer was told, and that is not
        * the technician's business: showing both side by side turns every
        * offer into a negotiation about the margin instead of a question about
-       * whether they can be there. So a technician sees what they will be
-       * paid and nothing else, and a technician with no rate for this car
-       * simply names one.
+       * whether they can be there.
        */
-      mine !== null ? `Uw tarief: € ${mine.toFixed(2)}` : null,
-      '',
-      mine !== null ? 'Wanneer kunt u? Uw tarief wordt automatisch meegestuurd.' : 'Wanneer kunt u? Daarna vraag ik uw prijs.',
+      mine !== null ? `Uw tarief: ${b(euro(mine))}` : null,
+      mine !== null
+        ? '\nKies een dag en een tijd — uw tarief gaat automatisch mee.'
+        : '\nKies een dag en een tijd. Daarna vraag ik uw prijs.',
     ]
       .filter((line) => line !== null)
       .join('\n');

@@ -21,6 +21,7 @@ import { parseExpenseCaption, readAmount, EXPENSE_CATEGORIES } from '@/lib/expen
 import { SCENARIO_INFO, scenarioFromLabel, type Scenario } from '@/lib/scenarios';
 import { priceFor, type PricedCoverageRow } from '@/lib/capability';
 import { parseJobLine, JOB_TEMPLATE } from '@/lib/jobFromText';
+import { b, esc, euro, block, list } from '@/lib/telegramText';
 import { offerJobToTechnicians } from '@/lib/offerJob';
 
 export const dynamic = 'force-dynamic';
@@ -208,13 +209,16 @@ async function announceExpense(
     return;
   }
 
-  const text = [
-    `🧾 Nieuwe uitgave van ${technicianName}`,
-    `${MONEY.format(expense.amount)} · ${EXPENSE_CATEGORIES[expense.category] ?? expense.category}`,
-    expense.description,
-    expense.is_reimbursable ? 'Declaratie — zelf voorgeschoten.' : 'Zakelijk betaald.',
-    'De bon staat bij Uitgaven in de CRM.',
-  ].join('\n');
+  const text = block(
+    `🧾 Uitgave van ${technicianName}`,
+    [
+      ['Bedrag', euro(expense.amount)],
+      ['Soort', EXPENSE_CATEGORIES[expense.category] ?? expense.category],
+      ['Omschrijving', expense.description],
+      ['Betaald', expense.is_reimbursable ? 'zelf voorgeschoten' : 'zakelijk'],
+    ],
+    'De bon staat bij Uitgaven in de CRM.'
+  );
 
   for (const recipient of recipients ?? []) {
     await sendTelegramExpense(recipient.telegram_chat_id, text, expense.id);
@@ -301,8 +305,11 @@ async function handleReceipt(
 
   await sendTelegram(
     String(chatId),
-    `✅ ${MONEY.format(expense.amount)} · ${EXPENSE_CATEGORIES[expense.category]} genoteerd. ` +
+    block(
+      '✅ Bon genoteerd',
+      [['Bedrag', euro(expense.amount)], ['Soort', EXPENSE_CATEGORIES[expense.category]]],
       'Het kantoor keurt hem goed.'
+    )
   );
   await announceExpense(supabase, expense, technician.name);
 }
@@ -352,8 +359,11 @@ async function handleAmountReply(chatId: number | string, text: string): Promise
 
   await sendTelegram(
     String(chatId),
-    `✅ ${MONEY.format(expense.amount)} · ${EXPENSE_CATEGORIES[expense.category]} genoteerd. ` +
+    block(
+      '✅ Bon genoteerd',
+      [['Bedrag', euro(expense.amount)], ['Soort', EXPENSE_CATEGORIES[expense.category]]],
       'Het kantoor keurt hem goed.'
+    )
   );
   await announceExpense(supabase, expense, technician.name);
   return true;
@@ -564,14 +574,22 @@ async function completeBid(
 
   await sendTelegram(
     String(chatId),
-    `✅ Uw bod staat genoteerd.\n\n${what}\n${when}\n${MONEY_EUR.format(amount)}${fromList ? ' (uw tarief)' : ''}\n\nKantoor laat weten of de klus naar u gaat.`
+    block(
+      '✅ Uw bod staat genoteerd',
+      [['Klus', what], ['Wanneer', when], ['Uw prijs', euro(amount) + (fromList ? ' <i>(uw tarief)</i>' : '')]],
+      'Kantoor laat weten of de klus naar u gaat.'
+    )
   );
 
   const { data: recipients } = await supabase.from('admin_telegram').select('telegram_chat_id');
   for (const recipient of recipients ?? []) {
     await sendTelegram(
       recipient.telegram_chat_id,
-      `💶 Bod van ${technician.name}\n${what}\n${when}\n${MONEY_EUR.format(amount)}${fromList ? ' (eigen tarief)' : ''}\n\nGunnen doet u bij Biedingen in de CRM.`
+      block(
+        `💶 Bod van ${technician.name}`,
+        [['Klus', what], ['Wanneer', when], ['Vraagt', euro(amount) + (fromList ? ' <i>(eigen tarief)</i>' : '')]],
+        'Gunnen doet u bij Biedingen, of via /menu.'
+      )
     );
   }
   return true;
@@ -762,13 +780,22 @@ async function handleMenuChoice(query: NonNullable<TelegramUpdate['callback_quer
       await sendTelegram(String(chatId), '📋 Geen klussen gepland.');
       return;
     }
+    /* One job, three lines: when and who on the first, where on the second,
+       money and state on the third. Six jobs as six run-on sentences is what
+       this replaced. */
     const lines = data.map((job) => {
-      const when = `${job.scheduled_date === today ? 'Vandaag' : job.scheduled_date} ${String(job.slot_start ?? '').slice(0, 5)}`;
+      const when = job.scheduled_date === today ? 'Vandaag' : job.scheduled_date;
       const who = job.customer_name?.trim() || [job.car_make, job.car_model].filter(Boolean).join(' ') || 'Klus';
       const price = job.final_price ?? job.quoted_price;
-      return `${when} · ${who}${job.city ? ` · ${job.city}` : ''}${price ? ` · ${MONEY_EUR.format(Number(price))}` : ''} · ${job.status}`;
+      return [
+        `${b(`${when} ${String(job.slot_start ?? '').slice(0, 5)}`)} — ${esc(who)}`,
+        job.city ? `   📍 ${esc(job.city)}` : null,
+        `   ${price ? euro(price) : '—'} · ${esc(job.status)}`,
+      ]
+        .filter(Boolean)
+        .join('\n');
     });
-    await sendTelegram(String(chatId), `📋 Uw klussen\n\n${lines.join('\n')}`);
+    await sendTelegram(String(chatId), list('📋 Uw klussen', lines, { max: 8 }));
     return;
   }
 
@@ -815,7 +842,18 @@ async function handleMenuChoice(query: NonNullable<TelegramUpdate['callback_quer
     const direction = saldo > 0 ? 'u moet nog afdragen' : saldo < 0 ? 'wij moeten u nog betalen' : 'niets openstaand';
     await sendTelegram(
       String(chatId),
-      `💰 Saldo: ${MONEY_EUR.format(Math.abs(saldo))} — ${direction}\n\nGeïnd: ${MONEY_EUR.format(Number(data.totaal_geind ?? 0))}\nAfgedragen: ${MONEY_EUR.format(Number(data.totaal_afgedragen ?? 0))}\nUitbetaald: ${MONEY_EUR.format(Number(data.totaal_uitbetaald ?? 0))}`
+      block(
+        '💰 Uw saldo',
+        [
+          ['Openstaand', euro(Math.abs(saldo))],
+          ['Geïnd', euro(data.totaal_geind)],
+          ['Afgedragen', euro(data.totaal_afgedragen)],
+          ['Uitbetaald', euro(data.totaal_uitbetaald)],
+        ],
+        /* Which way it runs, spelled out: a positive "saldo" reads like money
+           owed to you and means the opposite. */
+        direction
+      )
     );
     return;
   }
@@ -833,10 +871,15 @@ async function handleMenuChoice(query: NonNullable<TelegramUpdate['callback_quer
     }
     const short = data.filter((row) => Number(row.quantity) <= 0 || (Number(row.min_quantity) > 0 && Number(row.quantity) <= Number(row.min_quantity)));
     const value = data.reduce((total, row) => total + Number(row.quantity) * Number(row.unit_cost ?? 0), 0);
-    const lines = data.slice(0, 15).map((row) => `${row.quantity}× ${row.description}`);
+    const lines = data.map((row) => `${b(`${row.quantity}×`)} ${esc(row.description)}`);
     await sendTelegram(
       String(chatId),
-      `📦 Uw bus — ${data.length} artikelen, waarde ${MONEY_EUR.format(value)}\n\n${lines.join('\n')}${data.length > 15 ? `\n… en ${data.length - 15} meer` : ''}${short.length ? `\n\n⚠️ Op of bijna op: ${short.map((s) => s.description).join(', ')}` : ''}`
+      list(`📦 Uw bus — ${data.length} artikelen, ${euro(value)}`, lines, {
+        max: 15,
+        footer: short.length
+          ? `⚠️ Op of bijna op: ${short.map((row) => row.description).join(', ')}`
+          : undefined,
+      })
     );
     return;
   }
@@ -853,8 +896,13 @@ async function handleMenuChoice(query: NonNullable<TelegramUpdate['callback_quer
       await sendTelegram(String(chatId), '🧾 Nog geen facturen. Stuur een foto of PDF van een leveranciersfactuur en ik zet hem klaar.');
       return;
     }
-    const lines = data.map((inv) => `${inv.invoice_date ?? '—'} · ${inv.supplier ?? 'onbekend'} · ${inv.total_amount ? MONEY_EUR.format(Number(inv.total_amount)) : '—'} · ${inv.status}`);
-    await sendTelegram(String(chatId), `🧾 Uw facturen\n\n${lines.join('\n')}`);
+    const lines = data.map((inv) =>
+      [
+        `${b(inv.supplier ?? 'Onbekende leverancier')} — ${inv.total_amount ? euro(inv.total_amount) : '—'}`,
+        `   ${esc(inv.invoice_date ?? 'geen datum')} · ${esc(inv.status)}`,
+      ].join('\n')
+    );
+    await sendTelegram(String(chatId), list('🧾 Uw facturen', lines, { max: 8 }));
     return;
   }
 
@@ -871,10 +919,18 @@ async function handleMenuChoice(query: NonNullable<TelegramUpdate['callback_quer
       return;
     }
     const open = data.filter((e) => e.status === 'pending').reduce((t, e) => t + Number(e.amount ?? 0), 0);
-    const lines = data.map((e) => `${e.date_incurred} · ${EXPENSE_CATEGORIES[e.category] ?? e.category} · ${MONEY_EUR.format(Number(e.amount ?? 0))} · ${e.status}`);
+    const lines = data.map((e) =>
+      [
+        `${b(euro(e.amount))} — ${esc(EXPENSE_CATEGORIES[e.category] ?? e.category)}`,
+        `   ${esc(e.date_incurred)} · ${esc(e.status)}`,
+      ].join('\n')
+    );
     await sendTelegram(
       String(chatId),
-      `💸 Uw uitgaven\n\n${lines.join('\n')}${open > 0 ? `\n\nNog goed te keuren: ${MONEY_EUR.format(open)}` : ''}`
+      list('💸 Uw uitgaven', lines, {
+        max: 8,
+        footer: open > 0 ? `Nog goed te keuren: ${new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(open)}` : undefined,
+      })
     );
     return;
   }
@@ -1041,15 +1097,16 @@ async function handleOfficeChoice(query: NonNullable<TelegramUpdate['callback_qu
     }
     for (const lead of data) {
       const age = Math.floor((Date.now() - Date.parse(lead.created_at)) / 3600_000);
-      const text = [
+      const text = block(
         `📥 ${lead.name?.trim() || 'Naam onbekend'}`,
-        [lead.brand, lead.model].filter(Boolean).join(' ') || null,
-        lead.phone ? `📞 ${lead.phone}` : null,
-        lead.postcode ? `📍 ${lead.postcode}` : null,
-        `${age}u geleden${lead.first_contact_at ? ' · al contact gehad' : ' · nog niet gebeld'}`,
-      ]
-        .filter(Boolean)
-        .join('\n');
+        [
+          ['Auto', [lead.brand, lead.model].filter(Boolean).join(' ')],
+          ['Telefoon', lead.phone],
+          ['Postcode', lead.postcode],
+          ['Binnen', `${age} uur geleden`],
+        ],
+        lead.first_contact_at ? 'Er is al contact geweest.' : 'Nog niet gebeld.'
+      );
       await sendTelegramLead(String(chatId), text, lead.id);
     }
     return;
@@ -1073,7 +1130,11 @@ async function handleOfficeChoice(query: NonNullable<TelegramUpdate['callback_qu
       const what2 = await jobLine(supabase, bid.job_id);
       await sendTelegramBidToOffice(
         String(chatId),
-        `💶 ${tech?.name ?? 'Monteur'}\n${what2}\n${bid.bid_date} · ${String(bid.bid_start).slice(0, 5)}–${String(bid.bid_end).slice(0, 5)}\n${MONEY_EUR.format(Number(bid.bid_price))}`,
+        block(`💶 ${tech?.name ?? 'Monteur'}`, [
+          ['Klus', what2],
+          ['Wanneer', `${bid.bid_date} · ${String(bid.bid_start).slice(0, 5)}–${String(bid.bid_end).slice(0, 5)}`],
+          ['Vraagt', euro(bid.bid_price)],
+        ]),
         bid.id
       );
     }
@@ -1094,9 +1155,12 @@ async function handleOfficeChoice(query: NonNullable<TelegramUpdate['callback_qu
     const lines = data.map((job) => {
       const tech = job.technicians as unknown as { name: string } | null;
       const who = job.customer_name?.trim() || [job.car_make, job.car_model].filter(Boolean).join(' ') || 'Klus';
-      return `${String(job.slot_start ?? '').slice(0, 5)} ${who}${job.city ? ` · ${job.city}` : ''} · ${tech?.name?.split(' ')[0] ?? 'geen monteur'} · ${job.status}`;
+      return [
+        `${b(String(job.slot_start ?? '').slice(0, 5))} — ${esc(who)}`,
+        `   ${esc(job.city ?? 'geen plaats')} · ${esc(tech?.name?.split(' ')[0] ?? 'geen monteur')} · ${esc(job.status)}`,
+      ].join('\n');
     });
-    await sendTelegram(String(chatId), `📋 Vandaag — ${data.length} klus(sen)\n\n${lines.join('\n')}`);
+    await sendTelegram(String(chatId), list(`📋 Vandaag — ${data.length} klus(sen)`, lines, { max: 12 }));
     return;
   }
 
@@ -1133,14 +1197,12 @@ async function handleOfficeChoice(query: NonNullable<TelegramUpdate['callback_qu
     const revenue = done.reduce((t, j) => t + Number(j.final_price ?? j.quoted_price ?? 0), 0);
     await sendTelegram(
       String(chatId),
-      [
-        `📊 Vandaag`,
-        ``,
-        `Klussen: ${done.length} afgerond van ${(jobs ?? []).length}`,
-        `Omzet: ${MONEY_EUR.format(revenue)}`,
-        `Leads binnen: ${(leads ?? []).length}`,
-        `Nog niet gebeld: ${(leads ?? []).filter((l) => l.status === 'new').length}`,
-      ].join('\n')
+      block('📊 Vandaag', [
+        ['Klussen afgerond', `${done.length} van ${(jobs ?? []).length}`],
+        ['Omzet', euro(revenue)],
+        ['Leads binnen', (leads ?? []).length],
+        ['Nog niet gebeld', (leads ?? []).filter((l) => l.status === 'new').length],
+      ])
     );
   }
 }
@@ -1202,23 +1264,25 @@ async function handleNewJob(chatId: number | string, text: string) {
 
   await sendTelegram(
     String(chatId),
-    [
+    block(
       '✅ Klus aangemaakt',
-      '',
-      `🔧 ${what}`,
-      car || null,
-      `📍 ${[parsed.city, parsed.postcode].filter(Boolean).join(' ') || 'onbekend'}`,
-      parsed.customer_name ? `👤 ${parsed.customer_name}` : null,
-      parsed.customer_phone ? `📞 ${parsed.customer_phone}` : null,
-      parsed.quoted_price ? `Richtprijs: ${MONEY_EUR.format(parsed.quoted_price)}` : null,
-      !parsed.scenario
-        ? '\n⚠️ Geen dienst herkend — monteurs krijgen geen eigen tarief en moeten een prijs sturen.'
-        : null,
-      '',
-      'Dag en tijd komen uit het bod van de monteur.',
-    ]
-      .filter((line) => line !== null)
-      .join('\n')
+      [
+        ['Werk', what],
+        ['Auto', car],
+        ['Waar', [parsed.city, parsed.postcode].filter(Boolean).join(' ')],
+        ['Klant', parsed.customer_name],
+        ['Telefoon', parsed.customer_phone],
+        ['Richtprijs', parsed.quoted_price ? euro(parsed.quoted_price) : null],
+      ],
+      [
+        'Dag en tijd komen uit het bod van de monteur.',
+        !parsed.scenario
+          ? '⚠️ Geen dienst herkend — monteurs krijgen geen eigen tarief en moeten zelf een prijs sturen.'
+          : null,
+      ]
+        .filter(Boolean)
+        .join('\n')
+    )
   );
 
   /* Offered straight away: a job typed while the customer waits is the one

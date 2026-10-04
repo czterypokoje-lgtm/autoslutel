@@ -27,9 +27,24 @@ async function callTelegram(method: string, payload: Record<string, unknown>): P
   }
 }
 
+/**
+ * Every message goes out as HTML.
+ *
+ * Telegram rejects the whole message when the parser meets a stray `<` or
+ * `&`, and these carry customer names and free-typed descriptions — so
+ * anything built by hand must come through the helpers in telegramText.ts,
+ * which escape as they go. `disable_web_page_preview` because a postcode or a
+ * model number occasionally looks like a link to Telegram and a preview card
+ * under a two-line job is noise.
+ */
 export async function sendTelegram(chatId: string | null | undefined, message: string): Promise<void> {
   if (!chatId) return;
-  await callTelegram('sendMessage', { chat_id: chatId, text: message });
+  await callTelegram('sendMessage', {
+    chat_id: chatId,
+    text: message,
+    parse_mode: 'HTML',
+    link_preview_options: { is_disabled: true },
+  });
 }
 
 /**
@@ -48,6 +63,8 @@ export async function sendTelegramOffer(
   await callTelegram('sendMessage', {
     chat_id: chatId,
     text: message,
+    parse_mode: 'HTML',
+    link_preview_options: { is_disabled: true },
     reply_markup: {
       inline_keyboard: [
         [
@@ -74,7 +91,13 @@ export async function editTelegramMessage(
   messageId: number,
   text: string
 ): Promise<void> {
-  await callTelegram('editMessageText', { chat_id: chatId, message_id: messageId, text });
+  await callTelegram('editMessageText', {
+    chat_id: chatId,
+    message_id: messageId,
+    text,
+    parse_mode: 'HTML',
+    link_preview_options: { is_disabled: true },
+  });
 }
 
 /**
@@ -93,6 +116,8 @@ export async function sendTelegramExpense(
   await callTelegram('sendMessage', {
     chat_id: chatId,
     text: message,
+    parse_mode: 'HTML',
+    link_preview_options: { is_disabled: true },
     reply_markup: {
       inline_keyboard: [
         [
@@ -201,6 +226,8 @@ export async function sendTelegramBidOffer(
   await callTelegram('sendMessage', {
     chat_id: chatId,
     text: message,
+    parse_mode: 'HTML',
+    link_preview_options: { is_disabled: true },
     reply_markup: {
       inline_keyboard: [
         DAY_LABELS.slice(0, 2).map((label, index) => ({
@@ -238,7 +265,8 @@ export async function editToSlotChoice(
   await callTelegram('editMessageText', {
     chat_id: chatId,
     message_id: messageId,
-    text: `${dayLabel} — hoe laat kunt u er zijn?`,
+    parse_mode: 'HTML',
+    text: `<b>${dayLabel}</b> — hoe laat kunt u er zijn?`,
     reply_markup: { inline_keyboard: rows },
   });
 }
@@ -254,6 +282,7 @@ export async function editToDayChoice(
     chat_id: chatId,
     message_id: messageId,
     text: message,
+    parse_mode: 'HTML',
     reply_markup: {
       inline_keyboard: [
         DAY_LABELS.slice(0, 2).map((label, index) => ({
@@ -322,6 +351,8 @@ export async function sendTelegramLead(
   await callTelegram('sendMessage', {
     chat_id: chatId,
     text: message,
+    parse_mode: 'HTML',
+    link_preview_options: { is_disabled: true },
     reply_markup: {
       inline_keyboard: [
         [
@@ -343,6 +374,8 @@ export async function sendTelegramBidToOffice(
   await callTelegram('sendMessage', {
     chat_id: chatId,
     text: message,
+    parse_mode: 'HTML',
+    link_preview_options: { is_disabled: true },
     reply_markup: {
       inline_keyboard: [[{ text: '✅ Gun deze klus', callback_data: `aw:${offerId}` }]],
     },

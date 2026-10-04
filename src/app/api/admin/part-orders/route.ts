@@ -3,10 +3,9 @@ import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { sendTelegram } from '@/lib/telegram';
+import { block, euro } from '@/lib/telegramText';
 
 export const dynamic = 'force-dynamic';
-
-const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 
 function number(value: unknown, fallback: number | null): number | null | 'invalid' {
   if (value === null || value === undefined || value === '') return fallback;
@@ -100,17 +99,15 @@ export async function POST(request: Request) {
     for (const recipient of recipients ?? []) {
       await sendTelegram(
         recipient.telegram_chat_id,
-        [
+        block(
           `📦 ${me.name} vraagt een onderdeel`,
-          '',
-          `${order.quantity}× ${order.description}`,
-          order.article_code ? `Artikelnr: ${order.article_code}` : null,
-          order.unit_cost ? `Inkoop: ${MONEY.format(Number(order.unit_cost))}` : null,
-          '',
-          'Afhandelen doet u bij Voorraad in de CRM.',
-        ]
-          .filter(Boolean)
-          .join('\n')
+          [
+            ['Artikel', `${order.quantity}× ${order.description}`],
+            ['Artikelnr', order.article_code],
+            ['Inkoop', order.unit_cost ? euro(order.unit_cost) : null],
+          ],
+          'Afhandelen doet u bij Voorraad in de CRM.'
+        )
       );
     }
   });
