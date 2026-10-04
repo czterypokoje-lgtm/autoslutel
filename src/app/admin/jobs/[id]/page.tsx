@@ -8,6 +8,7 @@ import JobEditor, { type JobDetail } from './JobEditor';
 import AdClickPanel from './AdClickPanel';
 import PaymentPanel, { type PaymentRow } from './PaymentPanel';
 import OfferHistory, { type OfferRow } from './OfferHistory';
+import OfferButton from './OfferButton';
 import DeleteJobButton from './DeleteJobButton';
 import { Badge } from '../../_ui';
 import { getBrandLogo } from '@/lib/brandLogos';
@@ -192,6 +193,20 @@ export default async function JobPage({
       {/* Renders itself away unless this job has no attribution and an
           unclaimed click landed near its date. */}
       <AdClickPanel jobId={job.id as string} />
+
+      {/*
+        * Offering is only on the table while the job is still to be done —
+        * a finished job sent out to bid is how a monteur drives to work that
+        * someone else already did.
+        */}
+      {job.status !== 'afgerond' && job.status !== 'geannuleerd' && (
+        <div style={{ margin: '1.5rem 0' }}>
+          <OfferButton
+            jobId={job.id as string}
+            alreadyOpen={(offers ?? []).filter((o) => o.response === null).length}
+          />
+        </div>
+      )}
 
       <OfferHistory offers={offerRows} />
     </>
