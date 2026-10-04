@@ -172,7 +172,12 @@ export default function OfferList({ offers }: { offers: OfferRow[] }) {
                     Keyless
                   </li>
                 )}
-                {offer.price != null && <li className={styles.price}>{EUR.format(offer.price)}</li>}
+                {/* Hun tarief, niet wat de klant betaalt. */}
+                {offer.price != null && (
+                  <li className={styles.price} title="Uw eigen tarief uit Mijn vak">
+                    {EUR.format(offer.price)}
+                  </li>
+                )}
               </ul>
               {offer.reason && <p className={styles.reason}>{offer.reason}</p>}
 

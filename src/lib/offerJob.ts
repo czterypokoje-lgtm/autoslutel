@@ -135,10 +135,19 @@ export async function offerJobToTechnicians(
       car || null,
       `📍 ${where}${job.postcode && job.city ? ` (${job.postcode})` : ''}`,
       job.keyless ? '🔑 Keyless' : null,
-      job.quoted_price ? `Richtprijs: € ${Number(job.quoted_price).toFixed(2)}` : null,
+      /*
+       * Their number, never ours.
+       *
+       * The job's quoted_price is what the customer was told, and that is not
+       * the technician's business: showing both side by side turns every
+       * offer into a negotiation about the margin instead of a question about
+       * whether they can be there. So a technician sees what they will be
+       * paid and nothing else, and a technician with no rate for this car
+       * simply names one.
+       */
       mine !== null ? `Uw tarief: € ${mine.toFixed(2)}` : null,
       '',
-      mine !== null ? 'Wanneer kunt u? Uw tarief wordt automatisch meegestuurd.' : 'Wanneer kunt u?',
+      mine !== null ? 'Wanneer kunt u? Uw tarief wordt automatisch meegestuurd.' : 'Wanneer kunt u? Daarna vraag ik uw prijs.',
     ]
       .filter((line) => line !== null)
       .join('\n');

@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Notice, HelpSteps } from '../_ui';
 import { getBrandLogo } from '@/lib/brandLogos';
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
+import { priceFor, type PricedCoverageRow } from '@/lib/capability';
 import { slotLabel } from '@/lib/crmJobs';
 import OfferList, { type OfferRow } from './OfferList';
 
@@ -29,6 +30,20 @@ export default async function AanbodPage() {
     .select('id')
     .eq('user_id', user.id)
     .maybeSingle();
+
+  /*
+   * Their own rates, for the price column below.
+   *
+   * What the customer was quoted is not the technician's business: showing it
+   * turns every offer into a conversation about the margin rather than about
+   * whether they can be there. They see what they will be paid.
+   */
+  const { data: myRates } = me
+    ? await supabase
+        .from('technician_coverage')
+        .select('technician_id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+        .eq('technician_id', me.id)
+    : { data: [] };
 
   if (!me) {
     return (
@@ -88,7 +103,20 @@ export default async function AanbodPage() {
           keyless: job.keyless,
           when: `${new Intl.DateTimeFormat('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/Amsterdam' }).format(new Date(`${job.scheduled_date}T12:00:00Z`))} · ${slotLabel(job.slot_start, job.slot_end)}`,
           where: [job.postcode, job.city].filter(Boolean).join(' ') || 'Onbekend',
-          price: job.quoted_price == null ? null : Number(job.quoted_price),
+          /* Null when they never priced this car — the offer then says so
+             rather than quoting them someone else's number. */
+          price:
+            scenario && job.car_make
+              ? priceFor(
+                  (myRates ?? []) as PricedCoverageRow[],
+                  { make: job.car_make, model: job.car_model, year: job.car_year },
+                  scenario,
+                  job.keyless
+                )
+              : /* No scenario means no price: the same Peugeot is EUR 120 to
+                   copy a key and EUR 250 when they are all lost, and picking
+                   one would quote the technician a number for other work. */
+                null,
         },
       ];
     });
