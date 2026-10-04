@@ -1,7 +1,7 @@
 import 'server-only';
 import { SITE_CONFIG } from '@/config/site.config';
 import { sendMail } from './email';
-import { sendTelegram } from './telegram';
+import { sendTelegram, sendTelegramLead } from './telegram';
 
 /**
  * Tell the office a lead just came in.
@@ -118,9 +118,41 @@ export async function notifyNewLead(lead: LeadAlert): Promise<{ mail: boolean; t
     }).catch(() => false),
 
     (async () => {
-      if (!officeChat) return false;
       if (!process.env.TELEGRAM_BOT_TOKEN) return false;
-      await sendTelegram(officeChat, text);
+
+      /*
+       * Two audiences, one message.
+       *
+       * TELEGRAM_OFFICE_CHAT_ID is a single chat set in the environment, from
+       * before anyone could connect their own. admin_telegram is everyone who
+       * has since done so from Mijn profiel. Both get it, deduplicated — the
+       * env chat is often one of the connected ones, and a lead alert arriving
+       * twice trains people to stop reading it.
+       *
+       * With a lead id the alert carries its two answers as buttons, so being
+       * called can be recorded from the notification instead of from a laptop
+       * somebody is not sitting at.
+       */
+      const chats = new Set<string>();
+      if (officeChat) chats.add(officeChat);
+
+      try {
+        const { createSupabaseAdminClient } = await import('./supabase/admin');
+        const { data } = await createSupabaseAdminClient()
+          .from('admin_telegram')
+          .select('telegram_chat_id');
+        for (const row of data ?? []) chats.add(String(row.telegram_chat_id));
+      } catch (error) {
+        /* The env chat still gets it; a missing service key must not cost the
+           alert entirely. */
+        console.error('[lead-alert] admin_telegram lookup failed:', error);
+      }
+
+      if (!chats.size) return false;
+      for (const chat of chats) {
+        if (lead.id) await sendTelegramLead(chat, text, String(lead.id));
+        else await sendTelegram(chat, text);
+      }
       return true;
     })().catch(() => false),
   ]);

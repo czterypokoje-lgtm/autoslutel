@@ -9,6 +9,9 @@ import {
   downloadTelegramFile,
   sendTelegramBidOffer,
   sendTelegramMenu,
+  sendTelegramOfficeMenu,
+  sendTelegramLead,
+  sendTelegramBidToOffice,
   editToSlotChoice,
   editToDayChoice,
   dayLabel,
@@ -836,6 +839,271 @@ async function handleMenuChoice(query: NonNullable<TelegramUpdate['callback_quer
   }
 }
 
+
+/* ── Kantoor in Telegram ────────────────────────────────────────────────── */
+
+/** The office user behind this chat, or null if it is not an office chat. */
+async function officeFor(supabase: SupabaseClient, chatId: number | string) {
+  const { data } = await supabase
+    .from('admin_telegram')
+    .select('user_id')
+    .eq('telegram_chat_id', String(chatId))
+    .maybeSingle();
+  return data as { user_id: string } | null;
+}
+
+/** "✅ Gebeld" / "🚫 Geen klant" on a lead alert. */
+async function handleLeadAction(
+  query: NonNullable<TelegramUpdate['callback_query']>,
+  leadId: string,
+  reached: boolean
+) {
+  const chatId = query.message?.chat?.id;
+  const messageId = query.message?.message_id;
+  if (chatId === undefined || messageId === undefined) {
+    await answerTelegramCallback(query.id);
+    return;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  if (!(await officeFor(supabase, chatId))) {
+    await answerTelegramCallback(query.id, 'Alleen kantoor kan dit.');
+    return;
+  }
+
+  /*
+   * first_contact_at only when it is still empty. It is the start of the
+   * response-time metric (crm_report_response), and overwriting it on a
+   * second call would quietly rewrite how fast this lead was answered.
+   */
+  const patch = reached
+    ? { status: 'contacted', first_contact_at: new Date().toISOString() }
+    : { status: 'rejected' };
+
+  const { data: lead, error } = await supabase
+    .from('leads')
+    .update(reached ? patch : { status: 'rejected' })
+    .eq('id', leadId)
+    .select('id, name, phone, first_contact_at')
+    .maybeSingle();
+
+  if (error) console.error('Lead action failed:', error.message);
+
+  const outcome = error
+    ? 'Bijwerken mislukt.'
+    : reached
+      ? `✅ ${lead?.name?.trim() || 'Lead'} — gebeld`
+      : `🚫 ${lead?.name?.trim() || 'Lead'} — geen klant`;
+
+  await answerTelegramCallback(query.id, error ? 'Mislukt' : 'Bijgewerkt');
+  await editTelegramMessage(chatId, messageId, outcome);
+}
+
+/** "✅ Gun deze klus" on a bid, from the office chat. */
+async function handleAwardFromChat(
+  query: NonNullable<TelegramUpdate['callback_query']>,
+  offerId: string
+) {
+  const chatId = query.message?.chat?.id;
+  const messageId = query.message?.message_id;
+  if (chatId === undefined || messageId === undefined) {
+    await answerTelegramCallback(query.id);
+    return;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  /*
+   * The service-role key can award anything, so the question "may this
+   * person" is answered here rather than in the database: is this chat one
+   * the office connected itself?
+   */
+  if (!(await officeFor(supabase, chatId))) {
+    await answerTelegramCallback(query.id, 'Alleen kantoor kan gunnen.');
+    return;
+  }
+
+  const { data: before } = await supabase
+    .from('job_offers')
+    .select('job_id, technician_id, bid_price, bid_date, bid_start, technicians (name, telegram_chat_id)')
+    .eq('id', offerId)
+    .maybeSingle();
+
+  const { data: outcome, error } = await supabase.rpc('crm_award_offer', { p_offer: offerId });
+
+  if (error || outcome !== 'ok') {
+    const why = error
+      ? 'Gunnen mislukt.'
+      : outcome === 'geen_toegang'
+        ? 'Voer supabase/migrations/0068_award_from_telegram.sql uit.'
+        : outcome === 'niet_gevonden'
+          ? 'Dit bod is al beantwoord.'
+          : String(outcome);
+    if (error) console.error('Award from chat failed:', error.message);
+    await answerTelegramCallback(query.id, why);
+    return;
+  }
+
+  const tech = before?.technicians as unknown as { name: string; telegram_chat_id: string | null } | null;
+  await answerTelegramCallback(query.id, 'Gegund');
+  await editTelegramMessage(
+    chatId,
+    messageId,
+    `✅ Gegund aan ${tech?.name ?? 'monteur'} — ${before?.bid_price ? MONEY_EUR.format(Number(before.bid_price)) : ''} op ${before?.bid_date}`
+  );
+
+  await sendTelegram(
+    tech?.telegram_chat_id,
+    `🎉 De klus is voor u.\n${before?.bid_date} · ${String(before?.bid_start ?? '').slice(0, 5)}\n\nU vindt hem bij Vandaag.`
+  );
+
+  /* Everyone who bid and lost, told now rather than left holding a slot. */
+  const { data: losers } = await supabase
+    .from('job_offers')
+    .select('technicians (telegram_chat_id)')
+    .eq('job_id', before?.job_id ?? '')
+    .neq('id', offerId);
+  for (const row of losers ?? []) {
+    const t = row.technicians as unknown as { telegram_chat_id: string | null } | null;
+    await sendTelegram(t?.telegram_chat_id, 'Deze klus is naar een collega gegaan. Bedankt voor het bieden.');
+  }
+}
+
+/** The office menu's answers. */
+async function handleOfficeChoice(query: NonNullable<TelegramUpdate['callback_query']>, what: string) {
+  const chatId = query.message?.chat?.id;
+  if (chatId === undefined) {
+    await answerTelegramCallback(query.id);
+    return;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  await answerTelegramCallback(query.id);
+
+  if (!(await officeFor(supabase, chatId))) {
+    await sendTelegram(String(chatId), 'Deze chat is niet aan een kantoorgebruiker gekoppeld. Open Mijn profiel in de CRM en tik op "Telegram koppelen".');
+    return;
+  }
+
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date());
+
+  if (what === 'leads') {
+    const { data } = await supabase
+      .from('leads')
+      .select('id, name, phone, brand, model, postcode, status, created_at, first_contact_at')
+      .in('status', ['new', 'qualified'])
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '📥 Geen open leads.');
+      return;
+    }
+    for (const lead of data) {
+      const age = Math.floor((Date.now() - Date.parse(lead.created_at)) / 3600_000);
+      const text = [
+        `📥 ${lead.name?.trim() || 'Naam onbekend'}`,
+        [lead.brand, lead.model].filter(Boolean).join(' ') || null,
+        lead.phone ? `📞 ${lead.phone}` : null,
+        lead.postcode ? `📍 ${lead.postcode}` : null,
+        `${age}u geleden${lead.first_contact_at ? ' · al contact gehad' : ' · nog niet gebeld'}`,
+      ]
+        .filter(Boolean)
+        .join('\n');
+      await sendTelegramLead(String(chatId), text, lead.id);
+    }
+    return;
+  }
+
+  if (what === 'bids') {
+    const { data } = await supabase
+      .from('job_offers')
+      .select('id, bid_price, bid_date, bid_start, bid_end, job_id, technicians (name)')
+      .is('response', null)
+      .not('bid_price', 'is', null)
+      .order('bid_at', { ascending: true })
+      .limit(8);
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '💶 Geen open biedingen.');
+      return;
+    }
+    for (const bid of data) {
+      const tech = bid.technicians as unknown as { name: string } | null;
+      const what2 = await jobLine(supabase, bid.job_id);
+      await sendTelegramBidToOffice(
+        String(chatId),
+        `💶 ${tech?.name ?? 'Monteur'}\n${what2}\n${bid.bid_date} · ${String(bid.bid_start).slice(0, 5)}–${String(bid.bid_end).slice(0, 5)}\n${MONEY_EUR.format(Number(bid.bid_price))}`,
+        bid.id
+      );
+    }
+    return;
+  }
+
+  if (what === 'today') {
+    const { data } = await supabase
+      .from('jobs')
+      .select('slot_start, status, city, customer_name, car_make, car_model, quoted_price, final_price, technicians (name)')
+      .eq('scheduled_date', today)
+      .order('slot_start');
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '📋 Niets gepland vandaag.');
+      return;
+    }
+    const lines = data.map((job) => {
+      const tech = job.technicians as unknown as { name: string } | null;
+      const who = job.customer_name?.trim() || [job.car_make, job.car_model].filter(Boolean).join(' ') || 'Klus';
+      return `${String(job.slot_start ?? '').slice(0, 5)} ${who}${job.city ? ` · ${job.city}` : ''} · ${tech?.name?.split(' ')[0] ?? 'geen monteur'} · ${job.status}`;
+    });
+    await sendTelegram(String(chatId), `📋 Vandaag — ${data.length} klus(sen)\n\n${lines.join('\n')}`);
+    return;
+  }
+
+  if (what === 'expenses') {
+    const { data } = await supabase
+      .from('expenses')
+      .select('id, date_incurred, category, description, amount, technicians (name)')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
+      .limit(6);
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '💸 Niets te keuren.');
+      return;
+    }
+    for (const expense of data) {
+      const tech = expense.technicians as unknown as { name: string } | null;
+      await sendTelegramExpense(
+        String(chatId),
+        `💸 ${tech?.name ?? 'Kantoor'}\n${expense.date_incurred} · ${EXPENSE_CATEGORIES[expense.category] ?? expense.category}\n${expense.description}\n${MONEY_EUR.format(Number(expense.amount))}`,
+        expense.id
+      );
+    }
+    return;
+  }
+
+  if (what === 'figures') {
+    const [{ data: jobs }, { data: leads }] = await Promise.all([
+      supabase.from('jobs').select('status, final_price, quoted_price').eq('scheduled_date', today),
+      supabase.from('leads').select('id, status').gte('created_at', `${today}T00:00:00`),
+    ]);
+
+    const done = (jobs ?? []).filter((j) => j.status === 'afgerond');
+    const revenue = done.reduce((t, j) => t + Number(j.final_price ?? j.quoted_price ?? 0), 0);
+    await sendTelegram(
+      String(chatId),
+      [
+        `📊 Vandaag`,
+        ``,
+        `Klussen: ${done.length} afgerond van ${(jobs ?? []).length}`,
+        `Omzet: ${MONEY_EUR.format(revenue)}`,
+        `Leads binnen: ${(leads ?? []).length}`,
+        `Nog niet gebeld: ${(leads ?? []).filter((l) => l.status === 'new').length}`,
+      ].join('\n')
+    );
+  }
+}
+
 /**
  * Telegram calling us back, every time someone messages the bot or taps a
  * button on one of its messages.
@@ -863,8 +1131,18 @@ export async function POST(request: Request) {
     const bid = /^(bd|bh|bn|bb):([0-9a-f-]{36})(?::(\d{1,2}))?$/i.exec(data);
     const menu = /^m:(\w+)$/.exec(data);
 
+    const lead = /^ld_(ok|no):([0-9a-f-]{36})$/i.exec(data);
+    const award = /^aw:([0-9a-f-]{36})$/i.exec(data);
+    const office = /^o:(\w+)$/.exec(data);
+
     if (/^exp_(ok|no):/i.test(data)) {
       await handleExpenseCallback(body.callback_query);
+    } else if (lead) {
+      await handleLeadAction(body.callback_query, lead[2]!, lead[1]!.toLowerCase() === 'ok');
+    } else if (award) {
+      await handleAwardFromChat(body.callback_query, award[1]!);
+    } else if (office) {
+      await handleOfficeChoice(body.callback_query, office[1]!);
     } else if (menu) {
       await handleMenuChoice(body.callback_query, menu[1]!);
     } else if (bid) {
@@ -903,7 +1181,17 @@ export async function POST(request: Request) {
       await handleTechnicianStart(chatId, match[2]!);
     }
   } else if (/^\/menu|^\/start$|^menu$/i.test(text.trim())) {
-    await sendTelegramMenu(String(chatId));
+    /*
+     * The same word means two different things depending on who typed it.
+     * A monteur asks "what is mine"; the office asks "what needs me", and
+     * giving either of them the other's menu is worse than giving them none.
+     */
+    const supabase = createSupabaseAdminClient();
+    if (await officeFor(supabase, chatId)) {
+      await sendTelegramOfficeMenu(String(chatId));
+    } else {
+      await sendTelegramMenu(String(chatId));
+    }
   } else if (text) {
     /*
      * A bare number can be two things, and the order matters: a bid is a

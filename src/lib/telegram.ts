@@ -303,3 +303,75 @@ export async function sendTelegramMenu(chatId: string | null | undefined): Promi
     },
   });
 }
+
+/*
+ * ── Kantoor ─────────────────────────────────────────────────────────────────
+ *
+ * The office half of the bot. Same shape as the technician's: everything
+ * answers in the chat, because the person reading this is on a phone between
+ * other things and will not open a laptop to mark a lead as called.
+ */
+
+/** A new lead, with the two answers that move it on. */
+export async function sendTelegramLead(
+  chatId: string | null | undefined,
+  message: string,
+  leadId: string
+): Promise<void> {
+  if (!chatId) return;
+  await callTelegram('sendMessage', {
+    chat_id: chatId,
+    text: message,
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: '✅ Gebeld', callback_data: `ld_ok:${leadId}` },
+          { text: '🚫 Geen klant', callback_data: `ld_no:${leadId}` },
+        ],
+      ],
+    },
+  });
+}
+
+/** One open bid, with the button that ends the question. */
+export async function sendTelegramBidToOffice(
+  chatId: string | null | undefined,
+  message: string,
+  offerId: string
+): Promise<void> {
+  if (!chatId) return;
+  await callTelegram('sendMessage', {
+    chat_id: chatId,
+    text: message,
+    reply_markup: {
+      inline_keyboard: [[{ text: '✅ Gun deze klus', callback_data: `aw:${offerId}` }]],
+    },
+  });
+}
+
+/**
+ * The office menu.
+ *
+ * Not the technician's menu with extra rows: the two jobs barely overlap. A
+ * monteur asks "what is mine"; the office asks "what needs me".
+ */
+export async function sendTelegramOfficeMenu(chatId: string | null | undefined): Promise<void> {
+  if (!chatId) return;
+  await callTelegram('sendMessage', {
+    chat_id: chatId,
+    text: 'Kantoor — waar kijkt u naar?',
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: '📥 Nieuwe leads', callback_data: 'o:leads' },
+          { text: '💶 Biedingen', callback_data: 'o:bids' },
+        ],
+        [
+          { text: '📋 Vandaag', callback_data: 'o:today' },
+          { text: '💸 Uitgaven', callback_data: 'o:expenses' },
+        ],
+        [{ text: '📊 Cijfers vandaag', callback_data: 'o:figures' }],
+      ],
+    },
+  });
+}
