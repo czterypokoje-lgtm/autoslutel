@@ -168,3 +168,138 @@ export async function downloadTelegramFile(fileId: string): Promise<TelegramFile
     return null;
   }
 }
+
+/*
+ * ── Bieden op een klus ──────────────────────────────────────────────────────
+ *
+ * Three taps and one number: a day, an hour, a price. Each tap carries
+ * everything the next step needs in its own callback_data, so the bot keeps
+ * no session anywhere — Telegram's 64-byte limit is the only budget, and a
+ * uuid plus a prefix fits inside it with room to spare.
+ */
+
+/** Two-hour windows. Early and late on purpose: this trade is a lockout at 7am. */
+export const BID_SLOTS: Array<[string, string]> = [
+  ['08:00', '10:00'],
+  ['10:00', '12:00'],
+  ['12:00', '14:00'],
+  ['14:00', '16:00'],
+  ['16:00', '18:00'],
+  ['18:00', '20:00'],
+  ['20:00', '22:00'],
+];
+
+const DAY_LABELS = ['Vandaag', 'Morgen', 'Overmorgen', 'Over 3 dagen'];
+
+/** The job, and the four days they could do it. */
+export async function sendTelegramBidOffer(
+  chatId: string | null | undefined,
+  message: string,
+  offerId: string
+): Promise<void> {
+  if (!chatId) return;
+  await callTelegram('sendMessage', {
+    chat_id: chatId,
+    text: message,
+    reply_markup: {
+      inline_keyboard: [
+        DAY_LABELS.slice(0, 2).map((label, index) => ({
+          text: label,
+          callback_data: `bd:${offerId}:${index}`,
+        })),
+        DAY_LABELS.slice(2).map((label, index) => ({
+          text: label,
+          callback_data: `bd:${offerId}:${index + 2}`,
+        })),
+        [{ text: '❌ Nee, laat maar', callback_data: `bn:${offerId}` }],
+      ],
+    },
+  });
+}
+
+/** Having picked a day, which two hours. */
+export async function editToSlotChoice(
+  chatId: string | number,
+  messageId: number,
+  offerId: string,
+  dayLabel: string
+): Promise<void> {
+  const rows: { text: string; callback_data: string }[][] = [];
+  for (let i = 0; i < BID_SLOTS.length; i += 2) {
+    rows.push(
+      BID_SLOTS.slice(i, i + 2).map(([from, to], offset) => ({
+        text: `${from}–${to}`,
+        callback_data: `bh:${offerId}:${i + offset}`,
+      }))
+    );
+  }
+  rows.push([{ text: '← Andere dag', callback_data: `bb:${offerId}` }]);
+
+  await callTelegram('editMessageText', {
+    chat_id: chatId,
+    message_id: messageId,
+    text: `${dayLabel} — hoe laat kunt u er zijn?`,
+    reply_markup: { inline_keyboard: rows },
+  });
+}
+
+/** Back to the four days, when they change their mind. */
+export async function editToDayChoice(
+  chatId: string | number,
+  messageId: number,
+  offerId: string,
+  message: string
+): Promise<void> {
+  await callTelegram('editMessageText', {
+    chat_id: chatId,
+    message_id: messageId,
+    text: message,
+    reply_markup: {
+      inline_keyboard: [
+        DAY_LABELS.slice(0, 2).map((label, index) => ({
+          text: label,
+          callback_data: `bd:${offerId}:${index}`,
+        })),
+        DAY_LABELS.slice(2).map((label, index) => ({
+          text: label,
+          callback_data: `bd:${offerId}:${index + 2}`,
+        })),
+        [{ text: '❌ Nee, laat maar', callback_data: `bn:${offerId}` }],
+      ],
+    },
+  });
+}
+
+export const dayLabel = (index: number): string => DAY_LABELS[index] ?? 'Die dag';
+
+/**
+ * The menu.
+ *
+ * A monteur reads this on a phone in a van, so it is six taps and no typing.
+ * Each button answers with text in the same chat rather than sending them to
+ * a login screen — opening the CRM on a phone mid-job is exactly the thing
+ * they will not do.
+ */
+export async function sendTelegramMenu(chatId: string | null | undefined): Promise<void> {
+  if (!chatId) return;
+  await callTelegram('sendMessage', {
+    chat_id: chatId,
+    text: 'Waar kan ik u mee helpen?',
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: '📋 Mijn klussen', callback_data: 'm:jobs' },
+          { text: '📨 Open aanbod', callback_data: 'm:offers' },
+        ],
+        [
+          { text: '💰 Mijn saldo', callback_data: 'm:saldo' },
+          { text: '📦 Mijn bus', callback_data: 'm:bus' },
+        ],
+        [
+          { text: '🧾 Facturen', callback_data: 'm:facturen' },
+          { text: '💸 Uitgaven', callback_data: 'm:uitgaven' },
+        ],
+      ],
+    },
+  });
+}

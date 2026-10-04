@@ -64,6 +64,7 @@ const OFFICE_NAV: NavItem[] = [
       { href: '/admin/jobs', label: 'Agenda' },
       { href: '/admin/jobs/nieuw', label: 'Klus inplannen' },
       { href: '/admin/aanbod', label: 'Aanbod' },
+      { href: '/admin/biedingen', label: 'Biedingen' },
       { href: '/admin/vandaag', label: 'Vandaag (monteurscherm)' },
     ],
   },

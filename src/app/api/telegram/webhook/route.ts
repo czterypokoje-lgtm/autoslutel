@@ -7,8 +7,15 @@ import {
   editTelegramMessage,
   sendTelegramExpense,
   downloadTelegramFile,
+  sendTelegramBidOffer,
+  sendTelegramMenu,
+  editToSlotChoice,
+  editToDayChoice,
+  dayLabel,
+  BID_SLOTS,
 } from '@/lib/telegram';
 import { parseExpenseCaption, readAmount, EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
+import { SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 
 export const dynamic = 'force-dynamic';
 /** Buffer and the storage upload below are Node, not edge. */
@@ -374,6 +381,378 @@ async function handleExpenseCallback(query: NonNullable<TelegramUpdate['callback
   );
 }
 
+
+/* ── Bieden op een klus ─────────────────────────────────────────────────── */
+
+const MONEY_EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+
+/** `today + n` in Amsterdam, as a plain date. */
+function dayPlus(days: number): string {
+  const now = new Date();
+  now.setDate(now.getDate() + days);
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(now);
+}
+
+/** The offer, but only if it is still this technician's to answer. */
+async function openOfferFor(
+  supabase: SupabaseClient,
+  offerId: string,
+  chatId: number | string
+) {
+  const technician = await technicianFor(supabase, chatId);
+  if (!technician) return { technician: null, offer: null };
+
+  const { data: offer } = await supabase
+    .from('job_offers')
+    .select('id, job_id, technician_id, expires_at, response, bid_date, bid_start, bid_end')
+    .eq('id', offerId)
+    .eq('technician_id', technician.id)
+    .is('response', null)
+    .maybeSingle();
+
+  return { technician, offer };
+}
+
+/** A one-line description of the work, for the chat. */
+async function jobLine(supabase: SupabaseClient, jobId: string): Promise<string> {
+  const { data: job } = await supabase
+    .from('jobs')
+    .select('city, car_make, car_model, scenario, service_type')
+    .eq('id', jobId)
+    .maybeSingle();
+  if (!job) return 'Klus';
+  const car = [job.car_make, job.car_model].filter(Boolean).join(' ');
+  const what = job.scenario
+    ? (SCENARIO_INFO[job.scenario as Scenario]?.label ?? job.scenario)
+    : (job.service_type ?? 'Klus');
+  return [what, car, job.city].filter(Boolean).join(' · ');
+}
+
+/** Day tapped: remember which, then ask the hour. */
+async function handleBidDay(query: NonNullable<TelegramUpdate['callback_query']>, offerId: string, dayIndex: number) {
+  const chatId = query.message?.chat?.id;
+  const messageId = query.message?.message_id;
+  if (chatId === undefined || messageId === undefined) {
+    await answerTelegramCallback(query.id);
+    return;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const { offer } = await openOfferFor(supabase, offerId, chatId);
+  if (!offer) {
+    await answerTelegramCallback(query.id, 'Dit aanbod is al beantwoord.');
+    await editTelegramMessage(chatId, messageId, 'Dit aanbod is niet meer open.');
+    return;
+  }
+
+  /* Written now so the next step needs no memory of its own: a row with a
+     date and no price IS the state "waiting for a price". */
+  await supabase.from('job_offers').update({ bid_date: dayPlus(dayIndex) }).eq('id', offerId);
+
+  await answerTelegramCallback(query.id);
+  await editToSlotChoice(chatId, messageId, offerId, dayLabel(dayIndex));
+}
+
+/** Hour tapped: store the window and ask for the money. */
+async function handleBidHour(query: NonNullable<TelegramUpdate['callback_query']>, offerId: string, slotIndex: number) {
+  const chatId = query.message?.chat?.id;
+  const messageId = query.message?.message_id;
+  const slot = BID_SLOTS[slotIndex];
+  if (chatId === undefined || messageId === undefined || !slot) {
+    await answerTelegramCallback(query.id);
+    return;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const { offer } = await openOfferFor(supabase, offerId, chatId);
+  if (!offer) {
+    await answerTelegramCallback(query.id, 'Dit aanbod is al beantwoord.');
+    return;
+  }
+
+  await supabase
+    .from('job_offers')
+    .update({ bid_start: slot[0], bid_end: slot[1] })
+    .eq('id', offerId);
+
+  const what = await jobLine(supabase, offer.job_id);
+  await answerTelegramCallback(query.id);
+  await editTelegramMessage(
+    chatId,
+    messageId,
+    `${what}\n${offer.bid_date} · ${slot[0]}–${slot[1]}\n\nWat vraagt u voor deze klus? Stuur alleen het bedrag, bijvoorbeeld 245.`
+  );
+}
+
+/** Changed their mind about the day — back to the four buttons. */
+async function handleBidBack(query: NonNullable<TelegramUpdate['callback_query']>, offerId: string) {
+  const chatId = query.message?.chat?.id;
+  const messageId = query.message?.message_id;
+  if (chatId === undefined || messageId === undefined) {
+    await answerTelegramCallback(query.id);
+    return;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const { offer } = await openOfferFor(supabase, offerId, chatId);
+  if (!offer) {
+    await answerTelegramCallback(query.id, 'Dit aanbod is al beantwoord.');
+    return;
+  }
+
+  /* Clear what was picked, so a half-filled row can never read as a bid
+     waiting for a price. */
+  await supabase
+    .from('job_offers')
+    .update({ bid_date: null, bid_start: null, bid_end: null })
+    .eq('id', offerId);
+
+  const what = await jobLine(supabase, offer.job_id);
+  await answerTelegramCallback(query.id);
+  await editToDayChoice(chatId, messageId, offerId, `${what}\n\nWanneer kunt u?`);
+}
+
+/** Passed. */
+async function handleBidNo(query: NonNullable<TelegramUpdate['callback_query']>, offerId: string) {
+  const chatId = query.message?.chat?.id;
+  const messageId = query.message?.message_id;
+  if (chatId === undefined || messageId === undefined) {
+    await answerTelegramCallback(query.id);
+    return;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const { offer } = await openOfferFor(supabase, offerId, chatId);
+  if (offer) {
+    await supabase
+      .from('job_offers')
+      .update({ response: 'declined', responded_at: new Date().toISOString() })
+      .eq('id', offerId)
+      .is('response', null);
+  }
+  await answerTelegramCallback(query.id, 'Doorgegeven.');
+  await editTelegramMessage(chatId, messageId, '❌ U heeft deze klus laten lopen.');
+}
+
+/**
+ * The amount, answering the question above.
+ *
+ * Found the same way a receipt's amount is: the one row this technician left
+ * half-finished. No session table, and nothing to clean up when somebody
+ * wanders off mid-conversation — an abandoned bid simply expires with its
+ * offer.
+ */
+async function handleBidPrice(chatId: number | string, text: string): Promise<boolean> {
+  const amount = readAmount(text);
+  if (amount === null) return false;
+
+  const supabase = createSupabaseAdminClient();
+  const technician = await technicianFor(supabase, chatId);
+  if (!technician) return false;
+
+  const { data: waiting } = await supabase
+    .from('job_offers')
+    .select('id, job_id, bid_date, bid_start, bid_end')
+    .eq('technician_id', technician.id)
+    .is('response', null)
+    .is('bid_price', null)
+    .not('bid_date', 'is', null)
+    .not('bid_start', 'is', null)
+    .order('offered_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!waiting) return false;
+
+  const { error } = await supabase
+    .from('job_offers')
+    .update({ bid_price: amount, bid_at: new Date().toISOString() })
+    .eq('id', waiting.id);
+
+  if (error) {
+    console.error('Bid price write failed:', error.message);
+    await sendTelegram(String(chatId), 'Uw bod vastleggen mislukte. Probeer het nog een keer.');
+    return true;
+  }
+
+  const what = await jobLine(supabase, waiting.job_id);
+  await sendTelegram(
+    String(chatId),
+    `✅ Uw bod staat genoteerd.\n\n${what}\n${waiting.bid_date} · ${String(waiting.bid_start).slice(0, 5)}–${String(waiting.bid_end).slice(0, 5)}\n${MONEY_EUR.format(amount)}\n\nKantoor laat weten of de klus naar u gaat.`
+  );
+
+  /* The office hears about it where they already read everything else. */
+  const { data: recipients } = await supabase.from('admin_telegram').select('telegram_chat_id');
+  for (const recipient of recipients ?? []) {
+    await sendTelegram(
+      recipient.telegram_chat_id,
+      `💶 Bod van ${technician.name}\n${what}\n${waiting.bid_date} · ${String(waiting.bid_start).slice(0, 5)}–${String(waiting.bid_end).slice(0, 5)}\n${MONEY_EUR.format(amount)}\n\nGunnen doet u bij Aanbod in de CRM.`
+    );
+  }
+  return true;
+}
+
+/* ── Het menu ───────────────────────────────────────────────────────────── */
+
+/**
+ * Each menu button answers in the chat itself.
+ *
+ * Deliberately text, not links. A monteur with one hand on a door card is not
+ * going to open a browser, find a login and wait for a page — if the answer
+ * cannot arrive in the conversation they are already in, it may as well not
+ * exist. The CRM link goes at the bottom for the things that genuinely need
+ * a screen.
+ */
+async function handleMenuChoice(query: NonNullable<TelegramUpdate['callback_query']>, what: string) {
+  const chatId = query.message?.chat?.id;
+  if (chatId === undefined) {
+    await answerTelegramCallback(query.id);
+    return;
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const technician = await technicianFor(supabase, chatId);
+  await answerTelegramCallback(query.id);
+
+  if (!technician) {
+    await sendTelegram(String(chatId), NOT_LINKED);
+    return;
+  }
+
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date());
+
+  if (what === 'jobs') {
+    const { data } = await supabase
+      .from('jobs')
+      .select('scheduled_date, slot_start, slot_end, status, city, customer_name, car_make, car_model, quoted_price, final_price')
+      .eq('technician_id', technician.id)
+      .gte('scheduled_date', today)
+      .order('scheduled_date')
+      .order('slot_start')
+      .limit(10);
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '📋 Geen klussen gepland.');
+      return;
+    }
+    const lines = data.map((job) => {
+      const when = `${job.scheduled_date === today ? 'Vandaag' : job.scheduled_date} ${String(job.slot_start ?? '').slice(0, 5)}`;
+      const who = job.customer_name?.trim() || [job.car_make, job.car_model].filter(Boolean).join(' ') || 'Klus';
+      const price = job.final_price ?? job.quoted_price;
+      return `${when} · ${who}${job.city ? ` · ${job.city}` : ''}${price ? ` · ${MONEY_EUR.format(Number(price))}` : ''} · ${job.status}`;
+    });
+    await sendTelegram(String(chatId), `📋 Uw klussen\n\n${lines.join('\n')}`);
+    return;
+  }
+
+  if (what === 'offers') {
+    const { data } = await supabase
+      .from('job_offers')
+      .select('id, job_id, expires_at, bid_price, bid_date')
+      .eq('technician_id', technician.id)
+      .is('response', null)
+      .order('offered_at', { ascending: false })
+      .limit(5);
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '📨 Geen open aanbod.');
+      return;
+    }
+    for (const offer of data) {
+      const what2 = await jobLine(supabase, offer.job_id);
+      if (offer.bid_price) {
+        await sendTelegram(String(chatId), `📨 ${what2}\nUw bod: ${MONEY_EUR.format(Number(offer.bid_price))} op ${offer.bid_date}. Wachten op kantoor.`);
+      } else {
+        /* Still answerable, so it comes back with its buttons rather than as
+           a line of text they cannot act on. */
+        await sendTelegramBidOffer(String(chatId), `📨 ${what2}\n\nWanneer kunt u?`, offer.id);
+      }
+    }
+    return;
+  }
+
+  if (what === 'saldo') {
+    const { data } = await supabase
+      .from('crm_technician_balance')
+      .select('saldo, totaal_geind, totaal_afgedragen, totaal_uitbetaald')
+      .eq('technician_id', technician.id)
+      .maybeSingle();
+
+    if (!data) {
+      await sendTelegram(String(chatId), '💰 Nog geen mutaties op uw saldo.');
+      return;
+    }
+    const saldo = Number(data.saldo ?? 0);
+    /* Positive means the monteur is holding the company's money, which is the
+       opposite of what "saldo" reads like. Say which way it runs. */
+    const direction = saldo > 0 ? 'u moet nog afdragen' : saldo < 0 ? 'wij moeten u nog betalen' : 'niets openstaand';
+    await sendTelegram(
+      String(chatId),
+      `💰 Saldo: ${MONEY_EUR.format(Math.abs(saldo))} — ${direction}\n\nGeïnd: ${MONEY_EUR.format(Number(data.totaal_geind ?? 0))}\nAfgedragen: ${MONEY_EUR.format(Number(data.totaal_afgedragen ?? 0))}\nUitbetaald: ${MONEY_EUR.format(Number(data.totaal_uitbetaald ?? 0))}`
+    );
+    return;
+  }
+
+  if (what === 'bus') {
+    const { data } = await supabase
+      .from('stock_items')
+      .select('description, quantity, min_quantity, unit_cost')
+      .eq('technician_id', technician.id)
+      .order('description');
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '📦 Niets geregistreerd in uw bus.');
+      return;
+    }
+    const short = data.filter((row) => Number(row.quantity) <= 0 || (Number(row.min_quantity) > 0 && Number(row.quantity) <= Number(row.min_quantity)));
+    const value = data.reduce((total, row) => total + Number(row.quantity) * Number(row.unit_cost ?? 0), 0);
+    const lines = data.slice(0, 15).map((row) => `${row.quantity}× ${row.description}`);
+    await sendTelegram(
+      String(chatId),
+      `📦 Uw bus — ${data.length} artikelen, waarde ${MONEY_EUR.format(value)}\n\n${lines.join('\n')}${data.length > 15 ? `\n… en ${data.length - 15} meer` : ''}${short.length ? `\n\n⚠️ Op of bijna op: ${short.map((s) => s.description).join(', ')}` : ''}`
+    );
+    return;
+  }
+
+  if (what === 'facturen') {
+    const { data } = await supabase
+      .from('purchase_invoices')
+      .select('supplier, invoice_date, total_amount, status')
+      .eq('technician_id', technician.id)
+      .order('created_at', { ascending: false })
+      .limit(8);
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '🧾 Nog geen facturen. Stuur een foto of PDF van een leveranciersfactuur en ik zet hem klaar.');
+      return;
+    }
+    const lines = data.map((inv) => `${inv.invoice_date ?? '—'} · ${inv.supplier ?? 'onbekend'} · ${inv.total_amount ? MONEY_EUR.format(Number(inv.total_amount)) : '—'} · ${inv.status}`);
+    await sendTelegram(String(chatId), `🧾 Uw facturen\n\n${lines.join('\n')}`);
+    return;
+  }
+
+  if (what === 'uitgaven') {
+    const { data } = await supabase
+      .from('expenses')
+      .select('date_incurred, category, description, amount, status')
+      .eq('technician_id', technician.id)
+      .order('created_at', { ascending: false })
+      .limit(8);
+
+    if (!data?.length) {
+      await sendTelegram(String(chatId), '💸 Nog geen uitgaven. Stuur een foto van een bon met het bedrag erbij.');
+      return;
+    }
+    const open = data.filter((e) => e.status === 'pending').reduce((t, e) => t + Number(e.amount ?? 0), 0);
+    const lines = data.map((e) => `${e.date_incurred} · ${EXPENSE_CATEGORIES[e.category] ?? e.category} · ${MONEY_EUR.format(Number(e.amount ?? 0))} · ${e.status}`);
+    await sendTelegram(
+      String(chatId),
+      `💸 Uw uitgaven\n\n${lines.join('\n')}${open > 0 ? `\n\nNog goed te keuren: ${MONEY_EUR.format(open)}` : ''}`
+    );
+    return;
+  }
+}
+
 /**
  * Telegram calling us back, every time someone messages the bot or taps a
  * button on one of its messages.
@@ -397,9 +776,23 @@ export async function POST(request: Request) {
   }
 
   if (body.callback_query) {
-    if (/^exp_(ok|no):/i.test(body.callback_query.data ?? '')) {
+    const data = body.callback_query.data ?? '';
+    const bid = /^(bd|bh|bn|bb):([0-9a-f-]{36})(?::(\d{1,2}))?$/i.exec(data);
+    const menu = /^m:(\w+)$/.exec(data);
+
+    if (/^exp_(ok|no):/i.test(data)) {
       await handleExpenseCallback(body.callback_query);
+    } else if (menu) {
+      await handleMenuChoice(body.callback_query, menu[1]!);
+    } else if (bid) {
+      const [, kind, offerId, index] = bid;
+      if (kind === 'bd') await handleBidDay(body.callback_query, offerId!, Number(index ?? 0));
+      else if (kind === 'bh') await handleBidHour(body.callback_query, offerId!, Number(index ?? 0));
+      else if (kind === 'bn') await handleBidNo(body.callback_query, offerId!);
+      else await handleBidBack(body.callback_query, offerId!);
     } else {
+      /* The old straight accept/decline buttons, for offers sent before the
+         bidding flow existed. */
       await handleOfferCallback(body.callback_query);
     }
     return NextResponse.json({ ok: true });
@@ -426,8 +819,17 @@ export async function POST(request: Request) {
     } else {
       await handleTechnicianStart(chatId, match[2]!);
     }
-  } else if (text && !(await handleAmountReply(chatId, text))) {
-    await sendTelegram(String(chatId), HELP);
+  } else if (/^\/menu|^\/start$|^menu$/i.test(text.trim())) {
+    await sendTelegramMenu(String(chatId));
+  } else if (text) {
+    /*
+     * A bare number can be two things, and the order matters: a bid is a
+     * reply to a question the bot asked seconds ago, a receipt amount is a
+     * reply to one it asked whenever the photo came in. Asked last, answered
+     * first.
+     */
+    const handled = (await handleBidPrice(chatId, text)) || (await handleAmountReply(chatId, text));
+    if (!handled) await sendTelegram(String(chatId), HELP);
   }
 
   // Telegram only cares about the 200 — it retries anything else.
