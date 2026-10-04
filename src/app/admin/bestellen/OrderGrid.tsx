@@ -192,7 +192,10 @@ export default function OrderGrid({
                  a loader round trip per card for no gain on a grid of 48. */
               <img className={styles.photo} src={product.image} alt={product.title} loading="lazy" />
             ) : (
-              <div className={styles.photoEmpty}>geen foto</div>
+              /* Either no photo at all, or every one we have carries the
+                 supplier's logo. The article number is what identifies the
+                 part anyway. */
+              <div className={styles.photoEmpty}>geen eigen foto</div>
             )}
 
             <div className={styles.body}>

@@ -2,6 +2,7 @@ import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, CardHead, Badge, Empty, Notice } from '../_ui';
 import { getProducts, filterProducts, shelfPrice, type CatalogProduct } from '@/lib/catalog';
+import { cleanPhoto } from '@/lib/productPhoto';
 import OrderGrid, { type ShopProduct } from './OrderGrid';
 import styles from './bestellen.module.css';
 
@@ -99,7 +100,9 @@ export default async function BestellenPage({
     category: product.category ?? null,
     subcategory: product.subcategory ?? null,
     articleCode: product.articleCode ?? null,
-    image: product.image ?? null,
+    /* Null when every photo of this part carries A-Key's logo — the card
+       then shows its placeholder rather than somebody else's branding. */
+    image: cleanPhoto(product),
     costPrice: product.costPrice ?? null,
     shelf: shelfPrice(product.costPrice) ?? null,
     /* The three answers that decide whether a key can work at all. */
