@@ -1,7 +1,7 @@
 -- ============================================================================
 -- CRM fase 60: een naam bij een campagnenummer.
 --
--- Run after 0059_ad_campaign_and_keyword.sql. Idempotent.
+-- Run after 0064_ad_campaign_and_keyword.sql. Idempotent.
 --
 -- Google hands over `24286719575`, never "Sleutel bijmaken - NL". The number
 -- is what rides along on the landing URL and the only thing this system can

@@ -15,6 +15,7 @@ import FaqSection from '@/components/FaqSection/FaqSection';
 import { getFaqForBrand } from '@/config/faq';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import { captionFromFilename } from '@/lib/imageCaption';
+import { isFlyer } from '@/lib/jobPhotos';
 import { brandLimitNotice } from '@/lib/serviceLimits';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
@@ -123,7 +124,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
   let recentWorkImages: string[] = [];
   try {
     const files = fs.readdirSync(imagesDir);
-    recentWorkImages = files.filter(f => f.toLowerCase().startsWith(brand.nameSlug.toLowerCase() + '-'));
+    recentWorkImages = files.filter(f => f.toLowerCase().startsWith(brand.nameSlug.toLowerCase() + '-') && !isFlyer(f));
   } catch (e) {
     // ignore
   }

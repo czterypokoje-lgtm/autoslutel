@@ -83,6 +83,16 @@ grant execute on function public.crm_set_job_travel(uuid, numeric, numeric) to a
 
 -- 2. Brutowinst zonder de commissie-aanname ------------------------------------
 /*
+ * ACHTERHAALD — niet opnieuw draaien.
+ *
+ * 0059_gross_margin_reads_commission.sql stelt de formule hierna opnieuw
+ * vast, en beter. Dit blok haalde de commissie eruit omdat de richting ervan
+ * per monteur verschilt; die migratie vond de echte oorzaak: cost_technician
+ * is DEFAULT 0, dus coalesce(cost_technician, commission_amount, 0) gaf
+ * altijd 0 en de terugval was onbereikbaar. nullif() repareert dat zonder de
+ * post weg te gooien. Op de live database staat die versie, en terecht.
+ */
+/*
  * 0054 subtracts `coalesce(cost_technician, commission_amount, 0)`.
  *
  * The problem is not that the fallback is imprecise — it is that its SIGN is

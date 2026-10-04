@@ -72,11 +72,11 @@ export default function ContactForm() {
          * posts and reloads; this one never does, so relying on it is how a
          * form that works perfectly can still show zero conversions.
          *
-         * email/phone_number ride along for Google Ads' "Enhanced
-         * conversions for leads" — GTM's own tag hashes them before
-         * anything leaves the browser, this just has to hand them over. Only
-         * sent on a real, successful submission, and only what the visitor
-         * just typed into this form themselves.
+         * email/phone_number here are for other tags in the container;
+         * Google Ads' "Enhanced conversions for leads" gets them from
+         * reportLeadConversion below (gtag 'set user_data'). Only sent on a
+         * real, successful submission, and only what the visitor just typed
+         * into this form themselves.
          */
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({

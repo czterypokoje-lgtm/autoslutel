@@ -251,7 +251,7 @@ export default function OfflineConversionsPage() {
     let csv = `Parameters:TimeZone=Europe/Amsterdam\n`;
     csv += `Email,Phone Number,Conversion Name,Conversion Time,Conversion Value,Conversion Currency\n`;
 
-    let rows = 0;
+    const exportedIds: string[] = [];
     for (const lead of positive) {
       /* A row already carrying a click id belongs in the click upload, which
          matches more precisely. This file is only for the ones that cannot. */
@@ -264,14 +264,19 @@ export default function OfflineConversionsPage() {
       const hEmail = lead.email ? await sha256(lead.email) : '';
       const hPhone = lead.phone ? await sha256(lead.phone) : '';
       csv += `${hEmail},${hPhone},${GOOGLE_ADS_CONVERSION_NAME},${when},${cValue},EUR\n`;
-      rows++;
+      exportedIds.push(lead.id);
     }
 
-    if (!rows) {
+    if (!exportedIds.length) {
       window.alert('Geen leads zonder click id maar mét e-mail of telefoon.');
       return;
     }
     downloadCsv(`google-ads-enhanced-${new Date().toISOString().split('T')[0]}.csv`, csv);
+    /* Marked like the click upload. Without this every finished job was
+       offered again on each visit, and a second upload of the same file
+       counts the same sale twice. */
+    await markExported(exportedIds, 'positive');
+    setPositive((prev) => prev.filter((l) => !exportedIds.includes(l.id)));
   };
 
   const handleDownloadMicrosoft = () => {
@@ -362,7 +367,7 @@ export default function OfflineConversionsPage() {
                   <th style={{ padding: '1rem' }}>Datum</th>
                   <th style={{ padding: '1rem' }}>Dienst</th>
                   <th style={{ padding: '1rem' }}>Status</th>
-                  <th style={{ padding: '1rem' }}>Omzet (€)</th>
+                  <th style={{ padding: '1rem' }}>Marge (€)</th>
                 </tr>
               </thead>
               <tbody>
@@ -407,6 +412,7 @@ export default function OfflineConversionsPage() {
 
             <button
               onClick={handleDownloadEnhanced}
+              disabled={marking}
               style={{
                 padding: '1rem 2rem',
                 marginLeft: '0.75rem',

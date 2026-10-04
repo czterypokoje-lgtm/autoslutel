@@ -42,7 +42,7 @@ export default async function BiedingenPage() {
         <Notice tone="bad">
           Biedingen laden mislukte: {error.message}
           {/bid_price|column/.test(error.message) && (
-            <> — voer <code>supabase/migrations/0061_offer_bids.sql</code> uit.</>
+            <> — voer <code>supabase/migrations/0066_offer_bids.sql</code> uit.</>
           )}
         </Notice>
       </>

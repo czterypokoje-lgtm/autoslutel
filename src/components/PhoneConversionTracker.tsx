@@ -1,6 +1,6 @@
 'use client';
 import { useEffect } from 'react';
-import { captureAdClickIdFromUrl, readAdClickId } from '@/lib/adClickId';
+import { captureAdClickIdFromUrl, makeWhatsAppRef, readAdClickId } from '@/lib/adClickId';
 
 declare global {
   interface Window {
@@ -43,6 +43,36 @@ function rememberAdSource(): void {
   }
 }
 
+/**
+ * Writes the click's code into the WhatsApp message, so the chat that follows
+ * can be tied back to this ad click (see supabase/migrations/0063_call_click_
+ * whatsapp_ref.sql). Runs inside the click handler, before the browser follows
+ * the link, so the new href is the one that opens. The original href is kept
+ * on the element: a second tap gets a fresh code, not two stacked ones.
+ *
+ * Our own /whatsapp page builds the message server-side, so it gets the code
+ * as ?ref=; a direct wa.me / api.whatsapp.com link gets it in front of its text.
+ */
+function addWhatsAppRef(link: HTMLAnchorElement, ref: string): void {
+  const base = link.dataset.waBase ?? link.href;
+  link.dataset.waBase = base;
+  try {
+    const url = new URL(base);
+    if (url.origin === window.location.origin) {
+      url.searchParams.set('ref', ref);
+    } else {
+      const text = url.searchParams.get('text') ?? '';
+      url.searchParams.delete('text');
+      // Encoded by hand: URLSearchParams writes spaces as "+", which WhatsApp shows literally.
+      const rest = url.searchParams.toString();
+      url.search = `${rest ? `${rest}&` : ''}text=${encodeURIComponent(`[${ref}] ${text}`.trim())}`;
+    }
+    link.href = url.toString();
+  } catch {
+    /* Unparseable link: it opens without a code, the tap is still counted. */
+  }
+}
+
 function readAdSource(): AdSource {
   try {
     const raw = sessionStorage.getItem(SOURCE_KEY);
@@ -68,7 +98,11 @@ export default function PhoneConversionTracker() {
     const lastFired = new Map<string, number>();
 
     const handlePhoneClick = (e: MouseEvent) => {
-      const target = (e.target as Element | null)?.closest?.('a');
+      // The CRM has its own WhatsApp and phone buttons for staff contacting
+      // customers. Those are work, not leads: never report them anywhere.
+      if (window.location.pathname.startsWith('/admin')) return;
+
+      const target = (e.target as Element | null)?.closest?.('a') as HTMLAnchorElement | null | undefined;
       if (!target || !target.href) return;
 
       const isTel = target.href.startsWith('tel:');
@@ -79,9 +113,15 @@ export default function PhoneConversionTracker() {
       // Once per tap. A double tap, a click that reaches the document twice, or
       // two nested links must not count as two calls.
       const now = Date.now();
-      const key = `${isTel ? 'tel' : 'wa'}:${target.href}`;
+      const key = `${isTel ? 'tel' : 'wa'}:${target.dataset.waBase ?? target.href}`;
       if (now - (lastFired.get(key) ?? 0) < DEDUPE_MS) return;
       lastFired.set(key, now);
+
+      // A WhatsApp tap from an ad visitor carries a code into the chat. Without
+      // a click id there is nothing to tie the chat to, so the message stays clean.
+      const clickIds = readAdClickId();
+      const ref = isWhatsApp && clickIds ? makeWhatsAppRef() : undefined;
+      if (ref) addWhatsAppRef(target, ref);
 
       // The link is left alone: a tel: link never unloads the page, so the
       // pings below finish on their own, and the call starts on the tap
@@ -137,7 +177,7 @@ export default function PhoneConversionTracker() {
       fetch('/api/track-call-conversion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sourceUrl: window.location.href, ...readAdClickId() }),
+        body: JSON.stringify({ sourceUrl: window.location.href, ...clickIds, ref }),
         keepalive: true,
       }).catch(() => {});
     };

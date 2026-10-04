@@ -1,3 +1,5 @@
+import { isFlyer } from '@/lib/jobPhotos';
+
 export interface GalleryProject {
   id: number;
   src: string;
@@ -466,4 +468,5 @@ export const REAL_GALLERY_PROJECTS: GalleryProject[] = [
     width: 1200,
     height: 1006
   }
-];
+// Ids 12-55 are flyers, not photographs; see isFlyer.
+].filter((p) => !isFlyer(p.src));

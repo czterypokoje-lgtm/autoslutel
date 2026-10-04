@@ -69,7 +69,7 @@ const EXPORT_COLUMNS =
  * 0053_call_click_attribution.sql for why that table exists.
  */
 const POSITIVE_FROM_JOBS =
-  'id, final_price, completed_at, scheduled_date, lead_id, ' +
+  'id, final_price, gross_margin, completed_at, scheduled_date, lead_id, ' +
   'gclid, wbraid, gbraid, msclkid, click_captured_at, customer_phone, ' +
   'leads (id, gclid, wbraid, gbraid, msclkid, email, phone, phone_e164, created_at)';
 
@@ -165,6 +165,7 @@ export async function GET(request: Request) {
     interface JobRow {
       id: string;
       final_price: number | string | null;
+      gross_margin: number | string | null;
       completed_at: string | null;
       scheduled_date: string | null;
       lead_id: string | null;
@@ -210,7 +211,16 @@ export async function GET(request: Request) {
         /* When did that click happen? A lead's created_at if there is one,
            otherwise the moment call_clicks recorded it. */
         const clickedAt = lead?.created_at ?? job.click_captured_at ?? null;
-        const value = Number(job.final_price ?? 0);
+        /*
+         * The money the business keeps, not what the customer paid.
+         * gross_margin is final_price less the technician payout and costs
+         * (migration 0059). Reporting the customer price told Smart Bidding a
+         * job with a large payout was worth as much as one done in-house; the
+         * margin is what an ad click actually earned. A job with no margin
+         * (zero or a loss) is not offered: a 0 would teach Google the click
+         * was worthless, and it is better to send nothing than a wrong value.
+         */
+        const value = Number(job.gross_margin ?? 0);
         /* Microsoft's click id travels the same two paths as Google's — the
            lead's first, then the job's own from a claimed call click. Reading
            only the job's meant the five leads that actually carry one were

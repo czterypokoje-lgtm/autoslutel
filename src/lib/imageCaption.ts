@@ -51,7 +51,9 @@ export function captionFromFilename(input: string): string {
   // Only treat it as a hash when it has a digit in it; see the note above.
   const trailing = withoutExtension.slice(candidate.length + 1);
   const isHash = candidate !== withoutExtension && /[0-9]/.test(trailing);
-  const stem = isHash ? candidate : withoutExtension;
+  const hashless = isHash ? candidate : withoutExtension;
+  // A trailing counter ("…-utrecht-22") tells two files apart, not the reader.
+  const stem = hashless.replace(/[-_]\d{1,2}$/, '');
 
   return stem
     .replace(/[-_]+/g, ' ')

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireOfficeUserApi } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { WHATSAPP_REF_PATTERN } from '@/lib/adClickId';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +26,7 @@ const ID = /^[0-9a-f-]{32,40}$/i;
 /** How far either side of the job to look. Days, not minutes — see above. */
 const WINDOW_DAYS = 7;
 
-export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { response } = await requireOfficeUserApi();
   if (response) return response;
 
@@ -59,14 +60,22 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const from = new Date(anchor.getTime() - WINDOW_DAYS * 864e5).toISOString();
   const to = new Date(anchor.getTime() + WINDOW_DAYS * 864e5).toISOString();
 
-  const { data, error } = await supabase
+  /*
+   * ?ref= looks up the one click whose code the customer's WhatsApp message
+   * starts with ("[K7F2] Hallo, ..."). That is not a guess, so it ignores the
+   * date window: a customer may chat for a week before the job is booked.
+   */
+  const ref = new URL(request.url).searchParams.get('ref')?.trim().toUpperCase() ?? '';
+  if (ref && !WHATSAPP_REF_PATTERN.test(ref)) {
+    return NextResponse.json({ error: 'Een code is 4 tekens, bijvoorbeeld K7F2' }, { status: 400 });
+  }
+
+  let query = supabase
     .from('call_clicks')
-    .select('id, created_at, gclid, wbraid, gbraid, msclkid, source_url')
-    .is('claimed_by_job_id', null)
-    .gte('created_at', from)
-    .lte('created_at', to)
-    .order('created_at', { ascending: false })
-    .limit(50);
+    .select('id, created_at, gclid, wbraid, gbraid, msclkid, source_url, ref')
+    .is('claimed_by_job_id', null);
+  query = ref ? query.eq('ref', ref) : query.gte('created_at', from).lte('created_at', to);
+  const { data, error } = await query.order('created_at', { ascending: false }).limit(50);
 
   if (error) {
     console.error('call_clicks lookup failed:', error.message);
@@ -87,6 +96,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
       id: click.id,
       created_at: click.created_at,
       source_url: click.source_url,
+      ref: click.ref,
       network: click.msclkid && !click.gclid ? 'Microsoft' : 'Google',
       /* Hours between the click and the day of the job, so the office can see
          at a glance which one plausibly belongs to this call. */

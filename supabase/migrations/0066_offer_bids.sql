@@ -1,7 +1,7 @@
 -- ============================================================================
 -- CRM fase 61: de monteur noemt zijn prijs en zijn moment.
 --
--- Run after 0060_ad_campaign_names.sql. Idempotent.
+-- Run after 0065_ad_campaign_names.sql. Idempotent.
 --
 -- Tot nu was een aanbod een ja/nee vraag: kantoor bepaalde de prijs en de
 -- monteur mocht hem aannemen of laten lopen. job_offers heeft daardoor nooit

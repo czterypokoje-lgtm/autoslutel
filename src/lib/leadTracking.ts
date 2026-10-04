@@ -22,15 +22,18 @@
  * WHAT IS SENT
  *
  * Only what the visitor just typed into the form they submitted, and only on
- * a genuinely successful submission. email and phone ride along for Google
- * Ads' Enhanced conversions for leads: GTM's own tag hashes them in the
- * browser before anything is transmitted, so this just has to hand them over.
+ * a genuinely successful submission. email and phone reach Google Ads'
+ * Enhanced conversions for leads through gtag('set', 'user_data') below —
+ * gtag hashes them in the browser. The dataLayer copy is for other tags;
+ * nothing in the GTM container reads it for Google Ads.
  * Consent Mode is configured in layout.tsx and gates what actually leaves.
  *
  * Never throws. A blocked or missing tag manager is normal — an ad blocker,
  * a declined consent banner — and a lead that was already saved to the
  * database must not surface an error because a pixel was unavailable.
  */
+
+import { toE164NL } from '@/lib/phone';
 
 declare global {
   interface Window {
@@ -87,20 +90,27 @@ export function reportLeadConversion(lead: LeadConversion): void {
        normal path, but a standalone gtag.js has existed on this site before
        and this costs nothing if no gtag is present. */
     if (typeof window.gtag === 'function') {
-      // Send directly to Google Ads via the explicit gtag.js loaded in layout.tsx
-      // The Google Ads action "Website lead form - submitted".
+      /* Enhanced conversions for leads: user data is set before the
+         conversion so Google hashes it and attaches it to that ping. */
+      // The phone must be E.164 ("+31611751231"): gtag hashes it as given, and
+      // "06 11 75 12 31" hashes to something that matches nobody's upload.
+      window.gtag('set', 'user_data', { email, phone_number: toE164NL(phone) ?? undefined });
+
+      // The Google Ads action "Website lead form - submitted". No value here:
+      // the action's own default value (set in Google Ads) is the one source
+      // of truth, the same for calls, WhatsApp and forms.
       window.gtag('event', 'conversion', {
         send_to: 'AW-18315813515/-RCqCNDYoYwdEIvF1J1E',
-        value: 40,
-        currency: 'EUR',
         transport_type: 'beacon',
       });
+
+      // GA4 only, so GA4 can mark it a key event. The GTM container has no GA4
+      // event tag for this; if one is ever added there, remove this call or
+      // every form lead is counted twice. No personal data goes to GA4.
       window.gtag('event', 'generate_lead', {
-        event_category: lead.source,
-        send_to: 'AW-18315813515',
-        // Enhanced Conversions for Leads user data
-        email: email,
-        phone_number: phone
+        send_to: 'G-C4WR7TYCTV',
+        lead_source: lead.source,
+        transport_type: 'beacon',
       });
     }
 

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { AD_CLICK_PARAMS, readClickOrigin } from '@/lib/adClickId';
+import { AD_CLICK_PARAMS, WHATSAPP_REF_PATTERN, readClickOrigin } from '@/lib/adClickId';
 import { rateLimit, getClientIp } from '@/lib/rateLimit';
 import { sendOpenAiEvent } from '@/lib/openaiAds';
 
@@ -65,15 +65,30 @@ async function recordCallClick(body: Record<string, unknown>): Promise<void> {
      */
     const origin = readClickOrigin(sourceUrl);
 
-    await supabase.from('call_clicks').insert({
+    /* The click itself, with nothing on it that a migration might not have
+       created yet. Everything below is added to a copy. */
+    const row = {
       gclid: clean(body.gclid),
       wbraid: clean(body.wbraid),
       gbraid: clean(body.gbraid),
       msclkid: clean(body.msclkid),
       source_url: sourceUrl,
-      campaign_id: origin.campaignId,
-      keyword: origin.keyword,
-    });
+    };
+
+    /* The code the visitor's WhatsApp message now starts with. */
+    const ref = typeof body.ref === 'string' && WHATSAPP_REF_PATTERN.test(body.ref) ? body.ref : null;
+
+    const { error } = await supabase
+      .from('call_clicks')
+      .insert({ ...row, ref, campaign_id: origin.campaignId, keyword: origin.keyword });
+
+    /*
+     * Without the extras rather than not at all: a code collision, or a deploy
+     * landing before the migration that added any of these three columns, must
+     * not cost the click itself — that is the one thing here that cannot be
+     * reconstructed afterwards.
+     */
+    if (error) await supabase.from('call_clicks').insert(row);
   } catch (err) {
     console.error('[call-click] failed to record click', err);
   }

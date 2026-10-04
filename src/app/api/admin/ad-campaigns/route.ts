@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: /does not exist|relation/i.test(error.message)
-          ? 'Voer supabase/migrations/0060_ad_campaign_names.sql uit.'
+          ? 'Voer supabase/migrations/0065_ad_campaign_names.sql uit.'
           : 'Opslaan mislukt',
       },
       { status: 500 }

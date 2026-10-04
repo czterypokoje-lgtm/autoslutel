@@ -77,6 +77,20 @@ export function captureAdClickIdFromUrl(): void {
   }
 }
 
+/*
+ * The code written into a WhatsApp message from an ad visitor, so the office
+ * can tie the chat to its click (see supabase/migrations/0063_call_click_
+ * whatsapp_ref.sql). No 0/O, 1/I/L: it is read off a phone screen and typed
+ * back by hand.
+ */
+const WHATSAPP_REF_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+export const WHATSAPP_REF_PATTERN = /^[A-HJKMNP-Z2-9]{4}$/;
+
+export function makeWhatsAppRef(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(4));
+  return Array.from(bytes, (b) => WHATSAPP_REF_ALPHABET[b % WHATSAPP_REF_ALPHABET.length]).join('');
+}
+
 /** Reads the click id captured earlier this session (or on this exact page load). */
 export function readAdClickId(): AdClickIds | null {
   if (typeof document === 'undefined') return null;

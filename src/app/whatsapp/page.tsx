@@ -1,7 +1,18 @@
 import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
+import { WHATSAPP_REF_PATTERN } from '@/lib/adClickId';
 
-const TARGET_WA_URL = `https://api.whatsapp.com/send/?phone=${SITE_CONFIG.whatsapp}&text=Hallo%2C%20ik%20heb%20hulp%20nodig%20met%20mijn%20autosleutel.%20Automerk%20en%20model%3A%20&type=phone_number&app_absent=0`;
+const MESSAGE = 'Hallo, ik heb hulp nodig met mijn autosleutel. Automerk en model: ';
+
+/*
+ * ?ref= is the code PhoneConversionTracker gives an ad visitor's tap; it goes
+ * in front of the message so the office can tie the chat to its ad click
+ * (see supabase/migrations/0063_call_click_whatsapp_ref.sql).
+ */
+function whatsAppUrl(ref: unknown): string {
+  const text = typeof ref === 'string' && WHATSAPP_REF_PATTERN.test(ref) ? `[${ref}] ${MESSAGE}` : MESSAGE;
+  return `https://api.whatsapp.com/send/?phone=${SITE_CONFIG.whatsapp}&text=${encodeURIComponent(text)}&type=phone_number&app_absent=0`;
+}
 
 export const metadata: Metadata = {
   title: 'Direct WhatsApp Contact | Autosleutel24',
@@ -12,7 +23,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function WhatsAppRedirectPage() {
+export default async function WhatsAppRedirectPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const TARGET_WA_URL = whatsAppUrl((await searchParams).ref);
   return (
     <>
       <head>

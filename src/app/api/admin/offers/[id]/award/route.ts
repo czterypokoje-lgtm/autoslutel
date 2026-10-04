@@ -58,7 +58,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
     return NextResponse.json(
       {
         error: /does not exist|function/i.test(error.message)
-          ? 'Voer supabase/migrations/0061_offer_bids.sql uit.'
+          ? 'Voer supabase/migrations/0066_offer_bids.sql uit.'
           : 'Gunnen mislukt',
       },
       { status: 500 }
