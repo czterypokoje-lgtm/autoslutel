@@ -4,6 +4,7 @@ import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Empty, Notice }
 import { Boxes, Euro, TriangleAlert, CircleHelp } from 'lucide-react';
 import { stockStatus } from '@/lib/stockStatus';
 import StockForm from './StockForm';
+import PartOrders, { type PartOrderRow } from './PartOrders';
 import v from './voorraad.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -49,7 +50,7 @@ export default async function VoorraadPage() {
   await requireOfficeUser('/admin/voorraad');
   const supabase = await createSupabaseServerClient();
 
-  const [stockResult, techResult, movesResult] = await Promise.all([
+  const [stockResult, techResult, movesResult, orderResult] = await Promise.all([
     supabase
       .from('stock_items')
       .select('id, technician_id, description, quantity, min_quantity, unit_cost')
@@ -60,6 +61,13 @@ export default async function VoorraadPage() {
       .select('id, description, delta, quantity_after, reason, changed_at')
       .order('changed_at', { ascending: false })
       .limit(40),
+    /* What the monteurs asked for. Open ones first; the handled ones stay
+       visible for a while so a delivery can be checked against the van. */
+    supabase
+      .from('part_orders')
+      .select('id, description, article_code, quantity, unit_cost, status, created_at, note, technicians (name)')
+      .order('created_at', { ascending: false })
+      .limit(30),
   ]);
 
   if (stockResult.error) {
@@ -145,6 +153,30 @@ export default async function VoorraadPage() {
       <details className={v.addFold}>
         <summary className={v.addSummary}>+ Artikel toevoegen of bijboeken</summary>
         <StockForm technicians={technicians} />
+
+      <PartOrders
+        orders={((orderResult.data ?? []) as unknown as Array<{
+          id: string; description: string; article_code: string | null; quantity: number;
+          unit_cost: number | null; status: string; created_at: string; note: string | null;
+          technicians: { name: string } | null;
+        }>)
+          .map<PartOrderRow>((order) => ({
+            id: order.id,
+            technician: order.technicians?.name ?? 'Onbekend',
+            description: order.description,
+            articleCode: order.article_code,
+            quantity: Number(order.quantity),
+            unitCost: order.unit_cost === null ? null : Number(order.unit_cost),
+            status: order.status,
+            createdAt: order.created_at,
+            note: order.note,
+          }))
+          /* Open first: the handled ones are history, not a to-do. */
+          .sort((a, b) => {
+            const open = (row: PartOrderRow) => (row.status === 'geleverd' || row.status === 'afgewezen' ? 1 : 0);
+            return open(a) - open(b);
+          })}
+      />
       </details>
 
       {holders.map((holder) => (

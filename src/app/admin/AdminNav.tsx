@@ -70,7 +70,14 @@ const OFFICE_NAV: NavItem[] = [
   },
   { label: 'Klanten', icon: Users, href: '/admin/klanten' },
   { label: 'Monteurs', icon: Wrench, href: '/admin/monteurs' },
-  { label: 'Voorraad', icon: Boxes, href: '/admin/voorraad' },
+  {
+    label: 'Voorraad',
+    icon: Boxes,
+    children: [
+      { href: '/admin/voorraad', label: 'Magazijn en bussen' },
+      { href: '/admin/bestellen', label: 'Onderdelen bestellen' },
+    ],
+  },
   {
     label: 'Geld',
     icon: Euro,
