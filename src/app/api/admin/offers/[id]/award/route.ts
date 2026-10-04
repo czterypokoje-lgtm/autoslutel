@@ -20,10 +20,11 @@ const OUTCOME: Record<string, string> = {
 /**
  * Giving the job to one bidder.
  *
- * The decision itself is one SQL statement (crm_award_offer, 0061): the job
- * changes hands, takes the bid's price and slot, and every other bid on it
- * closes — in one transaction, because a second tap between two of those
- * steps would put two technicians on one job.
+ * The decision itself is one SQL statement (crm_award_offer): the job changes
+ * hands, takes the bid's slot, books the bid as cost_technician, and every
+ * other bid closes — in one transaction, because a second tap between two of
+ * those steps would put two technicians on one job. The sale price is not
+ * touched: the bid is what the monteur is paid, not what the customer pays.
  *
  * Telling people comes after, in after(), because it is a courtesy and the
  * award is a fact. A Telegram outage must not roll back a job that is

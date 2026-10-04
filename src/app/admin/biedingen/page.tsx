@@ -13,10 +13,15 @@ const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR
 /**
  * What the monteurs are asking for the open work.
  *
- * The bids arrive over Telegram — a price and a two-hour window, typed on a
- * phone between jobs. This is where one of them becomes the job: awarding
- * writes the bid's price and slot onto the klus, puts it on that monteur's
- * name, and closes every other bid on it in the same statement.
+ * The bids arrive over Telegram — what the monteur wants for the work and a
+ * two-hour window, typed on a phone between jobs. This is where one of them
+ * becomes the job: awarding puts the klus on that monteur's name, takes his
+ * slot, books his bid as cost_technician, and closes every other bid in the
+ * same statement.
+ *
+ * His bid is a cost, never the sale price. What the customer was quoted stays
+ * the office's own number — the richtprijs beside each job here is shown for
+ * comparison, and is not what anybody is paid.
  *
  * Grouped by job rather than listed flat, because the only question worth
  * asking here is "of these three, which one" — and that is unanswerable in a
@@ -114,8 +119,8 @@ export default async function BiedingenPage() {
       )}
 
       <Notice>
-        Gunnen zet de klus op naam van die monteur, neemt zijn prijs en tijdvak over, en sluit de
-        andere biedingen. Iedereen die bood krijgt meteen bericht — ook wie hem niet kreeg, want
+        Gunnen zet de klus op naam van die monteur, neemt zijn tijdvak over en boekt zijn bedrag
+        als loonkosten. De verkoopprijs aan de klant verandert niet. Dit sluit de andere biedingen. Iedereen die bood krijgt meteen bericht — ook wie hem niet kreeg, want
         anders houdt die zijn dag vrij voor werk dat niet komt.
       </Notice>
     </>
