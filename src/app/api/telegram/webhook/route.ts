@@ -20,6 +20,8 @@ import {
 import { parseExpenseCaption, readAmount, EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
 import { SCENARIO_INFO, scenarioFromLabel, type Scenario } from '@/lib/scenarios';
 import { priceFor, type PricedCoverageRow } from '@/lib/capability';
+import { parseJobLine, JOB_TEMPLATE } from '@/lib/jobFromText';
+import { offerJobToTechnicians } from '@/lib/offerJob';
 
 export const dynamic = 'force-dynamic';
 /** Buffer and the storage upload below are Node, not edge. */
@@ -1104,6 +1106,93 @@ async function handleOfficeChoice(query: NonNullable<TelegramUpdate['callback_qu
   }
 }
 
+
+/**
+ * A job dictated into the chat, for the office taking a call.
+ *
+ * Creates it and offers it in one go, because that is the actual moment: the
+ * customer is on the phone, and the question is "can someone come", not "is
+ * this row correct". No date is asked for — the technicians propose one in
+ * their bids, and awarding writes it onto the job.
+ *
+ * The placeholder day and slot exist only because jobs.scheduled_date,
+ * slot_start and slot_end are NOT NULL (0004). Today, all day. Both are
+ * replaced by the winning bid; a job that never gets one shows up as
+ * today's with no technician, which is what it is.
+ */
+async function handleNewJob(chatId: number | string, text: string) {
+  const supabase = createSupabaseAdminClient();
+
+  if (!(await officeFor(supabase, chatId))) {
+    await sendTelegram(String(chatId), 'Alleen kantoor kan klussen aanmaken.');
+    return;
+  }
+
+  const parsed = parseJobLine(text);
+  if (!parsed) {
+    await sendTelegram(String(chatId), JOB_TEMPLATE);
+    return;
+  }
+
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date());
+
+  const { data: job, error } = await supabase
+    .from('jobs')
+    .insert({
+      ...parsed,
+      status: 'gepland',
+      scheduled_date: today,
+      slot_start: '08:00',
+      slot_end: '20:00',
+      job_source: 'eigen',
+      notes: 'Telefonisch aangenomen via Telegram.',
+    })
+    .select('id, car_make, car_model, city, postcode, quoted_price, scenario, service_type')
+    .single();
+
+  if (error || !job) {
+    console.error('Telegram job insert failed:', error?.message);
+    await sendTelegram(String(chatId), `Aanmaken mislukt: ${error?.message ?? 'onbekend'}`);
+    return;
+  }
+
+  const what = parsed.scenario
+    ? (SCENARIO_INFO[parsed.scenario]?.label ?? parsed.scenario)
+    : (parsed.service_type ?? 'Klus');
+  const car = [parsed.car_make, parsed.car_model, parsed.car_year].filter(Boolean).join(' ');
+
+  await sendTelegram(
+    String(chatId),
+    [
+      '✅ Klus aangemaakt',
+      '',
+      `🔧 ${what}`,
+      car || null,
+      `📍 ${[parsed.city, parsed.postcode].filter(Boolean).join(' ') || 'onbekend'}`,
+      parsed.customer_name ? `👤 ${parsed.customer_name}` : null,
+      parsed.customer_phone ? `📞 ${parsed.customer_phone}` : null,
+      parsed.quoted_price ? `Richtprijs: ${MONEY_EUR.format(parsed.quoted_price)}` : null,
+      !parsed.scenario
+        ? '\n⚠️ Geen dienst herkend — monteurs krijgen geen eigen tarief en moeten een prijs sturen.'
+        : null,
+      '',
+      'Dag en tijd komen uit het bod van de monteur.',
+    ]
+      .filter((line) => line !== null)
+      .join('\n')
+  );
+
+  /* Offered straight away: a job typed while the customer waits is the one
+     case where "create it, then go and press send" is a step too many. */
+  const offered = await offerJobToTechnicians(supabase, job.id);
+  await sendTelegram(
+    String(chatId),
+    offered.ok
+      ? `📨 Verstuurd naar ${offered.technicians.join(', ')}. Biedingen komen hier binnen.`
+      : `Niet verstuurd: ${offered.error}`
+  );
+}
+
 /**
  * Telegram calling us back, every time someone messages the bot or taps a
  * button on one of its messages.
@@ -1180,6 +1269,8 @@ export async function POST(request: Request) {
     } else {
       await handleTechnicianStart(chatId, match[2]!);
     }
+  } else if (/^\/nieuw\b/i.test(text.trim())) {
+    await handleNewJob(chatId, text);
   } else if (/^\/menu|^\/start$|^menu$/i.test(text.trim())) {
     /*
      * The same word means two different things depending on who typed it.
