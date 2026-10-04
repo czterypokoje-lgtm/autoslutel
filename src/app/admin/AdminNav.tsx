@@ -79,6 +79,7 @@ const OFFICE_NAV: NavItem[] = [
       { href: '/admin/uitgaven', label: 'Uitgaven' },
       { href: '/admin/kas', label: 'Kas & uitbetalingen' },
       { href: '/admin/tarieven', label: 'Tarieven' },
+      { href: '/admin/monteurtarieven', label: 'Monteurtarieven' },
     ],
   },
   {
