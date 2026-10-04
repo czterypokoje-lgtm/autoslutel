@@ -109,7 +109,14 @@ const MONTEUR_NAV: NavItem[] = [
   { label: 'Aanbod', icon: Handshake, href: '/admin/aanbod' },
   { label: 'Mijn agenda', icon: CalendarDays, href: '/admin/mijn-agenda' },
   { label: 'Mijn klussen', icon: History, href: '/admin/mijn-klussen' },
-  { label: 'Mijn bus', icon: Package, href: '/admin/mijn-bus' },
+  {
+    label: 'Mijn bus',
+    icon: Package,
+    children: [
+      { href: '/admin/mijn-bus', label: 'Wat erin ligt' },
+      { href: '/admin/bestellen', label: 'Onderdelen bestellen' },
+    ],
+  },
   {
     label: 'Geld',
     icon: Euro,
