@@ -1,72 +1,60 @@
 import { NextResponse } from 'next/server';
-import { requireCrmUser, OFFICE_ROLES } from '@/lib/crmSession';
+import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+const OUTCOME: Record<string, string> = {
+  geen_monteur: 'Uw login is niet aan een monteur gekoppeld.',
+  geen_toegang: 'Alleen kantoor kan dit voor een ander doen.',
+  niet_gevonden: 'Die monteur bestaat niet meer.',
+};
+
 /**
  * Disconnecting a Telegram chat.
  *
- * Needed more often than it sounds: a phone is replaced, somebody connects
- * the wrong account while testing, a technician leaves. Without this the
- * connection is permanent — the profile page hides the connect button once
- * `telegramConnected` is true, so there is no way back to it.
+ * Through crm_disconnect_telegram rather than a plain update, for the same
+ * reason crm_update_own_profile exists: the only write policy on
+ * `technicians` is the office one (0004), so a technician's own update
+ * matches no rows. PostgREST calls that a success — which is exactly how the
+ * first version of this route reported "ok" while changing nothing.
  *
- * A technician may disconnect their own. The office may disconnect anyone's,
- * because the case that matters is a phone nobody has any more, and the
- * person who lost it cannot sign in to fix it.
+ * Needed more often than it sounds: a new phone, or the wrong account
+ * connected while testing. Without it the link is permanent, because the
+ * profile page hides the connect button once it says "gekoppeld".
  */
 export async function DELETE(request: Request) {
-  const user = await requireCrmUser();
+  await requireCrmUser();
   const supabase = await createSupabaseServerClient();
 
   const asked = new URL(request.url).searchParams.get('technician');
-  const isOffice = Boolean(user.role && OFFICE_ROLES.includes(user.role));
-
-  /* Office with no technician named: their own admin_telegram row. */
-  if (isOffice && !asked) {
-    const { error } = await supabase.from('admin_telegram').delete().eq('user_id', user.id);
-    if (error) {
-      console.error('Admin telegram unlink failed:', error.message);
-      return NextResponse.json({ error: 'Ontkoppelen mislukt' }, { status: 500 });
-    }
-    return NextResponse.json({ ok: true });
+  if (asked && !UUID.test(asked)) {
+    return NextResponse.json({ error: 'Ongeldige monteur' }, { status: 400 });
   }
 
-  let technicianId: string | null = null;
-
-  if (asked) {
-    if (!UUID.test(asked)) {
-      return NextResponse.json({ error: 'Ongeldige monteur' }, { status: 400 });
-    }
-    if (!isOffice) {
-      /* A technician asking about somebody else. Not "forbidden", because
-         that confirms the id exists — just their own, or nothing. */
-      return NextResponse.json({ error: 'Alleen kantoor kan dit voor een ander doen.' }, { status: 403 });
-    }
-    technicianId = asked;
-  } else {
-    const { data: me } = await supabase
-      .from('technicians')
-      .select('id')
-      .eq('user_id', user.id)
-      .maybeSingle();
-    if (!me) {
-      return NextResponse.json({ error: 'Uw login is niet aan een monteur gekoppeld.' }, { status: 403 });
-    }
-    technicianId = me.id;
-  }
-
-  const { error } = await supabase
-    .from('technicians')
-    .update({ telegram_chat_id: null })
-    .eq('id', technicianId);
+  const { data: outcome, error } = await supabase.rpc('crm_disconnect_telegram', {
+    p_technician: asked || null,
+  });
 
   if (error) {
-    console.error('Technician telegram unlink failed:', error.message);
-    return NextResponse.json({ error: 'Ontkoppelen mislukt' }, { status: 500 });
+    console.error('Telegram disconnect failed:', error.message);
+    return NextResponse.json(
+      {
+        error: /does not exist|function/i.test(error.message)
+          ? 'Voer supabase/migrations/0072_disconnect_telegram.sql uit.'
+          : 'Ontkoppelen mislukt',
+      },
+      { status: 500 }
+    );
+  }
+
+  if (outcome !== 'ok') {
+    return NextResponse.json(
+      { error: OUTCOME[String(outcome)] ?? String(outcome) },
+      { status: outcome === 'geen_toegang' ? 403 : 400 }
+    );
   }
 
   return NextResponse.json({ ok: true });
