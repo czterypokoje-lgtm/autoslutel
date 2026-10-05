@@ -85,6 +85,23 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
 
   const photoInput = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<Tab>('profiel');
+  const [unlinking, setUnlinking] = useState(false);
+
+  async function disconnectTelegram() {
+    if (!window.confirm('Telegram ontkoppelen? Meldingen stoppen tot er opnieuw gekoppeld is.')) {
+      return;
+    }
+    setUnlinking(true);
+    const response = await fetch('/api/admin/profiel/telegram', { method: 'DELETE' }).catch(() => null);
+    setUnlinking(false);
+    if (!response?.ok) {
+      window.alert((await response?.json().catch(() => null))?.error ?? 'Ontkoppelen mislukt.');
+      return;
+    }
+    /* Reload rather than flip a flag: the page has to mint a fresh connect
+       code, and that happens on the server. */
+    router.refresh();
+  }
 
   const [biz, setBiz] = useState<Business | null>(profile.business);
   const [certText, setCertText] = useState((profile.business?.certifications ?? []).join(', '));
@@ -489,9 +506,29 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
         <section className={pf.card}>
           <h2 className={pf.h2}>Meldingen via Telegram</h2>
           {profile.telegramConnected ? (
-            <p className={pf.okLine}>
-              <BadgeCheck size={18} aria-hidden="true" /> Gekoppeld. Nieuwe klussen, aanbod, voorraad en berichten komen hier binnen.
-            </p>
+            <>
+              <p className={pf.okLine}>
+                <BadgeCheck size={18} aria-hidden="true" /> Gekoppeld. Nieuwe klussen, aanbod, voorraad en berichten komen hier binnen.
+              </p>
+              {/*
+                * Needed more often than it sounds: a new phone, or the wrong
+                * account connected while testing. Without it the link is
+                * permanent, because the connect button hides itself once this
+                * says "gekoppeld".
+                */}
+              <button
+                type="button"
+                className={pf.ghostBtn}
+                onClick={disconnectTelegram}
+                disabled={unlinking}
+              >
+                {unlinking ? 'Bezig…' : 'Telegram ontkoppelen'}
+              </button>
+              <p className={pf.note}>
+                Daarna kan er een nieuwe telefoon gekoppeld worden. Meldingen stoppen tot dat
+                gebeurd is.
+              </p>
+            </>
           ) : profile.telegramConnectUrl ? (
             <>
               <p className={pf.note}>
