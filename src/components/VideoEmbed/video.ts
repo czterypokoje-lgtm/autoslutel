@@ -12,11 +12,23 @@ import { SITE_CONFIG } from '@/config/site.config';
  *
  * uploadDate and duration are read off YouTube rather than guessed; they are
  * what a VideoObject needs to be eligible for a video result.
+ *
+ * uploadDate must be a full ISO 8601 datetime WITH an offset. A bare
+ * '2026-09-29' is rejected twice over by Search Console — "invalid datetime
+ * value" because it is a date and not a datetime, and "missing a time zone"
+ * because a date cannot carry one. Both appeared on /autosleutel-kwijt, the
+ * one page that declares this video.
+ *
+ * +02:00 is CEST, which is what the Netherlands was on in September. The
+ * clock time is the part we do not actually know: YouTube reports the day,
+ * not the minute, so midday stands in for it. Being a few hours out on a
+ * video's upload time costs nothing; having no parseable date at all costs
+ * the video result.
  */
 export const VIDEO = {
   id: 'LTlKCZnjzH4',
   name: 'Autosleutel Kwijt? Zo Regel Je Snel een Nieuwe Autosleutel',
-  uploadDate: '2026-09-29',
+  uploadDate: '2026-09-29T12:00:00+02:00',
   duration: 'PT40S',
   description:
     'Uw autosleutel kwijt? In veertig seconden ziet u hoe wij op locatie een nieuwe sleutel maken en programmeren, wat het kost en hoe snel wij er zijn.',
