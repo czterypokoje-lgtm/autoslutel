@@ -1,135 +1,199 @@
 import type { Metadata } from 'next';
-import { SITE, isReady } from '@/config/site';
-import { STAEDTE } from '@/config/staedte';
-import { JsonLd, breadcrumbSchema } from '@/lib/schema';
+import Link from 'next/link';
+import Image from 'next/image';
+import { SITE_CONFIG } from '@/config/site.config';
+import B2BForm from '@/components/B2BForm/B2BForm';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Partner werden — Aufträge statt Klickkosten',
+  /*
+   * Recruitment, not a service. It was in the sitemap alongside the money
+   * pages, competing for crawl budget it cannot repay: 0 impressions in
+   * three months. Partners find it from a link or a conversation.
+   */
+  robots: { index: false, follow: true },
+  // 75 characters once the template appended the brand — which it also said
+  // twice. Base is now 43, landing at 59.
+  title: 'Autosleutelspecialist Worden bij Ons Netwerk',
   description:
-    'Sie machen Autoschlüssel und kaufen Ihre Aufträge heute bei Google. Wir bieten dasselbe Geld für einen gebuchten Auftrag zum vereinbarten Preis.',
-  alternates: { canonical: `${SITE.domain}/partner-werden` },
+    'Zelfstandig autosleutelspecialist in Noord-Brabant of Limburg? Wij zoeken partners in onder andere Eindhoven en Maastricht. Klussen, CRM en facturatie geregeld.',
+  alternates: { canonical: `${SITE_CONFIG.domain}/monteur-worden` },
 };
 
-/**
- * Partnerwerbung — und das ist in Deutschland die Seite, die zuerst ranken muss.
+/*
+ * The recruitment page.
  *
- * Nicht aus Bescheidenheit, sondern weil die Rechnung so aufgeht: ohne Partner
- * in einer Stadt gibt es dort keine Stadtseite, kein Unternehmensprofil und
- * keinen Platz im lokalen Dreierpack. Jeder gewonnene Partner ist also eine
- * Stadt, die überhaupt erst ranken kann. Dazu sind die Suchbegriffe hier
- * ("Schlüsseldienst Partner werden", "Aufträge Autoschlüssel") fast
- * konkurrenzlos, während die Verbraucherbegriffe dieser Branche zu den
- * teuersten in Deutschland gehören.
+ * Deliberately vague about money and precise about everything else. What a
+ * technician earns and what they pay is a conversation, not a landing page —
+ * the tiers exist in the CRM but quoting them here would turn a negotiation
+ * into a take-it-or-leave-it, and they are not fixed enough to publish.
  *
- * Das Argument ist nicht erfunden: es steht in subscription.ts der
- * niederländischen Seite — jeder selbstständige Autoschlüsseldienst kauft
- * seine Aufträge schon, nur eben bei Google, pro Klick, für einen Fremden mit
- * einem Auto, das vielleicht niemand kann.
+ * What the page can be exact about is the thing candidates actually want to
+ * know: where the work comes from, what is supplied, and what is expected. All
+ * of that is real and already built.
  */
-export default function PartnerPage() {
-  const offen = STAEDTE.map((s) => s.stadt);
+export default function MonteurWorden() {
+  const gains = [
+    {
+      title: 'Klussen komen naar u toe',
+      text: 'Wij investeren in vindbaarheid en advertenties. U krijgt aanvragen uit uw eigen regio doorgestuurd en kiest zelf welke u aanneemt.',
+    },
+    {
+      title: 'Geen eigen marketing nodig',
+      text: 'Geen website bijhouden, geen advertentiebudget, geen offertes najagen. Dat deel doen wij, u doet het werk waar u goed in bent.',
+    },
+    {
+      title: 'CRM, facturatie en agenda inbegrepen',
+      text: 'Uw klussen, foto’s, materiaalgebruik en facturen op één plek. Facturen maakt u met twee klikken; uw administratie loopt mee in plaats van achteraan.',
+    },
+    {
+      title: 'U bepaalt uw eigen uren',
+      text: 'U blijft zelfstandig ondernemer. Geen rooster, geen verplichte diensten — u zet uzelf beschikbaar wanneer het u uitkomt.',
+    },
+    {
+      title: 'Collega’s voor de lastige klussen',
+      text: 'Een besloten netwerk van specialisten per merk. Loopt u vast op een systeem dat u nog niet kent, dan is er iemand die het wél gedaan heeft.',
+    },
+    {
+      title: 'Wij zeggen eerlijk wat niet kan',
+      text: 'Onze site vertelt klanten vooraf welke auto’s wij niet kunnen helpen. U komt dus niet voor een Mercedes FBS4 te staan waar niemand iets mee kan.',
+    },
+  ];
+
+  const expect = [
+    'U werkt als zelfstandige, met eigen KvK-inschrijving en verzekering',
+    'U heeft ervaring met sleutelprogrammering en eigen diagnoseapparatuur',
+    'U werkt mobiel: bij de klant op locatie, niet vanuit een vaste werkplaats',
+    'U reageert snel — spoed is bij dit werk eerder regel dan uitzondering',
+  ];
+
   return (
-    <>
-      <JsonLd data={breadcrumbSchema([{ name: 'Partner werden', path: '/partner-werden' }])} />
-
-      <section className="hero">
-        <div className="wrap">
-          <h1>Aufträge, statt Klicks zu kaufen</h1>
-          <p className="lede">
-            Sie machen Autoschlüssel und kaufen Ihre Aufträge heute bei Google — pro
-            Klick, für einen Fremden mit einem Fahrzeug, das Sie vielleicht nicht
-            bedienen können. Bei uns ist es dasselbe Geld für einen gebuchten Auftrag
-            zum vorher vereinbarten Preis.
-          </p>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="wrap">
-          <h2>Wie es läuft</h2>
-          <div className="grid">
-            <article className="card">
-              <h3>Sie nennen Ihren Preis</h3>
-              <p>
-                Sie hinterlegen, was ein Auftrag Ihnen wert ist — pro Fahrzeugtyp und
-                pro Arbeit. Wir legen unsere Marge darauf und nennen dem Kunden den
-                Endpreis. Was Sie bekommen, steht vorher fest.
-              </p>
-            </article>
-            <article className="card">
-              <h3>Sie bekommen ein Angebot, keinen Befehl</h3>
-              <p>
-                Passende Aufträge erscheinen in Ihrer App und über Telegram, mit
-                Fahrzeug, Ort und Zeitfenster. Annehmen oder ablehnen — ablehnen kostet
-                nichts und wird nicht kommentiert.
-              </p>
-            </article>
-            <article className="card">
-              <h3>Sie bleiben Ihr eigener Betrieb</h3>
-              <p>
-                Eigene Kunden, eigene Zeiten, eigenes Fahrzeug. Sie sind kein
-                Angestellter und sollen auch keiner werden — deshalb ist das Angebot
-                ein Angebot und keine Zuweisung.
-              </p>
-            </article>
-            <article className="card">
-              <h3>Verwaltung inklusive</h3>
-              <p>
-                Auftragsübersicht, Kalender, Rechnungen und Ihr Guthaben laufen über
-                unser System. Auf Deutsch — die Sprache stellen Sie in Ihrem Profil
-                selbst ein.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="section section-alt">
-        <div className="wrap prose">
-          <h2>Was wir von Ihnen erwarten</h2>
-          <ul>
-            <li>Ein angemeldeter Betrieb mit USt-IdNr. und Betriebshaftpflicht</li>
-            <li>Eigene Ausrüstung für Schlüsselfräsen und Programmierung</li>
-            <li>Dass Sie sagen, was Sie nicht können — lieber vorher als vor dem Auto</li>
-            <li>Dass der am Telefon genannte Festpreis vor Ort gehalten wird</li>
-          </ul>
-          <p className="notice">
-            Ob und wie Ihre Tätigkeit eine Eintragung bei der Handwerkskammer erfordert,
-            klären wir gemeinsam vor dem Start — das hängt vom Zuschnitt Ihres Betriebs
-            ab, und wir schicken niemanden mit einer ungeprüften Auskunft los.
-          </p>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="wrap">
-          <h2>Wo wir gerade suchen</h2>
-          <p className="lede">
-            Partner haben wir in {offen.join(', ')}. Gesucht wird überall sonst — am
-            dringendsten im Rheinland (Köln, Düsseldorf, Essen, Dortmund), in Stuttgart
-            und in Leipzig, weil dort Anfragen hereinkommen, die wir heute nicht
-            annehmen können.
-          </p>
-          <div className="btn-row">
-            {isReady(SITE.phone) ? (
-              <a className="btn btn-primary" href={`tel:${SITE.phoneTel}`}>
-                {SITE.phone} — anrufen
-              </a>
-            ) : null}
-            {isReady(SITE.email) ? (
-              <a className="btn btn-ghost" href={`mailto:${SITE.email}?subject=Partner%20werden`}>
-                Per E-Mail melden
-              </a>
-            ) : null}
-          </div>
-          {!isReady(SITE.phone) && !isReady(SITE.email) && (
-            <p className="notice">
-              Die deutschen Kontaktdaten werden gerade eingerichtet und erscheinen hier,
-              sobald sie stehen.
+    <main>
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <div>
+            <nav className={styles.crumbs} aria-label="Breadcrumb">
+              <Link href="/">Home</Link> <span>/</span>{' '}
+              <span>Monteur worden</span>
+            </nav>
+            <p className={styles.eyebrow}>Wij breiden uit</p>
+            <h1>
+              Autosleutelspecialist in Eindhoven of Maastricht?
+              <br />
+              <span className={styles.accent}>Wij zoeken u.</span>
+            </h1>
+            <p className={styles.lead}>
+              Wij krijgen aanvragen uit Noord-Brabant en Limburg die wij nu nog
+              moeten afwijzen omdat er niemand in de buurt is. Bent u
+              zelfstandig autosleutelspecialist in die regio, dan hebben wij werk
+              voor u — en de systemen eromheen zijn al gebouwd.
             </p>
-          )}
+            <div className={styles.ctas}>
+              <a href="#aanmelden" className={styles.btnPhone}>
+                Ik wil kennismaken
+              </a>
+              <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnOutline}>
+                Bel {SITE_CONFIG.phone}
+              </a>
+            </div>
+          </div>
+          <div className={styles.heroImage}>
+            {/*
+              * A specialist in company kit outside the branch, supplied for
+              * this page. It recruits better than a workbench does: somebody
+              * deciding whether to join looks for the person they would become,
+              * not the tool they would hold.
+              *
+              * (The original pick here was a file whose name promised a
+              * workshop and which turned out to be a 1024x139 crop of a badge
+              * from this very site. Filenames are not captions — open the
+              * image.)
+              */}
+            <Image
+              src="/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp"
+              alt="Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond"
+              width={800}
+              height={560}
+              priority
+              quality={80}
+              sizes="(max-width: 992px) 100vw, 45vw"
+            />
+          </div>
         </div>
       </section>
-    </>
+
+      <section className={styles.section}>
+        <div className={styles.container}>
+          <h2>Wat u van ons krijgt</h2>
+          <div className={styles.grid}>
+            {gains.map((g) => (
+              <div key={g.title} className={styles.card}>
+                <h3>{g.title}</h3>
+                <p>{g.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={`${styles.section} ${styles.alt}`}>
+        <div className={styles.container}>
+          <h2>Wat wij van u verwachten</h2>
+          <ul className={styles.expect}>
+            {expect.map((e) => (
+              <li key={e}>{e}</li>
+            ))}
+          </ul>
+          <p className={styles.note}>
+            Over de samenwerkingsvorm en de vergoeding praten wij liever
+            persoonlijk dan via een webpagina — dat hangt af van uw regio, uw
+            apparatuur en hoeveel u wilt werken. Wij zijn er duidelijk over
+            tijdens het eerste gesprek, niet pas achteraf.
+          </p>
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.container}>
+          <h2>Waar wij nu vooral zoeken</h2>
+          <p className={styles.sub}>
+            Aanvragen uit deze regio’s kunnen wij op dit moment niet of moeilijk
+            bedienen:
+          </p>
+          <div className={styles.regions}>
+            <span>Eindhoven</span>
+            <span>Maastricht</span>
+            <span>Tilburg</span>
+            <span>Breda</span>
+            <span>Den Bosch</span>
+            <span>Venlo</span>
+            <span>Roermond</span>
+            <span>Helmond</span>
+          </div>
+          <p className={styles.sub}>
+            Zit u daar niet tussen maar denkt u dat er in uw regio werk ligt?
+            Laat het weten — wij kijken graag mee.
+          </p>
+        </div>
+      </section>
+
+      <section id="aanmelden" className={`${styles.section} ${styles.alt}`}>
+        <div className={styles.formWrap}>
+          <div>
+            <h2>Kennismaken?</h2>
+            <p className={styles.sub}>
+              Laat uw gegevens achter met uw regio en waar u mee werkt. Wij
+              bellen u binnen één werkdag voor een eerlijk gesprek over wat het
+              oplevert en wat het kost.
+            </p>
+            <p className={styles.sub}>
+              Liever meteen bellen?{' '}
+              <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a>
+            </p>
+          </div>
+          <B2BForm segment="monteur" segmentLabel="Monteur worden" />
+        </div>
+      </section>
+    </main>
   );
 }

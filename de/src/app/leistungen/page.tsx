@@ -1,42 +1,140 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { LEISTUNGEN, abPreis } from '@/config/leistungen';
-import { SITE } from '@/config/site';
-import { JsonLd, breadcrumbSchema } from '@/lib/schema';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
+
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Leistungen — Autoschlüssel-Service',
-  description:
-    'Autoschlüssel nachmachen, verlorene Schlüssel ersetzen, Funk- und Keyless-Go-Schlüssel anlernen, Fahrzeuge schadenfrei öffnen, Zündschloss reparieren.',
-  alternates: { canonical: `${SITE.domain}/leistungen` },
+  title: {
+    absolute: 'Autosleutel Diensten: Bijmaken, Kwijt, Openen | 24/7',
+  },
+  description: 'Alle autosleutel diensten op locatie: bijmaken, alle sleutels kwijt, transponder, smart key, auto openen en reparatie. Vaste prijs vooraf. Bel direct!',
+  alternates: { canonical: `${SITE_CONFIG.domain}/diensten` },
 };
 
-export default function LeistungenPage() {
+export default function DienstenOverviewPage() {
+  /*
+   * The hub emitted no structured data at all — not even a breadcrumb — while
+   * every one of its 19 children carries a full Service graph. An ItemList
+   * tells a crawler this page IS the index of those services rather than
+   * another page that happens to link to them.
+   */
+  /*
+   * Where a service actually lives. alle-sleutels-kwijt-auto 301s to
+   * /autosleutel-kwijt, so both the table and the ItemList below have to
+   * point at the destination -- a redirecting URL declared in structured
+   * data hands a crawler a hop it did not need to take.
+   */
+  const hrefFor = (slug: string) =>
+    REDIRECTED_SERVICE_SLUGS.has(slug) ? '/autosleutel-kwijt' : `/diensten/${slug}`;
+
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${SITE_CONFIG.domain}/diensten#lijst`,
+    name: 'Autosleutel diensten',
+    numberOfItems: DIENSTEN.length,
+    itemListElement: DIENSTEN.map((dienst, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: dienst.title,
+      url: `${SITE_CONFIG.domain}${hrefFor(dienst.slug)}`,
+    })),
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
+      { '@type': 'ListItem', position: 2, name: 'Diensten', item: `${SITE_CONFIG.domain}/diensten` },
+    ],
+  };
+
   return (
-    <>
-      <JsonLd data={breadcrumbSchema([{ name: 'Leistungen', path: '/leistungen' }])} />
-      <section className="section">
-        <div className="wrap">
-          <h1>Leistungen</h1>
-          <p className="lede">
-            Alles, was am Schlüssel und am Schließsystem vor Ort gemacht werden kann —
-            ohne dass das Fahrzeug bewegt werden muss.
+    <main>
+      <script id="diensten-itemlist" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      <script id="diensten-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <span className={styles.label}>ONZE DIENSTEN</span>
+          <h1>Professionele Autosleutel Services</h1>
+          <p className={styles.heroSub}>
+            Wij lossen elk autosleutel probleem ter plaatse op. Geen sleepkosten, geen lange wachttijden bij de dealer.
           </p>
-          <div className="grid">
-            {LEISTUNGEN.map((l) => {
-              const preis = abPreis(l);
-              return (
-                <article className="card" key={l.slug}>
-                  <h3>{l.titel}</h3>
-                  {preis && <p className="price-tag">ab {preis} €</p>}
-                  <p>{l.kurz}</p>
-                  <Link href={`/leistungen/${l.slug}`}>Mehr dazu →</Link>
-                </article>
-              );
-            })}
-          </div>
         </div>
       </section>
-    </>
+
+      <VerifiedReviewBanner />
+
+      <BrandsMarquee />
+
+      <div className="container" style={{ padding: '3rem 2rem', maxWidth: 1000, margin: '0 auto' }}>
+        <h2 className={styles.tableTitle}>Diensten Overzicht</h2>
+        <div className={styles.tableWrap}>
+          <table className={styles.priceTable}>
+            <thead>
+              <tr>
+                <th>Dienst</th>
+                <th>Wat wij doen</th>
+                <th>Tijd</th>
+                <th className={styles.actionCol}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {DIENSTEN.map((s, i) => {
+                const href = hrefFor(s.slug);
+                return (
+                  <tr key={i}>
+                    <td className={styles.serviceCell}>
+                      <Link href={href} className={styles.serviceLink}>{s.title}</Link>
+                    </td>
+                    <td className={styles.descCell}>{s.intro.split('.')[0]}.</td>
+                    <td className={styles.timeCell}>{s.duration || '30–60 min'}</td>
+                    <td className={styles.actionCell}>
+                      <Link href={href} className={styles.moreBtn}>Details →</Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {/* ── COMPREHENSIVE DIENSTEN SEO GUIDE ARTICLE ── */}
+        <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="seo-article-block" style={{ marginTop: 0 }}>
+            <h2>Compleet Overzicht van Onze Mobiele Autosleutel &amp; Slotenmaker Diensten</h2>
+            <p>
+              Als gespecialiseerd auto slotenmaker biedt <strong>{SITE_CONFIG.name}</strong> een totaaloplossing voor elk type autosleutelprobleem. Of u nu uw sleutel in de auto heeft laten liggen, te maken heeft met een afgebroken sleutelbaard, een defect contactslot of een lege batterij van uw smart key: onze mobiele monteurs staan 24/7 voor u klaar om u ter plaatse te helpen.
+            </p>
+            <h3>1. Schadevrij Autodeur Openen &amp; Noodopeningen</h3>
+            <p>
+              Is uw autodeur dichtgevallen met de sleutel nog op het contact of op de stoel? Wij openen uw auto 100% schadevrij met geavanceerde Lishi lock decoders. In tegenstelling tot traditionele openbreekmethodes blijft uw fabrieksslot volledig intact.
+            </p>
+            <h3>2. Autosleutel Bijmaken &amp; Programmeren op Locatie</h3>
+            <p>
+              Wij snijden mechanische sleutelbladen direct met onze mobiele CNC-lasersnijders en lezen uw startonderbreker (immobiliser) uit via de OBD2-diagnosepoort. Wij leveren en programmeren originele transponderchips en keyless go sleutels voor meer dan 59 automerken.
+            </p>
+            <h3>3. All Keys Lost (AKL) — Alle Sleutels Kwijt</h3>
+            <p>
+              Bent u al uw autosleutels verloren? Geen paniek. Waar een dealer u verplicht om uw auto te laten wegslepen en vaak complete slotensets vervangt, genereren wij ter plaatse een compleet nieuwe sleutel en wissen wij de oude, verloren sleutels uit het geheugen van uw boordcomputer.
+            </p>
+          </div>
+        </section>
+
+        <div className={styles.cta}>
+          <h2>Direct Hulp Nodig?</h2>
+          <p>Bel of WhatsApp voor een prijsindicatie en planning.</p>
+          <div className={styles.ctaBtns}>
+            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="diensten-overview-phone">{SITE_CONFIG.phone}</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWa} id="diensten-overview-wa">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

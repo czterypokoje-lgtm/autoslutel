@@ -1,0 +1,160 @@
+/**
+ * First-party capture of the ad click id (gclid/wbraid/gbraid/msclkid) that
+ * brought a visitor here, so a phone call from them — which never touches
+ * /api/leads — can still be attributed later. See supabase/migrations/
+ * 0053_call_click_attribution.sql for why this needs a table at all.
+ *
+ * Stored the moment it appears in the URL, before any consent choice: this
+ * is a click id, not tracking of behaviour — nothing leaves the browser
+ * until a real, completed job later claims it, and exporting that job to
+ * Google Ads already goes through its own consent-gated pipeline (see
+ * src/app/api/track-call-conversion and .../export-conversions).
+ */
+
+export const AD_CLICK_PARAMS = ['gclid', 'wbraid', 'gbraid', 'msclkid'] as const;
+export type AdClickIds = Partial<Record<(typeof AD_CLICK_PARAMS)[number], string>>;
+
+const COOKIE_NAME = 'as24_clickid';
+/** Matches Google's own offline-conversion click window (see export-conversions/route.ts). */
+const COOKIE_MAX_AGE_DAYS = 90;
+
+/**
+ * How long after a tel:/WhatsApp click a hand-created job may still claim it.
+ *
+ * This business runs one phone line, so "the most recent unclaimed click" is
+ * almost always the right one — but it's a guess, not a certainty. A short
+ * window trades a few missed matches (customer thinks it over for an hour
+ * before calling) for far fewer wrong ones (a second, unrelated visitor's
+ * click stealing the attribution). Widen it if the office reports jobs are
+ * going unmatched; narrow it if a match looks wrong.
+ */
+export const CALL_CLICK_WINDOW_MINUTES = (() => {
+  const raw = Number(process.env.CALL_CLICK_WINDOW_MINUTES);
+  return Number.isFinite(raw) && raw > 0 ? raw : 45;
+})();
+
+/*
+ * MEASURED, 29 September 2026: this window has never once matched.
+ *
+ * 17 call_clicks exist, 14 carrying a gclid, and `claimed_by_job_id` is null
+ * on every one of them. For each click, the nearest job created afterwards was
+ * between 1,826 and 3,814 minutes later — 30 to 63 hours. Not one fell inside
+ * 45 minutes. The mechanism assumes the office books the job while the caller
+ * is still on the phone; in practice the job is entered a day or two later.
+ *
+ * Tunable now via CALL_CLICK_WINDOW_MINUTES so the number can be moved without
+ * a deploy, but DO NOT simply widen it and walk away. Over three days, "the
+ * nearest unclaimed click" stops being evidence and becomes a coin toss
+ * between a dozen candidates, and a wrong gclid uploaded to Google teaches
+ * Smart Bidding to buy the wrong traffic. That account has already been
+ * through this once — ten conversions retracted against one kept.
+ *
+ * The durable fix is a person, not a bigger number: show the office the
+ * unclaimed clicks around a job's date and let them confirm which call it was,
+ * the same way invoiceLines.ts proposes stock lines and never writes them.
+ */
+
+function fromSearch(search: string): AdClickIds | null {
+  const params = new URLSearchParams(search);
+  const found: AdClickIds = {};
+  for (const key of AD_CLICK_PARAMS) {
+    const value = params.get(key);
+    if (value) found[key] = value.slice(0, 200);
+  }
+  return Object.keys(found).length ? found : null;
+}
+
+/** Call once on mount, on every page: if this landing has a click id, remember it. */
+export function captureAdClickIdFromUrl(): void {
+  if (typeof window === 'undefined') return;
+  const found = fromSearch(window.location.search);
+  if (!found) return;
+  try {
+    const maxAge = COOKIE_MAX_AGE_DAYS * 24 * 60 * 60;
+    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(JSON.stringify(found))};path=/;max-age=${maxAge};SameSite=Lax`;
+  } catch {
+    // Cookies blocked — this visitor's phone call simply won't be attributable later.
+  }
+}
+
+/*
+ * The code written into a WhatsApp message from an ad visitor, so the office
+ * can tie the chat to its click (see supabase/migrations/0063_call_click_
+ * whatsapp_ref.sql). No 0/O, 1/I/L: it is read off a phone screen and typed
+ * back by hand.
+ */
+const WHATSAPP_REF_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+export const WHATSAPP_REF_PATTERN = /^[A-HJKMNP-Z2-9]{4}$/;
+
+export function makeWhatsAppRef(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(4));
+  return Array.from(bytes, (b) => WHATSAPP_REF_ALPHABET[b % WHATSAPP_REF_ALPHABET.length]).join('');
+}
+
+/** Reads the click id captured earlier this session (or on this exact page load). */
+export function readAdClickId(): AdClickIds | null {
+  if (typeof document === 'undefined') return null;
+  const fromUrl = fromSearch(window.location.search);
+  if (fromUrl) return fromUrl;
+
+  const raw = document.cookie
+    .split('; ')
+    .find((c) => c.startsWith(`${COOKIE_NAME}=`))
+    ?.slice(COOKIE_NAME.length + 1);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(decodeURIComponent(raw));
+    return parsed && typeof parsed === 'object' ? (parsed as AdClickIds) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * What a captured click says about where it came from.
+ *
+ * `call_clicks.source_url` is the full landing URL the visitor was on when
+ * they tapped the phone number, so the campaign id and the page they were
+ * reading are both sitting in it already — no extra tracking, no join. Both
+ * are what makes a click recognisable to a person: "Arnhem page, 19:39"
+ * is something the office can weigh against their memory of the call in a
+ * way that a 90-character gclid never will be.
+ */
+export interface ClickOrigin {
+  /** Google's numeric campaign id, as `gad_campaignid` on the landing URL. */
+  campaignId: string | null;
+  /** What the visitor actually typed, from a {keyword} tracking template. */
+  keyword: string | null;
+  /** The page they were on, path only — the full URL is unreadable at a glance. */
+  page: string | null;
+}
+
+/** Trimmed and length-capped: these land in text columns and in a UI table. */
+const param = (url: URL, ...names: string[]): string | null => {
+  for (const name of names) {
+    const value = url.searchParams.get(name)?.trim();
+    if (value) return value.slice(0, 200);
+  }
+  return null;
+};
+
+export function readClickOrigin(sourceUrl: string | null | undefined): ClickOrigin {
+  if (!sourceUrl) return { campaignId: null, keyword: null, page: null };
+  try {
+    const url = new URL(sourceUrl);
+    return {
+      /*
+       * `gad_campaignid` is what Google's own auto-tagging adds, sometimes.
+       * `campaignid` is what a {campaignid} tracking template adds, always.
+       * Reading both means the template improves coverage without breaking
+       * the clicks captured before it was set.
+       */
+      campaignId: param(url, 'gad_campaignid', 'campaignid', 'utm_campaign'),
+      keyword: param(url, 'kw', 'keyword', 'utm_term'),
+      /* A trailing slash reads as a missing page; the homepage is "/" on purpose. */
+      page: url.pathname === '/' ? '/' : url.pathname.replace(/\/$/, ''),
+    };
+  } catch {
+    return { campaignId: null, keyword: null, page: null };
+  }
+}

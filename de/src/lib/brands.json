@@ -1,0 +1,246 @@
+[
+ {
+  "make": "Hyundai",
+  "count": 118
+ },
+ {
+  "make": "Opel",
+  "count": 117
+ },
+ {
+  "make": "Renault",
+  "count": 112
+ },
+ {
+  "make": "Toyota",
+  "count": 111
+ },
+ {
+  "make": "Ford",
+  "count": 93
+ },
+ {
+  "make": "BMW",
+  "count": 84
+ },
+ {
+  "make": "Citroën",
+  "count": 82
+ },
+ {
+  "make": "Volkswagen",
+  "count": 81
+ },
+ {
+  "make": "Kia",
+  "count": 77
+ },
+ {
+  "make": "Honda",
+  "count": 76
+ },
+ {
+  "make": "Peugeot",
+  "count": 75
+ },
+ {
+  "make": "Mercedes-Benz",
+  "count": 71
+ },
+ {
+  "make": "Fiat",
+  "count": 66
+ },
+ {
+  "make": "Chrysler",
+  "count": 55
+ },
+ {
+  "make": "Nissan",
+  "count": 52
+ },
+ {
+  "make": "Audi",
+  "count": 43
+ },
+ {
+  "make": "Smart",
+  "count": 40
+ },
+ {
+  "make": "Dacia",
+  "count": 37
+ },
+ {
+  "make": "Škoda",
+  "count": 35
+ },
+ {
+  "make": "Suzuki",
+  "count": 34
+ },
+ {
+  "make": "Seat",
+  "count": 33
+ },
+ {
+  "make": "Lexus",
+  "count": 32
+ },
+ {
+  "make": "Land Rover",
+  "count": 31
+ },
+ {
+  "make": "Mazda",
+  "count": 28
+ },
+ {
+  "make": "Chevrolet",
+  "count": 24
+ },
+ {
+  "make": "Yamaha",
+  "count": 24
+ },
+ {
+  "make": "Volvo",
+  "count": 22
+ },
+ {
+  "make": "Mitsubishi",
+  "count": 20
+ },
+ {
+  "make": "Mini",
+  "count": 18
+ },
+ {
+  "make": "Porsche",
+  "count": 16
+ },
+ {
+  "make": "Piaggio",
+  "count": 15
+ },
+ {
+  "make": "Alfa Romeo",
+  "count": 14
+ },
+ {
+  "make": "Jaguar",
+  "count": 13
+ },
+ {
+  "make": "Subaru",
+  "count": 13
+ },
+ {
+  "make": "Kawasaki",
+  "count": 10
+ },
+ {
+  "make": "Dodge",
+  "count": 9
+ },
+ {
+  "make": "Daewoo",
+  "count": 8
+ },
+ {
+  "make": "Jeep",
+  "count": 7
+ },
+ {
+  "make": "Saab",
+  "count": 7
+ },
+ {
+  "make": "Buick",
+  "count": 6
+ },
+ {
+  "make": "Rover",
+  "count": 6
+ },
+ {
+  "make": "Cadillac",
+  "count": 5
+ },
+ {
+  "make": "Isuzu",
+  "count": 5
+ },
+ {
+  "make": "Iveco",
+  "count": 5
+ },
+ {
+  "make": "SsangYong",
+  "count": 5
+ },
+ {
+  "make": "Lamborghini",
+  "count": 4
+ },
+ {
+  "make": "Ferrari",
+  "count": 3
+ },
+ {
+  "make": "Lancia",
+  "count": 3
+ },
+ {
+  "make": "Aprilia",
+  "count": 2
+ },
+ {
+  "make": "Bentley",
+  "count": 2
+ },
+ {
+  "make": "General Motors",
+  "count": 2
+ },
+ {
+  "make": "Infiniti",
+  "count": 2
+ },
+ {
+  "make": "Kymco",
+  "count": 2
+ },
+ {
+  "make": "Abarth",
+  "count": 1
+ },
+ {
+  "make": "Aston Martin",
+  "count": 1
+ },
+ {
+  "make": "Ducati",
+  "count": 1
+ },
+ {
+  "make": "GM",
+  "count": 1
+ },
+ {
+  "make": "KTM",
+  "count": 1
+ },
+ {
+  "make": "Lada",
+  "count": 1
+ },
+ {
+  "make": "Maserati",
+  "count": 1
+ },
+ {
+  "make": "MG",
+  "count": 1
+ }
+]

@@ -1,119 +1,89 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { clampMeta } from '@/lib/meta';
+import ServiceLayout from '@/components/ServiceLayout/ServiceLayout';
 import { notFound } from 'next/navigation';
-import { LEISTUNGEN, findLeistung, abPreis, FAQ } from '@/config/leistungen';
-import { STAEDTE } from '@/config/staedte';
-import { SITE, isReady } from '@/config/site';
-import Faq from '@/components/Faq';
-import { JsonLd, serviceSchema, faqSchema, breadcrumbSchema } from '@/lib/schema';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { getRelatedBlogPosts } from '@/config/services';
+import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import SplitHero from '@/components/SplitHero/SplitHero';
+import GalleryMarquee from '@/components/GallerySlider/GalleryMarquee';
+import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
+import GallerySlider from '@/components/GallerySlider/GallerySlider';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import Image from 'next/image';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import BrandsLogoGrid from '@/components/BrandsLogoGrid/BrandsLogoGrid';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 
-export function generateStaticParams() {
-  return LEISTUNGEN.map((l) => ({ slug: l.slug }));
+import { CITIES } from '@/config/cities';
+import { BRANDS } from '@/config/brands';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import { captionFromFilename } from '@/lib/imageCaption';
+import styles from './page.module.css';
+import fs from 'fs';
+import path from 'path';
+
+export async function generateStaticParams() {
+  return DIENSTEN.filter(s => !REDIRECTED_SERVICE_SLUGS.has(s.slug)).map(s => ({ slug: s.slug }));
 }
 
-export const dynamicParams = false;
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const l = findLeistung(slug);
-  if (!l) return {};
+  const service = DIENSTEN.find(s => s.slug === slug);
+  if (!service) return {};
+  const pageUrl = `${SITE_CONFIG.domain}/diensten/${slug}`;
   return {
-    title: `${l.titel} — mobiler Service`,
-    description: l.kurz,
-    alternates: { canonical: `${SITE.domain}/leistungen/${l.slug}` },
+    /*
+     * metaTitle first. All 17 services carry a hand-written one and this
+     * template ignored every single one of them, generating a title from
+     * `title` instead -- which is the short NAV label, not a page title.
+     *
+     * That was not only wasted copy. alle-sleutels-kwijt-auto has
+     * title: 'Autosleutel Kwijt', so it published "Autosleutel Kwijt | 24/7
+     * Mobiel | Autosleutel24" and competed with /autosleutel-kwijt for the
+     * exact query that page exists to win, while its own metaTitle -- "Alle
+     * Autosleutels Kwijt? | AKL Specialist op Locatie" -- sat unused.
+     *
+     * The generated form stays as the fallback for a service added without
+     * one. There, two suffixes fit behind a short title and not a long one,
+     * so "24/7 Mobiel" gives way rather than the brand being truncated off.
+     */
+    title: {
+      absolute:
+        service.metaTitle ??
+        (service.title.length > 30
+          ? `${service.title} | Autosleutel24`
+          : `${service.title} | 24/7 Mobiel | Autosleutel24`),
+    },
+    description: clampMeta(service.metaDesc),
+    alternates: {
+      canonical: pageUrl,
+      languages: {
+        'nl-NL': pageUrl,
+        'x-default': pageUrl,
+      },
+    },
+    openGraph: {
+      type: 'website',
+      url: pageUrl,
+      title: `${service.title} | Mobiel & Schadevrij ter Plaatse`,
+      description: clampMeta(service.metaDesc),
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `${service.title} — Autosleutel24` }],
+    },
   };
 }
 
-export default async function LeistungPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+
+/*
+ * The page body lives in ServiceLayout because /autosleutel-kwijt renders the
+ * same thing under its own URL. basePath tells it which one it is on.
+ */
+export default async function DienstPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const l = findLeistung(slug);
-  if (!l) notFound();
-
-  const preis = abPreis(l);
-  const url = `${SITE.domain}/leistungen/${l.slug}`;
-
-  return (
-    <>
-      <JsonLd
-        data={[
-          serviceSchema({ name: l.titel, description: l.kurz, url, abPreis: preis }),
-          faqSchema(FAQ),
-          breadcrumbSchema([
-            { name: 'Leistungen', path: '/leistungen' },
-            { name: l.titel, path: `/leistungen/${l.slug}` },
-          ]),
-        ]}
-      />
-
-      <section className="hero">
-        <div className="wrap">
-          <h1>{l.titel}</h1>
-          <p className="lede">{l.kurz}</p>
-          <ul className="facts">
-            {preis && <li>ab {preis} € inkl. MwSt.</li>}
-            <li>Dauer vor Ort: {l.dauer}</li>
-            <li>Festpreis am Telefon</li>
-          </ul>
-          <div className="btn-row">
-            {isReady(SITE.phone) ? (
-              <a className="btn btn-primary" href={`tel:${SITE.phoneTel}`}>
-                {SITE.phone} — jetzt anrufen
-              </a>
-            ) : (
-              <Link className="btn btn-primary" href="/kontakt">
-                Kontakt aufnehmen
-              </Link>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="wrap prose">
-          <h2>Wann Sie das brauchen</h2>
-          <ul>
-            {l.wann.map((w) => (
-              <li key={w}>{w}</li>
-            ))}
-          </ul>
-          {!preis && (
-            <p className="notice">
-              Den Preis für Ihr Fahrzeug nennen wir am Telefon, bevor jemand losfährt —
-              er hängt von Marke, Modell, Baujahr und Schlüsselart ab und bleibt dann
-              unverändert.
-            </p>
-          )}
-        </div>
-      </section>
-
-      <section className="section section-alt">
-        <div className="wrap">
-          <h2>In diesen Städten</h2>
-          <p>
-            {STAEDTE.map((s, i) => (
-              <span key={s.slug}>
-                {i > 0 && ' · '}
-                <Link href={`/staedte/${s.slug}`}>{s.stadt}</Link>
-              </span>
-            ))}
-          </p>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="wrap prose">
-          <h2>Häufige Fragen</h2>
-          <Faq items={FAQ} />
-        </div>
-      </section>
-    </>
-  );
+  if (!DIENSTEN.some((s) => s.slug === slug)) notFound();
+  return <ServiceLayout slug={slug} basePath={`/diensten/${slug}`} />;
 }
