@@ -63,19 +63,83 @@ export function slotLabel(start: string | null, end: string | null): string {
 }
 
 /**
- * The numeric part of a Dutch postcode. `3512AB`, `3512 ab` and `3512` all
- * give 3512 — the four digits are the region, which is everything routing
- * needs and all the customer reliably types.
+ * Countries the dispatch router knows how to read a postcode in, and how many
+ * leading digits that country's postcode has.
+ *
+ * NL and BE are both four; DE is five. The number matters because it is what
+ * a werkgebied range is compared against — see coversPostcode below.
  */
-export function postcodeDigits(postcode: string | null | undefined): number | null {
+export const POSTCODE_WIDTH = { NL: 4, BE: 4, DE: 5 } as const;
+export type PostcodeCountry = keyof typeof POSTCODE_WIDTH;
+
+export function isPostcodeCountry(value: unknown): value is PostcodeCountry {
+  return typeof value === 'string' && value in POSTCODE_WIDTH;
+}
+
+/**
+ * The numeric part of a postcode, as many digits as the country uses.
+ *
+ * `3512AB`, `3512 ab` and `3512` all give 3512 in NL — the four digits are the
+ * region, which is everything routing needs and all the customer reliably
+ * types. In Germany the same job is done by five: `40210 Düsseldorf` gives
+ * 40210.
+ *
+ * A German postcode may start with a zero (`01067` in Dresden), and Number()
+ * drops it. That is harmless here and only because it is dropped on both sides
+ * of every comparison: the range `01000-01999` parses to 1000-1999 and 01067
+ * parses to 1067, which still falls inside it. Nothing may compare one of
+ * these numbers against a raw string.
+ */
+export function postcodeDigits(
+  postcode: string | null | undefined,
+  country: PostcodeCountry = 'NL'
+): number | null {
   if (!postcode) return null;
-  const match = /(\d{4})/.exec(postcode);
+  const width = POSTCODE_WIDTH[country];
+  const match = new RegExp(`(\\d{${width}})`).exec(postcode);
   return match ? Number(match[1]) : null;
 }
 
-/** Does `3500-3599` cover this postcode? Single values like `3512` also work. */
-export function coversPostcode(range: string, postcode: string | null): boolean {
-  const digits = postcodeDigits(postcode);
+/**
+ * A werkgebied entry says which country it is in, or it means the Netherlands.
+ *
+ * `DE:40000-40999` and a bare `3500-3599` both appear in the same column. The
+ * prefix exists because the two numbering spaces overlap and silence is the
+ * wrong failure: a Dutch technician covering `3500-3599` would otherwise match
+ * a job in 35001 Hessen, because the first four digits of a German postcode
+ * read as a perfectly good Dutch one. The prefix makes that impossible rather
+ * than unlikely.
+ *
+ * Bare ranges keep meaning NL so that every row already in the database keeps
+ * meaning exactly what it meant before Germany existed. There is no migration.
+ */
+export function splitWerkgebied(entry: string): { country: PostcodeCountry; range: string } {
+  const [maybeCountry, ...rest] = entry.split(':');
+  if (rest.length && isPostcodeCountry(maybeCountry.toUpperCase())) {
+    return {
+      country: maybeCountry.toUpperCase() as PostcodeCountry,
+      range: rest.join(':').trim(),
+    };
+  }
+  return { country: 'NL', range: entry.trim() };
+}
+
+/**
+ * Does `3500-3599` cover this postcode? Single values like `3512` also work,
+ * and so do `DE:40000-40999` and a five-digit German postcode.
+ *
+ * `country` is the country of the job being routed. An entry for a different
+ * country never matches, which is the point of the prefix above.
+ */
+export function coversPostcode(
+  entry: string,
+  postcode: string | null,
+  country: PostcodeCountry = 'NL'
+): boolean {
+  const { country: entryCountry, range } = splitWerkgebied(entry);
+  if (entryCountry !== country) return false;
+
+  const digits = postcodeDigits(postcode, country);
   if (digits === null) return false;
 
   const parts = range.split('-').map((p) => Number(p.trim()));
@@ -87,16 +151,33 @@ export function coversPostcode(range: string, postcode: string | null): boolean 
 }
 
 /**
- * `3500-3599, 1000-1099` from the form becomes {'3500-3599','1000-1099'}.
- * Anything that is not a four-digit range is dropped rather than stored as
- * noise the router would silently never match.
+ * `3500-3599, 1000-1099` from the form becomes {'3500-3599','1000-1099'}, and
+ * `DE:40000-40999` survives alongside them.
+ *
+ * Anything that is not a range of the right width for its country is dropped
+ * rather than stored as noise the router would silently never match. Both ends
+ * of a range must have the same width, so `40000-4099` is noise, not a range.
+ *
+ * The width check is why this had to change at all: the old pattern was
+ * /^\d{4}(-\d{4})?$/, so every German werkgebied a partner typed was thrown
+ * away on save and no German job could ever be routed to anyone.
  */
 export function parseWerkgebied(value: unknown): string[] {
   if (typeof value !== 'string') return [];
   return value
     .split(/[,\n]/)
     .map((part) => part.trim())
-    .filter((part) => /^\d{4}(-\d{4})?$/.test(part))
+    .filter((part) => {
+      if (!part) return false;
+      const { country, range } = splitWerkgebied(part);
+      const w = POSTCODE_WIDTH[country];
+      return new RegExp(`^\\d{${w}}(-\\d{${w}})?$`).test(range);
+    })
+    .map((part) => {
+      // Store the prefix uppercased so 'de:40000' and 'DE:40000' are one thing.
+      const { country, range } = splitWerkgebied(part);
+      return country === 'NL' ? range : `${country}:${range}`;
+    })
     .slice(0, 40);
 }
 
