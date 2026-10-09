@@ -117,6 +117,7 @@ const websiteSchema = {
 import { GlobalHeader, GlobalFooter, GlobalStickyBar, GlobalWidgets } from '@/components/LayoutManager';
 import PhoneConversionTracker from '@/components/PhoneConversionTracker';
 import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
+import AdVisitBeacon from '@/components/Tracking/AdVisitBeacon';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -288,6 +289,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         */}
 
         <AdParameterTracker />
+        <AdVisitBeacon />
         <PhoneConversionTracker />
         {/*
           Google Tag Manager (noscript) — left unconditional. Gating this on
