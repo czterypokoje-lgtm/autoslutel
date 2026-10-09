@@ -18,11 +18,12 @@
     "cheerio": "^1.2.0",
     "heic-convert": "^2.1.0",
     "lucide-react": "^1.42.0",
-    "next": "16.2.4",
+    "next": "16.4.0",
     "pdf-parse": "^2.4.5",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "server-only": "^0.0.1",
+    "sharp": "^0.35.5",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -30,9 +31,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.4",
+    "eslint-config-next": "16.4.0",
     "exiftool-vendored": "^36.1.0",
-    "sharp": "^0.35.3",
     "typescript": "^5.9.3"
   }
 }
