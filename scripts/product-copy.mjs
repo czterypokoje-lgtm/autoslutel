@@ -881,3 +881,55 @@ export function metaDescription(product, classification, fitment, price) {
     .join(' ')
     .slice(0, 155);
 }
+
+/**
+ * A Dutch title for an AccessFobs housing.
+ *
+ * Their feed is English and was passed through verbatim, so 123 of the 440
+ * housings read "Aftermarket Flip Key Remote Fob Case for VW Seat Skoda 3
+ * buttons" — in the category the shop leads with, and against Dutch search
+ * queries. Translating the sentence is the wrong fix: it is marketing copy
+ * with the facts buried in it, and a machine translation of it would read
+ * worse than no translation.
+ *
+ * So this composes a title from the fields the import already carries, in the
+ * same order and shape dutchTitle() uses for A-Key, which is why the two read
+ * as one catalogue:
+ *
+ *   Sleutelbehuizing voor Volkswagen en Seat 3 knoppen · HU66
+ *   Volkswagen Golf sleutelbehuizing 3 knoppen
+ *
+ * `null` when there is nothing to build from — the caller then keeps the
+ * supplier's English, which is still better than "Sleutelbehuizing" repeated
+ * 123 times with nothing to tell them apart.
+ */
+export function housingTitle({ makes = [], buttons = null, blade = null, vehicles = [] }) {
+  const named = (makes ?? []).filter(Boolean).map(spellMake);
+  const count = buttonCount(buttons);
+  const bladeName = blade ? tidyBlade(blade) : null;
+
+  /* One model and one make between them: name the model, as A-Key's do. */
+  const models = (vehicles ?? []).filter((v) => v?.make && v?.model);
+  const onlyModel =
+    models.length === 1 && named.length === 1 && spellMake(models[0].make) === named[0]
+      ? models[0].model
+      : null;
+
+  const head = onlyModel
+    ? `${named[0]} ${onlyModel} sleutelbehuizing`
+    : named.length > 1
+      ? `Sleutelbehuizing voor ${named.slice(0, 2).join(' en ')}${named.length > 2 ? ' e.a.' : ''}`
+      : named.length === 1
+        ? `${named[0]} sleutelbehuizing`
+        : null;
+
+  // No make at all: a bare "Sleutelbehuizing" tells a customer nothing that
+  // the English line did not, so leave theirs alone.
+  if (!head) return null;
+
+  const specs = [];
+  if (count) specs.push(`${count} knoppen`);
+  if (bladeName) specs.push(bladeName);
+
+  return [head, specs.join(' · ')].filter(Boolean).join(' ');
+}

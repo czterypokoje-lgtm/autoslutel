@@ -1,0 +1,65 @@
+.wrap {
+  margin-top: var(--sp-5);
+}
+
+.row {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.qtyLabel {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.qty {
+  padding: 0.6rem 0.7rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  background: #fff;
+  /* 44px, so a thumb can hit it. */
+  min-height: 44px;
+}
+
+.addBtn {
+  flex: 1 1 180px;
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+.addedRow {
+  margin: var(--sp-3) 0 0;
+  font-size: 0.9rem;
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.addedRow a {
+  color: var(--navy-700);
+}
+
+.soldOut {
+  margin-top: var(--sp-5);
+  padding: var(--sp-4);
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+}
+
+.soldOutTitle {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  color: var(--gray-800);
+}
+
+.soldOutText {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}

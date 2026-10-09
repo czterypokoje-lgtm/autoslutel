@@ -1,0 +1,658 @@
+/*
+ * The shop, on the tokens that already exist.
+ *
+ * Nothing here invents a colour, a radius or a shadow — every value is a
+ * var() from globals.css. The site has a navy/orange system already and a
+ * second palette inside /winkel would read as a different company.
+ *
+ * A CSS module and not inline styles, because AGENTS.md records what inline
+ * styles cost here: they cannot carry a media query, and every mobile failure
+ * on this site was traced back to one. The shop is the most mobile-heavy
+ * surface we have — someone standing at their car with a broken key — so the
+ * breakpoints are not optional.
+ */
+
+/* ── finder ───────────────────────────────────────────────────────────── */
+
+.finder {
+  background: var(--navy-900);
+  padding: var(--sp-10) 0;
+  position: relative;
+}
+
+.finderInner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.finderKicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--orange-400);
+  margin-bottom: 0.6rem;
+}
+
+.finderTitle {
+  color: #fff;
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  line-height: 1.15;
+}
+
+.finderLead {
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0 auto var(--sp-6);
+  max-width: 48ch;
+  line-height: 1.6;
+}
+
+/*
+ * Three steps side by side on a desktop, stacked on a phone.
+ *
+ * A single row that wraps rather than a grid with fixed columns: the year
+ * step disappears entirely for a make whose articles state no years, and a
+ * grid would leave a hole where it was.
+ */
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.step {
+  flex: 1 1 180px;
+  min-width: 0;
+  text-align: left;
+}
+
+.stepLabel {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.35rem;
+}
+
+.select,
+.input {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--gray-900);
+  background: #fff;
+  border: 1px solid var(--navy-600);
+  border-radius: var(--radius-md);
+  /* 16px minimum, or iOS Safari zooms the whole page on focus. */
+  min-height: 44px;
+}
+
+.select:disabled {
+  background: var(--gray-100);
+  color: var(--gray-500);
+}
+
+.finderSubmit {
+  flex: 0 0 auto;
+  min-height: 44px;
+}
+
+/* The plate shortcut: one field instead of three dropdowns. */
+.plateRow {
+  display: flex;
+  gap: var(--sp-2);
+  justify-content: center;
+  align-items: stretch;
+  margin-top: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.plateField {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f7c815;
+  border: 2px solid #111;
+  border-radius: var(--radius-md);
+  padding: 0 0.6rem;
+}
+
+.plateCountry {
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: #111;
+}
+
+.plateInput {
+  border: 0;
+  background: transparent;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: 8.5ch;
+  padding: 0.55rem 0;
+  min-height: 44px;
+  color: #111;
+}
+
+.plateInput:focus {
+  outline: 2px solid var(--orange-400);
+  outline-offset: 2px;
+}
+
+.plateHint {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.82rem;
+  margin-top: var(--sp-3);
+}
+
+.plateError {
+  color: #ffd2c2;
+  font-size: 0.86rem;
+  margin-top: var(--sp-3);
+}
+
+@media (max-width: 700px) {
+  .steps {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .step {
+    flex: 1 1 auto;
+  }
+  .finderSubmit {
+    width: 100%;
+  }
+}
+
+/* ── results layout ──────────────────────────────────────────────────── */
+
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--sp-8);
+  align-items: start;
+  padding: var(--sp-8) 0 var(--sp-12);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--sp-5);
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    position: static;
+  }
+}
+
+/*
+ * The facet panel collapses on a phone through a checkbox and a label, with
+ * no JavaScript. Filters that need hydration to open are filters that do not
+ * work on the slow connection the customer is standing on.
+ */
+.facetToggle {
+  display: none;
+}
+
+.facetToggleLabel {
+  display: none;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  background: #fff;
+  user-select: none;
+}
+
+@media (max-width: 900px) {
+  .facetToggleLabel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .facetPanel {
+    display: none;
+  }
+  .facetToggle:checked ~ .facetPanel {
+    display: block;
+    margin-top: var(--sp-3);
+  }
+}
+
+.facetGroup {
+  border-bottom: 1px solid var(--gray-200);
+  padding: var(--sp-4) 0;
+}
+
+.facetGroup:last-child {
+  border-bottom: 0;
+}
+
+.facetTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-500);
+  margin: 0 0 0.6rem;
+}
+
+.facetList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/*
+ * A real <a href>, not a button. It works before hydration, it can be opened
+ * in a new tab, and the back button does what the visitor expects.
+ */
+.facetLink {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  /* 44px targets on a phone; tighter is fine with a mouse. */
+  min-height: 32px;
+  align-items: center;
+}
+
+.facetLink:hover {
+  background: var(--navy-50);
+  color: var(--navy-800);
+  text-decoration: none;
+}
+
+.facetLinkActive {
+  background: var(--navy-800);
+  color: #fff;
+  font-weight: 600;
+}
+
+.facetLinkActive:hover {
+  background: var(--navy-700);
+  color: #fff;
+}
+
+.facetCount {
+  color: inherit;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85em;
+}
+
+@media (max-width: 900px) {
+  .facetLink {
+    min-height: 44px;
+    font-size: 1rem;
+  }
+}
+
+/* ── the result header ───────────────────────────────────────────────── */
+
+.resultHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--sp-5);
+}
+
+.resultTitle {
+  margin: 0;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.resultCount {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  margin: 0.25rem 0 0;
+}
+
+.sortRow {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sortLabel {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+.sortLink {
+  font-size: 0.88rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sortLink:hover {
+  border-color: var(--navy-400);
+  color: var(--navy-800);
+  text-decoration: none;
+}
+
+.sortLinkActive {
+  background: var(--navy-800);
+  border-color: var(--navy-800);
+  color: #fff;
+}
+
+.sortLinkActive:hover {
+  color: #fff;
+}
+
+/* ── a group of results, with its own honest heading ────────────────── */
+
+.group {
+  margin-bottom: var(--sp-10);
+}
+
+.groupHead {
+  margin-bottom: var(--sp-4);
+  padding-bottom: var(--sp-2);
+  border-bottom: 2px solid var(--navy-100);
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--navy-800);
+}
+
+/*
+ * The sentence under a group heading is the most important copy in the shop.
+ * "Past op uw auto" is a claim the supplier does not make for 80% of this
+ * catalogue; this is where we say what they do say instead.
+ */
+.groupNote {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+  max-width: 70ch;
+}
+
+/* ── product grid ────────────────────────────────────────────────────── */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: var(--sp-4);
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-3);
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.card:hover {
+  border-color: var(--navy-300);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: inherit;
+}
+
+.cardPhoto {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--gray-50);
+  overflow: hidden;
+}
+
+.cardPhoto img {
+  object-fit: contain;
+  padding: var(--sp-3);
+}
+
+.cardNoPhoto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--gray-400);
+  font-size: 0.8rem;
+}
+
+.cardBody {
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.cardTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text-primary);
+  margin: 0;
+  /* Two lines, so the price row of every card in a row lines up. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardMeta {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  margin: 0;
+}
+
+.cardFoot {
+  margin-top: auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.3rem;
+}
+
+.cardPrice {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--navy-800);
+  font-variant-numeric: tabular-nums;
+}
+
+.cardPriceAsk {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-500);
+}
+
+/* ── the fit badge ───────────────────────────────────────────────────── */
+
+/*
+ * Three states, three colours, and the one that matters most is the one that
+ * is NOT for sale. A visitor must be able to tell from the grid that a key
+ * means a visit, before they click it and find no buy button.
+ */
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-sm);
+  align-self: flex-start;
+}
+
+.badgeSelf {
+  background: #e7f5ec;
+  color: #1e7e34;
+}
+
+.badgeCutting {
+  background: var(--navy-50);
+  color: var(--navy-700);
+}
+
+.badgeProgramming {
+  background: var(--orange-100);
+  color: var(--orange-700);
+}
+
+.badgeExact {
+  background: var(--navy-800);
+  color: #fff;
+}
+
+/* ── empty and fallback states ───────────────────────────────────────── */
+
+.empty {
+  text-align: center;
+  padding: var(--sp-10) var(--sp-5);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.emptyTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.emptyText {
+  margin: 0 auto var(--sp-5);
+  max-width: 54ch;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ── category tiles on the shop home ────────────────────────────────── */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--sp-4);
+}
+
+.tile {
+  display: block;
+  padding: var(--sp-5);
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.tile:hover {
+  border-color: var(--navy-300);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: inherit;
+}
+
+.tileTitle {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy-800);
+}
+
+.tileCount {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+/* ── the makes index ─────────────────────────────────────────────────── */
+
+.makeCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.makeChip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  min-height: 36px;
+}
+
+.makeChip:hover {
+  border-color: var(--navy-400);
+  background: var(--navy-50);
+  color: var(--navy-800);
+  text-decoration: none;
+}
+
+/* ── section rhythm ──────────────────────────────────────────────────── */
+
+.section {
+  padding: var(--sp-10) 0;
+}
+
+.sectionAlt {
+  padding: var(--sp-10) 0;
+  background: var(--gray-50);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--sp-2);
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+}
+
+.sectionLead {
+  margin: 0 0 var(--sp-6);
+  color: var(--color-text-secondary);
+  max-width: 68ch;
+  line-height: 1.6;
+}

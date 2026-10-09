@@ -1,0 +1,40 @@
+.bar {
+  background: var(--navy-800);
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.text {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.text strong {
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.link {
+  color: var(--orange-300);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  /* A 44px row even here: this is the main way back to the basket on a phone. */
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.link:hover {
+  color: #fff;
+  text-decoration: underline;
+}

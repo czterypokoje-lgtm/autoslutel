@@ -57,8 +57,6 @@ export type FitClass =
 const FIT_BY_CATEGORY: Record<string, FitClass> = {
   behuizingen: 'plug-and-play',
   batterijen: 'plug-and-play',
-  printplaten: 'plug-and-play',
-  accessoires: 'plug-and-play',
 
   sleutelbaarden: 'cutting',
   noodsleutels: 'cutting',
@@ -72,9 +70,31 @@ const FIT_BY_CATEGORY: Record<string, FitClass> = {
   // A bare transponder chip is the clearest case of all: it is nothing but
   // the thing that has to be programmed.
   transponders: 'programming',
+  /*
+   * A replacement circuit board is not the plug-and-play part it looks like.
+   * It carries the remote's radio and its chip identity, so a car that knew
+   * the old board does not know the new one — fitting one and programming
+   * one are the same job. Classed with the keys for that reason, not with
+   * the housings it physically resembles.
+   */
+  printplaten: 'programming',
 
   programmeerapparatuur: 'trade',
   gereedschap: 'trade',
+  /*
+   * `accessoires` reads like a consumer shelf and is not one. Checked
+   * article by article: of 312 public rows, 84 are soldering adapters for
+   * key programmers (XDMP/XDNP), 16 are shop supplies in packs of 100 or
+   * 200, 191 carry no real name beyond "Accessoire (CODE)", and the
+   * remaining 41 are clamps for key-cutting machines, VVDI programmers and
+   * OBDSTAR kits. Not one of them is something a car owner buys.
+   *
+   * It was mapped to plug-and-play first, and the build caught it: the three
+   * articles pre-rendered ahead of every housing were a bag of zip-lock
+   * pouches and two sets of coloured key caps. Trade, therefore, until
+   * someone splits the genuinely consumer rows out in taxonomy.mjs.
+   */
+  accessoires: 'trade',
 };
 
 /**

@@ -1,0 +1,144 @@
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--sp-12) 0;
+}
+
+.kicker {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-success);
+}
+
+.kickerBad {
+  color: var(--color-danger);
+}
+
+.title {
+  margin: 0 0 var(--sp-4);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  line-height: 1.2;
+}
+
+.lead {
+  margin: 0 0 var(--sp-5);
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+
+.lead strong {
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-6);
+}
+
+.summary {
+  margin-top: var(--sp-8);
+  padding: var(--sp-5);
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.summaryTitle {
+  margin: 0 0 var(--sp-4);
+  font-size: 1rem;
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  gap: var(--sp-3);
+  align-items: baseline;
+  padding: 0.5rem 0;
+  margin: 0;
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 0.92rem;
+}
+
+.item:last-child {
+  border-bottom: 0;
+}
+
+.itemQty {
+  color: var(--gray-500);
+  font-variant-numeric: tabular-nums;
+}
+
+.itemTitle {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.itemTitle:hover {
+  color: var(--navy-700);
+}
+
+.itemPrice {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.totals {
+  margin: var(--sp-4) 0 0;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--gray-300);
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+}
+
+.totalRow dt,
+.totalRow dd {
+  margin: 0;
+}
+
+.totalRow dd {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.totalGrand {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--gray-300);
+  font-size: 1.1rem;
+}
+
+.totalGrand dt,
+.totalGrand dd {
+  font-weight: 700;
+}
+
+.totalGrand dd {
+  color: var(--navy-800);
+}
+
+.footNote {
+  margin: var(--sp-8) 0 0;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--gray-500);
+}

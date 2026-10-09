@@ -35,6 +35,7 @@ import {
   buttonLabel,
   tidyBlade,
   tidyArticleNumber,
+  housingTitle,
 } from './product-copy.mjs';
 import { translateDescription } from './accessory-copy.mjs';
 
@@ -360,6 +361,10 @@ if (existsSync(ACCESSFOBS)) {
   const data = JSON.parse(readFileSync(ACCESSFOBS, 'utf8'));
   for (const item of data.products) {
     const slug = `accessfobs-${String(item.id)}`;
+    /* Their feed is English. Compose a Dutch name from the structured fields
+       instead of shipping their marketing line; falls back to theirs when
+       there is no make to build one from. See housingTitle(). */
+    const nameNl = housingTitle(item) ?? item.title;
     products.push({
       id: slug,
       slug,
@@ -388,7 +393,7 @@ if (existsSync(ACCESSFOBS)) {
         // backwards is a typo, not a fact.
         .map((v) => (v.to && v.from && v.to < v.from ? { ...v, from: v.to, to: v.from } : v)),
       excerpt: (item.notes ?? []).join(' ').slice(0, 400),
-      titleNl: item.title,
+      titleNl: nameNl,
       descriptionNl: `<p>Vervangende sleutelbehuizing. U zet uw eigen elektronica en sleutelbaard erin — de auto hoeft daarna niet opnieuw geprogrammeerd te worden.</p>${
         (item.vehicles ?? []).length
           ? `<h4>Past op</h4><ul>${item.vehicles
@@ -396,7 +401,7 @@ if (existsSync(ACCESSFOBS)) {
               .join('')}</ul>`
           : ''
       }`,
-      directAnswer: `Sleutelbehuizing${item.makes?.length ? ` voor ${item.makes[0]}` : ''}.`,
+      directAnswer: `${nameNl}. Alleen de behuizing: u zet uw eigen elektronica en sleutelbaard erin.`,
       metaDescriptionNl: `Sleutelbehuizing${item.makes?.length ? ` voor ${item.makes.join(', ')}` : ''}. Zelf ombouwen of door onze monteur laten doen.`,
       specs: [
         item.blade ? ['Sleutelbaard', item.blade] : null,
