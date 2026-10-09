@@ -1,138 +1,168 @@
 # Expansion plan — Belgium & Germany
 
-Status: **plan only, nothing built yet.** Written after reading the actual
-codebase, not from a template. Every claim below names the file it came from.
+**v2 — revised after the business model was clarified: we are not opening a
+second mobile workshop, we are replicating the network.** The leads go to local
+technicians who become our branch. That changes the order of the whole project.
+
+Status: plan only, nothing built. Every claim names the file it came from.
 
 ---
 
-## 1. What we already have (the good news)
+## 1. The finding that reframes everything
 
-The NL site is in far better shape for this than a typical expansion target.
+**You already built this product. It is running in NL.**
 
-| Fact | Where | Why it matters |
+| What exists | Where |
+|---|---|
+| Three-tier partner subscription: Starter €0/25% commission, Pro €679/18%, Premium €1,800/8%, with priority dispatch windows (0/45/90 s) | `src/lib/subscription.ts` |
+| Break-even maths so each tier is cheapest *somewhere* (`bestTier`, `breakEven`) — with a written account of how a dead Pro tier was found and repriced | `src/lib/subscription.ts:10-32` |
+| Offer-and-accept dispatch with four hard gates (can they do this car / do they drive there / are they free) then a score | `src/lib/dispatch.ts` |
+| Telegram bid offers to technicians, 24 h window | `src/lib/offerJob.ts` |
+| Per-technician rate cards, office-wide comparison + Excel export | `src/lib/technicianRates.ts` |
+| Technician balance, commission settlement, payouts | `src/lib/technicianBalance.ts`, `/admin/mijn-saldo`, `/admin/kas` |
+| Bidding screen, my-jobs, my-van, my-profile, marktplaats, per-country network channels | `/admin/biedingen`, `/admin/mijn-klussen`, `/admin/mijn-bus`, `/admin/netwerk/*` |
+| Partner recruitment landing page | `src/app/monteur-worden/page.tsx` |
+| The "what you'd have paid Google" renewal argument (`ADS_COST_PER_JOB = 85`) | `src/lib/subscription.ts` |
+| Country as a first-class unit in the network | `admin/netwerk/layout.tsx:11` — *"A server is a country: Nederland, Duitsland, België"* |
+
+So Germany and Belgium are **a replication of a working playbook**, not a new
+build. That is a much stronger starting position than §1 of v1 of this plan
+assumed, and it changes the sequencing below.
+
+---
+
+## 2. The decision that drives everything else: who contracts the consumer?
+
+Your model, as the code implements it today: **we set the price, we take the
+payment, we route the work, the technician fulfils and we keep 8–25%.**
+`src/lib/dispatch.ts:3-9` states it outright and names the consequence:
+
+> *"We set the price, take the payment and route the work, and in the
+> Netherlands that combination is exactly what gets examined for
+> schijnzelfstandigheid."*
+
+That makes us the **service provider to the consumer**, not a lead broker. The
+technician is our subcontractor. Which means, in Germany:
+
+- German consumer law applies to **us**: Impressum, Widerrufsrecht, warranty,
+  gross prices incl. 19 % MwSt.
+- We invoice the German consumer → **German VAT registration or OSS**. (Pure
+  lead-selling would instead be a B2B service with reverse charge and no German
+  VAT at all. Completely different tax shape. **Accountant decision, and it has
+  to be made before I write the price pages.**)
+- **Scheinselbständigkeit** is the German twin of the Dutch risk the code
+  already guards against — and it is enforced far harder: Deutsche
+  Rentenversicherung status audits, back-dated social contributions up to four
+  years. The offer-and-accept design in `dispatch.ts` is the right defence and
+  must survive translation: a German partner must be able to decline without
+  penalty, set their own availability, and keep their own customers.
+- The priority-window design (Premium sees jobs 90 s first) is a commercial
+  feature, not an exclusivity — keep it that way in the German contract.
+
+If instead you want to **sell raw leads** in Germany (pay-per-lead, technician
+sets their own price and invoices the consumer directly), say so, because then:
+the price pages come off, "prijs vooraf" positioning goes with them, the schema
+changes from service provider to marketplace, VAT becomes reverse-charge B2B,
+and the Scheinselbständigkeit exposure largely disappears. **Cleaner legally,
+materially weaker product and weaker trust signal in a market as scam-sensitive
+as German Schlüsseldienst.** My recommendation is to keep the NL model.
+
+---
+
+## 3. The ranking engine you actually have: partner GBPs
+
+This is the answer to "rank 1 very fast", and it only exists because of the
+network model.
+
+A single Dutch company cannot get a verified Google Business Profile in Köln.
+But **a real technician in Köln already can — and does.** In the network model,
+each recruited partner is a potential GBP in their city. That is the mechanism
+that gets us into the local pack, which is where `Autoschlüssel nachmachen Köln`
+actually converts.
+
+Three options, in order of ranking power:
+
+| Option | Local pack? | Notes |
 |---|---|---|
-| `City` type **already** declares `country: "NL" \| "BE" \| "DE"` and `lang: "NL" \| "FR" \| "VL"` | `src/config/cities.ts:17-18` | The data model was designed for this. No migration needed. |
-| 237 uses of `SITE_CONFIG.domain`, only 22 hardcoded `autosleutel24.nl` strings | `src/config/site.config.ts` + grep | Domain is already centralised. A multi-domain build is a config change, not a rewrite. |
-| 75 cities, all `country:"NL"` | `src/config/cities.ts` | Clean slate for BE/DE rows — same shape, same page template. |
-| `SERVICE_REGIONS`, sitemap, robots, `LocalBusinessSchema`, `ServiceSchema`, `ArticleSchema`, FAQ schema, `llms.txt`, image sitemap, geojson service area | `src/app/sitemap.ts`, `src/components/Schema/*`, `src/app/llms*.txt` | The entire SEO machine is built and proven. We re-point it, not rebuild it. |
-| The CRM network already treats a country as a first-class unit | `src/app/admin/netwerk/layout.tsx:11` — *"A server is a country: Nederland, Duitsland, België"* | Ops side already anticipated this. Monteurs read all three channels. |
-| `Address.country` defaults to `"NL"` but exists | `prisma/schema.prisma:196` | Orders/addresses are country-aware already. |
+| **A. Partner trades as "Autoschlüssel24 Köln"** at their real address, our city page as the listing's website | **Yes** | Strongest. Needs a brand licence in the partner agreement, their real address, consistent NAP, and their own or a tracked number. Franchise-style listings are legitimate when the partner genuinely trades under that name at that address. |
+| B. Partner keeps their own brand, our site listed as a secondary link | Their listing ranks, not ours | Leads reach them directly and bypass our commission. Worst of both. |
+| C. No GBP, organic only | No | Works for research queries (`Autoschlüssel nachmachen Kosten`), loses the urgent local ones. |
 
-**Conclusion: the machinery is ~80% reusable. The work is content, legal, and
-local presence — not code.**
+**Go with A, and build the partner agreement around it from day one.** Retrofitting
+a brand licence onto twenty partners later is far harder than writing it in now.
 
----
-
-## 2. The one thing I have to push back on
-
-> "same page just the cities will change"
-
-This is **true for Belgium-Flanders and false for Germany.**
-
-- **Flanders (BE-NL)** really is close to a city swap. Dutch copy works with
-  terminology corrections (see §5). This is the cheap, fast win.
-- **Wallonia + Brussels (BE-FR)** needs a full French translation.
-- **Germany** needs a full German translation. The public-facing copy surface is
-  roughly **22,400 lines**: `src/app` routes 10,263 + `src/components` 6,087 +
-  `src/config` content 6,083 (including `blog_content.tsx`, 2,352 lines of
-  long-form Dutch articles). Prices, FAQs, service descriptions, blog, meta
-  templates — all Dutch prose embedded in TSX.
-- **Good news on scope:** `src/app/admin` is 23,821 lines and needs **zero**
-  translation. Monteurs and office work in Dutch; the network layout comment
-  already confirms all monteurs read all three country channels. That cuts the
-  translation surface by more than half versus "translate the app".
-
-So: Belgium ships fast. Germany is a real project. Phasing below reflects that.
-
-## 3. The other thing I have to push back on: "rank 1 very fast"
-
-I can build the site in this session. I cannot make it rank, and neither can any
-amount of code — and **this repo already documents why**, in your own words:
-
-> `src/config/thinPages.ts` — *"A page for a town the van does not drive to is
-> the textbook doorway page, and it dilutes the cities that do earn clicks."*
-> Nine NL cities beyond the 75 km radius earned **zero impressions** and were
-> noindexed for exactly this reason.
-
-And `src/app/steden/[citySlug]/[slug]/page.tsx` permanently redirects the old
-city×brand and city×service combinations — you already learned that
-combinatorial local pages don't work.
-
-If we launch 200 German city pages with no technician in Germany, we rebuild the
-exact mistake `thinPages.ts` was written to clean up — at 10× scale, on a fresh
-domain with no authority to absorb it.
-
-**What actually controls local ranking in DE/BE:**
-1. A verified **Google Business Profile** per country with a local address and
-   phone. Without it there is no local pack, and the local pack is where
-   "Autoschlüssel nachmachen Köln" converts. GBP verification needs a real
-   verifiable presence — this is the hard gate, and it is not a code problem.
-2. A **local phone number** (+49 / +32). A Dutch 06 number on a German page
-   kills trust and GBP eligibility.
-3. **Technician coverage that is real.** `findCityTechnician` →
-   `arrivalWindow()` in the city page already refuses to print an arrival time
-   when distance is unknown (`src/app/steden/[citySlug]/page.tsx:215-230`). On a
-   German page with no German monteur, every page would honestly say nothing.
-4. **Reviews in-country.** `reviewCount: '10'` today.
-
-Realistic timeline, stated plainly: **domain + indexable site in days; first
-real DE organic traffic 3–6 months; local-pack competitiveness 6–12 months**
-with GBP + reviews. Paid (Google Ads) is the only "fast" channel and can run
-from day one on the same pages.
-
-I will build the fastest-ranking site that is technically possible. I will not
-promise a timeline that depends on things code cannot do.
+**Consequence for sequencing: every partner recruited is a city that becomes
+rankable. Partner recruitment is not a prerequisite of the SEO — it *is* the
+SEO.** That inverts v1 of this plan.
 
 ---
 
-## 4. Recommended architecture: one repo, three builds
+## 4. Revised sequencing: B2B funnel first, consumer funnel second
 
-**Decision: separate Vercel project per domain, same repo, selected by a
-`SITE_ID` env var at build time.**
+v1 said: build consumer pages, hold them `noindex` until coverage exists. Still
+true — but it buries the lede. **The first page that has to rank in Germany is
+not a consumer page at all. It is the partner recruitment page.**
 
-Why not host-header multi-tenancy in one deployment (the obvious first idea):
-`SITE_CONFIG` is a **module-level constant imported in 77 files**. Making it
-request-scoped means threading a context through 77 files and 237 call sites,
-and it breaks static generation — the thing that makes these pages fast and
-cheap. Host-based resolution would also force `sitemap.ts` and `robots.ts`
-dynamic, and all three domains would share one Vercel deployment, so a bug in
-German copy could take down the Dutch site that pays for everything.
+Why this is the right order:
+- **Cheap.** `Schlüsseldienst Partner werden`, `Autoschlüssel Aufträge`,
+  `mehr Aufträge als Autoschlüsseldienst` — near-zero competition against the
+  consumer terms, which are among the most expensive CPCs in Germany.
+- **Unblocks everything.** No partner → no coverage → no GBP → no local pack →
+  no indexable city page. One partner in Köln unlocks the entire NRW cluster.
+- **The pitch already exists and is good.** `subscription.ts:4-8`: *"every
+  independent auto locksmith in the country is already buying leads, they just
+  buy them from Google, per click, for a stranger who may be driving a car
+  nobody can do. This is the same money for a booked job at an agreed price."*
+  That argument is **stronger** in Germany, where Schlüsseldienst CPCs are
+  brutal. `ADS_COST_PER_JOB = 85` is a conservative Dutch figure and must become
+  a per-country number — the German one is higher, which makes the pitch better.
+- **It's measurable fast.** A partner signup is a conversion we control, unlike
+  waiting on Google to trust a new domain.
 
-Build-time selection gives us, with almost no refactor:
+So: **`/partner-werden` (DE) and `/partner-worden` + `/fr/devenir-partenaire`
+(BE) are Phase 1 deliverables, ahead of the consumer city pages.**
+
+One concrete improvement over the NL page: `monteur-worden/page.tsx:158-172`
+hardcodes the eight cities we're recruiting in (Eindhoven, Maastricht, Tilburg…).
+In DE/BE that list should be **derived from live coverage gaps** — cities with
+demand and no partner — so the recruitment page updates itself as the network
+fills, instead of going stale the way a hand-typed list does.
+
+---
+
+## 5. Architecture (unchanged from v1 — this part was right)
+
+**One repo, three Vercel builds, selected by `SITE_ID` at build time.**
 
 ```
-src/config/sites/
-  nl.ts   ← today's site.config.ts, unchanged
-  be.ts
-  de.ts
-  index.ts → export const SITE_CONFIG = SITES[process.env.SITE_ID ?? 'nl']
+src/config/sites/{nl,be,de}.ts  →  index.ts exports SITES[SITE_ID]
 ```
 
-- Every one of the 77 importers keeps `import { SITE_CONFIG } from '@/config/site.config'`. **Zero changes at call sites.**
-- Static generation preserved.
-- Each domain gets its own `sitemap.ts` / `robots.ts` output naturally.
-- Each domain is its own Google Search Console property (required anyway).
-- NL deploy is isolated from DE/BE deploys. NL risk ≈ 0.
-- One `git push` builds all three.
+`SITE_CONFIG` is a module-level constant imported in **77 files** with **237
+`SITE_CONFIG.domain` call sites**. Request-scoping it for host-header
+multi-tenancy means touching all of them and losing static generation, and it
+would put untested German copy in the same deployment as the Dutch site that
+pays for everything. Build-time selection needs **zero call-site changes**,
+keeps static generation, gives each domain its own sitemap/robots and GSC
+property, and isolates NL risk to approximately zero.
 
-`CITIES` gets filtered per build: `CITIES.filter(c => c.country === SITE.country)`.
-Same for `SERVICE_REGIONS` (becomes per-country), `FAQ`, `DIENSTEN`, `BRANDS`
-(brands are universal — reused as-is, translated labels only).
+`CITIES.filter(c => c.country === SITE.country)` per build. The `City` type
+**already** declares `country: "NL"|"BE"|"DE"` and `lang: "NL"|"FR"|"VL"`
+(`src/config/cities.ts:17-18`) — the data model was built for this.
 
-### Locale handling
-- `src/app/layout.tsx:123` hardcodes `<html lang="nl">` → `lang={SITE.htmlLang}`.
-- 119 `nl-NL` references audited and driven from config.
-- `alternates.languages` in the city page currently hardcodes `'nl-NL'` and
-  `'x-default'` to itself (`steden/[citySlug]/page.tsx:185-191`). Becomes a real
-  cross-domain hreflang cluster: `nl-NL` → .nl, `nl-BE` → .be/nl, `fr-BE` →
-  .be/fr, `de-DE` → .de, `x-default` → .nl. **Cross-domain hreflang must be
-  reciprocal on all four or Google ignores it.**
-- BE is the only bilingual build: `/nl/...` and `/fr/...` path prefixes.
-  DE and NL stay unprefixed at the root (no reason to pay the migration cost).
+### Now per-country, because of the network model
+- `TIER_TERMS` (German partners earn differently; €679/month is a Dutch number)
+- `ADS_COST_PER_JOB`
+- `prices` — **gross incl. MwSt for DE** (see §7)
+- `BIZ_ID`, `areaServed`, `paymentAccepted`, `availableLanguage`
+- `serviceArea` centre + radius (a 75 km circle around Bussum is meaningless in NRW)
+- `reviewCount` / `rating` — **start at zero per country.** Reusing the Dutch
+  `reviewCount: '10'` in German schema is a structured-data violation and risks
+  a manual action.
+- Recruitment target cities — derived, not hardcoded
 
-### Routing / URL slugs
-Dutch slugs must not survive into German. `/steden/koeln` is wrong; it must be
-`/staedte/koeln`. Slug map per site, defined in config:
+### Slug map
+Dutch slugs must not survive into German.
 
 | NL | BE-NL | BE-FR | DE |
 |---|---|---|---|
@@ -140,226 +170,216 @@ Dutch slugs must not survive into German. `/steden/koeln` is wrong; it must be
 | `/diensten` | `/diensten` | `/fr/services` | `/leistungen` |
 | `/merken` | `/merken` | `/fr/marques` | `/marken` |
 | `/prijzen` | `/prijzen` | `/fr/tarifs` | `/preise` |
-| `/contact` | `/contact` | `/fr/contact` | `/kontakt` |
-| `/veelgestelde-vragen` | idem | `/fr/faq` | `/haeufige-fragen` |
+| `/monteur-worden` | `/partner-worden` | `/fr/devenir-partenaire` | `/partner-werden` |
 | `/autosleutel-kwijt` | idem | `/fr/cle-voiture-perdue` | `/autoschluessel-verloren` |
+| `/contact` | `/contact` | `/fr/contact` | `/kontakt` |
+| — | — | — | `/impressum` (**new, legally required**) |
 
 ---
 
-## 5. Keyword & content strategy per market
+## 6. Technical blockers (from the code)
+
+| # | Finding | File | Impact under the network model |
+|---|---|---|---|
+| 1 | **Dispatch drops non-4-digit postcodes.** `parseWerkgebied` filters on `/^\d{4}(-\d{4})?$/`; `coversPostcode` compares 4-digit integers | `src/lib/crmJobs.ts:77-101` | **German postcodes are 5-digit. Every German partner's werkgebied would be silently discarded and no German job would ever route to anyone.** Under the network model dispatch *is* the product, so this moves from "a bug" to **critical path**. Belgium (4-digit) is unaffected. Needs country-aware parsing + a country column on werkgebied. |
+| 2 | `postcodeDigits` assumes Dutch format | `src/lib/crmJobs.ts` | same |
+| 3 | Payment is iDEAL-first | `admin/jobs/[id]/PaymentPanel.tsx`, `LocalBusinessSchema.tsx:95` | A German partner cannot take iDEAL — it does not exist there. **DE needs card/PayPal/SEPA, BE needs Bancontact (~60 % of Belgian online payments).** Now an operational blocker: the partner cannot get paid on site. |
+| 4 | `<html lang="nl">` hardcoded | `src/app/layout.tsx:123` | from config |
+| 5 | hreflang self-references `nl-NL` + `x-default` only | `steden/[citySlug]/page.tsx:185-191` | reciprocal cross-domain cluster across all four locales, or Google ignores it |
+| 6 | `geo.region: 'NL'`, `geo.placename: '…, Nederland'` hardcoded | `steden/[citySlug]/page.tsx:199-203` | from config |
+| 7 | `LocalBusinessSchema`: NL `areaServed`, Dutch description, Dutch provinces, Dutch My Maps, single `BIZ_ID` | `src/components/Schema/LocalBusinessSchema.tsx` | per-country `@id` or the three sites claim to be one business. Partner GBPs (§3) also need the city page's schema to agree with the listing's NAP. |
+| 8 | 22 hardcoded `autosleutel24.nl` strings in 17 files | grep | route through config |
+| 9 | 119 `nl-NL` references | grep | audit |
+| 10 | `reviewCount: '10'`, `rating: '5.0'` | `site.config.ts` | must not cross borders |
+| 11 | Placeholder `kvk` / `btw` / `iban`, flagged in the code as *"VERIFY BEFORE INVOICING"* | `site.config.ts` | **do not let this bug propagate into three countries** |
+| 12 | `thinPages.ts` noindex set is hand-maintained | `src/config/thinPages.ts` | Under the network model, indexability should be **derived from live coverage** — a city gets indexed when a partner covers it. The city page already reads technicians at request time (`findCityTechnician`, `arrivalWindow`), so the page itself is ready; the sitemap needs a build-time snapshot or ISR. Design decision to make, not a blocker. |
+| 13 | **Next.js 16.2.4** — middleware is `src/proxy.ts`; newer than my training data; `node_modules` not installed in this container | `package.json`, `AGENTS.md` | `npm install` and read `node_modules/next/dist/docs/` before I write routing/i18n code, per `AGENTS.md` |
+
+**The honest `arrivalWindow` behaviour is an asset here.** `steden/[citySlug]/page.tsx:215-230`
+already refuses to print an arrival time when no technician distance is known —
+so a German city page with no partner says nothing rather than lying. That is
+exactly the right default for a network that is still filling.
+
+---
+
+## 7. Legal & compliance
+
+### Germany — launch blockers
+1. **Impressum** (§5 DDG): legal name, form, address, phone, email, HRB,
+   USt-IdNr., named responsible person. Two clicks from every page. No route exists today.
+2. **Gross prices incl. 19 % MwSt.** `site.config.ts:56` ships
+   `exVatDisclaimer: 'excl. btw'`, rendered on four pages (`/regio/[regio]:211`,
+   `/autosleutel-laten-maken:188`, `/autosleutel-kopieren:186`,
+   `/renault-sleutelkaart…:156`). German B2C prices must be gross under the
+   Preisangabenverordnung. **A German price table is needed, not Dutch numbers
+   relabelled.**
+3. **Widerrufsrecht** (14 days) + the urgent-service exception: the customer must
+   expressly request immediate performance and acknowledge loss of the right.
+   **This is a change to the lead funnel, not just a legal page.**
+4. **Datenschutzerklärung** + TTDSG consent audit of `ConsentBanner`.
+5. **German VAT** — see §2. Depends on who contracts the consumer.
+6. **Scheinselbständigkeit** — §2. Partner agreement, not code.
+7. **Handwerksordnung — must verify, I will not guess.** Whether mobile auto-key
+   work requires Handwerkskammer registration (and whether it falls in Anlage A
+   as meisterpflichtig) decides who we are even allowed to recruit. **Get this
+   from a German Steuerberater or the HWK before recruiting. If I had to bet I'd
+   say it's not Anlage A, but a bet is not a basis for a recruitment campaign.**
+
+### Belgium
+1. Ondernemingsnummer (KBO/BCE) + Belgian BTW/TVA in the footer.
+2. Legal pages in **both** NL and FR on a `.be` domain.
+3. Prices incl. 21 % BTW. 14-day withdrawal + urgent-service exception.
+4. **Access to the profession — verify.** Flanders dropped the
+   bedrijfsbeheer requirement; Wallonia and Brussels retain access rules for
+   some trades. Affects who can be a partner in Liège/Charleroi vs Antwerpen.
+
+### Both
+Partner agreement needs: brand licence (for the GBP strategy in §3), commission
+and tier terms, decline-without-penalty, their own customers stay theirs,
+warranty allocation (who honours the 12-month warranty we advertise), insurance,
+data processing (they see customer data → GDPR processor terms).
+
+---
+
+## 8. Keywords
 
 **I will not invent search volumes.** `cities.ts` carries a real `nlSearches`
-field per city, sourced from Search Console/SEMrush. I have no DE/BE data and
-will not fill that field with numbers I made up — a fabricated volume would
-drive the P1/P2 priority decisions and the whole city roster. See §8 for what I
-need. Until then, DE/BE cities get `nlSearches: 0` and priority from population
-and competitive logic, explicitly marked as provisional.
+per city from Search Console/SEMrush; filling DE/BE rows with numbers I made up
+would silently drive the P1/P2/P3 priorities and the whole city roster. DE/BE
+cities get `nlSearches: 0` and provisional priority from population and
+proximity until there is an export. See §10.
 
-What I *can* give with confidence is the keyword **structure** — the head terms
-in each language, which is what the page templates and meta hang off:
+### Germany — consumer (Phase 3)
+`Autoschlüssel nachmachen` (head), `Autoschlüssel nachmachen lassen`,
+`Ersatzschlüssel Auto`, `Autoschlüssel verloren` (highest urgency and
+conversion), `Autoschlüssel verloren alle Schlüssel`,
+`Autoschlüssel programmieren`, `Transponder anlernen`,
+`Keyless Go Schlüssel nachmachen`, `Funkschlüssel`,
+`Auto aufschließen Notdienst`, `Schlüsseldienst Auto`,
+`mobiler Autoschlüsseldienst`, `Zündschloss reparieren`,
+`Autoschlüssel nachmachen Kosten` (feeds the price page).
 
-### Germany (de-DE)
-| Intent | Head term | Notes |
-|---|---|---|
-| Duplicate | `Autoschlüssel nachmachen` | primary money term |
-| Duplicate alt | `Autoschlüssel nachmachen lassen`, `Ersatzschlüssel Auto` | |
-| Lost | `Autoschlüssel verloren` | highest-urgency, highest-converting |
-| Lost (all keys) | `Autoschlüssel verloren alle Schlüssel` | |
-| Programming | `Autoschlüssel programmieren`, `Transponder anlernen` | |
-| Smart key | `Keyless Go Schlüssel nachmachen`, `Funkschlüssel` | |
-| Locked out | `Auto aufschließen Notdienst`, `Auto öffnen ohne Schlüssel` | |
-| Trade term | `Schlüsseldienst Auto`, `mobiler Autoschlüsseldienst` | |
-| Ignition | `Zündschloss reparieren` | |
-| Cost | `Autoschlüssel nachmachen Kosten` | top-of-funnel, feeds the price page |
+**Market note:** German Schlüsseldienst is a scam-plagued category with heavy
+consumer-protection coverage. Searchers screen for a fixed price before arrival,
+gross prices, an Impressum, a real address. Our existing "prijs vooraf"
+positioning is a genuine differentiator there in a way it is not in NL — lead
+with it, and it is also the argument that makes partners want the brand.
 
-**Critical market note:** "Schlüsseldienst" in Germany is a scam-plagued
-category with heavy consumer-protection press coverage. German searchers screen
-hard for: a fixed price *before* arrival, gross prices incl. MwSt, an Impressum,
-a real address, TÜV/handwerk-style credibility signals. Our existing
-"prijs vooraf" positioning is exactly right for this market — it is a
-differentiator in DE in a way it isn't in NL. Lead with it.
+### Germany — partner recruitment (Phase 1, the one that matters first)
+`Schlüsseldienst Partner werden`, `Autoschlüssel Aufträge`,
+`Aufträge für Schlüsseldienst`, `mehr Aufträge Autoschlüsseldienst`,
+`Franchise Schlüsseldienst`, `als Subunternehmer Autoschlüssel`.
 
 ### Belgium — Flanders (nl-BE)
-Dutch copy reused, with Belgian terminology corrections. Flemish searchers use
-different words and a Netherlands-Dutch page reads as foreign:
-- `nummerplaat` not `kenteken` (this matters — we have a whole
-  `/autosleutel-bestellen-op-kenteken` page and a `KentekenForm` component)
-- `inschrijvingsbewijs` not `kentekenbewijs`
-- `BTW-nummer` + `ondernemingsnummer` not `KvK`
-- `GSM` commonly used for mobile
-- `autosleutel bijmaken` works; `autosleutel namaken` also used
-- Prices: BE VAT is **21%**, NL is 21% too — same, but see §6 on display.
+Dutch copy reused with Flemish corrections: **`nummerplaat` not `kenteken`**
+(we have a whole `/autosleutel-bestellen-op-kenteken` page and a `KentekenForm`
+component built on that word), `inschrijvingsbewijs` not `kentekenbewijs`,
+`ondernemingsnummer` not `KvK`, `GSM` for mobile.
 
 ### Belgium — Wallonia/Brussels (fr-BE)
 `clé de voiture`, `double de clé de voiture`, `clé de voiture perdue`,
 `reprogrammation clé`, `serrurier automobile`, `ouverture de voiture`.
-Brussels is bilingual and must be served by both language versions.
+Brussels is bilingual and must be served by both.
 
-### City rosters (provisional, pending real volume data)
-- **BE**: Antwerpen, Gent, Brussel/Bruxelles, Charleroi, Liège, Brugge, Namur,
-  Leuven, Mons, Aalst, Mechelen, Hasselt, Kortrijk, Oostende, Genk, Sint-Niklaas,
-  Turnhout, Roeselare, Dendermonde, Beringen. Antwerpen/Gent/Brussel/Hasselt/
-  Turnhout are plausible day-one coverage from a Dutch base (Antwerpen is ~160 km
-  from Bussum — further than Maastricht, which we noindexed). **This is the
-  coverage question, not a content question.**
-- **DE**: the NRW cluster first — Köln, Düsseldorf, Duisburg, Essen, Dortmund,
-  Mönchengladbach, Krefeld, Aachen, Wuppertal, Bochum — because it is the
-  densest car market in Europe *and* the closest to the existing base. Berlin,
-  Hamburg, München, Frankfurt only once there is a technician there.
+### City rosters — provisional, driven by partner coverage not by population
+- **BE**: Antwerpen, Gent, Brussel/Bruxelles, Hasselt, Leuven, Mechelen,
+  Turnhout, Brugge, Kortrijk, Sint-Niklaas, Aalst, Genk (NL) + Liège, Charleroi,
+  Namur, Mons (FR).
+- **DE**: NRW first — Köln, Düsseldorf, Duisburg, Essen, Dortmund, Krefeld,
+  Mönchengladbach, Aachen, Wuppertal, Bochum. Densest car market in Europe and
+  closest to the existing base. Berlin/Hamburg/München/Frankfurt only once a
+  partner is there.
 
-**Hard rule, inherited from `thinPages.ts`: a city page ships indexable only
-where a technician actually drives. Everything else is `noindex, follow` from
-day one** — reachable, linked, ready to flip with one line when coverage
-arrives. This is the single highest-leverage SEO decision in the whole plan.
-
----
-
-## 6. Legal & compliance — blocking, and mostly Germany
-
-These are launch-blockers, not nice-to-haves. A German site missing these is
-exposed to `Abmahnung` (competitor cease-and-desist letters are an industry in
-Germany) and gets its Google Ads account suspended.
-
-### Germany
-1. **Impressum** — mandatory under §5 DDG (successor to §5 TMG). Needs: legal
-   name, legal form, address, phone, email, Handelsregister + HRB number if
-   applicable, USt-IdNr., and a named person responsible. Must be reachable in
-   two clicks from every page. **We have no `/impressum` route.**
-2. **Gross prices incl. MwSt — not optional.** `site.config.ts:56` ships
-   `exVatDisclaimer: 'excl. btw'`, rendered on at least four pages
-   (`/prijzen`, `/regio/[regio]:211`, `/autosleutel-laten-maken:188`,
-   `/autosleutel-kopieren:186`). B2C prices in Germany must be shown **gross,
-   incl. 19% MwSt**, under the Preisangabenverordnung. Shipping an "excl. btw"
-   price to German consumers is a textbook Abmahnung. The DE config needs a
-   gross price table — not the NL numbers with a different label.
-3. **Widerrufsrecht** (14-day withdrawal) + the service exception: for urgent
-   on-site work the customer must expressly request immediate performance and
-   acknowledge loss of the withdrawal right. This is a form/flow change in the
-   lead funnel, not just a legal page.
-4. **Datenschutzerklärung** — German-specific, and stricter in practice than the
-   Dutch `/privacybeleid`. Consent banner (`src/components/ConsentBanner`) must
-   be audited for TTDSG: no non-essential scripts before consent.
-5. **VAT registration**: either a German USt-IdNr. or OSS, depending on whether
-   on-site services make us locally established. **Accountant question, not mine.**
-6. `site.config.ts` currently carries a **placeholder KvK-derived BTW number and
-   a placeholder IBAN** — the file's own comments flag both as "VERIFY BEFORE
-   INVOICING". These must not propagate into a second and third country.
-
-### Belgium
-1. **Ondernemingsnummer (KBO/BCE)** + Belgian BTW/TVA number on every page footer.
-2. Legal pages in **both** NL and FR for a `.be` domain serving both regions.
-3. Belgian consumer law: 14-day withdrawal, same urgent-service exception logic.
-4. B2C prices shown incl. BTW (21%).
-
-### Both
-- Payments: `LocalBusinessSchema.tsx:95` lists `iDEAL` and the CRM payment panel
-  is iDEAL-first (`admin/jobs/[id]/PaymentPanel.tsx`). **BE needs Bancontact**
-  (~60%+ of Belgian online payments), **DE needs PayPal / SEPA / card** — Germans
-  have no iDEAL and low card usage. Mollie supports all of these, so this is
-  configuration + schema `paymentAccepted` per country, plus new options in the
-  monteur's payment panel.
+**Hard rule, inherited from `thinPages.ts`: a city page is indexable only where
+a partner actually drives. Everything else is `noindex, follow` from day one** —
+reachable, linked, one flag from going live. `thinPages.ts` documents nine NL
+cities beyond the serving radius that earned **zero impressions** and diluted the
+ones that earn clicks. Under the network model this rule gets *easier* to obey,
+because coverage is now a database fact rather than a judgement call.
 
 ---
 
-## 7. Technical findings that will bite us (found in the code)
+## 9. Phases
 
-| # | Finding | File | Fix |
-|---|---|---|---|
-| 1 | **Dispatch is hard-wired to 4-digit postcodes.** `parseWerkgebied` drops anything not matching `/^\d{4}(-\d{4})?$/`; `coversPostcode` compares 4-digit integers. | `src/lib/crmJobs.ts:77-101` | **BE is fine (4-digit). German postcodes are 5-digit — every German werkgebied range would be silently dropped and no German job would ever route.** Needs country-aware parsing + a `country` column on technician werkgebied. This is the #1 functional blocker for DE. |
-| 2 | `City.postcode` doc-comment assumes Dutch ranges | `src/config/cities.ts:5-13` | Same change as #1. |
-| 3 | `<html lang="nl">` hardcoded | `src/app/layout.tsx:123` | from config |
-| 4 | hreflang self-references only `nl-NL` + `x-default` | `steden/[citySlug]/page.tsx:185-191` | real reciprocal cross-domain cluster |
-| 5 | `geo.region: 'NL'`, `geo.placename: '…, Nederland'` hardcoded in city meta | `steden/[citySlug]/page.tsx:199-203` | from config |
-| 6 | `LocalBusinessSchema`: `areaServed: 'NL'`, Dutch `description`, NL-only `availableLanguage`, Dutch provinces in `areaServed`, `addressCountry` from NL config, `hasMap` → Dutch My Maps | `src/components/Schema/LocalBusinessSchema.tsx` | per-country schema config; **each country needs its own `BIZ_ID`** or the three sites claim to be one business |
-| 7 | 22 hardcoded `autosleutel24.nl` strings | across 17 files | route through `SITE_CONFIG.domain` |
-| 8 | `BLOCKED_COUNTRIES = {PL, IN}` blocks by Vercel geo on **all** pages | `src/proxy.ts:29` | harmless for DE/BE, but confirm no German/Belgian traffic is caught by proxy rules; the crawler allowlist already protects Googlebot |
-| 9 | `serviceArea` = 75 km radius around Bussum | `site.config.ts` | per-country centre + radius, or the German pages claim coverage from the Netherlands |
-| 10 | `reviewCount: '10'`, `rating: '5.0'` | `site.config.ts` | **must not be reused on DE/BE.** Reusing Dutch review counts in another country's schema is a structured-data violation and risks a manual action. Each country starts at zero and earns its own. |
-| 11 | **Next.js 16.2.4** — middleware is `src/proxy.ts`, not `middleware.ts`; this version is newer than my training data | `package.json`, `AGENTS.md` | Per `AGENTS.md` I must read `node_modules/next/dist/docs/` before writing routing/i18n code. **`node_modules` is not installed in this container — `npm install` first.** |
-| 12 | `prebuild` runs `scripts/build-catalog.mjs` | `package.json` | verify it is country-agnostic before three builds run it |
+**Phase 0 — foundation.** `SITE_ID` config split; `CITIES` filtered by country;
+per-country tiers/prices/schema/payments; **country-aware postcode dispatch
+(blocker #1)**; 22 hardcoded domains routed through config. NL output
+byte-identical, verified by diffing the built sitemap before and after.
 
----
+**Phase 1 — partner recruitment, both countries at once.** `/partner-werden`
+(DE) + `/partner-worden` and `/fr/devenir-partenaire` (BE), with the
+tier/commission/break-even maths localised and the recruitment city list derived
+from coverage gaps. Partner agreement drafted with the brand licence in it.
+B2B Google Ads — cheap, and the only fast channel. **This phase is what makes
+every later phase possible.**
 
-## 8. Phasing — what ships when
+**Phase 2 — Belgium consumer (`/nl`, then `/fr`).** Dutch copy + Flemish
+terminology pass, Bancontact, Belgian legal pages, reciprocal hreflang.
+Indexable only where partners cover. French: core funnel only, not the
+2,352-line blog.
 
-### Phase 0 — foundation (no public change, safe to merge)
-`src/config/sites/{nl,be,de}.ts` + `SITE_ID` switch; `CITIES` filtered by
-country; `lang` from config; all 22 hardcoded domains routed through config;
-per-country `BIZ_ID`, `areaServed`, `paymentAccepted`; country-aware postcode
-parsing (finding #1). **NL output byte-identical — verified by diffing the
-built sitemap before and after.** This is the only phase with any risk to the
-site that currently pays the bills, and it is designed to have none.
+**Phase 3 — Germany consumer.** Full German translation of the core funnel,
+**gross MwSt price table**, Impressum + Widerrufsrecht + Datenschutz, DE payment
+methods, NRW cluster, partner GBPs applied for as each partner signs.
 
-### Phase 1 — Belgium / Flanders (`autosleutel24.be`, `/nl`)
-Cheapest real revenue. Dutch copy + Flemish terminology pass, BE city rows,
-Bancontact, Belgian legal pages, `/nl` + reciprocal hreflang. **Indexable only
-for cities with real coverage; the rest `noindex, follow`.**
+**Phase 4 — depth.** German blog/kennisbank, brand pages per market, review
+acquisition per country, flip `noindex` cities as the network fills.
 
-### Phase 2 — Belgium / Wallonia (`/fr`)
-French translation of the core funnel only — home, 3 service pages, prices,
-contact, FAQ, covered cities. **Not** the 2,352-line blog. Brussels served
-bilingually.
-
-### Phase 3 — Germany (`autoschluessel24.de` or similar)
-German slug map, full translation of the core funnel, **gross MwSt price
-table**, Impressum + Widerrufsrecht + Datenschutz, DE payment methods, NRW city
-cluster, 5-digit postcode dispatch live, GBP application, Google Ads from day one
-(the only fast channel).
-
-### Phase 4 — depth
-German blog/kennisbank translation, brand pages per market, review acquisition,
-flip `noindex` cities as coverage grows.
-
-**Honest estimate:** Phase 0+1 is one focused working session. Phase 3 is not a
-10-minute job at any level of engineering skill — German legal copy and a gross
-price table are decisions about your business, and I should not invent either.
+**Honest estimate:** Phase 0 + Phase 1 is one focused session — and Phase 1 is
+the phase with the highest return per hour in this entire plan. Phase 3 is not a
+10-minute job at any skill level: a German gross price table and German legal
+copy are decisions about your business that I must not invent.
 
 ---
 
-## 9. What I need from you
+## 10. What I need from you
 
-Blocking — I cannot build correctly without these:
+**Answered so far:** German domain is `autoschluessel.de` — confirm whether it is
+`autoschluessel.de` (exact-match, excellent) or `autoschluessel24.de`, because
+it changes the brand name, the Impressum and every canonical. Model: leads to
+local technicians who become our branch — **so §2–§4 are rewritten around that.**
 
-1. **Domains.** Are `autosleutel24.be` and a German domain registered? German
-   has an umlaut problem: `autoschlüssel24.de` only works as punycode and is bad
-   for links and ads — recommend **`autoschluessel24.de`** (the standard German
-   "ue" transliteration). Tell me what you own or can register.
-2. **Germany: do you have, or can you get, a German address + phone + GBP?**
-   This single answer decides whether Phase 3 is a real local business or a
-   doorway site. If the answer is "not yet", I will build it ad-ready and
-   `noindex` on the city pages until it is — that is the correct call, not a
-   limitation.
-3. **Belgium: same question** — Belgian phone (+32), and does a monteur actually
-   drive to Antwerpen/Gent/Brussel today? If not, which cities, and from where?
-4. **German gross price table.** NL `transponder: 125` excl. btw. What are the
-   German consumer prices **incl. 19% MwSt**? Do not let me guess — German
-   price display is legally constrained and a wrong number is an Abmahnung.
-5. **Belgian prices incl. 21% BTW.** Same as NL, or different?
-6. **Legal identities:** Belgian ondernemingsnummer + BTW number; German legal
-   form, address, Handelsregister/HRB, USt-IdNr., and the responsible person for
-   the Impressum. Also: the current `kvk`/`btw`/`iban` in `site.config.ts` are
-   flagged in the code as placeholders — give me the real NL ones too so the
-   bug doesn't get copied three times.
-7. **Real keyword volumes for DE and BE.** A Keyword Planner or Ahrefs export
-   (city + term + volume, CSV) so `nlSearches` and the P1/P2/P3 priorities are
-   data, not my guess. Do you have Ahrefs/SEMrush access?
-8. **Target city lists** — or confirm you want my provisional rosters in §5.
+### Blocking
+1. **Belgian domain** — registered, or shall it be `autosleutel24.be`?
+2. **§2: who invoices the consumer in Germany?** Us (platform, as in NL) or the
+   partner (we sell the lead)? This single answer decides German VAT, the price
+   pages, the schema type, the Widerruf flow and the Scheinselbständigkeit
+   exposure. **Nothing in Phase 3 can be written correctly without it.**
+3. **German partner tier economics.** `€679` Pro / `€1,800` Premium /
+   8–18–25 % are Dutch numbers. Same, or different for DE/BE? And what is the
+   German `ADS_COST_PER_JOB` equivalent — if you know German Schlüsseldienst
+   CPCs, that number *is* the recruitment pitch.
+4. **German consumer prices incl. 19 % MwSt**, and Belgian incl. 21 % BTW.
+5. **Legal identities:** German legal form, address, HRB, USt-IdNr., responsible
+   person for the Impressum; Belgian ondernemingsnummer + BTW. Plus the **real**
+   NL `kvk`/`btw`/`iban` — the code flags all three as placeholders and I will
+   not copy a placeholder into two more countries.
+6. **Do you have any German or Belgian partners already, or warm contacts?**
+   Even one in NRW changes Phase 1 from cold outreach to a reference case.
+7. **Payments:** can your Mollie account enable Bancontact and German methods, or
+   is a second account needed per country? A partner who cannot take payment on
+   site cannot complete a job.
 
-Non-blocking but valuable:
-9. Existing German/French copy, if any (website, flyers, ad copy) — gives me
-   your voice instead of a translator's.
-10. Mollie account: can it enable Bancontact and German methods, or is a second
-    account needed per country?
-11. Who is reviewing the German copy? **I will produce native-quality German,
-    but a native speaker who knows the trade should sign off on the legal pages
-    and the price page before they go live.**
+### Needed soon, not blocking
+8. Real DE/BE keyword volumes (Keyword Planner or Ahrefs CSV) — do you have
+   Ahrefs or SEMrush access?
+9. Any existing German/French copy you have, so the translation carries your
+   voice rather than a translator's.
+10. Who reviews the German copy? I will write native-quality German, but the
+    legal pages and the price page should be signed off by a native speaker who
+    knows the trade.
+11. **Handwerksordnung / HWK answer (§7.7)** and the Wallonia access-to-profession
+    answer — from a German Steuerberater and a Belgian accountant. These decide
+    who we may recruit, so they gate Phase 1's outreach, not its build.
 
 ---
 
-## 10. First decision I need from you
+## 11. The two decisions that unblock me today
 
-**One repo + three Vercel builds via `SITE_ID`** (§4) — confirm, and I start on
-Phase 0, which touches NL only in ways that are provably invisible.
+1. **Confirm the `SITE_ID` architecture** (§5) → I start Phase 0, which touches
+   NL only in provably invisible ways.
+2. **Answer §10.2 (who invoices the German consumer)** → I can take Phase 1 all
+   the way through, because the partner page's pitch depends on whether we are
+   selling them jobs at an agreed price or selling them raw leads.
 
-And tell me the Phase 1 answer to question 3, because that decides whether
-Belgium launches with 5 indexable cities or 20.
+Everything else in §10 can arrive while I build.
