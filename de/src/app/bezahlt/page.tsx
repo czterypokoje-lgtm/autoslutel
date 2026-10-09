@@ -33,7 +33,7 @@ export default function BetaaldPage() {
           bedrag binnen is — u hoeft niets meer te doen.
         </p>
         <Link href="/" style={{ color: '#c2410c' }}>
-          Naar autosleutel24.nl
+          Zur Startseite
         </Link>
       </div>
     </main>

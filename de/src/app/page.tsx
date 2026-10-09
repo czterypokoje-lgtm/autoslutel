@@ -144,7 +144,7 @@ export default function HomePage() {
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "ImageObject",
-                "contentUrl": "https://www.autosleutel24.nl/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp",
+                "contentUrl": `${SITE_CONFIG.domain}/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp`,
                 "name": "Autosleutelspecialist van Autosleutel24 op locatie",
                 "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht, Amsterdam en Midden-Nederland door Autosleutel24.",
                 "contentLocation": {

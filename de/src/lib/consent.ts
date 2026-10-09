@@ -1,3 +1,4 @@
+import { SITE_CONFIG } from '@/config/site.config';
 /**
  * Consent state — replaces the iubenda Cookie Solution.
  *
@@ -174,12 +175,29 @@ export function applyConsent(state: ConsentState | null): void {
  * Microsoft Clarity records sessions and is not Consent Mode aware, so unlike
  * the Google tags it must not be loaded at all until the visitor agrees.
  */
-const CLARITY_ID = 'y9gjejwp8z';
+/*
+ * Clarity-Projekt dieser Seite.
+ *
+ * null heißt: nicht laden. Nach dem Kopieren stand hier die Projekt-ID der
+ * niederländischen Seite — deutsche Sitzungen wären in deren Aufzeichnungen
+ * gelandet und hätten beide Auswertungen unbrauchbar gemacht. Siehe den
+ * Kommentar an SITE_CONFIG.analytics.
+ */
+const CLARITY_ID: string | null = null;
 let clarityRequested = false;
 
-const PROD_HOSTNAMES = ['www.autosleutel24.nl', 'autosleutel24.nl'];
+/*
+ * Die eigene Produktionsdomain, aus der Konfiguration abgeleitet.
+ *
+ * Hier standen die niederländischen Hostnamen, also hätte Clarity auf
+ * autoschluessel24.de nie geladen — und wäre es nur der Hostname gewesen,
+ * hätten die Sitzungen im falschen Projekt gelegen.
+ */
+const SITE_HOST = new URL(SITE_CONFIG.domain).hostname.replace(/^www\./, '');
+const PROD_HOSTNAMES = [SITE_HOST, `www.${SITE_HOST}`];
 
 export function loadClarity(): void {
+  if (!CLARITY_ID) return;
   if (typeof window === 'undefined' || clarityRequested) return;
   if (!PROD_HOSTNAMES.includes(window.location.hostname)) return;
   if (document.getElementById('ms-clarity')) return;

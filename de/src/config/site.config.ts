@@ -98,6 +98,60 @@ export const SITE_CONFIG = {
 
   blobStorageDomain: 'https://omqnxprotjfbyqqq.public.blob.vercel-storage.com',
 
+  /*
+   * Messung — eigene Konten, nicht die niederländischen.
+   *
+   * Beim Kopieren der Seite kamen GTM-PRT75SWX, AW-18315813515 und die
+   * UET-ID 97270067 mit: die Konten der niederländischen Seite. Beide Fehler
+   * wären teuer gewesen. Die Ladeskripte waren auf
+   * window.location.hostname === 'autosleutel24.nl' abgefragt, also hätte auf
+   * autoschluessel24.de überhaupt nichts gefeuert — und in Deutschland sind
+   * Anzeigen der einzige schnelle Kanal, der Ausfall also genau dort, wo er
+   * zählt. Hätte man nur den Hostnamen getauscht, lägen deutsche Klicks und
+   * Conversions im niederländischen Konto und die Zuordnung wäre für beide
+   * Märkte falsch.
+   *
+   * null heißt: das Skript wird nicht geladen. Keine Messung ist richtig,
+   * solange kein eigenes Konto existiert; falsch gemessen ist schlimmer.
+   */
+  analytics: {
+    /** Eigener GTM-Container für Deutschland, z. B. 'GTM-XXXXXXX'. */
+    gtmId: null as string | null,
+    /** Eigene Google-Ads-Conversion-ID, z. B. 'AW-XXXXXXXXXX'. */
+    googleAdsId: null as string | null,
+    /** Eigene Microsoft-Advertising-UET-ID. */
+    bingUetId: null as string | null,
+    /*
+     * Eigener IndexNow-Schlüssel für diese Domain.
+     *
+     * Der Schlüssel muss unter der eigenen Domain als Textdatei liegen; der
+     * niederländische Schlüssel liegt auf autosleutel24.nl und wäre für
+     * autoschluessel24.de ungültig — die Einreichung würde abgelehnt. null
+     * heißt: nicht einreichen, bis es einen eigenen gibt.
+     */
+    indexNowKey: null as string | null,
+    /** GA4-Messstream dieser Seite, z. B. 'G-XXXXXXXXXX'. */
+    ga4Id: null as string | null,
+    /*
+     * Conversion-Aktionen dieser Seite, je 'AW-XXXXXXXXXX/Label'.
+     *
+     * Beim Kopieren kamen die niederländischen Labels mit — Click to call,
+     * WhatsApp-Klick und Formular-Lead. Das ist die gefährlichste der
+     * Mitnahmen: sie hätten funktioniert. Deutsche Anrufe und Formulare wären
+     * als niederländische Conversions gemeldet worden und hätten die
+     * Gebotsoptimierung des niederländischen Kontos auf Traffic trainiert, der
+     * nie ein niederländischer Kunde wird. Falsch gemessen ist teurer als
+     * nicht gemessen.
+     *
+     * null heißt: dieses Ereignis wird nicht gemeldet.
+     */
+    conversions: {
+      clickToCall: null as string | null,
+      whatsappClick: null as string | null,
+      leadForm: null as string | null,
+    },
+  },
+
   // ── Land und Sprache ──────────────────────────────────────
   siteId: 'de',
   country: 'DE' as const,

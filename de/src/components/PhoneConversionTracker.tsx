@@ -1,5 +1,6 @@
 'use client';
 import { useEffect } from 'react';
+import { SITE_CONFIG } from '@/config/site.config';
 import { captureAdClickIdFromUrl, makeWhatsAppRef, readAdClickId } from '@/lib/adClickId';
 
 declare global {
@@ -147,18 +148,21 @@ export default function PhoneConversionTracker() {
       // this call, or every tap will be counted twice.
       if (typeof window.gtag === 'function') {
         window.gtag('event', isTel ? 'click_to_call' : 'click_to_whatsapp', {
-          send_to: 'G-C4WR7TYCTV',
+          send_to: SITE_CONFIG.analytics.ga4Id ?? '',
           transport_type: 'beacon',
           ...details,
         });
       }
 
       // 2. Direct Google Ads conversion ping, counted as one tap (no value).
-      if (typeof window.gtag === 'function') {
+      //    Nur wenn für diese Seite eine eigene Conversion-Aktion hinterlegt
+      //    ist — siehe SITE_CONFIG.analytics.conversions.
+      const sendTo = isTel
+        ? SITE_CONFIG.analytics.conversions.clickToCall
+        : SITE_CONFIG.analytics.conversions.whatsappClick;
+      if (sendTo && typeof window.gtag === 'function') {
         window.gtag('event', 'conversion', {
-          send_to: isTel
-            ? 'AW-18315813515/FoiPCLLl7NocEIvF1J1E' // Click to call
-            : 'AW-18315813515/eQj3CNPYoYwdEIvF1J1E', // WhatsApp click
+          send_to: sendTo,
           transport_type: 'beacon',
         });
       }

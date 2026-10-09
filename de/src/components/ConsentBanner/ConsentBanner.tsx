@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useSyncExternalStore } from 'react';
+import { SITE_CONFIG } from '@/config/site.config';
 import Link from 'next/link';
 import styles from './ConsentBanner.module.css';
 import {
@@ -88,7 +89,7 @@ export default function ConsentBanner() {
     >
       <div className={styles.panel}>
         <p className={styles.title} id="consent-title">
-          Cookies op autosleutel24.nl
+          Cookies auf {SITE_CONFIG.domain.replace('https://', '')}
         </p>
         <p className={styles.text}>
           <span className={styles.full}>

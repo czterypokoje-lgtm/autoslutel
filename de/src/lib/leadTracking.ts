@@ -34,6 +34,7 @@
  */
 
 import { toE164NL } from '@/lib/phone';
+import { SITE_CONFIG } from '@/config/site.config';
 
 declare global {
   interface Window {
@@ -99,16 +100,19 @@ export function reportLeadConversion(lead: LeadConversion): void {
       // The Google Ads action "Website lead form - submitted". No value here:
       // the action's own default value (set in Google Ads) is the one source
       // of truth, the same for calls, WhatsApp and forms.
-      window.gtag('event', 'conversion', {
-        send_to: 'AW-18315813515/-RCqCNDYoYwdEIvF1J1E',
-        transport_type: 'beacon',
-      });
+      /* Nur mit eigener Conversion-Aktion — siehe SITE_CONFIG.analytics. */
+      if (SITE_CONFIG.analytics.conversions.leadForm) {
+        window.gtag('event', 'conversion', {
+          send_to: SITE_CONFIG.analytics.conversions.leadForm,
+          transport_type: 'beacon',
+        });
+      }
 
       // GA4 only, so GA4 can mark it a key event. The GTM container has no GA4
       // event tag for this; if one is ever added there, remove this call or
       // every form lead is counted twice. No personal data goes to GA4.
       window.gtag('event', 'generate_lead', {
-        send_to: 'G-C4WR7TYCTV',
+        send_to: SITE_CONFIG.analytics.ga4Id ?? '',
         lead_source: lead.source,
         transport_type: 'beacon',
       });

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { SITE_CONFIG } from '@/config/site.config';
 import sitemap from '../../sitemap';
 import { isAuthorized } from '@/lib/adminAuth';
 
@@ -19,10 +20,28 @@ export async function GET(request: Request) {
   const sitemapData = sitemap();
   const urls = sitemapData.map(item => item.url);
   
+  /*
+   * Host und Schlüssel dieser Domain, nicht der niederländischen.
+   *
+   * Nach dem Kopieren stand hier www.autosleutel24.nl mit dem dortigen
+   * Schlüssel. IndexNow prüft, ob der Schlüssel unter der angegebenen Domain
+   * liegt — deutsche Adressen unter dem niederländischen Host einzureichen
+   * wäre also eine abgelehnte Anfrage, und im besseren Fall eine, die
+   * Adressen für die falsche Seite meldet.
+   */
+  const key = SITE_CONFIG.analytics.indexNowKey;
+  if (!key) {
+    return NextResponse.json(
+      { error: 'Kein IndexNow-Schlüssel für diese Domain konfiguriert.' },
+      { status: 503 }
+    );
+  }
+
+  const host = new URL(SITE_CONFIG.domain).hostname;
   const payload = {
-    host: "www.autosleutel24.nl",
-    key: "3afd2ed80ce14931a7e74761f40741d6",
-    keyLocation: "https://www.autosleutel24.nl/3afd2ed80ce14931a7e74761f40741d6.txt",
+    host,
+    key,
+    keyLocation: `${SITE_CONFIG.domain}/${key}.txt`,
     urlList: urls
   };
   

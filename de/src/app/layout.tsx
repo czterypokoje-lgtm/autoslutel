@@ -143,6 +143,15 @@ import { GlobalHeader, GlobalFooter, GlobalStickyBar, GlobalWidgets } from '@/co
 import PhoneConversionTracker from '@/components/PhoneConversionTracker';
 import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 
+/*
+ * Der Hostname, auf dem Messung feuern darf.
+ *
+ * Aus der Konfiguration abgeleitet statt eingetippt: beim Kopieren der Seite
+ * stand hier 'autosleutel24.nl', und auf einer deutschen Domain hätte damit
+ * kein einziges Skript geladen.
+ */
+const SITE_HOST = new URL(SITE_CONFIG.domain).hostname.replace(/^www\./, '');
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang={SITE_CONFIG.htmlLang} className={`${ibmPlexSans.variable} ${chivo.variable}`}>
@@ -228,30 +237,44 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           tapping a customer's WhatsApp button counted as visitors and taps.
           The /admin path check is on all three loaders (GTM, Google Ads, UET).
         */}
-        <Script id="gtm-script">
-          {`
-            if ((window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') && !window.location.pathname.startsWith('/admin')) {
+        {/*
+          Nur wenn ein eigener deutscher Container konfiguriert ist. Hier stand
+          nach dem Kopieren GTM-PRT75SWX — der Container der niederländischen
+          Seite. Siehe den Kommentar an SITE_CONFIG.analytics.
+        */}
+        {SITE_CONFIG.analytics.gtmId && (
+          <Script id="gtm-script">
+            {`
+            if ((window.location.hostname === 'www.' + '${SITE_HOST}' || window.location.hostname === '${SITE_HOST}') && !window.location.pathname.startsWith('/admin')) {
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','GTM-PRT75SWX');
+              })(window,document,'script','dataLayer','${SITE_CONFIG.analytics.gtmId}');
             }
           `}
-        </Script>
+          </Script>
+        )}
 
         {/* Google Ads Standalone gtag.js (AW-18315813515) - Added to guarantee conversions bypassing GTM complexity */}
-        <Script id="google-ads-script" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=AW-18315813515" />
-        <Script id="google-ads-config">
-          {`
-            if ((window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') && !window.location.pathname.startsWith('/admin')) {
+        {SITE_CONFIG.analytics.googleAdsId && (
+          <Script
+            id="google-ads-script"
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.analytics.googleAdsId}`}
+          />
+        )}
+        {SITE_CONFIG.analytics.googleAdsId && (
+          <Script id="google-ads-config">
+            {`
+            if ((window.location.hostname === 'www.' + '${SITE_HOST}' || window.location.hostname === '${SITE_HOST}') && !window.location.pathname.startsWith('/admin')) {
               window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
-              // Prevent duplicate pageviews if GA4 in GTM already tracks them
-              gtag('config', 'AW-18315813515', { send_page_view: false, allow_enhanced_conversions: true });
+              gtag('config', '${SITE_CONFIG.analytics.googleAdsId}', { send_page_view: false, allow_enhanced_conversions: true });
             }
           `}
-        </Script>
+          </Script>
+        )}
         {/* End Google Tag Manager */}
 
         {/*
@@ -269,30 +292,34 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           function that already updates Google, so one banner decision drives
           both and they cannot disagree.
         */}
-        <Script id="uet-consent-default" strategy="beforeInteractive">
-          {`
-            window.uetq = window.uetq || [];
-            window.uetq.push('consent', 'default', { ad_storage: 'denied' });
-          `}
-        </Script>
-        <Script id="uet-tag">
-          {`
-            if ((window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') && !window.location.pathname.startsWith('/admin')) {
-              (function(w,d,t,u,o){
-                w[u]=w[u]||[],o.ts=(new Date).getTime();
-                var n=d.createElement(t);
-                n.src="https://bat.bing.net/bat.js?ti="+o.ti+("uetq"!=u?"&q="+u:""),
-                n.async=1,
-                n.onload=n.onreadystatechange=function(){
-                  var s=this.readyState;
-                  s&&"loaded"!==s&&"complete"!==s||(o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad"),n.onload=n.onreadystatechange=null)
-                };
-                var i=d.getElementsByTagName(t)[0];
-                i.parentNode.insertBefore(n,i);
-              })(window, document, "script", "uetq", { ti:"97270067", enableAutoSpaTracking:true });
-            }
-          `}
-        </Script>
+{SITE_CONFIG.analytics.bingUetId && (
+          <>
+          <Script id="uet-consent-default" strategy="beforeInteractive">
+            {`
+              window.uetq = window.uetq || [];
+              window.uetq.push('consent', 'default', { ad_storage: 'denied' });
+            `}
+          </Script>
+          <Script id="uet-tag">
+            {`
+              if ((window.location.hostname === 'www.' + '${SITE_HOST}' || window.location.hostname === '${SITE_HOST}') && !window.location.pathname.startsWith('/admin')) {
+                (function(w,d,t,u,o){
+                  w[u]=w[u]||[],o.ts=(new Date).getTime();
+                  var n=d.createElement(t);
+                  n.src="https://bat.bing.net/bat.js?ti="+o.ti+("uetq"!=u?"&q="+u:""),
+                  n.async=1,
+                  n.onload=n.onreadystatechange=function(){
+                    var s=this.readyState;
+                    s&&"loaded"!==s&&"complete"!==s||(o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad"),n.onload=n.onreadystatechange=null)
+                  };
+                  var i=d.getElementsByTagName(t)[0];
+                  i.parentNode.insertBefore(n,i);
+                })(window, document, "script", "uetq", { ti:"${SITE_CONFIG.analytics.bingUetId}", enableAutoSpaTracking:true });
+              }
+            `}
+          </Script>
+          </>
+        )}
         {/*
           GA4 (G-C4WR7TYCTV) is no longer loaded here directly — it's now
           configured as a "Google Tag" inside the GTM container itself
@@ -322,14 +349,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           exposure is a JS-disabled browser hitting a preview/localhost URL,
           which does not happen in practice for internal CRM testing.
         */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-PRT75SWX"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
+{SITE_CONFIG.analytics.gtmId && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${SITE_CONFIG.analytics.gtmId}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
+        )}
         {/* End Google Tag Manager (noscript) */}
         
         <GlobalHeader />
