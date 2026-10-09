@@ -7,7 +7,24 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/'],
+        /*
+         * `/winkel/zoeken` is blocked rather than left to its meta noindex.
+         *
+         * It takes nine filter parameters in any combination, so the number
+         * of distinct URLs it can produce is effectively unbounded — and
+         * every one of them is the same catalogue sliced differently. A
+         * noindex only works after the page has been crawled, so it would
+         * spend the crawl budget first and decline to index afterwards. The
+         * canonical on those pages already points at /winkel, so nothing is
+         * lost by never fetching them.
+         *
+         * `/winkel/mandje` and `/winkel/bestelling/` are per-visitor and have
+         * nothing to index at all.
+         *
+         * `/winkel` itself and the article pages stay open: those are the
+         * pages meant to rank.
+         */
+        disallow: ['/api/', '/winkel/zoeken', '/winkel/mandje', '/winkel/bestelling/'],
         // NOTE: /_next/ is intentionally NOT blocked — Google needs JS chunks for rendering
       },
       {
@@ -71,7 +88,7 @@ export default function robots(): MetadataRoute.Robots {
           'Bytespider',
         ],
         allow: '/',
-        disallow: ['/api/'],
+        disallow: ['/api/', '/winkel/zoeken', '/winkel/mandje', '/winkel/bestelling/'],
       },
     ],
     // Sitemaps — main sitemap (which now includes all dynamic images)

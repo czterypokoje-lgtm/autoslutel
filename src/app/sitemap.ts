@@ -8,6 +8,8 @@ import { isNoindexBrand, isNoindexCity } from '@/config/thinPages';
 import { SERVICE_REGIONS } from '@/config/regions';
 import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
 import { lastModifiedFor } from '@/lib/contentDates';
+import { getProducts, shelfPrice } from '@/lib/catalog';
+import { isSellable } from '@/lib/finder';
 import fs from 'fs';
 import path from 'path';
 
@@ -47,7 +49,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/algemene-voorwaarden',
     // B2B and recruitment. Different audience and different queries from the
     // consumer pages, so they earn their own entries rather than riding along.
-    '/zakelijk'
+    '/zakelijk',
+    // The onderdelen shop. Its own entrance, and the only page of the shop
+    // that is a hub rather than a filtered view of one.
+    '/winkel'
   ].map(p => ({
     url: `${base}${p}`,
     lastModified: lastModifiedFor(
@@ -143,6 +148,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  /*
+   * 8. Shop articles
+   *
+   * Only the ones that can actually be bought: sellable (a part, not a key
+   * that needs programming) and priced. An article with no buying price
+   * renders "prijs op aanvraag" and is a thin page with nothing to convert.
+   *
+   * The ~700 key pages are deliberately NOT listed. They are indexable and
+   * useful, but they are a visit rather than a purchase, and promoting 700 of
+   * them would put them in front of /merken/<merk>-autosleutel-bijmaken —
+   * which is the page that is supposed to win that search.
+   */
+  const shopPages = getProducts('public')
+    .filter((p) => isSellable(p) && shelfPrice(p.costPrice) != null)
+    .map((p) => ({
+      url: `${base}/winkel/artikel/${p.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      /* Below the service pages: a €9 housing is worth less than a job, and
+         the shop exists partly to feed the service funnel. */
+      priority: 0.5,
+      images: p.image ? [`${base}${p.image}`] : undefined,
+    }));
+
   return [
     ...corePages,
     ...servicePages,
@@ -150,6 +179,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...cityPages,
     ...brandPages,
     ...zakelijkPages,
-    ...blogPages
+    ...blogPages,
+    ...shopPages
   ];
 }

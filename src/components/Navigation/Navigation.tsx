@@ -168,6 +168,7 @@ export default function Navigation() {
           </div>
 
 
+          <Link href="/winkel" className={styles.navLink}>Winkel</Link>
           <Link href="/steden" className={styles.navLink}>Steden</Link>
           <Link href="/prijzen" className={styles.navLink}>Prijzen</Link>
           <Link href="/blog" className={styles.navLink}>Blog &amp; Advies</Link>
@@ -238,6 +239,7 @@ export default function Navigation() {
             </div>
 
             <div className={styles.mobileDivider} />
+            <Link href="/winkel" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Winkel</Link>
             <Link href="/steden" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Steden</Link>
             <Link href="/prijzen" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Prijzen</Link>
             <Link href="/blog" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Blog &amp; Advies</Link>
