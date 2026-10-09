@@ -94,6 +94,29 @@ export const DE_SITE = {
    * front of a German consumer is the textbook Abmahnung in this category.
    */
   vat: { rate: 19, pricesAreGross: true },
+  geoRegion: 'DE',
+  countryName: 'Deutschland',
+  ogLocale: 'de_DE',
+  /* German, and Dutch because the office behind the network speaks it. No
+     English claim until somebody is actually on the phone in English. */
+  availableLanguage: ['de', 'nl'],
+  /* The Dutch My Maps shows a Dutch service area. Germany gets its own or none. */
+  serviceAreaMapUrl: null,
+  schemaDescription:
+    'Mobiler Autoschlüssel-Service für alle Marken und Modelle. Autoschlüssel nachmachen, Transponder programmieren, Keyless-Go-Schlüssel anlernen und Fahrzeuge schadenfrei öffnen — unser Partner kommt zu Ihrem Fahrzeug in Berlin, Hamburg, München und Frankfurt am Main.',
+  /*
+   * The four cities with a partner, and only those.
+   *
+   * areaServed is a claim about where somebody can actually come out, so it
+   * tracks the partner network rather than the ambition. Köln and Düsseldorf
+   * belong here the day a partner there does.
+   */
+  areaServedCities: [
+    { name: 'Berlin', sameAs: 'https://en.wikipedia.org/wiki/Berlin' },
+    { name: 'Hamburg', sameAs: 'https://en.wikipedia.org/wiki/Hamburg' },
+    { name: 'München', sameAs: 'https://en.wikipedia.org/wiki/Munich' },
+    { name: 'Frankfurt am Main', sameAs: 'https://en.wikipedia.org/wiki/Frankfurt' },
+  ],
   /** USt-IdNr.: DE + 9 digits. */
   vatNumberPattern: '^DE\\d{9}$',
   /*

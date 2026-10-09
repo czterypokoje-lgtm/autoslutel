@@ -182,23 +182,32 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
       city.customMetaDesc ||
         `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} ter plaatse, dag en nacht. Prijs vooraf. Bel nu!`
     ),
+    /*
+     * Canonical only, no alternates.
+     *
+     * A cluster is for one page in several languages, and a city page is not
+     * that: /steden/utrecht and /staedte/berlin are two different cities, not
+     * two translations of each other. This used to list the page as its own
+     * 'nl-NL' and 'x-default', which said nothing; the thing to avoid is
+     * wiring Utrecht to Berlin because both happen to be "the city page".
+     */
     alternates: {
       canonical: pageUrl,
-      languages: {
-        'nl-NL': pageUrl,
-        'x-default': pageUrl,
-      },
     },
     openGraph: {
       type: 'website',
+      /* A page-level openGraph block replaces the root layout's rather than
+         merging into it, so without this the city pages were the only pages on
+         the site shipping no og:locale at all. */
+      locale: SITE_CONFIG.ogLocale,
       url: pageUrl,
       title: city.customMetaTitle || cityTitle(city.city),
       description: `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Bel: ${SITE_CONFIG.phone}`,
       images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
     },
     other: {
-      'geo.region': 'NL',
-      'geo.placename': `${city.city}, Nederland`,
+      'geo.region': SITE_CONFIG.geoRegion,
+      'geo.placename': `${city.city}, ${SITE_CONFIG.countryName}`,
       'geo.position': `${city.geo.lat};${city.geo.lng}`,
       'ICBM': `${city.geo.lat}, ${city.geo.lng}`,
     },

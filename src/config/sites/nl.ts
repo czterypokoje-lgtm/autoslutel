@@ -6,6 +6,16 @@
 // written to match this file, and be.ts and de.ts must satisfy it.
 // ============================================================
 
+/*
+ * Relative, not '@/config/myMaps'.
+ *
+ * next.config.ts imports site.config.ts (for the blob-storage rewrite), and
+ * Next transpiles the config file without the '@/' path alias — an aliased
+ * import anywhere in this file's graph fails the whole build with
+ * "Cannot find module". Everything reachable from a site config stays on
+ * relative paths.
+ */
+import { MY_MAPS_VIEWER_URL } from '../myMaps';
 import type { SiteConfig } from './types';
 
 export const NL_SITE = {
@@ -84,6 +94,52 @@ export const NL_SITE = {
    * carries its own numbers rather than these with a different label.
    */
   vat: { rate: 21, pricesAreGross: false },
+  geoRegion: 'NL',
+  countryName: 'Nederland',
+  ogLocale: 'nl_NL',
+  availableLanguage: ['nl', 'en'],
+  /* The service-area map the site embeds, not a pin on the head office. */
+  serviceAreaMapUrl: MY_MAPS_VIEWER_URL,
+  schemaDescription:
+    'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Binnen 30-60 min ter plaatse in Utrecht, Noord-Holland, Zuid-Holland, Gelderland en Flevoland, 24/7.',
+  /*
+   * Kept in sync with the real Google Business Profile service area, plus a
+   * handful of extra cities the office serves but hasn't added to GBP yet
+   * (Houten, Maarssen, Leusden, IJsselstein, Vianen, Woerden, Alphen aan den
+   * Rijn) — those stay rather than understating real coverage; the office is
+   * adding them to GBP separately. Rotterdam and Alkmaar are real stationed
+   * coverage, not just Bussum-radius reach.
+   */
+  areaServedCities: [
+    { name: 'Utrecht', sameAs: 'https://en.wikipedia.org/wiki/Utrecht' },
+    { name: 'Amsterdam', sameAs: 'https://en.wikipedia.org/wiki/Amsterdam' },
+    { name: 'Almere' },
+    { name: 'Amersfoort' },
+    { name: 'Hilversum' },
+    { name: 'Nieuwegein' },
+    { name: 'Houten' },
+    { name: 'Zeist' },
+    { name: 'Maarssen' },
+    { name: 'Amstelveen' },
+    { name: 'Diemen' },
+    { name: 'Naarden' },
+    { name: 'Weesp' },
+    { name: 'Leusden' },
+    { name: 'Baarn' },
+    { name: 'Soest' },
+    { name: 'IJsselstein' },
+    { name: 'Vianen' },
+    { name: 'Woerden' },
+    { name: 'Alphen aan den Rijn' },
+    { name: 'Bussum' },
+    { name: 'Huizen' },
+    { name: 'Zeewolde' },
+    { name: 'Bilthoven' },
+    { name: 'Den Haag', sameAs: 'https://en.wikipedia.org/wiki/The_Hague' },
+    { name: 'Amsterdam-Zuid' },
+    { name: 'Rotterdam', sameAs: 'https://en.wikipedia.org/wiki/Rotterdam' },
+    { name: 'Alkmaar' },
+  ],
   /** Shape of a valid VAT id here — guards printing a placeholder on an invoice. */
   vatNumberPattern: '^NL\\d{9}B\\d{2}$',
   /** Drives schema paymentAccepted and the monteur's payment panel. */

@@ -1,6 +1,5 @@
 import { SITE_CONFIG } from '@/config/site.config';
 import { BIZ_ID, serviceRegionNodes } from '@/utils/schema';
-import { MY_MAPS_VIEWER_URL } from '@/config/myMaps';
 
 export default function LocalBusinessSchema() {
   const localBusinessSchema = {
@@ -9,7 +8,7 @@ export default function LocalBusinessSchema() {
     '@id': BIZ_ID,
     name: SITE_CONFIG.name,
     alternateName: 'Autosleutel24',
-    description: 'Professionele mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key bijmaken en auto openen. Binnen 30-60 min ter plaatse in Utrecht, Noord-Holland, Zuid-Holland, Gelderland en Flevoland, 24/7.',
+    description: SITE_CONFIG.schemaDescription,
     url: SITE_CONFIG.domain,
     logo: {
       '@type': 'ImageObject',
@@ -36,11 +35,13 @@ export default function LocalBusinessSchema() {
       '@type': 'ContactPoint',
       telephone: SITE_CONFIG.phoneTel,
       contactType: 'customer service',
-      areaServed: 'NL',
-      availableLanguage: ['nl', 'en'],
+      areaServed: SITE_CONFIG.country,
+      availableLanguage: SITE_CONFIG.availableLanguage,
     },
     // The service-area map the site embeds, not a pin on the head office.
-    hasMap: MY_MAPS_VIEWER_URL,
+    // Omitted entirely on a site that has no map of its own rather than
+    // pointing a German visitor at a map of the Dutch service area.
+    ...(SITE_CONFIG.serviceAreaMapUrl ? { hasMap: SITE_CONFIG.serviceAreaMapUrl } : {}),
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
@@ -50,49 +51,26 @@ export default function LocalBusinessSchema() {
       },
     ],
     /*
-     * Kept in sync with the real Google Business Profile service area, plus
-     * a handful of extra cities the office serves but hasn't added to GBP
-     * yet (Houten, Maarssen, Leusden, IJsselstein, Vianen, Woerden, Alphen
-     * aan den Rijn) — those stay rather than understating real coverage;
-     * the office is adding them to GBP separately.
+     * The regions first: one statement of where the business works, shared
+     * with every Service node. Then the cities.
+     *
+     * A name can appear in both lists, and that is deliberate rather than a
+     * duplicate to clean up. Utrecht is a province and a city, Berlin and
+     * Hamburg are a Bundesland and a city, and "we serve the province of
+     * Utrecht" is a different claim from "we serve the city of Utrecht" —
+     * collapsing them would quietly drop the larger one. The @type tells them
+     * apart, which is what it is for.
      */
     areaServed: [
-      // The provinces first: one statement of where the business works, shared with every Service node.
       ...serviceRegionNodes(),
-      { '@type': 'City', 'name': 'Utrecht', 'sameAs': 'https://en.wikipedia.org/wiki/Utrecht' },
-      { '@type': 'City', 'name': 'Amsterdam', 'sameAs': 'https://en.wikipedia.org/wiki/Amsterdam' },
-      { '@type': 'City', 'name': 'Almere' },
-      { '@type': 'City', 'name': 'Amersfoort' },
-      { '@type': 'City', 'name': 'Hilversum' },
-      { '@type': 'City', 'name': 'Nieuwegein' },
-      { '@type': 'City', 'name': 'Houten' },
-      { '@type': 'City', 'name': 'Zeist' },
-      { '@type': 'City', 'name': 'Maarssen' },
-      { '@type': 'City', 'name': 'Amstelveen' },
-      { '@type': 'City', 'name': 'Diemen' },
-      { '@type': 'City', 'name': 'Naarden' },
-      { '@type': 'City', 'name': 'Weesp' },
-      { '@type': 'City', 'name': 'Leusden' },
-      { '@type': 'City', 'name': 'Baarn' },
-      { '@type': 'City', 'name': 'Soest' },
-      { '@type': 'City', 'name': 'IJsselstein' },
-      { '@type': 'City', 'name': 'Vianen' },
-      { '@type': 'City', 'name': 'Woerden' },
-      { '@type': 'City', 'name': 'Alphen aan den Rijn' },
-      { '@type': 'City', 'name': 'Bussum' },
-      { '@type': 'City', 'name': 'Huizen' },
-      { '@type': 'City', 'name': 'Zeewolde' },
-      { '@type': 'City', 'name': 'Bilthoven' },
-      { '@type': 'City', 'name': 'Den Haag', 'sameAs': 'https://en.wikipedia.org/wiki/The_Hague' },
-      { '@type': 'City', 'name': 'Amsterdam-Zuid' },
-      // Real technician coverage, not just the Bussum-radius reach: the
-      // office confirmed staff actually stationed in these two on top of
-      // Den Haag and Amsterdam above.
-      { '@type': 'City', 'name': 'Rotterdam', 'sameAs': 'https://en.wikipedia.org/wiki/Rotterdam' },
-      { '@type': 'City', 'name': 'Alkmaar' },
+      ...SITE_CONFIG.areaServedCities.map((c) => ({
+        '@type': 'City',
+        name: c.name,
+        ...(c.sameAs ? { sameAs: c.sameAs } : {}),
+      })),
     ],
     priceRange: '€€',
-    paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'iDEAL', 'Pin'],
+    paymentAccepted: SITE_CONFIG.paymentAccepted,
     currenciesAccepted: 'EUR',
     /*
      * No aggregateRating.

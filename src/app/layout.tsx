@@ -12,6 +12,7 @@ import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
 
 
 import { SITE_CONFIG } from '@/config/site.config';
+import { alternatesForPath } from '@/config/sites/hreflang';
 
 /*
  * The two fonts the stylesheet actually uses, self-hosted.
@@ -52,14 +53,18 @@ export const metadata: Metadata = {
   description: `Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!`,
   alternates: {
     canonical: SITE_CONFIG.domain,
-    languages: {
-      'nl-NL': SITE_CONFIG.domain,
-      'x-default': SITE_CONFIG.domain,
-    },
+    /*
+     * The home page is the one page that genuinely is the same page in three
+     * languages, so it gets a real cluster. alternatesForPath only lists sites
+     * whose config is finished, which today is the Netherlands alone — so this
+     * emits exactly what the hand-written map emitted, and Germany adds itself
+     * the day its config is filled in rather than when somebody remembers.
+     */
+    languages: alternatesForPath(''),
   },
   openGraph: {
     type: 'website',
-    locale: 'nl_NL',
+    locale: SITE_CONFIG.ogLocale,
     url: SITE_CONFIG.domain,
     siteName: SITE_CONFIG.name,
     title: 'Autosleutel Bijmaken & Programmeren | Mobiele Specialist 24/7',
@@ -120,7 +125,7 @@ import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl" className={`${ibmPlexSans.variable} ${chivo.variable}`}>
+    <html lang={SITE_CONFIG.htmlLang} className={`${ibmPlexSans.variable} ${chivo.variable}`}>
       <head>
         {/*
           ── CONSENT MODE v2 DEFAULTS ──

@@ -60,6 +60,27 @@ export interface SiteConfig {
   /** Leading digits of a postcode here: 4 in NL/BE, 5 in DE. */
   readonly postcodeDigits: 4 | 5;
   readonly vat: { readonly rate: number; readonly pricesAreGross: boolean };
+  /** Value for the `geo.region` meta tag: an ISO country or region code. */
+  readonly geoRegion: string;
+  /** The country's name in this site's own language, for `geo.placename`. */
+  readonly countryName: string;
+  /** Open Graph locale, e.g. nl_NL. */
+  readonly ogLocale: string;
+  /** Languages a customer can be served in here, for schema availableLanguage. */
+  readonly availableLanguage: readonly string[];
+  /** The service-area map this site embeds, or null when it has none yet. */
+  readonly serviceAreaMapUrl: string | null;
+  /** The business description in the LocalBusiness node, in this site's language. */
+  readonly schemaDescription: string;
+  /**
+   * The cities named in schema `areaServed`, on top of the regions.
+   *
+   * Hand-curated rather than derived from CITIES, because this list answers
+   * "where does the Google Business Profile say we work" and CITIES answers
+   * "what pages exist" — they are close but they are not the same question,
+   * and the GBP one is the one a crawler should be told.
+   */
+  readonly areaServedCities: readonly { readonly name: string; readonly sameAs?: string }[];
   /** Source for a RegExp that a valid VAT id here must match. */
   readonly vatNumberPattern: string;
   readonly paymentAccepted: readonly string[];

@@ -65,6 +65,17 @@ export const BE_SITE = {
   /** Belgian postcodes are four digits, like Dutch ones — dispatch works as-is. */
   postcodeDigits: 4,
   vat: { rate: 21, pricesAreGross: true },
+  geoRegion: 'BE',
+  countryName: 'België',
+  ogLocale: 'nl_BE',
+  /* Dutch and French: Brussels is bilingual and neither is a fallback. */
+  availableLanguage: ['nl', 'fr'],
+  serviceAreaMapUrl: null,
+  schemaDescription:
+    'Mobiele autosleutelspecialist voor alle merken en modellen. Autosleutel bijmaken, transponder programmeren, smart key inleren en auto openen zonder schade — onze partner komt naar uw voertuig.',
+  /* Empty until there are Belgian partners: areaServed is a claim about where
+     somebody can come out, not a list of cities we would like to serve. */
+  areaServedCities: [],
   /** Belgian BTW/TVA: BE + 0 + 9 digits. */
   vatNumberPattern: '^BE0\\d{9}$',
   /* Bancontact is the default way Belgians pay. iDEAL is not used there. */
