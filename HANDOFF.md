@@ -170,7 +170,9 @@ URL pattern per make/model/year, account linking, reseller terms, referrals.
 **Security, before sharing any link.**
 
 1. Rotate the Supabase **service_role key** — it was pasted into a chat.
-2. Change the CRM password for `info@autosleutel24.nl`; it is still `123456`.
+2. Change the CRM password for `info@autosleutel24.nl` — the current one is weak.
+   Its literal value was previously written out here while this repository was
+   public, so treat it as compromised rather than merely guessable.
 
 **Blocking the friend's access.** The preview deploy is current but Vercel
 **Deployment Protection** returns Vercel's own login page — the "No Vercel

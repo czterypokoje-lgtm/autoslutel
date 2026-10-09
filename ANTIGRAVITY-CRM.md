@@ -146,9 +146,11 @@ npx next start -p 3100 -H 0.0.0.0     # then /admin on a phone
 
 ## Known problems to fix early
 
-1. **The CRM password is `123456`** for `info@autosleutel24.nl`. The Supabase
-   anon key is public by design, so anyone can try that against the live auth
-   endpoint. This is the most urgent item in the whole project.
+1. **The CRM password for `info@autosleutel24.nl` is weak and must be rotated.**
+   The Supabase anon key is public by design, so anyone can try a guess against
+   the live auth endpoint. This is the most urgent item in the whole project.
+   The literal value used to be written out here, in a repository that was
+   public — treat the old password as compromised, not merely weak.
 2. **The `SUPABASE_SERVICE_ROLE_KEY` was pasted into a chat.** It bypasses
    every policy. Rotate it and update Vercel.
 3. There is no audit trail: "who changed this lead" is answerable from the

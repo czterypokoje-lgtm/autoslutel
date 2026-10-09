@@ -59,8 +59,9 @@ database, full stop.
 From `HANDOFF.md` §7, still true unless someone confirms otherwise —
 **check before assuming fixed**:
 
-1. CRM password for `info@autosleutel24.nl` was `123456` against a public
-   Supabase anon key.
+1. CRM password for `info@autosleutel24.nl` was weak, against a public Supabase
+   anon key. Its literal value was written out in three tracked files while this
+   repository was public, so treat the old password as compromised.
 2. `SUPABASE_SERVICE_ROLE_KEY` was pasted into a chat and needs rotation.
 3. No audit trail on leads/jobs — "who changed this" is unanswerable.
 
