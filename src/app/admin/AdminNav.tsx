@@ -27,6 +27,9 @@ import {
 } from 'lucide-react';
 import styles from './admin.module.css';
 import type { CrmRole } from '@/lib/crmSession';
+import { DEFAULT_CRM_LOCALE, type CrmLocale } from '@/lib/crmLocale';
+import { t, type Phrase } from './_i18n';
+import { NAV } from './_i18n/shell';
 
 /**
  * The sidebar menu.
@@ -41,11 +44,11 @@ import type { CrmRole } from '@/lib/crmSession';
 
 interface Leaf {
   href: string;
-  label: string;
+  label: string | Phrase;
 }
 
 interface NavItem {
-  label: string;
+  label: string | Phrase;
   icon: LucideIcon;
   href?: string;
   /** Marks a screen whose content comes from the AI agent. */
@@ -103,40 +106,62 @@ const OFFICE_NAV: NavItem[] = [
   { label: 'Instellingen', icon: Settings, href: '/admin/instellingen' },
 ];
 
+/*
+ * The monteur's nav carries phrases rather than strings, because this is the
+ * one nav a German partner reads. The office nav above stays Dutch on purpose
+ * — see the note in _i18n/shell.ts.
+ */
 const MONTEUR_NAV: NavItem[] = [
-  { label: 'Overzicht', icon: LayoutDashboard, href: '/admin/overzicht' },
-  { label: 'Vandaag', icon: Truck, href: '/admin/vandaag' },
-  { label: 'Aanbod', icon: Handshake, href: '/admin/aanbod' },
-  { label: 'Mijn agenda', icon: CalendarDays, href: '/admin/mijn-agenda' },
-  { label: 'Mijn klussen', icon: History, href: '/admin/mijn-klussen' },
+  { label: NAV.overzicht, icon: LayoutDashboard, href: '/admin/overzicht' },
+  { label: NAV.vandaag, icon: Truck, href: '/admin/vandaag' },
+  { label: NAV.aanbod, icon: Handshake, href: '/admin/aanbod' },
+  { label: NAV.mijnAgenda, icon: CalendarDays, href: '/admin/mijn-agenda' },
+  { label: NAV.mijnKlussen, icon: History, href: '/admin/mijn-klussen' },
   {
-    label: 'Mijn bus',
+    label: NAV.mijnBus,
     icon: Package,
     children: [
-      { href: '/admin/mijn-bus', label: 'Wat erin ligt' },
-      { href: '/admin/bestellen', label: 'Onderdelen bestellen' },
+      { href: '/admin/mijn-bus', label: NAV.watErinLigt },
+      { href: '/admin/bestellen', label: NAV.onderdelenBestellen },
     ],
   },
   {
-    label: 'Geld',
+    label: NAV.geld,
     icon: Euro,
     children: [
-      { href: '/admin/mijn-saldo', label: 'Saldo' },
-      { href: '/admin/facturen', label: 'Facturen' },
-      { href: '/admin/uitgaven', label: 'Mijn uitgaven' },
+      { href: '/admin/mijn-saldo', label: NAV.saldo },
+      { href: '/admin/facturen', label: NAV.facturen },
+      { href: '/admin/uitgaven', label: NAV.mijnUitgaven },
     ],
   },
-  { label: 'Mijn vak', icon: BadgeCheck, href: '/admin/mijn-vak' },
-  { label: 'Profiel', icon: CircleUser, href: '/admin/mijn-profiel' },
+  { label: NAV.mijnVak, icon: BadgeCheck, href: '/admin/mijn-vak' },
+  { label: NAV.profiel, icon: CircleUser, href: '/admin/mijn-profiel' },
 ];
 
 function allHrefs(nav: NavItem[]): string[] {
   return nav.flatMap((i) => (i.children ? i.children.map((c) => c.href) : i.href ? [i.href] : []));
 }
 
-export default function AdminNav({ role }: { role: CrmRole | null }) {
+export default function AdminNav({
+  role,
+  locale = DEFAULT_CRM_LOCALE,
+}: {
+  role: CrmRole | null;
+  /** The reader's own language. Office screens pass nothing and get Dutch. */
+  locale?: CrmLocale;
+}) {
   const pathname = usePathname() ?? '';
   const nav = role === 'monteur' ? MONTEUR_NAV : OFFICE_NAV;
+  /** A nav label is either a plain Dutch string (office) or a phrase. */
+  const label = (value: string | Phrase) =>
+    typeof value === 'string' ? value : t(value, locale);
+  /*
+   * React keys and the open-group state key off this, not off the label.
+   * A translated label is not a stable identity: keying the open/closed state
+   * by it would collapse every group the moment somebody switches language.
+   */
+  const navKey = (item: NavItem) =>
+    item.href ?? item.children?.[0]?.href ?? label(item.label);
 
   /*
    * The most specific match wins, so /admin/jobs/nieuw lights up
@@ -159,22 +184,22 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
           const on = item.href === active;
           return (
             <Link
-              key={item.label}
+              key={navKey(item)}
               href={item.href!}
               aria-current={on ? 'page' : undefined}
               className={on ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}
             >
               <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
-              <span className={styles.navLabel}>{item.label}</span>
+              <span className={styles.navLabel}>{label(item.label)}</span>
               {item.ai && <span className={styles.navAi}>AI</span>}
             </Link>
           );
         }
 
         const childOn = item.children.some((c) => c.href === active);
-        const open = toggled[item.label] ?? childOn;
+        const open = toggled[navKey(item)] ?? childOn;
         return (
-          <div key={item.label}>
+          <div key={navKey(item)}>
             <button
               type="button"
               className={childOn ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}
@@ -183,11 +208,11 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
                 // The mobile drawer closes on any click inside it; opening a
                 // group is not a navigation, so keep the drawer open.
                 e.stopPropagation();
-                setToggled((t) => ({ ...t, [item.label]: !open }));
+                setToggled((prev) => ({ ...prev, [navKey(item)]: !open }));
               }}
             >
               <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
-              <span className={styles.navLabel}>{item.label}</span>
+              <span className={styles.navLabel}>{label(item.label)}</span>
               {open ? (
                 <ChevronDown size={16} className={styles.navChevron} aria-hidden="true" />
               ) : (
@@ -205,7 +230,7 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
                       aria-current={on ? 'page' : undefined}
                       className={on ? `${styles.navSubLink} ${styles.navSubLinkActive}` : styles.navSubLink}
                     >
-                      {c.label}
+                      {label(c.label)}
                     </Link>
                   );
                 })}

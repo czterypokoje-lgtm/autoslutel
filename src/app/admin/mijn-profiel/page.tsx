@@ -1,4 +1,5 @@
 import { requireCrmUser, OFFICE_ROLES } from '@/lib/crmSession';
+import { DEFAULT_CRM_LOCALE, isCrmLocale } from '@/lib/crmLocale';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../vandaag/vandaag.module.css';
 import pf from './profiel.module.css';
@@ -28,7 +29,7 @@ export default async function MijnProfielPage() {
   const { data, error } = await supabase
     .from('technicians')
     .select(
-      'id, name, phone, werkgebied, color, photo_url, online, online_since, active, employment_type, telegram_chat_id'
+      'id, name, phone, werkgebied, color, photo_url, online, online_since, active, employment_type, telegram_chat_id, locale'
     )
     .eq('user_id', user.id)
     .maybeSingle();
@@ -153,6 +154,9 @@ export default async function MijnProfielPage() {
         };
 
   const profile: Profile = {
+    /* Dutch when the column is missing, which is any database where 0073 has
+       not run yet — the screen still works, it just offers no choice. */
+    locale: isCrmLocale(data.locale) ? data.locale : DEFAULT_CRM_LOCALE,
     name: (data.name as string) ?? '',
     phone: (data.phone as string) ?? '',
     werkgebied: Array.isArray(data.werkgebied) ? (data.werkgebied as string[]) : [],

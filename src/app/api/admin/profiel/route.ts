@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { parseWerkgebied } from '@/lib/crmJobs';
+import { isCrmLocale } from '@/lib/crmLocale';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,6 +46,26 @@ export async function PATCH(request: Request) {
     supabase = await createSupabaseServerClient();
   } catch {
     return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
+  }
+
+  /*
+   * Language goes through its own function (crm_update_own_locale, 0073)
+   * rather than being added to crm_update_own_profile, because the profile
+   * form is not the only place it will be set — the shell gets a picker too,
+   * and a one-field call is what that needs. Sent only when present, so a
+   * form that does not carry it leaves the choice alone.
+   */
+  if ('locale' in body) {
+    if (!isCrmLocale(body.locale)) {
+      return NextResponse.json({ error: 'Onbekende taal' }, { status: 400 });
+    }
+    const { error: localeError } = await supabase.rpc('crm_update_own_locale', {
+      p_locale: body.locale,
+    });
+    if (localeError) {
+      console.error('Locale update failed:', localeError.message);
+      return NextResponse.json({ error: 'Opslaan mislukt' }, { status: 500 });
+    }
   }
 
   const { data, error } = await supabase.rpc('crm_update_own_profile', {

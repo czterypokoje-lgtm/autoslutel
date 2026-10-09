@@ -6,6 +6,10 @@ import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import { priceFor, type PricedCoverageRow } from '@/lib/capability';
 import { slotLabel } from '@/lib/crmJobs';
 import OfferList, { type OfferRow } from './OfferList';
+import { INTL_LOCALE } from '@/lib/crmLocale';
+import { getCrmLocale } from '@/lib/crmLocaleServer';
+import { translator } from '../_i18n';
+import { AANBOD } from '../_i18n/aanbod';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +28,8 @@ export const dynamic = 'force-dynamic';
 export default async function AanbodPage() {
   const user = await requireCrmUser('/admin/aanbod');
   const supabase = await createSupabaseServerClient();
+  const locale = await getCrmLocale();
+  const tr = translator(locale);
 
   const { data: me } = await supabase
     .from('technicians')
@@ -48,8 +54,8 @@ export default async function AanbodPage() {
   if (!me) {
     return (
       <>
-        <PageHead title="Aanbod" />
-        <Notice tone="bad">Je login is nog niet aan een monteur gekoppeld.</Notice>
+        <PageHead title={tr(AANBOD.title)} />
+        <Notice tone="bad">{tr(AANBOD.notLinked)}</Notice>
       </>
     );
   }
@@ -66,7 +72,7 @@ export default async function AanbodPage() {
   if (error) {
     return (
       <>
-        <PageHead title="Aanbod" />
+        <PageHead title={tr(AANBOD.title)} />
         <Notice tone="bad">
           {/does not exist|relation/i.test(error.message)
             ? 'Voer supabase/migrations/0013_technician_platform.sql uit.'
@@ -97,12 +103,12 @@ export default async function AanbodPage() {
           offeredAt: row.offered_at,
           logo: getBrandLogo(job.car_make),
           make: job.car_make ?? null,
-          car: [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ') || 'Onbekende auto',
-          work: scenario ? SCENARIO_INFO[scenario].label : 'Werk aan de sleutel',
+          car: [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ') || tr(AANBOD.unknownCar),
+          work: scenario ? SCENARIO_INFO[scenario].label : tr(AANBOD.keyWork),
           minutes: scenario ? SCENARIO_INFO[scenario].minutes : null,
           keyless: job.keyless,
-          when: `${new Intl.DateTimeFormat('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/Amsterdam' }).format(new Date(`${job.scheduled_date}T12:00:00Z`))} · ${slotLabel(job.slot_start, job.slot_end)}`,
-          where: [job.postcode, job.city].filter(Boolean).join(' ') || 'Onbekend',
+          when: `${new Intl.DateTimeFormat(INTL_LOCALE[locale], { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/Amsterdam' }).format(new Date(`${job.scheduled_date}T12:00:00Z`))} · ${slotLabel(job.slot_start, job.slot_end)}`,
+          where: [job.postcode, job.city].filter(Boolean).join(' ') || tr(AANBOD.unknown),
           /* Null when they never priced this car — the offer then says so
              rather than quoting them someone else's number. */
           price:
@@ -123,18 +129,11 @@ export default async function AanbodPage() {
 
   return (
     <>
-      <PageHead
-        title="Aanbod"
-        sub="Klussen die bij jouw vak en gebied passen. Wie het eerst accepteert, krijgt de klus. Nee zeggen kost niets."
-      />
+      <PageHead title={tr(AANBOD.title)} sub={tr(AANBOD.sub)} />
       <HelpSteps
-        steps={[
-          'Kijk naar de auto, de plaats en de tijd.',
-          'Accepteren: de klus staat meteen in Vandaag, met het volledige adres.',
-          'Geen tijd of niet jouw vak? Tik Nee, de volgende monteur krijgt hem.',
-        ]}
+        steps={[tr(AANBOD.step1), tr(AANBOD.step2), tr(AANBOD.step3)]}
       />
-      <OfferList offers={offers} />
+      <OfferList offers={offers} locale={locale} />
     </>
   );
 }

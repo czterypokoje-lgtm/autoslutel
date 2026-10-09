@@ -7,6 +7,7 @@ import Sidebar from './Sidebar';
 import MobileTabBar from './MobileTabBar';
 import TopBar from './TopBar';
 import { CRM_READONLY, READONLY_MESSAGE } from '@/lib/readonly';
+import { DEFAULT_CRM_LOCALE, isCrmLocale, type CrmLocale } from '@/lib/crmLocale';
 
 /**
  * The CRM shell.
@@ -60,17 +61,27 @@ export default async function AdminLayout({ children }: { children: React.ReactN
    * keep the initials; that is the fallback, not a failure.
    */
   let photoUrl: string | null = null;
+  /*
+   * The shell's language, from the person reading it.
+   *
+   * Read here, in the same row as the photo, rather than per screen: the CRM
+   * is one deployment for three countries, so this cannot come from SITE_ID
+   * the way the public site's language does. An office account has no
+   * technicians row and falls back to Dutch, which is what it should see.
+   */
+  let locale: CrmLocale = DEFAULT_CRM_LOCALE;
   if (user) {
     try {
       const supabase = await createSupabaseServerClient();
       const { data } = await supabase
         .from('technicians')
-        .select('photo_url')
+        .select('photo_url, locale')
         .eq('user_id', user.id)
         .maybeSingle();
       photoUrl = (data?.photo_url as string) ?? null;
+      if (isCrmLocale(data?.locale)) locale = data.locale;
     } catch {
-      // Unconfigured deployment, or no row: initials still work.
+      // Unconfigured deployment, or no row: initials and Dutch still work.
     }
   }
 
@@ -79,7 +90,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className={`crm ${styles.shell}`}>
       {user && (
-        <Sidebar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
+        <Sidebar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} locale={locale} />
       )}
       <div className={styles.column}>
         {user && (
@@ -89,7 +100,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           {children}
         </main>
       </div>
-      {isMonteur && <MobileTabBar />}
+      {isMonteur && <MobileTabBar locale={locale} />}
       {CRM_READONLY && (
         <div role="status" className={styles.readonlyBanner}>
           {READONLY_MESSAGE}

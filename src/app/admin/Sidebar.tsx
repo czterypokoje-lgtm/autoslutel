@@ -7,6 +7,9 @@ import styles from './admin.module.css';
 import AdminNav from './AdminNav';
 import SignOutButton from './SignOutButton';
 import type { CrmRole } from '@/lib/crmSession';
+import { DEFAULT_CRM_LOCALE, type CrmLocale } from '@/lib/crmLocale';
+import { t } from './_i18n';
+import { SHELL } from './_i18n/shell';
 
 /**
  * The sidebar, and the phone-width behaviour it needs and desktop never does.
@@ -25,12 +28,15 @@ export default function Sidebar({
   email,
   initials,
   photoUrl,
+  locale = DEFAULT_CRM_LOCALE,
 }: {
   role: CrmRole | null;
   email: string | null;
   initials: string;
   /** technicians.photo_url; null for an office account, which has no row. */
   photoUrl?: string | null;
+  /** The reader's own CRM language, from technicians.locale. */
+  locale?: CrmLocale;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -41,7 +47,7 @@ export default function Sidebar({
           type="button"
           className={styles.mobileMenuBtn}
           onClick={() => setOpen(true)}
-          aria-label="Menu openen"
+          aria-label={t(SHELL.menuOpenen, locale)}
         >
           <Menu size={20} strokeWidth={2} />
         </button>
@@ -53,18 +59,18 @@ export default function Sidebar({
           <span>
             Autosleutel<span className={styles.brand24}>24</span>
           </span>
-          <span className={styles.brandRole}>{role === 'monteur' ? 'Monteur' : 'CRM'}</span>
+          <span className={styles.brandRole}>{role === 'monteur' ? t(SHELL.monteurLabel, locale) : 'CRM'}</span>
         </Link>
 
         
         {/* Only office roles have the global search to Klanten */}
         {(role === 'owner' || role === 'kantoor') && (
-          <Link href="/admin/klanten" className={`${styles.iconGhost} ${styles.mobileOnly}`} title="Zoeken">
+          <Link href="/admin/klanten" className={`${styles.iconGhost} ${styles.mobileOnly}`} title={t(SHELL.zoeken, locale)}>
             <Search size={16} strokeWidth={1.9} aria-hidden="true" />
           </Link>
         )}
 
-        <Link href="/admin/mijn-profiel" className={`${styles.avatar} ${styles.mobileOnly}`} title={email ?? 'Profiel'}>
+        <Link href="/admin/mijn-profiel" className={`${styles.avatar} ${styles.mobileOnly}`} title={email ?? t(SHELL.profielTitel, locale)}>
           {photoUrl ? (
             /*
               Plain <img>, not next/image: the file sits in blob storage under
@@ -101,7 +107,7 @@ export default function Sidebar({
         </button>
 
         <div className={styles.navWrapper}>
-          <AdminNav role={role} />
+          <AdminNav role={role} locale={locale} />
         </div>
 
         <div className={styles.sidebarBottom}>

@@ -7,6 +7,7 @@ import pf from './profiel.module.css';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { TECHNICIAN_COLOURS } from '@/lib/crmColours';
 import { toWebp } from '@/lib/toWebp';
+import { CRM_LOCALES, CRM_LOCALE_LABELS, type CrmLocale } from '@/lib/crmLocale';
 
 export interface Profile {
   name: string;
@@ -24,6 +25,8 @@ export interface Profile {
   telegramConnectUrl: string | null;
   /** null until migration 0062 has run on this database. */
   business: Business | null;
+  /** technicians.locale — the language this monteur reads the CRM in. */
+  locale: CrmLocale;
 }
 
 export interface Business {
@@ -74,6 +77,7 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
   const [colour, setColour] = useState(profile.color);
   const [photo, setPhoto] = useState(profile.photoUrl);
   const [online, setOnline] = useState(profile.online);
+  const [locale, setLocale] = useState<CrmLocale>(profile.locale);
 
   const [email, setEmail] = useState(profile.email);
   const [password, setPassword] = useState('');
@@ -182,6 +186,19 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
     setOnline(next);
     const ok = await patch({ online: next }, next ? 'Je staat op dienst.' : 'Je staat uit dienst.');
     if (!ok) setOnline(!next);
+  }
+
+  /*
+   * Language saves on its own, like the duty switch and for the same reason:
+   * somebody who cannot read the page cannot be asked to find the Save button
+   * at the bottom of it. The label of each option is in its own language, so
+   * it is readable whatever the CRM is currently showing.
+   */
+  async function changeLocale(next: CrmLocale) {
+    const previous = locale;
+    setLocale(next);
+    const ok = await patch({ locale: next }, CRM_LOCALE_LABELS[next]);
+    if (!ok) setLocale(previous);
   }
 
   async function saveProfile() {
@@ -481,6 +498,32 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
             <button type="button" className={online ? pf.ghostBtn : pf.primary} onClick={toggleOnline} disabled={busy}>
               {online ? 'Uit dienst gaan' : 'Op dienst gaan'}
             </button>
+          </div>
+
+          {/*
+            The language of the CRM itself.
+            Every option is written in its own language, so this row is
+            readable no matter which language the screen is currently in —
+            which is the whole point of it for a partner who opened a Dutch
+            CRM by accident. Saves on selection, like the duty switch above.
+          */}
+          <div className={pf.duty}>
+            <div>
+              <b>Taal · Sprache · Langue</b>
+              <span>De taal van dit CRM, alleen voor jou.</span>
+            </div>
+            <select
+              aria-label="Taal"
+              value={locale}
+              onChange={(e) => changeLocale(e.target.value as CrmLocale)}
+              disabled={busy}
+            >
+              {CRM_LOCALES.map((code) => (
+                <option key={code} value={code}>
+                  {CRM_LOCALE_LABELS[code]}
+                </option>
+              ))}
+            </select>
           </div>
 
           <Field

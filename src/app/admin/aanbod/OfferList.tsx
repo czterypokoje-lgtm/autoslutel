@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, Clock, KeyRound, MapPin, Timer, X } from 'lucide-react';
 import styles from './aanbod.module.css';
+import { DEFAULT_CRM_LOCALE, INTL_LOCALE, type CrmLocale } from '@/lib/crmLocale';
+import { tf, translator } from '../_i18n';
+import { AANBOD } from '../_i18n/aanbod';
+import { NAV } from '../_i18n/shell';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 
 export interface OfferRow {
@@ -29,16 +33,28 @@ function secondsLeft(iso: string, now: number): number | null {
 }
 
 const mmss = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
-const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+/* Built per locale rather than once at module scope: a German partner reads
+   "129,00 €" and a Dutch one "€ 129,00", and the old module-level formatter
+   gave everyone the Dutch form. */
+const eur = (locale: CrmLocale) =>
+  new Intl.NumberFormat(INTL_LOCALE[locale], { style: 'currency', currency: 'EUR' });
 
 /** The time left as a ring that empties, so urgency reads without reading. */
-function Countdown({ left, total }: { left: number; total: number }) {
+function Countdown({
+  left,
+  total,
+  locale,
+}: {
+  left: number;
+  total: number;
+  locale: CrmLocale;
+}) {
   const r = 26;
   const c = 2 * Math.PI * r;
   const frac = total > 0 ? Math.max(0, Math.min(1, left / total)) : 0;
   const urgent = left < 60;
   return (
-    <div className={styles.ring} aria-label={`Nog ${mmss(left)}`}>
+    <div className={styles.ring} aria-label={tf(AANBOD.timeLeft, locale, { time: mmss(left) })}>
       <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
         <circle cx="32" cy="32" r={r} className={styles.ringTrack} />
         <circle
@@ -55,7 +71,16 @@ function Countdown({ left, total }: { left: number; total: number }) {
   );
 }
 
-export default function OfferList({ offers }: { offers: OfferRow[] }) {
+export default function OfferList({
+  offers,
+  locale = DEFAULT_CRM_LOCALE,
+}: {
+  offers: OfferRow[];
+  /** The partner's own language, from technicians.locale. */
+  locale?: CrmLocale;
+}) {
+  const tr = translator(locale);
+  const money = eur(locale);
   const router = useRouter();
   const [now, setNow] = useState(() => Date.now());
   const [busy, setBusy] = useState<string | null>(null);
@@ -92,19 +117,21 @@ export default function OfferList({ offers }: { offers: OfferRow[] }) {
       setMessage({
         good: false,
         text: /does not exist|function/i.test(error.message)
-          ? 'Voer supabase/migrations/0013_technician_platform.sql uit.'
+          ? tr(AANBOD.runMigration)
           : error.message,
       });
       return;
     }
 
+    /* The keys are what the Postgres function returns and stay Dutch; only
+       what the partner reads is translated. */
     const said: Record<string, string> = {
-      geaccepteerd: 'De klus is van jou. Je vindt hem bij Vandaag.',
-      afgewezen: 'Afgewezen.',
-      al_vergeven: 'Net te laat: een collega was er eerder bij.',
-      verlopen: 'Dit aanbod is verlopen.',
-      niet_gevonden: 'Dit aanbod bestaat niet meer.',
-      geen_monteur: 'Je login is niet aan een monteur gekoppeld.',
+      geaccepteerd: tr(AANBOD.accepted),
+      afgewezen: tr(AANBOD.declined),
+      al_vergeven: tr(AANBOD.tooLate),
+      verlopen: tr(AANBOD.expired),
+      niet_gevonden: tr(AANBOD.gone),
+      geen_monteur: tr(AANBOD.noTechnician),
     };
     setMessage({ good: String(data) === 'geaccepteerd', text: said[String(data)] ?? String(data) });
     router.refresh();
@@ -117,10 +144,11 @@ export default function OfferList({ offers }: { offers: OfferRow[] }) {
       <>
         {note}
         <div className={styles.empty}>
-          <b>Op dit moment geen aanbod.</b>
+          <b>{tr(AANBOD.noneRightNow)}</b>
           <span>
-            Nieuwe klussen verschijnen hier en via Telegram. Zet bij <a href="/admin/mijn-vak">Mijn vak</a> welke
-            auto&apos;s je aankunt: wat daar niet staat, krijg je niet aangeboden.
+            {tr(AANBOD.emptyHintBefore)}
+            <a href="/admin/mijn-vak">{tr(NAV.mijnVak)}</a>
+            {tr(AANBOD.emptyHintAfter)}
           </span>
         </div>
       </>
@@ -149,7 +177,7 @@ export default function OfferList({ offers }: { offers: OfferRow[] }) {
                   <h2 className={styles.car}>{offer.car}</h2>
                   <span className={styles.work}>{offer.work}</span>
                 </div>
-                <Countdown left={left} total={total} />
+                <Countdown left={left} total={total} locale={locale} />
               </div>
 
               <ul className={styles.facts}>
@@ -174,8 +202,8 @@ export default function OfferList({ offers }: { offers: OfferRow[] }) {
                 )}
                 {/* Hun tarief, niet wat de klant betaalt. */}
                 {offer.price != null && (
-                  <li className={styles.price} title="Uw eigen tarief uit Mijn vak">
-                    {EUR.format(offer.price)}
+                  <li className={styles.price} title={tr(AANBOD.ownRateTitle)}>
+                    {money.format(offer.price)}
                   </li>
                 )}
               </ul>
@@ -184,11 +212,11 @@ export default function OfferList({ offers }: { offers: OfferRow[] }) {
               <div className={styles.actions}>
                 <button className={styles.no} onClick={() => respond(offer.id, false)} disabled={busy === offer.id}>
                   <X size={18} strokeWidth={2} />
-                  Nee
+                  {tr(AANBOD.decline)}
                 </button>
                 <button className={styles.yes} onClick={() => respond(offer.id, true)} disabled={busy === offer.id}>
                   <Check size={18} strokeWidth={2.4} />
-                  {busy === offer.id ? 'Bezig…' : 'Accepteren'}
+                  {busy === offer.id ? tr(AANBOD.busy) : tr(AANBOD.accept)}
                 </button>
               </div>
             </article>
