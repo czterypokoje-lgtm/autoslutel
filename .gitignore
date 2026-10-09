@@ -51,3 +51,7 @@ exports/
 # disk, out of the repo: 984 files, 366 MB, and every one of them unreferenced
 # (checked against catalog.json and the whole of src/).
 unused-images/
+
+# Conversion exports: contain customer PII, never commit
+google_ads_conversions.csv
+*conversions*.csv
