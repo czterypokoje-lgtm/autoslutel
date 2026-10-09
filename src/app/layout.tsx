@@ -118,6 +118,7 @@ import { GlobalHeader, GlobalFooter, GlobalStickyBar, GlobalWidgets } from '@/co
 import PhoneConversionTracker from '@/components/PhoneConversionTracker';
 import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 import AdVisitBeacon from '@/components/Tracking/AdVisitBeacon';
+import ClickGuard from '@/components/Tracking/ClickGuard';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -290,6 +291,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <AdParameterTracker />
         <AdVisitBeacon />
+        {/*
+          ClickGuard loads itself only for visitors who arrived on a paid
+          click, and never on /admin — the reasoning, and why it is not gated
+          on the consent banner like Clarity is, is in the component.
+        */}
+        <ClickGuard />
         <PhoneConversionTracker />
         {/*
           Google Tag Manager (noscript) — left unconditional. Gating this on
