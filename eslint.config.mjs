@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // de/ is its own app with its own eslint config and its own node_modules.
+    // Linting it from here resolves nothing and reports every @/ import as
+    // missing — keeping the two apps apart is the point of that folder.
+    "de/**",
   ]),
 ]);
 

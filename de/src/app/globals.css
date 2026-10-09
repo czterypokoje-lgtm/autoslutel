@@ -1,0 +1,410 @@
+/*
+ * Eigenes Stylesheet.
+ *
+ * Die Farben sind dieselben wie auf autosleutel24.nl, damit beide Seiten als
+ * dasselbe Unternehmen zu erkennen sind — aber als eigene Kopie, nicht als
+ * gemeinsame Datei. Wer hier etwas ändert, ändert nichts an der
+ * niederländischen Seite.
+ */
+
+:root {
+  --night-navy: rgb(12, 20, 34);
+  --navy-surface: rgb(15, 24, 38);
+  --raised-navy: rgb(19, 29, 46);
+  --line: rgb(42, 54, 80);
+  --frost: rgb(238, 240, 243);
+  --mist: rgb(163, 173, 189);
+  --signal-orange: rgb(255, 106, 43);
+  --signal-orange-hover: rgb(235, 90, 30);
+  --on-orange: rgb(12, 20, 34);
+
+  --page: #ffffff;
+  --page-alt: #f6f7f9;
+  --ink: rgb(18, 24, 36);
+  --ink-soft: rgb(88, 98, 116);
+  --border: rgb(224, 228, 234);
+
+  --radius: 12px;
+  --radius-lg: 18px;
+  --gutter: 16px;
+  --measure: 1120px;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+  font-weight: 800;
+}
+h2 {
+  font-size: clamp(1.35rem, 1.1rem + 1.1vw, 2rem);
+  font-weight: 750;
+}
+h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+p {
+  margin: 0 0 1em;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+/* ── Layout ──────────────────────────────────────────────── */
+
+.wrap {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.section-alt {
+  background: var(--page-alt);
+  border-block: 1px solid var(--border);
+}
+
+.lede {
+  font-size: 1.125rem;
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--night-navy);
+  color: var(--frost);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 62px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  font-size: 1.0625rem;
+}
+.brand span {
+  color: var(--signal-orange);
+}
+
+.nav {
+  display: flex;
+  gap: 0.25rem 1rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+  font-size: 0.9375rem;
+}
+.nav a {
+  color: var(--mist);
+  text-decoration: none;
+  padding-block: 0.35rem;
+}
+.nav a:hover,
+.nav a:focus-visible {
+  color: var(--frost);
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.7rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--signal-orange);
+  color: var(--on-orange);
+}
+.btn-primary:hover {
+  background: var(--signal-orange-hover);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+
+.btn-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-block: 1.25rem;
+}
+
+/* ── Hero ────────────────────────────────────────────────── */
+
+.hero {
+  background: var(--night-navy);
+  color: var(--frost);
+  padding-block: clamp(2.5rem, 7vw, 5rem);
+}
+.hero h1 {
+  max-width: 24ch;
+}
+.hero .lede {
+  color: var(--mist);
+}
+
+.facts {
+  display: flex;
+  gap: 0.5rem 1.5rem;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  font-size: 0.9375rem;
+  color: var(--mist);
+}
+.facts li::before {
+  content: '✓';
+  color: var(--signal-orange);
+  font-weight: 700;
+  margin-right: 0.4rem;
+}
+
+/* ── Cards ───────────────────────────────────────────────── */
+
+.card {
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+.card h3 {
+  margin-bottom: 0.35rem;
+}
+.card p {
+  color: var(--ink-soft);
+  margin-bottom: 0.75rem;
+  font-size: 0.9375rem;
+}
+.card a {
+  font-weight: 700;
+  color: var(--signal-orange);
+  text-decoration: none;
+}
+.card a:hover {
+  text-decoration: underline;
+}
+
+.price-tag {
+  display: inline-block;
+  font-weight: 800;
+  background: var(--page-alt);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.875rem;
+}
+
+/* ── FAQ ─────────────────────────────────────────────────── */
+
+details.faq {
+  border-bottom: 1px solid var(--border);
+  padding-block: 0.9rem;
+}
+details.faq summary {
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+details.faq summary::-webkit-details-marker {
+  display: none;
+}
+details.faq summary::after {
+  content: '+';
+  float: right;
+  color: var(--signal-orange);
+  font-weight: 800;
+}
+details.faq[open] summary::after {
+  content: '–';
+}
+details.faq p {
+  margin: 0.6rem 0 0;
+  color: var(--ink-soft);
+}
+
+/* ── Tables ──────────────────────────────────────────────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.7rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.table th {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+/* ── Notice ──────────────────────────────────────────────── */
+
+.notice {
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--signal-orange);
+  background: var(--page-alt);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  font-size: 0.9375rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+
+.site-footer {
+  background: var(--night-navy);
+  color: var(--mist);
+  padding-block: 2.5rem;
+  font-size: 0.9375rem;
+}
+.site-footer a {
+  color: var(--mist);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: var(--frost);
+}
+.site-footer h3 {
+  color: var(--frost);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.site-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.footer-legal {
+  border-top: 1px solid var(--line);
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  font-size: 0.875rem;
+}
+
+/* ── Sticky call bar (phone only) ────────────────────────── */
+
+.call-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 30;
+  display: none;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  background: var(--night-navy);
+  border-top: 1px solid var(--line);
+}
+.call-bar .btn {
+  flex: 1;
+}
+
+@media (max-width: 720px) {
+  .call-bar {
+    display: flex;
+  }
+  body {
+    padding-bottom: 76px;
+  }
+}
+
+/* ── Prose ───────────────────────────────────────────────── */
+
+.prose {
+  max-width: 68ch;
+}
+.prose ul {
+  padding-left: 1.2rem;
+}
+.prose li {
+  margin-bottom: 0.4rem;
+}
+.prose dt {
+  font-weight: 700;
+  margin-top: 1rem;
+}
+.prose dd {
+  margin: 0.15rem 0 0;
+  color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

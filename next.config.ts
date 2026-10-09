@@ -41,6 +41,15 @@ const crmReadonly =
   (READONLY_BRANCHES.includes(process.env.VERCEL_GIT_COMMIT_REF ?? '') ? '1' : '0');
 
 const nextConfig: NextConfig = {
+  /*
+   * Diese App endet hier, auch wenn im Repository noch eine zweite liegt.
+   *
+   * de/ is a separate Next app with its own lockfile and its own
+   * node_modules. Without pinning the root, Next's file tracing and Turbopack
+   * root detection can walk across the two, which is what the split exists to
+   * prevent. The German app pins its own root the same way.
+   */
+  outputFileTracingRoot: __dirname,
   env: {
     NEXT_PUBLIC_CRM_READONLY: crmReadonly,
   },
