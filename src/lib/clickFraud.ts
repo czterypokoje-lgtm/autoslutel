@@ -328,6 +328,30 @@ export function judgeIp(visits: AdVisit[]): Judgement | null {
   };
 }
 
+/**
+ * Which addresses a nightly alert should name.
+ *
+ * Only `fraude`, and only once ever. Both halves matter, in opposite
+ * directions:
+ *
+ *   Only `fraude`  — alerting on `verdacht` would push the office toward
+ *                    excluding addresses that have not earned it, which is
+ *                    the one mistake this whole module is built to avoid. The
+ *                    middle tier exists so suspicion has somewhere to live
+ *                    that is not a phone buzzing.
+ *   Only once      — a nightly repeat of the same addresses trains people to
+ *                    stop reading the message, which also hides the night
+ *                    something new happens. `alreadyAlerted` is that memory
+ *                    (public.ad_fraud_alerts).
+ */
+export function needsAlert(
+  judgements: Judgement[],
+  alreadyAlerted: Iterable<string>
+): Judgement[] {
+  const seen = new Set(alreadyAlerted);
+  return judgements.filter((j) => j.tier === 'fraude' && !seen.has(j.ip));
+}
+
 /** Group a window of visits by address and judge each one, worst first. */
 export function judgeAll(visits: AdVisit[]): Judgement[] {
   const byIp = new Map<string, AdVisit[]>();

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { AD_CLICK_PARAMS } from '@/lib/adClickId';
+import { tagAdClickClaritySession } from '@/lib/clarity';
 
 /**
  * Tells /api/ad-visit that a real browser rendered this paid landing.
@@ -28,14 +29,26 @@ import { AD_CLICK_PARAMS } from '@/lib/adClickId';
 
 const PROBE_DELAY_MS = 2500;
 
-function hasPaidClickId(): boolean {
+/** The click id on this landing, if any — the first one present. */
+function paidClickId(): string | null {
   const params = new URLSearchParams(window.location.search);
-  return AD_CLICK_PARAMS.some((p) => !!params.get(p));
+  for (const param of AD_CLICK_PARAMS) {
+    const value = params.get(param);
+    if (value) return value.slice(0, 200);
+  }
+  return null;
 }
 
 export default function AdVisitBeacon() {
   useEffect(() => {
-    if (!hasPaidClickId()) return;
+    const clickId = paidClickId();
+    if (!clickId) return;
+
+    /* Links this landing to its Clarity recording, so a flagged address on
+       /admin/klikfraude can be watched before anybody is excluded. Runs
+       first: it is a no-op without consent, and it must not depend on the
+       beacon below having gone out. */
+    tagAdClickClaritySession(clickId);
 
     let sent = false;
     let interacted = false;

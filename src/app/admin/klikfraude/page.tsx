@@ -178,6 +178,7 @@ export default async function KlikfraudePage({
           'Kijk eerst in Google Ads bij de kolom «Ongeldige klikken». Wat daar staat, heeft Google zelf al gecrediteerd — dat opnieuw claimen kost alleen een ticket.',
           'Neem de IP-uitsluitingen hieronder over in de zoekcampagne: Instellingen → Aanvullende instellingen → IP-uitsluitingen. Maximaal 500 reeksen. Performance Max kent geen IP-uitsluitingen.',
           'Stuur het bewijsblok mee met een verzoek om creditering, met de gclid erin: zonder die code neemt support de claim niet in behandeling.',
+          'Wil je zien wat er werkelijk gebeurde? Neem het klik-id uit de tabel en zoek het op in Clarity: Filters → Aangepaste tags → ad_click. Doe dit vóór je iemand uitsluit — een oordeel van negen getallen is iets anders dan dertig seconden beeld.',
           'Sluit nooit een adres uit dat hier «verdacht» is. Een bot die wegkomt kost één klik; een klant die je uitsluit kost elke klik die hij nog zou doen, en dat ziet niemand.',
         ]}
       />
@@ -201,6 +202,7 @@ export default async function KlikfraudePage({
                 <th>Klikken</th>
                 <th>Stil</th>
                 <th>Laatste</th>
+                <th>Klik-id</th>
                 <th>Waarom</th>
               </>
             }
@@ -217,6 +219,11 @@ export default async function KlikfraudePage({
                 <td>{j.visits}</td>
                 <td>{j.silent}</td>
                 <td>{DATE.format(new Date(j.lastSeen))}</td>
+                {/* Truncated to stay in the row; the full id is in the title
+                    and in the evidence export, which is what gets pasted. */}
+                <td className={ui.sub} title={j.clickIds.join(' ')}>
+                  {j.clickIds.length ? <code>{j.clickIds[0]!.slice(0, 14)}…</code> : '—'}
+                </td>
                 <td className={ui.sub}>
                   {j.reasons.length ? j.reasons.join('; ') : 'niets bijzonders gezien'}
                 </td>

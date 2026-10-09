@@ -18,6 +18,7 @@ import assert from 'node:assert/strict';
 import {
   judgeIp,
   judgeAll,
+  needsAlert,
   FRAUD_POINTS,
   SUSPECT_POINTS,
   type AdVisit,
@@ -235,6 +236,51 @@ for (const visits of [
   const all = judgeAll(series(5, 600, { ip: '7.7.7.7' }));
   assert.equal(all.length, 1);
   assert.equal(all[0]!.visits, 5);
+}
+
+/* ── what the nightly alert is allowed to say ────────────────────────── */
+
+const silentIp = (ip: string, count = 9) =>
+  series(count, 3600, { js_ran: false, interacted: false, ip });
+
+// THE SECOND CASE THIS FILE EXISTS FOR: the alert names only convicted
+// addresses. Alerting on `verdacht` would push the office toward excluding
+// addresses that have not earned it — the exact mistake the middle tier
+// exists to prevent, arriving as a buzzing phone at that.
+{
+  const judgements = judgeAll([
+    ...silentIp('9.9.9.9'),
+    ...series(3, 7200, { js_ran: false, interacted: false, ip: '4.4.4.4' }),
+    ...series(1, 0, { ip: '5.5.5.5' }),
+  ]);
+
+  assert.equal(judgements.find((j) => j.ip === '4.4.4.4')!.tier, 'verdacht');
+
+  const alerts = needsAlert(judgements, []);
+  assert.deepEqual(
+    alerts.map((j) => j.ip),
+    ['9.9.9.9'],
+    'only the fraude tier may trigger an alert'
+  );
+}
+
+// Once ever, not once a night. A repeat trains people to stop reading, which
+// also hides the night something new happens.
+{
+  const judgements = judgeAll([...silentIp('9.9.9.9'), ...silentIp('8.8.8.8')]);
+  assert.equal(needsAlert(judgements, []).length, 2);
+  assert.deepEqual(
+    needsAlert(judgements, ['9.9.9.9']).map((j) => j.ip),
+    ['8.8.8.8'],
+    'an address already reported must not be reported again'
+  );
+  assert.deepEqual(needsAlert(judgements, ['9.9.9.9', '8.8.8.8']), []);
+}
+
+// A quiet night is silence, not an empty message.
+{
+  assert.deepEqual(needsAlert(judgeAll(series(1, 0, {})), []), []);
+  assert.deepEqual(needsAlert([], []), []);
 }
 
 console.log('check-click-fraud: ok');
