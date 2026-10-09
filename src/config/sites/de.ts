@@ -48,9 +48,19 @@ export const DE_SITE = {
   /*
    * Gross prices, incl. 19% MwSt — see `vat` below.
    *
-   * These are deliberately not the Dutch numbers converted. The Dutch table is
-   * ex-btw and the German one may not be, so a conversion here would be a
-   * number nobody decided. The office supplies them.
+   * These should probably not be typed in here at all, and that follows from
+   * how the German deal actually works: the partner names what the job is
+   * worth to them, we add our margin, and that is what the customer is
+   * quoted. So the "ab" price in a German city is a function of the cheapest
+   * partner rate card in that market plus the margin — which moves when a
+   * partner joins or reprices — and a hand-typed constant here would go stale
+   * silently and be wrong in exactly the market where a wrong advertised
+   * price is an Abmahnung.
+   *
+   * src/lib/technicianRates.ts and priceFor() in capability.ts already hold
+   * the per-partner rate cards the Dutch side quotes from, so the machinery
+   * exists. Until the margin and the German rate cards are in, these stay TBD
+   * and the build refuses — see EXPANSION-BE-DE-PLAN.md section 10.
    */
   prices: {
     unlock: TBD,

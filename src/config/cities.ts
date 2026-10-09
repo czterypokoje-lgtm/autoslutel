@@ -1,3 +1,5 @@
+import { SITE_CONFIG } from '@/config/site.config';
+
 export type City = {
   slug: string; city: string; region: string;
   /*
@@ -13,7 +15,7 @@ export type City = {
    */
   postcode: string;
   country: "NL" | "BE" | "DE";
-  lang: "NL" | "FR" | "VL"; travelTime: string; keyword: string; nlSearches: number; priority: "P1"|"P2"|"P3";
+  lang: "NL" | "FR" | "VL" | "DE"; travelTime: string; keyword: string; nlSearches: number; priority: "P1"|"P2"|"P3";
   subAreas: string[];
   geo: { lat: string; lng: string };
   customH1?: string;
@@ -25,7 +27,7 @@ export type City = {
   avgJobDuration?: string;
 };
 
-export const CITIES: City[] = [
+const ALL_CITIES_RAW: City[] = [
   { slug:"bussum", city:"Bussum", region:"Noord-Holland", postcode:"1401", country:"NL", lang:"NL", travelTime:"30-60 min", keyword:"autosleutel programmeren Bussum", nlSearches:210, priority:"P1", subAreas:["Bussum Centrum","Spiegel","Brediuskwartier","Eng","Zuid"], geo:{lat:"52.2740",lng:"5.1611"}, popularBrands:["BMW","Audi","Mercedes-Benz"], commonJob:"Smart key & keyless entry inleren", localFact:"In 't Gooi rijden relatief veel premium voertuigen. Wij zien dagelijks BMW, Audi en Mercedes waarvoor dealer-niveau programmering vereist is.", avgJobDuration:"30-60 min" },
   { slug:"utrecht", city:"Utrecht", region:"Utrecht", postcode:"3511", country:"NL", lang:"NL", travelTime:"30-60 min", keyword:"autosleutel programmeren Utrecht", nlSearches:480, priority:"P1", subAreas:["Utrecht Centrum","Leidsche Rijn","Overvecht","Kanaleneiland","Lunetten","Vleuten-De Meern","Oost","West","Zuid"], geo:{lat:"52.0907",lng:"5.1214"}, popularBrands:["Volkswagen","Toyota","Opel"], commonJob:"Autosleutel kwijt in parkeergarage — noodopening & nieuwe sleutel", localFact:"Utrecht heeft veel drukke parkeergarages (Hoog Catharijne, Jaarbeursplein). Wij worden regelmatig gebeld door bestuurders die hun sleutel in de auto hebben laten liggen of kwijt zijn na een bezoek aan de binnenstad.", avgJobDuration:"25-40 min" },
   { slug:"hilversum", city:"Hilversum", region:"Noord-Holland", postcode:"1211", country:"NL", lang:"NL", travelTime:"30-60 min", keyword:"autosleutel programmeren Hilversum", nlSearches:185, priority:"P1", subAreas:["Centrum","Noord","Oost","Zuid","Media Park","Kerkelanden"], geo:{lat:"52.2292",lng:"5.1669"}, popularBrands:["BMW","Mercedes-Benz","Volvo"], commonJob:"Reservesleutel bijmaken voor leaseauto of zakelijke auto", localFact:"Rondom het Media Park in Hilversum rijden veel lease- en zakelijke voertuigen. Een extra sleutel bijmaken is hier een veelgevraagde dienst — snel, zonder ritje naar de dealer.", avgJobDuration:"30-60 min" },
@@ -139,3 +141,51 @@ export const CITIES: City[] = [
   { slug:"tiel", city:"Tiel", region:"Gelderland", postcode:"4001", country:"NL", lang:"NL", travelTime:"30-60 min", keyword:"autosleutel programmeren Tiel", nlSearches:0, priority:"P2", subAreas:["Tiel Centrum","Passewaaij","Medel","Tiel-West","Kellen"], geo:{lat:"51.8864",lng:"5.4286"}, localFact:"Tiel ligt in de Betuwe. Wij komen naar uw auto in de stad en in de dorpen in de Betuwe." },
   { slug:"veenendaal", city:"Veenendaal", region:"Utrecht", postcode:"3901", country:"NL", lang:"NL", travelTime:"30-60 min", keyword:"autosleutel programmeren Veenendaal", nlSearches:0, priority:"P2", subAreas:["Veenendaal Centrum","Petenbos","De Kade","Dragonder","Veenendaal-Oost"], geo:{lat:"52.0278",lng:"5.5583"}, localFact:"Veenendaal ligt aan de rand van de Utrechtse Heuvelrug, langs de A12 tussen Utrecht en Arnhem. Wij komen naar uw auto in de stad en langs de A12." },
 ];
+
+// ── GERMANY ─────────────────────────────────────────────────
+/*
+ * The four cities with a partner on the ground today.
+ *
+ * Not the NRW cluster the expansion plan first drafted. That order was argued
+ * from proximity to the Dutch base, which is the right argument for a van
+ * driving from Bussum and the wrong one for a network: a city is rankable when
+ * somebody there can take the job, and these four are where that is true.
+ * Köln, Düsseldorf and the rest go in when a partner does.
+ *
+ * `nlSearches` is 0 for all of them, and that is a known gap rather than a
+ * claim. The Dutch records carry real Search Console and SEMrush volume and
+ * the P1/P2 split is argued from it; nothing comparable exists for Germany
+ * yet, so inventing numbers here would quietly drive the priorities off
+ * fiction. P1 because there is a partner, not because of a volume I guessed.
+ * See EXPANSION-BE-DE-PLAN.md section 10.
+ *
+ * `travelTime` is left at the honest vague value on purpose — the field is
+ * legacy and unread (the city page computes its arrival window from the real
+ * technician distance, and CitySeoText is handed that computed value).
+ */
+const DE_CITIES: City[] = [
+  { slug:"berlin", city:"Berlin", region:"Berlin", postcode:"10115", country:"DE", lang:"DE", travelTime:"", keyword:"Autoschlüssel nachmachen Berlin", nlSearches:0, priority:"P1", subAreas:["Mitte","Charlottenburg","Kreuzberg","Prenzlauer Berg","Neukölln","Pankow","Spandau","Steglitz","Friedrichshain","Wedding"], geo:{lat:"52.5200",lng:"13.4050"}, popularBrands:["Volkswagen","BMW","Mercedes-Benz"], commonJob:"Autoschlüssel verloren — Ersatzschlüssel vor Ort anlernen", localFact:"In Berlin wird überwiegend am Straßenrand geparkt, nicht in der eigenen Einfahrt. Wer den Schlüssel verliert, steht damit an einem Auto, das sich nicht einfach in eine Werkstatt bringen lässt — unser Partner kommt zum Fahrzeug.", avgJobDuration:"30-60 min" },
+  { slug:"hamburg", city:"Hamburg", region:"Hamburg", postcode:"20095", country:"DE", lang:"DE", travelTime:"", keyword:"Autoschlüssel nachmachen Hamburg", nlSearches:0, priority:"P1", subAreas:["Altona","Eimsbüttel","Wandsbek","Harburg","Bergedorf","St. Pauli","HafenCity","Barmbek","Winterhude"], geo:{lat:"53.5511",lng:"9.9937"}, popularBrands:["Volkswagen","Mercedes-Benz","Audi"], commonJob:"Ersatzschlüssel für Firmen- und Leasingfahrzeuge", localFact:"Hamburg ist Hafen- und Logistikstandort, und ein Transporter, der auf einen Schlüssel wartet, kostet den ganzen Tag. Unser Partner arbeitet auch auf dem Betriebshof statt in der Werkstatt.", avgJobDuration:"30-60 min" },
+  { slug:"muenchen", city:"München", region:"Bayern", postcode:"80331", country:"DE", lang:"DE", travelTime:"", keyword:"Autoschlüssel nachmachen München", nlSearches:0, priority:"P1", subAreas:["Altstadt","Maxvorstadt","Schwabing","Haidhausen","Bogenhausen","Sendling","Giesing","Pasing","Neuhausen"], geo:{lat:"48.1351",lng:"11.5820"}, popularBrands:["BMW","Audi","Mercedes-Benz"], commonJob:"Keyless-Go-Schlüssel und Smart Key anlernen", localFact:"In München fahren besonders viele Fahrzeuge mit Keyless-Go und schlüssellosem Zugang. Genau diese Systeme sind beim Hersteller am teuersten und beim Termin am langsamsten.", avgJobDuration:"35-60 min" },
+  { slug:"frankfurt", city:"Frankfurt am Main", region:"Hessen", postcode:"60311", country:"DE", lang:"DE", travelTime:"", keyword:"Autoschlüssel nachmachen Frankfurt", nlSearches:0, priority:"P1", subAreas:["Innenstadt","Sachsenhausen","Bornheim","Nordend","Westend","Bockenheim","Höchst","Niederrad","Gallus"], geo:{lat:"50.1109",lng:"8.6821"}, popularBrands:["Volkswagen","Mercedes-Benz","BMW"], commonJob:"Schlüssel im Parkhaus eingeschlossen — Öffnung und Ersatzschlüssel", localFact:"Frankfurt hat als Pendler- und Messestadt sehr viele Parkhäuser, und dort endet die Panne meistens. Unser Partner kommt bis in die Tiefgarage, das Auto muss nicht abgeschleppt werden.", avgJobDuration:"30-55 min" },
+];
+
+/**
+ * Every city in every country. For the CRM, which is one office for all three:
+ * a German partner's coverage has to be editable from a Dutch-built admin.
+ */
+export const ALL_CITIES: City[] = [...ALL_CITIES_RAW, ...DE_CITIES];
+
+/**
+ * The cities this build's country serves.
+ *
+ * Every public page and the sitemap read this, so a German build cannot
+ * render /staedte/utrecht and the Dutch sitemap cannot grow a Berlin entry —
+ * neither needed a change at its call site. Belgium is empty until there are
+ * Belgian partners, which is the correct state rather than a gap: the
+ * alternative is a page for a city nobody drives to, and thinPages.ts is
+ * already a record of what that costs.
+ */
+export const CITIES: City[] = ALL_CITIES.filter(
+  (c) => c.country === SITE_CONFIG.country
+);

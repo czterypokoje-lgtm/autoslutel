@@ -1,7 +1,12 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { CITIES } from '@/config/cities';
+/*
+ * ALL_CITIES, not CITIES: the office is one office for three countries, and
+ * CITIES is narrowed to the country this build serves. A German partner's
+ * werkgebied has to be editable from the Dutch-built admin.
+ */
+import { ALL_CITIES as CITIES } from '@/config/cities';
 
 /**
  * Where a monteur works, and who they are on the public site.
