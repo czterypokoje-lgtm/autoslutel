@@ -19,6 +19,15 @@ import styles from './ServiceAreaMap.module.css';
  * Die Karte ist die statische Karte aus /api/service-map; eine interaktive
  * My-Maps-Einbettung gibt es erst, wenn eine deutsche Karte angelegt ist —
  * siehe config/myMaps.ts.
+ *
+ * Und wenn es gar keine Karte gibt, gibt es auch keine Kartenspalte.
+ * /api/service-map antwortet ohne GOOGLE_MAPS_API_KEY mit 204, MY_MAPS_ID
+ * steht auf null — beides trifft im Moment zu, und das Ergebnis war ein
+ * großer leerer dunkler Kasten neben den Regionskarten, der aussah wie ein
+ * Ladefehler. Der Abschnitt fällt jetzt auf die Regionskarten über die volle
+ * Breite zurück und sieht damit gewollt aus statt kaputt. Sobald der
+ * Schlüssel gesetzt oder eine deutsche My-Maps-Karte angelegt ist, kommt die
+ * Spalte von selbst zurück.
  */
 
 const PER_CARD = 6;
@@ -35,6 +44,13 @@ const regions = SERVICE_REGIONS.map((region) => {
 const totalCities = regions.reduce((n, r) => n + r.cities.length, 0);
 
 export default function ServiceAreaMap() {
+  /*
+   * Auf dem Server ausgewertet: die statische Karte braucht diesen
+   * Schlüssel, sonst antwortet /api/service-map mit 204.
+   */
+  const hasStaticMap = Boolean(process.env.GOOGLE_MAPS_API_KEY);
+  const hasMap = hasStaticMap || MY_MAPS_VIEWER_URL !== null;
+
   return (
     <div className={styles.root}>
       <ul className={styles.stats} aria-label="Unser Einsatzgebiet in Zahlen">
@@ -64,15 +80,17 @@ export default function ServiceAreaMap() {
         </li>
       </ul>
 
-      <div className={styles.layout}>
-        <div className={styles.mapCol}>
-          <InstantServiceMap />
-          {MY_MAPS_VIEWER_URL && (
-            <a href={MY_MAPS_VIEWER_URL} target="_blank" rel="noopener noreferrer" className={styles.mapLink}>
-              Karte in Google Maps öffnen ↗
-            </a>
-          )}
-        </div>
+      <div className={`${styles.layout} ${hasMap ? '' : styles.layoutNoMap}`}>
+        {hasMap && (
+          <div className={styles.mapCol}>
+            <InstantServiceMap />
+            {MY_MAPS_VIEWER_URL && (
+              <a href={MY_MAPS_VIEWER_URL} target="_blank" rel="noopener noreferrer" className={styles.mapLink}>
+                Karte in Google Maps öffnen ↗
+              </a>
+            )}
+          </div>
+        )}
 
         <div className={styles.cards}>
           {regions.map((r) => {

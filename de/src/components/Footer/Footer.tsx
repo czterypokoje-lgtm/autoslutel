@@ -2,7 +2,7 @@ import Link from 'next/link';
 import ConsentPreferencesButton from '@/components/ConsentBanner/ConsentPreferencesButton';
 import Image from 'next/image';
 import styles from './Footer.module.css';
-import { SITE_CONFIG } from '@/config/site.config';
+import { SITE_CONFIG, isReady } from '@/config/site.config';
 
 /*
  * Die Fußzeile steht auf jeder Seite, also stehen hier die Links, die eine
@@ -75,10 +75,20 @@ export default function Footer() {
               )}
             </div>
             <p className={styles.footerDesc}>Mobiler Autoschlüssel-Service für alle Marken: Autoschlüssel verloren, defekt oder nachmachen, und Fahrzeuge schadenfrei öffnen. Rund um die Uhr, Festpreis vorab. Unser Partner kommt zu Ihrem Fahrzeug in <Link href="/staedte/berlin" className={styles.seoLink}>Berlin</Link>, <Link href="/staedte/hamburg" className={styles.seoLink}>Hamburg</Link>, <Link href="/staedte/muenchen" className={styles.seoLink}>München</Link> und <Link href="/staedte/frankfurt" className={styles.seoLink}>Frankfurt am Main</Link>.</p>
+            {/*
+              * Jede Plakette nur, wenn sie etwas sagt.
+              *
+              * Hier standen bisher "__TBD__", "USt-IdNr.: __TBD__" und
+              * "0 ★ Google" nebeneinander — die Null neben einem Stern
+              * behauptet eine Bewertung, die es nicht gibt (§5 UWG, dieselbe
+              * Überlegung wie im HeroTrustBadge). Sobald Handelsregister,
+              * USt-IdNr. und die ersten echten Bewertungen eingetragen sind,
+              * erscheinen die Plaketten von selbst.
+              */}
             <div className={styles.footerBadges}>
-              <span>{SITE_CONFIG.hrb}</span>
-              <span>USt-IdNr.: {SITE_CONFIG.ustId}</span>
-              <span>{SITE_CONFIG.rating} ★ Google</span>
+              {isReady(SITE_CONFIG.hrb) && <span>{SITE_CONFIG.hrb}</span>}
+              {isReady(SITE_CONFIG.ustId) && <span>USt-IdNr.: {SITE_CONFIG.ustId}</span>}
+              {Number(SITE_CONFIG.rating) > 0 && <span>{SITE_CONFIG.rating} ★ Google</span>}
               <span>Versichert</span>
             </div>
             <div style={{ marginTop: '1.25rem', marginBottom: '1.5rem' }}>

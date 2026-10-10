@@ -5,7 +5,10 @@ import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 
 export const metadata: Metadata = {
-  title: `Galerie | ${SITE_CONFIG.name}`,
+  /* Nur "Galerie": das Layout hängt über title.template bereits
+     "| Autoschlüssel24" an, und mit dem Namen hier stand im Browsertab
+     "Galerie | Autoschlüssel24 | Autoschlüssel24". */
+  title: 'Galerie unserer Arbeiten',
   /* Counted, not typed: the flyers left this gallery (see lib/jobPhotos.ts)
      and a hand-written "26" was already wrong before they did. Brands named
      are only ones still pictured. */
@@ -53,7 +56,7 @@ export default function GaleriePage() {
       />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
         <span className="section-label">GALERIE</span>
-        <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Ons Werk in Beelden</h1>
+        <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Unsere Arbeit in Bildern</h1>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, margin: '0 auto' }}>
           {/*
             * Hier standen auf der niederländischen Seite fünf Stadtlinks nach
@@ -70,11 +73,11 @@ export default function GaleriePage() {
       </section>
 
       <div className="container" style={{ padding: '4rem 2rem' }}>
-        {/* Werkplaats Section */}
+        {/* Werkstatt-Abschnitt */}
         <div style={{ marginBottom: '4rem', background: 'var(--color-bg-alt)', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--color-border)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2.5rem', alignItems: 'center' }}>
             <div>
-              <span className="section-label" style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em' }}>UTRECHT WERKPLAATS & MOBIELE SERVICE</span>
+              <span className="section-label" style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em' }}>WERKSTATTTECHNIK IM EINSATZFAHRZEUG</span>
               <h2 style={{ fontSize: '1.8rem', marginTop: '0.5rem', marginBottom: '1rem' }}>Werkstatttechnik, mobil eingesetzt</h2>
               <p style={{ color: 'var(--color-text-secondary)', lineHeight: '1.7', fontSize: '0.95rem' }}>
                 Die Fahrzeuge unserer Partner führen Diagnose- und Anlerntechnik für die gängigen Systeme mit: von BMW FEM/BDC und Mercedes EIS über die Online-Freigabe im VW-Konzern bis zu Keyless-Go-Schlüsseln bei Porsche. Gearbeitet wird dort, wo das Fahrzeug steht — nicht in einer Halle, in die es gebracht werden muss.

@@ -55,6 +55,28 @@
   gap: 1.25rem;
 }
 
+/*
+ * Ohne Karte keine Kartenspalte — die Regionskarten nehmen die ganze Breite.
+ * Siehe ServiceAreaMap.tsx: solange weder eine statische noch eine
+ * My-Maps-Karte vorhanden ist, stand hier ein leerer dunkler Kasten.
+ */
+.layout.layoutNoMap {
+  display: block;
+}
+
+@media (min-width: 1000px) {
+  /* Doppelte Klasse, damit die Regel die .layout-Regel darunter schlägt —
+     sonst bleibt das Raster zweispaltig und die Karten stehen in der
+     Kartenspalte, die es gar nicht mehr gibt. */
+  .layout.layoutNoMap {
+    display: block;
+  }
+
+  .layout.layoutNoMap .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (min-width: 1000px) {
   .layout {
     display: grid;
