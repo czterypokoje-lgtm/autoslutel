@@ -107,6 +107,21 @@ export const SITE_CONFIG = {
   blobStorageDomain: 'https://omqnxprotjfbyqqq.public.blob.vercel-storage.com',
 
   /*
+   * Das Formspree-Formular dieser Seite, als Endpunkt-ID.
+   *
+   * Beim Kopieren kam 'mgavvqvd' mit — das Formular der niederländischen
+   * Seite. Es hätte funktioniert, und genau das ist das Problem: jede deutsche
+   * Anfrage wäre im niederländischen Postfach gelandet, bei jemandem, der sie
+   * nicht beantworten kann, und im CRM wäre sie nicht aufgefallen, weil der
+   * Lead parallel ohnehin in die eigene Tabelle geht.
+   *
+   * null heißt: das Formular schickt nur an /api/leads, und das genügt — dort
+   * landen alle Anfragen ohnehin. Ein eigener Formspree-Endpunkt ist eine
+   * zusätzliche E-Mail-Benachrichtigung, kein Ersatz.
+   */
+  formspreeId: null as string | null,
+
+  /*
    * Messung — eigene Konten, nicht die niederländischen.
    *
    * Beim Kopieren der Seite kamen GTM-PRT75SWX, AW-18315813515 und die

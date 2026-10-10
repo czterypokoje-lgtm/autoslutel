@@ -5,12 +5,18 @@ import { SITE_CONFIG } from '@/config/site.config';
 import { ARRIVAL } from '@/config/arrival';
 
 /*
- * The service area as GeoJSON: one Point per town, with its province, its page and
- * the arrival promise. It is the same list the map, the province pages and the sitemap
- * are built from, in the one format mapping tools, GIS software and AI crawlers read
- * without scraping a page. /llms.txt and /staedte point to it.
+ * Das Einsatzgebiet als GeoJSON: ein Point je Stadt, mit Region, Seite und
+ * Anbieter. Dieselbe Liste, aus der die Karte, die Regionsseiten und die
+ * Sitemap gebaut werden — in dem einen Format, das Kartenwerkzeuge,
+ * GIS-Software und KI-Crawler lesen, ohne eine Seite zu scrapen. /llms.txt und
+ * /staedte verweisen darauf.
  *
- * Coordinates are [longitude, latitude], as GeoJSON requires.
+ * Die Adresse hieß /werkgebied.geojson. Das ist niederländisch und stand als
+ * URL in der Sitemap, im alternates-Block der Städteseite und in /llms.txt —
+ * also an drei Stellen, die Maschinen lesen. Umbenannt, weil eine URL Teil des
+ * Inhalts ist.
+ *
+ * Koordinaten sind [Längengrad, Breitengrad], wie GeoJSON es verlangt.
  */
 export const dynamic = 'force-static';
 
@@ -21,10 +27,11 @@ export function GET() {
     geometry: { type: 'Point' as const, coordinates: [parseFloat(c.geo.lng), parseFloat(c.geo.lat)] },
     properties: {
       name: c.city,
-      province: c.region,
+      region: c.region,
       url: `${SITE_CONFIG.domain}/staedte/${c.slug}`,
-      service: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
-      arrival: `Binnen ${ARRIVAL} ter plaatse`,
+      service: 'Autoschlüssel nachmachen, Autoschlüssel verloren, Auto öffnen',
+      /* Kein Minutenversprechen — siehe config/arrival.ts. */
+      arrival: ARRIVAL,
       provider: SITE_CONFIG.fullName,
       telephone: SITE_CONFIG.phoneTel,
     },
@@ -34,7 +41,7 @@ export function GET() {
     JSON.stringify(
       {
         type: 'FeatureCollection',
-        name: `Werkgebied ${SITE_CONFIG.fullName}`,
+        name: `Einsatzgebiet ${SITE_CONFIG.fullName}`,
         features,
       },
       null,

@@ -138,6 +138,24 @@
 .plateInput::placeholder { color: rgba(26, 26, 26, .34); letter-spacing: .08em; }
 .plateWrap:focus-within { box-shadow: 0 0 0 3px rgba(232, 82, 10, .35); }
 
+/*
+ * Marke und Baujahr, an der Stelle, an der auf der niederländischen Seite die
+ * Registerbestätigung erscheint.
+ *
+ * Dasselbe Erscheinen von unten (die pop-Animation), derselbe Abstand nach
+ * oben — der Abschnitt behält seinen Rhythmus, auch wenn die Angabe jetzt vom
+ * Besucher kommt und nicht von einer Behörde. Siehe VehicleWizard.tsx.
+ */
+.vehiclePick {
+  display: grid;
+  gap: 11px;
+  margin-top: 14px;
+  animation: pop .3s cubic-bezier(.2, 1.2, .4, 1) both;
+}
+@media (min-width: 460px) {
+  .vehiclePick { grid-template-columns: 1fr 1fr; }
+}
+
 /* vehicle found */
 .found {
   display: flex;

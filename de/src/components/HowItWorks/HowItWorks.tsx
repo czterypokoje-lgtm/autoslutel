@@ -28,39 +28,39 @@ export default function HowItWorks({ cityName, brandName, variant = 'default' }:
       },
       {
         imgSrc: '/images/steps/akl_step2_1786439617601.webp',
-        alt: `Monteur direct ter plaatse${cityTextLoc}`,
+        alt: `Partner kommt zum Fahrzeug${cityTextLoc}`,
         step: 'Schritt 2',
         title: `Partner kommt zu Ihrem Fahrzeug${cityTextLoc}`,
         desc: `Unser Partner kommt mit ausgerüstetem Fahrzeug zu Ihnen. Das Auto muss nicht abgeschleppt werden — das spart die Abschleppkosten und die Tage beim Händler.`,
       },
       {
         imgSrc: '/images/steps/akl_step3_1786439623637.webp',
-        alt: 'Nieuwe sleutel geprogrammeerd',
+        alt: 'Neuer Schlüssel an der Wegfahrsperre angelernt',
         step: 'Schritt 3',
         title: 'Neuer Schlüssel, alter gelöscht',
         desc: 'Wir öffnen schadenfrei, fertigen einen neuen Schlüssel an und löschen den verlorenen aus der Wegfahrsperre — damit er Ihr Fahrzeug nicht mehr öffnet.',
       },
     ];
   } else if (variant === 'ignition') {
-    sectionTitle = `Contactslot defect? Zo lossen we het op${cityText}`;
+    sectionTitle = `Zündschloss defekt? So lösen wir das${cityText}`;
     steps = [
       {
         imgSrc: '/images/steps/ignition_step1_1786439640448.webp',
-        alt: `Sleutel draait niet in contactslot`,
+        alt: 'Schlüssel dreht nicht mehr im Zündschloss',
         step: 'Schritt 1',
         title: 'Schlüssel dreht nicht mehr?',
         desc: `Steckt der Schlüssel fest oder dreht das Zündschloss nicht mehr durch? Rufen Sie an und geben Marke, Modell und Baujahr durch.`,
       },
       {
         imgSrc: '/images/steps/ignition_step2_1786439648237.webp',
-        alt: `Reparatie contactslot op locatie`,
+        alt: 'Zündschloss wird vor Ort instand gesetzt',
         step: 'Schritt 2',
         title: `Reparatur${cityTextLoc}`,
         desc: `Unser Partner kommt zu Ihnen und baut das hakende oder blockierte Zündschloss aus oder setzt es instand — vor Ort.`,
       },
       {
         imgSrc: '/images/steps/ignition_step3_1786439655474.webp',
-        alt: 'Weer veilig op weg met gerepareerd slot',
+        alt: 'Wieder unterwegs mit instand gesetztem Zündschloss',
         step: 'Schritt 3',
         title: 'Wieder sicher unterwegs',
         desc: 'Sie bekommen ein funktionierendes Zündschloss und, wenn nötig, ein neu gefrästes Schlüsselblatt. Danach können Sie direkt weiterfahren.',
@@ -92,7 +92,7 @@ export default function HowItWorks({ cityName, brandName, variant = 'default' }:
       },
     ];
   } else {
-    // default / autosleutel bijmaken
+    // Standard: Autoschlüssel nachmachen
     steps = [
       {
         imgSrc: '/images/steps/step_1_contact_1786407570135.webp',

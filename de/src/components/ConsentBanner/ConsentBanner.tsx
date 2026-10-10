@@ -14,7 +14,7 @@ import {
 } from '@/lib/consent';
 
 /**
- * First-party cookie banner, replacing the iubenda Cookie Solution.
+ * Eigenes Cookie-Banner, an der Stelle der iubenda Cookie Solution.
  *
  * Two deliberate differences from the widget it replaces:
  *  - it is a bottom strip, not a full-screen overlay, so the phone and
@@ -93,16 +93,17 @@ export default function ConsentBanner() {
         </p>
         <p className={styles.text}>
           <span className={styles.full}>
-            Wij gebruiken noodzakelijke cookies om de site te laten werken. Met uw
-            toestemming gebruiken wij ook cookies voor statistieken en marketing.
-            U kunt uw keuze altijd wijzigen. Lees meer in ons{' '}
-            <Link href="/cookie-richtlinie">cookiebeleid</Link> en{' '}
-            <Link href="/datenschutz">privacybeleid</Link>.
+            Technisch notwendige Cookies brauchen wir, damit die Seite funktioniert. Für
+            Statistik und Marketing nur mit Ihrer Einwilligung — und die können Sie jederzeit
+            ändern oder widerrufen. Mehr steht in unserer{' '}
+            <Link href="/cookie-richtlinie">Cookie-Richtlinie</Link> und der{' '}
+            <Link href="/datenschutz">Datenschutzerklärung</Link>.
           </span>
-          {/* Phones get one line: someone next to a locked car should see the page, not a wall of text. */}
+          {/* Auf dem Telefon eine Zeile: wer neben einem verschlossenen Auto
+              steht, soll die Seite sehen und keine Textwand. */}
           <span className={styles.brief}>
-            Cookies voor de werking van de site en, met uw toestemming, voor statistieken en
-            marketing. <Link href="/cookie-richtlinie">Cookiebeleid</Link>.
+            Notwendige Cookies für den Betrieb, Statistik und Marketing nur mit Ihrer
+            Einwilligung. <Link href="/cookie-richtlinie">Cookie-Richtlinie</Link>.
           </span>
         </p>
 
@@ -112,12 +113,13 @@ export default function ConsentBanner() {
               <input type="checkbox" checked disabled readOnly />
               <span className={styles.optionBody}>
                 <span className={styles.optionName}>
-                  Noodzakelijk
-                  <span className={styles.always}>altijd aan</span>
+                  Technisch notwendig
+                  <span className={styles.always}>immer aktiv</span>
                 </span>
                 <span className={styles.optionDesc}>
-                  Nodig om de website te laten werken. Slaat geen persoonlijke
-                  gegevens op voor andere doeleinden.
+                  Nötig, damit die Seite funktioniert und Ihre Entscheidung gespeichert bleibt.
+                  Braucht nach § 25 Abs. 2 TDDDG keine Einwilligung und wird nicht zum
+                  Verfolgen verwendet.
                 </span>
               </span>
             </label>
@@ -129,12 +131,19 @@ export default function ConsentBanner() {
                 onChange={(e) => setStatistics(e.target.checked)}
               />
               <span className={styles.optionBody}>
-                <span className={styles.optionName}>Statistieken</span>
+                <span className={styles.optionName}>Statistik</span>
+                {/*
+                  * Hier stand "Google Analytics en Microsoft Clarity … opnames
+                  * van websessies". In dieser App ist kein Messwerkzeug
+                  * eingerichtet (site.config.ts analytics steht auf null), es
+                  * wird also nichts geladen. Eine Verarbeitung zu beschreiben,
+                  * die nicht stattfindet, ist derselbe Fehler wie eine zu
+                  * verschweigen — siehe app/cookie-richtlinie.
+                  */}
                 <span className={styles.optionDesc}>
-                  Google Analytics en Microsoft Clarity. Laat ons zien welke
-                  pagina&apos;s goed werken. Microsoft Clarity maakt daarbij
-                  opnames van websessies (muisbewegingen, klikken en
-                  scrollgedrag).
+                  Zeigt uns, welche Seiten funktionieren. Derzeit ist kein Statistik-Werkzeug
+                  eingerichtet; Ihre Zustimmung wird gespeichert und gilt, sobald eines
+                  hinzukommt.
                 </span>
               </span>
             </label>
@@ -148,8 +157,9 @@ export default function ConsentBanner() {
               <span className={styles.optionBody}>
                 <span className={styles.optionName}>Marketing</span>
                 <span className={styles.optionDesc}>
-                  Google Ads en OpenAI Ads. Meet welke advertenties tot een aanvraag leiden en
-                  maakt relevantere advertenties mogelijk.
+                  Misst, welche Anzeige zu einer Anfrage geführt hat. Derzeit ist kein
+                  Anzeigenkonto eingerichtet; Ihre Zustimmung wird gespeichert und gilt, sobald
+                  eines hinzukommt.
                 </span>
               </span>
             </label>
@@ -162,7 +172,7 @@ export default function ConsentBanner() {
             className={`${styles.btn} ${styles.reject}`}
             onClick={() => save({ statistics: false, marketing: false })}
           >
-            Weigeren
+            Ablehnen
           </button>
           <button
             type="button"
@@ -175,7 +185,7 @@ export default function ConsentBanner() {
               )
             }
           >
-            {showOptions ? 'Keuze opslaan' : 'Accepteren'}
+            {showOptions ? 'Auswahl speichern' : 'Alle akzeptieren'}
           </button>
           {!showOptions && (
             <button
@@ -183,7 +193,7 @@ export default function ConsentBanner() {
               className={styles.link}
               onClick={() => setShowOptions(true)}
             >
-              Instellingen
+              Einstellungen
             </button>
           )}
         </div>

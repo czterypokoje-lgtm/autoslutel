@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import { SITE_CONFIG } from '@/config/site.config';
 import { WHATSAPP_REF_PATTERN } from '@/lib/adClickId';
 
-const MESSAGE = 'Hallo, ik heb hulp nodig met mijn autosleutel. Automerk en model: ';
+const MESSAGE = 'Hallo, ich brauche Hilfe mit meinem Autoschlüssel. Marke, Modell und Baujahr: ';
 
 /*
- * ?ref= is the code PhoneConversionTracker gives an ad visitor's tap; it goes
- * in front of the message so the office can tie the chat to its ad click
- * (see supabase/migrations/0063_call_click_whatsapp_ref.sql).
+ * ?ref= ist der Code, den PhoneConversionTracker dem Tap eines Anzeigenbesuchers
+ * mitgibt; er steht vor der Nachricht, damit das Büro den Chat dem Anzeigenklick
+ * zuordnen kann (siehe supabase/migrations/0063_call_click_whatsapp_ref.sql).
  */
 function whatsAppUrl(ref: unknown): string {
   const text = typeof ref === 'string' && WHATSAPP_REF_PATTERN.test(ref) ? `[${ref}] ${MESSAGE}` : MESSAGE;
@@ -15,8 +15,8 @@ function whatsAppUrl(ref: unknown): string {
 }
 
 export const metadata: Metadata = {
-  title: 'Direct WhatsApp Contact | Autosleutel24',
-  description: 'U wordt direct doorverwezen naar onze 24/7 WhatsApp spoedservice.',
+  title: `Direkt per WhatsApp | ${SITE_CONFIG.name}`,
+  description: 'Sie werden direkt zu unserem WhatsApp-Notdienst weitergeleitet, rund um die Uhr.',
   robots: {
     index: false,
     follow: false,
@@ -40,10 +40,10 @@ export default async function WhatsAppRedirectPage({
             💬
           </div>
           <h1 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.75rem', color: '#fff' }}>
-            Verbinding maken met WhatsApp...
+            Verbindung zu WhatsApp…
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginBottom: '2rem', lineHeight: 1.6 }}>
-            U wordt automatisch doorverwezen naar onze monteur op WhatsApp. Gaat dit niet automatisch?
+            Sie werden automatisch weitergeleitet. Passiert nichts?
           </p>
           <a
             href={TARGET_WA_URL}
@@ -60,7 +60,7 @@ export default async function WhatsAppRedirectPage({
               boxSizing: 'border-box'
             }}
           >
-            Open WhatsApp Direct →
+            WhatsApp jetzt öffnen →
           </a>
           <script
             dangerouslySetInnerHTML={{

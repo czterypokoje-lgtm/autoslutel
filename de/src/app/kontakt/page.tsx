@@ -8,9 +8,15 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: `Contact & 24/7 Spoedhulp Autosleutel | ${SITE_CONFIG.phone}`,
+    absolute: `Kontakt & 24/7 Notdienst | ${SITE_CONFIG.phone}`,
   },
-  description: `Sleutel kwijt of auto op slot? Bel of app ${SITE_CONFIG.fullName} op ${SITE_CONFIG.phone}, 24/7 bereikbaar. Reactietijd ${SITE_CONFIG.responseTime}. Ook voor offertes en afspraken.`,
+  /*
+   * Hier stand "Reactietijd ${SITE_CONFIG.responseTime}" — responseTime steht
+   * in dieser App auf TBD, die Beschreibung hätte also "Reaktionszeit __TBD__"
+   * in den Suchergebnissen gezeigt. Eine Zeitangabe gehört ohnehin nicht
+   * hierher; siehe config/arrival.ts.
+   */
+  description: `Schlüssel verloren oder Auto zu? Rufen Sie ${SITE_CONFIG.fullName} unter ${SITE_CONFIG.phone} an, rund um die Uhr erreichbar — auch per WhatsApp, für Anfragen und Termine.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/kontakt`,
   },
@@ -30,8 +36,8 @@ const contactPageSchema = {
   '@type': 'ContactPage',
   '@id': `${SITE_CONFIG.domain}/kontakt#contactpage`,
   url: `${SITE_CONFIG.domain}/kontakt`,
-  name: 'Contact — Autosleutel24',
-  inLanguage: 'nl-NL',
+  name: `Kontakt — ${SITE_CONFIG.name}`,
+  inLanguage: SITE_CONFIG.hreflang,
   // The ContactPoint lives on the business node in the root layout.
   mainEntity: businessRef,
 };
@@ -41,7 +47,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-    { '@type': 'ListItem', position: 2, name: 'Contact', item: `${SITE_CONFIG.domain}/kontakt` },
+    { '@type': 'ListItem', position: 2, name: 'Kontakt', item: `${SITE_CONFIG.domain}/kontakt` },
   ],
 };
 
@@ -73,13 +79,13 @@ export default function ContactPage() {
         }}>
           <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
              <div style={{ display: 'inline-flex', alignItems: 'center', background: '#e0ebf6', color: 'var(--color-primary)', padding: '0.4rem 1.25rem', borderRadius: '999px', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1.5rem' }}>
-                Neem contact op
+                Kontakt
              </div>
              <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, color: 'var(--navy-900)', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
-                Probleem met uw autosleutel?<br/>Wij kunnen helpen!
+                Problem mit Ihrem Autoschlüssel?<br/>Wir lösen das.
              </h1>
              <p style={{ fontSize: '1.15rem', color: 'var(--gray-600)', lineHeight: 1.6, maxWidth: '600px', margin: '0 auto' }}>
-                Professionele autoslotenmaker service in Nederland. Duidelijke prijzen, betrouwbaar werk en mobiele hulp wanneer u het nodig heeft. Bel <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: 'var(--color-primary)', fontWeight: 600, textDecoration: 'none' }}>{SITE_CONFIG.phone}</a>.
+                Mobiler Autoschlüssel-Service in {SITE_CONFIG.serviceAreaString}. Festpreis vorab, Werkstatttechnik statt Gewalt, rund um die Uhr erreichbar. Rufen Sie <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: 'var(--color-primary)', fontWeight: 600, textDecoration: 'none' }}>{SITE_CONFIG.phone}</a> an.
              </p>
           </div>
         </section>
@@ -94,16 +100,16 @@ export default function ContactPage() {
             <div className={styles.leftCol}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                 <MessageSquareText size={32} color="var(--color-primary)" strokeWidth={2} />
-                <h2 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--navy-900)', letterSpacing: '-0.01em' }}>Neem Contact Op</h2>
+                <h2 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--navy-900)', letterSpacing: '-0.01em' }}>Schreiben Sie uns</h2>
               </div>
               <p style={{ color: 'var(--gray-600)', lineHeight: 1.6, marginBottom: '2.5rem', fontSize: '1.05rem' }}>
-                Autosleutel24 is de professionele autoslotenmaker. Vul het onderstaande formulier in en een van onze vertegenwoordigers helpt u zo snel mogelijk om uw sleutelprobleem op te lossen.
+                Füllen Sie das Formular aus, und wir melden uns mit dem Festpreis für Ihr Fahrzeug und einem Zeitfenster. Eilt es, rufen Sie besser an — bei einem verschlossenen Auto ist das Telefon schneller als jedes Formular.
               </p>
               
               <ContactForm />
               
               <p style={{ marginTop: '1.5rem', fontSize: '0.75rem', color: 'var(--gray-400)', lineHeight: 1.5 }}>
-                * Door dit formulier in te dienen, gaat u ermee akkoord dat wij via e-mail of telefoon contact met u opnemen met betrekking tot uw aanvraag.
+                * Mit dem Absenden willigen Sie ein, dass wir Sie zu Ihrer Anfrage per E-Mail oder Telefon kontaktieren. Wie wir mit Ihren Daten umgehen, steht in der <a href="/datenschutz" style={{ color: 'var(--color-primary)' }}>Datenschutzerklärung</a>; die Einwilligung können Sie jederzeit widerrufen.
               </p>
             </div>
 
@@ -112,16 +118,17 @@ export default function ContactPage() {
               
               {/* TOP BLUE BLOCK */}
               <div style={{ background: 'var(--color-primary)', color: '#fff', padding: '2.5rem', borderRadius: '16px', boxShadow: '0 20px 40px rgba(13, 33, 55, 0.15)' }}>
-                <h3 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '1rem' }}>Direct Hulp Nodig?</h3>
+                <h3 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '1rem' }}>Sofort Hilfe nötig?</h3>
                 <p style={{ color: 'rgba(255,255,255,0.9)', marginBottom: '2rem', lineHeight: 1.5, fontSize: '1.05rem' }}>
-                  Heeft u het nu direct nodig? Bel ons meteen of stuur een e-mail. Onze meldkamer staat 24/7 klaar om u verder te helpen.
+                  Stehen Sie gerade neben Ihrem Auto? Dann rufen Sie an. Wir sind rund um die Uhr
+                  erreichbar und nennen Ihnen den Festpreis, bevor jemand losfährt.
                 </p>
                 <div className={styles.buttonGroup}>
                   <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary}>
-                    <Phone size={18} strokeWidth={2.5} /> Bel voor Service
+                    <Phone size={18} strokeWidth={2.5} /> Jetzt anrufen
                   </a>
                   <a href={`mailto:${SITE_CONFIG.email}`} className={styles.btnOutline}>
-                    <Mail size={18} strokeWidth={2.5} /> Stuur een E-mail
+                    <Mail size={18} strokeWidth={2.5} /> E-Mail schreiben
                   </a>
                 </div>
               </div>
@@ -135,7 +142,7 @@ export default function ContactPage() {
                       <Phone size={20} strokeWidth={2} />
                     </div>
                     <div>
-                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Telefoonnummer</h4>
+                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Telefon</h4>
                       <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: 'var(--gray-600)', textDecoration: 'none', fontSize: '1rem' }}>{SITE_CONFIG.phone}</a>
                     </div>
                   </div>
@@ -145,10 +152,10 @@ export default function ContactPage() {
                       <Clock size={20} strokeWidth={2} />
                     </div>
                     <div>
-                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Openingstijden</h4>
+                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Erreichbarkeit</h4>
                       <p style={{ color: 'var(--gray-600)', fontSize: '1rem', lineHeight: 1.5 }}>
-                        Maandag – Zondag: 24/7 bereikbaar<br/>
-                        <span style={{ fontSize: '0.9rem', color: 'var(--gray-500)' }}>Nooddienst altijd beschikbaar</span>
+                        Montag bis Sonntag, durchgehend<br/>
+                        <span style={{ fontSize: '0.9rem', color: 'var(--gray-500)' }}>Notdienst auch nachts und an Feiertagen</span>
                       </p>
                     </div>
                   </div>
@@ -158,7 +165,7 @@ export default function ContactPage() {
                       <Mail size={20} strokeWidth={2} />
                     </div>
                     <div>
-                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>E-mailadres</h4>
+                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>E-Mail</h4>
                       <a href={`mailto:${SITE_CONFIG.email}`} style={{ color: 'var(--gray-600)', textDecoration: 'none', fontSize: '1rem' }}>{SITE_CONFIG.email}</a>
                     </div>
                   </div>
@@ -168,9 +175,15 @@ export default function ContactPage() {
                       <MapPin size={20} strokeWidth={2} />
                     </div>
                     <div>
-                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Werkgebied</h4>
+                      <h4 style={{ fontWeight: 700, color: 'var(--navy-900)', fontSize: '1rem', marginBottom: '0.25rem' }}>Einsatzgebiet</h4>
+                      {/*
+                        * Hier stand "Landelijke dekking in Nederland" — eine
+                        * landesweite Zusage. Vier Partner decken kein Land ab,
+                        * also nennt diese Zeile die Städte aus der
+                        * Konfiguration und wächst mit dem Netzwerk mit.
+                        */}
                       <p style={{ color: 'var(--gray-600)', fontSize: '1rem', lineHeight: 1.5 }}>
-                        Landelijke dekking in Nederland. Wij komen direct naar u toe.
+                        {SITE_CONFIG.serviceAreaString}. Unser Partner kommt zu Ihrem Fahrzeug.
                       </p>
                     </div>
                   </div>

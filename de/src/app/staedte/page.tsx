@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${SITE_CONFIG.domain}/staedte`,
     // The service area as GeoJSON, for mapping tools and crawlers.
-    types: { 'application/geo+json': '/werkgebied.geojson' },
+    types: { 'application/geo+json': '/einsatzgebiet.geojson' },
     languages: { 'de-DE': `${SITE_CONFIG.domain}/staedte` },
   },
   openGraph: {

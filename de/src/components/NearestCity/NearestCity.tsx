@@ -8,16 +8,17 @@ import { SITE_CONFIG } from '@/config/site.config';
 import styles from './NearestCity.module.css';
 
 /*
- * "In de buurt" is a question about where the reader is, and the browser is
- * the only thing on the page that knows.
+ * "In der Nähe" ist eine Frage danach, wo der Leser steht, und der Browser ist
+ * das Einzige auf der Seite, das es weiß.
  *
- * Deliberately behind a button rather than on load: a geolocation prompt
- * that appears unasked is the kind of thing people dismiss on reflex, and a
- * dismissed prompt cannot be asked again on that visit. The city list below
- * it works without ever pressing it, so nothing is gated on consent.
+ * Mit Absicht hinter einer Schaltfläche und nicht beim Laden: ein
+ * Standortdialog, der unaufgefordert erscheint, wird reflexhaft weggeklickt,
+ * und ein weggeklickter Dialog lässt sich im selben Besuch nicht erneut
+ * stellen. Die Städteliste darunter funktioniert, ohne dass jemand sie
+ * drückt — nichts hängt an der Freigabe.
  *
- * haversineKm comes from cityTechnician rather than being written again here;
- * it is the same straight-line distance the dispatch scoring uses.
+ * haversineKm kommt aus cityTechnician statt hier noch einmal geschrieben zu
+ * werden; es ist dieselbe Luftlinie, mit der auch die Auftragsvergabe rechnet.
  */
 export default function NearestCity() {
   const [state, setState] = useState<'idle' | 'asking' | 'denied' | 'unsupported'>('idle');
@@ -50,45 +51,52 @@ export default function NearestCity() {
       {match ? (
         <>
           <p className={styles.result}>
-            Dichtstbijzijnde servicegebied: <strong>{match.city}</strong>
-            <span className={styles.km}> — hemelsbreed {Math.round(match.km)} km</span>
+            Nächstes Einsatzgebiet: <strong>{match.city}</strong>
+            <span className={styles.km}> — {Math.round(match.km)} km Luftlinie</span>
           </p>
           <div className={styles.actions}>
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.call}>
-              Bel {SITE_CONFIG.phone}
+              {SITE_CONFIG.phone} anrufen
             </a>
             <Link href={`/staedte/${match.slug}`} className={styles.secondary}>
-              Bekijk {match.city} →
+              {match.city} ansehen →
             </Link>
           </div>
           <p className={styles.note}>
-            Staat uw plaats er niet bij? Wij rijden verder dan deze lijst — bel gerust, dan hoort u
-            direct of er iemand in de buurt is.
+            Ihr Ort steht nicht dabei? Unsere Partner fahren weiter als diese Liste reicht — rufen
+            Sie gern an, dann hören Sie sofort, ob jemand in Ihrer Nähe ist.
           </p>
         </>
       ) : (
         <>
+          {/*
+            * Hier stand "Wij werken door heel Nederland met vaste technici per
+            * regio" — eine landesweite Zusage. Vier Partner decken kein Land
+            * ab, also nennt der Satz die Städte aus der Konfiguration und
+            * wächst mit dem Netzwerk mit.
+            */}
           <p className={styles.lead}>
-            Wij werken door heel Nederland met vaste technici per regio. Laat uw browser uw locatie
-            doorgeven, dan ziet u meteen welk servicegebied het dichtstbij is.
+            In {SITE_CONFIG.serviceAreaString} sitzt je ein eigener Fachbetrieb. Geben Sie Ihren
+            Standort frei, und Sie sehen sofort, welches Einsatzgebiet am nächsten liegt.
           </p>
           <div className={styles.actions}>
             <button type="button" onClick={locate} className={styles.call} disabled={state === 'asking'}>
-              {state === 'asking' ? 'Even zoeken…' : 'Toon het dichtstbijzijnde gebied'}
+              {state === 'asking' ? 'Wird gesucht…' : 'Nächstes Gebiet anzeigen'}
             </button>
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.secondary}>
-              Of bel direct: {SITE_CONFIG.phone}
+              Oder direkt anrufen: {SITE_CONFIG.phone}
             </a>
           </div>
           {state === 'denied' && (
             <p className={styles.note}>
-              Geen toegang tot uw locatie — geen probleem. Kies hieronder uw stad, of bel ons met uw
-              postcode.
+              Kein Zugriff auf Ihren Standort — kein Problem. Wählen Sie unten Ihre Stadt, oder
+              rufen Sie mit Ihrer Postleitzahl an.
             </p>
           )}
           {state === 'unsupported' && (
             <p className={styles.note}>
-              Uw browser deelt geen locatie. Kies hieronder uw stad, of bel ons met uw postcode.
+              Ihr Browser gibt keinen Standort weiter. Wählen Sie unten Ihre Stadt, oder rufen Sie
+              mit Ihrer Postleitzahl an.
             </p>
           )}
         </>

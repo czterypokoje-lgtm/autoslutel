@@ -10,77 +10,98 @@ declare global {
 import { reportLeadConversion } from '@/lib/leadTracking';
 import { tagLeadClaritySession } from '@/lib/clarity';
 
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import styles from './VehicleWizard.module.css';
 import { serviceLimit } from '@/lib/serviceLimits';
 import { SITE_CONFIG } from '@/config/site.config';
+import { BRANDS_LIST } from '@/data/carModels';
 import {
   PushButtonIcon,
   TurnKeyIcon,
   RemoteYesIcon,
   RemoteNoIcon,
-  CheckIcon,
   PhoneIcon,
   WhatsAppIcon,
 } from './icons';
 
 /**
- * Four-step booking wizard for the hero.
+ * Der Assistent im Hero: fünf Schritte mit je einer Entscheidung.
  *
- * Replaces a six-field form (make, model, year, service, phone, city) with
- * four one-decision screens. The reasoning: a driver standing next to a locked
- * car knows the licence plate by heart but often not the exact trim or year,
- * so the plate plus an RDW lookup removes three fields and a moment of doubt.
+ * Statt eines Formulars mit sechs Feldern (Marke, Modell, Baujahr, Leistung,
+ * Telefon, Ort) fünf Bildschirme mit je einer Frage. Die Begründung: wer neben
+ * einem verschlossenen Auto steht, kennt sein Kennzeichen auswendig, aber oft
+ * nicht die genaue Ausstattung.
  *
- * The two icon questions are not filler — together they determine the key type
- * and therefore the price, which lets the last step show a real figure instead
- * of asking for a phone number in exchange for nothing.
+ * DIE EINE ÄNDERUNG GEGENÜBER DER NIEDERLÄNDISCHEN FASSUNG
  *
- * Anyone without a Dutch plate (foreign car, helping a friend) can skip
- * straight to the plain form via the escape link, so the lookup never becomes
- * a dead end.
+ * Dort fragt Schritt 1 nur das Kennzeichen und holt Marke, Modell und Baujahr
+ * automatisch beim RDW — dem offenen niederländischen Fahrzeugregister. Der
+ * Satz "Wij halen merk, model en bouwjaar automatisch op" ist dort wahr und
+ * der Grund, warum der Schritt überhaupt funktioniert.
+ *
+ * In Deutschland gibt es dieses Register nicht. Das Kraftfahrt-Bundesamt gibt
+ * Fahrzeug- und Halterdaten nicht an Dritte heraus; es existiert keine
+ * Abfrage, die wir für den Besucher machen könnten. Den Aufruf einfach stehen
+ * zu lassen, wäre doppelt falsch gewesen: das Versprechen wird gebrochen, und
+ * das Kennzeichen eines deutschen Besuchers wäre an eine niederländische
+ * Behörde geschickt worden.
+ *
+ * Also: das Kennzeichenfeld bleibt — es ist die erkennbare Form dieses
+ * Abschnitts, und ein deutscher Fahrer kennt sein Kennzeichen — aber es wird
+ * als Text aufgenommen und an die Anfrage angehängt. Marke und Baujahr fragen
+ * wir dort, wo vorher die Bestätigung stand: zwei Auswahlfelder, gefüllt aus
+ * demselben Markenverzeichnis wie der Rest der Seite. Das ist ein Tippen mehr
+ * als in den Niederlanden und immer noch weniger als die sechs Felder, die es
+ * ersetzt — und es liefert bessere Daten, weil die Auswahl des Fahrers
+ * stimmt, wo ein Register nur die Erstzulassung kennt.
+ *
+ * Die beiden Icon-Fragen sind kein Füllmaterial: zusammen bestimmen sie die
+ * Schlüsselart und damit den Preis, sodass der letzte Schritt eine echte Zahl
+ * zeigen kann, statt eine Telefonnummer für nichts zu verlangen.
+ *
+ * Wer kein Kennzeichen zur Hand hat, springt über den Ausweichlink direkt ins
+ * einfache Formular.
  */
 
 type StartType = 'push' | 'key';
 type RemoteType = 'yes' | 'no';
 type WorkingKeyType = 'yes' | 'no';
 
-interface Vehicle {
-  merk: string;
-  model: string;
-  bouwjaar: string;
-}
-
 interface Props {
-  /** Rendered when the visitor says they do not have a plate to hand. */
+  /** Wird gezeigt, wenn der Besucher sagt, er habe sein Kennzeichen nicht zur Hand. */
   fallback?: React.ReactNode;
   city?: string;
 }
 
 const TOTAL_STEPS = 5;
 
-/** Key type follows from the two icon answers, and the price follows from that. */
+/** Die Jahre, die zur Auswahl stehen. OLDEST_YEAR in serviceLimits.ts ist 2000. */
+const YEARS = Array.from({ length: new Date().getFullYear() - 1999 }, (_, i) =>
+  String(new Date().getFullYear() - i)
+);
+
+/** Die Schlüsselart folgt aus den beiden Icon-Antworten, der Preis aus ihr. */
 function quoteFor(start: StartType | null, remote: RemoteType | null, workingKey: WorkingKeyType | null) {
   if (workingKey === 'no') {
     return {
-      service: 'Alle sleutels kwijt (noodaanmaak)',
+      service: 'Alle Schlüssel verloren (Notanfertigung)',
       from: SITE_CONFIG.prices.allKeysLost,
     };
   }
   if (start === 'push') {
     return {
-      service: 'Smart key / keyless bijmaken',
+      service: 'Keyless Go / Smart Key anfertigen',
       from: SITE_CONFIG.prices.smartKey,
     };
   }
   if (remote === 'yes') {
     return {
-      service: 'Afstandsbediening-sleutel bijmaken',
+      service: 'Funkschlüssel anfertigen',
       from: SITE_CONFIG.prices.remote,
     };
   }
   return {
-    service: 'Transpondersleutel bijmaken',
+    service: 'Transponderschlüssel anfertigen',
     from: SITE_CONFIG.prices.transponder,
   };
 }
@@ -90,9 +111,9 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
   const [goingBack, setGoingBack] = useState(false);
   const [showFallback, setShowFallback] = useState(false);
 
-  const [kenteken, setKenteken] = useState('');
-  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
-  const [lookupState, setLookupState] = useState<'idle' | 'busy' | 'fail'>('idle');
+  const [kennzeichen, setKennzeichen] = useState('');
+  const [marke, setMarke] = useState('');
+  const [baujahr, setBaujahr] = useState('');
 
   const [startType, setStartType] = useState<StartType | null>(null);
   const [remote, setRemote] = useState<RemoteType | null>(null);
@@ -103,90 +124,47 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
   const [honeypot, setHoneypot] = useState('');
   const [sending, setSending] = useState(false);
 
-  const lastLookup = useRef('');
-
   const go = useCallback((next: number) => {
-    setGoingBack(typeof step === 'number' ? typeof step === 'number' && next < step : false);
+    setGoingBack(typeof step === 'number' ? next < step : false);
     setStep(next);
   }, [step]);
 
-  const plateDigits = kenteken.replace(/[^A-Za-z0-9]/g, '');
-
-  /**
-   * RDW lookup. Never blocks progress: a failure or a timeout just means the
-   * vehicle box stays empty and the visitor carries on.
+  /*
+   * Hier stand ein Debounce-Effekt, der das Kennzeichen beim Tippen an
+   * /api/kenteken schickte, sobald sechs Zeichen eingegeben waren. Der
+   * Endpunkt ist ein Proxy auf das niederländische RDW-Register; mit einem
+   * deutschen Kennzeichen hätte er nie etwas gefunden, und jede Eingabe wäre
+   * an eine niederländische Behörde gegangen. Entfernt — siehe den Dateikopf.
    */
-  const lookup = useCallback(async () => {
-    const q = plateDigits.toUpperCase();
-    if (q.length < 4 || q === lastLookup.current) return;
-    lastLookup.current = q;
-    setLookupState('busy');
-    try {
-      const res = await fetch(`/api/kenteken?q=${encodeURIComponent(q)}`);
-      const json = await res.json();
-      if (json.success && json.data?.merk) {
-        setVehicle({
-          merk: json.data.merk,
-          model: json.data.model,
-          bouwjaar: json.data.bouwjaar,
-        });
-        setLookupState('idle');
-      } else {
-        setVehicle(null);
-        setLookupState('fail');
-      }
-    } catch {
-      setVehicle(null);
-      setLookupState('fail');
-    }
-  }, [plateDigits]);
-
-  /**
-   * Look the plate up while the visitor is still typing, rather than only on
-   * blur. A Dutch plate is six characters, so as soon as six are entered we
-   * have enough to ask. This matters because the confirmation ("SKODA FABIA,
-   * 2022") is the moment that earns trust — waiting for blur means anyone who
-   * taps "Verder" straight away never sees it.
-   */
-  useEffect(() => {
-    if (plateDigits.length < 6) return;
-    const t = setTimeout(() => { void lookup(); }, 450);
-    return () => clearTimeout(t);
-  }, [plateDigits, lookup]);
 
   const quote = quoteFor(startType, remote, workingKey);
 
   /*
-   * What we can actually do for this car.
+   * Was wir für dieses Fahrzeug tatsächlich tun können.
    *
-   * Shown before the price rather than after it: a visitor who reads "vanaf
-   * €249" and only then learns we cannot key their 2016 Mercedes has already
-   * cost us the click and is about to cost us the phone call. `workingKey`
-   * decides the scenario — no working key is all-keys-lost, which is the
-   * harder job and has stricter limits.
+   * Steht vor dem Preis und nicht dahinter: wer "ab 249 €" liest und erst
+   * danach erfährt, dass wir seinen Mercedes von 2016 nicht anlernen können,
+   * hat uns den Klick gekostet und kostet gleich noch das Telefonat.
+   * workingKey entscheidet das Szenario — ohne funktionierenden Schlüssel ist
+   * es der schwerere Fall mit den strengeren Grenzen.
+   *
+   * Marke und Baujahr kommen jetzt aus der Auswahl des Besuchers statt aus
+   * einer Registerabfrage. Für diese Prüfung ist das die bessere Quelle: das
+   * Register kennt die Erstzulassung, der Fahrer kennt sein Auto.
    */
-  const limit = serviceLimit(
-    vehicle?.merk,
-    vehicle?.bouwjaar,
-    workingKey === 'no' ? 'akl' : 'add-key',
-  );
+  const limit = serviceLimit(marke || undefined, baujahr || undefined, workingKey === 'no' ? 'akl' : 'add-key');
 
-  function buildWhatsAppUrl() {
-    const lines = [
-      'Hallo Autosleutel24!',
-      '',
-      `Kenteken: ${kenteken || 'niet ingevuld'}`,
-      vehicle ? `Auto: ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar})` : null,
-      `Sleuteltype: ${quote.service}`,
-      `Werkende sleutel: ${workingKey === 'yes' ? 'Ja' : 'Nee, alle sleutels kwijt'}`, 
-      `Start met: ${startType === 'push' ? 'Startknop' : 'Sleutel in contact'}`,
-      postcode ? `Postcode: ${postcode}` : null,
-      phone ? `Telefoon: ${phone}` : null,
-      '',
-      'Graag hoor ik de prijs en de aankomsttijd.',
-    ].filter(Boolean);
-    return `https://wa.me/${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`;
-  }
+  /*
+   * Hier stand buildWhatsAppUrl(): baute eine WhatsApp-Nachricht mit allen
+   * Angaben des Assistenten. Schon auf der niederländischen Seite rief sie
+   * niemand auf — die WhatsApp-Schaltfläche oben geht auf /whatsapp, das die
+   * Weiterleitung samt Anzeigen-Zuordnung übernimmt. Entfernt statt
+   * mitübersetzt: toter Code, der aussieht wie eine Funktion, ist schlimmer
+   * als keiner, weil beim nächsten Lesen jemand glaubt, dieser Weg existiere.
+   *
+   * Wird die Nachricht gebraucht, gehört sie in /whatsapp, wo der Rest der
+   * WhatsApp-Logik liegt.
+   */
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -201,11 +179,13 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        brand: vehicle?.merk || 'Onbekend',
-        model: vehicle ? `${kenteken} — ${vehicle.model}` : kenteken,
-        year: vehicle?.bouwjaar || '',
+        brand: marke || 'Unbekannt',
+        /* Das Kennzeichen reist im Modellfeld mit: die Tabelle hat keine
+           eigene Spalte dafür, und das Büro liest dieses Feld ohnehin. */
+        model: kennzeichen || '',
+        year: baujahr || '',
         service: quote.service,
-        workingKey: workingKey === 'yes' ? 'Ja' : 'Nee',
+        workingKey: workingKey === 'yes' ? 'Ja' : 'Nein',
         location: postcode,
         postcode,
         phone,
@@ -228,9 +208,6 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       postcode,
     });
 
-
-
-
     setStep('success');
     setSending(false);
   }
@@ -243,15 +220,15 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
 
   return (
     <div className={styles.shell}>
-      {/* Someone genuinely locked out will call, not fill in a form. Keep both
-          routes above the wizard rather than below it. */}
+      {/* Wer wirklich ausgeschlossen ist, ruft an und füllt kein Formular aus.
+          Beide Wege stehen deshalb über dem Assistenten und nicht darunter. */}
       <div className={styles.urgent}>
         <a
           href={`tel:${SITE_CONFIG.phoneTel}`}
           className={`${styles.urgentBtn} ${styles.callBtn}`}
           id="wizard-call"
         >
-          <PhoneIcon /> Bel direct
+          <PhoneIcon /> Jetzt anrufen
         </a>
         <a
           href="/whatsapp"
@@ -274,77 +251,99 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       </div>
 
       <div className={styles.stepMeta}>
-        <span>Stap {step === 'success' ? TOTAL_STEPS : step} van {TOTAL_STEPS}</span>
+        <span>Schritt {step === 'success' ? TOTAL_STEPS : step} von {TOTAL_STEPS}</span>
         {typeof step === 'number' && step > 1 && (
           <button type="button" className={styles.back} onClick={() => go((step as number) - 1)}>
-            Terug
+            Zurück
           </button>
         )}
       </div>
 
       <div className={styles.body}>
-        {/* ── 1. Licence plate ── */}
+        {/* ── 1. Kennzeichen, Marke und Baujahr ── */}
         {step === 1 && (
           <div className={stepClass} key="s1">
-            <p className={styles.q}>Wat is uw kenteken?</p>
+            <p className={styles.q}>Welches Fahrzeug ist es?</p>
+            {/*
+              * Der Hinweis sagt NICHT, dass wir Marke und Baujahr automatisch
+              * holen. Auf der niederländischen Seite steht genau das, und dort
+              * stimmt es; hier gibt es kein öffentliches Register, das man
+              * abfragen könnte. Siehe den Dateikopf.
+              */}
             <p className={styles.hint}>
-              Wij halen merk, model en bouwjaar automatisch op bij de RDW — u hoeft
-              verder niets op te zoeken.
+              Das Kennzeichen hilft uns beim Zuordnen vor Ort. Marke und Baujahr brauchen wir,
+              um Ihnen den Festpreis nennen zu können — beides steht in Ihrer
+              Zulassungsbescheinigung Teil I.
             </p>
 
             <div className={styles.plateWrap}>
               <span className={styles.euBand} aria-hidden="true">
                 <span>★</span>
-                <span>NL</span>
+                <span>D</span>
               </span>
               <input
                 className={styles.plateInput}
-                value={kenteken}
-                onChange={(e) => {
-                  setKenteken(e.target.value.toUpperCase());
-                  setVehicle(null);
-                  setLookupState('idle');
-                }}
-                onBlur={lookup}
-                placeholder="XX-XXX-X"
-                maxLength={10}
+                value={kennzeichen}
+                onChange={(e) => setKennzeichen(e.target.value.toUpperCase())}
+                placeholder="B-AB 1234"
+                maxLength={12}
                 autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
-                aria-label="Kenteken"
+                aria-label="Kennzeichen"
                 inputMode="text"
               />
             </div>
 
-            {vehicle && (
-              <div className={styles.found}>
-                <span className={styles.foundIcon}><CheckIcon /></span>
-                <span className={styles.foundText}>
-                  <span className={styles.foundName}>
-                    {vehicle.merk} {vehicle.model}
-                  </span>
-                  <span className={styles.foundSub}>Bouwjaar {vehicle.bouwjaar}</span>
-                </span>
-              </div>
-            )}
-
-            {lookupState === 'busy' && (
-              <p className={styles.lookupNote}>Kenteken opzoeken…</p>
-            )}
-            {lookupState === 'fail' && (
-              <p className={`${styles.lookupNote} ${styles.lookupErr}`}>
-                Dit kenteken kunnen wij niet ophalen. Geen probleem — u kunt gewoon
-                doorgaan.
-              </p>
-            )}
+            {/*
+              * Wo auf der niederländischen Seite die Bestätigung aus dem
+              * Register erscheint ("SKODA FABIA, 2022"), stehen hier zwei
+              * Auswahlfelder. Dieselbe Stelle, dieselbe Rolle: sie sagen dem
+              * Besucher, dass wir sein Auto kennen — nur weiß es hier er und
+              * nicht eine Behörde.
+              */}
+            <div className={styles.vehiclePick}>
+              <label className={styles.field}>
+                <span className={styles.label}>Marke</span>
+                <select
+                  className={styles.input}
+                  value={marke}
+                  onChange={(e) => setMarke(e.target.value)}
+                  aria-label="Marke"
+                >
+                  <option value="">Marke wählen…</option>
+                  {BRANDS_LIST.map((b) => (
+                    <option key={b} value={b}>
+                      {b}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className={styles.field}>
+                <span className={styles.label}>Baujahr</span>
+                <select
+                  className={styles.input}
+                  value={baujahr}
+                  onChange={(e) => setBaujahr(e.target.value)}
+                  aria-label="Baujahr"
+                >
+                  <option value="">Baujahr wählen…</option>
+                  {YEARS.map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
 
             <button
               type="button"
               className={styles.cta}
-              disabled={plateDigits.length < 4}
-              onClick={() => { lookup(); go(2); }}
+              disabled={!marke}
+              onClick={() => go(2)}
             >
-              Verder
+              Weiter
             </button>
 
             {fallback && (
@@ -353,7 +352,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
                 className={styles.escape}
                 onClick={() => setShowFallback(true)}
               >
-                Ik weet mijn kenteken niet
+                Ich habe die Angaben nicht zur Hand
               </button>
             )}
           </div>
@@ -362,11 +361,11 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {/* ── 2. How does the car start ── */}
         {step === 2 && (
           <div className={stepClass} key="s2">
-            <p className={styles.q}>Hoe start u uw auto?</p>
+            <p className={styles.q}>Wie starten Sie Ihr Auto?</p>
             <p className={styles.hint}>
-              Hiermee weten wij welk type sleutel u nodig heeft.
+              Daran erkennen wir, welche Schlüsselart Sie brauchen.
             </p>
-            <div className={styles.options} role="radiogroup" aria-label="Hoe start u uw auto">
+            <div className={styles.options} role="radiogroup" aria-label="Wie starten Sie Ihr Auto">
               <button
                 type="button"
                 role="radio"
@@ -376,8 +375,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               >
                 <span className={styles.cardArt}><PushButtonIcon /></span>
                 <span>
-                  <span className={styles.cardLabel}>Startknop</span>
-                  <span className={styles.cardSub}>Keyless — sleutel blijft in uw zak</span>
+                  <span className={styles.cardLabel}>Startknopf</span>
+                  <span className={styles.cardSub}>Keyless Go — der Schlüssel bleibt in der Tasche</span>
                 </span>
               </button>
               <button
@@ -389,8 +388,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               >
                 <span className={styles.cardArt}><TurnKeyIcon /></span>
                 <span>
-                  <span className={styles.cardLabel}>Sleutel omdraaien</span>
-                  <span className={styles.cardSub}>Sleutel in het contactslot</span>
+                  <span className={styles.cardLabel}>Schlüssel drehen</span>
+                  <span className={styles.cardSub}>Schlüssel steckt im Zündschloss</span>
                 </span>
               </button>
             </div>
@@ -400,11 +399,11 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {/* ── 3. Remote buttons ── */}
         {step === 3 && (
           <div className={stepClass} key="s3">
-            <p className={styles.q}>Zitten er knoppen op uw sleutel?</p>
+            <p className={styles.q}>Hat Ihr Schlüssel Tasten?</p>
             <p className={styles.hint}>
-              Bedoeld zijn de knoppen voor openen en sluiten op afstand.
+              Gemeint sind die Tasten zum Ver- und Entriegeln aus der Entfernung.
             </p>
-            <div className={styles.options} role="radiogroup" aria-label="Knoppen op de sleutel">
+            <div className={styles.options} role="radiogroup" aria-label="Tasten am Schlüssel">
               <button
                 type="button"
                 role="radio"
@@ -414,8 +413,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               >
                 <span className={styles.cardArt}><RemoteYesIcon /></span>
                 <span>
-                  <span className={styles.cardLabel}>Ja, met knoppen</span>
-                  <span className={styles.cardSub}>Centrale vergrendeling</span>
+                  <span className={styles.cardLabel}>Ja, mit Tasten</span>
+                  <span className={styles.cardSub}>Zentralverriegelung per Funk</span>
                 </span>
               </button>
               <button
@@ -427,8 +426,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               >
                 <span className={styles.cardArt}><RemoteNoIcon /></span>
                 <span>
-                  <span className={styles.cardLabel}>Nee, geen knoppen</span>
-                  <span className={styles.cardSub}>Alleen een sleutelbaard</span>
+                  <span className={styles.cardLabel}>Nein, keine Tasten</span>
+                  <span className={styles.cardSub}>Nur das Schlüsselblatt</span>
                 </span>
               </button>
             </div>
@@ -436,14 +435,15 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         )}
 
         
-        {/* ── 4. Werkende sleutel ── */}
+        {/* ── 4. Funktionierender Schlüssel ── */}
         {step === 4 && (
           <div className={stepClass} key="s4">
-            <p className={styles.q}>Heeft u nog een werkende sleutel?</p>
+            <p className={styles.q}>Haben Sie noch einen funktionierenden Schlüssel?</p>
             <p className={styles.hint}>
-              Als u alle sleutels kwijt bent, moeten wij de auto openen zonder schade en een nieuwe sleutel vanaf nul inleren.
+              Sind alle Schlüssel weg, müssen wir das Fahrzeug schadenfrei öffnen und einen neuen
+              Schlüssel von null an der Wegfahrsperre anlernen — mehr Arbeit, anderer Preis.
             </p>
-            <div className={styles.options} role="radiogroup" aria-label="Heeft u nog een werkende sleutel">
+            <div className={styles.options} role="radiogroup" aria-label="Haben Sie noch einen funktionierenden Schlüssel">
               <button
                 type="button"
                 role="radio"
@@ -453,8 +453,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               >
                 <span className={styles.cardArt}><RemoteYesIcon /></span>
                 <span>
-                  <span className={styles.cardLabel}>Ja, ik heb een sleutel</span>
-                  <span className={styles.cardSub}>Ik wil een extra reservesleutel</span>
+                  <span className={styles.cardLabel}>Ja, einen habe ich</span>
+                  <span className={styles.cardSub}>Ich möchte einen Zweitschlüssel</span>
                 </span>
               </button>
               <button
@@ -466,8 +466,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               >
                 <span className={styles.cardArt}><RemoteNoIcon /></span>
                 <span>
-                  <span className={styles.cardLabel}>Nee, alles is kwijt</span>
-                  <span className={styles.cardSub}>Ik heb een compleet nieuwe nodig</span>
+                  <span className={styles.cardLabel}>Nein, alle sind weg</span>
+                  <span className={styles.cardSub}>Ich brauche einen komplett neuen</span>
                 </span>
               </button>
             </div>
@@ -477,9 +477,9 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         {/* ── 5. Contact ── */}
         {step === 5 && (
           <form className={stepClass} key="s5" onSubmit={submit}>
-            <p className={styles.q}>Waar mogen wij naartoe komen?</p>
+            <p className={styles.q}>Wohin sollen wir kommen?</p>
             <p className={styles.hint}>
-              U krijgt direct de exacte prijs en aankomsttijd via WhatsApp.
+              Sie hören den Festpreis und ein Zeitfenster, bevor jemand losfährt.
             </p>
 
             {limit.status !== 'ok' && (
@@ -495,20 +495,19 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
             )}
 
             {/*
-              * No price when we cannot do the job. A "richtprijs" beside a
-              * notice saying we cannot help is the kind of mixed message that
-              * gets someone to send the form anyway.
+              * Kein Preis, wenn wir die Arbeit nicht machen können. Ein
+              * Richtpreis neben dem Hinweis, dass wir nicht helfen können, ist
+              * genau die widersprüchliche Botschaft, die jemanden dazu bringt,
+              * das Formular trotzdem abzuschicken.
               */}
             {limit.status !== 'unavailable' && (
             <div className={styles.quote}>
               <div className={styles.quoteLabel}>Richtprijs — {quote.service}</div>
               <div className={styles.quoteAmount}>vanaf €{quote.from}</div>
               <div className={styles.quoteNote}>
-                {vehicle
-                  ? `Voor uw ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar}). `
-                  : ''}
-                De exacte prijs bevestigen wij vooraf — nooit achteraf.
-                {limit.status === 'lead-time' && ` Levertijd ${limit.lead}.`}
+                {marke ? `Für Ihren ${marke}${baujahr ? ` (${baujahr})` : ''}. ` : ''}
+                Den Festpreis bestätigen wir vorab — nie hinterher.
+                {limit.status === 'lead-time' && ` Lieferzeit ${limit.lead}.`}
               </div>
             </div>
             )}
@@ -516,23 +515,29 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
             <div className={styles.fields}>
               <div className={styles.row2}>
                 <label className={styles.field}>
-                  <span className={styles.label}>Postcode</span>
+                  <span className={styles.label}>Postleitzahl</span>
+                  {/* Fünfstellig, deutsches Format. "1011 AB" ist eine
+                      niederländische PLZ, und ein Beispiel im falschen Format
+                      lässt Leute falsch tippen. */}
                   <input
                     className={styles.input}
                     value={postcode}
                     onChange={(e) => setPostcode(e.target.value)}
-                    placeholder="1011 AB"
+                    placeholder="10115"
+                    inputMode="numeric"
+                    maxLength={5}
+                    pattern="[0-9]{5}"
                     autoComplete="postal-code"
                     required
                   />
                 </label>
                 <label className={styles.field}>
-                  <span className={styles.label}>Telefoonnummer</span>
+                  <span className={styles.label}>Telefonnummer</span>
                   <input
                     className={styles.input}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="06 1234 5678"
+                    placeholder="0151 23456789"
                     type="tel"
                     autoComplete="tel"
                     required
@@ -541,7 +546,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               </div>
             </div>
 
-            {/* Honeypot — hidden from people, tempting to bots. */}
+            {/* Honeypot — für Menschen unsichtbar, für Bots verlockend. */}
             <input
               type="text"
               name="company"
@@ -554,7 +559,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
             />
 
             <button type="submit" className={styles.cta} disabled={sending}>
-              {sending ? 'Versturen…' : 'Ontvang prijs & aankomsttijd'}
+              {sending ? 'Wird gesendet…' : 'Festpreis & Zeitfenster erhalten'}
             </button>
           </form>
         )}
@@ -563,8 +568,11 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Aanvraag Ontvangen!</h3>
-            <p style={{ color: '#cbd5e1', fontSize: '1.1rem' }}>Bedankt voor uw aanvraag. We bellen u binnen 5 minuten met de exacte prijs en beschikbaarheid.</p>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Anfrage angekommen</h3>
+            {/* Hier stand "We bellen u binnen 5 minuten" — eine Zusage, die bei
+                vier Partnern niemand halten kann und die beim ersten Mal
+                auffällt, an dem sie nicht stimmt. */}
+            <p style={{ color: '#cbd5e1', fontSize: '1.1rem' }}>Danke. Wir rufen Sie mit dem Festpreis für Ihr Fahrzeug und einem Zeitfenster zurück. Eilt es? Rufen Sie an — das ist schneller.</p>
           </div>
         )}
       </div>

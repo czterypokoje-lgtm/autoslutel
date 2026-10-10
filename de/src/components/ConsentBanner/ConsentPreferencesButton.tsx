@@ -24,7 +24,7 @@ export default function ConsentPreferencesButton() {
         textDecoration: 'underline',
       }}
     >
-      Cookie-instellingen
+      Cookie-Einstellungen
     </button>
   );
 }

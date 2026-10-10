@@ -2,6 +2,7 @@
 
 import { reportLeadConversion } from '@/lib/leadTracking';
 import { tagLeadClaritySession } from '@/lib/clarity';
+import { SITE_CONFIG } from '@/config/site.config';
 
 import React, { useState } from 'react';
 
@@ -52,13 +53,19 @@ export default function ContactForm() {
       .catch(err => console.error('Error saving lead', err));
 
     try {
-      const response = await fetch('https://formspree.io/f/mgavvqvd', {
-        method: 'POST',
-        body: data,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+      /*
+       * Formspree ist die zusätzliche E-Mail-Benachrichtigung, nicht der Weg,
+       * auf dem die Anfrage ankommt — das ist /api/leads oben. Ohne eigenen
+       * Endpunkt (siehe site.config.ts formspreeId) wird dieser Schritt
+       * übersprungen, statt an das niederländische Formular zu senden.
+       */
+      const response = SITE_CONFIG.formspreeId
+        ? await fetch(`https://formspree.io/f/${SITE_CONFIG.formspreeId}`, {
+            method: 'POST',
+            body: data,
+            headers: { Accept: 'application/json' },
+          })
+        : ({ ok: true } as const);
 
       if (response.ok) {
         setStatus('succeeded');
@@ -120,13 +127,16 @@ export default function ContactForm() {
   if (status === 'succeeded') {
     return (
       <div style={{ background: '#e6fffa', border: '1px solid #38b2ac', padding: '1.5rem', borderRadius: '8px', color: '#234e52', textAlign: 'center' }}>
-        <h3 style={{ marginBottom: '0.5rem', color: '#2c7a7b' }}>Bedankt voor uw aanvraag!</h3>
-        <p>We hebben uw bericht succesvol ontvangen. U ontvangt doorgaans binnen 15 minuten een reactie van onze monteur.</p>
+        <h3 style={{ marginBottom: '0.5rem', color: '#2c7a7b' }}>Danke — Ihre Anfrage ist angekommen.</h3>
+        {/* Hier stand "binnen 15 minuten een reactie" — eine Zusage, die
+            niemand prüfen kann, bis sie gebrochen ist. Was wahr ist: wir
+            melden uns, und wer es eilig hat, ruft an. */}
+        <p>Wir melden uns mit dem Festpreis für Ihr Fahrzeug und einem Zeitfenster. Eilt es? Rufen Sie an — das ist schneller als jedes Formular.</p>
         <button 
           onClick={() => setStatus('idle')} 
           style={{ background: 'transparent', border: '1px solid #38b2ac', padding: '0.5rem 1rem', borderRadius: '6px', color: '#2c7a7b', marginTop: '1rem', cursor: 'pointer', fontWeight: 600 }}
         >
-          Nog een bericht sturen
+          Weitere Anfrage senden
         </button>
       </div>
     );
@@ -135,10 +145,15 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} id="contact-form">
       {[
-        { id: 'name', label: 'Naam', type: 'text', placeholder: 'Uw naam' },
-        { id: 'phone', label: 'Telefoonnummer', type: 'tel', placeholder: '06-XXXXXXXX' },
-        { id: 'car', label: 'Automerk & Model', type: 'text', placeholder: 'bijv. BMW 3-serie 2019' },
-        { id: 'email', label: 'E-mailadres', type: 'email', placeholder: 'uw@email.nl' },
+        { id: 'name', label: 'Name', type: 'text', placeholder: 'Ihr Name' },
+        /*
+         * Platzhalter im deutschen Format. "06-XXXXXXXX" ist eine
+         * niederländische Mobilnummer, und ein Beispiel im falschen Format
+         * ist der häufigste Grund, warum jemand eine Nummer falsch eingibt.
+         */
+        { id: 'phone', label: 'Telefon', type: 'tel', placeholder: '0151 23456789' },
+        { id: 'car', label: 'Marke, Modell & Baujahr', type: 'text', placeholder: 'z. B. BMW 3er 2019' },
+        { id: 'email', label: 'E-Mail', type: 'email', placeholder: 'ihre@email.de' },
       ].map((field) => (
         <div key={field.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
           <label htmlFor={field.id} style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>{field.label}</label>
@@ -154,12 +169,12 @@ export default function ContactForm() {
         </div>
       ))}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-        <label htmlFor="message" style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>Bericht / Situatie</label>
+        <label htmlFor="message" style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text-primary)' }}>Ihre Situation</label>
         <textarea
           id="message"
           name="message"
           rows={4}
-          placeholder="Beschrijf uw situatie..."
+          placeholder="Was ist passiert, und wo steht das Fahrzeug?"
           required
           disabled={status === 'submitting'}
           style={{ padding: '0.75rem 1rem', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '0.95rem', resize: 'vertical', outline: 'none', background: status === 'submitting' ? '#f3f4f6' : '#fff' }}
@@ -168,7 +183,7 @@ export default function ContactForm() {
 
       {status === 'error' && (
         <div style={{ color: '#c53030', background: '#fff5f5', padding: '0.75rem', borderRadius: '6px', fontSize: '0.9rem', border: '1px solid #feb2b2' }}>
-          Er is helaas iets misgegaan bij het versturen van uw bericht. Probeer het opnieuw of neem telefonisch contact op.
+          Das Senden hat nicht funktioniert. Versuchen Sie es noch einmal, oder rufen Sie an — das geht ohnehin schneller.
         </div>
       )}
 
@@ -189,7 +204,7 @@ export default function ContactForm() {
           transition: 'background 0.2s'
         }}
       >
-        {status === 'submitting' ? 'Bezig met verzenden...' : '📋 Offerte Aanvragen'}
+        {status === 'submitting' ? 'Wird gesendet…' : '📋 Angebot anfordern'}
       </button>
     </form>
   );

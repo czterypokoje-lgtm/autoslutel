@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: {
     absolute: `Häufige Fragen zum Autoschlüssel | FAQ | ${SITE_CONFIG.name}`,
   },
-  description: `Antwoorden op alle vragen over autosleutel bijmaken, kosten, transponder programmeren, smart key en auto openen. Bel direct: ${SITE_CONFIG.phone}`,
+  description: `Antworten auf die häufigsten Fragen: Autoschlüssel nachmachen, Kosten, Transponder anlernen, Keyless Go und Auto öffnen. Telefon: ${SITE_CONFIG.phone}`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/haeufige-fragen`,
     languages: {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     url: `${SITE_CONFIG.domain}/haeufige-fragen`,
     type: 'website',
     title: `Häufige Fragen zum Autoschlüssel nachmachen | ${SITE_CONFIG.name}`,
-    description: `Alles wat u wilt weten over autosleutels bijmaken, kosten en onze service. Bel ${SITE_CONFIG.phone}`,
+    description: `Alles zum Autoschlüssel nachmachen, zu den Kosten und zum Ablauf. Telefon: ${SITE_CONFIG.phone}`,
     images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Häufige Fragen zum Autoschlüssel nachmachen — Autoschlüssel24' }],
   },
 };

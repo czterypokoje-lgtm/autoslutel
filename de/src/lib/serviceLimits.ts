@@ -1,20 +1,21 @@
 /**
- * What we cannot do, and what we can only do with a delay.
+ * Was wir nicht können, und was wir nur mit Verzögerung können.
  *
- * These are real workshop limits, not marketing copy. Quoting a same-day price
- * for a job that needs a dealer-ordered key — or any price at all for a car we
- * cannot key — costs twice: once for the advertising click, and again for the
- * phone call that ends in "sorry". The same rules therefore drive the kenteken
- * wizard and the notices on the brand pages, so the site cannot say one thing
- * in one place and something else in another.
+ * Das sind echte Werkstattgrenzen, keine Werbetexte. Einen Preis für denselben
+ * Tag zu nennen, wo der Schlüssel erst beim Händler bestellt werden muss — oder
+ * überhaupt einen Preis für ein Fahrzeug, das wir nicht anlernen können —
+ * kostet zweimal: einmal den Klick auf die Anzeige und einmal das Telefonat,
+ * das mit "tut mir leid" endet. Dieselben Regeln steuern deshalb den Assistenten
+ * im Hero und die Hinweise auf den Leistungsseiten, damit die Seite nicht an
+ * einer Stelle etwas anderes sagt als an der anderen.
  *
- * SCENARIOS
+ * SZENARIEN
  *
- *   'add-key'  the customer still has a working key and wants another
- *   'akl'      all keys lost, the car has to be opened and started from nothing
+ *   'add-key'  der Kunde hat noch einen funktionierenden Schlüssel und will einen zweiten
+ *   'akl'      alle Schlüssel verloren; das Fahrzeug muss geöffnet und von null angelernt werden
  *
- * These are harder than each other in that order, which is why a make can be
- * fine for one and impossible for the other.
+ * In dieser Reihenfolge wird es schwerer, und darum kann eine Marke für das
+ * eine machbar und für das andere unmöglich sein.
  */
 
 export type LimitScenario = 'add-key' | 'akl';
@@ -26,7 +27,7 @@ export type LimitVerdict =
       status: 'lead-time';
       title: string;
       detail: string;
-      /** Human-readable, e.g. "2-4 werkdagen". */
+      /** Für Menschen lesbar, z. B. "3-5 Werktage". */
       lead: string;
     }
   | {
@@ -37,43 +38,44 @@ export type LimitVerdict =
     };
 
 /**
- * The oldest car we take on.
+ * Das älteste Fahrzeug, das wir übernehmen.
  *
- * Pre-2000 vehicles are mechanical or use immobiliser generations whose tooling
- * we no longer carry.
+ * Fahrzeuge vor 2000 sind mechanisch oder verwenden Wegfahrsperren-Generationen,
+ * deren Technik unsere Partner nicht mehr mitführen.
  */
 const OLDEST_YEAR = 2000;
 
 /**
  * Mercedes FBS4.
  *
- * FBS4 keys are bound to the car in a way no aftermarket tool can reproduce:
- * neither an extra key nor all-keys-lost is possible outside the dealer
- * network. It arrived with the W222 S-Klasse in 2013 and spread through the
- * range with the W205 C-Klasse in 2014.
+ * FBS4-Schlüssel sind so an das Fahrzeug gebunden, dass kein Nachbaugerät das
+ * reproduziert: weder ein Zweitschlüssel noch "alle Schlüssel verloren" ist
+ * außerhalb des Händlernetzes möglich. Eingeführt mit der S-Klasse W222 im Jahr
+ * 2013, in der Breite mit der C-Klasse W205 im Jahr 2014.
  *
- * The cut-off is the earlier of the two on purpose. Being too cautious costs a
- * job we might have done; being too generous means a van sent to a car that
- * cannot be keyed, with the customer waiting. If you would rather catch the
- * 2013 cars, move this to 2014 — it is deliberately one number in one place.
+ * Die Grenze ist absichtlich die früheste der beiden. Zu vorsichtig zu sein
+ * kostet einen Auftrag, den wir vielleicht hätten machen können; zu großzügig
+ * zu sein heißt, ein Fahrzeug anzufahren, das nicht angelernt werden kann,
+ * während der Kunde wartet. Wer die 2013er doch mitnehmen will, setzt das auf
+ * 2014 — es ist mit Absicht eine Zahl an einer Stelle.
  */
 const MERCEDES_FBS4_FROM = 2013;
 
 /**
- * Volkswagen, all keys lost.
+ * Volkswagen, alle Schlüssel verloren.
  *
- * ONLY all-keys-lost. An extra key alongside a working one is same-day as
- * usual — the working key is what makes that possible. With no key left the
- * replacement has to be ordered as an original through the dealer channel,
- * which is what takes the days.
+ * NUR dieser Fall. Ein Zweitschlüssel neben einem funktionierenden ist wie
+ * immer eine Sache desselben Tages — der vorhandene Schlüssel ist, was das
+ * möglich macht. Ohne jeden Schlüssel muss der Ersatz als Originalteil über
+ * den Händlerkanal bestellt werden, und das sind die Tage.
  *
- * Applying this to add-key as well, as an earlier version did, quietly told
- * every VW owner wanting a spare to wait four days for a job we do while they
- * watch.
+ * Das auch auf den Zweitschlüssel anzuwenden, wie eine frühere Fassung es tat,
+ * sagte jedem VW-Fahrer, der einen Ersatz wollte, er solle Tage warten — für
+ * eine Arbeit, die er zusehen kann.
  */
 const VW_AKL_ORDER_FROM = 2014;
 
-/** Normalises RDW make strings: "MERCEDES-BENZ", "VOLKSWAGEN", "V.W." … */
+/** Normalisiert Markennamen: "MERCEDES-BENZ", "VOLKSWAGEN", "V.W." … */
 function normaliseMake(make: string): string {
   return make
     .toLowerCase()
@@ -93,10 +95,10 @@ function isVolkswagen(make: string): boolean {
 }
 
 /**
- * @param make  as the RDW returns it
- * @param year  first registration year; anything unparseable means we stay
- *              quiet rather than guess, because a wrong "we cannot help you"
- *              loses a customer who was ready to book.
+ * @param make  wie der Besucher sie angegeben hat
+ * @param year  Baujahr; ist es nicht lesbar, schweigen wir statt zu raten —
+ *              ein falsches "wir können Ihnen nicht helfen" verliert einen
+ *              Kunden, der buchen wollte.
  */
 export function serviceLimit(
   make: string | null | undefined,
@@ -111,28 +113,28 @@ export function serviceLimit(
   if (y < OLDEST_YEAR) {
     return {
       status: 'unavailable',
-      title: `Bouwjaar vóór ${OLDEST_YEAR} — wij kunnen deze auto niet helpen`,
+      title: `Baujahr vor ${OLDEST_YEAR} — dieses Fahrzeug können wir nicht übernehmen`,
       detail:
-        'Voor auto’s van vóór 2000 werken wij niet meer: het benodigde gereedschap voor die oudere systemen voeren wij niet. Een traditionele slotenmaker of de merkdealer kan u hier wel verder helpen.',
+        'Für Fahrzeuge vor 2000 führen unsere Partner die Technik nicht mehr mit. Ein klassischer Schlüsseldienst mit mechanischer Fräse oder der Vertragshändler kann Ihnen hier weiterhelfen — wir sagen es lieber jetzt als nach der Anfahrt.',
     };
   }
 
   if (isMercedes(make) && y >= MERCEDES_FBS4_FROM) {
     return {
       status: 'unavailable',
-      title: 'Mercedes met FBS4 — alleen via de dealer',
+      title: 'Mercedes mit FBS4 — nur über den Vertragshändler',
       detail:
-        'Mercedes-modellen vanaf ongeveer 2013/2014 gebruiken het FBS4-systeem. Daarbij zijn de sleutels zo aan de auto gekoppeld dat een sleutel bijmaken én alle sleutels kwijt uitsluitend door Mercedes zelf gedaan kunnen worden. Wij kunnen dit niet voor u oplossen en sturen u liever meteen door dan dat u op ons wacht.',
+        'Mercedes-Modelle ab etwa 2013/2014 verwenden FBS4. Dabei sind die Schlüssel so an das Fahrzeug gebunden, dass weder ein Zweitschlüssel noch der Fall "alle Schlüssel verloren" außerhalb des Händlernetzes möglich ist. Das können wir nicht lösen, und wir schicken Sie lieber gleich weiter, als dass Sie auf uns warten.',
     };
   }
 
   if (isVolkswagen(make) && scenario === 'akl' && y >= VW_AKL_ORDER_FROM) {
     return {
       status: 'lead-time',
-      title: 'Mogelijk, maar niet dezelfde dag',
-      lead: '2-4 werkdagen',
+      title: 'Machbar, aber nicht am selben Tag',
+      lead: '3-5 Werktage',
       detail:
-        'Bent u álle sleutels kwijt van een Volkswagen van dit bouwjaar, dan moet de nieuwe sleutel als origineel onderdeel bij de dealer besteld worden. Wij programmeren hem daarna gewoon bij u op locatie, maar houd rekening met 2 tot 4 werkdagen. Heeft u nog wél een werkende sleutel en wilt u er een bij? Dat doen wij gewoon dezelfde dag.',
+        'Sind bei einem Volkswagen dieses Baujahrs ALLE Schlüssel verloren, muss der neue Schlüssel als Originalteil über den Händlerkanal bestellt werden und der Hersteller eine Online-Freigabe erteilen. Angelernt wird er danach bei Ihnen vor Ort, aber rechnen Sie mit 3 bis 5 Werktagen. Haben Sie noch einen funktionierenden Schlüssel und wollen einen zweiten? Das erledigen wir am selben Tag.',
     };
   }
 
@@ -140,22 +142,22 @@ export function serviceLimit(
 }
 
 /**
- * The limits that apply to a whole make, for the notice on a brand page.
- * Returns null when a make has nothing worth warning about.
+ * Die Grenzen, die für eine ganze Marke gelten — für den Hinweis auf einer
+ * Markenseite. Gibt null zurück, wenn es bei einer Marke nichts zu warnen gibt.
  */
 export function brandLimitNotice(make: string): { title: string; detail: string } | null {
   if (isMercedes(make)) {
     return {
-      title: 'Let op: Mercedes vanaf ±2013/2014 (FBS4)',
+      title: 'Achtung: Mercedes ab etwa 2013/2014 (FBS4)',
       detail:
-        'Bij Mercedes-modellen met het FBS4-systeem — grofweg vanaf bouwjaar 2013/2014 — kunnen wij géén sleutel bijmaken en geen oplossing bieden als alle sleutels kwijt zijn. Dat kan alleen de merkdealer. Voor oudere Mercedes-modellen bent u bij ons wel aan het juiste adres.',
+        'Bei Mercedes-Modellen mit FBS4 — grob ab Baujahr 2013/2014 — können wir weder einen Schlüssel nachmachen noch den Fall "alle Schlüssel verloren" lösen. Das kann nur der Vertragshändler. Für ältere Mercedes-Modelle sind Sie bei uns richtig.',
     };
   }
   if (isVolkswagen(make)) {
     return {
-      title: 'Volkswagen: sleutel bijmaken dezelfde dag, alle sleutels kwijt 2-4 werkdagen',
+      title: 'Volkswagen: Zweitschlüssel am selben Tag, alle Schlüssel verloren 3-5 Werktage',
       detail:
-        'Heeft u nog een werkende sleutel en wilt u een reservesleutel? Die maken en programmeren wij gewoon dezelfde dag bij u op locatie. Bent u vanaf bouwjaar 2014 álle sleutels kwijt, dan moet de nieuwe sleutel als origineel onderdeel bij de dealer besteld worden — reken dan op 2 tot 4 werkdagen.',
+        'Haben Sie noch einen funktionierenden Schlüssel und wollen einen Zweitschlüssel? Den fertigen und lernen wir am selben Tag bei Ihnen vor Ort an. Sind ab Baujahr 2014 ALLE Schlüssel verloren, muss der neue Schlüssel als Originalteil bestellt und vom Hersteller freigegeben werden — rechnen Sie dann mit 3 bis 5 Werktagen.',
     };
   }
   return null;
