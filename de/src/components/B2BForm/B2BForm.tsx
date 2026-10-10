@@ -7,29 +7,31 @@ import React, { useState } from 'react';
 import styles from './B2BForm.module.css';
 
 /**
- * The enquiry form on the zakelijk pages.
+ * Das Anfrageformular der Geschäftskundenseiten.
  *
- * Deliberately not LeadCaptureForm. A consumer is one person with one car and
- * wants a price now; a garage wants to know whether this is workable at all and
- * is comparing suppliers. So this asks who they are and how much work there is,
- * and promises a written quote rather than an arrival time.
+ * Mit Absicht nicht LeadCaptureForm. Ein Verbraucher ist eine Person mit einem
+ * Fahrzeug und will jetzt einen Preis; eine Werkstatt will wissen, ob das
+ * überhaupt funktioniert, und vergleicht Anbieter. Also fragt dieses Formular,
+ * wer sie sind und wie viel Arbeit es ist, und verspricht ein schriftliches
+ * Angebot statt einer Ankunftszeit.
  *
- * WHERE IT LANDS
+ * WO DIE ANFRAGE LANDET
  *
- * The same /api/leads endpoint and the same leads table as everything else, on
- * purpose — a B2B enquiry that arrives in a separate inbox is one nobody reads.
- * The office sees it beside the consumer leads with `source` naming the segment.
+ * Am selben /api/leads-Endpunkt und in derselben Tabelle wie alles andere, und
+ * das ist Absicht — eine B2B-Anfrage in einem eigenen Postfach ist eine, die
+ * niemand liest. Das Büro sieht sie neben den Verbraucheranfragen, mit `source`
+ * als Herkunft.
  *
- * The leads table has no company column, so the company name is folded into
- * `name` as "Contactpersoon — Bedrijf". That reads correctly in the CRM without
- * a migration, which matters: there are already several migrations waiting to be
- * run, and adding another to ship a form would be a poor trade.
+ * Die Tabelle hat keine Spalte für den Firmennamen, also wird er in `name` als
+ * "Ansprechpartner — Firma" eingefaltet. Das liest sich im CRM richtig und
+ * braucht keine Migration — was zählt, weil ohnehin schon Migrationen auf
+ * ihre Ausführung warten.
  */
 export default function B2BForm({
   segment,
   segmentLabel,
 }: {
-  /** Slug, e.g. 'garages'. Ends up in `source` so the office knows the origin. */
+  /** Slug, z. B. 'kfz-werkstaetten'. Landet in `source`, damit das Büro die Herkunft kennt. */
   segment: string;
   segmentLabel: string;
 }) {
@@ -56,20 +58,20 @@ export default function B2BForm({
           phone: form.get('phone'),
           email: form.get('email'),
           location: form.get('city'),
-          service: `Zakelijk: ${segmentLabel}`,
-          /* Free text has nowhere else to go, so it rides along with the
-             service description the office already reads. */
+          service: `Geschäftskunde: ${segmentLabel}`,
+          /* Für Freitext gibt es kein eigenes Feld, also reist er mit der
+             Leistungsbeschreibung mit, die das Büro ohnehin liest. */
           model: String(form.get('volume') || '').slice(0, 80) || null,
           source: `b2b-${segment}`,
         }),
       });
-      if (!res.ok) throw new Error('mislukt');
+      if (!res.ok) throw new Error('fehlgeschlagen');
       const json = await res.json().catch(() => null);
       tagLeadClaritySession(json?.data?.id);
 
-      /* Unlike the consumer forms, this one stays on the page and shows a
-         confirmation — so it can wait for the response and only report a
-         lead the API actually accepted. */
+      /* Anders als die Verbraucherformulare bleibt dieses auf der Seite und
+         zeigt eine Bestätigung — es kann also auf die Antwort warten und nur
+         eine Anfrage melden, die die API tatsächlich angenommen hat. */
       reportLeadConversion({
         source: `b2b-${segment}`,
         email: String(form.get('email') || '') || null,
@@ -78,7 +80,7 @@ export default function B2BForm({
 
       setDone(true);
     } catch {
-      setError('Versturen lukte niet. Belt u ons gerust direct — dat gaat sneller.');
+      setError('Das Senden hat nicht funktioniert. Rufen Sie uns gern direkt an — das geht schneller.');
     } finally {
       setSending(false);
     }
@@ -87,10 +89,10 @@ export default function B2BForm({
   if (done) {
     return (
       <div className={styles.card}>
-        <h3 className={styles.doneTitle}>Bedankt — uw aanvraag staat bij ons.</h3>
+        <h3 className={styles.doneTitle}>Danke — Ihre Anfrage liegt bei uns.</h3>
         <p className={styles.doneText}>
-          Wij nemen binnen één werkdag contact met u op met een prijs en een
-          voorstel voor de werkwijze. Heeft u haast? Bel ons gerust direct.
+          Wir melden uns innerhalb eines Werktags mit einem Preis und einem
+          Vorschlag zum Ablauf. Eilt es? Rufen Sie gern direkt an.
         </p>
       </div>
     );
@@ -98,26 +100,26 @@ export default function B2BForm({
 
   return (
     <form className={styles.card} onSubmit={submit}>
-      <h3 className={styles.title}>Vraag een zakelijk voorstel aan</h3>
+      <h3 className={styles.title}>Angebot für Geschäftskunden anfordern</h3>
       <p className={styles.sub}>
-        Vertel kort wat u nodig heeft. U krijgt binnen één werkdag een prijs en
-        een voorstel — geen automatische mailtjes.
+        Sagen Sie kurz, was Sie brauchen. Sie erhalten innerhalb eines Werktags
+        einen Preis und einen Vorschlag — keine automatischen Mails.
       </p>
 
       <div className={styles.row}>
         <label className={styles.field}>
-          <span>Bedrijfsnaam</span>
+          <span>Firmenname</span>
           <input name="company" required autoComplete="organization" />
         </label>
         <label className={styles.field}>
-          <span>Contactpersoon</span>
+          <span>Ansprechpartner</span>
           <input name="contact" required autoComplete="name" />
         </label>
       </div>
 
       <div className={styles.row}>
         <label className={styles.field}>
-          <span>Telefoon</span>
+          <span>Telefon</span>
           <input name="phone" type="tel" required autoComplete="tel" />
         </label>
         <label className={styles.field}>
@@ -127,19 +129,19 @@ export default function B2BForm({
       </div>
 
       <label className={styles.field}>
-        <span>Plaats</span>
+        <span>Ort</span>
         <input name="city" required autoComplete="address-level2" />
       </label>
 
       <label className={styles.field}>
-        <span>Om hoeveel voertuigen gaat het, en welke merken?</span>
-        <input name="volume" placeholder="bijv. 6 occasions, VW en Opel" />
+        <span>Um wie viele Fahrzeuge geht es, und um welche Marken?</span>
+        <input name="volume" placeholder="z. B. 6 Gebrauchtwagen, VW und Opel" />
       </label>
 
       {error && <p className={styles.error}>{error}</p>}
 
       <button className={styles.submit} type="submit" disabled={sending}>
-        {sending ? 'Versturen…' : 'Voorstel aanvragen'}
+        {sending ? 'Wird gesendet…' : 'Angebot anfordern'}
       </button>
     </form>
   );

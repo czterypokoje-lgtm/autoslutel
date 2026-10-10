@@ -25,7 +25,7 @@ export async function generateMetadata(props: {
   };
 }
 
-export default async function ZakelijkSegmentPage(props: {
+export default async function GeschaeftskundenSegmentPage(props: {
   params: Promise<{ segment: string }>;
 }) {
   const { segment } = await props.params;
@@ -49,12 +49,12 @@ export default async function ZakelijkSegmentPage(props: {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <script
-        id={`bc-zakelijk-${s.slug}`}
+        id={`bc-geschaeftskunden-${s.slug}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             breadcrumbSchema([
-              { name: 'Zakelijk', path: '/geschaeftskunden' },
+              { name: 'Geschäftskunden', path: '/geschaeftskunden' },
               { name: s.label, path: `/geschaeftskunden/${s.slug}` },
             ])
           ),
@@ -67,7 +67,7 @@ export default async function ZakelijkSegmentPage(props: {
             <div>
               <nav className={styles.crumbs} aria-label="Breadcrumb">
                 <Link href="/">Home</Link> <span>/</span>{' '}
-                <Link href="/geschaeftskunden">Zakelijk</Link> <span>/</span>{' '}
+                <Link href="/geschaeftskunden">Geschäftskunden</Link> <span>/</span>{' '}
                 <span>{s.label}</span>
               </nav>
               <h1>
@@ -78,10 +78,10 @@ export default async function ZakelijkSegmentPage(props: {
               <p className={styles.lead}>{s.intro}</p>
               <div className={styles.heroCtas}>
                 <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone}>
-                  Bel {SITE_CONFIG.phone}
+                  {SITE_CONFIG.phone} anrufen
                 </a>
-                <a href="#voorstel" className={styles.btnOutline}>
-                  Voorstel aanvragen
+                <a href="#angebot" className={styles.btnOutline}>
+                  Angebot anfordern
                 </a>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default async function ZakelijkSegmentPage(props: {
         {/* ── GAINS ── */}
         <section className={`${styles.section} ${styles.sectionAlt}`}>
           <div className={styles.container}>
-            <h2>Wat u eraan heeft</h2>
+            <h2>Was Sie davon haben</h2>
             <div className={styles.gainGrid}>
               {s.gains.map((g) => (
                 <div key={g.title} className={styles.gain}>
@@ -129,7 +129,7 @@ export default async function ZakelijkSegmentPage(props: {
         {/* ── HOW IT WORKS ── */}
         <section className={styles.section}>
           <div className={styles.container}>
-            <h2>Hoe het werkt</h2>
+            <h2>So läuft es ab</h2>
             <ol className={styles.steps}>
               {s.steps.map((step) => (
                 <li key={step}>{step}</li>
@@ -139,18 +139,18 @@ export default async function ZakelijkSegmentPage(props: {
         </section>
 
         {/* ── FORM ── */}
-        <section id="voorstel" className={`${styles.section} ${styles.sectionAlt}`}>
+        <section id="angebot" className={`${styles.section} ${styles.sectionAlt}`}>
           <div className={styles.formWrap}>
             <div>
-              <h2>Zullen we het concreet maken?</h2>
+              <h2>Machen wir es konkret</h2>
               <p className={styles.formLead}>
-                Vertel ons om hoeveel voertuigen het gaat en welke merken. U
-                krijgt binnen één werkdag een prijs en een voorstel voor de
-                werkwijze — of meteen een eerlijk &ldquo;dit kunnen wij niet&rdquo;
-                als dat het antwoord is.
+                Sagen Sie uns, um wie viele Fahrzeuge es geht und um welche
+                Marken. Sie erhalten innerhalb eines Werktags einen Preis und
+                einen Vorschlag zum Ablauf — oder gleich ein ehrliches
+                &ldquo;das können wir nicht&rdquo;, wenn das die Antwort ist.
               </p>
               <p className={styles.formLead}>
-                Liever direct iemand spreken?{' '}
+                Lieber gleich jemanden sprechen?{' '}
                 <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a>,
                 {' '}{SITE_CONFIG.hoursShort}.
               </p>
@@ -162,7 +162,7 @@ export default async function ZakelijkSegmentPage(props: {
         {/* ── FAQ ── */}
         <section className={styles.section}>
           <div className={styles.container}>
-            <h2>Veelgestelde vragen</h2>
+            <h2>Häufige Fragen</h2>
             <div className={styles.faq}>
               {s.faq.map((f) => (
                 <details key={f.q}>
@@ -177,7 +177,7 @@ export default async function ZakelijkSegmentPage(props: {
         {/* ── OTHER SEGMENTS ── */}
         <section className={`${styles.section} ${styles.sectionAlt}`}>
           <div className={styles.container}>
-            <h2>Ook interessant</h2>
+            <h2>Auch interessant</h2>
             <div className={styles.otherGrid}>
               {ZAKELIJK_SEGMENTS.filter((o) => o.slug !== s.slug).map((o) => (
                 <Link key={o.slug} href={`/geschaeftskunden/${o.slug}`} className={styles.otherCard}>

@@ -1,166 +1,179 @@
 // ============================================================
-// ZAKELIJK — B2B partner segments
+// GESCHÄFTSKUNDEN — B2B-Segmente
 //
-// Four businesses that all lose money on the same problem, for four different
-// reasons. That difference is the page: a garage loses the whole repair job, a
-// dealer loses margin at handover, an importer loses days per batch, a rental
-// company loses the day-rate. Writing one page for "bedrijven" would say
-// nothing to any of them.
+// Vier Betriebsarten, die am selben Problem Geld verlieren, aus vier
+// verschiedenen Gründen. Dieser Unterschied IST die Seite: eine Werkstatt
+// verliert den ganzen Reparaturauftrag, ein Autohaus Marge bei der Übergabe,
+// ein Importeur Tage pro Charge, ein Vermieter den Tagessatz. Eine einzige
+// Seite für "Firmenkunden" würde keinem von ihnen etwas sagen.
 //
-// WHAT IS DELIBERATELY NOT IN HERE
+// WAS HIER ABSICHTLICH NICHT STEHT
 //
-// No volume discounts, no contract terms, no "X garages work with us". Those
-// are real commercial decisions the office has not made yet, and a landing page
-// is a bad place to invent them. Every page ends in a quote request instead,
-// which is honest and is also what generates the enquiry the pages exist for.
+// Keine Mengenrabatte, keine Vertragsbedingungen, kein "X Werkstätten
+// arbeiten mit uns". Das sind echte kaufmännische Entscheidungen, die das
+// Büro noch nicht getroffen hat, und eine Landingpage ist der falsche Ort,
+// sie zu erfinden. Jede Seite endet stattdessen in einer Anfrage — was
+// ehrlich ist und zugleich das erzeugt, wofür die Seiten da sind.
+//
+// ÜBERSETZUNG, NICHT ÜBERTRAGUNG
+//
+// Drei Dinge der niederländischen Fassung gelten hier nicht und sind
+// geändert, nicht übersetzt:
+//
+//  - Das Kennzeichen identifiziert in Deutschland kein Fahrzeug für Dritte
+//    (kein öffentliches Register, siehe app/autoschluessel-nachmachen-lassen).
+//    Für den B2B-Weg ist die FIN sowieso die bessere Angabe, und Betriebe
+//    haben sie zur Hand — sie steht in Feld E der Zulassungsbescheinigung.
+//  - "btw-specificatie" ist der MwSt.-Ausweis auf der Rechnung, 19 %.
+//  - "op Nederlands kenteken" wird zur deutschen Zulassung.
 // ============================================================
 
 export type ZakelijkSegment = {
   slug: string;
-  /** Nav and card label. */
+  /** Beschriftung für Navigation und Karte. */
   label: string;
   title: string;
-  /* Kept under 44 characters: layout.tsx appends ' | Autosleutel24', and all
-     four of these were running to 74-79 in results. */
+  /* Unter 44 Zeichen halten: layout.tsx hängt ' | Autoschlüssel24' an, und
+     die niederländischen Fassungen liefen in den Ergebnissen auf 74-79. */
   metaTitle: string;
   metaDesc: string;
   h1Top: string;
   h1Accent: string;
   intro: string;
   image: { src: string; alt: string };
-  /** The situation they recognise, in their words. */
+  /** Die Situation, die sie wiedererkennen — in ihren Worten. */
   painTitle: string;
   pain: string[];
-  /** What working with us changes. One claim per line, all defensible. */
+  /** Was sich durch die Zusammenarbeit ändert. Eine Aussage je Zeile, jede belegbar. */
   gains: { title: string; text: string }[];
-  /** How it actually runs, so nobody has to ask. */
+  /** Wie es tatsächlich abläuft, damit niemand fragen muss. */
   steps: string[];
   faq: { q: string; a: string }[];
 };
 
 export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
-  // ── 1. GARAGES ────────────────────────────────────────────
+  // ── 1. KFZ-WERKSTÄTTEN ────────────────────────────────────
   {
-    slug: 'garages',
-    label: 'Garages',
-    title: 'Autosleutels voor garagebedrijven',
-    metaTitle: 'Autosleutelservice voor Garages op Locatie',
+    slug: 'kfz-werkstaetten',
+    label: 'Kfz-Werkstätten',
+    title: 'Autoschlüssel für Kfz-Werkstätten',
+    metaTitle: 'Autoschlüssel-Service für Kfz-Werkstätten',
     metaDesc:
-      'Sleutelklus in uw werkplaats? Wij komen naar u toe en coderen de sleutel ter plaatse. Geen investering in apparatuur nodig, en u houdt de klant.',
-    h1Top: 'Uw klant staat met een sleutelprobleem in de werkplaats.',
-    h1Accent: 'Wij komen naar u toe.',
+      'Schlüsselauftrag in Ihrer Werkstatt? Wir kommen zu Ihnen und lernen den Schlüssel vor Ort an. Keine Investition in Technik, und der Kunde bleibt bei Ihnen.',
+    h1Top: 'Ihr Kunde steht mit einem Schlüsselproblem in der Werkstatt.',
+    h1Accent: 'Wir kommen zu Ihnen.',
     intro:
-      'Sleutelprogrammering vraagt merkspecifieke apparatuur en licenties die voor één klus per maand nooit uit kan. Wij rijden naar uw werkplaats, maken en coderen de sleutel bij de auto, en u gaat verder met de rest van de reparatie.',
+      'Schlüssel anlernen verlangt markenspezifische Geräte und Lizenzen, die sich für einen Auftrag im Monat nie rechnen. Wir fahren in Ihre Werkstatt, fertigen den Schlüssel am Fahrzeug und lernen ihn an — und Sie machen mit dem Rest der Reparatur weiter.',
     image: {
       src: '/images/seo/auto-schluesseldienst-werkstatt.webp',
-      alt: 'Autosleutel geprogrammeerd in de werkplaats van een garagebedrijf',
+      alt: 'Autoschlüssel wird in der Werkstatt eines Kfz-Betriebs angelernt',
     },
-    painTitle: 'Herkenbaar?',
+    painTitle: 'Kommt Ihnen das bekannt vor?',
     pain: [
-      'De auto staat al op de brug, maar de sleutel is kwijt of de transponder wordt niet meer herkend — en u kunt er niets mee.',
-      'U stuurt de klant door naar de merkdealer, wacht twee weken op een afspraak en bent de rest van de reparatie ook kwijt.',
-      'De sleutelapparatuur die u nodig heeft kost tienduizenden euro’s plus jaarlijkse licenties per merk, voor een handvol klussen per jaar.',
-      'De auto bezet ondertussen een brugplaats die u niet kunt verhuren.',
+      'Das Fahrzeug steht schon auf der Hebebühne, aber der Schlüssel ist weg oder der Transponder wird nicht mehr erkannt — und Sie können nichts damit anfangen.',
+      'Sie schicken den Kunden zum Vertragshändler, warten zwei Wochen auf einen Termin und sind damit auch den Rest der Reparatur los.',
+      'Die Anlerntechnik, die Sie dafür bräuchten, kostet zusammen mit den Jahreslizenzen je Marke ein Vielfaches dessen, was ein paar Aufträge im Jahr einbringen.',
+      'Das Fahrzeug belegt in der Zwischenzeit einen Hebebühnenplatz, den Sie nicht vermieten können.',
     ],
     gains: [
       {
-        title: 'De auto blijft bij u staan',
-        text: 'Geen sleepwagen en geen doorverwijzing. Wij komen naar uw werkplaats, dus de auto verlaat uw pand niet en u houdt de rest van de opdracht.',
+        title: 'Das Fahrzeug bleibt bei Ihnen',
+        text: 'Kein Abschleppwagen und keine Weiterverweisung. Wir kommen in Ihre Werkstatt, das Fahrzeug verlässt Ihr Gelände nicht, und der Auftrag bleibt Ihrer.',
       },
       {
-        title: 'Geen investering in apparatuur',
-        text: 'U hoeft geen programmeerapparatuur, licenties of abonnementen aan te schaffen voor werk dat een paar keer per jaar langskomt.',
+        title: 'Keine Investition in Technik',
+        text: 'Sie brauchen keine Diagnosegeräte, keine Lizenzen und keine Abos für Arbeit, die ein paar Mal im Jahr vorbeikommt.',
       },
       {
-        title: 'U blijft het aanspreekpunt',
-        text: 'Uw klant heeft één contactpersoon: u. Wij factureren aan u, u factureert aan de klant — met uw eigen marge erop.',
+        title: 'Sie bleiben der Ansprechpartner',
+        text: 'Ihr Kunde hat einen Kontakt: Sie. Wir rechnen mit Ihnen ab, Sie mit Ihrem Kunden — mit Ihrer eigenen Marge darauf.',
       },
       {
-        title: 'Alle merken, ook de lastige',
-        text: 'Van transponder tot smart key en keyless entry. Wat wij niet kunnen — Mercedes FBS4 vanaf ±2013/2014 — zeggen wij meteen, zodat u uw klant geen valse hoop geeft.',
+        title: 'Alle Marken, auch die schwierigen',
+        text: 'Von Transponder bis Keyless Go. Was wir nicht können — Mercedes FBS4 ab etwa 2013/2014 —, sagen wir sofort, damit Sie Ihrem Kunden keine falsche Hoffnung machen.',
       },
     ],
     steps: [
-      'U belt of appt ons met kenteken en wat er aan de hand is',
-      'Wij bevestigen vooraf of het kan, wat het kost en wanneer wij er zijn',
-      'Wij komen naar uw werkplaats en maken de sleutel bij de auto',
-      'U krijgt één factuur, met zakelijke betaaltermijn',
+      'Sie rufen an oder schreiben per WhatsApp, mit FIN und dem, was ansteht',
+      'Wir bestätigen vorab, ob es geht, was es kostet und wann wir kommen',
+      'Wir kommen in Ihre Werkstatt und fertigen den Schlüssel am Fahrzeug',
+      'Sie erhalten eine Rechnung mit ausgewiesener MwSt. und gewerblichem Zahlungsziel',
     ],
     faq: [
       {
-        q: 'Moet de auto naar jullie toe?',
-        a: 'Nee. Wij werken mobiel en komen naar uw werkplaats. De auto hoeft uw pand niet te verlaten en u hoeft geen vervangend vervoer te regelen.',
+        q: 'Muss das Fahrzeug zu Ihnen gebracht werden?',
+        a: 'Nein. Wir arbeiten mobil und kommen in Ihre Werkstatt. Das Fahrzeug muss Ihr Gelände nicht verlassen, und Sie müssen keinen Ersatzwagen organisieren.',
       },
       {
-        q: 'Praten jullie rechtstreeks met mijn klant?',
-        a: 'Alleen als u dat wilt. Standaard bent u het aanspreekpunt: wij factureren aan u en uw klant merkt alleen dat de sleutel geregeld is.',
+        q: 'Sprechen Sie direkt mit meinem Kunden?',
+        a: 'Nur wenn Sie das wollen. Im Normalfall sind Sie der Ansprechpartner: wir rechnen mit Ihnen ab, und Ihr Kunde merkt nur, dass der Schlüssel erledigt ist.',
       },
       {
-        q: 'Wat als het merk of bouwjaar niet kan?',
-        a: 'Dan horen wij dat vooraf, niet ter plaatse. Mercedes met FBS4 (globaal vanaf 2013/2014) kan alleen de dealer, en bij sommige Volkswagens moet de sleutel besteld worden — reken dan op 2 tot 4 werkdagen.',
+        q: 'Was, wenn Marke oder Baujahr nicht geht?',
+        a: 'Dann hören Sie das vorher und nicht vor Ort. Mercedes mit FBS4 (etwa ab 2013/2014) kann nur der Vertragshändler, und bei manchen Modellen des VW-Konzerns ist eine Online-Freigabe des Herstellers nötig — rechnen Sie dann mit einigen Werktagen.',
       },
     ],
   },
 
-  // ── 2. AUTOBEDRIJVEN / DEALERS ────────────────────────────
+  // ── 2. AUTOHÄUSER UND HÄNDLER ─────────────────────────────
   {
-    slug: 'autobedrijven',
-    label: 'Autobedrijven & dealers',
-    title: 'Tweede sleutel voor uw occasions',
-    metaTitle: 'Autosleutel Bijmaken voor Autobedrijven',
+    slug: 'autohaeuser',
+    label: 'Autohäuser & Händler',
+    title: 'Zweitschlüssel für Ihre Gebrauchtwagen',
+    metaTitle: 'Zweitschlüssel für Autohäuser und Händler',
     metaDesc:
-      'Occasions met maar één sleutel? Wij maken tweede sleutels bij u op locatie, meerdere auto’s per bezoek. Hogere verkoopprijs, minder discussie bij aflevering.',
-    h1Top: 'Een occasion met één sleutel verkoopt moeilijker.',
-    h1Accent: 'Wij maken de tweede bij u op de zaak.',
+      'Gebrauchtwagen mit nur einem Schlüssel? Wir fertigen Zweitschlüssel bei Ihnen auf dem Hof, mehrere Fahrzeuge pro Termin. Besserer Preis, keine Diskussion bei der Übergabe.',
+    h1Top: 'Ein Gebrauchtwagen mit einem Schlüssel verkauft sich schwerer.',
+    h1Accent: 'Wir fertigen den zweiten bei Ihnen auf dem Hof.',
     intro:
-      'Inruilers komen binnen met één sleutel. Bij aflevering is dat het eerste waar een koper over onderhandelt — en een ontbrekende sleutel kost aan de onderhandelingstafel doorgaans meer dan het bijmaken ervan. Wij komen naar uw terrein en doen meerdere auto’s in één bezoek.',
+      'Eintauschfahrzeuge kommen mit einem Schlüssel herein. Bei der Übergabe ist das das Erste, worüber ein Käufer verhandelt — und ein fehlender Schlüssel kostet am Verhandlungstisch in der Regel mehr als seine Anfertigung. Wir kommen auf Ihr Gelände und erledigen mehrere Fahrzeuge in einem Termin.',
     image: {
       src: '/images/seo/autoschluessel_lager_alle_marken.webp',
-      alt: 'Voorraad autosleutels voor alle merken, klaar om bij te maken voor autobedrijven',
+      alt: 'Lager mit Autoschlüsseln für alle Marken, bereit zum Anfertigen für Autohäuser',
     },
-    painTitle: 'Herkenbaar?',
+    painTitle: 'Kommt Ihnen das bekannt vor?',
     pain: [
-      'Elke inruiler komt met één sleutel binnen en u weet dat de koper er straks over begint.',
-      'Bij aflevering levert u in op de prijs, of u belooft een sleutel die u daarna alsnog moet regelen.',
-      'De dealer rekent dealertarief en levert pas na een of twee weken — terwijl de auto had kunnen staan te glimmen op uw plein.',
-      'Per auto apart iets regelen kost meer tijd dan het werk zelf.',
+      'Jedes Eintauschfahrzeug kommt mit einem Schlüssel herein, und Sie wissen, dass der Käufer später davon anfängt.',
+      'Bei der Übergabe geben Sie beim Preis nach, oder Sie versprechen einen Schlüssel, den Sie danach doch besorgen müssen.',
+      'Der Vertragshändler verlangt Händlertarif und liefert erst nach einer oder zwei Wochen — während das Fahrzeug längst verkaufsfertig auf dem Hof stehen könnte.',
+      'Jedes Fahrzeug einzeln zu organisieren kostet mehr Zeit als die Arbeit selbst.',
     ],
     gains: [
       {
-        title: 'Meerdere auto’s in één bezoek',
-        text: 'Verzamel de occasions die een tweede sleutel nodig hebben. Wij komen langs en doen ze achter elkaar op uw eigen terrein, in één afspraak.',
+        title: 'Mehrere Fahrzeuge in einem Termin',
+        text: 'Sammeln Sie die Fahrzeuge, die einen Zweitschlüssel brauchen. Wir kommen vorbei und erledigen sie hintereinander auf Ihrem eigenen Gelände, in einem Termin.',
       },
       {
-        title: 'Sterker bij de aflevering',
-        text: 'Twee sleutels bij de auto haalt het onderwerp van tafel voordat de koper erover begint. Geen korting weggeven voor iets wat u had kunnen regelen.',
+        title: 'Stärker bei der Übergabe',
+        text: 'Zwei Schlüssel am Fahrzeug nehmen das Thema vom Tisch, bevor der Käufer davon anfängt. Kein Nachlass für etwas, das Sie hätten regeln können.',
       },
       {
-        title: 'Eén factuur, zakelijke termijn',
-        text: 'Geen losse betalingen per auto. U krijgt één factuur voor het hele bezoek, met btw-specificatie voor uw boekhouding.',
+        title: 'Eine Rechnung, gewerbliches Zahlungsziel',
+        text: 'Keine Einzelzahlungen je Fahrzeug. Sie erhalten eine Rechnung für den gesamten Termin, mit ausgewiesener MwSt. je Fahrzeug für Ihre Buchhaltung.',
       },
       {
-        title: 'Ook voor auto’s zonder sleutel',
-        text: 'Een inruiler waarvan alle sleutels kwijt zijn lossen wij ter plaatse op — inclusief het wissen van de oude sleutels uit de boordcomputer, zodat u de auto met een schone beveiliging aflevert.',
+        title: 'Auch für Fahrzeuge ohne Schlüssel',
+        text: 'Ein Eintauschfahrzeug, von dem kein Schlüssel mehr existiert, lösen wir vor Ort — einschließlich Löschen der alten Schlüssel aus der Wegfahrsperre, damit Sie das Fahrzeug mit sauberer Sicherung übergeben.',
       },
     ],
     steps: [
-      'U geeft door welke kentekens een sleutel nodig hebben',
-      'Wij bevestigen per auto of het kan en wat het kost',
-      'Wij komen langs en doen alle auto’s in één bezoek',
-      'Eén factuur achteraf, met btw-specificatie per voertuig',
+      'Sie nennen uns die Fahrzeuge, die einen Schlüssel brauchen (FIN genügt)',
+      'Wir bestätigen je Fahrzeug, ob es geht und was es kostet',
+      'Wir kommen vorbei und erledigen alle Fahrzeuge in einem Termin',
+      'Eine Rechnung im Nachgang, mit MwSt.-Ausweis je Fahrzeug',
     ],
     faq: [
       {
-        q: 'Hoeveel auto’s kunnen jullie in één bezoek doen?',
-        a: 'Dat hangt af van merk en type sleutel — een standaard transponder is sneller dan een keyless smart key. Geef door hoeveel auto’s het zijn en om welke modellen het gaat, dan plannen wij er de juiste tijd voor in.',
+        q: 'Wie viele Fahrzeuge schaffen Sie in einem Termin?',
+        a: 'Das hängt von Marke und Schlüsselart ab — ein einfacher Transponder geht schneller als ein Keyless-Go-Schlüssel. Nennen Sie uns Anzahl und Modelle, dann planen wir die richtige Zeit ein.',
       },
       {
-        q: 'Kunnen jullie ook sleutels leveren voor auto’s die nog binnenkomen?',
-        a: 'Ja. Veel autobedrijven plannen een vast moment per week of per maand in, zodat nieuwe inruilers meteen meegaan in het volgende bezoek.',
+        q: 'Können Sie auch Schlüssel für Fahrzeuge liefern, die erst hereinkommen?',
+        a: 'Ja. Viele Händler legen einen festen Termin pro Woche oder Monat fest, sodass neue Eintauschfahrzeuge beim nächsten Besuch gleich mitlaufen.',
       },
       {
-        q: 'Werken jullie met originele of aftermarket sleutels?',
-        a: 'Beide, afhankelijk van merk en budget. Wij zeggen vooraf welke wij gebruiken en wat het verschil is; voor sommige modellen is een origineel sleutel de enige werkende optie.',
+        q: 'Arbeiten Sie mit Original- oder Nachbauschlüsseln?',
+        a: 'Mit beiden, je nach Marke und Budget. Wir sagen vorher, was wir verwenden und wo der Unterschied liegt; bei einzelnen Modellen ist ein Originalschlüssel die einzige funktionierende Option.',
       },
     ],
   },
@@ -168,125 +181,125 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
   // ── 3. IMPORT / EXPORT ────────────────────────────────────
   {
     slug: 'import-export',
-    label: 'Import & export',
-    title: 'Sleutels voor import- en exportauto’s',
-    metaTitle: 'Autosleutels voor Import en Export',
+    label: 'Import & Export',
+    title: 'Schlüssel für Import- und Exportfahrzeuge',
+    metaTitle: 'Autoschlüssel für Import und Export',
     metaDesc:
-      'Importauto’s met één of geen sleutel? Wij maken en coderen sleutels op uw eigen terrein of in de loods, ook bij volledig sleutelverlies. Alle Europese merken.',
-    h1Top: 'Importauto’s komen zelden met twee sleutels binnen.',
-    h1Accent: 'Wij regelen ze op uw terrein.',
+      'Importfahrzeuge mit einem oder keinem Schlüssel? Wir fertigen und lernen Schlüssel auf Ihrem Gelände oder in der Halle an, auch bei vollständigem Schlüsselverlust.',
+    h1Top: 'Importfahrzeuge kommen selten mit zwei Schlüsseln herein.',
+    h1Accent: 'Wir erledigen sie auf Ihrem Gelände.',
     intro:
-      'Auto’s van veiling of uit het buitenland arriveren vaak met één sleutel, en soms met geen enkele. Wij komen naar uw loods of opslagterrein en maken de sleutels ter plaatse — ook wanneer alle sleutels ontbreken en de auto van nul af aan ingeleerd moet worden.',
+      'Fahrzeuge von der Auktion oder aus dem Ausland kommen oft mit einem Schlüssel an, manchmal mit keinem. Wir kommen in Ihre Halle oder auf Ihr Lagergelände und fertigen die Schlüssel vor Ort — auch dann, wenn kein Schlüssel mehr existiert und das Fahrzeug von null angelernt werden muss.',
     image: {
       src: '/images/seo/autoschluessel-nachmachen-equipment.webp',
-      alt: 'Diagnoseapparatuur voor het inleren van autosleutels bij import- en exportvoertuigen',
+      alt: 'Diagnosetechnik zum Anlernen von Autoschlüsseln bei Import- und Exportfahrzeugen',
     },
-    painTitle: 'Herkenbaar?',
+    painTitle: 'Kommt Ihnen das bekannt vor?',
     pain: [
-      'Een veilingauto of importvoertuig arriveert met één sleutel, of met helemaal geen sleutel.',
-      'Zonder werkende sleutel kunt u de auto niet verplaatsen, niet keuren en niet afleveren.',
-      'Een dealer in het land van herkomst benaderen kost dagen en levert zelden een snel antwoord op.',
-      'De auto’s staan intussen ruimte in te nemen op uw terrein.',
+      'Ein Auktions- oder Importfahrzeug kommt mit einem Schlüssel an — oder mit gar keinem.',
+      'Ohne funktionierenden Schlüssel können Sie das Fahrzeug nicht bewegen, nicht vorführen und nicht ausliefern.',
+      'Einen Händler im Herkunftsland anzuschreiben kostet Tage und bringt selten eine schnelle Antwort.',
+      'Die Fahrzeuge nehmen in der Zwischenzeit Platz auf Ihrem Gelände ein.',
     ],
     gains: [
       {
-        title: 'Wij komen naar de loods',
-        text: 'Geen transport van auto’s die niet rijden of niet te openen zijn. Wij werken op uw eigen terrein, ook bij meerdere voertuigen achter elkaar.',
+        title: 'Wir kommen in die Halle',
+        text: 'Kein Transport von Fahrzeugen, die nicht fahren oder sich nicht öffnen lassen. Wir arbeiten auf Ihrem Gelände, auch bei mehreren Fahrzeugen hintereinander.',
       },
       {
-        title: 'Ook bij volledig sleutelverlies',
-        text: 'Alle sleutels kwijt is bij importauto’s eerder regel dan uitzondering. Wij openen de auto schadevrij, lezen de code uit en leren een nieuwe sleutel in.',
+        title: 'Auch bei vollständigem Schlüsselverlust',
+        text: 'Kein Schlüssel vorhanden ist bei Importfahrzeugen eher die Regel als die Ausnahme. Wir öffnen schadenfrei, lesen die Schlüsseldaten aus dem Steuergerät und lernen einen neuen Schlüssel an.',
       },
       {
-        title: 'Alle Europese merken',
-        text: 'Duitse, Franse, Italiaanse en Aziatische modellen met dealer-niveau apparatuur. Wat niet kan, zeggen wij vooraf — Mercedes FBS4 vanaf ±2013/2014 kan alleen de dealer.',
+        title: 'Alle europäischen Marken',
+        text: 'Deutsche, französische, italienische und asiatische Modelle mit Werkstatttechnik. Was nicht geht, sagen wir vorher — Mercedes FBS4 ab etwa 2013/2014 kann nur der Vertragshändler.',
       },
       {
-        title: 'Auto’s sneller doorstromen',
-        text: 'Hoe eerder een auto een werkende sleutel heeft, hoe eerder hij gekeurd, verplaatst en verkocht kan worden. Dat is de echte kostenpost, niet de sleutel.',
+        title: 'Fahrzeuge laufen schneller durch',
+        text: 'Je früher ein Fahrzeug einen funktionierenden Schlüssel hat, desto früher kann es zur Hauptuntersuchung, bewegt und verkauft werden. Das ist der eigentliche Kostenpunkt, nicht der Schlüssel.',
       },
     ],
     steps: [
-      'U stuurt de kentekens of VIN-nummers en aantallen door',
-      'Wij bepalen per auto wat nodig is en of iets besteld moet worden',
-      'Wij komen langs en doen de auto’s in één bezoek',
-      'Eén factuur per bezoek, met specificatie per voertuig',
+      'Sie schicken die FIN und die Anzahl der Fahrzeuge',
+      'Wir bestimmen je Fahrzeug, was nötig ist und ob etwas bestellt werden muss',
+      'Wir kommen vorbei und erledigen die Fahrzeuge in einem Termin',
+      'Eine Rechnung je Termin, mit Aufstellung je Fahrzeug',
     ],
     faq: [
       {
-        q: 'Wij hebben geen kenteken, alleen een VIN. Kan dat?',
-        a: 'Ja. Bij importauto’s werken wij vaak op VIN, zeker als het voertuig nog niet op Nederlands kenteken staat. Stuur het VIN mee, dan weten wij welk sleuteltype en welk systeem erin zit.',
+        q: 'Wir haben kein Kennzeichen, nur die FIN. Geht das?',
+        a: 'Ja, und das ist uns ohnehin lieber. In Deutschland gibt es kein öffentliches Register, das zu einem Kennzeichen Marke, Modell und Baujahr herausgibt — die FIN sagt uns das direkt, und bei einem noch nicht zugelassenen Importfahrzeug ist sie die einzige verlässliche Angabe. Sie steht in Feld E der Zulassungsbescheinigung oder auf dem Fahrzeug selbst.',
       },
       {
-        q: 'Kunnen jullie ook auto’s openen waar geen sleutel van is?',
-        a: 'Ja, dat is precies het geval waar wij het vaakst voor komen. Wij openen schadevrij en leren daarna een nieuwe sleutel in; de eventueel nog bestaande oude sleutels wissen wij uit het geheugen.',
+        q: 'Können Sie auch Fahrzeuge öffnen, von denen kein Schlüssel existiert?',
+        a: 'Ja, das ist der Fall, für den wir am häufigsten kommen. Wir öffnen schadenfrei und lernen danach einen neuen Schlüssel an; etwaige noch existierende alte Schlüssel löschen wir aus der Wegfahrsperre.',
       },
       {
-        q: 'Hoe snel kunnen jullie komen bij een grotere partij?',
-        a: 'Voor één auto rijden wij meestal dezelfde dag. Bij een grotere partij plannen wij een vast moment, zodat wij de juiste sleutels en apparatuur voor die merken meenemen.',
+        q: 'Wie schnell können Sie bei einer größeren Partie kommen?',
+        a: 'Für ein einzelnes Fahrzeug fahren wir meist am selben Tag. Bei einer größeren Partie legen wir einen Termin fest, damit die passenden Schlüssel und Geräte für diese Marken mitkommen.',
       },
     ],
   },
 
-  // ── 4. WAGENPARK / VERHUUR ────────────────────────────────
+  // ── 4. FUHRPARK / VERMIETUNG ──────────────────────────────
   {
-    slug: 'wagenpark-en-verhuur',
-    label: 'Wagenpark & verhuur',
-    title: 'Sleutelservice voor wagenparken en verhuurbedrijven',
-    metaTitle: 'Autosleutelservice Wagenpark en Verhuur',
+    slug: 'fuhrpark-und-vermietung',
+    label: 'Fuhrpark & Vermietung',
+    title: 'Schlüsselservice für Fuhrparks und Vermieter',
+    metaTitle: 'Schlüsselservice für Fuhrpark und Vermietung',
     metaDesc:
-      'Bus, bestelbus of huurauto zonder sleutel staat stil en verdient niets. Wij maken reservesleutels voor uw hele wagenpark en komen 24/7 bij storing of verlies.',
-    h1Top: 'Een voertuig zonder sleutel verdient niets.',
-    h1Accent: 'Wij houden uw wagenpark rijdend.',
+      'Ein Transporter oder Mietwagen ohne Schlüssel steht und verdient nichts. Wir fertigen Zweitschlüssel für Ihren ganzen Fuhrpark und kommen 24/7 bei Verlust oder Störung.',
+    h1Top: 'Ein Fahrzeug ohne Schlüssel verdient nichts.',
+    h1Accent: 'Wir halten Ihren Fuhrpark am Fahren.',
     intro:
-      'Bij verhuur en wagenparken is de sleutel zelden de grootste kostenpost — de stilstand is dat. Wij maken vooraf reservesleutels voor uw voertuigen, zodat sleutelverlies een kwestie van minuten is in plaats van een dag uit de verhuur. En als het toch misgaat, komen wij 24/7.',
+      'Bei Vermietung und Fuhrpark ist der Schlüssel selten der größte Kostenpunkt — der Stillstand ist es. Wir fertigen vorab Zweitschlüssel für Ihre Fahrzeuge, sodass ein Schlüsselverlust eine Sache von Minuten ist statt eines Tages aus der Vermietung. Und wenn es doch passiert, kommen wir rund um die Uhr.',
     image: {
       src: '/images/hero-mobile-van.webp',
-      alt: 'Mobiele servicebus voor sleutelservice aan wagenparken en verhuurbedrijven',
+      alt: 'Mobiles Servicefahrzeug für Schlüsselservice an Fuhrparks und Vermietern',
     },
-    painTitle: 'Herkenbaar?',
+    painTitle: 'Kommt Ihnen das bekannt vor?',
     pain: [
-      'Een huurder levert in zonder sleutel, of sluit de sleutel op in de auto op een parkeerplaats ver weg.',
-      'Het voertuig staat stil en kan niet opnieuw verhuurd worden — elke dag stilstand is gemiste omzet.',
-      'Voor bussen, bestelbussen en campers is een sleutel bij de dealer duur en vaak pas na dagen beschikbaar.',
-      'U heeft van de helft van het wagenpark maar één sleutel en merkt dat pas op het verkeerde moment.',
+      'Ein Mieter gibt ohne Schlüssel zurück, oder schließt den Schlüssel auf einem Parkplatz weit weg im Fahrzeug ein.',
+      'Das Fahrzeug steht und kann nicht neu vermietet werden — jeder Tag Stillstand ist entgangener Umsatz.',
+      'Für Transporter, Kleinbusse und Wohnmobile ist ein Schlüssel beim Händler teuer und oft erst nach Tagen verfügbar.',
+      'Von der Hälfte des Fuhrparks existiert nur ein Schlüssel, und das merkt man im falschen Moment.',
     ],
     gains: [
       {
-        title: 'Reservesleutels vóórdat het misgaat',
-        text: 'Wij maken in één ronde reservesleutels voor uw voertuigen. Raakt er daarna één kwijt, dan is het een sleutel uit de la in plaats van een dag uit de verhuur.',
+        title: 'Zweitschlüssel, bevor es schiefgeht',
+        text: 'Wir fertigen in einem Durchgang Zweitschlüssel für Ihre Fahrzeuge. Geht danach einer verloren, ist es ein Schlüssel aus der Schublade statt ein Tag aus der Vermietung.',
       },
       {
-        title: '24/7 bij spoed',
-        text: 'Sleutelverlies houdt zich niet aan kantooruren. Wij rijden ook ’s avonds en in het weekend naar de locatie van het voertuig.',
+        title: '24/7 im Notfall',
+        text: 'Schlüsselverlust hält sich nicht an Bürozeiten. Unsere Partner fahren auch abends und am Wochenende zum Standort des Fahrzeugs.',
       },
       {
-        title: 'Wij komen naar het voertuig',
-        text: 'Bij de vestiging, op de standplaats of bij de huurder langs de weg. Geen berging, geen transport van een auto die niet te openen is.',
+        title: 'Wir kommen zum Fahrzeug',
+        text: 'An der Niederlassung, am Standplatz oder beim Mieter am Straßenrand. Kein Abschleppen, kein Transport eines Fahrzeugs, das sich nicht öffnen lässt.',
       },
       {
-        title: 'Ook bussen, bestelbussen en campers',
-        text: 'Groter materieel valt bij veel partijen buiten de boot. Wij werken op dezelfde manier aan een bestelbus of touringcar als aan een personenauto.',
+        title: 'Auch Transporter, Kleinbusse und Wohnmobile',
+        text: 'Größeres Material fällt bei vielen Anbietern hinten runter. Wir arbeiten an einem Sprinter oder Wohnmobil auf dieselbe Weise wie an einem Pkw.',
       },
     ],
     steps: [
-      'Wij nemen samen het wagenpark door: welke voertuigen, welke sleuteltypes',
-      'Wij maken in één of enkele bezoeken de ontbrekende reservesleutels',
-      'U krijgt een vast nummer voor spoed, 24/7 bereikbaar',
-      'Facturatie per bezoek of per periode, in overleg',
+      'Wir gehen den Fuhrpark gemeinsam durch: welche Fahrzeuge, welche Schlüsselarten',
+      'Wir fertigen in einem oder wenigen Terminen die fehlenden Zweitschlüssel',
+      'Sie erhalten eine Nummer für den Notfall, rund um die Uhr erreichbar',
+      'Abrechnung je Termin oder je Zeitraum, nach Absprache',
     ],
     faq: [
       {
-        q: 'Kunnen jullie reservesleutels maken voor ons hele wagenpark?',
-        a: 'Ja, en dat is de goedkoopste volgorde. Vooraf sleutels maken kost per voertuig minder dan een spoedoproep achteraf, en het scheelt stilstand op het moment dat het misgaat.',
+        q: 'Können Sie Zweitschlüssel für unseren gesamten Fuhrpark anfertigen?',
+        a: 'Ja, und das ist die günstigste Reihenfolge. Schlüssel vorab anzufertigen kostet je Fahrzeug weniger als ein Noteinsatz hinterher, und es spart den Stillstand in dem Moment, in dem es schiefgeht.',
       },
       {
-        q: 'Komen jullie ook naar een huurder toe die onderweg is?',
-        a: 'Ja. Wij rijden naar de locatie van het voertuig, ook buiten kantooruren. Geef het kenteken en de locatie door, dan bevestigen wij de aankomsttijd.',
+        q: 'Kommen Sie auch zu einem Mieter, der unterwegs ist?',
+        a: 'Ja. Wir fahren zum Standort des Fahrzeugs, auch außerhalb der Bürozeiten. Nennen Sie Fahrzeug und Ort, dann bestätigen wir das Zeitfenster.',
       },
       {
-        q: 'Werken jullie met vaste afspraken of per keer?',
-        a: 'Allebei komt voor. Sommige bedrijven bellen ons per geval, andere spreken een vaste werkwijze en bereikbaarheid af. Vertel wat u nodig heeft, dan kijken wij wat past.',
+        q: 'Arbeiten Sie mit festen Vereinbarungen oder je Einsatz?',
+        a: 'Beides kommt vor. Manche Betriebe rufen von Fall zu Fall an, andere legen einen festen Ablauf und eine Erreichbarkeit fest. Sagen Sie, was Sie brauchen, dann sehen wir, was passt.',
       },
     ],
   },

@@ -6,40 +6,42 @@ import { SITE_CONFIG } from '@/config/site.config';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  // The layout template appends ' | Autosleutel24' (16 chars), so a base over
-  // 44 characters is cut in results. This one ran to 79.
-  title: 'Zakelijke Autosleutelservice voor Bedrijven',
+  // Das Layout hängt ' | Autoschlüssel24' an (18 Zeichen), ein Basistitel über
+  // 42 Zeichen wird in den Ergebnissen abgeschnitten. Die niederländische
+  // Fassung lief auf 79.
+  title: 'Autoschlüssel-Service für Geschäftskunden',
   description:
-    'Autosleutels voor garages, autobedrijven, import & export en wagenparken. Wij komen naar uw werkplaats of terrein, meerdere voertuigen per bezoek, één factuur.',
+    'Autoschlüssel für Kfz-Werkstätten, Autohäuser, Import & Export und Fuhrparks. Wir kommen in Ihre Werkstatt oder auf Ihr Gelände, mehrere Fahrzeuge pro Termin, eine Rechnung.',
   alternates: { canonical: `${SITE_CONFIG.domain}/geschaeftskunden` },
 };
 
-export default function ZakelijkHub() {
+export default function GeschaeftskundenHub() {
   return (
     <main>
-      <script id="bc-zakelijk" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Zakelijk', path: '/geschaeftskunden' }])) }} />
+      <script id="bc-zakelijk" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Geschäftskunden', path: '/geschaeftskunden' }])) }} />
       <section className={styles.hero}>
         <div className={styles.inner}>
           <nav className={styles.crumbs} aria-label="Breadcrumb">
-            <Link href="/">Home</Link> <span>/</span> <span>Zakelijk</span>
+            <Link href="/">Home</Link> <span>/</span> <span>Geschäftskunden</span>
           </nav>
           <h1>
-            Sleutelwerk uitbesteden,
+            Schlüsselarbeit abgeben,
             <br />
-            <span className={styles.accent}>zonder de auto weg te geven.</span>
+            <span className={styles.accent}>ohne das Fahrzeug abzugeben.</span>
           </h1>
           <p className={styles.lead}>
-            Sleutelprogrammering vraagt merkspecifieke apparatuur en licenties
-            die voor een handvol klussen per jaar nooit uit kan. Wij rijden naar
-            uw werkplaats, showroom, loods of standplaats en doen het werk daar —
-            meerdere voertuigen per bezoek, één factuur achteraf.
+            Schlüssel anlernen verlangt markenspezifische Geräte und Lizenzen,
+            die sich für eine Handvoll Aufträge im Jahr nie rechnen. Wir fahren
+            in Ihre Werkstatt, Ihren Ausstellungsraum, Ihre Halle oder auf Ihren
+            Standplatz und arbeiten dort — mehrere Fahrzeuge pro Termin, eine
+            Rechnung im Nachgang.
           </p>
           <div className={styles.ctas}>
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone}>
-              Bel {SITE_CONFIG.phone}
+              {SITE_CONFIG.phone} anrufen
             </a>
-            <Link href="/geschaeftskunden/garages" className={styles.btnOutline}>
-              Bekijk voor garages
+            <Link href="/geschaeftskunden/kfz-werkstaetten" className={styles.btnOutline}>
+              Für Kfz-Werkstätten
             </Link>
           </div>
         </div>
@@ -47,10 +49,10 @@ export default function ZakelijkHub() {
 
       <section className={styles.section}>
         <div className={styles.inner}>
-          <h2>Voor wie wij werken</h2>
+          <h2>Für wen wir arbeiten</h2>
           <p className={styles.sub}>
-            Vier soorten bedrijven, vier verschillende redenen. Kies wat op u van
-            toepassing is.
+            Vier Betriebsarten, vier verschiedene Gründe. Wählen Sie, was auf
+            Sie zutrifft.
           </p>
           <div className={styles.grid}>
             {ZAKELIJK_SEGMENTS.map((s) => (
@@ -58,7 +60,7 @@ export default function ZakelijkHub() {
                 <strong>{s.label}</strong>
                 <span className={styles.cardTitle}>{s.title}</span>
                 <span className={styles.cardText}>{s.metaDesc}</span>
-                <span className={styles.cardLink}>Lees verder &rarr;</span>
+                <span className={styles.cardLink}>Weiterlesen &rarr;</span>
               </Link>
             ))}
           </div>
@@ -67,26 +69,27 @@ export default function ZakelijkHub() {
 
       <section className={`${styles.section} ${styles.alt}`}>
         <div className={styles.inner}>
-          <h2>Wat wij niet kunnen</h2>
+          <h2>Was wir nicht können</h2>
           <p className={styles.sub}>
-            Belangrijker dan de lijst met wat wél kan, want dit bepaalt of u ons
-            moet bellen of niet. Wij zeggen het liever vooraf dan bij uw klant in
-            de werkplaats.
+            Wichtiger als die Liste dessen, was geht — denn daran entscheidet
+            sich, ob Sie uns anrufen sollten. Wir sagen es lieber vorher als
+            später bei Ihrem Kunden in der Werkstatt.
           </p>
           <ul className={styles.limits}>
             <li>
-              <strong>Mercedes met FBS4</strong> — grofweg vanaf bouwjaar
-              2013/2014. Sleutel bijmaken én alle sleutels kwijt kan hier alleen
-              de merkdealer.
+              <strong>Mercedes mit FBS4</strong> — etwa ab Baujahr 2013/2014.
+              Schlüssel nachmachen und der Fall &quot;alle Schlüssel verloren&quot; können
+              hier nur beim Vertragshändler erledigt werden.
             </li>
             <li>
-              <strong>Auto&rsquo;s van vóór 2000</strong> — de apparatuur voor die
-              oudere systemen voeren wij niet meer.
+              <strong>Fahrzeuge vor 2000</strong> — die Geräte für diese älteren
+              Systeme führen wir nicht mehr mit.
             </li>
             <li>
-              <strong>Volkswagen, alle sleutels kwijt, vanaf 2014</strong> — dat
-              kunnen wij wél, maar de sleutel moet als origineel onderdeel
-              besteld worden. Reken op 2 tot 4 werkdagen; dezelfde dag lukt niet.
+              <strong>VW-Konzern, alle Schlüssel verloren, ab 2014</strong> — das
+              können wir, aber der Hersteller verlangt eine Online-Freigabe und
+              der Schlüssel muss als Originalteil bestellt werden. Rechnen Sie
+              mit einigen Werktagen; am selben Tag geht es nicht.
             </li>
           </ul>
         </div>
@@ -94,13 +97,14 @@ export default function ZakelijkHub() {
 
       <section className={styles.section}>
         <div className={styles.inner}>
-          <h2>Zelf monteur?</h2>
+          <h2>Selbst Fachbetrieb?</h2>
           <p className={styles.sub}>
-            Wij breiden uit en zoeken zelfstandige autosleutelspecialisten — op
-            dit moment vooral in Noord-Brabant en Limburg.
+            Wir bauen das Netzwerk aus und suchen selbstständige
+            Autoschlüssel-Fachbetriebe — derzeit vor allem außerhalb von Berlin,
+            Hamburg, München und Frankfurt am Main, wo schon ein Partner sitzt.
           </p>
           <Link href="/partner-werden" className={styles.btnOutline}>
-            Bekijk wat wij bieden
+            Was wir bieten
           </Link>
         </div>
       </section>
