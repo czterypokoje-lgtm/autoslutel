@@ -94,12 +94,16 @@ export default function FaqSection({ customFaqs, cityName, brandName, pageUrl = 
       />
       <div className="container">
         <div className={styles.faqHeader}>
-          <p className="section-eyebrow">VEELGESTELDE VRAGEN</p>
+          <p className="section-eyebrow">HÄUFIGE FRAGEN</p>
           <h2 className="section-title">
             {cityName ? `Häufige Fragen aus ${cityName}` : brandName ? `Häufige Fragen zu ${brandName}-Autoschlüsseln` : 'Häufige Fragen zu Autoschlüsseln'}
           </h2>
           <p className="section-lead">
-            {cityName ? `Lees hier de meest gestelde vragen over onze service in ${cityName}.` : brandName ? `Heeft u vragen over het bijmaken of inleren van een ${brandName} sleutel? Lees hier de meest gestelde vragen.` : 'Heeft u vragen over kosten, levertijden of reparaties? Bekijk onze meest gestelde vragen.'}
+            {cityName
+              ? `Die Fragen, die uns aus ${cityName} am häufigsten gestellt werden.`
+              : brandName
+                ? `Fragen zum Nachmachen oder Anlernen eines ${brandName}-Schlüssels — hier die häufigsten.`
+                : 'Fragen zu Preisen, Dauer oder Reparaturen? Hier die Antworten, die wir am häufigsten geben.'}
           </p>
         </div>
 

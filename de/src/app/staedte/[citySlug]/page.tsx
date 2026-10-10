@@ -10,18 +10,14 @@ import { CITIES } from '@/config/cities';
 import { isNoindexCity } from '@/config/thinPages';
 import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
 import { SERVICE_REGIONS } from '@/config/regions';
-import { BRANDS } from '@/config/brands';
-import { DEEP_DIVE, RELAY_THEFT_MAKES, GHOST_ARTICLE } from '@/config/deepDives';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/supabase/env';
 import { findCityTechnician, arrivalWindow, type PublicTechnician } from '@/lib/cityTechnician';
-import { DIENSTEN } from '@/config/leistungen';
+import { preisAb } from '@/config/leistungen';
 const BrandsLogoGrid = dynamic(() => import('@/components/BrandsLogoGrid/BrandsLogoGrid'));
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 const GallerySlider = dynamic(() => import('@/components/GallerySlider/GallerySlider'));
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
-import { isFlyer } from '@/lib/jobPhotos';
-import { captionFromFilename } from '@/lib/imageCaption';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
@@ -88,24 +84,16 @@ export const revalidate = 3600;
  * page degrades to naming nobody, which is the honest failure — the previous
  * behaviour was to name the same person everywhere, which is the other kind.
  */
-/**
- * A technician photo as a first-party URL.
+/*
+ * Hier stand localTechnicianPhoto(): eine Hilfsfunktion, die das Foto eines
+ * Technikers aus dem Vercel-Blob-Store auf eine eigene URL umschrieb, damit
+ * die Partnerkarte ein Gesicht zeigen konnte.
  *
- * Photos live in Vercel Blob (/api/admin/profiel/foto). next.config.ts rewrites
- * `/f/monteurs/*` onto the blob store, exactly as it already does for lead
- * photos, so the page can reference its own domain instead of putting a third
- * party into images.remotePatterns.
- *
- * Anything that is not a blob URL under that prefix returns null and the photo
- * is simply not rendered: an <Image> pointed at an unconfigured remote host is
- * a build failure, and a missing face is not worth one.
+ * Sie ist entfernt, weil diese Seite keinen Partner namentlich nennt und
+ * deshalb auch kein Partnerfoto zeigt (siehe die Partnerkarte weiter unten).
+ * Die Technikerdaten werden weiter geladen, aber nur für das Zeitfenster:
+ * arrivalWindow() braucht die Entfernung, nicht das Foto.
  */
-function localTechnicianPhoto(url: string | null): string | null {
-  if (!url) return null;
-  if (url.startsWith('/')) return url;
-  const prefix = `${SITE_CONFIG.blobStorageDomain}/monteurs/`;
-  return url.startsWith(prefix) ? `/f/monteurs/${url.slice(prefix.length)}` : null;
-}
 
 async function loadPublicTechnicians(): Promise<PublicTechnician[]> {
   if (!supabaseAuthConfigured()) return [];
@@ -131,18 +119,20 @@ export async function generateStaticParams() {
 }
 
 /*
- * A 60-character title is roughly what Google shows before cutting. The price
- * version overflows for the longer town names (Alphen aan den Rijn, Wijk bij
- * Duurstede), so those fall back to the shorter form rather than losing
- * "Op Locatie" to an ellipsis.
+ * Rund 60 Zeichen zeigt Google, danach wird abgeschnitten. Die vier deutschen
+ * Städte sind kurz, aber "Frankfurt am Main" sprengt die erste Form — darum
+ * gibt es eine zweite, und die Reihenfolge entscheidet, welche genommen wird.
+ *
+ * Was hier NICHT steht, ist eine Minutenangabe. Die niederländische Fassung
+ * hatte sie im Titel jeder Stadtseite, auch für Maastricht, 210 km von der
+ * Werkstatt; sie wurde entfernt, weil sie unwahr war. Sie in einer deutschen
+ * Variante neu zu tippen, wäre derselbe Fehler mit anderer Flagge.
  */
 function cityTitle(name: string): string {
-  // Every city leads with the arrival time, which is what converted best. The shorter
-  // "30-60 Min" form is for the longer town names (Alphen aan den Rijn) that overflow 60.
   const candidates = [
-    `Autosleutel Bijmaken ${name} | ${ARRIVAL_TITLE}`,
-    `Autosleutel Bijmaken ${name} | 30-60 Min`,
-    `Autosleutel Bijmaken ${name} | Op Locatie`,
+    `Autoschlüssel nachmachen ${name} | ${ARRIVAL_TITLE}`,
+    `Autoschlüssel nachmachen ${name} | 24/7`,
+    `Autoschlüssel ${name} | vor Ort`,
   ];
   return candidates.find((t) => t.length <= 60) ?? candidates[candidates.length - 1];
 }
@@ -154,28 +144,18 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const pageUrl = `${SITE_CONFIG.domain}/staedte/${citySlug}`;
   return {
     /*
-     * "Sleutelmaker", not "Kopiëren".
+     * "nachmachen", nicht "kopieren".
      *
-     * Google was rewriting the title of every city page — all ten in the
-     * Ahrefs report came back "Is page title used in SERP: No" — and the
-     * rewrite it substituted was always the same: Kopiëren swapped for
-     * Sleutelmaker. The top-ranking keyword per city says the same thing
-     * ("sleutelmaker bussum", "sleutelmaker amstelveen"), and the word
-     * already appears a dozen times in each page's own body, which is where
-     * Google was taking it from. This is not a guess about intent; it is the
-     * word Google and the searchers both chose over ours.
-     */
-    /*
-     * "laten maken" is in the title and the description because Search
-     * Console says it is the biggest keyword family on the site: 17,314
-     * impressions across 212 queries, average position 47. The old wording
-     * ("kopiëren", "Sleutelmaker") carried none of it.
+     * Beides steht in den deutschen Wörterbüchern, gesucht wird aber das
+     * erste: "autoschlüssel nachmachen" ist der Begriff, unter dem in
+     * Deutschland Preise, Vergleiche und Ratgeber zu dieser Arbeit erscheinen,
+     * "kopieren" bringt vor allem Ergebnisse zu Haustürschlüsseln. Die
+     * Begründung je Begriff steht in config/keywords.ts.
      *
-     * The price stays; the arrival time does NOT come back. The previous
-     * generation of this copy promised "binnen 30-60 min" on all 62 cities
-     * including Maastricht, about 210 km from the Bussum base. It was
-     * removed for being false and the fix is not to retype it in a meta
-     * description, which is the most-read sentence on the page.
+     * Was auf der niederländischen Seite hier mitläuft und hier fehlt: die
+     * Ankunftszeit. Sie stand dort in der Beschreibung jeder Stadtseite — dem
+     * meistgelesenen Satz der Seite — und war für die entfernten Städte
+     * unwahr. Vier deutsche Partner tragen sie noch nicht.
      */
     title: {
       absolute: city.customMetaTitle || cityTitle(city.city),
@@ -183,16 +163,17 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     ...(isNoindexCity(citySlug) && { robots: { index: false, follow: true } }),
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} ter plaatse, dag en nacht. Prijs vooraf. Bel nu!`
+        `Autoschlüssel nachmachen lassen in ${city.city}? Unser Partner kommt zu Ihrem Fahrzeug, Tag und Nacht. Festpreis vorab, inkl. MwSt.`
     ),
     /*
      * Canonical only, no alternates.
      *
-     * A cluster is for one page in several languages, and a city page is not
-     * that: /staedte/utrecht and /staedte/berlin are two different cities, not
-     * two translations of each other. This used to list the page as its own
-     * 'nl-NL' and 'x-default', which said nothing; the thing to avoid is
-     * wiring Utrecht to Berlin because both happen to be "the city page".
+     * Eine hreflang-Gruppe ist für eine Seite in mehreren Sprachen, und eine
+     * Stadtseite ist das nicht: /staedte/berlin und /staedte/hamburg sind zwei
+     * verschiedene Städte, keine Übersetzungen voneinander. Die
+     * niederländische Fassung trug hier einmal sich selbst als 'nl-NL' und
+     * 'x-default' ein, was nichts aussagte. Zu vermeiden ist, Berlin an
+     * Utrecht zu hängen, nur weil beide "die Stadtseite" sind.
      */
     alternates: {
       canonical: pageUrl,
@@ -205,8 +186,8 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
       locale: SITE_CONFIG.ogLocale,
       url: pageUrl,
       title: city.customMetaTitle || cityTitle(city.city),
-      description: `Autosleutel laten maken of bijmaken in ${city.city}? Onze monteur komt naar u toe, dag en nacht. Bel: ${SITE_CONFIG.phone}`,
-      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${city.city} — Autosleutel24` }],
+      description: `Autoschlüssel nachmachen lassen in ${city.city}? Unser Partner kommt zu Ihrem Fahrzeug, Tag und Nacht. Telefon: ${SITE_CONFIG.phone}`,
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autoschlüssel nachmachen ${city.city} — Autoschlüssel24` }],
     },
     other: {
       'geo.region': SITE_CONFIG.geoRegion,
@@ -235,7 +216,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
    * region further out than the Randstad.
    */
   const arrivalText = arrival ?? ARRIVAL;
-  const arrivalPhrase = arrival ? `gemiddeld binnen ${arrival}` : `binnen ${ARRIVAL}`;
+  const arrivalPhrase = arrival ? `im Schnitt in ${arrival}` : ARRIVAL;
 
   // Find 3 geographically closest cities
   const closestCities = CITIES
@@ -264,8 +245,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     '@context': 'https://schema.org',
     '@type': 'Service',
     '@id': `${SITE_CONFIG.domain}/staedte/${citySlug}#service`,
-    name: `Autosleutel bijmaken en kwijt in ${city.city}`,
-    serviceType: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
+    name: `Autoschlüssel nachmachen und Notdienst in ${city.city}`,
+    serviceType: 'Autoschlüssel nachmachen, Autoschlüssel verloren, Auto öffnen',
     url: `${SITE_CONFIG.domain}/staedte/${citySlug}`,
     provider: getBaseLocalBusinessSchema(),
     areaServed: {
@@ -280,7 +261,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Steden', item: `${SITE_CONFIG.domain}/staedte` },
+      { '@type': 'ListItem', position: 2, name: 'Städte', item: `${SITE_CONFIG.domain}/staedte` },
       { '@type': 'ListItem', position: 3, name: city.city, item: `${SITE_CONFIG.domain}/staedte/${citySlug}` },
     ],
   };
@@ -290,11 +271,19 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
   // Generate deterministic E-E-A-T local data
   const area1 = city.subAreas && city.subAreas.length > 0 ? city.subAreas[0] : `${city.city} Centrum`;
-  const area2 = city.subAreas && city.subAreas.length > 1 ? city.subAreas[1] : `omgeving ${city.city}`;
+  const area2 = city.subAreas && city.subAreas.length > 1 ? city.subAreas[1] : `Umgebung ${city.city}`;
 
-  const imagePathWebp = path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${citySlug}.webp`);
-  const imagePathPng = path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${citySlug}.png`);
-  const imagePathJpg = path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${citySlug}.jpg`);
+  /*
+   * Ein eigenes Heldenfoto je Stadt, wenn es eines gibt.
+   *
+   * Heute gibt es keines: die niederländischen Stadtfotos sind in
+   * niederländischen Städten entstanden und wurden deshalb nicht übernommen.
+   * Die Prüfung bleibt, weil sie die Stelle ist, an der ein Partnerfoto aus
+   * Berlin oder Hamburg ohne Codeänderung erscheint — Datei ablegen, fertig.
+   */
+  const imagePathWebp = path.join(process.cwd(), 'public', 'images', `autoschluessel-nachmachen-${citySlug}.webp`);
+  const imagePathPng = path.join(process.cwd(), 'public', 'images', `autoschluessel-nachmachen-${citySlug}.png`);
+  const imagePathJpg = path.join(process.cwd(), 'public', 'images', `autoschluessel-nachmachen-${citySlug}.jpg`);
   
   let hasHeroImage = false;
   let heroImageExt = '.webp';
@@ -321,7 +310,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <div className={styles.heroUtrechtInner}>
               <div className={styles.heroTopContent}>
                 <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-                  <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/staedte" style={{ color: 'var(--gray-500)' }}>Steden</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
+                  <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/staedte" style={{ color: 'var(--gray-500)' }}>Städte</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
                 </nav>
                 <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                   <HeroTrustBadge />
@@ -330,19 +319,19 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   {city.customH1 ? (
                     city.customH1
                   ) : (
-                    <>Autosleutel Bijmaken of Laten Maken in {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Sleutelmaker</span></>
+                    <>Autoschlüssel nachmachen in {city.city} — <span style={{ color: 'var(--orange-500)' }}>24/7 Notdienst vor Ort</span></>
                   )}
                 </h1>
                 <p className={styles.heroUtrechtLead}>
-                  Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>binnen <strong>{ARRIVAL}</strong></>} bij u in {city.city}.
-                  Alle merken, ter plaatse geprogrammeerd.
+                  Unser Partner ist {arrival ? <>im Schnitt in <strong>{arrival}</strong></> : <><strong>{ARRIVAL}</strong></>} bei Ihnen in {city.city}.
+                  Alle Marken, Wegfahrsperre vor Ort angelernt.
                 </p>
               </div>
 
               <div className={styles.heroImageContent}>
                 <Image 
-                  src={`/images/autosleutel-bijmaken-${city.slug}${heroImageExt}`}
-                  alt={`Autosleutel bijmaken ${city.city} - 24/7 service op locatie`}
+                  src={`/images/autoschluessel-nachmachen-${city.slug}${heroImageExt}`}
+                  alt={`Autoschlüssel nachmachen in ${city.city} — Service vor Ort, rund um die Uhr`}
                   width={800}
                   height={450}
                   style={{ width: '100%', height: 'auto', borderRadius: '12px' }}
@@ -360,15 +349,15 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <section className={styles.hero}>
             <div className={styles.heroInner}>
               <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-                <Link href="/">Home</Link> <span>/</span> <Link href="/staedte">Steden</Link> <span>/</span> <span>{city.city}</span>
+                <Link href="/">Home</Link> <span>/</span> <Link href="/staedte">Städte</Link> <span>/</span> <span>{city.city}</span>
               </nav>
               <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                 <HeroTrustBadge />
               </div>
-              <h1>{city.customH1 || `Autosleutel Bijmaken of Laten Maken in ${city.city} — 24/7 Sleutelmaker`}</h1>
+              <h1>{city.customH1 || `Autoschlüssel nachmachen in ${city.city} — 24/7 Notdienst vor Ort`}</h1>
               <p className={styles.heroLead}>
-                Wij zijn {arrival ? <>gemiddeld binnen <strong>{arrival}</strong></> : <>binnen <strong>{ARRIVAL}</strong></>} bij u in {city.city}.
-                Alle merken, ter plaatse geprogrammeerd.
+                Unser Partner ist {arrival ? <>im Schnitt in <strong>{arrival}</strong></> : <><strong>{ARRIVAL}</strong></>} bei Ihnen in {city.city}.
+                Alle Marken, Wegfahrsperre vor Ort angelernt.
               </p>
               <LeadCaptureForm city={city.city} phone={SITE_CONFIG.phone} />
             </div>
@@ -379,47 +368,55 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>
           <FeatureCards 
             cardTitleAs="h2"
-            videoHeading={`Autosleutel laten maken in ${city.city}: zo werkt het in 40 seconden`}
+            videoHeading={`Autoschlüssel nachmachen in ${city.city}: in 40 Sekunden erklärt`}
             features={[
               {
                 id: 'feature-1',
-                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: '24/7 Mobiele Slotenmaker',
-                description: `Wij rijden als lokale mobiele slotenmaker direct naar uw locatie in ${city.city} om u zonder vertraging weer op weg te helpen.`,
-                linkText: 'Meer over mobiele service',
+                icon: <Image src="/images/icon_van.webp" alt="Mobiler Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '24/7 mobiler Schlüsseldienst',
+                description: `Unser Partner in ${city.city} fährt mit eigener Diagnosetechnik und eigenem Schlüssellager zu Ihrem Fahrzeug — ohne Abschleppen und ohne Termin beim Händler.`,
+                linkText: 'Mehr zum mobilen Service',
                 linkUrl: '/leistungen'
               },
               {
                 id: 'feature-2',
-                icon: <Image src="/images/icon_map.webp" alt="Werkgebied" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: `Snel ter plaatse in ${city.city}`,
-                description: `Wij werken dagelijks in ${area1}, ${area2} en de rest van ${city.city}. Bel ons en u hoort meteen hoe snel een monteur bij u kan zijn.`,
-                linkText: 'Vind een monteur',
-                linkUrl: '#contact'
+                icon: <Image src="/images/icon_map.webp" alt="Einsatzgebiet" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: `Vor Ort in ${city.city}`,
+                description: `Gearbeitet wird in ${area1}, ${area2} und im übrigen ${city.city}. Rufen Sie an, und Sie hören sofort, wann der Partner bei Ihnen sein kann.`,
+                linkText: 'Jetzt anrufen',
+                linkUrl: `tel:${SITE_CONFIG.phoneTel}`
               },
               {
                 id: 'feature-3',
-                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: 'Ervaren & Vaste Prijs',
-                description: `U krijgt vooraf een vaste prijs voor de klus in ${city.city}, zodat u nooit voor verrassingen komt te staan. Geen voorrijkosten, geen meerwerk achteraf.`,
-                linkText: 'Bekijk onze tarieven',
+                icon: <Image src="/images/icon_price.webp" alt="Festpreis" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Festpreis vorab',
+                description: `Sie hören den Preis für den Auftrag in ${city.city} am Telefon, inklusive 19 % MwSt. Keine Anfahrtspauschale, keine Nachforderung vor Ort.`,
+                linkText: 'Preise ansehen',
                 linkUrl: '/preise'
               },
               {
                 id: 'feature-4',
                 icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: '12 Maanden Garantie',
-                description: 'Wij bieden standaard 12 maanden volledige garantie op al onze geleverde sleutels en het programmeren daarvan.',
-                linkText: 'Bekijk waar wij service verlenen',
+                title: '12 Monate Garantie',
+                description: 'Auf jeden gelieferten Schlüssel und jedes Anlernen geben wir zwölf Monate schriftliche Garantie.',
+                linkText: 'Wo wir arbeiten',
                 linkUrl: '/staedte'
               },
               {
                 id: 'feature-5',
-                icon: <Image src="/images/icon_insurance.webp" alt="Verzekerd" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: 'Verzekerd & Gecertificeerd',
-                description: 'U bent 100% verzekerd. We werken samen met alle grote verzekeraars.',
-                linkText: 'Lees meer over verzekering',
-                linkUrl: '/blog/verzekering-dekt-autosleutel-vervangen'
+                icon: <Image src="/images/icon_insurance.webp" alt="Rechnung für die Versicherung" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                /*
+                 * Hier stand "U bent 100% verzekerd. We werken samen met alle
+                 * grote verzekeraars." Eine Zusammenarbeit mit deutschen
+                 * Versicherern gibt es nicht, und ob ein Schlüsselverlust
+                 * gedeckt ist, steht in der Police des Kunden — nicht in
+                 * unserer Hand. Was wir zusagen können, ist die Rechnung, mit
+                 * der er es bei seinem Versicherer einreichen kann.
+                 */
+                title: 'Rechnung für die Versicherung',
+                description: 'Sie erhalten eine Rechnung mit ausgewiesener MwSt. und aufgeführter Leistung — so, wie Ihr Versicherer sie zur Erstattung braucht.',
+                linkText: 'Preise ansehen',
+                linkUrl: '/preise'
               }
             ]}
           />
@@ -432,88 +429,78 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         <HowItWorks cityName={city.city} />
 
 
-        {/* ── TECHNICIAN TRUST CARD ─────────────────────────────────────
-            Berkan, on every city page, by the owner's decision.
+        {/* ── PARTNERKARTE ────────────────────────────────────────────
+            Kein Name, kein Gesicht — mit Absicht.
 
-            This block briefly rendered whichever partner covered the city,
-            from the technicians table. That was mine to build and not mine to
-            decide: naming a partner on a public page is a co-branding
-            commitment -- what appears where, and what happens to sixty-two
-            pages when a partnership ends -- and it was never agreed with the
-            partners. Reverted on instruction.
+            Auf der niederländischen Seite steht an dieser Stelle Berkan
+            Acarol als "Gecertificeerd Hoofdtechnicus", der jedes
+            Schlüsselproblem der Stadt persönlich löst. Das ist dort wahr und
+            hier nicht: in dieser Stadt fährt ein selbstständiger
+            Partnerbetrieb. Diesen Text zu übersetzen hieße, einen Techniker
+            anzukündigen, der nicht kommt.
 
-            The dynamic lookup stays in src/lib/cityTechnician.ts and is still
-            what dispatch uses to route a job. It just does not put a name on
-            a public page any more. */}
+            Den Partner stattdessen namentlich zu nennen, wäre eine
+            Co-Branding-Zusage, die mit den vier Betrieben nicht vereinbart
+            ist — dieselbe Entscheidung, die auf der niederländischen Seite
+            schon einmal getroffen und zurückgenommen wurde. Die Zuordnung
+            Stadt → Partner liegt weiter in src/lib/cityTechnician.ts und
+            steuert die Auftragsvergabe; sie setzt nur keinen Namen auf eine
+            öffentliche Seite.
+
+            Was hier steht, ist nachprüfbar: welche Technik verwendet wird und
+            was der Preis bedeutet. */}
         <section style={{ padding: '2.5rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
           <div className="container">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '2rem', alignItems: 'center' }}>
               <div>
-                <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>UW MONTEUR IN {city.city.toUpperCase()}</p>
-                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>Berkan Acarol — Gecertificeerd Hoofdtechnicus</h2>
+                <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>IHR PARTNERBETRIEB IN {city.city.toUpperCase()}</p>
+                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>Werkstatttechnik, kein Aufsperrdienst</h2>
                 <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1rem', fontSize: '0.9rem' }}>
-                  Uw sleutelprobleem in {city.city} wordt persoonlijk opgelost door Berkan. Gecertificeerd op Autel IM608 Pro&nbsp;II en AVDI Abrites — dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.
+                  Zu Ihrem Fahrzeug in {city.city} kommt ein selbstständiger Fachbetrieb
+                  unseres Netzwerks — mit Autel IM608 Pro&nbsp;II und AVDI Abrites, also
+                  derselben Diagnosetechnik, die der Vertragshändler einsetzt, aber ohne
+                  Wartezeit und ohne Händleraufschlag.
                 </p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.25rem', fontSize: '0.875rem', color: 'var(--gray-700)', lineHeight: 1.7 }}>
-                  <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Autel IM608 Pro II &amp; AVDI Abrites</strong> — dealer-niveau apparatuur</span></li>
-                  <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Schadevrij werken</strong> — 12 maanden garantie op elk onderdeel</span></li>
-                  <li style={{ display: 'flex', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Vaste prijs vooraf</strong> — nooit een verrassingsrekening</span></li>
+                  <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Autel IM608 Pro II &amp; AVDI Abrites</strong> — Werkstatttechnik, nicht Schlagschlüssel</span></li>
+                  <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Schadenfrei öffnen</strong> — 12 Monate Garantie auf Schlüssel und Anlernen</span></li>
+                  <li style={{ display: 'flex', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Festpreis vorab</strong> — inkl. 19 % MwSt., keine Nachforderung</span></li>
                 </ul>
-                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id={`city-berkan-phone-${city.slug}`}>📞 Bel Berkan: {SITE_CONFIG.phone}</a>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id={`city-phone-${city.slug}`}>📞 Jetzt anrufen: {SITE_CONFIG.phone}</a>
               </div>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Image
-                  src="/images/team/berkan-acarol-autoschluessel-spezialist.webp"
-                  alt={`Berkan Acarol — Autosleutelspecialist ${city.city}`}
+                  src="/images/seo/professionelle_diagnose_geraete.webp"
+                  alt="Fahrzeugdiagnose zum Anlernen der Wegfahrsperre"
                   width={300}
                   height={200}
-                  style={{ width: '100%', maxWidth: '300px', height: '200px', objectFit: 'cover', objectPosition: 'top', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', maxWidth: '300px', height: '200px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #cbd5e1' }}
                 />
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── TECHNICAL DEEP DIVES FOR THIS CITY'S COMMON MAKES ────────
-            Linked off popularBrands, so a Gooi page that sees BMW and Audi
-            all day points at BDC2 and SFD, and a page that does not, does
-            not. The three posts had three inbound links each while the
-            footer handed boilerplate pages 178. */}
-        {(city.popularBrands ?? []).some((b) => DEEP_DIVE[b]) && (
-          <section style={{ padding: '2.5rem 0', background: '#ffffff' }}>
-            <div className="container" style={{ maxWidth: 760 }}>
-              <h2 style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.45rem)', marginBottom: '0.75rem' }}>
-                Veelvoorkomende merken in {city.city}
-              </h2>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, lineHeight: 1.9 }}>
-                {[...new Set((city.popularBrands ?? []).filter((b) => DEEP_DIVE[b]))].map((brand) => (
-                  <li key={brand}>
-                    <Link href={`/blog/${DEEP_DIVE[brand]!.slug}`} style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
-                      {brand}: {DEEP_DIVE[brand]!.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              {(city.popularBrands ?? []).some((b) => RELAY_THEFT_MAKES.has(b)) && (
-                <p style={{ marginTop: '1rem', color: 'var(--gray-700)', lineHeight: 1.65 }}>
-                  Deze merken worden in Nederland het vaakst gestolen via een relay-aanval op
-                  het keyless systeem.{' '}
-                  <Link href={`/blog/${GHOST_ARTICLE.slug}`} style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
-                    {GHOST_ARTICLE.title} →
-                  </Link>
-                </p>
-              )}
-            </div>
-          </section>
-        )}
+        {/*
+          * Hier stehen auf der niederländischen Seite die Fachartikel zu den
+          * Marken, die in dieser Stadt häufig sind — BMW BDC2, VAG SFD, Ghost
+          * gegen Relay-Diebstahl. Dieser Block ist entfernt, nicht übersetzt:
+          * die Artikel liegen unter /blog, diese App hat weder die Route noch
+          * deutsche Fassungen (siehe config/deepDives.ts). Ein Abschnitt, der
+          * auf drei 404-Seiten zeigt, nützt niemandem.
+          *
+          * Sobald es deutsche Artikel gibt, kommt er zurück: DEEP_DIVE füllen,
+          * app/blog anlegen, Block wieder einsetzen.
+          */}
 
-        {/* Local context — real per-city detail that used to be written into
-            the data (cities.ts) but never actually reached the page. */}
+        {/* Lokaler Kontext — die Angaben aus cities.ts, die es auf der
+            niederländischen Seite lange in die Daten, aber nie auf die Seite
+            geschafft haben. */}
         {(city.localFact || city.commonJob) && (
           <section style={{ padding: '3rem 0', background: '#fff' }}>
             <div className="container" style={{ maxWidth: '760px', margin: '0 auto' }}>
               <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '1rem' }}>
-                Autosleutel service in {city.city}
+                Autoschlüssel-Service in {city.city}
               </h2>
               {city.localFact && (
                 <p style={{ color: 'var(--gray-700)', lineHeight: 1.7, marginBottom: city.commonJob ? '1rem' : 0 }}>
@@ -522,22 +509,22 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               )}
               {city.commonJob && (
                 <p style={{ color: 'var(--gray-700)', lineHeight: 1.7 }}>
-                  <strong>Veelvoorkomende klus in {city.city}:</strong> {city.commonJob}
-                  {city.avgJobDuration && <> — gemiddelde duur ter plaatse: {city.avgJobDuration}.</>}
+                  <strong>Häufigster Auftrag in {city.city}:</strong> {city.commonJob}
+                  {city.avgJobDuration && <> — durchschnittliche Dauer vor Ort: {city.avgJobDuration}.</>}
                 </p>
               )}
             </div>
           </section>
         )}
 
-        {/* SEO Gallery — max 3 city-relevant images */}
+        {/* Galerie — höchstens drei Bilder */}
         <section style={{ padding: '4rem 0', background: 'var(--gray-50)', borderTop: '1px solid #e2e8f0', borderBottom: '1px solid #e2e8f0' }}>
           <div className="container">
             <h2 style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '1rem', color: 'var(--navy-900)' }}>
-              Service in {city.city} &mdash; Galerij
+              Service in {city.city} &mdash; Galerie
             </h2>
             <p style={{ textAlign: 'center', color: 'var(--gray-600)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem' }}>
-              Een impressie van ons dagelijks werk: van sleutels inleren op locatie tot schadevrij openen van portieren in {city.city}.
+              Ein Eindruck unserer täglichen Arbeit: vom Anlernen der Wegfahrsperre bis zum schadenfreien Öffnen einer Fahrzeugtür.
             </p>
             {(() => {
               /*
@@ -572,90 +559,111 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
         {/* Top brands in this city (SEO List) */}
         <BrandsLogoGrid
-          title={`Welke Merken Bedienen Wij in ${city.city}?`}
-          subtitle={`Wij maken en programmeren autosleutels voor alle gangbare automerken direct ter plaatse in ${city.city}. Onze mobiele dealer-niveau apparatuur ondersteunt:`}
+          title={`Welche Marken bedienen wir in ${city.city}?`}
+          subtitle={`Unser Partner fertigt und lernt Autoschlüssel für alle gängigen Marken direkt vor Ort in ${city.city} an. Die mitgeführte Werkstatttechnik deckt ab:`}
         />
 
-        {/* All services in this city */}
+        {/* Alle Leistungen in dieser Stadt */}
         <section className={styles.sectionAlt}>
           <div className="container">
-            <h2 style={{ textAlign: 'center', marginBottom: '3rem' }}>Onze Diensten in {city.city}</h2>
+            <h2 style={{ textAlign: 'center', marginBottom: '3rem' }}>Unsere Leistungen in {city.city}</h2>
             <div className={styles.serviceCardsGrid}>
               <Link href={`/leistungen/autoschluessel-nachmachen`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_nachmachen.webp" alt={`Autosleutel Bijmaken in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_nachmachen.webp" alt={`Autoschlüssel nachmachen in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
-                <h3>Autosleutel Bijmaken in {city.city}</h3>
-                <p>Heeft u een extra autosleutel nodig? Wij maken een nieuwe sleutel op locatie, vaak de helft goedkoper dan de dealer.</p>
+                <h3>Autoschlüssel nachmachen in {city.city}</h3>
+                <p>Zweitschlüssel nötig? Der Schlüssel wird vor Ort gefräst und an der Wegfahrsperre angelernt — ohne Termin beim Vertragshändler.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €{SITE_CONFIG.prices.transponder},- ex</span>
-                  <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
+                  {/* Bruttopreis. Fehlt die Zahl noch, steht hier nichts statt
+                      eines Platzhalters — siehe preisAb in config/leistungen.ts. */}
+                  <span className={styles.serviceCardPrice}>{preisAb('transponder') ?? 'Festpreis vorab'}</span>
+                  <span className={styles.serviceCardBtn}>Mehr erfahren &rarr;</span>
                 </div>
               </Link>
 
               <Link href={`/autoschluessel-verloren`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_verloren_illustration.webp" alt={`Autosleutels Kwijt in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_verloren_illustration.webp" alt={`Alle Autoschlüssel verloren in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
-                <h3>Autosleutels Kwijt in {city.city}</h3>
-                <p>Geen enkele sleutel meer? Wij komen direct naar u toe, openen de auto, frezen een nieuwe sleutel en leren hem in.</p>
+                <h3>Autoschlüssel verloren in {city.city}</h3>
+                <p>Kein Schlüssel mehr da? Wir öffnen das Fahrzeug schadenfrei, fräsen einen neuen Schlüssel, lernen ihn an und löschen die alten aus der Wegfahrsperre.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €299,- ex</span>
-                  <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
+                  <span className={styles.serviceCardPrice}>{preisAb('allKeysLost') ?? 'Festpreis vorab'}</span>
+                  <span className={styles.serviceCardBtn}>Mehr erfahren &rarr;</span>
                 </div>
               </Link>
 
               <Link href={`/leistungen/auto-oeffnen-notdienst`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_oeffnen.webp" alt={`Autodeur Openen in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_oeffnen.webp" alt={`Auto öffnen ohne Schlüssel in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
-                <h3>Autodeur Openen in {city.city}</h3>
-                <p>Sleutel in de auto laten liggen? Wij openen uw auto 100% schadevrij met speciaal gereedschap, zonder krassen.</p>
+                <h3>Auto öffnen in {city.city}</h3>
+                <p>Schlüssel im Auto eingeschlossen? Wir öffnen Ihre Fahrzeugtür mit Spezialwerkzeug — ohne Schaden an Scheibe, Dichtung oder Schloss.</p>
                 <div className={styles.serviceCardFooter}>
-                  <span className={styles.serviceCardPrice}>Vanaf €{SITE_CONFIG.prices.unlock},- ex</span>
-                  <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
+                  <span className={styles.serviceCardPrice}>{preisAb('unlock') ?? 'Festpreis vorab'}</span>
+                  <span className={styles.serviceCardBtn}>Mehr erfahren &rarr;</span>
                 </div>
               </Link>
             </div>
           </div>
         </section>
 
-        {/* Comparison Table */}
+        {/* Vergleichstabelle */}
+        {/*
+          * Ohne erfundene Zahlen.
+          *
+          * Die niederländische Fassung nennt hier EUR 300-900 beim Händler
+          * gegen EUR 150-500 bei uns und EUR 100-150 Abschleppkosten. Diese
+          * Spannen stammen aus niederländischen Aufträgen und Werkstattpreisen.
+          * Für Deutschland liegen sie nicht vor: der Ab-Preis ergibt sich erst
+          * aus den Sätzen der vier Partner plus Marge. Übersetzte Zahlen wären
+          * keine Übersetzung, sondern eine Behauptung — und eine Preisangabe,
+          * die am Fahrzeug nicht hält, ist in Deutschland ein Fall für § 5 UWG.
+          *
+          * Darum stehen hier die Unterschiede, die ohne Zahl wahr sind. Die
+          * Preise gehören auf /preise, sobald sie feststehen.
+          */}
         <section className={styles.section}>
           <div className="container">
-            <h2 className={styles.tableTitle}>Waarom Ons? Bespaar 30–50% vs Dealer in {city.city}</h2>
+            <h2 className={styles.tableTitle}>Warum wir? Vor Ort statt Vertragshändler in {city.city}</h2>
             <p className={styles.tableDesc}>
-              Dealer-niveau apparatuur, transparante prijzen, dezelfde dag service. Wij komen naar u toe in {city.city}.
+              Werkstatttechnik, Festpreis vorab, am selben Tag. Unser Partner kommt zu Ihrem Fahrzeug in {city.city}.
             </p>
             <div className={styles.comparisonWrapper}>
               <table className={styles.comparisonTable}>
                 <thead>
                   <tr>
-                    <th>Vergelijking</th>
-                    <th>Dealer in {city.city}</th>
-                    <th className={styles.tableHighlight}>Autosleutel24 ✓</th>
+                    <th>Vergleich</th>
+                    <th>Vertragshändler in {city.city}</th>
+                    <th className={styles.tableHighlight}>Autoschlüssel24 ✓</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Prijs</td>
-                    <td>€300 – €900</td>
-                    <td className={styles.tableHighlight}>€150 – €500</td>
+                    <td>Preis</td>
+                    <td>Kostenvoranschlag nach Termin</td>
+                    <td className={styles.tableHighlight}>Festpreis am Telefon, inkl. MwSt.</td>
                   </tr>
                   <tr>
-                    <td>Wachttijd</td>
-                    <td>3 – 14 dagen</td>
-                    <td className={styles.tableHighlight}>Zelfde dag in {city.city}</td>
+                    <td>Wartezeit</td>
+                    <td>Schlüssel wird bestellt</td>
+                    <td className={styles.tableHighlight}>Am selben Tag in {city.city}</td>
                   </tr>
                   <tr>
-                    <td>Sleepkosten</td>
-                    <td>€100 – €150</td>
-                    <td className={styles.tableHighlight}>Geen (wij komen naar u)</td>
+                    <td>Abschleppen</td>
+                    <td>Nötig, wenn kein Schlüssel da ist</td>
+                    <td className={styles.tableHighlight}>Entfällt — wir kommen zum Fahrzeug</td>
+                  </tr>
+                  <tr>
+                    <td>Erreichbarkeit</td>
+                    <td>Mo–Fr zu Öffnungszeiten</td>
+                    <td className={styles.tableHighlight}>24/7, auch nachts und an Feiertagen</td>
                   </tr>
                   <tr>
                     <td>Garantie</td>
                     <td>Ja</td>
-                    <td className={styles.tableHighlight}>12 maanden</td>
+                    <td className={styles.tableHighlight}>12 Monate, schriftlich</td>
                   </tr>
                 </tbody>
               </table>
@@ -663,21 +671,21 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
-        {/* Why us */}
+        {/* Warum wir */}
         <section className={styles.section}>
           <div className="container">
             <div className={styles.whyGrid}>
               <div>
-                <h2>Waarom Onze Autosleutelspecialist in {city.city}?</h2>
+                <h2>Warum unser Partner in {city.city}?</h2>
                 <ul className={styles.checkList}>
                   {[
-                    arrival ? `${arrival} reactietijd in ${city.city}` : `Snelle reactietijd in ${city.city}`,
-                    'Geen sleepkosten — volledig mobiel',
-                    'Zelfde dag service, ook weekend',
-                    `Goedkoper dan ${city.city} dealer — gegarandeerd`,
-                    'Verzekeringsklare facturen',
-                    '12 maanden garantie op programmering',
-                    '24/7 bereikbaar, ook nacht en feestdagen',
+                    arrival ? `Im Schnitt in ${arrival} bei Ihnen in ${city.city}` : `Ehrliches Zeitfenster am Telefon für ${city.city}`,
+                    'Keine Abschleppkosten — vollständig mobil',
+                    'Am selben Tag, auch am Wochenende',
+                    'Festpreis vorab, inkl. 19 % MwSt.',
+                    'Rechnung mit MwSt., für die Versicherung verwendbar',
+                    '12 Monate Garantie auf Schlüssel und Anlernen',
+                    '24/7 erreichbar, auch nachts und an Feiertagen',
                   ].map(item => (
                     <li key={item} className={styles.checkItem}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="15" height="15" className={styles.checkIcon} aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -692,7 +700,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
 
 
-        {/* SEO Content Section */}
+        {/* Stadtspezifischer Text, falls vorhanden */}
         {SeoComponents[citySlug] && (
           <section className={styles.section}>
             <div className="container">
@@ -704,12 +712,12 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </section>
         )}
 
-        {/* Neighborhoods / Nearby cities SEO block */}
+        {/* Stadtteile und Nachbarstädte */}
         <section className={styles.sectionAlt}>
           <div className="container">
-            <h2>Waar Komen Wij voor Auto Slotenmaker in {city.city}?</h2>
+            <h2>Wohin kommen wir in {city.city}?</h2>
             <p className={styles.seoIntro}>
-              Als dé mobiele <strong>auto slotenmaker</strong> zijn wij actief in regio {city.region} en omstreken. Heeft u uw <strong>sleutel in auto</strong> laten liggen, heeft u hulp nodig bij het <strong>autodeur openen</strong> zonder schade, of moeten we een <strong>autosleutel bijmaken</strong> of <strong>autosleutels repareren</strong>? Wij staan {arrivalPhrase} voor u klaar in:
+              Als <strong>mobiler Schlüsseldienst für Autos</strong> arbeiten unsere Partner in {city.region} und Umgebung. Ist Ihr <strong>Schlüssel im Auto eingeschlossen</strong>, soll eine <strong>Autotür schadenfrei geöffnet</strong> werden, oder brauchen Sie einen <strong>Autoschlüssel nachgemacht</strong> oder <strong>repariert</strong>? Wir sind {arrivalPhrase} für Sie da in:
             </p>
             <ul className={styles.seoList}>
               {city.subAreas.length > 0 ? (
@@ -737,45 +745,45 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
-        {/* ── INTERNAL LINKS BLOCK ── */}
+        {/* ── INTERNE VERLINKUNG ── */}
         <section style={{ padding: '2rem 0', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
           <div className="container">
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'space-between' }}>
               <div style={{ flex: '1 1 300px' }}>
-                <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>Nabijgelegen steden</h3>
+                <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>Städte in der Nähe</h3>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {closestCities.map(c => (
                     <li key={c.slug}>
                       <Link href={`/staedte/${c.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
-                        Autosleutel bijmaken {c.city} &rarr;
+                        Autoschlüssel nachmachen {c.city} &rarr;
                       </Link>
                     </li>
                   ))}
                   {SERVICE_REGIONS.some((r) => r.name === city.region) && (
                     <li>
                       <Link href={`/regionen/${SERVICE_REGIONS.find((r) => r.name === city.region)!.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 700 }}>
-                        Alle steden in {city.region} &rarr;
+                        Alle Städte in {city.region} &rarr;
                       </Link>
                     </li>
                   )}
                 </ul>
               </div>
               <div style={{ flex: '1 1 300px' }}>
-                <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>Gerelateerde diensten in {city.city}</h3>
+                <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>Passende Leistungen in {city.city}</h3>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   <li>
                     <Link href="/leistungen/autoschluessel-nachmachen" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
-                      Sleutel bijmaken & programmeren &rarr;
+                      Schlüssel nachmachen &amp; anlernen &rarr;
                     </Link>
                   </li>
                   <li>
                     <Link href="/autoschluessel-verloren" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
-                      Alle autosleutels kwijt? &rarr;
+                      Alle Autoschlüssel verloren? &rarr;
                     </Link>
                   </li>
                   <li>
                     <Link href="/leistungen/auto-oeffnen-notdienst" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
-                      Schadevrij autodeur openen &rarr;
+                      Autotür schadenfrei öffnen &rarr;
                     </Link>
                   </li>
                 </ul>
@@ -784,21 +792,21 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           </div>
         </section>
 
-        {/* ── COMPREHENSIVE CITY SEO GUIDE ARTICLE ── */}
+        {/* ── RATGEBERTEXT ZUR STADT ── */}
         <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
           <div className="container">
             <CitySeoText cityName={city.city} travelTime={arrivalText} />
           </div>
         </section>
 
-        {/* ── REVIEWS SECTION ────────────────────────────────────── */}
+        {/* ── BEWERTUNGEN ─────────────────────────────────────────── */}
         <section className={styles.reviews}>
           <div className="container">
             <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
-              KLANTBEOORDELINGEN
+              KUNDENBEWERTUNGEN
             </p>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
-              Wat Klanten Zeggen over Autosleutel24 in {city.city}
+              Was Kunden über Autoschlüssel24 in {city.city} sagen
             </h2>
             <GoogleReviewsCta />
           </div>
@@ -806,17 +814,17 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
 
 
-        {/* FAQ SECTION */}
+        {/* HÄUFIGE FRAGEN */}
         <FaqSection customFaqs={mappedFaqs} cityName={city.city} pageUrl={pageUrl} />
 
         {/* CTA */}
         <section className={styles.cta}>
           <div className="container">
-            <h2>Autosleutel Probleem in {city.city}?</h2>
-            <p>Bel of WhatsApp ons &mdash; {arrivalPhrase} bij u ter plaatse.</p>
+            <h2>Schlüsselproblem in {city.city}?</h2>
+            <p>Rufen Sie an oder schreiben Sie per WhatsApp &mdash; unser Partner ist {arrivalPhrase} bei Ihrem Fahrzeug.</p>
             <div className={styles.ctaBtns}>
               <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary btn-lg" id={`cta-city-${citySlug}-phone`}>{SITE_CONFIG.phone}</a>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.waBtn} id={`cta-city-${citySlug}-wa`}>WhatsApp Direct</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.waBtn} id={`cta-city-${citySlug}-wa`}>Direkt per WhatsApp</a>
             </div>
           </div>
         </section>

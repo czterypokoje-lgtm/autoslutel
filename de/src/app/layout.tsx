@@ -58,10 +58,11 @@ const chivo = Chivo({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.domain),
   title: {
-    template: '%s | Autosleutel24',
-    default: 'Autosleutel Bijmaken of Kwijt? Op Locatie | Autosleutel24',
+    template: `%s | ${SITE_CONFIG.name}`,
+    default: `Autoschlüssel nachmachen oder verloren? Vor Ort | ${SITE_CONFIG.name}`,
   },
-  description: `Autosleutel bijmaken of alle sleutels kwijt? Onze mobiele monteurs komen direct naar u toe in de Randstad. Schadevrij openen & inleren. Bel direct!`,
+  description:
+    'Autoschlüssel nachmachen lassen oder alle Schlüssel verloren? Unser Partner kommt zu Ihrem Fahrzeug in Berlin, Hamburg, München und Frankfurt — schadenfrei öffnen, Wegfahrsperre anlernen, Festpreis vorab inkl. MwSt.',
   alternates: {
     canonical: SITE_CONFIG.domain,
     /*
@@ -79,14 +80,17 @@ export const metadata: Metadata = {
     locale: SITE_CONFIG.ogLocale,
     url: SITE_CONFIG.domain,
     siteName: SITE_CONFIG.name,
-    title: 'Autosleutel Bijmaken & Programmeren | Mobiele Specialist 24/7',
-    description: 'Mobiele autosleutelspecialist voor alle merken. Utrecht, Amsterdam, Almere & omstreken. Zelfde dag. Goedkoper dan dealer. Bel nu.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel24 — Mobiele Autosleutelspecialist Utrecht Amsterdam' }],
+    title: 'Autoschlüssel nachmachen & anlernen | mobil, 24/7',
+    description: `Mobiler Autoschlüssel-Service für alle Marken in ${SITE_CONFIG.serviceAreaString}. Am selben Tag, Festpreis vorab, inkl. MwSt.`,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel24 — mobiler Autoschlüssel-Service' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Autosleutel Bijmaken & Programmeren | Autosleutel24',
-    description: 'Mobiele autosleutelspecialist voor alle merken. 24/7 service. Bel 06 11 75 12 31',
+    title: `Autoschlüssel nachmachen & anlernen | ${SITE_CONFIG.name}`,
+    /* Die Rufnummer kommt aus der Konfiguration. Auf der niederländischen
+       Seite stand sie hier als Text — und wäre so die niederländische Nummer
+       in jeder deutschen Twitter-Karte geworden. */
+    description: `Mobiler Autoschlüssel-Service für alle Marken. 24/7 erreichbar. Telefon: ${SITE_CONFIG.phone}`,
     images: ['/og-image.png'],
   },
   icons: {
@@ -133,8 +137,8 @@ const websiteSchema = {
   '@id': `${SITE_CONFIG.domain}/#website`,
   name: SITE_CONFIG.name,
   url: SITE_CONFIG.domain,
-  description: 'Mobiele autosleutelspecialist — alle merken — 24/7',
-  inLanguage: 'nl-NL',
+  description: 'Mobiler Autoschlüssel-Service — alle Marken — 24/7',
+  inLanguage: SITE_CONFIG.hreflang,
   publisher: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
   // SearchAction removed — Next.js has no ?s= endpoint; prevents schema error in GSC
 };
@@ -183,7 +187,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta property="business:contact_data:website" content={SITE_CONFIG.domain} />
 
         {/* ── SERVICE TYPE META ── */}
-        <meta name="classification" content="Autosleutelspecialist, Slotenmaker, Auto Locksmith" />
+        <meta name="classification" content="Autoschlüsseldienst, Schlüsseldienst für Fahrzeuge, Auto Locksmith" />
         <meta name="category" content="Automotive, Locksmith Services, Mobile Car Key Programming" />
         <meta name="coverage" content="Utrecht, Amsterdam, Almere, Amersfoort, Nederland" />
         {/* distribution, rating, revisit-after removed — not recognised by Google, add noise to head */}

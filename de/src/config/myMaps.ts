@@ -1,18 +1,30 @@
 /*
- * The Google My Maps map of the service area ("Werkgebied Autosleutel24"), built from
- * seo/google-my-maps-cities.csv: 62 cities in Utrecht, Noord-Holland, Zuid-Holland,
- * Gelderland and Flevoland, coloured by province.
+ * Die Google-My-Maps-Karte des Einsatzgebiets — für diese Domain noch keine.
  *
- * One ID, used three ways:
- *  - the interactive embed behind the tap-to-load facade (InstantServiceMap),
- *  - `hasMap` on the business node in the structured data, so the map the page shows and
- *    the map the markup names are the same one,
- *  - the map line in /llms.txt.
+ * Die niederländische Seite hat eine ("Werkgebied Autosleutel24"): 62 Städte in
+ * Utrecht, Noord-Holland, Zuid-Holland, Gelderland und Flevoland, nach Provinz
+ * gefärbt. Diese Karten-ID ist beim Kopieren mitgekommen, und das wäre der
+ * teuerste der harmlos aussehenden Fehler gewesen: ein deutscher Besucher
+ * tippt auf "Karte ansehen" und bekommt eine Karte der Niederlande — und
+ * dieselbe ID stand als `hasMap` in den strukturierten Daten, hätte also auch
+ * Google gemeldet, das Einsatzgebiet dieses Unternehmens liege in den
+ * Niederlanden.
  *
- * To change the map, change it in Google My Maps and, only if it is a new map, this ID.
- * The map must stay shared as "Anyone with the link can view".
+ * null heißt: die interaktive Einbettung wird nicht angeboten. Die Seite zeigt
+ * stattdessen die statische Karte aus /api/service-map, die aus config/cities.ts
+ * gezeichnet wird und damit immer das echte Gebiet trifft.
+ *
+ * Für eine eigene Karte: in Google My Maps eine Karte mit den deutschen
+ * Partnerstädten anlegen, als "Jeder mit dem Link kann ansehen" freigeben und
+ * die ID hier eintragen. Dann erscheint die Einbettung von selbst, und
+ * site.config.ts serviceAreaMapUrl kann auf MY_MAPS_VIEWER_URL zeigen.
  */
-export const MY_MAPS_ID = '1Le9pOFisnp1C6SqZIEPZRyLerGrp040';
+export const MY_MAPS_ID: string | null = null;
 
-export const MY_MAPS_EMBED_URL = `https://www.google.com/maps/d/embed?mid=${MY_MAPS_ID}&ehbc=2E312F`;
-export const MY_MAPS_VIEWER_URL = `https://www.google.com/maps/d/viewer?mid=${MY_MAPS_ID}`;
+export const MY_MAPS_EMBED_URL: string | null = MY_MAPS_ID
+  ? `https://www.google.com/maps/d/embed?mid=${MY_MAPS_ID}&ehbc=2E312F`
+  : null;
+
+export const MY_MAPS_VIEWER_URL: string | null = MY_MAPS_ID
+  ? `https://www.google.com/maps/d/viewer?mid=${MY_MAPS_ID}`
+  : null;

@@ -1,65 +1,32 @@
 /*
- * Deep-dive articles, keyed by the make they actually describe.
+ * Fachartikel je Marke — in dieser App leer.
  *
- * These three posts — BDC2, SFD, Ghost — carry the site's real technical
- * authority and had three inbound links each, while a boilerplate page like
- * /kontakt had 178 from the footer. They are linked from the brand page and
- * from city pages that list the make among their popular brands, so every
- * link has a reader behind it rather than being placed to move PageRank.
- */
-/**
- * Brands whose keys have a documented security system we have written about.
+ * Auf der niederländischen Seite stehen hier drei Artikel (BMW BDC2, VAG SFD,
+ * Ghost-Immobiliser), die die eigentliche technische Autorität der Domain
+ * tragen. Sie sind auf Niederländisch geschrieben und liegen unter /blog, und
+ * diese App hat weder die Übersetzungen noch die Route (siehe
+ * config/services.ts). Ein Verweis von hier wäre ein Link auf eine 404.
  *
- * Only where the article genuinely covers that make — BDC2 is BMW's body
- * controller, SFD is the VW group's online-service lock. A mapping that
- * pointed every brand at the same post would be the link farm this is meant
- * to avoid.
+ * Die Struktur bleibt stehen, weil sie das Richtige tut, sobald es deutsche
+ * Artikel gibt: ein Artikel wird nur dort verlinkt, wo er die Marke wirklich
+ * beschreibt. BDC2 ist BMWs Bodycontroller, SFD die Online-Freigabe im
+ * VW-Konzern. Eine Zuordnung, die jede Marke auf denselben Artikel zeigen
+ * ließe, wäre die Linkfarm, die das hier verhindern soll.
+ *
+ * Deutsche Artikel also hier eintragen, nicht die niederländischen übersetzen
+ * lassen — FBS4 und FEM/BDC heißen in deutschen Werkstattunterlagen so, und
+ * danach wird auch gesucht.
  */
-export const DEEP_DIVE: Record<string, { slug: string; title: string; blurb: string }> = {
-  BMW: {
-    slug: 'bmw-bdc2-sleutel-bijmaken-2026',
-    title: 'BMW BDC2: sleutel bijmaken in 2026',
-    blurb: 'Nieuwere BMW-modellen gebruiken de BDC2-bodycontroller, die het bijmaken van een sleutel anders aanpakt dan de oudere CAS-systemen. Wat dat betekent voor doorlooptijd en kosten leest u hier.',
-  },
-  Volkswagen: {
-    slug: 'sfd-lock-vw-golf-8-uitleg',
-    title: 'SFD-lock op de Golf 8 uitgelegd',
-    blurb: 'Vanaf de Golf 8 zit er een SFD-slot op de stuurmodule, waardoor niet elke specialist zomaar een sleutel kan inleren. Wat het is en hoe wij ermee werken.',
-  },
-  Audi: {
-    slug: 'sfd-lock-vw-golf-8-uitleg',
-    title: 'SFD-lock binnen de VAG-groep',
-    blurb: 'Audi deelt het SFD-slot met Volkswagen, Seat en Skoda. Dezelfde online-vrijgave is nodig voordat er een sleutel ingeleerd kan worden.',
-  },
-  Seat: {
-    slug: 'sfd-lock-vw-golf-8-uitleg',
-    title: 'SFD-lock binnen de VAG-groep',
-    blurb: 'Seat valt onder dezelfde SFD-beveiliging als Volkswagen en Audi. Wat dat voor uw sleutel betekent.',
-  },
-  Skoda: {
-    slug: 'sfd-lock-vw-golf-8-uitleg',
-    title: 'SFD-lock binnen de VAG-groep',
-    blurb: 'Skoda gebruikt de VAG-elektronica en dus ook het SFD-slot. De uitleg staat in dit artikel.',
-  },
-  'Land Rover': {
-    slug: 'ghost-immobiliser-utrecht',
-    title: 'Ghost immobiliser tegen keyless diefstal',
-    blurb: 'Land Rover staat hoog in de diefstalcijfers door relay-aanvallen op keyless systemen. Een Ghost immobiliser voegt een pincode toe die met geen enkele sleutel te omzeilen is.',
-  },
-  Toyota: {
-    slug: 'toyota-hybride-sleutel-vervangen',
-    title: 'Toyota hybride: sleutel vervangen',
-    blurb: 'De hybride modellen van Toyota hebben een eigen inleerprocedure. Wat daarbij komt kijken.',
-  },
-};
+export const DEEP_DIVE: Record<string, { slug: string; title: string; blurb: string }> = {};
 
 /**
- * Makes routinely taken by relay attack on their keyless entry.
+ * Marken, die regelmäßig per Relay-Angriff auf das Keyless-System gestohlen
+ * werden.
  *
- * The Ghost immobiliser article is about that specific threat, so it belongs
- * on pages where these cars are common rather than on every page. Kept
- * separate from DEEP_DIVE because it is a second, different reason to link —
- * not "this is how your key works" but "this is how your car gets stolen".
+ * Bleibt gefüllt, weil es eine Tatsache über die Fahrzeuge ist und nicht über
+ * unsere Artikel: die Liste steuert, wo der Hinweis auf Keyless-Diebstahl
+ * überhaupt sinnvoll ist. Verlinkt wird er erst, wenn GHOST_ARTICLE einen
+ * deutschen Artikel hat.
  */
 export const RELAY_THEFT_MAKES = new Set([
   'BMW',
@@ -71,7 +38,5 @@ export const RELAY_THEFT_MAKES = new Set([
   'Volkswagen',
 ]);
 
-export const GHOST_ARTICLE = {
-  slug: 'ghost-immobiliser-utrecht',
-  title: 'Ghost immobiliser: bescherming tegen relay-diefstal',
-};
+/** Der Artikel zum Relay-Diebstahl. null, solange es keinen deutschen gibt. */
+export const GHOST_ARTICLE: { slug: string; title: string } | null = null;

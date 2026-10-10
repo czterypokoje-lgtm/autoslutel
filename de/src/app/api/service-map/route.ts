@@ -67,7 +67,7 @@ export async function GET() {
   url.searchParams.set('size', '640x640');
   url.searchParams.set('scale', '2');          // sharp on the phone screens this is for
   url.searchParams.set('maptype', 'roadmap');
-  url.searchParams.set('language', 'nl');
+  url.searchParams.set('language', 'de');
   url.searchParams.set('region', 'NL');
   url.searchParams.set('markers', `size:small|color:0x1d4ed8|${pins.join('|')}`);
   url.searchParams.set('key', key);

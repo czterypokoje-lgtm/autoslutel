@@ -1,6 +1,23 @@
 import React from 'react';
 import { SITE_CONFIG } from '@/config/site.config';
 
+/*
+ * Der Ratgebertext der Stadtseite.
+ *
+ * Drei Fassungen je Abschnitt, ausgewählt über einen stabilen Hash des
+ * Stadtnamens. Das ist nicht Tarnung, sondern das Gegenteil: vier Stadtseiten
+ * mit identischem Fließtext sind vier Seiten, von denen Google eine indexiert
+ * und drei als Dublette behandelt. Stabil heißt: dieselbe Stadt bekommt bei
+ * jedem Build denselben Text — eine zufällige Auswahl würde den Inhalt bei
+ * jedem Deploy ändern, und das liest Google als instabile Seite.
+ *
+ * Nichts hier nennt eine Minute, obwohl die Komponente travelTime bekommt:
+ * der Wert ist bei vier Partnern meistens ARRIVAL ("kurzfristig"), und ein
+ * Satz, der mit "im Schnitt in kurzfristig" endet, liest sich wie eine
+ * maschinelle Übersetzung. Darum wird travelTime nur dort eingesetzt, wo der
+ * Satz mit beiden Formen funktioniert.
+ */
+
 function getStableHash(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -11,21 +28,21 @@ function getStableHash(str: string): number {
 }
 
 const introTemplates = [
-  (city: string, travel: string) => `Welkom bij ${SITE_CONFIG.name}, uw betrouwbare partner voor alles rondom autosleutels in ${city} en omstreken. Heeft u een probleem met uw sleutel, afstandsbediening of slot? Onze specialisten staan 24/7 voor u klaar en zijn vaak al binnen ${travel} ter plaatse om u weer op weg te helpen. Wij werken volledig mobiel en beschikken over de meest geavanceerde apparatuur.`,
-  (city: string, travel: string) => `Heeft u met spoed een nieuwe autosleutel nodig in ${city}? Of krijgt u uw auto niet meer open? ${SITE_CONFIG.name} biedt een unieke, volledig mobiele slotenmakerservice. Binnen gemiddeld ${travel} is onze monteur bij u in ${city} gearriveerd. Wij garanderen een schadevrije opening en kunnen vrijwel elke sleutel ter plekke voor u bijmaken, kopiëren en inleren.`,
-  (city: string, travel: string) => `In ${city} en de wijde regio eromheen is ${SITE_CONFIG.name} dé specialist op het gebied van autosleutels en autobeveiliging. U hoeft uw voertuig niet naar een dure dealer te slepen als u al uw sleutels kwijt bent. Wij komen naar u toe. Met een gemiddelde aanrijtijd van slechts ${travel} lossen wij uw probleem direct naast de auto op.`
+  (city: string) => `Willkommen bei ${SITE_CONFIG.name}, Ihrem Ansprechpartner für alles rund um den Autoschlüssel in ${city} und Umgebung. Schlüssel verloren, Funkfernbedienung ohne Funktion oder Schloss defekt? Unsere Partnerbetriebe sind rund um die Uhr erreichbar und kommen zu Ihrem Fahrzeug — mit eigener Fahrzeugdiagnose und eigenem Schlüssellager, nicht mit einem Abschleppwagen.`,
+  (city: string) => `Sie brauchen kurzfristig einen neuen Autoschlüssel in ${city}, oder Ihr Fahrzeug lässt sich nicht mehr öffnen? ${SITE_CONFIG.name} ist ein Netzwerk selbstständiger Fachbetriebe, die vollständig mobil arbeiten. Der Partner Ihrer Stadt öffnet das Fahrzeug schadenfrei und kann nahezu jeden Schlüssel vor Ort fräsen und an der Wegfahrsperre anlernen.`,
+  (city: string) => `In ${city} und der Region ist ${SITE_CONFIG.name} auf Autoschlüssel und Fahrzeugelektronik spezialisiert. Sie müssen Ihr Fahrzeug nicht zum Vertragshändler abschleppen lassen, wenn kein Schlüssel mehr existiert — unser Partner kommt dorthin, wo das Auto steht, und löst das Problem neben dem Fahrzeug.`,
 ];
 
 const bodyTemplates1 = [
-  (city: string) => `Onze mobiele werkplaatsen rijden dagelijks door ${city}. Ze zijn uitgerust met computergestuurde CNC-freesmachines en de modernste OBD-uitleesapparatuur. Hierdoor kunnen we niet alleen traditionele transpondersleutels, maar ook geavanceerde Smart Keys en Keyless Go-systemen moeiteloos programmeren. Of u nu op uw oprit staat, op uw werk of langs een drukke weg in ${city}, onze service gaat altijd door.`,
-  (city: string) => `Waar traditionele garages in ${city} vaak een wachttijd van weken hebben voor het bestellen van een originele autosleutel, doen wij dit direct uit voorraad. Onze monteurs in ${city} hebben toegang tot software van meer dan 59 automerken. Dit betekent dat wij de boordcomputer kunnen uitlezen, oude en verloren sleutels veilig uit het geheugen kunnen blokkeren, en ter plekke een compleet nieuwe sleutel voor u bijmaken of kopiëren.`,
-  (city: string) => `Het verliezen van uw laatste autosleutel (All Keys Lost) in ${city} is een stressvolle gebeurtenis. Wij nemen deze zorg volledig uit handen. Omdat wij niet werken met wegsleepdiensten of dure tussenpersonen, bent u bij ons tot wel 50% voordeliger uit. Onze ervaren technici zijn getraind om veilig de immobiliser of ECU van uw voertuig te bereiken, zelfs als de deuren geblokkeerd zijn met zogenaamde deadlocks.`
+  (city: string) => `Die mobilen Werkstätten unserer Partner sind in ${city} täglich unterwegs, mit CNC-Fräse und aktueller OBD-Diagnosetechnik an Bord. Damit lassen sich nicht nur klassische Transponderschlüssel anlernen, sondern auch Funkschlüssel und Keyless-Go-Systeme. Ob das Fahrzeug in der Einfahrt steht, auf dem Firmenparkplatz oder am Straßenrand in ${city}: gearbeitet wird vor Ort.`,
+  (city: string) => `Wo beim Vertragshändler in ${city} ein Originalschlüssel erst bestellt werden muss, kommt er bei uns aus dem Lager des Partners. Unsere Partner lesen das Steuergerät aus, sperren verlorene und gestohlene Schlüssel sicher aus der Wegfahrsperre und fertigen einen neuen Schlüssel an — in einem Termin statt in zwei.`,
+  (city: string) => `Wenn in ${city} der letzte Schlüssel weg ist, ist das kein Routinefall, sondern der, bei dem die meisten Betriebe passen müssen. Unsere Partner sind dafür ausgerüstet: Zugriff auf Wegfahrsperre und Motorsteuergerät, auch wenn die Türen verriegelt sind und das Fahrzeug keinen Schlüssel mehr kennt. Abschleppen und Händlertermin entfallen damit beide.`,
 ];
 
 const bodyTemplates2 = [
-  (city: string) => `Daarnaast zijn wij gespecialiseerd in het schadevrij openen van voertuigen. Mocht u per ongeluk uw sleutels in de kofferbak of op de passagiersstoel hebben laten liggen, dan openen wij uw deuren met speciale Lishi decoders. Dit lockpick-gereedschap zorgt ervoor dat uw slot volledig intact blijft. Inwoner of bezoeker van ${city}, wij helpen u veilig uw voertuig weer in.`,
-  (city: string) => `Ook voor reparaties aan bestaande sleutels bent u in ${city} aan het juiste adres. Zijn de drukknoppen lam, de behuizing gebroken, of is de batterij gewoon aan vervanging toe? Wij voeren microsoldeerwerk uit op locatie. Hierdoor bespaart u de kosten van een geheel nieuwe sleutel en wordt de levensduur van uw huidige afstandsbediening aanzienlijk verlengd. We gebruiken hiervoor enkel hoogwaardige OEM-componenten.`,
-  (city: string) => `Transparantie en veiligheid staan bij ons voorop. Voordat we in ${city} aan uw auto beginnen, controleren wij altijd de identiteit en de eigendomspapieren om misbruik te voorkomen. U krijgt bovendien van tevoren een exacte prijsopgave, zodat u nooit voor verrassingen komt te staan. Met een officiële, verzekeringsklare factuur en 12 maanden schriftelijke garantie op ons werk, bent u verzekerd van absolute topkwaliteit.`
+  (city: string) => `Dazu kommt das schadenfreie Öffnen. Liegt der Schlüssel im Kofferraum oder auf dem Beifahrersitz, öffnen unsere Partner die Tür mit Lishi-Decodern — Spezialwerkzeug, das das Schloss unbeschädigt lässt, statt die Scheibe zu opfern. Ob Sie in ${city} wohnen oder nur dort parken: Sie kommen in Ihr Fahrzeug zurück, ohne Folgeschaden.`,
+  (city: string) => `Auch für Reparaturen am vorhandenen Schlüssel sind Sie in ${city} richtig. Tasten ohne Funktion, gerissenes Gehäuse, leere Batterie? Unsere Partner löten vor Ort an der Platine und tauschen das Gehäuse, statt gleich einen neuen Schlüssel zu verkaufen. Das ist in den meisten Fällen die deutlich günstigere Reparatur — und der Schlüssel bleibt der, den Ihr Fahrzeug schon kennt.`,
+  (city: string) => `Bevor in ${city} am Fahrzeug gearbeitet wird, prüfen wir Identität und Fahrzeugpapiere. Das ist keine Formalität: ein Schlüsseldienst, der ohne diese Prüfung arbeitet, ist genau der Weg, auf dem ein fremdes Auto gestohlen wird. Den Festpreis hören Sie vorher am Telefon, inklusive 19 % MwSt., und Sie erhalten eine Rechnung mit ausgewiesener Steuer sowie zwölf Monate schriftliche Garantie.`,
 ];
 
 interface CitySeoTextProps {
@@ -35,29 +52,30 @@ interface CitySeoTextProps {
 
 export default function CitySeoText({ cityName, travelTime }: CitySeoTextProps) {
   const hash = getStableHash(cityName);
-  
+
   const intro = introTemplates[hash % introTemplates.length];
   const body1 = bodyTemplates1[(hash + 1) % bodyTemplates1.length];
   const body2 = bodyTemplates2[(hash + 2) % bodyTemplates2.length];
 
   return (
     <div className="seo-article-block">
-      <h2>Autosleutel Bijmaken & Kopiëren — Complete Service in {cityName}</h2>
-      <p>{intro(cityName, travelTime)}</p>
-      
-      <h3>Moderne Apparatuur, Direct uit Voorraad</h3>
+      <h2>Autoschlüssel nachmachen und anlernen — in {cityName} vor Ort</h2>
+      <p>{intro(cityName)}</p>
+
+      <h3>Werkstatttechnik und Schlüssel aus dem Lager</h3>
       <p>{body1(cityName)}</p>
-      
-      <h3>Schadevrij Openen en Vakkundige Reparaties</h3>
+
+      <h3>Schadenfrei öffnen und fachgerecht reparieren</h3>
       <p>{body2(cityName)}</p>
-      
-      <h3>Kies voor Zekerheid in {cityName}</h3>
+
+      <h3>Was Sie in {cityName} erwarten können</h3>
       <p>
-        Wacht niet langer als uw sleutel kuren vertoont of als u een extra exemplaar nodig heeft. 
-        Onze lokale dekking in <strong>{cityName}</strong> garandeert snelle responstijden en 
-        professioneel vakmanschap. Bel direct <strong>{SITE_CONFIG.phone}</strong> voor een 
-        vrijblijvende prijsopgave of om meteen een spoedmonteur in te schakelen. 
-        Uw mobiliteit is onze prioriteit.
+        Warten Sie nicht, bis der einzige Schlüssel ausfällt — ein Zweitschlüssel
+        kostet im Normalfall einen Bruchteil dessen, was der Notfall kostet. Unser
+        Partner in <strong>{cityName}</strong> ist {travelTime} erreichbar. Rufen Sie
+        unter <strong>{SITE_CONFIG.phone}</strong> an: Sie nennen Marke, Modell,
+        Baujahr und Schlüsselart, und Sie hören den Festpreis und ein ehrliches
+        Zeitfenster, bevor jemand losfährt.
       </p>
     </div>
   );

@@ -2,24 +2,23 @@ import Link from 'next/link';
 import { CITIES } from '@/config/cities';
 import { SERVICE_REGIONS } from '@/config/regions';
 import { isNoindexCity } from '@/config/thinPages';
-import { ARRIVAL } from '@/config/arrival';
 import { SITE_CONFIG } from '@/config/site.config';
 import { MY_MAPS_VIEWER_URL } from '@/config/myMaps';
 import InstantServiceMap from '../InstantServiceMap';
 import styles from './ServiceAreaMap.module.css';
 
 /*
- * The service area: the map, the provinces and the towns, as one section.
+ * Das Einsatzgebiet: Karte, Regionen und Städte als ein Abschnitt.
  *
- * Everything shown is derived from the same two records the rest of the site reads
- * (CITIES and SERVICE_REGIONS), so the provinces, the town counts and every link can
- * only point at pages that exist and are indexed. The map itself is the Google My Maps
- * map in src/config/myMaps.ts behind a tap-to-load facade; the province cards link to the
- * /regio hubs and from there to each town.
+ * Alles Gezeigte kommt aus denselben zwei Datensätzen, die auch der Rest der
+ * Seite liest (CITIES und SERVICE_REGIONS). Die Regionen, die Städtezahlen und
+ * jeder Link können deshalb nur auf Seiten zeigen, die es gibt und die
+ * indexierbar sind — keine Zahl ist hier von Hand getippt. Das ist der Grund,
+ * warum dieser Abschnitt heute vier Städte zeigt und nicht vierundzwanzig.
  *
- * It replaces an accordion that listed towns by search volume (so the twelve newest towns,
- * measured at 0, sat at the bottom of every list), included Noord-Brabant, which is not a
- * province the business serves, and said "46+ steden" by hand.
+ * Die Karte ist die statische Karte aus /api/service-map; eine interaktive
+ * My-Maps-Einbettung gibt es erst, wenn eine deutsche Karte angelegt ist —
+ * siehe config/myMaps.ts.
  */
 
 const PER_CARD = 6;
@@ -28,7 +27,7 @@ const regions = SERVICE_REGIONS.map((region) => {
   const cities = CITIES.filter((c) => c.region === region.name && !isNoindexCity(c.slug)).sort((a, b) => {
     if (a.priority !== b.priority) return a.priority < b.priority ? -1 : 1;
     if (a.nlSearches !== b.nlSearches) return b.nlSearches - a.nlSearches;
-    return a.city.localeCompare(b.city, 'nl');
+    return a.city.localeCompare(b.city, 'de');
   });
   return { ...region, cities };
 });
@@ -38,31 +37,41 @@ const totalCities = regions.reduce((n, r) => n + r.cities.length, 0);
 export default function ServiceAreaMap() {
   return (
     <div className={styles.root}>
-      <ul className={styles.stats} aria-label="Ons werkgebied in cijfers">
+      <ul className={styles.stats} aria-label="Unser Einsatzgebiet in Zahlen">
         <li>
           <strong>{regions.length}</strong>
-          <span>provincies</span>
+          <span>{regions.length === 1 ? 'Region' : 'Regionen'}</span>
         </li>
         <li>
           <strong>{totalCities}</strong>
-          <span>steden en dorpen</span>
+          <span>{totalCities === 1 ? 'Stadt' : 'Städte'}</span>
         </li>
+        {/*
+          * Die niederländische Fassung zeigt hier "30-60 min — ter plaatse".
+          * ARRIVAL ist in dieser App "kurzfristig" (siehe config/arrival.ts),
+          * und die Zeile stand als ARRIVAL.replace('min', '') im Code — mit
+          * dem deutschen Wert hätte dort "kurzfristig min" gestanden. Statt
+          * eine Zahl zu erfinden, nennt die Kachel den Festpreis: das ist die
+          * Zusage, die dieses Netz tatsächlich halten kann.
+          */}
         <li>
-          <strong>{ARRIVAL.replace('min', '')}<small> min</small></strong>
-          <span>ter plaatse</span>
+          <strong>Festpreis</strong>
+          <span>vorab am Telefon</span>
         </li>
         <li>
           <strong>24/7</strong>
-          <span>bereikbaar</span>
+          <span>erreichbar</span>
         </li>
       </ul>
 
       <div className={styles.layout}>
         <div className={styles.mapCol}>
           <InstantServiceMap />
-          <a href={MY_MAPS_VIEWER_URL} target="_blank" rel="noopener noreferrer" className={styles.mapLink}>
-            Open de kaart in Google Maps ↗
-          </a>
+          {MY_MAPS_VIEWER_URL && (
+            <a href={MY_MAPS_VIEWER_URL} target="_blank" rel="noopener noreferrer" className={styles.mapLink}>
+              Karte in Google Maps öffnen ↗
+            </a>
+          )}
         </div>
 
         <div className={styles.cards}>
@@ -75,7 +84,7 @@ export default function ServiceAreaMap() {
                   <h3>
                     <Link href={`/regionen/${r.slug}`}>{r.label}</Link>
                   </h3>
-                  <span className={styles.count}>{r.cities.length} steden</span>
+                  <span className={styles.count}>{r.cities.length} {r.cities.length === 1 ? 'Stadt' : 'Städte'}</span>
                 </header>
                 <p className={styles.intro}>{r.intro}</p>
                 <ul className={styles.chips}>
@@ -87,13 +96,13 @@ export default function ServiceAreaMap() {
                   {more > 0 && (
                     <li>
                       <Link href={`/regionen/${r.slug}`} className={styles.more}>
-                        +{more} meer
+                        +{more} weitere
                       </Link>
                     </li>
                   )}
                 </ul>
                 <Link href={`/regionen/${r.slug}`} className={styles.cta}>
-                  Alle steden in {r.name} →
+                  Alle Städte in {r.name} →
                 </Link>
               </article>
             );
@@ -103,14 +112,15 @@ export default function ServiceAreaMap() {
 
       <div className={styles.footer}>
         <p>
-          <strong>Staat uw plaats er niet bij?</strong> Wij komen ook naar de dorpen en gemeenten eromheen.
+          <strong>Ihr Ort steht nicht dabei?</strong> Unsere Partner fahren auch in die
+          Gemeinden ringsum — rufen Sie an, und Sie hören sofort, ob jemand zu Ihnen kommt.
         </p>
         <div className={styles.footerActions}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.call}>
-            Bel {SITE_CONFIG.phone}
+            {SITE_CONFIG.phone} anrufen
           </a>
           <Link href="/autoschluessel-nachmachen-in-der-naehe" className={styles.ghost}>
-            Zoek wie er bij u in de buurt is
+            Wer ist in Ihrer Nähe?
           </Link>
         </div>
       </div>

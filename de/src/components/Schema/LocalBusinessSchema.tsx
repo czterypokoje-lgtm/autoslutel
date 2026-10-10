@@ -1,4 +1,4 @@
-import { SITE_CONFIG } from '@/config/site.config';
+import { SITE_CONFIG, isReady } from '@/config/site.config';
 import { BIZ_ID, serviceRegionNodes } from '@/utils/schema';
 
 export default function LocalBusinessSchema() {
@@ -7,7 +7,16 @@ export default function LocalBusinessSchema() {
     '@type': ['LocalBusiness', 'AutomotiveBusiness', 'Locksmith'],
     '@id': BIZ_ID,
     name: SITE_CONFIG.name,
-    alternateName: 'Autosleutel24',
+    /*
+     * Die Schreibweise ohne Umlaut, nicht der niederländische Name.
+     *
+     * Hier stand 'Autosleutel24' — der Name der niederländischen Seite. In
+     * einer deutschen LocalBusiness-Auszeichnung behauptet das, dieses
+     * Unternehmen heiße auch so, und verknüpft die neue Domain mit einer
+     * bestehenden Marke, die ihr nicht gehört. Was ein deutscher Kunde
+     * tatsächlich tippt, ist der Domainname ohne Umlaut.
+     */
+    alternateName: 'Autoschluessel24',
     description: SITE_CONFIG.schemaDescription,
     url: SITE_CONFIG.domain,
     logo: {
@@ -38,9 +47,9 @@ export default function LocalBusinessSchema() {
       areaServed: SITE_CONFIG.country,
       availableLanguage: SITE_CONFIG.availableLanguage,
     },
-    // The service-area map the site embeds, not a pin on the head office.
-    // Omitted entirely on a site that has no map of its own rather than
-    // pointing a German visitor at a map of the Dutch service area.
+    // Die eingebettete Einsatzgebietskarte, nicht eine Nadel am Firmensitz.
+    // Fehlt ganz, solange es keine eigene Karte gibt — statt einem deutschen
+    // Besucher die Karte des niederländischen Einsatzgebiets zu zeigen.
     ...(SITE_CONFIG.serviceAreaMapUrl ? { hasMap: SITE_CONFIG.serviceAreaMapUrl } : {}),
     openingHoursSpecification: [
       {
@@ -51,15 +60,15 @@ export default function LocalBusinessSchema() {
       },
     ],
     /*
-     * The regions first: one statement of where the business works, shared
-     * with every Service node. Then the cities.
+     * Zuerst die Regionen: eine Aussage darüber, wo das Unternehmen arbeitet,
+     * die jeder Service-Knoten mitbenutzt. Danach die Städte.
      *
-     * A name can appear in both lists, and that is deliberate rather than a
-     * duplicate to clean up. Utrecht is a province and a city, Berlin and
-     * Hamburg are a Bundesland and a city, and "we serve the province of
-     * Utrecht" is a different claim from "we serve the city of Utrecht" —
-     * collapsing them would quietly drop the larger one. The @type tells them
-     * apart, which is what it is for.
+     * Ein Name kann in beiden Listen stehen, und das ist Absicht, keine
+     * Dublette: Berlin und Hamburg sind jeweils ein Bundesland UND eine
+     * Stadt, und "wir bedienen das Land Berlin" ist eine andere Aussage als
+     * "wir bedienen die Stadt Berlin". Die beiden zusammenzuführen, würde die
+     * größere stillschweigend fallen lassen. Der @type hält sie auseinander —
+     * dafür ist er da.
      */
     areaServed: [
       ...serviceRegionNodes(),
@@ -73,31 +82,42 @@ export default function LocalBusinessSchema() {
     paymentAccepted: SITE_CONFIG.paymentAccepted,
     currenciesAccepted: 'EUR',
     /*
-     * No aggregateRating.
+     * Kein aggregateRating.
      *
-     * The reviews are real, but they live on our Google Business Profile, not
-     * on this page. Google calls that self-serving — a business rating itself
-     * on its own site — and states plainly that pages using LocalBusiness or
-     * Organization markup are "ineligible for the star review feature". So
-     * these stars were never being shown; the markup only asserted something
-     * Google's own guidance says not to assert, on a domain that can do
-     * without the attention.
+     * Zwei Gründe, und jeder allein genügt. Erstens hat diese Domain noch
+     * keine eigenen Bewertungen (rating und reviewCount stehen auf '0'), und
+     * die niederländischen zu übernehmen wäre eine falsche Auszeichnung mit
+     * Risiko einer manuellen Maßnahme für die ganze Domain. Zweitens nennt
+     * Google eine Bewertung, die ein Unternehmen sich auf seiner eigenen
+     * Seite gibt, ausdrücklich "self-serving" und schließt Seiten mit
+     * LocalBusiness- oder Organization-Markup von den Sternen aus.
      *
-     * The 5.0 in Google Maps and the local pack comes from the Business
-     * Profile itself and is untouched by this.
+     * Die Sterne im Unternehmensprofil und im Local Pack kommen vom Profil
+     * selbst und sind davon unberührt.
+     */
+    /*
+     * sameAs verweist nur auf Profile, die es gibt.
+     *
+     * Der vierte Eintrag war eine kvk.nl-Suche nach der Handelskammernummer —
+     * die niederländische Handelskammer, die über ein deutsches Unternehmen
+     * nichts weiß. Das deutsche Gegenstück, das Handelsregister, hat keine
+     * stabile öffentliche URL je Unternehmen, auf die man so verweisen
+     * könnte; die Registerangaben stehen deshalb im Impressum und nicht hier.
+     *
+     * Die Filterung hält Platzhalter aus dem Markup: ein sameAs auf '__TBD__'
+     * ist ein Fehler in der Rich-Result-Prüfung.
      */
     sameAs: [
       SITE_CONFIG.social.facebook,
       SITE_CONFIG.social.instagram,
       SITE_CONFIG.social.google,
-      `https://www.kvk.nl/zoeken/?source=all&q=${SITE_CONFIG.hrb}`,
-    ],
+    ].filter(isReady),
     foundingDate: '2020',
     vatID: SITE_CONFIG.ustId,
     legalName: SITE_CONFIG.fullName,
     identifier: {
       '@type': 'PropertyValue',
-      name: 'KVK',
+      name: 'Handelsregister',
       value: SITE_CONFIG.hrb,
     },
   };
