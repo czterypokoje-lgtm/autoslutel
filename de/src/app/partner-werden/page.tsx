@@ -7,64 +7,87 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   /*
-   * Recruitment, not a service. It was in the sitemap alongside the money
-   * pages, competing for crawl budget it cannot repay: 0 impressions in
-   * three months. Partners find it from a link or a conversation.
+   * Partnergewinnung, keine Leistung. Auf der niederländischen Seite stand
+   * diese Seite in der Sitemap neben den Geldseiten und konkurrierte um
+   * Crawl-Budget, das sie nicht zurückzahlen kann: null Impressionen in drei
+   * Monaten. Partner finden sie über einen Link oder ein Gespräch.
    */
   robots: { index: false, follow: true },
-  // 75 characters once the template appended the brand — which it also said
-  // twice. Base is now 43, landing at 59.
-  title: 'Autosleutelspecialist Worden bij Ons Netwerk',
+  // Basis unter 44 Zeichen halten: das Layout hängt die Marke an.
+  title: 'Partnerbetrieb werden',
   description:
-    'Zelfstandig autosleutelspecialist in Noord-Brabant of Limburg? Wij zoeken partners in onder andere Eindhoven en Maastricht. Klussen, CRM en facturatie geregeld.',
+    'Selbstständiger Autoschlüssel-Fachbetrieb? Wir suchen Partner außerhalb von Berlin, Hamburg, München und Frankfurt. Aufträge, CRM und Abrechnung sind schon gebaut.',
   alternates: { canonical: `${SITE_CONFIG.domain}/partner-werden` },
 };
 
 /*
- * The recruitment page.
+ * Die Partnerseite.
  *
- * Deliberately vague about money and precise about everything else. What a
- * technician earns and what they pay is a conversation, not a landing page —
- * the tiers exist in the CRM but quoting them here would turn a negotiation
- * into a take-it-or-leave-it, and they are not fixed enough to publish.
+ * Absichtlich unbestimmt beim Geld und genau bei allem anderen. Was ein
+ * Partner verdient und was er zahlt, ist ein Gespräch und keine Landingpage —
+ * die Stufen existieren im CRM, aber sie hier zu nennen würde aus einer
+ * Verhandlung ein Ultimatum machen, und sie stehen nicht fest genug, um
+ * veröffentlicht zu werden.
  *
- * What the page can be exact about is the thing candidates actually want to
- * know: where the work comes from, what is supplied, and what is expected. All
- * of that is real and already built.
+ * Genau sein kann die Seite bei dem, was Bewerber wirklich wissen wollen: wo
+ * die Aufträge herkommen, was gestellt wird und was erwartet wird.
+ *
+ * ZWEI DEUTSCHE RECHTSFRAGEN, DIE VOR DEM START GEKLÄRT SEIN MÜSSEN
+ *
+ * 1. Scheinselbständigkeit. Dieses Modell — ein Netzwerk, das Aufträge
+ *    zuweist, die Abrechnung macht und das CRM stellt — ist in Deutschland
+ *    genau die Konstellation, die die Deutsche Rentenversicherung prüft. Wird
+ *    ein Partner als abhängig beschäftigt eingeordnet, werden Beiträge bis zu
+ *    vier Jahre rückwirkend nachgefordert, und zwar von uns. Was dagegen
+ *    spricht, muss echt sein und nicht nur auf dieser Seite stehen: eigene
+ *    Kunden neben unseren, eigene Preisgestaltung, freie Annahme oder Ablehnung
+ *    jedes Auftrags, eigene Geräte, eigenes Fahrzeug, keine Weisungen zur
+ *    Arbeitszeit. Darum sagt der Text unten "Sie wählen aus, welche Aufträge
+ *    Sie annehmen" — das ist nicht Werbung, das ist das Merkmal. Vor der
+ *    ersten Zusammenarbeit von einem Fachanwalt für Arbeitsrecht prüfen und
+ *    gegebenenfalls ein Statusfeststellungsverfahren einleiten.
+ *
+ * 2. Handwerksordnung. Ob diese Tätigkeit in die Anlage A fällt und damit eine
+ *    Eintragung bei der Handwerkskammer braucht, ist nicht geklärt (siehe
+ *    app/impressum). Die Anforderung unten verlangt daher vom Partner, dass
+ *    seine Gewerbeanmeldung und, falls nötig, seine Handwerkskammer-Eintragung
+ *    vorliegen — das ist ohnehin seine Pflicht, und es ist die ehrliche Stelle,
+ *    an der diese Frage auftaucht.
  */
-export default function MonteurWorden() {
+export default function PartnerWerdenPage() {
   const gains = [
     {
-      title: 'Klussen komen naar u toe',
-      text: 'Wij investeren in vindbaarheid en advertenties. U krijgt aanvragen uit uw eigen regio doorgestuurd en kiest zelf welke u aanneemt.',
+      title: 'Die Aufträge kommen zu Ihnen',
+      text: 'Wir investieren in Sichtbarkeit und Anzeigen. Anfragen aus Ihrer Region werden Ihnen weitergeleitet, und Sie wählen aus, welche Sie annehmen — jede einzeln, ohne Begründung.',
     },
     {
-      title: 'Geen eigen marketing nodig',
-      text: 'Geen website bijhouden, geen advertentiebudget, geen offertes najagen. Dat deel doen wij, u doet het werk waar u goed in bent.',
+      title: 'Kein eigenes Marketing nötig',
+      text: 'Keine Website pflegen, kein Anzeigenbudget, keinen Angeboten nachlaufen. Diesen Teil machen wir, Sie machen die Arbeit, die Sie können.',
     },
     {
-      title: 'CRM, facturatie en agenda inbegrepen',
-      text: 'Uw klussen, foto’s, materiaalgebruik en facturen op één plek. Facturen maakt u met twee klikken; uw administratie loopt mee in plaats van achteraan.',
+      title: 'CRM, Abrechnung und Kalender inklusive',
+      text: 'Ihre Aufträge, Fotos, Materialverbrauch und Rechnungen an einer Stelle. Eine Rechnung sind zwei Klicks; die Buchhaltung läuft mit statt hinterher.',
     },
     {
-      title: 'U bepaalt uw eigen uren',
-      text: 'U blijft zelfstandig ondernemer. Geen rooster, geen verplichte diensten — u zet uzelf beschikbaar wanneer het u uitkomt.',
+      title: 'Sie bestimmen Ihre Zeiten',
+      text: 'Sie bleiben selbstständiger Unternehmer. Kein Dienstplan, keine Bereitschaftspflicht, keine Weisung zur Arbeitszeit — Sie stellen sich verfügbar, wenn es Ihnen passt.',
     },
     {
-      title: 'Collega’s voor de lastige klussen',
-      text: 'Een besloten netwerk van specialisten per merk. Loopt u vast op een systeem dat u nog niet kent, dan is er iemand die het wél gedaan heeft.',
+      title: 'Kollegen für die schwierigen Fälle',
+      text: 'Ein geschlossenes Netzwerk mit Spezialisten je Marke. Bleiben Sie an einem System hängen, das Sie noch nicht kennen, hat es jemand anders schon gemacht.',
     },
     {
-      title: 'Wij zeggen eerlijk wat niet kan',
-      text: 'Onze site vertelt klanten vooraf welke auto’s wij niet kunnen helpen. U komt dus niet voor een Mercedes FBS4 te staan waar niemand iets mee kan.',
+      title: 'Wir sagen vorher, was nicht geht',
+      text: 'Unsere Seiten nennen den Kunden vorab die Fälle, die wir nicht lösen können. Sie stehen also nicht vor einem Mercedes mit FBS4, mit dem niemand etwas anfangen kann.',
     },
   ];
 
   const expect = [
-    'U werkt als zelfstandige, met eigen KvK-inschrijving en verzekering',
-    'U heeft ervaring met sleutelprogrammering en eigen diagnoseapparatuur',
-    'U werkt mobiel: bij de klant op locatie, niet vanuit een vaste werkplaats',
-    'U reageert snel — spoed is bij dit werk eerder regel dan uitzondering',
+    'Sie arbeiten selbstständig, mit eigener Gewerbeanmeldung, eigener Betriebshaftpflicht und — falls für diese Tätigkeit erforderlich — eigener Handwerkskammer-Eintragung',
+    'Sie haben Erfahrung im Anlernen von Schlüsseln und eigene Diagnosegeräte',
+    'Sie arbeiten mobil: beim Kunden am Fahrzeug, nicht aus einer festen Werkstatt',
+    'Sie reagieren schnell — bei dieser Arbeit ist Eile eher die Regel als die Ausnahme',
+    'Sie haben eigene Kunden neben unseren Aufträgen und setzen Ihre Preise selbst',
   ];
 
   return (
@@ -74,26 +97,26 @@ export default function MonteurWorden() {
           <div>
             <nav className={styles.crumbs} aria-label="Breadcrumb">
               <Link href="/">Home</Link> <span>/</span>{' '}
-              <span>Monteur worden</span>
+              <span>Partnerbetrieb werden</span>
             </nav>
-            <p className={styles.eyebrow}>Wij breiden uit</p>
+            <p className={styles.eyebrow}>Wir bauen das Netzwerk aus</p>
             <h1>
-              Autosleutelspecialist in Eindhoven of Maastricht?
+              Autoschlüssel-Fachbetrieb in Köln, Stuttgart oder Leipzig?
               <br />
-              <span className={styles.accent}>Wij zoeken u.</span>
+              <span className={styles.accent}>Wir suchen Sie.</span>
             </h1>
             <p className={styles.lead}>
-              Wij krijgen aanvragen uit Noord-Brabant en Limburg die wij nu nog
-              moeten afwijzen omdat er niemand in de buurt is. Bent u
-              zelfstandig autosleutelspecialist in die regio, dan hebben wij werk
-              voor u — en de systemen eromheen zijn al gebouwd.
+              Wir bekommen Anfragen aus Städten, in denen noch kein Partner
+              sitzt, und müssen sie heute ablehnen. Sind Sie selbstständiger
+              Autoschlüssel-Fachbetrieb in einer davon, haben wir Arbeit für Sie —
+              und das Drumherum ist bereits gebaut: Aufträge, CRM, Abrechnung.
             </p>
             <div className={styles.ctas}>
-              <a href="#aanmelden" className={styles.btnPhone}>
-                Ik wil kennismaken
+              <a href="#anmelden" className={styles.btnPhone}>
+                Kennenlernen
               </a>
               <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnOutline}>
-                Bel {SITE_CONFIG.phone}
+                {SITE_CONFIG.phone} anrufen
               </a>
             </div>
           </div>
@@ -111,7 +134,7 @@ export default function MonteurWorden() {
               */}
             <Image
               src="/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp"
-              alt="Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond"
+              alt="Autoschlüssel-Spezialist in Arbeitskleidung am Fahrzeug, Servicefahrzeug im Hintergrund"
               width={800}
               height={560}
               priority
@@ -124,7 +147,7 @@ export default function MonteurWorden() {
 
       <section className={styles.section}>
         <div className={styles.container}>
-          <h2>Wat u van ons krijgt</h2>
+          <h2>Was Sie von uns bekommen</h2>
           <div className={styles.grid}>
             {gains.map((g) => (
               <div key={g.title} className={styles.card}>
@@ -138,60 +161,66 @@ export default function MonteurWorden() {
 
       <section className={`${styles.section} ${styles.alt}`}>
         <div className={styles.container}>
-          <h2>Wat wij van u verwachten</h2>
+          <h2>Was wir von Ihnen erwarten</h2>
           <ul className={styles.expect}>
             {expect.map((e) => (
               <li key={e}>{e}</li>
             ))}
           </ul>
           <p className={styles.note}>
-            Over de samenwerkingsvorm en de vergoeding praten wij liever
-            persoonlijk dan via een webpagina — dat hangt af van uw regio, uw
-            apparatuur en hoeveel u wilt werken. Wij zijn er duidelijk over
-            tijdens het eerste gesprek, niet pas achteraf.
+            Über die Form der Zusammenarbeit und die Vergütung sprechen wir
+            lieber persönlich als über eine Webseite — das hängt von Ihrer
+            Region, Ihren Geräten und davon ab, wie viel Sie arbeiten wollen.
+            Wir sind im ersten Gespräch deutlich, nicht erst hinterher. Sie
+            bleiben dabei selbstständig: Sie nehmen jeden Auftrag einzeln an
+            oder nicht, setzen Ihre Preise selbst und arbeiten auch für eigene
+            Kunden.
           </p>
         </div>
       </section>
 
       <section className={styles.section}>
         <div className={styles.container}>
-          <h2>Waar wij nu vooral zoeken</h2>
+          <h2>Wo wir derzeit suchen</h2>
           <p className={styles.sub}>
-            Aanvragen uit deze regio’s kunnen wij op dit moment niet of moeilijk
-            bedienen:
+            Anfragen aus diesen Städten können wir heute nicht oder nur schwer
+            bedienen — in {SITE_CONFIG.serviceAreaString} sitzt schon ein
+            Partner:
           </p>
           <div className={styles.regions}>
-            <span>Eindhoven</span>
-            <span>Maastricht</span>
-            <span>Tilburg</span>
-            <span>Breda</span>
-            <span>Den Bosch</span>
-            <span>Venlo</span>
-            <span>Roermond</span>
-            <span>Helmond</span>
+            <span>Köln</span>
+            <span>Stuttgart</span>
+            <span>Düsseldorf</span>
+            <span>Leipzig</span>
+            <span>Dortmund</span>
+            <span>Essen</span>
+            <span>Bremen</span>
+            <span>Hannover</span>
+            <span>Nürnberg</span>
+            <span>Dresden</span>
           </div>
           <p className={styles.sub}>
-            Zit u daar niet tussen maar denkt u dat er in uw regio werk ligt?
-            Laat het weten — wij kijken graag mee.
+            Ihre Stadt steht nicht dabei, aber Sie sehen in Ihrer Region Arbeit?
+            Sagen Sie es uns — wir schauen gern mit.
           </p>
         </div>
       </section>
 
-      <section id="aanmelden" className={`${styles.section} ${styles.alt}`}>
+      <section id="anmelden" className={`${styles.section} ${styles.alt}`}>
         <div className={styles.formWrap}>
           <div>
-            <h2>Kennismaken?</h2>
+            <h2>Kennenlernen?</h2>
             <p className={styles.sub}>
-              Laat uw gegevens achter met uw regio en waar u mee werkt. Wij
-              bellen u binnen één werkdag voor een eerlijk gesprek over wat het
-              oplevert en wat het kost.
+              Hinterlassen Sie Ihre Daten mit Ihrer Region und der Technik, mit
+              der Sie arbeiten. Wir rufen innerhalb eines Werktags an — für ein
+              offenes Gespräch darüber, was es einbringt und was es kostet.
             </p>
             <p className={styles.sub}>
-              Liever meteen bellen?{' '}
+              Lieber gleich anrufen?{' '}
               <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a>
             </p>
           </div>
-          <B2BForm segment="monteur" segmentLabel="Monteur worden" />
+          <B2BForm segment="partner" segmentLabel="Partnerbetrieb werden" />
         </div>
       </section>
     </main>

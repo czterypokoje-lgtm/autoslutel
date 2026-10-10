@@ -9,24 +9,25 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Diensten: Bijmaken, Kwijt, Openen | 24/7',
+    absolute: 'Autoschlüssel-Leistungen: nachmachen, verloren, öffnen | 24/7',
   },
-  description: 'Alle autosleutel diensten op locatie: bijmaken, alle sleutels kwijt, transponder, smart key, auto openen en reparatie. Vaste prijs vooraf. Bel direct!',
+  description:
+    'Alle Leistungen rund um den Autoschlüssel, vor Ort erledigt: nachmachen, alle Schlüssel verloren, Transponder anlernen, Keyless Go, Auto öffnen und Reparatur. Festpreis vorab inkl. MwSt.',
   alternates: { canonical: `${SITE_CONFIG.domain}/leistungen` },
 };
 
-export default function DienstenOverviewPage() {
+export default function LeistungenOverviewPage() {
   /*
-   * The hub emitted no structured data at all — not even a breadcrumb — while
-   * every one of its 19 children carries a full Service graph. An ItemList
-   * tells a crawler this page IS the index of those services rather than
-   * another page that happens to link to them.
-   */
-  /*
-   * Where a service actually lives. alle-sleutels-kwijt-auto 301s to
-   * /autoschluessel-verloren, so both the table and the ItemList below have to
-   * point at the destination -- a redirecting URL declared in structured
-   * data hands a crawler a hop it did not need to take.
+   * Diese Übersicht lieferte auf der niederländischen Seite lange überhaupt
+   * keine strukturierten Daten — nicht einmal einen Breadcrumb —, während jede
+   * ihrer Unterseiten einen vollständigen Service-Graphen trägt. Eine ItemList
+   * sagt einem Crawler, dass DIESE Seite das Verzeichnis dieser Leistungen ist
+   * und nicht eine weitere Seite, die zufällig auf sie verlinkt.
+   *
+   * hrefFor löst Weiterleitungen auf: eine URL, die weiterleitet, in
+   * strukturierten Daten anzugeben, schickt einen Crawler über einen Umweg,
+   * den er nicht nehmen müsste. In dieser App ist REDIRECTED_SERVICE_SLUGS
+   * leer, aber die Funktion bleibt, damit das beim ersten Umzug stimmt.
    */
   const hrefFor = (slug: string) =>
     REDIRECTED_SERVICE_SLUGS.has(slug) ? '/autoschluessel-verloren' : `/leistungen/${slug}`;
@@ -34,8 +35,8 @@ export default function DienstenOverviewPage() {
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    '@id': `${SITE_CONFIG.domain}/leistungen#lijst`,
-    name: 'Autosleutel diensten',
+    '@id': `${SITE_CONFIG.domain}/leistungen#liste`,
+    name: 'Autoschlüssel-Leistungen',
     numberOfItems: DIENSTEN.length,
     itemListElement: DIENSTEN.map((dienst, i) => ({
       '@type': 'ListItem',
@@ -50,20 +51,21 @@ export default function DienstenOverviewPage() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Diensten', item: `${SITE_CONFIG.domain}/leistungen` },
+      { '@type': 'ListItem', position: 2, name: 'Leistungen', item: `${SITE_CONFIG.domain}/leistungen` },
     ],
   };
 
   return (
     <main>
-      <script id="diensten-itemlist" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
-      <script id="diensten-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="leistungen-itemlist" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      <script id="leistungen-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <span className={styles.label}>ONZE DIENSTEN</span>
-          <h1>Professionele Autosleutel Services</h1>
+          <span className={styles.label}>UNSERE LEISTUNGEN</span>
+          <h1>Alles rund um den Autoschlüssel</h1>
           <p className={styles.heroSub}>
-            Wij lossen elk autosleutel probleem ter plaatse op. Geen sleepkosten, geen lange wachttijden bij de dealer.
+            Jedes Schlüsselproblem wird dort gelöst, wo Ihr Fahrzeug steht. Keine Abschleppkosten,
+            keine Wartezeit beim Vertragshändler, Festpreis vorab am Telefon.
           </p>
         </div>
       </section>
@@ -73,14 +75,14 @@ export default function DienstenOverviewPage() {
       <BrandsMarquee />
 
       <div className="container" style={{ padding: '3rem 2rem', maxWidth: 1000, margin: '0 auto' }}>
-        <h2 className={styles.tableTitle}>Diensten Overzicht</h2>
+        <h2 className={styles.tableTitle}>Leistungen im Überblick</h2>
         <div className={styles.tableWrap}>
           <table className={styles.priceTable}>
             <thead>
               <tr>
-                <th>Dienst</th>
-                <th>Wat wij doen</th>
-                <th>Tijd</th>
+                <th>Leistung</th>
+                <th>Was wir tun</th>
+                <th>Dauer</th>
                 <th className={styles.actionCol}></th>
               </tr>
             </thead>
@@ -93,7 +95,7 @@ export default function DienstenOverviewPage() {
                       <Link href={href} className={styles.serviceLink}>{s.title}</Link>
                     </td>
                     <td className={styles.descCell}>{s.intro.split('.')[0]}.</td>
-                    <td className={styles.timeCell}>{s.duration || '30–60 min'}</td>
+                    <td className={styles.timeCell}>{s.duration || '30–60 Minuten'}</td>
                     <td className={styles.actionCell}>
                       <Link href={href} className={styles.moreBtn}>Details →</Link>
                     </td>
@@ -104,34 +106,56 @@ export default function DienstenOverviewPage() {
           </table>
         </div>
 
-        {/* ── COMPREHENSIVE DIENSTEN SEO GUIDE ARTICLE ── */}
+        {/* ── RATGEBERTEXT ZU DEN LEISTUNGEN ── */}
         <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
           <div className="seo-article-block" style={{ marginTop: 0 }}>
-            <h2>Compleet Overzicht van Onze Mobiele Autosleutel &amp; Slotenmaker Diensten</h2>
+            <h2>Was ein Autoschlüssel-Fachbetrieb vor Ort leisten kann</h2>
             <p>
-              Als gespecialiseerd auto slotenmaker biedt <strong>{SITE_CONFIG.name}</strong> een totaaloplossing voor elk type autosleutelprobleem. Of u nu uw sleutel in de auto heeft laten liggen, te maken heeft met een afgebroken sleutelbaard, een defect contactslot of een lege batterij van uw smart key: onze mobiele monteurs staan 24/7 voor u klaar om u ter plaatse te helpen.
+              <strong>{SITE_CONFIG.name}</strong> deckt über ein Netzwerk selbstständiger
+              Fachbetriebe jeden Fall rund um den Autoschlüssel ab — vom eingeschlossenen Schlüssel
+              über das abgebrochene Schlüsselblatt und das defekte Zündschloss bis zur leeren
+              Batterie im Keyless-Go-Schlüssel. Gearbeitet wird dort, wo das Fahrzeug steht, rund um
+              die Uhr.
             </p>
-            <h3>1. Schadevrij Autodeur Openen &amp; Noodopeningen</h3>
+            <h3>1. Auto schadenfrei öffnen</h3>
             <p>
-              Is uw autodeur dichtgevallen met de sleutel nog op het contact of op de stoel? Wij openen uw auto 100% schadevrij met geavanceerde Lishi lock decoders. In tegenstelling tot traditionele openbreekmethodes blijft uw fabrieksslot volledig intact.
+              Tür zugefallen, Schlüssel liegt innen auf dem Sitz oder im Kofferraum? Geöffnet wird
+              mit Lishi-Decodern über den Schließzylinder. Anders als bei den Methoden, für die ein
+              Abschleppdienst bekannt ist, bleibt dabei die Scheibe ganz, der Türrahmen gerade und
+              das Schloss funktionsfähig — Sie zahlen also nicht hinterher noch eine Reparatur.
             </p>
-            <h3>2. Autosleutel Bijmaken &amp; Programmeren op Locatie</h3>
+            <h3>2. Autoschlüssel nachmachen und anlernen</h3>
             <p>
-              Wij snijden mechanische sleutelbladen direct met onze mobiele CNC-lasersnijders en lezen uw startonderbreker (immobiliser) uit via de OBD2-diagnosepoort. Wij leveren en programmeren originele transponderchips en keyless go sleutels voor meer dan 59 automerken.
+              Das Schlüsselblatt wird mit der CNC-Fräse auf Ihr Schließsystem gefräst, und der
+              Transponder über die OBD-Schnittstelle an der Wegfahrsperre angelernt. Beides gehört
+              zusammen: ein gefräster Rohling öffnet die Tür, startet aber den Motor nicht. Das ist
+              der Punkt, an dem ein Schlüsseldienst ohne Fahrzeugdiagnose aufhört — und der Grund,
+              warum ADAC- und Versicherer-Ratgeber schreiben, man müsse zum Hersteller.
             </p>
-            <h3>3. All Keys Lost (AKL) — Alle Sleutels Kwijt</h3>
+            <h3>3. Alle Schlüssel verloren</h3>
             <p>
-              Bent u al uw autosleutels verloren? Geen paniek. Waar een dealer u verplicht om uw auto te laten wegslepen en vaak complete slotensets vervangt, genereren wij ter plaatse een compleet nieuwe sleutel en wissen wij de oude, verloren sleutels uit het geheugen van uw boordcomputer.
+              Existiert kein Schlüssel mehr, verlangt der Vertragshändler, dass das Fahrzeug zu ihm
+              gebracht wird. Unser Partner öffnet es vor Ort, liest die Schlüsseldaten aus dem
+              Steuergerät, fertigt einen neuen Schlüssel an und löscht die verlorenen aus der
+              Wegfahrsperre — damit niemand mit ihnen mehr öffnen oder starten kann. Es dauert
+              länger als ein Zweitschlüssel und kostet mehr, aber Abschleppen und Händlertermin
+              entfallen.
+            </p>
+            <h3>4. Reparieren statt ersetzen</h3>
+            <p>
+              Nicht jeder Fall braucht einen neuen Schlüssel. Tasten ohne Funktion, ein gerissenes
+              Gehäuse oder eine leere Batterie lassen sich meist reparieren — und das ist deutlich
+              günstiger, außerdem bleibt es der Schlüssel, den Ihr Fahrzeug schon kennt.
             </p>
           </div>
         </section>
 
         <div className={styles.cta}>
-          <h2>Direct Hulp Nodig?</h2>
-          <p>Bel of WhatsApp voor een prijsindicatie en planning.</p>
+          <h2>Sofort Hilfe nötig?</h2>
+          <p>Rufen Sie an oder schreiben Sie per WhatsApp — Sie hören den Festpreis und ein Zeitfenster.</p>
           <div className={styles.ctaBtns}>
-            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="diensten-overview-phone">{SITE_CONFIG.phone}</a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWa} id="diensten-overview-wa">WhatsApp</a>
+            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="leistungen-overview-phone">{SITE_CONFIG.phone}</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWa} id="leistungen-overview-wa">WhatsApp</a>
           </div>
         </div>
       </div>

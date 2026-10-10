@@ -9,24 +9,21 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Autosleutel Bijmaken per Stad | 24/7 Mobiel | Autosleutel24',
+    absolute: `Autoschlüssel-Service nach Stadt | 24/7 mobil | ${SITE_CONFIG.name}`,
   },
-  description: `Mobiele autosleutelspecialist in Utrecht, Noord-Holland, Zuid-Holland, Gelderland en Flevoland. Wij komen naar u toe. Bel ${SITE_CONFIG.phone}.`,
+  description: `Mobiler Autoschlüssel-Service in ${SITE_CONFIG.serviceAreaString}. Unser Partner kommt zu Ihrem Fahrzeug. Telefon: ${SITE_CONFIG.phone}.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/staedte`,
     // The service area as GeoJSON, for mapping tools and crawlers.
     types: { 'application/geo+json': '/werkgebied.geojson' },
-    languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/staedte`,
-      'x-default': `${SITE_CONFIG.domain}/staedte`,
-    },
+    languages: { 'de-DE': `${SITE_CONFIG.domain}/staedte` },
   },
   openGraph: {
     url: `${SITE_CONFIG.domain}/staedte`,
     type: 'website',
-    title: 'Autosleutel Bijmaken in de Randstad en Gelderland',
-    description: `Mobiele autosleutelspecialist in Utrecht, Zuid-Holland, Noord-Holland, Gelderland en Flevoland. Bel ${SITE_CONFIG.phone}`,
-    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Autosleutel24 — Mobiele autosleutelspecialist in Midden-Nederland en de Randstad' }],
+    title: `Autoschlüssel nachmachen in ${SITE_CONFIG.serviceAreaString}`,
+    description: `Mobiler Autoschlüssel-Service in ${SITE_CONFIG.serviceAreaString}. Telefon: ${SITE_CONFIG.phone}`,
+    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Autoschlüssel24 — mobiler Autoschlüssel-Service' }],
   },
 };
 
@@ -38,13 +35,13 @@ const groups = [
   })),
   // Outside the provinces we serve. The pages exist but are kept out of the index.
   {
-    title: 'Overige regio\'s',
+    title: 'Weitere Regionen',
     href: undefined as string | undefined,
     filter: (c: typeof CITIES[0]) => !SERVICE_REGIONS.some((r) => r.name === c.region),
   },
 ];
 
-export default function Steden() {
+export default function StaedtePage() {
   /*
    * Thinnest hub on the site — 516 words and, until now, no structured data
    * whatsoever, while all 62 children carry a Locksmith graph each. The
@@ -56,8 +53,8 @@ export default function Steden() {
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    '@id': `${SITE_CONFIG.domain}/staedte#lijst`,
-    name: 'Werkgebied per stad',
+    '@id': `${SITE_CONFIG.domain}/staedte#liste`,
+    name: 'Einsatzgebiet nach Stadt',
     numberOfItems: listed.length,
     itemListElement: listed.map((city, i) => ({
       '@type': 'ListItem',
@@ -77,19 +74,28 @@ export default function Steden() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Steden', item: `${SITE_CONFIG.domain}/staedte` },
+      { '@type': 'ListItem', position: 2, name: 'Städte', item: `${SITE_CONFIG.domain}/staedte` },
     ],
   };
 
   return (
     <main>
-      <script id="steden-itemlist" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
-      <script id="steden-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="staedte-itemlist" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      <script id="staedte-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <section style={{ background:'linear-gradient(160deg, var(--navy-900), var(--navy-800))', padding:'4rem 2rem', textAlign:'center' }}>
-        <p style={{ fontSize:'0.72rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', color:'var(--orange-400)', marginBottom:'0.75rem' }}>SERVICEDEKKING</p>
-        <h1 style={{ color:'#fff', marginBottom:'1rem' }}>Alle Steden — {CITIES.length} Locaties</h1>
+        <p style={{ fontSize:'0.72rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', color:'var(--orange-400)', marginBottom:'0.75rem' }}>EINSATZGEBIET</p>
+        {/*
+          * Die Zahl kommt aus den Daten, nicht aus der Überschrift. CITIES
+          * enthält in dieser App vier Städte, weil es vier Partner gibt; die
+          * niederländische Fassung zählt hier 62. Eine von Hand getippte Zahl
+          * wäre beim fünften Partner falsch.
+          */}
+        <h1 style={{ color:'#fff', marginBottom:'1rem' }}>
+          {CITIES.length === 1 ? 'Eine Stadt' : `Alle Städte — ${CITIES.length} Standorte`}
+        </h1>
         <p style={{ color:'rgba(255,255,255,0.7)', fontSize:'1rem', maxWidth:580, margin:'0 auto' }}>
-          Mobiele autosleutelservice in Utrecht, Zuid-Holland, Noord-Holland, Gelderland en Flevoland: de hele Randstad en Gelderland. Kies uw provincie of stad.
+          Mobiler Autoschlüssel-Service in {SITE_CONFIG.serviceAreaString}. In jeder dieser Städte
+          sitzt ein eigener Fachbetrieb — wählen Sie Ihre Stadt oder Region.
         </p>
         {/*
           * This hub answers "which cities", and it has been ranking for
@@ -103,18 +109,18 @@ export default function Steden() {
             href="/autoschluessel-nachmachen-in-der-naehe"
             style={{ color:'var(--orange-400)', fontWeight:600, textDecoration:'none' }}
           >
-            Staat uw plaats er niet bij? Zoek wie er bij u in de buurt is →
+            Ihr Ort steht nicht dabei? Finden Sie, wer in Ihrer Nähe ist →
           </Link>
         </p>
       </section>
 
-      <section style={{ maxWidth: 1100, margin: '2rem auto 0', padding: '0 1.25rem' }} aria-label="Kaart van ons werkgebied">
+      <section style={{ maxWidth: 1100, margin: '2rem auto 0', padding: '0 1.25rem' }} aria-label="Karte unseres Einsatzgebiets">
         <InstantServiceMap />
       </section>
 
       <div className="container" style={{ padding:'3.5rem 2rem' }}>
         {groups.map(g => {
-          const cities = CITIES.filter(g.filter).sort((a, b) => a.city.localeCompare(b.city));
+          const cities = CITIES.filter(g.filter).sort((a, b) => a.city.localeCompare(b.city, 'de'));
           if (!cities.length) return null;
           return (
             <div key={g.title} style={{ marginBottom:'3rem' }}>
@@ -123,7 +129,7 @@ export default function Steden() {
               <ul className={styles.seoList}>
                 {cities.map(c => (
                   <li key={c.slug}>
-                    <Link href={`/staedte/${c.slug}`} id={`stad-${c.slug}`}>
+                    <Link href={`/staedte/${c.slug}`} id={`stadt-${c.slug}`}>
                       <strong style={{ color: 'var(--orange-500)' }}>{c.city}</strong>
                     </Link>
                   </li>
@@ -133,27 +139,46 @@ export default function Steden() {
           );
         })}
 
-        {/* ── COMPREHENSIVE STEDEN SEO GUIDE ARTICLE ── */}
+        {/* ── RATGEBERTEXT ZUM EINSATZGEBIET ── */}
         <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
-          <h2>Mobiele Autosleutel Service in Heel Nederland — Een Monteur bij U in de Regio</h2>
+          <h2>Ein Fachbetrieb in Ihrer Stadt, nicht eine Nummer für ganz Deutschland</h2>
           <p>
-            Met een netwerk van aangesloten autosleutelspecialisten bedient <strong>{SITE_CONFIG.name}</strong> meer dan {CITIES.length} steden en gemeenten, van de Randstad en Midden-Nederland tot Gelderland, Noord-Brabant en Limburg. Elke regio heeft zijn eigen monteur, en op elke stadspagina staat wie dat is. Of u nu bent buitengesloten in het centrum van Amsterdam, met een kapotte autosleutel staat in Utrecht, of met spoed een nieuwe sleutel wilt laten inleren in Hilversum, Amstelveen of Almere: onze volledig ingerichte mobiele werkplaatsen komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw locatie.
+            <strong>{SITE_CONFIG.name}</strong> arbeitet über ein Netzwerk selbstständiger
+            Fachbetriebe. Heute sind das {CITIES.length} Städte: {SITE_CONFIG.serviceAreaString}. In
+            jeder sitzt ein eigener Betrieb mit eigener Werkstatt, eigener Diagnosetechnik und
+            eigenem Schlüssellager — deshalb ist der Weg zu Ihrem Fahrzeug kurz, und deshalb kennt
+            der Partner die Parkhäuser und Hinterhöfe seiner Stadt.
           </p>
-          <h3>Geen Takel- of Sleepkosten Meer</h3>
           <p>
-            Traditionele merkdealers vereisen bij verlies van al uw autosleutels (All Keys Lost) dat uw voertuig per takelwagen naar de garage wordt vervoerd. Dit kost honderden euro&apos;s aan sleepkosten en brengt dagenlange wachttijden met zich mee. Wij voeren alle werkzaamheden — van het 100% schadevrij openen van autodeuren met Lishi tools tot het CNC-frezen en OBD2-programmeren van transponderchips — direct ter plaatse uit.
+            Dass diese Liste kurz ist, ist Absicht. Eine Stadtseite entsteht bei uns erst, wenn
+            dort wirklich jemand hinfährt — vierhundert Seiten für Städte ohne Partner wären
+            Seiten, die eine Nähe behaupten, die es nicht gibt. Fehlt Ihr Ort, heißt das nicht,
+            dass niemand kommt: unsere Partner fahren auch in die Gemeinden ringsum. Rufen Sie mit
+            Ihrer Postleitzahl an, und Sie hören es in einer Minute.
           </p>
-          <h3>Dekking in Utrecht, Noord-Holland, Flevoland, Zuid-Holland en Gelderland</h3>
+          <h3>Keine Abschleppkosten</h3>
           <p>
-            Onze monteurs zijn strategisch gestationeerd langs belangrijke snelwegen (A1, A2, A12, A27 en A28). Hierdoor kunnen wij razendsnel schakelen bij noodgevallen in onder andere Amersfoort, Bussum, Naarden, Huizen, Zeist, Houten, Nieuwegein, Diemen en Weesp. Staat uw stad niet direct in het overzicht hierboven? Bel dan direct onze 24/7 noodlijn om te controleren hoe snel onze monteur bij u kan zijn.
+            Beim Vertragshändler muss das Fahrzeug in die Werkstatt — und wenn kein Schlüssel mehr
+            existiert, heißt das abschleppen, dazu Tage Wartezeit auf einen Schlüssel, der auf
+            Fahrgestellnummer bestellt wird. Unsere Partner erledigen alles vor Ort: Öffnen mit
+            Lishi-Decodern, Fräsen mit der CNC-Maschine, Anlernen über die OBD-Schnittstelle. Das
+            ersparte Abschleppen ist in der Rechnung oft mehr wert als die Arbeit selbst.
           </p>
-          <h3>Wat doen wij bij All Keys Lost (Alle Autosleutels Kwijt) op locatie?</h3>
+          <h3>Was bei &quot;alle Schlüssel verloren&quot; vor Ort passiert</h3>
           <p>
-            Wanneer u geen enkele werkende autosleutel meer bezit, lezen wij op locatie de mechanische slotcode van uw deurslot uit of demonteren wij indien nodig het slot om de sleutelcode te decoderen. Vervolgens slijpt onze automatische CNC-machine een nieuwe mechanische sleutelbaard op honderdste millimeters nauwkeurig. Via geavanceerde diagnose-apparatuur coderen wij de transponderchip en afstandsbediening rechtstreeks in de immobilizer (startonderbreker).
+            Existiert kein funktionierender Schlüssel mehr, wird das Schließsystem über das
+            Türschloss dekodiert — falls nötig wird das Schloss dafür ausgebaut. Danach fräst die
+            CNC-Maschine ein neues Schlüsselblatt, und über die Fahrzeugdiagnose werden Transponder
+            und Funkfernbedienung in der Wegfahrsperre hinterlegt. Die verlorenen Schlüssel werden
+            dabei gelöscht, damit niemand mit ihnen mehr öffnen oder starten kann.
           </p>
-          <h3>12 Maanden Garantie en Verzekeringsvergoeding per Stad</h3>
+          <h3>Gleicher Preis, gleiche Garantie, in jeder Stadt</h3>
           <p>
-            In welke stad u zich ook bevindt: u betaalt vooraf altijd een vaste, transparante prijs zonder verrassingen achteraf. Op al onze geleverde sleutels, smart keys en reparaties verlenen wij standaard 12 maanden schriftelijke garantie. Veel verzekeringsmaatschappijen vergoeden onze werkzaamheden onder uw Beperkt Casco of Allrisk autoverzekering.
+            In welcher dieser Städte Sie auch stehen: Sie hören den Festpreis am Telefon, bevor
+            jemand losfährt — als Bruttopreis inklusive 19 % MwSt., ohne Zuschlag für Nacht,
+            Wochenende oder Feiertag. Auf jeden gelieferten Schlüssel und jedes Anlernen geben wir
+            zwölf Monate schriftliche Garantie, und die Rechnung weist die MwSt. aus, sodass Sie sie
+            bei Ihrem Versicherer einreichen können.
           </p>
         </div>
       </div>
