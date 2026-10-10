@@ -24,6 +24,7 @@ import {
   IMAGE_DIR,
   CATEGORIES,
   MIN_WIDTH,
+  centreDelta,
   get,
   getText,
   log,
@@ -57,6 +58,54 @@ if (!sources.cleanLargeSourceExists) {
 /** Build a URL for one image from the measured template. */
 const sourceUrl = (id, slug) =>
   BASE + BEST.template.replace('{id}', String(id)).replace('{slug}', slug);
+
+/* ── the two-tier strategy ────────────────────────────────────────────── */
+
+/**
+ * Take the 800px one when it is clean, the 320px one when it is not.
+ *
+ * `lg` is NOT uniformly watermarked, which is the finding that makes this
+ * worth doing. Of the lg files already in this repository that were checked,
+ * 287 of 345 carry the mark — but 58 do not. Treating the whole size as dirty
+ * throws away a sixth of the catalogue at two and a half times the resolution,
+ * for no reason.
+ *
+ * So every photo is fetched twice: md, which we know is clean and is the
+ * yardstick, and lg. If lg's centre matches md's, lg is clean and we keep it.
+ * If it does not, the difference is the overlay and we keep md.
+ *
+ * This costs one extra request per image. That is the right trade — the
+ * alternative is a human opening 1,700 photos, or a shop with a supplier's
+ * logo stamped across its product pages.
+ */
+const LG = (id, slug) => `${BASE}/media/image/product/${id}/lg/${slug}.jpg`;
+const MD = (id, slug) => `${BASE}/media/image/product/${id}/md/${slug}.jpg`;
+
+/**
+ * Returns the bytes to save, plus which rendition they came from and why.
+ * Never returns a watermarked image: when lg is dirty and md is unavailable,
+ * it returns nothing rather than the mark.
+ */
+async function bestCleanImage(id, slug) {
+  const md = await get(MD(id, slug));
+  if (!md.ok) return { error: `md unavailable (HTTP ${md.status})` };
+
+  const lg = await get(LG(id, slug));
+  if (!lg.ok) return { buf: md.body, variant: 'md', reason: `lg unavailable (HTTP ${lg.status})` };
+
+  let delta;
+  try {
+    delta = await centreDelta(lg.body, md.body);
+  } catch {
+    // Undecodable lg: fall back rather than guess.
+    return { buf: md.body, variant: 'md', reason: 'lg not decodable' };
+  }
+
+  if (delta.score > delta.threshold) {
+    return { buf: md.body, variant: 'md', reason: `lg watermarked (Δ${delta.score.toFixed(1)})` };
+  }
+  return { buf: lg.body, variant: 'lg', reason: `lg clean (Δ${delta.score.toFixed(1)})` };
+}
 
 /* ── walking the categories ───────────────────────────────────────────── */
 
@@ -154,9 +203,9 @@ async function fetchProduct(productUrl, manifest) {
       continue;
     }
 
-    const res = await get(sourceUrl(ownId, shot.slug));
-    if (!res.ok) {
-      saved.push({ index: i, slug: shot.slug, error: `HTTP ${res.status}` });
+    const picked = await bestCleanImage(ownId, shot.slug);
+    if (picked.error) {
+      saved.push({ index: i, slug: shot.slug, error: picked.error });
       continue;
     }
 
@@ -164,7 +213,7 @@ async function fetchProduct(productUrl, manifest) {
     // the failure mode that survives all the way to a broken product page.
     let meta;
     try {
-      meta = await sharp(res.body).metadata();
+      meta = await sharp(picked.buf).metadata();
     } catch {
       saved.push({ index: i, slug: shot.slug, error: 'not decodable' });
       continue;
@@ -174,8 +223,16 @@ async function fetchProduct(productUrl, manifest) {
       continue;
     }
 
-    writeFileSync(file, res.body);
-    saved.push({ index: i, slug: shot.slug, file: rel, width: meta.width, height: meta.height });
+    writeFileSync(file, picked.buf);
+    saved.push({
+      index: i,
+      slug: shot.slug,
+      file: rel,
+      width: meta.width,
+      height: meta.height,
+      variant: picked.variant,
+      reason: picked.reason,
+    });
   }
 
   const entry = { url: productUrl, productId: ownId, ok: true, images: saved };
@@ -228,8 +285,11 @@ async function main() {
   mkdirSync(HERE, { recursive: true });
   writeFileSync(path.join(HERE, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
 
-  const total = manifest.products.reduce((n, p) => n + p.images.filter((i) => i.file).length, 0);
-  log(`\n${manifest.products.length} products · ${total} images on disk`);
+  const all = manifest.products.flatMap((p) => p.images).filter((i) => i.file);
+  const lg = all.filter((i) => i.variant === 'lg').length;
+  const md = all.filter((i) => i.variant === 'md').length;
+  log(`\n${manifest.products.length} products · ${all.length} images on disk`);
+  log(`  ${lg} at 800px (lg was clean) · ${md} at 320px (lg was watermarked)`);
   log(`Written: scripts/akey-images/manifest.json`);
   log(`\nNow run: node scripts/akey-images/verify.mjs`);
   log('Nothing here is trustworthy until that passes.');

@@ -47,6 +47,15 @@ Their largest public rendition is 800 px and it is the watermarked one. No
 scraper can produce a 1920 px clean image from a site whose biggest file is an
 800 px watermarked one.
 
+**But `lg` is not uniformly watermarked.** Of the 800px files already in this
+repository that were checked, 287 of 345 carry the mark and **58 do not** — a
+sixth of them are clean at 800px. Treating the whole size as dirty throws those
+away for nothing, so `fetch.mjs` now fetches both renditions per photo,
+compares them, and keeps `lg` where it is clean and `md` where it is not. Every
+saved image is clean; a minority are properly large.
+
+That is the best a scraper can do here. It is still not full HD.
+
 So there are only three real routes:
 
 1. **An unwatermarked original behind a different path.** Gambio shops often
@@ -91,6 +100,13 @@ refuses to run until that file exists, so the scraper can never silently fall
 back to pulling watermarked `lg` files again.
 
 ### 2. `fetch.mjs` — the scraper
+
+Two requests per photo, on purpose: `md` as the yardstick and `lg` as the
+candidate. If `lg`'s centre matches `md`'s it is clean and gets saved at 800px;
+if it does not, the difference is the overlay and `md` is saved instead. It
+never saves a watermarked file — where `lg` is dirty and `md` is missing, it
+saves nothing and says so.
+
 
 Scope is the two category trees you asked for, including every
 `geeignet für <make>` sub-category:
