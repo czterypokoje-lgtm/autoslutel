@@ -3,7 +3,7 @@ import { breadcrumbSchema } from '@/utils/schema';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ZAKELIJK_SEGMENTS, getZakelijkSegment } from '@/config/zakelijk';
+import { ZAKELIJK_SEGMENTS, getZakelijkSegment } from '@/config/geschaeftskunden';
 import { SITE_CONFIG } from '@/config/site.config';
 import B2BForm from '@/components/B2BForm/B2BForm';
 import styles from './page.module.css';
@@ -21,7 +21,7 @@ export async function generateMetadata(props: {
   return {
     title: s.metaTitle,
     description: s.metaDesc,
-    alternates: { canonical: `${SITE_CONFIG.domain}/zakelijk/${s.slug}` },
+    alternates: { canonical: `${SITE_CONFIG.domain}/geschaeftskunden/${s.slug}` },
   };
 }
 
@@ -54,8 +54,8 @@ export default async function ZakelijkSegmentPage(props: {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             breadcrumbSchema([
-              { name: 'Zakelijk', path: '/zakelijk' },
-              { name: s.label, path: `/zakelijk/${s.slug}` },
+              { name: 'Zakelijk', path: '/geschaeftskunden' },
+              { name: s.label, path: `/geschaeftskunden/${s.slug}` },
             ])
           ),
         }}
@@ -67,7 +67,7 @@ export default async function ZakelijkSegmentPage(props: {
             <div>
               <nav className={styles.crumbs} aria-label="Breadcrumb">
                 <Link href="/">Home</Link> <span>/</span>{' '}
-                <Link href="/zakelijk">Zakelijk</Link> <span>/</span>{' '}
+                <Link href="/geschaeftskunden">Zakelijk</Link> <span>/</span>{' '}
                 <span>{s.label}</span>
               </nav>
               <h1>
@@ -180,7 +180,7 @@ export default async function ZakelijkSegmentPage(props: {
             <h2>Ook interessant</h2>
             <div className={styles.otherGrid}>
               {ZAKELIJK_SEGMENTS.filter((o) => o.slug !== s.slug).map((o) => (
-                <Link key={o.slug} href={`/zakelijk/${o.slug}`} className={styles.otherCard}>
+                <Link key={o.slug} href={`/geschaeftskunden/${o.slug}`} className={styles.otherCard}>
                   <strong>{o.label}</strong>
                   <span>{o.title}</span>
                 </Link>

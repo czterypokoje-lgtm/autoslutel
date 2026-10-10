@@ -16,7 +16,7 @@ import { SITE_CONFIG } from '@/config/site.config';
  * uploadDate must be a full ISO 8601 datetime WITH an offset. A bare
  * '2026-09-29' is rejected twice over by Search Console — "invalid datetime
  * value" because it is a date and not a datetime, and "missing a time zone"
- * because a date cannot carry one. Both appeared on /autosleutel-kwijt, the
+ * because a date cannot carry one. Both appeared on /autoschluessel-verloren, the
  * one page that declares this video.
  *
  * +02:00 is CEST, which is what the Netherlands was on in September. The
@@ -33,11 +33,11 @@ export const VIDEO = {
   description:
     'Uw autosleutel kwijt? In veertig seconden ziet u hoe wij op locatie een nieuwe sleutel maken en programmeren, wat het kost en hoe snel wij er zijn.',
   /* YouTube's own still, re-encoded and served from our origin. */
-  poster: '/images/video/autosleutel-kwijt-uitleg.jpg',
+  poster: '/images/video/autoschluessel-verloren-erklaerung.jpg',
 } as const;
 
 /*
- * VideoObject belongs on ONE page, and that page is /autosleutel-kwijt.
+ * VideoObject belongs on ONE page, and that page is /autoschluessel-verloren.
  *
  * Google indexes a video from its "watch page" — the page whose primary
  * purpose is that video — and explicitly lists a page where the video merely

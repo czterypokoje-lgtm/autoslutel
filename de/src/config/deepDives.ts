@@ -3,7 +3,7 @@
  *
  * These three posts — BDC2, SFD, Ghost — carry the site's real technical
  * authority and had three inbound links each, while a boilerplate page like
- * /contact had 178 from the footer. They are linked from the brand page and
+ * /kontakt had 178 from the footer. They are linked from the brand page and
  * from city pages that list the make among their popular brands, so every
  * link has a reader behind it rather than being placed to move PageRank.
  */

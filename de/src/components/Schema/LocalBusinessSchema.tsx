@@ -12,7 +12,7 @@ export default function LocalBusinessSchema() {
     url: SITE_CONFIG.domain,
     logo: {
       '@type': 'ImageObject',
-      url: `${SITE_CONFIG.domain}/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp`,
+      url: `${SITE_CONFIG.domain}/images/logo/autoschluessel24-logo-schluesseldienst.webp`,
       width: 1024,
       height: 304,
     },
@@ -90,15 +90,15 @@ export default function LocalBusinessSchema() {
       SITE_CONFIG.social.facebook,
       SITE_CONFIG.social.instagram,
       SITE_CONFIG.social.google,
-      `https://www.kvk.nl/zoeken/?source=all&q=${SITE_CONFIG.kvk}`,
+      `https://www.kvk.nl/zoeken/?source=all&q=${SITE_CONFIG.hrb}`,
     ],
     foundingDate: '2020',
-    vatID: SITE_CONFIG.btw,
+    vatID: SITE_CONFIG.ustId,
     legalName: SITE_CONFIG.fullName,
     identifier: {
       '@type': 'PropertyValue',
       name: 'KVK',
-      value: SITE_CONFIG.kvk,
+      value: SITE_CONFIG.hrb,
     },
   };
 

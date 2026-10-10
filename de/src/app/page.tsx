@@ -6,7 +6,8 @@ import Image from 'next/image';
 import styles from './page.module.css';
 import dynamic from 'next/dynamic';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
-import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import { SITE_CONFIG } from '@/config/site.config';
+import { preisAb } from '@/config/leistungen';
 import { BRANDS } from '../config/brands';
 import FaqSection from '@/components/FaqSection/FaqSection';
 import ServiceAreaMap from '@/components/ServiceAreaMap/ServiceAreaMap';
@@ -23,24 +24,35 @@ import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import GalleryMarquee from '@/components/GallerySlider/GalleryMarquee';
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 
+const TITLE = 'Autoschlüssel nachmachen oder verloren? Festpreis vorab | 24/7';
+const DESCRIPTION =
+  'Autoschlüssel nachmachen lassen oder alle Schlüssel verloren? Unser Partner kommt zu Ihrem Fahrzeug in Berlin, Hamburg, München und Frankfurt — schadenfrei öffnen, Wegfahrsperre anlernen, Festpreis vorab inkl. MwSt.';
+
 export const metadata: Metadata = {
-  title: {
-    absolute: `Autosleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE} | 24/7`,
-  },
-  description: `Autosleutel bijmaken of alle sleutels kwijt? Binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: {
     canonical: SITE_CONFIG.domain,
+    /*
+     * Nur de-DE.
+     *
+     * Ein hreflang-Verweis auf autosleutel24.nl wäre erst dann richtig, wenn
+     * die niederländische Seite in derselben Gruppe zurückverweist — ein
+     * einseitiger Verweis wird von Google ignoriert, und x-default auf eine
+     * Domain zu setzen, die man von hier aus nicht mitändern kann, würde die
+     * beiden Seiten gegeneinander laufen lassen. Kommt dazu, sobald beide
+     * Seiten gemeinsam ausgeliefert werden.
+     */
     languages: {
-      'nl-NL': SITE_CONFIG.domain,
-      'x-default': SITE_CONFIG.domain,
+      'de-DE': SITE_CONFIG.domain,
     },
   },
   openGraph: {
     type: 'website',
     url: SITE_CONFIG.domain,
-    title: `Autosleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE} | 24/7`,
-    description: `Autosleutel bijmaken of alle sleutels kwijt? Binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel24 mobiele autosleutelspecialist' }],
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel24 — mobiler Autoschlüssel-Service' }],
   },
 };
 
@@ -58,56 +70,55 @@ const breadcrumbSchema = {
 };
 
 const services = [
-  { 
-    title: 'Autosleutel Bijmaken & Reservesleutel', 
-    desc: 'Wilt u een professionele reservesleutel laten bijmaken en programmeren zonder lange wachttijden of hoge dealerprijzen? Onze mobiele slotenmakers komen 24/7 naar u toe voor een voordelige prijs.',
-    href: '/diensten/autosleutel-bijmaken',
-    src: '/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp',
-    alt: 'Autosleutel bijmaken en programmeren in Utrecht en Midden-Nederland - klaar terwijl u wacht op locatie',
-    btnText: 'Vind uw sleutel'
+  {
+    title: 'Autoschlüssel nachmachen & Zweitschlüssel',
+    desc: 'Zweitschlüssel nötig, ohne Wartezeit beim Vertragshändler und ohne Händlerpreis? Unser Partner fräst den Schlüssel vor Ort und lernt die Wegfahrsperre direkt am Fahrzeug an — rund um die Uhr, zum Festpreis.',
+    href: '/leistungen/autoschluessel-nachmachen',
+    src: '/images/seo/autoschluessel_nachmachen_car_keys.webp',
+    alt: 'Autoschlüssel nachmachen und anlernen vor Ort — fertig, während Sie warten',
+    btnText: 'Schlüssel nachmachen',
   },
-  { 
-    title: 'Alle Autosleutels Kwijt', 
-    desc: 'Bent u al uw autosleutels kwijt of zijn deze gestolen? Wij komen naar uw locatie, openen de auto schadevrij, frezen een nieuwe sleutel en wissen oude sleutels uit het systeem.',
-    href: '/autosleutel-kwijt',
-    src: '/images/service_kwijt.webp',
-    alt: 'Monteur programmeert autosleutel via OBD diagnostiek in de auto op locatie',
-    btnText: 'Direct hulp bij kwijt'
+  {
+    title: 'Alle Autoschlüssel verloren',
+    desc: 'Kein Schlüssel mehr da, oder alle gestohlen? Wir kommen zu Ihrem Fahrzeug, öffnen es schadenfrei, fräsen einen neuen Schlüssel und löschen die alten Schlüssel aus der Wegfahrsperre.',
+    href: '/autoschluessel-verloren',
+    src: '/images/service_verloren.webp',
+    alt: 'Techniker lernt einen Autoschlüssel über die OBD-Schnittstelle am Fahrzeug an',
+    btnText: 'Soforthilfe bei Verlust',
   },
-  { 
-    title: 'Autosleutels Repareren & Behuizing Vervangen', 
-    desc: 'Is de behuizing van uw autosleutel gescheurd, zijn de knoppen lam of werkt de afstandsbediening niet meer? Onze specialisten kunnen uw autosleutel repareren terwijl u wacht.',
-    href: '/diensten/autosleutels-repareren',
-    src: '/images/seo/autosleutel_reparatie_hero.webp',
-    alt: 'Autosleutel behuizing vervangen en knoppen repareren op locatie',
-    btnText: 'Meer over reparaties'
+  {
+    title: 'Autoschlüssel reparieren & Gehäuse wechseln',
+    desc: 'Gehäuse gerissen, Tasten ohne Funktion, Funkfernbedienung reagiert nicht mehr? In den meisten Fällen bleibt die Elektronik Ihres Schlüssels erhalten und nur das Gehäuse wird getauscht — vor Ort, während Sie warten.',
+    href: '/leistungen/autoschluessel-reparieren',
+    src: '/images/seo/autoschluessel_reparatur_hero.webp',
+    alt: 'Schlüsselgehäuse wechseln und Tasten reparieren vor Ort',
+    btnText: 'Mehr zur Reparatur',
   },
-  { 
-    title: 'Contactslot Auto Vervangen & Repareren', 
-    desc: 'Draait uw autosleutel niet meer in het contactslot of zit deze vast? Een defect contactslot komt vaak voor. Wij reviseren of vervangen uw contactslot direct bij u op de oprit.',
-    href: '/diensten/contactslot-auto-vervangen',
-    src: '/images/contactslot-auto-vervangen/auto_contactslot_reparatie_slotenmaker_utrecht.webp',
-    alt: 'Defect contactslot auto vervangen en repareren door monteur in Utrecht',
-    btnText: 'Contactslot herstellen'
+  {
+    title: 'Funkschlüssel & Transponder anlernen',
+    desc: 'Ein Rohling allein startet kein Auto. Transponder und Funkfernbedienung werden über die OBD-Schnittstelle an der Wegfahrsperre angelernt — mit derselben Technik, die die Werkstatt verwendet.',
+    href: '/leistungen/transponder-anlernen',
+    src: '/images/seo/autoschluessel_anlernen_vor_ort.webp',
+    alt: 'Transponder und Funkschlüssel über die Fahrzeugdiagnose an der Wegfahrsperre anlernen',
+    btnText: 'Anlernen erklären',
   },
-  { 
-    title: 'Auto Slotenmaker & Schadevrij Openen', 
-    desc: 'Bent u buitengesloten omdat de sleutels nog in de auto liggen of de accu leeg is? Wij openen uw autodeur 100% schadevrij met speciaal gereedschap.',
-    href: '/diensten/auto-openen-zonder-sleutel',
-    src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp',
-    alt: 'Buitengesloten auto openen zonder sleutel, 100% schadevrij',
-    btnText: 'Snel auto openen'
+  {
+    title: 'Auto öffnen ohne Schlüssel — schadenfrei',
+    desc: 'Schlüssel im Auto eingeschlossen, Tür zugefallen oder Batterie leer? Wir öffnen Ihre Fahrzeugtür mit Spezialwerkzeug, ohne Schaden an Scheibe, Dichtung oder Schloss.',
+    href: '/leistungen/auto-oeffnen-notdienst',
+    src: '/images/seo/auto_tuer_oeffnen_schluesseldienst_schadenfrei.webp',
+    alt: 'Ausgeschlossen — Auto ohne Schlüssel schadenfrei öffnen',
+    btnText: 'Auto öffnen lassen',
   },
-  { 
-    title: 'Smart Key / Keyless', 
-    desc: 'Heeft u problemen met uw keyless entry of keyless go autosleutel, of wordt uw proximity smart key niet meer gedetecteerd door de sensoren van uw auto? Wij leveren, inleren en synchroniseren originele smart keys met geavanceerde codering direct op locatie.', 
-    href: '/diensten/smart-key-programmeren',
-    src: '/images/seo/smart-key-keyless-programmeren-autosleutel24-utrecht.webp',
-    alt: 'Smart key en keyless entry autosleutels inleren en programmeren op locatie',
-    btnText: 'Smart Key oplossingen'
-  }
+  {
+    title: 'Keyless Go / Smart Key',
+    desc: 'Keyless Go reagiert nicht mehr, oder der Smart Key wird vom Fahrzeug nicht erkannt? Wir liefern, codieren und synchronisieren Keyless-Go-Schlüssel direkt vor Ort — auch bei FBS4 und FEM/BDC.',
+    href: '/leistungen/keyless-go-schluessel',
+    src: '/images/seo/smart-key-keyless-anlernen-autoschluessel24.webp',
+    alt: 'Keyless Go und Smart Key anlernen und synchronisieren vor Ort',
+    btnText: 'Keyless Go lösen',
+  },
 ];
-
 
 export default function HomePage() {
   return (
@@ -120,19 +131,24 @@ export default function HomePage() {
           <div className={styles.heroTopContent}>
             <HeroTrustBadge />
             <h1>
-              Autosleutel Kwijt of Bijmaken?<br />
-              <span style={{ color: 'var(--orange-500)' }}>Binnen 30–60 Min Ter Plaatse!</span>
+              Autoschlüssel verloren oder nachmachen?<br />
+              {/*
+                * Hier stand in der niederländischen Fassung "Binnen 30-60 Min
+                * Ter Plaatse". Diese Zeile fehlt bewusst: vier Partner in vier
+                * Städten tragen keine Minutenangabe. Siehe config/arrival.ts.
+                */}
+              <span style={{ color: 'var(--orange-500)' }}>Festpreis vorab — unser Partner kommt zu Ihnen</span>
             </h1>
             <p className={styles.heroSplitLead}>
-              Buitengesloten of sleutel kwijt? <strong>Binnen 30–60 min</strong> ter plaatse — goedkoper dan de dealer, geen wegsleepkosten.
+              Ausgeschlossen oder Schlüssel weg? Der Festpreis steht <strong>vor der Anfahrt</strong> — günstiger als der Vertragshändler, ohne Abschleppkosten.
             </p>
-            <HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />
+            <HeroQuickFacts price={preisAb('transponder')} />
           </div>
 
           <div className={styles.heroImageContent}>
             <Image 
-              src="/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp" 
-              alt="Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond"
+              src="/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp" 
+              alt="Autoschlüssel-Spezialist in Arbeitskleidung am Fahrzeug, Servicefahrzeug im Hintergrund"
               width={800}
               height={450}
               style={{ width: '100%', height: 'auto', borderRadius: '12px', objectFit: 'cover' }}
@@ -140,30 +156,23 @@ export default function HomePage() {
               quality={80}
               sizes="(max-width: 992px) 100vw, 50vw"
             />
-            <script id="hero-image-gps" type="application/ld+json" dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "ImageObject",
-                "contentUrl": `${SITE_CONFIG.domain}/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp`,
-                "name": "Autosleutelspecialist van Autosleutel24 op locatie",
-                "description": "Sleutel ter plaatse bijmaken en programmeren in Utrecht, Amsterdam en Midden-Nederland door Autosleutel24.",
-                "contentLocation": {
-                  "@type": "Place",
-                  "name": "Utrecht, Amsterdam",
-                  "geo": {
-                    "@type": "GeoCoordinates",
-                    "latitude": 52.0907,
-                    "longitude": 5.1214
-                  }
-                }
-              })
-            }} />
+            {/*
+              * Kein ImageObject mit contentLocation.
+              *
+              * Die niederländische Fassung hängt hier GPS-Koordinaten von
+              * Utrecht an das Heldenbild. Dieses Foto ist in den Niederlanden
+              * entstanden, und es mit deutschen Koordinaten auszuzeichnen
+              * wäre eine falsche Angabe in strukturierten Daten — genau die
+              * Art Fehler, die eine neue Domain nicht gebrauchen kann. Sobald
+              * ein deutscher Partner eigene Fotos liefert, kommt die
+              * Auszeichnung mit seinen Koordinaten zurück.
+              */}
           </div>
 
           <div className={styles.heroBottomContent}>
-            {/* Kenteken-first wizard: four one-decision steps instead of six
-                fields. LeadCaptureForm stays as the fallback for anyone who
-                does not have a Dutch plate to hand. */}
+            {/* Kennzeichen zuerst: vier Schritte mit je einer Entscheidung
+                statt sechs Feldern. LeadCaptureForm bleibt der Rückfall für
+                jeden, der sein Kennzeichen nicht zur Hand hat. */}
             <VehicleWizard
               fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />}
             />
@@ -177,62 +186,78 @@ export default function HomePage() {
       {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
       <div style={{ backgroundColor: '#f3f4f6', padding: '1px 0' }}>
         <FeatureCards 
-          title="Bijmaken. Vervanging. Programmeren."
-          subtitle={<><span style={{ color: 'var(--orange-500)' }}>AutoSleutel24</span> doet het allemaal, waar u maar wilt.</>}
+          title="Nachmachen. Ersetzen. Anlernen."
+          subtitle={<><span style={{ color: 'var(--orange-500)' }}>Autoschlüssel24</span> erledigt alles dort, wo Ihr Fahrzeug steht.</>}
           features={[
             {
               id: 'feature-0',
-              icon: <Image src="/images/icon_key_red.jpg" alt="Autosleutel Bijmaken" width={90} height={90} style={{ borderRadius: '12px' }} />,
-              title: 'Autosleutel Bijmaken',
-              description: 'Direct een nieuwe autosleutel bijmaken op locatie. Snel, vakkundig en inclusief programmeren.',
-              linkText: 'Meer over sleutel bijmaken',
-              linkUrl: '/diensten/autosleutel-bijmaken'
+              icon: <Image src="/images/icon_key_red.jpg" alt="Autoschlüssel nachmachen" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: 'Autoschlüssel nachmachen',
+              description: 'Neuer Autoschlüssel vor Ort — gefräst, angelernt und geprüft, bevor der Partner wieder losfährt.',
+              linkText: 'Mehr zum Nachmachen',
+              linkUrl: '/leistungen/autoschluessel-nachmachen'
             },
             {
               id: 'feature-1',
-              icon: <Image src="/images/icon_van.webp" alt="Autosleutel Kwijt? Direct Hulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
-              title: 'Autosleutel Kwijt? Direct Hulp',
-              description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
-              linkText: 'Meer over mobiele service',
-              linkUrl: '/diensten'
+              icon: <Image src="/images/icon_van.webp" alt="Autoschlüssel verloren? Soforthilfe" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: 'Autoschlüssel verloren? Soforthilfe',
+              description: 'Wir kommen zu Ihrem Fahrzeug — für die Reparatur oder für einen komplett neuen Schlüssel.',
+              linkText: 'Mehr zum mobilen Service',
+              linkUrl: '/leistungen'
             },
             {
               id: 'feature-2',
-              icon: <Image src="/images/icon_map.webp" alt="Auto Op Slot? Schadevrij openen" width={90} height={90} style={{ borderRadius: '12px' }} />,
-              title: 'Auto Op Slot? Schadevrij openen',
-              description: `Binnen ${SITE_CONFIG.responseTime} ter plaatse. Onze lokale monteur is altijd in de buurt.`,
-              linkText: 'Vind een monteur',
-              linkUrl: '#contact'
+              icon: <Image src="/images/icon_map.webp" alt="Auto zu? Schadenfrei öffnen" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: 'Auto zu? Schadenfrei öffnen',
+              description: 'Spezialwerkzeug statt Glasbruch: Tür, Heckklappe und Zündschloss bleiben unbeschädigt.',
+              linkText: 'Auto öffnen lassen',
+              linkUrl: '/leistungen/auto-oeffnen-notdienst'
             },
             {
               id: 'feature-3',
-              icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
-              title: 'Vaste prijs vooraf',
-              description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
-              linkText: 'Bekijk onze tarieven',
-              linkUrl: '/prijzen'
+              icon: <Image src="/images/icon_price.webp" alt="Festpreis vorab" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: 'Festpreis vorab',
+              description: 'Keine Überraschung hinterher. Sie hören den Preis inkl. 19 % MwSt., bevor jemand losfährt.',
+              linkText: 'Preise ansehen',
+              linkUrl: '/preise'
             },
             {
               id: 'feature-4',
               icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
-              title: '12 Maanden Garantie',
-              description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
-              linkText: 'Bekijk waar wij service verlenen',
-              linkUrl: '/steden'
+              title: '12 Monate Garantie',
+              description: 'Auf jeden gelieferten Schlüssel und jedes Anlernen — schriftlich, zwölf Monate.',
+              linkText: 'Wo wir arbeiten',
+              linkUrl: '/staedte'
             },
             {
               id: 'feature-5',
-              icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
-              title: '24/7 Spoedhulp Bel Nu',
-              description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
-              linkText: 'Bel direct',
+              icon: <Image src="/images/icon_insurance.webp" alt="24/7 Notdienst" width={90} height={90} style={{ borderRadius: '12px' }} />,
+              title: '24/7 Notdienst — jetzt anrufen',
+              description: 'Tag und Nacht erreichbar, auch am Wochenende und an Feiertagen.',
+              linkText: 'Jetzt anrufen',
               linkUrl: `tel:${SITE_CONFIG.phoneTel}`
             }
           ]}
         />
       </div>
 
-      {/* ===== E-E-A-T MEET THE OWNER ===== */}
+      {/* ===== E-E-A-T: WER HINTER DEM NETZWERK STEHT ===== */}
+      {/*
+        * Dieser Abschnitt sagt bewusst nicht, dass hier ein deutscher
+        * Chef-Techniker ans Telefon geht.
+        *
+        * In der niederländischen Fassung stellt sich an dieser Stelle Berkan
+        * Acarol als "Gecertificeerd Hoofdtechnicus" vor, der jeden Anruf
+        * persönlich annimmt. Das ist dort wahr und hier nicht: in Deutschland
+        * fährt ein selbstständiger Partnerbetrieb zum Fahrzeug. Denselben Text
+        * zu übersetzen, hieße dem Kunden zu sagen, es komme jemand, der nicht
+        * kommt — und das ist genau die Zusage, an der ein Schlüsseldienst
+        * gemessen wird.
+        *
+        * Was stattdessen hier steht, ist nachprüfbar: wer das Netzwerk
+        * aufgebaut hat, mit welcher Technik gearbeitet wird, und wer vor Ort
+        * tatsächlich auftaucht.
+        */}
       <section style={{ padding: '4rem 0', background: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
           <div style={{
@@ -242,40 +267,47 @@ export default function HomePage() {
             alignItems: 'start'
           }}>
             <div>
-              <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>LOKALE EXPERTISE &amp; VERTROUWEN</p>
+              <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>WER HINTER AUTOSCHLÜSSEL24 STEHT</p>
               <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.75rem', marginTop: '0.25rem' }}>
-                Ontmoet Berkan Acarol
+                Ein Netzwerk, kein Callcenter
               </h2>
               <p style={{ fontWeight: 600, color: 'var(--orange-700)', fontSize: '0.95rem', marginBottom: '1rem' }}>
-                Gecertificeerd Hoofdtechnicus van Autosleutel24
+                Gegründet von Berkan Acarol — Autoschlüssel-Techniker seit über zehn Jahren
               </p>
               <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1.25rem', fontSize: '0.92rem' }}>
-                Wanneer u belt voor een autosleutelprobleem, krijgt u direct te maken met een specialist. Als hoofdtechnicus sta ik, Berkan Acarol, persoonlijk garant voor de kwaliteit van onze service. Met jarenlange actieve ervaring in de automotive slotenmakerij en gecertificeerd door marktleiders zoals Autel, programmeren wij elke sleutel snel, veilig en ter plaatse.
+                Autoschlüssel24 ist aus einer Werkstatt entstanden, nicht aus einem
+                Vermittlungsportal. Wer bei uns anruft, spricht mit jemandem, der weiß, was
+                FBS4, FEM/BDC und ein gesperrtes Steuergerät bedeuten — und der deshalb am
+                Telefon einen Festpreis nennen kann, statt vor Ort nachzurechnen. Zu Ihrem
+                Fahrzeug fährt der selbstständige Partnerbetrieb Ihrer Stadt, mit eigener
+                Diagnosetechnik und eigenem Schlüssellager. Wen wir aufnehmen, entscheidet
+                die Werkstatt: eigene Diagnosegeräte, Nachweis der Arbeit und ein Preis, der
+                vorher hält.
               </p>
               <ul style={{ listStyleType: 'none', padding: 0, margin: '0 0 1.5rem 0', fontSize: '0.88rem', color: 'var(--gray-700)', lineHeight: '1.7' }}>
                 <li style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Gecertificeerd Expert:</strong> Specialist in Autel IM608 Pro II &amp; AVDI Abrites.</span>
+                  <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Werkstatttechnik:</strong> Autel IM608 Pro II, AVDI Abrites, Lonsdor K518, VVDI.</span>
                 </li>
                 <li style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Ruime Ervaring:</strong> Jarenlange ervaring met alle automerken en systemen.</span>
+                  <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Alle Marken:</strong> vom Transponderschlüssel bis zum Keyless-Go-System.</span>
                 </li>
                 <li style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaar &amp; Lokaal:</strong> Eerlijke, vooraf gecommuniceerde vaste prijzen zonder verrassingen.</span>
+                  <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Festpreis vorab:</strong> der Preis am Telefon ist der Preis auf der Rechnung, inkl. MwSt.</span>
                 </li>
               </ul>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id="meet-owner-phone">
-                  📞 Bel Direct: {SITE_CONFIG.phone}
+                  📞 Jetzt anrufen: {SITE_CONFIG.phone}
                 </a>
-                <Link href="/over-ons" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-                  Lees meer over ons →
+                <Link href="/ueber-uns" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                  Mehr über uns →
                 </Link>
               </div>
             </div>
             <div>
               <img
-                src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
-                alt="Berkan Acarol — Autosleutelspecialist"
+                src="/images/team/berkan-acarol-autoschluessel-spezialist.webp"
+                alt="Berkan Acarol — Gründer von Autoschlüssel24"
                 style={{
                   width: '100%',
                   maxWidth: '340px',
@@ -299,9 +331,9 @@ export default function HomePage() {
       <section className={styles.services}>
         <div className="container">
           <div className={styles.sectionHead}>
-            <p className="section-eyebrow">ONZE DIENSTEN</p>
-            <h2 className="section-title">Alles voor Uw Autosleutel — Snel & Betrouwbaar</h2>
-            <p className="section-lead">Direct ter plaatse geprogrammeerd in onze mobiele werkplaats. Geen verborgen kosten en altijd vooraf een vaste prijs.</p>
+            <p className="section-eyebrow">UNSERE LEISTUNGEN</p>
+            <h2 className="section-title">Alles rund um Ihren Autoschlüssel — vor Ort erledigt</h2>
+            <p className="section-lead">Gefräst und angelernt dort, wo Ihr Fahrzeug steht, in der mobilen Werkstatt des Partners. Keine versteckten Kosten, der Festpreis steht vorher.</p>
           </div>
           <div className={styles.servicesGrid}>
             {services.map((s, i) => (
@@ -330,8 +362,18 @@ export default function HomePage() {
             ))}
           </div>
           <div className={styles.servicesCta} style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/autosleutel-bestellen-op-kenteken" className="btn btn-green">Autosleutel Bestellen op Kenteken</Link>
-            <Link href="/diensten" className="btn btn-navy">Alle diensten bekijken</Link>
+            {/*
+              * In der niederländischen Fassung steht hier "Autosleutel
+              * bestellen op kenteken": man gibt das Kennzeichen ein, das RDW
+              * gibt Marke, Modell und Baujahr zurück, und daraus folgt der
+              * Schlüssel. Ein öffentliches Fahrzeugregister dieser Art gibt es
+              * in Deutschland nicht — das Kraftfahrt-Bundesamt gibt
+              * Halterdaten nicht an Dritte heraus. Darum führt die Schaltfläche
+              * hier auf die Leistung selbst, und das Kennzeichen wird im
+              * Formular als Text aufgenommen (siehe VehicleWizard).
+              */}
+            <Link href="/leistungen/autoschluessel-nachmachen" className="btn btn-green">Autoschlüssel nachmachen lassen</Link>
+            <Link href="/leistungen" className="btn btn-navy">Alle Leistungen ansehen</Link>
           </div>
         </div>
       </section>
@@ -357,12 +399,26 @@ export default function HomePage() {
             width: p.width,
             height: p.height,
           }))}
-          title="Sleutels Die Wij Maakten, Klussen Die Wij Deden"
-          subtitle="Elke dag op locatie — van reservesleutel tot volledig sleutelverlies."
+          title="Schlüssel, die wir gemacht haben"
+          subtitle="Jeden Tag am Fahrzeug — vom Zweitschlüssel bis zum kompletten Schlüsselverlust."
         />
         <div className="container">
           <p className="section-lead" style={{ maxWidth: 880, margin: '2.5rem auto 0', lineHeight: '1.75', fontSize: '0.98rem', color: 'var(--gray-600)' }}>
-            Bekijk hierboven een selectie van onze afgeronde praktijkprojecten en tevreden klanten in Midden-Nederland en de Randstad. Als erkend autosleutel specialist zijn wij dagelijks actief met onze volledig uitgeruste mobiele servicebus in onder andere <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link>, <Link href="/steden/amersfoort" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amersfoort</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/nijmegen" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Nijmegen</Link>, <Link href="/steden/apeldoorn" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Apeldoorn</Link> en omstreken. Of het nu gaat om het bijmaken van een reservesleutel, het vakkundig inleren van keyless entry smart keys, of spoedreparaties bij een verloren of defecte autosleutel ter plaatse: wij garanderen schadevrij werk met originele OEM-diagnoseapparatuur. Dankzij onze transparante tarieven, snelle responstijden en jarenlange expertise bespaart u onnodige wegsleepkosten en lange wachttijden bij de officiële merkdealer. Blader door onze recente klussen en ontdek wat onze mobiele sleutelservice voor u kan betekenen.
+            Oben sehen Sie Aufträge aus dem Netzwerk: gefräste und angelernte Schlüssel,
+            schadenfrei geöffnete Fahrzeuge, getauschte Gehäuse. Dieselbe Arbeit erledigen
+            unsere Partner in <Link href="/staedte/berlin" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Berlin</Link>, <Link href="/staedte/hamburg" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Hamburg</Link>, <Link href="/staedte/muenchen" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>München</Link> und <Link href="/staedte/frankfurt" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Frankfurt am Main</Link> —
+            mit eigener Fahrzeugdiagnose, eigenem Schlüssellager und einem Festpreis, der vor
+            der Anfahrt steht. Ob Zweitschlüssel, Keyless-Go-System oder ein Fahrzeug, zu dem
+            kein Schlüssel mehr existiert: die Wegfahrsperre wird über die OBD-Schnittstelle
+            am Fahrzeug angelernt, mit derselben Technik wie in der Werkstatt. Damit entfallen
+            Abschleppkosten und Tage Wartezeit beim Vertragshändler.
+            {/*
+              * Diese Fotos sind in den Niederlanden entstanden — die Arbeit ist
+              * identisch, die Städte sind es nicht. Deshalb nennt der Text
+              * keine Stadt zum Bild und behauptet nicht, das Foto sei in Berlin
+              * gemacht. Sobald die deutschen Partner eigene Fotos liefern,
+              * gehören sie hierher; siehe config/gallery.ts.
+              */}
           </p>
         </div>
       </section>
@@ -371,44 +427,57 @@ export default function HomePage() {
       <section className={styles.serviceAreaSection}>
         <div className="container">
           <div className="text-center" style={{ marginBottom: '2rem' }}>
-            <p className="section-eyebrow">WERKGEBIED</p>
-            <h2 className="section-title">Waar Wij Naartoe Komen</h2>
-            <p className="section-lead">Wij komen binnen {ARRIVAL} naar uw auto in Utrecht, de Randstad en Gelderland. Kies uw provincie of tik op de kaart.</p>
+            <p className="section-eyebrow">EINSATZGEBIET</p>
+            <h2 className="section-title">Wohin wir kommen</h2>
+            <p className="section-lead">Unser Partner kommt {ARRIVAL} zu Ihrem Fahrzeug in Berlin, Hamburg, München und Frankfurt am Main. Wählen Sie Ihre Region.</p>
           </div>
           <ServiceAreaMap />
         </div>
       </section>
 
-      {/* ===== COMPARE ===== */}
+      {/* ===== VERGLEICH ===== */}
       <section className={styles.compare}>
         <div className="container">
           <div className={styles.compareGrid}>
             <div>
-              <p className="section-eyebrow">WAAROM ONS?</p>
-              <h2 className="section-title">Bespaar 30–50% vs Dealer</h2>
-              <p>Dealer-niveau apparatuur, transparante prijzen, dezelfde dag service. Wij komen naar u toe.</p>
+              <p className="section-eyebrow">WARUM WIR?</p>
+              {/*
+                * Die niederländische Überschrift lautet "Bespaar 30-50% vs
+                * Dealer" und die Tabelle nennt dort EUR 300-900 beim Händler
+                * gegen EUR 150-500 bei uns. Diese Zahlen stammen aus Jahren
+                * niederländischer Aufträge. Für Deutschland gibt es sie noch
+                * nicht: der Ab-Preis ergibt sich erst aus den Sätzen der vier
+                * Partner plus Marge (siehe site.config.ts). Eine erfundene
+                * Ersparnis in Prozent wäre eine Preisangabe, die niemand
+                * halten kann — in Deutschland zusätzlich ein Fall für § 5 UWG.
+                *
+                * Darum steht hier, was ohne Zahl wahr ist, und die Preise
+                * stehen auf /preise, sobald sie feststehen.
+                */}
+              <h2 className="section-title">Günstiger als der Vertragshändler — und ohne Abschleppen</h2>
+              <p>Werkstatttechnik, Festpreis vorab, am selben Tag. Unser Partner kommt zu Ihrem Fahrzeug.</p>
               <ul className={styles.checkList}>
-                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Goedkoper dan dealer — gegarandeerd</li>
-                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Geen sleepkosten — wij komen naar u</li>
-                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Zelfde dag service — ook weekend</li>
-                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Dealer-niveau tools: Autel, VVDI, AVDI, ACDP</li>
-                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> 12 maanden garantie</li>
-                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Verzekeringsklare facturen</li>
+                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Festpreis vor der Anfahrt, inkl. 19 % MwSt.</li>
+                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Keine Abschleppkosten — wir kommen zum Fahrzeug</li>
+                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Am selben Tag, auch am Wochenende</li>
+                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Werkstatttechnik: Autel, VVDI, AVDI, ACDP</li>
+                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> 12 Monate Garantie auf Schlüssel und Anlernen</li>
+                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Rechnung mit MwSt., für die Versicherung verwendbar</li>
               </ul>
-              <Link href="/diensten/autosleutel-bijmaken" className="btn btn-primary btn-lg">Autosleutel Bijmaken</Link>
+              <Link href="/leistungen/autoschluessel-nachmachen" className="btn btn-primary btn-lg">Autoschlüssel nachmachen</Link>
             </div>
             <div className={styles.compareTableWrap}>
               <table className="price-table">
                 <thead>
-                  <tr><th>Vergelijking</th><th>Dealer</th><th>Wij ✓</th></tr>
+                  <tr><th>Vergleich</th><th>Vertragshändler</th><th>Wir ✓</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Prijs</td><td>€300–€900</td><td><strong>€150–€500</strong></td></tr>
-                  <tr><td>Wachttijd</td><td>3–14 dagen</td><td><strong>Zelfde dag</strong></td></tr>
-                  <tr><td>Sleepkosten</td><td>€100–€150</td><td><strong>Geen</strong></td></tr>
-                  <tr><td>Locatie</td><td>U rijdt erheen</td><td><strong>Wij komen</strong></td></tr>
-                  <tr><td>Openingstijden</td><td>Ma-Vr 8–17</td><td><strong>24/7</strong></td></tr>
-                  <tr><td>Garantie</td><td>Ja</td><td><strong>12 maanden</strong></td></tr>
+                  <tr><td>Preis</td><td>Kostenvoranschlag nach Termin</td><td><strong>Festpreis am Telefon</strong></td></tr>
+                  <tr><td>Wartezeit</td><td>Schlüssel wird bestellt</td><td><strong>Am selben Tag</strong></td></tr>
+                  <tr><td>Abschleppen</td><td>Nötig, wenn kein Schlüssel da ist</td><td><strong>Entfällt</strong></td></tr>
+                  <tr><td>Ort</td><td>Sie fahren hin</td><td><strong>Wir kommen</strong></td></tr>
+                  <tr><td>Erreichbarkeit</td><td>Mo–Fr zu Öffnungszeiten</td><td><strong>24/7</strong></td></tr>
+                  <tr><td>Garantie</td><td>Ja</td><td><strong>12 Monate, schriftlich</strong></td></tr>
                 </tbody>
               </table>
             </div>
@@ -419,53 +488,61 @@ export default function HomePage() {
       {/* ===== REVIEWS ===== */}
       <section className={styles.reviews}>
         <div className="container">
-          <p className="section-eyebrow">KLANTBEOORDELINGEN</p>
-          <h2 className="section-title">Wat Onze Klanten Zeggen</h2>
+          <p className="section-eyebrow">KUNDENBEWERTUNGEN</p>
+          <h2 className="section-title">Was unsere Kunden sagen</h2>
           <GoogleReviewsCta />
         </div>
       </section>
 
-      {/* ── COMPREHENSIVE HOMEPAGE SEO GUIDE ARTICLE ── */}
+      {/* ── RATGEBERTEXT DER STARTSEITE ── */}
       <section style={{ padding: '3.5rem 0', background: '#ffffff' }}>
         <div className="container">
           <div className="seo-article-block" style={{ marginTop: 0 }}>
-            <h2>Autosleutelservice op Locatie — Sleutel Bijmaken in Utrecht en Omgeving</h2>
+            <h2>Autoschlüssel nachmachen lassen — vor Ort statt beim Vertragshändler</h2>
             <p>
-              Heeft u een nieuwe autosleutel nodig? Of wilt u een <strong>extra sleutel</strong> laten bijmaken zodat u altijd een reserve heeft?
-              Bij <strong>{SITE_CONFIG.name}</strong> kunt u terecht voor een complete <strong>autosleutelservice</strong>.
-              <strong>Wij maken</strong> sleutels voor <strong>vrijwel alle</strong> automerken en modellen —
-              van een eenvoudige transpondersleutel tot een moderne smart key met afstandsbediening.
+              Sie brauchen einen neuen Autoschlüssel, oder einen <strong>Zweitschlüssel</strong>,
+              damit nicht alles an einem einzigen hängt? Bei <strong>{SITE_CONFIG.name}</strong> bekommen
+              Sie beides dort, wo Ihr Fahrzeug steht. Unsere Partner fertigen Schlüssel für
+              <strong> nahezu alle Marken und Modelle</strong> — vom einfachen Transponderschlüssel
+              bis zum Keyless-Go-Schlüssel mit Komfortzugang.
             </p>
             <p>
-              Ons werkgebied is groot. Wij zijn actief in Utrecht, Amsterdam, Almere, Amersfoort
-              <strong> en omgeving</strong>. Wilt u een autosleutel <strong>bijmaken in Utrecht</strong>?
-              Dan zijn wij er gemiddeld binnen 15 tot 20 minuten. Staat u ergens anders geparkeerd? Geen probleem.
-              Wij komen direct naar uw locatie toe.
-            </p>
-
-            <h3>Autosleutels met Afstandsbediening Laten Bijmaken</h3>
-            <p>
-              Moderne auto&apos;s rijden niet meer met een gewone metalen sleutel. Ze hebben
-              <strong> autosleutels met afstandsbediening</strong> nodig — ook wel klapsleutels, smart keys
-              of keyless go sleutels genoemd. Wij leveren en programmeren <strong>gecertificeerde sleutels</strong>
-              die exact werken zoals de originele fabriekssleutel. U hoeft niet naar de dealer.
-              Wij doen alles ter plekke, bij u thuis of op het werk.
+              Gearbeitet wird vor Ort: in <strong>Berlin</strong>, <strong>Hamburg</strong>,
+              <strong> München</strong> und <strong>Frankfurt am Main</strong>. Sie nennen uns Marke,
+              Modell, Baujahr und Schlüsselart, wir nennen Ihnen den Festpreis und ein ehrliches
+              Zeitfenster — erst dann fährt jemand los. Steht Ihr Fahrzeug in einer Tiefgarage
+              oder am Straßenrand: das ist der Normalfall, nicht die Ausnahme.
             </p>
 
-            <h3>Autosleutels Gestolen? Wij Lossen Het Op</h3>
+            <h3>Funkschlüssel und Keyless Go nachmachen lassen</h3>
             <p>
-              Zijn uw <strong>autosleutels gestolen</strong>? Dan moet u snel handelen.
-              Een gestolen sleutel is een veiligheidsrisico. Wij wissen de gestolen sleutel uit het
-              geheugen van uw auto en maken direct een nieuwe aan. Zo kan niemand anders meer met uw
-              voertuig rijden. Dit is een spoedklus die wij 24 uur per dag, 7 dagen per week uitvoeren.
+              Moderne Fahrzeuge fahren nicht mehr mit einem reinen Metallschlüssel. Sie brauchen
+              einen <strong>Funkschlüssel</strong>, einen Klappschlüssel oder einen
+              <strong> Keyless-Go-Schlüssel</strong>, und in allen drei Fällen genügt ein gefräster
+              Rohling nicht: der Transponder muss an der <strong>Wegfahrsperre</strong> angelernt
+              werden, sonst dreht der Schlüssel das Schloss, startet aber den Motor nicht. Genau
+              das erledigen unsere Partner über die OBD-Schnittstelle am Fahrzeug — auch bei
+              Mercedes FBS4 und BMW FEM/BDC, wo das Steuergerät ausgelesen werden muss.
             </p>
 
-            <h3>Goedkoper dan de Dealer, met 12 Maanden Garantie</h3>
+            <h3>Autoschlüssel gestohlen? Alte Schlüssel müssen gelöscht werden</h3>
             <p>
-              Doordat wij direct bij u op locatie werken, bespaart u gemiddeld <strong>30% tot 50%</strong>
-              ten opzichte van de merkdealer. U betaalt geen sleepkosten en geen dure showroomtarieven.
-              Op elke nieuwe sleutel en reparatie geven wij standaard 12 maanden schriftelijke garantie.
-              Veel verzekeraars vergoeden onze factuur onder uw Beperkt Casco of Allrisk polis.
+              Ist Ihr <strong>Autoschlüssel gestohlen</strong> worden, reicht ein neuer Schlüssel
+              nicht aus: solange der alte in der Wegfahrsperre hinterlegt bleibt, startet er Ihr
+              Fahrzeug weiter. Wir legen einen neuen Schlüssel an und <strong>löschen die alten
+              Schlüsseldaten aus dem Steuergerät</strong>, sodass niemand sonst mehr fahren kann.
+              Das ist ein Notfall, und dafür sind wir rund um die Uhr erreichbar. Für die Anzeige
+              und für Ihre Versicherung erhalten Sie eine Rechnung mit ausgewiesener MwSt.
+            </p>
+
+            <h3>Festpreis vorab, 12 Monate Garantie</h3>
+            <p>
+              Weil unsere Partner zum Fahrzeug fahren, entfallen Abschleppkosten und die Tage, die
+              ein bestellter Schlüssel beim Händler braucht. Alle Preise auf dieser Seite sind
+              Bruttopreise <strong>inklusive 19 % Mehrwertsteuer</strong> — so wie es die
+              Preisangabenverordnung gegenüber Verbrauchern verlangt, und so wie es auf der
+              Rechnung steht. Auf jeden gelieferten Schlüssel und jedes Anlernen geben wir
+              <strong> 12 Monate schriftliche Garantie</strong>.
             </p>
           </div>
         </div>

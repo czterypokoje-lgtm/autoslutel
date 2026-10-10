@@ -4,90 +4,78 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import styles from './Navigation.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
-import { BRAND_COUNT } from '@/config/brands';
 
 /*
- * The services menu.
+ * Das Menü, mit deutschen Adressen und deutschen Worten.
  *
- * Four columns, each with something under it. It was six, two of which were a
- * heading over an empty space because the service has no children -- and one
- * of those, Batterij Vervangen, carried "(EUR 15 - EUR 20)" in the heading
- * itself: a price in a navigation label, and a fourth place a price lived
- * outside site.config.
+ * Die Gruppierung folgt der niederländischen Seite, weil sie sich dort bewährt
+ * hat: Öffnen, Nachmachen, Verloren, Reparieren. Die Begriffe kommen aus
+ * ./keywords.ts und sind nicht übersetzt, sondern die, mit denen in
+ * Deutschland gesucht wird — "nachmachen" statt "bijmaken", "anlernen" statt
+ * "programmeren", "Schlüssel im Auto eingeschlossen" statt "sleutel in auto".
  *
- * Batterij Vervangen is a repair to the key and sits under Autosleutels
- * Repareren. Contactslot Vervangen is NOT: replacing a car's ignition lock is
- * a mechanical job on the vehicle, EUR 299-599, and has nothing to do with
- * mending a key housing or a rubber button. It belongs with the other lock
- * work under Auto Slotenmaker -- a contactslot is a lock.
- *
- * The Autosleutel Kwijt column also listed "Alle Sleutels Kwijt (AKL)" under
- * itself. That was one page linked twice: the AKL service 301s to
- * /autosleutel-kwijt now, so the child and its own heading pointed at the
- * same URL under two different names -- exactly the confusion the redirect
- * was meant to end.
+ * Zwei Einträge der niederländischen Seite fehlen hier mit Absicht: "Bestellen
+ * op kenteken" (es gibt kein öffentliches deutsches Fahrzeugregister, auf das
+ * man einen Schlüssel bestellen könnte) und "Renault Sleutelkaart" (eine
+ * niederländische Besonderheit). "Contactslot vervangen" fehlt, weil es diese
+ * Dienstseite hier noch nicht gibt.
  */
-const DienstenStructure = [
+const LeistungenStructure = [
   {
-    title: 'Auto Slotenmaker',
-    href: '/diensten/auto-slotenmaker',
+    title: 'Auto öffnen',
+    href: '/leistungen/auto-oeffnen-notdienst',
     subs: [
-      { href: '/diensten/auto-openen-zonder-sleutel', label: 'Auto Openen Zonder Sleutel' },
-      { href: '/diensten/sleutel-in-auto', label: 'Sleutel in Auto' },
-      { href: '/diensten/deur-dichtgevallen', label: 'Deur Dichtgevallen' },
-      { href: '/diensten/kofferbak-openen', label: 'Kofferbak Openen' },
-      { href: '/diensten/sleutel-afgebroken-in-slot', label: 'Sleutel Afgebroken in Slot' },
-      { href: '/diensten/contactslot-auto-vervangen', label: 'Contactslot Vervangen' },
-      { href: '/mobiele-sleutelmaker', label: 'Mobiele Sleutelmaker' },
-    ]
+      { href: '/leistungen/auto-oeffnen-notdienst', label: 'Auto öffnen ohne Schlüssel' },
+      { href: '/leistungen/schluessel-im-auto-eingeschlossen', label: 'Schlüssel im Auto eingeschlossen' },
+      { href: '/leistungen/autotuer-zugefallen', label: 'Autotür zugefallen' },
+      { href: '/leistungen/kofferraum-oeffnen', label: 'Kofferraum öffnen' },
+      { href: '/leistungen/autoschluessel-abgebrochen', label: 'Autoschlüssel abgebrochen' },
+      { href: '/mobiler-schluesseldienst', label: 'Mobiler Schlüsseldienst' },
+    ],
   },
   {
-    title: 'Autosleutel Bijmaken',
-    href: '/diensten/autosleutel-bijmaken',
+    title: 'Autoschlüssel nachmachen',
+    href: '/leistungen/autoschluessel-nachmachen',
     subs: [
-      { href: '/diensten/transponder-programmeren', label: 'Transponder Programmeren' },
-      { href: '/diensten/afstandsbediening-bijmaken', label: 'Afstandsbediening Bijmaken' },
-      { href: '/diensten/smart-key-programmeren', label: 'Smart Key / Keyless' },
-      { href: '/diensten/reservesleutel-maken', label: 'Reservesleutel Maken' },
-      { href: '/autosleutel-bestellen-op-kenteken', label: 'Bestellen op Kenteken' },
-      { href: '/autosleutel-kopieren', label: 'Autosleutel Kopiëren' },
-      { href: '/autosleutel-bijmaken-in-de-buurt', label: 'Bijmaken in de Buurt' },
-      { href: '/autosleutel-laten-maken', label: 'Autosleutel Laten Maken' },
-      { href: '/motorsleutel-bijmaken', label: 'Motorsleutel Bijmaken' },
-    ]
+      { href: '/leistungen/transponder-anlernen', label: 'Transponder anlernen' },
+      { href: '/leistungen/funkschluessel-nachmachen', label: 'Funkschlüssel nachmachen' },
+      { href: '/leistungen/keyless-go-schluessel', label: 'Keyless Go / Smart Key' },
+      { href: '/leistungen/ersatzschluessel-anfertigen', label: 'Ersatzschlüssel anfertigen' },
+      { href: '/autoschluessel-kopieren', label: 'Autoschlüssel kopieren' },
+      { href: '/autoschluessel-nachmachen-in-der-naehe', label: 'Nachmachen in der Nähe' },
+      { href: '/autoschluessel-nachmachen-lassen', label: 'Nachmachen lassen' },
+      { href: '/motorradschluessel-nachmachen', label: 'Motorradschlüssel nachmachen' },
+    ],
   },
   {
-    title: 'Autosleutel Kwijt',
-    href: '/autosleutel-kwijt',
+    title: 'Autoschlüssel verloren',
+    href: '/autoschluessel-verloren',
     subs: [
-      { href: '/diensten/noodopening-auto', label: 'Noodopening' },
-      { href: '/autosleutel-gestolen', label: 'Autosleutel Gestolen' },
-      { href: '/renault-sleutelkaart-kwijt-of-kapot', label: 'Renault Sleutelkaart' },
-    ]
+      { href: '/leistungen/alle-autoschluessel-verloren', label: 'Alle Schlüssel verloren' },
+      { href: '/autoschluessel-gestohlen', label: 'Autoschlüssel gestohlen' },
+    ],
   },
   {
-    title: 'Autosleutels Repareren',
-    href: '/diensten/autosleutels-repareren',
+    title: 'Autoschlüssel reparieren',
+    href: '/leistungen/autoschluessel-reparieren',
     subs: [
-      { href: '/diensten/behuizing-vervangen', label: 'Behuizing Vervangen' },
-      { href: '/diensten/knoppen-repareren', label: 'Knoppen Repareren' },
-      { href: '/diensten/batterij-vervangen', label: 'Batterij Vervangen' },
-    ]
+      { href: '/leistungen/schluesselgehaeuse-wechseln', label: 'Schlüsselgehäuse wechseln' },
+      { href: '/leistungen/autoschluessel-tasten-reparieren', label: 'Tasten reparieren' },
+      { href: '/leistungen/autoschluessel-batterie-wechseln', label: 'Batterie wechseln' },
+    ],
   },
 ];
 
-const MerkenLinks = [
-  { href: '/merken/bmw-autosleutel-bijmaken', label: 'BMW' },
-  { href: '/merken/mercedes-autosleutel-bijmaken', label: 'Mercedes-Benz' },
-  { href: '/merken/volkswagen-autosleutel-bijmaken', label: 'Volkswagen' },
-  { href: '/merken/audi-autosleutel-bijmaken', label: 'Audi' },
-  { href: '/merken/toyota-autosleutel-bijmaken', label: 'Toyota' },
-  { href: '/merken/ford-autosleutel-bijmaken', label: 'Ford' },
-  { href: '/merken/volvo-autosleutel-bijmaken', label: 'Volvo' },
-  { href: '/merken/opel-autosleutel-bijmaken', label: 'Opel' },
-];
-
-
+/*
+ * Keine Markenseiten, also auch keine Markenlinks.
+ *
+ * Auf der niederländischen Seite stehen hier acht Marken. Die ~600
+ * Markenseiten sind in dieser App nicht enthalten (siehe Commit, der de/
+ * angelegt hat): sie müssten erst übersetzt sein, bevor sie auf einer neuen
+ * Domain online dürfen. Ein Menüeintrag, der ins Nichts führt, ist schlimmer
+ * als keiner.
+ */
+const MarkenLinks: { href: string; label: string }[] = [];
 
 export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -108,10 +96,10 @@ export default function Navigation() {
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
         {/* Logo */}
-        <Link href="/" className={styles.logo} aria-label="Autosleutel24.nl — 24/7 Autosleutelspecialist Utrecht homepage">
+        <Link href="/" className={styles.logo} aria-label="Autoschluessel24.de — 24/7 Autoschlüssel-Notdienst, Startseite">
           <Image
-            src="/images/logo/autosleutel24-logo-slotenmaker-utrecht.webp"
-            alt="Autosleutel24 Logo"
+            src="/images/logo/autoschluessel24-logo-schluesseldienst.webp"
+            alt="Autoschluessel24 Logo"
             width={128}
             height={38}
             style={{ height: '38px', width: 'auto', display: 'block' }}
@@ -119,17 +107,17 @@ export default function Navigation() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className={styles.nav} role="navigation" aria-label="Hoofdnavigatie">
-          {/* Diensten dropdown */}
+        <nav className={styles.nav} role="navigation" aria-label="Hauptnavigation">
+          {/* Leistungen-Dropdown */}
           <div className={styles.dropdown}>
             <button className={styles.navBtn} aria-haspopup="true">
-              Diensten
+              Leistungen
               <svg className={styles.chevron} width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>
             </button>
             <div className={styles.dropMenuLarge}>
-              <div className={styles.dropHeader}>Onze Diensten</div>
+              <div className={styles.dropHeader}>Unsere Leistungen</div>
               <div className={styles.dropGridLarge}>
-                {DienstenStructure.map(pillar => (
+                {LeistungenStructure.map(pillar => (
                   <div key={pillar.title} className={styles.dropColumn}>
                     <Link href={pillar.href} className={styles.pillarTitle}>
                       {pillar.title}
@@ -145,46 +133,50 @@ export default function Navigation() {
                 ))}
               </div>
               <div className={styles.dropDivider} />
-              <Link href="/diensten" className={styles.dropAll}>Alle diensten bekijken →</Link>
+              <Link href="/leistungen" className={styles.dropAll}>Alle Leistungen ansehen →</Link>
             </div>
           </div>
 
-          {/* Merken dropdown */}
+          {/* Marken-Dropdown: ausgeblendet, solange es keine Markenseiten gibt */}
+          {MarkenLinks.length > 0 && (
           <div className={styles.dropdown}>
             <button className={styles.navBtn} aria-haspopup="true">
-              Merken
+              Marken
               <svg className={styles.chevron} width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>
             </button>
             <div className={styles.dropMenu}>
-              <div className={styles.dropHeader}>Populaire Merken</div>
+              <div className={styles.dropHeader}>Beliebte Marken</div>
               <div className={styles.dropGrid}>
-                {MerkenLinks.map(l => (
+                {MarkenLinks.map(l => (
                   <Link key={l.href} href={l.href} className={styles.dropItem}>{l.label}</Link>
                 ))}
               </div>
-              <div className={styles.dropDivider} />
-              <Link href="/merken" className={styles.dropAll}>Alle {BRAND_COUNT} merken →</Link>
             </div>
           </div>
+          )}
 
 
-          <Link href="/steden" className={styles.navLink}>Steden</Link>
-          <Link href="/prijzen" className={styles.navLink}>Prijzen</Link>
-          <Link href="/blog" className={styles.navLink}>Blog &amp; Advies</Link>
-          <Link href="/kennisbank" className={styles.navLink}>Kennisbank</Link>
-          <Link href="/over-ons" className={styles.navLink}>Over Ons</Link>
+          <Link href="/staedte" className={styles.navLink}>Städte</Link>
+          <Link href="/preise" className={styles.navLink}>Preise</Link>
+          {/*
+            * Blog und Kennisbank gibt es auf der niederländischen Seite; ihre
+            * Artikel sind noch nicht übersetzt, deshalb stehen die Links hier
+            * nicht — ein Menüpunkt, der auf eine 404 zeigt, ist schlimmer als
+            * ein fehlender.
+            */}
+          <Link href="/ueber-uns" className={styles.navLink}>Über uns</Link>
         </nav>
 
         {/* CTA */}
         <div className={styles.actions}>
-          <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.phoneLink} id="nav-phone-cta" aria-label={`Bel direct: ${SITE_CONFIG.phone}`}>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.phoneLink} id="nav-phone-cta" aria-label={`Jetzt anrufen: ${SITE_CONFIG.phone}`}>
             <svg className={styles.phoneIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
             </svg>
             <span>{SITE_CONFIG.phone}</span>
           </a>
-          <Link href="/contact" className={styles.ctaBtn} id="nav-offerte-cta">
-            Offerte Aanvragen
+          <Link href="/kontakt" className={styles.ctaBtn} id="nav-angebot-cta">
+            Angebot anfordern
           </Link>
         </div>
 
@@ -192,7 +184,7 @@ export default function Navigation() {
         <button
           className={`${styles.hamburger} ${mobileOpen ? styles.hamburgerOpen : ''}`}
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? 'Menu sluiten' : 'Menu openen'}
+          aria-label={mobileOpen ? 'Menü schließen' : 'Menü öffnen'}
           aria-expanded={mobileOpen}
         >
           <span /><span /><span />
@@ -203,20 +195,20 @@ export default function Navigation() {
       {mobileOpen && (
         <>
           <div className={styles.mobileOverlay} onClick={() => setMobileOpen(false)} aria-hidden="true" />
-          <div className={`${styles.mobileDrawer} ${styles.mobileDrawerOpen}`} role="dialog" aria-modal="true" aria-label="Navigatiemenu">
+          <div className={`${styles.mobileDrawer} ${styles.mobileDrawerOpen}`} role="dialog" aria-modal="true" aria-label="Navigationsmenü">
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.mobilePhone} onClick={() => setMobileOpen(false)}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" aria-hidden="true">
                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
               </svg>
-              Bel Nu: {SITE_CONFIG.phone}
+              Jetzt anrufen: {SITE_CONFIG.phone}
             </a>
 
 
 
             <div className={styles.mobileSection}>
-              <div className={styles.mobileSectionTitle}>Diensten</div>
-              <div className={styles.mobileDienstenGroup}>
-                {DienstenStructure.map(pillar => (
+              <div className={styles.mobileSectionTitle}>Leistungen</div>
+              <div className={styles.mobileLeistungenGroup}>
+                {LeistungenStructure.map(pillar => (
                   <div key={pillar.title} className={styles.mobilePillarBlock}>
                     <Link href={pillar.href} className={styles.mobilePillarLink} onClick={() => setMobileOpen(false)}>
                       {pillar.title}
@@ -232,17 +224,16 @@ export default function Navigation() {
             </div>
 
             <div className={styles.mobileSection}>
-              <div className={styles.mobileSectionTitle}>Merken</div>
-              {MerkenLinks.map(l => <Link key={l.href} href={l.href} className={styles.mobileLink} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
-              <Link href="/merken" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Alle {BRAND_COUNT} merken →</Link>
+              {MarkenLinks.length > 0 && <div className={styles.mobileSectionTitle}>Marken</div>}
+              {MarkenLinks.map(l => <Link key={l.href} href={l.href} className={styles.mobileLink} onClick={() => setMobileOpen(false)}>{l.label}</Link>)}
             </div>
 
             <div className={styles.mobileDivider} />
-            <Link href="/steden" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Steden</Link>
-            <Link href="/prijzen" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Prijzen</Link>
-            <Link href="/blog" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Blog &amp; Advies</Link>
-            <Link href="/over-ons" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Over Ons</Link>
-            <Link href="/contact" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Contact</Link>
+            <Link href="/staedte" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Städte</Link>
+            <Link href="/preise" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Preise</Link>
+            <Link href="/partner-werden" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Partner werden</Link>
+            <Link href="/ueber-uns" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Über uns</Link>
+            <Link href="/kontakt" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Kontakt</Link>
           </div>
         </>
       )}

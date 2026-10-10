@@ -18,7 +18,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
  * laten maken"), and it was landing on 404s and on pages that never used the
  * phrase.
  *
- * This page is deliberately NOT a second copy of /diensten/autosleutel-bijmaken.
+ * This page is deliberately NOT a second copy of /leistungen/autoschluessel-nachmachen.
  * That page is the transactional one. This one answers the question that sits
  * in front of it — where do I have a car key made, and what does each route
  * cost me in time and money — and then hands every brand-shaped query to the
@@ -30,15 +30,15 @@ export const metadata: Metadata = {
   title: { absolute: 'Autosleutel Laten Maken: Dealer, Slotenmaker of Mobiel?' },
   description: `Autosleutel laten maken? Vergelijk dealer, slotenmaker en mobiele specialist op prijs en tijd. Bij ons op locatie, met de prijs vooraf en 12 maanden garantie.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/autosleutel-laten-maken`,
+    canonical: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-lassen`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/autosleutel-laten-maken`,
-      'x-default': `${SITE_CONFIG.domain}/autosleutel-laten-maken`,
+      'nl-NL': `${SITE_CONFIG.domain}/autoschluessel-nachmachen-lassen`,
+      'x-default': `${SITE_CONFIG.domain}/autoschluessel-nachmachen-lassen`,
     },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/autosleutel-laten-maken`,
+    url: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-lassen`,
     title: 'Autosleutel laten maken: dealer, slotenmaker of mobiel?',
     description:
       'Drie manieren om een autosleutel te laten maken, wat elke route kost en hoe lang het duurt.',
@@ -90,7 +90,7 @@ export default function AutosleutelLatenMaken() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Autosleutel laten maken', item: `${SITE_CONFIG.domain}/autosleutel-laten-maken` },
+      { '@type': 'ListItem', position: 2, name: 'Autosleutel laten maken', item: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-lassen` },
     ],
   };
 
@@ -106,7 +106,7 @@ export default function AutosleutelLatenMaken() {
         lead="Een nieuwe autosleutel laat u maken bij de dealer, bij een slotenmaker of bij een specialist die naar u toe komt. Het verschil zit in tijd, prijs en of uw auto ergens naartoe moet."
         facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
-          src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
+          src: '/images/seo/autoschluessel_spezialist_background.webp',
           alt: 'Sleutelwand met autosleutels per merk in de servicebus van Autosleutel24',
         }}
       >
@@ -151,7 +151,7 @@ export default function AutosleutelLatenMaken() {
             Welke route past, hangt af van uw situatie. Heeft u nog een werkende sleutel, dan is een
             tweede sleutel de goedkoopste oplossing. Is uw sleutel kwijt, dan leest een specialist de
             code uit de auto. Is hij alleen kapot, kijk dan eerst of{' '}
-            <Link href="/diensten/autosleutels-repareren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/leistungen/autoschluessel-reparieren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               autosleutel repareren
             </Link>{' '}
             volstaat.
@@ -187,7 +187,7 @@ export default function AutosleutelLatenMaken() {
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
             Bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer} en afhankelijk van merk, model en
             bouwjaar. U hoort de exacte prijs telefonisch voordat wij vertrekken.{' '}
-            <Link href="/prijzen" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/preise" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               Bekijk het volledige prijsoverzicht →
             </Link>
           </p>
@@ -241,15 +241,15 @@ export default function AutosleutelLatenMaken() {
           ))}
           <p style={{ marginTop: '2rem', color: 'var(--gray-600)', lineHeight: 1.7 }}>
             Weet u al wat u nodig heeft? Alles over prijs, werkwijze en garantie staat op{' '}
-            <Link href="/diensten/autosleutel-bijmaken" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/leistungen/autoschluessel-nachmachen" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               autosleutel bijmaken
             </Link>
             . Is uw sleutel weg, begin dan bij{' '}
-            <Link href="/autosleutel-kwijt" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/autoschluessel-verloren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               autosleutel kwijt
             </Link>
             . Wilt u weten waarom een kopie niet altijd start, lees dan{' '}
-            <Link href="/autosleutel-kopieren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/autoschluessel-kopieren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               autosleutel kopiëren
             </Link>
             .

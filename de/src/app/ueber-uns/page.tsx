@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   },
   description: `Maak kennis met Autosleutel24. Onder leiding van Berkan Acarol bieden wij professionele, mobiele autosleutelservice in de gehele Randstad en Midden-Nederland.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/over-ons`,
+    canonical: `${SITE_CONFIG.domain}/ueber-uns`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/over-ons`,
-      'x-default': `${SITE_CONFIG.domain}/over-ons`,
+      'nl-NL': `${SITE_CONFIG.domain}/ueber-uns`,
+      'x-default': `${SITE_CONFIG.domain}/ueber-uns`,
     },
   },
 };
@@ -23,7 +23,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-    { '@type': 'ListItem', position: 2, name: 'Over Ons', item: `${SITE_CONFIG.domain}/over-ons` },
+    { '@type': 'ListItem', position: 2, name: 'Over Ons', item: `${SITE_CONFIG.domain}/ueber-uns` },
   ],
 };
 
@@ -59,7 +59,7 @@ const personSchema = {
       name: 'AVDI Abrites Gecertificeerd Technicus',
     },
   ],
-  url: `${SITE_CONFIG.domain}/over-ons`,
+  url: `${SITE_CONFIG.domain}/ueber-uns`,
 };
 
 export default function OverOnsPage() {
@@ -69,7 +69,7 @@ export default function OverOnsPage() {
       <script id="over-ons-person-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       <main>
       <section style={{ 
-        background: 'linear-gradient(135deg, rgba(7,14,26,0.85) 0%, rgba(10,22,40,0.95) 100%), url("/images/seo/auto_sleutel_utrecht_achtergrond_service.webp")',
+        background: 'linear-gradient(135deg, rgba(7,14,26,0.85) 0%, rgba(10,22,40,0.95) 100%), url("/images/seo/auto_schluessel_hintergrund_service.webp")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         padding: '6rem 2rem' 
@@ -104,7 +104,7 @@ export default function OverOnsPage() {
 
           <div>
             <img
-              src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+              src="/images/team/berkan-acarol-autoschluessel-spezialist.webp"
               alt="Berkan Acarol — Hoofdtechnicus"
               style={{
                 width: '100%',
@@ -132,7 +132,7 @@ export default function OverOnsPage() {
           </div>
           <div>
             <img 
-              src="/images/seo/auto_sleutel_utrecht_24uur_workshop.webp" 
+              src="/images/seo/auto_schluessel_24stunden_workshop.webp" 
               alt="Professionele autosleutel werkplaats en gereedschap" 
               style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
@@ -147,7 +147,7 @@ export default function OverOnsPage() {
           </div>
           <div>
             <img 
-              src="/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.webp" 
+              src="/images/seo/schluesseldienst_arbeiten_24stunden.webp" 
               alt="Werkzaamheden op locatie door monteur" 
               style={{ width: '100%', maxWidth: '340px', height: '210px', objectFit: 'cover', objectPosition: 'top', borderRadius: '4px', border: '1px solid #cbd5e1', display: 'block' }} 
             />
@@ -202,7 +202,7 @@ export default function OverOnsPage() {
         </div>
 
         <div style={{ textAlign: 'center', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/contact" className="btn btn-primary btn-lg" id="over-ons-contact-cta">
+          <Link href="/kontakt" className="btn btn-primary btn-lg" id="over-ons-contact-cta">
             📞 Neem Contact Op
           </Link>
           <a

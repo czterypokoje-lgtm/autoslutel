@@ -1,148 +1,102 @@
 import { MetadataRoute } from 'next';
 import { SITE_CONFIG, siteIsReady } from '@/config/site.config';
-import { ZAKELIJK_SEGMENTS } from '@/config/zakelijk';
-import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { ZAKELIJK_SEGMENTS } from '@/config/geschaeftskunden';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/leistungen';
 import { CITIES } from '@/config/cities';
-import { BRANDS } from '@/config/brands';
-import { isNoindexBrand, isNoindexCity } from '@/config/thinPages';
+import { isNoindexCity } from '@/config/thinPages';
 import { SERVICE_REGIONS } from '@/config/regions';
-import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
 import { lastModifiedFor } from '@/lib/contentDates';
-import fs from 'fs';
-import path from 'path';
 
+/*
+ * Nur URLs, die es gibt.
+ *
+ * Die niederländische Sitemap listet zusätzlich 59 Markenseiten, rund dreißig
+ * Blogartikel und eine Kennisbank. Diese drei Bereiche sind in dieser App
+ * nicht enthalten (siehe config/services.ts und BrandsLogoGrid), also stehen
+ * sie auch nicht hier: eine Sitemap, die auf 404 zeigt, ist der schnellste
+ * Weg, das Vertrauen in alle übrigen Einträge zu verlieren.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
   /* Eine Vorschau listet nichts: siehe robots.ts. */
   if (!siteIsReady()) return [];
 
   const base = SITE_CONFIG.domain;
 
-  // 1. Core Pages
+  // 1. Kernseiten
   const corePages = [
-    '', '/diensten', '/steden', '/merken', '/prijzen', '/blog', '/kennisbank',
-    '/over-ons', '/galerij', '/beoordelingen', '/veelgestelde-vragen',
-    '/contact', '/privacybeleid', '/cookiebeleid',
-    '/autosleutel-kwijt', '/autosleutel-bestellen-op-kenteken',
+    '', '/leistungen', '/staedte', '/preise',
+    '/ueber-uns', '/galerie', '/bewertungen', '/haeufige-fragen',
+    '/kontakt', '/impressum', '/datenschutz', '/cookie-richtlinie', '/agb',
     /*
-     * Two pages built from the Search Console export rather than from a
-     * guess: "gestolen" is 612 impressions sitting at position 50 against a
-     * blog post that sells nothing, and the sleutelmaker/slotenmaker family
-     * is 708 impressions of people looking for a trade rather than a task.
+     * Die eigenständigen Landingpages. Jede davon antwortet auf eine eigene
+     * Suchintention, die die Leistungsseiten nicht abdecken: "verloren" und
+     * "gestohlen" sind Notfälle, "in der Nähe" ist eine lokale Suche ohne
+     * Stadtnamen, "kopieren" und "nachmachen lassen" sind dieselbe Arbeit in
+     * anderen Worten, und "mobiler Schlüsseldienst" sucht ein Gewerbe statt
+     * einer Leistung.
      */
-    '/autosleutel-gestolen', '/mobiele-sleutelmaker',
-    /*
-     * "in de buurt" is already at position 8.4 with the best click rate of
-     * any local query in the export, ranking against the city hub because
-     * nothing answered it directly. "kopieren" is 798 impressions landing on
-     * a 404.
-     */
-    '/autosleutel-bijmaken-in-de-buurt', '/autosleutel-kopieren',
-    /*
-     * "laten maken" (17,314 impressions across 212 queries, pos 47) and the
-     * Renault sleutelkaart queries (about 425 impressions, no clicks) had no
-     * page to land on.
-     */
-    '/autosleutel-laten-maken', '/renault-sleutelkaart-kwijt-of-kapot',
-    // Replaces the twelve cut car brands with the ten motorcycle brands on Dutch roads, as one page.
-    '/motorsleutel-bijmaken',
-    // Linked from the footer of every page and indexable, but was never
-    // listed here — the only orphan left after the model pages came out.
-    '/algemene-voorwaarden',
-    // B2B and recruitment. Different audience and different queries from the
-    // consumer pages, so they earn their own entries rather than riding along.
-    '/zakelijk'
+    '/autoschluessel-verloren', '/autoschluessel-gestohlen',
+    '/autoschluessel-nachmachen-in-der-naehe', '/autoschluessel-kopieren',
+    '/autoschluessel-nachmachen-lassen', '/mobiler-schluesseldienst',
+    '/motorradschluessel-nachmachen',
+    // B2B und Partnergewinnung: anderes Publikum, andere Suchanfragen.
+    '/geschaeftskunden', '/partner-werden',
   ].map(p => ({
     url: `${base}${p}`,
     lastModified: lastModifiedFor(
       p || '/',
       p === '' ? 'home'
-        : ['/privacybeleid', '/cookiebeleid', '/algemene-voorwaarden'].includes(p) ? 'legal'
-        : p === '/prijzen' ? 'prijzen'
-        : p === '/kennisbank' ? 'kennisbank'
-        : p === '/blog' ? 'blog'
-        : p === '/diensten' ? 'diensten'
-        : p === '/steden' ? 'steden'
-        : p === '/merken' ? 'merken'
+        : ['/datenschutz', '/cookie-richtlinie', '/agb', '/impressum'].includes(p) ? 'legal'
+        : p === '/preise' ? 'preise'
+        : p === '/leistungen' ? 'leistungen'
+        : p === '/staedte' ? 'staedte'
         : 'static'
     ),
     changeFrequency: 'weekly' as const,
     priority: p === '' ? 1.0 : 0.8,
-    images: [`${base}/og-image.png`, `${base}/logo.png`],
   }));
 
-  // 2. Service Pages
-  // `auto-slotenmaker` and `autosleutel-bijmaken` are standalone route folders
-  // rather than DIENSTEN entries, so they were missing from the sitemap even
-  // though the navigation links to them from every page.
-  const STANDALONE_SERVICES = ['auto-slotenmaker', 'autosleutel-bijmaken'];
-
-  const serviceSlugs = Array.from(
-    new Set([...DIENSTEN.filter(s => !REDIRECTED_SERVICE_SLUGS.has(s.slug)).map(s => s.slug), ...STANDALONE_SERVICES])
-  );
+  // 2. Leistungsseiten
+  const serviceSlugs = DIENSTEN
+    .filter(s => !REDIRECTED_SERVICE_SLUGS.has(s.slug))
+    .map(s => s.slug);
 
   const servicePages = serviceSlugs.map(slug => ({
-    url: `${base}/diensten/${slug}`,
-    lastModified: lastModifiedFor(`/diensten/${slug}`, 'diensten'),
+    url: `${base}/leistungen/${slug}`,
+    lastModified: lastModifiedFor(`/leistungen/${slug}`, 'leistungen'),
     changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));
 
-  // 3. City Pages
-  const cityPages = CITIES.filter(c => !isNoindexCity(c.slug)).map(c => {
-    const images = [];
-    if (fs.existsSync(path.join(process.cwd(), 'public', 'images', `autosleutel-bijmaken-${c.slug}.webp`))) {
-      images.push(`${base}/images/autosleutel-bijmaken-${c.slug}.webp`);
-    }
-    return {
-      url: `${base}/steden/${c.slug}`,
-      lastModified: lastModifiedFor(`/steden/${c.slug}`, 'steden'),
-      changeFrequency: 'monthly' as const,
-      priority: 0.85,
-      images,
-    };
-  });
-
-  // 3b. Province hubs: Utrecht, Noord-Holland, Zuid-Holland, Gelderland, Flevoland.
-  const regionPages = SERVICE_REGIONS.map(r => ({
-    url: `${base}/regio/${r.slug}`,
-    lastModified: lastModifiedFor(`/regio/${r.slug}`, 'steden'),
-    changeFrequency: 'monthly' as const,
-    priority: 0.85,
-  }));
-
-  // 4. Brand Pages
-  const brandPages = BRANDS.filter(b => !isNoindexBrand(b.nameSlug)).map(b => ({
-    url: `${base}/merken/${b.nameSlug}-autosleutel-bijmaken`,
-    lastModified: lastModifiedFor(`/merken/${b.nameSlug}-autosleutel-bijmaken`, 'merken'),
-    changeFrequency: 'monthly' as const,
-    priority: 0.85,
-  }));
-
   /*
-   * 5. No model pages.
+   * 3. Städte — nur die vier mit einem Partner.
    *
-   * There used to be one page per brand-and-model pair — 664 of them, built
-   * from a single template and measuring 94-97% identical to one another.
-   * They now 301 to their brand page (see next.config.ts), and a sitemap
-   * should only ever list final URLs, never redirects.
+   * isNoindexCity ist das Erbe der niederländischen Seite und der Grund, dass
+   * sie keine Doorway-Pages hat: eine Stadtseite ist nur indexierbar, wenn
+   * dort wirklich jemand hinfährt. Darum stehen hier vier Städte und nicht
+   * vierhundert.
    */
-  // 8. Blog Pages
-  const blogPages = BLOG_POSTS
-    .filter(b => !REDIRECTED_BLOG_SLUGS.has(b.slug))
-    .map(b => ({
-      url: `${base}/blog/${b.slug}`,
-      lastModified: lastModifiedFor(`/blog/${b.slug}`, 'blog'),
-      changeFrequency: 'weekly' as const,
-      priority: 0.75,
-      images: [`${base}/og-image.png`],
-    }));
+  const cityPages = CITIES.filter(c => !isNoindexCity(c.slug)).map(c => ({
+    url: `${base}/staedte/${c.slug}`,
+    lastModified: lastModifiedFor(`/staedte/${c.slug}`, 'staedte'),
+    changeFrequency: 'monthly' as const,
+    priority: 0.85,
+  }));
+
+  // 3b. Regionen: Berlin, Hamburg, Bayern, Hessen.
+  const regionPages = SERVICE_REGIONS.map(r => ({
+    url: `${base}/regionen/${r.slug}`,
+    lastModified: lastModifiedFor(`/regionen/${r.slug}`, 'staedte'),
+    changeFrequency: 'monthly' as const,
+    priority: 0.85,
+  }));
 
   const zakelijkPages = ZAKELIJK_SEGMENTS.map((seg) => ({
-    url: `${base}/zakelijk/${seg.slug}`,
-    lastModified: new Date(),
+    url: `${base}/geschaeftskunden/${seg.slug}`,
+    lastModified: lastModifiedFor(`/geschaeftskunden/${seg.slug}`, 'static'),
     changeFrequency: 'monthly' as const,
-    /* Below the consumer service pages: fewer searches, but each enquiry is
-       worth several jobs rather than one. */
+    /* Unter den Verbraucherseiten: weniger Suchanfragen, aber jede Anfrage
+       ist mehrere Aufträge wert statt einen. */
     priority: 0.7,
   }));
 
@@ -151,8 +105,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...servicePages,
     ...regionPages,
     ...cityPages,
-    ...brandPages,
     ...zakelijkPages,
-    ...blogPages
   ];
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { breadcrumbSchema } from '@/utils/schema';
 import Link from 'next/link';
-import { ZAKELIJK_SEGMENTS } from '@/config/zakelijk';
+import { ZAKELIJK_SEGMENTS } from '@/config/geschaeftskunden';
 import { SITE_CONFIG } from '@/config/site.config';
 import styles from './page.module.css';
 
@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   title: 'Zakelijke Autosleutelservice voor Bedrijven',
   description:
     'Autosleutels voor garages, autobedrijven, import & export en wagenparken. Wij komen naar uw werkplaats of terrein, meerdere voertuigen per bezoek, één factuur.',
-  alternates: { canonical: `${SITE_CONFIG.domain}/zakelijk` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/geschaeftskunden` },
 };
 
 export default function ZakelijkHub() {
   return (
     <main>
-      <script id="bc-zakelijk" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Zakelijk', path: '/zakelijk' }])) }} />
+      <script id="bc-zakelijk" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Zakelijk', path: '/geschaeftskunden' }])) }} />
       <section className={styles.hero}>
         <div className={styles.inner}>
           <nav className={styles.crumbs} aria-label="Breadcrumb">
@@ -38,7 +38,7 @@ export default function ZakelijkHub() {
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone}>
               Bel {SITE_CONFIG.phone}
             </a>
-            <Link href="/zakelijk/garages" className={styles.btnOutline}>
+            <Link href="/geschaeftskunden/garages" className={styles.btnOutline}>
               Bekijk voor garages
             </Link>
           </div>
@@ -54,7 +54,7 @@ export default function ZakelijkHub() {
           </p>
           <div className={styles.grid}>
             {ZAKELIJK_SEGMENTS.map((s) => (
-              <Link key={s.slug} href={`/zakelijk/${s.slug}`} className={styles.card}>
+              <Link key={s.slug} href={`/geschaeftskunden/${s.slug}`} className={styles.card}>
                 <strong>{s.label}</strong>
                 <span className={styles.cardTitle}>{s.title}</span>
                 <span className={styles.cardText}>{s.metaDesc}</span>
@@ -99,7 +99,7 @@ export default function ZakelijkHub() {
             Wij breiden uit en zoeken zelfstandige autosleutelspecialisten — op
             dit moment vooral in Noord-Brabant en Limburg.
           </p>
-          <Link href="/monteur-worden" className={styles.btnOutline}>
+          <Link href="/partner-werden" className={styles.btnOutline}>
             Bekijk wat wij bieden
           </Link>
         </div>

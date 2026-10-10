@@ -1,43 +1,41 @@
 /**
- * Real per-URL modification dates for the sitemap.
+ * Echte lastmod-Daten je URL für die Sitemap.
  *
- * `sitemap.ts` used to stamp `new Date()` on all 851 URLs, so every build told
- * Google that the entire site had just changed. A lastmod that moves for every
- * page on every deploy carries no information, and Google learns to ignore it —
- * including on the pages you genuinely did update.
+ * Die niederländische Fassung stempelte eine Zeit lang `new Date()` auf alle
+ * 851 URLs, sodass jeder Build Google meldete, die ganze Seite habe sich
+ * gerade geändert. Ein lastmod, der sich bei jedem Deploy für jede Seite
+ * bewegt, trägt keine Information, und Google lernt, ihn zu ignorieren —
+ * auch auf den Seiten, die man wirklich überarbeitet hat.
  *
- * Dates are recorded per content group and only bumped when that group's
- * content actually changes. Keep them in the past; a future date is ignored.
+ * Die Daten stehen je Inhaltsgruppe und werden nur angehoben, wenn sich der
+ * Inhalt dieser Gruppe tatsächlich ändert. Immer in der Vergangenheit; ein
+ * Datum in der Zukunft wird ignoriert.
  */
 
-/** Bump when the shared page templates change in a way that alters the content. */
-export const TEMPLATE_REVISED = '2026-08-31';
+/** Anheben, wenn sich die gemeinsamen Vorlagen inhaltlich ändern. */
+export const TEMPLATE_REVISED = '2026-10-10';
 
-/** Per-section content revisions. Update the date when you edit that section. */
+/**
+ * Inhaltsstand je Abschnitt. Datum anpassen, wenn dieser Abschnitt bearbeitet
+ * wird. Alles steht auf dem Tag, an dem die deutschen Texte geschrieben
+ * wurden — es ist der erste Stand dieser Domain, nicht der niederländische.
+ */
 export const SECTION_REVISED: Record<string, string> = {
-  home: '2026-09-30',
-  diensten: '2026-09-30', // meta titles and descriptions rewritten from Search Console data
-  steden: '2026-09-30',
-  merken: '2026-09-30',
-  blog: '2026-09-30', // nine short descriptions lengthened
-  prijzen: '2026-09-30',
-  kennisbank: '2026-09-30',
-  legal: '2026-09-30', // privacybeleid, cookiebeleid, algemene voorwaarden
-  static: '2026-09-30', // over-ons, galerij, beoordelingen, contact, faq
+  home: '2026-10-10',
+  leistungen: '2026-10-10',
+  staedte: '2026-10-10',
+  preise: '2026-10-10',
+  legal: '2026-10-10', // Datenschutz, Cookie-Richtlinie, AGB, Impressum
+  static: '2026-10-10', // ueber-uns, galerie, bewertungen, kontakt, haeufige-fragen
 };
 
 /**
- * Individual overrides, for pages edited on their own. A slug listed here wins
- * over its section date.
+ * Einzelne Ausnahmen, für Seiten, die allein bearbeitet wurden. Ein hier
+ * eingetragener Pfad gewinnt gegen das Datum seines Abschnitts.
  */
-export const PAGE_REVISED: Record<string, string> = {
-  '/cookiebeleid': '2026-08-31',
-  '/privacybeleid': '2026-08-31',
-  '/steden/rotterdam': '2026-08-31',
-  '/contact': '2026-08-31',
-};
+export const PAGE_REVISED: Record<string, string> = {};
 
-/** Resolves the lastmod for a path, falling back to its section then the template date. */
+/** Löst den lastmod für einen Pfad auf: Seite, dann Abschnitt, dann Vorlage. */
 export function lastModifiedFor(path: string, section: keyof typeof SECTION_REVISED | string): Date {
   const iso =
     PAGE_REVISED[path] ??

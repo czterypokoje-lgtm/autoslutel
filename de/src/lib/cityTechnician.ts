@@ -2,7 +2,7 @@
  * Which technician does a city page show?
  *
  * Until this existed, the answer was "Berkan, always" — hardcoded into
- * src/app/steden/[citySlug]/page.tsx and rendered on all 62 city pages,
+ * src/app/staedte/[citySlug]/page.tsx and rendered on all 62 city pages,
  * including Maastricht, which is about 210 km from the Bussum base. The
  * photo, the name and the "binnen 30-60 min" promise were the same on every
  * one of them. That is a lie to a Maastricht customer before it is an SEO

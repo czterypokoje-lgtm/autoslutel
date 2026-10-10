@@ -50,7 +50,7 @@ const CATEGORY_WORDS: Array<[RegExp, string]> = [
 ];
 
 /** Said of a company card: then it is a cost, not something to pay back. */
-const COMPANY_PAID = /zakelijk|bedrijfspas|firmakaart|firma kaart|company|[sş]irket/i;
+const COMPANY_PAID = /geschaeftskunden|bedrijfspas|firmakaart|firma kaart|company|[sş]irket/i;
 
 /*
  * Money as a phone types it: "35", "35,20", "€35.20", "35 euro".

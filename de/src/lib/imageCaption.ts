@@ -3,7 +3,7 @@
  *
  * The gallery captions were built by stripping the extension, swapping
  * hyphens for spaces and title-casing whatever was left. Most of the
- * photographs in public/images/merken carry a six-character hash on the end
+ * photographs in public/images/marken carry a six-character hash on the end
  * to keep two shots of the same car apart, so visitors were reading
  * "Ford Autosleutel Bijmaken A8b252" under a real photo of a real job.
  *

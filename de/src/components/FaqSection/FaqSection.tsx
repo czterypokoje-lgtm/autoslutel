@@ -2,30 +2,44 @@ import React from 'react';
 import styles from './FaqSection.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
 
+/*
+ * Die Fragen, die eine Seite ohne eigene FAQ zeigt.
+ *
+ * Geschrieben gegen das, was in Deutschland auf der ersten Seite steht: ADAC,
+ * AutoScout24, Allianz und R+V ranken für "Autoschlüssel nachmachen" und
+ * schreiben, beim Schlüsseldienst gehe das bei modernen Schlüsseln nicht. Die
+ * zweite Frage hier ist genau diese Frage, und sie ist die wichtigste auf der
+ * Seite. Siehe ./keywords.ts.
+ *
+ * Keine Zahl, die nicht aus SITE_CONFIG kommt, und keine Ankunftszeit —
+ * siehe src/config/arrival.ts, warum hier keine Minutenangabe steht.
+ */
 const defaultFaqs = [
   {
-    question: 'Wat moet ik doen als ik mijn autosleutel kwijt ben?',
-    answer: 'Als u uw autosleutel kwijt bent, controleer dan eerst of er nog ergens een reservesleutel ligt. Is dit niet het geval, neem dan direct contact op met Autosleutel24 via 06 11 75 12 31. Wij komen met onze mobiele servicebussen binnen 30 tot 60 minuten naar uw locatie toe, openen de auto 100% schadevrij en programmeren direct een nieuwe sleutel ter plaatse. De verloren autosleutels worden bovendien direct uit het geheugen van de boordcomputer (ECU) gewist om diefstal te voorkomen.'
+    question: 'Was muss ich tun, wenn ich meinen Autoschlüssel verloren habe?',
+    answer: `Prüfen Sie zuerst, ob irgendwo noch ein Zweitschlüssel liegt — das ist immer der günstigste Weg. Wenn nicht, rufen Sie an${
+      SITE_CONFIG.phone && SITE_CONFIG.phone !== '__TBD__' ? ` (${SITE_CONFIG.phone})` : ''
+    }. Unser Partner kommt zu Ihrem Fahrzeug, öffnet es schadenfrei, fertigt einen neuen Schlüssel an und lernt ihn an der Wegfahrsperre an. Der verlorene Schlüssel wird dabei aus dem System gelöscht, damit er das Auto nicht mehr öffnet — und das Fahrzeug muss in der Regel nicht abgeschleppt werden.`
   },
   {
-    question: 'Waar kan ik snel een autosleutel laten bijmaken in Nederland?',
-    answer: 'U kunt snel een autosleutel laten bijmaken bij Autosleutel24 in Nederland. Onze volledig uitgeruste mobiele servicebussen patrouilleren dagelijks in de regio Utrecht, Amsterdam, Almere, Amersfoort en de gehele Randstad. In plaats van uw voertuig naar een dealer te slepen, komen onze specialisten naar uw huis, werk of pechlocatie toe en maken ter plaatse binnen een uur een nieuwe reservesleutel of smart key.'
+    question: 'Kann ein Schlüsseldienst moderne Autoschlüssel überhaupt nachmachen?',
+    answer: 'Ein klassischer Schlüsseldienst nicht — wer nur Schlüssel fräst, kann die elektronische Wegfahrsperre nicht anlernen, und ohne das startet der Motor nicht. Genau deshalb schreiben ADAC und die Versicherer-Ratgeber, man müsse zum Hersteller. Der Unterschied ist die Fahrzeugdiagnose: unsere Partner lernen den Transponder mit denselben Geräten an, die eine Werkstatt benutzt. Bei einzelnen sehr neuen Systemen, die der Hersteller nur über eine Online-Freigabe zulässt, geht es tatsächlich nicht — und das sagen wir am Telefon, statt für eine Anfahrt zu berechnen.'
   },
   {
-    question: 'Wat is de beste service voor autosleutel vervangen na verlies?',
-    answer: 'De beste service voor het vervangen van uw autosleutel na verlies is een mobiele autosleutelspecialist zoals Autosleutel24. Wij bieden snelle pechhulp op locatie, programmeren dealer-niveau transpondersleutels en zijn tot 60% goedkoper dan de officiële merkdealer. Bovendien hoeft u uw auto niet te laten wegslepen; onze gecertificeerde monteurs lossen het probleem direct op uw strandinglocatie op.'
+    question: 'Was kostet ein neuer Autoschlüssel?',
+    answer: 'Sie hören den Festpreis für Ihr Fahrzeug am Telefon, bevor jemand losfährt, und er ändert sich vor Ort nicht. Was er ist, hängt von Marke, Modell, Baujahr und Schlüsselart ab. Zum Vergleich: Verbraucherberichte nennen für Herstellerersatz 200 bis 500 Euro, bei komplexeren Funkschlüsseln mehr, zuzüglich Abschleppen und drei bis fünf Werktagen Wartezeit. Alle unsere Beträge sind Bruttopreise inklusive 19 % MwSt.'
   },
   {
-    question: 'Autosleutel kwijt, wat zijn de kosten voor een nieuwe sleutel?',
-    answer: `Als u uw autosleutel kwijt bent, liggen de kosten voor een nieuwe sleutel bij Autosleutel24 gemiddeld tussen de €${SITE_CONFIG.prices.unlock} en €${SITE_CONFIG.prices.smartKey}, inclusief frezen, inleren en programmeren op locatie. Dit is aanzienlijk goedkoper dan de dealer, waar de tarieven voor een vergelijkbare sleutel al snel tussen de €300 en €900 liggen (exclusief wegsleepkosten). U ontvangt bij ons altijd vooraf een vaste prijsopgave zonder verborgen kosten.`
+    question: 'Kann ein neuer Schlüssel angefertigt werden, wenn kein Original mehr da ist?',
+    answer: 'Ja. Das ist der Fall "alle Schlüssel verloren": das Fahrzeug wird geöffnet, die Schlüsseldaten werden über die OBD-Schnittstelle aus dem Steuergerät gelesen, ein Rohling wird auf Ihr Schließsystem gefräst und an der Wegfahrsperre angelernt. Es dauert länger als ein Zweitschlüssel und kostet mehr, aber es geht — und zwar dort, wo das Auto steht.'
   },
   {
-    question: 'Welke slotenmaker in Nederland kan een autosleutel zonder originele sleutel maken?',
-    answer: 'Autosleutel24 kan als gespecialiseerde autoslotenmaker in Nederland een nieuwe autosleutel maken wanneer u alle originele sleutels kwijt bent. Met onze geavanceerde Autel- en AVDI-diagnoseapparatuur lezen we de unieke mechanische en elektronische sleutelcodes rechtstreeks uit de computer (ECU/immobilizer) van uw voertuig via de OBD2-poort en slijpen we ter plekke een nieuwe sleutelbaard.'
+    question: 'Händler oder mobiler Dienst — was ist bei einem verlorenen Schlüssel besser?',
+    answer: 'Der Händler verlangt, dass das Fahrzeug in die Werkstatt kommt, bestellt den Schlüssel auf Fahrgestellnummer und braucht meist drei bis fünf Werktage. Unser Partner kommt am selben Tag zu Ihrem Fahrzeug und lernt den Schlüssel vor Ort an. Was der Händler dafür mehr hat, ist der Zugang zu einzelnen Systemen mit Online-Freigabe — und genau da schicken wir Sie selbst zum Händler, statt es zu versuchen.'
   },
   {
-    question: 'Autosleutel verloren, moet ik naar de dealer of kan een slotenmaker helpen?',
-    answer: 'Bij een verloren autosleutel kunt u het beste een mobiele slotenmaker zoals Autosleutel24 inschakelen in plaats van de dealer. De dealer vereist dat u uw auto naar de werkplaats laat slepen en hanteert vaak wachttijden van meerdere dagen of weken. Autosleutel24 komt dezelfde dag nog naar u toe, opent de auto schadevrij en programmeert direct een nieuwe werkende transpondersleutel.'
+    question: 'Welche Unterlagen brauche ich?',
+    answer: 'Ihren Personalausweis oder Pass und die Zulassungsbescheinigung Teil I. Damit weisen Sie nach, dass das Fahrzeug Ihnen gehört. Ohne diesen Nachweis wird kein Schlüssel angefertigt — das ist der Grund, warum sich ein Dritter für Ihr Auto keinen Schlüssel machen lassen kann.'
   }
 ];
 
@@ -82,7 +96,7 @@ export default function FaqSection({ customFaqs, cityName, brandName, pageUrl = 
         <div className={styles.faqHeader}>
           <p className="section-eyebrow">VEELGESTELDE VRAGEN</p>
           <h2 className="section-title">
-            {cityName ? `Veelgestelde Vragen in ${cityName}` : brandName ? `Veelgestelde Vragen over ${brandName} Autosleutels` : 'Alles over Autosleutels & Sloten'}
+            {cityName ? `Häufige Fragen aus ${cityName}` : brandName ? `Häufige Fragen zu ${brandName}-Autoschlüsseln` : 'Häufige Fragen zu Autoschlüsseln'}
           </h2>
           <p className="section-lead">
             {cityName ? `Lees hier de meest gestelde vragen over onze service in ${cityName}.` : brandName ? `Heeft u vragen over het bijmaken of inleren van een ${brandName} sleutel? Lees hier de meest gestelde vragen.` : 'Heeft u vragen over kosten, levertijden of reparaties? Bekijk onze meest gestelde vragen.'}

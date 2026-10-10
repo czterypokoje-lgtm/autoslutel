@@ -96,13 +96,13 @@ export default function ConsentBanner() {
             Wij gebruiken noodzakelijke cookies om de site te laten werken. Met uw
             toestemming gebruiken wij ook cookies voor statistieken en marketing.
             U kunt uw keuze altijd wijzigen. Lees meer in ons{' '}
-            <Link href="/cookiebeleid">cookiebeleid</Link> en{' '}
-            <Link href="/privacybeleid">privacybeleid</Link>.
+            <Link href="/cookie-richtlinie">cookiebeleid</Link> en{' '}
+            <Link href="/datenschutz">privacybeleid</Link>.
           </span>
           {/* Phones get one line: someone next to a locked car should see the page, not a wall of text. */}
           <span className={styles.brief}>
             Cookies voor de werking van de site en, met uw toestemming, voor statistieken en
-            marketing. <Link href="/cookiebeleid">Cookiebeleid</Link>.
+            marketing. <Link href="/cookie-richtlinie">Cookiebeleid</Link>.
           </span>
         </p>
 

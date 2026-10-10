@@ -15,7 +15,7 @@ import { DEEP_DIVE, RELAY_THEFT_MAKES, GHOST_ARTICLE } from '@/config/deepDives'
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/supabase/env';
 import { findCityTechnician, arrivalWindow, type PublicTechnician } from '@/lib/cityTechnician';
-import { DIENSTEN } from '@/config/diensten';
+import { DIENSTEN } from '@/config/leistungen';
 const BrandsLogoGrid = dynamic(() => import('@/components/BrandsLogoGrid/BrandsLogoGrid'));
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 const GallerySlider = dynamic(() => import('@/components/GallerySlider/GallerySlider'));
@@ -151,7 +151,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
   const { citySlug } = await params;
   const city = CITIES.find(c => c.slug === citySlug);
   if (!city) return {};
-  const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
+  const pageUrl = `${SITE_CONFIG.domain}/staedte/${citySlug}`;
   return {
     /*
      * "Sleutelmaker", not "Kopiëren".
@@ -189,7 +189,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
      * Canonical only, no alternates.
      *
      * A cluster is for one page in several languages, and a city page is not
-     * that: /steden/utrecht and /staedte/berlin are two different cities, not
+     * that: /staedte/utrecht and /staedte/berlin are two different cities, not
      * two translations of each other. This used to list the page as its own
      * 'nl-NL' and 'x-default', which said nothing; the thing to avoid is
      * wiring Utrecht to Berlin because both happen to be "the city page".
@@ -221,7 +221,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const { citySlug } = await params;
   const city = CITIES.find(c => c.slug === citySlug);
   if (!city) notFound();
-  const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
+  const pageUrl = `${SITE_CONFIG.domain}/staedte/${citySlug}`;
 
   /* Who actually covers this city, and how far away they really are. Null
      only when the roster could not be read at all. */
@@ -263,10 +263,10 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    '@id': `${SITE_CONFIG.domain}/steden/${citySlug}#service`,
+    '@id': `${SITE_CONFIG.domain}/staedte/${citySlug}#service`,
     name: `Autosleutel bijmaken en kwijt in ${city.city}`,
     serviceType: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
-    url: `${SITE_CONFIG.domain}/steden/${citySlug}`,
+    url: `${SITE_CONFIG.domain}/staedte/${citySlug}`,
     provider: getBaseLocalBusinessSchema(),
     areaServed: {
       '@type': 'City',
@@ -280,8 +280,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Steden', item: `${SITE_CONFIG.domain}/steden` },
-      { '@type': 'ListItem', position: 3, name: city.city, item: `${SITE_CONFIG.domain}/steden/${citySlug}` },
+      { '@type': 'ListItem', position: 2, name: 'Steden', item: `${SITE_CONFIG.domain}/staedte` },
+      { '@type': 'ListItem', position: 3, name: city.city, item: `${SITE_CONFIG.domain}/staedte/${citySlug}` },
     ],
   };
 
@@ -321,7 +321,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <div className={styles.heroUtrechtInner}>
               <div className={styles.heroTopContent}>
                 <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-                  <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/steden" style={{ color: 'var(--gray-500)' }}>Steden</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
+                  <Link href="/" style={{ color: 'var(--gray-500)' }}>Home</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <Link href="/staedte" style={{ color: 'var(--gray-500)' }}>Steden</Link> <span style={{ color: 'var(--gray-400)' }}>/</span> <span style={{ color: 'var(--navy-900)' }}>{city.city}</span>
                 </nav>
                 <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                   <HeroTrustBadge />
@@ -360,7 +360,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <section className={styles.hero}>
             <div className={styles.heroInner}>
               <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-                <Link href="/">Home</Link> <span>/</span> <Link href="/steden">Steden</Link> <span>/</span> <span>{city.city}</span>
+                <Link href="/">Home</Link> <span>/</span> <Link href="/staedte">Steden</Link> <span>/</span> <span>{city.city}</span>
               </nav>
               <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
                 <HeroTrustBadge />
@@ -387,7 +387,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 title: '24/7 Mobiele Slotenmaker',
                 description: `Wij rijden als lokale mobiele slotenmaker direct naar uw locatie in ${city.city} om u zonder vertraging weer op weg te helpen.`,
                 linkText: 'Meer over mobiele service',
-                linkUrl: '/diensten'
+                linkUrl: '/leistungen'
               },
               {
                 id: 'feature-2',
@@ -403,7 +403,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 title: 'Ervaren & Vaste Prijs',
                 description: `U krijgt vooraf een vaste prijs voor de klus in ${city.city}, zodat u nooit voor verrassingen komt te staan. Geen voorrijkosten, geen meerwerk achteraf.`,
                 linkText: 'Bekijk onze tarieven',
-                linkUrl: '/prijzen'
+                linkUrl: '/preise'
               },
               {
                 id: 'feature-4',
@@ -411,7 +411,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 title: '12 Maanden Garantie',
                 description: 'Wij bieden standaard 12 maanden volledige garantie op al onze geleverde sleutels en het programmeren daarvan.',
                 linkText: 'Bekijk waar wij service verlenen',
-                linkUrl: '/steden'
+                linkUrl: '/staedte'
               },
               {
                 id: 'feature-5',
@@ -463,7 +463,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </div>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Image
-                  src="/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp"
+                  src="/images/team/berkan-acarol-autoschluessel-spezialist.webp"
                   alt={`Berkan Acarol — Autosleutelspecialist ${city.city}`}
                   width={300}
                   height={200}
@@ -540,26 +540,26 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               Een impressie van ons dagelijks werk: van sleutels inleren op locatie tot schadevrij openen van portieren in {city.city}.
             </p>
             {(() => {
-              const citySpecific = REAL_GALLERY_PROJECTS.filter(p =>
-                p.alt.toLowerCase().includes(city.city.toLowerCase()) ||
-                p.src.toLowerCase().includes(citySlug)
-              );
-              // Fallback for cities without a dedicated photo: only use images
-              // that don't name any city at all, so we never caption a photo
-              // with a different city's name on this page.
-              const namesAnyCity = (p: (typeof REAL_GALLERY_PROJECTS)[number]) =>
-                CITIES.some(c => p.alt.toLowerCase().includes(c.city.toLowerCase()));
-              // Real job photos from /images/merken, captioned without the
-              // "-utrecht-N" their filenames carry.
-              const jobPhotos = fs.readdirSync(path.join(process.cwd(), 'public', 'images', 'merken'))
-                .filter(f => f.includes('-utrecht-') && !isFlyer(f))
-                .map(f => ({ src: `/images/merken/${f}`, alt: captionFromFilename(f.replace(/-utrecht-\d+/, '')) }));
-              const genericPool = [...REAL_GALLERY_PROJECTS.filter(p => !namesAnyCity(p)), ...jobPhotos];
-              // Always show at least 3 images: use the city-specific ones first,
-              // then pad out with neutral (no-city-named) photos if there aren't enough.
-              const pool = citySpecific.length >= 3
-                ? citySpecific
-                : [...citySpecific, ...genericPool];
+              /*
+               * Every photo in the pool is a Dutch job, so none of them can be
+               * captioned with a German city — see config/gallery.ts. The Dutch
+               * version of this block filtered on the city name in the alt text
+               * and fell back to a "names no city" pool; here that filter would
+               * match nothing and the fallback would be the whole pool, so the
+               * two branches have collapsed into one.
+               *
+               * The slice is offset by the city rather than taken from the top,
+               * so Berlin, Hamburg, München and Frankfurt do not all show the
+               * same three Audis. Offset from the slug's characters: stable
+               * across builds, which a random pick would not be.
+               */
+              const offset =
+                [...citySlug].reduce((n, ch) => n + ch.charCodeAt(0), 0) %
+                REAL_GALLERY_PROJECTS.length;
+              const pool = [
+                ...REAL_GALLERY_PROJECTS.slice(offset),
+                ...REAL_GALLERY_PROJECTS.slice(0, offset),
+              ];
               return (
                 <GallerySlider
                   images={pool.slice(0, 3).map(p => ({ src: p.src, caption: p.alt }))}
@@ -581,9 +581,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <div className="container">
             <h2 style={{ textAlign: 'center', marginBottom: '3rem' }}>Onze Diensten in {city.city}</h2>
             <div className={styles.serviceCardsGrid}>
-              <Link href={`/diensten/autosleutel-bijmaken`} className={styles.serviceCardBig}>
+              <Link href={`/leistungen/autoschluessel-nachmachen`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_bijmaken.webp" alt={`Autosleutel Bijmaken in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_nachmachen.webp" alt={`Autosleutel Bijmaken in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autosleutel Bijmaken in {city.city}</h3>
                 <p>Heeft u een extra autosleutel nodig? Wij maken een nieuwe sleutel op locatie, vaak de helft goedkoper dan de dealer.</p>
@@ -593,9 +593,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 </div>
               </Link>
 
-              <Link href={`/autosleutel-kwijt`} className={styles.serviceCardBig}>
+              <Link href={`/autoschluessel-verloren`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_kwijt_illustration.webp" alt={`Autosleutels Kwijt in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_verloren_illustration.webp" alt={`Autosleutels Kwijt in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autosleutels Kwijt in {city.city}</h3>
                 <p>Geen enkele sleutel meer? Wij komen direct naar u toe, openen de auto, frezen een nieuwe sleutel en leren hem in.</p>
@@ -605,9 +605,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 </div>
               </Link>
 
-              <Link href={`/diensten/auto-openen-zonder-sleutel`} className={styles.serviceCardBig}>
+              <Link href={`/leistungen/auto-oeffnen-notdienst`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
-                  <Image src="/images/service_openen.webp" alt={`Autodeur Openen in ${city.city}`} fill style={{ objectFit: 'contain' }} />
+                  <Image src="/images/service_oeffnen.webp" alt={`Autodeur Openen in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autodeur Openen in {city.city}</h3>
                 <p>Sleutel in de auto laten liggen? Wij openen uw auto 100% schadevrij met speciaal gereedschap, zonder krassen.</p>
@@ -727,7 +727,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               ) : (
                 closestCities.map(c => (
                   <li key={c.slug}>
-                    <Link href={`/steden/${c.slug}`}>
+                    <Link href={`/staedte/${c.slug}`}>
                       <strong>{c.city}</strong>
                     </Link>
                   </li>
@@ -746,14 +746,14 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {closestCities.map(c => (
                     <li key={c.slug}>
-                      <Link href={`/steden/${c.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                      <Link href={`/staedte/${c.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
                         Autosleutel bijmaken {c.city} &rarr;
                       </Link>
                     </li>
                   ))}
                   {SERVICE_REGIONS.some((r) => r.name === city.region) && (
                     <li>
-                      <Link href={`/regio/${SERVICE_REGIONS.find((r) => r.name === city.region)!.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 700 }}>
+                      <Link href={`/regionen/${SERVICE_REGIONS.find((r) => r.name === city.region)!.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 700 }}>
                         Alle steden in {city.region} &rarr;
                       </Link>
                     </li>
@@ -764,17 +764,17 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>Gerelateerde diensten in {city.city}</h3>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   <li>
-                    <Link href="/diensten/autosleutel-bijmaken" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link href="/leistungen/autoschluessel-nachmachen" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
                       Sleutel bijmaken & programmeren &rarr;
                     </Link>
                   </li>
                   <li>
-                    <Link href="/autosleutel-kwijt" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link href="/autoschluessel-verloren" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
                       Alle autosleutels kwijt? &rarr;
                     </Link>
                   </li>
                   <li>
-                    <Link href="/diensten/auto-openen-zonder-sleutel" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link href="/leistungen/auto-oeffnen-notdienst" style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
                       Schadevrij autodeur openen &rarr;
                     </Link>
                   </li>

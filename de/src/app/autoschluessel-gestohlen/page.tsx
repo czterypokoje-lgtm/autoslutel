@@ -7,13 +7,13 @@ import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
-import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/leistungen';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
 
 /*
  * Stolen is not the same job as lost, which is why this is not a section of
- * /autosleutel-kwijt.
+ * /autoschluessel-verloren.
  *
  * When a key is lost, nobody has it. When it is stolen, somebody has it, and
  * that person may also know which car it belongs to and where that car sleeps.
@@ -31,15 +31,15 @@ export const metadata: Metadata = {
   title: { absolute: 'Autosleutel Gestolen? Direct Blokkeren en Nieuwe Sleutel' },
   description: `Autosleutel gestolen? De dief kan uw auto starten. Wij wissen de gestolen sleutel uit de auto en maken ter plaatse een nieuwe. Binnen 30-60 min bij u, 24/7.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/autosleutel-gestolen`,
+    canonical: `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/autosleutel-gestolen`,
-      'x-default': `${SITE_CONFIG.domain}/autosleutel-gestolen`,
+      'nl-NL': `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
+      'x-default': `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
     },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/autosleutel-gestolen`,
+    url: `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
     title: 'Autosleutel Gestolen? Direct Blokkeren en Nieuwe Sleutel',
     description:
       'Autosleutel gestolen? Wij wissen de gestolen sleutel uit de startonderbreker en maken ter plaatse een nieuwe. 24/7 op locatie.',
@@ -105,7 +105,7 @@ export default function AutosleutelGestolen() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Autosleutel gestolen', item: `${SITE_CONFIG.domain}/autosleutel-gestolen` },
+      { '@type': 'ListItem', position: 2, name: 'Autosleutel gestolen', item: `${SITE_CONFIG.domain}/autoschluessel-gestohlen` },
     ],
   };
 
@@ -119,7 +119,7 @@ export default function AutosleutelGestolen() {
     availableChannel: {
       '@type': 'ServiceChannel',
       servicePhone: SITE_CONFIG.phoneTel,
-      serviceUrl: `${SITE_CONFIG.domain}/autosleutel-gestolen`,
+      serviceUrl: `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
     },
   };
 
@@ -136,7 +136,7 @@ export default function AutosleutelGestolen() {
         lead="Bij diefstal telt iets anders dan bij verlies: iemand heeft uw sleutel. Wij komen naar uw auto toe, wissen de gestolen sleutel uit de startonderbreker en leveren ter plaatse een nieuwe."
         facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.allKeysLost}`} />}
         image={{
-          src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
+          src: '/images/seo/autoschluessel_spezialist_background.webp',
           alt: 'Sleutelwand in de werkplaats van Autosleutel24 met transpondersleutels per automerk',
         }}
       >
@@ -200,7 +200,7 @@ export default function AutosleutelGestolen() {
           </p>
           <p style={{ color: 'var(--gray-600)', lineHeight: 1.7, marginTop: '1rem' }}>
             Heeft u de sleutel simpelweg verloren en heeft niemand hem meegenomen, dan leest{' '}
-            <Link href="/autosleutel-kwijt" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/autoschluessel-verloren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               autosleutel kwijt
             </Link>{' '}
             prettiger: dezelfde techniek, minder haast. Wilt u weten hoe uw keyless auto zonder de
@@ -250,7 +250,7 @@ export default function AutosleutelGestolen() {
                 <div className="seo-hub-title">Andere diensten</div>
                 <div className="seo-hub-col">
                   {DIENSTEN.filter((d) => !REDIRECTED_SERVICE_SLUGS.has(d.slug)).map((d) => (
-                    <Link key={d.slug} href={`/diensten/${d.slug}`} className="seo-hub-link">
+                    <Link key={d.slug} href={`/leistungen/${d.slug}`} className="seo-hub-link">
                       {`${d.title} →`}
                     </Link>
                   ))}
@@ -273,13 +273,13 @@ export default function AutosleutelGestolen() {
               <div>
                 <div className="seo-hub-title">In de regio</div>
                 <div className="seo-hub-col">
-                  <Link href="/steden" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
+                  <Link href="/staedte" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
                     Bekijk alle steden →
                   </Link>
                   {CITIES.filter((c) => c.priority === 'P1')
                     .slice(0, 8)
                     .map((c) => (
-                      <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
+                      <Link key={c.slug} href={`/staedte/${c.slug}`} className="seo-hub-link">
                         {`Autosleutel gestolen ${c.city} →`}
                       </Link>
                     ))}

@@ -35,15 +35,15 @@ export const metadata: Metadata = {
   title: { absolute: `Motorsleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE}` },
   description: `Motorsleutel bijmaken of kwijt? Honda, Yamaha, Kawasaki, BMW, Harley en meer: binnen ${ARRIVAL} ter plaatse, prijs telefonisch vooraf. Bel direct!`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/motorsleutel-bijmaken`,
+    canonical: `${SITE_CONFIG.domain}/motorradschluessel-nachmachen`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/motorsleutel-bijmaken`,
-      'x-default': `${SITE_CONFIG.domain}/motorsleutel-bijmaken`,
+      'nl-NL': `${SITE_CONFIG.domain}/motorradschluessel-nachmachen`,
+      'x-default': `${SITE_CONFIG.domain}/motorradschluessel-nachmachen`,
     },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/motorsleutel-bijmaken`,
+    url: `${SITE_CONFIG.domain}/motorradschluessel-nachmachen`,
     title: 'Motorsleutel bijmaken of kwijt? Wij komen naar uw motor toe',
     description: 'Motorsleutel of scootersleutel bijmaken, ook als u er geen meer heeft. Op locatie, prijs vooraf.',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Motorsleutel bijmaken — Autosleutel24' }],
@@ -105,7 +105,7 @@ export default function MotorsleutelBijmaken() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Motorsleutel bijmaken', item: `${SITE_CONFIG.domain}/motorsleutel-bijmaken` },
+      { '@type': 'ListItem', position: 2, name: 'Motorsleutel bijmaken', item: `${SITE_CONFIG.domain}/motorradschluessel-nachmachen` },
     ],
   };
   const link = { color: 'var(--orange-600)', fontWeight: 600 } as const;
@@ -122,7 +122,7 @@ export default function MotorsleutelBijmaken() {
         lead="Sleutel van uw motor of scooter kwijt of kapot, of een reserve nodig? Wij maken hem op locatie bij en leren hem in, zodat u niet hoeft te slepen of dagen te wachten."
         facts={<HeroQuickFacts />}
         image={{
-          src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
+          src: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
         }}
       >
@@ -203,11 +203,11 @@ export default function MotorsleutelBijmaken() {
           ))}
           <p style={{ marginTop: '2rem', color: 'var(--gray-600)', lineHeight: 1.7 }}>
             Gaat het om een auto? Zie{' '}
-            <Link href="/diensten/autosleutel-bijmaken" style={link}>autosleutel bijmaken</Link>{' '}
+            <Link href="/leistungen/autoschluessel-nachmachen" style={link}>autosleutel bijmaken</Link>{' '}
             of{' '}
-            <Link href="/autosleutel-kwijt" style={link}>autosleutel kwijt</Link>. Een kapotte sleutel
+            <Link href="/autoschluessel-verloren" style={link}>autosleutel kwijt</Link>. Een kapotte sleutel
             kunt u laten repareren via{' '}
-            <Link href="/diensten/autosleutels-repareren" style={link}>autosleutel repareren</Link>.
+            <Link href="/leistungen/autoschluessel-reparieren" style={link}>autosleutel repareren</Link>.
           </p>
         </div>
       </section>

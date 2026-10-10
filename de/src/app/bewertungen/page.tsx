@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     absolute: 'Autosleutel24 Reviews | 5,0★ Klantbeoordelingen',
   },
   description: `Lees echte reviews van klanten over ${SITE_CONFIG.fullName}. Sleutel bijgemaakt of kwijt? Zie de beoordelingen op ons Google-bedrijfsprofiel.`,
-  alternates: { canonical: `${SITE_CONFIG.domain}/beoordelingen` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/bewertungen` },
 };
 
 export default function BeoordelingenPage() {
@@ -63,7 +63,7 @@ export default function BeoordelingenPage() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Beoordelingen', item: `${SITE_CONFIG.domain}/beoordelingen` },
+      { '@type': 'ListItem', position: 2, name: 'Beoordelingen', item: `${SITE_CONFIG.domain}/bewertungen` },
     ],
   };
 

@@ -52,8 +52,8 @@ export async function generateMetadata(props: { params: Promise<{ regio: string 
   const region = SERVICE_REGIONS.find((r) => r.slug === regio);
   if (!region) return {};
   const towns = citiesIn(region.name).slice(0, 3).map((c) => c.city).join(', ');
-  const url = `${SITE_CONFIG.domain}/regio/${region.slug}`;
-  // /steden/utrecht already owns "Autosleutel Bijmaken Utrecht | …"; the province page must not repeat it.
+  const url = `${SITE_CONFIG.domain}/regionen/${region.slug}`;
+  // /staedte/utrecht already owns "Autosleutel Bijmaken Utrecht | …"; the province page must not repeat it.
   const title =
     region.slug === 'utrecht'
       ? `Autosleutel Provincie Utrecht | ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`
@@ -108,10 +108,10 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
   const serviceSchema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    '@id': `${SITE_CONFIG.domain}/regio/${region.slug}#service`,
+    '@id': `${SITE_CONFIG.domain}/regionen/${region.slug}#service`,
     name: `Autosleutel bijmaken en kwijt in ${region.name}`,
     serviceType: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
-    url: `${SITE_CONFIG.domain}/regio/${region.slug}`,
+    url: `${SITE_CONFIG.domain}/regionen/${region.slug}`,
     provider: getBaseLocalBusinessSchema(),
     areaServed: {
       '@type': 'AdministrativeArea',
@@ -119,7 +119,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
       containsPlace: cities.map((c) => ({
         '@type': 'City',
         name: c.city,
-        url: `${SITE_CONFIG.domain}/steden/${c.slug}`,
+        url: `${SITE_CONFIG.domain}/staedte/${c.slug}`,
         geo: { '@type': 'GeoCoordinates', latitude: c.geo.lat, longitude: c.geo.lng },
       })),
     },
@@ -130,8 +130,8 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
     mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   };
   const crumbs = breadcrumbSchema([
-    { name: 'Werkgebied', path: '/steden' },
-    { name: region.name, path: `/regio/${region.slug}` },
+    { name: 'Werkgebied', path: '/staedte' },
+    { name: region.name, path: `/regionen/${region.slug}` },
   ]);
 
   return (
@@ -141,13 +141,13 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
       <script id={`regio-bc-${region.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbs) }} />
 
       <SplitHero
-        crumbs={[{ label: 'Home', href: '/' }, { label: 'Werkgebied', href: '/steden' }, { label: region.name }]}
+        crumbs={[{ label: 'Home', href: '/' }, { label: 'Werkgebied', href: '/staedte' }, { label: region.name }]}
         titleTop={`Autosleutel Bijmaken in ${region.label}`}
         titleAccent={`Binnen ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`}
         lead={`${region.intro} Sleutel kwijt, kapot of een reserve nodig? Wij komen naar uw auto.`}
         facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
-          src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
+          src: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
         }}
       >
@@ -172,7 +172,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
             {cities.map((c) => (
               <li key={c.slug} style={{ border: '1px solid var(--gray-200)', borderRadius: 10, padding: '1rem', background: '#fff' }}>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '0.35rem' }}>
-                  <Link href={`/steden/${c.slug}`} style={link}>{c.city}</Link>
+                  <Link href={`/staedte/${c.slug}`} style={link}>{c.city}</Link>
                 </h3>
                 <p style={{ color: 'var(--gray-600)', fontSize: '0.92rem', lineHeight: 1.55 }}>
                   {c.subAreas.slice(0, 4).join(', ')}
@@ -210,7 +210,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
             Bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer}, binnen {ARRIVAL} ter plaatse, met 12 maanden garantie. U hoort de exacte
             prijs telefonisch voordat wij vertrekken.{' '}
-            <Link href="/prijzen" style={link}>Bekijk alle prijzen →</Link>
+            <Link href="/preise" style={link}>Bekijk alle prijzen →</Link>
           </p>
         </div>
       </section>
@@ -225,7 +225,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
               staat. Kijk ook bij:{' '}
               {others.filter((r) => RANDSTAD.has(r.slug)).map((r, i, all) => (
                 <span key={r.slug}>
-                  <Link href={`/regio/${r.slug}`} style={link}>{r.name}</Link>
+                  <Link href={`/regionen/${r.slug}`} style={link}>{r.name}</Link>
                   {i < all.length - 1 ? ', ' : '.'}
                 </span>
               ))}
@@ -250,11 +250,11 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
           ))}
           <p style={{ marginTop: '2rem', color: 'var(--gray-600)', lineHeight: 1.7 }}>
             Alles over een verloren sleutel staat op{' '}
-            <Link href="/autosleutel-kwijt" style={link}>autosleutel kwijt</Link>, de werkwijze voor een tweede sleutel op{' '}
-            <Link href="/diensten/autosleutel-bijmaken" style={link}>autosleutel bijmaken</Link>. Andere provincies:{' '}
+            <Link href="/autoschluessel-verloren" style={link}>autosleutel kwijt</Link>, de werkwijze voor een tweede sleutel op{' '}
+            <Link href="/leistungen/autoschluessel-nachmachen" style={link}>autosleutel bijmaken</Link>. Andere provincies:{' '}
             {others.map((r, i) => (
               <span key={r.slug}>
-                <Link href={`/regio/${r.slug}`} style={link}>{r.name}</Link>
+                <Link href={`/regionen/${r.slug}`} style={link}>{r.name}</Link>
                 {i < others.length - 1 ? ', ' : '.'}
               </span>
             ))}

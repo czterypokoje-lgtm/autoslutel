@@ -28,7 +28,7 @@ type FeatureCardsProps = {
   videoHeading?: string;
 };
 
-export default function FeatureCards({ title, subtitle, features, cardTitleAs: CardTitle = 'h3', videoHeading = 'Zo werkt het — in 40 seconden' }: FeatureCardsProps) {
+export default function FeatureCards({ title, subtitle, features, cardTitleAs: CardTitle = 'h3', videoHeading = 'So läuft es — in 40 Sekunden' }: FeatureCardsProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -99,7 +99,7 @@ export default function FeatureCards({ title, subtitle, features, cardTitleAs: C
         * with "isn't on a watch page" rows. A non-watch page keeps its text
         * result with a video badge either way, and Google states repeat
         * embeds of one video are not a duplicate-content problem. So the
-        * video travels and the markup stays on /autosleutel-kwijt.
+        * video travels and the markup stays on /autoschluessel-verloren.
         */}
       <div className={styles.videoWrapper}>
         <VideoEmbed heading={videoHeading} caption={false} />

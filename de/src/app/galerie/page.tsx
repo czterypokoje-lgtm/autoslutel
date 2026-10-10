@@ -10,7 +10,7 @@ export const metadata: Metadata = {
      and a hand-written "26" was already wrong before they did. Brands named
      are only ones still pictured. */
   description: `Galerij van autosleutel werkzaamheden: ${REAL_GALLERY_PROJECTS.length} echte praktijkprojecten, o.a. BMW, Audi en Mercedes — sleutels bijmaken, programmeren en schadevrij openen op locatie.`,
-  alternates: { canonical: `${SITE_CONFIG.domain}/galerij` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/galerie` },
 };
 
 export default function GalerijPage() {
@@ -19,7 +19,7 @@ export default function GalerijPage() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Galerij', item: `${SITE_CONFIG.domain}/galerij` },
+      { '@type': 'ListItem', position: 2, name: 'Galerij', item: `${SITE_CONFIG.domain}/galerie` },
     ],
   };
 
@@ -29,7 +29,7 @@ export default function GalerijPage() {
   const gallerySchema = {
     '@context': 'https://schema.org',
     '@type': 'ImageGallery',
-    '@id': `${SITE_CONFIG.domain}/galerij#gallery`,
+    '@id': `${SITE_CONFIG.domain}/galerie#gallery`,
     name: 'Uitgevoerde autosleutel projecten',
     description:
       'Foto\'s van door Autosleutel24 uitgevoerde opdrachten: sleutels bijmaken, transponders programmeren en schadevrij openen op locatie.',
@@ -55,7 +55,7 @@ export default function GalerijPage() {
         <span className="section-label">GALERIJ & PROJECTEN</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Ons Werk in Beelden</h1>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, margin: '0 auto' }}>
-          Bekijk onze {REAL_GALLERY_PROJECTS.length} recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link> en heel Nederland.
+          Bekijk onze {REAL_GALLERY_PROJECTS.length} recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in <Link href="/staedte/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/staedte/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/staedte/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/staedte/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/staedte/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link> en heel Nederland.
         </p>
       </section>
 
@@ -72,7 +72,7 @@ export default function GalerijPage() {
             </div>
             <div>
               <img 
-                src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
+                src="/autoschluessel24-schluesselnachmachen.webp" 
                 alt="Sleutelmaker werkplaats met soldeerbouten en gereedschap" 
                 style={{ width: '100%', borderRadius: '12px', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }} 
               />

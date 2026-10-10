@@ -69,15 +69,17 @@ export const SITE_CONFIG = {
   hoursShort: '24/7 erreichbar',
   responseTime: TBD,
 
-  /** Handelsregister (HRB) — Impressum. */
-  kvk: TBD,
+  /** Handelsregisternummer, z. B. 'HRB 123456 B' — Impressum. */
+  hrb: TBD,
   /** USt-IdNr. — Impressum und jede Rechnung. */
-  btw: TBD,
+  ustId: TBD,
   iban: TBD,
   /** Die nach § 18 Abs. 2 MStV verantwortliche Person. */
   responsible: TBD,
   /** Rechtsform, für das Impressum. */
   legalForm: TBD,
+  /** Registergericht, z. B. 'Amtsgericht Berlin-Charlottenburg' — Impressum. */
+  registerCourt: TBD,
 
   /*
    * Fängt bei null an.
@@ -93,7 +95,13 @@ export const SITE_CONFIG = {
     facebook: TBD,
     instagram: TBD,
     google: TBD,
-    marktplaats: TBD,
+    /*
+     * Marktplaats war hier nicht sinnvoll: ein niederländischer Marktplatz,
+     * auf dem diese Seite kein Profil hat. Das deutsche Gegenstück heißt
+     * Kleinanzeigen; sobald es dort ein Profil gibt, kommt es hier hinein und
+     * das Abzeichen im Footer erscheint von selbst.
+     */
+    kleinanzeigen: TBD,
   },
 
   blobStorageDomain: 'https://omqnxprotjfbyqqq.public.blob.vercel-storage.com',
@@ -194,8 +202,8 @@ export const isReady = (value: string | null | undefined): boolean =>
  * Seiten, die sie ausgeben, prüfen das zuerst, damit ein Platzhalter nie auf
  * einer Rechnung oder in den AGB landet.
  */
-export function isBtwConfigured(): boolean {
-  return new RegExp(SITE_CONFIG.vatNumberPattern).test(SITE_CONFIG.btw ?? '');
+export function isUstIdConfigured(): boolean {
+  return new RegExp(SITE_CONFIG.vatNumberPattern).test(SITE_CONFIG.ustId ?? '');
 }
 
 /** Jedes Feld, das noch auf TBD steht, als Pfad. */

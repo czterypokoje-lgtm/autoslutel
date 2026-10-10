@@ -28,7 +28,7 @@ export default function robots(): MetadataRoute.Robots {
          * Over 20 Aug - 18 Sep, "final URL expansion" spent €86.82 of €274.53
          * (32% of the budget, 54 of 136 clicks) on /blog/ URLs and returned
          * zero conversions. €73.48 of that went to one post,
-         * /blog/autosleutel-kwijt-wat-nu-stappenplan. Blog readers are looking
+         * /blog/autoschluessel-verloren-wat-nu-stappenplan. Blog readers are looking
          * for an answer, not for a locksmith to come out today.
          *
          * AdsBot-Google is the crawler that decides which pages an expanded
@@ -64,7 +64,7 @@ export default function robots(): MetadataRoute.Robots {
          */
         userAgent: ['AdsBot-Google', 'AdsBot-Google-Mobile'],
         allow: '/',
-        disallow: ['/api/', '/blog/', '/mobiele-sleutelmaker', '/diensten/auto-slotenmaker'],
+        disallow: ['/api/', '/blog/', '/mobiler-schluesseldienst', '/leistungen/auto-oeffnen-notdienst'],
       },
       {
         // Allow AI bots to index content for LLM citations & AI search visibility

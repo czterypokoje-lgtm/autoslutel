@@ -7,28 +7,28 @@ BRANDS.forEach(brand => {
   if (brand.models && brand.models.length > 0) {
     CAR_MODELS[brand.name] = brand.models.map(m => m.name);
   } else {
-    CAR_MODELS[brand.name] = ["Alle modellen"];
+    CAR_MODELS[brand.name] = ["Alle Modelle"];
   }
 });
 
-// Add Overige fallback
-CAR_MODELS["Overige"] = ["Anders model"];
+// Fallback for brands that are not in the list
+CAR_MODELS["Sonstige"] = ["Anderes Modell"];
 
 export const BRANDS_LIST = Object.keys(CAR_MODELS).map(b => b.replace(/_/g, " "));
 
 export const SERVICES_LIST = [
-  "Autosleutel kwijt / noodsleutel",
-  "Reservesleutel bijmaken",
-  "Auto openen zonder sleutel",
-  "Sleutel programmeren",
-  "Transponder inleren",
-  "Smart key / keyless entry",
-  "Contactslot reparatie",
-  "Sleutelbehuizing vervangen",
-  "Alle sleutels kwijt",
-  "Bedrijfswagen sleutel",
-  "Tesla key card programmeren",
-  "ECU clonen / component protection",
+  "Autoschlüssel verloren / Notschlüssel",
+  "Ersatzschlüssel nachmachen",
+  "Auto öffnen ohne Schlüssel",
+  "Schlüssel anlernen / programmieren",
+  "Transponder anlernen",
+  "Keyless Go / Smart Key",
+  "Zündschloss reparieren",
+  "Schlüsselgehäuse wechseln",
+  "Alle Schlüssel verloren",
+  "Transporter- / Firmenwagenschlüssel",
+  "Tesla Keycard anlernen",
+  "Steuergerät klonen / Component Protection",
 ];
 
 export const YEARS_LIST: string[] = Array.from({ length: 27 }, (_, i) => String(2026 - i));

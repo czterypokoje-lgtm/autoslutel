@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   },
   description:
     'Welke cookies Autosleutel24 gebruikt, waarvoor, hoe lang ze bewaard blijven en hoe u uw toestemming op elk moment wijzigt of intrekt.',
-  alternates: { canonical: `${SITE_CONFIG.domain}/cookiebeleid` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/cookie-richtlinie` },
 };
 
 /**
@@ -67,7 +67,7 @@ const cell: React.CSSProperties = {
 export default function CookiePage() {
   return (
     <main>
-      <script id="bc-cookie" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Cookiebeleid', path: '/cookiebeleid' }])) }} />
+      <script id="bc-cookie" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Cookiebeleid', path: '/cookie-richtlinie' }])) }} />
       <section
         style={{
           background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)',
@@ -156,7 +156,7 @@ export default function CookiePage() {
           <p style={{ lineHeight: 1.7, fontSize: '0.95rem' }}>
             Google en Microsoft kunnen gegevens verwerken buiten de Europese
             Economische Ruimte. Meer over hoe wij met persoonsgegevens omgaan
-            leest u in ons <Link href="/privacybeleid">privacybeleid</Link>.
+            leest u in ons <Link href="/datenschutz">privacybeleid</Link>.
             Vragen? Mail naar {SITE_CONFIG.email}. U kunt ook een klacht
             indienen bij de Autoriteit Persoonsgegevens
             (autoriteitpersoonsgegevens.nl).

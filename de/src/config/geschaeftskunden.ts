@@ -52,7 +52,7 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
     intro:
       'Sleutelprogrammering vraagt merkspecifieke apparatuur en licenties die voor één klus per maand nooit uit kan. Wij rijden naar uw werkplaats, maken en coderen de sleutel bij de auto, en u gaat verder met de rest van de reparatie.',
     image: {
-      src: '/images/seo/auto-slotenmaker-werkplaats-utrecht.webp',
+      src: '/images/seo/auto-schluesseldienst-werkstatt.webp',
       alt: 'Autosleutel geprogrammeerd in de werkplaats van een garagebedrijf',
     },
     painTitle: 'Herkenbaar?',
@@ -115,7 +115,7 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
     intro:
       'Inruilers komen binnen met één sleutel. Bij aflevering is dat het eerste waar een koper over onderhandelt — en een ontbrekende sleutel kost aan de onderhandelingstafel doorgaans meer dan het bijmaken ervan. Wij komen naar uw terrein en doen meerdere auto’s in één bezoek.',
     image: {
-      src: '/images/seo/autosleutel_voorraad_alle_merken_utrecht_amsterdam.webp',
+      src: '/images/seo/autoschluessel_lager_alle_marken.webp',
       alt: 'Voorraad autosleutels voor alle merken, klaar om bij te maken voor autobedrijven',
     },
     painTitle: 'Herkenbaar?',
@@ -178,7 +178,7 @@ export const ZAKELIJK_SEGMENTS: ZakelijkSegment[] = [
     intro:
       'Auto’s van veiling of uit het buitenland arriveren vaak met één sleutel, en soms met geen enkele. Wij komen naar uw loods of opslagterrein en maken de sleutels ter plaatse — ook wanneer alle sleutels ontbreken en de auto van nul af aan ingeleerd moet worden.',
     image: {
-      src: '/images/seo/autosleutel-bijmaken-equipment.webp',
+      src: '/images/seo/autoschluessel-nachmachen-equipment.webp',
       alt: 'Diagnoseapparatuur voor het inleren van autosleutels bij import- en exportvoertuigen',
     },
     painTitle: 'Herkenbaar?',

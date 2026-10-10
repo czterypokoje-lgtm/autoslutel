@@ -18,7 +18,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
  * are surprised by the price of a car key. So the page answers the question
  * behind the word — what copying does and does not get you on a car built
  * after about 1998 — and sends the transactional half to
- * /diensten/autosleutel-bijmaken rather than competing with it.
+ * /leistungen/autoschluessel-nachmachen rather than competing with it.
  *
  * If this ever starts ranking for plain "autosleutel bijmaken" instead of
  * for kopiëren, it should be folded into that page, not kept alongside it.
@@ -28,15 +28,15 @@ export const metadata: Metadata = {
   title: { absolute: 'Autosleutel Kopiëren: Wanneer Kan Het en Wanneer Niet?' },
   description: `Autosleutel kopiëren? Bij een auto van na 1998 past de kopie wel, maar start de motor niet zonder de chip in te leren. Wat wél werkt, met de prijs vooraf.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/autosleutel-kopieren`,
+    canonical: `${SITE_CONFIG.domain}/autoschluessel-kopieren`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/autosleutel-kopieren`,
-      'x-default': `${SITE_CONFIG.domain}/autosleutel-kopieren`,
+      'nl-NL': `${SITE_CONFIG.domain}/autoschluessel-kopieren`,
+      'x-default': `${SITE_CONFIG.domain}/autoschluessel-kopieren`,
     },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/autosleutel-kopieren`,
+    url: `${SITE_CONFIG.domain}/autoschluessel-kopieren`,
     title: 'Autosleutel Kopiëren: Wanneer Kan Het en Wanneer Niet?',
     description:
       'Een autosleutel kopiëren is meer dan de baard naslijpen. Wat er bij een moderne auto écht nodig is, en wat het kost.',
@@ -86,7 +86,7 @@ export default function AutosleutelKopieren() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Autosleutel kopiëren', item: `${SITE_CONFIG.domain}/autosleutel-kopieren` },
+      { '@type': 'ListItem', position: 2, name: 'Autosleutel kopiëren', item: `${SITE_CONFIG.domain}/autoschluessel-kopieren` },
     ],
   };
 
@@ -102,7 +102,7 @@ export default function AutosleutelKopieren() {
         lead="Een autosleutel kopiëren klinkt als het naslijpen van een stuk metaal. Bij een moderne auto is dat hooguit de helft van het werk — de andere helft zit in een chip ter grootte van een rijstkorrel."
         facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
-          src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
+          src: '/images/seo/autoschluessel_spezialist_background.webp',
           alt: 'Sleutelwand met honderden sleutelbaarden en transponderbehuizingen per automerk',
         }}
       >
@@ -185,7 +185,7 @@ export default function AutosleutelKopieren() {
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
             Bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer} en afhankelijk van merk, model en
             bouwjaar. U hoort de exacte prijs telefonisch voordat wij vertrekken.{' '}
-            <Link href="/prijzen" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/preise" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               Bekijk het volledige prijsoverzicht →
             </Link>
           </p>
@@ -209,11 +209,11 @@ export default function AutosleutelKopieren() {
           <p style={{ marginTop: '2rem', color: 'var(--gray-600)', lineHeight: 1.7 }}>
             Weet u al dat u een werkende tweede sleutel nodig heeft? Dan staat alles over prijs,
             werkwijze en garantie op{' '}
-            <Link href="/diensten/autosleutel-bijmaken" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/leistungen/autoschluessel-nachmachen" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               autosleutel bijmaken
             </Link>
             . Heeft u helemaal geen sleutel meer, begin dan bij{' '}
-            <Link href="/autosleutel-kwijt" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+            <Link href="/autoschluessel-verloren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               autosleutel kwijt
             </Link>
             .

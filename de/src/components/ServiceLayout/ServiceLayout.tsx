@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/leistungen';
 import { getRelatedBlogPosts } from '@/config/services';
-import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import { isReady, SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import SplitHero from '@/components/SplitHero/SplitHero';
 import GalleryMarquee from '@/components/GallerySlider/GalleryMarquee';
@@ -31,7 +31,7 @@ import path from 'path';
 /*
  * The whole service page, as a component two routes can render.
  *
- * It was the body of /diensten/[slug]. /autosleutel-kwijt needs exactly the
+ * It was the body of /leistungen/[slug]. /autoschluessel-verloren needs exactly the
  * same page -- the gallery, the brand grid, the regions, both long articles,
  * the emergency CTA and the related posts -- because that is the page the
  * merged AKL service had and the one people were reading. Hand-copying six
@@ -50,21 +50,21 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
   const p1Cities = CITIES.filter(c => c.priority === 'P1').slice(0, 8);
   const popularBrands = BRANDS.filter(b => b.priority === 'P1').slice(0, 8);
 
-  const isOpening = ['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'sleutel-afgebroken-in-slot', 'noodopening-auto', 'auto-openen-zonder-sleutel'].includes(slug);
+  const isOpening = ['auto-oeffnen-notdienst', 'schluessel-im-auto-eingeschlossen', 'autotuer-zugefallen', 'kofferraum-oeffnen', 'autoschluessel-abgebrochen'].includes(slug);
   /*
    * The lost-key page is not a bijmaken page. It renders this same layout, and the
    * isKey copy (reserve sleutel laten bijmaken, extra sleutel, behuizing) told someone who
    * had lost every key that they were in the wrong place. isLost swaps those sections.
    */
-  const isLost = ['autosleutel-kwijt', 'alle-sleutels-kwijt-auto'].includes(slug);
-  const isKey = ['sleutel-bijmaken', 'autosleutel-kwijt', 'alle-sleutels-kwijt-auto', 'reserve-autosleutel', 'transponder-programmeren', 'smart-key-programmeren', 'autosleutel-bijmaken'].includes(slug);
+  const isLost = ['alle-autoschluessel-verloren'].includes(slug);
+  const isKey = ['autoschluessel-nachmachen', 'ersatzschluessel-anfertigen', 'transponder-anlernen', 'keyless-go-schluessel', 'funkschluessel-nachmachen'].includes(slug);
 
   let howItWorksVariant: 'default' | 'akl' | 'ignition' | 'lockout' = 'default';
-  if (['autosleutel-kwijt', 'alle-sleutels-kwijt-auto'].includes(slug)) {
+  if (['alle-autoschluessel-verloren'].includes(slug)) {
     howItWorksVariant = 'akl';
-  } else if (['auto-openen-zonder-sleutel', 'sleutel-in-auto', 'deur-dichtgevallen', 'kofferbak-openen', 'noodopening-auto', 'auto-slotenmaker'].includes(slug)) {
+  } else if (['auto-oeffnen-notdienst', 'schluessel-im-auto-eingeschlossen', 'autotuer-zugefallen', 'kofferraum-oeffnen'].includes(slug)) {
     howItWorksVariant = 'lockout';
-  } else if (['contactslot-auto-vervangen', 'sleutel-afgebroken-in-slot', 'contactslot-vervangen'].includes(slug)) {
+  } else if (['autoschluessel-abgebrochen'].includes(slug)) {
     howItWorksVariant = 'ignition';
   }
 
@@ -77,46 +77,47 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
       const files = fs.readdirSync(imagesDirMerken);
       const matched = files.filter(f => {
         if (isFlyer(f)) return false;
-        if (isOpening && f.includes('auto-openen-zonder-sleutel')) return true;
-        if (isKey && !isLost && f.includes('autosleutel-bijmaken')) return true;
+        if (isOpening && f.includes('auto-oeffnen-ohne-schluessel')) return true;
+        if (isKey && !isLost && f.includes('autoschluessel-nachmachen')) return true;
         return false;
       });
       // Mix up the array to get a variety
       const shuffled = matched.sort(() => 0.5 - Math.random());
-      serviceImages.push(...shuffled.slice(0, 4).map(f => `/images/merken/${f}`));
+      serviceImages.push(...shuffled.slice(0, 4).map(f => `/images/marken/${f}`));
     }
     
     // Fallback/fill with general equipment if needed
     if (!isLost && fs.existsSync(imagesDirDiensten) && serviceImages.length < 4) {
       const equipFiles = fs.readdirSync(imagesDirDiensten);
-      serviceImages.push(...equipFiles.slice(0, 4 - serviceImages.length).map(f => `/images/diensten/${f}`));
+      serviceImages.push(...equipFiles.slice(0, 4 - serviceImages.length).map(f => `/images/leistungen/${f}`));
     }
   } catch (e) {}
 
   // Dynamic scenarios for better SEO & human tone
+  // Situationen, in denen Kunden anrufen — in ihren Worten, nicht in unseren
   const bulletItems = isLost ? [
-    { strong: 'Alle sleutels kwijt en geen reservesleutel:', text: 'Wij openen de auto schadevrij als hij op slot zit, lezen de sleutelcode uit en maken ter plaatse een nieuwe sleutel. Slepen naar de dealer is niet nodig.' },
-    { strong: 'Sleutel verloren of gestolen:', text: 'De verloren sleutel wordt uit het geheugen van de auto gewist, zodat niemand er nog mee kan starten of rijden.' },
-    { strong: 'Sleutel kwijt op straat, bij uw werk of in een parkeergarage:', text: 'Wij komen naar de plek waar de auto staat. U hoeft niet terug te lopen of de auto te laten wegslepen.' },
-    { strong: 'Smart key of keyless sleutel kwijt:', text: 'Ook proximity- en keyless-sleutels maken en programmeren wij ter plaatse.' },
-    { strong: 'Sleutel in de auto opgesloten en nergens een reserve:', text: 'Eerst openen wij de auto schadevrij, daarna maken wij zo nodig meteen een nieuwe sleutel.' }
+    { strong: 'Alle Schlüssel verloren, kein Zweitschlüssel:', text: 'Wir öffnen das Fahrzeug schadenfrei, lesen die Schlüsseldaten aus und fertigen vor Ort einen neuen Schlüssel an. Abschleppen zum Händler ist nicht nötig.' },
+    { strong: 'Schlüssel verloren oder gestohlen:', text: 'Der verlorene Schlüssel wird aus der Wegfahrsperre gelöscht, damit niemand damit mehr öffnen oder starten kann.' },
+    { strong: 'Schlüssel unterwegs, auf der Arbeit oder im Parkhaus verloren:', text: 'Wir kommen dorthin, wo das Fahrzeug steht — auch in die Tiefgarage. Sie müssen nicht zurücklaufen und nichts abschleppen lassen.' },
+    { strong: 'Keyless-Go- oder Smart-Key-Schlüssel verloren:', text: 'Auch schlüssellose Systeme fertigen und lernen wir vor Ort an, soweit der Hersteller das zulässt.' },
+    { strong: 'Schlüssel im verschlossenen Auto und kein Ersatz:', text: 'Zuerst öffnen wir schadenfrei, danach fertigen wir, wenn nötig, gleich einen neuen Schlüssel an.' }
   ] : isOpening ? [
-    { strong: 'Sleutel op de autostoel of in het contact laten liggen:', text: 'U stapt even uit en de centrale deurvergrendeling springt automatisch dicht terwijl de sleutel nog binnen ligt.' },
-    { strong: 'Sleutel in de kofferbak beland:', text: 'Tijdens het inladen van boodschappen, sportspullen of bagage klapt de klep dicht terwijl uw sleutel nog in de laadruimte ligt.' },
-    { strong: 'Batterij afstandsbediening of smart key leeg:', text: 'De auto reageert niet meer op het signaal en de mechanische noodsleutel in de portiergreep draait niet door vuil of vorst.' },
-    { strong: 'Kind of huisdier per ongeluk ingesloten:', text: 'Een acute noodsituatie waarin wij direct met de hoogste prioriteit én gegarandeerd schadevrij ingrijpen.' },
-    { strong: 'Elektronische storing in de centrale vergrendeling:', text: 'Het slot weigert dienst of de keyless-entry module detecteert de sleutel niet meer na een spanningsdip.' }
+    { strong: 'Schlüssel auf dem Sitz oder im Zündschloss liegen gelassen:', text: 'Sie steigen kurz aus und die Zentralverriegelung schließt automatisch, während der Schlüssel noch drin liegt.' },
+    { strong: 'Schlüssel im Kofferraum:', text: 'Beim Einladen von Einkäufen, Sportsachen oder Gepäck fällt die Klappe zu, und der Schlüssel liegt im Laderaum.' },
+    { strong: 'Batterie der Fernbedienung oder des Smart Keys leer:', text: 'Das Fahrzeug reagiert nicht mehr auf das Signal, und der mechanische Notschlüssel im Türgriff dreht wegen Schmutz oder Frost nicht durch.' },
+    { strong: 'Kind oder Haustier eingeschlossen:', text: 'Ein echter Notfall. Rufen Sie zuerst 112 — bei Hitze zählen Minuten, und dann ist die Feuerwehr richtig und nicht ein Dienstleister mit Anfahrtszeit.' },
+    { strong: 'Störung in der Zentralverriegelung:', text: 'Das Schloss reagiert nicht mehr oder das Keyless-System erkennt den Schlüssel nach einem Spannungsabfall nicht.' }
   ] : isKey ? [
-    { strong: 'U heeft slechts één werkende sleutel over:', text: 'Voorkom acute stress en hoge wegsleepkosten door tijdig een reserve autosleutel met startonderbreker te laten bijmaken.' },
-    { strong: 'Autosleutel kwijtgeraakt of gestolen:', text: 'Wij wissen direct de verloren of gestolen sleutels uit de boordcomputer (ECU) zodat uw auto 100% beveiligd blijft tegen diefstal.' },
-    { strong: 'Behuizing versleten of knoppen ingedrukt:', text: 'Het sleutelblad is krom of de rubberen drukknoppen zijn kapot waardoor vocht de printplaat kan beschadigen.' },
-    { strong: 'Transponder of chip wordt niet meer herkend:', text: 'De startmotor draait wel, maar de motor slaat niet aan omdat het startblokkeringssignaal niet doorkomt.' },
-    { strong: 'Extra sleutel nodig voor partner of gezinslid:', text: 'Direct ter plaatse ingeleerd en getest op alle portieren en het contactslot.' }
+    { strong: 'Sie haben nur noch einen funktionierenden Schlüssel:', text: 'Ein Zweitschlüssel jetzt kostet einen Bruchteil von dem, was ein Totalverlust später kostet — und braucht keinen Notfall als Anlass.' },
+    { strong: 'Schlüssel verloren oder gestohlen:', text: 'Wir löschen den verlorenen Schlüssel aus der Wegfahrsperre, damit er das Fahrzeug nicht mehr öffnet und nicht mehr startet.' },
+    { strong: 'Gehäuse gebrochen oder Tasten ausgefallen:', text: 'Das Schlüsselblatt ist verbogen oder die Gummitasten sind durch, sodass Feuchtigkeit an die Platine kommen kann.' },
+    { strong: 'Transponder wird nicht mehr erkannt:', text: 'Der Anlasser dreht, der Motor startet nicht — die Wegfahrsperre gibt nicht frei. Das wird am Fahrzeug angelernt, der Schlüssel muss dafür nicht ersetzt werden.' },
+    { strong: 'Zusätzlicher Schlüssel für Partner oder Familie:', text: 'Vor Ort angelernt und an allen Türen und am Zündschloss geprüft.' }
   ] : [
-    { strong: 'Contactslot draait niet of zit muurvast:', text: 'De sleutel wil niet meer draaien in het stuurslot door interne slijtage van de cilinder of het stuurkolomscharnier.' },
-    { strong: 'Sleutel afgebroken in het contact of portierslot:', text: 'Wij verwijderen het afgebroken sleutelstuk met speciale extractietools zonder het slot te beschadigen.' },
-    { strong: 'Elektronische storing of communicatiefout:', text: 'De startonderbreker of BCM-module blokkeert de startvrijgave van uw voertuig.' },
-    { strong: 'Slijtage aan sleutelblad of sleutelbaard:', text: 'Door jarenlang gebruik is het metaal afgesleten waardoor de sleutel hakt of blijft hangen.' }
+    { strong: 'Zündschloss dreht nicht oder sitzt fest:', text: 'Der Schlüssel lässt sich nicht mehr drehen, weil der Schließzylinder innen verschlissen ist.' },
+    { strong: 'Schlüssel im Zünd- oder Türschloss abgebrochen:', text: 'Wir holen das Bruchstück mit Spezialwerkzeug heraus, ohne den Zylinder zu beschädigen.' },
+    { strong: 'Elektronische Störung oder Kommunikationsfehler:', text: 'Die Wegfahrsperre oder das Steuergerät gibt den Start nicht frei.' },
+    { strong: 'Schlüsselblatt abgenutzt:', text: 'Nach Jahren ist das Metall abgetragen, der Schlüssel hakt oder bleibt hängen — und nutzt dabei das Zündschloss mit ab.' }
   ];
 
   /*
@@ -135,7 +136,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
     // No folder for this service yet.
   }
 
-  const pricingHeaders = ['Dienst / Sleuteltype', 'Kenmerken', 'Onze Tarieven (excl. btw)', 'Dealer Prijs'];
+  const pricingHeaders = ['Leistung / Schlüsselart', 'Merkmale', 'Unser Preis (inkl. MwSt.)', 'Beim Händler'];
 
   /*
    * A service with its own price rows shows only those. The generic table
@@ -143,13 +144,30 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
    * contactslot page it meant five of its six rows were about smart keys and
    * behuizingen, which is not what the visitor came for.
    */
+  /*
+   * Preise brutto, inkl. 19 % MwSt — Preisangabenverordnung, nicht Geschmack.
+   * Die niederländische Tabelle ist ex btw; diese darf das nicht sein.
+   *
+   * Steht ein Preis noch auf TBD, erscheint "Festpreis am Telefon" statt einer
+   * Zahl oder eines Platzhalters. Die Händlerspalte nennt Spannen aus
+   * Verbraucherberichten (ADAC, netzwelt, Autobild: 200–500 € für den Schlüssel,
+   * mehr bei Funk- und Keyless-Schlüsseln, drei bis fünf Werktage Lieferzeit)
+   * und nicht Zahlen, die wir uns gewünscht haben.
+   */
+  const unserPreis = (key: keyof typeof SITE_CONFIG.prices) => {
+    const value = SITE_CONFIG.prices[key];
+    return typeof value === 'string' && isReady(value)
+      ? `ab ${value} €`
+      : 'Festpreis am Telefon';
+  };
+
   const genericPricingRows = [
-    ['Standaard autosleutel (mechanisch)', 'Zonder afstandsbediening, incl. transponder chip', `Vanaf € ${SITE_CONFIG.prices.transponder},-`, '€ 400 - € 800 (1-2 wk levertijd)'],
-    ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € ${SITE_CONFIG.prices.remote},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
-    ['Smart Key / Keyless Entry', 'Proximity start, volledig geprogrammeerd', `Vanaf € ${SITE_CONFIG.prices.smartKey},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
-    ['Sleutel behuizing / batterij vervangen', 'Nieuwe behuizing, micro-switches & batterij', `Vanaf € ${SITE_CONFIG.prices.casing},-`, 'Vaak hele sleutel (€ 200+)'],
-    ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
-    ['Contactslot reparatie / vervanging', 'Reviseren of nieuw slot incl. sleutels', `Vanaf € ${SITE_CONFIG.prices.ignition},-`, 'Vaak hele stuurkolom (€ 600+)']
+    ['Autoschlüssel (mechanisch)', 'Ohne Fernbedienung, inkl. Transponder', unserPreis('transponder'), '200–500 € (3–5 Werktage)'],
+    ['Funkschlüssel mit Fernbedienung', 'Gefräst und am Fahrzeug angelernt', unserPreis('remote'), 'ab 300 € (3–5 Werktage)'],
+    ['Keyless Go / Smart Key', 'Schlüsselloser Zugang, vollständig angelernt', unserPreis('smartKey'), 'ab 400 € (3–5 Werktage)'],
+    ['Gehäuse / Batterie wechseln', 'Neues Gehäuse, Mikroschalter, Batterie — Elektronik bleibt', unserPreis('casing'), 'oft ganzer Schlüssel (200 €+)'],
+    ['Alle Schlüssel verloren', 'Öffnen, neuer Schlüssel, Wegfahrsperre anlernen', unserPreis('allKeysLost'), 'Schlüssel plus Abschleppen'],
+    ['Zündschloss reparieren', 'Instandsetzen oder neues Schloss inkl. Schlüssel', unserPreis('ignition'), 'oft ganze Lenksäule (600 €+)'],
   ];
 
   const pricingRows = service.pricing
@@ -178,7 +196,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Diensten', item: `${SITE_CONFIG.domain}/diensten` },
+      { '@type': 'ListItem', position: 2, name: 'Diensten', item: `${SITE_CONFIG.domain}/leistungen` },
       { '@type': 'ListItem', position: 3, name: service.title, item: `${SITE_CONFIG.domain}${basePath}` },
     ],
   };
@@ -195,7 +213,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
           * Two layouts, chosen by whether the service has a photograph.
           *
           * With one, it gets SplitHero — the same white hero as the home page
-          * and /diensten/autosleutel-bijmaken, with the kenteken wizard beside
+          * and /leistungen/autoschluessel-nachmachen, with the kenteken wizard beside
           * the picture. Somebody arriving here from an ad used to meet a dark
           * navy band and a flat row of fields: visibly a different site from
           * the one the same campaign shows on the home page.
@@ -210,7 +228,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
           <SplitHero
             crumbs={[
               { label: 'Home', href: '/' },
-              { label: 'Diensten', href: '/diensten' },
+              { label: 'Diensten', href: '/leistungen' },
               { label: service.title },
             ]}
             titleTop={service.h1.includes('—') ? service.h1.split('—')[0].trim() : service.h1}
@@ -224,8 +242,8 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
         ) : (
           <section
             className={styles.hero}
-            style={slug === 'autosleutels-repareren' ? {
-              backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%), url('/images/seo/autosleutel_reparatie_hero.webp')`,
+            style={slug === 'autoschluessel-reparieren' ? {
+              backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%), url('/images/seo/autoschluessel_reparatur_hero.webp')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             } : undefined}
@@ -233,7 +251,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
             <div className={styles.heroInner}>
               <nav className={styles.breadcrumb} aria-label="Breadcrumb">
                 <Link href="/">Home</Link> <span>/</span>
-                <Link href="/diensten">Diensten</Link> <span>/</span>
+                <Link href="/leistungen">Diensten</Link> <span>/</span>
                 <span>{service.title}</span>
               </nav>
 
@@ -294,39 +312,39 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
         {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
         <FeatureCards 
           title={`Specialist in ${service.title}`}
-          subtitle={<><span style={{ color: '#f97316' }}>AutoSleutel24</span> lost het snel voor u op, direct op locatie.</>}
+          subtitle={<><span style={{ color: '#f97316' }}>Autoschlüssel24</span> löst das vor Ort, dort wo das Fahrzeug steht.</>}
           features={[
               {
                 id: 'feature-1',
                 icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: 'Autosleutel Kwijt? Direct Hulp',
-                description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
+                title: 'Autoschlüssel verloren? Sofort Hilfe',
+                description: 'Unser Partner kommt zu Ihrem Fahrzeug — für Reparatur oder Ersatz.',
                 linkText: 'Meer over mobiele service',
-                linkUrl: '/diensten'
+                linkUrl: '/leistungen'
               },
               {
                 id: 'feature-2',
                 icon: <Image src="/images/icon_map.webp" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: 'Auto Op Slot? Schadevrij openen',
+                title: 'Auto zu? Schadenfrei geöffnet',
                 description: `Binnen ${SITE_CONFIG.responseTime} minuten ter plaatse. Onze lokale monteur is altijd in de buurt.`,
-                linkText: 'Vind een monteur',
+                linkText: 'Partner finden',
                 linkUrl: '#contact'
               },
               {
                 id: 'feature-3',
                 icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: 'Vaste prijs vooraf',
-                description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
-                linkText: 'Bekijk onze tarieven',
-                linkUrl: '/prijzen'
+                title: 'Festpreis vorab',
+                description: 'Keine Überraschungen hinterher. Sie wissen vor dem Start, was es kostet.',
+                linkText: 'Preise ansehen',
+                linkUrl: '/preise'
               },
               {
                 id: 'feature-4',
                 icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '12 Maanden Garantie',
-                description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
-                linkText: 'Bekijk waar wij service verlenen',
-                linkUrl: '/steden'
+                description: 'Auf Schlüssel und Anlernen geben wir 12 Monate Garantie.',
+                linkText: 'Wo unsere Partner arbeiten',
+                linkUrl: '/staedte'
               },
               {
                 id: 'feature-5',
@@ -368,7 +386,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 {/* Section 2: Prijzen Tabel of Openingsmethoden */}
                 {isOpening ? (
                   <div>
-                    <h2>Schadevrije Openingsmethoden & Garantie</h2>
+                    <h2>Schadenfreie Öffnung & Garantie</h2>
                     <p>
                       Onze monteurs maken uitsluitend gebruik van geavanceerd, merkspecifiek slotenmakersgereedschap. In tegenstelling tot traditionele garages of bergingdiensten openen wij uw voertuig 100% schadevrij. Wij verbuigen geen deurstijlen, veroorzaken geen lakbeschadigingen en breken nooit ruiten in.
                     </p>
@@ -376,37 +394,37 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                       <table className={styles.pricingTable}>
                         <thead>
                           <tr>
-                            <th>Techniek / Gereedschap</th>
-                            <th>Toepassing & Situatie</th>
-                            <th>Schadevrij Garantie</th>
+                            <th>Technik / Werkzeug</th>
+                            <th>Anwendung & Situation</th>
+                            <th>Schadenfrei-Garantie</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
                             <td><strong>Air Wedge + Long Reach Tool</strong></td>
-                            <td>Standaard bij 95% van alle moderne personenauto&apos;s</td>
-                            <td>100% schadevrij, geen druk op lak of rubber</td>
+                            <td>Standard bei den meisten modernen Pkw</td>
+                            <td>Schadenfrei, kein Druck auf Lack oder Dichtung</td>
                           </tr>
                           <tr>
                             <td><strong>Lishi 2-in-1 Pick / Decoder</strong></td>
-                            <td>Rechtstreeks via het portierslot lockpicken en uitlezen</td>
-                            <td>100% mechanische precisie zonder geweld</td>
+                            <td>Direkt über das Türschloss öffnen und auslesen</td>
+                            <td>Mechanisch präzise, ohne Gewalt</td>
                           </tr>
                           <tr>
                             <td><strong>Turbo Decoder</strong></td>
-                            <td>Hoogbeveiligde sloten (zoals BMW, VAG en Porsche)</td>
-                            <td>Veilig en bliksemsnel zonder braaksporen</td>
+                            <td>Hochsicherheitsschlösser (BMW, VAG, Porsche)</td>
+                            <td>Schnell und ohne Einbruchspuren</td>
                           </tr>
                           <tr>
                             <td><strong>Extractie & Cilinder Bypass</strong></td>
-                            <td>Bij afgebroken sleutelstukjes in het contact of portierslot</td>
-                            <td>Behoud van uw originele slotcilinder</td>
+                            <td>Bei abgebrochenen Schlüsselstücken im Zünd- oder Türschloss</td>
+                            <td>Der originale Schließzylinder bleibt erhalten</td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
                     <div className={styles.callout}>
-                      <strong>Schadevrije garantie:</strong> Wij garanderen 100% schadevrije opening of herstel. Mocht er in een uitzonderlijk geval vooraf een risico zijn, dan bespreekt onze monteur dit altijd transparant met u vóór aanvang van de werkzaamheden.
+                      <strong>Schadenfrei-Garantie:</strong> Wij garanderen 100% schadevrije opening of herstel. Mocht er in een uitzonderlijk geval vooraf een risico zijn, dan bespreekt onze monteur dit altijd transparant met u vóór aanvang van de werkzaamheden.
                     </div>
                   </div>
                 ) : (
@@ -449,22 +467,22 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 )}
 
                 <div className={styles.callout}>
-                  <strong>Direct hulp nodig?</strong> Bel{' '}
+                  <strong>Sofort Hilfe nötig?</strong> Rufen Sie an:{' '}
                   <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ fontWeight: 800 }}>{SITE_CONFIG.phone}</a>
-                  {' '}of <a href={WHATSAPP_URL} style={{ fontWeight: 800 }}>stuur een WhatsApp</a>: binnen {ARRIVAL} ter plaatse, prijs vooraf.
+                  {' '}oder <a href={WHATSAPP_URL} style={{ fontWeight: 800 }}>schreiben per WhatsApp</a> — Festpreis, bevor jemand losfährt.
                 </div>
 
                 {/* Section 2.5: SEO Image & Expert Description */}
                 <div>
-                  <h2>Professionele Mobiele Service — Direct Ter Plaatse</h2>
+                  <h2>Mobiler Fachbetrieb — der Partner kommt zu Ihnen</h2>
                   
-                  {isLost ? null : slug === 'auto-openen-zonder-sleutel' ? (
+                  {isLost ? null : slug === 'auto-oeffnen-notdienst' ? (
                     <img 
-                      src="/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp" 
+                      src="/images/seo/auto_tuer_oeffnen_schluesseldienst_schadenfrei.webp" 
                       alt="Autodeur schadevrij openen door monteur" 
                       style={{ width: '100%', borderRadius: '12px', margin: '1.25rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', objectFit: 'cover', aspectRatio: '16/9' }}
                     />
-                  ) : slug === 'autosleutels-repareren' ? (
+                  ) : slug === 'autoschluessel-reparieren' ? (
                     <div style={{
                       display: 'grid',
                       gridTemplateColumns: 'repeat(2, 1fr)',
@@ -472,22 +490,22 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                       margin: '1.25rem 0'
                     }}>
                       <img 
-                        src="/images/seo/autosleutels-repareren-werkplaats-utrecht.webp" 
+                        src="/images/seo/autoschluessel-reparieren-werkstatt.webp" 
                         alt="SMD-solderen van microswitches en knoppen onder microscoop" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
-                        src="/images/seo/autosleutels-repareren-inventaris-amsterdam.webp" 
+                        src="/images/seo/autoschluessel-reparieren-lager.webp" 
                         alt="Voorraad van OEM behuizingen en reservesleutel onderdelen" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
-                        src="/images/seo/autosleutels-repareren-onderdelen-almere.webp" 
+                        src="/images/seo/autoschluessel-reparieren-ersatzteile.webp" 
                         alt="Reservesleutel printplaten, transponders en spoelen" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
-                        src="/images/seo/autosleutels-repareren-service-amersfoort.webp" 
+                        src="/images/seo/autoschluessel-reparieren-service.webp" 
                         alt="Monteur repareert sleutels ter plaatse" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
@@ -526,7 +544,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                     />
                   ) : (
                     <img 
-                      src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
+                      src="/autoschluessel24-schluesselnachmachen.webp" 
                       alt={`Professionele mobiele service voor ${service.title.toLowerCase()} - direct ter plaatse en 100% schadevrij`} 
                       style={{ width: '100%', borderRadius: '12px', margin: '1.25rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', objectFit: 'cover', aspectRatio: '16/9' }}
                     />
@@ -545,7 +563,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 <details style={{ margin: '2rem 0' }}>
                   <summary style={{ cursor: 'pointer', fontSize: '1.3rem', fontWeight: 800 }}>{`Voor welke merken bieden wij ${service.title}?`}</summary>
                   <BrandsLogoGrid
-                    title={isLost ? 'Uw merk? Wij maken de sleutel ter plaatse' : `Voor Welke Merken Bieden Wij ${service.title}?`}
+                    title={isLost ? 'Ihre Marke? Wir fertigen den Schlüssel vor Ort' : `Voor Welke Merken Bieden Wij ${service.title}?`}
                     subtitle="Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:"
                   />
                 </details>
@@ -564,7 +582,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   <p>
                     {CITIES.filter((c) => c.priority === 'P1').map((c, i, all) => (
                       <span key={c.slug}>
-                        <Link href={`/steden/${c.slug}`}>{c.city}</Link>
+                        <Link href={`/staedte/${c.slug}`}>{c.city}</Link>
                         {i < all.length - 1 ? ' · ' : ''}
                       </span>
                     ))}
@@ -575,7 +593,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                     <ul className={styles.bulletList}>
                       {CITIES.filter((c) => c.priority !== 'P1').map((c) => (
                         <li key={c.slug}>
-                          <Link href={`/steden/${c.slug}`}>
+                          <Link href={`/staedte/${c.slug}`}>
                             {c.city}
                           </Link>
                           {` — ${c.region}`}
@@ -584,7 +602,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                     </ul>
                   </details>
                   <p>
-                    <Link href="/steden" style={{ fontWeight: 700, color: '#f97316' }}>Bekijk ons volledige werkgebied per provincie en stad →</Link>
+                    <Link href="/staedte" style={{ fontWeight: 700, color: '#f97316' }}>Alle Städte und Regionen ansehen →</Link>
                   </p>
                 </div>
 
@@ -594,11 +612,11 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   <p>
                     Wanneer u hulp nodig heeft met <strong>{service.title.toLowerCase()}</strong>, wilt u niet afhankelijk zijn van lange wachttijden of dure wegsleepservices van traditionele garages. Onze gecertificeerde mobiele slotenmakers komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw auto toe in heel Nederland. Of u nu thuis op de oprit staat, op uw werk, of langs de weg bent gestrand: binnen gemiddeld 30 minuten zijn wij ter plaatse.
                   </p>
-                  <h3>Geavanceerde Apparatuur &amp; 100% Schadevrije Garantie</h3>
+                  <h3>Fahrzeugdiagnose &amp; schadenfreie Öffnung</h3>
                   <p>
                     Wij werken uitsluitend met hightech diagnoseapparatuur en originele dealer-tokens. Voor het openen van autodeuren gebruiken wij speciale Lishi 2-in-1 lock decoders waarmee we het slot schadevrij openen via de cilinder. Moet er een nieuwe sleutel worden ingeleerd? Via de OBD2-diagnosepoort koppelen wij de nieuwe transponderchip of Keyless Go smart key rechtstreeks aan de startonderbreker van uw auto.
                   </p>
-                  <h3>Kosten Besparen t.o.v. de Dealer & 12 Maanden Garantie</h3>
+                  <h3>Günstiger als der Händler, 12 Monate Garantie</h3>
                   <p>
                     Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €{SITE_CONFIG.prices.transponder} tot €299. Bij "alle sleutels kwijt" betaalt u €299 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
                   </p>
@@ -641,15 +659,15 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
               {/* Sidebar */}
               <aside className={styles.sidebar}>
                 <div className={styles.sideCard}>
-                  <h3>Direct Hulp Nodig?</h3>
+                  <h3>Sofort Hilfe nötig?</h3>
                   <p>Bel of WhatsApp ons direct. Wij zijn 24/7 bereikbaar en gemiddeld binnen {SITE_CONFIG.responseTime} bij u op locatie.</p>
                   <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.sidePhone} id={`svc-sidebar-${slug}-phone`}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
                     Bel: {SITE_CONFIG.phone}
                   </a>
-                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.sideWa} id={`svc-sidebar-${slug}-wa`}>WhatsApp Direct</a>
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.sideWa} id={`svc-sidebar-${slug}-wa`}>Per WhatsApp</a>
                   <div className={styles.sideList}>
-                    {['Geen sleepkosten', 'Vaste prijs vooraf', 'Verzekeringsklare factuur', '12 maanden garantie', '24/7 beschikbaar'].map(item => (
+                    {['Geen sleepkosten', 'Festpreis vorab', 'Verzekeringsklare factuur', '12 maanden garantie', '24/7 beschikbaar'].map(item => (
                       <div key={item} className={styles.sideListItem}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{ color: '#22c55e', flexShrink: 0 }} aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
                         <span>{item}</span>
@@ -664,16 +682,16 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
             {/* Bottom CTA block */}
             <div className={styles.ctaBlock}>
               <h2>{service.title} Nodig? Bel Onze Mobiele Spoedservice</h2>
-              <p>Geen lange wachttijden, geen dure sleepkosten naar de garage. Wij zijn 24 uur per dag, 7 dagen per week beschikbaar en komen direct naar u toe.</p>
+              <p>Keine Wartezeit beim Händler, keine Abschleppkosten. Unsere Partner arbeiten rund um die Uhr und kommen zu Ihrem Fahrzeug.</p>
               <div className={styles.ctaBtnsGrid}>
                 <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary} id={`svc-cta-${slug}-phone`}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
                   Bel: {SITE_CONFIG.phone}
                 </a>
-                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWhatsapp} id={`svc-cta-${slug}-wa`}>WhatsApp Direct</a>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWhatsapp} id={`svc-cta-${slug}-wa`}>Per WhatsApp</a>
               </div>
               <div className={styles.microText}>
-                <span>✓ Direct contact met monteur</span>
+                <span>✓ Direkter Kontakt zum Partner</span>
                 <span>✓ Vaste prijs vooraf, geen verrassingen</span>
                 <span>✓ 100% Schadevrije garantie</span>
               </div>
@@ -738,7 +756,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
               <p>
                 Wanneer u te maken heeft met een buitensluiting, een kapotte sleutel of een storing in uw startonderbreker, wilt u voorkomen dat er schade ontstaat aan uw autolak, portier of elektronica. Onze monteurs werken met schadevrije Lishi 2-in-1 lockdecoders, OEM-gecertificeerde diagnosecomputers en hightech CNC lasermachines. Wij lossen het probleem direct bij u voor de deur op — of u nu thuis bent, op het werk staat of onderweg langs de weg.
               </p>
-              <h3>Transparante All-In Prijzen, Verzekering en 12 Maanden Garantie</h3>
+              <h3>Festpreis vorab, versichert, 12 Monate Garantie</h3>
               <p>
                 Wij hanteren vooraf altijd een vaste en heldere prijsafspraak, zodat u nooit wordt geconfronteerd met onverwachte kosten of hoge sleepkosten naar een dealer. Bovendien ontvangt u op al onze geleverde sleutels, onderdelen en reparaties standaard 12 maanden schriftelijke garantie. Veel verzekeringsmaatschappijen vergoeden onze factuur onder uw WA Extra of Allrisk autoverzekering.
               </p>
@@ -752,7 +770,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   <div className="seo-hub-title">Andere Diensten</div>
                   <div className="seo-hub-col">
                     {DIENSTEN.filter(s => s.slug !== service.slug && !REDIRECTED_SERVICE_SLUGS.has(s.slug)).map(s => (
-                      <Link key={s.slug} href={`/diensten/${s.slug}`} className="seo-hub-link">
+                      <Link key={s.slug} href={`/leistungen/${s.slug}`} className="seo-hub-link">
                         {`${s.title} →`}
                       </Link>
                     ))}
@@ -762,7 +780,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   <div className="seo-hub-title">Automerken voor {service.title}</div>
                   <div className="seo-hub-col">
                     {BRANDS.map(b => (
-                      <Link key={b.slug} href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken${isLost ? '#sleutel-kwijt' : ''}`} className="seo-hub-link">
+                      <Link key={b.slug} href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken${isLost ? '#schluessel-verloren' : ''}`} className="seo-hub-link">
                         {isLost ? `${b.name} sleutel kwijt →` : `${b.name} Autosleutel Bijmaken →`}
                       </Link>
                     ))}
@@ -771,11 +789,11 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 <div>
                   <div className="seo-hub-title">{service.title} in de Regio</div>
                   <div className="seo-hub-col">
-                    <Link href="/steden" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
+                    <Link href="/staedte" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
                       Bekijk alle steden →
                     </Link>
                     {p1Cities.map(c => (
-                      <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
+                      <Link key={c.slug} href={`/staedte/${c.slug}`} className="seo-hub-link">
                         {`${service.title} ${c.city} →`}
                       </Link>
                     ))}

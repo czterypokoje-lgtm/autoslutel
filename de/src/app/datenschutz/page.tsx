@@ -7,13 +7,13 @@ export const metadata: Metadata = {
     absolute: 'Privacybeleid (AVG conform) | Autosleutel24',
   },
   description: `Privacybeleid van ${SITE_CONFIG.fullName}: welke persoonsgegevens wij bewaren, waarom en hoe lang. Wij voldoen aan de AVG en delen uw gegevens niet zonder toestemming.`,
-  alternates: { canonical: `${SITE_CONFIG.domain}/privacybeleid` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/datenschutz` },
 };
 
 export default function PrivacyPage() {
   return (
     <main>
-      <script id="bc-privacy" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Privacybeleid', path: '/privacybeleid' }])) }} />
+      <script id="bc-privacy" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Privacybeleid', path: '/datenschutz' }])) }} />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '4rem 2rem' }}>
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <h1 style={{ color: '#fff' }}>Privacybeleid</h1>
@@ -23,12 +23,12 @@ export default function PrivacyPage() {
 
       <div className="container" style={{ padding: '3rem 2rem', maxWidth: 900 }}>
         {[
-          { title: '1. Verantwoordelijke', content: `${SITE_CONFIG.fullName} is verantwoordelijk voor de verwerking van persoonsgegevens zoals beschreven in dit privacybeleid. KVK: ${SITE_CONFIG.kvk} | E-mail: ${SITE_CONFIG.email}` },
+          { title: '1. Verantwoordelijke', content: `${SITE_CONFIG.fullName} is verantwoordelijk voor de verwerking van persoonsgegevens zoals beschreven in dit privacybeleid. KVK: ${SITE_CONFIG.hrb} | E-mail: ${SITE_CONFIG.email}` },
           { title: '2. Welke Gegevens Verzamelen Wij?', content: 'Wij verzamelen: naam, telefoonnummer, e-mailadres, kenteken/voertuigdata (voor dienstverlening), factuurgegevens. Wij verzamelen géén bijzondere persoonsgegevens.' },
           { title: '3. Waarom Verwerken Wij Uw Gegevens?', content: 'Uitvoering van de overeenkomst (dienstverlening), facturatie, wettelijke verplichtingen, en op uw verzoek voor garantieclaims.' },
           { title: '4. Hoe Lang Bewaren Wij Uw Gegevens?', content: 'Factuurgegevens: 7 jaar (wettelijke bewaarplicht). Overige klantgegevens: maximaal 2 jaar na laatste contact.' },
           { title: '5. Uw Rechten (AVG/GDPR)', content: 'U heeft het recht op inzage, correctie, verwijdering, bezwaar en dataportabiliteit. Neem contact op via ' + SITE_CONFIG.email },
-          { title: '6. Cookies', content: 'Deze website gebruikt noodzakelijke cookies (nodig om de site te laten werken) en, uitsluitend met uw toestemming, cookies voor statistieken (Google Analytics 4, Microsoft Clarity — inclusief opnames van websessies) en marketing (Google Ads, DoubleClick). Zonder uw toestemming worden deze niet geplaatst. U kunt uw keuze op elk moment wijzigen of intrekken via "Cookie-instellingen" onderaan elke pagina. Een volledig overzicht per cookie staat in ons cookiebeleid op /cookiebeleid.' },
+          { title: '6. Cookies', content: 'Deze website gebruikt noodzakelijke cookies (nodig om de site te laten werken) en, uitsluitend met uw toestemming, cookies voor statistieken (Google Analytics 4, Microsoft Clarity — inclusief opnames van websessies) en marketing (Google Ads, DoubleClick). Zonder uw toestemming worden deze niet geplaatst. U kunt uw keuze op elk moment wijzigen of intrekken via "Cookie-instellingen" onderaan elke pagina. Een volledig overzicht per cookie staat in ons cookiebeleid op /cookie-richtlinie.' },
           { title: '7. Contact & Klachten', content: `Vragen? Mail naar ${SITE_CONFIG.email}. U kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl).` },
         ].map((section) => (
           <div key={section.title} style={{ marginBottom: '2rem', paddingBottom: '2rem', borderBottom: '1px solid var(--color-border)' }}>

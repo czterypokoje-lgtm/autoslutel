@@ -8,14 +8,14 @@ export const metadata: Metadata = {
   },
   description: `Antwoorden op alle vragen over autosleutel bijmaken, kosten, transponder programmeren, smart key en auto openen. Bel direct: ${SITE_CONFIG.phone}`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/veelgestelde-vragen`,
+    canonical: `${SITE_CONFIG.domain}/haeufige-fragen`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/veelgestelde-vragen`,
-      'x-default': `${SITE_CONFIG.domain}/veelgestelde-vragen`,
+      'nl-NL': `${SITE_CONFIG.domain}/haeufige-fragen`,
+      'x-default': `${SITE_CONFIG.domain}/haeufige-fragen`,
     },
   },
   openGraph: {
-    url: `${SITE_CONFIG.domain}/veelgestelde-vragen`,
+    url: `${SITE_CONFIG.domain}/haeufige-fragen`,
     type: 'website',
     title: 'Veelgestelde Vragen Autosleutel Bijmaken | Autosleutel24',
     description: `Alles wat u wilt weten over autosleutels bijmaken, kosten en onze service. Bel ${SITE_CONFIG.phone}`,
@@ -38,7 +38,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-    { '@type': 'ListItem', position: 2, name: 'Veelgestelde Vragen', item: `${SITE_CONFIG.domain}/veelgestelde-vragen` },
+    { '@type': 'ListItem', position: 2, name: 'Veelgestelde Vragen', item: `${SITE_CONFIG.domain}/haeufige-fragen` },
   ],
 };
 
@@ -55,35 +55,59 @@ const faqSchema = {
   })),
 };
 
-// Section categories for structured display
+/*
+ * Die Abschnitte, nach Frage statt nach Index.
+ *
+ * Hier stand eine Auswahl per Position — FAQ_GLOBAL[14], FAQ_AKL[1] und so
+ * weiter. Das bricht, sobald eine Frage dazukommt oder wegfällt: die deutsche
+ * FAQ ist kürzer als die niederländische, und der Build ist genau daran
+ * gescheitert ("Cannot read properties of undefined"). Ausgewählt wird jetzt
+ * über ein Stück der Frage, und was nicht gefunden wird, fällt weg statt den
+ * Build zu stoppen.
+ */
+const pick = (list: typeof FAQ_GLOBAL, ...needles: string[]) =>
+  needles
+    .map((n) => list.find((f) => f.q.toLowerCase().includes(n.toLowerCase())))
+    .filter((f): f is (typeof FAQ_GLOBAL)[number] => Boolean(f));
+
 const sections = [
   {
-    title: '💰 Kosten & Prijzen',
-    faqs: [FAQ_GLOBAL[0], FAQ_GLOBAL[4], FAQ_AUTOSLEUTEL_BIJMAKEN[2], FAQ_SMART_KEY[0]],
+    title: '💰 Kosten & Preise',
+    faqs: [
+      ...pick(FAQ_GLOBAL, 'was kostet es', 'kommen am ende', 'wie bezahle ich'),
+      ...pick(FAQ_SMART_KEY, 'so viel teurer'),
+    ],
   },
   {
-    title: '⏱️ Reactietijd & Beschikbaarheid',
-    faqs: [FAQ_GLOBAL[1], FAQ_GLOBAL[5], FAQ_GLOBAL[13]],
+    title: '⏱️ Erreichbarkeit',
+    faqs: pick(FAQ_GLOBAL, 'wie schnell', 'wer kommt'),
   },
   {
-    title: '🔑 Autosleutel Kwijt & Bijmaken',
-    faqs: [FAQ_GLOBAL[2], FAQ_GLOBAL[3], FAQ_AUTOSLEUTEL_BIJMAKEN[0], FAQ_AUTOSLEUTEL_BIJMAKEN[1], FAQ_GLOBAL[12]],
+    title: '🔑 Schlüssel verloren & nachmachen',
+    faqs: [
+      ...pick(FAQ_GLOBAL, 'alle schlüssel verloren', 'schlüsseldienst moderne'),
+      ...pick(FAQ_AUTOSLEUTEL_BIJMAKEN, 'vorhandener schlüssel', 'zweitschlüssel oder ersatzschlüssel', 'wie lange dauert'),
+    ],
   },
   {
-    title: '📡 Transponder & Smart Key',
-    faqs: [FAQ_GLOBAL[7], FAQ_GLOBAL[8], FAQ_TRANSPONDER[0], FAQ_TRANSPONDER[1], FAQ_TRANSPONDER[2], FAQ_SMART_KEY[1], FAQ_GLOBAL[11]],
+    title: '📡 Transponder & Keyless Go',
+    faqs: [
+      ...pick(FAQ_GLOBAL, 'motor startet nicht'),
+      ...pick(FAQ_TRANSPONDER, 'was ist ein transponder', 'fbs4'),
+      ...pick(FAQ_SMART_KEY, 'nicht mehr erkannt'),
+    ],
   },
   {
-    title: '🚗 Auto Openen',
-    faqs: [FAQ_AUTO_OP_SLOT[0], FAQ_AUTO_OP_SLOT[1], FAQ_AUTO_OP_SLOT[2], FAQ_GLOBAL[10]],
+    title: '🚗 Auto öffnen',
+    faqs: pick(FAQ_AUTO_OP_SLOT, 'schaden', 'kind oder ein hund', 'hersteller-app', 'nachweisen'),
   },
   {
-    title: '🛡️ Alle Sleutels Kwijt (AKL)',
-    faqs: [FAQ_AKL[0], FAQ_AKL[1], FAQ_GLOBAL[3]],
+    title: '🛡️ Alle Schlüssel verloren',
+    faqs: pick(FAQ_AKL, 'alle schlüssel verloren', 'verlorenen schlüssel', 'im vergleich zum händler'),
   },
   {
-    title: '✅ Garantie & Betrouwbaarheid',
-    faqs: [FAQ_GLOBAL[14], FAQ_GLOBAL[9], FAQ_GLOBAL[6]],
+    title: '✅ Garantie & Unterlagen',
+    faqs: pick(FAQ_GLOBAL, 'so gut wie der vom hersteller', 'welche unterlagen', 'allen marken', 'repariert werden'),
   },
 ];
 

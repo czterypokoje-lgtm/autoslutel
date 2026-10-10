@@ -1,15 +1,23 @@
 /*
- * The arrival promise, in one place.
+ * Das Ankunftsversprechen, an einer Stelle.
  *
- * "30-60 min ter plaatse" is the line that converted best for the kwijt and
- * open-the-door searches, where a person standing next to a car wants to know
- * how long. It is in the titles, headings and descriptions of those pages, of
- * the homepage and of every city page.
+ * Auf der niederländischen Seite steht hier "30-60 min ter plaatse" — die
+ * Zeile, die bei den Verloren- und Öffnen-Suchen am besten umgewandelt hat,
+ * weil jemand neben einem Auto wissen will, wie lange es dauert.
  *
- * It was once removed from the city pages because one van could not be in
- * Maastricht in an hour. The business now has technicians across the country,
- * so the promise is back everywhere. If a region is ever served by nobody,
- * take it out for that region rather than leaving a claim you cannot keep.
+ * Hier steht sie bewusst NICHT.
+ *
+ * Vier Partner in vier Städten sind kein Netz, das eine Zahl tragen kann, und
+ * die niederländische Seite hat genau diesen Fehler einmal gemacht: das
+ * Versprechen stand auf 62 Stadtseiten, auch auf Maastricht, 210 km von der
+ * Werkstatt. Es wurde entfernt, weil es unwahr war. Eine deutsche Seite, die
+ * am ersten Tag "in 30 Minuten da" sagt, fängt mit derselben Schuld an — und
+ * in einer Branche, in der deutsche Kunden ohnehin prüfen, ob am Ende mehr
+ * verlangt wird, ist das das Letzte, was man verspielen darf.
+ *
+ * Stattdessen: ein ehrliches Zeitfenster am Telefon. Sobald das Netz dicht
+ * genug ist, um eine Zahl zu halten, gehört sie hierher — pro Stadt, nicht
+ * pauschal.
  */
-export const ARRIVAL = '30-60 min';
-export const ARRIVAL_TITLE = '30-60 Min Ter Plaatse';
+export const ARRIVAL = 'kurzfristig';
+export const ARRIVAL_TITLE = 'Festpreis vorab';

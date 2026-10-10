@@ -8,7 +8,7 @@ import { ARRIVAL } from '@/config/arrival';
  * The service area as GeoJSON: one Point per town, with its province, its page and
  * the arrival promise. It is the same list the map, the province pages and the sitemap
  * are built from, in the one format mapping tools, GIS software and AI crawlers read
- * without scraping a page. /llms.txt and /steden point to it.
+ * without scraping a page. /llms.txt and /staedte point to it.
  *
  * Coordinates are [longitude, latitude], as GeoJSON requires.
  */
@@ -22,7 +22,7 @@ export function GET() {
     properties: {
       name: c.city,
       province: c.region,
-      url: `${SITE_CONFIG.domain}/steden/${c.slug}`,
+      url: `${SITE_CONFIG.domain}/staedte/${c.slug}`,
       service: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
       arrival: `Binnen ${ARRIVAL} ter plaatse`,
       provider: SITE_CONFIG.fullName,

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/leistungen';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     absolute: 'Autosleutel Diensten: Bijmaken, Kwijt, Openen | 24/7',
   },
   description: 'Alle autosleutel diensten op locatie: bijmaken, alle sleutels kwijt, transponder, smart key, auto openen en reparatie. Vaste prijs vooraf. Bel direct!',
-  alternates: { canonical: `${SITE_CONFIG.domain}/diensten` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/leistungen` },
 };
 
 export default function DienstenOverviewPage() {
@@ -24,17 +24,17 @@ export default function DienstenOverviewPage() {
    */
   /*
    * Where a service actually lives. alle-sleutels-kwijt-auto 301s to
-   * /autosleutel-kwijt, so both the table and the ItemList below have to
+   * /autoschluessel-verloren, so both the table and the ItemList below have to
    * point at the destination -- a redirecting URL declared in structured
    * data hands a crawler a hop it did not need to take.
    */
   const hrefFor = (slug: string) =>
-    REDIRECTED_SERVICE_SLUGS.has(slug) ? '/autosleutel-kwijt' : `/diensten/${slug}`;
+    REDIRECTED_SERVICE_SLUGS.has(slug) ? '/autoschluessel-verloren' : `/leistungen/${slug}`;
 
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    '@id': `${SITE_CONFIG.domain}/diensten#lijst`,
+    '@id': `${SITE_CONFIG.domain}/leistungen#lijst`,
     name: 'Autosleutel diensten',
     numberOfItems: DIENSTEN.length,
     itemListElement: DIENSTEN.map((dienst, i) => ({
@@ -50,7 +50,7 @@ export default function DienstenOverviewPage() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Diensten', item: `${SITE_CONFIG.domain}/diensten` },
+      { '@type': 'ListItem', position: 2, name: 'Diensten', item: `${SITE_CONFIG.domain}/leistungen` },
     ],
   };
 

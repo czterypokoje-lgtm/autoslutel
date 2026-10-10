@@ -30,15 +30,15 @@ export const metadata: Metadata = {
   title: { absolute: 'Autosleutel Bijmaken in de Buurt | Wij Komen Naar U Toe' },
   description: `Autosleutel bijmaken in de buurt? Onze monteur is binnen 30-60 min bij u in Utrecht, de Randstad en Gelderland en maakt de sleutel ter plaatse. Bel direct.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/autosleutel-bijmaken-in-de-buurt`,
+    canonical: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/autosleutel-bijmaken-in-de-buurt`,
-      'x-default': `${SITE_CONFIG.domain}/autosleutel-bijmaken-in-de-buurt`,
+      'nl-NL': `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe`,
+      'x-default': `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe`,
     },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/autosleutel-bijmaken-in-de-buurt`,
+    url: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe`,
     title: 'Autosleutel Bijmaken in de Buurt | Wij Komen Naar U Toe',
     description:
       'Autosleutel bijmaken in de buurt? Onze monteur komt naar uw locatie en maakt de sleutel ter plaatse. 24/7 in heel Nederland.',
@@ -84,7 +84,7 @@ export default function InDeBuurt() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Autosleutel bijmaken in de buurt', item: `${SITE_CONFIG.domain}/autosleutel-bijmaken-in-de-buurt` },
+      { '@type': 'ListItem', position: 2, name: 'Autosleutel bijmaken in de buurt', item: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe` },
     ],
   };
 
@@ -100,7 +100,7 @@ export default function InDeBuurt() {
         lead="Wij hebben geen winkel waar u naartoe rijdt. De werkplaats zit in de bus en die komt naar uw auto, waar die ook staat."
         facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
-          src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
+          src: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 met servicebus op locatie',
         }}
       >
@@ -133,7 +133,7 @@ export default function InDeBuurt() {
                 {CITIES.filter((c) => c.region === region).map((c) => (
                   <Link
                     key={c.slug}
-                    href={`/steden/${c.slug}`}
+                    href={`/staedte/${c.slug}`}
                     style={{
                       padding: '0.45rem 0.85rem',
                       background: '#fff',

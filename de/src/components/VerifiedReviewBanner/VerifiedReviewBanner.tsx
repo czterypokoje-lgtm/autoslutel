@@ -16,13 +16,13 @@ export interface BannerReview {
  * The review shown when a page does not name one of its own.
  *
  * Taken from REVIEWS — the same array transcribed from the Google Business
- * Profile that /beoordelingen renders — and not written here. The default
+ * Profile that /bewertungen renders — and not written here. The default
  * used to be a "Sanne V., Local Guide • 12 reviews" who appears nowhere on
  * that profile: placeholder copy that arrived with a contact-page redesign
  * (d6d3c4a) and survived the fabricated-review cleanup in 5c54b6e, because
  * that cleanup went through GoogleReviewsCta and this is a different
- * component. No caller passes a review, so she was on the home page, /contact,
- * /diensten and all nineteen service pages.
+ * component. No caller passes a review, so she was on the home page, /kontakt,
+ * /leistungen and all nineteen service pages.
  *
  * NOTE FOR WHOEVER ADDS THE NEXT ONE: these must be real reviews, quoted from
  * the profile. A service page showing an invented testimonial is a misleading
@@ -55,17 +55,22 @@ export function bannerReviewFor(name: string): BannerReview | undefined {
 }
 
 /*
- * The default is a Dutch review, on every page that does not name its own: the person
- * reading this is a Dutch customer in a hurry. The first Dutch one is Stijn's, which
- * Google truncates, so it is quoted up to its last complete sentence.
+ * Hier gibt es keinen Standard, weil es keine echte Bewertung gibt.
+ *
+ * Die niederländische Fassung setzt die erste echte Bewertung aus dem
+ * Google-Profil als Standard. REVIEWS ist hier leer (§ 5 UWG, siehe die
+ * Begründung in GoogleReviewsCta), also ist der Standard null und das Bauteil
+ * rendert nichts — statt wie früher einen erfundenen Namen auf jeder Seite.
  */
-const DEFAULT_REVIEW: BannerReview =
-  bannerReviewFor('Stijn Van Arkel') ??
-  bannerReviewFor('Julia Van Doorn') ?? {
-    name: REVIEWS[0].name,
-    meta: `Google · ${REVIEWS[0].when}`,
-    text: REVIEWS[0].text,
-  };
+const DEFAULT_REVIEW: BannerReview | null =
+  bannerReviewFor(REVIEWS[0]?.name ?? '') ??
+  (REVIEWS[0]
+    ? {
+        name: REVIEWS[0].name,
+        meta: `Google · ${REVIEWS[0].when ?? ''}`,
+        text: REVIEWS[0].text,
+      }
+    : null);
 
 /**
  * @param review A review relevant to this particular page. A contactslot page
@@ -73,7 +78,16 @@ const DEFAULT_REVIEW: BannerReview =
  *   contactslot — but only if the contactslot review actually exists.
  */
 export default function VerifiedReviewBanner({ review }: { review?: BannerReview } = {}) {
-  const { name, meta, text } = review ?? DEFAULT_REVIEW;
+  /*
+   * Ohne echte Bewertung kein Banner — weder die übergebene noch der
+   * Standard. Die niederländische Fassung hatte einmal eine erfundene
+   * Bewertung als Standardwert, die dadurch auf der Startseite, /kontakt und
+   * neunzehn Dienstseiten stand.
+   */
+
+  const chosen = review ?? DEFAULT_REVIEW;
+  if (!chosen) return null;
+  const { name, meta, text } = chosen;
 
   return (
     <div className={styles.bannerContainer}>
@@ -81,7 +95,7 @@ export default function VerifiedReviewBanner({ review }: { review?: BannerReview
         
         {/* Left Section */}
         <div className={styles.leftSection}>
-          <div className={styles.supertitle}>NEDERLAND&apos;S TOP AUTOSLOTENMAKER</div>
+          <div className={styles.supertitle}>GEPRÜFTE KUNDENBEWERTUNG</div>
           <h2 className={styles.title}>
             Wat Geverifieerde Klanten{' '}<br/>Zeggen Over Onze Service
           </h2>

@@ -37,7 +37,7 @@ export interface MarqueeImage {
  * There are sixty gallery photos. Rendering all of them, in two rows, each
  * doubled for the seamless loop, is well over two hundred <img> elements on a
  * section most visitors never reach. The cap keeps it to PER_ROW * 4 and the
- * rest stay on /galerij, which is the page that exists to show all of them.
+ * rest stay on /galerie, which is the page that exists to show all of them.
  */
 
 /** Tiles per row before the loop repeats. */

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: {
     /*
      * 10,607 impressions at average position 69 and 14 clicks -- the second
-     * biggest leak on the site after /diensten/autosleutel-bijmaken. The
+     * biggest leak on the site after /leistungen/autoschluessel-nachmachen. The
      * "kosten" and "prijs" query families are 5,947 impressions between them
      * and the old title led with "Prijzen", which is not the word they use.
      */
@@ -17,10 +17,10 @@ export const metadata: Metadata = {
   },
   description: `Wat kost een autosleutel bijmaken? Vaste prijzen per type sleutel: transponder, klapsleutel en smart key. Geen verrassingen achteraf.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/prijzen`,
+    canonical: `${SITE_CONFIG.domain}/preise`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/prijzen`,
-      'x-default': `${SITE_CONFIG.domain}/prijzen`,
+      'nl-NL': `${SITE_CONFIG.domain}/preise`,
+      'x-default': `${SITE_CONFIG.domain}/preise`,
     },
   },
 };
@@ -100,9 +100,9 @@ const euro = (value: string): number | null => {
 const offerCatalogSchema = {
   '@context': 'https://schema.org',
   '@type': 'OfferCatalog',
-  '@id': `${SITE_CONFIG.domain}/prijzen#tarieven`,
+  '@id': `${SITE_CONFIG.domain}/preise#tarieven`,
   name: 'Tarieven Autosleutel24',
-  url: `${SITE_CONFIG.domain}/prijzen`,
+  url: `${SITE_CONFIG.domain}/preise`,
   itemListElement: priceRows.flatMap((row) => {
     if (!row.service) return [];
     const min = euro(row.from);
@@ -132,7 +132,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-    { '@type': 'ListItem', position: 2, name: 'Prijzen', item: `${SITE_CONFIG.domain}/prijzen` },
+    { '@type': 'ListItem', position: 2, name: 'Prijzen', item: `${SITE_CONFIG.domain}/preise` },
   ],
 };
 
@@ -163,7 +163,7 @@ export default function PrijzenPage() {
 
       <div className="container" style={{ padding: '3rem 2rem', maxWidth: 1000, margin: '0 auto' }}>
 
-        {/* Video — no VideoObject here; the watch page is /autosleutel-kwijt */}
+        {/* Video — no VideoObject here; the watch page is /autoschluessel-verloren */}
         <section style={{ padding: '3.5rem 0' }}>
           <VideoEmbed heading="Zo werkt het — in 40 seconden" />
         </section>
@@ -226,7 +226,7 @@ export default function PrijzenPage() {
             <div className={styles.trustItem}>
               <div className={styles.trustImgWrap}>
                 <Image
-                  src="/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp"
+                  src="/images/seo/autoschluessel_reparatur_mobil.webp"
                   alt="Monteur repareert de behuizing van een autosleutel op locatie"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
@@ -242,7 +242,7 @@ export default function PrijzenPage() {
             <div className={styles.trustItem}>
               <div className={styles.trustImgWrap}>
                 <Image
-                  src="/images/seo/autosleutel_programmeren_op_locatie_utrecht_amsterdam.webp"
+                  src="/images/seo/autoschluessel_anlernen_vor_ort.webp"
                   alt="Programmeren en inleren van een nieuwe autosleutel in een mobiele servicebus"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
@@ -258,7 +258,7 @@ export default function PrijzenPage() {
             <div className={styles.trustItem}>
               <div className={styles.trustImgWrap}>
                 <Image
-                  src="/images/seo/autosleutel_voorraad_alle_merken_utrecht_amsterdam.webp"
+                  src="/images/seo/autoschluessel_lager_alle_marken.webp"
                   alt="Voorraad van originele autosleutels en transponders voor diverse automerken"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
@@ -274,7 +274,7 @@ export default function PrijzenPage() {
             <div className={styles.trustItem}>
               <div className={styles.trustImgWrap}>
                 <Image
-                  src="/images/seo/professionele_diagnose_apparatuur_utrecht_amsterdam.webp"
+                  src="/images/seo/professionelle_diagnose_geraete.webp"
                   alt="Professionele diagnose apparatuur (Autel IM608 Pro) voor autosleutel programmering"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
@@ -344,7 +344,7 @@ export default function PrijzenPage() {
               {SITE_CONFIG.phone}
             </a>
             <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.ctaWa} id="prijzen-cta-wa">WhatsApp</a>
-            <Link href="/contact" className={styles.ctaContact} id="prijzen-cta-form">Offerte formulier</Link>
+            <Link href="/kontakt" className={styles.ctaContact} id="prijzen-cta-form">Offerte formulier</Link>
           </div>
         </div>
 

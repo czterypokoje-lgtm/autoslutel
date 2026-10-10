@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: 'Autosleutelspecialist Worden bij Ons Netwerk',
   description:
     'Zelfstandig autosleutelspecialist in Noord-Brabant of Limburg? Wij zoeken partners in onder andere Eindhoven en Maastricht. Klussen, CRM en facturatie geregeld.',
-  alternates: { canonical: `${SITE_CONFIG.domain}/monteur-worden` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/partner-werden` },
 };
 
 /*
@@ -110,7 +110,7 @@ export default function MonteurWorden() {
               * image.)
               */}
             <Image
-              src="/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp"
+              src="/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp"
               alt="Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond"
               width={800}
               height={560}

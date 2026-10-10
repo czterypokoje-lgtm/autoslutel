@@ -13,13 +13,13 @@ const CORE_IMAGES = [
     /* The home page hero. Swapped when the hero changed — an image sitemap is
        meant to list images that actually appear on a page, and the previous
        entry pointed at a file the site no longer displays anywhere. */
-    url: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
+    url: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
     title: 'Autosleutelspecialist van Autosleutel24 op locatie',
     caption: 'Autosleutel24 — mobiele autosleutelspecialist in Utrecht, Amsterdam en Midden-Nederland',
     geo_location: 'Utrecht en Amsterdam, Nederland',
   },
   {
-    url: '/autosleutel24-sleutelbijmaken-utrecht.webp',
+    url: '/autoschluessel24-schluesselnachmachen.webp',
     title: 'Autosleutel Bijmaken Utrecht',
     caption: 'Professioneel autosleutel bijmaken op locatie in Utrecht door Autosleutel24',
     geo_location: 'Utrecht, Nederland',
@@ -31,97 +31,97 @@ const CORE_IMAGES = [
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp',
+    url: '/images/seo/auto_tuer_oeffnen_schluesseldienst_schadenfrei.webp',
     title: 'Auto Deur Openen Schadevrij Utrecht',
     caption: 'Professionele auto slotenmaker opent deur schadevrij in Utrecht',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/auto_sleutel_maken_op_locatie_utrecht.webp',
+    url: '/images/seo/auto_schluessel_anfertigen_vor_ort.webp',
     title: 'Autosleutel Maken Op Locatie Utrecht',
     caption: 'Autosleutel programmeringsapparatuur — sleutel bijmaken op locatie in Utrecht',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/auto_sleutel_utrecht_24uur_workshop.webp',
+    url: '/images/seo/auto_schluessel_24stunden_workshop.webp',
     title: 'Autosleutel Werkplaats Utrecht 24 Uur',
     caption: 'Professionele autosleutel werkplaats van Autosleutel24 in Utrecht — 24/7 open',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp',
+    url: '/images/seo/autoschluessel_nachmachen_car_keys.webp',
     title: 'Autosleutels Bijmaken Utrecht',
     caption: 'Diverse autosleutels voor bijmaken en programmeren in Utrecht',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/autosleutel-merken-bijmaken-utrecht-amsterdam.webp',
+    url: '/autoschluessel-marken-nachmachen.webp',
     title: 'Autosleutel Merken Bijmaken Utrecht en Amsterdam',
     caption: 'Autosleutel24 maakt sleutels voor alle 59 automerken waaronder BMW, Mercedes, VW, Audi, Toyota, Ford en Volvo in Utrecht en Amsterdam',
     geo_location: 'Utrecht en Amsterdam, Nederland',
   },
   {
-    url: '/images/seo/autosleutel_programmeren_op_locatie_utrecht_amsterdam.webp',
+    url: '/images/seo/autoschluessel_anlernen_vor_ort.webp',
     title: 'Autosleutel Programmeren Utrecht Amsterdam',
     caption: 'Mobiel autosleutel programmeren op uw locatie in Utrecht en Amsterdam',
     geo_location: 'Utrecht, Amsterdam, Nederland',
   },
   {
-    url: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp',
+    url: '/images/seo/autoschluessel_reparatur_mobil.webp',
     title: 'Autosleutel Reparatie Utrecht Amsterdam',
     caption: 'Mobiele autosleutel reparatie in Utrecht en Amsterdam door Autosleutel24',
     geo_location: 'Utrecht, Amsterdam, Nederland',
   },
   {
-    url: '/images/seo/autosleutel_voorraad_alle_merken_utrecht_amsterdam.webp',
+    url: '/images/seo/autoschluessel_lager_alle_marken.webp',
     title: 'Autosleutel Voorraad Alle Merken',
     caption: 'Grote voorraad originele autosleutels voor alle merken bij Autosleutel24',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/contactslot-auto-vervangen/auto_contactslot_reparatie_slotenmaker_utrecht.webp',
+    url: '/images/zuendschloss-auto-wechseln/auto_zuendschloss_reparatur_schluesseldienst.webp',
     title: 'Contactslot Auto Vervangen Utrecht',
     caption: 'Professioneel contactslot repareren en vervangen in Utrecht door slotenmaker',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/professionele_diagnose_apparatuur_utrecht_amsterdam.webp',
+    url: '/images/seo/professionelle_diagnose_geraete.webp',
     title: 'Professionele Diagnose Apparatuur Autosleutel',
     caption: 'Dealer-niveau diagnose apparatuur voor autosleutel programmering — Autel, VVDI, Lonsdor',
     geo_location: 'Utrecht, Amsterdam, Nederland',
   },
   {
-    url: '/images/seo/reserve_autosleutel_transponder_programmeren_utrecht.webp',
+    url: '/images/seo/ersatz_autoschluessel_transponder_anlernen.webp',
     title: 'Reserve Autosleutel Transponder Programmeren Utrecht',
     caption: 'Reserve autosleutel met transponder chip programmeren in Utrecht',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/slotenmaker_gereedschap_utrecht_spoed.webp',
+    url: '/images/seo/schluesseldienst_werkzeug_notdienst.webp',
     title: 'Slotenmaker Gereedschap Utrecht Spoed',
     caption: 'Professioneel slotenmaker gereedschap voor spoedopdrachten in Utrecht',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/slotenmaker_utrecht_werkzaamheden_24uur.webp',
+    url: '/images/seo/schluesseldienst_arbeiten_24stunden.webp',
     title: 'Slotenmaker Utrecht Werkzaamheden 24 Uur',
     caption: 'Slotenmaker in Utrecht voert werkzaamheden uit op locatie — 24 uur beschikbaar',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/slotenmaker_voorraad_utrecht_sleutels.webp',
+    url: '/images/seo/schluesseldienst_lager_schluessel.webp',
     title: 'Slotenmaker Voorraad Utrecht Sleutels',
     caption: 'Grote sleutelvoorraad van de slotenmaker in Utrecht',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/team/berkan-acarol-autosleutelspecialist-utrecht.webp',
+    url: '/images/team/berkan-acarol-autoschluessel-spezialist.webp',
     title: 'Berkan Acarol — Autosleutelspecialist Utrecht',
     caption: 'Berkan Acarol, eigenaar en hoofdtechnicus van Autosleutel24',
     geo_location: 'Utrecht, Nederland',
   },
   {
-    url: '/images/seo/marktplaats-autosleutel24-verifieerd.webp',
+    url: '/images/seo/marktplaats-autoschluessel24-verifiziert.webp',
     title: 'Autosleutel24 Marktplaats Geverifieerd',
     caption: 'Geverifieerd Marktplaats profiel van Autosleutel24 voor extra betrouwbaarheid en reviews',
     geo_location: 'Utrecht, Nederland',
@@ -131,32 +131,32 @@ const CORE_IMAGES = [
 // ── Blog post images ──
 const BLOG_IMAGES = [
   {
-    url: '/images/blog/auto_openen_zonder_sleutel_schadevrij.webp',
+    url: '/images/blog/auto_oeffnen_ohne_schluessel_schadenfrei.webp',
     title: 'Auto Openen Zonder Sleutel Schadevrij',
     caption: 'Schadevrij auto openen zonder sleutel door Autosleutel24',
   },
   {
-    url: '/images/blog/autosleutel_bijmaken_kosten_prijslijst.webp',
+    url: '/images/blog/autoschluessel_nachmachen_kosten_preisliste.webp',
     title: 'Autosleutel Bijmaken Kosten Prijslijst 2026',
     caption: 'Kostenoverzicht autosleutel bijmaken per merk — 2026 prijslijst',
   },
   {
-    url: '/images/blog/autosleutel_bijmaken_specialist_utrecht.webp',
+    url: '/images/blog/autoschluessel_nachmachen_spezialist.webp',
     title: 'Autosleutel Bijmaken Specialist Utrecht',
     caption: 'Gecertificeerde autosleutelspecialist aan het werk in Utrecht',
   },
   {
-    url: '/images/blog/autosleutel_kwijt_wat_nu_stappenplan.webp',
+    url: '/images/blog/autoschluessel_verloren_was_tun_anleitung.webp',
     title: 'Autosleutel Kwijt — Stappenplan Utrecht',
     caption: 'Stappenplan: wat te doen als u uw autosleutel kwijt bent in Utrecht',
   },
   {
-    url: '/images/blog/sleutel_bijmaken_auto_mobiele_service.webp',
+    url: '/images/blog/schluessel_nachmachen_auto_mobil_service.webp',
     title: 'Autosleutel Bijmaken Mobiele Service',
     caption: 'Mobiele autosleutel bijmaken service — Autosleutel24 bij u thuis of op kantoor',
   },
   {
-    url: '/images/blog/smart_key_programmeren_utrecht_auto.webp',
+    url: '/images/blog/smart_key_anlernen_auto.webp',
     title: 'Smart Key Programmeren Utrecht',
     caption: 'Smart key en keyless entry sleutel programmeren in Utrecht',
   },
@@ -185,7 +185,7 @@ function cityImageEntries() {
   ownCache ??= cityOwnImages();
   const own = ownCache;
   return CITIES.map((city) => ({
-    loc: `${BASE}/steden/${city.slug}`,
+    loc: `${BASE}/staedte/${city.slug}`,
     images: Array.from({ length: 8 })
       .map((_, i) => `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i + 1}.webp`)
       .filter((url) => own.has(url))
@@ -208,25 +208,25 @@ const PAGE_ENTRIES = [
     ],
   },
   {
-    loc: `${BASE}/over-ons`,
+    loc: `${BASE}/ueber-uns`,
     images: [
       CORE_IMAGES[5], CORE_IMAGES[11], CORE_IMAGES[14], CORE_IMAGES[17], CORE_IMAGES[18],
     ],
   },
   {
-    loc: `${BASE}/diensten/autosleutel-bijmaken`,
+    loc: `${BASE}/leistungen/autoschluessel-nachmachen`,
     images: [CORE_IMAGES[4], CORE_IMAGES[13], CORE_IMAGES[9]],
   },
   {
-    loc: `${BASE}/diensten/transponder-programmeren`,
+    loc: `${BASE}/leistungen/transponder-programmeren`,
     images: [CORE_IMAGES[13], CORE_IMAGES[8]],
   },
   {
-    loc: `${BASE}/diensten/smart-key-programmeren`,
+    loc: `${BASE}/leistungen/keyless-go-schluessel`,
     images: [CORE_IMAGES[8], CORE_IMAGES[1]],
   },
   {
-    loc: `${BASE}/diensten/contactslot-auto-vervangen`,
+    loc: `${BASE}/leistungen`,
     images: [CORE_IMAGES[10], CORE_IMAGES[11]],
   },
 

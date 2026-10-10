@@ -27,7 +27,7 @@ interface GoogleReviewsCtaProps {
  * of a second, different, invented number living only in this file.
  */
 /*
- * Exported so /beoordelingen can build Review markup from the same array the
+ * Exported so /bewertungen can build Review markup from the same array the
  * cards render. It must be marked up THERE and nowhere else: this component
  * is on all 62 city pages, and emitting the same review nodes 62 times is the
  * per-page duplication utils/schema.ts already warns about.
@@ -37,51 +37,46 @@ interface GoogleReviewsCtaProps {
  * Dutch reviews lead because the customer reading this is usually Dutch and in a hurry,
  * and the one that opens with a remark about the owner speaking only English goes last.
  */
-export const REVIEWS = [
-  {
-    name: 'Stijn Van Arkel',
-    when: '2 weken geleden',
-    text: 'De monteur kwam netjes bij mij op locatie en heeft binnen één uur twee nieuwe autosleutels ingeleerd op de auto. Alles werkte direct en de service was snel en …',
-  },
-  {
-    name: 'Julia Van Doorn',
-    when: '2 maanden geleden',
-    text: 'Uitstekende service! Autosleutel voor Mercedes, twee uur later klaar. …',
-  },
-  {
-    name: 'Baran Kaya',
-    when: 'een maand geleden',
-    text: 'Good service, They make key for my bmw m5 in 30 minute, Very friendly and professional service. i recommend',
-  },
-  {
-    name: 'ışıl güvercin',
-    when: 'een maand geleden',
-    text: 'Fast and trustful service. The young technician took care of everything; he opened my Golf door in approximately 1 minute. Very professional and clean work. I highly recommend him',
-  },
-  {
-    name: 'xXx XxX',
-    when: '2 maanden geleden',
-    text: 'Very friendly and competent service. They were able to make two complete replacement keys for a 2011 Mercedes Vito W639 at a fair and transparent price. I recommend.',
-  },
-  {
-    name: 'Cahit Keskin',
-    when: 'een maand geleden',
-    text: 'Their workmanship was excellent and fast; I was very pleased',
-  },
-  {
-    name: 'Lal',
-    when: 'een maand geleden',
-    text: 'Premium service they are very gentle and professional',
-  },
-  {
-    name: 'Roy',
-    when: 'een week geleden',
-    text: 'Exceptional service and a great company. Was a little bit starteld at first by talking to a only English speaking owner, but they came as promised very late at night and helped us make our car save again. Were fast and nice too. Great service.',
-  },
-] as const;
+/**
+ * Echte Bewertungen dieser Seite — derzeit keine.
+ *
+ * Leer, und das ist eine Entscheidung. Die niederländische Fassung enthält
+ * hier fünf aus dem Google-Unternehmensprofil abgetippte Bewertungen mit
+ * Namen; das sind niederländische Kunden. Sie auf einer deutschen Domain zu
+ * zeigen, als wären sie deutsche Bewertungen, oder sie zu übersetzen, wäre
+ * eine irreführende geschäftliche Handlung nach § 5 UWG — und seit 2022
+ * verlangt § 5b Abs. 3 UWG ausdrücklich, offenzulegen, ob und wie Bewertungen
+ * auf Echtheit geprüft wurden.
+ *
+ * Die niederländische Datei warnt an dieser Stelle selbst davor, hier
+ * Erfundenes einzutragen. Das gilt hier genauso: wer eine Bewertung
+ * hinzufügt, trägt eine echte ein, wörtlich aus dem deutschen
+ * Unternehmensprofil. Solange es keine gibt, zeigt die Seite keine.
+ */
+export type Review = {
+  /** Wie der Bewertende bei Google signiert. */
+  name: string;
+  /** Die Zeile unter dem Namen, z. B. "Local Guide • 12 Bewertungen". */
+  meta: string;
+  /** Die Bewertung, wörtlich zitiert. */
+  text: string;
+  /** Wann sie abgegeben wurde, wie Google es anzeigt. */
+  when?: string;
+};
+
+export const REVIEWS: Review[] = [];
 
 export default function GoogleReviewsCta({ title, intro, limit }: GoogleReviewsCtaProps) {
   const profileUrl = SITE_CONFIG.social.google;
+
+  /*
+   * Ohne echte Bewertungen rendert dieser Block nichts.
+   *
+   * Sonst stünde dort eine Bewertung von 0 mit fünf Sternen daneben — also
+   * eine Behauptung ohne Grundlage, auf der Startseite. Sobald die erste
+   * echte Bewertung in REVIEWS steht, erscheint der Block von selbst.
+   */
+  if (REVIEWS.length === 0) return null;
 
   return (
     <div>
@@ -92,7 +87,7 @@ export default function GoogleReviewsCta({ title, intro, limit }: GoogleReviewsC
         <span className={styles.ratingNum}>{SITE_CONFIG.rating}</span>
         <div>
           <div className="stars">★★★★★</div>
-          <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Google beoordelingen</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Google-Bewertungen</span>
         </div>
       </div>
       <div className={styles.reviewGrid}>

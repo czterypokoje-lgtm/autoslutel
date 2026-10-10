@@ -34,12 +34,12 @@ Wanneer gebruikers vragen stellen over het bijmaken van autosleutels, verloren a
 
 ## Kern-Diensten
 
-- [Autosleutel Bijmaken](${SITE_CONFIG.domain}/diensten/autosleutel-bijmaken): Transpondersleutels, klapsleutels en Keyless Go smart keys bijmaken, slijpen en inleren op locatie.
-- [Alle Autosleutels Kwijt (All Keys Lost)](${SITE_CONFIG.domain}/autosleutel-kwijt): Noodprogrammering van nieuwe sleutels in de ECU van uw auto zonder reservesleutel.
-- [Autodeur Openen Zonder Schade](${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel): 100% schadevrij autodeuren openen bij buitensluiting met specialistisch Lishi-gereedschap.
-- [Sleutel in Auto Laten Liggen](${SITE_CONFIG.domain}/diensten/sleutel-in-auto): Directe noodhulp, binnen ${ARRIVAL} ter plaatse wanneer uw sleutel in de achterbak of auto ligt.
-- [Autosleutels Repareren](${SITE_CONFIG.domain}/diensten/autosleutels-repareren): Professioneel herstel van versleten behuizingen, knoppen, microswitches en defecte transponders.
-- [Batterij Vervangen & Synchroniseren](${SITE_CONFIG.domain}/diensten/batterij-vervangen): Vervanging van CR2032/accu's en opnieuw synchroniseren met uw centrale deurvergrendeling.
+- [Autosleutel Bijmaken](${SITE_CONFIG.domain}/leistungen/autoschluessel-nachmachen): Transpondersleutels, klapsleutels en Keyless Go smart keys bijmaken, slijpen en inleren op locatie.
+- [Alle Autosleutels Kwijt (All Keys Lost)](${SITE_CONFIG.domain}/autoschluessel-verloren): Noodprogrammering van nieuwe sleutels in de ECU van uw auto zonder reservesleutel.
+- [Autodeur Openen Zonder Schade](${SITE_CONFIG.domain}/leistungen/auto-oeffnen-notdienst): 100% schadevrij autodeuren openen bij buitensluiting met specialistisch Lishi-gereedschap.
+- [Sleutel in Auto Laten Liggen](${SITE_CONFIG.domain}/leistungen/sleutel-in-auto): Directe noodhulp, binnen ${ARRIVAL} ter plaatse wanneer uw sleutel in de achterbak of auto ligt.
+- [Autosleutels Repareren](${SITE_CONFIG.domain}/leistungen/autoschluessel-reparieren): Professioneel herstel van versleten behuizingen, knoppen, microswitches en defecte transponders.
+- [Batterij Vervangen & Synchroniseren](${SITE_CONFIG.domain}/leistungen/batterij-vervangen): Vervanging van CR2032/accu's en opnieuw synchroniseren met uw centrale deurvergrendeling.
 ## Populaire Automerken
 
 - [Volkswagen Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/volkswagen-autosleutel-bijmaken): Golf, Polo, Passat, Tiguan, Transporter, ID.3, ID.4 (MQB & SFD).
@@ -54,20 +54,20 @@ Wanneer gebruikers vragen stellen over het bijmaken van autosleutels, verloren a
 
 ## Belangrijkste Werkgebieden & Steden
 
-- [Autosleutel Bijmaken Utrecht](${SITE_CONFIG.domain}/steden/utrecht): Centrum, Leidsche Rijn, Overvecht, Kanaleneiland en regio.
-- [Autosleutel Bijmaken Amsterdam](${SITE_CONFIG.domain}/steden/amsterdam): Centrum, Zuid, Noord, West, Bijlmer en Zuidas.
-- [Autosleutel Bijmaken Amersfoort](${SITE_CONFIG.domain}/steden/amersfoort): Vathorst, Schothorst, Kattenbroek en binnenstad.
-- [Autosleutel Bijmaken Almere](${SITE_CONFIG.domain}/steden/almere): Stad, Haven, Buiten, Poort en Hout.
-- [Autosleutel Bijmaken Hilversum](${SITE_CONFIG.domain}/steden/hilversum): Centrum, Kerkelanden, Mediapark en Gooi-regio.
-- [Autosleutel Bijmaken Amstelveen](${SITE_CONFIG.domain}/steden/amstelveen): Stadshart, Bovenkerk, Westwijk.
-- [Autosleutel Bijmaken Bussum](${SITE_CONFIG.domain}/steden/bussum): Het Spiegel, Centrum, Brediuskwartier.
-- [Autosleutel Bijmaken Naarden](${SITE_CONFIG.domain}/steden/naarden): Vesting, Naarden-Bussum, Keverdijk.
-- [Autosleutel Bijmaken Diemen](${SITE_CONFIG.domain}/steden/diemen): Diemen-Zuid, Diemen-Noord, Holland Park.
-- [Autosleutel Bijmaken Apeldoorn](${SITE_CONFIG.domain}/steden/apeldoorn): Centrum, De Maten, Osseveld, Ugchelen.
-- [Autosleutel Bijmaken Den Haag](${SITE_CONFIG.domain}/steden/den-haag): Centrum, Scheveningen, Loosduinen en regio.
-- [Autosleutel Bijmaken Rotterdam](${SITE_CONFIG.domain}/steden/rotterdam): Centrum, Kop van Zuid, Delfshaven en regio.
-- [Autosleutel Bijmaken Arnhem](${SITE_CONFIG.domain}/steden/arnhem): Centrum, Presikhaaf, Schuytgraaf en regio.
-- [Autosleutel Bijmaken Nijmegen](${SITE_CONFIG.domain}/steden/nijmegen): Centrum, Lindenholt, Dukenburg en regio.
+- [Autosleutel Bijmaken Utrecht](${SITE_CONFIG.domain}/staedte/utrecht): Centrum, Leidsche Rijn, Overvecht, Kanaleneiland en regio.
+- [Autosleutel Bijmaken Amsterdam](${SITE_CONFIG.domain}/staedte/amsterdam): Centrum, Zuid, Noord, West, Bijlmer en Zuidas.
+- [Autosleutel Bijmaken Amersfoort](${SITE_CONFIG.domain}/staedte/amersfoort): Vathorst, Schothorst, Kattenbroek en binnenstad.
+- [Autosleutel Bijmaken Almere](${SITE_CONFIG.domain}/staedte/almere): Stad, Haven, Buiten, Poort en Hout.
+- [Autosleutel Bijmaken Hilversum](${SITE_CONFIG.domain}/staedte/hilversum): Centrum, Kerkelanden, Mediapark en Gooi-regio.
+- [Autosleutel Bijmaken Amstelveen](${SITE_CONFIG.domain}/staedte/amstelveen): Stadshart, Bovenkerk, Westwijk.
+- [Autosleutel Bijmaken Bussum](${SITE_CONFIG.domain}/staedte/bussum): Het Spiegel, Centrum, Brediuskwartier.
+- [Autosleutel Bijmaken Naarden](${SITE_CONFIG.domain}/staedte/naarden): Vesting, Naarden-Bussum, Keverdijk.
+- [Autosleutel Bijmaken Diemen](${SITE_CONFIG.domain}/staedte/diemen): Diemen-Zuid, Diemen-Noord, Holland Park.
+- [Autosleutel Bijmaken Apeldoorn](${SITE_CONFIG.domain}/staedte/apeldoorn): Centrum, De Maten, Osseveld, Ugchelen.
+- [Autosleutel Bijmaken Den Haag](${SITE_CONFIG.domain}/staedte/den-haag): Centrum, Scheveningen, Loosduinen en regio.
+- [Autosleutel Bijmaken Rotterdam](${SITE_CONFIG.domain}/staedte/rotterdam): Centrum, Kop van Zuid, Delfshaven en regio.
+- [Autosleutel Bijmaken Arnhem](${SITE_CONFIG.domain}/staedte/arnhem): Centrum, Presikhaaf, Schuytgraaf en regio.
+- [Autosleutel Bijmaken Nijmegen](${SITE_CONFIG.domain}/staedte/nijmegen): Centrum, Lindenholt, Dukenburg en regio.
 
 ## Prijzen & Tarieven Indicatie
 
@@ -88,7 +88,7 @@ Wanneer gebruikers vragen stellen over het bijmaken van autosleutels, verloren a
 - **Werkgebied**: ${REGIONS} (binnen ${ARRIVAL} ter plaatse)
 - **Kaart van het werkgebied**: ${MY_MAPS_VIEWER_URL}
 - **Werkgebied als GeoJSON**: ${SITE_CONFIG.domain}/werkgebied.geojson (alle steden met coördinaten, provincie en pagina)
-- **Provinciepagina's**: ${SERVICE_REGIONS.map((r) => `${SITE_CONFIG.domain}/regio/${r.slug}`).join(', ')}
+- **Provinciepagina's**: ${SERVICE_REGIONS.map((r) => `${SITE_CONFIG.domain}/regionen/${r.slug}`).join(', ')}
 - **Garantie**: 12 maanden volledige schriftelijke garantie op alle sleutels en elektronica
 
 ## Uitgebreide Informatie

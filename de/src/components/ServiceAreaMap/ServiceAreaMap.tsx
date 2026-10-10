@@ -73,7 +73,7 @@ export default function ServiceAreaMap() {
               <article key={r.slug} className={styles.card}>
                 <header className={styles.cardHead}>
                   <h3>
-                    <Link href={`/regio/${r.slug}`}>{r.label}</Link>
+                    <Link href={`/regionen/${r.slug}`}>{r.label}</Link>
                   </h3>
                   <span className={styles.count}>{r.cities.length} steden</span>
                 </header>
@@ -81,18 +81,18 @@ export default function ServiceAreaMap() {
                 <ul className={styles.chips}>
                   {shown.map((c) => (
                     <li key={c.slug}>
-                      <Link href={`/steden/${c.slug}`}>{c.city}</Link>
+                      <Link href={`/staedte/${c.slug}`}>{c.city}</Link>
                     </li>
                   ))}
                   {more > 0 && (
                     <li>
-                      <Link href={`/regio/${r.slug}`} className={styles.more}>
+                      <Link href={`/regionen/${r.slug}`} className={styles.more}>
                         +{more} meer
                       </Link>
                     </li>
                   )}
                 </ul>
-                <Link href={`/regio/${r.slug}`} className={styles.cta}>
+                <Link href={`/regionen/${r.slug}`} className={styles.cta}>
                   Alle steden in {r.name} →
                 </Link>
               </article>
@@ -109,7 +109,7 @@ export default function ServiceAreaMap() {
           <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.call}>
             Bel {SITE_CONFIG.phone}
           </a>
-          <Link href="/autosleutel-bijmaken-in-de-buurt" className={styles.ghost}>
+          <Link href="/autoschluessel-nachmachen-in-der-naehe" className={styles.ghost}>
             Zoek wie er bij u in de buurt is
           </Link>
         </div>

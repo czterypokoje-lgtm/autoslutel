@@ -32,7 +32,7 @@ export default function HomeActionBanners() {
                 Regio&apos;s<br/>in Nederland
               </h3>
             </div>
-            <Link href="/steden" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+            <Link href="/staedte" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
               Bekijk ons werkgebied <span aria-hidden="true">→</span>
             </Link>
           </div>
@@ -60,7 +60,7 @@ export default function HomeActionBanners() {
                 Neem Contact Op
               </h3>
             </div>
-            <Link href="/contact" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+            <Link href="/kontakt" style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
               Neem contact op <span aria-hidden="true">→</span>
             </Link>
           </div>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { clampMeta } from '@/lib/meta';
 import ServiceLayout from '@/components/ServiceLayout/ServiceLayout';
 import { notFound } from 'next/navigation';
-import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/leistungen';
 import { getRelatedBlogPosts } from '@/config/services';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const service = DIENSTEN.find(s => s.slug === slug);
   if (!service) return {};
-  const pageUrl = `${SITE_CONFIG.domain}/diensten/${slug}`;
+  const pageUrl = `${SITE_CONFIG.domain}/leistungen/${slug}`;
   return {
     /*
      * metaTitle first. All 17 services carry a hand-written one and this
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
      *
      * That was not only wasted copy. alle-sleutels-kwijt-auto has
      * title: 'Autosleutel Kwijt', so it published "Autosleutel Kwijt | 24/7
-     * Mobiel | Autosleutel24" and competed with /autosleutel-kwijt for the
+     * Mobiel | Autosleutel24" and competed with /autoschluessel-verloren for the
      * exact query that page exists to win, while its own metaTitle -- "Alle
      * Autosleutels Kwijt? | AKL Specialist op Locatie" -- sat unused.
      *
@@ -79,11 +79,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 
 /*
- * The page body lives in ServiceLayout because /autosleutel-kwijt renders the
+ * The page body lives in ServiceLayout because /autoschluessel-verloren renders the
  * same thing under its own URL. basePath tells it which one it is on.
  */
 export default async function DienstPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   if (!DIENSTEN.some((s) => s.slug === slug)) notFound();
-  return <ServiceLayout slug={slug} basePath={`/diensten/${slug}`} />;
+  return <ServiceLayout slug={slug} basePath={`/leistungen/${slug}`} />;
 }

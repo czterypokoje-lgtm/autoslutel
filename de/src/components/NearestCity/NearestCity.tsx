@@ -57,7 +57,7 @@ export default function NearestCity() {
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.call}>
               Bel {SITE_CONFIG.phone}
             </a>
-            <Link href={`/steden/${match.slug}`} className={styles.secondary}>
+            <Link href={`/staedte/${match.slug}`} className={styles.secondary}>
               Bekijk {match.city} →
             </Link>
           </div>

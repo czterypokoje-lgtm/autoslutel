@@ -13,16 +13,16 @@ export const metadata: Metadata = {
   },
   description: `Mobiele autosleutelspecialist in Utrecht, Noord-Holland, Zuid-Holland, Gelderland en Flevoland. Wij komen naar u toe. Bel ${SITE_CONFIG.phone}.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/steden`,
+    canonical: `${SITE_CONFIG.domain}/staedte`,
     // The service area as GeoJSON, for mapping tools and crawlers.
     types: { 'application/geo+json': '/werkgebied.geojson' },
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/steden`,
-      'x-default': `${SITE_CONFIG.domain}/steden`,
+      'nl-NL': `${SITE_CONFIG.domain}/staedte`,
+      'x-default': `${SITE_CONFIG.domain}/staedte`,
     },
   },
   openGraph: {
-    url: `${SITE_CONFIG.domain}/steden`,
+    url: `${SITE_CONFIG.domain}/staedte`,
     type: 'website',
     title: 'Autosleutel Bijmaken in de Randstad en Gelderland',
     description: `Mobiele autosleutelspecialist in Utrecht, Zuid-Holland, Noord-Holland, Gelderland en Flevoland. Bel ${SITE_CONFIG.phone}`,
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 const groups = [
   ...SERVICE_REGIONS.map((r) => ({
     title: r.label,
-    href: `/regio/${r.slug}`,
+    href: `/regionen/${r.slug}`,
     filter: (c: typeof CITIES[0]) => c.region === r.name,
   })),
   // Outside the provinces we serve. The pages exist but are kept out of the index.
@@ -56,7 +56,7 @@ export default function Steden() {
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    '@id': `${SITE_CONFIG.domain}/steden#lijst`,
+    '@id': `${SITE_CONFIG.domain}/staedte#lijst`,
     name: 'Werkgebied per stad',
     numberOfItems: listed.length,
     itemListElement: listed.map((city, i) => ({
@@ -65,7 +65,7 @@ export default function Steden() {
       item: {
         '@type': 'Place',
         name: city.city,
-        url: `${SITE_CONFIG.domain}/steden/${city.slug}`,
+        url: `${SITE_CONFIG.domain}/staedte/${city.slug}`,
         geo: { '@type': 'GeoCoordinates', latitude: city.geo.lat, longitude: city.geo.lng },
         containedInPlace: { '@type': 'AdministrativeArea', name: city.region },
       },
@@ -77,7 +77,7 @@ export default function Steden() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Steden', item: `${SITE_CONFIG.domain}/steden` },
+      { '@type': 'ListItem', position: 2, name: 'Steden', item: `${SITE_CONFIG.domain}/staedte` },
     ],
   };
 
@@ -100,7 +100,7 @@ export default function Steden() {
           */}
         <p style={{ marginTop:'1.25rem' }}>
           <Link
-            href="/autosleutel-bijmaken-in-de-buurt"
+            href="/autoschluessel-nachmachen-in-der-naehe"
             style={{ color:'var(--orange-400)', fontWeight:600, textDecoration:'none' }}
           >
             Staat uw plaats er niet bij? Zoek wie er bij u in de buurt is →
@@ -123,7 +123,7 @@ export default function Steden() {
               <ul className={styles.seoList}>
                 {cities.map(c => (
                   <li key={c.slug}>
-                    <Link href={`/steden/${c.slug}`} id={`stad-${c.slug}`}>
+                    <Link href={`/staedte/${c.slug}`} id={`stad-${c.slug}`}>
                       <strong style={{ color: 'var(--orange-500)' }}>{c.city}</strong>
                     </Link>
                   </li>

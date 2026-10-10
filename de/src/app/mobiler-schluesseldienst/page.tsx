@@ -7,7 +7,7 @@ import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
-import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
+import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/leistungen';
 import { CITIES } from '@/config/cities';
 
 /*
@@ -31,15 +31,15 @@ export const metadata: Metadata = {
   title: { absolute: 'Mobiele Sleutelmaker voor Auto’s | Komt Naar U Toe' },
   description: `Mobiele sleutelmaker of slotenmaker nodig voor uw auto? Wij komen naar uw locatie, openen schadevrij en maken sleutels ter plaatse. Binnen 30-60 min bij u.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/mobiele-sleutelmaker`,
+    canonical: `${SITE_CONFIG.domain}/mobiler-schluesseldienst`,
     languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/mobiele-sleutelmaker`,
-      'x-default': `${SITE_CONFIG.domain}/mobiele-sleutelmaker`,
+      'nl-NL': `${SITE_CONFIG.domain}/mobiler-schluesseldienst`,
+      'x-default': `${SITE_CONFIG.domain}/mobiler-schluesseldienst`,
     },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/mobiele-sleutelmaker`,
+    url: `${SITE_CONFIG.domain}/mobiler-schluesseldienst`,
     title: 'Mobiele Sleutelmaker voor Auto’s | Komt Naar U Toe',
     description:
       'Mobiele sleutelmaker voor auto’s: wij komen naar uw locatie, openen schadevrij en maken sleutels ter plaatse. 24/7 in heel Nederland.',
@@ -89,7 +89,7 @@ export default function MobieleSleutelmaker() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Mobiele sleutelmaker', item: `${SITE_CONFIG.domain}/mobiele-sleutelmaker` },
+      { '@type': 'ListItem', position: 2, name: 'Mobiele sleutelmaker', item: `${SITE_CONFIG.domain}/mobiler-schluesseldienst` },
     ],
   };
   /*
@@ -102,12 +102,12 @@ export default function MobieleSleutelmaker() {
   const businessSchema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    '@id': `${SITE_CONFIG.domain}/mobiele-sleutelmaker#service`,
+    '@id': `${SITE_CONFIG.domain}/mobiler-schluesseldienst#service`,
     name: 'Mobiele sleutelmaker en autoslotenmaker',
     serviceType: 'Mobiele sleutelmaker, autoslotenmaker, auto openen, autosleutel bijmaken',
     description:
       'Mobiele sleutelmaker en autoslotenmaker: wij komen naar de auto toe, openen schadevrij en frezen en programmeren sleutels ter plaatse.',
-    url: `${SITE_CONFIG.domain}/mobiele-sleutelmaker`,
+    url: `${SITE_CONFIG.domain}/mobiler-schluesseldienst`,
     provider: getBaseLocalBusinessSchema(),
     areaServed: serviceRegionNodes(),
   };
@@ -125,7 +125,7 @@ export default function MobieleSleutelmaker() {
         lead="Zoekt u een sleutelmaker of slotenmaker voor uw auto? Onze werkplaats zit in de bus: frezen, programmeren en schadevrij openen gebeuren bij uw auto, niet achter een toonbank."
         facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
         image={{
-          src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
+          src: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
         }}
       >
@@ -161,7 +161,7 @@ export default function MobieleSleutelmaker() {
               .map((d) => (
                 <Link
                   key={d.slug}
-                  href={`/diensten/${d.slug}`}
+                  href={`/leistungen/${d.slug}`}
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -218,7 +218,7 @@ export default function MobieleSleutelmaker() {
                 <div className="seo-hub-title">Wat wij doen</div>
                 <div className="seo-hub-col">
                   {DIENSTEN.filter((d) => !REDIRECTED_SERVICE_SLUGS.has(d.slug)).map((d) => (
-                    <Link key={d.slug} href={`/diensten/${d.slug}`} className="seo-hub-link">
+                    <Link key={d.slug} href={`/leistungen/${d.slug}`} className="seo-hub-link">
                       {`${d.title} →`}
                     </Link>
                   ))}
@@ -227,13 +227,13 @@ export default function MobieleSleutelmaker() {
               <div>
                 <div className="seo-hub-title">Sleutelmaker in uw stad</div>
                 <div className="seo-hub-col">
-                  <Link href="/steden" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
+                  <Link href="/staedte" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
                     Bekijk alle steden →
                   </Link>
                   {CITIES.filter((c) => c.priority === 'P1')
                     .slice(0, 10)
                     .map((c) => (
-                      <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
+                      <Link key={c.slug} href={`/staedte/${c.slug}`} className="seo-hub-link">
                         {`Sleutelmaker ${c.city} →`}
                       </Link>
                     ))}
@@ -242,11 +242,11 @@ export default function MobieleSleutelmaker() {
               <div>
                 <div className="seo-hub-title">Meer weten</div>
                 <div className="seo-hub-col">
-                  <Link href="/autosleutel-kwijt" className="seo-hub-link">Autosleutel kwijt →</Link>
-                  <Link href="/autosleutel-gestolen" className="seo-hub-link">Autosleutel gestolen →</Link>
-                  <Link href="/prijzen" className="seo-hub-link">Wat kost het? →</Link>
-                  <Link href="/over-ons" className="seo-hub-link">Wie zijn wij? →</Link>
-                  <Link href="/beoordelingen" className="seo-hub-link">Beoordelingen →</Link>
+                  <Link href="/autoschluessel-verloren" className="seo-hub-link">Autosleutel kwijt →</Link>
+                  <Link href="/autoschluessel-gestohlen" className="seo-hub-link">Autosleutel gestolen →</Link>
+                  <Link href="/preise" className="seo-hub-link">Wat kost het? →</Link>
+                  <Link href="/ueber-uns" className="seo-hub-link">Wie zijn wij? →</Link>
+                  <Link href="/bewertungen" className="seo-hub-link">Beoordelingen →</Link>
                   <Link href="/kennisbank" className="seo-hub-link">Kennisbank →</Link>
                 </div>
               </div>

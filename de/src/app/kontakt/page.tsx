@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   },
   description: `Sleutel kwijt of auto op slot? Bel of app ${SITE_CONFIG.fullName} op ${SITE_CONFIG.phone}, 24/7 bereikbaar. Reactietijd ${SITE_CONFIG.responseTime}. Ook voor offertes en afspraken.`,
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/contact`,
+    canonical: `${SITE_CONFIG.domain}/kontakt`,
   },
 };
 
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
 const contactPageSchema = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
-  '@id': `${SITE_CONFIG.domain}/contact#contactpage`,
-  url: `${SITE_CONFIG.domain}/contact`,
+  '@id': `${SITE_CONFIG.domain}/kontakt#contactpage`,
+  url: `${SITE_CONFIG.domain}/kontakt`,
   name: 'Contact — Autosleutel24',
   inLanguage: 'nl-NL',
   // The ContactPoint lives on the business node in the root layout.
@@ -41,7 +41,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-    { '@type': 'ListItem', position: 2, name: 'Contact', item: `${SITE_CONFIG.domain}/contact` },
+    { '@type': 'ListItem', position: 2, name: 'Contact', item: `${SITE_CONFIG.domain}/kontakt` },
   ],
 };
 

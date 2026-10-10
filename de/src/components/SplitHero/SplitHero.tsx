@@ -15,7 +15,7 @@ export interface Crumb {
  * Home and the service landing pages had two different heroes: home a white
  * split with the kenteken wizard beside a photo, the service pages a dark
  * navy band with a single row of fields. Somebody arriving on
- * /diensten/autosleutel-bijmaken from an ad met a different site from the one
+ * /leistungen/autoschluessel-nachmachen from an ad met a different site from the one
  * they would have met on the home page, and every future change to the hero
  * had to be made twice or drift.
  *

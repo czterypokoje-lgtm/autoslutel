@@ -1,7 +1,7 @@
 import React from 'react';
 import { breadcrumbSchema } from '@/utils/schema';
 import type { Metadata } from 'next';
-import { SITE_CONFIG, isBtwConfigured } from '@/config/site.config';
+import { SITE_CONFIG, isUstIdConfigured } from '@/config/site.config';
 import { VAT_RATE } from '@/lib/catalog';
 
 /**
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: { absolute: 'Algemene voorwaarden | Autosleutel24' },
   description:
     'De voorwaarden waaronder Autosleutel24 een autosleutel bijmaakt of monteert aan huis: prijs, betaling, garantie, annulering en aansprakelijkheid.',
-  alternates: { canonical: `${SITE_CONFIG.domain}/algemene-voorwaarden` },
+  alternates: { canonical: `${SITE_CONFIG.domain}/agb` },
 };
 
 const h2: React.CSSProperties = {
@@ -38,7 +38,7 @@ const p: React.CSSProperties = { color: '#334155', lineHeight: 1.7, margin: '0 0
 export default function TermsPage() {
   return (
     <main style={{ background: '#fff' }}>
-      <script id="bc-voorwaarden" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Algemene voorwaarden', path: '/algemene-voorwaarden' }])) }} />
+      <script id="bc-voorwaarden" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Algemene voorwaarden', path: '/agb' }])) }} />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '4rem 1.5rem', textAlign: 'center' }}>
         <h1 style={{ color: '#fff', margin: 0, fontSize: 'clamp(1.6rem, 5vw, 2.4rem)' }}>
           Algemene voorwaarden
@@ -52,11 +52,11 @@ export default function TermsPage() {
           {SITE_CONFIG.serviceAreaString}.<br />
           E-mail: {SITE_CONFIG.email} · Telefoon: {SITE_CONFIG.phone}
           <br />
-          KvK-nummer: {SITE_CONFIG.kvk}
-          {isBtwConfigured() && (
+          KvK-nummer: {SITE_CONFIG.hrb}
+          {isUstIdConfigured() && (
             <>
               <br />
-              Btw-identificatienummer: {SITE_CONFIG.btw}
+              Btw-identificatienummer: {SITE_CONFIG.ustId}
             </>
           )}
         </p>
