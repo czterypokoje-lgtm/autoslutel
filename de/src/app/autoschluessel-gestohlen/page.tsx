@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
+import { preisAb } from '@/config/leistungen';
 import SplitHero from '@/components/SplitHero/SplitHero';
 import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
@@ -8,91 +9,94 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/leistungen';
-import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
 
 /*
- * Stolen is not the same job as lost, which is why this is not a section of
- * /autoschluessel-verloren.
+ * Gestohlen ist nicht dieselbe Arbeit wie verloren — darum ist das keine
+ * Unterseite von /autoschluessel-verloren.
  *
- * When a key is lost, nobody has it. When it is stolen, somebody has it, and
- * that person may also know which car it belongs to and where that car sleeps.
- * Everything on this page follows from that one difference: the police report
- * the insurer will ask for, wiping the stolen key from the immobiliser as the
- * point of the visit rather than a nicety, and the fact that a keyless car can
- * be taken without the key ever leaving the hallway.
+ * Wer einen Schlüssel verliert, hat ihn nicht mehr. Wer bestohlen wird, hat
+ * ihn nicht mehr, aber jemand anders hat ihn — und weiß bei einer gestohlenen
+ * Tasche oder einem Wohnungseinbruch oft auch, zu welchem Auto er gehört und
+ * wo das Auto steht. Alles auf dieser Seite folgt aus diesem einen
+ * Unterschied: die Anzeige, die der Versicherer verlangt, das Löschen des
+ * gestohlenen Schlüssels aus der Wegfahrsperre als Zweck des Termins und
+ * nicht als Beigabe, und der Umstand, dass ein Keyless-Fahrzeug gefahren
+ * werden kann, ohne dass der Schlüssel die Wohnung verlässt.
  *
- * Search Console: 612 impressions at average position 50 over three months,
- * against a blog post that answers the question and sells nothing. The post
- * stays -- it is the informational half -- and links here.
+ * Auf der niederländischen Seite kommt diese Suchanfrage auf 612 Impressionen
+ * bei durchschnittlich Position 50 — gegen einen Blogartikel, der die Frage
+ * beantwortet und nichts verkauft.
  */
 
+const PAGE_PATH = '/autoschluessel-gestohlen';
+const PAGE_URL = `${SITE_CONFIG.domain}${PAGE_PATH}`;
+
 export const metadata: Metadata = {
-  title: { absolute: 'Autosleutel Gestolen? Direct Blokkeren en Nieuwe Sleutel' },
-  description: `Autosleutel gestolen? De dief kan uw auto starten. Wij wissen de gestolen sleutel uit de auto en maken ter plaatse een nieuwe. Binnen 30-60 min bij u, 24/7.`,
+  title: { absolute: 'Autoschlüssel gestohlen? Sofort sperren und ersetzen' },
+  description:
+    'Autoschlüssel gestohlen? Solange er in der Wegfahrsperre steht, startet er Ihr Auto. Wir löschen den gestohlenen Schlüssel und fertigen vor Ort einen neuen an — 24/7, Festpreis vorab.',
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
-    languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
-      'x-default': `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
-    },
+    canonical: PAGE_URL,
+    languages: { 'de-DE': PAGE_URL },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
-    title: 'Autosleutel Gestolen? Direct Blokkeren en Nieuwe Sleutel',
+    url: PAGE_URL,
+    title: 'Autoschlüssel gestohlen? Sofort sperren und ersetzen',
     description:
-      'Autosleutel gestolen? Wij wissen de gestolen sleutel uit de startonderbreker en maken ter plaatse een nieuwe. 24/7 op locatie.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel gestolen — Autosleutel24' }],
+      'Wir löschen den gestohlenen Schlüssel aus der Wegfahrsperre und fertigen vor Ort einen neuen an. Rund um die Uhr.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel gestohlen — Autoschlüssel24' }],
   },
 };
 
 const faqItems = [
   {
-    q: 'Mijn autosleutel is gestolen — wat moet ik als eerste doen?',
-    a: 'Zet de auto als het kan op een plek met zicht of achter een poort, en doe aangifte bij de politie. Bel ons daarna: zolang de gestolen sleutel nog in de startonderbreker staat, kan wie hem heeft de auto gewoon starten. Wij komen naar de auto toe, wissen die sleutel uit het geheugen en leveren een nieuwe.',
+    q: 'Mein Autoschlüssel ist gestohlen — was mache ich zuerst?',
+    a: 'Stellen Sie das Fahrzeug, wenn möglich, an eine einsehbare Stelle oder hinter ein Tor, und erstatten Sie Anzeige bei der Polizei. Rufen Sie danach uns an: solange der gestohlene Schlüssel in der Wegfahrsperre hinterlegt ist, startet er Ihr Auto — egal, wo er gerade ist. Wir kommen zum Fahrzeug, löschen diesen Schlüssel aus dem Steuergerät und fertigen einen neuen an.',
   },
   {
-    q: 'Waarom is aangifte doen belangrijk?',
-    a: 'Uw verzekeraar vraagt er vrijwel altijd om bij diefstal, en zonder aangifte is een claim lastig. Het kost een paar minuten online of op het bureau. U krijgt van ons een gespecificeerde factuur die u samen met het proces-verbaalnummer kunt indienen.',
+    q: 'Warum ist die Anzeige wichtig?',
+    a: 'Weil Ihr Versicherer bei Diebstahl praktisch immer nach dem Aktenzeichen fragt, und ohne Anzeige eine Meldung schwierig wird. Die Anzeige geht online oder auf der Dienststelle und kostet ein paar Minuten. Von uns erhalten Sie eine Rechnung mit ausgewiesener MwSt. und aufgeführter Leistung, die Sie zusammen mit dem Aktenzeichen einreichen können.',
   },
   {
-    q: 'Kan de dief mijn auto starten met de gestolen sleutel?',
-    a: 'Ja, tot het moment dat die sleutel uit de startonderbreker gewist is. Dat is precies wat wij doen en het is het belangrijkste deel van het werk — een nieuwe sleutel laten maken zonder de oude te blokkeren lost het probleem niet op, het geeft u alleen een tweede sleutel naast die van de dief.',
+    q: 'Kann der Täter mein Auto mit dem gestohlenen Schlüssel starten?',
+    a: 'Ja — bis zu dem Moment, in dem dieser Schlüssel aus der Wegfahrsperre gelöscht ist. Genau das ist der wichtigste Teil der Arbeit. Einen neuen Schlüssel anfertigen zu lassen, ohne den alten zu sperren, löst das Problem nicht: Sie haben dann einen zweiten Schlüssel neben dem des Täters.',
   },
   {
-    q: 'Wat kost het als mijn sleutel gestolen is?',
-    a: `Heeft u nog een tweede werkende sleutel, dan is het een kwestie van de gestolen sleutel wissen en een nieuwe inleren: vanaf €${SITE_CONFIG.prices.transponder}. Is de gestolen sleutel uw enige sleutel, dan moet de sleutelcode uit de boordcomputer gelezen worden en begint het bij €${SITE_CONFIG.prices.allKeysLost}. U hoort de prijs telefonisch voordat wij vertrekken.`,
+    q: 'Was kostet es, wenn der Schlüssel gestohlen wurde?',
+    a: 'Haben Sie noch einen funktionierenden Zweitschlüssel, ist es eine Sache von Löschen und Anlernen. War der gestohlene Ihr einziger Schlüssel, müssen die Schlüsseldaten erst aus dem Steuergerät gelesen werden, und es ist der aufwendigere Fall "alle Schlüssel verloren". Sie hören den Festpreis am Telefon, bevor jemand losfährt; alle Beträge sind Bruttopreise inklusive 19 % MwSt.',
   },
   {
-    q: 'Mijn auto is keyless — de sleutel lag binnen en is toch gebruikt',
-    a: 'Dat is een relay-aanval: twee mensen met een versterker vangen het signaal van uw sleutel op door de voordeur heen en spelen het af bij de auto. De sleutel blijft dan gewoon in huis liggen. Bewaar hem in een Faraday-hoesje of blikken trommel, en overweeg een Ghost immobiliser — een extra code die met de knoppen in de auto ingevoerd moet worden voordat hij start.',
+    q: 'Mein Auto hat Keyless Go — der Schlüssel lag drinnen und es wurde trotzdem geöffnet',
+    a: 'Das ist ein Relay-Angriff: zwei Täter mit einem Verstärker fangen das Signal Ihres Schlüssels durch die Wohnungstür ab und spielen es am Fahrzeug wieder ein. Der Schlüssel bleibt dabei in der Wohnung liegen. Bewahren Sie ihn in einer Faraday-Tasche oder einer Blechdose auf, prüfen Sie, ob Ihr Schlüssel eine abschaltbare Funkfunktion hat (viele Hersteller bieten das über eine Tastenkombination), und erwägen Sie eine zusätzliche Wegfahrsperre mit PIN-Eingabe.',
   },
   {
-    q: 'Vergoedt mijn verzekering een gestolen autosleutel?',
-    a: 'Bij WA+ (beperkt casco) en All Risk is diefstal van sleutels meestal gedekt, bij alleen WA niet. Het eigen risico verschilt per polis. Controleer ook of uw inboedelverzekering iets dekt als de sleutel bij een woninginbraak is meegenomen.',
+    q: 'Zahlt meine Versicherung einen gestohlenen Autoschlüssel?',
+    a: 'Das steht in Ihrer Police, und die Antwort ist häufiger "nein", als man erwartet: die Teilkasko deckt den Diebstahl des Fahrzeugs, den Ersatz eines gestohlenen Schlüssels in der Regel nicht. Manche Versicherer bieten den Schlüsselersatz als Zusatzbaustein an, und wurde der Schlüssel bei einem Wohnungseinbruch entwendet, kann die Hausratversicherung greifen. Fragen Sie Ihren Versicherer, bevor Sie etwas voraussetzen — die Rechnung von uns ist in jedem Fall einreichbar.',
   },
   {
-    q: 'Moeten de sloten ook vervangen worden?',
-    a: 'Meestal niet. Bij vrijwel alle auto’s van na 2000 zit de beveiliging in de elektronica, niet in het slot: zodra de sleutel uit de startonderbreker gewist is, start de auto er niet meer mee. Alleen als er ook een kentekenbewijs of adresgegevens zijn meegenomen adviseren wij verder te kijken dan de sleutel alleen.',
+    q: 'Müssen auch die Schlösser getauscht werden?',
+    a: 'In den meisten Fällen nicht. Bei Fahrzeugen ab etwa dem Jahr 2000 sitzt die Sicherung in der Elektronik und nicht im Schloss: ist der Schlüssel aus der Wegfahrsperre gelöscht, startet das Auto damit nicht mehr. Nur wenn zusammen mit dem Schlüssel auch Fahrzeugpapiere oder Ihre Adresse entwendet wurden, sollten Sie weiter denken als bis zum Schlüssel.',
   },
   {
-    q: 'Hoe snel kunnen jullie er zijn?',
-    a: 'Wij zijn 24 uur per dag bereikbaar, ook ’s nachts en in het weekend. Bij diefstal gaat het om de tijd tussen nu en het moment dat de sleutel onbruikbaar is, dus dit is een spoedklus — bel, dan hoort u direct wanneer een monteur bij u kan zijn.',
+    q: 'Wie schnell können Sie da sein?',
+    a: 'Wir sind rund um die Uhr erreichbar, auch nachts und am Wochenende. Bei Diebstahl zählt die Zeit zwischen jetzt und dem Moment, in dem der Schlüssel unbrauchbar ist — rufen Sie an, und Sie hören sofort, wann der Partner bei Ihnen sein kann. Eine pauschale Minutenangabe nennen wir nicht, weil sie je Stadt und Tageszeit anders ausfällt.',
   },
 ];
 
 const steps = [
-  { n: '1', title: 'Zet de auto veilig', desc: 'Als het kan achter een poort of in zicht. Verplaats hem niet ver — wij komen naar de auto toe.' },
-  { n: '2', title: 'Doe aangifte', desc: 'Online of op het bureau. Uw verzekeraar vraagt om het proces-verbaalnummer.' },
-  { n: '3', title: 'Bel ons', desc: 'Geef merk, model, bouwjaar en locatie door. U hoort direct de prijs en wanneer wij er zijn.' },
-  { n: '4', title: 'Sleutel gewist, nieuwe erin', desc: 'Wij wissen de gestolen sleutel uit de startonderbreker en leren ter plaatse een nieuwe in.' },
+  { n: '1', title: 'Fahrzeug sichern', desc: 'Wenn möglich hinter ein Tor oder an eine einsehbare Stelle. Nicht weit wegfahren — der Partner kommt zum Fahrzeug.' },
+  { n: '2', title: 'Anzeige erstatten', desc: 'Online oder auf der Dienststelle. Ihr Versicherer fragt nach dem Aktenzeichen.' },
+  { n: '3', title: 'Anrufen', desc: 'Marke, Modell, Baujahr und Standort nennen. Sie hören den Festpreis und wann jemand da ist.' },
+  { n: '4', title: 'Alten Schlüssel löschen, neuen anlernen', desc: 'Der gestohlene Schlüssel wird aus der Wegfahrsperre gelöscht und ein neuer vor Ort angelernt.' },
 ];
 
-export default function AutosleutelGestolen() {
+export default function AutoschluesselGestohlen() {
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    '@id': `${PAGE_URL}#faqpage`,
     mainEntity: faqItems.map((f) => ({
       '@type': 'Question',
       name: f.q,
@@ -105,39 +109,48 @@ export default function AutosleutelGestolen() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Autosleutel gestolen', item: `${SITE_CONFIG.domain}/autoschluessel-gestohlen` },
+      { '@type': 'ListItem', position: 2, name: 'Autoschlüssel gestohlen', item: PAGE_URL },
     ],
   };
 
   const serviceSchema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: 'Autosleutel gestolen — blokkeren en vervangen op locatie',
-    serviceType: 'Gestolen autosleutel uit de startonderbreker wissen en vervangen',
+    name: 'Autoschlüssel gestohlen — sperren und vor Ort ersetzen',
+    serviceType: 'Gestohlenen Autoschlüssel aus der Wegfahrsperre löschen und ersetzen',
     provider: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
-    areaServed: { '@type': 'Country', name: 'Nederland' },
+    /*
+     * Das Einsatzgebiet, nicht das Land.
+     *
+     * Hier stand { '@type': 'Country', name: 'Nederland' } — auf einer
+     * deutschen Domain eine falsche Angabe, und "Deutschland" wäre genauso
+     * falsch: vier Partner in vier Städten bedienen kein Land. Die Städte
+     * stehen in site.config.ts und sind dieselben, die die
+     * LocalBusiness-Auszeichnung nennt.
+     */
+    areaServed: SITE_CONFIG.areaServedCities.map((c) => ({ '@type': 'City', name: c.name })),
     availableChannel: {
       '@type': 'ServiceChannel',
       servicePhone: SITE_CONFIG.phoneTel,
-      serviceUrl: `${SITE_CONFIG.domain}/autoschluessel-gestohlen`,
+      serviceUrl: PAGE_URL,
     },
   };
 
   return (
     <div>
-      <script id="gestolen-faq" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <script id="gestolen-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <script id="gestolen-service" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <script id="gestohlen-faq" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script id="gestohlen-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="gestohlen-service" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
 
       <SplitHero
-        crumbs={[{ label: 'Home', href: '/' }, { label: 'Autosleutel gestolen' }]}
-        titleTop="Autosleutel Gestolen?"
-        titleAccent="Blokkeer Hem Voordat Iemand Anders Rijdt"
-        lead="Bij diefstal telt iets anders dan bij verlies: iemand heeft uw sleutel. Wij komen naar uw auto toe, wissen de gestolen sleutel uit de startonderbreker en leveren ter plaatse een nieuwe."
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.allKeysLost}`} />}
+        crumbs={[{ label: 'Home', href: '/' }, { label: 'Autoschlüssel gestohlen' }]}
+        titleTop="Autoschlüssel gestohlen?"
+        titleAccent="Sperren Sie ihn, bevor jemand anders fährt"
+        lead="Bei Diebstahl zählt etwas anderes als bei Verlust: jemand hat Ihren Schlüssel. Unser Partner kommt zu Ihrem Fahrzeug, löscht den gestohlenen Schlüssel aus der Wegfahrsperre und fertigt vor Ort einen neuen an."
+        facts={<HeroQuickFacts price={preisAb('allKeysLost')} />}
         image={{
           src: '/images/seo/autoschluessel_spezialist_background.webp',
-          alt: 'Sleutelwand in de werkplaats van Autosleutel24 met transpondersleutels per automerk',
+          alt: 'Schlüsselwand mit Transponderschlüsseln nach Marke in der Werkstatt',
         }}
       >
         <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />} />
@@ -148,10 +161,11 @@ export default function AutosleutelGestolen() {
 
       <section className="section">
         <div className="container" style={{ maxWidth: 900 }}>
-          <h2 style={{ marginBottom: '1rem' }}>Wat u nu moet doen — in vier stappen</h2>
+          <h2 style={{ marginBottom: '1rem' }}>Was Sie jetzt tun — in vier Schritten</h2>
           <p style={{ color: 'var(--gray-600)', lineHeight: 1.7, marginBottom: '2rem' }}>
-            Diefstal van een autosleutel is geen papierwerk dat kan wachten. Zolang de sleutel in
-            het geheugen van de auto staat, is hij een werkende sleutel — waar hij ook is.
+            Der Diebstahl eines Autoschlüssels ist kein Papierkram, der warten kann. Solange der
+            Schlüssel im Steuergerät hinterlegt ist, ist er ein funktionierender Schlüssel — wo
+            auch immer er sich befindet.
           </p>
           <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '1.25rem' }}>
             {steps.map((s) => (
@@ -191,34 +205,33 @@ export default function AutosleutelGestolen() {
 
       <section className="section-alt">
         <div className="container" style={{ maxWidth: 900 }}>
-          <h2 style={{ marginBottom: '1rem' }}>Gestolen is niet hetzelfde als kwijt</h2>
+          <h2 style={{ marginBottom: '1rem' }}>Gestohlen ist nicht dasselbe wie verloren</h2>
           <p style={{ color: 'var(--gray-600)', lineHeight: 1.7 }}>
-            Raakt u een sleutel kwijt, dan heeft niemand hem. Wordt hij gestolen, dan heeft iemand
-            hem — en bij een tas, jas of woninginbraak vaak ook uw adres of kentekenbewijs erbij.
-            Daarom is het wissen van de oude sleutel hier niet het sluitstuk maar het doel van het
-            bezoek: daarna is het ding in andermans zak een stuk plastic.
+            Verlieren Sie einen Schlüssel, hat ihn niemand. Wird er gestohlen, hat ihn jemand — und
+            bei einer Tasche, einer Jacke oder einem Wohnungseinbruch oft auch Ihre Adresse oder
+            Ihre Fahrzeugpapiere dazu. Deshalb ist das Löschen des alten Schlüssels hier nicht der
+            Abschluss, sondern der Zweck des Termins: danach ist das Ding in der fremden Tasche ein
+            Stück Plastik.
           </p>
           <p style={{ color: 'var(--gray-600)', lineHeight: 1.7, marginTop: '1rem' }}>
-            Heeft u de sleutel simpelweg verloren en heeft niemand hem meegenomen, dan leest{' '}
+            Haben Sie den Schlüssel schlicht verloren und hat ihn niemand mitgenommen, dann ist{' '}
             <Link href="/autoschluessel-verloren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
-              autosleutel kwijt
+              Autoschlüssel verloren
             </Link>{' '}
-            prettiger: dezelfde techniek, minder haast. Wilt u weten hoe uw keyless auto zonder de
-            sleutel geopend kan zijn, dan legt{' '}
-            <Link
-              href="/blog/faraday-pouch-bescherming-relay-attack"
-              style={{ color: 'var(--orange-600)', fontWeight: 600 }}
-            >
-              de uitleg over relay-aanvallen
+            die passende Seite: dieselbe Technik, weniger Eile. Steht gar kein Schlüssel mehr zur
+            Verfügung, beschreibt{' '}
+            <Link href="/leistungen/alle-autoschluessel-verloren" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
+              alle Autoschlüssel verloren
             </Link>{' '}
-            uit hoe dat werkt en wat een Faraday-hoesje wel en niet tegenhoudt.
+            den aufwendigeren Fall, bei dem die Schlüsseldaten erst aus dem Steuergerät gelesen
+            werden müssen.
           </p>
         </div>
       </section>
 
       <section className="section">
         <div className="container" style={{ maxWidth: 900 }}>
-          <h2 style={{ marginBottom: '2rem' }}>Veelgestelde vragen — autosleutel gestolen</h2>
+          <h2 style={{ marginBottom: '2rem' }}>Häufige Fragen — Autoschlüssel gestohlen</h2>
           {faqItems.map((f, i) => (
             <details key={i} className="faq-item">
               <summary className="faq-question">
@@ -247,7 +260,7 @@ export default function AutosleutelGestolen() {
           <div className="seo-hub-box">
             <div className="seo-hub-grid">
               <div>
-                <div className="seo-hub-title">Andere diensten</div>
+                <div className="seo-hub-title">Andere Leistungen</div>
                 <div className="seo-hub-col">
                   {DIENSTEN.filter((d) => !REDIRECTED_SERVICE_SLUGS.has(d.slug)).map((d) => (
                     <Link key={d.slug} href={`/leistungen/${d.slug}`} className="seo-hub-link">
@@ -256,31 +269,22 @@ export default function AutosleutelGestolen() {
                   ))}
                 </div>
               </div>
+              {/*
+                * Die Markenspalte der niederländischen Seite fehlt hier: sie
+                * verweist auf /merken/<marke>-autosleutel-bijmaken, und diese
+                * App hat keine Markenseiten. Siehe BrandsLogoGrid.
+                */}
               <div>
-                <div className="seo-hub-title">Automerken</div>
-                <div className="seo-hub-col">
-                  {BRANDS.filter((b) => b.priority === 'P1').map((b) => (
-                    <Link
-                      key={b.slug}
-                      href={`/merken/${b.nameSlug.toLowerCase()}-autosleutel-bijmaken`}
-                      className="seo-hub-link"
-                    >
-                      {`${b.name} autosleutel bijmaken →`}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="seo-hub-title">In de regio</div>
+                <div className="seo-hub-title">In Ihrer Stadt</div>
                 <div className="seo-hub-col">
                   <Link href="/staedte" className="seo-hub-link" style={{ fontWeight: 'bold' }}>
-                    Bekijk alle steden →
+                    Alle Städte ansehen →
                   </Link>
                   {CITIES.filter((c) => c.priority === 'P1')
                     .slice(0, 8)
                     .map((c) => (
                       <Link key={c.slug} href={`/staedte/${c.slug}`} className="seo-hub-link">
-                        {`Autosleutel gestolen ${c.city} →`}
+                        {`Autoschlüssel gestohlen ${c.city} →`}
                       </Link>
                     ))}
                 </div>
