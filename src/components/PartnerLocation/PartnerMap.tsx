@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useNearViewport } from '../useNearViewport';
 import styles from './PartnerLocation.module.css';
 
 /**
@@ -9,20 +10,21 @@ import styles from './PartnerLocation.module.css';
  * 1. A STATIC IMAGE from /api/service-map?partner=<slug>. One request, no
  *    script, key on the server. This is what should normally be on screen.
  *
- * 2. A TAP-TO-LOAD EMBED when that image cannot be produced. The route answers
- *    204 with no GOOGLE_MAPS_API_KEY, with Static Maps not enabled on the Cloud
+ * 2. AN EMBED when that image cannot be produced. The route answers 204 with
+ *    no GOOGLE_MAPS_API_KEY, with Static Maps not enabled on the Cloud
  *    project, or when Google is having a bad day — and the static map is the
  *    only one of the two that needs a key at all. `maps?q=…&output=embed` does
  *    not, so a deployment that has not got around to the key still shows a map
  *    rather than a gap where one was promised.
  *
- *    It stays behind a tap for the reason InstantServiceMap documents: that
- *    embed is about 1.4 MB across 22 requests, 733 KB of it JavaScript, which
- *    is a Maps application booting up to draw one pin. Nobody pays that on load
- *    and nobody pays it at all unless they ask to see the street.
+ *    It mounts by itself once the reader has scrolled to it (useNearViewport),
+ *    not on a button and not during page load. That embed is about 1.4 MB
+ *    across 22 requests, which nobody should pay while the page is still
+ *    drawing; waiting for the scroll keeps it off the critical path without
+ *    putting a door in front of a map.
  *
- * 3. NOTHING, if the facade itself cannot be drawn. A broken-image icon under a
- *    heading promising a location is worse than no picture.
+ * 3. NOTHING, if neither can be drawn. A broken-image icon under a heading
+ *    promising a location is worse than no picture.
  *
  * The caption lives in here rather than beside it so that it leaves with the
  * map. A line reading "Draaierweg 10, 1032 KS Amsterdam" floating alone in an
@@ -44,7 +46,7 @@ export default function PartnerMap({
   caption: string;
 }) {
   const [staticFailed, setStaticFailed] = useState(false);
-  const [showEmbed, setShowEmbed] = useState(false);
+  const { ref, near } = useNearViewport<HTMLDivElement>();
 
   const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   const embedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&z=15&hl=nl&output=embed`;
@@ -63,25 +65,23 @@ export default function PartnerMap({
             onError={() => setStaticFailed(true)}
           />
         </a>
-      ) : showEmbed ? (
-        <iframe
-          className={styles.map}
-          src={embedSrc}
-          title={`Kaart: ${address}`}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          style={{ border: 0 }}
-        />
       ) : (
         /*
-         * A real <button>, so it is keyboard reachable and announces what it
-         * does, rather than a div that only answers to a mouse.
+         * The wrapper keeps the map's footprint before the iframe arrives, so
+         * the caption and everything under it do not jump when it mounts.
          */
-        <button type="button" className={styles.mapFacade} onClick={() => setShowEmbed(true)}>
-          <span className={styles.mapFacadePin} aria-hidden="true">📍</span>
-          <span className={styles.mapFacadeAddress}>{address}</span>
-          <span className={styles.mapFacadeHint}>Kaart laden</span>
-        </button>
+        <div ref={ref} className={styles.mapSlot}>
+          {near && (
+            <iframe
+              className={styles.map}
+              src={embedSrc}
+              title={`Kaart: ${address}`}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              style={{ border: 0 }}
+            />
+          )}
+        </div>
       )}
       <figcaption className={styles.caption}>{caption}</figcaption>
     </figure>

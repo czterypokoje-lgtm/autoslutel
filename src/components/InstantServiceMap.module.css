@@ -68,23 +68,21 @@
 }
 
 
-/* ── FACADE ────────────────────────────────────────────────────────────────
+/* ── PLACEHOLDER ───────────────────────────────────────────────────────────
  *
- * Shares .mapRoot so the placeholder and the real embed occupy exactly the
- * same box — tapping swaps one for the other without the page jumping.
+ * The static image shown until the embed has drawn. It shares .mapRoot so the
+ * two occupy exactly the same box and the page does not jump when the iframe
+ * mounts on top.
+ *
+ * Only applied while the embed is not mounted: .mapRoot crops the top to hide
+ * the My Maps title bar, and the static image has no title bar to hide, so it
+ * must not inherit that crop — but the iframe must.
  */
 
-.facade {
+.placeholder {
   display: block;
   padding: 0;
-  border: none;
-  cursor: pointer;
-  font: inherit;
-  color: inherit;
-  text-align: left;
 
-  /* .mapRoot crops the top for the embed's title bar; the static image has no
-     title bar to hide. */
   --map-crop: 0px;
 }
 
@@ -95,56 +93,11 @@
   display: block;
 }
 
-.facadeOverlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  text-align: center;
-
-  /* Dark enough that white type is legible over roads and water, light enough
-     that the map still reads as a map. */
-  background: linear-gradient(rgba(7, 21, 37, 0.35), rgba(7, 21, 37, 0.55));
-  transition: background 0.2s ease;
-}
-
-.facade:hover .facadeOverlay,
-.facade:focus-visible .facadeOverlay {
-  background: linear-gradient(rgba(7, 21, 37, 0.28), rgba(7, 21, 37, 0.48));
-}
-
-.facade:focus-visible {
-  outline: 3px solid var(--orange-400);
-  outline-offset: 2px;
-}
-
-.facadeCta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1.4rem;
-  border-radius: 999px;
-  background: var(--orange-500);
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 700;
-  box-shadow: 0 8px 20px rgba(7, 21, 37, 0.3);
-}
-
-.facadeHint {
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-shadow: 0 1px 3px rgba(7, 21, 37, 0.7);
-  max-width: 24ch;
-  line-height: 1.35;
-}
-
-/* No map image available — a solid brand panel rather than a broken frame. */
-.facadeOverlayPlain {
-  background: var(--navy-800);
-}
+/*
+ * The overlay, the call to action and the hint that used to sit on top of the
+ * image are gone with the tap that needed them. The map now mounts by itself
+ * when the reader scrolls to it, so there is nothing to invite them to press,
+ * and a label over a map that is about to become the real map only obscures
+ * it. When no static image can be produced, .mapRoot's own background stands
+ * in until the embed arrives.
+ */
