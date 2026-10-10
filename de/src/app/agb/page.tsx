@@ -1,28 +1,49 @@
 import React from 'react';
 import { breadcrumbSchema } from '@/utils/schema';
 import type { Metadata } from 'next';
-import { SITE_CONFIG, isUstIdConfigured } from '@/config/site.config';
-import { VAT_RATE } from '@/lib/catalog';
+import { SITE_CONFIG, isUstIdConfigured, isReady } from '@/config/site.config';
 
 /**
- * Algemene voorwaarden.
+ * Allgemeine Geschäftsbedingungen.
  *
- * Mobiele autosleutelservice only — there is no webshop on this domain
- * anymore, so every clause here concerns the callout/repair service: identity,
- * pricing, the agreement, warranty, liability, complaints (BW 6:230m still
- * applies to a service agreed at a distance, e.g. by phone or WhatsApp).
+ * Nur mobiler Autoschlüssel-Service — auf dieser Domain gibt es keinen
+ * Webshop, also betrifft jede Klausel hier den Einsatz vor Ort: Identität,
+ * Preis, Vertragsschluss, Gewährleistung, Haftung, Beschwerden.
  *
- * NOTE: this page was trimmed down from a version that also covered online
- * orders (distance-selling withdrawal rights, shipping, returns). That trim
- * removed the clauses that no longer apply now that nothing is sold online
- * from this domain, but it was not written or reviewed by a lawyer — have
- * this checked before relying on it.
+ * WAS GEGENÜBER DER NIEDERLÄNDISCHEN FASSUNG ANDERS IST
+ *
+ * Nicht übersetzt, sondern ersetzt — das sind die Stellen, an denen eine
+ * Übersetzung rechtlich falsch geworden wäre:
+ *
+ *  - Der Steuersatz. Die niederländische Fassung las VAT_RATE aus
+ *    lib/catalog.ts, und der stand auf 21 % — dem niederländischen Satz. Auf
+ *    einer deutschen Seite ist das eine falsche Angabe in den AGB. Der Satz
+ *    kommt jetzt aus site.config.ts (19 %), wo auch die Preise ihn lesen.
+ *  - Das Widerrufsrecht. Niederländisches Recht kennt BW 6:230m, deutsches
+ *    § 312g BGB; der Fernabsatzvertrag entsteht auch hier am Telefon oder per
+ *    WhatsApp, und das Widerrufsrecht von 14 Tagen gilt. Für den Notdienst
+ *    ist die Ausnahme in § 356 Abs. 4 BGB entscheidend: beginnt die Arbeit auf
+ *    ausdrücklichen Wunsch vor Ablauf der Frist und wird sie vollständig
+ *    erbracht, erlischt das Widerrufsrecht. Deshalb steht hier, dass der
+ *    Partner diese Zustimmung vor Beginn einholt.
+ *  - Gewährleistung. BW 7:17 wird zu §§ 434 ff. BGB, mit den zwei Jahren,
+ *    die das Gesetz vorsieht; unsere eigene Garantie von zwölf Monaten tritt
+ *    daneben und nicht an ihre Stelle.
+ *  - Recht und Gerichtsstand: deutsches Recht statt niederländischem.
+ *  - Der Identitätsnachweis. Das Kennzeichen beweist in Deutschland nichts
+ *    (kein öffentliches Register), also die Zulassungsbescheinigung Teil I.
+ *
+ * WICHTIG: Dieser Text ist von keinem Anwalt geprüft. Vor dem Start von einem
+ * Fachanwalt für IT- oder Verbraucherrecht durchsehen lassen — insbesondere
+ * die Widerrufsbelehrung, die formale Anforderungen hat, die ein Absatz in
+ * einer AGB-Seite allein nicht erfüllt.
  */
 
+const VAT_PERCENT = SITE_CONFIG.vat.rate;
+
 export const metadata: Metadata = {
-  title: { absolute: 'Algemene voorwaarden | Autosleutel24' },
-  description:
-    'De voorwaarden waaronder Autosleutel24 een autosleutel bijmaakt of monteert aan huis: prijs, betaling, garantie, annulering en aansprakelijkheid.',
+  title: { absolute: `AGB | ${SITE_CONFIG.name}` },
+  description: `Die Bedingungen, unter denen ${SITE_CONFIG.fullName} einen Autoschlüssel vor Ort anfertigt oder ein Fahrzeug öffnet: Preis, Zahlung, Gewährleistung, Widerruf und Haftung.`,
   alternates: { canonical: `${SITE_CONFIG.domain}/agb` },
 };
 
@@ -38,93 +59,125 @@ const p: React.CSSProperties = { color: '#334155', lineHeight: 1.7, margin: '0 0
 export default function TermsPage() {
   return (
     <main style={{ background: '#fff' }}>
-      <script id="bc-voorwaarden" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Algemene voorwaarden', path: '/agb' }])) }} />
+      <script id="bc-agb" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'AGB', path: '/agb' }])) }} />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '4rem 1.5rem', textAlign: 'center' }}>
         <h1 style={{ color: '#fff', margin: 0, fontSize: 'clamp(1.6rem, 5vw, 2.4rem)' }}>
-          Algemene voorwaarden
+          Allgemeine Geschäftsbedingungen
         </h1>
       </section>
 
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '2.5rem 1.25rem 5rem' }}>
-        <h2 style={{ ...h2, marginTop: 0 }}>1. Wie wij zijn</h2>
+        <h2 style={{ ...h2, marginTop: 0 }}>1. Wer wir sind</h2>
         <p style={p}>
-          {SITE_CONFIG.fullName}, mobiele autosleutelservice, werkzaam in{' '}
-          {SITE_CONFIG.serviceAreaString}.<br />
-          E-mail: {SITE_CONFIG.email} · Telefoon: {SITE_CONFIG.phone}
+          {SITE_CONFIG.fullName}
+          {isReady(SITE_CONFIG.legalForm) && <> ({SITE_CONFIG.legalForm})</>}, mobiler
+          Autoschlüssel-Service, tätig in {SITE_CONFIG.serviceAreaString}.
           <br />
-          KvK-nummer: {SITE_CONFIG.hrb}
+          E-Mail: {SITE_CONFIG.email} · Telefon: {SITE_CONFIG.phone}
+          {isReady(SITE_CONFIG.hrb) && (
+            <>
+              <br />
+              Registernummer: {SITE_CONFIG.hrb}
+            </>
+          )}
           {isUstIdConfigured() && (
             <>
               <br />
-              Btw-identificatienummer: {SITE_CONFIG.ustId}
+              Umsatzsteuer-Identifikationsnummer: {SITE_CONFIG.ustId}
             </>
           )}
+          <br />
+          Die vollständigen Angaben nach § 5 DDG stehen im{' '}
+          <a href="/impressum" style={{ color: '#b93c20' }}>Impressum</a>.
         </p>
 
-        <h2 style={h2}>2. Waarop deze voorwaarden gelden</h2>
+        <h2 style={h2}>2. Geltungsbereich</h2>
         <p style={p}>
-          Op elke opdracht aan onze monteur. Wijkt er iets af, dan leggen wij dat schriftelijk
-          vast; dan gaat die afspraak voor.
+          Diese Bedingungen gelten für jeden Auftrag an einen unserer Partnerbetriebe. Weicht etwas
+          davon ab, halten wir das schriftlich fest; die abweichende Abrede gilt dann vor diesen
+          Bedingungen.
+        </p>
+        <p style={p}>
+          {SITE_CONFIG.fullName} ist ein Netzwerk selbstständiger Fachbetriebe. Wir nehmen Ihre
+          Anfrage auf, nennen den Festpreis und sind Ihr Vertragspartner; die Arbeit am Fahrzeug
+          führt ein selbstständiger Partnerbetrieb aus. Welcher das ist, nennen wir Ihnen auf
+          Wunsch.
         </p>
 
-        <h2 style={h2}>3. Prijzen</h2>
+        <h2 style={h2}>3. Preise</h2>
         <p style={p}>
-          Alle prijzen zijn in euro&apos;s en inclusief {Math.round(VAT_RATE * 100)}% btw. U krijgt
-          de prijs voordat de monteur begint; wat is afgesproken is het bedrag dat wordt
-          afgerekend — daar komt niets bij.
+          Alle Preise sind in Euro und <strong>Bruttopreise inklusive {VAT_PERCENT} % Mehrwertsteuer</strong>,
+          wie es die Preisangabenverordnung gegenüber Verbrauchern verlangt. Sie hören den Festpreis,
+          bevor der Partner losfährt. Der vereinbarte Betrag ist der Betrag, der abgerechnet wird —
+          es kommt nichts hinzu, auch kein Zuschlag für Abend, Nacht, Wochenende oder Feiertag, und
+          die Anfahrt ist enthalten.
         </p>
 
-        <h2 style={h2}>4. De overeenkomst</h2>
+        <h2 style={h2}>4. Vertragsschluss</h2>
         <p style={p}>
-          De opdracht komt tot stand zodra wij uw afspraak bevestigen. Bleek de eerder genoemde
-          prijs door een kennelijke fout verkeerd, dan laten wij dat vóór aanvang van het werk
-          weten; u bent dan niet aan die foutieve prijs gehouden.
+          Der Vertrag kommt zustande, sobald wir Ihren Auftrag bestätigen. Stellt sich heraus, dass
+          ein genannter Preis durch einen offensichtlichen Fehler unrichtig war, teilen wir das vor
+          Beginn der Arbeit mit; an den fehlerhaften Preis sind Sie dann nicht gebunden.
         </p>
 
-        <h2 style={h2}>5. Garantie en conformiteit</h2>
+        <h2 style={h2}>5. Widerrufsrecht</h2>
         <p style={p}>
-          Wij geven 12 maanden garantie op ons werk en de ingebouwde elektronica. Daarnaast heeft
-          u altijd recht op een resultaat dat doet wat u ervan mag verwachten (BW 7:17); die
-          wettelijke aanspraak vervalt niet door onze garantietermijn.
+          Weil der Auftrag in der Regel am Telefon oder per WhatsApp zustande kommt, ist er ein
+          Fernabsatzvertrag. Als Verbraucher haben Sie das Recht, binnen 14 Tagen ohne Angabe von
+          Gründen zu widerrufen (§ 312g BGB). Die Erklärung genügt in Textform an{' '}
+          {SITE_CONFIG.email}.
+        </p>
+        <p style={p}>
+          Für einen Noteinsatz gilt eine gesetzliche Ausnahme, auf die wir ausdrücklich hinweisen:
+          Verlangen Sie, dass die Arbeit noch innerhalb der Widerrufsfrist beginnt, und wird sie
+          vollständig erbracht, erlischt das Widerrufsrecht mit der vollständigen Erbringung
+          (§ 356 Abs. 4 BGB). Genau deshalb holt der Partner diese Zustimmung ein, bevor er
+          anfängt — wer vor einem verschlossenen Auto steht, möchte in der Regel nicht 14 Tage
+          warten.
         </p>
 
-        <h2 style={h2}>6. Werk aan uw voertuig</h2>
+        <h2 style={h2}>6. Gewährleistung und Garantie</h2>
         <p style={p}>
-          Onze monteur werkt alleen aan een voertuig wanneer u kunt aantonen dat u eigenaar bent
-          of daartoe gemachtigd. Wij vragen daarom om uw kenteken en een legitimatie. Wij openen
-          of programmeren geen voertuig zonder dat bewijs — ook niet met spoed.
-        </p>
-        <p style={p}>
-          Voor het inleren van een sleutel wordt met de boordelektronica van uw auto gewerkt. Wij
-          zijn niet aansprakelijk voor gebreken die daar al waren, of voor gevolgschade door een
-          storing die losstaat van ons werk.
+          Es gilt die gesetzliche Gewährleistung nach §§ 434 ff. BGB mit zwei Jahren. Darüber
+          hinaus geben wir <strong>12 Monate Garantie</strong> auf unsere Arbeit und die gelieferte
+          Elektronik. Diese Garantie ist eine freiwillige Zusage und tritt neben Ihre gesetzlichen
+          Rechte, nicht an deren Stelle — sie verkürzt die Gewährleistung also nicht.
         </p>
 
-        <h2 style={h2}>7. Aansprakelijkheid</h2>
+        <h2 style={h2}>7. Arbeit an Ihrem Fahrzeug</h2>
         <p style={p}>
-          Onze aansprakelijkheid is beperkt tot het bedrag van de betreffende opdracht. Deze
-          beperking geldt niet bij opzet of bewuste roekeloosheid en evenmin waar de wet dwingend
-          anders bepaalt.
+          Unsere Partner arbeiten an einem Fahrzeug nur, wenn Sie nachweisen können, dass Sie der
+          Halter sind oder dazu bevollmächtigt wurden. Wir verlangen dafür Ihren Personalausweis
+          oder Pass und die Zulassungsbescheinigung Teil I. Ohne diesen Nachweis wird kein Fahrzeug
+          geöffnet und kein Schlüssel angelernt — auch nicht im Notfall. Das ist keine Formalität:
+          es ist der Grund, warum sich ein Dritter für Ihr Auto bei uns keinen Schlüssel machen
+          lassen kann.
+        </p>
+        <p style={p}>
+          Für das Anlernen eines Schlüssels wird mit der Elektronik Ihres Fahrzeugs gearbeitet. Für
+          Mängel, die dort bereits bestanden, und für Folgeschäden durch eine Störung, die mit
+          unserer Arbeit nicht zusammenhängt, haften wir nicht.
         </p>
 
-        <h2 style={h2}>8. Klachten en geschillen</h2>
+        <h2 style={h2}>8. Haftung</h2>
         <p style={p}>
-          Meld een klacht binnen bekwame tijd bij {SITE_CONFIG.email}. Wij reageren binnen twee
-          werkdagen. Op deze voorwaarden is Nederlands recht van toepassing. Komen wij er samen
-          niet uit, dan kunt u terecht bij de bevoegde Nederlandse rechter of via het{' '}
-          <a
-            href="https://ec.europa.eu/consumers/odr"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#b93c20' }}
-          >
-            Europese ODR-platform
-          </a>
-          .
+          Bei leichter Fahrlässigkeit ist unsere Haftung auf den Betrag des jeweiligen Auftrags
+          begrenzt. Diese Begrenzung gilt nicht bei Vorsatz und grober Fahrlässigkeit, nicht bei
+          der Verletzung von Leben, Körper oder Gesundheit, nicht bei der Verletzung wesentlicher
+          Vertragspflichten und nicht, soweit das Gesetz zwingend etwas anderes bestimmt.
+        </p>
+
+        <h2 style={h2}>9. Beschwerden, Recht und Gerichtsstand</h2>
+        <p style={p}>
+          Melden Sie eine Beschwerde zeitnah an {SITE_CONFIG.email}. Wir antworten innerhalb von
+          zwei Werktagen. Es gilt deutsches Recht. Kommen wir gemeinsam nicht weiter, steht Ihnen
+          der Weg zum zuständigen Gericht offen. Wir sind nicht verpflichtet und nicht bereit, an
+          einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
         </p>
 
         <p style={{ ...p, marginTop: '2.5rem', fontSize: '.9rem', color: '#64748b' }}>
-          Laatst bijgewerkt: september 2026.
+          Stand: Oktober 2026. Diese Bedingungen sind anwaltlich nicht geprüft; insbesondere die
+          Widerrufsbelehrung sollte vor dem Start von einem Fachanwalt durchgesehen werden.
         </p>
       </div>
     </main>

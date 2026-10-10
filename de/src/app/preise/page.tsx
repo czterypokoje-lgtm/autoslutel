@@ -2,129 +2,148 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import { preisAb } from '@/config/leistungen';
 import styles from './page.module.css';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 
 export const metadata: Metadata = {
   title: {
     /*
-     * 10,607 impressions at average position 69 and 14 clicks -- the second
-     * biggest leak on the site after /leistungen/autoschluessel-nachmachen. The
-     * "kosten" and "prijs" query families are 5,947 impressions between them
-     * and the old title led with "Prijzen", which is not the word they use.
+     * Auf der niederländischen Seite ist das nach der Nachmachen-Seite das
+     * zweitgrößte Leck: 10.607 Impressionen bei Position 69. Die Lehre daraus
+     * steht im Titel — die Suchanfrage lautet "kosten", nicht "Preisliste",
+     * und der alte Titel begann mit dem Wort, das niemand tippt.
      */
-    absolute: `Autosleutel Bijmaken Kosten | Vaste Prijs Vooraf`,
+    absolute: 'Autoschlüssel nachmachen Kosten | Festpreis vorab',
   },
-  description: `Wat kost een autosleutel bijmaken? Vaste prijzen per type sleutel: transponder, klapsleutel en smart key. Geen verrassingen achteraf.`,
+  description:
+    'Was kostet es, einen Autoschlüssel nachmachen zu lassen? Festpreis je Schlüsselart — Transponder, Klappschlüssel, Keyless Go. Alle Preise inkl. 19 % MwSt., vorab am Telefon.',
   alternates: {
     canonical: `${SITE_CONFIG.domain}/preise`,
-    languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/preise`,
-      'x-default': `${SITE_CONFIG.domain}/preise`,
-    },
+    languages: { 'de-DE': `${SITE_CONFIG.domain}/preise` },
   },
 };
 
-type PriceItem = 
-  | { category: string; service?: never; from?: never; to?: never; note?: never }
-  | { category?: never; service: string; from: string; to: string; note: string };
+/*
+ * Die Preistabelle — mit einer Spalte weniger als die niederländische.
+ *
+ * Dort hat sie vier Spalten: Leistung, Vanaf, Tot, Toelichting, und jede Zeile
+ * nennt eine Spanne (EUR 149-199, EUR 299-399 und so weiter). Diese Zahlen
+ * stammen aus Jahren niederländischer Aufträge. Für Deutschland gibt es sie
+ * noch nicht: der Partner nennt, was ihm der Auftrag wert ist, wir legen die
+ * Marge darauf, und daraus ergibt sich der Ab-Preis (siehe site.config.ts).
+ *
+ * Eine Spanne zu übersetzen wäre keine Übersetzung, sondern eine Behauptung —
+ * und eine Preisangabe, die am Fahrzeug nicht hält, ist in Deutschland nicht
+ * nur ärgerlich, sondern ein Fall für § 5 UWG. Darum eine Preisspalte statt
+ * zwei, gefüllt aus der Konfiguration, und "auf Anfrage", wo die Zahl noch
+ * fehlt. Sobald die Sätze der vier Partner da sind, füllt sich die Spalte von
+ * selbst.
+ *
+ * Die Zeilen ohne Betrag bleiben stehen, weil sie etwas anderes leisten: sie
+ * sagen dem Leser, dass wir diese Arbeit überhaupt machen.
+ */
+type PriceItem =
+  | { category: string; service?: never; price?: never; note?: never }
+  | { category?: never; service: string; price?: string; note: string };
 
 const priceRows: PriceItem[] = [
-  { category: 'Autosleutel Bijmaken (Reserve)' },
-  { service: 'Standaard transpondersleutel', from: `€ ${SITE_CONFIG.prices.transponder}`, to: '€ 199', note: 'Meeste oudere modellen' },
-  { service: 'Klap-/flipsleutel met afstandsbediening', from: `€ ${SITE_CONFIG.prices.klapsleutel}`, to: '€ 249', note: 'VW, Audi, Seat, Skoda, Ford' },
-  { service: 'Smart key / Keyless entry', from: `€ ${SITE_CONFIG.prices.smartKey}`, to: '€ 349', note: 'BMW, Mercedes, Toyota, Mazda' },
-  { service: 'Proximity key met start-stop', from: `€ ${SITE_CONFIG.prices.smartKey}`, to: '€ 349', note: 'Premium merken' },
-  
-  { category: 'Autosleutel Kwijt (Alle sleutels verloren)' },
-  { service: 'Standaard transpondersleutel', from: `€ ${SITE_CONFIG.prices.allKeysLost}`, to: '€ 399', note: 'Inclusief programmeren' },
-  { service: 'Klap-/flipsleutel met afstandsbediening', from: `€ ${SITE_CONFIG.prices.allKeysLost}`, to: '€ 399', note: 'Inclusief code uitlezen' },
-  { service: 'Smart key / Keyless entry', from: '€ 349', to: '€ 449', note: 'Inclusief noodprocedure' },
-  { service: 'Proximity key met start-stop', from: '€ 399', to: '€ 500', note: 'Premium systemen' },
-  
-  { category: 'Auto Openen (Buitengesloten)' },
-  { service: 'Standaard auto openen', from: `€ ${SITE_CONFIG.prices.unlock}`, to: '€ 200', note: 'Schadevrij, 5-15 minuten' },
+  { category: 'Autoschlüssel nachmachen (Zweitschlüssel)' },
+  { service: 'Transponderschlüssel', price: preisAb('transponder'), note: 'Die meisten älteren Modelle' },
+  { service: 'Klapp-/Flipschlüssel mit Funkfernbedienung', price: preisAb('klapsleutel'), note: 'VW, Audi, Seat, Škoda, Ford' },
+  { service: 'Keyless Go / Smart Key', price: preisAb('smartKey'), note: 'BMW, Mercedes, Toyota, Mazda' },
+  { service: 'Funkfernbedienung nachmachen', price: preisAb('remote'), note: 'Nur die Fernbedienung, Schlüssel vorhanden' },
 
-  { service: 'Noodopening (keyless systeem)', from: '€ 175', to: '€ 250', note: 'Speciale techniek vereist' },
-  
-  { category: 'Reparatie & Onderhoud (Sleutel kapot)' },
-  { service: 'Behuizing vervangen', from: `€ ${SITE_CONFIG.prices.casing}`, to: '€ 89', note: 'Nieuw ombouw-setje' },
-  { service: 'Batterij vervangen', from: '€ 15', to: '€ 20', note: 'Inclusief test' },
-  { service: 'Afstandsbediening herprogrammeren', from: '€ 49', to: '€ 99', note: 'Werkt niet meer' },
-  { service: 'Transponder chip vervangen', from: '€ 89', to: '€ 149', note: 'Chip defect' },
-  
-  { category: 'Contactslot & Stuurslot (Mechanische problemen)' },
-  { service: 'Contactslot vervangen (standaard)', from: `€ ${SITE_CONFIG.prices.ignition}`, to: '€ 399', note: 'VW, Audi, Seat, Skoda' },
-  { service: 'Contactslot vervangen (premium)', from: '€ 399', to: '€ 599', note: 'Mercedes, BMW' },
-  { service: 'Stuurslot reparatie/vervanging', from: '€ 199', to: '€ 349', note: 'ELV/ESL systemen' },
-  { service: 'Immobilizer reset', from: '€ 149', to: '€ 299', note: 'Software herstel' }
+  { category: 'Alle Autoschlüssel verloren' },
+  { service: 'Transponderschlüssel, kein Original vorhanden', price: preisAb('allKeysLost'), note: 'Schlüsseldaten aus dem Steuergerät lesen' },
+  { service: 'Keyless Go, kein Original vorhanden', note: 'Aufwendiger — Preis nach Marke und Baujahr' },
+
+  { category: 'Auto öffnen (ausgeschlossen)' },
+  { service: 'Fahrzeug schadenfrei öffnen', price: preisAb('unlock'), note: 'Mit Spezialwerkzeug, ohne Glasbruch' },
+  { service: 'Notöffnung bei Keyless-System', note: 'Eigene Technik nötig — Preis vorab am Telefon' },
+
+  { category: 'Reparatur (Schlüssel defekt)' },
+  { service: 'Schlüsselgehäuse wechseln', price: preisAb('casing'), note: 'Elektronik bleibt, Gehäuse neu' },
+  { service: 'Batterie wechseln', note: 'Inklusive Funktionsprüfung' },
+  { service: 'Tasten / Mikroschalter reparieren', note: 'SMD-Löten an der Platine' },
+  { service: 'Transponder ersetzen', note: 'Wenn der Chip selbst defekt ist' },
+
+  { category: 'Zündschloss und Lenkradschloss' },
+  { service: 'Zündschloss wechseln', price: preisAb('ignition'), note: 'Mechanischer Defekt, Schlüssel dreht nicht' },
+  { service: 'Lenkradschloss (ELV/ESL) reparieren', note: 'Häufig bei Mercedes und BMW' },
 ];
 
 /*
- * The out-of-hours surcharge table is gone.
+ * Der Zuschlag für Abend, Nacht und Wochenende ist hier nicht.
  *
- * It advertised +15% evenings and Saturdays and +25% nights and Sundays --
- * charges nothing in the codebase applies. SERVICE_SURCHARGE in
- * src/lib/services.ts is about how the key reaches the customer (post, send
- * in, technician out), not what time it is; no quote, invoice or wizard path
- * reads the clock. So the table was a price the site promised to charge and
- * the system never did, on the page a customer checks before calling at
- * 23:00.
+ * Die niederländische Seite hatte einmal eine Tabelle mit +15 % abends und
+ * samstags und +25 % nachts und sonntags — Zuschläge, die im Code nirgends
+ * angewandt wurden. Das war ein Preis, den die Seite ankündigte und das System
+ * nie berechnete, auf der Seite, die ein Kunde um 23 Uhr aufruft, bevor er
+ * anruft.
+ *
+ * Für Deutschland ist das keine Auslassung, sondern das Versprechen: der Preis
+ * am Telefon gilt unabhängig von der Uhrzeit. Genau davor warnen
+ * Verbraucherzentralen bei Aufsperrdiensten, und es ist der Grund, warum diese
+ * Zeile auf /mobiler-schluesseldienst der erste Absatz ist.
  */
 
 /**
- * '€ 149' -> 149.
+ * 'ab 149 €' -> 149.
  *
- * Derived from the string the table already renders rather than hand-typed
- * beside it: two copies of the same price drift, and the one nobody looks at
- * is the one in the schema. This way the number Google reads is by
- * construction the number on the page.
+ * Abgeleitet aus dem String, den die Tabelle rendert, statt daneben von Hand
+ * getippt: zwei Kopien desselben Preises driften auseinander, und die, die
+ * niemand ansieht, ist die im Schema. So ist die Zahl, die Google liest, von
+ * Bauart her die Zahl, die auf der Seite steht.
  */
-const euro = (value: string): number | null => {
+const euro = (value: string | undefined): number | null => {
+  if (!value) return null;
   const n = Number(value.replace(/[^0-9.,]/g, '').replace(',', '.'));
   return Number.isFinite(n) && n > 0 ? n : null;
 };
 
 /*
- * The price list, machine-readable.
+ * Die Preisliste, maschinenlesbar.
  *
- * Every row is a range, so each Offer carries a PriceSpecification with
- * minPrice and maxPrice rather than a single `price` — quoting €149 flat for
- * a service the page itself advertises as €149–199 would be a cheaper number
- * than we actually charge, published in a form Google may surface.
+ * valueAddedTaxIncluded: TRUE — das ist der Unterschied zur niederländischen
+ * Fassung, und er ist keine Geschmacksfrage. Dort steht false, weil die Seite
+ * zweimal "exclusief btw" sagt. Gegenüber deutschen Verbrauchern verlangt die
+ * Preisangabenverordnung Bruttopreise, also sind die Beträge hier inklusive
+ * 19 % MwSt., und das Schema muss dasselbe sagen wie die Seite.
  *
- * valueAddedTaxIncluded: false, because the page says so twice ("Alle prijzen
- * zijn exclusief btw"). Leaving it out lets a consumer-facing surface read
- * these as gross prices, which they are not.
+ * Zeilen ohne Betrag erzeugen kein Offer: ein Offer ohne Preis ist in der
+ * Rich-Result-Prüfung ein Fehler, und einen Preis zu erfinden, damit das
+ * Schema vollständig aussieht, ist genau der Fehler, den diese Datei
+ * vermeidet.
  */
+const offers = priceRows.flatMap((row) => {
+  if (!row.service) return [];
+  const min = euro(row.price);
+  if (min === null) return [];
+  return [{
+    '@type': 'Offer',
+    name: row.service,
+    description: row.note,
+    priceCurrency: 'EUR',
+    availability: 'https://schema.org/InStock',
+    areaServed: SITE_CONFIG.areaServedCities.map((c) => ({ '@type': 'City', name: c.name })),
+    itemOffered: { '@type': 'Service', name: row.service, provider: { '@id': `${SITE_CONFIG.domain}/#localbusiness` } },
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      priceCurrency: 'EUR',
+      minPrice: min,
+      valueAddedTaxIncluded: true,
+    },
+  }];
+});
+
 const offerCatalogSchema = {
   '@context': 'https://schema.org',
   '@type': 'OfferCatalog',
-  '@id': `${SITE_CONFIG.domain}/preise#tarieven`,
-  name: 'Tarieven Autosleutel24',
+  '@id': `${SITE_CONFIG.domain}/preise#preise`,
+  name: `Preise ${SITE_CONFIG.name}`,
   url: `${SITE_CONFIG.domain}/preise`,
-  itemListElement: priceRows.flatMap((row) => {
-    if (!row.service) return [];
-    const min = euro(row.from);
-    const max = euro(row.to);
-    if (min === null) return [];
-    return [{
-      '@type': 'Offer',
-      name: row.service,
-      description: row.note,
-      priceCurrency: 'EUR',
-      availability: 'https://schema.org/InStock',
-      areaServed: 'NL',
-      itemOffered: { '@type': 'Service', name: row.service, provider: { '@id': `${SITE_CONFIG.domain}/#localbusiness` } },
-      priceSpecification: {
-        '@type': 'PriceSpecification',
-        priceCurrency: 'EUR',
-        minPrice: min,
-        ...(max !== null && max !== min ? { maxPrice: max } : {}),
-        valueAddedTaxIncluded: false,
-      },
-    }];
-  }),
+  itemListElement: offers,
 };
 
 const breadcrumbSchema = {
@@ -132,31 +151,38 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-    { '@type': 'ListItem', position: 2, name: 'Prijzen', item: `${SITE_CONFIG.domain}/preise` },
+    { '@type': 'ListItem', position: 2, name: 'Preise', item: `${SITE_CONFIG.domain}/preise` },
   ],
 };
 
-export default function PrijzenPage() {
+export default function PreisePage() {
   return (
     <>
-      <script id="prijzen-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <script id="prijzen-offers-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offerCatalogSchema) }} />
+      <script id="preise-bc-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {/* Kein leerer OfferCatalog: solange kein Betrag konfiguriert ist, gibt
+          es nichts auszuzeichnen, und ein OfferCatalog ohne Offers ist in der
+          Rich-Result-Prüfung ein Fehler. */}
+      {offers.length > 0 && (
+        <script id="preise-offers-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(offerCatalogSchema) }} />
+      )}
       <main>
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <p className={styles.label}>TARIEVEN</p>
-          <h1>Prijsoverzicht — Indicatieve Tarieven</h1>
+          <p className={styles.label}>PREISE</p>
+          <h1>Was kostet ein Autoschlüssel?</h1>
           <p className={styles.heroSub}>
-            Exacte prijs wordt altijd <strong>vóór aanvang</strong> van de werkzaamheden afgesproken. 
-            Bij de officiële autodealer bent u vaak <strong>50% duurder</strong> uit. Bovendien betaalt u bij ons <strong>géén wegsleepkosten</strong> omdat wij naar u toe komen!
+            Den genauen Festpreis hören Sie <strong>vor der Anfahrt</strong> am Telefon, und
+            er ändert sich am Fahrzeug nicht. Alle Beträge sind Bruttopreise{' '}
+            <strong>inklusive 19 % MwSt.</strong> Weil unser Partner zu Ihrem Fahrzeug kommt,
+            zahlen Sie <strong>keine Abschleppkosten</strong>.
           </p>
           <div className={styles.heroCtas}>
-            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="prijzen-hero-phone">
+            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="preise-hero-phone">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-              Bel voor Exacte Prijs
+              Festpreis erfragen
             </a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWa} id="prijzen-hero-wa">WhatsApp Offerte</a>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWa} id="preise-hero-wa">Per WhatsApp anfragen</a>
           </div>
         </div>
       </section>
@@ -165,7 +191,7 @@ export default function PrijzenPage() {
 
         {/* Video — no VideoObject here; the watch page is /autoschluessel-verloren */}
         <section style={{ padding: '3.5rem 0' }}>
-          <VideoEmbed heading="Zo werkt het — in 40 seconden" />
+          <VideoEmbed heading="So läuft es ab — in 40 Sekunden" />
         </section>
 
         {/* Important disclaimer */}
@@ -174,39 +200,37 @@ export default function PrijzenPage() {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           </div>
           <div>
-            <strong>Belangrijke informatie over onze tarieven</strong>
+            <strong>Wichtig zu unseren Preisen</strong>
             <ul className={styles.disclaimerList}>
-              <li>Onderstaande prijzen zijn <strong>indicatieve startprijzen</strong> — de exacte prijs hangt af van uw merk, model, bouwjaar en type sleutelsysteem.</li>
-              <li>Alle prijzen zijn exclusief btw.</li>
-              <li>De definitieve prijs wordt <strong>altijd vooraf telefonisch afgesproken</strong> — nooit verrassingen achteraf.</li>
-              <li>De merkdealer is vaak <strong>50% duurder</strong>, en u bespaart bij ons op dure wegsleepkosten (wij werken 100% op uw locatie).</li>
+              <li>Die Beträge unten sind <strong>Ab-Preise</strong> — was es genau kostet, hängt von Marke, Modell, Baujahr und Schlüsselsystem ab.</li>
+              <li>Alle Preise sind <strong>Bruttopreise inklusive 19 % MwSt.</strong>, wie es die Preisangabenverordnung gegenüber Verbrauchern verlangt. Was Sie hier lesen, ist der Betrag, der auf der Rechnung steht.</li>
+              <li>Der Festpreis wird <strong>vor der Anfahrt am Telefon vereinbart</strong> und gilt unabhängig von Uhrzeit, Wochentag und Feiertag. Keine Nachforderung vor Ort, kein Nachtzuschlag.</li>
+              <li>Die Anfahrt ist enthalten. Sagen Sie nach dem Preis nein, zahlen Sie nichts.</li>
             </ul>
           </div>
         </div>
 
         {/* Main price table */}
-        <h2 className={styles.tableTitle}>Indicatieve Prijslijst</h2>
+        <h2 className={styles.tableTitle}>Preisübersicht</h2>
         <div className={styles.tableWrap}>
           <table className={styles.priceTable}>
             <thead>
               <tr>
-                <th>Dienst</th>
-                <th>Vanaf</th>
-                <th>Tot</th>
-                <th className={styles.noteCol}>Toelichting</th>
+                <th>Leistung</th>
+                <th>Preis (inkl. MwSt.)</th>
+                <th className={styles.noteCol}>Hinweis</th>
               </tr>
             </thead>
             <tbody>
               {priceRows.map((row, i) => (
                 row.category ? (
                   <tr key={i} className={styles.categoryRow}>
-                    <td colSpan={4}><strong>{row.category}</strong></td>
+                    <td colSpan={3}><strong>{row.category}</strong></td>
                   </tr>
                 ) : (
                   <tr key={i}>
                     <td className={styles.serviceCell}>{row.service}</td>
-                    <td className={styles.priceCell}>{row.from}</td>
-                    <td className={styles.priceCell}>{row.to}</td>
+                    <td className={styles.priceCell}>{row.price ?? 'auf Anfrage'}</td>
                     <td className={styles.noteCell}>{row.note}</td>
                   </tr>
                 )
@@ -214,28 +238,35 @@ export default function PrijzenPage() {
             </tbody>
           </table>
         </div>
-        <p className={styles.tableNote}>* Prijzen zijn exclusief btw en gelden voor diensten binnen Nederland. Exacte prijs na telefonische diagnose.</p>
+        <p className={styles.tableNote}>
+          * Bruttopreise inklusive 19 % MwSt., für Einsätze in {SITE_CONFIG.serviceAreaString}.
+          Den genauen Festpreis nennen wir am Telefon, nachdem Sie Marke, Modell, Baujahr und
+          Schlüsselart genannt haben.
+        </p>
 
-        {/* Trust Gallery: Onze Mobiele Werkplaats & Apparatuur */}
+        {/* Vertrauensabschnitt: die mobile Werkstatt und ihre Technik */}
         <div className={styles.trustSection}>
-          <h2 className={styles.tableTitle}>Onze Mobiele Werkplaats &amp; Apparatuur in Utrecht &amp; Amsterdam</h2>
+          <h2 className={styles.tableTitle}>Die mobile Werkstatt unserer Partner</h2>
           <p style={{ color: 'var(--gray-600)', fontSize: '0.95rem', lineHeight: 1.6 }}>
-            Wij werken uitsluitend met gecertificeerde diagnose- en programmeerapparatuur. Onze mobiele servicebussen zijn volledig uitgerust om transpondersleutels, smart keys en contactsloten ter plaatse in Utrecht, Amsterdam en heel Midden-Nederland 100% schadevrij te programmeren.
+            Gearbeitet wird mit Diagnose- und Anlerntechnik, nicht mit Gewalt. Die Fahrzeuge unserer
+            Partner sind so ausgerüstet, dass Transponderschlüssel, Keyless-Go-Schlüssel und
+            Zündschlösser in {SITE_CONFIG.serviceAreaString} vor Ort und ohne Folgeschaden erledigt
+            werden können.
           </p>
           <div className={styles.trustGrid}>
             <div className={styles.trustItem}>
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/autoschluessel_reparatur_mobil.webp"
-                  alt="Monteur repareert de behuizing van een autosleutel op locatie"
+                  alt="Techniker repariert das Gehäuse eines Autoschlüssels vor Ort"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImg}
                 />
               </div>
               <div className={styles.trustContent}>
-                <h3 className={styles.trustTitle}>Mobiele Sleutelreparatie Ter Plaats</h3>
-                <p className={styles.trustDesc}>Directe reparatie van defecte sleutelbehuizingen, transponders en printplaten op locatie in Utrecht en Amsterdam.</p>
+                <h3 className={styles.trustTitle}>Reparatur vor Ort</h3>
+                <p className={styles.trustDesc}>Gerissene Gehäuse, defekte Transponder und Platinen werden dort instand gesetzt, wo das Fahrzeug steht.</p>
               </div>
             </div>
 
@@ -243,15 +274,15 @@ export default function PrijzenPage() {
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/autoschluessel_anlernen_vor_ort.webp"
-                  alt="Programmeren en inleren van een nieuwe autosleutel in een mobiele servicebus"
+                  alt="Neuer Autoschlüssel wird im Servicefahrzeug codiert und angelernt"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImgTop}
                 />
               </div>
               <div className={styles.trustContent}>
-                <h3 className={styles.trustTitle}>Programmeren Op Locatie</h3>
-                <p className={styles.trustDesc}>Inleren van transpondersleutels en smart keys ter plaatse zonder uw voertuig naar de dealer te hoeven wegslepen.</p>
+                <h3 className={styles.trustTitle}>Anlernen vor Ort</h3>
+                <p className={styles.trustDesc}>Transponder und Keyless-Go-Schlüssel werden an der Wegfahrsperre angelernt — ohne Abschleppen zum Vertragshändler.</p>
               </div>
             </div>
 
@@ -259,15 +290,15 @@ export default function PrijzenPage() {
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/autoschluessel_lager_alle_marken.webp"
-                  alt="Voorraad van originele autosleutels en transponders voor diverse automerken"
+                  alt="Lager mit Autoschlüsseln und Transpondern für verschiedene Fahrzeugmarken"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImg}
                 />
               </div>
               <div className={styles.trustContent}>
-                <h3 className={styles.trustTitle}>Originele Voorraad Alle Merken</h3>
-                <p className={styles.trustDesc}>Uitgebreide voorraad OEM-sleutels, smart keys en transponderchips voor direct gebruik bij sleutelverlies.</p>
+                <h3 className={styles.trustTitle}>Schlüssellager für alle Marken</h3>
+                <p className={styles.trustDesc}>OEM-Schlüssel, Keyless-Go-Schlüssel und Transponder im Fahrzeug — deshalb muss nichts bestellt werden.</p>
               </div>
             </div>
 
@@ -275,15 +306,15 @@ export default function PrijzenPage() {
               <div className={styles.trustImgWrap}>
                 <Image
                   src="/images/seo/professionelle_diagnose_geraete.webp"
-                  alt="Professionele diagnose apparatuur (Autel IM608 Pro) voor autosleutel programmering"
+                  alt="Diagnosegerät Autel IM608 Pro zum Anlernen von Autoschlüsseln"
                   fill
                   sizes="(max-width: 640px) 100vw, 500px"
                   className={styles.trustImg}
                 />
               </div>
               <div className={styles.trustContent}>
-                <h3 className={styles.trustTitle}>Dealer-Niveau Apparatuur</h3>
-                <p className={styles.trustDesc}>Geavanceerde diagnoseapparatuur voor veilige toegang tot ECU, CAS, FEM, MQB en EIS systemen.</p>
+                <h3 className={styles.trustTitle}>Werkstatttechnik</h3>
+                <p className={styles.trustDesc}>Zugriff auf Steuergerät, CAS, FEM/BDC, MQB und EIS — dieselben Geräte, die eine Werkstatt einsetzt.</p>
               </div>
             </div>
           </div>
@@ -291,13 +322,20 @@ export default function PrijzenPage() {
 
         {/* Why cheaper */}
         <div className={styles.whyCard}>
-          <h2>Waarom Goedkoper dan de Dealer?</h2>
+          <h2>Warum günstiger als der Vertragshändler?</h2>
+          {/*
+            * Die niederländische Überschrift nennt hier "30-50 % günstiger".
+            * Diese Zahl steht hier nicht: sie stammt aus niederländischen
+            * Aufträgen gegen niederländische Händlerpreise, und für Deutschland
+            * liegt sie nicht vor. Was unten steht, ist der GRUND, warum es
+            * günstiger wird, und der gilt auch ohne Prozentangabe.
+            */}
           <div className={styles.whyGrid}>
             {[
-              { title: 'Geen showroomkosten', desc: 'Wij rijden naar u toe — geen huur, geen overheadkosten.' },
-              { title: 'Dezelfde tools', desc: 'Autel IM608 Pro II, AVDI, VVDI — dealer-niveau apparatuur.' },
-              { title: 'Geen wachttijd', desc: 'Geen 1–2 weken wachten op een dealerfactory sleutel.' },
-              { title: 'Vaste prijs vooraf', desc: 'U weet de prijs vóór wij beginnen. Nooit een verrassing.' },
+              { title: 'Kein Ausstellungsraum', desc: 'Der Partner fährt zu Ihrem Fahrzeug — keine Miete, kein Überbau.' },
+              { title: 'Dieselben Geräte', desc: 'Autel IM608 Pro II, AVDI, VVDI — Werkstatttechnik, nicht Schlagschlüssel.' },
+              { title: 'Keine Wartezeit', desc: 'Kein Warten auf einen Schlüssel, der auf Fahrgestellnummer bestellt wird.' },
+              { title: 'Festpreis vorab', desc: 'Sie kennen den Preis, bevor jemand losfährt. Keine Nachforderung.' },
             ].map(item => (
               <div key={item.title} className={styles.whyItem}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" style={{ color: 'var(--color-success)', flexShrink: 0, marginTop: 2 }} aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -310,41 +348,69 @@ export default function PrijzenPage() {
           </div>
         </div>
 
-        {/* ── COMPREHENSIVE PRIJZEN SEO GUIDE ARTICLE ── */}
+        {/* ── RATGEBERTEXT ZU DEN PREISEN ── */}
         <div className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem' }}>
-          <h2>Transparante Tarieven voor Autosleutels en Slotenmaker Service op Locatie</h2>
+          <h2>Woraus sich der Preis eines Autoschlüssels ergibt</h2>
           <p>
-            Bij het bijmaken of vervangen van een autosleutel spelen verschillende technische factoren een rol in de prijsopbouw. Waar een eenvoudige reservesleutel zonder afstandsbediening relatief goedkoop is, vereist een moderne Keyless Entry of Keyless Go sleutel (smart key) geavanceerde elektronica en gecertificeerde programmeersoftware. <strong>{SITE_CONFIG.name}</strong> garandeert u altijd vooraf een vaste en transparante all-in prijs, zodat u nooit wordt geconfronteerd met onverwachte kosten.
+            Beim Nachmachen oder Ersetzen eines Autoschlüssels entscheiden technische Umstände über
+            den Preis, nicht eine Pauschale. Ein einfacher Zweitschlüssel ohne Funkfernbedienung ist
+            die kleinste Arbeit; ein Keyless-Go-Schlüssel verlangt Elektronik und eine
+            Anlernprozedur, die der Hersteller je Baureihe anders gelöst hat.
+            <strong> {SITE_CONFIG.name}</strong> nennt Ihnen deshalb vor der Anfahrt einen Festpreis
+            für Ihr Fahrzeug — inklusive 19 % MwSt., und ohne Nachforderung vor Ort.
           </p>
-          <h3>Waarom zijn wij 30% tot 50% goedkoper dan de officiële merkdealer?</h3>
+          <h3>Warum es beim mobilen Fachbetrieb günstiger ist als beim Vertragshändler</h3>
           <p>
-            Officiële merkdealers berekenen vaak hoge uurtarieven, logistieke bestel- en administratiekosten én verplichte takel- of wegsleepkosten naar hun showroom. Onze gecertificeerde mobiele slotenmakers komen met een compleet uitgeruste servicebus direct naar uw voertuig toe. Wij snijden de sleutelbaard met CNC-gestuurde snijmachines ter plaatse en leren de transponderchip in via de OBD2-diagnosepoort.
+            Beim Vertragshändler kommen drei Dinge zusammen: der Stundensatz der Werkstatt, die
+            Bestellung des Schlüssels auf Fahrgestellnummer samt Verwaltung, und — wenn kein
+            Schlüssel mehr existiert — das Abschleppen zum Betrieb. Unsere Partner fahren mit
+            Fräse und Diagnosetechnik zu Ihrem Fahrzeug, fräsen das Schlüsselblatt vor Ort und
+            lernen den Transponder über die OBD-Schnittstelle an der Wegfahrsperre an. Damit
+            entfallen Abschleppen und Wartezeit, und das ist der eigentliche Unterschied in der
+            Rechnung.
           </p>
-          <h3>Verschil in Prijs tussen Mechanische Sleutels, Klapsleutels en Smart Keys</h3>
+          <h3>Transponderschlüssel, Klappschlüssel und Keyless Go im Vergleich</h3>
           <p>
-            Een mechanische reservesleutel met transponderchip start uw auto en opent uw deuren handmatig; dit is de voordeligste optie (vanaf €{SITE_CONFIG.prices.transponder}). Een klapsleutel met afstandsbediening heeft extra RF-elektronica om uw centrale deurvergrendeling op afstand te bedienen (vanaf €{SITE_CONFIG.prices.klapsleutel}). Keyless Entry en Keyless Go smart keys (zoals bij BMW, Mercedes en Volkswagen) vereisen cryptografische Eeprom- of Bench-programmering en liggen in het luxere segment (vanaf €{SITE_CONFIG.prices.smartKey}).
+            Ein Transponderschlüssel startet das Fahrzeug und öffnet die Tür mechanisch — die
+            günstigste Variante. Ein Klappschlüssel mit Funkfernbedienung hat zusätzlich die
+            Funkelektronik für die Zentralverriegelung. Keyless Go und Smart Keys, etwa bei BMW,
+            Mercedes und im VW-Konzern, verlangen das Auslesen oder Beschreiben eines Steuergeräts
+            und liegen deshalb darüber. An welcher Stelle Ihr Fahrzeug steht, sagen wir Ihnen am
+            Telefon, sobald Sie Marke, Modell und Baujahr nennen.
           </p>
-          <h3>Kosten bij All Keys Lost (Alle Sleutels Kwijt) ten opzichte van Reservesleutel</h3>
+          <h3>Zweitschlüssel gegen &quot;alle Schlüssel verloren&quot;</h3>
           <p>
-            Wanneer u nog minstens één werkende sleutel heeft, kunnen wij de cryptografische sleuteldata direct klonen of via de OBD2-poort een tweede sleutel toevoegen. Bent u echter alle sleutels kwijt? Dan moeten wij de sleutelcode via het deurslot decoderen en de startonderbreker compleet resetten en opnieuw beveiligen met nieuwe transpondercodes. Hierdoor liggen All Keys Lost tarieven iets hoger dan het bijmaken van een enkele reservesleutel.
+            Solange noch ein funktionierender Schlüssel existiert, kann ein zweiter über die
+            OBD-Schnittstelle hinzugefügt werden. Ist kein Schlüssel mehr da, muss das Schließsystem
+            erst dekodiert und die Wegfahrsperre neu mit Schlüsseldaten versehen werden. Das ist
+            mehr Arbeit und kostet entsprechend mehr — und es ist der Grund, warum ein
+            Zweitschlüssel, solange alles funktioniert, die mit Abstand günstigste Entscheidung
+            ist.
           </p>
-          <h3>Vergoeding via uw Autoverzekering &amp; 12 Maanden Garantie</h3>
+          <h3>Versicherung und 12 Monate Garantie</h3>
           <p>
-            Wanneer u uw autosleutel bent verloren of als deze is gestolen, valt het vervangen van uw sleutelset en het wissen van de oude sleutelcodes vaak onder de dekking van uw WA Extra (Beperkt Casco) of Allrisk autoverzekering. U ontvangt van ons altijd een officiële en gespecificeerde KVK-factuur die u direct kunt indienen bij uw verzekeraar. Bovendien krijgt u op alle geleverde autosleutels 12 maanden schriftelijke garantie.
+            Ob Ihre Versicherung einen verlorenen oder gestohlenen Schlüssel ersetzt, steht in Ihrer
+            Police, und die Antwort ist häufiger &quot;nein&quot;, als man erwartet: die Teilkasko
+            deckt den Diebstahl des Fahrzeugs, den Ersatz eines Schlüssels in der Regel nicht.
+            Manche Versicherer bieten das als Zusatzbaustein an, und bei einem Wohnungseinbruch kann
+            die Hausratversicherung greifen. Fragen Sie dort nach, bevor Sie damit rechnen. Von uns
+            erhalten Sie in jedem Fall eine Rechnung mit ausgewiesener MwSt. und aufgeführter
+            Leistung, wie sie zur Einreichung gebraucht wird, sowie zwölf Monate schriftliche
+            Garantie auf jeden gelieferten Schlüssel und jedes Anlernen.
           </p>
         </div>
 
         {/* CTA */}
         <div className={styles.cta}>
-          <h2>Exacte Prijs Weten?</h2>
-          <p>Geef uw automerk, model en bouwjaar door — wij geven direct een vaste prijs.</p>
+          <h2>Festpreis für Ihr Fahrzeug?</h2>
+          <p>Nennen Sie Marke, Modell, Baujahr und Schlüsselart — Sie hören den Festpreis sofort.</p>
           <div className={styles.ctaBtns}>
-            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.ctaPhone} id="prijzen-cta-phone">
+            <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.ctaPhone} id="preise-cta-phone">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
               {SITE_CONFIG.phone}
             </a>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.ctaWa} id="prijzen-cta-wa">WhatsApp</a>
-            <Link href="/kontakt" className={styles.ctaContact} id="prijzen-cta-form">Offerte formulier</Link>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.ctaWa} id="preise-cta-wa">WhatsApp</a>
+            <Link href="/kontakt" className={styles.ctaContact} id="preise-cta-form">Anfrageformular</Link>
           </div>
         </div>
 

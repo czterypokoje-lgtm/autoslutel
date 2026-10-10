@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SITE_CONFIG } from '@/config/site.config';
+import { preisAb } from '@/config/leistungen';
 import { ARRIVAL } from '@/config/arrival';
 import { CITIES } from '@/config/cities';
 import { SERVICE_REGIONS } from '@/config/regions';
@@ -15,27 +16,32 @@ import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedRevi
 import InstantServiceMap from '@/components/InstantServiceMap';
 
 /*
- * One page per province the business wants to be found in.
+ * Eine Seite je Region, in der ein Partner steht.
  *
- * Someone in Rotterdam searching "autosleutel bijmaken zuid-holland", or a fleet
- * manager in Arnhem searching "autosleutel gelderland", should land on a page that
- * is about their province and names the towns they would recognise, not on a
- * national page or on a single city. These pages are the hub between the two: the
- * province, the towns in it with their neighbourhoods, and the links down to each.
+ * Wer in Nürnberg "autoschlüssel nachmachen bayern" sucht, oder ein
+ * Fuhrparkleiter in Wiesbaden "autoschlüssel hessen", soll auf einer Seite
+ * landen, die von seiner Region handelt und die Orte nennt, die er kennt —
+ * nicht auf einer Seite über Deutschland und nicht auf einer einzelnen Stadt.
+ * Diese Seiten sind das Scharnier zwischen beidem.
  *
- * They are NOT a template with the province name swapped. What differs per page
- * comes from the city records (neighbourhoods, the local fact and the typical job
- * where one exists) and from which towns actually sit in that province, so a
- * Gelderland page lists Arnhem, Nijmegen and Apeldoorn and a Zuid-Holland page
- * lists Den Haag, Rotterdam and Delft. If a province has no record with a local
- * fact the section simply shows the towns; nothing is invented to fill it.
+ * Sie sind KEINE Vorlage mit ausgetauschtem Regionsnamen. Was je Seite anders
+ * ist, kommt aus den Stadtdatensätzen (Stadtteile, lokale Besonderheit,
+ * typischer Auftrag) und daraus, welche Städte wirklich in dieser Region
+ * liegen. Fehlt eine Angabe, zeigt der Abschnitt einfach die Städte; es wird
+ * nichts erfunden, um ihn zu füllen.
  *
- * "Randstad" is not a province. It is how people in Utrecht, Noord-Holland,
- * Zuid-Holland and Flevoland describe where they live, so the four pages that are
- * in it say so in a section of their own and link to each other.
+ * WAS GEGENÜBER DER NIEDERLÄNDISCHEN FASSUNG FEHLT: die Randstad.
+ *
+ * Dort gibt es dafür einen eigenen Abschnitt, weil "Randstad" das Wort ist,
+ * mit dem Menschen in vier Provinzen beschreiben, wo sie wohnen. Für Berlin,
+ * Hamburg, Bayern und Hessen gibt es kein solches Wort — die vier liegen in
+ * vier Bundesländern und haben außer uns nichts gemeinsam. Einen Abschnitt zu
+ * erfinden, der sie zusammenfasst, hieße eine Nähe zu behaupten, die es nicht
+ * gibt, und vier Seiten einander ähnlicher zu machen, als sie sein sollten.
+ *
+ * Eine Region hier heißt außerdem nicht, dass das ganze Bundesland bedient
+ * wird: München hat einen Partner, Nürnberg nicht. Siehe config/regions.ts.
  */
-
-const RANDSTAD = new Set(['utrecht', 'noord-holland', 'zuid-holland', 'flevoland']);
 
 export function generateStaticParams() {
   return SERVICE_REGIONS.map((r) => ({ regio: r.slug }));
@@ -44,37 +50,45 @@ export function generateStaticParams() {
 const citiesIn = (name: string) =>
   CITIES.filter((c) => c.region === name && !isNoindexCity(c.slug)).sort((a, b) => {
     if (a.priority !== b.priority) return a.priority < b.priority ? -1 : 1;
-    return a.city.localeCompare(b.city, 'nl');
+    return a.city.localeCompare(b.city, 'de');
   });
 
 export async function generateMetadata(props: { params: Promise<{ regio: string }> }): Promise<Metadata> {
   const { regio } = await props.params;
   const region = SERVICE_REGIONS.find((r) => r.slug === regio);
   if (!region) return {};
-  const towns = citiesIn(region.name).slice(0, 3).map((c) => c.city).join(', ');
+  const metaCities = citiesIn(region.name);
+  const towns = metaCities.slice(0, 3).map((c) => c.city).join(', ');
   const url = `${SITE_CONFIG.domain}/regionen/${region.slug}`;
-  // /staedte/utrecht already owns "Autosleutel Bijmaken Utrecht | …"; the province page must not repeat it.
-  const title =
-    region.slug === 'utrecht'
-      ? `Autosleutel Provincie Utrecht | ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`
-      : `Autosleutel Bijmaken ${region.name} | ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`;
+  /*
+   * Berlin und Hamburg sind Stadt UND Bundesland, und /staedte/berlin besitzt
+   * schon den Titel "Autoschlüssel nachmachen Berlin | …". Die Regionsseite
+   * darf ihn nicht wiederholen, sonst konkurrieren zwei eigene Seiten um
+   * dieselbe Anfrage — genau der Fehler, den die niederländische Fassung für
+   * Utrecht einmal gemacht hat. Bei einem Stadtstaat führt der Titel deshalb
+   * mit "Region".
+   */
+  const isCityState = metaCities.some((c) => c.city === region.name);
+  const title = isCityState
+    ? `Autoschlüssel Region ${region.name} | vor Ort, 24/7`
+    : `Autoschlüssel nachmachen ${region.name} | vor Ort, 24/7`;
   return {
     title: { absolute: title },
     description: clampMeta(
-      `Autosleutel kwijt, kapot of bijmaken in ${region.name}? Binnen ${ARRIVAL} ter plaatse in ${towns} en omgeving. Vaste prijs vooraf, 24/7. Bel direct!`
+      `Autoschlüssel verloren, defekt oder nachmachen in ${region.name}? Unser Partner kommt zu Ihrem Fahrzeug in ${towns} und Umgebung. Festpreis vorab inkl. MwSt., 24/7.`
     ),
-    alternates: { canonical: url, languages: { 'nl-NL': url, 'x-default': url } },
+    alternates: { canonical: url, languages: { 'de-DE': url } },
     openGraph: {
       type: 'website',
       url,
       title,
-      description: `Mobiele autosleutelspecialist in ${region.name}: kwijt, kapot of bijmaken, op locatie.`,
-      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autosleutel bijmaken ${region.name} — Autosleutel24` }],
+      description: `Mobiler Autoschlüssel-Service in ${region.name}: verloren, defekt oder nachmachen — vor Ort.`,
+      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autoschlüssel nachmachen ${region.name} — Autoschlüssel24` }],
     },
   };
 }
 
-export default async function RegioPage(props: { params: Promise<{ regio: string }> }) {
+export default async function RegionPage(props: { params: Promise<{ regio: string }> }) {
   const { regio } = await props.params;
   const region = SERVICE_REGIONS.find((r) => r.slug === regio);
   if (!region) notFound();
@@ -83,25 +97,24 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
   const top = cities.slice(0, 3).map((c) => c.city);
   const brands = [...new Set(cities.flatMap((c) => c.popularBrands ?? []))].slice(0, 5);
   const others = SERVICE_REGIONS.filter((r) => r.slug !== region.slug);
-  const inRandstad = RANDSTAD.has(region.slug);
   const link = { color: 'var(--orange-600)', fontWeight: 600 } as const;
 
   const faq = [
     {
-      q: `Komt u ook naar ${top.join(', ')} en de rest van ${region.name}?`,
-      a: `Ja. Wij komen naar uw auto in heel ${region.name}, binnen ${ARRIVAL} ter plaatse, dag en nacht. Geef uw locatie door per telefoon of WhatsApp en u hoort direct hoe snel wij er zijn.`,
+      q: `Kommen Sie auch nach ${top.join(', ')} und in die Umgebung?`,
+      a: `Ja. Unser Partner kommt ${ARRIVAL} zu Ihrem Fahrzeug, Tag und Nacht. Nennen Sie Ihren Standort am Telefon oder per WhatsApp, und Sie hören sofort, wann jemand bei Ihnen sein kann. Eine pauschale Minutenangabe nennen wir nicht — sie fällt je Ort und Tageszeit anders aus.`,
     },
     {
-      q: `Wat kost een autosleutel bijmaken in ${region.name}?`,
-      a: `Een reservesleutel begint bij €${SITE_CONFIG.prices.transponder}, een klapsleutel met afstandsbediening bij €${SITE_CONFIG.prices.klapsleutel} en een smart key bij €${SITE_CONFIG.prices.smartKey}. Zijn al uw sleutels kwijt, dan begint de prijs bij €${SITE_CONFIG.prices.allKeysLost}. U hoort de exacte prijs telefonisch voordat wij vertrekken.`,
+      q: `Was kostet ein Autoschlüssel in ${region.name}?`,
+      a: 'Das hängt von Marke, Modell, Baujahr und Schlüsselart ab: ein Transponderschlüssel ist die einfachste Arbeit, ein Keyless-Go-Schlüssel die aufwendigste, und ohne vorhandenes Original müssen die Schlüsseldaten erst aus dem Steuergerät gelesen werden. Sie hören den Festpreis am Telefon, bevor jemand losfährt — als Bruttopreis inklusive 19 % MwSt.',
     },
     {
-      q: `Ik ben mijn autosleutel kwijt in ${region.name}. Moet de auto naar de dealer?`,
-      a: 'Nee. Wij openen de auto schadevrij als hij op slot zit, lezen de sleutelcode uit en maken ter plaatse een nieuwe sleutel. Slepen naar de dealer is niet nodig.',
+      q: `Ich habe meinen Autoschlüssel in ${region.name} verloren. Muss das Fahrzeug zum Händler?`,
+      a: 'Nein. Wir öffnen das Fahrzeug schadenfrei, wenn es verschlossen ist, lesen die Schlüsseldaten aus dem Steuergerät und fertigen vor Ort einen neuen Schlüssel an. Abschleppen zum Vertragshändler ist nicht nötig.',
     },
     {
-      q: `Voor welke automerken komt u in ${region.name}?`,
-      a: `Voor alle gangbare merken${brands.length ? `, in ${region.name} vooral ${brands.join(', ')}` : ''}. Geef uw kenteken door en wij zoeken merk, model en bouwjaar zelf op.`,
+      q: `Für welche Marken kommen Sie nach ${region.name}?`,
+      a: `Für alle gängigen Marken${brands.length ? `, in ${region.name} vor allem ${brands.join(', ')}` : ''}. Nennen Sie uns Marke, Modell und Baujahr aus Ihrer Zulassungsbescheinigung Teil I — anders als in den Niederlanden gibt es in Deutschland kein öffentliches Register, das uns das zu einem Kennzeichen beantworten könnte.`,
     },
   ];
 
@@ -109,8 +122,8 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
     '@context': 'https://schema.org',
     '@type': 'Service',
     '@id': `${SITE_CONFIG.domain}/regionen/${region.slug}#service`,
-    name: `Autosleutel bijmaken en kwijt in ${region.name}`,
-    serviceType: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
+    name: `Autoschlüssel nachmachen und Notdienst in ${region.name}`,
+    serviceType: 'Autoschlüssel nachmachen, Autoschlüssel verloren, Auto öffnen',
     url: `${SITE_CONFIG.domain}/regionen/${region.slug}`,
     provider: getBaseLocalBusinessSchema(),
     areaServed: {
@@ -130,7 +143,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
     mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   };
   const crumbs = breadcrumbSchema([
-    { name: 'Werkgebied', path: '/staedte' },
+    { name: 'Einsatzgebiet', path: '/staedte' },
     { name: region.name, path: `/regionen/${region.slug}` },
   ]);
 
@@ -141,14 +154,14 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
       <script id={`regio-bc-${region.slug}`} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbs) }} />
 
       <SplitHero
-        crumbs={[{ label: 'Home', href: '/' }, { label: 'Werkgebied', href: '/staedte' }, { label: region.name }]}
-        titleTop={`Autosleutel Bijmaken in ${region.label}`}
-        titleAccent={`Binnen ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`}
-        lead={`${region.intro} Sleutel kwijt, kapot of een reserve nodig? Wij komen naar uw auto.`}
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
+        crumbs={[{ label: 'Home', href: '/' }, { label: 'Einsatzgebiet', href: '/staedte' }, { label: region.name }]}
+        titleTop={`Autoschlüssel nachmachen in ${region.label}`}
+        titleAccent="Festpreis vorab, vor Ort erledigt"
+        lead={`${region.intro} Schlüssel verloren, defekt oder einen Zweitschlüssel nötig? Unser Partner kommt zu Ihrem Fahrzeug.`}
+        facts={<HeroQuickFacts price={preisAb('transponder')} />}
         image={{
           src: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
-          alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
+          alt: 'Autoschlüssel-Spezialist in Arbeitskleidung am Fahrzeug, Servicefahrzeug im Hintergrund',
         }}
       >
         <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
@@ -156,17 +169,17 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
 
       <VerifiedReviewBanner />
 
-      <section style={{ maxWidth: 1100, margin: '2rem auto 0', padding: '0 1.25rem' }} aria-label={`Kaart van ons werkgebied, ook in ${region.name}`}>
-        <h2 style={{ marginBottom: '1rem' }}>Ons werkgebied, ook in {region.name}</h2>
+      <section style={{ maxWidth: 1100, margin: '2rem auto 0', padding: '0 1.25rem' }} aria-label={`Karte unseres Einsatzgebiets, auch in ${region.name}`}>
+        <h2 style={{ marginBottom: '1rem' }}>Unser Einsatzgebiet, auch in {region.name}</h2>
         <InstantServiceMap />
       </section>
 
       <section className="section">
         <div className="container" style={{ maxWidth: 960 }}>
-          <h2 style={{ marginBottom: '1rem' }}>Steden in {region.name} waar wij komen</h2>
+          <h2 style={{ marginBottom: '1rem' }}>Städte in {region.name}, in die wir kommen</h2>
           <p style={{ color: 'var(--gray-600)', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-            Kies uw stad voor de wijken, de werkwijze en de prijs. Staat uw plaats er niet bij, bel dan
-            gewoon: wij komen ook naar de dorpen en gemeenten eromheen.
+            Wählen Sie Ihre Stadt für die Stadtteile, den Ablauf und den Preis. Fehlt Ihr Ort,
+            rufen Sie einfach an: unsere Partner fahren auch in die Gemeinden ringsum.
           </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
             {cities.map((c) => (
@@ -190,53 +203,51 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
 
       <section className="section-alt">
         <div className="container" style={{ maxWidth: 860 }}>
-          <h2 style={{ marginBottom: '1rem' }}>Wat u in {region.name} van ons kunt verwachten</h2>
+          <h2 style={{ marginBottom: '1rem' }}>Was Sie in {region.name} erwarten können</h2>
           <div style={{ overflowX: 'auto' }}>
             <table className="price-table" style={{ width: '100%', borderCollapse: 'collapse', background: '#fff' }}>
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Situatie</th>
-                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Vanaf</th>
+                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Situation</th>
+                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Preis (inkl. MwSt.)</th>
                 </tr>
               </thead>
               <tbody>
-                <tr><td style={{ padding: '0.9rem' }}>Reservesleutel (transponder)</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.transponder}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Klapsleutel met afstandsbediening</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.klapsleutel}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Smart key / keyless</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.smartKey}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Alle sleutels kwijt</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.allKeysLost}</strong></td></tr>
+                {/* Betrag aus der Konfiguration, oder "Festpreis vorab" — nie ein
+                    Platzhalter. Siehe preisAb in config/leistungen.ts. */}
+                {([
+                  ['Zweitschlüssel (Transponder)', preisAb('transponder')],
+                  ['Klappschlüssel mit Funkfernbedienung', preisAb('klapsleutel')],
+                  ['Keyless Go / Smart Key', preisAb('smartKey')],
+                  ['Alle Schlüssel verloren', preisAb('allKeysLost')],
+                ] as [string, string | undefined][]).map(([label, price]) => (
+                  <tr key={label}>
+                    <td style={{ padding: '0.9rem' }}>{label}</td>
+                    <td style={{ padding: '0.9rem' }}><strong>{price ?? 'Festpreis vorab'}</strong></td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
-            Bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer}, binnen {ARRIVAL} ter plaatse, met 12 maanden garantie. U hoort de exacte
-            prijs telefonisch voordat wij vertrekken.{' '}
-            <Link href="/preise" style={link}>Bekijk alle prijzen →</Link>
+            Bruttopreise {SITE_CONFIG.prices.exVatDisclaimer}, mit 12 Monaten Garantie auf Schlüssel
+            und Anlernen. Den genauen Festpreis hören Sie am Telefon, bevor jemand losfährt.{' '}
+            <Link href="/preise" style={link}>Alle Preise ansehen →</Link>
           </p>
         </div>
       </section>
 
-      {inRandstad ? (
-        <section className="section">
-          <div className="container" style={{ maxWidth: 860 }}>
-            <h2 style={{ marginBottom: '1rem' }}>Autosleutel bijmaken in de Randstad</h2>
-            <p style={{ color: 'var(--gray-600)', lineHeight: 1.7 }}>
-              Woont of werkt u in de Randstad, dan bent u met ons nooit ver van een monteur.
-              Wij werken in {SERVICE_REGIONS.filter((r) => RANDSTAD.has(r.slug)).map((r) => r.name).join(', ')} en komen naar uw auto, waar u ook
-              staat. Kijk ook bij:{' '}
-              {others.filter((r) => RANDSTAD.has(r.slug)).map((r, i, all) => (
-                <span key={r.slug}>
-                  <Link href={`/regionen/${r.slug}`} style={link}>{r.name}</Link>
-                  {i < all.length - 1 ? ', ' : '.'}
-                </span>
-              ))}
-            </p>
-          </div>
-        </section>
-      ) : null}
+      {/*
+        * Hier steht auf der niederländischen Seite der Randstad-Abschnitt.
+        * Er fehlt hier mit Absicht — die Begründung steht oben im Dateikopf:
+        * für Berlin, Hamburg, Bayern und Hessen gibt es kein gemeinsames Wort,
+        * und eines zu erfinden hieße eine Nähe zu behaupten, die es nicht gibt.
+        */}
 
-      <section className={inRandstad ? 'section-alt' : 'section'}>
+      <section className="section">
+
         <div className="container" style={{ maxWidth: 860 }}>
-          <h2 style={{ marginBottom: '2rem' }}>Veelgestelde vragen: autosleutel in {region.name}</h2>
+          <h2 style={{ marginBottom: '2rem' }}>Häufige Fragen: Autoschlüssel in {region.name}</h2>
           {faq.map((f, i) => (
             <details key={i} className="faq-item">
               <summary className="faq-question">
@@ -249,9 +260,9 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
             </details>
           ))}
           <p style={{ marginTop: '2rem', color: 'var(--gray-600)', lineHeight: 1.7 }}>
-            Alles over een verloren sleutel staat op{' '}
-            <Link href="/autoschluessel-verloren" style={link}>autosleutel kwijt</Link>, de werkwijze voor een tweede sleutel op{' '}
-            <Link href="/leistungen/autoschluessel-nachmachen" style={link}>autosleutel bijmaken</Link>. Andere provincies:{' '}
+            Alles zu einem verlorenen Schlüssel steht auf{' '}
+            <Link href="/autoschluessel-verloren" style={link}>Autoschlüssel verloren</Link>, der Ablauf für einen Zweitschlüssel auf{' '}
+            <Link href="/leistungen/autoschluessel-nachmachen" style={link}>Autoschlüssel nachmachen</Link>. Andere Regionen:{' '}
             {others.map((r, i) => (
               <span key={r.slug}>
                 <Link href={`/regionen/${r.slug}`} style={link}>{r.name}</Link>
