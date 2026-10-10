@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
+import { preisAb } from '@/config/leistungen';
 import SplitHero from '@/components/SplitHero/SplitHero';
 import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
@@ -11,65 +12,69 @@ import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedRevi
 import { CITIES } from '@/config/cities';
 
 /*
- * The best-converting local query on the site, with nowhere to land.
+ * Die lokale Suche ohne Stadtnamen.
  *
- * "autosleutel bijmaken in de buurt": 95 impressions, 2 clicks, average
- * position 8.4 — already on page one, and the highest click rate of any
- * local query in the export. It has been ranking against the city hub, which
- * answers "which cities" rather than "are you near me".
+ * Auf der niederländischen Seite ist "autosleutel bijmaken in de buurt" die
+ * lokale Anfrage mit der besten Klickrate im ganzen Export — Position 8,4,
+ * ohne dass es je eine Seite dafür gab; sie rankte gegen die Städteübersicht,
+ * die "welche Städte" beantwortet statt "sind Sie in meiner Nähe".
  *
- * So this page answers the question as asked. The browser is the only thing
- * that knows where the reader is, so NearestCity asks it — behind a button,
- * because an unprompted permission dialog gets dismissed on reflex and cannot
- * be asked twice. Everything below works without it.
+ * "in der Nähe" ist die deutsche Entsprechung und trägt dieselbe Absicht.
+ * Diese Seite beantwortet sie, wie sie gestellt wird.
+ *
+ * Nur der Browser weiß, wo der Leser steht, also fragt NearestCity ihn —
+ * hinter einer Schaltfläche, weil ein unaufgeforderter Standortdialog
+ * reflexhaft weggeklickt wird und nicht zweimal gestellt werden kann. Alles
+ * darunter funktioniert auch ohne.
  */
 
 const REGIONS = Array.from(new Set(CITIES.map((c) => c.region))).sort();
 
+const PAGE_PATH = '/autoschluessel-nachmachen-in-der-naehe';
+const PAGE_URL = `${SITE_CONFIG.domain}${PAGE_PATH}`;
+
 export const metadata: Metadata = {
-  title: { absolute: 'Autosleutel Bijmaken in de Buurt | Wij Komen Naar U Toe' },
-  description: `Autosleutel bijmaken in de buurt? Onze monteur is binnen 30-60 min bij u in Utrecht, de Randstad en Gelderland en maakt de sleutel ter plaatse. Bel direct.`,
+  title: { absolute: 'Autoschlüssel nachmachen in der Nähe | wir kommen zu Ihnen' },
+  description:
+    'Autoschlüssel nachmachen in der Nähe? Unser Partner kommt zu Ihrem Fahrzeug in Berlin, Hamburg, München und Frankfurt und fertigt den Schlüssel vor Ort an. Festpreis vorab.',
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe`,
-    languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe`,
-      'x-default': `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe`,
-    },
+    canonical: PAGE_URL,
+    languages: { 'de-DE': PAGE_URL },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe`,
-    title: 'Autosleutel Bijmaken in de Buurt | Wij Komen Naar U Toe',
+    url: PAGE_URL,
+    title: 'Autoschlüssel nachmachen in der Nähe | wir kommen zu Ihnen',
     description:
-      'Autosleutel bijmaken in de buurt? Onze monteur komt naar uw locatie en maakt de sleutel ter plaatse. 24/7 in heel Nederland.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel bijmaken in de buurt — Autosleutel24' }],
+      'Autoschlüssel nachmachen in der Nähe? Unser Partner kommt zu Ihrem Fahrzeug und fertigt den Schlüssel vor Ort an. Rund um die Uhr.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel nachmachen in der Nähe — Autoschlüssel24' }],
   },
 };
 
 const faqItems = [
   {
-    q: 'Hoe weet ik of er een monteur bij mij in de buurt is?',
-    a: 'Gebruik de knop hierboven om uw locatie te delen, dan ziet u direct welk servicegebied het dichtstbij ligt. Werkt dat niet of staat uw plaats er niet tussen, bel ons dan met uw postcode — wij rijden verder dan de lijst hieronder en zeggen eerlijk wanneer iemand er kan zijn.',
+    q: 'Woran sehe ich, ob ein Partner in meiner Nähe ist?',
+    a: 'Nutzen Sie die Schaltfläche oben, um Ihren Standort freizugeben — dann sehen Sie sofort, welches Einsatzgebiet am nächsten liegt. Funktioniert das nicht, oder steht Ihr Ort nicht in der Liste weiter unten, rufen Sie mit Ihrer Postleitzahl an. Unsere Partner fahren weiter als die Liste reicht, und Sie hören ehrlich, ob und wann jemand kommen kann.',
   },
   {
-    q: 'Moet ik naar een winkel komen?',
-    a: 'Nee. Er is geen winkel. De werkplaats zit in de bus: freesmachine, diagnoseapparatuur en sleutelvoorraad rijden mee. Wij komen naar uw auto, waar die ook staat — thuis, op het werk, op een parkeerdek of langs de weg.',
+    q: 'Muss ich in einen Laden kommen?',
+    a: 'Nein. Es gibt keinen Laden. Die Werkstatt ist im Fahrzeug: Fräse, Diagnosegeräte und Schlüssellager fahren mit. Der Partner kommt zu Ihrem Auto, wo es auch steht — zu Hause, am Arbeitsplatz, im Parkhaus oder am Straßenrand.',
   },
   {
-    q: 'Wat kost het als ik verder weg woon?',
-    a: `Voorrijden zit bij de prijs in. Een sleutel bijmaken begint bij €${SITE_CONFIG.prices.transponder} en u hoort de exacte prijs telefonisch voordat wij vertrekken. Er komen achteraf geen kilometers bij.`,
+    q: 'Kostet es mehr, wenn ich weiter weg wohne?',
+    a: 'Nein. Die Anfahrt ist im Preis enthalten, und es kommen hinterher keine Kilometer dazu. Sie hören den Festpreis am Telefon, bevor jemand losfährt, als Bruttopreis inklusive 19 % MwSt.',
   },
   {
-    q: 'Hoe snel kan iemand er zijn?',
-    a: 'Dat hangt af van waar u staat en wie er op dat moment in uw regio rijdt. Wij noemen daarom geen vast aantal minuten voor het hele land: u krijgt aan de telefoon een echte aankomsttijd van de monteur die naar u toe komt, niet een gemiddelde.',
+    q: 'Wie schnell kann jemand da sein?',
+    a: 'Das hängt davon ab, wo Sie stehen und wer gerade in Ihrer Region unterwegs ist. Genau deshalb nennen wir hier keine pauschale Minutenzahl: Sie bekommen am Telefon ein Zeitfenster von dem Partner, der zu Ihnen fährt, und keinen Durchschnitt über vier Städte.',
   },
   {
-    q: 'Werken jullie ook buiten de grote steden?',
-    a: 'Ja. De stedenpagina laat zien waar wij vaste technici hebben, maar die rijden ook naar de plaatsen daaromheen. Als u twijfelt: bellen kost een minuut en u weet het meteen.',
+    q: 'Arbeiten Sie auch außerhalb der großen Städte?',
+    a: 'Ja. Die Städteseite zeigt, wo ein Partnerbetrieb sitzt, aber diese Betriebe fahren auch in die Gemeinden ringsum. Dass Ihr Ort keine eigene Seite hat, heißt nicht, dass niemand kommt — ein Anruf kostet eine Minute und Sie wissen es sofort.',
   },
 ];
 
-export default function InDeBuurt() {
+export default function InDerNaehe() {
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -84,7 +89,7 @@ export default function InDeBuurt() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Autosleutel bijmaken in de buurt', item: `${SITE_CONFIG.domain}/autoschluessel-nachmachen-in-der-naehe` },
+      { '@type': 'ListItem', position: 2, name: 'Autoschlüssel nachmachen in der Nähe', item: PAGE_URL },
     ],
   };
 
@@ -94,14 +99,14 @@ export default function InDeBuurt() {
       <script id="buurt-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <SplitHero
-        crumbs={[{ label: 'Home', href: '/' }, { label: 'In de buurt' }]}
-        titleTop="Autosleutel Bijmaken in de Buurt?"
-        titleAccent="Er Hoeft Niemand Ergens Heen — Behalve Wij"
-        lead="Wij hebben geen winkel waar u naartoe rijdt. De werkplaats zit in de bus en die komt naar uw auto, waar die ook staat."
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
+        crumbs={[{ label: 'Home', href: '/' }, { label: 'In der Nähe' }]}
+        titleTop="Autoschlüssel nachmachen in der Nähe?"
+        titleAccent="Niemand muss irgendwohin — außer wir"
+        lead="Es gibt keinen Laden, zu dem Sie fahren. Die Werkstatt ist im Fahrzeug, und sie kommt zu Ihrem Auto, wo es auch steht."
+        facts={<HeroQuickFacts price={preisAb('transponder')} />}
         image={{
           src: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
-          alt: 'Autosleutelspecialist van Autosleutel24 met servicebus op locatie',
+          alt: 'Autoschlüssel-Spezialist mit Servicefahrzeug am Einsatzort',
         }}
       >
         <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />} />
@@ -109,7 +114,7 @@ export default function InDeBuurt() {
 
       <section className="section">
         <div className="container" style={{ maxWidth: 780 }}>
-          <h2 style={{ marginBottom: '1.25rem' }}>Wie is er bij mij in de buurt?</h2>
+          <h2 style={{ marginBottom: '1.25rem' }}>Wer ist in meiner Nähe?</h2>
           <NearestCity />
         </div>
       </section>
@@ -120,11 +125,12 @@ export default function InDeBuurt() {
 
       <section className="section-alt">
         <div className="container">
-          <h2 style={{ marginBottom: '0.75rem' }}>Onze servicegebieden per provincie</h2>
+          <h2 style={{ marginBottom: '0.75rem' }}>Unsere Einsatzgebiete nach Region</h2>
           <p style={{ color: 'var(--gray-600)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: 780 }}>
-            Hieronder staan de plaatsen waar wij een vaste technicus hebben. Staat uw plaats er niet
-            bij, dan betekent dat niet dat wij niet komen — het betekent dat er nog geen eigen pagina
-            voor is. Bel met uw postcode.
+            Hier stehen die Städte, in denen ein Partnerbetrieb sitzt. Fehlt Ihr Ort, heißt das
+            nicht, dass niemand kommt — es heißt, dass es dafür noch keine eigene Seite gibt. Das
+            ist Absicht: eine Stadtseite entsteht hier erst, wenn dort wirklich jemand hinfährt.
+            Rufen Sie mit Ihrer Postleitzahl an.
           </p>
           {REGIONS.map((region) => (
             <div key={region} style={{ marginBottom: '2rem' }}>
@@ -155,7 +161,7 @@ export default function InDeBuurt() {
 
       <section className="section">
         <div className="container" style={{ maxWidth: 900 }}>
-          <h2 style={{ marginBottom: '2rem' }}>Veelgestelde vragen</h2>
+          <h2 style={{ marginBottom: '2rem' }}>Häufige Fragen</h2>
           {faqItems.map((f, i) => (
             <details key={i} className="faq-item">
               <summary className="faq-question">

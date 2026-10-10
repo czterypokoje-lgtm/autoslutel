@@ -8,92 +8,94 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 
 /*
- * One page for motorcycle and scooter keys, not ten brand pages.
+ * Eine Seite für Motorrad- und Rollerschlüssel, nicht zehn Markenseiten.
  *
- * The brand audit cut twelve car brands that had no Dutch market and no
- * impressions, and this replaces that space with the ten motorcycle brands
- * that are actually on Dutch roads. It is deliberately a single page: ten
- * near-identical brand pages is the same scaled-content pattern that took the
- * 664 model pages out, and a rider searching "motorsleutel bijmaken" wants one
- * answer, not a directory.
+ * Zehn fast gleiche Markenseiten sind dasselbe Muster, das der
+ * niederländischen Seite 664 Modellseiten eingebracht hat, die inzwischen
+ * alle weiterleiten. Wer "motorradschlüssel nachmachen" sucht, will eine
+ * Antwort und kein Verzeichnis.
  *
- * NO price is printed. SITE_CONFIG.prices has no motorcycle row and a number
- * invented for one page is exactly what that config exists to prevent. Add one
- * and this page can carry it.
+ * KEIN Preis steht auf dieser Seite. SITE_CONFIG.prices hat keine Zeile für
+ * Motorräder, und eine Zahl, die für eine einzelne Seite erfunden wird, ist
+ * genau das, was diese Konfiguration verhindern soll. Kommt eine Zeile dazu,
+ * kann die Seite sie tragen.
  *
- * Two things to confirm with the technicians before relying on this page:
- * which of the ten brands they can program on the spot, and that the wording
- * below about key types matches what they see in practice. The brand notes are
- * general on purpose; they name a system only where it is well documented.
+ * Zwei Dinge sind mit den Partnerbetrieben zu klären, bevor man sich auf
+ * diese Seite verlässt: welche der zehn Marken sie vor Ort anlernen können,
+ * und ob die Beschreibungen unten dem entsprechen, was sie in der Praxis
+ * sehen. Die Markenhinweise sind mit Absicht allgemein gehalten und nennen
+ * ein System nur, wo es gut dokumentiert ist.
  *
- * Search Console has no motorcycle queries in its top 1,000 yet, so this page
- * is built on the brief, not on demand data. Judge it on impressions after
- * 60 days, the same way the brand audit holds brands.
+ * Die Seite ist auf der Annahme gebaut, nicht auf Nachfragedaten — beurteile
+ * sie nach 60 Tagen an ihren Impressionen.
  */
 
+const PAGE_PATH = '/motorradschluessel-nachmachen';
+const PAGE_URL = `${SITE_CONFIG.domain}${PAGE_PATH}`;
+
 export const metadata: Metadata = {
-  title: { absolute: `Motorsleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE}` },
-  description: `Motorsleutel bijmaken of kwijt? Honda, Yamaha, Kawasaki, BMW, Harley en meer: binnen ${ARRIVAL} ter plaatse, prijs telefonisch vooraf. Bel direct!`,
+  title: { absolute: `Motorradschlüssel nachmachen oder verloren? ${ARRIVAL_TITLE}` },
+  description:
+    'Motorradschlüssel nachmachen oder verloren? Honda, Yamaha, Kawasaki, BMW Motorrad, Harley und mehr — unser Partner kommt zu Ihrem Motorrad, Festpreis vorab am Telefon.',
   alternates: {
-    canonical: `${SITE_CONFIG.domain}/motorradschluessel-nachmachen`,
-    languages: {
-      'nl-NL': `${SITE_CONFIG.domain}/motorradschluessel-nachmachen`,
-      'x-default': `${SITE_CONFIG.domain}/motorradschluessel-nachmachen`,
-    },
+    canonical: PAGE_URL,
+    languages: { 'de-DE': PAGE_URL },
   },
   openGraph: {
     type: 'website',
-    url: `${SITE_CONFIG.domain}/motorradschluessel-nachmachen`,
-    title: 'Motorsleutel bijmaken of kwijt? Wij komen naar uw motor toe',
-    description: 'Motorsleutel of scootersleutel bijmaken, ook als u er geen meer heeft. Op locatie, prijs vooraf.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Motorsleutel bijmaken — Autosleutel24' }],
+    url: PAGE_URL,
+    title: 'Motorradschlüssel nachmachen oder verloren? Wir kommen zu Ihrem Motorrad',
+    description:
+      'Motorrad- und Rollerschlüssel nachmachen, auch wenn keiner mehr da ist. Vor Ort, Festpreis vorab.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Motorradschlüssel nachmachen — Autoschlüssel24' }],
   },
 };
 
 const brands = [
-  { name: 'Honda', note: 'Van scooters als de PCX en Forza tot de CBR en Africa Twin. Veel Honda\'s hebben een startonderbreker (HISS), waarbij een nieuwe sleutel moet worden ingeleerd.' },
-  { name: 'Yamaha', note: 'Van de NMAX en X-Max tot de MT- en R-serie. Bij modellen met een startonderbreker werkt een gefreesde sleutel alleen als hij ook is ingeleerd.' },
-  { name: 'Kawasaki', note: 'Ninja, Z en Versys. Sommige modellen hebben een gecodeerde sleutel, nieuwere modellen een keyless systeem.' },
-  { name: 'Suzuki', note: 'Van de Burgman en Address tot de GSX- en V-Strom-serie. Wij kijken per model of het om een gewone of een gecodeerde sleutel gaat.' },
-  { name: 'BMW Motorrad', note: 'R, F, S en K-serie. Oudere modellen hebben een gecodeerde sleutel, bij nieuwere modellen is keyless ride mogelijk.' },
-  { name: 'Harley-Davidson', note: 'Bij veel modellen werkt een sleutelhanger die met de motor is gekoppeld; een nieuwe moet bij de motor worden ingeleerd.' },
-  { name: 'Ducati', note: 'Monster, Multistrada, Panigale en Scrambler. Afhankelijk van model en bouwjaar een gecodeerde sleutel of hands-free.' },
-  { name: 'KTM', note: 'Duke, Adventure en SMC. Wij kijken per model en bouwjaar welk type sleutel en welke koppeling erbij hoort.' },
-  { name: 'Triumph', note: 'Street Triple, Speed Triple, Tiger en Bonneville. Afhankelijk van het model een gecodeerde sleutel of keyless.' },
-  { name: 'Vespa en Piaggio', note: 'Scooters met kenteken. Bel of app met merk, model en bouwjaar, dan horen wij wat voor sleutel erbij hoort.' },
+  { name: 'Honda', note: 'Von Rollern wie PCX und Forza bis CBR und Africa Twin. Viele Hondas haben eine Wegfahrsperre (HISS), bei der ein neuer Schlüssel angelernt werden muss.' },
+  { name: 'Yamaha', note: 'Von NMAX und X-Max bis zur MT- und R-Reihe. Bei Modellen mit Wegfahrsperre funktioniert ein gefräster Schlüssel nur, wenn er auch angelernt ist.' },
+  { name: 'Kawasaki', note: 'Ninja, Z und Versys. Manche Modelle haben einen codierten Schlüssel, neuere ein Keyless-System.' },
+  { name: 'Suzuki', note: 'Von Burgman und Address bis zur GSX- und V-Strom-Reihe. Wir prüfen je Modell, ob es ein einfacher oder ein codierter Schlüssel ist.' },
+  { name: 'BMW Motorrad', note: 'R-, F-, S- und K-Reihe. Ältere Modelle haben einen codierten Schlüssel, bei neueren ist Keyless Ride möglich.' },
+  { name: 'Harley-Davidson', note: 'Bei vielen Modellen arbeitet ein Fob, der mit dem Motorrad gekoppelt ist; ein neuer muss am Fahrzeug angelernt werden.' },
+  { name: 'Ducati', note: 'Monster, Multistrada, Panigale und Scrambler. Je nach Modell und Baujahr ein codierter Schlüssel oder Hands-free.' },
+  { name: 'KTM', note: 'Duke, Adventure und SMC. Wir prüfen je Modell und Baujahr, welche Schlüsselart und welche Kopplung dazugehört.' },
+  { name: 'Triumph', note: 'Street Triple, Speed Triple, Tiger und Bonneville. Je nach Modell ein codierter Schlüssel oder Keyless.' },
+  { name: 'Vespa und Piaggio', note: 'Roller mit Zulassung. Nennen Sie uns Marke, Modell und Baujahr, dann sagen wir, welche Schlüsselart dazugehört.' },
 ];
 
 const faqItems = [
   {
-    q: 'Kan een motorsleutel worden bijgemaakt?',
-    a: 'Meestal wel. Bij een motor zonder startonderbreker volstaat het frezen van de sleutel. Zit er een chip in, dan moet de nieuwe sleutel ook worden ingeleerd, anders past hij wel maar start de motor niet. Aan merk, model en bouwjaar zien wij welk van de twee bij u past.',
+    q: 'Kann ein Motorradschlüssel nachgemacht werden?',
+    a: 'In den meisten Fällen ja. Hat das Motorrad keine Wegfahrsperre, genügt das Fräsen. Sitzt ein Transponder im Schlüssel, muss der neue Schlüssel zusätzlich angelernt werden — sonst passt er, aber der Motor startet nicht. An Marke, Modell und Baujahr sehen wir, welcher der beiden Fälle auf Sie zutrifft.',
   },
   {
-    q: 'Ik ben mijn motorsleutel kwijt en heb geen reservesleutel. Wat nu?',
-    a: 'Bel of app ons met merk, model, bouwjaar en kenteken. Of dat op locatie kan, hangt af van het model. U hoort het direct en u krijgt de prijs telefonisch voordat wij komen, zodat u niet voor verrassingen komt te staan. Wij beloven niet iets voor een model waarvan wij het niet zeker weten.',
+    q: 'Ich habe meinen Motorradschlüssel verloren und keinen Zweitschlüssel. Was jetzt?',
+    a: 'Rufen Sie an oder schreiben Sie per WhatsApp, mit Marke, Modell und Baujahr. Ob das vor Ort möglich ist, hängt vom Modell ab — Sie hören das sofort, und Sie bekommen den Festpreis am Telefon, bevor jemand losfährt. Wir sagen nichts für ein Modell zu, bei dem wir es nicht sicher wissen.',
   },
   {
-    q: 'Wat heb ik nodig om een motorsleutel te laten maken?',
-    a: 'Twee documenten: een geldig legitimatiebewijs en het kentekenbewijs (deel 1B of de kentekencard) waaruit blijkt dat u de rechtmatige eigenaar bent. Zonder deze documenten maken wij geen sleutels bij.',
+    q: 'Was brauche ich, um einen Motorradschlüssel machen zu lassen?',
+    a: 'Einen gültigen Personalausweis oder Pass und die Zulassungsbescheinigung Teil I, aus der hervorgeht, dass das Fahrzeug Ihnen gehört. Ohne diesen Nachweis fertigen wir keinen Schlüssel an.',
   },
   {
-    q: 'Komt u ook bij mij thuis of op locatie?',
-    a: `Ja. Wij komen naar uw motor toe, bij u thuis, op uw werk of langs de weg, binnen ${ARRIVAL} ter plaatse. U hoeft de motor niet te vervoeren.`,
+    q: 'Kommen Sie auch zu mir nach Hause?',
+    a: `Ja. Unser Partner kommt ${ARRIVAL} zu Ihrem Motorrad — zu Hause, am Arbeitsplatz oder am Straßenrand. Sie müssen das Fahrzeug nicht transportieren, und es muss nicht abgeschleppt werden.`,
   },
   {
-    q: 'Wat kost een motorsleutel bijmaken?',
-    a: 'Dat hangt af van het merk, het model en of er een chip in zit. Wij noemen u telefonisch een vaste prijs voordat wij vertrekken.',
+    q: 'Was kostet ein Motorradschlüssel?',
+    a: 'Das hängt von Marke, Modell und davon ab, ob ein Transponder verbaut ist. Sie hören den Festpreis am Telefon, bevor jemand losfährt. Alle Beträge sind Bruttopreise inklusive 19 % MwSt.',
   },
   {
-    q: 'Kunt u ook een scootersleutel maken?',
-    a: 'Ja, voor scooters met kenteken van onder meer Vespa, Piaggio, Honda en Yamaha. Bel of app met merk, model en bouwjaar, dan horen wij wat mogelijk is.',
+    q: 'Machen Sie auch Rollerschlüssel?',
+    a: 'Ja, für Roller mit Zulassung — unter anderem Vespa, Piaggio, Honda und Yamaha. Nennen Sie uns Marke, Modell und Baujahr, dann sagen wir, was möglich ist.',
   },
 ];
 
-export default function MotorsleutelBijmaken() {
+export default function MotorradschluesselNachmachen() {
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    '@id': `${PAGE_URL}#faqpage`,
     mainEntity: faqItems.map((f) => ({
       '@type': 'Question',
       name: f.q,
@@ -105,7 +107,7 @@ export default function MotorsleutelBijmaken() {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_CONFIG.domain },
-      { '@type': 'ListItem', position: 2, name: 'Motorsleutel bijmaken', item: `${SITE_CONFIG.domain}/motorradschluessel-nachmachen` },
+      { '@type': 'ListItem', position: 2, name: 'Motorradschlüssel nachmachen', item: PAGE_URL },
     ],
   };
   const link = { color: 'var(--orange-600)', fontWeight: 600 } as const;
@@ -116,14 +118,14 @@ export default function MotorsleutelBijmaken() {
       <script id="motor-bc" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <SplitHero
-        crumbs={[{ label: 'Home', href: '/' }, { label: 'Motorsleutel bijmaken' }]}
-        titleTop="Motorsleutel Bijmaken of Kwijt?"
-        titleAccent="Wij Komen Naar Uw Motor Toe"
-        lead="Sleutel van uw motor of scooter kwijt of kapot, of een reserve nodig? Wij maken hem op locatie bij en leren hem in, zodat u niet hoeft te slepen of dagen te wachten."
+        crumbs={[{ label: 'Home', href: '/' }, { label: 'Motorradschlüssel nachmachen' }]}
+        titleTop="Motorradschlüssel nachmachen oder verloren?"
+        titleAccent="Wir kommen zu Ihrem Motorrad"
+        lead="Schlüssel von Motorrad oder Roller verloren, defekt, oder einen Zweitschlüssel nötig? Unser Partner fertigt ihn vor Ort an und lernt ihn an — ohne Transport und ohne Tage Wartezeit."
         facts={<HeroQuickFacts />}
         image={{
           src: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
-          alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
+          alt: 'Autoschlüssel-Spezialist in Arbeitskleidung am Fahrzeug, Servicefahrzeug im Hintergrund',
         }}
       >
         <LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />
@@ -133,15 +135,15 @@ export default function MotorsleutelBijmaken() {
 
       <section className="section">
         <div className="container" style={{ maxWidth: 860 }}>
-          <h2 style={{ marginBottom: '1.25rem' }}>De tien meest gereden motormerken</h2>
+          <h2 style={{ marginBottom: '1.25rem' }}>Die zehn häufigsten Marken</h2>
           <p style={{ color: 'var(--gray-600)', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-            Elk merk heeft een eigen sleutelsysteem en binnen een merk verschilt het per model en
-            bouwjaar. Dit zijn de merken waar wij het meest naar gevraagd worden.
+            Jede Marke hat ihr eigenes Schlüsselsystem, und innerhalb einer Marke unterscheidet es
+            sich nach Modell und Baujahr. Das sind die Marken, nach denen am häufigsten gefragt wird.
           </p>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '1rem' }}>
             {brands.map((b) => (
               <li key={b.name}>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{b.name} sleutel bijmaken</h3>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{b.name} Schlüssel nachmachen</h3>
                 <p style={{ color: 'var(--gray-600)', lineHeight: 1.65 }}>{b.note}</p>
               </li>
             ))}
@@ -151,45 +153,45 @@ export default function MotorsleutelBijmaken() {
 
       <section className="section-alt">
         <div className="container" style={{ maxWidth: 860 }}>
-          <h2 style={{ marginBottom: '1.25rem' }}>Uw sleutel is kwijt of kapot: wat past bij u?</h2>
+          <h2 style={{ marginBottom: '1.25rem' }}>Verloren oder defekt — was passt zu Ihrem Fall?</h2>
           <div style={{ overflowX: 'auto' }}>
             <table className="price-table" style={{ width: '100%', borderCollapse: 'collapse', background: '#fff' }}>
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Uw situatie</th>
-                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Wat wij doen</th>
+                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Ihre Lage</th>
+                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Was wir tun</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ padding: '0.9rem' }}>Reservesleutel nodig</td>
-                  <td style={{ padding: '0.9rem' }}>Frezen, en inleren als er een chip in zit</td>
+                  <td style={{ padding: '0.9rem' }}>Zweitschlüssel nötig</td>
+                  <td style={{ padding: '0.9rem' }}>Fräsen, und anlernen, wenn ein Transponder verbaut ist</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '0.9rem' }}>Sleutel kwijt, nog één over</td>
-                  <td style={{ padding: '0.9rem' }}>Een tweede sleutel bijmaken: de goedkoopste route</td>
+                  <td style={{ padding: '0.9rem' }}>Einen Schlüssel verloren, einer ist noch da</td>
+                  <td style={{ padding: '0.9rem' }}>Zweitschlüssel anfertigen — der günstigste Weg</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '0.9rem' }}>Alle sleutels kwijt</td>
-                  <td style={{ padding: '0.9rem' }}>Per model bekijken wat op locatie kan; prijs telefonisch vooraf</td>
+                  <td style={{ padding: '0.9rem' }}>Alle Schlüssel verloren</td>
+                  <td style={{ padding: '0.9rem' }}>Je Modell prüfen, was vor Ort geht; Festpreis vorab am Telefon</td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '0.9rem' }}>Sleutel kapot of batterij leeg (keyless)</td>
-                  <td style={{ padding: '0.9rem' }}>Behuizing of batterij vervangen, vaak zonder nieuwe sleutel</td>
+                  <td style={{ padding: '0.9rem' }}>Schlüssel defekt oder Batterie leer (Keyless)</td>
+                  <td style={{ padding: '0.9rem' }}>Gehäuse oder Batterie wechseln — oft ohne neuen Schlüssel</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
-            Bedragen hangen af van merk, model en bouwjaar. U hoort de prijs telefonisch voordat wij
-            vertrekken.
+            Der Preis hängt von Marke, Modell und Baujahr ab. Sie hören ihn am Telefon, bevor jemand
+            losfährt — als Bruttopreis inklusive 19 % MwSt.
           </p>
         </div>
       </section>
 
       <section className="section">
         <div className="container" style={{ maxWidth: 860 }}>
-          <h2 style={{ marginBottom: '2rem' }}>Veelgestelde vragen: motorsleutel bijmaken</h2>
+          <h2 style={{ marginBottom: '2rem' }}>Häufige Fragen: Motorradschlüssel nachmachen</h2>
           {faqItems.map((f, i) => (
             <details key={i} className="faq-item">
               <summary className="faq-question">
@@ -202,12 +204,13 @@ export default function MotorsleutelBijmaken() {
             </details>
           ))}
           <p style={{ marginTop: '2rem', color: 'var(--gray-600)', lineHeight: 1.7 }}>
-            Gaat het om een auto? Zie{' '}
-            <Link href="/leistungen/autoschluessel-nachmachen" style={link}>autosleutel bijmaken</Link>{' '}
-            of{' '}
-            <Link href="/autoschluessel-verloren" style={link}>autosleutel kwijt</Link>. Een kapotte sleutel
-            kunt u laten repareren via{' '}
-            <Link href="/leistungen/autoschluessel-reparieren" style={link}>autosleutel repareren</Link>.
+            Geht es um ein Auto? Dann siehe{' '}
+            <Link href="/leistungen/autoschluessel-nachmachen" style={link}>Autoschlüssel nachmachen</Link>{' '}
+            oder{' '}
+            <Link href="/autoschluessel-verloren" style={link}>Autoschlüssel verloren</Link>. Einen defekten
+            Schlüssel können Sie über{' '}
+            <Link href="/leistungen/autoschluessel-reparieren" style={link}>Autoschlüssel reparieren</Link>{' '}
+            instand setzen lassen.
           </p>
         </div>
       </section>
