@@ -1,64 +1,76 @@
 import { SITE_CONFIG } from '@/config/site.config';
 
 /*
- * The video's facts, and its schema, in a module with no client boundary.
+ * Das Erklärvideo — für diese Domain noch keines.
  *
- * VideoEmbed.tsx is a client component because the poster has to become a
- * player when someone presses it. A value exported from a "use client" module
- * reaches a server component as a client reference rather than the object, so
- * the page that renders this schema got `undefined` and the build failed with
- * "dangerouslySetInnerHTML must be in the form {__html: ...}". The data lives
- * here instead, where both sides can read it.
+ * Die niederländische Seite hat eines: "Autosleutel Kwijt? Zo Regel Je Snel
+ * een Nieuwe Autosleutel", vierzig Sekunden, niederländisch gesprochen. Die
+ * Video-ID ist beim Kopieren mitgekommen, und sie hätte funktioniert — das
+ * ist der Grund, warum sie hier entfernt ist und nicht übersetzt:
  *
- * uploadDate and duration are read off YouTube rather than guessed; they are
- * what a VideoObject needs to be eligible for a video result.
+ *  - Ein deutscher Besucher drückt auf Abspielen und hört Niederländisch. Das
+ *    ist schlimmer als kein Video, weil es in der Sekunde, in der Vertrauen
+ *    entsteht, zeigt, dass die Seite nicht für ihn gemacht ist.
+ *  - Das VideoObject hätte Google gemeldet, dieses niederländische Video sei
+ *    der Inhalt dieser Domain. Ein Videoergebnis dafür zu gewinnen, wäre ein
+ *    Treffer, der niemandem nützt.
+ *  - Der Titel und die Beschreibung im Schema wären niederländischer Text in
+ *    den strukturierten Daten einer deutschen Seite.
  *
- * uploadDate must be a full ISO 8601 datetime WITH an offset. A bare
- * '2026-09-29' is rejected twice over by Search Console — "invalid datetime
- * value" because it is a date and not a datetime, and "missing a time zone"
- * because a date cannot carry one. Both appeared on /autoschluessel-verloren, the
- * one page that declares this video.
+ * null heißt: VideoEmbed rendert nichts, und die Seiten, die es einbinden,
+ * zeigen den Abschnitt nicht. Sobald ein deutsches Video existiert, hier
+ * eintragen — dann erscheinen Player und Auszeichnung von selbst.
  *
- * +02:00 is CEST, which is what the Netherlands was on in September. The
- * clock time is the part we do not actually know: YouTube reports the day,
- * not the minute, so midday stands in for it. Being a few hours out on a
- * video's upload time costs nothing; having no parseable date at all costs
- * the video result.
+ * Beim Eintragen zwei Dinge beachten, die auf der niederländischen Seite Zeit
+ * gekostet haben:
+ *
+ *  - uploadDate muss ein vollständiges ISO-8601-Datum MIT Zeitzonen-Offset
+ *    sein. Ein bloßes '2026-09-29' wird von der Search Console zweifach
+ *    beanstandet: "invalid datetime value", weil es ein Datum und keine
+ *    Zeitangabe ist, und "missing a time zone", weil ein Datum keine tragen
+ *    kann. Für Deutschland ist der Offset +01:00 (MEZ) bzw. +02:00 (MESZ).
+ *  - Ein VideoObject gehört auf EINE Seite, und zwar die, deren Zweck das
+ *    Video ist. Google nennt eine Seite, auf der das Video den Text nur
+ *    ergänzt, ausdrücklich keine Watch-Page; die Auszeichnung auf jeder
+ *    einbindenden Seite zu wiederholen füllt den Videobericht mit
+ *    "isn't on a watch page". Der Player darf überall stehen, die
+ *    Auszeichnung bleibt zu Hause.
  */
-export const VIDEO = {
-  id: 'LTlKCZnjzH4',
-  name: 'Autosleutel Kwijt? Zo Regel Je Snel een Nieuwe Autosleutel',
-  uploadDate: '2026-09-29T12:00:00+02:00',
-  duration: 'PT40S',
-  description:
-    'Uw autosleutel kwijt? In veertig seconden ziet u hoe wij op locatie een nieuwe sleutel maken en programmeren, wat het kost en hoe snel wij er zijn.',
-  /* YouTube's own still, re-encoded and served from our origin. */
-  poster: '/images/video/autoschluessel-verloren-erklaerung.jpg',
-} as const;
+
+export type VideoFacts = {
+  id: string;
+  name: string;
+  uploadDate: string;
+  duration: string;
+  description: string;
+  poster: string;
+};
 
 /*
- * VideoObject belongs on ONE page, and that page is /autoschluessel-verloren.
+ * null, solange es kein deutsches Video gibt.
  *
- * Google indexes a video from its "watch page" — the page whose primary
- * purpose is that video — and explicitly lists a page where the video merely
- * complements the text as NOT a watch page. Declaring it on every page that
- * embeds this would win the same single video result and fill the video
- * indexing report with "isn't on a watch page" rows.
- *
- * The embed still earns its keep elsewhere: a non-watch page carrying the
- * video stays eligible for a text result with a video badge, and repeat
- * embeds of one video are not a duplicate-content problem. So the video
- * travels everywhere and the markup stays home.
+ * Die Annotation steht auf `VideoFacts | null` und nicht auf dem Literal, damit
+ * ein Eintrag hier den übrigen Code nicht bricht: ohne sie leitet TypeScript
+ * den Typ `null` ab, verengt jeden Wahrheitszweig auf `never` und meldet
+ * "Property 'name' does not exist on type 'never'".
  */
-export const videoSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'VideoObject',
-  name: VIDEO.name,
-  description: VIDEO.description,
-  thumbnailUrl: [`https://i.ytimg.com/vi/${VIDEO.id}/maxresdefault.jpg`],
-  uploadDate: VIDEO.uploadDate,
-  duration: VIDEO.duration,
-  embedUrl: `https://www.youtube.com/embed/${VIDEO.id}`,
-  contentUrl: `https://www.youtube.com/watch?v=${VIDEO.id}`,
-  publisher: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
-};
+export const VIDEO: VideoFacts | null = null;
+
+/** Baut das VideoObject zu einem Video. Getrennt, damit die Verengung greift. */
+function buildVideoSchema(video: VideoFacts) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: video.name,
+    description: video.description,
+    thumbnailUrl: [`https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`],
+    uploadDate: video.uploadDate,
+    duration: video.duration,
+    embedUrl: `https://www.youtube.com/embed/${video.id}`,
+    contentUrl: `https://www.youtube.com/watch?v=${video.id}`,
+    publisher: { '@id': `${SITE_CONFIG.domain}/#localbusiness` },
+  };
+}
+
+/** Das VideoObject, oder null, solange es kein deutsches Video gibt. */
+export const videoSchema = VIDEO ? buildVideoSchema(VIDEO) : null;

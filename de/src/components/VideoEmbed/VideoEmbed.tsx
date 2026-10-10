@@ -18,6 +18,16 @@ export default function VideoEmbed({
 }) {
   const [playing, setPlaying] = useState(false);
 
+  /*
+   * Ohne Video kein Abschnitt.
+   *
+   * VIDEO ist null, solange es kein deutsch gesprochenes Video gibt — siehe
+   * ./video.ts. Die Seiten, die diese Komponente einbinden (die Preisseite und
+   * FeatureCards), zeigen den Block dann gar nicht, statt eine Überschrift über
+   * einem leeren Rahmen oder einem niederländischen Player zu rendern.
+   */
+  if (!VIDEO) return null;
+
   return (
     <>
       {heading ? (
@@ -56,7 +66,7 @@ export default function VideoEmbed({
             type="button"
             className={styles.poster}
             onClick={() => setPlaying(true)}
-            aria-label={`Video afspelen: ${VIDEO.name}`}
+            aria-label={`Video abspielen: ${VIDEO.name}`}
           >
             <Image
               src={VIDEO.poster}
@@ -81,9 +91,9 @@ export default function VideoEmbed({
 
       {caption ? (
         <p className={styles.caption}>
-          Onze eigen monteur, een echte auto, geen animatie. Bel{' '}
-          <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a> als u nu naast uw auto
-          staat.
+          Ein echter Auftrag, ein echtes Fahrzeug, keine Animation. Rufen Sie{' '}
+          <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a> an, wenn Sie gerade neben
+          Ihrem Auto stehen.
         </p>
       ) : null}
     </>
