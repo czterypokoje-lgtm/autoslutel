@@ -35,8 +35,65 @@ Ein eigenes Vercel-Projekt mit **Root Directory = `de`**. Domain:
 
 ## Was noch fehlt
 
-`src/config/site.ts` enthält Platzhalter (`TBD`) für alles, was nur das Büro
-liefern kann — Telefonnummer, Impressumsdaten, USt-IdNr., Preise. Der Build
-bricht ab, solange einer davon übrig ist, und nennt die fehlenden Felder beim
-Namen. Das ist Absicht: ein geratener Preis oder eine fremde USt-IdNr. auf
-einer deutschen Seite ist eine Abmahnung, kein vorläufiger Wert.
+`src/config/site.config.ts` enthält Platzhalter (`TBD`) für alles, was nur das
+Büro liefern kann — Telefonnummer, Impressumsdaten, USt-IdNr., Preise. Der
+Build bricht ab, solange einer davon übrig ist, und nennt die fehlenden Felder
+beim Namen (`assertSiteReady()`, `missingFields()`). Das ist Absicht: ein
+geratener Preis oder eine fremde USt-IdNr. auf einer deutschen Seite ist eine
+Abmahnung, kein vorläufiger Wert.
+
+Zum Ansehen ohne diese Daten:
+
+```
+AUTOSCHLUESSEL_ALLOW_PLACEHOLDERS=1 npm run build
+```
+
+Dann rendert die Seite mit sichtbaren Platzhaltern. **Nicht** so deployen.
+
+### Checkliste vor dem Livegang
+
+1. **Telefonnummer und WhatsApp** (`phone`, `phoneTel`, `whatsapp`, `email`).
+   Eine deutsche Nummer; eine niederländische Vorwahl kostet hier Anrufe.
+2. **Impressum nach §5 DDG** (`legalForm`, `address`, `hrb`, `registerCourt`,
+   `ustId`, `responsible` nach §18 Abs. 2 MStV). Ohne diese Felder gibt es
+   keine Impressumsseite, und ohne Impressumsseite droht die Abmahnung.
+3. **Preise brutto, inkl. 19 % MwSt** (`prices.*`). Die
+   Preisangabenverordnung verlangt Endpreise gegenüber Verbrauchern. Entweder
+   die Bruttopreise direkt, oder die Marge plus die Sätze der vier Partner —
+   dann rechnet das Büro sie einmal aus und sie stehen fest.
+4. **Formspree-Formular-ID** (`formspreeId`, steht auf `null`). Die Anfrage
+   kommt über `/api/leads` in der eigenen Tabelle an — das funktioniert auch
+   ohne. Was fehlt, ist die E-Mail-Benachrichtigung dazu: solange die ID
+   `null` ist, wird dieser Schritt übersprungen. Die niederländische ID darf
+   hier nicht stehen, sonst gehen die Benachrichtigungen zu deutschen
+   Anfragen in ein niederländisches Postfach.
+5. **Messung und Werbung**: eigene GTM-, GA4-, Google-Ads- und
+   Clarity-Properties, eigener IndexNow-Key, eigene Search-Console-Property.
+6. **Google Business Profile** (`social.google`) — die Bewertungs-Schaltfläche
+   auf `/ueber-uns` braucht die Place-ID des deutschen Profils.
+7. **Karte** (`src/config/myMaps.ts`, steht auf `null`) — eine eigene My-Maps-ID
+   für das deutsche Einsatzgebiet. Erst dann erscheinen Karte und `hasMap`.
+8. **Migration** `supabase/migrations/0073_technician_country_and_locale.sql`
+   muss vor dem Deployment laufen.
+9. **Juristische Prüfung** von AGB (vor allem der Widerrufsbelehrung: §312g
+   BGB mit der Ausnahme nach §356 Abs. 4 BGB für den dringenden Einsatz),
+   Datenschutzerklärung und den beiden offenen Fragen
+   Schein­selbständigkeit (Deutsche Rentenversicherung) und
+   Handwerksordnung Anlage A.
+10. **Echte Suchvolumina** für `src/config/keywords.ts` (Keyword-Planner- oder
+    Ahrefs-Export: Stadt + Begriff + Volumen). Bis dahin ist die Rangfolge
+    dort eine begründete Einschätzung und als solche markiert.
+
+### Bewusst nicht dabei
+
+Blog, Kennisbank und die rund 600 Markenseiten (`/marken`) sind nicht
+übersetzt. Deshalb ist `BrandCard` ein `<div>` und kein `<Link>`: es gibt die
+Zielseiten nicht, und 35 toten Links pro Seite ist schlechter als keiner.
+Dasselbe gilt für `BLOG_POSTS`, `DEEP_DIVE` und `GHOST_ARTICLE` — leer, nicht
+niederländisch.
+
+Eine Kennzeichenabfrage gibt es nicht und kann es nicht geben: das
+Kraftfahrt-Bundesamt gibt keine Halter- oder Fahrzeugdaten an Dritte heraus.
+Wo die niederländische Seite das Kennzeichen beim RDW auflöst, fragt die
+deutsche nach Marke und Baujahr — zwei Felder statt einem Versprechen, das
+niemand einhalten kann.
