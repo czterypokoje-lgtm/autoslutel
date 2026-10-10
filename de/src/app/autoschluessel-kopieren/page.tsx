@@ -43,7 +43,6 @@ export const metadata: Metadata = {
     title: 'Autoschlüssel kopieren: Wann geht das — und wann nicht?',
     description:
       'Einen Autoschlüssel zu kopieren ist mehr als das Nachfräsen eines Blechs. Was ein modernes Fahrzeug wirklich braucht.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel kopieren — Autoschlüssel24' }],
   },
 };
 

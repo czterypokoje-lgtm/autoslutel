@@ -82,7 +82,6 @@ export const metadata: Metadata = {
     siteName: SITE_CONFIG.name,
     title: 'Autoschlüssel nachmachen & anlernen | mobil, 24/7',
     description: `Mobiler Autoschlüssel-Service für alle Marken in ${SITE_CONFIG.serviceAreaString}. Am selben Tag, Festpreis vorab, inkl. MwSt.`,
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel24 — mobiler Autoschlüssel-Service' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -91,7 +90,6 @@ export const metadata: Metadata = {
        Seite stand sie hier als Text — und wäre so die niederländische Nummer
        in jeder deutschen Twitter-Karte geworden. */
     description: `Mobiler Autoschlüssel-Service für alle Marken. 24/7 erreichbar. Telefon: ${SITE_CONFIG.phone}`,
-    images: ['/og-image.png'],
   },
   icons: {
     icon: [

@@ -19,7 +19,6 @@ export const metadata: Metadata = {
     type: 'website',
     title: `Häufige Fragen zum Autoschlüssel nachmachen | ${SITE_CONFIG.name}`,
     description: `Alles zum Autoschlüssel nachmachen, zu den Kosten und zum Ablauf. Telefon: ${SITE_CONFIG.phone}`,
-    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Häufige Fragen zum Autoschlüssel nachmachen — Autoschlüssel24' }],
   },
 };
 
@@ -118,7 +117,7 @@ export default function FAQPage() {
       <script id="schema-faq-breadcrumb" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <main>
         <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--orange-400)', marginBottom: '0.75rem' }}>VEELGESTELDE VRAGEN</p>
+          <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--orange-400)', marginBottom: '0.75rem' }}>HÄUFIGE FRAGEN</p>
           <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Alles zum Autoschlüssel nachmachen und anlernen</h1>
           <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 640, margin: '0 auto 1.5rem' }}>
             Antworten auf die Fragen, die uns am häufigsten gestellt werden. Nicht gefunden, was Sie suchen?

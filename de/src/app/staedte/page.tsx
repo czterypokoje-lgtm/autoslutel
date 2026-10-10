@@ -23,7 +23,6 @@ export const metadata: Metadata = {
     type: 'website',
     title: `Autoschlüssel nachmachen in ${SITE_CONFIG.serviceAreaString}`,
     description: `Mobiler Autoschlüssel-Service in ${SITE_CONFIG.serviceAreaString}. Telefon: ${SITE_CONFIG.phone}`,
-    images: [{ url: `${SITE_CONFIG.domain}/og-image.png`, width: 1200, height: 630, alt: 'Autoschlüssel24 — mobiler Autoschlüssel-Service' }],
   },
 };
 

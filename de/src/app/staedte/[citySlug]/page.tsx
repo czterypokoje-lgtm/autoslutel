@@ -187,7 +187,6 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
       url: pageUrl,
       title: city.customMetaTitle || cityTitle(city.city),
       description: `Autoschlüssel nachmachen lassen in ${city.city}? Unser Partner kommt zu Ihrem Fahrzeug, Tag und Nacht. Telefon: ${SITE_CONFIG.phone}`,
-      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autoschlüssel nachmachen ${city.city} — Autoschlüssel24` }],
     },
     other: {
       'geo.region': SITE_CONFIG.geoRegion,

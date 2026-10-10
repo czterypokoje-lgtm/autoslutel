@@ -2,13 +2,26 @@ import { SITE_CONFIG } from '@/config/site.config';
 import styles from './HeroTrustBadge.module.css';
 
 /**
- * Compact rating badge for hero sections.
+ * Kompaktes Bewertungsabzeichen für die Hero-Bereiche.
  *
- * The score and count must always match the live Google Business Profile
- * linked below. Never show avatars, names or testimonial text here — the
- * previous version used stock photos as if they were customers.
+ * Bewertung und Anzahl müssen immer mit dem verlinkten
+ * Google-Unternehmensprofil übereinstimmen. Niemals Avatare, Namen oder
+ * Zitate hier — eine frühere Fassung zeigte Stockfotos, als wären es Kunden.
+ *
+ * Und: ohne Bewertungen kein Abzeichen. Auf der deutschen Seite stand hier
+ * eine „0“ neben fünf goldenen Sternen — das Profil gibt es noch nicht, die
+ * Sterne sind fest im Markup, und gefüllte Sterne neben einer Null behaupten
+ * etwas, das niemand bewertet hat (§5 UWG). Solange rating oder reviewCount
+ * auf 0 stehen, rendert die Komponente nichts; sobald das deutsche Profil
+ * echte Bewertungen hat, erscheint sie von selbst.
  */
 export default function HeroTrustBadge() {
+  const rating = Number(SITE_CONFIG.rating);
+  const reviews = Number(SITE_CONFIG.reviewCount);
+  if (!Number.isFinite(rating) || rating <= 0 || !Number.isFinite(reviews) || reviews <= 0) {
+    return null;
+  }
+
   return (
     <a
       className={styles.badgeContainer}
@@ -35,7 +48,7 @@ export default function HeroTrustBadge() {
           </div>
         </div>
         <span className={styles.label}>
-          Google-reviews — bekijk op Google
+          {reviews} Google-Bewertungen — auf Google ansehen
         </span>
       </div>
     </a>

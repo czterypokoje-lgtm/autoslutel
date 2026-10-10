@@ -72,7 +72,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: pageUrl,
       title: `${service.title} | Mobiel & Schadevrij ter Plaatse`,
       description: clampMeta(service.metaDesc),
-      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `${service.title} — Autosleutel24` }],
     },
   };
 }

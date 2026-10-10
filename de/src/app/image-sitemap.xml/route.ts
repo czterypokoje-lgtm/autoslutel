@@ -1,263 +1,121 @@
 import { SITE_CONFIG } from '@/config/site.config';
-import { BLOG_POSTS } from '@/config/services';
-import { CITIES } from '@/config/cities';
+import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
+import { DIENSTEN } from '@/config/leistungen';
 import fs from 'fs';
-import crypto from 'crypto';
 import path from 'path';
 
 const BASE = SITE_CONFIG.domain;
 
-// ── Core SEO images with descriptive alt/title metadata ──
-const CORE_IMAGES = [
+/*
+ * Die Bilder-Sitemap. In robots.txt angemeldet, also holt Google sie wirklich
+ * ab — und genau deshalb stand hier der teuerste übersehene Text der ganzen
+ * Übersetzung.
+ *
+ * Was hier stand: 21 Einträge, Titel und Bildunterschriften durchgehend
+ * niederländisch ("Autosleutel Bijmaken Utrecht", "Berkan Acarol, eigenaar en
+ * hoofdtechnicus"), jeder mit <image:geo_location>Utrecht, Nederland</…> auf
+ * einer .de-Domain, dazu ein Bild, das es nicht gibt
+ * (marktplaats-…-verifiziert.webp), und /leistungen/transponder-programmeren
+ * — ein niederländischer Slug, der 404 liefert. Eine Bilder-Sitemap ist keine
+ * Seite; keine Übersetzungsprüfung, die auf gerenderte HTML-Seiten schaut,
+ * kommt hier je vorbei. Deshalb wird sie jetzt aus den Daten gebaut statt von
+ * Hand gepflegt:
+ *
+ *  - Seiten kommen aus DIENSTEN, also gibt es jeden Slug wirklich.
+ *  - Galeriebilder kommen aus config/gallery.ts, mit genau dem Alt-Text, den
+ *    die Seite auch anzeigt.
+ *  - Jede Datei wird beim Start gegen /public geprüft; was fehlt, fliegt raus,
+ *    statt Google eine 404 anzubieten.
+ *  - Kein geo_location mehr. Die Fotos stammen aus dem niederländischen
+ *    Betrieb; eine deutsche Stadt daruntersetzen wäre dieselbe Behauptung, die
+ *    in gallery.ts schon aus den Alt-Texten entfernt wurde.
+ */
+
+type SitemapImage = { url: string; title: string; caption: string };
+
+function exists(url: string): boolean {
+  return fs.existsSync(path.join(process.cwd(), 'public', url));
+}
+
+/** Bilder, die die Startseite und /ueber-uns wirklich zeigen. */
+const HOME_IMAGES: SitemapImage[] = [
   {
-    /* The home page hero. Swapped when the hero changed — an image sitemap is
-       meant to list images that actually appear on a page, and the previous
-       entry pointed at a file the site no longer displays anywhere. */
     url: '/images/seo/autoschluessel24_autoschluessel-spezialist_vor_ort.webp',
-    title: 'Autosleutelspecialist van Autosleutel24 op locatie',
-    caption: 'Autosleutel24 — mobiele autosleutelspecialist in Utrecht, Amsterdam en Midden-Nederland',
-    geo_location: 'Utrecht en Amsterdam, Nederland',
-  },
-  {
-    url: '/autoschluessel24-schluesselnachmachen.webp',
-    title: 'Autosleutel Bijmaken Utrecht',
-    caption: 'Professioneel autosleutel bijmaken op locatie in Utrecht door Autosleutel24',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/hero-auto.webp',
-    title: 'Auto Sleutel Service Utrecht 24/7',
-    caption: 'Autosleutel24 — 24/7 mobiele autosleutel service in Utrecht en omgeving',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/images/seo/auto_tuer_oeffnen_schluesseldienst_schadenfrei.webp',
-    title: 'Auto Deur Openen Schadevrij Utrecht',
-    caption: 'Professionele auto slotenmaker opent deur schadevrij in Utrecht',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/images/seo/auto_schluessel_anfertigen_vor_ort.webp',
-    title: 'Autosleutel Maken Op Locatie Utrecht',
-    caption: 'Autosleutel programmeringsapparatuur — sleutel bijmaken op locatie in Utrecht',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/images/seo/auto_schluessel_24stunden_workshop.webp',
-    title: 'Autosleutel Werkplaats Utrecht 24 Uur',
-    caption: 'Professionele autosleutel werkplaats van Autosleutel24 in Utrecht — 24/7 open',
-    geo_location: 'Utrecht, Nederland',
+    title: 'Autoschlüssel-Spezialist vor Ort',
+    caption: 'Mobiler Autoschlüsseldienst: der Partner kommt mit Ausrüstung zum Fahrzeug.',
   },
   {
     url: '/images/seo/autoschluessel_nachmachen_car_keys.webp',
-    title: 'Autosleutels Bijmaken Utrecht',
-    caption: 'Diverse autosleutels voor bijmaken en programmeren in Utrecht',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/autoschluessel-marken-nachmachen.webp',
-    title: 'Autosleutel Merken Bijmaken Utrecht en Amsterdam',
-    caption: 'Autosleutel24 maakt sleutels voor alle 59 automerken waaronder BMW, Mercedes, VW, Audi, Toyota, Ford en Volvo in Utrecht en Amsterdam',
-    geo_location: 'Utrecht en Amsterdam, Nederland',
+    title: 'Autoschlüssel nachmachen',
+    caption: 'Schlüsselrohlinge und Funkschlüssel, wie sie vor Ort gefräst und angelernt werden.',
   },
   {
     url: '/images/seo/autoschluessel_anlernen_vor_ort.webp',
-    title: 'Autosleutel Programmeren Utrecht Amsterdam',
-    caption: 'Mobiel autosleutel programmeren op uw locatie in Utrecht en Amsterdam',
-    geo_location: 'Utrecht, Amsterdam, Nederland',
+    title: 'Schlüssel an der Wegfahrsperre anlernen',
+    caption: 'Anlernen des neuen Schlüssels an der Wegfahrsperre, am Fahrzeug statt in der Werkstatt.',
+  },
+  {
+    url: '/images/seo/auto_tuer_oeffnen_schluesseldienst_schadenfrei.webp',
+    title: 'Auto schadenfrei öffnen',
+    caption: 'Öffnen der Fahrzeugtür am Schließsystem, ohne Schaden an Lack, Schloss oder Dichtung.',
   },
   {
     url: '/images/seo/autoschluessel_reparatur_mobil.webp',
-    title: 'Autosleutel Reparatie Utrecht Amsterdam',
-    caption: 'Mobiele autosleutel reparatie in Utrecht en Amsterdam door Autosleutel24',
-    geo_location: 'Utrecht, Amsterdam, Nederland',
-  },
-  {
-    url: '/images/seo/autoschluessel_lager_alle_marken.webp',
-    title: 'Autosleutel Voorraad Alle Merken',
-    caption: 'Grote voorraad originele autosleutels voor alle merken bij Autosleutel24',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/images/zuendschloss-auto-wechseln/auto_zuendschloss_reparatur_schluesseldienst.webp',
-    title: 'Contactslot Auto Vervangen Utrecht',
-    caption: 'Professioneel contactslot repareren en vervangen in Utrecht door slotenmaker',
-    geo_location: 'Utrecht, Nederland',
+    title: 'Autoschlüssel reparieren',
+    caption: 'Reparatur von Funkschlüssel und Schlüsselgehäuse statt Neuanfertigung.',
   },
   {
     url: '/images/seo/professionelle_diagnose_geraete.webp',
-    title: 'Professionele Diagnose Apparatuur Autosleutel',
-    caption: 'Dealer-niveau diagnose apparatuur voor autosleutel programmering — Autel, VVDI, Lonsdor',
-    geo_location: 'Utrecht, Amsterdam, Nederland',
+    title: 'Diagnose- und Programmiergeräte',
+    caption: 'Programmiergeräte auf Fachbetriebsniveau für das Anlernen von Schlüsseln und Transpondern.',
   },
+];
+
+const ABOUT_IMAGES: SitemapImage[] = [
   {
-    url: '/images/seo/ersatz_autoschluessel_transponder_anlernen.webp',
-    title: 'Reserve Autosleutel Transponder Programmeren Utrecht',
-    caption: 'Reserve autosleutel met transponder chip programmeren in Utrecht',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/images/seo/schluesseldienst_werkzeug_notdienst.webp',
-    title: 'Slotenmaker Gereedschap Utrecht Spoed',
-    caption: 'Professioneel slotenmaker gereedschap voor spoedopdrachten in Utrecht',
-    geo_location: 'Utrecht, Nederland',
+    url: '/images/seo/auto_schluessel_24stunden_workshop.webp',
+    title: 'Rund um die Uhr erreichbar',
+    caption: 'Autoschlüssel-Werkstatt: Fräsen, Anlernen und Reparatur, 24 Stunden erreichbar.',
   },
   {
     url: '/images/seo/schluesseldienst_arbeiten_24stunden.webp',
-    title: 'Slotenmaker Utrecht Werkzaamheden 24 Uur',
-    caption: 'Slotenmaker in Utrecht voert werkzaamheden uit op locatie — 24 uur beschikbaar',
-    geo_location: 'Utrecht, Nederland',
+    title: 'Arbeiten am Fahrzeug',
+    caption: 'Arbeit am Schließsystem vor Ort, mit Fachwerkzeug statt roher Gewalt.',
   },
   {
-    url: '/images/seo/schluesseldienst_lager_schluessel.webp',
-    title: 'Slotenmaker Voorraad Utrecht Sleutels',
-    caption: 'Grote sleutelvoorraad van de slotenmaker in Utrecht',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/images/team/berkan-acarol-autoschluessel-spezialist.webp',
-    title: 'Berkan Acarol — Autosleutelspecialist Utrecht',
-    caption: 'Berkan Acarol, eigenaar en hoofdtechnicus van Autosleutel24',
-    geo_location: 'Utrecht, Nederland',
-  },
-  {
-    url: '/images/seo/marktplaats-autoschluessel24-verifiziert.webp',
-    title: 'Autosleutel24 Marktplaats Geverifieerd',
-    caption: 'Geverifieerd Marktplaats profiel van Autosleutel24 voor extra betrouwbaarheid en reviews',
-    geo_location: 'Utrecht, Nederland',
+    url: '/images/seo/envanter.webp',
+    title: 'Schlüssellager',
+    caption: 'Vorrat an Schlüsselrohlingen und Transpondern für die gängigen Marken.',
   },
 ];
 
-// ── Blog post images ──
-const BLOG_IMAGES = [
+/** Die Bilder, die ServiceLayout über jeder Dienstseite zeigt. */
+const SERVICE_IMAGES: SitemapImage[] = [
   {
-    url: '/images/blog/auto_oeffnen_ohne_schluessel_schadenfrei.webp',
-    title: 'Auto Openen Zonder Sleutel Schadevrij',
-    caption: 'Schadevrij auto openen zonder sleutel door Autosleutel24',
-  },
-  {
-    url: '/images/blog/autoschluessel_nachmachen_kosten_preisliste.webp',
-    title: 'Autosleutel Bijmaken Kosten Prijslijst 2026',
-    caption: 'Kostenoverzicht autosleutel bijmaken per merk — 2026 prijslijst',
-  },
-  {
-    url: '/images/blog/autoschluessel_nachmachen_spezialist.webp',
-    title: 'Autosleutel Bijmaken Specialist Utrecht',
-    caption: 'Gecertificeerde autosleutelspecialist aan het werk in Utrecht',
-  },
-  {
-    url: '/images/blog/autoschluessel_verloren_was_tun_anleitung.webp',
-    title: 'Autosleutel Kwijt — Stappenplan Utrecht',
-    caption: 'Stappenplan: wat te doen als u uw autosleutel kwijt bent in Utrecht',
-  },
-  {
-    url: '/images/blog/schluessel_nachmachen_auto_mobil_service.webp',
-    title: 'Autosleutel Bijmaken Mobiele Service',
-    caption: 'Mobiele autosleutel bijmaken service — Autosleutel24 bij u thuis of op kantoor',
-  },
-  {
-    url: '/images/blog/smart_key_anlernen_auto.webp',
-    title: 'Smart Key Programmeren Utrecht',
-    caption: 'Smart key en keyless entry sleutel programmeren in Utrecht',
+    url: '/images/seo/autoschluessel_reparatur_hero.webp',
+    title: 'Autoschlüssel-Service vor Ort',
+    caption: 'Mobiler Autoschlüsseldienst am Fahrzeug, mit Festpreis vor der Anfahrt.',
   },
 ];
 
-/** Files whose bytes appear under exactly one city. */
-function cityOwnImages(): Set<string> {
-  const seen = new Map<string, string[]>();
-  for (const city of CITIES) {
-    for (let i = 1; i <= 8; i++) {
-      const rel = `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i}.webp`;
-      const abs = path.join(process.cwd(), 'public', rel);
-      if (!fs.existsSync(abs)) continue;
-      const hash = crypto.createHash('md5').update(fs.readFileSync(abs)).digest('hex');
-      seen.set(hash, [...(seen.get(hash) ?? []), rel]);
-    }
-  }
-  const own = new Set<string>();
-  for (const paths of seen.values()) if (paths.length === 1) own.add(paths[0]!);
-  return own;
-}
+/** Die Galerie, mit genau dem Alt-Text, den /galerie anzeigt. */
+const GALLERY_IMAGES: SitemapImage[] = REAL_GALLERY_PROJECTS.map((g) => ({
+  url: g.src,
+  title: g.alt,
+  caption: g.alt,
+}));
 
-let ownCache: Set<string> | null = null;
-
-function cityImageEntries() {
-  ownCache ??= cityOwnImages();
-  const own = ownCache;
-  return CITIES.map((city) => ({
-    loc: `${BASE}/staedte/${city.slug}`,
-    images: Array.from({ length: 8 })
-      .map((_, i) => `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i + 1}.webp`)
-      .filter((url) => own.has(url))
-      .map((url, i) => ({
-        url,
-        title: `Autosleutel Bijmaken ${city.city} - Foto ${i + 1}`,
-        caption: `Professioneel autosleutel bijmaken en programmeren in ${city.city}`,
-        geo_location: `${city.city}, ${city.region}, Nederland`,
-      })),
-  })).filter((entry) => entry.images.length > 0);
-}
-
-// ── Page entries: url → its image(s) ──
-const PAGE_ENTRIES = [
-  {
-    loc: `${BASE}/`,
-    images: [
-      CORE_IMAGES[0], CORE_IMAGES[2], CORE_IMAGES[7],
-      CORE_IMAGES[4], CORE_IMAGES[3], CORE_IMAGES[17], CORE_IMAGES[18],
-    ],
-  },
-  {
-    loc: `${BASE}/ueber-uns`,
-    images: [
-      CORE_IMAGES[5], CORE_IMAGES[11], CORE_IMAGES[14], CORE_IMAGES[17], CORE_IMAGES[18],
-    ],
-  },
-  {
-    loc: `${BASE}/leistungen/autoschluessel-nachmachen`,
-    images: [CORE_IMAGES[4], CORE_IMAGES[13], CORE_IMAGES[9]],
-  },
-  {
-    loc: `${BASE}/leistungen/transponder-programmeren`,
-    images: [CORE_IMAGES[13], CORE_IMAGES[8]],
-  },
-  {
-    loc: `${BASE}/leistungen/keyless-go-schluessel`,
-    images: [CORE_IMAGES[8], CORE_IMAGES[1]],
-  },
-  {
-    loc: `${BASE}/leistungen`,
-    images: [CORE_IMAGES[10], CORE_IMAGES[11]],
-  },
-
-  ...BLOG_POSTS.map((post) => ({
-    loc: `${BASE}/blog/${post.slug}`,
-    images: [BLOG_IMAGES[0]],
+const PAGE_ENTRIES: { loc: string; images: SitemapImage[] }[] = [
+  { loc: `${BASE}/`, images: HOME_IMAGES },
+  { loc: `${BASE}/ueber-uns`, images: ABOUT_IMAGES },
+  { loc: `${BASE}/galerie`, images: GALLERY_IMAGES },
+  ...DIENSTEN.map((dienst) => ({
+    loc: `${BASE}/leistungen/${dienst.slug}`,
+    images: SERVICE_IMAGES,
   })),
-
-  /*
-   * City gallery images — only the ones that belong to that city.
-   *
-   * Two filters, and the second is the point.
-   *
-   * It exists on disk: this block used to emit 8 URLs per city regardless,
-   * and 17 cities have no directory at all, so 136 of the URLs handed to
-   * Google were 404s — concentrated in the newest regions, exactly the pages
-   * that most need to be crawled cleanly.
-   *
-   * And it is not the same photograph as another city's: 384 files across 48
-   * cities were 8 stock images copied and renamed per city. Telling Google
-   * "Autosleutel Bijmaken Breda - Foto 1" about a picture also filed as
-   * Gouda's, Bussum's and forty-five others' is an image-duplication signal
-   * laid on top of the text one. A shared photo can stay on the page as
-   * decoration; it has no business being declared as that city's.
-   *
-   * Computed once per process rather than per request — 394 small reads at
-   * module load, none afterwards — and self-maintaining: as real job photos
-   * replace stock, coverage grows with no list to keep up to date.
-   */
-  ...cityImageEntries(),
-];
+]
+  .map(({ loc, images }) => ({ loc, images: images.filter((img) => exists(img.url)) }))
+  .filter((entry) => entry.images.length > 0);
 
 function escapeXml(str: string) {
   return str
@@ -267,6 +125,8 @@ function escapeXml(str: string) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 }
+
+export const dynamic = 'force-static';
 
 export async function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -278,8 +138,7 @@ ${PAGE_ENTRIES.map(({ loc, images }) => `  <url>
 ${images.map((img) => `    <image:image>
       <image:loc>${escapeXml(BASE + img.url)}</image:loc>
       <image:title>${escapeXml(img.title)}</image:title>
-      <image:caption>${escapeXml(img.caption)}</image:caption>${(img as any).geo_location ? `
-      <image:geo_location>${escapeXml((img as any).geo_location)}</image:geo_location>` : ''}
+      <image:caption>${escapeXml(img.caption)}</image:caption>
     </image:image>`).join('\n')}
   </url>`).join('\n')}
 </urlset>`;

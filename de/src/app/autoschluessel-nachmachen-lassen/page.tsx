@@ -47,7 +47,6 @@ export const metadata: Metadata = {
     title: 'Autoschlüssel nachmachen lassen: Händler, Schlüsseldienst oder mobil?',
     description:
       'Drei Wege, einen Autoschlüssel nachmachen zu lassen — was jeder kostet und wie lange er dauert.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel nachmachen lassen — Autoschlüssel24' }],
   },
 };
 

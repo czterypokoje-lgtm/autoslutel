@@ -52,7 +52,6 @@ export const metadata: Metadata = {
     title: 'Mobiler Autoschlüsseldienst | wir kommen zum Fahrzeug',
     description:
       'Mobiler Schlüsseldienst für Autos: schadenfrei öffnen, Schlüssel vor Ort fräsen und anlernen. Festpreis vorab, rund um die Uhr.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Mobiler Autoschlüsseldienst — Autoschlüssel24' }],
   },
 };
 

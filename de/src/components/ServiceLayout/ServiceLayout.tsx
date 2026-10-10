@@ -701,7 +701,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
                 {/* Section 6: FAQ Accordion */}
                 <div>
-                  <h2>Veelgestelde Vragen over {service.title}</h2>
+                  <h2>Häufige Fragen zu {service.title}</h2>
                   {service.faq.slice(0, 6).map((f, i) => (
                     <details key={i} className={styles.faqItem}>
                       <summary className={styles.faqQuestion}>

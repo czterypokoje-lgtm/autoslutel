@@ -83,7 +83,6 @@ export async function generateMetadata(props: { params: Promise<{ regio: string 
       url,
       title,
       description: `Mobiler Autoschlüssel-Service in ${region.name}: verloren, defekt oder nachmachen — vor Ort.`,
-      images: [{ url: '/og-image.png', width: 1200, height: 630, alt: `Autoschlüssel nachmachen ${region.name} — Autoschlüssel24` }],
     },
   };
 }

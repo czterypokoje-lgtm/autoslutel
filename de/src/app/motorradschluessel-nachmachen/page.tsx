@@ -47,7 +47,6 @@ export const metadata: Metadata = {
     title: 'Motorradschlüssel nachmachen oder verloren? Wir kommen zu Ihrem Motorrad',
     description:
       'Motorrad- und Rollerschlüssel nachmachen, auch wenn keiner mehr da ist. Vor Ort, Festpreis vorab.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Motorradschlüssel nachmachen — Autoschlüssel24' }],
   },
 };
 

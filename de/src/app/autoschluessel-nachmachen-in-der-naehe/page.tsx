@@ -47,7 +47,6 @@ export const metadata: Metadata = {
     title: 'Autoschlüssel nachmachen in der Nähe | wir kommen zu Ihnen',
     description:
       'Autoschlüssel nachmachen in der Nähe? Unser Partner kommt zu Ihrem Fahrzeug und fertigt den Schlüssel vor Ort an. Rund um die Uhr.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel nachmachen in der Nähe — Autoschlüssel24' }],
   },
 };
 

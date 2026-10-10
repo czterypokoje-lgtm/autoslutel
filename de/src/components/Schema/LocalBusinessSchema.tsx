@@ -25,7 +25,7 @@ export default function LocalBusinessSchema() {
       width: 1024,
       height: 304,
     },
-    image: `${SITE_CONFIG.domain}/og-image.png`,
+    image: `${SITE_CONFIG.domain}/opengraph-image`,
     telephone: SITE_CONFIG.phoneTel,
     email: SITE_CONFIG.email,
     address: {

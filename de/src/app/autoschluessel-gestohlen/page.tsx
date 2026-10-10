@@ -46,7 +46,6 @@ export const metadata: Metadata = {
     title: 'Autoschlüssel gestohlen? Sofort sperren und ersetzen',
     description:
       'Wir löschen den gestohlenen Schlüssel aus der Wegfahrsperre und fertigen vor Ort einen neuen an. Rund um die Uhr.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autoschlüssel gestohlen — Autoschlüssel24' }],
   },
 };
 

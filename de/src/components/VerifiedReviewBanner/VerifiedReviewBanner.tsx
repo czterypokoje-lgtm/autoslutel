@@ -34,6 +34,12 @@ export interface BannerReview {
  * Reviews Google itself truncates with "…" are quoted only up to their last
  * complete sentence (see completeSentences): a quote that stops mid-sentence
  * misrepresents what the person wrote.
+ *
+ * Hier standen zwei fest eingetragene niederländische Adressen: das
+ * Google-Profil des niederländischen Betriebs (share.google/…) und
+ * facebook.com/autosleutel24. Beide zeigen jetzt auf SITE_CONFIG.social —
+ * dieselbe Falle wie die Place-ID auf /ueber-uns, und sie fällt nicht auf,
+ * weil ein Link auf ein echtes Profil funktioniert, nur eben auf das falsche.
  */
 /*
  * Google cuts long reviews with "…". Quote only the complete sentences before the
@@ -97,7 +103,7 @@ export default function VerifiedReviewBanner({ review }: { review?: BannerReview
         <div className={styles.leftSection}>
           <div className={styles.supertitle}>GEPRÜFTE KUNDENBEWERTUNG</div>
           <h2 className={styles.title}>
-            Wat Geverifieerde Klanten{' '}<br/>Zeggen Over Onze Service
+            Was geprüfte Kunden{' '}<br/>über unseren Service sagen
           </h2>
         </div>
 
@@ -114,7 +120,7 @@ export default function VerifiedReviewBanner({ review }: { review?: BannerReview
             </div>
           </div>
           
-          <div className={styles.stars} aria-label="5 sterren">
+          <div className={styles.stars} aria-label="5 von 5 Sternen">
             ★★★★★
           </div>
 
@@ -133,10 +139,10 @@ export default function VerifiedReviewBanner({ review }: { review?: BannerReview
             style={{ fontSize: '0.8rem', fontWeight: 600, color: 'inherit', textDecoration: 'none', textAlign: 'center', lineHeight: 1.35 }}
           >
             <span style={{ display: 'block', fontSize: '1.1rem' }}>{SITE_CONFIG.rating} ★</span>
-            Bekijk alle {SITE_CONFIG.reviewCount} reviews op Google
+            Alle {SITE_CONFIG.reviewCount} Bewertungen auf Google ansehen
           </a>
           {/* Google Logo Circle */}
-          <a href="https://share.google/3qBeXHp6tQ6mdOa4B" target="_blank" rel="noopener noreferrer" className={styles.logoCircle} aria-label="Bekijk onze Google reviews">
+          <a href={SITE_CONFIG.social.google} target="_blank" rel="noopener noreferrer" className={styles.logoCircle} aria-label="Unsere Google-Bewertungen ansehen">
             <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -145,7 +151,7 @@ export default function VerifiedReviewBanner({ review }: { review?: BannerReview
             </svg>
           </a>
           {/* Facebook Logo Circle */}
-          <a href="https://www.facebook.com/autosleutel24" target="_blank" rel="noopener noreferrer" className={styles.logoCircle} aria-label="Bekijk onze Facebook pagina">
+          <a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer" className={styles.logoCircle} aria-label="Unsere Facebook-Seite ansehen">
             <svg viewBox="0 0 24 24" width="28" height="28" xmlns="http://www.w3.org/2000/svg" fill="#1877F2">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
             </svg>

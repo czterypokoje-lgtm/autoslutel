@@ -67,7 +67,15 @@ export const SITE_CONFIG = {
 
   hours: 'Montag bis Sonntag 00:00–24:00',
   hoursShort: '24/7 erreichbar',
-  responseTime: TBD,
+  /*
+   * Keine durchschnittliche Reaktionszeit mehr. Sie stand im Banner über
+   * jeder Seite und war eine am niederländischen Betrieb gemessene Zahl; in
+   * Deutschland gibt es noch nichts zu messen, und eine geschätzte Minutenzahl
+   * über einem Notfall ist eine Zusage, keine Angabe. Das Feld bleibt leer
+   * stehen, damit es nicht als TBD den Build blockiert, für etwas, das keine
+   * Seite mehr zeigt — siehe arrival.ts für die gleiche Entscheidung.
+   */
+  responseTime: '',
 
   /** Handelsregisternummer, z. B. 'HRB 123456 B' — Impressum. */
   hrb: TBD,
