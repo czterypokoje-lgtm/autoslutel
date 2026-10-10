@@ -93,7 +93,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
 ];
 
 // ── Dienstspezifisch ───────────────────────────────────────
-export const FAQ_AUTOSLEUTEL_BIJMAKEN: FaqItem[] = [
+export const FAQ_SCHLUESSEL_NACHMACHEN: FaqItem[] = [
   {
     q: 'Muss mein vorhandener Schlüssel dabei sein?',
     a: 'Wenn Sie noch einen haben, bringen Sie ihn mit — dann ist der Auftrag einfacher und oft günstiger. Nötig ist es nicht: auch ohne vorhandenen Schlüssel lässt sich ein neuer anfertigen, das dauert dann länger und kostet mehr.',
@@ -130,7 +130,7 @@ export const FAQ_SMART_KEY: FaqItem[] = [
   },
 ];
 
-export const FAQ_AUTO_OP_SLOT: FaqItem[] = [
+export const FAQ_AUTO_OEFFNEN: FaqItem[] = [
   {
     q: 'Entsteht beim Öffnen ein Schaden?',
     a: 'Nein. Geöffnet wird mit Fachwerkzeug über die Türdichtung oder das Schließsystem, nicht über die Scheibe. ADAC und t-online warnen beide vor den Hausmitteln aus dem Internet, weil die meist Lack, Dichtung oder Türelektrik beschädigen — die Reparatur kostet dann mehr als die Öffnung.',
@@ -149,7 +149,7 @@ export const FAQ_AUTO_OP_SLOT: FaqItem[] = [
   },
 ];
 
-export const FAQ_AKL: FaqItem[] = [
+export const FAQ_ALLE_SCHLUESSEL_VERLOREN: FaqItem[] = [
   {
     q: 'Was bedeutet „alle Schlüssel verloren"?',
     a: 'Dass kein funktionierender Schlüssel mehr existiert. Dann reicht Fräsen nicht: das Fahrzeug muss geöffnet, die Schlüsseldaten müssen ausgelesen und die Wegfahrsperre ohne vorhandenen Schlüssel neu angelernt werden. Das ist der aufwendigste Fall und dauert 45 bis 90 Minuten.',

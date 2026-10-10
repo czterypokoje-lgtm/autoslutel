@@ -6,52 +6,67 @@ import ConsentPreferencesButton from '@/components/ConsentBanner/ConsentPreferen
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Cookiebeleid | Autosleutel24',
+    absolute: `Cookie-Richtlinie | ${SITE_CONFIG.name}`,
   },
   description:
-    'Welke cookies Autosleutel24 gebruikt, waarvoor, hoe lang ze bewaard blijven en hoe u uw toestemming op elk moment wijzigt of intrekt.',
+    'Welche Cookies diese Website setzt, wofür, wie lange sie gespeichert bleiben und wie Sie Ihre Einwilligung jederzeit ändern oder widerrufen.',
   alternates: { canonical: `${SITE_CONFIG.domain}/cookie-richtlinie` },
 };
 
 /**
- * Replaces the iubenda-hosted cookie policy, which returned 404.
+ * Was diese Seite wirklich lädt — und was nicht.
  *
- * The list below describes what the site actually loads. The previous policy
- * claimed only "analytische cookies (Google Analytics 4, geanonimiseerd)"
- * while Google Ads, DoubleClick and Microsoft Clarity session recording were
- * also running — stating that inaccurately is itself a breach.
+ * Die niederländische Fassung listet hier GA4, Microsoft Clarity (mit
+ * Sitzungsaufzeichnung), Google Ads und DoubleClick, weil die dort auch laufen.
+ * In dieser App stehen alle Messwerkzeuge auf null (siehe site.config.ts,
+ * analytics) — es wird also nichts davon geladen, und keines dieser Cookies
+ * wird gesetzt.
+ *
+ * Diese Liste zu übersetzen hätte eine Verarbeitung beschrieben, die nicht
+ * stattfindet. Das ist derselbe Fehler wie der umgekehrte, nur spiegelbildlich:
+ * die alte niederländische Richtlinie nannte einmal nur "analytische cookies",
+ * während Ads, DoubleClick und Clarity ebenfalls liefen, und eine falsche
+ * Angabe ist für sich schon ein Verstoß.
+ *
+ * Darum tragen die Kategorien `active`. Was nicht aktiv ist, erscheint als
+ * Hinweis, nicht als Tabelle — und schaltet sich von selbst ein, sobald in
+ * site.config.ts ein Konto eingetragen wird. Beim Eintragen bitte die Zeilen
+ * prüfen: Namen und Fristen gelten für die Werkzeuge, die dann wirklich laufen.
  */
+
+const ANALYTICS_ACTIVE = Boolean(SITE_CONFIG.analytics.ga4Id);
+const MARKETING_ACTIVE = Boolean(
+  SITE_CONFIG.analytics.googleAdsId || SITE_CONFIG.analytics.bingUetId
+);
 
 const CATEGORIES = [
   {
-    name: 'Noodzakelijk',
-    consent: 'Altijd actief — geen toestemming vereist',
+    name: 'Technisch notwendig',
+    consent: 'Immer aktiv — keine Einwilligung erforderlich',
+    active: true,
     intro:
-      'Nodig om de website te laten werken en om uw cookiekeuze te onthouden. Deze cookies worden niet gebruikt om u te volgen.',
-    rows: [
-      ['as24_consent', 'Autosleutel24', 'Onthoudt uw cookiekeuze', '6 maanden'],
-    ],
+      'Nötig, damit die Website funktioniert und Ihre Cookie-Entscheidung gespeichert bleibt. Diese Cookies werden nicht verwendet, um Sie zu verfolgen, und sie brauchen nach § 25 Abs. 2 TDDDG keine Einwilligung.',
+    rows: [['as24_consent', SITE_CONFIG.name, 'Speichert Ihre Cookie-Entscheidung', '6 Monate']],
   },
   {
-    name: 'Statistieken',
-    consent: 'Alleen met uw toestemming',
+    name: 'Statistik',
+    consent: 'Nur mit Ihrer Einwilligung',
+    active: ANALYTICS_ACTIVE,
     intro:
-      'Helpt ons te begrijpen welke pagina’s werken. Microsoft Clarity maakt daarbij opnames van websessies (muisbewegingen, klikken en scrollgedrag).',
+      'Hilft uns zu verstehen, welche Seiten funktionieren. Wird erst gesetzt, nachdem Sie zugestimmt haben.',
     rows: [
-      ['_ga, _ga_*', 'Google Analytics 4', 'Onderscheidt bezoekers en sessies', '2 jaar'],
-      ['_clck', 'Microsoft Clarity', 'Koppelt sessies aan één bezoeker', '1 jaar'],
-      ['_clsk', 'Microsoft Clarity', 'Bundelt paginaweergaven in één sessie', '1 dag'],
-      ['CLID', 'Microsoft Clarity', 'Identificeert het apparaat', '1 jaar'],
+      ['_ga, _ga_*', 'Google Analytics 4', 'Unterscheidet Besucher und Sitzungen', '2 Jahre'],
     ],
   },
   {
     name: 'Marketing',
-    consent: 'Alleen met uw toestemming',
+    consent: 'Nur mit Ihrer Einwilligung',
+    active: MARKETING_ACTIVE,
     intro:
-      'Meet welke advertentie tot een aanvraag heeft geleid en maakt relevantere advertenties mogelijk.',
+      'Misst, welche Anzeige zu einer Anfrage geführt hat. Wird erst gesetzt, nachdem Sie zugestimmt haben.',
     rows: [
-      ['_gcl_au', 'Google Ads', 'Meet conversies uit advertenties', '90 dagen'],
-      ['IDE, test_cookie', 'Google DoubleClick', 'Advertentiemeting en -targeting', 'max. 1 jaar'],
+      ['_gcl_au', 'Google Ads', 'Misst Conversions aus Anzeigen', '90 Tage'],
+      ['IDE, test_cookie', 'Google DoubleClick', 'Anzeigenmessung und -auswahl', 'max. 1 Jahr'],
     ],
   },
 ];
@@ -67,7 +82,7 @@ const cell: React.CSSProperties = {
 export default function CookiePage() {
   return (
     <main>
-      <script id="bc-cookie" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Cookiebeleid', path: '/cookie-richtlinie' }])) }} />
+      <script id="bc-cookie" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Cookie-Richtlinie', path: '/cookie-richtlinie' }])) }} />
       <section
         style={{
           background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)',
@@ -75,24 +90,50 @@ export default function CookiePage() {
         }}
       >
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <h1 style={{ color: '#fff' }}>Cookiebeleid</h1>
-          <p style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Laatste update: {new Date().toLocaleDateString('nl-NL')}
-          </p>
+          <h1 style={{ color: '#fff' }}>Cookie-Richtlinie</h1>
+          {/* Kein new Date(): ein Rechtstext, der bei jedem Build behauptet,
+              heute geändert worden zu sein, sagt etwas Falsches. */}
+          <p style={{ color: 'rgba(255,255,255,0.6)' }}>Stand: Oktober 2026</p>
         </div>
       </section>
 
       <div className="container" style={{ padding: '3rem 2rem', maxWidth: 900 }}>
         <p style={{ lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '2rem' }}>
-          Een cookie is een klein tekstbestand dat bij uw bezoek op uw apparaat
-          wordt opgeslagen. Wij plaatsen alleen noodzakelijke cookies zonder uw
-          toestemming. Cookies voor statistieken en marketing worden pas
-          geplaatst nadat u daarvoor toestemming heeft gegeven.
+          Ein Cookie ist eine kleine Textdatei, die bei Ihrem Besuch auf Ihrem Gerät gespeichert
+          wird. Ohne Ihre Einwilligung setzen wir ausschließlich technisch notwendige Cookies.
+          Cookies für Statistik und Marketing werden erst gesetzt, nachdem Sie zugestimmt haben —
+          so verlangt es § 25 Abs. 1 TDDDG.
         </p>
+        {!ANALYTICS_ACTIVE && !MARKETING_ACTIVE && (
+          <p
+            style={{
+              lineHeight: 1.7,
+              fontSize: '0.95rem',
+              marginBottom: '2rem',
+              padding: '1rem 1.25rem',
+              background: '#f1f5f9',
+              borderLeft: '3px solid #0d5f70',
+              borderRadius: '4px',
+            }}
+          >
+            <strong>Derzeit nur notwendige Cookies.</strong> Auf dieser Website sind keine
+            Werkzeuge für Statistik oder Marketing eingerichtet; es findet also keine
+            Reichweitenmessung und kein Tracking statt. Die Kategorien unten stehen hier, damit
+            Sie sehen, was eingesetzt würde — und sie werden erst mit Ihrer Einwilligung aktiv,
+            sobald wir sie einrichten.
+          </p>
+        )}
 
         {CATEGORIES.map((cat) => (
           <div key={cat.name} style={{ marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: '1.15rem', marginBottom: '0.35rem' }}>{cat.name}</h2>
+            <h2 style={{ fontSize: '1.15rem', marginBottom: '0.35rem' }}>
+              {cat.name}
+              {!cat.active && (
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--gray-500)', marginLeft: '0.6rem' }}>
+                  — derzeit nicht eingesetzt
+                </span>
+              )}
+            </h2>
             <p
               style={{
                 fontSize: '0.8125rem',
@@ -111,9 +152,9 @@ export default function CookiePage() {
                 <thead>
                   <tr>
                     <th style={{ ...cell, fontWeight: 700 }}>Cookie</th>
-                    <th style={{ ...cell, fontWeight: 700 }}>Aanbieder</th>
-                    <th style={{ ...cell, fontWeight: 700 }}>Doel</th>
-                    <th style={{ ...cell, fontWeight: 700 }}>Bewaartermijn</th>
+                    <th style={{ ...cell, fontWeight: 700 }}>Anbieter</th>
+                    <th style={{ ...cell, fontWeight: 700 }}>Zweck</th>
+                    <th style={{ ...cell, fontWeight: 700 }}>Speicherdauer</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -139,27 +180,29 @@ export default function CookiePage() {
           }}
         >
           <h2 style={{ fontSize: '1.15rem', marginBottom: '0.75rem' }}>
-            Uw toestemming wijzigen of intrekken
+            Einwilligung ändern oder widerrufen
           </h2>
           <p style={{ lineHeight: 1.7, fontSize: '0.95rem' }}>
-            U kunt uw keuze op elk moment aanpassen. Intrekken is net zo
-            eenvoudig als geven en heeft geen gevolgen voor het gebruik van deze
-            website. Klik hiervoor op{' '}
-            <ConsentPreferencesButton /> — ook onderaan elke pagina te vinden.
+            Sie können Ihre Entscheidung jederzeit anpassen. Der Widerruf ist genauso einfach wie
+            die Zustimmung (Art. 7 Abs. 3 DSGVO) und hat keine Folgen für die Nutzung dieser
+            Website. Klicken Sie dafür auf{' '}
+            <ConsentPreferencesButton /> — zu finden auch am Ende jeder Seite.
           </p>
         </div>
 
         <div>
           <h2 style={{ fontSize: '1.15rem', marginBottom: '0.75rem' }}>
-            Doorgifte en vragen
+            Übermittlung in Drittländer und Fragen
           </h2>
           <p style={{ lineHeight: 1.7, fontSize: '0.95rem' }}>
-            Google en Microsoft kunnen gegevens verwerken buiten de Europese
-            Economische Ruimte. Meer over hoe wij met persoonsgegevens omgaan
-            leest u in ons <Link href="/datenschutz">privacybeleid</Link>.
-            Vragen? Mail naar {SITE_CONFIG.email}. U kunt ook een klacht
-            indienen bij de Autoriteit Persoonsgegevens
-            (autoriteitpersoonsgegevens.nl).
+            Sobald Statistik- oder Marketing-Werkzeuge eingesetzt werden, können deren Anbieter
+            Daten außerhalb des Europäischen Wirtschaftsraums verarbeiten; eine Einwilligung
+            dafür wird dann gesondert eingeholt. Wie wir mit personenbezogenen Daten umgehen,
+            steht in unserer <Link href="/datenschutz">Datenschutzerklärung</Link>. Fragen
+            richten Sie an {SITE_CONFIG.email}. Sie haben außerdem das Recht, sich nach Art. 77
+            DSGVO bei der Datenschutz-Aufsichtsbehörde Ihres Bundeslandes zu beschweren; eine
+            Übersicht führt der Bundesbeauftragte für den Datenschutz und die
+            Informationsfreiheit unter bfdi.bund.de.
           </p>
         </div>
       </div>
