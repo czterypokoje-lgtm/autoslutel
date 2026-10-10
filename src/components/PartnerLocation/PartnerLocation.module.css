@@ -1,13 +1,22 @@
+/*
+ * auto-fit rather than two fixed tracks.
+ *
+ * The media column is not always there: a city may have no photo, and the
+ * static map removes itself when the Maps API cannot draw one. With fixed
+ * tracks that left the text in a narrow column beside an empty half. auto-fit
+ * collapses the empty track instead, so one child fills the row and two share
+ * it, without the component having to know which case it is in — which it
+ * cannot, because the map decides in the browser.
+ */
 .root {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
   gap: 1.5rem;
   align-items: start;
 }
 
 @media (min-width: 860px) {
   .root {
-    grid-template-columns: 1.1fr 1fr;
     gap: 2.5rem;
   }
 }

@@ -15,26 +15,44 @@ import styles from './PartnerLocation.module.css';
  * A client component only for that one fallback; everything else about this
  * section renders on the server.
  */
-export default function PartnerMap({ citySlug, address }: { citySlug: string; address: string }) {
+export default function PartnerMap({
+  citySlug,
+  address,
+  caption,
+}: {
+  citySlug: string;
+  address: string;
+  caption: string;
+}) {
   const [failed, setFailed] = useState(false);
+
+  /*
+   * The caption lives in here rather than beside it, so that it leaves with
+   * the map. A line reading "Draaierweg 10, Amsterdam" floating in an empty
+   * column, under a heading promising a location, is the broken-looking half
+   * of the failure this component exists to avoid.
+   */
   if (failed) return null;
 
   return (
-    <a
-      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${address} op Google Maps bekijken`}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        className={styles.map}
-        src={`/api/service-map?partner=${encodeURIComponent(citySlug)}`}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        onError={() => setFailed(true)}
-      />
-    </a>
+    <figure className={styles.media}>
+      <a
+        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${address} op Google Maps bekijken`}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className={styles.map}
+          src={`/api/service-map?partner=${encodeURIComponent(citySlug)}`}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => setFailed(true)}
+        />
+      </a>
+      <figcaption className={styles.caption}>{caption}</figcaption>
+    </figure>
   );
 }

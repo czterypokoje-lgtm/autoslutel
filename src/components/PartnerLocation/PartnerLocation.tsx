@@ -38,6 +38,9 @@ export default function PartnerLocation({ citySlug, cityName }: { citySlug: stri
 
   const address = formatAddress(partner);
   const area = partner.district ?? partner.city;
+  const caption = partner.businessName
+    ? `${partner.businessName} — ${address}`
+    : `${address} — ${area}`;
 
   /*
    * Two sentences for two different true things.
@@ -89,8 +92,14 @@ export default function PartnerLocation({ citySlug, cityName }: { citySlug: stri
         </div>
       </div>
 
-      <figure className={styles.media}>
-        {partner.photo ? (
+      {/*
+        * A photo when there is one, otherwise the map — and nothing at all
+        * when the map cannot be drawn, which PartnerMap decides for itself.
+        * The grid is auto-fit, so the text simply takes the full width rather
+        * than sitting beside a gap.
+        */}
+      {partner.photo ? (
+        <figure className={styles.media}>
           <Image
             className={styles.photo}
             src={partner.photo.src}
@@ -99,15 +108,11 @@ export default function PartnerLocation({ citySlug, cityName }: { citySlug: stri
             height={900}
             sizes="(min-width: 860px) 45vw, 100vw"
           />
-        ) : (
-          <PartnerMap citySlug={citySlug} address={address} />
-        )}
-        <figcaption className={styles.caption}>
-          {partner.businessName
-            ? `${partner.businessName} — ${address}`
-            : `${address} — ${area}`}
-        </figcaption>
-      </figure>
+          <figcaption className={styles.caption}>{caption}</figcaption>
+        </figure>
+      ) : (
+        <PartnerMap citySlug={citySlug} address={address} caption={caption} />
+      )}
     </div>
   );
 }

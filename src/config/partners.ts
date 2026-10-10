@@ -117,12 +117,15 @@ export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
     city: 'Amsterdam',
     district: 'Amsterdam Noord',
     /*
-     * An APK station is RDW-approved by law, and the signage on the premises
-     * reads "APK STATION". CONFIRM IT AGAINST THE RDW REGISTER BEFORE THIS
-     * GOES LIVE — a credential is only worth printing if it is checkable, and
-     * checkable cuts both ways.
+     * No credentials line.
+     *
+     * "RDW-erkend APK-station" was read off the signage in a photograph, and
+     * nobody has held it against the RDW register. Everything in this repo
+     * that was typed from a reasonable inference rather than a document — the
+     * btw number, the review count, three invented reviews — had to come back
+     * out again. One line in `credentials` is all it takes once somebody has
+     * actually looked it up.
      */
-    credentials: ['RDW-erkend APK-station'],
   },
 ] as const;
 
