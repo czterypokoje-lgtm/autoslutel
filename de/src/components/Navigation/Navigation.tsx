@@ -97,13 +97,20 @@ export default function Navigation() {
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="Autoschluessel24.de — 24/7 Autoschlüssel-Notdienst, Startseite">
-          <Image
-            src="/images/logo/autoschluessel24-logo-schluesseldienst.webp"
-            alt="Autoschluessel24 Logo"
-            width={128}
-            height={38}
-            style={{ height: '38px', width: 'auto', display: 'block' }}
-          />
+          {SITE_CONFIG.logo.header ? (
+            <Image
+              src={SITE_CONFIG.logo.header}
+              alt={`${SITE_CONFIG.name} Logo`}
+              width={128}
+              height={38}
+              style={{ height: '38px', width: 'auto', display: 'block' }}
+            />
+          ) : (
+            <span className={styles.logoText}>
+              <span className={styles.logoMain}>{SITE_CONFIG.name}</span>
+              <span className={styles.logoSub}>Mobiler Schlüsseldienst</span>
+            </span>
+          )}
         </Link>
 
         {/* Desktop Nav */}

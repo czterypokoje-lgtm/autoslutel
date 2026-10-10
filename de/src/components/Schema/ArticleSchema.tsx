@@ -34,10 +34,14 @@ export default function ArticleSchema({
     publisher: {
       '@type': 'Organization',
       name: SITE_CONFIG.name,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${SITE_CONFIG.domain}/images/logo/autoschluessel24-logo-schluesseldienst.webp`,
-      },
+      ...(SITE_CONFIG.logo.header
+        ? {
+            logo: {
+              '@type': 'ImageObject',
+              url: `${SITE_CONFIG.domain}${SITE_CONFIG.logo.header}`,
+            },
+          }
+        : {}),
     },
   };
 

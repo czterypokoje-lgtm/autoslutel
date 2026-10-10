@@ -60,13 +60,19 @@ export default function Footer() {
           {/* Brand column */}
           <div>
             <div className={styles.footerBrand}>
-              <Image
-                src="/images/logo/autoschluessel24-logo-footer-weiss.webp"
-                alt="Autoschlüssel24 Logo"
-                width={160}
-                height={42}
-                style={{ height: '42px', width: 'auto', display: 'block' }}
-              />
+              {SITE_CONFIG.logo.footer ? (
+                <Image
+                  src={SITE_CONFIG.logo.footer}
+                  alt={`${SITE_CONFIG.name} Logo`}
+                  width={160}
+                  height={42}
+                  style={{ height: '42px', width: 'auto', display: 'block' }}
+                />
+              ) : (
+                <span style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>
+                  {SITE_CONFIG.name}
+                </span>
+              )}
             </div>
             <p className={styles.footerDesc}>Mobiler Autoschlüssel-Service für alle Marken: Autoschlüssel verloren, defekt oder nachmachen, und Fahrzeuge schadenfrei öffnen. Rund um die Uhr, Festpreis vorab. Unser Partner kommt zu Ihrem Fahrzeug in <Link href="/staedte/berlin" className={styles.seoLink}>Berlin</Link>, <Link href="/staedte/hamburg" className={styles.seoLink}>Hamburg</Link>, <Link href="/staedte/muenchen" className={styles.seoLink}>München</Link> und <Link href="/staedte/frankfurt" className={styles.seoLink}>Frankfurt am Main</Link>.</p>
             <div className={styles.footerBadges}>

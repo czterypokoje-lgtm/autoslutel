@@ -291,7 +291,10 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
             type="tel"
             value={phoneState}
             onChange={e => setPhoneState(e.target.value)}
-            placeholder="Ihre Telefonnummer"
+            /* Kurz, weil das Feld in der waagerechten Variante auf den
+               Städteseiten schmal ist und "Ihre Telefonnummer" dort abgeschnitten
+               wurde. */
+            placeholder="Telefonnummer"
             aria-label="Telefonnummer"
             required
           />

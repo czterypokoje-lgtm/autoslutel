@@ -65,6 +65,26 @@ export const SITE_CONFIG = {
     exVatDisclaimer: 'inkl. MwSt.',
   },
 
+  /*
+   * Die Logodateien — null, solange es kein deutsches Logo gibt.
+   *
+   * Die beiden Dateien in public/images/logo tragen deutsche Dateinamen, aber
+   * auf den Pixeln steht "Autosleutel24.nl". Das Umbenennen beim Kopieren hat
+   * den Dateinamen geändert, nicht das Bild — und es stand in der Navigation
+   * und im Fußzeilenbereich jeder Seite sowie als logo im LocalBusiness- und
+   * Article-Schema, also in dem Feld, aus dem Google das Logo des
+   * Unternehmens nimmt.
+   *
+   * Solange hier null steht, zeigen Navigation und Fußzeile den Schriftzug aus
+   * Text (die Klassen logoText/logoMain/logoSub gibt es im Stylesheet bereits)
+   * und das Schema lässt das Feld weg. Sobald ein deutsches Logo vorliegt:
+   * Datei nach public/images/logo legen und hier den Pfad eintragen.
+   */
+  logo: {
+    header: null as string | null,
+    footer: null as string | null,
+  },
+
   hours: 'Montag bis Sonntag 00:00–24:00',
   hoursShort: '24/7 erreichbar',
   /*

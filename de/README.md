@@ -54,35 +54,61 @@ Dann rendert die Seite mit sichtbaren Platzhaltern. **Nicht** so deployen.
 
 1. **Telefonnummer und WhatsApp** (`phone`, `phoneTel`, `whatsapp`, `email`).
    Eine deutsche Nummer; eine niederländische Vorwahl kostet hier Anrufe.
-2. **Impressum nach §5 DDG** (`legalForm`, `address`, `hrb`, `registerCourt`,
+
+2. **Ein deutsches Logo** (`logo.header`, `logo.footer`, beide `null`). Die
+   beiden Dateien, die mitkopiert wurden, tragen deutsche Dateinamen, aber auf
+   den Pixeln steht "Autosleutel24.nl" — in der Navigation jeder Seite und im
+   Schema-Feld, aus dem Google das Firmenlogo nimmt. Bis ein Logo da ist,
+   steht dort der Schriftzug als Text.
+
+3. **Impressum nach §5 DDG** (`legalForm`, `address`, `hrb`, `registerCourt`,
    `ustId`, `responsible` nach §18 Abs. 2 MStV). Ohne diese Felder gibt es
    keine Impressumsseite, und ohne Impressumsseite droht die Abmahnung.
-3. **Preise brutto, inkl. 19 % MwSt** (`prices.*`). Die
+
+4. **Preise brutto, inkl. 19 % MwSt** (`prices.*`). Die
    Preisangabenverordnung verlangt Endpreise gegenüber Verbrauchern. Entweder
    die Bruttopreise direkt, oder die Marge plus die Sätze der vier Partner —
    dann rechnet das Büro sie einmal aus und sie stehen fest.
-4. **Formspree-Formular-ID** (`formspreeId`, steht auf `null`). Die Anfrage
+
+5. **Formspree-Formular-ID** (`formspreeId`, steht auf `null`). Die Anfrage
    kommt über `/api/leads` in der eigenen Tabelle an — das funktioniert auch
    ohne. Was fehlt, ist die E-Mail-Benachrichtigung dazu: solange die ID
    `null` ist, wird dieser Schritt übersprungen. Die niederländische ID darf
    hier nicht stehen, sonst gehen die Benachrichtigungen zu deutschen
    Anfragen in ein niederländisches Postfach.
-5. **Messung und Werbung**: eigene GTM-, GA4-, Google-Ads- und
+
+6. **Messung und Werbung**: eigene GTM-, GA4-, Google-Ads- und
    Clarity-Properties, eigener IndexNow-Key, eigene Search-Console-Property.
-6. **Google Business Profile** (`social.google`) — die Bewertungs-Schaltfläche
+
+7. **Google Business Profile** (`social.google`) — die Bewertungs-Schaltfläche
    auf `/ueber-uns` braucht die Place-ID des deutschen Profils.
-7. **Karte** (`src/config/myMaps.ts`, steht auf `null`) — eine eigene My-Maps-ID
+
+8. **Karte** (`src/config/myMaps.ts`, steht auf `null`) — eine eigene My-Maps-ID
    für das deutsche Einsatzgebiet. Erst dann erscheinen Karte und `hasMap`.
-8. **Migration** `supabase/migrations/0073_technician_country_and_locale.sql`
+
+9. **Migration** `supabase/migrations/0073_technician_country_and_locale.sql`
    muss vor dem Deployment laufen.
-9. **Juristische Prüfung** von AGB (vor allem der Widerrufsbelehrung: §312g
-   BGB mit der Ausnahme nach §356 Abs. 4 BGB für den dringenden Einsatz),
-   Datenschutzerklärung und den beiden offenen Fragen
-   Schein­selbständigkeit (Deutsche Rentenversicherung) und
-   Handwerksordnung Anlage A.
-10. **Echte Suchvolumina** für `src/config/keywords.ts` (Keyword-Planner- oder
+
+10. **Juristische Prüfung** von AGB (vor allem der Widerrufsbelehrung: §312g
+    BGB mit der Ausnahme nach §356 Abs. 4 BGB für den dringenden Einsatz),
+    Datenschutzerklärung und den beiden offenen Fragen
+    Schein­selbständigkeit (Deutsche Rentenversicherung) und
+    Handwerksordnung Anlage A.
+
+11. **Echte Suchvolumina** für `src/config/keywords.ts` (Keyword-Planner- oder
     Ahrefs-Export: Stadt + Begriff + Volumen). Bis dahin ist die Rangfolge
     dort eine begründete Einschätzung und als solche markiert.
+
+### Zwei Fragen an das Büro
+
+Das Foto und der Name **Berkan Acarol** stehen als Gründer auf der Startseite
+und auf /ueber-uns. Wenn hinter dem deutschen Betrieb dieselbe Person steht,
+bleibt das so; wenn nicht, gehört dort die Person hin, die auch unter §18
+Abs. 2 MStV im Impressum verantwortlich ist.
+
+Und mit den vier Partnern zu klären: welche Motorradmarken sie vor Ort
+anlernen können, und ob die markenweisen Hinweise auf
+/motorradschluessel-nachmachen der Praxis entsprechen.
 
 ### Bewusst nicht dabei
 

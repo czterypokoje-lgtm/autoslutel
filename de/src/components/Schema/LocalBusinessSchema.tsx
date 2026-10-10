@@ -19,12 +19,17 @@ export default function LocalBusinessSchema() {
     alternateName: 'Autoschluessel24',
     description: SITE_CONFIG.schemaDescription,
     url: SITE_CONFIG.domain,
-    logo: {
-      '@type': 'ImageObject',
-      url: `${SITE_CONFIG.domain}/images/logo/autoschluessel24-logo-schluesseldienst.webp`,
-      width: 1024,
-      height: 304,
-    },
+    /* Kein Logo, solange es kein deutsches gibt — siehe site.config.ts logo.
+       Lieber kein logo-Feld als das niederländische Logo in dem Feld, aus dem
+       Google das Logo des Unternehmens nimmt. */
+    ...(SITE_CONFIG.logo.header
+      ? {
+          logo: {
+            '@type': 'ImageObject',
+            url: `${SITE_CONFIG.domain}${SITE_CONFIG.logo.header}`,
+          },
+        }
+      : {}),
     image: `${SITE_CONFIG.domain}/opengraph-image`,
     telephone: SITE_CONFIG.phoneTel,
     email: SITE_CONFIG.email,
