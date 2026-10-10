@@ -136,3 +136,44 @@
   margin-top: 0.6rem;
   line-height: 1.5;
 }
+
+/*
+ * The facade shown when the static map cannot be drawn. Same footprint as the
+ * map it stands in for, so nothing shifts when the embed mounts on tap.
+ */
+.mapFacade {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1rem;
+  border: 1px dashed var(--gray-300, #d1d5db);
+  border-radius: var(--radius-lg, 12px);
+  background: var(--gray-50, #f9fafb);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+
+.mapFacade:hover {
+  background: var(--gray-100, #f3f4f6);
+}
+
+.mapFacadePin {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.mapFacadeAddress {
+  font-weight: 700;
+  color: var(--navy-900, #0a192f);
+}
+
+.mapFacadeHint {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--orange-600, #ea580c);
+}
