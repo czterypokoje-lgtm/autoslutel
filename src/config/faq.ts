@@ -73,7 +73,14 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Waar vind ik een autosleutelmaker in mijn buurt?',
-    a: 'Autosleutel24 is dé mobiele autosleutelmaker in Midden-Nederland. Omdat wij werken vanuit een volledig uitgeruste servicebus, brengen wij de werkplaats naar u toe in Utrecht, Amsterdam, Almere, Amersfoort en omstreken. U hoeft dus niet op zoek naar een fysieke winkel in uw buurt; wij komen direct naar uw auto.',
+    /*
+     * "U hoeft niet op zoek naar een fysieke winkel" was an absolute, and the
+     * city pages stopped being able to keep it: PARTNER_LOCATIONS names the
+     * street our Amsterdam technician works from. The answer still says the
+     * thing that sells — you do not have to drive anywhere — without claiming
+     * there is nowhere to drive to.
+     */
+    a: 'Autosleutel24 is dé mobiele autosleutelmaker in Midden-Nederland. Omdat wij werken vanuit een volledig uitgeruste servicebus, brengen wij de werkplaats naar u toe in Utrecht, Amsterdam, Almere, Amersfoort en omstreken. U hoeft dus niet zelf naar een werkplaats te rijden; wij komen direct naar uw auto.',
   },
   {
     q: 'Kosten voor het bijmaken van een autosleutel zonder reserve?',

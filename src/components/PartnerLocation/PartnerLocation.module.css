@@ -1,0 +1,179 @@
+/*
+ * auto-fit rather than two fixed tracks.
+ *
+ * The media column is not always there: a city may have no photo, and the
+ * static map removes itself when the Maps API cannot draw one. With fixed
+ * tracks that left the text in a narrow column beside an empty half. auto-fit
+ * collapses the empty track instead, so one child fills the row and two share
+ * it, without the component having to know which case it is in — which it
+ * cannot, because the map decides in the browser.
+ */
+.root {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 860px) {
+  .root {
+    gap: 2.5rem;
+  }
+}
+
+.heading {
+  font-size: 1.5rem;
+  color: var(--navy-900, #0a192f);
+  margin: 0 0 0.75rem;
+}
+
+.body {
+  color: var(--gray-700, #374151);
+  line-height: 1.7;
+  margin: 0 0 1.25rem;
+}
+
+.credentials {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.credential {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--navy-50, #f1f5f9);
+  color: var(--navy-800, #1e293b);
+  border: 1px solid var(--gray-200, #e5e7eb);
+  border-radius: var(--radius-full, 50px);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* A real <address>, so the browser and the crawler both read it as one. */
+.address {
+  font-style: normal;
+  color: var(--navy-900, #0a192f);
+  font-weight: 600;
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+}
+
+.addressLabel {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-500, #6b7280);
+  margin-bottom: 0.2rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.3rem;
+  border-radius: var(--radius-md, 8px);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.primary {
+  background: var(--orange-600, #ea580c);
+  color: #fff;
+}
+
+.secondary {
+  background: #fff;
+  color: var(--navy-900, #0a192f);
+  border: 1px solid var(--gray-300, #d1d5db);
+}
+
+.media {
+  margin: 0;
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg, 12px);
+  display: block;
+}
+
+/*
+ * The static map is a plain <img>: the source is our own API route returning a
+ * remote image, so there is nothing for next/image to pre-size or re-encode,
+ * and routing it through /_next/image would only add a hop. Same reasoning as
+ * InstantServiceMap.
+ */
+.map {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-lg, 12px);
+  display: block;
+  background: var(--gray-100, #f3f4f6);
+}
+
+.caption {
+  font-size: 0.85rem;
+  color: var(--gray-500, #6b7280);
+  margin-top: 0.6rem;
+  line-height: 1.5;
+}
+
+/*
+ * The facade shown when the static map cannot be drawn. Same footprint as the
+ * map it stands in for, so nothing shifts when the embed mounts on tap.
+ */
+.mapFacade {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1rem;
+  border: 1px dashed var(--gray-300, #d1d5db);
+  border-radius: var(--radius-lg, 12px);
+  background: var(--gray-50, #f9fafb);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+
+.mapFacade:hover {
+  background: var(--gray-100, #f3f4f6);
+}
+
+.mapFacadePin {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.mapFacadeAddress {
+  font-weight: 700;
+  color: var(--navy-900, #0a192f);
+}
+
+.mapFacadeHint {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--orange-600, #ea580c);
+}
