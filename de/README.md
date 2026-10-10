@@ -17,16 +17,35 @@ Was **nicht** doppelt existiert: das CRM. Partner aus allen Ländern arbeiten in
 einem System (`../src/app/admin`), und dort ist die Sprache pro Person
 eingestellt, nicht pro Build.
 
-## Entwicklung
+## Lokal starten
+
+Gebraucht wird Node 20 oder neuer (`node -v`). Sonst nichts — keine
+.env-Datei, keine Zugangsdaten, keine Datenbank.
 
 ```
-cd de
+git clone https://github.com/czterypokoje-lgtm/autoslutel.git
+cd autoslutel/de
 npm install
-npm run dev     # http://localhost:3001
-npm run build
+npm run dev
 ```
 
-Läuft auf Port 3001, damit beide Seiten gleichzeitig lokal laufen können.
+Dann im Browser **http://localhost:3001** öffnen. Port 3001, damit die
+niederländische Seite (3000) gleichzeitig laufen kann.
+
+Unter Windows dieselben Befehle in PowerShell oder in der Git-Bash.
+
+Der Entwicklungsserver läuft, obwohl Telefonnummer, Preise und
+Impressumsdaten noch fehlen — oben steht dann ein schwarzes Band, das die
+fehlenden Felder aufzählt, und jede Seite steht auf noindex. Das ist die
+Vorschau, nicht der Veröffentlichungsstand.
+
+`npm run build` dagegen bricht ab, solange ein Feld fehlt (siehe unten) —
+das ist der Build, der nach Vercel geht. Nur zum Ansehen des fertigen
+Builds:
+
+```
+AUTOSCHLUESSEL_ALLOW_PLACEHOLDERS=1 npm run build && npm start
+```
 
 ## Deployment
 
@@ -41,14 +60,6 @@ Build bricht ab, solange einer davon übrig ist, und nennt die fehlenden Felder
 beim Namen (`assertSiteReady()`, `missingFields()`). Das ist Absicht: ein
 geratener Preis oder eine fremde USt-IdNr. auf einer deutschen Seite ist eine
 Abmahnung, kein vorläufiger Wert.
-
-Zum Ansehen ohne diese Daten:
-
-```
-AUTOSCHLUESSEL_ALLOW_PLACEHOLDERS=1 npm run build
-```
-
-Dann rendert die Seite mit sichtbaren Platzhaltern. **Nicht** so deployen.
 
 ### Checkliste vor dem Livegang
 

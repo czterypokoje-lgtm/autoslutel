@@ -265,14 +265,29 @@ export const siteIsReady = (): boolean => missingFields().length === 0;
 /**
  * Vorschaumodus: bauen, obwohl Angaben fehlen.
  *
- * Nur über eine ausdrücklich gesetzte Umgebungsvariable. In diesem Modus steht
- * auf jeder Seite ein Hinweisband, robots.txt sperrt alles, die Sitemap ist
- * leer und jede Seite ist auf noindex — eine Vorschau darf nicht in den Index
- * geraten, auch nicht aus Versehen. Sobald die Konfiguration vollständig ist,
- * schaltet das von selbst um.
+ * In diesem Modus steht auf jeder Seite ein Hinweisband, robots.txt sperrt
+ * alles, die Sitemap ist leer und jede Seite ist auf noindex — eine Vorschau
+ * darf nicht in den Index geraten, auch nicht aus Versehen. Sobald die
+ * Konfiguration vollständig ist, schaltet das von selbst um.
+ *
+ * Zwei Wege hinein:
+ *
+ *  1. `npm run dev`. Der Entwicklungsserver läuft mit NODE_ENV=development und
+ *     wird nie veröffentlicht, also bricht er nicht ab, nur weil die
+ *     Telefonnummer noch fehlt. Ohne das muss jeder, der die Seite nur ansehen
+ *     will, erst eine Umgebungsvariable setzen — und die schreibt sich unter
+ *     Windows anders als unter macOS, was die erste Frage jedes neuen Rechners
+ *     war.
+ *  2. AUTOSCHLUESSEL_ALLOW_PLACEHOLDERS=1 vor `npm run build`, wenn jemand
+ *     ausdrücklich eine Vorschau bauen will.
+ *
+ * Was sich dadurch *nicht* ändert: `npm run build` ohne diese Variable bricht
+ * weiterhin ab, solange ein TBD übrig ist. Genau dieser Build geht nach
+ * Vercel, und er bleibt die Stelle, die nein sagt.
  */
 export const PREVIEW_WITH_PLACEHOLDERS =
-  process.env.AUTOSCHLUESSEL_ALLOW_PLACEHOLDERS === '1';
+  process.env.AUTOSCHLUESSEL_ALLOW_PLACEHOLDERS === '1' ||
+  process.env.NODE_ENV === 'development';
 
 export function assertSiteReady(): void {
   const missing = missingFields();

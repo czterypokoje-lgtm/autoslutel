@@ -24,6 +24,18 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ['image/webp'],
+    /*
+     * Ab Next 16 muss jede verwendete Qualitätsstufe hier stehen; ohne Angabe
+     * gilt nur [75]. Die Seite benutzt drei: 70 in der Galerie-Laufschrift
+     * (viele Bilder nebeneinander, kleine Darstellung), 75 im SplitHero und
+     * 80 für die großen Porträt- und Hero-Bilder auf Startseite,
+     * /partner-werden und den Geschäftskundenseiten.
+     *
+     * Ohne diesen Eintrag warnt der Entwicklungsserver bei jedem dieser
+     * Bilder, und die Optimierung fällt auf 75 zurück — die Angabe im
+     * Bauteil wäre dann wirkungslos, ohne dass es jemand merkt.
+     */
+    qualities: [70, 75, 80],
   },
   async headers() {
     return [
