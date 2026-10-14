@@ -19,6 +19,13 @@ export const dynamic = 'force-dynamic';
  * ponytail: daily, so the event lands up to a day late; the API takes 7 days.
  *
  * Value is gross_margin — what Autosleutel24 keeps — never final_price.
+ *
+ * The same sweep sends the earlier stage, qualified_service_call, once per job.
+ * A job is the human qualification: the office booked a technician for a real
+ * service in a covered city. An oppref only reaches a job through a person
+ * claiming the click, or the web lead the job was booked from, so an
+ * unanswered or unsuitable call never has a job and never counts. Cancelled
+ * jobs are left out.
  */
 
 const API_WINDOW_MS = 7 * 864e5 - 60 * 60 * 1000; // an hour of margin inside the API's 7 days
@@ -88,5 +95,43 @@ export async function GET(request: Request) {
     sent.push(job.id);
   }
 
-  return NextResponse.json({ sent, failed, expired });
+  const qualified = await reportQualifiedCalls(supabase);
+
+  return NextResponse.json({ sent, failed, expired, qualified });
+}
+
+async function reportQualifiedCalls(supabase: ReturnType<typeof createSupabaseAdminClient>) {
+  const { data, error } = await supabase
+    .from('jobs')
+    .select('id, created_at, oppref, leads (oppref)')
+    .neq('status', 'geannuleerd')
+    .is('openai_qualified_at', null)
+    // Booking time is the qualification time; older than the API window cannot be sent.
+    .gte('created_at', new Date(Date.now() - API_WINDOW_MS).toISOString());
+  if (error) {
+    console.error('[openai-paid-jobs] qualified query failed', error.message);
+    return { error: error.message };
+  }
+
+  const sent: string[] = [];
+  const failed: string[] = [];
+  for (const job of (data ?? []) as unknown as { id: string; created_at: string; oppref: string | null; leads: { oppref: string | null } | null }[]) {
+    const oppref = job.oppref ?? job.leads?.oppref;
+    if (!oppref) continue;
+    const ok = await sendOpenAiEvent({
+      eventName: 'custom',
+      customEventName: 'qualified_service_call',
+      id: `qualified_${job.id}`,
+      timestampMs: Date.parse(job.created_at),
+      actionSource: 'phone_call',
+      oppref,
+    });
+    if (!ok) {
+      failed.push(job.id);
+      continue;
+    }
+    await supabase.from('jobs').update({ openai_qualified_at: new Date().toISOString() }).eq('id', job.id);
+    sent.push(job.id);
+  }
+  return { sent, failed };
 }
