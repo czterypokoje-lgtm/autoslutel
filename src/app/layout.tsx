@@ -224,6 +224,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               function gtag(){window.dataLayer.push(arguments);}
               // Prevent duplicate pageviews if GA4 in GTM already tracks them
               gtag('config', 'AW-18315813515', { send_page_view: false, allow_enhanced_conversions: true });
+              // New account. Page views on, so its tag shows as active and remarketing lists fill.
+              // ponytail: old account stays until the new conversion labels replace its send_to's.
+              gtag('config', 'AW-18511036958', { allow_enhanced_conversions: true });
             }
           `}
         </Script>
