@@ -33,7 +33,7 @@ function rememberAdSource(): void {
     if (source) found.ad_source = source.slice(0, 80);
     if (medium) found.ad_medium = medium.slice(0, 80);
     if (campaign) found.ad_campaign = campaign.slice(0, 120);
-    if (['gclid', 'wbraid', 'gbraid', 'msclkid'].some((k) => params.get(k))) found.ad_click_id_present = true;
+    if (['gclid', 'wbraid', 'gbraid', 'msclkid', 'oppref'].some((k) => params.get(k))) found.ad_click_id_present = true;
     // First touch of the visit wins; a later page without parameters must not erase it.
     if (Object.keys(found).length && !sessionStorage.getItem(SOURCE_KEY)) {
       sessionStorage.setItem(SOURCE_KEY, JSON.stringify(found));
@@ -167,8 +167,8 @@ export default function PhoneConversionTracker() {
       window.uetq = window.uetq || [];
       window.uetq.push('event', isTel ? 'click_to_call' : 'click_to_whatsapp', { event_category: isTel ? 'phone' : 'whatsapp' });
 
-      // 4. OpenAI Ads
-      window.oaiq?.('measure', 'lead_created', { type: 'customer_action' });
+      // 4. OpenAI Ads: sent server-side only, by the route below, as the custom
+      // phone_button_click stage. A tap is not a lead, so no lead_created here.
 
       // 5. Server-side fallback (survives an ad blocker dropping the client
       // pixels above) — also anonymously records the click id so a phone

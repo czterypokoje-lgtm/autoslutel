@@ -90,6 +90,16 @@ export async function POST(request: Request) {
      * unattributable exactly the way Google's did before gclid was stored.
      */
     const msclkid = clean(body.msclkid, MAX.clickId);
+    /* ChatGPT ads' oppref, from the first-party click cookie adClickId.ts writes
+       on landing — the forms don't post it, and it must arrive unaltered. */
+    let oppref: string | null = null;
+    try {
+      const raw = request.headers.get('cookie')?.match(/(?:^|;\s*)as24_clickid=([^;]+)/)?.[1];
+      const value = raw ? JSON.parse(decodeURIComponent(raw)).oppref : null;
+      oppref = typeof value === 'string' && value ? value.slice(0, 500) : null;
+    } catch {
+      /* unreadable cookie: the lead is simply not attributable to ChatGPT */
+    }
 
     // What the visitor chose (working key vs. all lost) and the indicative
     // price shown for it, from forms that ask (see publicQuote.ts). Never
@@ -167,6 +177,7 @@ export async function POST(request: Request) {
       /* Enriched row only — the legacy fallback shape predates this column,
          and adding it there would break the very fallback it exists for. */
       msclkid,
+      oppref,
       ...(initialStatus ? { status: initialStatus } : {}),
     };
 
@@ -226,6 +237,9 @@ export async function POST(request: Request) {
       try {
         await sendOpenAiEvent({
           eventName: 'lead_created',
+          oppref,
+          /* action_source web requires a source_url; the form's page is the referer. */
+          sourceUrl: request.headers.get('referer') || 'https://www.autosleutel24.nl/',
           email: email,
           phone: phone,
           ip: ip,

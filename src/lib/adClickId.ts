@@ -11,7 +11,8 @@
  * src/app/api/track-call-conversion and .../export-conversions).
  */
 
-export const AD_CLICK_PARAMS = ['gclid', 'wbraid', 'gbraid', 'msclkid'] as const;
+/* oppref is ChatGPT ads' click reference: passed back exactly as received, never rebuilt. */
+export const AD_CLICK_PARAMS = ['gclid', 'wbraid', 'gbraid', 'msclkid', 'oppref'] as const;
 export type AdClickIds = Partial<Record<(typeof AD_CLICK_PARAMS)[number], string>>;
 
 const COOKIE_NAME = 'as24_clickid';
@@ -59,7 +60,7 @@ function fromSearch(search: string): AdClickIds | null {
   const found: AdClickIds = {};
   for (const key of AD_CLICK_PARAMS) {
     const value = params.get(key);
-    if (value) found[key] = value.slice(0, 200);
+    if (value) found[key] = value.slice(0, 500); // oppref must survive unaltered
   }
   return Object.keys(found).length ? found : null;
 }

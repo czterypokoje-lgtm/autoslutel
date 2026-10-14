@@ -37,19 +37,19 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
   const { data: job } = await supabase
     .from('jobs')
-    .select('id, created_at, scheduled_date, gclid, wbraid, gbraid, msclkid, lead_id')
+    .select('id, created_at, scheduled_date, gclid, wbraid, gbraid, msclkid, oppref, lead_id')
     .eq('id', id)
     .maybeSingle<{
       id: string; created_at: string; scheduled_date: string | null;
       gclid: string | null; wbraid: string | null; gbraid: string | null; msclkid: string | null;
-      lead_id: string | null;
+      oppref: string | null; lead_id: string | null;
     }>();
 
   if (!job) return NextResponse.json({ error: 'Klus niet gevonden' }, { status: 404 });
 
   /* Already attributed, by its lead or by an earlier claim. Offering more
      would invite someone to overwrite a click that is already correct. */
-  const attributed = Boolean(job.gclid || job.wbraid || job.gbraid || job.msclkid || job.lead_id);
+  const attributed = Boolean(job.gclid || job.wbraid || job.gbraid || job.msclkid || job.oppref || job.lead_id);
 
   /*
    * Anchored on the planned day where there is one, because that is when the
@@ -72,7 +72,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
   let query = supabase
     .from('call_clicks')
-    .select('id, created_at, gclid, wbraid, gbraid, msclkid, source_url, ref')
+    .select('id, created_at, gclid, wbraid, gbraid, msclkid, oppref, source_url, ref')
     .is('claimed_by_job_id', null);
   query = ref ? query.eq('ref', ref) : query.gte('created_at', from).lte('created_at', to);
   const { data, error } = await query.order('created_at', { ascending: false }).limit(50);
@@ -97,7 +97,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       created_at: click.created_at,
       source_url: click.source_url,
       ref: click.ref,
-      network: click.msclkid && !click.gclid ? 'Microsoft' : 'Google',
+      network: click.oppref ? 'ChatGPT' : click.msclkid && !click.gclid ? 'Microsoft' : 'Google',
       /* Hours between the click and the day of the job, so the office can see
          at a glance which one plausibly belongs to this call. */
       hoursFromJob: Math.round((new Date(click.created_at).getTime() - anchor.getTime()) / 36e5),
@@ -136,10 +136,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     .update({ claimed_by_job_id: id })
     .eq('id', clickId)
     .is('claimed_by_job_id', null)
-    .select('id, created_at, gclid, wbraid, gbraid, msclkid')
+    .select('id, created_at, gclid, wbraid, gbraid, msclkid, oppref')
     .maybeSingle<{
       id: string; created_at: string;
-      gclid: string | null; wbraid: string | null; gbraid: string | null; msclkid: string | null;
+      gclid: string | null; wbraid: string | null; gbraid: string | null; msclkid: string | null; oppref: string | null;
     }>();
 
   if (claimError) {
@@ -157,6 +157,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       wbraid: claimed.wbraid,
       gbraid: claimed.gbraid,
       msclkid: claimed.msclkid,
+      oppref: claimed.oppref,
       click_captured_at: claimed.created_at,
     })
     .eq('id', id);

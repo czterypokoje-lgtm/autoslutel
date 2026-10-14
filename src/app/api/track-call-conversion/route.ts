@@ -80,11 +80,11 @@ async function recordCallClick(body: Record<string, unknown>): Promise<void> {
 
     const { error } = await supabase
       .from('call_clicks')
-      .insert({ ...row, ref, campaign_id: origin.campaignId, keyword: origin.keyword });
+      .insert({ ...row, ref, campaign_id: origin.campaignId, keyword: origin.keyword, oppref: clean(body.oppref, 500) });
 
     /*
      * Without the extras rather than not at all: a code collision, or a deploy
-     * landing before the migration that added any of these three columns, must
+     * landing before the migration that added any of these columns, must
      * not cost the click itself — that is the one thing here that cannot be
      * reconstructed afterwards.
      */
@@ -124,8 +124,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ skipped: true, reason: 'no_consent' });
   }
 
+  /* A tap is only the phone_button_click stage: the call may never connect.
+     The paid job is reported separately, once, by api/cron/openai-paid-jobs. */
   const success = await sendOpenAiEvent({
-    eventName: 'lead_created',
+    eventName: 'custom',
+    customEventName: 'phone_button_click',
+    oppref: clean(body.oppref, 500),
     sourceUrl: sourceUrl || undefined,
     ip: ip,
     userAgent: request.headers.get('user-agent') || undefined,
