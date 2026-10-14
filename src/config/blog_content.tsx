@@ -4,6 +4,457 @@ import Image from 'next/image';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 
 export const BLOG_CONTENT: Record<string, React.ReactNode> = {
+  'sleutel-kwijt-dealer-pechhulp-of-specialist': (
+    <>
+      <h2>Eerst de juiste handeling, dan de juiste aanbieder</h2>
+      <p>
+        Een sleutel die in de afgesloten auto ligt, vraagt iets anders dan een smart key die echt
+        verdwenen is. En wie thuis nog een werkende reserve heeft, hoeft niet meteen een nieuwe
+        sleutel te laten maken. Dit artikel gaat daarom niet over <em>wat</em> u moet doen als uw
+        sleutel weg is &mdash; dat staat op onze pagina{' '}
+        <Link href="/autosleutel-kwijt">autosleutel kwijt</Link> &mdash; maar over de vraag{' '}
+        <strong>wie</strong> u belt: de dealer, de pechhulp, een werkplaats of een mobiele
+        specialist.
+      </p>
+      <p>
+        Een moderne autosleutel doet drie dingen: mechanisch openen, op afstand ontgrendelen en
+        de startonderbreker toestemming geven. Een oplossing voor &eacute;&eacute;n functie
+        herstelt de andere niet vanzelf. Een geopende deur is nog geen auto die start.
+      </p>
+
+      <h3>De vijf routes naast elkaar</h3>
+      <div style={{ overflowX: 'auto' }}>
+        <table>
+          <thead>
+            <tr>
+              <th>Route</th>
+              <th>Past bij</th>
+              <th>Let op</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mobiele autosleutelspecialist</td>
+              <td>Alle sleutels kwijt, auto staat stil</td>
+              <td>Laat vooraf bevestigen dat uw model zonder sleutel kan worden ingeleerd</td>
+            </tr>
+            <tr>
+              <td>Reservesleutel</td>
+              <td>Er is nog een werkende sleutel bereikbaar</td>
+              <td>De verloren sleutel blijft actief tot hij is uitgeschakeld</td>
+            </tr>
+            <tr>
+              <td>Merkdealer</td>
+              <td>Vervanging via het eigen merk</td>
+              <td>De auto moet meestal naar de werkplaats, ook als hij niet start</td>
+            </tr>
+            <tr>
+              <td>Pechhulp</td>
+              <td>U staat onderweg en moet eerst de stranding oplossen</td>
+              <td>Een nieuwe, geprogrammeerde sleutel valt er doorgaans niet onder</td>
+            </tr>
+            <tr>
+              <td>Werkplaats met sleutelservice</td>
+              <td>Een geplande afspraak als u de auto kunt brengen</td>
+              <td>Zonder werkende sleutel moet u vervoer regelen</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>1. Mobiele specialist: als er geen werkende sleutel meer is</h3>
+      <p>
+        Een mobiele specialist komt naar de plek waar de auto staat en kan openen, een nieuwe
+        sleutel frezen en die aan de startonderbreker aanleren in &eacute;&eacute;n bezoek. Dat is
+        precies wat u nodig heeft als alle sleutels weg zijn: niemand hoeft de auto te slepen.
+      </p>
+      <p>
+        Vertel bij het bellen niet alleen het merk, maar ook model, bouwjaar en sleuteltype, en zeg
+        er uitdrukkelijk bij dat <em>alle</em> sleutels ontbreken. Een sleutel bijmaken met een
+        werkend origineel is een andere opdracht dan een sleutel maken zonder &mdash; meer daarover
+        in{' '}
+        <Link href="/blog/autosleutel-bijmaken-zonder-origineel">
+          een autosleutel bijmaken zonder origineel
+        </Link>
+        . Niet iedere aanbieder ondersteunt iedere beveiligingsmodule, dus laat dat vooraf
+        bevestigen.
+      </p>
+
+      <h3>2. Reservesleutel: eerst weer rijden, daarna het vervolg</h3>
+      <p>
+        Kan iemand uw reserve brengen, dan is dat de snelste route. Test wel of die sleutel niet
+        alleen de deur opent maar ook de motor start &mdash; een los sleutelblad bewijst niets over
+        de transponder. Behandel de verdwenen sleutel daarna als apart probleem: zolang hij in het
+        geheugen van de auto staat, kan wie hem vindt uw auto starten. Laat hem uitschakelen en
+        meteen een nieuwe reserve maken.
+      </p>
+
+      <h3>3. Merkdealer: de route via het eigen merk</h3>
+      <p>
+        De dealer is een logische keuze als u de vervanging bewust via het merk wilt laten lopen.
+        Vraag welke documenten nodig zijn, hoe lang het bestellen van de sleutel duurt en wie de
+        auto naar de werkplaats brengt als hij niet start. Een sleutel aanvragen is nog geen
+        afspraak waarna u weer kunt rijden. Wat dat in geld scheelt, staat in{' '}
+        <Link href="/blog/dealer-vs-mobiele-sleutelmaker">
+          dealer tegenover mobiele sleutelmaker
+        </Link>
+        .
+      </p>
+
+      <h3>4. Pechhulp: voor de stranding, niet voor de sleutel</h3>
+      <p>
+        Staat u onderweg stil, dan is uw pechhulp een goed eerste telefoontje. Vraag wel wat er
+        onder uw overeenkomst valt. Een hulpverlener die de auto opent of wegsleept, maakt daarmee
+        geen nieuwe transpondersleutel; vraag dus wie het sleutelwerk daarna doet, zodat u niet
+        twee keer betaalt voor vervoer.
+      </p>
+
+      <h3>5. Werkplaats met sleutelservice: als u de auto kunt brengen</h3>
+      <p>
+        Heeft u een reserve om mee te rijden, dan kan een vaste werkplaats prima zijn voor een
+        geplande afspraak. Controleer dat ze autosleutels <em>programmeren</em> en niet alleen
+        mechanische sleutels slijpen &mdash; dat is lang niet bij iedere sleutelmaker het geval.
+      </p>
+
+      <h3>Welke route kiest u?</h3>
+      <ul>
+        <li>
+          <strong>Geen reserve, auto staat stil:</strong> een mobiele specialist die uw model
+          ondersteunt.
+        </li>
+        <li>
+          <strong>Werkende reserve bereikbaar:</strong> eerst de reserve, daarna de verloren
+          sleutel laten uitschakelen en een nieuwe laten maken.
+        </li>
+        <li>
+          <strong>Onderweg gestrand:</strong> pechhulp voor de stranding, en vooraf afspreken wie
+          de sleutel maakt.
+        </li>
+        <li>
+          <strong>Bewust via het merk:</strong> de dealer, met vervoer en levertijd vooraf
+          geregeld.
+        </li>
+      </ul>
+      <p>
+        Vermoedt u diefstal in plaats van verlies? Dan horen politie en verzekeraar bij het vervolg
+        &mdash; zie{' '}
+        <Link href="/blog/autosleutel-gestolen-wat-te-doen">autosleutel gestolen</Link>.
+      </p>
+
+      <h3>Veelgestelde vragen</h3>
+      <p>
+        <strong>Is de auto weer bruikbaar zodra de deur open is?</strong> Nee. Als de sleutel
+        ontbreekt, zijn een nieuwe sleutel en het aanleren aan de startonderbreker nog nodig.
+        Spreek daarom vooraf af dat de opdracht ook het starten omvat.
+      </p>
+      <p>
+        <strong>Welke gegevens moet ik doorgeven?</strong> Merk, model, bouwjaar, sleuteltype en
+        locatie, of er een werkende reserve is en of de auto op slot staat. Houd uw legitimatie en
+        het kentekenbewijs bij de hand: zonder bewijs van eigendom maakt geen betrouwbare
+        specialist een sleutel.
+      </p>
+      <p>
+        <strong>Wat gebeurt er met de verloren sleutel?</strong> Die wordt uit het geheugen van de
+        auto gewist, zodat hij de motor niet meer kan starten. Het mechanische sleutelblad past
+        daarna nog wel op het slot; bespreek of dat voor u een risico is.
+      </p>
+
+      <h3>Wat wij doen</h3>
+      <p>
+        Onze monteurs openen de auto schadevrij, maken ter plaatse een nieuwe sleutel en leren die
+        aan; de verloren sleutel wordt in dezelfde handeling uitgeschakeld. Hoe dat precies gaat en
+        wat het kost, leest u op{' '}
+        <Link href="/autosleutel-kwijt">autosleutel kwijt</Link>.{' '}
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+          Stuur ons een WhatsApp
+        </a>{' '}
+        of bel {SITE_CONFIG.phone} met merk, model, bouwjaar en locatie.
+      </p>
+    </>
+  ),
+
+  'contactslot-garage-dealer-of-mobiele-specialist': (
+    <>
+      <h2>Wie vervangt uw contactslot het best?</h2>
+      <p>
+        Een contactslot kunt u laten vervangen door een onafhankelijke garage, de merkdealer of een
+        mobiele autosleutelspecialist. Alle drie kunnen het, maar ze passen bij een andere
+        situatie. Het grootste verschil zit niet in wie het onderdeel monteert, maar in hoe uw auto
+        bij de reparatie komt &mdash; en of er iemand naar de sleutel kijkt.
+      </p>
+      <p>
+        Weet u nog niet zeker of het om het slot gaat? Lees dan eerst{' '}
+        <Link href="/blog/contactslot-defect-sleutel-draait-niet">
+          contactslot defect: sleutel draait niet meer om
+        </Link>
+        . Daar staat hoe u in dertig seconden ziet of het mechanisch of elektronisch is, en wat u
+        zelf kunt proberen. Dit artikel begint waar dat ophoudt: het slot moet eruit, en u kiest
+        wie het doet.
+      </p>
+
+      <h3>De drie routes in &eacute;&eacute;n overzicht</h3>
+      <div style={{ overflowX: 'auto' }}>
+        <table>
+          <thead>
+            <tr>
+              <th>Route</th>
+              <th>Past bij</th>
+              <th>Let op</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mobiele specialist</td>
+              <td>Auto start niet en staat thuis of op een parkeerplaats</td>
+              <td>Laat vooraf bevestigen dat uw model op locatie kan</td>
+            </tr>
+            <tr>
+              <td>Onafhankelijke garage</td>
+              <td>U twijfelt nog tussen slot, accu en startmotor</td>
+              <td>Sleutels aanleren doet lang niet iedere garage zelf</td>
+            </tr>
+            <tr>
+              <td>Merkdealer</td>
+              <td>U wilt de reparatie via het eigen merk</td>
+              <td>De auto moet naar de werkplaats; bij een stilstaande auto betekent dat slepen</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>1. Mobiele specialist: als de auto niet meer kan rijden</h3>
+      <p>
+        Een contactslot geeft het meestal op op een moment dat de auto niet meer start. Dan is een
+        werkplaats pas bereikbaar na een sleepwagen. Een mobiele autosleutelspecialist komt naar de
+        auto, bouwt de cilinder uit, reviseert of vervangt hem en leert zo nodig een nieuwe sleutel
+        aan &mdash; slot en sleutel in &eacute;&eacute;n bezoek.
+      </p>
+      <p>
+        Beschrijf bij het bellen precies wat de sleutel doet: hij draait niet, hij draait alleen
+        met kracht, of hij draait wel terwijl de motor niet aanslaat. Dat laatste is meestal geen
+        slot maar de startonderbreker, en dan is vervangen de verkeerde ingreep.
+      </p>
+
+      <h3>2. Onafhankelijke garage: voor een geplande controle</h3>
+      <p>
+        Kunt u nog rijden en weet u niet zeker of het slot, de accu of de startmotor de oorzaak is,
+        dan is een garage die de hele startklacht bekijkt een goede keuze. Vraag wel vooraf of ze
+        het sleutelwerk zelf doen. Een nieuw slot betekent vaak een nieuwe of aangepaste sleutel,
+        en die moet aan de startonderbreker worden aangeleerd. Besteedt de garage dat uit, dan staat
+        uw auto langer stil.
+      </p>
+
+      <h3>3. Merkdealer: de route via het merk</h3>
+      <p>
+        De dealer kan de samenhang tussen contactslot, sleutel en startbeveiliging voor uw model
+        goed beoordelen. Reken er wel op dat de auto naar de werkplaats moet en dat een nieuw slot
+        soms besteld wordt. Vraag of de voorgestelde reparatie alleen het mechanische deel betreft
+        of ook nieuwe sleutels &mdash; dat bepaalt een groot deel van de rekening. Het
+        kostenverschil staat in{' '}
+        <Link href="/blog/dealer-vs-mobiele-sleutelmaker">
+          dealer tegenover mobiele sleutelmaker
+        </Link>
+        .
+      </p>
+
+      <h3>Wat er in de opdracht moet staan</h3>
+      <p>
+        &ldquo;Contactslot vervangen&rdquo; laat te veel open. Bedoelt de aanbieder de cilinder,
+        het elektrische contactblok erachter of het hele samenstel? Vraag bij iedere route om
+        antwoord op deze punten voordat u akkoord geeft:
+      </p>
+      <ul>
+        <li>
+          <strong>Wat is defect, en waarom vervangen?</strong> Een cilinder die nog draait, kan
+          vaak gereviseerd worden.
+        </li>
+        <li>
+          <strong>Blijven mijn sleutels bruikbaar?</strong> Een nieuwe cilinder past niet
+          vanzelf op uw oude sleutel, en ook niet op de portiersloten.
+        </li>
+        <li>
+          <strong>Is aanleren nodig?</strong> Zo ja: wie doet het, en zit het in de prijs?
+        </li>
+        <li>
+          <strong>Waar gebeurt het?</strong> Bij de auto of in de werkplaats &mdash; en wie regelt
+          het vervoer?
+        </li>
+        <li>
+          <strong>Wat wordt er na afloop getest?</strong> Draaien, starten, sleutel uitnemen en de
+          deursloten.
+        </li>
+      </ul>
+
+      <h3>Veelgestelde vragen</h3>
+      <p>
+        <strong>Kan een garage mijn contactslot op locatie vervangen?</strong> Alleen als die garage
+        mobiele service aanbiedt. Een gewone werkplaatsafspraak is geen hulp bij de auto.
+      </p>
+      <p>
+        <strong>Is een mobiele specialist altijd beter dan de dealer?</strong> Nee. Staat de auto
+        stil, dan scheelt het slepen en wachten. Kunt u nog rijden en wilt u het via het merk, dan
+        is de dealer een prima route.
+      </p>
+      <p>
+        <strong>Moet ik twee sleutels meenemen?</strong> Ja, als u een reserve heeft. Laat beide
+        na afloop testen; anders ontdekt u pas later dat de reserve niet meer past.
+      </p>
+
+      <h3>Wat wij ter plaatse doen</h3>
+      <p>
+        Wij vervangen of reviseren contactsloten op de plek waar de auto staat en leren de sleutel
+        meteen aan. Wat dat kost en hoe lang het duurt, staat op{' '}
+        <Link href="/diensten/contactslot-auto-vervangen">contactslot vervangen</Link>.{' '}
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+          Stuur ons een WhatsApp
+        </a>{' '}
+        of bel {SITE_CONFIG.phone} en beschrijf wat de sleutel doet als u hem omdraait.
+      </p>
+    </>
+  ),
+
+  'welke-reparatie-bij-welk-sleuteldefect': (
+    <>
+      <h2>Laat het defect de reparatie kiezen, niet de buitenkant</h2>
+      <p>
+        Een autosleutel bestaat uit losse onderdelen met elk een eigen taak. Het sleutelblad
+        bedient het slot, de afstandsbediening de centrale vergrendeling en de transponder vertelt
+        de startonderbreker dat u mag starten. Een kapotte knop betekent dus niet dat de auto niet
+        meer start, en een werkende afstandsbediening bewijst niet dat de transponder in orde is.
+      </p>
+      <p>
+        Wat u zelf kunt doen aan batterij en behuizing staat in{' '}
+        <Link href="/blog/autosleutel-repareren-tips-kosten-besparen">
+          autosleutel repareren: zelf doen en kosten besparen
+        </Link>
+        . Dit artikel is de beslisboom ervoor: welk symptoom hoort bij welke van de vijf
+        reparaties, en wanneer repareren geen zin meer heeft.
+      </p>
+
+      <h3>Symptoom en reparatie naast elkaar</h3>
+      <div style={{ overflowX: 'auto' }}>
+        <table>
+          <thead>
+            <tr>
+              <th>Symptoom</th>
+              <th>Reparatie</th>
+              <th>Lost niet op</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Minder bereik, knoppen reageren traag</td>
+              <td>Batterij vervangen</td>
+              <td>Een kapotte schakelaar of een versleten blad</td>
+            </tr>
+            <tr>
+              <td>Gebroken kastje, sleutel werkt verder</td>
+              <td>Behuizing vervangen</td>
+              <td>Elektronica die zelf defect is</td>
+            </tr>
+            <tr>
+              <td>E&eacute;n knop werkt niet, de rest wel</td>
+              <td>Knop of printplaat herstellen</td>
+              <td>Een lege batterij of een herkenningsprobleem</td>
+            </tr>
+            <tr>
+              <td>Blad verbogen, gebroken of afgesleten</td>
+              <td>Sleutelblad vervangen</td>
+              <td>Een versleten contactslot</td>
+            </tr>
+            <tr>
+              <td>Opent wel, maar de auto start niet</td>
+              <td>Opnieuw aanleren na diagnose</td>
+              <td>Kapotte hardware</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>1. Batterij vervangen: bij een zwakke afstandsbediening</h3>
+      <p>
+        Moet u steeds dichter bij de auto staan, of meldt het dashboard dat de sleutelbatterij
+        bijna leeg is, dan is een nieuwe batterij de eerste stap. Bij de meeste sleutels werkt de
+        transponder zonder batterij, dus starten lukt meestal nog wel. Blijft het probleem na een
+        nieuwe batterij bestaan, wissel dan niet steeds opnieuw: dan zit het in de contacten of de
+        schakelaar. Het stappenplan per sleuteltype staat in{' '}
+        <Link href="/blog/autosleutel-batterij-vervangen-stappenplan">
+          autosleutel batterij vervangen
+        </Link>
+        .
+      </p>
+
+      <h3>2. Behuizing vervangen: als alleen de buitenkant kapot is</h3>
+      <p>
+        Een afgebroken ophangoog, een gescheurde schaal of versleten knoprubbers: de binnenkant
+        werkt nog, alleen de verpakking niet. Een nieuwe behuizing hergebruikt de werkende
+        elektronica. Let op twee dingen. Dezelfde buitenvorm betekent niet dat de printplaat past,
+        en bij sommige sleutels zit de transponder los in het kastje &mdash; een klein glazen of
+        zwart blokje dat er uitziet als afval. Gooi de oude behuizing pas weg als openen,
+        afsluiten &eacute;n starten werken.
+      </p>
+
+      <h3>3. Knop of printplaat herstellen: als &eacute;&eacute;n functie uitvalt</h3>
+      <p>
+        Werkt &eacute;&eacute;n knop niet en de andere wel, dan is de microschakelaar of een
+        soldeerverbinding meestal de oorzaak. Die is te vervangen zonder de hele sleutel te
+        vervangen. Druk niet steeds harder: dat helpt een elektrisch defect niet en belast de
+        printplaat. Is de sleutel nat geworden, haal dan de batterij eruit en gebruik hem niet
+        meer tot hij is nagekeken &mdash; corrosie breidt zich uit zolang er spanning op staat.
+      </p>
+
+      <h3>4. Sleutelblad vervangen: bij mechanische schade</h3>
+      <p>
+        Een verbogen of gebroken blad wordt vervangen door een nieuw blad dat op het slot wordt
+        gefreesd; de elektronica kan blijven. Buig een verbogen blad niet terug &mdash; het metaal
+        scheurt dan vaak precies op de knik. En draait een <em>onbeschadigde</em> reservesleutel
+        ook niet, dan zit het probleem in het slot en helpt een nieuw blad niets. Zie dan{' '}
+        <Link href="/blog/contactslot-defect-sleutel-draait-niet">contactslot defect</Link>.
+      </p>
+
+      <h3>5. Opnieuw aanleren: alleen na een diagnose</h3>
+      <p>
+        Opent de sleutel de auto wel maar start hij niet, dan herkent de startonderbreker de
+        transponder niet. Soms is opnieuw aanleren de oplossing, soms is de transponder zelf
+        beschadigd, en soms ligt het helemaal niet aan de sleutel. Wat er dan speelt, staat in{' '}
+        <Link href="/blog/auto-herkent-sleutel-niet-meer">auto herkent sleutel niet meer</Link>.
+        Aanleren zonder diagnose kan de bestaande sleutelconfiguratie verstoren, dus laat het doen
+        door iemand met de juiste apparatuur.
+      </p>
+
+      <h3>Zo beschrijft u het defect</h3>
+      <ul>
+        <li>Reageren alle knoppen, &eacute;&eacute;n knop of geen enkele?</li>
+        <li>Ziet u verbuiging, een breuk of duidelijke slijtage aan het blad?</li>
+        <li>Start de auto, en verschijnt er een melding op het dashboard?</li>
+        <li>Heeft de reservesleutel hetzelfde probleem?</li>
+      </ul>
+      <p>
+        Die vier antwoorden zeggen een monteur meestal al welke reparatie nodig is. Werken beide
+        sleutels niet, dan ligt het waarschijnlijk aan de auto en niet aan de sleutel.
+      </p>
+
+      <h3>Wanneer repareren niet meer loont</h3>
+      <p>
+        Repareren is de kleinste ingreep die het defect oplost, maar niet altijd mogelijk. Bij
+        zware vochtschade, een gebroken printplaat of een beschadigde transponder is een nieuwe
+        sleutel meestal sneller en betrouwbaarder. Een eerlijke monteur zegt dat voordat hij aan
+        de slag gaat.
+      </p>
+
+      <h3>Wat wij doen</h3>
+      <p>
+        Wij repareren knoppen, behuizingen en sleutelbladen en leren sleutels opnieuw aan, op de
+        plek waar u bent. Prijzen en werkwijze staan op{' '}
+        <Link href="/diensten/autosleutels-repareren">autosleutel repareren</Link>.{' '}
+        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+          Stuur ons een WhatsApp
+        </a>{' '}
+        met een foto van de sleutel, of bel {SITE_CONFIG.phone}.
+      </p>
+    </>
+  ),
+
   'contactslot-defect-sleutel-draait-niet': (
     <>
       <h2>Uw sleutel draait niet meer om: is het de sleutel of het slot?</h2>

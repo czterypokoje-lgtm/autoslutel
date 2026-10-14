@@ -41,6 +41,61 @@ export const REDIRECTED_BLOG_SLUGS = new Set([
 ]);
 
 export const BLOG_POSTS = [
+  /*
+   * Three "which route" comparisons. Each leaves the head term to the page that
+   * already owns it and takes the choice-between-providers intent instead:
+   *   - /autosleutel-kwijt owns "autosleutel kwijt"; this post is who to call
+   *     (dealer, pechhulp, werkplaats, mobiel), not what to do.
+   *   - /diensten/contactslot-auto-vervangen owns "contactslot vervangen" and
+   *     "contactslot-defect-sleutel-draait-niet" owns the diagnosis; this post
+   *     is garage vs dealer vs mobile, and sends the diagnosis back there.
+   *   - /diensten/autosleutels-repareren owns "autosleutel repareren" and
+   *     "autosleutel-repareren-tips-kosten-besparen" owns doing it yourself;
+   *     this post maps symptom to repair and links out for the rest.
+   * No prices in them: the owning pages carry those, so nothing can drift.
+   */
+  {
+    slug: 'sleutel-kwijt-dealer-pechhulp-of-specialist',
+    title: 'Dealer, Pechhulp of Specialist bij Sleutelverlies?',
+    excerpt:
+      'Wie belt u als uw autosleutel weg is: dealer, pechhulp, werkplaats of een mobiele specialist? Vijf routes naast elkaar, met wat elk wel en niet oplost.',
+    keywords: [
+      'dealer of slotenmaker sleutel kwijt',
+      'pechhulp autosleutel kwijt',
+      'wie bellen bij autosleutel kwijt',
+      'reservesleutel verloren sleutel uitschakelen',
+    ],
+    publishDate: '2026-10-14',
+    readTime: '6 min',
+  },
+  {
+    slug: 'contactslot-garage-dealer-of-mobiele-specialist',
+    title: 'Contactslot: Garage, Dealer of Mobiele Specialist?',
+    excerpt:
+      'Uw contactslot moet eruit. Laat u dat doen door de garage, de dealer of een mobiele specialist? Zo kiest u, en dit moet er in de opdracht staan.',
+    keywords: [
+      'contactslot garage of dealer',
+      'contactslot dealer',
+      'contactslot mobiele specialist',
+      'contactslot cilinder revisie',
+    ],
+    publishDate: '2026-10-14',
+    readTime: '5 min',
+  },
+  {
+    slug: 'welke-reparatie-bij-welk-sleuteldefect',
+    title: 'Welke Reparatie bij Welk Sleuteldefect?',
+    excerpt:
+      'Knop kapot, kastje gebroken, blad verbogen of start hij niet? Per symptoom de reparatie die past, en wanneer een nieuwe sleutel de betere keuze is.',
+    keywords: [
+      'autosleutel knop werkt niet',
+      'sleutelblad vervangen',
+      'autosleutel printplaat reparatie',
+      'autosleutel behuizing of nieuwe sleutel',
+    ],
+    publishDate: '2026-10-14',
+    readTime: '6 min',
+  },
   {
     /*
      * Deliberately about the mechanical ignition lock, not the electronics.
@@ -317,6 +372,7 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
     // ── Autosleutel kwijt service page ───────────────────────────
     'autosleutel-kwijt': [
+      'sleutel-kwijt-dealer-pechhulp-of-specialist',
       'autosleutel-kwijt-wat-nu-stappenplan',
       'sleutel-in-auto-laten-liggen-oplossingen',
       'autosleutel-bijmaken-zonder-origineel',
@@ -345,6 +401,7 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
     // ── Autosleutels repareren ────────────────────────────────────
     'autosleutels-repareren': [
+      'welke-reparatie-bij-welk-sleuteldefect',
       'autosleutel-repareren-tips-kosten-besparen',
       'autosleutel-batterij-vervangen-stappenplan',
       'verzekering-dekt-autosleutel-vervangen',
@@ -352,6 +409,7 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
     // ── Contactslot reparatie ─────────────────────────────────────
     'contactslot-auto-vervangen': [
+      'contactslot-garage-dealer-of-mobiele-specialist',
       'autosleutel-repareren-tips-kosten-besparen',
       'auto-slotenmaker-ultieme-gids-snel-hulp',
       'auto-openen-zonder-sleutel-schadevrij',
