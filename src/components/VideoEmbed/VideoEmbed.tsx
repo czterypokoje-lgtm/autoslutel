@@ -81,7 +81,7 @@ export default function VideoEmbed({
 
       {caption ? (
         <p className={styles.caption}>
-          Onze eigen monteur, een echte auto, geen animatie. Bel{' '}
+          Bel{' '}
           <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a> als u nu naast uw auto
           staat.
         </p>
