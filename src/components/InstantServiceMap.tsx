@@ -2,73 +2,68 @@
 
 import React, { useState } from 'react';
 import styles from './InstantServiceMap.module.css';
+import { useNearViewport } from './useNearViewport';
 import { MY_MAPS_EMBED_URL } from '@/config/myMaps';
 
 /**
- * The service-area map, behind a facade.
+ * The service-area map, which arrives on its own when you reach it.
  *
- * WHY
+ * WHY NOT SIMPLY EMBED IT
  *
  * The Google My Maps embed costs 1.4 MB decoded across 22 requests, 733 KB of
  * it JavaScript — measured by loading the embed on its own and reading its
  * resource timings. That is a Maps application booting up inside the page to
- * draw about twenty pins, and on a phone it is seconds of download and parse
- * for a section most visitors only glance at.
+ * draw about twenty pins, and on a phone it is seconds of download and parse.
+ * In the markup it is paid during page load by everyone, including the visitor
+ * who never scrolls this far.
  *
- * So nothing from Google's Maps app loads until somebody asks for it. Until
- * then the section shows a real Google map — a single Static Maps image with
- * our service cities pinned, served through /api/service-map so the API key
- * stays on the server — and the interactive embed mounts on the first tap.
+ * WHY NOT A BUTTON EITHER
  *
- * For the visitor who never taps, which is most of them, the map now costs one
- * image instead of a megabyte and a half. This is the "third-party facade"
- * pattern Lighthouse asks for.
+ * This used to be a tap-to-load facade, and that did keep the page fast. But
+ * it put a door in front of a map, and a map is something people expect to
+ * simply be there. The button was the cost showing through to the reader.
  *
- * WHY A TAP AND NOT A HOVER
+ * WHAT IT DOES NOW
  *
- * Hover does not exist on the phone this was reported from, and preloading on
- * hover hands the cost back to every desktop visitor who sweeps a mouse across
- * it. One deliberate tap.
+ * The embed mounts by itself once the section comes near the screen
+ * (useNearViewport, which starts it a screen early). Nothing to press, and the
+ * 1.4 MB still never lands during page load — which is the part LCP measures,
+ * and the part someone who never reaches this section should not be charged
+ * for.
  *
- * The facade is a real <button>, so it is keyboard reachable and announces what
- * it does. The map image is decorative beside that label, so it carries an
- * empty alt rather than repeating it.
+ * Underneath it, until the iframe has drawn, sits a real Google map: a single
+ * Static Maps image with our service cities pinned, served through
+ * /api/service-map so the API key stays on the server. So the box is never
+ * empty and nothing shifts when the embed lands on top of it.
  *
  * Plain <img>, not next/image: the source is an API route returning a remote
  * image, so there is nothing for the optimiser to pre-size or re-encode, and
- * routing it through /_next/image would only add a second hop.
+ * routing it through /_next/image would only add a second hop. It is
+ * decorative once the embed is coming, so it carries an empty alt.
  */
 export default function InstantServiceMap() {
-  const [showEmbed, setShowEmbed] = useState(false);
+  /*
+   * The embed mounts by itself once the reader has scrolled to it, rather than
+   * on a tap. See useNearViewport: the cost stays off page load, which is the
+   * part LCP measures, without asking anybody to press anything first.
+   */
+  const { ref, near } = useNearViewport<HTMLDivElement>();
 
   /*
    * /api/service-map answers 204 when the static map cannot be produced —
    * most likely because the Maps Static API is not enabled on the Cloud
-   * project. Rather than leave a broken image icon, the facade drops to its
-   * own branded panel and the button still works.
+   * project. Rather than leave a broken image icon, the section falls back to
+   * its own plain panel until the embed arrives.
    */
   const [imageFailed, setImageFailed] = useState(false);
 
-  if (showEmbed) {
-    return (
-      <div className={styles.mapRoot}>
-        <iframe
-          className={styles.googleMapIframe}
-          src={MY_MAPS_EMBED_URL}
-          allowFullScreen
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Autosleutel24 servicegebied — Utrecht, Randstad en omstreken"
-        />
-      </div>
-    );
-  }
-
   return (
-    <button
-      type="button"
-      className={`${styles.mapRoot} ${styles.facade}`}
-      onClick={() => setShowEmbed(true)}
-    >
+    <div ref={ref} className={`${styles.mapRoot} ${near ? '' : styles.placeholder}`}>
+      {/*
+        * The static image sits underneath until the embed has drawn, so the
+        * section is never an empty rectangle and nothing shifts when the
+        * iframe arrives on top of it.
+        */}
       {!imageFailed && (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img
@@ -84,14 +79,15 @@ export default function InstantServiceMap() {
         />
       )}
 
-      <span className={`${styles.facadeOverlay} ${imageFailed ? styles.facadeOverlayPlain : ''}`}>
-        <span className={styles.facadeCta}>
-          <span aria-hidden="true">📍</span> Bekijk de interactieve kaart
-        </span>
-        <span className={styles.facadeHint}>
-          Tik om te zoomen en alle servicelocaties te bekijken
-        </span>
-      </span>
-    </button>
+      {near && (
+        <iframe
+          className={styles.googleMapIframe}
+          src={MY_MAPS_EMBED_URL}
+          allowFullScreen
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Autosleutel24 servicegebied — Utrecht, Randstad en omstreken"
+        />
+      )}
+    </div>
   );
 }
