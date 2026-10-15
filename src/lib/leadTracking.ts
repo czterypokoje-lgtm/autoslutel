@@ -100,8 +100,7 @@ export function reportLeadConversion(lead: LeadConversion): void {
       // the action's own default value (set in Google Ads) is the one source
       // of truth, the same for calls, WhatsApp and forms.
       window.gtag('event', 'conversion', {
-        // Old account + new account ("Contact"). Drop the old one when it's retired.
-        send_to: ['AW-18315813515/-RCqCNDYoYwdEIvF1J1E', 'AW-18511036958/jFYACMWqspwdEJ6E4PpE'],
+        send_to: 'AW-18511036958/jFYACMWqspwdEJ6E4PpE',
         transport_type: 'beacon',
       });
 

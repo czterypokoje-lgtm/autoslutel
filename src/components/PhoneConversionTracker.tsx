@@ -157,8 +157,8 @@ export default function PhoneConversionTracker() {
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'conversion', {
           send_to: isTel
-            ? 'AW-18315813515/FoiPCLLl7NocEIvF1J1E' // Click to call
-            : 'AW-18315813515/eQj3CNPYoYwdEIvF1J1E', // WhatsApp click
+            ? 'AW-18511036958/Zy2-CL3l0p0dEJ6E4PpE' // Klik op telefoon
+            : 'AW-18511036958/4vk8CJ_PzZ0dEJ6E4PpE', // Klik op WhatsApp
           transport_type: 'beacon',
         });
       }
