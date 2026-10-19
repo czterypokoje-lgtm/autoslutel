@@ -466,8 +466,24 @@ const nextConfig: NextConfig = {
         ]
       : [];
 
+    /*
+     * The webshop is its own Next app (repo czterypokoje-lgtm/shop), sold by
+     * CarKey24 (KvK 42155437) and built with basePath '/webshop'. These lines
+     * show it at www.autosleutel24.nl/webshop, so the shop Mollie checks and
+     * the shop customers use are at the same address. Set SHOP_ZONE_ORIGIN to
+     * the shop's Vercel URL (no trailing slash) to switch it on.
+     */
+    const shopOrigin = process.env.SHOP_ZONE_ORIGIN?.trim().replace(/\/+$/, '');
+    const shopZone = shopOrigin
+      ? [
+          { source: '/webshop', destination: `${shopOrigin}/webshop` },
+          { source: '/webshop/:path*', destination: `${shopOrigin}/webshop/:path*` },
+        ]
+      : [];
+
     return [
       ...lpZone,
+      ...shopZone,
       {
         // Serves customer lead photos from our own domain.
         // Scoped to the `leads/` prefix that /api/upload writes, so the blob
