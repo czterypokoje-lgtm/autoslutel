@@ -1,4 +1,4 @@
-import { SITE_CONFIG } from '@/config/site.config';
+import { SITE_CONFIG, isBtwConfigured } from '@/config/site.config';
 import { BIZ_ID, serviceRegionNodes } from '@/utils/schema';
 import { MY_MAPS_VIEWER_URL } from '@/config/myMaps';
 
@@ -115,7 +115,7 @@ export default function LocalBusinessSchema() {
       `https://www.kvk.nl/zoeken/?source=all&q=${SITE_CONFIG.kvk}`,
     ],
     foundingDate: '2020',
-    vatID: SITE_CONFIG.btw,
+    ...(isBtwConfigured() && { vatID: SITE_CONFIG.btw }),
     legalName: SITE_CONFIG.fullName,
     identifier: {
       '@type': 'PropertyValue',

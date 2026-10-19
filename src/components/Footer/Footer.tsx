@@ -2,7 +2,7 @@ import Link from 'next/link';
 import ConsentPreferencesButton from '@/components/ConsentBanner/ConsentPreferencesButton';
 import Image from 'next/image';
 import styles from './Footer.module.css';
-import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import { SITE_CONFIG, WHATSAPP_URL, isBtwConfigured } from '@/config/site.config';
 import { BRANDS } from '../../config/brands';
 import { BRAND_COUNT } from '@/config/brands';
 
@@ -84,7 +84,7 @@ export default function Footer() {
             <p className={styles.footerDesc}>Mobiele autosleutelspecialist voor alle merken: autosleutel kwijt, kapot of bijmaken, en auto open zonder schade. Binnen 30-60 min ter plaatse, 24/7. Wij komen naar u toe in <Link href="/steden/amsterdam" className={styles.seoLink}>Amsterdam</Link>, <Link href="/steden/utrecht" className={styles.seoLink}>Utrecht</Link>, <Link href="/steden/almere" className={styles.seoLink}>Almere</Link>, <Link href="/steden/den-haag" className={styles.seoLink}>Den Haag</Link>, <Link href="/steden/rotterdam" className={styles.seoLink}>Rotterdam</Link>, <Link href="/steden/arnhem" className={styles.seoLink}>Arnhem</Link>, <Link href="/steden/amersfoort" className={styles.seoLink}>Amersfoort</Link>, <Link href="/steden/hilversum" className={styles.seoLink}>Hilversum</Link>, <Link href="/steden/nijmegen" className={styles.seoLink}>Nijmegen</Link> en <Link href="/steden/apeldoorn" className={styles.seoLink}>Apeldoorn</Link>, en in heel <Link href="/regio/utrecht" className={styles.seoLink}>Utrecht</Link>, <Link href="/regio/noord-holland" className={styles.seoLink}>Noord-Holland</Link>, <Link href="/regio/zuid-holland" className={styles.seoLink}>Zuid-Holland</Link>, <Link href="/regio/gelderland" className={styles.seoLink}>Gelderland</Link> en <Link href="/regio/flevoland" className={styles.seoLink}>Flevoland</Link>.</p>
             <div className={styles.footerBadges}>
               <span>KVK: {SITE_CONFIG.kvk}</span>
-              <span>BTW: {SITE_CONFIG.btw}</span>
+              {isBtwConfigured() && <span>BTW: {SITE_CONFIG.btw}</span>}
               <span>{SITE_CONFIG.rating} ★ Google</span>
               <span>Verzekerd</span>
             </div>

@@ -49,7 +49,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Hebben jullie een KVK-nummer?',
-    a: `Ja. Autosleutel24 is ingeschreven bij de Kamer van Koophandel onder nummer ${SITE_CONFIG.kvk}. BTW-nummer: ${SITE_CONFIG.btw}. Na iedere service ontvangt u een officiële factuur — handig voor de verzekeringsmaatschappij.`,
+    a: `Ja. Autosleutel24 is ingeschreven bij de Kamer van Koophandel onder nummer ${SITE_CONFIG.kvk}. Na iedere service ontvangt u een officiële factuur — handig voor de verzekeringsmaatschappij.`,
   },
   {
     q: 'Kan ik mijn auto openen als de accu leeg is?',
