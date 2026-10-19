@@ -93,9 +93,8 @@ const euro = (value: string): number | null => {
  * a service the page itself advertises as €149–199 would be a cheaper number
  * than we actually charge, published in a form Google may surface.
  *
- * valueAddedTaxIncluded: false, because the page says so twice ("Alle prijzen
- * zijn exclusief btw"). Leaving it out lets a consumer-facing surface read
- * these as gross prices, which they are not.
+ * valueAddedTaxIncluded: true. The amounts are all-in starting prices: the
+ * cheapest job of each row costs the customer exactly the "from" amount.
  */
 const offerCatalogSchema = {
   '@context': 'https://schema.org',
@@ -121,7 +120,7 @@ const offerCatalogSchema = {
         priceCurrency: 'EUR',
         minPrice: min,
         ...(max !== null && max !== min ? { maxPrice: max } : {}),
-        valueAddedTaxIncluded: false,
+        valueAddedTaxIncluded: true,
       },
     }];
   }),
@@ -177,7 +176,6 @@ export default function PrijzenPage() {
             <strong>Belangrijke informatie over onze tarieven</strong>
             <ul className={styles.disclaimerList}>
               <li>Onderstaande prijzen zijn <strong>indicatieve startprijzen</strong> — de exacte prijs hangt af van uw merk, model, bouwjaar en type sleutelsysteem.</li>
-              <li>Alle prijzen zijn exclusief btw.</li>
               <li>De definitieve prijs wordt <strong>altijd vooraf telefonisch afgesproken</strong> — nooit verrassingen achteraf.</li>
               <li>De merkdealer is vaak <strong>50% duurder</strong>, en u bespaart bij ons op dure wegsleepkosten (wij werken 100% op uw locatie).</li>
             </ul>
@@ -205,8 +203,8 @@ export default function PrijzenPage() {
                 ) : (
                   <tr key={i}>
                     <td className={styles.serviceCell}>{row.service}</td>
-                    <td className={styles.priceCell}>{row.from}</td>
-                    <td className={styles.priceCell}>{row.to}</td>
+                    <td className={styles.priceCell}>{row.from},-</td>
+                    <td className={styles.priceCell}>{row.to},-</td>
                     <td className={styles.noteCell}>{row.note}</td>
                   </tr>
                 )
@@ -214,7 +212,7 @@ export default function PrijzenPage() {
             </tbody>
           </table>
         </div>
-        <p className={styles.tableNote}>* Prijzen zijn exclusief btw en gelden voor diensten binnen Nederland. Exacte prijs na telefonische diagnose.</p>
+        <p className={styles.tableNote}>* Vanafprijzen voor diensten binnen Nederland. Exacte prijs na telefonische diagnose.</p>
 
         {/* Trust Gallery: Onze Mobiele Werkplaats & Apparatuur */}
         <div className={styles.trustSection}>
@@ -322,7 +320,7 @@ export default function PrijzenPage() {
           </p>
           <h3>Verschil in Prijs tussen Mechanische Sleutels, Klapsleutels en Smart Keys</h3>
           <p>
-            Een mechanische reservesleutel met transponderchip start uw auto en opent uw deuren handmatig; dit is de voordeligste optie (vanaf €{SITE_CONFIG.prices.transponder}). Een klapsleutel met afstandsbediening heeft extra RF-elektronica om uw centrale deurvergrendeling op afstand te bedienen (vanaf €{SITE_CONFIG.prices.klapsleutel}). Keyless Entry en Keyless Go smart keys (zoals bij BMW, Mercedes en Volkswagen) vereisen cryptografische Eeprom- of Bench-programmering en liggen in het luxere segment (vanaf €{SITE_CONFIG.prices.smartKey}).
+            Een mechanische reservesleutel met transponderchip start uw auto en opent uw deuren handmatig; dit is de voordeligste optie (vanaf €{SITE_CONFIG.prices.transponder},-). Een klapsleutel met afstandsbediening heeft extra RF-elektronica om uw centrale deurvergrendeling op afstand te bedienen (vanaf €{SITE_CONFIG.prices.klapsleutel},-). Keyless Entry en Keyless Go smart keys (zoals bij BMW, Mercedes en Volkswagen) vereisen cryptografische Eeprom- of Bench-programmering en liggen in het luxere segment (vanaf €{SITE_CONFIG.prices.smartKey},-).
           </p>
           <h3>Kosten bij All Keys Lost (Alle Sleutels Kwijt) ten opzichte van Reservesleutel</h3>
           <p>

@@ -630,7 +630,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                     </tr>
                     <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
                       <td style={{ padding: '0.85rem', fontWeight: 600 }}>Sleepkosten bij sleutel kwijt</td>
-                      <td style={{ padding: '0.85rem' }}>€150 – €300 (wegslepen verplicht)</td>
+                      <td style={{ padding: '0.85rem' }}>€150,- – €300,- (wegslepen verplicht)</td>
                       <td style={{ padding: '0.85rem', fontWeight: 700, color: '#059669' }}>€0 — Wij komen naar uw auto</td>
                     </tr>
                     <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
@@ -667,7 +667,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <p>
                 Bent u uw <strong>{brand.name} sleutel kwijt</strong> maar heeft u nog één werkende sleutel, dan laten wij daar een
                 tweede van maken: de goedkoopste route. Heeft u <strong>geen enkele {brand.name} sleutel</strong> meer, dan lezen wij de sleutelcode
-                uit de auto en maken wij ter plaatse een nieuwe, vanaf €{SITE_CONFIG.prices.allKeysLost}. Is de sleutel alleen <strong>kapot</strong>,
+                uit de auto en maken wij ter plaatse een nieuwe, vanaf €{SITE_CONFIG.prices.allKeysLost},-. Is de sleutel alleen <strong>kapot</strong>,
                 kijk dan eerst naar{' '}
                 <Link href="/diensten/batterij-vervangen">een nieuwe batterij</Link>,{' '}
                 <Link href="/diensten/behuizing-vervangen">een nieuwe behuizing</Link> of{' '}

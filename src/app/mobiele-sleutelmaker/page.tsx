@@ -70,7 +70,7 @@ const faqItems = [
   },
   {
     q: 'Wat kost het om een mobiele sleutelmaker te laten komen?',
-    a: `Voorrijden zit bij de prijs in. Een auto schadevrij openen begint bij €${SITE_CONFIG.prices.unlock}, een sleutel bijmaken bij €${SITE_CONFIG.prices.transponder}, en heeft u geen enkele sleutel meer dan begint het bij €${SITE_CONFIG.prices.allKeysLost}. U krijgt de exacte prijs telefonisch voordat wij vertrekken; zegt u nee, dan betaalt u niets.`,
+    a: `Voorrijden zit bij de prijs in. Een auto schadevrij openen begint bij €${SITE_CONFIG.prices.unlock},-, een sleutel bijmaken bij €${SITE_CONFIG.prices.transponder},-, en heeft u geen enkele sleutel meer dan begint het bij €${SITE_CONFIG.prices.allKeysLost},-. U krijgt de exacte prijs telefonisch voordat wij vertrekken; zegt u nee, dan betaalt u niets.`,
   },
 ];
 
@@ -123,7 +123,7 @@ export default function MobieleSleutelmaker() {
         titleTop="Mobiele Sleutelmaker voor Auto’s"
         titleAccent="Geen Winkel — Wij Komen Naar U Toe"
         lead="Zoekt u een sleutelmaker of slotenmaker voor uw auto? Onze werkplaats zit in de bus: frezen, programmeren en schadevrij openen gebeuren bij uw auto, niet achter een toonbank."
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />}
         image={{
           src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',

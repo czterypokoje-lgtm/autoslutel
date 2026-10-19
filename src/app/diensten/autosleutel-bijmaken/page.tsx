@@ -95,7 +95,7 @@ export default function SleutelBijmakenPage() {
       {
         "@type": "Question",
         "name": "Is het goedkoper dan bij de dealer?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €125 tot €299. Bij \"alle sleutels kwijt\" rekenen we €299 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!)." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €125,- tot €299,-. Bij \"alle sleutels kwijt\" rekenen we €299,- tot €500,-. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!)." }
       },
       {
         "@type": "Question",
@@ -133,7 +133,7 @@ export default function SleutelBijmakenPage() {
   const trustItems = [
     '24/7 Beschikbaar',
     'Binnen 30 min in Utrecht',
-    `Vaste prijs vanaf €${SITE_CONFIG.prices.transponder}`,
+    `Vaste prijs vanaf €${SITE_CONFIG.prices.transponder},-`,
     'Vaste prijs vooraf',
     'Verzekerd & Gecertificeerd'
   ];
@@ -277,25 +277,25 @@ return (
                         <tr>
                           <td>Standaard sleutel (met transponder chip)</td>
                           <td>Oudere auto's, basis modellen</td>
-                          <td><strong>€125 - €249</strong></td>
+                          <td><strong>€125,- – €249,-</strong></td>
                           <td>15 min</td>
                         </tr>
                         <tr>
                           <td>Klapsleutel / Flip Key</td>
                           <td>VW, Toyota, Ford, Opel, etc.</td>
-                          <td><strong>€199 - €349</strong></td>
+                          <td><strong>€199,- – €349,-</strong></td>
                           <td>20-30 min</td>
                         </tr>
                         <tr>
                           <td>Smart Key / Keyless</td>
                           <td>Proximity sleutel, Push-to-start</td>
-                          <td><strong>€249 - €349</strong></td>
+                          <td><strong>€249,- – €349,-</strong></td>
                           <td>30-60 min</td>
                         </tr>
                         <tr>
                           <td>Alle sleutels kwijt (geen werkende sleutel)</td>
                           <td>Auto openen & sleutel inleren</td>
-                          <td><strong>Vanaf €299</strong></td>
+                          <td><strong>Vanaf €299,-</strong></td>
                           <td>45-60 min</td>
                         </tr>
                       </tbody>
@@ -303,7 +303,7 @@ return (
                   </div>
                   <ul className={styles.bulletList}>
                     <li>
-                      <strong>Wat kost een sleutel bijmaken?</strong> Een nieuwe reservesleutel kost bij ons tussen de €125 en €299, afhankelijk van het merk en of het een smart key is. Bent u alle sleutels kwijt? Dan liggen de kosten tussen de €299 en €500. Dit is altijd inclusief programmeren op locatie!
+                      <strong>Wat kost een sleutel bijmaken?</strong> Een nieuwe reservesleutel kost bij ons tussen de €125,- en €299,-, afhankelijk van het merk en of het een smart key is. Bent u alle sleutels kwijt? Dan liggen de kosten tussen de €299,- en €500,-. Dit is altijd inclusief programmeren op locatie!
                     </li>
                     <li>
                       <strong>Dealer vs. Slotenmaker:</strong> De dealer is gemiddeld 50% duurder dan Autosleutel24 voor exact dezelfde sleutel. Bovendien bespaart u bij ons op wegsleepkosten, want wij komen naar u toe (geen wegsleepkosten!). U ontvangt altijd <strong>gecertificeerde sleutels</strong> met 12 maanden garantie.
@@ -409,7 +409,7 @@ return (
                       <span className={styles.faqChevron}>+</span>
                     </summary>
                     <p className={styles.faqAnswer}>
-                      Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €125 tot €299. Bij "alle sleutels kwijt" rekenen we €299 tot €500. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!).
+                      Ja, aanzienlijk! Een dealer is gemiddeld 50% duurder. Voor een reservesleutel betaalt u bij ons €125,- tot €299,-. Bij "alle sleutels kwijt" rekenen we €299,- tot €500,-. Bij de dealer lopen deze kosten in de duizenden euro's, mede omdat ze vaak de hele slotenset willen vervangen en u verplicht bent de auto te laten wegslepen (bij ons heeft u géén wegsleepkosten!).
                     </p>
                   </details>
 

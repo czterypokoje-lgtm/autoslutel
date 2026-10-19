@@ -13,7 +13,7 @@ export type FaqItem = { q: string; a: string };
 export const FAQ_GLOBAL: FaqItem[] = [
   {
     q: 'Wat kost het gemiddeld om een autosleutel bij te laten maken in Nederland?',
-    a: `De exacte kosten voor het bijmaken van een autosleutel hangen sterk af van het merk, het model, het bouwjaar en het type sleutel (standaard sleutel, klapsleutel of geavanceerde keyless entry smart key). Bij de officiële autodealer betaalt u al snel tussen de €300 en €900, exclusief torenhoge wegsleepkosten als u al uw sleutels kwijt bent. Bij Autosleutel24 bent u gegarandeerd stukken voordeliger uit. Een standaard transpondersleutel bijmaken begint bij ons rond de €${SITE_CONFIG.prices.transponder}, terwijl een volledig ingeleerde smart key (inclusief behuizing en transponder programmeren op locatie) gemiddeld begint vanaf €${SITE_CONFIG.prices.smartKey}, afhankelijk van de complexiteit van de startonderbreker. Doordat wij geen duur pand of showrooms hebben en direct op locatie werken, profiteert u van groothandelsprijzen met dealer-niveau kwaliteit. Neem telefonisch of via WhatsApp contact met ons op voor een exacte en vrijblijvende prijsopgave voor uw specifieke voertuig.`,
+    a: `De exacte kosten voor het bijmaken van een autosleutel hangen sterk af van het merk, het model, het bouwjaar en het type sleutel (standaard sleutel, klapsleutel of geavanceerde keyless entry smart key). Bij de officiële autodealer betaalt u al snel tussen de €300,- en €900,-, exclusief torenhoge wegsleepkosten als u al uw sleutels kwijt bent. Bij Autosleutel24 bent u gegarandeerd stukken voordeliger uit. Een standaard transpondersleutel bijmaken begint bij ons rond de €${SITE_CONFIG.prices.transponder},-, terwijl een volledig ingeleerde smart key (inclusief behuizing en transponder programmeren op locatie) gemiddeld begint vanaf €${SITE_CONFIG.prices.smartKey},-, afhankelijk van de complexiteit van de startonderbreker. Doordat wij geen duur pand of showrooms hebben en direct op locatie werken, profiteert u van groothandelsprijzen met dealer-niveau kwaliteit. Neem telefonisch of via WhatsApp contact met ons op voor een exacte en vrijblijvende prijsopgave voor uw specifieke voertuig.`,
   },
   {
     q: 'Hoe snel kunt u bij mij zijn?',
@@ -77,7 +77,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Kosten voor het bijmaken van een autosleutel zonder reserve?',
-    a: `Het bijmaken van een autosleutel zonder originele reserve (All Keys Lost) kost meer dan een simpele kopie, omdat we het slot moeten decoderen. De kosten starten vanaf €${SITE_CONFIG.prices.allKeysLost} voor mechanische sleutels en kunnen oplopen voor moderne smart keys. Bij Autosleutel24 betaalt u echter altijd een vaste, transparante prijs die tot wel 50% lager ligt dan bij de autodealer, zonder extra sleepkosten.`,
+    a: `Het bijmaken van een autosleutel zonder originele reserve (All Keys Lost) kost meer dan een simpele kopie, omdat we het slot moeten decoderen. De kosten starten vanaf €${SITE_CONFIG.prices.allKeysLost},- voor mechanische sleutels en kunnen oplopen voor moderne smart keys. Bij Autosleutel24 betaalt u echter altijd een vaste, transparante prijs die tot wel 50% lager ligt dan bij de autodealer, zonder extra sleepkosten.`,
   },
   {
     q: 'Kan een autosleutel met afstandsbediening zonder originele sleutel worden gemaakt?',
@@ -117,7 +117,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Autosleutel kwijt, wat kost het vervangen door een universele sleutel?',
-    a: `Een volledig "universele" autosleutel bestaat niet voor moderne auto's, omdat elke auto een unieke cryptografische startonderbreker heeft. Wel gebruiken wij hoogwaardige aftermarket (OEM-kwaliteit) sleutels die we specifiek voor uw auto programmeren. Dit kost, afhankelijk van het model en type (transponder of smart key), vanaf €${SITE_CONFIG.prices.allKeysLost} in een situatie waarbij alle sleutels kwijt zijn.`,
+    a: `Een volledig "universele" autosleutel bestaat niet voor moderne auto's, omdat elke auto een unieke cryptografische startonderbreker heeft. Wel gebruiken wij hoogwaardige aftermarket (OEM-kwaliteit) sleutels die we specifiek voor uw auto programmeren. Dit kost, afhankelijk van het model en type (transponder of smart key), vanaf €${SITE_CONFIG.prices.allKeysLost},- in een situatie waarbij alle sleutels kwijt zijn.`,
   },
   {
     q: 'Hoelang duurt het bijmaken van een autosleutel?',
@@ -133,7 +133,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Autosleutel bijmaken kosten vergelijken in Nederland',
-    a: `Wanneer u de kosten voor het bijmaken van een autosleutel vergelijkt in Nederland, ziet u grote verschillen. Autodealers rekenen vaak tussen de €250 en €600 inclusief programmeerkosten en wachttijden. Onafhankelijke mobiele specialisten zoals Autosleutel24 bieden dezelfde OEM-kwaliteit sleutels aan vanaf €${SITE_CONFIG.prices.transponder} tot €${SITE_CONFIG.prices.smartKey} (voor smart keys), inclusief frezen en inleren op uw locatie. U bespaart hierdoor tot wel 50%.`,
+    a: `Wanneer u de kosten voor het bijmaken van een autosleutel vergelijkt in Nederland, ziet u grote verschillen. Autodealers rekenen vaak tussen de €250,- en €600,- inclusief programmeerkosten en wachttijden. Onafhankelijke mobiele specialisten zoals Autosleutel24 bieden dezelfde OEM-kwaliteit sleutels aan vanaf €${SITE_CONFIG.prices.transponder},- tot €${SITE_CONFIG.prices.smartKey},- (voor smart keys), inclusief frezen en inleren op uw locatie. U bespaart hierdoor tot wel 50%.`,
   },
   {
     q: 'Waar kan ik snel een autosleutel bijmaken in mijn buurt?',
@@ -185,7 +185,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Hoeveel kost het om een reservesleutel te bestellen?',
-    a: `De kosten voor een nieuwe autosleutel (reservesleutel) variëren van €${SITE_CONFIG.prices.transponder} voor een standaard transpondersleutel tot €${SITE_CONFIG.prices.smartKey} voor geavanceerde smart keys. Bestelt u deze bij een dealer, dan vallen de kosten vaak twee keer zo hoog uit door administratie- en programmeerkosten. Bij Autosleutel24 betaalt u een transparante all-in prijs.`,
+    a: `De kosten voor een nieuwe autosleutel (reservesleutel) variëren van €${SITE_CONFIG.prices.transponder},- voor een standaard transpondersleutel tot €${SITE_CONFIG.prices.smartKey},- voor geavanceerde smart keys. Bestelt u deze bij een dealer, dan vallen de kosten vaak twee keer zo hoog uit door administratie- en programmeerkosten. Bij Autosleutel24 betaalt u een transparante all-in prijs.`,
   },
   {
     q: 'Wat is de beste plek om een reservesleutel te laten bijmaken?',
@@ -233,7 +233,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Wat kost een auto slotenmaker voor het openen van een deur?',
-    a: `De kosten voor een auto slotenmaker voor het openen van uw deur zonder schade starten doorgaans vanaf €${SITE_CONFIG.prices.unlock}, afhankelijk van uw locatie, het tijdstip (dag/nacht) en het automerk. Bij Autosleutel24 hanteren wij vaste en transparante tarieven voor noodopeningen, zodat u nooit voor verrassingen staat. Neem contact op voor een directe prijsopgave.`,
+    a: `De kosten voor een auto slotenmaker voor het openen van uw deur zonder schade starten doorgaans vanaf €${SITE_CONFIG.prices.unlock},-, afhankelijk van uw locatie, het tijdstip (dag/nacht) en het automerk. Bij Autosleutel24 hanteren wij vaste en transparante tarieven voor noodopeningen, zodat u nooit voor verrassingen staat. Neem contact op voor een directe prijsopgave.`,
   },
   {
     q: 'Welke 24-uurs auto slotenmaker heeft de beste recensies?',
@@ -265,7 +265,7 @@ export const FAQ_AUTOSLEUTEL_BIJMAKEN: FaqItem[] = [
   },
   {
     q: 'Hoe duur is een reservesleutel laten bijmaken?',
-    a: `Prijzen starten vanaf €${SITE_CONFIG.prices.transponder} voor eenvoudige transponder sleutels. Smart keys en keyless sleutels kosten vanaf €${SITE_CONFIG.prices.smartKey}. Een vaste prijs wordt altijd vooraf gecommuniceerd. Bel voor een gratis offerte: ${SITE_CONFIG.phone}.`,
+    a: `Prijzen starten vanaf €${SITE_CONFIG.prices.transponder},- voor eenvoudige transponder sleutels. Smart keys en keyless sleutels kosten vanaf €${SITE_CONFIG.prices.smartKey},-. Een vaste prijs wordt altijd vooraf gecommuniceerd. Bel voor een gratis offerte: ${SITE_CONFIG.phone}.`,
   },
 ];
 
@@ -287,11 +287,11 @@ export const FAQ_TRANSPONDER: FaqItem[] = [
 export const FAQ_SMART_KEY: FaqItem[] = [
   {
     q: 'Wat kost een Smart Key bijmaken?',
-    a: 'Smart keys kosten meer dan gewone sleutels vanwege de complexere electronica en de programmeerprocessen. Prijzen: €249–€349 afhankelijk van merk en model. BMW Smart Keys zijn gemiddeld €249, Mercedes €279, VW/Audi €249.',
+    a: 'Smart keys kosten meer dan gewone sleutels vanwege de complexere electronica en de programmeerprocessen. Prijzen: €249,- – €349,- afhankelijk van merk en model. BMW Smart Keys zijn gemiddeld €249,-, Mercedes €279,-, VW/Audi €249,-.',
   },
   {
     q: 'Hoe lang is de batterij van een Smart Key?',
-    a: 'Gemiddeld 1–3 jaar bij normaal gebruik. Wij vervangen ook de batterij in uw Smart Key. Kosten: €15–€25 voor de batterijwissel inclusief functietest.',
+    a: 'Gemiddeld 1–3 jaar bij normaal gebruik. Wij vervangen ook de batterij in uw Smart Key. Kosten: €15,- – €25,- voor de batterijwissel inclusief functietest.',
   },
 ];
 
@@ -337,7 +337,7 @@ export function getFaqForCity(cityName: string, arrival?: string | null): FaqIte
   return [
     {
       q: `Autosleutel bijmaken in ${cityName}: wat zijn de exacte kosten?`,
-      a: `De kosten voor een autosleutel bijmaken in ${cityName} bedragen vanaf €${SITE_CONFIG.prices.transponder} voor een standaard transpondersleutel. Voor een autosleutel met afstandsbediening of smart key (keyless entry) starten de tarieven vanaf €${SITE_CONFIG.prices.smartKey}. Onze prijzen zijn altijd inclusief het frezen van de sleutelbaard en het inleren of programmeren van de transponder op locatie in ${cityName}. Omdat wij een mobiele autosleutelmaker zijn, betaalt u geen sleepkosten en bent u tot 50% goedkoper uit dan bij de officiële merkdealer.`,
+      a: `De kosten voor een autosleutel bijmaken in ${cityName} bedragen vanaf €${SITE_CONFIG.prices.transponder},- voor een standaard transpondersleutel. Voor een autosleutel met afstandsbediening of smart key (keyless entry) starten de tarieven vanaf €${SITE_CONFIG.prices.smartKey},-. Onze prijzen zijn altijd inclusief het frezen van de sleutelbaard en het inleren of programmeren van de transponder op locatie in ${cityName}. Omdat wij een mobiele autosleutelmaker zijn, betaalt u geen sleepkosten en bent u tot 50% goedkoper uit dan bij de officiële merkdealer.`,
     },
     {
       q: `Autosleutel kwijt in ${cityName}, wat is de snelste oplossing?`,
@@ -367,7 +367,7 @@ export function getFaqForBrand(brandName: string): FaqItem[] {
   return [
     {
       q: `Wat kost een nieuwe ${brandName} autosleutel bijmaken?`,
-      a: `De kosten voor het bijmaken van een ${brandName} autosleutel variëren per model en type sleutel. Een standaard ${brandName} transpondersleutel begint bij Autosleutel24 vanaf €${SITE_CONFIG.prices.transponder}. Heeft u een ${brandName} klapsleutel of smart key (keyless entry) nodig? Dan starten de prijzen vanaf €${SITE_CONFIG.prices.smartKey}. Wij zijn hiermee tot 50% goedkoper dan de officiële ${brandName} dealer, zonder extra wegsleepkosten. U krijgt altijd vooraf een vaste en transparante prijs.`,
+      a: `De kosten voor het bijmaken van een ${brandName} autosleutel variëren per model en type sleutel. Een standaard ${brandName} transpondersleutel begint bij Autosleutel24 vanaf €${SITE_CONFIG.prices.transponder},-. Heeft u een ${brandName} klapsleutel of smart key (keyless entry) nodig? Dan starten de prijzen vanaf €${SITE_CONFIG.prices.smartKey},-. Wij zijn hiermee tot 50% goedkoper dan de officiële ${brandName} dealer, zonder extra wegsleepkosten. U krijgt altijd vooraf een vaste en transparante prijs.`,
     },
     {
       q: `Mijn ${brandName} autosleutel kwijt, wat moet ik doen?`,

@@ -53,7 +53,6 @@ export const SITE_CONFIG = {
     allKeysLost: '299',
     casing: '35',
     ignition: '299',
-    exVatDisclaimer: 'excl. btw',
   },
 
   hours: 'Maandag t/m Zondag 00:00–24:00',

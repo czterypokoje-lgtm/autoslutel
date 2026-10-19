@@ -84,7 +84,7 @@ export default function AutoSlotenmakerPage() {
     },
     {
       q: 'Wat kost een auto slotenmaker voor het openen van mijn auto?',
-      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting vanaf €149 (exclusief btw). Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
+      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting vanaf €149,-. Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
     },
     {
       q: 'Kan een auto slotenmaker ook een nieuwe sleutel maken als ik alles kwijt ben?',
@@ -256,32 +256,32 @@ export default function AutoSlotenmakerPage() {
                         <tr>
                           <td>Autodeur schadevrij openen</td>
                           <td>Bij buitensluiting, sleutel in auto</td>
-                          <td><strong>€149</strong></td>
+                          <td><strong>€149,-</strong></td>
                           <td>10-15 min</td>
                         </tr>
                         <tr>
                           <td>Nieuwe reservesleutel maken</td>
                           <td>Inclusief programmeren transponder</td>
-                          <td><strong>€{SITE_CONFIG.prices.transponder} - €299</strong></td>
+                          <td><strong>€{SITE_CONFIG.prices.transponder},- – €299,-</strong></td>
                           <td>20-30 min</td>
                         </tr>
                         <tr>
                           <td>Alle sleutels kwijt (All Keys Lost)</td>
                           <td>Genereren van een nieuwe sleutelbaard</td>
-                          <td><strong>€299 - €500</strong></td>
+                          <td><strong>€299,- – €500,-</strong></td>
                           <td>30-60 min</td>
                         </tr>
                         <tr>
                           <td>Contactslot / Deurslot reparatie</td>
                           <td>Demonteren, reviseren en reinigen</td>
-                          <td><strong>€299</strong></td>
+                          <td><strong>€299,-</strong></td>
                           <td>45 min</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                   <div className={styles.callout}>
-                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken, krijgt u bij ons vooraf een vaste prijsopgave exclusief btw. 
+                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken, krijgt u bij ons vooraf een vaste prijsopgave. 
                     <br/><br/>
                     <strong>Goed om te weten:</strong> Officiële autodealers zijn vaak <strong>50% duurder</strong>. Daarnaast bespaart u bij ons op dure wegsleepkosten, want <strong>wij rekenen geen sleepkosten</strong> en helpen u direct ter plaatse!
                   </div>

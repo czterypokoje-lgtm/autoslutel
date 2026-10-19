@@ -17,7 +17,7 @@ const defaultFaqs = [
   },
   {
     question: 'Autosleutel kwijt, wat zijn de kosten voor een nieuwe sleutel?',
-    answer: `Als u uw autosleutel kwijt bent, liggen de kosten voor een nieuwe sleutel bij Autosleutel24 gemiddeld tussen de €${SITE_CONFIG.prices.unlock} en €${SITE_CONFIG.prices.smartKey}, inclusief frezen, inleren en programmeren op locatie. Dit is aanzienlijk goedkoper dan de dealer, waar de tarieven voor een vergelijkbare sleutel al snel tussen de €300 en €900 liggen (exclusief wegsleepkosten). U ontvangt bij ons altijd vooraf een vaste prijsopgave zonder verborgen kosten.`
+    answer: `Als u uw autosleutel kwijt bent, liggen de kosten voor een nieuwe sleutel bij Autosleutel24 gemiddeld tussen de €${SITE_CONFIG.prices.unlock},- en €${SITE_CONFIG.prices.smartKey},-, inclusief frezen, inleren en programmeren op locatie. Dit is aanzienlijk goedkoper dan de dealer, waar de tarieven voor een vergelijkbare sleutel al snel tussen de €300,- en €900,- liggen (exclusief wegsleepkosten). U ontvangt bij ons altijd vooraf een vaste prijsopgave zonder verborgen kosten.`
   },
   {
     question: 'Welke slotenmaker in Nederland kan een autosleutel zonder originele sleutel maken?',

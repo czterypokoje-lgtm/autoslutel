@@ -63,7 +63,7 @@ const faqItems = [
   },
   {
     q: 'Wat kost een autosleutel kopiëren en programmeren?',
-    a: `Een transpondersleutel frezen en inleren begint bij €${SITE_CONFIG.prices.transponder}. Een klapsleutel met afstandsbediening vanaf €${SITE_CONFIG.prices.klapsleutel}, een smart key vanaf €${SITE_CONFIG.prices.smartKey}. Heeft u geen enkele werkende sleutel meer, dan moet de code uit de auto gelezen worden en begint het bij €${SITE_CONFIG.prices.allKeysLost}.`,
+    a: `Een transpondersleutel frezen en inleren begint bij €${SITE_CONFIG.prices.transponder},-. Een klapsleutel met afstandsbediening vanaf €${SITE_CONFIG.prices.klapsleutel},-, een smart key vanaf €${SITE_CONFIG.prices.smartKey},-. Heeft u geen enkele werkende sleutel meer, dan moet de code uit de auto gelezen worden en begint het bij €${SITE_CONFIG.prices.allKeysLost},-.`,
   },
   {
     q: 'Kan ik online een sleutel kopen en die laten programmeren?',
@@ -100,7 +100,7 @@ export default function AutosleutelKopieren() {
         titleTop="Autosleutel Kopiëren?"
         titleAccent="De Baard Is het Makkelijke Deel"
         lead="Een autosleutel kopiëren klinkt als het naslijpen van een stuk metaal. Bij een moderne auto is dat hooguit de helft van het werk — de andere helft zit in een chip ter grootte van een rijstkorrel."
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />}
         image={{
           src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
           alt: 'Sleutelwand met honderden sleutelbaarden en transponderbehuizingen per automerk',
@@ -162,28 +162,28 @@ export default function AutosleutelKopieren() {
                 <tr>
                   <td style={{ padding: '0.9rem' }}>Gewone tweede sleutel die moet starten</td>
                   <td style={{ padding: '0.9rem' }}>Frezen + transponder inleren</td>
-                  <td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.transponder}</strong></td>
+                  <td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.transponder},-</strong></td>
                 </tr>
                 <tr>
                   <td style={{ padding: '0.9rem' }}>Klapsleutel met afstandsbediening</td>
                   <td style={{ padding: '0.9rem' }}>Frezen + chip + afstandsbediening koppelen</td>
-                  <td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.klapsleutel}</strong></td>
+                  <td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.klapsleutel},-</strong></td>
                 </tr>
                 <tr>
                   <td style={{ padding: '0.9rem' }}>Smart key / keyless</td>
                   <td style={{ padding: '0.9rem' }}>Programmeren in het keyless systeem</td>
-                  <td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.smartKey}</strong></td>
+                  <td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.smartKey},-</strong></td>
                 </tr>
                 <tr>
                   <td style={{ padding: '0.9rem' }}>Geen enkele werkende sleutel meer</td>
                   <td style={{ padding: '0.9rem' }}>Sleutelcode uit de auto lezen</td>
-                  <td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.allKeysLost}</strong></td>
+                  <td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.allKeysLost},-</strong></td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
-            Bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer} en afhankelijk van merk, model en
+            Bedragen zijn vanafprijzen en afhankelijk van merk, model en
             bouwjaar. U hoort de exacte prijs telefonisch voordat wij vertrekken.{' '}
             <Link href="/prijzen" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               Bekijk het volledige prijsoverzicht →

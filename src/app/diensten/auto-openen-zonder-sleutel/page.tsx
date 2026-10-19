@@ -37,7 +37,7 @@ const schema = {
     "priceCurrency": "EUR",
     "priceSpecification": {
       "@type": "PriceSpecification",
-      "description": "All-in prijs exclusief btw"
+      "description": "All-in vanafprijs"
     }
   }
 };
@@ -57,7 +57,7 @@ const faqItems = [
   },
   {
     q: "Wat zijn de kosten voor het openen van mijn auto (buitensluiting)?",
-    a: "Bij Autosleutel24 betaalt u een vaste all-in prijs vanaf €149 voor het schadevrij openen van uw autodeur bij een buitensluiting. U ontvangt de prijsopgave altijd vóór wij uitrijden — geen verborgen kosten achteraf."
+    a: "Bij Autosleutel24 betaalt u een vaste all-in prijs vanaf €149,- voor het schadevrij openen van uw autodeur bij een buitensluiting. U ontvangt de prijsopgave altijd vóór wij uitrijden — geen verborgen kosten achteraf."
   },
   {
     q: "Welke auto merken kunnen worden geopend zonder sleutel?",
@@ -271,25 +271,25 @@ export default function AutoOpenenZonderSleutelPage() {
                         <tr>
                           <td>Autodeur / kofferbak schadevrij openen</td>
                           <td>Overdag (07:00–22:00)</td>
-                          <td><strong>€149</strong></td>
+                          <td><strong>€149,-</strong></td>
                           <td>10–20 min</td>
                         </tr>
                         <tr>
                           <td>Autodeur / kofferbak schadevrij openen</td>
                           <td>Nacht &amp; weekend</td>
-                          <td><strong>€115</strong></td>
+                          <td><strong>€115,-</strong></td>
                           <td>10–20 min</td>
                         </tr>
                         <tr>
                           <td>Openen + nieuwe reservesleutel programmeren</td>
                           <td>Alle tijden</td>
-                          <td><strong>€199</strong></td>
+                          <td><strong>€199,-</strong></td>
                           <td>30-60 min</td>
                         </tr>
                         <tr>
                           <td>Openen bij deadlock systeem (BMW, Audi, VW)</td>
                           <td>Alle tijden</td>
-                          <td><strong>€125</strong></td>
+                          <td><strong>€125,-</strong></td>
                           <td>20–30 min</td>
                         </tr>
                       </tbody>

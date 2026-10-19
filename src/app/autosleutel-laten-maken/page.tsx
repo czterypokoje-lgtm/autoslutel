@@ -57,7 +57,7 @@ const faqItems = [
   },
   {
     q: 'Kan ik een autosleutel laten maken als ik alle sleutels kwijt ben?',
-    a: `Ja. Zonder werkende sleutel moet de sleutelcode uit de auto worden gelezen en een nieuwe sleutel op die code worden gefreesd en ingeleerd. Dat is meer werk dan een tweede sleutel bij een werkende, daarom begint de prijs dan bij €${SITE_CONFIG.prices.allKeysLost}. Alles staat op de pagina autosleutel kwijt.`,
+    a: `Ja. Zonder werkende sleutel moet de sleutelcode uit de auto worden gelezen en een nieuwe sleutel op die code worden gefreesd en ingeleerd. Dat is meer werk dan een tweede sleutel bij een werkende, daarom begint de prijs dan bij €${SITE_CONFIG.prices.allKeysLost},-. Alles staat op de pagina autosleutel kwijt.`,
   },
   {
     q: 'Moet mijn auto naar een garage om een sleutel te laten maken?',
@@ -69,7 +69,7 @@ const faqItems = [
   },
   {
     q: 'Wat kost het om een autosleutel te laten maken?',
-    a: `Een transpondersleutel begint bij €${SITE_CONFIG.prices.transponder}, een klapsleutel met afstandsbediening bij €${SITE_CONFIG.prices.klapsleutel}, een smart key bij €${SITE_CONFIG.prices.smartKey}. U hoort de exacte prijs telefonisch voordat wij vertrekken. Gemiddeld is dat 30-50% goedkoper dan de officiële merkdealer.`,
+    a: `Een transpondersleutel begint bij €${SITE_CONFIG.prices.transponder},-, een klapsleutel met afstandsbediening bij €${SITE_CONFIG.prices.klapsleutel},-, een smart key bij €${SITE_CONFIG.prices.smartKey},-. U hoort de exacte prijs telefonisch voordat wij vertrekken. Gemiddeld is dat 30-50% goedkoper dan de officiële merkdealer.`,
   },
 ];
 
@@ -104,7 +104,7 @@ export default function AutosleutelLatenMaken() {
         titleTop="Autosleutel Laten Maken?"
         titleAccent="Kies de Route die bij Uw Situatie Past"
         lead="Een nieuwe autosleutel laat u maken bij de dealer, bij een slotenmaker of bij een specialist die naar u toe komt. Het verschil zit in tijd, prijs en of uw auto ergens naartoe moet."
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />}
         image={{
           src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
           alt: 'Sleutelwand met autosleutels per merk in de servicebus van Autosleutel24',
@@ -177,15 +177,15 @@ export default function AutosleutelLatenMaken() {
                 </tr>
               </thead>
               <tbody>
-                <tr><td style={{ padding: '0.9rem' }}>Transpondersleutel</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.transponder}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Klapsleutel met afstandsbediening</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.klapsleutel}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Smart key / keyless</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.smartKey}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Alle sleutels kwijt</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.allKeysLost}</strong></td></tr>
+                <tr><td style={{ padding: '0.9rem' }}>Transpondersleutel</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.transponder},-</strong></td></tr>
+                <tr><td style={{ padding: '0.9rem' }}>Klapsleutel met afstandsbediening</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.klapsleutel},-</strong></td></tr>
+                <tr><td style={{ padding: '0.9rem' }}>Smart key / keyless</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.smartKey},-</strong></td></tr>
+                <tr><td style={{ padding: '0.9rem' }}>Alle sleutels kwijt</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.allKeysLost},-</strong></td></tr>
               </tbody>
             </table>
           </div>
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
-            Bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer} en afhankelijk van merk, model en
+            Bedragen zijn vanafprijzen en afhankelijk van merk, model en
             bouwjaar. U hoort de exacte prijs telefonisch voordat wij vertrekken.{' '}
             <Link href="/prijzen" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
               Bekijk het volledige prijsoverzicht →

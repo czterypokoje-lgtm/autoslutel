@@ -135,7 +135,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
     // No folder for this service yet.
   }
 
-  const pricingHeaders = ['Dienst / Sleuteltype', 'Kenmerken', 'Onze Tarieven (excl. btw)', 'Dealer Prijs'];
+  const pricingHeaders = ['Dienst / Sleuteltype', 'Kenmerken', 'Onze tarieven', 'Dealer Prijs'];
 
   /*
    * A service with its own price rows shows only those. The generic table
@@ -144,11 +144,11 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
    * behuizingen, which is not what the visitor came for.
    */
   const genericPricingRows = [
-    ['Standaard autosleutel (mechanisch)', 'Zonder afstandsbediening, incl. transponder chip', `Vanaf € ${SITE_CONFIG.prices.transponder},-`, '€ 400 - € 800 (1-2 wk levertijd)'],
-    ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € ${SITE_CONFIG.prices.remote},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
-    ['Smart Key / Keyless Entry', 'Proximity start, volledig geprogrammeerd', `Vanaf € ${SITE_CONFIG.prices.smartKey},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
+    ['Standaard autosleutel (mechanisch)', 'Zonder afstandsbediening, incl. transponder chip', `Vanaf € ${SITE_CONFIG.prices.transponder},-`, '€ 400,- – € 800,- (1-2 wk levertijd)'],
+    ['Autosleutel met afstandsbediening', 'Originele kwaliteit, incl. inleren & slijpen', `Vanaf € ${SITE_CONFIG.prices.remote},-`, '€ 500,- – € 1500,- (1-2 wk levertijd)'],
+    ['Smart Key / Keyless Entry', 'Proximity start, volledig geprogrammeerd', `Vanaf € ${SITE_CONFIG.prices.smartKey},-`, '€ 500,- – € 1500,- (1-2 wk levertijd)'],
     ['Sleutel behuizing / batterij vervangen', 'Nieuwe behuizing, micro-switches & batterij', `Vanaf € ${SITE_CONFIG.prices.casing},-`, 'Vaak hele sleutel (€ 200+)'],
-    ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, '€ 500 - € 1500 (1-2 wk levertijd)'],
+    ['All Keys Lost (alle sleutels kwijt)', 'Gespecialiseerde noodprogrammering op locatie', `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`, '€ 500,- – € 1500,- (1-2 wk levertijd)'],
     ['Contactslot reparatie / vervanging', 'Reviseren of nieuw slot incl. sleutels', `Vanaf € ${SITE_CONFIG.prices.ignition},-`, 'Vaak hele stuurkolom (€ 600+)']
   ];
 
@@ -600,7 +600,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   </p>
                   <h3>Kosten Besparen t.o.v. de Dealer & 12 Maanden Garantie</h3>
                   <p>
-                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €{SITE_CONFIG.prices.transponder} tot €299. Bij "alle sleutels kwijt" betaalt u €299 tot €500 (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
+                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €{SITE_CONFIG.prices.transponder},- tot €299,-. Bij "alle sleutels kwijt" betaalt u €299,- tot €500,- (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
                   </p>
                 </details>
 

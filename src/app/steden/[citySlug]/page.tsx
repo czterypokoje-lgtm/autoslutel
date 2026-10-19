@@ -627,8 +627,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 <tbody>
                   <tr>
                     <td>Prijs</td>
-                    <td>€300 – €900</td>
-                    <td className={styles.tableHighlight}>€150 – €500</td>
+                    <td>€300,- – €900,-</td>
+                    <td className={styles.tableHighlight}>€150,- – €500,-</td>
                   </tr>
                   <tr>
                     <td>Wachttijd</td>
@@ -637,7 +637,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   </tr>
                   <tr>
                     <td>Sleepkosten</td>
-                    <td>€100 – €150</td>
+                    <td>€100,- – €150,-</td>
                     <td className={styles.tableHighlight}>Geen (wij komen naar u)</td>
                   </tr>
                   <tr>

@@ -57,7 +57,7 @@ const faqItems = [
   },
   {
     q: 'Wat kost het als ik verder weg woon?',
-    a: `Voorrijden zit bij de prijs in. Een sleutel bijmaken begint bij €${SITE_CONFIG.prices.transponder} en u hoort de exacte prijs telefonisch voordat wij vertrekken. Er komen achteraf geen kilometers bij.`,
+    a: `Voorrijden zit bij de prijs in. Een sleutel bijmaken begint bij €${SITE_CONFIG.prices.transponder},- en u hoort de exacte prijs telefonisch voordat wij vertrekken. Er komen achteraf geen kilometers bij.`,
   },
   {
     q: 'Hoe snel kan iemand er zijn?',
@@ -98,7 +98,7 @@ export default function InDeBuurt() {
         titleTop="Autosleutel Bijmaken in de Buurt?"
         titleAccent="Er Hoeft Niemand Ergens Heen — Behalve Wij"
         lead="Wij hebben geen winkel waar u naartoe rijdt. De werkplaats zit in de bus en die komt naar uw auto, waar die ook staat."
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />}
         image={{
           src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 met servicebus op locatie',

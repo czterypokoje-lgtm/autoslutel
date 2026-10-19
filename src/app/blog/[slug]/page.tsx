@@ -106,7 +106,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           name: 'Hoeveel kost het om een autosleutel bij te maken zonder origineel?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'De kosten variëren van €180 voor standaard transponder sleutels tot €350 tot €650 voor complexe smart keys (bijvoorbeeld BMW, Mercedes, Tesla). Dit is inclusief programmeren en slijpen ter plaatse.',
+            text: 'De kosten variëren van €180,- voor standaard transponder sleutels tot €350,- tot €650,- voor complexe smart keys (bijvoorbeeld BMW, Mercedes, Tesla). Dit is inclusief programmeren en slijpen ter plaatse.',
           },
         },
         {

@@ -99,10 +99,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Autodeur Openen Zonder Sleutel — Mobiel & Schadevrij ter Plaatse',
     intro: 'Buitengesloten of sleutel in de auto? Wij openen uw autodeur 100% schadevrij, gemiddeld binnen 30 min ter plaatse.',
     system: 'Lishi Lock Decoders / Over-the-shoulder tools',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock},-`,
     duration: '15–30 minuten',
     directAnswer:
-      'Een auto openen zonder sleutel kost bij Autosleutel24 vanaf €149 en duurt gemiddeld 15 tot 30 minuten. Wij openen 100% schadevrij met professioneel gereedschap — het slot, de ruit en de elektronica blijven intact. Een monteur is doorgaans binnen 30 tot 60 minuten bij u ter plaatse, 24 uur per dag.',
+      'Een auto openen zonder sleutel kost bij Autosleutel24 vanaf €149,- en duurt gemiddeld 15 tot 30 minuten. Wij openen 100% schadevrij met professioneel gereedschap — het slot, de ruit en de elektronica blijven intact. Een monteur is doorgaans binnen 30 tot 60 minuten bij u ter plaatse, 24 uur per dag.',
     steps: [
       'U neemt contact op via telefoon of WhatsApp en geeft uw locatie en automodel door',
       'Onze mobiele specialist rijdt direct naar uw locatie',
@@ -125,10 +125,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Sleutel in Auto Laten Liggen? Binnen 30–60 Min Ter Plaatse, Schadevrij Geopend',
     intro: 'Sleutel in de auto laten liggen? Geen paniek — wij openen uw auto ter plaatse zonder enige schade.',
     system: 'Lishi HU66, HU92, HU101, HU162T Decoders',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock},-`,
     duration: '15–30 minuten',
     directAnswer:
-      'Ligt uw sleutel in de auto en zit de deur op slot? Wij openen de auto zonder de sleutel te beschadigen, vanaf €149 en meestal binnen 15 tot 30 minuten ter plaatse. Belangrijk: probeer het niet zelf met een draad of wig — bij moderne auto\'s ligt de zijairbag in het portier, en schade daaraan kost al snel meer dan de opening zelf.',
+      'Ligt uw sleutel in de auto en zit de deur op slot? Wij openen de auto zonder de sleutel te beschadigen, vanaf €149,- en meestal binnen 15 tot 30 minuten ter plaatse. Belangrijk: probeer het niet zelf met een draad of wig — bij moderne auto\'s ligt de zijairbag in het portier, en schade daaraan kost al snel meer dan de opening zelf.',
     steps: [
       'Bel direct en leg de situatie uit',
       'Onze mobiele bus komt direct naar uw locatie in Utrecht of Amsterdam',
@@ -152,10 +152,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Autodeur Dichtgevallen met Sleutel erin? Binnen 30–60 Min Ter Plaatse',
     intro: 'Autodeur dichtgevallen? Onze mobiele slotenmakers zijn 24/7 stand-by en openen uw auto schadevrij.',
     system: 'Professional Locksmith Bypass Tools',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock},-`,
     duration: '15–30 minuten',
     directAnswer:
-      'Een dichtgevallen autodeur openen wij vanaf €149, gemiddeld binnen 15 tot 30 minuten. Dit gebeurt meestal door de auto-relock functie: veel auto\'s vergrendelen zichzelf automatisch als de sleutel een tijd buiten bereik van de antenne blijft. Uw bestaande sleutels blijven na de opening gewoon werken — het slot hoeft niet vervangen te worden.',
+      'Een dichtgevallen autodeur openen wij vanaf €149,-, gemiddeld binnen 15 tot 30 minuten. Dit gebeurt meestal door de auto-relock functie: veel auto\'s vergrendelen zichzelf automatisch als de sleutel een tijd buiten bereik van de antenne blijft. Uw bestaande sleutels blijven na de opening gewoon werken — het slot hoeft niet vervangen te worden.',
     steps: [
       'Bel ons storingsnummer voor directe hulp',
       'We sturen de dichtstbijzijnde monteur naar u toe',
@@ -179,10 +179,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Kofferbak Openen Zonder Sleutel — Binnen 30–60 Min Ter Plaatse',
     intro: 'Sleutel in de kofferbak en auto op slot? Wij openen uw kofferbak 100% schadevrij — ook bij deadlock-systemen.',
     system: 'Lishi Laser Picks & OBD electronic triggers',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock},-`,
     duration: '20–45 minuten',
     directAnswer:
-      'Een geblokkeerde kofferbak openen wij vanaf €149, meestal binnen 20 tot 40 minuten. De kofferbak is technisch lastiger dan een portier: er zit vaak geen mechanisch slot meer op en de vergrendeling loopt volledig via de carrosseriemodule. Wij openen via de achterbank, de noodontgrendeling of het elektronische circuit — zonder de bekleding of het slot te beschadigen.',
+      'Een geblokkeerde kofferbak openen wij vanaf €149,-, meestal binnen 20 tot 40 minuten. De kofferbak is technisch lastiger dan een portier: er zit vaak geen mechanisch slot meer op en de vergrendeling loopt volledig via de carrosseriemodule. Wij openen via de achterbank, de noodontgrendeling of het elektronische circuit — zonder de bekleding of het slot te beschadigen.',
     steps: [
       'U belt ons en meldt dat de sleutel in de kofferbak ligt',
       'Onze specialist komt ter plaatse en inspecteert het voertuig',
@@ -206,10 +206,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Autosleutel Afgebroken in Slot of Contactslot? — Wij Lossen Het Op',
     intro: 'Sleutel afgebroken in het slot? Niet zelf peuteren — wij verwijderen het schadevrij en snijden direct een nieuwe sleutel op locatie.',
     system: 'Professional Key Extractors & CNC Computerized Key Cutters',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock},-`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een afgebroken sleutel uit het slot verwijderen kost vanaf €149 en duurt 20 tot 45 minuten. Wij trekken het afgebroken deel met extractiegereedschap uit de cilinder, zonder het slot te slopen. Duw het restant nooit verder naar binnen: dan beschadigen de lamellen en moet de complete cilinder vervangen worden, wat de kosten fors verhoogt.',
+      'Een afgebroken sleutel uit het slot verwijderen kost vanaf €149,- en duurt 20 tot 45 minuten. Wij trekken het afgebroken deel met extractiegereedschap uit de cilinder, zonder het slot te slopen. Duw het restant nooit verder naar binnen: dan beschadigen de lamellen en moet de complete cilinder vervangen worden, wat de kosten fors verhoogt.',
     steps: [
       'Bel ons en meld dat de sleutel is afgebroken',
       'Wij komen met een mobiele werkplaats naar u toe',
@@ -231,7 +231,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Autosleutel Kwijt of Verloren? Binnen 30–60 Min Ter Plaatse',
     intro: 'Alle sleutels kwijt? Geen sleeptruck nodig — wij programmeren nieuwe sleutels vandaag nog direct bij uw auto op locatie.',
     system: 'All Keys Lost (AKL) bypass software, EEPROM programmering, MCU data reading, OBD key writing',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.allKeysLost},-`,
     duration: '60–180 minuten',
     /* Already had this photo, in a hand-written split hero of its own that
        SplitHero now replaces. */
@@ -244,25 +244,25 @@ export const DIENSTEN: Service[] = [
         service: 'Alle sleutels kwijt (All Keys Lost)',
         features: 'Sleutelcode uit de auto lezen, nieuwe sleutel frezen en inleren',
         ours: `Vanaf € ${SITE_CONFIG.prices.allKeysLost},-`,
-        dealer: '€ 500 - € 1500 (1-2 wk levertijd)',
+        dealer: '€ 500,- – € 1500,- (1-2 wk levertijd)',
       },
       {
         service: 'Smart key of keyless sleutel kwijt',
         features: 'Nieuwe proximity-sleutel, volledig geprogrammeerd',
         ours: `Vanaf € ${SITE_CONFIG.prices.smartKey},-`,
-        dealer: '€ 500 - € 1500 (1-2 wk levertijd)',
+        dealer: '€ 500,- – € 1500,- (1-2 wk levertijd)',
       },
       {
         service: 'Klapsleutel met afstandsbediening kwijt',
         features: 'Nieuwe sleutel, afstandsbediening gekoppeld',
         ours: `Vanaf € ${SITE_CONFIG.prices.klapsleutel},-`,
-        dealer: '€ 500 - € 1500 (1-2 wk levertijd)',
+        dealer: '€ 500,- – € 1500,- (1-2 wk levertijd)',
       },
       {
         service: 'Sleutel kwijt, nog één werkende sleutel',
         features: 'Een tweede sleutel: de goedkoopste route',
         ours: `Vanaf € ${SITE_CONFIG.prices.transponder},-`,
-        dealer: '€ 400 - € 800 (1-2 wk levertijd)',
+        dealer: '€ 400,- – € 800,- (1-2 wk levertijd)',
       },
     ],
     steps: [
@@ -292,11 +292,11 @@ export const DIENSTEN: Service[] = [
        * / alle autosleutels kwijt" another 434, and the page had no question
        * phrased either way. All sit around positions 35-52 today.
        */
-      { q: 'Autosleutel kwijt en geen reservesleutel: wat nu?', a: `Dan is het een All Keys Lost-situatie en begint de prijs bij €${SITE_CONFIG.prices.allKeysLost}. Wij komen naar uw auto, openen hem schadevrij als hij op slot zit, lezen de sleutelcode uit en leren een nieuwe sleutel in. U hoeft niet te slepen en niet dagen op de dealer te wachten. Houd merk, kenteken, uw legitimatiebewijs en het kentekenbewijs bij de hand.` },
-      { q: 'Beide autosleutels kwijt: wat kost dat?', a: `Zijn al uw sleutels weg, dan is dat dezelfde klus als hierboven en begint de prijs bij €${SITE_CONFIG.prices.allKeysLost}, inclusief frezen en programmeren. U hoort de exacte prijs telefonisch voordat wij vertrekken. Wilt u meteen een reservesleutel erbij, dan noemen wij die prijs ook vooraf, zodat u niet nog eens in deze situatie komt.` },
+      { q: 'Autosleutel kwijt en geen reservesleutel: wat nu?', a: `Dan is het een All Keys Lost-situatie en begint de prijs bij €${SITE_CONFIG.prices.allKeysLost},-. Wij komen naar uw auto, openen hem schadevrij als hij op slot zit, lezen de sleutelcode uit en leren een nieuwe sleutel in. U hoeft niet te slepen en niet dagen op de dealer te wachten. Houd merk, kenteken, uw legitimatiebewijs en het kentekenbewijs bij de hand.` },
+      { q: 'Beide autosleutels kwijt: wat kost dat?', a: `Zijn al uw sleutels weg, dan is dat dezelfde klus als hierboven en begint de prijs bij €${SITE_CONFIG.prices.allKeysLost},-, inclusief frezen en programmeren. U hoort de exacte prijs telefonisch voordat wij vertrekken. Wilt u meteen een reservesleutel erbij, dan noemen wij die prijs ook vooraf, zodat u niet nog eens in deze situatie komt.` },
       { q: 'Is een gestolen sleutel iets anders dan een verloren sleutel?', a: 'Voor de auto niet, voor de veiligheid wel. Bij diefstal moet de gestolen sleutel direct uit het geheugen van de auto worden gewist, omdat iemand anders hem kan gebruiken. Wij doen dat bij het inleren van de nieuwe sleutel. Lees ook wat u verder moet regelen op de pagina over een gestolen autosleutel.' },
       { q: 'Ik ben mijn autosleutel kwijt — wat moet ik nu doen?', a: 'Laat de auto op een veilige plek staan en kijk eerst of er nog een reservesleutel is. Is die er niet, verzamel dan merk, model, bouwjaar en kenteken en bel ons. Onze monteur komt naar uw locatie, opent de auto 100% schadevrij, leest de startonderbreker uit, blokkeert de verloren sleutel en programmeert ter plekke een nieuwe. U rijdt dezelfde dag weer.' },
-      { q: 'Wat kost een nieuwe autosleutel?', a: `Tussen €${SITE_CONFIG.prices.transponder} en €350, afhankelijk van merk, bouwjaar en of het om een transpondersleutel, klapsleutel of smart key gaat. Bent u álle sleutels kwijt en is er geen reserve, dan begint het bij €${SITE_CONFIG.prices.allKeysLost}: het deurslot moet dan eerst gedecodeerd worden voordat er geprogrammeerd kan worden. U hoort de exacte prijs telefonisch, vóór wij vertrekken. Een dealer rekent voor hetzelfde werk doorgaans het dubbele, plus sleepkosten.` },
+      { q: 'Wat kost een nieuwe autosleutel?', a: `Tussen €${SITE_CONFIG.prices.transponder},- en €350,-, afhankelijk van merk, bouwjaar en of het om een transpondersleutel, klapsleutel of smart key gaat. Bent u álle sleutels kwijt en is er geen reserve, dan begint het bij €${SITE_CONFIG.prices.allKeysLost},-: het deurslot moet dan eerst gedecodeerd worden voordat er geprogrammeerd kan worden. U hoort de exacte prijs telefonisch, vóór wij vertrekken. Een dealer rekent voor hetzelfde werk doorgaans het dubbele, plus sleepkosten.` },
       { q: 'Hoe snel heb ik een nieuwe sleutel?', a: 'Meestal binnen 30 tot 60 minuten na aankomst, ter plekke klaar en ingeleerd. Bij de dealer duurt dit doorgaans 3 tot 10 werkdagen, omdat de sleutel op chassisnummer besteld moet worden. Wij zijn 24/7 bereikbaar, ook \'s nachts en in het weekend.' },
       { q: 'Kan er een sleutel gemaakt worden zonder dat ik er nog één heb?', a: 'Ja. De mechanische insnijding bepalen wij door de cilinder van het deurslot te decoderen. De transponder en de afstandsbediening koppelen we daarna via de OBD2-poort aan de boordcomputer. Er hoeft dus geen originele sleutel te zijn — dat is precies het geval waarvoor wij bestaan.' },
       { q: 'Wordt mijn verloren sleutel onbruikbaar gemaakt?', a: 'Ja, en dat is het belangrijkste deel van het werk. Wij wissen de codes van de verloren sleutel uit de startonderbreker, zodat wie hem vindt de auto niet meer kan starten. Een nieuwe sleutel laten maken zonder de oude te blokkeren laat uw auto open staan voor de vinder.' },
@@ -321,10 +321,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Autosleutel Bijmaken & Programmeren — Mobiele Service op Locatie',
     intro: 'Reservesleutel laten maken? Wij programmeren een nieuwe sleutel op locatie voor alle merken — goedkoper dan de dealer, 12 mnd garantie.',
     system: 'AVDI, Lonsdor K518, VVDI, Autel IM608 Pro',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.transponder}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.transponder},-`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een autosleutel bijmaken kost bij Autosleutel24 vanaf €125 voor een transpondersleutel en vanaf €249 voor een smart key. Wij komen naar u toe en het werk duurt gemiddeld 30 tot 60 minuten. U hoeft niet naar de dealer en betaalt doorgaans tot 50% minder, met 12 maanden garantie op sleutel en programmering.',
+      'Een autosleutel bijmaken kost bij Autosleutel24 vanaf €125,- voor een transpondersleutel en vanaf €249,- voor een smart key. Wij komen naar u toe en het werk duurt gemiddeld 30 tot 60 minuten. U hoeft niet naar de dealer en betaalt doorgaans tot 50% minder, met 12 maanden garantie op sleutel en programmering.',
     steps: [
       'Geef uw merk, model en bouwjaar door via telefoon of WhatsApp',
       'Wij plannen een moment in dat u uitkomt op uw locatie',
@@ -333,7 +333,7 @@ export const DIENSTEN: Service[] = [
       'Volledige test van alle functies (deuren, kofferbak, motor starten)'
     ],
     faq: [
-      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een standaard transpondersleutel begint bij €125. Een klapsleutel met afstandsbediening kost gemiddeld €199 tot €349. Een Smart Key is beschikbaar vanaf €249. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
+      { q: 'Wat kost een autosleutel bijmaken bij jullie?', a: 'Een standaard transpondersleutel begint bij €125,-. Een klapsleutel met afstandsbediening kost gemiddeld €199,- tot €349,-. Een Smart Key is beschikbaar vanaf €249,-. Dit is gemiddeld 30% tot 50% goedkoper dan de officiële dealer.' },
       { q: 'Krijg ik garantie op de nieuwe autosleutel?', a: 'Ja, u ontvangt 12 maanden volledige garantie op de programmering en de elektronische componenten van de sleutel.' },
       { q: 'Moet ik met de auto langskomen?', a: 'Nee. Onze specialist komt met een volledig uitgeruste mobiele werkplaats naar u toe in Utrecht of Amsterdam.' }
     ],
@@ -347,10 +347,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Transponder Sleutel Programmeren — Immo & Chip Inleren',
     intro: 'Transponder chip kapot of niet herkend? Wij schrijven de chip direct in de boordcomputer van uw voertuig — motor start gegarandeerd.',
     system: 'Megamos ID48, NXP PCF7935 / PCF7936 / PCF7945 / PCF7953, Hitag 2 / 3 / Pro, DST40 / DST80 / DST-AES',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.transponder}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.transponder},-`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een transpondersleutel programmeren kost vanaf €125 en duurt 20 tot 40 minuten op locatie. De transponder is de chip in de sleutelkop die met de startonderbreker communiceert; zonder correcte programmering opent de auto wel, maar start hij niet. Wij lezen de startonderbreker via de OBD-poort uit en leren de chip in.',
+      'Een transpondersleutel programmeren kost vanaf €125,- en duurt 20 tot 40 minuten op locatie. De transponder is de chip in de sleutelkop die met de startonderbreker communiceert; zonder correcte programmering opent de auto wel, maar start hij niet. Wij lezen de startonderbreker via de OBD-poort uit en leren de chip in.',
     steps: [
       'We lezen het startonderbreker-systeem uit met OBD-diagnosetools',
       'De juiste transponderchip (zoals ID48 of PCF7936) wordt geselecteerd',
@@ -371,10 +371,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Wat is de Prijs Autosleutel Bijmaken met Afstandsbediening?',
     intro: 'Afstandsbediening bijmaken of sleutel met knoppen? Wij programmeren ter plaatse voor alle merken — goedkoper dan de dealer.',
     system: 'ASK / FSK Rolling Code, NXP PCF7946 / PCF7961, Hitag2, 315MHz / 433MHz / 868MHz',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.remote}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.remote},-`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een afstandsbediening bijmaken of vervangen kost vanaf €220 en duurt 20 tot 40 minuten. Werkt uw centrale vergrendeling niet meer terwijl de auto wel start? Dan is meestal alleen het zendgedeelte defect en hoeft de sleutel zelf niet vervangen te worden — dat scheelt aanzienlijk in de kosten.',
+      'Een afstandsbediening bijmaken of vervangen kost vanaf €220,- en duurt 20 tot 40 minuten. Werkt uw centrale vergrendeling niet meer terwijl de auto wel start? Dan is meestal alleen het zendgedeelte defect en hoeft de sleutel zelf niet vervangen te worden — dat scheelt aanzienlijk in de kosten.',
     steps: [
       'U vraagt de prijs op voor uw specifieke type autosleutel',
       'Wij snijden de sleutelbaard (mechanische sleutels) op maat',
@@ -395,10 +395,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Smart Key & Keyless Entry Programmeren — Proximity Specialist',
     intro: 'Smart key of keyless entry programmeren? Wij werken met dealer-niveau apparatuur voor BMW, Mercedes en VAG op locatie.',
     system: 'BMW CAS4+ / FEM / BDC / BDC2, Mercedes-Benz FBS3 / FBS4 / EIS / ELV, VAG MQB / MQB48 / MLB / SFD, JLR KVM / RFA / BCM',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.smartKey}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.smartKey},-`,
     duration: '45–90 minuten',
     directAnswer:
-      'Een smart key of keyless-entry sleutel programmeren kost vanaf €249 en duurt 30 tot 60 minuten. Bij keyless systemen wisselen sleutel en auto een rollende code uit, wat zwaardere apparatuur vereist dan bij een gewone transponder. Wij programmeren op locatie en wissen daarbij desgewenst verloren sleutels uit het geheugen.',
+      'Een smart key of keyless-entry sleutel programmeren kost vanaf €249,- en duurt 30 tot 60 minuten. Bij keyless systemen wisselen sleutel en auto een rollende code uit, wat zwaardere apparatuur vereist dan bij een gewone transponder. Wij programmeren op locatie en wissen daarbij desgewenst verloren sleutels uit het geheugen.',
     steps: [
       'OBD diagnostics verbinding opzetten met de startcomputer',
       'Bestaande sleutels controleren en synchroniseren',
@@ -419,10 +419,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Reservesleutel Auto Laten Maken — Voorkom Hoge Sleepkosten',
     intro: 'Nog maar één sleutel? Wij komen naar u toe en maken direct een reservesleutel — bescherm uzelf tegen dure All Keys Lost situaties.',
     system: 'Transponder Cloners / OBD programming tools',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.transponder}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.transponder},-`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een reservesleutel laten maken kost vanaf €125 en duurt 30 tot 60 minuten bij u op locatie. Zolang u nog één werkende sleutel heeft is dit de goedkoopste route. Bent u álle sleutels kwijt, dan is een All Keys Lost procedure nodig en liggen de kosten vanaf €299 — een tweede sleutel op tijd laten maken scheelt dus honderden euro\'s.',
+      'Een reservesleutel laten maken kost vanaf €125,- en duurt 30 tot 60 minuten bij u op locatie. Zolang u nog één werkende sleutel heeft is dit de goedkoopste route. Bent u álle sleutels kwijt, dan is een All Keys Lost procedure nodig en liggen de kosten vanaf €299,- — een tweede sleutel op tijd laten maken scheelt dus honderden euro\'s.',
     steps: [
       'U kiest of u een eenvoudige reservesleutel (zonder knoppen) of een afstandsbediening wilt',
       'We slijpen de mechanische sleutel op basis van uw huidige sleutel',
@@ -430,7 +430,7 @@ export const DIENSTEN: Service[] = [
       'De nieuwe sleutel wordt direct op werking getest'
     ],
     faq: [
-      { q: 'Kan ik ook een eenvoudige reservesleutel zonder knoppen krijgen?', a: 'Ja, dat is een uitstekende budgetoptie. Deze sleutel kan de deuren mechanisch openen en bevat de juiste transponder chip om de motor te starten. Dit kan al vanaf €125.' },
+      { q: 'Kan ik ook een eenvoudige reservesleutel zonder knoppen krijgen?', a: 'Ja, dat is een uitstekende budgetoptie. Deze sleutel kan de deuren mechanisch openen en bevat de juiste transponder chip om de motor te starten. Dit kan al vanaf €125,-.' },
       { q: 'Hoe lang duurt het maken van een reservesleutel?', a: 'Binnen 30 tot 60 minuten is uw nieuwe reservesleutel klaar en volledig geprogrammeerd.' }
     ],
     relatedSlugs: ['transponder-programmeren', 'afstandsbediening-bijmaken', 'smart-key-programmeren']
@@ -444,10 +444,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Noodopening Auto — Binnen 30–60 Min Ter Plaatse & Schadevrij',
     intro: 'Kind of huisdier in de auto? Noodgeval? Wij voeren 24/7 een 100% schadevrije noodopening uit — gemiddeld binnen 15–20 min.',
     system: 'Deadlock bypass tools & Laser Decoders',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.unlock},-`,
     duration: '15–30 minuten',
     directAnswer:
-      'Een noodopening is de spoedvariant: wij rijden met voorrang naar u toe en openen de auto vanaf €149, meestal binnen 30 tot 60 minuten na uw telefoontje. Staat er een kind of huisdier in de auto, bel dan eerst 112 — de hulpdiensten mogen dan direct handelen; voor alle andere situaties zijn wij 24 uur per dag bereikbaar.',
+      'Een noodopening is de spoedvariant: wij rijden met voorrang naar u toe en openen de auto vanaf €149,-, meestal binnen 30 tot 60 minuten na uw telefoontje. Staat er een kind of huisdier in de auto, bel dan eerst 112 — de hulpdiensten mogen dan direct handelen; voor alle andere situaties zijn wij 24 uur per dag bereikbaar.',
     steps: [
       'U belt onze spoedlijn (directe prioriteit)',
       'De dichtstbijzijnde mobiele bus rijdt met zwaailicht/spoed naar u toe',
@@ -471,12 +471,12 @@ export const DIENSTEN: Service[] = [
     metaTitle: 'Autosleutel Batterij Vervangen | Binnen 30-60 Min',
     metaDesc: 'Autosleutel batterij leeg? Wij vervangen uw autosleutel batterij op locatie voor een vaste prijs, vooraf afgesproken. Varta, Panasonic, Duracell. Bel!',
     h1: 'Batterij Autosleutel Vervangen — Vaste Prijs op Locatie',
-    intro: 'Sleutelbatterij leeg of reageert traag? Wij vervangen hem op locatie met A-merk batterij voor een vaste prijs van €15–20.',
+    intro: 'Sleutelbatterij leeg of reageert traag? Wij vervangen hem op locatie met A-merk batterij voor een vaste prijs van €15,-–20.',
     system: 'Knoopcellen: CR2032, CR2025, CR1620, CR1616, CR2450 (Duracell, Panasonic, Varta)',
-    priceFrom: 'Vaste prijs €15 - €20',
+    priceFrom: 'Vaste prijs €15,- – €20,-',
     duration: '5–10 minuten',
     directAnswer:
-      'Een autosleutelbatterij vervangen kost €15 tot €20 en is in vijf minuten klaar. Symptomen zijn een kleiner wordend bereik en een sleutel die alleen nog vlak bij de deur reageert. Bij de meeste sleutels blijft de programmering bij het wisselen gewoon behouden.',
+      'Een autosleutelbatterij vervangen kost €15,- tot €20,- en is in vijf minuten klaar. Symptomen zijn een kleiner wordend bereik en een sleutel die alleen nog vlak bij de deur reageert. Bij de meeste sleutels blijft de programmering bij het wisselen gewoon behouden.',
     steps: [
       'Onze monteur controleert de signaalsterkte van de sleutel',
       'De behuizing wordt voorzichtig geopend zonder beschadigingen',
@@ -501,10 +501,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Autosleutels Repareren — Bespaar op een Nieuwe Autosleutel',
     intro: 'Waterschade, lamme knoppen of transponder defect? Wij repareren uw sleutel op locatie — bespaar tot 70% t.o.v. een nieuwe sleutel.',
     system: 'Micro-soldering, SMD tactile switch replacements, Transponder coil repair',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.casing}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.casing},-`,
     duration: '20–45 minuten',
     directAnswer:
-      'Een autosleutel repareren kost vanaf €35 en duurt meestal 20 tot 45 minuten — bijna altijd goedkoper dan een nieuwe sleutel. Losse knoppen, een gebroken behuizing of een versleten sleutelbaard zijn te herstellen met behoud van de originele elektronica, zodat er niets opnieuw geprogrammeerd hoeft te worden.',
+      'Een autosleutel repareren kost vanaf €35,- en duurt meestal 20 tot 45 minuten — bijna altijd goedkoper dan een nieuwe sleutel. Losse knoppen, een gebroken behuizing of een versleten sleutelbaard zijn te herstellen met behoud van de originele elektronica, zodat er niets opnieuw geprogrammeerd hoeft te worden.',
     steps: [
       'We meten de printplaat door om de exacte storing te vinden',
       'Defecte micro-switches of spoelen worden gedesoldeerd',
@@ -515,8 +515,8 @@ export const DIENSTEN: Service[] = [
     faq: [
       { q: 'Hoe kan ik een kapotte autosleutel zelf repareren?', a: 'U kunt een kapotte autosleutel zelf repareren door de batterij te vervangen of de behuizing te vernieuwen. Voor complexere problemen zoals defecte knoppen op de printplaat, startproblemen of transponder-defecten is professioneel soldeerwerk vereist. Zelf solderen zonder microscoop en juiste SMD-switches kan de sleutel definitief onbruikbaar maken. Autosleutel24 repareert dit snel en schadevrij op locatie.' },
       { q: 'Wat te doen als je autosleutel niet meer reageert?', a: 'Als uw autosleutel niet reageert, vervang dan eerst de batterij (meestal CR2032). Werkt de sleutel daarna nog niet, controleer dan of de reserve-sleutel de auto wel opent. Reageert de auto op geen van beide sleutels, dan ligt het probleem vaak bij de accu van het voertuig of de ontvanger-module. Autosleutel24 kan ter plekke de zendfrequentie meten en de storing oplossen.' },
-      { q: 'Wat kost het om een autosleutel te laten repareren?', a: 'De kosten om een autosleutel te laten repareren variëren van €49 tot €85 bij Autosleutel24, afhankelijk van het type defect (zoals losse knopjes solderen of printplaat-corrosie). Dit bespaart u tot wel 70% in vergelijking met het aanschaffen en inleren van een volledig nieuwe sleutel bij de dealer.' },
-      { q: 'Kosten reparatie autosleutel behuizing.', a: 'Het vervangen of repareren van een kapotte autosleutel behuizing kost bij Autosleutel24 gemiddeld €49. Onze mobiele monteurs zetten de originele printplaat en transponderchip schadevrij over naar een nieuwe, stevige OEM-kwaliteit sleutelbehuizing, zodat uw sleutel direct weer start en functioneert.' },
+      { q: 'Wat kost het om een autosleutel te laten repareren?', a: 'De kosten om een autosleutel te laten repareren variëren van €49,- tot €85,- bij Autosleutel24, afhankelijk van het type defect (zoals losse knopjes solderen of printplaat-corrosie). Dit bespaart u tot wel 70% in vergelijking met het aanschaffen en inleren van een volledig nieuwe sleutel bij de dealer.' },
+      { q: 'Kosten reparatie autosleutel behuizing.', a: 'Het vervangen of repareren van een kapotte autosleutel behuizing kost bij Autosleutel24 gemiddeld €49,-. Onze mobiele monteurs zetten de originele printplaat en transponderchip schadevrij over naar een nieuwe, stevige OEM-kwaliteit sleutelbehuizing, zodat uw sleutel direct weer start en functioneert.' },
       { q: 'Welke merken autosleutels zijn makkelijk te repareren?', a: 'Merken zoals Volkswagen, Peugeot, Citroën, Renault en Opel zijn relatief makkelijk te repareren wat betreft behuizing en knoppen. Ultrasoon dichtgelijmde sleutels (bijvoorbeeld van Ford of BMW) vereisen speciaal gereedschap om de behuizing open te frezen zonder de printplaat te raken, een specialisme van Autosleutel24.' },
       { q: 'Waarom werkt mijn autosleutel afstandsbediening niet?', a: 'De meest voorkomende redenen waarom een autosleutel afstandsbediening niet werkt zijn een lege knoopcelbatterij, kapotte drukschakelaars (micro-switches) op de printplaat, waterschade, of een verstoorde synchronisatie tussen de sleutel en de startonderbreker van het voertuig.' },
       { q: 'Welke tools heb ik nodig om een autosleutel thuis te repareren?', a: 'Om thuis een autosleutel te repareren heeft u precisieschroevendraaiers nodig om de behuizing te openen. Voor printplaatreparaties zijn een SMD-soldeerbout met dunne stift, soldeertin, vloeimiddel (flux), een pincet en bij voorkeur een microscoop vereist. Zonder deze professionele tools riskeert u permanente schade aan de transponderchip.' },
@@ -534,10 +534,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Sleutelbehuizing Vervangen — Geef Uw Sleutel een Tweede Leven',
     intro: 'Sleutelbehuizing gescheurd of knoppen doorgedrukt? Wij zetten uw elektronica schadevrij over in een nieuwe OEM-behuizing op locatie.',
     system: 'OEM replacement key shells (folding / smart keys)',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.casing}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.casing},-`,
     duration: '15–30 minuten',
     directAnswer:
-      'Een sleutelbehuizing vervangen kost vanaf €35 en duurt 20 tot 30 minuten. Wij zetten de originele printplaat, transponder en sleutelbaard over in een nieuwe kast. Omdat de elektronica dezelfde blijft, is opnieuw programmeren niet nodig en blijft de sleutel direct werken.',
+      'Een sleutelbehuizing vervangen kost vanaf €35,- en duurt 20 tot 30 minuten. Wij zetten de originele printplaat, transponder en sleutelbaard over in een nieuwe kast. Omdat de elektronica dezelfde blijft, is opnieuw programmeren niet nodig en blijft de sleutel direct werken.',
     steps: [
       'De oude behuizing wordt voorzichtig opengemaakt (soms opengefreesd bij gelijmde types)',
       'De kwetsbare printplaat en transponder chip worden schadevrij verwijderd',
@@ -561,10 +561,10 @@ export const DIENSTEN: Service[] = [
     h1: 'Autosleutel Drukknoppen Repareren — SMD Micro-Switches Solderen',
     intro: 'Sleutelknoppen reageren niet meer? Wij solderen nieuwe micro-switches op de printplaat — snel klaar op locatie.',
     system: 'SMD Micro-soldering / PCB Switch replacement',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.casing}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.casing},-`,
     duration: '20–40 minuten',
     directAnswer:
-      'Kapotte sleutelknoppen repareren kost vanaf €35 en duurt 20 tot 30 minuten. Meestal is niet de elektronica stuk maar het rubberen matje of het contactvlak eronder, versleten door dagelijks gebruik. Vervanging van dat onderdeel is fors goedkoper dan een complete nieuwe afstandsbediening.',
+      'Kapotte sleutelknoppen repareren kost vanaf €35,- en duurt 20 tot 30 minuten. Meestal is niet de elektronica stuk maar het rubberen matje of het contactvlak eronder, versleten door dagelijks gebruik. Vervanging van dat onderdeel is fors goedkoper dan een complete nieuwe afstandsbediening.',
     steps: [
       'We demonteren de sleutel en inspecteren de printplaat onder een microscoop',
       'De defecte knopjes worden voorzichtig losgesoldeerd',
@@ -574,7 +574,7 @@ export const DIENSTEN: Service[] = [
     faq: [
       { q: 'Wat is een micro-switch?', a: 'Een micro-switch is het kleine elektronische knopje op de printplaat dat contact maakt als u op de buitenkant van de sleutel drukt. Door intensief gebruik slijten de interne metalen contacten of breken de soldeereilandjes los.' },
       { q: 'Kan elk type knopje worden vervangen?', a: 'Ja, wij hebben vrijwel alle typen SMD-schakelaars voor alle automerken op voorraad in onze mobiele bussen.' },
-      { q: 'Is repareren goedkoper dan een nieuwe afstandsbediening?', a: 'Vrijwel altijd. Een reparatie begint bij €35, terwijl een nieuwe afstandsbediening inclusief programmeren vanaf €220 kost. Alleen bij waterschade aan de print is vervanging voordeliger.' },
+      { q: 'Is repareren goedkoper dan een nieuwe afstandsbediening?', a: 'Vrijwel altijd. Een reparatie begint bij €35,-, terwijl een nieuwe afstandsbediening inclusief programmeren vanaf €220,- kost. Alleen bij waterschade aan de print is vervanging voordeliger.' },
       { q: 'De knop klikt wel maar de auto reageert niet — is dat hetzelfde probleem?', a: 'Niet noodzakelijk. Een voelbare klik zonder reactie wijst eerder op een lege batterij of een defect zendgedeelte. Wij meten dat ter plaatse door voordat we iets vervangen.' }
     ],
     relatedSlugs: ['autosleutels-repareren', 'behuizing-vervangen', 'batterij-vervangen', 'afstandsbediening-bijmaken']
@@ -587,7 +587,7 @@ export const DIENSTEN: Service[] = [
     h1: 'Auto Contactslot Vervangen & Reparatie — Direct ter Plaatse',
     intro: 'Contactslot defect of sleutel draait niet meer? Wij vervangen of repareren uw contactslot ter plaatse — ook Mercedes EIS/ELV specialist.',
     system: 'Mercedes EIS / ELV / ESL systemen, BMW CAS/Immo synchronisatie, mechanical ignition locks',
-    priceFrom: `Vanaf €${SITE_CONFIG.prices.ignition}`,
+    priceFrom: `Vanaf €${SITE_CONFIG.prices.ignition},-`,
     duration: '45–120 minuten',
     heroImage: {
       src: '/images/contactslot-auto-vervangen/auto_contactslot_vervangen_mercedes_eis_utrecht.webp',
@@ -603,7 +603,7 @@ export const DIENSTEN: Service[] = [
       {
         service: 'Contactslot vervangen (mechanisch)',
         features: 'Nieuwe cilinder, omgebouwd op uw huidige sleutel zodat u één sleutel houdt',
-        ours: '€ 300 - € 500,-',
+        ours: '€ 300,- – € 500,-',
         dealer: 'Vaak hele stuurkolom (€ 600+)',
       },
       {
@@ -622,7 +622,7 @@ export const DIENSTEN: Service[] = [
       },
     ],
     directAnswer:
-      'Een contactslot vervangen of repareren kost vanaf €299 en duurt 60 tot 120 minuten. Klemt de sleutel, of draait hij wel maar start de auto niet, dan zijn meestal de lamellen in de cilinder versleten. Wij vervangen de cilinder en passen die aan op uw bestaande sleutel, zodat u niet met twee verschillende sleutels komt te zitten.',
+      'Een contactslot vervangen of repareren kost vanaf €299,- en duurt 60 tot 120 minuten. Klemt de sleutel, of draait hij wel maar start de auto niet, dan zijn meestal de lamellen in de cilinder versleten. Wij vervangen de cilinder en passen die aan op uw bestaande sleutel, zodat u niet met twee verschillende sleutels komt te zitten.',
     steps: [
       'Mechanische en elektrische diagnose van het contactslot',
       'Demonteren van de stuurkolom of het dashboardpaneel',

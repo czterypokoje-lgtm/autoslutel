@@ -126,7 +126,7 @@ export default function HomePage() {
             <p className={styles.heroSplitLead}>
               Buitengesloten of sleutel kwijt? <strong>Binnen 30–60 min</strong> ter plaatse — goedkoper dan de dealer, geen wegsleepkosten.
             </p>
-            <HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />
+            <HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />
           </div>
 
           <div className={styles.heroImageContent}>
@@ -403,9 +403,9 @@ export default function HomePage() {
                   <tr><th>Vergelijking</th><th>Dealer</th><th>Wij ✓</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Prijs</td><td>€300–€900</td><td><strong>€150–€500</strong></td></tr>
+                  <tr><td>Prijs</td><td>€300,- – €900,-</td><td><strong>€150,- – €500,-</strong></td></tr>
                   <tr><td>Wachttijd</td><td>3–14 dagen</td><td><strong>Zelfde dag</strong></td></tr>
-                  <tr><td>Sleepkosten</td><td>€100–€150</td><td><strong>Geen</strong></td></tr>
+                  <tr><td>Sleepkosten</td><td>€100,- – €150,-</td><td><strong>Geen</strong></td></tr>
                   <tr><td>Locatie</td><td>U rijdt erheen</td><td><strong>Wij komen</strong></td></tr>
                   <tr><td>Openingstijden</td><td>Ma-Vr 8–17</td><td><strong>24/7</strong></td></tr>
                   <tr><td>Garantie</td><td>Ja</td><td><strong>12 maanden</strong></td></tr>
