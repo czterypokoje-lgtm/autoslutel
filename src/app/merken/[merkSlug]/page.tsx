@@ -261,7 +261,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   Extra of reserve {brand.name} sleutel nodig? Wij frezen en programmeren een nieuwe sleutel direct bij u op locatie, vaak de helft goedkoper dan de {brand.name}-dealer.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.transponder},- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.transponder},-</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -278,7 +278,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   Alle {brand.name} sleutels kwijt? Wij komen direct naar u toe, openen de auto schadevrij, frezen een nieuwe sleutel en leren hem in de {brand.name} boordcomputer.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €299,- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €299,-</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -295,7 +295,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   Sleutel in de {brand.name} laten liggen? Wij openen uw auto 100% schadevrij met professioneel gereedschap, zonder krassen of beschadigingen.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.unlock},- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.unlock},-</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -312,7 +312,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   {brand.name} contactslot defect of beschadigd? Wij vervangen het contactslot en programmeren de nieuwe sleutel direct ter plaatse, zonder uw auto naar de garage te slepen.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €299,- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €299,-</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
