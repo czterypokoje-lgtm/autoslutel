@@ -213,7 +213,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.08rem', lineHeight: 1.7, marginBottom: '2.2rem' }}>
                 Bent u uw {brand.name} autosleutel kwijt, is de sleutel afgebroken of reageert de Smart Key afstandsbediening niet meer?
                 Wij komen met onze volledig uitgeruste mobiele werkplaats naar u toe en programmeren direct een originele dealer-sleutel in de boordcomputer.
-                <strong> 30% tot 50% goedkoper dan de {brand.name}-dealer</strong>, zonder wegsleepkosten!
+                <strong> vaak flink goedkoper dan de {brand.name}-dealer</strong>, zonder wegsleepkosten!
               </p>
 
             </div>
@@ -258,10 +258,10 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   {brand.name} Autosleutel Bijmaken
                 </h3>
                 <p className={styles.dienstCardDesc}>
-                  Extra of reserve {brand.name} sleutel nodig? Wij frezen en programmeren een nieuwe sleutel direct bij u op locatie, vaak de helft goedkoper dan de {brand.name}-dealer.
+                  Extra of reserve {brand.name} sleutel nodig? Wij frezen en programmeren een nieuwe sleutel direct bij u op locatie, vaak flink goedkoper dan de {brand.name}-dealer.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.transponder},- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.transponder},-</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -278,7 +278,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   Alle {brand.name} sleutels kwijt? Wij komen direct naar u toe, openen de auto schadevrij, frezen een nieuwe sleutel en leren hem in de {brand.name} boordcomputer.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €299,- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €299,-</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -292,10 +292,10 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   {brand.name} Autodeur Openen
                 </h3>
                 <p className={styles.dienstCardDesc}>
-                  Sleutel in de {brand.name} laten liggen? Wij openen uw auto 100% schadevrij met professioneel gereedschap, zonder krassen of beschadigingen.
+                  Sleutel in de {brand.name} laten liggen? Wij openen uw auto schadevrij met professioneel gereedschap, zonder krassen of beschadigingen.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.unlock},- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €{SITE_CONFIG.prices.unlock},-</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -312,7 +312,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                   {brand.name} contactslot defect of beschadigd? Wij vervangen het contactslot en programmeren de nieuwe sleutel direct ter plaatse, zonder uw auto naar de garage te slepen.
                 </p>
                 <div className={styles.dienstCardFooter}>
-                  <span className={styles.dienstCardPrice}>Vanaf €299,- ex</span>
+                  <span className={styles.dienstCardPrice}>Vanaf €299,-</span>
                   <span className={styles.dienstCardBtn}>Lees meer &rarr;</span>
                 </div>
               </Link>
@@ -548,7 +548,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 </div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>Betaalbaar</h3>
                 <p style={{ color: '#475569', fontSize: '1.05rem', lineHeight: 1.6, margin: 0 }}>
-                  Onze {brand.name} reservesleutels zijn tot 50% goedkoper dan bij de officiële merkdealers.
+                  Onze {brand.name} reservesleutels zijn vaak flink goedkoper dan bij de officiële merkdealers.
                 </p>
               </div>
 
@@ -604,7 +604,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                 Dankzij onze gespecialiseerde mobiele noodservice lossen wij een &apos;All Keys Lost&apos; situatie ter plaatse voor u op:
               </p>
               <ul>
-                <li><strong>100% Schadevrij Openen:</strong> Met precisie Lishi 2-in-1 lock decoders openen wij het portierslot van uw {brand.name} zonder enige schade aan lak, rubber of cilinder.</li>
+                <li><strong>Schadevrij Openen:</strong> Met precisie Lishi 2-in-1 lock decoders openen wij het portierslot van uw {brand.name} zonder enige schade aan lak, rubber of cilinder.</li>
                 <li><strong>Mechanisch CNC-Frezen:</strong> Aan de hand van de slotcode snijdt onze mobiele computergestuurde freesmachine direct een gloednieuwe sleutelbaard.</li>
                 <li><strong>Elektronische Herprogrammering:</strong> Wij programmeren de nieuwe sleutel in en wissen tegelijkertijd alle verloren of gestolen sleutels uit de computer, zodat onbevoegden uw auto niet meer kunnen starten.</li>
               </ul>
@@ -630,13 +630,13 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
                     </tr>
                     <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
                       <td style={{ padding: '0.85rem', fontWeight: 600 }}>Sleepkosten bij sleutel kwijt</td>
-                      <td style={{ padding: '0.85rem' }}>€150 – €300 (wegslepen verplicht)</td>
+                      <td style={{ padding: '0.85rem' }}>€150,- – €300,- (wegslepen verplicht)</td>
                       <td style={{ padding: '0.85rem', fontWeight: 700, color: '#059669' }}>€0 — Wij komen naar uw auto</td>
                     </tr>
                     <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
                       <td style={{ padding: '0.85rem', fontWeight: 600 }}>Prijsniveau Reservesleutel</td>
                       <td style={{ padding: '0.85rem' }}>Hoog dealer-tarief</td>
-                      <td style={{ padding: '0.85rem', fontWeight: 700, color: '#059669' }}>Tot 50% voordeliger</td>
+                      <td style={{ padding: '0.85rem', fontWeight: 700, color: '#059669' }}>Vaak flink voordeliger</td>
                     </tr>
                     <tr>
                       <td style={{ padding: '0.85rem', fontWeight: 600 }}>Garantie op sleutel &amp; chip</td>
@@ -667,7 +667,7 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
               <p>
                 Bent u uw <strong>{brand.name} sleutel kwijt</strong> maar heeft u nog één werkende sleutel, dan laten wij daar een
                 tweede van maken: de goedkoopste route. Heeft u <strong>geen enkele {brand.name} sleutel</strong> meer, dan lezen wij de sleutelcode
-                uit de auto en maken wij ter plaatse een nieuwe, vanaf €{SITE_CONFIG.prices.allKeysLost}. Is de sleutel alleen <strong>kapot</strong>,
+                uit de auto en maken wij ter plaatse een nieuwe, vanaf €{SITE_CONFIG.prices.allKeysLost},-. Is de sleutel alleen <strong>kapot</strong>,
                 kijk dan eerst naar{' '}
                 <Link href="/diensten/batterij-vervangen">een nieuwe batterij</Link>,{' '}
                 <Link href="/diensten/behuizing-vervangen">een nieuwe behuizing</Link> of{' '}

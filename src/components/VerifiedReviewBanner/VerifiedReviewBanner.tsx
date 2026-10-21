@@ -81,7 +81,7 @@ export default function VerifiedReviewBanner({ review }: { review?: BannerReview
         
         {/* Left Section */}
         <div className={styles.leftSection}>
-          <div className={styles.supertitle}>NEDERLAND&apos;S TOP AUTOSLOTENMAKER</div>
+          <div className={styles.supertitle}>5,0 OP GOOGLE</div>
           <h2 className={styles.title}>
             Wat Geverifieerde Klanten{' '}<br/>Zeggen Over Onze Service
           </h2>

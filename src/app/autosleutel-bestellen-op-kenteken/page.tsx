@@ -84,7 +84,7 @@ export default function KentekenBestellenPage() {
     'Gemiddelde beoordeling 5.0/5',
     '100% Mobiele Service',
     '12 Maanden Garantie',
-    'Verzekerd & Gecertificeerd'
+    'Vakwerk met garantie'
   ];
 
   const whatsappMsg = "Hallo, wat kost een nieuwe sleutel voor mijn auto? Mijn kenteken is: ";
@@ -208,7 +208,7 @@ export default function KentekenBestellenPage() {
                         <tr>
                           <td><strong>Prijs</strong></td>
                           <td>Hoofdprijzen plus verborgen inleerkosten.</td>
-                          <td><strong>Tot 50% goedkoper met een transparante, vaste prijs vooraf.</strong></td>
+                          <td><strong>Vaak flink goedkoper met een transparante, vaste prijs vooraf.</strong></td>
                         </tr>
                         <tr>
                           <td><strong>Garantie</strong></td>

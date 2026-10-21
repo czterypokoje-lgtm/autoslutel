@@ -93,7 +93,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
     },
     {
       q: `Wat kost een autosleutel bijmaken in ${region.name}?`,
-      a: `Een reservesleutel begint bij €${SITE_CONFIG.prices.transponder}, een klapsleutel met afstandsbediening bij €${SITE_CONFIG.prices.klapsleutel} en een smart key bij €${SITE_CONFIG.prices.smartKey}. Zijn al uw sleutels kwijt, dan begint de prijs bij €${SITE_CONFIG.prices.allKeysLost}. U hoort de exacte prijs telefonisch voordat wij vertrekken.`,
+      a: `Een reservesleutel begint bij €${SITE_CONFIG.prices.transponder},-, een klapsleutel met afstandsbediening bij €${SITE_CONFIG.prices.klapsleutel},- en een smart key bij €${SITE_CONFIG.prices.smartKey},-. Zijn al uw sleutels kwijt, dan begint de prijs bij €${SITE_CONFIG.prices.allKeysLost},-. U hoort de exacte prijs telefonisch voordat wij vertrekken.`,
     },
     {
       q: `Ik ben mijn autosleutel kwijt in ${region.name}. Moet de auto naar de dealer?`,
@@ -145,7 +145,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
         titleTop={`Autosleutel Bijmaken in ${region.label}`}
         titleAccent={`Binnen ${ARRIVAL.replace('min', 'Min')} Ter Plaatse`}
         lead={`${region.intro} Sleutel kwijt, kapot of een reserve nodig? Wij komen naar uw auto.`}
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />}
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />}
         image={{
           src: '/images/seo/autosleutel24_autosleutelspecialist_op_locatie.webp',
           alt: 'Autosleutelspecialist van Autosleutel24 in bedrijfskleding op locatie, met servicebus op de achtergrond',
@@ -200,15 +200,15 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
                 </tr>
               </thead>
               <tbody>
-                <tr><td style={{ padding: '0.9rem' }}>Reservesleutel (transponder)</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.transponder}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Klapsleutel met afstandsbediening</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.klapsleutel}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Smart key / keyless</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.smartKey}</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Alle sleutels kwijt</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.allKeysLost}</strong></td></tr>
+                <tr><td style={{ padding: '0.9rem' }}>Reservesleutel (transponder)</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.transponder},-</strong></td></tr>
+                <tr><td style={{ padding: '0.9rem' }}>Klapsleutel met afstandsbediening</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.klapsleutel},-</strong></td></tr>
+                <tr><td style={{ padding: '0.9rem' }}>Smart key / keyless</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.smartKey},-</strong></td></tr>
+                <tr><td style={{ padding: '0.9rem' }}>Alle sleutels kwijt</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.allKeysLost},-</strong></td></tr>
               </tbody>
             </table>
           </div>
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
-            Bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer}, binnen {ARRIVAL} ter plaatse, met 12 maanden garantie. U hoort de exacte
+            Bedragen zijn vanafprijzen, binnen {ARRIVAL} ter plaatse, met 12 maanden garantie. U hoort de exacte
             prijs telefonisch voordat wij vertrekken.{' '}
             <Link href="/prijzen" style={link}>Bekijk alle prijzen →</Link>
           </p>

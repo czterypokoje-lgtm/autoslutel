@@ -92,10 +92,10 @@ const services = [
   },
   { 
     title: 'Auto Slotenmaker & Schadevrij Openen', 
-    desc: 'Bent u buitengesloten omdat de sleutels nog in de auto liggen of de accu leeg is? Wij openen uw autodeur 100% schadevrij met speciaal gereedschap.',
+    desc: 'Bent u buitengesloten omdat de sleutels nog in de auto liggen of de accu leeg is? Wij openen uw autodeur schadevrij met speciaal gereedschap.',
     href: '/diensten/auto-openen-zonder-sleutel',
     src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp',
-    alt: 'Buitengesloten auto openen zonder sleutel, 100% schadevrij',
+    alt: 'Buitengesloten auto openen zonder sleutel, schadevrij',
     btnText: 'Snel auto openen'
   },
   { 
@@ -126,7 +126,7 @@ export default function HomePage() {
             <p className={styles.heroSplitLead}>
               Buitengesloten of sleutel kwijt? <strong>Binnen 30–60 min</strong> ter plaatse — goedkoper dan de dealer, geen wegsleepkosten.
             </p>
-            <HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder}`} />
+            <HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />
           </div>
 
           <div className={styles.heroImageContent}>
@@ -224,7 +224,7 @@ export default function HomePage() {
               id: 'feature-5',
               icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
               title: '24/7 Spoedhulp Bel Nu',
-              description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
+              description: '12 maanden garantie op ons werk. Dag en nacht bereikbaar voor alle noodgevallen.',
               linkText: 'Bel direct',
               linkUrl: `tel:${SITE_CONFIG.phoneTel}`
             }
@@ -247,14 +247,14 @@ export default function HomePage() {
                 Ontmoet Berkan Acarol
               </h2>
               <p style={{ fontWeight: 600, color: 'var(--orange-700)', fontSize: '0.95rem', marginBottom: '1rem' }}>
-                Gecertificeerd Hoofdtechnicus van Autosleutel24
+                Hoofdtechnicus van Autosleutel24
               </p>
               <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1.25rem', fontSize: '0.92rem' }}>
-                Wanneer u belt voor een autosleutelprobleem, krijgt u direct te maken met een specialist. Als hoofdtechnicus sta ik, Berkan Acarol, persoonlijk garant voor de kwaliteit van onze service. Met jarenlange actieve ervaring in de automotive slotenmakerij en gecertificeerd door marktleiders zoals Autel, programmeren wij elke sleutel snel, veilig en ter plaatse.
+                Wanneer u belt voor een autosleutelprobleem, krijgt u direct te maken met een specialist. Als hoofdtechnicus sta ik, Berkan Acarol, persoonlijk garant voor de kwaliteit van onze service. Met jarenlange actieve ervaring in de automotive slotenmakerij en met professionele apparatuur van onder meer Autel programmeren wij elke sleutel snel, veilig en ter plaatse.
               </p>
               <ul style={{ listStyleType: 'none', padding: 0, margin: '0 0 1.5rem 0', fontSize: '0.88rem', color: 'var(--gray-700)', lineHeight: '1.7' }}>
                 <li style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Gecertificeerd Expert:</strong> Specialist in Autel IM608 Pro II &amp; AVDI Abrites.</span>
+                  <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Ervaren expert:</strong> Specialist in Autel IM608 Pro II &amp; AVDI Abrites.</span>
                 </li>
                 <li style={{ marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Ruime Ervaring:</strong> Jarenlange ervaring met alle automerken en systemen.</span>
@@ -362,7 +362,7 @@ export default function HomePage() {
         />
         <div className="container">
           <p className="section-lead" style={{ maxWidth: 880, margin: '2.5rem auto 0', lineHeight: '1.75', fontSize: '0.98rem', color: 'var(--gray-600)' }}>
-            Bekijk hierboven een selectie van onze afgeronde praktijkprojecten en tevreden klanten in Midden-Nederland en de Randstad. Als erkend autosleutel specialist zijn wij dagelijks actief met onze volledig uitgeruste mobiele servicebus in onder andere <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link>, <Link href="/steden/amersfoort" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amersfoort</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/nijmegen" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Nijmegen</Link>, <Link href="/steden/apeldoorn" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Apeldoorn</Link> en omstreken. Of het nu gaat om het bijmaken van een reservesleutel, het vakkundig inleren van keyless entry smart keys, of spoedreparaties bij een verloren of defecte autosleutel ter plaatse: wij garanderen schadevrij werk met originele OEM-diagnoseapparatuur. Dankzij onze transparante tarieven, snelle responstijden en jarenlange expertise bespaart u onnodige wegsleepkosten en lange wachttijden bij de officiële merkdealer. Blader door onze recente klussen en ontdek wat onze mobiele sleutelservice voor u kan betekenen.
+            Bekijk hierboven een selectie van onze afgeronde praktijkprojecten en tevreden klanten in Midden-Nederland en de Randstad. Als ervaren autosleutelspecialist zijn wij dagelijks actief met onze volledig uitgeruste mobiele servicebus in onder andere <Link href="/steden/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/steden/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/steden/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link>, <Link href="/steden/amersfoort" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amersfoort</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/nijmegen" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Nijmegen</Link>, <Link href="/steden/apeldoorn" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Apeldoorn</Link> en omstreken. Of het nu gaat om het bijmaken van een reservesleutel, het vakkundig inleren van keyless entry smart keys, of spoedreparaties bij een verloren of defecte autosleutel ter plaatse: wij garanderen schadevrij werk met professionele diagnoseapparatuur. Dankzij onze transparante tarieven, snelle responstijden en jarenlange expertise bespaart u onnodige wegsleepkosten en lange wachttijden bij de officiële merkdealer. Blader door onze recente klussen en ontdek wat onze mobiele sleutelservice voor u kan betekenen.
           </p>
         </div>
       </section>
@@ -388,7 +388,7 @@ export default function HomePage() {
               <h2 className="section-title">Bespaar 30–50% vs Dealer</h2>
               <p>Dealer-niveau apparatuur, transparante prijzen, dezelfde dag service. Wij komen naar u toe.</p>
               <ul className={styles.checkList}>
-                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Goedkoper dan dealer — gegarandeerd</li>
+                <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Vaak goedkoper dan de dealer</li>
                 <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Geen sleepkosten — wij komen naar u</li>
                 <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Zelfde dag service — ook weekend</li>
                 <li className={styles.checkItem}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16" className={styles.checkIcon}><polyline points="20 6 9 17 4 12"/></svg> Dealer-niveau tools: Autel, VVDI, AVDI, ACDP</li>
@@ -403,9 +403,9 @@ export default function HomePage() {
                   <tr><th>Vergelijking</th><th>Dealer</th><th>Wij ✓</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Prijs</td><td>€300–€900</td><td><strong>€150–€500</strong></td></tr>
+                  <tr><td>Prijs</td><td>€300,- – €900,-</td><td><strong>€150,- – €500,-</strong></td></tr>
                   <tr><td>Wachttijd</td><td>3–14 dagen</td><td><strong>Zelfde dag</strong></td></tr>
-                  <tr><td>Sleepkosten</td><td>€100–€150</td><td><strong>Geen</strong></td></tr>
+                  <tr><td>Sleepkosten</td><td>€100,- – €150,-</td><td><strong>Geen</strong></td></tr>
                   <tr><td>Locatie</td><td>U rijdt erheen</td><td><strong>Wij komen</strong></td></tr>
                   <tr><td>Openingstijden</td><td>Ma-Vr 8–17</td><td><strong>24/7</strong></td></tr>
                   <tr><td>Garantie</td><td>Ja</td><td><strong>12 maanden</strong></td></tr>
@@ -447,7 +447,7 @@ export default function HomePage() {
             <p>
               Moderne auto&apos;s rijden niet meer met een gewone metalen sleutel. Ze hebben
               <strong> autosleutels met afstandsbediening</strong> nodig — ook wel klapsleutels, smart keys
-              of keyless go sleutels genoemd. Wij leveren en programmeren <strong>gecertificeerde sleutels</strong>
+              of keyless go sleutels genoemd. Wij leveren en programmeren <strong>hoogwaardige sleutels</strong>
               die exact werken zoals de originele fabriekssleutel. U hoeft niet naar de dealer.
               Wij doen alles ter plekke, bij u thuis of op het werk.
             </p>
@@ -462,7 +462,7 @@ export default function HomePage() {
 
             <h3>Goedkoper dan de Dealer, met 12 Maanden Garantie</h3>
             <p>
-              Doordat wij direct bij u op locatie werken, bespaart u gemiddeld <strong>30% tot 50%</strong>
+              Doordat wij direct bij u op locatie werken, bespaart u vaak <strong>flink</strong>
               ten opzichte van de merkdealer. U betaalt geen sleepkosten en geen dure showroomtarieven.
               Op elke nieuwe sleutel en reparatie geven wij standaard 12 maanden schriftelijke garantie.
               Veel verzekeraars vergoeden onze factuur onder uw Beperkt Casco of Allrisk polis.

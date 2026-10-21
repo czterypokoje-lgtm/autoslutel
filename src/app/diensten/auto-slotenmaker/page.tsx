@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
   },
-  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Binnen 30-60 min, prijs vooraf. Bel 24/7.',
+  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto schadevrij en maken direct een nieuwe sleutel ter plaatse. Binnen 30-60 min, prijs vooraf. Bel 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-slotenmaker` },
 };
 
@@ -74,17 +74,17 @@ export default function AutoSlotenmakerPage() {
     'Schadevrij openen',
     'Direct nieuwe sleutel',
     'Vaste prijzen vooraf',
-    'Gecertificeerde monteurs'
+    'Ervaren monteurs'
   ];
 
   const faqItems = [
     {
       q: 'Hoe vind ik een betrouwbare auto slotenmaker in de buurt?',
-      a: 'Een betrouwbare autoslotenmaker werkt met vaste all-in tarieven die vooraf worden gecommuniceerd, en is gecertificeerd. Autosleutel24 is volledig mobiel actief in de regio Utrecht, Amsterdam, Almere, Amersfoort en Hilversum. Wij zijn binnen 30 tot 45 minuten op uw locatie met een compleet uitgeruste servicebus.'
+      a: 'Een betrouwbare autoslotenmaker werkt met vaste all-in tarieven die vooraf worden gecommuniceerd. Autosleutel24 is volledig mobiel actief in de regio Utrecht, Amsterdam, Almere, Amersfoort en Hilversum. Wij zijn binnen 30 tot 45 minuten op uw locatie met een compleet uitgeruste servicebus.'
     },
     {
       q: 'Wat kost een auto slotenmaker voor het openen van mijn auto?',
-      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting vanaf €149 (exclusief btw). Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
+      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting vanaf €149,-. Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
     },
     {
       q: 'Kan een auto slotenmaker ook een nieuwe sleutel maken als ik alles kwijt ben?',
@@ -126,7 +126,7 @@ export default function AutoSlotenmakerPage() {
     {
       num: 3,
       title: 'Schadevrije opening',
-      desc: 'Met behulp van Lishi lockpicks en specialistisch gereedschap openen we de autodeur of kofferbak 100% schadevrij.'
+      desc: 'Met behulp van Lishi lockpicks en specialistisch gereedschap openen we de autodeur of kofferbak schadevrij.'
     },
     {
       num: 4,
@@ -205,7 +205,7 @@ export default function AutoSlotenmakerPage() {
                 id: 'feature-5',
                 icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '24/7 Spoedhulp Bel Nu',
-                description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
+                description: '12 maanden garantie op ons werk. Dag en nacht bereikbaar voor alle noodgevallen.',
                 linkText: 'Bel direct',
                 linkUrl: `tel:${SITE_CONFIG.phoneTel}`
               }
@@ -256,34 +256,34 @@ export default function AutoSlotenmakerPage() {
                         <tr>
                           <td>Autodeur schadevrij openen</td>
                           <td>Bij buitensluiting, sleutel in auto</td>
-                          <td><strong>€149</strong></td>
+                          <td><strong>€149,-</strong></td>
                           <td>10-15 min</td>
                         </tr>
                         <tr>
                           <td>Nieuwe reservesleutel maken</td>
                           <td>Inclusief programmeren transponder</td>
-                          <td><strong>€{SITE_CONFIG.prices.transponder} - €299</strong></td>
+                          <td><strong>€{SITE_CONFIG.prices.transponder},- – €299,-</strong></td>
                           <td>20-30 min</td>
                         </tr>
                         <tr>
                           <td>Alle sleutels kwijt (All Keys Lost)</td>
                           <td>Genereren van een nieuwe sleutelbaard</td>
-                          <td><strong>€299 - €500</strong></td>
+                          <td><strong>€299,- – €500,-</strong></td>
                           <td>30-60 min</td>
                         </tr>
                         <tr>
                           <td>Contactslot / Deurslot reparatie</td>
                           <td>Demonteren, reviseren en reinigen</td>
-                          <td><strong>€299</strong></td>
+                          <td><strong>€299,-</strong></td>
                           <td>45 min</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                   <div className={styles.callout}>
-                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken, krijgt u bij ons vooraf een vaste prijsopgave exclusief btw. 
+                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken, krijgt u bij ons vooraf een vaste prijsopgave. 
                     <br/><br/>
-                    <strong>Goed om te weten:</strong> Officiële autodealers zijn vaak <strong>50% duurder</strong>. Daarnaast bespaart u bij ons op dure wegsleepkosten, want <strong>wij rekenen geen sleepkosten</strong> en helpen u direct ter plaatse!
+                    <strong>Goed om te weten:</strong> Officiële autodealers zijn vaak <strong>flink duurder</strong>. Daarnaast bespaart u bij ons op dure wegsleepkosten, want <strong>wij rekenen geen sleepkosten</strong> en helpen u direct ter plaatse!
                   </div>
                 </div>
 

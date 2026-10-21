@@ -106,7 +106,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           name: 'Hoeveel kost het om een autosleutel bij te maken zonder origineel?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'De kosten variëren van €180 voor standaard transponder sleutels tot €350 tot €650 voor complexe smart keys (bijvoorbeeld BMW, Mercedes, Tesla). Dit is inclusief programmeren en slijpen ter plaatse.',
+            text: 'De kosten variëren van €180,- voor standaard transponder sleutels tot €350,- tot €650,- voor complexe smart keys (bijvoorbeeld BMW, Mercedes, Tesla). Dit is inclusief programmeren en slijpen ter plaatse.',
           },
         },
         {
@@ -213,11 +213,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </p>
             <h3>3. Wat te doen bij All Keys Lost (Alle Sleutels Kwijt)?</h3>
             <p>
-              Bent u alle sleutels kwijtgeraakt? Bij een merkdealer moet uw auto dan vaak per takelwagen worden weggesleept naar de werkplaats, wat gepaard gaat met hoge sleepkosten en lange wachttijden. Onze mobiele slotenmakers komen 24/7 direct naar uw locatie. Wij openen uw auto 100% schadevrij met speciaal Lishi-gereedschap, decoderen het slotmechanisme om de sleutelsnede te bepalen, frezen een nieuwe sleutelbaard met onze computergestuurde CNC-machine én wissen de verloren sleutels uit het autogeheugen voor uw veiligheid.
+              Bent u alle sleutels kwijtgeraakt? Bij een merkdealer moet uw auto dan vaak per takelwagen worden weggesleept naar de werkplaats, wat gepaard gaat met hoge sleepkosten en lange wachttijden. Onze mobiele slotenmakers komen 24/7 direct naar uw locatie. Wij openen uw auto schadevrij met speciaal Lishi-gereedschap, decoderen het slotmechanisme om de sleutelsnede te bepalen, frezen een nieuwe sleutelbaard met onze computergestuurde CNC-machine én wissen de verloren sleutels uit het autogeheugen voor uw veiligheid.
             </p>
             <h3>4. Transparante Kosten, Garantie en Verzekering</h3>
             <p>
-              Dankzij onze efficiënte mobiele werkwijze bespaart u gemiddeld 30% tot 50% ten opzichte van officiële merkdealers. U ontvangt vooraf altijd een vaste all-in prijsopgave zonder verrassingen achteraf en standaard 12 maanden schriftelijke garantie op al onze geleverde sleutels en reparaties. In veel gevallen wordt het vervangen of bijmaken van een verloren autosleutel bovendien gedekt door uw WA Extra of Allrisk autoverzekering.
+              Dankzij onze efficiënte mobiele werkwijze bespaart u vaak flink ten opzichte van officiële merkdealers. U ontvangt vooraf altijd een vaste all-in prijsopgave zonder verrassingen achteraf en standaard 12 maanden schriftelijke garantie op al onze geleverde sleutels en reparaties. In veel gevallen wordt het vervangen of bijmaken van een verloren autosleutel bovendien gedekt door uw WA Extra of Allrisk autoverzekering.
             </p>
           </>
         )}
@@ -278,7 +278,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
           <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Een Autosleutel Laten Bijmaken of Programmeren?</h3>
-          <p style={{ color: 'rgba(255,255,255,0.8)', marginBottom: '1.5rem' }}>Onze gecertificeerde autosleutelspecialisten staan 24/7 voor u klaar.</p>
+          <p style={{ color: 'rgba(255,255,255,0.8)', marginBottom: '1.5rem' }}>Onze ervaren autosleutelspecialisten staan 24/7 voor u klaar.</p>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none', display: 'inline-block' }}>
             📞 {SITE_CONFIG.phone}
           </a>

@@ -62,7 +62,7 @@ const faqItems = [
   },
   {
     q: 'Wat kost het als mijn sleutel gestolen is?',
-    a: `Heeft u nog een tweede werkende sleutel, dan is het een kwestie van de gestolen sleutel wissen en een nieuwe inleren: vanaf €${SITE_CONFIG.prices.transponder}. Is de gestolen sleutel uw enige sleutel, dan moet de sleutelcode uit de boordcomputer gelezen worden en begint het bij €${SITE_CONFIG.prices.allKeysLost}. U hoort de prijs telefonisch voordat wij vertrekken.`,
+    a: `Heeft u nog een tweede werkende sleutel, dan is het een kwestie van de gestolen sleutel wissen en een nieuwe inleren: vanaf €${SITE_CONFIG.prices.transponder},-. Is de gestolen sleutel uw enige sleutel, dan moet de sleutelcode uit de boordcomputer gelezen worden en begint het bij €${SITE_CONFIG.prices.allKeysLost},-. U hoort de prijs telefonisch voordat wij vertrekken.`,
   },
   {
     q: 'Mijn auto is keyless — de sleutel lag binnen en is toch gebruikt',
@@ -134,7 +134,7 @@ export default function AutosleutelGestolen() {
         titleTop="Autosleutel Gestolen?"
         titleAccent="Blokkeer Hem Voordat Iemand Anders Rijdt"
         lead="Bij diefstal telt iets anders dan bij verlies: iemand heeft uw sleutel. Wij komen naar uw auto toe, wissen de gestolen sleutel uit de startonderbreker en leveren ter plaatse een nieuwe."
-        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.allKeysLost}`} />}
+        facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.allKeysLost},-`} />}
         image={{
           src: '/images/seo/autosleutel_specialist_utrecht_amsterdam_background.webp',
           alt: 'Sleutelwand in de werkplaats van Autosleutel24 met transpondersleutels per automerk',

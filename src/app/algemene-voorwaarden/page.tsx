@@ -111,16 +111,7 @@ export default function TermsPage() {
         <p style={p}>
           Meld een klacht binnen bekwame tijd bij {SITE_CONFIG.email}. Wij reageren binnen twee
           werkdagen. Op deze voorwaarden is Nederlands recht van toepassing. Komen wij er samen
-          niet uit, dan kunt u terecht bij de bevoegde Nederlandse rechter of via het{' '}
-          <a
-            href="https://ec.europa.eu/consumers/odr"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#b93c20' }}
-          >
-            Europese ODR-platform
-          </a>
-          .
+          niet uit, dan kunt u terecht bij de bevoegde Nederlandse rechter.
         </p>
 
         <p style={{ ...p, marginTop: '2.5rem', fontSize: '.9rem', color: '#64748b' }}>

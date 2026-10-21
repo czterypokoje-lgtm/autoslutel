@@ -16,12 +16,12 @@ export default function DenHaagSeoContent() {
 
       <h3>Alle Sleutels Kwijt? Onze 24/7 Spoedhulp Helpt U Verder</h3>
       <p>
-        Bent u al uw autosleutels kwijtgeraakt na een strandwandeling of tijdens het winkelen in het centrum? Blijf rustig, want de 24/7 noodservice van Autosleutel24 staat altijd voor u klaar. Onze auto slotenmaker is gemiddeld binnen 45 tot 60 minuten bij u in Den Haag. Wij openen uw autodeur 100% schadevrij, programmeren direct een nieuwe sleutel op locatie en zorgen ervoor dat uw verloren sleutels uit het systeem gewist worden. Zo bent u direct weer veilig en mobiel.
+        Bent u al uw autosleutels kwijtgeraakt na een strandwandeling of tijdens het winkelen in het centrum? Blijf rustig, want de 24/7 noodservice van Autosleutel24 staat altijd voor u klaar. Onze auto slotenmaker is gemiddeld binnen 45 tot 60 minuten bij u in Den Haag. Wij openen uw autodeur schadevrij, programmeren direct een nieuwe sleutel op locatie en zorgen ervoor dat uw verloren sleutels uit het systeem gewist worden. Zo bent u direct weer veilig en mobiel.
       </p>
 
       <h3>Programmeren van Moderne Smart Keys</h3>
       <p>
-        De hedendaagse autosleutel is een minicomputer. Met geavanceerde transponderchips (zoals ID48 of Hitag) en Keyless Go systemen, luistert de programmering nauw. Een fout in de communicatie met de ECU betekent dat de auto startblokkering actief blijft. Onze specialisten in Den Haag beschikken over de benodigde OEM-tokens en dealer-niveau diagnoseapparatuur om uw smart keys accuraat en veilig in te leren.
+        De hedendaagse autosleutel is een minicomputer. Met geavanceerde transponderchips (zoals ID48 of Hitag) en Keyless Go systemen, luistert de programmering nauw. Een fout in de communicatie met de ECU betekent dat de auto startblokkering actief blijft. Onze specialisten in Den Haag beschikken over de benodigde tokens en professionele diagnoseapparatuur om uw smart keys accuraat en veilig in te leren.
       </p>
 
       <h3>Reparatie van Autosleutels en Contactsloten</h3>

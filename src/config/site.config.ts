@@ -53,7 +53,6 @@ export const SITE_CONFIG = {
     allKeysLost: '299',
     casing: '35',
     ignition: '299',
-    exVatDisclaimer: 'excl. btw',
   },
 
   hours: 'Maandag t/m Zondag 00:00–24:00',
@@ -68,7 +67,7 @@ export const SITE_CONFIG = {
    * A number that belongs to someone else on an invoice is their problem and
    * ours. Replace it with the number on your own btw-aangifte.
    */
-  btw: 'NL42123555B01',
+  btw: '', // hidden everywhere until the real btw-id from the Belastingdienst is filled in
   /*
    * VERIFY BEFORE INVOICING — same placeholder problem as kvk/btw above. A
    * factuur with someone else's bank account on it is a mistake, not just a

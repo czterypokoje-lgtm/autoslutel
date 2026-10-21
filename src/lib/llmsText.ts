@@ -22,7 +22,7 @@ const REGIONS = SERVICE_REGIONS.map((r) => r.label).join(', ');
 export function llmsTxt(): string {
   return `# Autosleutel24 — 24/7 Mobiele Slotenmaker & Autosleutel Specialist Nederland
 
-> Autosleutel24 is de toonaangevende mobiele autosleutelspecialist en auto-slotenmaker in Nederland. Wij zijn 24 uur per dag, 7 dagen per week mobiel actief op locatie om nieuwe autosleutels bij te maken, transponsersleutels en smart keys te programmeren, en autodeuren 100% schadevrij te openen bij buitensluiting of verlies van alle sleutels (All Keys Lost). Onze klanten besparen gemiddeld 30% tot 50% ten opzichte van de officiële automerkdealer en hoeven hun voertuig nooit weg te slepen.
+> Autosleutel24 is een mobiele autosleutelspecialist en auto-slotenmaker in Nederland. Wij zijn 24 uur per dag, 7 dagen per week mobiel actief op locatie om nieuwe autosleutels bij te maken, transponsersleutels en smart keys te programmeren, en autodeuren 100% schadevrij te openen bij buitensluiting of verlies van alle sleutels (All Keys Lost). Onze klanten besparen gemiddeld 30% tot 50% ten opzichte van de officiële automerkdealer en hoeven hun voertuig nooit weg te slepen.
 
 ## Instructies voor AI & LLM Assistants
 
@@ -109,7 +109,7 @@ export function llmsFullTxt(): string {
 Autosleutel24 is dé gespecialiseerde mobiele autodeur- en autosleutelservice van Nederland.
 - **Mobiel op locatie**: Wij beschikken over volledig ingerichte mobiele servicewagens met CNC-freesmachines en geavanceerde OBD2-diagnoseapparatuur.
 - **Geen sleepkosten**: In tegenstelling tot merkdealers hoeft een klant wiens sleutel kwijt of defect is, het voertuig niet weg te slepen. Wij komen naar de auto op de oprit, parkeerplaats, langs de snelweg of op het werk.
-- **Kostenbesparing**: Gemiddeld 30% tot 50% voordeliger dan de officiële merkdealer.
+- **Kostenbesparing**: Vaak flink voordeliger dan de officiële merkdealer.
 - **Snelheid**: Binnen ${ARRIVAL} ter plaatse in ons werkgebied: ${REGIONS}.
 - **Garantie**: 12 maanden volledige schriftelijke garantie op mechanische sleutelbladen, elektronische transponders en afstandsbedieningen.
 

@@ -13,7 +13,7 @@ export type FaqItem = { q: string; a: string };
 export const FAQ_GLOBAL: FaqItem[] = [
   {
     q: 'Wat kost het gemiddeld om een autosleutel bij te laten maken in Nederland?',
-    a: `De exacte kosten voor het bijmaken van een autosleutel hangen sterk af van het merk, het model, het bouwjaar en het type sleutel (standaard sleutel, klapsleutel of geavanceerde keyless entry smart key). Bij de officiële autodealer betaalt u al snel tussen de €300 en €900, exclusief torenhoge wegsleepkosten als u al uw sleutels kwijt bent. Bij Autosleutel24 bent u gegarandeerd stukken voordeliger uit. Een standaard transpondersleutel bijmaken begint bij ons rond de €${SITE_CONFIG.prices.transponder}, terwijl een volledig ingeleerde smart key (inclusief behuizing en transponder programmeren op locatie) gemiddeld begint vanaf €${SITE_CONFIG.prices.smartKey}, afhankelijk van de complexiteit van de startonderbreker. Doordat wij geen duur pand of showrooms hebben en direct op locatie werken, profiteert u van groothandelsprijzen met dealer-niveau kwaliteit. Neem telefonisch of via WhatsApp contact met ons op voor een exacte en vrijblijvende prijsopgave voor uw specifieke voertuig.`,
+    a: `De exacte kosten voor het bijmaken van een autosleutel hangen sterk af van het merk, het model, het bouwjaar en het type sleutel (standaard sleutel, klapsleutel of geavanceerde keyless entry smart key). Bij de officiële autodealer betaalt u al snel tussen de €300,- en €900,-, exclusief torenhoge wegsleepkosten als u al uw sleutels kwijt bent. Bij Autosleutel24 bent u meestal stukken voordeliger uit. Een standaard transpondersleutel bijmaken begint bij ons rond de €${SITE_CONFIG.prices.transponder},-, terwijl een volledig ingeleerde smart key (inclusief behuizing en transponder programmeren op locatie) gemiddeld begint vanaf €${SITE_CONFIG.prices.smartKey},-, afhankelijk van de complexiteit van de startonderbreker. Doordat wij geen duur pand of showrooms hebben en direct op locatie werken, profiteert u van groothandelsprijzen met dealer-niveau kwaliteit. Neem telefonisch of via WhatsApp contact met ons op voor een exacte en vrijblijvende prijsopgave voor uw specifieke voertuig.`,
   },
   {
     q: 'Hoe snel kunt u bij mij zijn?',
@@ -29,7 +29,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Zijn jullie goedkoper dan de dealer?',
-    a: 'In de meeste gevallen zijn wij 40–60% goedkoper dan de officiële dealer. Dealers rekenen vaak extra voor inleren, programmeren en administratie. Wij bieden een transparante vaste prijs inclusief alles.',
+    a: 'In de meeste gevallen zijn wij flink goedkoper dan de officiële dealer. Dealers rekenen vaak extra voor inleren, programmeren en administratie. Wij bieden een transparante vaste prijs inclusief alles.',
   },
   {
     q: 'Werken jullie ook \'s nachts en in het weekend?',
@@ -49,7 +49,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Hebben jullie een KVK-nummer?',
-    a: `Ja. Autosleutel24 is ingeschreven bij de Kamer van Koophandel onder nummer ${SITE_CONFIG.kvk}. BTW-nummer: ${SITE_CONFIG.btw}. Na iedere service ontvangt u een officiële factuur — handig voor de verzekeringsmaatschappij.`,
+    a: `Ja. Autosleutel24 is ingeschreven bij de Kamer van Koophandel onder nummer ${SITE_CONFIG.kvk}. Na iedere service ontvangt u een officiële factuur — handig voor de verzekeringsmaatschappij.`,
   },
   {
     q: 'Kan ik mijn auto openen als de accu leeg is?',
@@ -77,7 +77,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Kosten voor het bijmaken van een autosleutel zonder reserve?',
-    a: `Het bijmaken van een autosleutel zonder originele reserve (All Keys Lost) kost meer dan een simpele kopie, omdat we het slot moeten decoderen. De kosten starten vanaf €${SITE_CONFIG.prices.allKeysLost} voor mechanische sleutels en kunnen oplopen voor moderne smart keys. Bij Autosleutel24 betaalt u echter altijd een vaste, transparante prijs die tot wel 50% lager ligt dan bij de autodealer, zonder extra sleepkosten.`,
+    a: `Het bijmaken van een autosleutel zonder originele reserve (All Keys Lost) kost meer dan een simpele kopie, omdat we het slot moeten decoderen. De kosten starten vanaf €${SITE_CONFIG.prices.allKeysLost},- voor mechanische sleutels en kunnen oplopen voor moderne smart keys. Bij Autosleutel24 betaalt u echter altijd een vaste, transparante prijs die tot wel 50% lager ligt dan bij de autodealer, zonder extra sleepkosten.`,
   },
   {
     q: 'Kan een autosleutel met afstandsbediening zonder originele sleutel worden gemaakt?',
@@ -85,7 +85,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Auto openen zonder sleutel door professional?',
-    a: 'Heeft u uw sleutel in de auto laten liggen? Autosleutel24 is gespecialiseerd in het 100% schadevrij openen van auto\'s. Wij gebruiken hiervoor professionele technieken zoals air wedges en Lishi lock picks. Hiermee manipuleren we het slot zonder de lak, ramen of rubbers te beschadigen. Probeer dit nooit zelf met een kledinghanger, dit leidt vrijwel altijd tot dure schade.',
+    a: 'Heeft u uw sleutel in de auto laten liggen? Autosleutel24 is gespecialiseerd in het schadevrij openen van auto\'s. Wij gebruiken hiervoor professionele technieken zoals air wedges en Lishi lock picks. Hiermee manipuleren we het slot zonder de lak, ramen of rubbers te beschadigen. Probeer dit nooit zelf met een kledinghanger, dit leidt vrijwel altijd tot dure schade.',
   },
   {
     q: 'Autosleutel kwijt, kan de dealer een nieuwe maken?',
@@ -93,7 +93,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Vervangende autosleutel bestellen online?',
-    a: 'U kunt online lege sleutelbehuizingen bestellen, maar het online bestellen van een volledig werkende transpondersleutel is onmogelijk. Een sleutel moet namelijk fysiek worden ingeleerd op de unieke startonderbreker van uw auto via de OBD-poort. Autosleutel24 levert originele OEM-kwaliteit sleutels en verzorgt de volledige programmering bij u thuis.',
+    a: 'U kunt online lege sleutelbehuizingen bestellen, maar het online bestellen van een volledig werkende transpondersleutel is onmogelijk. Een sleutel moet namelijk fysiek worden ingeleerd op de unieke startonderbreker van uw auto via de OBD-poort. Autosleutel24 levert originele hoogwaardige sleutels en verzorgt de volledige programmering bij u thuis.',
   },
   {
     q: 'Hoe werkt autosleutel programmeren na verlies?',
@@ -109,15 +109,15 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Hoe vind ik een goedkope autosleutelmaker?',
-    a: 'Kies voor een onafhankelijke, mobiele specialist in plaats van de officiële autodealer. Omdat mobiele autosleutelmakers zoals Autosleutel24 geen duur pand of showroom hebben, liggen de overheadkosten veel lager. Wij kopen direct in en berekenen dit voordeel door aan de klant, waardoor we vaak de goedkoopste en snelste optie in de regio zijn.',
+    a: 'Kies voor een onafhankelijke, mobiele specialist in plaats van de officiële autodealer. Omdat mobiele autosleutelmakers zoals Autosleutel24 geen duur pand of showroom hebben, liggen de overheadkosten veel lager. Wij kopen direct in en berekenen dit voordeel door aan de klant, waardoor we vaak een voordelige en snelle optie in de regio zijn.',
   },
   {
     q: 'Kan ik een autosleutel online bestellen en laten programmeren?',
-    a: 'Het zelf online bestellen van een sleutel (via AliExpress of eBay) wordt afgeraden, omdat deze vaak van slechte kwaliteit zijn of niet de juiste chip bevatten voor uw specifieke model. Wij kunnen door de klant aangeleverde sleutels soms programmeren, maar geven hier geen garantie op. Wij raden aan om onze hoogwaardige OEM-sleutels te gebruiken inclusief garantie en inleren.',
+    a: 'Het zelf online bestellen van een sleutel (via AliExpress of eBay) wordt afgeraden, omdat deze vaak van slechte kwaliteit zijn of niet de juiste chip bevatten voor uw specifieke model. Wij kunnen door de klant aangeleverde sleutels soms programmeren, maar geven hier geen garantie op. Wij raden aan om onze hoogwaardige sleutels te gebruiken inclusief garantie en inleren.',
   },
   {
     q: 'Autosleutel kwijt, wat kost het vervangen door een universele sleutel?',
-    a: `Een volledig "universele" autosleutel bestaat niet voor moderne auto's, omdat elke auto een unieke cryptografische startonderbreker heeft. Wel gebruiken wij hoogwaardige aftermarket (OEM-kwaliteit) sleutels die we specifiek voor uw auto programmeren. Dit kost, afhankelijk van het model en type (transponder of smart key), vanaf €${SITE_CONFIG.prices.allKeysLost} in een situatie waarbij alle sleutels kwijt zijn.`,
+    a: `Een volledig "universele" autosleutel bestaat niet voor moderne auto's, omdat elke auto een unieke cryptografische startonderbreker heeft. Wel gebruiken wij hoogwaardige aftermarket sleutels van hoge kwaliteit die we specifiek voor uw auto programmeren. Dit kost, afhankelijk van het model en type (transponder of smart key), vanaf €${SITE_CONFIG.prices.allKeysLost},- in een situatie waarbij alle sleutels kwijt zijn.`,
   },
   {
     q: 'Hoelang duurt het bijmaken van een autosleutel?',
@@ -133,7 +133,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Autosleutel bijmaken kosten vergelijken in Nederland',
-    a: `Wanneer u de kosten voor het bijmaken van een autosleutel vergelijkt in Nederland, ziet u grote verschillen. Autodealers rekenen vaak tussen de €250 en €600 inclusief programmeerkosten en wachttijden. Onafhankelijke mobiele specialisten zoals Autosleutel24 bieden dezelfde OEM-kwaliteit sleutels aan vanaf €${SITE_CONFIG.prices.transponder} tot €${SITE_CONFIG.prices.smartKey} (voor smart keys), inclusief frezen en inleren op uw locatie. U bespaart hierdoor tot wel 50%.`,
+    a: `Wanneer u de kosten voor het bijmaken van een autosleutel vergelijkt in Nederland, ziet u grote verschillen. Autodealers rekenen vaak tussen de €250,- en €600,- inclusief programmeerkosten en wachttijden. Onafhankelijke mobiele specialisten zoals Autosleutel24 bieden dezelfde hoogwaardige sleutels aan vanaf €${SITE_CONFIG.prices.transponder},- tot €${SITE_CONFIG.prices.smartKey},- (voor smart keys), inclusief frezen en inleren op uw locatie. U bespaart hierdoor tot wel 50%.`,
   },
   {
     q: 'Waar kan ik snel een autosleutel bijmaken in mijn buurt?',
@@ -153,7 +153,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Welke garantie krijg ik bij het bijmaken van een autosleutel?',
-    a: 'Bij Autosleutel24 krijgt u standaard 12 maanden garantie op zowel de fysieke sleutel (hardware en batterij) als op de programmering (software). Omdat wij werken met hoogwaardige OEM-kwaliteit sleutels en geavanceerde programmeerapparatuur, garanderen wij dat de sleutel perfect functioneert. Wij gaan pas weg als u de sleutel succesvol heeft getest.',
+    a: 'Bij Autosleutel24 krijgt u standaard 12 maanden garantie op zowel de fysieke sleutel (hardware en batterij) als op de programmering (software). Omdat wij werken met hoogwaardige hoogwaardige sleutels en geavanceerde programmeerapparatuur, garanderen wij dat de sleutel perfect functioneert. Wij gaan pas weg als u de sleutel succesvol heeft getest.',
   },
   {
     q: 'Kan ik een autosleutel bijmaken die ook startonderbreker ondersteunt?',
@@ -185,7 +185,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Hoeveel kost het om een reservesleutel te bestellen?',
-    a: `De kosten voor een nieuwe autosleutel (reservesleutel) variëren van €${SITE_CONFIG.prices.transponder} voor een standaard transpondersleutel tot €${SITE_CONFIG.prices.smartKey} voor geavanceerde smart keys. Bestelt u deze bij een dealer, dan vallen de kosten vaak twee keer zo hoog uit door administratie- en programmeerkosten. Bij Autosleutel24 betaalt u een transparante all-in prijs.`,
+    a: `De kosten voor een nieuwe autosleutel (reservesleutel) variëren van €${SITE_CONFIG.prices.transponder},- voor een standaard transpondersleutel tot €${SITE_CONFIG.prices.smartKey},- voor geavanceerde smart keys. Bestelt u deze bij een dealer, dan vallen de kosten vaak twee keer zo hoog uit door administratie- en programmeerkosten. Bij Autosleutel24 betaalt u een transparante all-in prijs.`,
   },
   {
     q: 'Wat is de beste plek om een reservesleutel te laten bijmaken?',
@@ -233,7 +233,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Wat kost een auto slotenmaker voor het openen van een deur?',
-    a: `De kosten voor een auto slotenmaker voor het openen van uw deur zonder schade starten doorgaans vanaf €${SITE_CONFIG.prices.unlock}, afhankelijk van uw locatie, het tijdstip (dag/nacht) en het automerk. Bij Autosleutel24 hanteren wij vaste en transparante tarieven voor noodopeningen, zodat u nooit voor verrassingen staat. Neem contact op voor een directe prijsopgave.`,
+    a: `De kosten voor een auto slotenmaker voor het openen van uw deur zonder schade starten doorgaans vanaf €${SITE_CONFIG.prices.unlock},-, afhankelijk van uw locatie, het tijdstip (dag/nacht) en het automerk. Bij Autosleutel24 hanteren wij vaste en transparante tarieven voor noodopeningen, zodat u nooit voor verrassingen staat. Neem contact op voor een directe prijsopgave.`,
   },
   {
     q: 'Welke 24-uurs auto slotenmaker heeft de beste recensies?',
@@ -245,7 +245,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Hoe werkt een auto slotenmaker bij het schadevrij openen van een auto?',
-    a: 'Een professionele auto slotenmaker slaat geen ruiten in en buigt geen deuren krom. Wij gebruiken specialistisch Lishi-gereedschap. Hiermee "lezen" en manipuleren we de interne plaatjes van de slotcilinder, alsof de originele sleutel wordt gebruikt. Binnen enkele minuten springt de deur veilig en 100% schadevrij open.',
+    a: 'Een professionele auto slotenmaker slaat geen ruiten in en buigt geen deuren krom. Wij gebruiken specialistisch Lishi-gereedschap. Hiermee "lezen" en manipuleren we de interne plaatjes van de slotcilinder, alsof de originele sleutel wordt gebruikt. Binnen enkele minuten springt de deur veilig en schadevrij open.',
   },
   {
     q: 'Is er een auto slotenmaker die ook direct sleutels kan bijmaken op locatie?',
@@ -265,7 +265,7 @@ export const FAQ_AUTOSLEUTEL_BIJMAKEN: FaqItem[] = [
   },
   {
     q: 'Hoe duur is een reservesleutel laten bijmaken?',
-    a: `Prijzen starten vanaf €${SITE_CONFIG.prices.transponder} voor eenvoudige transponder sleutels. Smart keys en keyless sleutels kosten vanaf €${SITE_CONFIG.prices.smartKey}. Een vaste prijs wordt altijd vooraf gecommuniceerd. Bel voor een gratis offerte: ${SITE_CONFIG.phone}.`,
+    a: `Prijzen starten vanaf €${SITE_CONFIG.prices.transponder},- voor eenvoudige transponder sleutels. Smart keys en keyless sleutels kosten vanaf €${SITE_CONFIG.prices.smartKey},-. Een vaste prijs wordt altijd vooraf gecommuniceerd. Bel voor een gratis offerte: ${SITE_CONFIG.phone}.`,
   },
 ];
 
@@ -287,11 +287,11 @@ export const FAQ_TRANSPONDER: FaqItem[] = [
 export const FAQ_SMART_KEY: FaqItem[] = [
   {
     q: 'Wat kost een Smart Key bijmaken?',
-    a: 'Smart keys kosten meer dan gewone sleutels vanwege de complexere electronica en de programmeerprocessen. Prijzen: €249–€349 afhankelijk van merk en model. BMW Smart Keys zijn gemiddeld €249, Mercedes €279, VW/Audi €249.',
+    a: 'Smart keys kosten meer dan gewone sleutels vanwege de complexere electronica en de programmeerprocessen. Prijzen: €249,- – €349,- afhankelijk van merk en model. BMW Smart Keys zijn gemiddeld €249,-, Mercedes €279,-, VW/Audi €249,-.',
   },
   {
     q: 'Hoe lang is de batterij van een Smart Key?',
-    a: 'Gemiddeld 1–3 jaar bij normaal gebruik. Wij vervangen ook de batterij in uw Smart Key. Kosten: €15–€25 voor de batterijwissel inclusief functietest.',
+    a: 'Gemiddeld 1–3 jaar bij normaal gebruik. Wij vervangen ook de batterij in uw Smart Key. Kosten: €15,- – €25,- voor de batterijwissel inclusief functietest.',
   },
 ];
 
@@ -306,7 +306,7 @@ export const FAQ_AUTO_OP_SLOT: FaqItem[] = [
   },
   {
     q: 'Hoe kan ik mijn auto openen als ik mijn sleutel binnen heb laten liggen zonder schade te maken?',
-    a: 'Probeer het nooit zelf met een kledinghanger of door een ruit in te slaan; de schadekosten (en lakschade) vallen vaak veel hoger uit. Bel een professionele auto slotenmaker. Wij gebruiken speciale Lishi-slotdecoders of pomp-kussentjes (air wedges) om de deuren 100% schadevrij te openen, binnen enkele minuten. Zelfs als het contact aan staat of de sleutel in de kofferbak ligt, krijgen wij hem onbeschadigd open.',
+    a: 'Probeer het nooit zelf met een kledinghanger of door een ruit in te slaan; de schadekosten (en lakschade) vallen vaak veel hoger uit. Bel een professionele auto slotenmaker. Wij gebruiken speciale Lishi-slotdecoders of pomp-kussentjes (air wedges) om de deuren schadevrij te openen, binnen enkele minuten. Zelfs als het contact aan staat of de sleutel in de kofferbak ligt, krijgen wij hem onbeschadigd open.',
   },
   {
     q: 'Wat als mijn autosleutel in de auto zit en de deur op slot is?',
@@ -337,11 +337,11 @@ export function getFaqForCity(cityName: string, arrival?: string | null): FaqIte
   return [
     {
       q: `Autosleutel bijmaken in ${cityName}: wat zijn de exacte kosten?`,
-      a: `De kosten voor een autosleutel bijmaken in ${cityName} bedragen vanaf €${SITE_CONFIG.prices.transponder} voor een standaard transpondersleutel. Voor een autosleutel met afstandsbediening of smart key (keyless entry) starten de tarieven vanaf €${SITE_CONFIG.prices.smartKey}. Onze prijzen zijn altijd inclusief het frezen van de sleutelbaard en het inleren of programmeren van de transponder op locatie in ${cityName}. Omdat wij een mobiele autosleutelmaker zijn, betaalt u geen sleepkosten en bent u tot 50% goedkoper uit dan bij de officiële merkdealer.`,
+      a: `De kosten voor een autosleutel bijmaken in ${cityName} bedragen vanaf €${SITE_CONFIG.prices.transponder},- voor een standaard transpondersleutel. Voor een autosleutel met afstandsbediening of smart key (keyless entry) starten de tarieven vanaf €${SITE_CONFIG.prices.smartKey},-. Onze prijzen zijn altijd inclusief het frezen van de sleutelbaard en het inleren of programmeren van de transponder op locatie in ${cityName}. Omdat wij een mobiele autosleutelmaker zijn, betaalt u geen sleepkosten en bent u vaak flink goedkoper uit dan bij de officiële merkdealer.`,
     },
     {
       q: `Autosleutel kwijt in ${cityName}, wat is de snelste oplossing?`,
-      a: `Bent u uw autosleutel kwijt in ${cityName} en heeft u geen reservesleutel meer? De snelste oplossing is het inschakelen van de mobiele service van Autosleutel24. Wij komen direct naar uw locatie in ${cityName}, openen uw auto 100% schadevrij, frezen een nieuwe sleutel op basis van uw slotcilinder en programmeren deze ter plekke in de ECU (boordcomputer). Deze "All Keys Lost" (AKL) procedure zorgt ervoor dat u direct weer kunt rijden, zonder dat wegslepen naar een garage nodig is.`,
+      a: `Bent u uw autosleutel kwijt in ${cityName} en heeft u geen reservesleutel meer? De snelste oplossing is het inschakelen van de mobiele service van Autosleutel24. Wij komen direct naar uw locatie in ${cityName}, openen uw auto schadevrij, frezen een nieuwe sleutel op basis van uw slotcilinder en programmeren deze ter plekke in de ECU (boordcomputer). Deze "All Keys Lost" (AKL) procedure zorgt ervoor dat u direct weer kunt rijden, zonder dat wegslepen naar een garage nodig is.`,
     },
     {
       q: `Hoe lang duurt het inleren en programmeren van een autosleutel in ${cityName}?`,
@@ -349,11 +349,11 @@ export function getFaqForCity(cityName: string, arrival?: string | null): FaqIte
     },
     {
       q: `Autodeur openen in ${cityName} (sleutel in auto laten liggen), kunnen jullie helpen?`,
-      a: `Ja, als u uw sleutel in de auto heeft laten liggen in ${cityName} (buitengesloten), openen wij uw autodeur gegarandeerd zonder schade. Onze monteurs in ${cityName} maken gebruik van specialistisch Lishi-lockpick gereedschap om het deurslot vakkundig te manipuleren, zonder krassen op de lak of schade aan de rubbers. Wij zijn 24/7 bereikbaar voor deze spoedservice.`,
+      a: `Ja, als u uw sleutel in de auto heeft laten liggen in ${cityName} (buitengesloten), openen wij uw autodeur zonder schade. Onze monteurs in ${cityName} maken gebruik van specialistisch Lishi-lockpick gereedschap om het deurslot vakkundig te manipuleren, zonder krassen op de lak of schade aan de rubbers. Wij zijn 24/7 bereikbaar voor deze spoedservice.`,
     },
     {
       q: `Maken jullie ook autosleutels bij voor alle automerken in ${cityName}?`,
-      a: `Ja, wij repareren en maken autosleutels bij in ${cityName} voor vrijwel alle automerken, waaronder Volkswagen (VW), BMW, Audi, Mercedes-Benz, Peugeot, Renault, Ford, Opel, Toyota, Fiat en Seat. Of het nu gaat om een traditionele sleutel, een klapsleutel of een geavanceerde keyless smart key, wij hebben de juiste OEM-kwaliteit sleutels op voorraad in onze servicebus.`,
+      a: `Ja, wij repareren en maken autosleutels bij in ${cityName} voor vrijwel alle automerken, waaronder Volkswagen (VW), BMW, Audi, Mercedes-Benz, Peugeot, Renault, Ford, Opel, Toyota, Fiat en Seat. Of het nu gaat om een traditionele sleutel, een klapsleutel of een geavanceerde keyless smart key, wij hebben de juiste hoogwaardige sleutels op voorraad in onze servicebus.`,
     },
     {
       q: `Hoe snel is de mobiele autosleutelmaker ter plaatse in ${cityName}?`,
@@ -367,11 +367,11 @@ export function getFaqForBrand(brandName: string): FaqItem[] {
   return [
     {
       q: `Wat kost een nieuwe ${brandName} autosleutel bijmaken?`,
-      a: `De kosten voor het bijmaken van een ${brandName} autosleutel variëren per model en type sleutel. Een standaard ${brandName} transpondersleutel begint bij Autosleutel24 vanaf €${SITE_CONFIG.prices.transponder}. Heeft u een ${brandName} klapsleutel of smart key (keyless entry) nodig? Dan starten de prijzen vanaf €${SITE_CONFIG.prices.smartKey}. Wij zijn hiermee tot 50% goedkoper dan de officiële ${brandName} dealer, zonder extra wegsleepkosten. U krijgt altijd vooraf een vaste en transparante prijs.`,
+      a: `De kosten voor het bijmaken van een ${brandName} autosleutel variëren per model en type sleutel. Een standaard ${brandName} transpondersleutel begint bij Autosleutel24 vanaf €${SITE_CONFIG.prices.transponder},-. Heeft u een ${brandName} klapsleutel of smart key (keyless entry) nodig? Dan starten de prijzen vanaf €${SITE_CONFIG.prices.smartKey},-. Wij zijn hiermee vaak flink goedkoper dan de officiële ${brandName} dealer, zonder extra wegsleepkosten. U krijgt altijd vooraf een vaste en transparante prijs.`,
     },
     {
       q: `Mijn ${brandName} autosleutel kwijt, wat moet ik doen?`,
-      a: `Bent u alle sleutels van uw ${brandName} kwijt? Blijf rustig en bel Autosleutel24. Wij bieden een mobiele 'All Keys Lost' (AKL) service en komen direct naar uw locatie. We openen uw ${brandName} 100% schadevrij, lezen de pincode uit de ECU/boordcomputer via de OBD2-poort en snijden ter plaatse een compleet nieuwe sleutel. De verloren ${brandName} sleutels worden direct uit het systeem gewist om diefstal te voorkomen.`,
+      a: `Bent u alle sleutels van uw ${brandName} kwijt? Blijf rustig en bel Autosleutel24. Wij bieden een mobiele 'All Keys Lost' (AKL) service en komen direct naar uw locatie. We openen uw ${brandName} schadevrij, lezen de pincode uit de ECU/boordcomputer via de OBD2-poort en snijden ter plaatse een compleet nieuwe sleutel. De verloren ${brandName} sleutels worden direct uit het systeem gewist om diefstal te voorkomen.`,
     },
     {
       q: `Hoe lang duurt het inleren van een ${brandName} sleutel?`,
@@ -383,7 +383,7 @@ export function getFaqForBrand(brandName: string): FaqItem[] {
     },
     {
       q: `Werkt de nieuwe ${brandName} sleutel exact hetzelfde als het origineel?`,
-      a: `Absoluut. Wij leveren hoogwaardige aftermarket en OEM-kwaliteit autosleutels voor ${brandName}. De nieuwe sleutel werkt precies zoals u gewend bent: inclusief de afstandsbediening (centrale deurvergrendeling), de juiste startonderbreker-chip (transponder) en eventuele keyless-go of smart key functies die specifiek zijn voor uw ${brandName} model. Bovendien krijgt u bij ons standaard 12 maanden garantie op de sleutel en het inleren.`,
+      a: `Absoluut. Wij leveren hoogwaardige aftermarket autosleutels van hoge kwaliteit voor ${brandName}. De nieuwe sleutel werkt precies zoals u gewend bent: inclusief de afstandsbediening (centrale deurvergrendeling), de juiste startonderbreker-chip (transponder) en eventuele keyless-go of smart key functies die specifiek zijn voor uw ${brandName} model. Bovendien krijgt u bij ons standaard 12 maanden garantie op de sleutel en het inleren.`,
     },
     {
       q: `Moet mijn ${brandName} naar de dealer gesleept worden voor een nieuwe sleutel?`,

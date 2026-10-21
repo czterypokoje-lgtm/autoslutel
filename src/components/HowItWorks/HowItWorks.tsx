@@ -80,7 +80,7 @@ export default function HowItWorks({ cityName, brandName, variant = 'default' }:
         imgSrc: '/images/steps/lockout_step2_1786439679636.webp',
         alt: `Auto schadevrij openen`,
         step: 'Stap 2',
-        title: '100% Schadevrij openen',
+        title: 'Schadevrij openen',
         desc: `Onze monteur is snel ter plaatse en gebruikt speciaal decoderingsgereedschap om het slot van uw autodeur of kofferbak volledig schadevrij te manipuleren.`,
       },
       {

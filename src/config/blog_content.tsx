@@ -669,9 +669,9 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </ul>
 
       <div className="author-bio" style={{ marginTop: '3rem', padding: '1.5rem', backgroundColor: '#f9fafb', borderRadius: '8px', borderLeft: '4px solid var(--primary)' }}>
-        <h3 style={{ marginTop: 0 }}>Eigenaar & Gecertificeerd Hoofdtechnicus Autosleutel24 (10+ jaar ervaring)</h3>
+        <h3 style={{ marginTop: 0 }}>Eigenaar & Hoofdtechnicus Autosleutel24 (10+ jaar ervaring)</h3>
         <p style={{ marginBottom: 0 }}>
-          Berkan Acarol is de oprichter en hoofdtechnicus van Autosleutel24. Als specialist in voertuigelektronica en transponderbeveiliging is hij officieel gecertificeerd in Autel IM608 Pro II en AVDI Abrites diagnose- en programmeersystemen. Hij voert dagelijks complexe OBD2-inleerprocedures, EEPROM-reparaties en schadevrije auto-ontsluitingen uit in heel Midden-Nederland.
+          Berkan Acarol is de oprichter en hoofdtechnicus van Autosleutel24. Als specialist in voertuigelektronica en transponderbeveiliging werkt hij dagelijks met Autel IM608 Pro II en AVDI Abrites diagnose- en programmeersystemen. Hij voert dagelijks complexe OBD2-inleerprocedures, EEPROM-reparaties en schadevrije auto-ontsluitingen uit in heel Midden-Nederland.
         </p>
       </div>
 
@@ -693,7 +693,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div className="cta-section" style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#eef2ff', borderRadius: '8px', textAlign: 'center' }}>
         <h3 style={{ marginTop: 0, color: 'var(--primary-dark)' }}>Direct Een Autosleutel Laten Bijmaken of Programmeren?</h3>
-        <p>Onze gecertificeerde autosleutelspecialisten staan 24/7 voor u klaar.</p>
+        <p>Onze ervaren autosleutelspecialisten staan 24/7 voor u klaar.</p>
         <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'inline-block', padding: '12px 24px', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem' }}>
           📞 {SITE_CONFIG.phone}
         </a>
@@ -749,32 +749,32 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           <tr>
             <td><strong>Volkswagen / Audi / Seat</strong></td>
             <td>Transponder / Smart Key (MQB)</td>
-            <td>€125 - €199</td>
-            <td>€300 - €450</td>
+            <td>€125,- – €199,-</td>
+            <td>€300,- – €450,-</td>
           </tr>
           <tr>
             <td><strong>BMW / Mini</strong></td>
             <td>Smart Key (CAS/FEM/BDC)</td>
-            <td>€199 - €249</td>
-            <td>€350 - €550</td>
+            <td>€199,- – €249,-</td>
+            <td>€350,- – €550,-</td>
           </tr>
           <tr>
             <td><strong>Mercedes-Benz</strong></td>
             <td>Infrarood Sleutel (FBS3/FBS4)</td>
-            <td>€199 - €269</td>
-            <td>€400 - €600</td>
+            <td>€199,- – €269,-</td>
+            <td>€400,- – €600,-</td>
           </tr>
           <tr>
             <td><strong>Toyota / Lexus</strong></td>
             <td>Proximity Smart Key</td>
-            <td>€189 - €239</td>
-            <td>€350 - €480</td>
+            <td>€189,- – €239,-</td>
+            <td>€350,- – €480,-</td>
           </tr>
           <tr>
             <td><strong>Ford / Opel / Peugeot</strong></td>
             <td>Afstandsbediening Klapsleutel</td>
-            <td>€129 - €179</td>
-            <td>€250 - €380</td>
+            <td>€129,- – €179,-</td>
+            <td>€250,- – €380,-</td>
           </tr>
         </tbody>
       </table>
@@ -789,9 +789,9 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Waarom een slotenmaker goedkoper en sneller is</h3>
       <ul>
-        <li><strong>Geen sleepkosten:</strong> Als u uw sleutels kwijt bent, moet de dealer de auto wegslepen (€100 - €150). Wij komen gewoon naar u toe in onze mobiele werkplaats.</li>
+        <li><strong>Geen sleepkosten:</strong> Als u uw sleutels kwijt bent, moet de dealer de auto wegslepen (€100,- – €150,-). Wij komen gewoon naar u toe in onze mobiele werkplaats.</li>
         <li><strong>Snelle levertijd:</strong> Een dealer bestelt een sleutel op chassisnummer in Duitsland of Frankrijk, wat 3 tot 10 werkdagen duurt. Wij programmeren en snijden een sleutel direct ter plaatse terwijl u wacht.</li>
-        <li><strong>Eerlijke tarieven:</strong> Wij hebben lagere overheadkosten en rekenen geen absurde fabrieksmarges. Dit scheelt u gemiddeld 30% tot 50% in de totale kosten.</li>
+        <li><strong>Eerlijke tarieven:</strong> Wij hebben lagere overheadkosten en rekenen geen absurde fabrieksmarges. Dit scheelt u vaak flink.</li>
       </ul>
     </>
   ),
@@ -882,10 +882,10 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>De dealeroplossing vs Autosleutel24</h3>
       <p>
-        De officiële BMW dealer gaf aan dat de auto op een dieplader gezet moest worden en naar de werkplaats gesleept diende te worden. De levertijd voor de nieuwe sleutel was 5 werkdagen en de totale kosten (inclusief slepen, inleren en de smart key) bedroegen ruim €550.
+        De officiële BMW dealer gaf aan dat de auto op een dieplader gezet moest worden en naar de werkplaats gesleept diende te worden. De levertijd voor de nieuwe sleutel was 5 werkdagen en de totale kosten (inclusief slepen, inleren en de smart key) bedroegen ruim €550,-.
       </p>
       <p>
-        Onze monteur was binnen 25 minuten ter plaatse. Met een Lishi pick opende hij het portierslot binnen 3 minuten volledig schadevrij. Vervolgens heeft hij de BDC-module uitgelezen en binnen 45 minuten een originele OEM smart key geprogrammeerd en ingeleerd. De klant was direct weer mobiel en bespaarde ruim €250 én een hoop wachttijd.
+        Onze monteur was binnen 25 minuten ter plaatse. Met een Lishi pick opende hij het portierslot binnen 3 minuten volledig schadevrij. Vervolgens heeft hij de BDC-module uitgelezen en binnen 45 minuten een originele OEM smart key geprogrammeerd en ingeleerd. De klant was direct weer mobiel en bespaarde ruim €250,- én een hoop wachttijd.
       </p>
     </>
   ),
@@ -972,10 +972,10 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         De kosten voor het bijmaken van een sleutel bij verlies van alle sleutels (All Keys Lost) liggen logischerwijs hoger dan wanneer u een reservesleutel laat kopiëren op basis van een werkend origineel. Dit komt door de benodigde noodopening en het decodeerwerk. Gemiddeld kunt u uitgaan van de volgende tarieven:
       </p>
       <ul>
-        <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €125 tot €249. Ideaal als goedkope noodoplossing.</li>
-        <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €{SITE_CONFIG.prices.klapsleutel} tot €349 voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
-        <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €249 tot €349 voor premium merken (BMW, Audi, Toyota, Volvo).</li>
-        <li><strong>Complexe immobilizers (o.a. Mercedes FBS4 of nieuwe VAG MQB48):</strong> Vanaf €299 tot €599 vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren.</li>
+        <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €125,- tot €249,-. Ideaal als goedkope noodoplossing.</li>
+        <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €{SITE_CONFIG.prices.klapsleutel},- tot €349,- voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
+        <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €249,- tot €349,- voor premium merken (BMW, Audi, Toyota, Volvo).</li>
+        <li><strong>Complexe immobilizers (o.a. Mercedes FBS4 of nieuwe VAG MQB48):</strong> Vanaf €299,- tot €599,- vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren.</li>
       </ul>
 
       <h3>Welke documenten heeft u nodig?</h3>
@@ -991,7 +991,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <details style={{ borderBottom: '1px solid #e2e8f0', padding: '1rem 0' }}>
         <summary style={{ fontWeight: 700, cursor: 'pointer' }}>Wat kost een autosleutel bijmaken zonder origineel?</summary>
         <p style={{ marginTop: '0.5rem', color: '#475569' }}>
-          De tarieven starten vanaf €125 voor oudere auto&apos;s en eenvoudige sleutels. Voor moderne smart keys ligt de prijs gemiddeld tussen de €299 en €499. Dit is inclusief de noodopening ter plaatse, het decoderen van het slot en het inleren van de chip.
+          De tarieven starten vanaf €125,- voor oudere auto&apos;s en eenvoudige sleutels. Voor moderne smart keys ligt de prijs gemiddeld tussen de €299,- en €499,-. Dit is inclusief de noodopening ter plaatse, het decoderen van het slot en het inleren van de chip.
         </p>
       </details>
 
@@ -1035,7 +1035,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
                 "name": "Wat kost een autosleutel bijmaken zonder origineel?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "De kosten beginnen vanaf €149 voor eenvoudige sleutels en liggen gemiddeld tussen de €299 en €499 voor smart keys. Dit is inclusief noodopening en programmering ter plaatse."
+                  "text": "De kosten beginnen vanaf €149,- voor eenvoudige sleutels en liggen gemiddeld tussen de €299,- en €499,- voor smart keys. Dit is inclusief noodopening en programmering ter plaatse."
                 }
               },
               {
@@ -1101,39 +1101,39 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           <tbody>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Volkswagen Golf 7 (Klapsleutel)</strong></td>
-              <td style={{ padding: '1rem' }}>€280 - €360</td>
-              <td style={{ padding: '1rem' }}>€125 - €179</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>45% - 50% besparing</td>
+              <td style={{ padding: '1rem' }}>€280,- – €360,-</td>
+              <td style={{ padding: '1rem' }}>€125,- – €179,-</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>BMW 3-Serie (F30 Smart Key)</strong></td>
-              <td style={{ padding: '1rem' }}>€380 - €480</td>
-              <td style={{ padding: '1rem' }}>€199 - €249</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>47% - 52% besparing</td>
+              <td style={{ padding: '1rem' }}>€380,- – €480,-</td>
+              <td style={{ padding: '1rem' }}>€199,- – €249,-</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Mercedes C-Klasse (FBS3 Infrarood)</strong></td>
-              <td style={{ padding: '1rem' }}>€410 - €520</td>
-              <td style={{ padding: '1rem' }}>€199 - €269</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>48% - 51% besparing</td>
+              <td style={{ padding: '1rem' }}>€410,- – €520,-</td>
+              <td style={{ padding: '1rem' }}>€199,- – €269,-</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Opel Corsa E (Afstandsbediening)</strong></td>
-              <td style={{ padding: '1rem' }}>€220 - €290</td>
-              <td style={{ padding: '1rem' }}>€129 - €159</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>41% - 45% besparing</td>
+              <td style={{ padding: '1rem' }}>€220,- – €290,-</td>
+              <td style={{ padding: '1rem' }}>€129,- – €159,-</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Toyota Yaris (Proximity Smart Key)</strong></td>
-              <td style={{ padding: '1rem' }}>€350 - €450</td>
-              <td style={{ padding: '1rem' }}>€189 - €229</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>46% - 49% besparing</td>
+              <td style={{ padding: '1rem' }}>€350,- – €450,-</td>
+              <td style={{ padding: '1rem' }}>€189,- – €229,-</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Ford Transit (Bedrijfswagen smart key)</strong></td>
-              <td style={{ padding: '1rem' }}>€320 - €420</td>
-              <td style={{ padding: '1rem' }}>€169 - €219</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>47% - 48% besparing</td>
+              <td style={{ padding: '1rem' }}>€320,- – €420,-</td>
+              <td style={{ padding: '1rem' }}>€169,- – €219,-</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
           </tbody>
         </table>
@@ -1145,7 +1145,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
       <ol>
         <li><strong>Logistiek en transport:</strong> Dealers bestellen een sleutel op chassisnummer bij de autofabrikant (vaak in Duitsland of Frankrijk). U betaalt indirect voor de verzendkosten, administratieve kosten van de importeur en de marges van de fabriek.</li>
-        <li><strong>Mandatoire uurlonen:</strong> Het inleren van de sleutel gebeurt in de werkplaats. Dealers hanteren uiterst hoge werkplaatstarieven (vaak tussen de €120 en €180 per uur) en rekenen een vast tarief voor diagnose en inleren, zelfs als dit slechts 15 minuten duurt.</li>
+        <li><strong>Mandatoire uurlonen:</strong> Het inleren van de sleutel gebeurt in de werkplaats. Dealers hanteren uiterst hoge werkplaatstarieven (vaak tussen de €120,- en €180,- per uur) en rekenen een vast tarief voor diagnose en inleren, zelfs als dit slechts 15 minuten duurt.</li>
         <li><strong>Fysieke overhead:</strong> Een dealerpand, showroom en personeel brengen hoge vaste lasten met zich mee. Dit wordt doorberekend in de onderdelen en diensten. Een mobiele sleutelmaker werkt vanuit een efficiënt ingerichte servicebus, waardoor de overheadkosten minimaal zijn.</li>
       </ol>
 
@@ -1154,7 +1154,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Naast de prijs is tijd de belangrijkste factor, zeker als u al uw autosleutels kwijt bent. 
       </p>
       <ul>
-        <li><strong>De dealerprocedure:</strong> U moet eerst fysiek naar de dealer met uw legitimatiebewijs en kentekenpapieren om de sleutel te bestellen. Vervolgens duurt het 3 tot 10 werkdagen voordat de sleutelbaard in de fabriek is gesneden en naar Nederland is verzonden. Zodra de sleutel binnen is, moet u een afspraak inplannen in de werkplaats om de transponder in te leren. Bent u al uw sleutels kwijt? Dan moet u de auto op eigen kosten naar de dealer laten slepen (€100 - €180).</li>
+        <li><strong>De dealerprocedure:</strong> U moet eerst fysiek naar de dealer met uw legitimatiebewijs en kentekenpapieren om de sleutel te bestellen. Vervolgens duurt het 3 tot 10 werkdagen voordat de sleutelbaard in de fabriek is gesneden en naar Nederland is verzonden. Zodra de sleutel binnen is, moet u een afspraak inplannen in de werkplaats om de transponder in te leren. Bent u al uw sleutels kwijt? Dan moet u de auto op eigen kosten naar de dealer laten slepen (€100,- – €180,-).</li>
         <li><strong>De mobiele specialist:</strong> U belt of stuurt een WhatsApp-bericht. De monteur komt dezelfde dag nog naar de locatie waar de auto geparkeerd staat. Binnen 30 tot 60 minuten opent de monteur de deur schadevrij, snijdt de sleutelbaard met een CNC-machine ter plaatse en programmeert de transponder. U kunt direct weer rijden.</li>
       </ul>
 
@@ -1173,32 +1173,32 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <p>
         Een gezin staat geparkeerd bij een recreatieplas in de buurt van Utrecht en verliest hun enige smart key van een Volkswagen Passat. 
         <br />
-        <em>Dealer-aanpak:</em> De auto moet worden weggesleept naar de dealer in Utrecht (€150). De dealer bestelt de sleutel in Duitsland. Levertijd: 5 werkdagen. Het gezin moet vervangend vervoer regelen of de vakantie afbreken. Kosten: €350 sleutel + €150 slepen + €200 vervangend vervoer = €700.
+        <em>Dealer-aanpak:</em> De auto moet worden weggesleept naar de dealer in Utrecht (€150,-). De dealer bestelt de sleutel in Duitsland. Levertijd: 5 werkdagen. Het gezin moet vervangend vervoer regelen of de vakantie afbreken. Kosten: €350,- sleutel + €150,- slepen + €200,- vervangend vervoer = €700,-.
         <br />
-        <em>Slotenmaker-aanpak:</em> Onze monteur komt binnen 30 minuten naar de recreatieplas. We openen de Passat schadevrij en programmeren een nieuwe smart key. Binnen een uur rijdt het gezin weer verder. Kosten: €199 all-in. <strong>Totale besparing: €501 en geen vakantiestress.</strong>
+        <em>Slotenmaker-aanpak:</em> Onze monteur komt binnen 30 minuten naar de recreatieplas. We openen de Passat schadevrij en programmeren een nieuwe smart key. Binnen een uur rijdt het gezin weer verder. Kosten: €199,- all-in. <strong>Totale besparing: €501,- en geen vakantiestress.</strong>
       </p>
 
       <h4>Scenario 2: De reservesleutel voor een student</h4>
       <p>
         Een student heeft een tweedehands Peugeot 208 gekocht met slechts één sleutel en wil een reservesleutel ter preventie.
         <br />
-        <em>Dealer-aanpak:</em> De dealer vraagt €240 voor een klapsleutel met afstandsbediening en rekent €80 voor het inleren. De student moet de auto een ochtend achterlaten in de werkplaats. Totale kosten: €320.
+        <em>Dealer-aanpak:</em> De dealer vraagt €240,- voor een klapsleutel met afstandsbediening en rekent €80,- voor het inleren. De student moet de auto een ochtend achterlaten in de werkplaats. Totale kosten: €320,-.
         <br />
-        <em>Slotenmaker-aanpak:</em> De student plant een afspraak in bij zijn studentenwoning. De monteur snijdt en programmeert de sleutel ter plaatse terwijl de student studeert. Totale kosten: €149. <strong>Besparing: €171.</strong>
+        <em>Slotenmaker-aanpak:</em> De student plant een afspraak in bij zijn studentenwoning. De monteur snijdt en programmeert de sleutel ter plaatse terwijl de student studeert. Totale kosten: €149,-. <strong>Besparing: €171,-.</strong>
       </p>
 
       <h4>Scenario 3: De gestrande Mercedes Sprinter koerier</h4>
       <p>
         Een pakketbezorger verliest zijn sleutel van zijn Mercedes Sprinter bestelbus tijdens zijn bezorgroute. Elke dag dat de bus stilstaat, kost de ondernemer geld (downtime).
         <br />
-        <em>Dealer-aanpak:</em> De bus moet naar de dealer gesleept worden (€180). De dealer heeft een wachttijd van 4 dagen voor de sleutel. De koerier mist 4 dagen omzet en moet een huurbus regelen. Totale kosten: €380 sleutel + €180 slepen + €400 huurbus + €800 omzetverlies = €1.760.
+        <em>Dealer-aanpak:</em> De bus moet naar de dealer gesleept worden (€180,-). De dealer heeft een wachttijd van 4 dagen voor de sleutel. De koerier mist 4 dagen omzet en moet een huurbus regelen. Totale kosten: €380,- sleutel + €180,- slepen + €400,- huurbus + €800,- omzetverlies = €1.760.
         <br />
-        <em>Slotenmaker-aanpak:</em> Wij sturen onze mobiele bus met spoed naar de locatie van de gestrande Sprinter. We openen de deuren en programmeren een nieuwe infrarood sleutel direct op locatie. De koerier kan na 45 minuten zijn route vervolgen. Kosten: €249 all-in. <strong>Totale besparing: ruim €1.500.</strong>
+        <em>Slotenmaker-aanpak:</em> Wij sturen onze mobiele bus met spoed naar de locatie van de gestrande Sprinter. We openen de deuren en programmeren een nieuwe infrarood sleutel direct op locatie. De koerier kan na 45 minuten zijn route vervolgen. Kosten: €249,- all-in. <strong>Totale besparing: ruim €1.500.</strong>
       </p>
 
       <h3>Conclusie</h3>
       <p>
-        De cijfers liegen niet. Een mobiele autosleutelspecialist is in 95% van de gevallen aanzienlijk goedkoper dan de dealer. U bespaart niet alleen 30% tot 50% op de sleutel zelf, maar voorkomt ook dure sleepkosten en dagenlange downtime. Bovendien profiteert u van het gemak van service aan huis of op locatie.
+        De cijfers liegen niet. Een mobiele autosleutelspecialist is meestal aanzienlijk goedkoper dan de dealer. U bespaart niet alleen 30% tot 50% op de sleutel zelf, maar voorkomt ook dure sleepkosten en dagenlange downtime. Bovendien profiteert u van het gemak van service aan huis of op locatie.
       </p>
     </>
   ),
@@ -1272,10 +1272,10 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Kosten van het bijmaken van een autosleutel</h3>
       <p>
-        De kosten van het bijmaken van een autosleutel variëren afhankelijk van het type sleutel en de complexiteit van de technologie. Mechanische sleutels zonder chip zijn erg goedkoop. Transpondersleutels (inclusief het inleren) variëren vaak van €89 tot €150.
+        De kosten van het bijmaken van een autosleutel variëren afhankelijk van het type sleutel en de complexiteit van de technologie. Mechanische sleutels zonder chip zijn erg goedkoop. Transpondersleutels (inclusief het inleren) variëren vaak van €89,- tot €150,-.
       </p>
       <p>
-        Slimme sleutels of keyless entry-sleutels zijn de duurste om bij te maken omdat ze gebruik maken van geavanceerde RFID- en cryptografische technologieën. Dit kan oplopen tot €150 - €300. Bij Autosleutel24 geven we echter altijd vooraf een vaste, transparante prijsopgave.
+        Slimme sleutels of keyless entry-sleutels zijn de duurste om bij te maken omdat ze gebruik maken van geavanceerde RFID- en cryptografische technologieën. Dit kan oplopen tot €150,- – €300,-. Bij Autosleutel24 geven we echter altijd vooraf een vaste, transparante prijsopgave.
       </p>
 
       <h3>Tips voor het kiezen van een betrouwbare slotenmaker</h3>
@@ -1295,7 +1295,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   ),
   'auto-openen-zonder-sleutel-schadevrij': (
     <>
-      <h2>Auto openen zonder sleutel: Doe het veilig en 100% schadevrij</h2>
+      <h2>Auto openen zonder sleutel: Doe het veilig en schadevrij</h2>
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/auto_openen_zonder_sleutel_schadevrij.webp" 
@@ -1310,12 +1310,12 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Waarom u niet zelf moet proberen in te breken</h3>
       <p>
-        Moderne auto's zijn uitgerust met geavanceerde "deadlock" systemen en anti-inbraak mechanismen. Het forceren van een deur met een koevoet of ijzerdraad activeert deze systemen, waardoor de auto volledig blokkeert. Bovendien kost het vervangen van een ingetikt zijraampje al snel €250 tot €400, exclusief de tijd die u kwijt bent aan het opruimen van de glasscherven.
+        Moderne auto's zijn uitgerust met geavanceerde "deadlock" systemen en anti-inbraak mechanismen. Het forceren van een deur met een koevoet of ijzerdraad activeert deze systemen, waardoor de auto volledig blokkeert. Bovendien kost het vervangen van een ingetikt zijraampje al snel €250,- tot €400,-, exclusief de tijd die u kwijt bent aan het opruimen van de glasscherven.
       </p>
 
       <h3>Hoe wij uw auto schadevrij openen</h3>
       <p>
-        Als professionele auto slotenmaker beschikken wij over specialistisch gereedschap dat speciaal is ontworpen om autodeuren 100% schadevrij te openen:
+        Als professionele auto slotenmaker beschikken wij over specialistisch gereedschap dat speciaal is ontworpen om autodeuren schadevrij te openen:
       </p>
       <ul>
         <li><strong>Air wedges (Pompkussentjes):</strong> Wij plaatsen een speciaal luchtkussentje tussen de deur en de carrosserie. Door dit zachtjes op te pompen, creëren we exact genoeg ruimte om met een gecoate tool de deurhendel aan de binnenkant over te halen, zonder de lak of rubbers te beschadigen.</li>
@@ -1327,7 +1327,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Staat u in de kou en moet de auto open? Onze mobiele servicebus is 24/7 beschikbaar in de gehele regio. Wij zijn vaak binnen 30 tot 60 minuten ter plaatse om u weer op weg te helpen.
       </p>
       <div style={{ background: '#f8fafc', borderLeft: '4px solid #dc2626', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
-        <strong>Sleutel in de auto? Breek niets af!</strong> Bel direct Autosleutel24 op <a href={WHATSAPP_URL} style={{ color: '#dc2626', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a>. Wij openen uw deur gegarandeerd 100% schadevrij.
+        <strong>Sleutel in de auto? Breek niets af!</strong> Bel direct Autosleutel24 op <a href={WHATSAPP_URL} style={{ color: '#dc2626', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a>. Wij openen uw deur schadevrij.
       </div>
     </>
   ),
@@ -1506,19 +1506,19 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <h3>Drie soorten autosleutels en hun prijskaartje</h3>
-      <h4>1. Standaard Transpondersleutel (Vanaf €125)</h4>
+      <h4>1. Standaard Transpondersleutel (Vanaf €125,-)</h4>
       <p>
         Een basis autosleutel, uitgerust met een transponder chip maar zonder knoppen. Voldoende om de deuren handmatig te openen en de motor te starten. Vaak gekozen als noodsleutel.
       </p>
 
-      <h4>2. Klapsleutel met Afstandsbediening (Vanaf €{SITE_CONFIG.prices.klapsleutel} - €349)</h4>
+      <h4>2. Klapsleutel met Afstandsbediening (Vanaf €{SITE_CONFIG.prices.klapsleutel},- – €349,-)</h4>
       <p>
         De meest voorkomende sleutel voor auto's vanaf ongeveer 2005. Voorzien van een inklapbare baard en drukknoppen voor de centrale vergrendeling. We programmeren zowel de startonderbreker als de afstandsbediening.
       </p>
 
-      <h4>3. Smart Key / Keyless Entry (Vanaf €249 - €349)</h4>
+      <h4>3. Smart Key / Keyless Entry (Vanaf €249,- – €349,-)</h4>
       <p>
-        De modernste sleutels die u in uw broekzak kunt houden om de auto te openen en te starten. Deze bevatten complexe cryptografische technologie (zoals bij BMW's FEM/BDC systemen of Mercedes FBS3). Het bijmaken en veilig inleren van een Smart Key is precisiewerk. Bij Autosleutel24 kost dit, afhankelijk van het model, tussen de €249 en €349. Ter vergelijking: bij de dealer betaalt u hier vaak tussen de €400 en €650 voor!
+        De modernste sleutels die u in uw broekzak kunt houden om de auto te openen en te starten. Deze bevatten complexe cryptografische technologie (zoals bij BMW's FEM/BDC systemen of Mercedes FBS3). Het bijmaken en veilig inleren van een Smart Key is precisiewerk. Bij Autosleutel24 kost dit, afhankelijk van het model, tussen de €249,- en €349,-. Ter vergelijking: bij de dealer betaalt u hier vaak tussen de €400,- en €650,- voor!
       </p>
 
       <h3>Waarom is Autosleutel24 goedkoper dan de dealer?</h3>
@@ -1526,11 +1526,11 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Veel mensen vragen zich af waarom het prijsverschil tussen de dealer en een specialist zo groot is. Het antwoord is simpel: overheadkosten. Een dealer heeft een enorm, duur pand en veel personeel. Bovendien bestellen zij de voorgeprogrammeerde sleutels via een trage, logistieke keten vanuit de fabriek. 
       </p>
       <p>
-        Wij zijn mobiele specialisten. Wij hebben geen dure showroom en we kopen ongeprogrammeerde OEM-kwaliteit sleutels rechtstreeks in. Met onze eigen, geavanceerde software programmeren we de sleutels zelf. Dit kostenvoordeel berekenen wij direct door in een lagere prijs voor u.
+        Wij zijn mobiele specialisten. Wij hebben geen dure showroom en we kopen ongeprogrammeerde hoogwaardige sleutels rechtstreeks in. Met onze eigen, geavanceerde software programmeren we de sleutels zelf. Dit kostenvoordeel berekenen wij direct door in een lagere prijs voor u.
       </p>
 
       <div style={{ background: '#f8fafc', borderLeft: '4px solid #10b981', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
-        <strong>Wilt u de exacte prijs voor uw auto weten?</strong> Bij ons krijgt u vooraf altijd een vaste, transparante all-in prijs (inclusief frezen en programmeren, exclusief BTW). Bel of app ons op <a href={WHATSAPP_URL} style={{ color: '#10b981', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a> met uw merk, model en bouwjaar, en wij geven u direct de prijs!
+        <strong>Wilt u de exacte prijs voor uw auto weten?</strong> Bij ons krijgt u vooraf altijd een vaste, transparante all-in prijs (inclusief frezen en programmeren). Bel of app ons op <a href={WHATSAPP_URL} style={{ color: '#10b981', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a> met uw merk, model en bouwjaar, en wij geven u direct de prijs!
       </div>
     </>
   ),
@@ -1597,7 +1597,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Veelvoorkomende situaties waarin u een auto slotenmaker nodig heeft</h3>
       <ul>
-        <li><strong>Buitengesloten (Sleutel in auto):</strong> De deuren vallen in het slot terwijl uw sleutel nog op de stoel of in het contactslot ligt. Wij openen uw deur 100% schadevrij zonder schade aan uw lak of deurrubbers.</li>
+        <li><strong>Buitengesloten (Sleutel in auto):</strong> De deuren vallen in het slot terwijl uw sleutel nog op de stoel of in het contactslot ligt. Wij openen uw deur schadevrij zonder schade aan uw lak of deurrubbers.</li>
         <li><strong>Autosleutel verloren of gestolen:</strong> Als u al uw sleutels kwijt bent, kunnen wij ter plaatse een nieuwe sleutel slijpen en programmeren. Tevens wissen we de oude, verloren sleutels direct uit het geheugen van de startonderbreker om diefstal te voorkomen.</li>
         <li><strong>Afgebroken sleutel in het slot:</strong> Een afgebroken sleutelbaard in het portier- of contactslot verwijderen wij vakkundig met speciale extractie-tools, waarna we ter plekke een nieuwe sleutel frezen.</li>
       </ul>
@@ -1609,7 +1609,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <ul>
         <li><strong>Autosleutel-specialisatie:</strong> Zorg ervoor dat de slotenmaker over de juiste diagnoseapparatuur beschikt voor uw specifieke automerk en bouwjaar.</li>
         <li><strong>Reputatie en recensies:</strong> Controleer onafhankelijke reviews (zoals Google Reviews) om de betrouwbaarheid en klanttevredenheid te verifiëren.</li>
-        <li><strong>Transparante tarieven:</strong> Vraag vooraf altijd om een vaste, all-in prijsopgave (exclusief btw) om verrassingen achteraf te voorkomen. Beloofde starttarieven van €15 tot €29 zijn in 99% van de gevallen een indicatie van malafide praktijken.</li>
+        <li><strong>Transparante tarieven:</strong> Vraag vooraf altijd om een vaste, all-in prijsopgave om verrassingen achteraf te voorkomen. Beloofde starttarieven van €15,- tot €29,- zijn in 99% van de gevallen een indicatie van malafide praktijken.</li>
       </ul>
 
       <h3>Kosten van een auto slotenmaker: Wat kunt u verwachten?</h3>
@@ -1617,9 +1617,9 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         De kosten van een autoslotenmaker hangen af van de benodigde dienst en het type sleutel (mechanisch versus smart key met keyless entry):
       </p>
       <ul>
-        <li><strong>Autodeur schadevrij openen:</strong> Vanaf €149.</li>
-        <li><strong>Autosleutel bijmaken (met werkend origineel):</strong> Vanaf €125.</li>
-        <li><strong>Alle autosleutels verloren (All Keys Lost):</strong> Vanaf €299 tot €350, aangezien de slotenmaker het slot handmatig moet decoderen en de startonderbreker via EEPROM of OBD2 moet programmeren.</li>
+        <li><strong>Autodeur schadevrij openen:</strong> Vanaf €149,-.</li>
+        <li><strong>Autosleutel bijmaken (met werkend origineel):</strong> Vanaf €125,-.</li>
+        <li><strong>Alle autosleutels verloren (All Keys Lost):</strong> Vanaf €299,- tot €350,-, aangezien de slotenmaker het slot handmatig moet decoderen en de startonderbreker via EEPROM of OBD2 moet programmeren.</li>
       </ul>
 
       <h3>De rol van geavanceerde technologie</h3>
@@ -1733,26 +1733,26 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '0.75rem' }}>Batterij vervangen</td>
               <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>€3 – €5</td>
-              <td style={{ padding: '0.75rem' }}>€15 – €25</td>
-              <td style={{ padding: '0.75rem' }}>€25 – €45</td>
+              <td style={{ padding: '0.75rem' }}>€15,- – €25,-</td>
+              <td style={{ padding: '0.75rem' }}>€25,- – €45,-</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '0.75rem' }}>Behuizing / knoppen vernieuwen</td>
-              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>€10 – €20</td>
-              <td style={{ padding: '0.75rem' }}>€35 – €65</td>
+              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>€10,- – €20,-</td>
+              <td style={{ padding: '0.75rem' }}>€35,- – €65,-</td>
               <td style={{ padding: '0.75rem' }}>€150+ (complete sleutel)</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '0.75rem' }}>Printplaat solderen / transponder herstel</td>
               <td style={{ padding: '0.75rem' }}>Niet aanbevolen</td>
-              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>€45 – €85</td>
-              <td style={{ padding: '0.75rem' }}>€200 – €350 (vervanging)</td>
+              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>€45,- – €85,-</td>
+              <td style={{ padding: '0.75rem' }}>€200,- – €350,- (vervanging)</td>
             </tr>
             <tr>
               <td style={{ padding: '0.75rem' }}>Complete nieuwe sleutel inleren op locatie</td>
               <td style={{ padding: '0.75rem' }}>Niet mogelijk</td>
-              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>Vanaf €125</td>
-              <td style={{ padding: '0.75rem' }}>€280 – €450 (+ wegsleepkosten)</td>
+              <td style={{ padding: '0.75rem', color: '#16a34a', fontWeight: 600 }}>Vanaf €125,-</td>
+              <td style={{ padding: '0.75rem' }}>€280,- – €450,- (+ wegsleepkosten)</td>
             </tr>
           </tbody>
         </table>
@@ -1816,7 +1816,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <p>
-        Elektronische beveiligingssystemen, zoals immobilizers (startonderbrekers) en GPS-trackers, bieden een extra laag bescherming. Een immobilizer voorkomt dat de motor start zonder de juiste versleutelde transpondersleutel, terwijl een GPS-tracker helpt bij het lokaliseren van een gestolen voertuig. Deze technologieën zijn cruciaal in de strijd tegen autodiefstal en kunnen helpen bij het snel terugvinden van je auto. Heeft u uw sleutel verloren of is deze mogelijk gestolen? Laat dan direct uw <Link href="/autosleutel-kwijt" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>verloren sleutels uit de boordcomputer wissen</Link> door onze gecertificeerde mobiele specialisten.
+        Elektronische beveiligingssystemen, zoals immobilizers (startonderbrekers) en GPS-trackers, bieden een extra laag bescherming. Een immobilizer voorkomt dat de motor start zonder de juiste versleutelde transpondersleutel, terwijl een GPS-tracker helpt bij het lokaliseren van een gestolen voertuig. Deze technologieën zijn cruciaal in de strijd tegen autodiefstal en kunnen helpen bij het snel terugvinden van je auto. Heeft u uw sleutel verloren of is deze mogelijk gestolen? Laat dan direct uw <Link href="/autosleutel-kwijt" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>verloren sleutels uit de boordcomputer wissen</Link> door onze ervaren mobiele specialisten.
       </p>
 
       <p>
@@ -1892,7 +1892,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         In de moderne tijd zijn elektronische beveiligingssystemen onmisbaar. Alarmsystemen produceren een luid geluid en lichtsignalen zodra iemand probeert in te breken. Immobilizers (startonderbrekers) gaan nog een stap verder: zij blokkeren de brandstoftoevoer en ontsteking zolang de geautoriseerde transpondencode van uw autosleutel niet door de ECU wordt herkend.
       </p>
       <p>
-        Wilt u een <Link href="/diensten/autosleutel-bijmaken" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>extra autosleutel laten bijmaken met professionele transpondercodering</Link>? Onze specialisten programmeren uitsluitend originele OEM-transponders die direct communiceren met uw startonderbreker.
+        Wilt u een <Link href="/diensten/autosleutel-bijmaken" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>extra autosleutel laten bijmaken met professionele transpondercodering</Link>? Onze specialisten programmeren uitsluitend hoogwaardige transponders die direct communiceren met uw startonderbreker.
       </p>
 
       <h3>GPS-trackers en voertuigvolgsystemen</h3>
@@ -1931,7 +1931,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Het beveiligen van je auto tegen diefstal is geen overbodige luxe, maar een noodzaak. Door een slimme combinatie van fysieke sloten, elektronische startonderbrekers en goede dagelijkse gewoontes verklein je de kans op diefstal aanzienlijk.
       </p>
       <p>
-        Is uw autosleutel kwijtgeraakt of vermoedt u dat iemand een onbevoegde sleutel in handen heeft? Neem dan direct contact op met de gecertificeerde specialisten van <strong>{SITE_CONFIG.name}</strong>. Onze mobiele monteurs komen 24/7 naar uw locatie, wissen de verloren sleutel direct uit de boordcomputer en programmeren ter plaatse een veilige nieuwe autosleutel.
+        Is uw autosleutel kwijtgeraakt of vermoedt u dat iemand een onbevoegde sleutel in handen heeft? Neem dan direct contact op met de ervaren specialisten van <strong>{SITE_CONFIG.name}</strong>. Onze mobiele monteurs komen 24/7 naar uw locatie, wissen de verloren sleutel direct uit de boordcomputer en programmeren ter plaatse een veilige nieuwe autosleutel.
       </p>
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
@@ -2083,7 +2083,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}
@@ -2346,7 +2346,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}
@@ -2526,7 +2526,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}
@@ -2605,7 +2605,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}
@@ -2661,21 +2661,21 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <p>
-        Als we in de basis puur kijken naar de kosten reservesleutel bij laten maken, dan is een conventionele mechanische sleutel met transponderchip (maar dus volledig zonder afstandsbediening voor de deuren) veruit de voordeligste keuze. Hier betaal je rond de €125 voor. Het is een perfecte, no-nonsense optie voor een extra reservesleutel in de la thuis.
+        Als we in de basis puur kijken naar de kosten reservesleutel bij laten maken, dan is een conventionele mechanische sleutel met transponderchip (maar dus volledig zonder afstandsbediening voor de deuren) veruit de voordeligste keuze. Hier betaal je rond de €125,- voor. Het is een perfecte, no-nonsense optie voor een extra reservesleutel in de la thuis.
       </p>
 
       <p>
         Wil je echter het dagelijkse comfort behouden van een volledige klapsleutel of een luxe smart key? Dan lopen de aanschafkosten van de hardware vanzelfsprekend op. Bovendien moet je dan steevast rekening houden met de onvermijdelijke volkswagen sleutel inleren kosten. 
       </p>
       <p>
-        Elke moderne sleutel volkswagen is intern voorzien van geavanceerde antidiefstaltechnologie. Om de motor draaiende te krijgen en te houden, moet de centrale boordcomputer van het voertuig deze unieke digitale sleutelchip feilloos herkennen en valideren. De arbeids- en softwarekosten voor dit onmisbare programmeerwerk liggen in de praktijk vaak tussen de €40 en €85.
+        Elke moderne sleutel volkswagen is intern voorzien van geavanceerde antidiefstaltechnologie. Om de motor draaiende te krijgen en te houden, moet de centrale boordcomputer van het voertuig deze unieke digitale sleutelchip feilloos herkennen en valideren. De arbeids- en softwarekosten voor dit onmisbare programmeerwerk liggen in de praktijk vaak tussen de €40,- en €85,-.
       </p>
 
       <p>
-        Samenvattend: voor een volledig functionerende, geprogrammeerde sleutel met geïntegreerde afstandsbediening via een lokale specialist betaal je al gauw in totaal tussen de €150 en €230. 
+        Samenvattend: voor een volledig functionerende, geprogrammeerde sleutel met geïntegreerde afstandsbediening via een lokale specialist betaal je al gauw in totaal tussen de €150,- en €230,-. 
       </p>
       <p>
-        Kies je bewust liever voor de officiële en authentieke route via de erkende merkdealer, houd er dan terdege rekening mee dat de totale eindprijzen de pijngrens van €300 betrekkelijk eenvoudig kunnen overstijgen.
+        Kies je bewust liever voor de officiële en authentieke route via de erkende merkdealer, houd er dan terdege rekening mee dat de totale eindprijzen de pijngrens van €300,- betrekkelijk eenvoudig kunnen overstijgen.
       </p>
 
       <h2>Het aanvraag- en programmeerproces stap voor stap</h2>
@@ -2690,7 +2690,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Zodra de fysieke sleutel netjes gefreesd klaarligt, start het elektronische precisiewerk pas echt: de transponder sleutel programmeren Volkswagen. 
       </p>
       <p>
-        Een gecertificeerde diagnosticus of automonteur sluit hiervoor professionele diagnoseapparatuur stevig aan op de gestandaardiseerde OBD2-stekkerpoort die zich meestal ergens onder je dashboard bevindt. Via sterk beveiligde, gespecialiseerde dealertools of softwarepakketten moet de technicus allereerst de zogeheten immobilizer code uitlezen Volkswagen. 
+        Een ervaren diagnosticus of automonteur sluit hiervoor professionele diagnoseapparatuur stevig aan op de gestandaardiseerde OBD2-stekkerpoort die zich meestal ergens onder je dashboard bevindt. Via sterk beveiligde, gespecialiseerde dealertools of softwarepakketten moet de technicus allereerst de zogeheten immobilizer code uitlezen Volkswagen. 
       </p>
       <p>
         Deze uiterst geheime, zwaar versleutelde PIN-code is absoluut essentieel om überhaupt legitieme digitale toegang te krijgen tot de geavanceerde startonderbrekermodule van het voertuig.
@@ -2791,7 +2791,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}

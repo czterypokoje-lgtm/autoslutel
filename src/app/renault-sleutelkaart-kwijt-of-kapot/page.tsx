@@ -49,7 +49,7 @@ export const metadata: Metadata = {
 const faqItems = [
   {
     q: 'Wat kost een nieuwe Renault sleutelkaart?',
-    a: `De prijs hangt af van het model, het bouwjaar en het type kaart, en of u nog een werkende kaart heeft. Wij noemen u telefonisch een vaste prijs voordat wij vertrekken. Als richtlijn: een reservesleutel begint bij €${SITE_CONFIG.prices.transponder} en een complete oplossing als alle sleutels weg zijn bij €${SITE_CONFIG.prices.allKeysLost}. Gemiddeld is dat 30-50% goedkoper dan de dealer.`,
+    a: `De prijs hangt af van het model, het bouwjaar en het type kaart, en of u nog een werkende kaart heeft. Wij noemen u telefonisch een vaste prijs voordat wij vertrekken. Als richtlijn: een reservesleutel begint bij €${SITE_CONFIG.prices.transponder},- en een complete oplossing als alle sleutels weg zijn bij €${SITE_CONFIG.prices.allKeysLost},-. Dat is vaak flink goedkoper dan de dealer.`,
   },
   {
     q: 'Kan ik een Renault sleutelkaart laten maken als ik geen enkele kaart meer heb?',
@@ -152,8 +152,7 @@ export default function RenaultSleutelkaart() {
           </div>
           <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
             Kaarten zitten onder meer in Clio, Mégane, Scénic, Captur en Kadjar. Welk type uw auto
-            heeft, zien wij aan uw kenteken. De prijs hoort u telefonisch voordat wij vertrekken;
-            bedragen zijn {SITE_CONFIG.prices.exVatDisclaimer}.
+            heeft, zien wij aan uw kenteken. De prijs hoort u telefonisch voordat wij vertrekken.
           </p>
         </div>
       </section>
