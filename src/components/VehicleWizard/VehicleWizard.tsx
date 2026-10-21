@@ -144,7 +144,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       if (json.success && json.data?.merk) {
         setVehicle({
           merk: json.data.merk,
-          model: json.data.model,
+          // RDW often repeats the make in the model ("FIAT PANDA"), which read as "FIAT FIAT PANDA".
+          model: String(json.data.model ?? '').replace(new RegExp(`^${String(json.data.merk).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+`, 'i'), ''),
           bouwjaar: json.data.bouwjaar,
         });
         setLookupState('idle');

@@ -48,7 +48,7 @@ export const SITE_CONFIG = {
     transponder: '125',
     /* Klap-/flipsleutel with remote: the step above a plain transponder. */
     klapsleutel: '149',
-    remote: '220',
+    remote: '150',
     smartKey: '249',
     allKeysLost: '299',
     casing: '35',
