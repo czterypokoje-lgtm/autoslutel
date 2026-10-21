@@ -374,7 +374,7 @@ export const DIENSTEN: Service[] = [
     priceFrom: `Vanaf €${SITE_CONFIG.prices.remote},-`,
     duration: '30–60 minuten',
     directAnswer:
-      'Een afstandsbediening bijmaken of vervangen kost vanaf €150,- en duurt 20 tot 40 minuten. Werkt uw centrale vergrendeling niet meer terwijl de auto wel start? Dan is meestal alleen het zendgedeelte defect en hoeft de sleutel zelf niet vervangen te worden — dat scheelt aanzienlijk in de kosten.',
+      'Een afstandsbediening bijmaken of vervangen kost vanaf €149,- en duurt 20 tot 40 minuten. Werkt uw centrale vergrendeling niet meer terwijl de auto wel start? Dan is meestal alleen het zendgedeelte defect en hoeft de sleutel zelf niet vervangen te worden — dat scheelt aanzienlijk in de kosten.',
     steps: [
       'U vraagt de prijs op voor uw specifieke type autosleutel',
       'Wij snijden de sleutelbaard (mechanische sleutels) op maat',
@@ -574,7 +574,7 @@ export const DIENSTEN: Service[] = [
     faq: [
       { q: 'Wat is een micro-switch?', a: 'Een micro-switch is het kleine elektronische knopje op de printplaat dat contact maakt als u op de buitenkant van de sleutel drukt. Door intensief gebruik slijten de interne metalen contacten of breken de soldeereilandjes los.' },
       { q: 'Kan elk type knopje worden vervangen?', a: 'Ja, wij hebben vrijwel alle typen SMD-schakelaars voor alle automerken op voorraad in onze mobiele bussen.' },
-      { q: 'Is repareren goedkoper dan een nieuwe afstandsbediening?', a: 'Vrijwel altijd. Een reparatie begint bij €35,-, terwijl een nieuwe afstandsbediening inclusief programmeren vanaf €150,- kost. Alleen bij waterschade aan de print is vervanging voordeliger.' },
+      { q: 'Is repareren goedkoper dan een nieuwe afstandsbediening?', a: 'Vrijwel altijd. Een reparatie begint bij €35,-, terwijl een nieuwe afstandsbediening inclusief programmeren vanaf €149,- kost. Alleen bij waterschade aan de print is vervanging voordeliger.' },
       { q: 'De knop klikt wel maar de auto reageert niet — is dat hetzelfde probleem?', a: 'Niet noodzakelijk. Een voelbare klik zonder reactie wijst eerder op een lege batterij of een defect zendgedeelte. Wij meten dat ter plaatse door voordat we iets vervangen.' }
     ],
     relatedSlugs: ['autosleutels-repareren', 'behuizing-vervangen', 'batterij-vervangen', 'afstandsbediening-bijmaken']
