@@ -25,7 +25,11 @@ import {
 } from './icons';
 
 /**
- * Four-step booking wizard for the hero.
+ * Booking wizard for the hero. The phone number comes at step 2 and the lead
+ * is saved right there; the questions after it only sharpen the quote, so a
+ * visitor who stops early is still a lead the office can call.
+ *
+ * (Originally: four-step booking wizard for the hero.)
  *
  * Replaces a six-field form (make, model, year, service, phone, city) with
  * four one-decision screens. The reasoning: a driver standing next to a locked
@@ -103,12 +107,24 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
   const [honeypot, setHoneypot] = useState('');
   const [sending, setSending] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  /* The lead is saved at step 2; the later answers are added to it with this. */
+  const [lead, setLead] = useState<{ id: string; token: string } | null>(null);
 
   const lastLookup = useRef('');
 
   const go = useCallback((next: number) => {
     setGoingBack(typeof step === 'number' ? typeof step === 'number' && next < step : false);
     setStep(next);
+  }, [step]);
+
+  /*
+   * One GA4 event per step reached, so the drop-off between steps is visible.
+   * Goes through gtag, so Consent Mode decides what leaves the browser.
+   */
+  useEffect(() => {
+    const name = step === 'success' ? 'klaar' : ['kenteken', 'contact', 'start', 'knoppen', 'werkende_sleutel'][(step as number) - 1];
+    const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+    w.gtag?.('event', 'form_step', { form_name: 'hero_wizard', step_number: step === 'success' ? TOTAL_STEPS + 1 : step, step_name: name });
   }, [step]);
 
   const plateDigits = kenteken.replace(/[^A-Za-z0-9]/g, '');
@@ -219,8 +235,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         brand: vehicle?.merk || 'Onbekend',
         model: vehicle ? `${kenteken} — ${vehicle.model}` : kenteken,
         year: vehicle?.bouwjaar || '',
-        service: quote.service,
-        workingKey: workingKey === 'yes' ? 'Ja' : 'Nee',
+        service: 'Nog te bepalen (aanvraag via kenteken)',
         location: postcode,
         postcode,
         phone,
@@ -266,6 +281,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
 
     const json = await res.json().catch(() => null);
     tagLeadClaritySession(json?.data?.id);
+    if (json?.data?.id && json?.data?.token) setLead({ id: json.data.id, token: json.data.token });
 
     /* Only now — a conversion Google can bid on has to mean a lead the office
        actually has. */
@@ -275,8 +291,24 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       postcode,
     });
 
-    setStep('success');
     setSending(false);
+    go(3);
+  }
+
+  /* The answers to the follow-up questions sharpen the lead the office already has. */
+  function finish(answer: WorkingKeyType) {
+    setWorkingKey(answer);
+    const q = quoteFor(startType, remote, answer);
+    if (lead) {
+      void fetch('/api/leads/details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...lead, service: q.service, quotedPrice: Number(q.from) }),
+        keepalive: true,
+      }).catch(() => null);
+    }
+    setGoingBack(false);
+    setStep('success');
   }
 
   if (showFallback && fallback) {
@@ -319,7 +351,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
 
       <div className={styles.stepMeta}>
         <span>Stap {step === 'success' ? TOTAL_STEPS : step} van {TOTAL_STEPS}</span>
-        {typeof step === 'number' && step > 1 && (
+        {typeof step === 'number' && step > 1 && step !== 3 && (
           <button type="button" className={styles.back} onClick={() => go((step as number) - 1)}>
             Terug
           </button>
@@ -391,6 +423,10 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               Verder
             </button>
 
+            <button type="button" className={styles.escape} onClick={() => go(2)}>
+              Liever direct gebeld? Laat alleen uw nummer achter
+            </button>
+
             {fallback && (
               <button
                 type="button"
@@ -403,159 +439,13 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
           </div>
         )}
 
-        {/* ── 2. How does the car start ── */}
+        {/* ── 2. Contact: the lead is saved here ── */}
         {step === 2 && (
-          <div className={stepClass} key="s2">
-            <p className={styles.q}>Hoe start u uw auto?</p>
+          <form className={stepClass} key="s2" onSubmit={submit}>
+            <p className={styles.q}>Waar staat de auto, en op welk nummer bellen wij u?</p>
             <p className={styles.hint}>
-              Hiermee weten wij welk type sleutel u nodig heeft.
+              Wij bellen u terug met de prijs en aankomsttijd. Daarna nog 3 korte vragen voor een richtprijs.
             </p>
-            <div className={styles.options} role="radiogroup" aria-label="Hoe start u uw auto">
-              <button
-                type="button"
-                role="radio"
-                aria-checked={startType === 'push'}
-                className={`${styles.card} ${startType === 'push' ? styles.cardOn : ''}`}
-                onClick={() => { setStartType('push'); go(3); }}
-              >
-                <span className={styles.cardArt}><PushButtonIcon /></span>
-                <span>
-                  <span className={styles.cardLabel}>Startknop</span>
-                  <span className={styles.cardSub}>Keyless — sleutel blijft in uw zak</span>
-                </span>
-              </button>
-              <button
-                type="button"
-                role="radio"
-                aria-checked={startType === 'key'}
-                className={`${styles.card} ${startType === 'key' ? styles.cardOn : ''}`}
-                onClick={() => { setStartType('key'); go(3); }}
-              >
-                <span className={styles.cardArt}><TurnKeyIcon /></span>
-                <span>
-                  <span className={styles.cardLabel}>Sleutel omdraaien</span>
-                  <span className={styles.cardSub}>Sleutel in het contactslot</span>
-                </span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ── 3. Remote buttons ── */}
-        {step === 3 && (
-          <div className={stepClass} key="s3">
-            <p className={styles.q}>Zitten er knoppen op uw sleutel?</p>
-            <p className={styles.hint}>
-              Bedoeld zijn de knoppen voor openen en sluiten op afstand.
-            </p>
-            <div className={styles.options} role="radiogroup" aria-label="Knoppen op de sleutel">
-              <button
-                type="button"
-                role="radio"
-                aria-checked={remote === 'yes'}
-                className={`${styles.card} ${remote === 'yes' ? styles.cardOn : ''}`}
-                onClick={() => { setRemote('yes'); go(4); }}
-              >
-                <span className={styles.cardArt}><RemoteYesIcon /></span>
-                <span>
-                  <span className={styles.cardLabel}>Ja, met knoppen</span>
-                  <span className={styles.cardSub}>Centrale vergrendeling</span>
-                </span>
-              </button>
-              <button
-                type="button"
-                role="radio"
-                aria-checked={remote === 'no'}
-                className={`${styles.card} ${remote === 'no' ? styles.cardOn : ''}`}
-                onClick={() => { setRemote('no'); go(4); }}
-              >
-                <span className={styles.cardArt}><RemoteNoIcon /></span>
-                <span>
-                  <span className={styles.cardLabel}>Nee, geen knoppen</span>
-                  <span className={styles.cardSub}>Alleen een sleutelbaard</span>
-                </span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        
-        {/* ── 4. Werkende sleutel ── */}
-        {step === 4 && (
-          <div className={stepClass} key="s4">
-            <p className={styles.q}>Heeft u nog een werkende sleutel?</p>
-            <p className={styles.hint}>
-              Als u alle sleutels kwijt bent, moeten wij de auto openen zonder schade en een nieuwe sleutel vanaf nul inleren.
-            </p>
-            <div className={styles.options} role="radiogroup" aria-label="Heeft u nog een werkende sleutel">
-              <button
-                type="button"
-                role="radio"
-                aria-checked={workingKey === 'yes'}
-                className={`${styles.card} ${workingKey === 'yes' ? styles.cardOn : ''}`}
-                onClick={() => { setWorkingKey('yes'); go(5); }}
-              >
-                <span className={styles.cardArt}><RemoteYesIcon /></span>
-                <span>
-                  <span className={styles.cardLabel}>Ja, ik heb een sleutel</span>
-                  <span className={styles.cardSub}>Ik wil een extra reservesleutel</span>
-                </span>
-              </button>
-              <button
-                type="button"
-                role="radio"
-                aria-checked={workingKey === 'no'}
-                className={`${styles.card} ${workingKey === 'no' ? styles.cardOn : ''}`}
-                onClick={() => { setWorkingKey('no'); go(5); }}
-              >
-                <span className={styles.cardArt}><RemoteNoIcon /></span>
-                <span>
-                  <span className={styles.cardLabel}>Nee, alles is kwijt</span>
-                  <span className={styles.cardSub}>Ik heb een compleet nieuwe nodig</span>
-                </span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* ── 5. Contact ── */}
-        {step === 5 && (
-          <form className={stepClass} key="s5" onSubmit={submit}>
-            <p className={styles.q}>Waar mogen wij naartoe komen?</p>
-            <p className={styles.hint}>
-              U krijgt direct de exacte prijs en aankomsttijd via WhatsApp.
-            </p>
-
-            {limit.status !== 'ok' && (
-              <div
-                className={
-                  limit.status === 'unavailable' ? styles.limitBlock : styles.limitWarn
-                }
-                role="alert"
-              >
-                <strong className={styles.limitTitle}>{limit.title}</strong>
-                <span className={styles.limitDetail}>{limit.detail}</span>
-              </div>
-            )}
-
-            {/*
-              * No price when we cannot do the job. A "richtprijs" beside a
-              * notice saying we cannot help is the kind of mixed message that
-              * gets someone to send the form anyway.
-              */}
-            {limit.status !== 'unavailable' && (
-            <div className={styles.quote}>
-              <div className={styles.quoteLabel}>Richtprijs — {quote.service}</div>
-              <div className={styles.quoteAmount}>vanaf €{quote.from}</div>
-              <div className={styles.quoteNote}>
-                {vehicle
-                  ? `Voor uw ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar}). `
-                  : ''}
-                De exacte prijs bevestigen wij vooraf — nooit achteraf.
-                {limit.status === 'lead-time' && ` Levertijd ${limit.lead}.`}
-              </div>
-            </div>
-            )}
 
             <div className={styles.fields}>
               <div className={styles.row2}>
@@ -609,10 +499,135 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
             )}
 
             <button type="submit" className={styles.cta} disabled={sending}>
-              {sending ? 'Versturen…' : 'Ontvang prijs & aankomsttijd'}
+              {sending ? 'Versturen…' : 'Bel mij terug'}
             </button>
           </form>
         )}
+        {/* ── 3. How does the car start ── */}
+        {step === 3 && (
+          <div className={stepClass} key="s3">
+            <p className={styles.saved} role="status">✓ Ontvangen — wij bellen u zo. Wilt u alvast een richtprijs? Nog 3 vragen.</p>
+            <p className={styles.q}>Hoe start u uw auto?</p>
+            <p className={styles.hint}>
+              Hiermee weten wij welk type sleutel u nodig heeft.
+            </p>
+            <div className={styles.options} role="radiogroup" aria-label="Hoe start u uw auto">
+              <button
+                type="button"
+                role="radio"
+                aria-checked={startType === 'push'}
+                className={`${styles.card} ${startType === 'push' ? styles.cardOn : ''}`}
+                onClick={() => { setStartType('push'); go(4); }}
+              >
+                <span className={styles.cardArt}><PushButtonIcon /></span>
+                <span>
+                  <span className={styles.cardLabel}>Startknop</span>
+                  <span className={styles.cardSub}>Keyless — sleutel blijft in uw zak</span>
+                </span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={startType === 'key'}
+                className={`${styles.card} ${startType === 'key' ? styles.cardOn : ''}`}
+                onClick={() => { setStartType('key'); go(4); }}
+              >
+                <span className={styles.cardArt}><TurnKeyIcon /></span>
+                <span>
+                  <span className={styles.cardLabel}>Sleutel omdraaien</span>
+                  <span className={styles.cardSub}>Sleutel in het contactslot</span>
+                </span>
+              </button>
+            </div>
+            <button type="button" className={styles.escape} onClick={() => { setGoingBack(false); setStep('success'); }}>
+              Overslaan — bel mij gewoon
+            </button>
+          </div>
+        )}
+
+        {/* ── 4. Remote buttons ── */}
+        {step === 4 && (
+          <div className={stepClass} key="s4">
+            <p className={styles.q}>Zitten er knoppen op uw sleutel?</p>
+            <p className={styles.hint}>
+              Bedoeld zijn de knoppen voor openen en sluiten op afstand.
+            </p>
+            <div className={styles.options} role="radiogroup" aria-label="Knoppen op de sleutel">
+              <button
+                type="button"
+                role="radio"
+                aria-checked={remote === 'yes'}
+                className={`${styles.card} ${remote === 'yes' ? styles.cardOn : ''}`}
+                onClick={() => { setRemote('yes'); go(5); }}
+              >
+                <span className={styles.cardArt}><RemoteYesIcon /></span>
+                <span>
+                  <span className={styles.cardLabel}>Ja, met knoppen</span>
+                  <span className={styles.cardSub}>Centrale vergrendeling</span>
+                </span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={remote === 'no'}
+                className={`${styles.card} ${remote === 'no' ? styles.cardOn : ''}`}
+                onClick={() => { setRemote('no'); go(5); }}
+              >
+                <span className={styles.cardArt}><RemoteNoIcon /></span>
+                <span>
+                  <span className={styles.cardLabel}>Nee, geen knoppen</span>
+                  <span className={styles.cardSub}>Alleen een sleutelbaard</span>
+                </span>
+              </button>
+            </div>
+            <button type="button" className={styles.escape} onClick={() => { setGoingBack(false); setStep('success'); }}>
+              Overslaan — bel mij gewoon
+            </button>
+          </div>
+        )}
+
+        
+        {/* ── 5. Werkende sleutel ── */}
+        {step === 5 && (
+          <div className={stepClass} key="s5">
+            <p className={styles.q}>Heeft u nog een werkende sleutel?</p>
+            <p className={styles.hint}>
+              Als u alle sleutels kwijt bent, moeten wij de auto openen zonder schade en een nieuwe sleutel vanaf nul inleren.
+            </p>
+            <div className={styles.options} role="radiogroup" aria-label="Heeft u nog een werkende sleutel">
+              <button
+                type="button"
+                role="radio"
+                aria-checked={workingKey === 'yes'}
+                className={`${styles.card} ${workingKey === 'yes' ? styles.cardOn : ''}`}
+                onClick={() => finish('yes')}
+              >
+                <span className={styles.cardArt}><RemoteYesIcon /></span>
+                <span>
+                  <span className={styles.cardLabel}>Ja, ik heb een sleutel</span>
+                  <span className={styles.cardSub}>Ik wil een extra reservesleutel</span>
+                </span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={workingKey === 'no'}
+                className={`${styles.card} ${workingKey === 'no' ? styles.cardOn : ''}`}
+                onClick={() => finish('no')}
+              >
+                <span className={styles.cardArt}><RemoteNoIcon /></span>
+                <span>
+                  <span className={styles.cardLabel}>Nee, alles is kwijt</span>
+                  <span className={styles.cardSub}>Ik heb een compleet nieuwe nodig</span>
+                </span>
+              </button>
+            </div>
+            <button type="button" className={styles.escape} onClick={() => { setGoingBack(false); setStep('success'); }}>
+              Overslaan — bel mij gewoon
+            </button>
+          </div>
+        )}
+
         {step === 'success' && (
           <div className={styles.successState} style={{ textAlign: 'center', padding: '2rem 1rem' }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
@@ -620,6 +635,41 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
             </div>
             <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Aanvraag Ontvangen!</h3>
             <p style={{ color: '#cbd5e1', fontSize: '1.1rem' }}>Bedankt voor uw aanvraag. We bellen u binnen 5 minuten met de exacte prijs en beschikbaarheid.</p>
+            {workingKey && (
+              <div style={{ textAlign: 'left', marginTop: '1.25rem' }}>
+            {limit.status !== 'ok' && (
+                <div
+                  className={
+                    limit.status === 'unavailable' ? styles.limitBlock : styles.limitWarn
+                  }
+                  role="alert"
+                >
+                  <strong className={styles.limitTitle}>{limit.title}</strong>
+                  <span className={styles.limitDetail}>{limit.detail}</span>
+                </div>
+              )}
+  
+              {/*
+                * No price when we cannot do the job. A "richtprijs" beside a
+                * notice saying we cannot help is the kind of mixed message that
+                * gets someone to send the form anyway.
+                */}
+              {limit.status !== 'unavailable' && (
+              <div className={styles.quote}>
+                <div className={styles.quoteLabel}>Richtprijs — {quote.service}</div>
+                <div className={styles.quoteAmount}>vanaf €{quote.from}</div>
+                <div className={styles.quoteNote}>
+                  {vehicle
+                    ? `Voor uw ${vehicle.merk} ${vehicle.model} (${vehicle.bouwjaar}). `
+                    : ''}
+                  De exacte prijs bevestigen wij vooraf — nooit achteraf.
+                  {limit.status === 'lead-time' && ` Levertijd ${limit.lead}.`}
+                </div>
+              </div>
+              )}
+  
+                </div>
+            )}
           </div>
         )}
       </div>
