@@ -102,6 +102,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
   const [postcode, setPostcode] = useState(city);
   const [honeypot, setHoneypot] = useState('');
   const [sending, setSending] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
 
   const lastLookup = useRef('');
 
@@ -188,16 +189,30 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
     return `https://wa.me/${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`;
   }
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     setSending(true);
+    setSaveFailed(false);
 
     const cookie = (name: string) => {
       const m = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       return m ? m[2] : null;
     };
 
-    fetch('/api/leads', {
+    /*
+     * Awaited, unlike LeadCaptureForm.
+     *
+     * That form fires and forgets for a stated reason: it opens WhatsApp two
+     * statements later and the page can be gone before any promise settles.
+     * This wizard copied the pattern without the navigation that justified it
+     * — it calls setStep('success') and stays put. So nothing here races a
+     * handoff, and there is no second channel either: the success screen
+     * promises "de exacte prijs en aankomsttijd via WhatsApp", which only
+     * happens if the office has a row to act on. A 429 from the rate limiter
+     * or a 500 from the insert used to land on that same screen, and the
+     * customer waited for a message nobody could send.
+     */
+    const post = fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -217,19 +232,48 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         msclkid: cookie('msclkid'),
       }),
       keepalive: true,
-    })
-      .then((r) => r.json())
-      .then((d) => tagLeadClaritySession(d?.data?.id))
-      .catch((err) => console.error('Error saving lead', err));
+    }).catch(() => null);
 
+    /*
+     * Raced against a clock, and deliberately not aborted.
+     *
+     * /api/leads only answers after it has awaited notifyNewLead() and
+     * sendOpenAiEvent(). Resend carries a 10s timeout and sendTelegram
+     * carries none, so a sulking Telegram can hold the response open far
+     * longer than anyone will stand next to a locked car watching
+     * "Versturen…". Before this file awaited anything that cost nobody
+     * anything; now it does, so the wait needs a ceiling.
+     *
+     * An AbortSignal would cancel the request and throw away a lead that was
+     * about to be written. So the fetch is left running under keepalive and
+     * only the UI gives up: the row still lands, the customer is told to ring
+     * rather than wait, and if they do ring, the 72-hour same-phone dedupe in
+     * /api/leads flags the second enquiry instead of creating a twin.
+     */
+    const res = await Promise.race([
+      post,
+      new Promise<null>((resolve) => { setTimeout(() => resolve(null), 8000); }),
+    ]);
+
+    if (!res || !res.ok) {
+      /* Say so, and give the phone number: this is the only moment the
+         customer can still be told that nobody received the request. */
+      console.error('Error saving lead', res ? res.status : 'network');
+      setSaveFailed(true);
+      setSending(false);
+      return;
+    }
+
+    const json = await res.json().catch(() => null);
+    tagLeadClaritySession(json?.data?.id);
+
+    /* Only now — a conversion Google can bid on has to mean a lead the office
+       actually has. */
     reportLeadConversion({
       source: 'hero_wizard',
       phone,
       postcode,
     });
-
-
-
 
     setStep('success');
     setSending(false);
@@ -552,6 +596,17 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               autoComplete="off"
               aria-hidden="true"
             />
+
+            {saveFailed && (
+              <p role="alert" style={{ margin: '0 0 0.75rem', fontSize: '0.9rem', lineHeight: 1.5, color: '#fca5a5' }}>
+                Versturen lukte niet — wij hebben uw aanvraag niet ontvangen.
+                Probeer het opnieuw of bel ons direct op{' '}
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: '#fff', textDecoration: 'underline' }}>
+                  {SITE_CONFIG.phone}
+                </a>
+                .
+              </p>
+            )}
 
             <button type="submit" className={styles.cta} disabled={sending}>
               {sending ? 'Versturen…' : 'Ontvang prijs & aankomsttijd'}
