@@ -669,9 +669,9 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </ul>
 
       <div className="author-bio" style={{ marginTop: '3rem', padding: '1.5rem', backgroundColor: '#f9fafb', borderRadius: '8px', borderLeft: '4px solid var(--primary)' }}>
-        <h3 style={{ marginTop: 0 }}>Eigenaar & Gecertificeerd Hoofdtechnicus Autosleutel24 (10+ jaar ervaring)</h3>
+        <h3 style={{ marginTop: 0 }}>Eigenaar & Hoofdtechnicus Autosleutel24 (10+ jaar ervaring)</h3>
         <p style={{ marginBottom: 0 }}>
-          Berkan Acarol is de oprichter en hoofdtechnicus van Autosleutel24. Als specialist in voertuigelektronica en transponderbeveiliging is hij officieel gecertificeerd in Autel IM608 Pro II en AVDI Abrites diagnose- en programmeersystemen. Hij voert dagelijks complexe OBD2-inleerprocedures, EEPROM-reparaties en schadevrije auto-ontsluitingen uit in heel Midden-Nederland.
+          Berkan Acarol is de oprichter en hoofdtechnicus van Autosleutel24. Als specialist in voertuigelektronica en transponderbeveiliging werkt hij dagelijks met Autel IM608 Pro II en AVDI Abrites diagnose- en programmeersystemen. Hij voert dagelijks complexe OBD2-inleerprocedures, EEPROM-reparaties en schadevrije auto-ontsluitingen uit in heel Midden-Nederland.
         </p>
       </div>
 
@@ -693,7 +693,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div className="cta-section" style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#eef2ff', borderRadius: '8px', textAlign: 'center' }}>
         <h3 style={{ marginTop: 0, color: 'var(--primary-dark)' }}>Direct Een Autosleutel Laten Bijmaken of Programmeren?</h3>
-        <p>Onze gecertificeerde autosleutelspecialisten staan 24/7 voor u klaar.</p>
+        <p>Onze ervaren autosleutelspecialisten staan 24/7 voor u klaar.</p>
         <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'inline-block', padding: '12px 24px', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '4px', textDecoration: 'none', fontWeight: 'bold', fontSize: '1.1rem' }}>
           📞 {SITE_CONFIG.phone}
         </a>
@@ -791,7 +791,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <ul>
         <li><strong>Geen sleepkosten:</strong> Als u uw sleutels kwijt bent, moet de dealer de auto wegslepen (€100,- – €150,-). Wij komen gewoon naar u toe in onze mobiele werkplaats.</li>
         <li><strong>Snelle levertijd:</strong> Een dealer bestelt een sleutel op chassisnummer in Duitsland of Frankrijk, wat 3 tot 10 werkdagen duurt. Wij programmeren en snijden een sleutel direct ter plaatse terwijl u wacht.</li>
-        <li><strong>Eerlijke tarieven:</strong> Wij hebben lagere overheadkosten en rekenen geen absurde fabrieksmarges. Dit scheelt u gemiddeld 30% tot 50% in de totale kosten.</li>
+        <li><strong>Eerlijke tarieven:</strong> Wij hebben lagere overheadkosten en rekenen geen absurde fabrieksmarges. Dit scheelt u vaak flink.</li>
       </ul>
     </>
   ),
@@ -1103,37 +1103,37 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
               <td style={{ padding: '1rem' }}><strong>Volkswagen Golf 7 (Klapsleutel)</strong></td>
               <td style={{ padding: '1rem' }}>€280,- – €360,-</td>
               <td style={{ padding: '1rem' }}>€125,- – €179,-</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>45% - 50% besparing</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>BMW 3-Serie (F30 Smart Key)</strong></td>
               <td style={{ padding: '1rem' }}>€380,- – €480,-</td>
               <td style={{ padding: '1rem' }}>€199,- – €249,-</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>47% - 52% besparing</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Mercedes C-Klasse (FBS3 Infrarood)</strong></td>
               <td style={{ padding: '1rem' }}>€410,- – €520,-</td>
               <td style={{ padding: '1rem' }}>€199,- – €269,-</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>48% - 51% besparing</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Opel Corsa E (Afstandsbediening)</strong></td>
               <td style={{ padding: '1rem' }}>€220,- – €290,-</td>
               <td style={{ padding: '1rem' }}>€129,- – €159,-</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>41% - 45% besparing</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Toyota Yaris (Proximity Smart Key)</strong></td>
               <td style={{ padding: '1rem' }}>€350,- – €450,-</td>
               <td style={{ padding: '1rem' }}>€189,- – €229,-</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>46% - 49% besparing</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Ford Transit (Bedrijfswagen smart key)</strong></td>
               <td style={{ padding: '1rem' }}>€320,- – €420,-</td>
               <td style={{ padding: '1rem' }}>€169,- – €219,-</td>
-              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>47% - 48% besparing</td>
+              <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
           </tbody>
         </table>
@@ -1198,7 +1198,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Conclusie</h3>
       <p>
-        De cijfers liegen niet. Een mobiele autosleutelspecialist is in 95% van de gevallen aanzienlijk goedkoper dan de dealer. U bespaart niet alleen 30% tot 50% op de sleutel zelf, maar voorkomt ook dure sleepkosten en dagenlange downtime. Bovendien profiteert u van het gemak van service aan huis of op locatie.
+        De cijfers liegen niet. Een mobiele autosleutelspecialist is meestal aanzienlijk goedkoper dan de dealer. U bespaart niet alleen 30% tot 50% op de sleutel zelf, maar voorkomt ook dure sleepkosten en dagenlange downtime. Bovendien profiteert u van het gemak van service aan huis of op locatie.
       </p>
     </>
   ),
@@ -1295,7 +1295,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
   ),
   'auto-openen-zonder-sleutel-schadevrij': (
     <>
-      <h2>Auto openen zonder sleutel: Doe het veilig en 100% schadevrij</h2>
+      <h2>Auto openen zonder sleutel: Doe het veilig en schadevrij</h2>
       <div style={{ margin: '2rem 0', position: 'relative', height: '350px', width: '100%', borderRadius: '12px', overflow: 'hidden' }}>
         <Image 
           src="/images/blog/auto_openen_zonder_sleutel_schadevrij.webp" 
@@ -1315,7 +1315,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Hoe wij uw auto schadevrij openen</h3>
       <p>
-        Als professionele auto slotenmaker beschikken wij over specialistisch gereedschap dat speciaal is ontworpen om autodeuren 100% schadevrij te openen:
+        Als professionele auto slotenmaker beschikken wij over specialistisch gereedschap dat speciaal is ontworpen om autodeuren schadevrij te openen:
       </p>
       <ul>
         <li><strong>Air wedges (Pompkussentjes):</strong> Wij plaatsen een speciaal luchtkussentje tussen de deur en de carrosserie. Door dit zachtjes op te pompen, creëren we exact genoeg ruimte om met een gecoate tool de deurhendel aan de binnenkant over te halen, zonder de lak of rubbers te beschadigen.</li>
@@ -1327,7 +1327,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Staat u in de kou en moet de auto open? Onze mobiele servicebus is 24/7 beschikbaar in de gehele regio. Wij zijn vaak binnen 30 tot 60 minuten ter plaatse om u weer op weg te helpen.
       </p>
       <div style={{ background: '#f8fafc', borderLeft: '4px solid #dc2626', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
-        <strong>Sleutel in de auto? Breek niets af!</strong> Bel direct Autosleutel24 op <a href={WHATSAPP_URL} style={{ color: '#dc2626', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a>. Wij openen uw deur gegarandeerd 100% schadevrij.
+        <strong>Sleutel in de auto? Breek niets af!</strong> Bel direct Autosleutel24 op <a href={WHATSAPP_URL} style={{ color: '#dc2626', fontWeight: 'bold', textDecoration: 'underline' }}>06 11 75 12 31</a>. Wij openen uw deur schadevrij.
       </div>
     </>
   ),
@@ -1526,7 +1526,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Veel mensen vragen zich af waarom het prijsverschil tussen de dealer en een specialist zo groot is. Het antwoord is simpel: overheadkosten. Een dealer heeft een enorm, duur pand en veel personeel. Bovendien bestellen zij de voorgeprogrammeerde sleutels via een trage, logistieke keten vanuit de fabriek. 
       </p>
       <p>
-        Wij zijn mobiele specialisten. Wij hebben geen dure showroom en we kopen ongeprogrammeerde OEM-kwaliteit sleutels rechtstreeks in. Met onze eigen, geavanceerde software programmeren we de sleutels zelf. Dit kostenvoordeel berekenen wij direct door in een lagere prijs voor u.
+        Wij zijn mobiele specialisten. Wij hebben geen dure showroom en we kopen ongeprogrammeerde hoogwaardige sleutels rechtstreeks in. Met onze eigen, geavanceerde software programmeren we de sleutels zelf. Dit kostenvoordeel berekenen wij direct door in een lagere prijs voor u.
       </p>
 
       <div style={{ background: '#f8fafc', borderLeft: '4px solid #10b981', padding: '1rem', margin: '1.5rem 0', borderRadius: '4px' }}>
@@ -1597,7 +1597,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Veelvoorkomende situaties waarin u een auto slotenmaker nodig heeft</h3>
       <ul>
-        <li><strong>Buitengesloten (Sleutel in auto):</strong> De deuren vallen in het slot terwijl uw sleutel nog op de stoel of in het contactslot ligt. Wij openen uw deur 100% schadevrij zonder schade aan uw lak of deurrubbers.</li>
+        <li><strong>Buitengesloten (Sleutel in auto):</strong> De deuren vallen in het slot terwijl uw sleutel nog op de stoel of in het contactslot ligt. Wij openen uw deur schadevrij zonder schade aan uw lak of deurrubbers.</li>
         <li><strong>Autosleutel verloren of gestolen:</strong> Als u al uw sleutels kwijt bent, kunnen wij ter plaatse een nieuwe sleutel slijpen en programmeren. Tevens wissen we de oude, verloren sleutels direct uit het geheugen van de startonderbreker om diefstal te voorkomen.</li>
         <li><strong>Afgebroken sleutel in het slot:</strong> Een afgebroken sleutelbaard in het portier- of contactslot verwijderen wij vakkundig met speciale extractie-tools, waarna we ter plekke een nieuwe sleutel frezen.</li>
       </ul>
@@ -1816,7 +1816,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       </p>
 
       <p>
-        Elektronische beveiligingssystemen, zoals immobilizers (startonderbrekers) en GPS-trackers, bieden een extra laag bescherming. Een immobilizer voorkomt dat de motor start zonder de juiste versleutelde transpondersleutel, terwijl een GPS-tracker helpt bij het lokaliseren van een gestolen voertuig. Deze technologieën zijn cruciaal in de strijd tegen autodiefstal en kunnen helpen bij het snel terugvinden van je auto. Heeft u uw sleutel verloren of is deze mogelijk gestolen? Laat dan direct uw <Link href="/autosleutel-kwijt" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>verloren sleutels uit de boordcomputer wissen</Link> door onze gecertificeerde mobiele specialisten.
+        Elektronische beveiligingssystemen, zoals immobilizers (startonderbrekers) en GPS-trackers, bieden een extra laag bescherming. Een immobilizer voorkomt dat de motor start zonder de juiste versleutelde transpondersleutel, terwijl een GPS-tracker helpt bij het lokaliseren van een gestolen voertuig. Deze technologieën zijn cruciaal in de strijd tegen autodiefstal en kunnen helpen bij het snel terugvinden van je auto. Heeft u uw sleutel verloren of is deze mogelijk gestolen? Laat dan direct uw <Link href="/autosleutel-kwijt" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>verloren sleutels uit de boordcomputer wissen</Link> door onze ervaren mobiele specialisten.
       </p>
 
       <p>
@@ -1892,7 +1892,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         In de moderne tijd zijn elektronische beveiligingssystemen onmisbaar. Alarmsystemen produceren een luid geluid en lichtsignalen zodra iemand probeert in te breken. Immobilizers (startonderbrekers) gaan nog een stap verder: zij blokkeren de brandstoftoevoer en ontsteking zolang de geautoriseerde transpondencode van uw autosleutel niet door de ECU wordt herkend.
       </p>
       <p>
-        Wilt u een <Link href="/diensten/autosleutel-bijmaken" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>extra autosleutel laten bijmaken met professionele transpondercodering</Link>? Onze specialisten programmeren uitsluitend originele OEM-transponders die direct communiceren met uw startonderbreker.
+        Wilt u een <Link href="/diensten/autosleutel-bijmaken" style={{ color: 'var(--color-primary)', fontWeight: 600 }}>extra autosleutel laten bijmaken met professionele transpondercodering</Link>? Onze specialisten programmeren uitsluitend hoogwaardige transponders die direct communiceren met uw startonderbreker.
       </p>
 
       <h3>GPS-trackers en voertuigvolgsystemen</h3>
@@ -1931,7 +1931,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Het beveiligen van je auto tegen diefstal is geen overbodige luxe, maar een noodzaak. Door een slimme combinatie van fysieke sloten, elektronische startonderbrekers en goede dagelijkse gewoontes verklein je de kans op diefstal aanzienlijk.
       </p>
       <p>
-        Is uw autosleutel kwijtgeraakt of vermoedt u dat iemand een onbevoegde sleutel in handen heeft? Neem dan direct contact op met de gecertificeerde specialisten van <strong>{SITE_CONFIG.name}</strong>. Onze mobiele monteurs komen 24/7 naar uw locatie, wissen de verloren sleutel direct uit de boordcomputer en programmeren ter plaatse een veilige nieuwe autosleutel.
+        Is uw autosleutel kwijtgeraakt of vermoedt u dat iemand een onbevoegde sleutel in handen heeft? Neem dan direct contact op met de ervaren specialisten van <strong>{SITE_CONFIG.name}</strong>. Onze mobiele monteurs komen 24/7 naar uw locatie, wissen de verloren sleutel direct uit de boordcomputer en programmeren ter plaatse een veilige nieuwe autosleutel.
       </p>
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
@@ -2083,7 +2083,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}
@@ -2346,7 +2346,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}
@@ -2526,7 +2526,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}
@@ -2605,7 +2605,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}
@@ -2690,7 +2690,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         Zodra de fysieke sleutel netjes gefreesd klaarligt, start het elektronische precisiewerk pas echt: de transponder sleutel programmeren Volkswagen. 
       </p>
       <p>
-        Een gecertificeerde diagnosticus of automonteur sluit hiervoor professionele diagnoseapparatuur stevig aan op de gestandaardiseerde OBD2-stekkerpoort die zich meestal ergens onder je dashboard bevindt. Via sterk beveiligde, gespecialiseerde dealertools of softwarepakketten moet de technicus allereerst de zogeheten immobilizer code uitlezen Volkswagen. 
+        Een ervaren diagnosticus of automonteur sluit hiervoor professionele diagnoseapparatuur stevig aan op de gestandaardiseerde OBD2-stekkerpoort die zich meestal ergens onder je dashboard bevindt. Via sterk beveiligde, gespecialiseerde dealertools of softwarepakketten moet de technicus allereerst de zogeheten immobilizer code uitlezen Volkswagen. 
       </p>
       <p>
         Deze uiterst geheime, zwaar versleutelde PIN-code is absoluut essentieel om überhaupt legitieme digitale toegang te krijgen tot de geavanceerde startonderbrekermodule van het voertuig.
@@ -2791,7 +2791,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <div style={{ background: 'var(--color-primary)', borderRadius: '12px', padding: '2rem', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Direct Hulp Nodig of een Reserve Sleutel Bijmaken?</h3>
-        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze gecertificeerde specialisten staan 24/7 voor u klaar.</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '1.5rem' }}>Onze ervaren specialisten staan 24/7 voor u klaar.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ background: '#fff', color: 'var(--color-primary)', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: 700, textDecoration: 'none' }}>
             📞 {SITE_CONFIG.phone}

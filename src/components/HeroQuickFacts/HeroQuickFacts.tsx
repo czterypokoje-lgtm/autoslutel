@@ -15,7 +15,7 @@ export default function HeroQuickFacts({ price, tone = 'light' }: { price?: stri
     <div className={`${styles.facts} ${tone === 'dark' ? styles.dark : ''}`}>
       <ul className={styles.list}>
         <li>
-          <strong>Binnen {ARRIVAL}</strong> ter plaatse
+          <strong>Gemiddeld binnen {ARRIVAL}</strong> ter plaatse
         </li>
         {price ? (
           <li>

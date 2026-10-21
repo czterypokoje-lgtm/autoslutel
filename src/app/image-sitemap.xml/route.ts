@@ -143,7 +143,7 @@ const BLOG_IMAGES = [
   {
     url: '/images/blog/autosleutel_bijmaken_specialist_utrecht.webp',
     title: 'Autosleutel Bijmaken Specialist Utrecht',
-    caption: 'Gecertificeerde autosleutelspecialist aan het werk in Utrecht',
+    caption: 'Autosleutelspecialist aan het werk in Utrecht',
   },
   {
     url: '/images/blog/autosleutel_kwijt_wat_nu_stappenplan.webp',

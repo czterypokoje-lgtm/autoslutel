@@ -242,7 +242,7 @@ export const BLOG_POSTS = [
   },
   {
     slug: 'auto-openen-zonder-sleutel-schadevrij',
-    title: 'Auto Openen Zonder Sleutel: 100% Schadevrij',
+    title: 'Auto Openen Zonder Sleutel: Schadevrij',
     excerpt: 'Sleutel in de auto laten liggen? Breek geen ruit in! Ontdek hoe wij uw autodeur schadevrij openen met specialistisch gereedschap.',
     keywords: ['auto openen zonder sleutel', 'sleutel in auto laten liggen', 'autodeur openmaken zonder schade', 'auto slotenmaker'],
     publishDate: '2026-07-09',

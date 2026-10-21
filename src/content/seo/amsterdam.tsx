@@ -59,7 +59,7 @@ export default function AmsterdamSeoContent() {
       <h3>Sleutels Verloren? 24/7 Nooddienst</h3>
       <p>
         Alle sleutels kwijt? Dat is een noodsituatie. Wij hebben een spoeddienst die dag en nacht
-        beschikbaar is, zeven dagen per week. Wij openen uw auto 100% schadevrij, zonder krassen op
+        beschikbaar is, zeven dagen per week. Wij openen uw auto schadevrij, zonder krassen op
         het lak of schade aan het slot. Daarna slijpen en programmeren wij ter plekke een nieuwe
         sleutel. De oude, verloren sleutels wissen wij tegelijkertijd uit het systeem, zodat niemand
         anders uw auto nog kan starten.
@@ -72,7 +72,7 @@ export default function AmsterdamSeoContent() {
         <li><strong>Zo snel mogelijk ter plaatse:</strong> Gemiddeld 25–35 minuten in Amsterdam.</li>
         <li><strong>Alle merken:</strong> Van Fiat tot Porsche, in bijna alle gevallen op voorraad.</li>
         <li><strong>12 maanden garantie:</strong> Op elke nieuwe sleutel en programmering.</li>
-        <li><strong>Goedkoper dan de dealer:</strong> Tot 50% voordeliger, gegarandeerd.</li>
+        <li><strong>Goedkoper dan de dealer:</strong> Vaak flink voordeliger.</li>
       </ul>
 
       <p>

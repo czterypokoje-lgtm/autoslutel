@@ -67,7 +67,7 @@ export default function GalerijPage() {
               <span className="section-label" style={{ color: 'var(--orange-500)', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.1em' }}>UTRECHT WERKPLAATS & MOBIELE SERVICE</span>
               <h2 style={{ fontSize: '1.8rem', marginTop: '0.5rem', marginBottom: '1rem' }}>Professionele Autosleutel Specialist</h2>
               <p style={{ color: 'var(--color-text-secondary)', lineHeight: '1.7', fontSize: '0.95rem' }}>
-                Onze professionele werkplaats in Utrecht en onze volledig uitgeruste mobiele servicebus zijn voorzien van de modernste OEM diagnose- en programmeertools. Van BMW FEM/BDC en Mercedes EIS tot Volkswagen SFD en Porsche smart keys — wij programmeren sleutels voor alle merken op locatie.
+                Onze volledig uitgeruste mobiele servicebussen zijn voorzien van moderne diagnose- en programmeertools. Van BMW FEM/BDC en Mercedes EIS tot Volkswagen SFD en Porsche smart keys — wij programmeren sleutels voor alle merken op locatie.
               </p>
             </div>
             <div>

@@ -69,7 +69,7 @@ const faqItems = [
   },
   {
     q: 'Wat kost het om een autosleutel te laten maken?',
-    a: `Een transpondersleutel begint bij €${SITE_CONFIG.prices.transponder},-, een klapsleutel met afstandsbediening bij €${SITE_CONFIG.prices.klapsleutel},-, een smart key bij €${SITE_CONFIG.prices.smartKey},-. U hoort de exacte prijs telefonisch voordat wij vertrekken. Gemiddeld is dat 30-50% goedkoper dan de officiële merkdealer.`,
+    a: `Een transpondersleutel begint bij €${SITE_CONFIG.prices.transponder},-, een klapsleutel met afstandsbediening bij €${SITE_CONFIG.prices.klapsleutel},-, een smart key bij €${SITE_CONFIG.prices.smartKey},-. U hoort de exacte prijs telefonisch voordat wij vertrekken. Dat is vaak flink goedkoper dan de officiële merkdealer.`,
   },
 ];
 
@@ -142,7 +142,7 @@ export default function AutosleutelLatenMaken() {
                 <tr>
                   <td style={{ padding: '0.9rem' }}><strong>Mobiele specialist (Autosleutel24)</strong></td>
                   <td style={{ padding: '0.9rem' }}>Wij komen naar uw auto, frezen en programmeren ter plekke</td>
-                  <td style={{ padding: '0.9rem' }}>Gemiddeld 30-50% goedkoper dan de dealer, 12 maanden garantie</td>
+                  <td style={{ padding: '0.9rem' }}>Vaak flink goedkoper dan de dealer, 12 maanden garantie</td>
                 </tr>
               </tbody>
             </table>

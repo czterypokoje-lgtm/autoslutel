@@ -113,7 +113,7 @@ export default function DienstenOverviewPage() {
             </p>
             <h3>1. Schadevrij Autodeur Openen &amp; Noodopeningen</h3>
             <p>
-              Is uw autodeur dichtgevallen met de sleutel nog op het contact of op de stoel? Wij openen uw auto 100% schadevrij met geavanceerde Lishi lock decoders. In tegenstelling tot traditionele openbreekmethodes blijft uw fabrieksslot volledig intact.
+              Is uw autodeur dichtgevallen met de sleutel nog op het contact of op de stoel? Wij openen uw auto schadevrij met geavanceerde Lishi lock decoders. In tegenstelling tot traditionele openbreekmethodes blijft uw fabrieksslot volledig intact.
             </p>
             <h3>2. Autosleutel Bijmaken &amp; Programmeren op Locatie</h3>
             <p>

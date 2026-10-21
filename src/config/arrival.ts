@@ -12,4 +12,4 @@
  * take it out for that region rather than leaving a claim you cannot keep.
  */
 export const ARRIVAL = '30-60 min';
-export const ARRIVAL_TITLE = '30-60 Min Ter Plaatse';
+export const ARRIVAL_TITLE = '± 30-60 Min Ter Plaatse';

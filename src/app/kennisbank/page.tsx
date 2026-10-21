@@ -95,10 +95,10 @@ export default function KennisbankPage() {
                   1. Mobiele Autosleutelservice in Midden-Nederland &amp; Het Gooi
                 </h2>
                 <p>
-                  Autosleutel24 is dé gespecialiseerde mobiele autosecuriteitsdienst voor het direct ter plaatse bijmaken, programmeren en herstellen van autosleutels. Wij bedienen een compact, razendsnel werkgebied in Midden-Nederland en Het Gooi (Bussum, Hilversum, Naarden, Laren, Blaricum, Huizen). Daarnaast zijn onze gecertificeerde monteurs dagelijks actief in Utrecht, Amsterdam, Amstelveen, Diemen, Amersfoort, Almere, Zeist, Breukelen en Nieuwegein. Doordat wij uitsluitend opereren met volledig uitgeruste mobiele servicewagens, hoeft u uw voertuig nooit te laten wegslepen naar een dure merkdealer.
+                  Autosleutel24 is dé gespecialiseerde mobiele autosecuriteitsdienst voor het direct ter plaatse bijmaken, programmeren en herstellen van autosleutels. Wij bedienen een compact, razendsnel werkgebied in Midden-Nederland en Het Gooi (Bussum, Hilversum, Naarden, Laren, Blaricum, Huizen). Daarnaast zijn onze ervaren monteurs dagelijks actief in Utrecht, Amsterdam, Amstelveen, Diemen, Amersfoort, Almere, Zeist, Breukelen en Nieuwegein. Doordat wij uitsluitend opereren met volledig uitgeruste mobiele servicewagens, hoeft u uw voertuig nooit te laten wegslepen naar een dure merkdealer.
                 </p>
                 <p>
-                  Onze mobiele werkplaatsen zijn voorzien van hightech computergestuurde sleutelfreesmachines en officiële OEM-diagnoseapparatuur. Hierdoor kunnen wij binnen 15 tot 30 minuten na uw oproep op uw locatie aanwezig zijn, of u nu thuis op de oprit staat, op uw werkplek, of gestrand bent op een openbare parkeerplaats langs de snelweg. Wij garanderen een 100% schadevrije werkwijze en leveren direct een geteste sleutel met volledige garantie.
+                  Onze mobiele werkplaatsen zijn voorzien van hightech computergestuurde sleutelfreesmachines en professionele diagnoseapparatuur. Hierdoor kunnen wij binnen 15 tot 30 minuten na uw oproep op uw locatie aanwezig zijn, of u nu thuis op de oprit staat, op uw werkplek, of gestrand bent op een openbare parkeerplaats langs de snelweg. Wij werken schadevrij en leveren direct een geteste sleutel met volledige garantie.
                 </p>
               </section>
 
@@ -131,7 +131,7 @@ export default function KennisbankPage() {
                   4. Procedure bij Volledig Sleutelverlies (All-Keys-Lost)
                 </h2>
                 <p>
-                  Bent u al uw autosleutels kwijtgeraakt of zijn deze gestolen? Dan is een reguliere kopie niet meer mogelijk en treedt onze All-Keys-Lost noodprocedure in werking. Onze specialist opent uw autodeur allereerst 100% schadevrij met behulp van specialistisch gereedschap zoals Lishi 2-in-1 lockpicks. Met deze precisie-instrumenten kunnen wij de mechanische groeven en dieptes van uw slotcilinder exact uitlezen zonder krassen of braamschade aan het portier.
+                  Bent u al uw autosleutels kwijtgeraakt of zijn deze gestolen? Dan is een reguliere kopie niet meer mogelijk en treedt onze All-Keys-Lost noodprocedure in werking. Onze specialist opent uw autodeur allereerst schadevrij met behulp van specialistisch gereedschap zoals Lishi 2-in-1 lockpicks. Met deze precisie-instrumenten kunnen wij de mechanische groeven en dieptes van uw slotcilinder exact uitlezen zonder krassen of braamschade aan het portier.
                 </p>
                 <p>
                   Vervolgens voeren wij deze mechanische slotcode in onze automatische CNC-sleutelmachine in, die binnen enkele seconden een gloednieuw sleutelblad freest. Daarna sluiten wij onze diagnoseapparatuur aan op de OBD2-poort om de oude, verloren sleutels definitief uit het geheugen van de immobilizer te wissen. Zo bent u ervan verzekerd dat een eventuele vinder of dief uw auto niet meer kan starten.
@@ -143,7 +143,7 @@ export default function KennisbankPage() {
                   5. Autosleutel Reparatie &amp; Batterijvervanging op Locatie
                 </h2>
                 <p>
-                  Niet in alle gevallen is een compleet nieuwe sleutel nodig. Werkt uw afstandsbediening slecht, zijn de drukknopjes versleten, is de sleutelbehuizing gebarsten of klapt het sleutelblad niet meer uit? Onze monteurs voeren ook deskundige reparaties uit. Wij solderen losse microswitches op de printplaat opnieuw vast, vervangen beschadigde behuizingen door stevige OEM-kwaliteit sleutelbehuizingen en vernieuwen defecte transponderspoelen.
+                  Niet in alle gevallen is een compleet nieuwe sleutel nodig. Werkt uw afstandsbediening slecht, zijn de drukknopjes versleten, is de sleutelbehuizing gebarsten of klapt het sleutelblad niet meer uit? Onze monteurs voeren ook deskundige reparaties uit. Wij solderen losse microswitches op de printplaat opnieuw vast, vervangen beschadigde behuizingen door stevige hoogwaardige sleutelbehuizingen en vernieuwen defecte transponderspoelen.
                 </p>
                 <p>
                   Daarnaast vervangen wij alle typen sleutelbatterijen, van reguliere CR2032 en CR2025 lithium knoopcellen tot oplaadbare VL2020 accu&apos;s die vastgesoldeerd zitten op de printplaat van onder andere BMW en Ford sleutels. Na reparatie testen wij de zendfrequentie (433 MHz of 868 MHz) met een professionele frequentiemeter.
@@ -158,7 +158,7 @@ export default function KennisbankPage() {
                   In veel situaties wordt het vervangen of bijmaken van een autosleutel na diefstal of verlies (gedeeltelijk) vergoed door uw autoverzekeraar, afhankelijk van uw polisvoorwaarden (Beperkt Casco of All-Risk / Volledig Casco). Verzekeraars stellen bij verlies of diefstal vrijwel altijd als harde eis dat de verloren sleutels elektronisch worden uitgeleerd en dat u een officiële factuur kunt overleggen waarop staat gespecificeerd dat de startonderbreker opnieuw is gecodeerd.
                 </p>
                 <p>
-                  Autosleutel24 is een erkend en volledig gecertificeerd slotenmakersbedrijf. Na afloop van onze werkzaamheden ontvangt u direct een gedetailleerde, officiële BTW-factuur en een digitaal rapport van de herprogrammering. Deze documenten kunt u rechtstreeks indienen bij uw verzekeringsmaatschappij voor een snelle en vlekkeloze schadeafhandeling.
+                  Autosleutel24 is een ervaren, KvK-geregistreerd slotenmakersbedrijf. Na afloop van onze werkzaamheden ontvangt u direct een gedetailleerde, officiële BTW-factuur en een digitaal rapport van de herprogrammering. Deze documenten kunt u rechtstreeks indienen bij uw verzekeringsmaatschappij voor een snelle en vlekkeloze schadeafhandeling.
                 </p>
               </section>
 
@@ -224,13 +224,13 @@ export default function KennisbankPage() {
 
               <section id="hoofdstuk-12" style={{ marginBottom: '3rem' }}>
                 <h2 style={{ fontSize: '1.7rem', color: '#0f172a', marginBottom: '1rem' }}>
-                  12. Kwaliteitsgarantie, CE-Gecertificeerde Transponders &amp; Milieubewustzijn
+                  12. Kwaliteitsgarantie, CE-gemarkeerde Transponders &amp; Milieubewustzijn
                 </h2>
                 <p>
                   Wij doen nooit concessies aan kwaliteit. Al onze sleutelbehuizingen, transponderchips, afstandsbedieningsprintplaten en knoopcelbatterijen voldoen strikt aan de Europese CE- en RoHS-richtlijnen en zijn kwalitatief gelijkwaardig aan of beter dan de originele fabrieksonderdelen. U ontvangt standaard 12 maanden volledige schriftelijke garantie op zowel het mechanische sleutelblad als de elektronische werking van de chip en zender.
                 </p>
                 <p>
-                  Daarnaast werken wij milieubewust: oude en defecte sleutels die wij vervangen worden niet weggegooid, maar vakkundig gerecycled waarbij hoogwaardige edelmetalen en lithiumbatterijen op een verantwoorde manier worden verwerkt via gecertificeerde recyclingpartners in Nederland.
+                  Daarnaast werken wij milieubewust: oude en defecte sleutels die wij vervangen worden niet weggegooid, maar vakkundig gerecycled waarbij hoogwaardige edelmetalen en lithiumbatterijen op een verantwoorde manier worden verwerkt via verantwoorde recyclingpartners in Nederland.
                 </p>
               </section>
 

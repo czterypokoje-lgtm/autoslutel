@@ -169,7 +169,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
      * ("kopiëren", "Sleutelmaker") carried none of it.
      *
      * The price stays; the arrival time does NOT come back. The previous
-     * generation of this copy promised "binnen 30-60 min" on all 62 cities
+     * generation of this copy promised "gemiddeld binnen 30-60 min" on all 62 cities
      * including Maastricht, about 210 km from the Bussum base. It was
      * removed for being false and the fix is not to retype it in a meta
      * description, which is the most-read sentence on the page.
@@ -180,7 +180,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     ...(isNoindexCity(citySlug) && { robots: { index: false, follow: true } }),
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} ter plaatse, dag en nacht. Prijs vooraf. Bel nu!`
+        `Autosleutel laten maken of bijmaken in ${city.city}? Gemiddeld binnen ${ARRIVAL} ter plaatse, dag en nacht. Prijs vooraf. Bel nu!`
     ),
     alternates: {
       canonical: pageUrl,
@@ -403,9 +403,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               },
               {
                 id: 'feature-5',
-                icon: <Image src="/images/icon_insurance.webp" alt="Verzekerd" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: 'Verzekerd & Gecertificeerd',
-                description: 'U bent 100% verzekerd. We werken samen met alle grote verzekeraars.',
+                icon: <Image src="/images/icon_insurance.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Vakwerk met garantie',
+                description: '12 maanden garantie op ons werk. We werken samen met alle grote verzekeraars.',
                 linkText: 'Lees meer over verzekering',
                 linkUrl: '/blog/verzekering-dekt-autosleutel-vervangen'
               }
@@ -438,9 +438,9 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '2rem', alignItems: 'center' }}>
               <div>
                 <p className="section-eyebrow" style={{ color: 'var(--color-primary)' }}>UW MONTEUR IN {city.city.toUpperCase()}</p>
-                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>Berkan Acarol — Gecertificeerd Hoofdtechnicus</h2>
+                <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '0.5rem', marginTop: '0.25rem' }}>Berkan Acarol — Hoofdtechnicus</h2>
                 <p style={{ color: 'var(--gray-700)', lineHeight: 1.6, marginBottom: '1rem', fontSize: '0.9rem' }}>
-                  Uw sleutelprobleem in {city.city} wordt persoonlijk opgelost door Berkan. Gecertificeerd op Autel IM608 Pro&nbsp;II en AVDI Abrites — dezelfde apparatuur als de officiële dealer, maar zonder de wachttijd en de hoge kosten.
+                  Uw sleutelprobleem in {city.city} wordt persoonlijk opgelost door Berkan. Werkt met de Autel IM608 Pro&nbsp;II en AVDI Abrites — professionele apparatuur, maar zonder de wachttijd en de hoge kosten.
                 </p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.25rem', fontSize: '0.875rem', color: 'var(--gray-700)', lineHeight: 1.7 }}>
                   <li style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.3rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span><span><strong>Autel IM608 Pro II &amp; AVDI Abrites</strong> — dealer-niveau apparatuur</span></li>
@@ -574,7 +574,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   <Image src="/images/service_bijmaken.webp" alt={`Autosleutel Bijmaken in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autosleutel Bijmaken in {city.city}</h3>
-                <p>Heeft u een extra autosleutel nodig? Wij maken een nieuwe sleutel op locatie, vaak de helft goedkoper dan de dealer.</p>
+                <p>Heeft u een extra autosleutel nodig? Wij maken een nieuwe sleutel op locatie, vaak flink goedkoper dan de dealer.</p>
                 <div className={styles.serviceCardFooter}>
                   <span className={styles.serviceCardPrice}>Vanaf €{SITE_CONFIG.prices.transponder},-</span>
                   <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
@@ -598,7 +598,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   <Image src="/images/service_openen.webp" alt={`Autodeur Openen in ${city.city}`} fill style={{ objectFit: 'contain' }} />
                 </div>
                 <h3>Autodeur Openen in {city.city}</h3>
-                <p>Sleutel in de auto laten liggen? Wij openen uw auto 100% schadevrij met speciaal gereedschap, zonder krassen.</p>
+                <p>Sleutel in de auto laten liggen? Wij openen uw auto schadevrij met speciaal gereedschap, zonder krassen.</p>
                 <div className={styles.serviceCardFooter}>
                   <span className={styles.serviceCardPrice}>Vanaf €{SITE_CONFIG.prices.unlock},-</span>
                   <span className={styles.serviceCardBtn}>Lees meer &rarr;</span>
@@ -662,7 +662,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                     arrival ? `${arrival} reactietijd in ${city.city}` : `Snelle reactietijd in ${city.city}`,
                     'Geen sleepkosten — volledig mobiel',
                     'Zelfde dag service, ook weekend',
-                    `Goedkoper dan ${city.city} dealer — gegarandeerd`,
+                    `Vaak goedkoper dan de dealer in ${city.city}`,
                     'Verzekeringsklare facturen',
                     '12 maanden garantie op programmering',
                     '24/7 bereikbaar, ook nacht en feestdagen',

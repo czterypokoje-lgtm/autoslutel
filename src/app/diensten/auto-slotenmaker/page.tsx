@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
   },
-  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto 100% schadevrij en maken direct een nieuwe sleutel ter plaatse. Binnen 30-60 min, prijs vooraf. Bel 24/7.',
+  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto schadevrij en maken direct een nieuwe sleutel ter plaatse. Gemiddeld binnen 30-60 min, prijs vooraf. Bel 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-slotenmaker` },
 };
 
@@ -74,13 +74,13 @@ export default function AutoSlotenmakerPage() {
     'Schadevrij openen',
     'Direct nieuwe sleutel',
     'Vaste prijzen vooraf',
-    'Gecertificeerde monteurs'
+    'Ervaren monteurs'
   ];
 
   const faqItems = [
     {
       q: 'Hoe vind ik een betrouwbare auto slotenmaker in de buurt?',
-      a: 'Een betrouwbare autoslotenmaker werkt met vaste all-in tarieven die vooraf worden gecommuniceerd, en is gecertificeerd. Autosleutel24 is volledig mobiel actief in de regio Utrecht, Amsterdam, Almere, Amersfoort en Hilversum. Wij zijn binnen 30 tot 45 minuten op uw locatie met een compleet uitgeruste servicebus.'
+      a: 'Een betrouwbare autoslotenmaker werkt met vaste all-in tarieven die vooraf worden gecommuniceerd. Autosleutel24 is volledig mobiel actief in de regio Utrecht, Amsterdam, Almere, Amersfoort en Hilversum. Wij zijn binnen 30 tot 45 minuten op uw locatie met een compleet uitgeruste servicebus.'
     },
     {
       q: 'Wat kost een auto slotenmaker voor het openen van mijn auto?',
@@ -96,7 +96,7 @@ export default function AutoSlotenmakerPage() {
     },
     {
       q: 'What is het verschil tussen Autosleutel24 en de autodealer?',
-      a: 'De autodealer vereist dat u uw auto laat wegslepen naar hun werkplaats en hanteert vaak leertijden van enkele dagen tot weken voor een nieuwe sleutel. Autosleutel24 komt naar u toe en regelt alles direct ter plaatse binnen 30-60 minuten, tegen een tarief dat tot wel 50% lager ligt dan bij de merkdealer.'
+      a: 'De autodealer vereist dat u uw auto laat wegslepen naar hun werkplaats en hanteert vaak leertijden van enkele dagen tot weken voor een nieuwe sleutel. Autosleutel24 komt naar u toe en regelt alles direct ter plaatse gemiddeld binnen 30-60 minuten, tegen een tarief dat tot wel 50% lager ligt dan bij de merkdealer.'
     }
   ];
 
@@ -121,12 +121,12 @@ export default function AutoSlotenmakerPage() {
     {
       num: 2,
       title: 'Monteur onderweg',
-      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Binnen 30-60 minuten is de bus bij u ter plaatse.'
+      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Gemiddeld binnen 30-60 minuten is de bus bij u ter plaatse.'
     },
     {
       num: 3,
       title: 'Schadevrije opening',
-      desc: 'Met behulp van Lishi lockpicks en specialistisch gereedschap openen we de autodeur of kofferbak 100% schadevrij.'
+      desc: 'Met behulp van Lishi lockpicks en specialistisch gereedschap openen we de autodeur of kofferbak schadevrij.'
     },
     {
       num: 4,
@@ -205,7 +205,7 @@ export default function AutoSlotenmakerPage() {
                 id: 'feature-5',
                 icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '24/7 Spoedhulp Bel Nu',
-                description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
+                description: '12 maanden garantie op ons werk. Dag en nacht bereikbaar voor alle noodgevallen.',
                 linkText: 'Bel direct',
                 linkUrl: `tel:${SITE_CONFIG.phoneTel}`
               }
@@ -283,7 +283,7 @@ export default function AutoSlotenmakerPage() {
                   <div className={styles.callout}>
                     <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken, krijgt u bij ons vooraf een vaste prijsopgave. 
                     <br/><br/>
-                    <strong>Goed om te weten:</strong> Officiële autodealers zijn vaak <strong>50% duurder</strong>. Daarnaast bespaart u bij ons op dure wegsleepkosten, want <strong>wij rekenen geen sleepkosten</strong> en helpen u direct ter plaatse!
+                    <strong>Goed om te weten:</strong> Officiële autodealers zijn vaak <strong>flink duurder</strong>. Daarnaast bespaart u bij ons op dure wegsleepkosten, want <strong>wij rekenen geen sleepkosten</strong> en helpen u direct ter plaatse!
                   </div>
                 </div>
 

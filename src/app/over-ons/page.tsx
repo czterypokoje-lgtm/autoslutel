@@ -4,7 +4,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Over Autosleutel24 | Gecertificeerde Specialist',
+    absolute: 'Over Autosleutel24 | Ervaren Specialist',
   },
   description: `Maak kennis met Autosleutel24. Onder leiding van Berkan Acarol bieden wij professionele, mobiele autosleutelservice in de gehele Randstad en Midden-Nederland.`,
   alternates: {
@@ -34,7 +34,7 @@ const personSchema = {
   '@id': `${SITE_CONFIG.domain}/#specialist`,
   name: 'Berkan Acarol',
   jobTitle: 'Hoofdtechnicus & Autosleutelspecialist',
-  description: 'Gecertificeerd autosleutelspecialist met jarenlange ervaring in voertuigbeveiliging en autosleutelcodering. Specialist in transponder programmering, smart key systemen en contactslot reparatie voor alle automerken.',
+  description: 'Ervaren autosleutelspecialist met jarenlange ervaring in voertuigbeveiliging en autosleutelcodering. Specialist in transponder programmering, smart key systemen en contactslot reparatie voor alle automerken.',
   worksFor: {
     '@id': `${SITE_CONFIG.domain}/#localbusiness`,
   },
@@ -46,18 +46,6 @@ const personSchema = {
     'Contactslot reparatie',
     'OBD2 diagnose',
     'Voertuigbeveiliging',
-  ],
-  hasCredential: [
-    {
-      '@type': 'EducationalOccupationalCredential',
-      credentialCategory: 'Certificering',
-      name: 'Autel IM608 Pro II Gecertificeerd',
-    },
-    {
-      '@type': 'EducationalOccupationalCredential',
-      credentialCategory: 'Certificering',
-      name: 'AVDI Abrites Gecertificeerd Technicus',
-    },
   ],
   url: `${SITE_CONFIG.domain}/over-ons`,
 };
@@ -89,15 +77,15 @@ export default function OverOnsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
           <div>
             <h2 style={{ fontSize: '1.6rem', fontWeight: 700, marginBottom: '0.75rem' }}>Wie Zijn Wij?</h2>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Autosleutel24 wordt geleid door Berkan Acarol. Hij is een gecertificeerd expert in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks particulieren, wagenparkbeheerders en garagebedrijven.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Autosleutel24 wordt geleid door Berkan Acarol. Hij is een ervaren expert in voertuigbeveiliging en autosleutelcodering. Samen met een hecht team van ervaren mobiele monteurs helpen wij dagelijks particulieren, wagenparkbeheerders en garagebedrijven.</p>
             <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Wij komen altijd naar u toe. Of u nu thuis bent, op het werk, of gestrand langs de snelweg.</p>
             <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1rem' }}>Onze focus is simpel: Eerlijke prijzen, snelle reactietijden en technisch perfect werk. Geen vage verhalen, gewoon direct uw probleem oplossen.</p>
 
             <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Onze Kernwaarden</h3>
             <ul style={{ listStyleType: 'none', padding: 0, margin: 0, fontSize: '0.88rem', color: 'var(--gray-700)', lineHeight: '1.7' }}>
               <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Transparantie:</strong> U krijgt altijd vooraf een vaste prijs. Geen verrassingen achteraf.</span></li>
-              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaarheid:</strong> Wij zijn KvK-geregistreerd, volledig verzekerd en leveren werk met standaard 12 maanden garantie.</span></li>
-              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Kwaliteit:</strong> Wij gebruiken uitsluitend professionele (OEM) apparatuur, geen goedkope imitatie.</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Betrouwbaarheid:</strong> Wij zijn KvK-geregistreerd en leveren werk met standaard 12 maanden garantie.</span></li>
+              <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Kwaliteit:</strong> Wij gebruiken uitsluitend professionele apparatuur.</span></li>
               <li style={{ marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><span style={{ color: '#10b981', fontWeight: 'bold' }}>✓</span> <span><strong>Bereikbaarheid:</strong> Wij staan 24 uur per dag, 7 dagen per week voor u klaar, ook in het weekend en op feestdagen.</span></li>
             </ul>
           </div>
@@ -126,8 +114,8 @@ export default function OverOnsPage() {
         {/* Workshop Image Section */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: '2.5rem', marginBottom: '3.5rem', alignItems: 'start' }}>
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Onze Werkplaats &amp; Mobiele Service<br/>📍 Hoofdkantoor in Utrecht, Actief in de Hele Randstad</h2>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Onze fysieke werkplaats en het magazijn zijn gevestigd in Utrecht. Vanuit deze centrale locatie sturen wij onze mobiele servicebussen aan.</p>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Onze Mobiele Service<br/>📍 Actief in de Hele Randstad</h2>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Wij werken volledig mobiel: onze servicebussen zijn rijdende werkplaatsen, met alle apparatuur en sleutels aan boord.</p>
             <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Wij rijden dagelijks uit naar klanten in de hele Randstad en Midden-Nederland. Zo helpen wij snel en op locatie in onder andere Amsterdam, Rotterdam, Den Haag, Amersfoort, Almere en het Gooi.</p>
           </div>
           <div>

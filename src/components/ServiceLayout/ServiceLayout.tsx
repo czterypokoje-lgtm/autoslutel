@@ -104,7 +104,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
     { strong: 'Sleutel op de autostoel of in het contact laten liggen:', text: 'U stapt even uit en de centrale deurvergrendeling springt automatisch dicht terwijl de sleutel nog binnen ligt.' },
     { strong: 'Sleutel in de kofferbak beland:', text: 'Tijdens het inladen van boodschappen, sportspullen of bagage klapt de klep dicht terwijl uw sleutel nog in de laadruimte ligt.' },
     { strong: 'Batterij afstandsbediening of smart key leeg:', text: 'De auto reageert niet meer op het signaal en de mechanische noodsleutel in de portiergreep draait niet door vuil of vorst.' },
-    { strong: 'Kind of huisdier per ongeluk ingesloten:', text: 'Een acute noodsituatie waarin wij direct met de hoogste prioriteit én gegarandeerd schadevrij ingrijpen.' },
+    { strong: 'Kind of huisdier per ongeluk ingesloten:', text: 'Een acute noodsituatie waarin wij direct met de hoogste prioriteit én schadevrij ingrijpen.' },
     { strong: 'Elektronische storing in de centrale vergrendeling:', text: 'Het slot weigert dienst of de keyless-entry module detecteert de sleutel niet meer na een spanningsdip.' }
   ] : isKey ? [
     { strong: 'U heeft slechts één werkende sleutel over:', text: 'Voorkom acute stress en hoge wegsleepkosten door tijdig een reserve autosleutel met startonderbreker te laten bijmaken.' },
@@ -332,7 +332,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 id: 'feature-5',
                 icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
                 title: '24/7 Spoedhulp Bel Nu',
-                description: 'U bent 100% verzekerd. Dag en nacht bereikbaar voor alle noodgevallen.',
+                description: '12 maanden garantie op ons werk. Dag en nacht bereikbaar voor alle noodgevallen.',
                 linkText: 'Bel direct',
                 linkUrl: `tel:${SITE_CONFIG.phoneTel}`
               }
@@ -370,7 +370,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   <div>
                     <h2>Schadevrije Openingsmethoden & Garantie</h2>
                     <p>
-                      Onze monteurs maken uitsluitend gebruik van geavanceerd, merkspecifiek slotenmakersgereedschap. In tegenstelling tot traditionele garages of bergingdiensten openen wij uw voertuig 100% schadevrij. Wij verbuigen geen deurstijlen, veroorzaken geen lakbeschadigingen en breken nooit ruiten in.
+                      Onze monteurs maken uitsluitend gebruik van geavanceerd, merkspecifiek slotenmakersgereedschap. In tegenstelling tot traditionele garages of bergingdiensten openen wij uw voertuig schadevrij. Wij verbuigen geen deurstijlen, veroorzaken geen lakbeschadigingen en breken nooit ruiten in.
                     </p>
                     <div className={styles.tableWrapper} style={{ marginBottom: '2rem' }}>
                       <table className={styles.pricingTable}>
@@ -378,14 +378,14 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                           <tr>
                             <th>Techniek / Gereedschap</th>
                             <th>Toepassing & Situatie</th>
-                            <th>Schadevrij Garantie</th>
+                            <th>Schadevrij Openen</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
                             <td><strong>Air Wedge + Long Reach Tool</strong></td>
                             <td>Standaard bij 95% van alle moderne personenauto&apos;s</td>
-                            <td>100% schadevrij, geen druk op lak of rubber</td>
+                            <td>schadevrij, geen druk op lak of rubber</td>
                           </tr>
                           <tr>
                             <td><strong>Lishi 2-in-1 Pick / Decoder</strong></td>
@@ -406,7 +406,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                       </table>
                     </div>
                     <div className={styles.callout}>
-                      <strong>Schadevrije garantie:</strong> Wij garanderen 100% schadevrije opening of herstel. Mocht er in een uitzonderlijk geval vooraf een risico zijn, dan bespreekt onze monteur dit altijd transparant met u vóór aanvang van de werkzaamheden.
+                      <strong>Schadevrije garantie:</strong> Wij werken schadevrij. Mocht er in een uitzonderlijk geval vooraf een risico zijn, dan bespreekt onze monteur dit altijd transparant met u vóór aanvang van de werkzaamheden.
                     </div>
                   </div>
                 ) : (
@@ -478,7 +478,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                       />
                       <img 
                         src="/images/seo/autosleutels-repareren-inventaris-amsterdam.webp" 
-                        alt="Voorraad van OEM behuizingen en reservesleutel onderdelen" 
+                        alt="Voorraad van behuizingen en reservesleutel onderdelen" 
                         style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
                       />
                       <img 
@@ -527,7 +527,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   ) : (
                     <img 
                       src="/autosleutel24-sleutelbijmaken-utrecht.webp" 
-                      alt={`Professionele mobiele service voor ${service.title.toLowerCase()} - direct ter plaatse en 100% schadevrij`} 
+                      alt={`Professionele mobiele service voor ${service.title.toLowerCase()} - direct ter plaatse en schadevrij`} 
                       style={{ width: '100%', borderRadius: '12px', margin: '1.25rem 0', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', objectFit: 'cover', aspectRatio: '16/9' }}
                     />
                   )}
@@ -592,15 +592,15 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 <details className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
                   <summary style={{ cursor: 'pointer', fontSize: '1.4rem', fontWeight: 800 }}>Alles over {service.title}: Mobiele Service, Techniek en Verzekering</summary>
                   <p>
-                    Wanneer u hulp nodig heeft met <strong>{service.title.toLowerCase()}</strong>, wilt u niet afhankelijk zijn van lange wachttijden of dure wegsleepservices van traditionele garages. Onze gecertificeerde mobiele slotenmakers komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw auto toe in heel Nederland. Of u nu thuis op de oprit staat, op uw werk, of langs de weg bent gestrand: binnen gemiddeld 30 minuten zijn wij ter plaatse.
+                    Wanneer u hulp nodig heeft met <strong>{service.title.toLowerCase()}</strong>, wilt u niet afhankelijk zijn van lange wachttijden of dure wegsleepservices van traditionele garages. Onze ervaren mobiele slotenmakers komen 24 uur per dag, 7 dagen per week rechtstreeks naar uw auto toe in heel Nederland. Of u nu thuis op de oprit staat, op uw werk, of langs de weg bent gestrand: binnen gemiddeld 30 minuten zijn wij ter plaatse.
                   </p>
-                  <h3>Geavanceerde Apparatuur &amp; 100% Schadevrije Garantie</h3>
+                  <h3>Geavanceerde Apparatuur &amp; Schadevrij Openen</h3>
                   <p>
                     Wij werken uitsluitend met hightech diagnoseapparatuur en originele dealer-tokens. Voor het openen van autodeuren gebruiken wij speciale Lishi 2-in-1 lock decoders waarmee we het slot schadevrij openen via de cilinder. Moet er een nieuwe sleutel worden ingeleerd? Via de OBD2-diagnosepoort koppelen wij de nieuwe transponderchip of Keyless Go smart key rechtstreeks aan de startonderbreker van uw auto.
                   </p>
                   <h3>Kosten Besparen t.o.v. de Dealer & 12 Maanden Garantie</h3>
                   <p>
-                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons gemiddeld <strong>50% voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €{SITE_CONFIG.prices.transponder},- tot €299,-. Bij "alle sleutels kwijt" betaalt u €299,- tot €500,- (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
+                    Doordat wij geen dure showrooms of logistieke ketens onderhouden, bent u bij ons vaak <strong>flink voordeliger uit</strong> dan bij de officiële merkdealer. Een reservesleutel kost bij ons €{SITE_CONFIG.prices.transponder},- tot €299,-. Bij "alle sleutels kwijt" betaalt u €299,- tot €500,- (inclusief programmeren). Bovendien komen wij naar u toe op locatie, dus u betaalt <strong>géén wegsleepkosten</strong>! U ontvangt standaard 12 maanden schriftelijke garantie op al onze sleutels en reparaties.
                   </p>
                 </details>
 
@@ -675,7 +675,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
               <div className={styles.microText}>
                 <span>✓ Direct contact met monteur</span>
                 <span>✓ Vaste prijs vooraf, geen verrassingen</span>
-                <span>✓ 100% Schadevrije garantie</span>
+                <span>✓ Schadevrij openen</span>
               </div>
             </div>
 
@@ -730,13 +730,13 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
             {/* ── COMPREHENSIVE SERVICE TECHNICAL SEO GUIDE ── */}
             <details className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem', background: '#ffffff', padding: '1.5rem 2.5rem', borderRadius: '16px', border: '1px solid var(--gray-200)' }}>
-              <summary style={{ cursor: 'pointer', fontSize: '1.4rem', fontWeight: 800 }}>Alles over {service.title} door Onze Gecertificeerde Slotenmakers</summary>
+              <summary style={{ cursor: 'pointer', fontSize: '1.4rem', fontWeight: 800 }}>Alles over {service.title} door Onze Ervaren Slotenmakers</summary>
               <p>
                 Het vakkundig uitvoeren van <strong>{service.title.toLowerCase()}</strong> vereist nauwkeurigheid, gespecialiseerde gereedschappen en actuele kennis van voertuigelektronica. Bij moderne personenauto&apos;s en bedrijfswagens is elk onderdeel — van het contactslot en het portierslot tot de afstandsbediening en transponderchip — naadloos verbonden met de centrale boordcomputer (ECU, BSI of CAS module). Waar conventionele garages of algemene pechhulpdiensten vaak niet over de juiste specialistische apparatuur beschikken, is <strong>{SITE_CONFIG.name}</strong> uitgerust om direct op locatie in te grijpen.
               </p>
               <h3>Waarom professionele mobiele hulp essentieel is</h3>
               <p>
-                Wanneer u te maken heeft met een buitensluiting, een kapotte sleutel of een storing in uw startonderbreker, wilt u voorkomen dat er schade ontstaat aan uw autolak, portier of elektronica. Onze monteurs werken met schadevrije Lishi 2-in-1 lockdecoders, OEM-gecertificeerde diagnosecomputers en hightech CNC lasermachines. Wij lossen het probleem direct bij u voor de deur op — of u nu thuis bent, op het werk staat of onderweg langs de weg.
+                Wanneer u te maken heeft met een buitensluiting, een kapotte sleutel of een storing in uw startonderbreker, wilt u voorkomen dat er schade ontstaat aan uw autolak, portier of elektronica. Onze monteurs werken met schadevrije Lishi 2-in-1 lockdecoders, professionele diagnosecomputers en hightech CNC lasermachines. Wij lossen het probleem direct bij u voor de deur op — of u nu thuis bent, op het werk staat of onderweg langs de weg.
               </p>
               <h3>Transparante All-In Prijzen, Verzekering en 12 Maanden Garantie</h3>
               <p>

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   // 186 characters truncated in results, and what Google cut was the price
   // and the call to action — the two things that earn the click.
-  description: `Auto openen zonder sleutel? Binnen ${ARRIVAL} ter plaatse, 100% schadevrij, prijs vooraf. 24/7 bereikbaar. Bel direct!`,
+  description: `Auto openen zonder sleutel? Gemiddeld binnen ${ARRIVAL} ter plaatse, schadevrij, prijs vooraf. 24/7 bereikbaar. Bel direct!`,
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
 };
 
@@ -53,7 +53,7 @@ const faqItems = [
   },
   {
     q: "Welke systemen vergelijken voor auto openen zonder sleutel?",
-    a: "Er zijn drie hoofdtechnieken: (1) Mechanische opening via Lishi decoders — het meest schadevrije en betrouwbare systeem voor het overgrote deel van de markt; (2) OBD-poort bypass voor auto's met elektronische deadlock zoals BMW en Mercedes; (3) Slim-Jim/long-reach tools voor oudere voertuigen. Autosleutel24 gebruikt uitsluitend gecertificeerde methode (1) en (2) en nooit destructieve technieken."
+    a: "Er zijn drie hoofdtechnieken: (1) Mechanische opening via Lishi decoders — het meest schadevrije en betrouwbare systeem voor het overgrote deel van de markt; (2) OBD-poort bypass voor auto's met elektronische deadlock zoals BMW en Mercedes; (3) Slim-Jim/long-reach tools voor oudere voertuigen. Autosleutel24 gebruikt uitsluitend methode (1) en (2) en nooit destructieve technieken."
   },
   {
     q: "Wat zijn de kosten voor het openen van mijn auto (buitensluiting)?",
@@ -69,7 +69,7 @@ const faqItems = [
   },
   {
     q: "Zijn er auto openen zonder sleutel apps die het mogelijk maken?",
-    a: "Sommige moderne auto's (Tesla, bepaalde BMW's/Mercedes met Connected App) bieden een fabrieksapp waarmee u het voertuig op afstand kunt ontgrendelen via uw smartphone — mits u de app vooraf heeft ingesteld en actief abonnement heeft. Als die mogelijkheid ontbreekt of de app niet werkt, is een gecertificeerde mobiele locksmith de snelste en veiligste oplossing. Let op: onbekende third-party apps die beweren sloten te openen zijn oplichting."
+    a: "Sommige moderne auto's (Tesla, bepaalde BMW's/Mercedes met Connected App) bieden een fabrieksapp waarmee u het voertuig op afstand kunt ontgrendelen via uw smartphone — mits u de app vooraf heeft ingesteld en actief abonnement heeft. Als die mogelijkheid ontbreekt of de app niet werkt, is een ervaren mobiele locksmith de snelste en veiligste oplossing. Let op: onbekende third-party apps die beweren sloten te openen zijn oplichting."
   },
   {
     q: "Kan ik mijn auto openen als ik geen reservesleutel heb?",
@@ -77,7 +77,7 @@ const faqItems = [
   },
   {
     q: "Welke installatiebedrijven voor auto openen zonder sleutel zijn actief in Nederland?",
-    a: `In Nederland zijn meerdere mobiele locksmith-bedrijven actief, maar de kwaliteit verschilt sterk. Let op gecertificeerde vakmannen die werken met professioneel Lishi-gereedschap en vaste transparante tarieven communiceren vóór aankomst. Autosleutel24 is actief in de regio Utrecht, Amsterdam, Almere en Amersfoort en staat bekendom schadevrij openen en eerlijke all-in prijzen — aantoonbaar via een ${SITE_CONFIG.rating}-sterren beoordeling op Google.`
+    a: `In Nederland zijn meerdere mobiele locksmith-bedrijven actief, maar de kwaliteit verschilt sterk. Let op ervaren vakmannen die werken met professioneel Lishi-gereedschap en vaste transparante tarieven communiceren vóór aankomst. Autosleutel24 is actief in de regio Utrecht, Amsterdam, Almere en Amersfoort en staat bekendom schadevrij openen en eerlijke all-in prijzen — aantoonbaar via een ${SITE_CONFIG.rating}-sterren beoordeling op Google.`
   },
   {
     q: "Wordt auto openen zonder sleutel vergoed door mijn verzekering?",
@@ -85,7 +85,7 @@ const faqItems = [
   },
   {
     q: "Diensten voor auto openen met sleutel erin — wat biedt een mobiele slotenmaker?",
-    a: "Een gecertificeerde mobiele auto-slotenmaker biedt: (1) Schadevrije opening van portieren en kofferbak; (2) Correcte identiteitsverificatie vóór opening (kopie rijbewijs + kentekenbewijs); (3) Een officiële factuur voor uw verzekeraar; (4) Optioneel: direct een nieuwe reservesleutel programmeren ter plaatse. Dit is volledig anders dan 'glasbrekers' of amateurs die met een kleerhanger of koevoet werken en schade veroorzaken."
+    a: "Een goede mobiele auto-slotenmaker biedt: (1) Schadevrije opening van portieren en kofferbak; (2) Correcte identiteitsverificatie vóór opening (kopie rijbewijs + kentekenbewijs); (3) Een officiële factuur voor uw verzekeraar; (4) Optioneel: direct een nieuwe reservesleutel programmeren ter plaatse. Dit is volledig anders dan 'glasbrekers' of amateurs die met een kleerhanger of koevoet werken en schade veroorzaken."
   }
 ];
 
@@ -120,9 +120,9 @@ const steps = [
 const trustItems = [
   '24/7 Spoedhulp',
   'Binnen 30 min ter plaatse',
-  '100% Schadevrij',
+  'Schadevrij',
   'Vaste prijs vooraf',
-  'Gecertificeerde locksmith',
+  'Ervaren slotenmaker',
   'Verzekeringsklare factuur'
 ];
 
@@ -168,9 +168,9 @@ export default function AutoOpenenZonderSleutelPage() {
             <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
               <HeroTrustBadge />
             </div>
-            <h1>Auto Openen Zonder Sleutel — Binnen 30–60 Min Ter Plaatse &amp; 100% Schadevrij</h1>
+            <h1>Auto Openen Zonder Sleutel — Gemiddeld 30-60 Min Ter Plaatse &amp; Schadevrij</h1>
             <p className={styles.heroLead}>
-              Buitengesloten? Wij openen uw auto <strong>100% schadevrij</strong>, gemiddeld binnen 30 min ter plaatse.
+              Buitengesloten? Wij openen uw auto <strong>schadevrij</strong>, gemiddeld binnen 30 min ter plaatse.
             </p>
             <div style={{ marginTop: '2rem' }}>
               <LeadCaptureForm phone={SITE_CONFIG.phone} />
@@ -190,7 +190,7 @@ export default function AutoOpenenZonderSleutelPage() {
               {
                 id: 'feature-1',
                 icon: <Image src="/images/icon_map.webp" alt="Snel op locatie" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: 'Binnen 30-60 min Ter Plaatse',
+                title: 'Gemiddeld 30-60 Min Ter Plaatse',
                 description: `Buitengesloten? Wij zijn direct naar u onderweg. Onze monteur is altijd in de buurt.`,
                 linkText: 'Vind een monteur',
                 linkUrl: '#contact'
@@ -214,8 +214,8 @@ export default function AutoOpenenZonderSleutelPage() {
               {
                 id: 'feature-4',
                 icon: <Image src="/images/icon_car_check.webp" alt="Schadevrij" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: '100% Schadevrij Garantie',
-                description: 'Wij garanderen dat wij uw auto openen zónder de ruit in te slaan of het slot te beschadigen.',
+                title: 'Schadevrij Openen',
+                description: 'Wij openen uw auto zónder de ruit in te slaan of het slot te beschadigen.',
                 linkText: 'Lees meer over ons',
                 linkUrl: '/over-ons'
               }
@@ -312,7 +312,7 @@ export default function AutoOpenenZonderSleutelPage() {
                     />
                     <img
                       src="/images/seo/auto-slotenmaker-werkplaats-utrecht.webp"
-                      alt="Lishi decoder gebruikt door gecertificeerde monteur"
+                      alt="Lishi decoder gebruikt door ervaren monteur"
                       style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
                     />
                     <img
@@ -365,12 +365,12 @@ export default function AutoOpenenZonderSleutelPage() {
                   </a>
                   <div className={styles.sideList}>
                     {[
-                      '100% schadevrij',
+                      'schadevrij',
                       'Vaste prijs vooraf',
                       'Verzekeringsklare factuur',
                       'Binnen 30 min ter plaatse',
                       '24/7 beschikbaar',
-                      'Gecertificeerde locksmith'
+                      'Ervaren slotenmaker'
                     ].map(item => (
                       <div key={item} className={styles.sideListItem}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{ color: '#22c55e', flexShrink: 0 }} aria-hidden="true">

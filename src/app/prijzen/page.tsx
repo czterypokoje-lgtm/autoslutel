@@ -148,7 +148,7 @@ export default function PrijzenPage() {
           <h1>Prijsoverzicht — Indicatieve Tarieven</h1>
           <p className={styles.heroSub}>
             Exacte prijs wordt altijd <strong>vóór aanvang</strong> van de werkzaamheden afgesproken. 
-            Bij de officiële autodealer bent u vaak <strong>50% duurder</strong> uit. Bovendien betaalt u bij ons <strong>géén wegsleepkosten</strong> omdat wij naar u toe komen!
+            Bij de officiële autodealer bent u vaak <strong>flink duurder</strong> uit. Bovendien betaalt u bij ons <strong>géén wegsleepkosten</strong> omdat wij naar u toe komen!
           </p>
           <div className={styles.heroCtas}>
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPhone} id="prijzen-hero-phone">
@@ -177,7 +177,7 @@ export default function PrijzenPage() {
             <ul className={styles.disclaimerList}>
               <li>Onderstaande prijzen zijn <strong>indicatieve startprijzen</strong> — de exacte prijs hangt af van uw merk, model, bouwjaar en type sleutelsysteem.</li>
               <li>De definitieve prijs wordt <strong>altijd vooraf telefonisch afgesproken</strong> — nooit verrassingen achteraf.</li>
-              <li>De merkdealer is vaak <strong>50% duurder</strong>, en u bespaart bij ons op dure wegsleepkosten (wij werken 100% op uw locatie).</li>
+              <li>De merkdealer is vaak <strong>flink duurder</strong>, en u bespaart bij ons op dure wegsleepkosten (wij werken 100% op uw locatie).</li>
             </ul>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function PrijzenPage() {
         <div className={styles.trustSection}>
           <h2 className={styles.tableTitle}>Onze Mobiele Werkplaats &amp; Apparatuur in Utrecht &amp; Amsterdam</h2>
           <p style={{ color: 'var(--gray-600)', fontSize: '0.95rem', lineHeight: 1.6 }}>
-            Wij werken uitsluitend met gecertificeerde diagnose- en programmeerapparatuur. Onze mobiele servicebussen zijn volledig uitgerust om transpondersleutels, smart keys en contactsloten ter plaatse in Utrecht, Amsterdam en heel Midden-Nederland 100% schadevrij te programmeren.
+            Wij werken uitsluitend met professionele diagnose- en programmeerapparatuur. Onze mobiele servicebussen zijn volledig uitgerust om transpondersleutels, smart keys en contactsloten ter plaatse in Utrecht, Amsterdam en heel Midden-Nederland schadevrij te programmeren.
           </p>
           <div className={styles.trustGrid}>
             <div className={styles.trustItem}>
@@ -265,7 +265,7 @@ export default function PrijzenPage() {
               </div>
               <div className={styles.trustContent}>
                 <h3 className={styles.trustTitle}>Originele Voorraad Alle Merken</h3>
-                <p className={styles.trustDesc}>Uitgebreide voorraad OEM-sleutels, smart keys en transponderchips voor direct gebruik bij sleutelverlies.</p>
+                <p className={styles.trustDesc}>Uitgebreide voorraad sleutels, smart keys en transponderchips voor direct gebruik bij sleutelverlies.</p>
               </div>
             </div>
 
@@ -312,11 +312,11 @@ export default function PrijzenPage() {
         <div className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem' }}>
           <h2>Transparante Tarieven voor Autosleutels en Slotenmaker Service op Locatie</h2>
           <p>
-            Bij het bijmaken of vervangen van een autosleutel spelen verschillende technische factoren een rol in de prijsopbouw. Waar een eenvoudige reservesleutel zonder afstandsbediening relatief goedkoop is, vereist een moderne Keyless Entry of Keyless Go sleutel (smart key) geavanceerde elektronica en gecertificeerde programmeersoftware. <strong>{SITE_CONFIG.name}</strong> garandeert u altijd vooraf een vaste en transparante all-in prijs, zodat u nooit wordt geconfronteerd met onverwachte kosten.
+            Bij het bijmaken of vervangen van een autosleutel spelen verschillende technische factoren een rol in de prijsopbouw. Waar een eenvoudige reservesleutel zonder afstandsbediening relatief goedkoop is, vereist een moderne Keyless Entry of Keyless Go sleutel (smart key) geavanceerde elektronica en professionele programmeersoftware. <strong>{SITE_CONFIG.name}</strong> garandeert u altijd vooraf een vaste en transparante all-in prijs, zodat u nooit wordt geconfronteerd met onverwachte kosten.
           </p>
-          <h3>Waarom zijn wij 30% tot 50% goedkoper dan de officiële merkdealer?</h3>
+          <h3>Waarom zijn wij vaak goedkoper dan de officiële merkdealer?</h3>
           <p>
-            Officiële merkdealers berekenen vaak hoge uurtarieven, logistieke bestel- en administratiekosten én verplichte takel- of wegsleepkosten naar hun showroom. Onze gecertificeerde mobiele slotenmakers komen met een compleet uitgeruste servicebus direct naar uw voertuig toe. Wij snijden de sleutelbaard met CNC-gestuurde snijmachines ter plaatse en leren de transponderchip in via de OBD2-diagnosepoort.
+            Officiële merkdealers berekenen vaak hoge uurtarieven, logistieke bestel- en administratiekosten én verplichte takel- of wegsleepkosten naar hun showroom. Onze ervaren mobiele slotenmakers komen met een compleet uitgeruste servicebus direct naar uw voertuig toe. Wij snijden de sleutelbaard met CNC-gestuurde snijmachines ter plaatse en leren de transponderchip in via de OBD2-diagnosepoort.
           </p>
           <h3>Verschil in Prijs tussen Mechanische Sleutels, Klapsleutels en Smart Keys</h3>
           <p>

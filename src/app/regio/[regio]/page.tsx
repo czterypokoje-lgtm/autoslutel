@@ -61,7 +61,7 @@ export async function generateMetadata(props: { params: Promise<{ regio: string 
   return {
     title: { absolute: title },
     description: clampMeta(
-      `Autosleutel kwijt, kapot of bijmaken in ${region.name}? Binnen ${ARRIVAL} ter plaatse in ${towns} en omgeving. Vaste prijs vooraf, 24/7. Bel direct!`
+      `Autosleutel kwijt, kapot of bijmaken in ${region.name}? Gemiddeld binnen ${ARRIVAL} ter plaatse in ${towns} en omgeving. Vaste prijs vooraf, 24/7. Bel direct!`
     ),
     alternates: { canonical: url, languages: { 'nl-NL': url, 'x-default': url } },
     openGraph: {

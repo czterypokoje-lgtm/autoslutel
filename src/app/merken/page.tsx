@@ -87,7 +87,7 @@ export default function MerkenPage() {
             Onze Sleutelservices &amp; Programmering
           </h2>
           <p style={{ fontSize: '0.92rem', color: 'var(--gray-700)', lineHeight: 1.55, marginBottom: '1.5rem' }}>
-            Als mobiele autosleutelspecialist leveren wij een breed scala aan diensten ter plaatse. Wij programmeren uw transpondersleutel, dupliceren uw smart key of openen uw voertuig schadevrij bij buitensluiting. Onze gecertificeerde specialisten werken snel en vakkundig.
+            Als mobiele autosleutelspecialist leveren wij een breed scala aan diensten ter plaatse. Wij programmeren uw transpondersleutel, dupliceren uw smart key of openen uw voertuig schadevrij bij buitensluiting. Onze ervaren specialisten werken snel en vakkundig.
           </p>
           
           <div style={{
@@ -251,13 +251,13 @@ export default function MerkenPage() {
           <p>
             Aziatische autofabrikanten zoals Toyota, Lexus, Kia, Hyundai, Nissan, Honda en Mazda werken met G-chip, H-chip en Smart Key proximity systemen die vaak beveiligd zijn met ID4D, ID46, ID47 of ID8A transponders. Voor Amerikaanse merken zoals Ford en Jeep programmeren wij PATS (Passive Anti-Theft System) transponders en FOBIK sleutels.
           </p>
-          <h3>Geautoriseerde OEM-Diagnose en CNC-Sleutelfrezen</h3>
+          <h3>Professionele Diagnose en CNC-Sleutelfrezen</h3>
           <p>
-            Onze servicebussen zijn uitgerust met professionele diagnosecomputers en officiële OEM-licenties. Hierdoor kunnen wij rechtstreeks communiceren met de immobiliser, ECU of BSI van uw voertuig via de OBD2-poort. Wij slijpen mechanische sleutelbladen met uiterste precisie op onze computergestuurde CNC-frezen op basis van uw chassisnummer (VIN) of de sleutelcode.
+            Onze servicebussen zijn uitgerust met professionele diagnosecomputers en professionele software. Hierdoor kunnen wij rechtstreeks communiceren met de immobiliser, ECU of BSI van uw voertuig via de OBD2-poort. Wij slijpen mechanische sleutelbladen met uiterste precisie op onze computergestuurde CNC-frezen op basis van uw chassisnummer (VIN) of de sleutelcode.
           </p>
           <h3>Smart Keys, Keyless Go en All Keys Lost per Merk</h3>
           <p>
-            Of u nu een gloednieuwe elektrische auto rijdt met Keyless Entry of een klassieke personenwagen: wij programmeren transponderchips, afstandsbedieningen en proximity keys op locatie. Ook wanneer u alle sleutels kwijt bent (All Keys Lost), openen wij uw voertuig 100% schadevrij met Lishi tools en genereren wij direct een nieuwe sleutelset met 12 maanden garantie.
+            Of u nu een gloednieuwe elektrische auto rijdt met Keyless Entry of een klassieke personenwagen: wij programmeren transponderchips, afstandsbedieningen en proximity keys op locatie. Ook wanneer u alle sleutels kwijt bent (All Keys Lost), openen wij uw voertuig schadevrij met Lishi tools en genereren wij direct een nieuwe sleutelset met 12 maanden garantie.
           </p>
         </div>
 

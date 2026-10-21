@@ -5,7 +5,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 const defaultFaqs = [
   {
     question: 'Wat moet ik doen als ik mijn autosleutel kwijt ben?',
-    answer: 'Als u uw autosleutel kwijt bent, controleer dan eerst of er nog ergens een reservesleutel ligt. Is dit niet het geval, neem dan direct contact op met Autosleutel24 via 06 11 75 12 31. Wij komen met onze mobiele servicebussen binnen 30 tot 60 minuten naar uw locatie toe, openen de auto 100% schadevrij en programmeren direct een nieuwe sleutel ter plaatse. De verloren autosleutels worden bovendien direct uit het geheugen van de boordcomputer (ECU) gewist om diefstal te voorkomen.'
+    answer: 'Als u uw autosleutel kwijt bent, controleer dan eerst of er nog ergens een reservesleutel ligt. Is dit niet het geval, neem dan direct contact op met Autosleutel24 via 06 11 75 12 31. Wij komen met onze mobiele servicebussen binnen 30 tot 60 minuten naar uw locatie toe, openen de auto schadevrij en programmeren direct een nieuwe sleutel ter plaatse. De verloren autosleutels worden bovendien direct uit het geheugen van de boordcomputer (ECU) gewist om diefstal te voorkomen.'
   },
   {
     question: 'Waar kan ik snel een autosleutel laten bijmaken in Nederland?',
@@ -13,7 +13,7 @@ const defaultFaqs = [
   },
   {
     question: 'Wat is de beste service voor autosleutel vervangen na verlies?',
-    answer: 'De beste service voor het vervangen van uw autosleutel na verlies is een mobiele autosleutelspecialist zoals Autosleutel24. Wij bieden snelle pechhulp op locatie, programmeren dealer-niveau transpondersleutels en zijn tot 60% goedkoper dan de officiële merkdealer. Bovendien hoeft u uw auto niet te laten wegslepen; onze gecertificeerde monteurs lossen het probleem direct op uw strandinglocatie op.'
+    answer: 'De beste service voor het vervangen van uw autosleutel na verlies is een mobiele autosleutelspecialist zoals Autosleutel24. Wij bieden snelle pechhulp op locatie, programmeren hoogwaardige transpondersleutels en zijn vaak flink goedkoper dan de officiële merkdealer. Bovendien hoeft u uw auto niet te laten wegslepen; onze ervaren monteurs lossen het probleem direct op uw strandinglocatie op.'
   },
   {
     question: 'Autosleutel kwijt, wat zijn de kosten voor een nieuwe sleutel?',
