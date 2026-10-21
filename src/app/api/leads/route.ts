@@ -5,6 +5,7 @@ import { isScenario } from '@/lib/scenarios';
 import { notifyNewLead } from '@/lib/leadNotify';
 import { toE164NL } from '@/lib/phone';
 import { sendOpenAiEvent } from '@/lib/openaiAds';
+import { leadToken } from '@/lib/leadToken';
 
 /**
  * Lead capture.
@@ -252,7 +253,9 @@ export async function POST(request: Request) {
       }
     }
 
-    return NextResponse.json({ success: true, data }, { status: 200 });
+    // The token lets the same browser add its follow-up answers (/api/leads/details).
+    const id = (data as { id?: string } | null)?.id;
+    return NextResponse.json({ success: true, data: id ? { id, token: leadToken(id) } : data }, { status: 200 });
   } catch (error) {
     console.error('Error in /api/leads route:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

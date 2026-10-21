@@ -382,3 +382,6 @@
 .limitDetail {
   opacity: 0.95;
 }
+
+/* Shown once the lead is saved (step 3): the rest is optional. */
+.saved { margin: 0 0 .9rem; padding: .6rem .8rem; border-radius: 10px; background: rgba(34, 197, 94, .14); color: #bbf7d0; font-weight: 600; font-size: .92rem; line-height: 1.4; }
