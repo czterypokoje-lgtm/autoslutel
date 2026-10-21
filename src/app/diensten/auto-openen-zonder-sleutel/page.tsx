@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   // 186 characters truncated in results, and what Google cut was the price
   // and the call to action — the two things that earn the click.
-  description: `Auto openen zonder sleutel? Gemiddeld binnen ${ARRIVAL} ter plaatse, schadevrij, prijs vooraf. 24/7 bereikbaar. Bel direct!`,
+  description: `Auto openen zonder sleutel? Binnen ${ARRIVAL} ter plaatse, schadevrij, prijs vooraf. 24/7 bereikbaar. Bel direct!`,
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
 };
 
@@ -168,7 +168,7 @@ export default function AutoOpenenZonderSleutelPage() {
             <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
               <HeroTrustBadge />
             </div>
-            <h1>Auto Openen Zonder Sleutel — Gemiddeld 30-60 Min Ter Plaatse &amp; Schadevrij</h1>
+            <h1>Auto Openen Zonder Sleutel — Binnen 30–60 Min Ter Plaatse &amp; Schadevrij</h1>
             <p className={styles.heroLead}>
               Buitengesloten? Wij openen uw auto <strong>schadevrij</strong>, gemiddeld binnen 30 min ter plaatse.
             </p>
@@ -190,7 +190,7 @@ export default function AutoOpenenZonderSleutelPage() {
               {
                 id: 'feature-1',
                 icon: <Image src="/images/icon_map.webp" alt="Snel op locatie" width={90} height={90} style={{ borderRadius: '12px' }} />,
-                title: 'Gemiddeld 30-60 Min Ter Plaatse',
+                title: 'Binnen 30-60 min Ter Plaatse',
                 description: `Buitengesloten? Wij zijn direct naar u onderweg. Onze monteur is altijd in de buurt.`,
                 linkText: 'Vind een monteur',
                 linkUrl: '#contact'

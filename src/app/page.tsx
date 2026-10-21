@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   title: {
     absolute: `Autosleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE} | 24/7`,
   },
-  description: `Autosleutel bijmaken of alle sleutels kwijt? Gemiddeld binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
+  description: `Autosleutel bijmaken of alle sleutels kwijt? Binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
   alternates: {
     canonical: SITE_CONFIG.domain,
     languages: {
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE_CONFIG.domain,
     title: `Autosleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE} | 24/7`,
-    description: `Autosleutel bijmaken of alle sleutels kwijt? Gemiddeld binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
+    description: `Autosleutel bijmaken of alle sleutels kwijt? Binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel24 mobiele autosleutelspecialist' }],
   },
 };
@@ -121,10 +121,10 @@ export default function HomePage() {
             <HeroTrustBadge />
             <h1>
               Autosleutel Kwijt of Bijmaken?<br />
-              <span style={{ color: 'var(--orange-500)' }}>Gemiddeld 30-60 Min Ter Plaatse!</span>
+              <span style={{ color: 'var(--orange-500)' }}>Binnen 30–60 Min Ter Plaatse!</span>
             </h1>
             <p className={styles.heroSplitLead}>
-              Buitengesloten of sleutel kwijt? <strong>Gemiddeld binnen 30-60 min</strong> ter plaatse — goedkoper dan de dealer, geen wegsleepkosten.
+              Buitengesloten of sleutel kwijt? <strong>Binnen 30–60 min</strong> ter plaatse — goedkoper dan de dealer, geen wegsleepkosten.
             </p>
             <HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />
           </div>

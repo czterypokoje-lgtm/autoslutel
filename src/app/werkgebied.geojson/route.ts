@@ -24,7 +24,7 @@ export function GET() {
       province: c.region,
       url: `${SITE_CONFIG.domain}/steden/${c.slug}`,
       service: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
-      arrival: `Gemiddeld binnen ${ARRIVAL} ter plaatse`,
+      arrival: `Binnen ${ARRIVAL} ter plaatse`,
       provider: SITE_CONFIG.fullName,
       telephone: SITE_CONFIG.phoneTel,
     },

@@ -169,7 +169,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
      * ("kopiëren", "Sleutelmaker") carried none of it.
      *
      * The price stays; the arrival time does NOT come back. The previous
-     * generation of this copy promised "gemiddeld binnen 30-60 min" on all 62 cities
+     * generation of this copy promised "binnen 30-60 min" on all 62 cities
      * including Maastricht, about 210 km from the Bussum base. It was
      * removed for being false and the fix is not to retype it in a meta
      * description, which is the most-read sentence on the page.
@@ -180,7 +180,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     ...(isNoindexCity(citySlug) && { robots: { index: false, follow: true } }),
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel laten maken of bijmaken in ${city.city}? Gemiddeld binnen ${ARRIVAL} ter plaatse, dag en nacht. Prijs vooraf. Bel nu!`
+        `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} ter plaatse, dag en nacht. Prijs vooraf. Bel nu!`
     ),
     alternates: {
       canonical: pageUrl,

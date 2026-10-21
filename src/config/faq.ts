@@ -201,7 +201,7 @@ export const FAQ_GLOBAL: FaqItem[] = [
   },
   {
     q: 'Hoe werkt een autosleutelmaker service aan huis?',
-    a: 'Onze mobiele autosleutelmaker service aan huis werkt heel simpel: u belt of WhatsAppt ons (06 11 75 12 31) uw kenteken en locatie. Wij komen met onze volledig uitgeruste servicebus naar u toe. In onze bus hebben we computergestuurde freesmachines en OBD-programmeerapparatuur. Vaak rijdt u binnen 30 minuten weer met een werkende nieuwe sleutel.',
+    a: 'Onze mobiele autosleutelmaker service aan huis werkt heel simpel: u belt of WhatsAppt ons (06 11 75 12 31) uw kenteken en locatie. Wij komen met onze volledig uitgeruste servicebus naar u toe. In onze bus hebben we computergestuurde freesmachines en OBD-programmeerapparatuur. Binnen 30 minuten rijdt u weer met een perfect werkende nieuwe sleutel.',
   },
   {
     q: 'Wat is het verschil tussen een reserve autosleutel en een hoofdsleutel?',

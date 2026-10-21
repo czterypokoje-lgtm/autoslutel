@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
   },
-  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto schadevrij en maken direct een nieuwe sleutel ter plaatse. Gemiddeld binnen 30-60 min, prijs vooraf. Bel 24/7.',
+  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto schadevrij en maken direct een nieuwe sleutel ter plaatse. Binnen 30-60 min, prijs vooraf. Bel 24/7.',
   alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-slotenmaker` },
 };
 
@@ -96,7 +96,7 @@ export default function AutoSlotenmakerPage() {
     },
     {
       q: 'What is het verschil tussen Autosleutel24 en de autodealer?',
-      a: 'De autodealer vereist dat u uw auto laat wegslepen naar hun werkplaats en hanteert vaak leertijden van enkele dagen tot weken voor een nieuwe sleutel. Autosleutel24 komt naar u toe en regelt alles direct ter plaatse gemiddeld binnen 30-60 minuten, tegen een tarief dat tot wel 50% lager ligt dan bij de merkdealer.'
+      a: 'De autodealer vereist dat u uw auto laat wegslepen naar hun werkplaats en hanteert vaak leertijden van enkele dagen tot weken voor een nieuwe sleutel. Autosleutel24 komt naar u toe en regelt alles direct ter plaatse binnen 30-60 minuten, tegen een tarief dat tot wel 50% lager ligt dan bij de merkdealer.'
     }
   ];
 
@@ -121,7 +121,7 @@ export default function AutoSlotenmakerPage() {
     {
       num: 2,
       title: 'Monteur onderweg',
-      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Gemiddeld binnen 30-60 minuten is de bus bij u ter plaatse.'
+      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Binnen 30-60 minuten is de bus bij u ter plaatse.'
     },
     {
       num: 3,
