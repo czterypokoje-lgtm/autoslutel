@@ -60,6 +60,11 @@ export default function KentekenForm() {
           msclkid: getCookie('msclkid'),
         }),
       });
+      /* See HorizontalKentekenForm: a 429 or a 500 resolves, so the catch
+         below was unreachable for HTTP errors and the visitor was promised a
+         call back against a row that was never written. */
+      if (!res.ok) throw new Error(`/api/leads ${res.status}`);
+
       const json = await res.json().catch(() => null);
       tagLeadClaritySession(json?.data?.id);
 
@@ -73,7 +78,7 @@ export default function KentekenForm() {
       setIsSubmitted(true);
     } catch (err) {
       console.error("Error saving lead", err);
-      alert('Er ging iets mis. Probeer het opnieuw of bel ons direct.');
+      alert(`Versturen lukte niet — wij hebben uw aanvraag niet ontvangen. Probeer het opnieuw of bel ons direct op ${SITE_CONFIG.phone}.`);
     } finally {
       setIsSubmitting(false);
     }

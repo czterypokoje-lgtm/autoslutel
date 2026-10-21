@@ -114,6 +114,21 @@ export default function HorizontalKentekenForm() {
           msclkid: getCookie('msclkid'),
         }),
       });
+      /*
+       * A 429 from the rate limiter (8/hour per IP, so a shared office or a
+       * carrier NAT trips it legitimately) or a 500 from the insert resolves
+       * the promise like any other response. Without this the catch below was
+       * unreachable for every HTTP error: the visitor read "we bellen u binnen
+       * 5 minuten", no row existed, and reportLeadConversion still told Google
+       * Ads it was a lead.
+       *
+       * LeadCaptureForm can fire and forget because it always opens WhatsApp
+       * with the whole request pre-filled — the row is a convenience there.
+       * This form stays on the page and hands off to nothing, so the row is
+       * the only record that anyone asked.
+       */
+      if (!res.ok) throw new Error(`/api/leads ${res.status}`);
+
       const json = await res.json().catch(() => null);
       tagLeadClaritySession(json?.data?.id);
 
@@ -127,7 +142,7 @@ export default function HorizontalKentekenForm() {
       setIsSubmitted(true);
     } catch (err) {
       console.error("Error saving lead", err);
-      alert('Er ging iets mis. Probeer het opnieuw of bel ons direct.');
+      alert(`Versturen lukte niet — wij hebben uw aanvraag niet ontvangen. Probeer het opnieuw of bel ons direct op ${SITE_CONFIG.phone}.`);
     } finally {
       setIsSubmitting(false);
     }
