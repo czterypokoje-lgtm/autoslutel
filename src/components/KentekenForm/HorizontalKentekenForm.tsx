@@ -3,7 +3,7 @@
 import { reportLeadConversion } from '@/lib/leadTracking';
 import { tagLeadClaritySession } from '@/lib/clarity';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './HorizontalKentekenForm.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
 import { publicQuoteFor, type StartType, type WorkingKeyType } from '@/lib/publicQuote';
@@ -28,6 +28,20 @@ export default function HorizontalKentekenForm() {
 
   const quote = publicQuoteFor(workingKey, startType);
 
+  /*
+   * This form has no steps to report, unlike VehicleWizard's form_step — it
+   * is one flat screen, not a wizard. Without any signal between page_view
+   * and the final submit, the only visibility into this page's funnel was
+   * "did they convert," with a black box in between. Fired once, on the
+   * first keystroke in the kenteken field (the form's natural first touch).
+   */
+  const engagedFired = useRef(false);
+  const reportEngaged = () => {
+    if (engagedFired.current) return;
+    engagedFired.current = true;
+    (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.('event', 'form_engaged', { form_name: 'kenteken_form' });
+  };
+
   const formatKenteken = (value: string) => {
     // Basic formatting for Dutch plates: remove invalid chars, uppercase
     // Real spacing logic could be added, but relying on monospace + uppercase is solid.
@@ -50,6 +64,7 @@ export default function HorizontalKentekenForm() {
   };
 
   const handleKentekenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    reportEngaged();
     setKenteken(formatKenteken(e.target.value));
     setVehicle(null);
   };
