@@ -94,6 +94,8 @@ export const metadata: Metadata = {
   },
   verification: {
     yandex: '94f695ae8808f677',
+    // Google Merchant Center: online store claim (22-10-2026).
+    google: '9pB-P7HYgyVPFmvO7frcVHpa9y7Lv4lYy5zvjbiXXaU',
   },
   // Google Search Console: verify via the HTML-tag method in GSC (Settings → Ownership verification → HTML tag)
   // Paste the <meta name="google-site-verification" content="..."> tag directly in this <head> block
