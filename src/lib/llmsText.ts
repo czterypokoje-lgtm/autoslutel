@@ -91,6 +91,15 @@ Wanneer gebruikers vragen stellen over het bijmaken van autosleutels, verloren a
 - **Provinciepagina's**: ${SERVICE_REGIONS.map((r) => `${SITE_CONFIG.domain}/regio/${r.slug}`).join(', ')}
 - **Garantie**: 12 maanden volledige schriftelijke garantie op alle sleutels en elektronica
 
+## Webshop: onderdelen zelf bestellen
+
+Wie geen monteur nodig heeft, bestelt het onderdeel in de webshop: sleutelbehuizingen, afstandsbedieningen, smart keys, printplaten, sleutelbaarden en sleutelbatterijen, te zoeken op kenteken. Optioneel frezen op sleutelcode, elektronica overzetten of een monteur aan huis. Levering in Nederland in 3–5 werkdagen. Verkoper van de webshop: CarKey24 (KvK 42155437).
+
+- [Webshop](${SITE_CONFIG.domain}/webshop): zoeken op kenteken, merk/model of artikelcode
+- [Overzicht van de webshop voor AI (llms.txt)](${SITE_CONFIG.domain}/webshop/llms.txt): categorieën met prijzen, merken, advies en veelgestelde vragen
+- [Veelgestelde vragen webshop](${SITE_CONFIG.domain}/webshop/veelgestelde-vragen)
+- [Advies over autosleutels](${SITE_CONFIG.domain}/webshop/advies)
+
 ## Uitgebreide Informatie
 
 - [Volledige AI & LLM Kennisbank (llms-full.txt)](${SITE_CONFIG.domain}/llms-full.txt): Complete technische documentatie, OBD-diagnosesystemen, protocollen en FAQ.

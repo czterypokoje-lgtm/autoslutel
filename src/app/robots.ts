@@ -59,7 +59,10 @@ export default function robots(): MetadataRoute.Robots {
         // Allow AI bots to index content for LLM citations & AI search visibility
         userAgent: [
           'GPTBot',
+          'OAI-SearchBot',
           'ChatGPT-User',
+          'Claude-SearchBot',
+          'Claude-User',
           'ClaudeBot',
           'Claude-Web',
           'Google-Extended',
@@ -80,6 +83,14 @@ export default function robots(): MetadataRoute.Robots {
       // 423 images were being generated at /image-sitemap.xml but never
       // announced here, so Google never discovered any of them.
       `${SITE_CONFIG.domain}/image-sitemap.xml`,
+      /*
+       * The webshop (/webshop, a separate Vercel project) has its own sitemap.
+       * Crawlers only read this robots.txt on this domain, so it must be named
+       * here — but only once the shop is open to search engines, or Search
+       * Console fills with "submitted URL marked noindex". Set SHOP_INDEXABLE=1
+       * here and in the shop project together.
+       */
+      ...(process.env.SHOP_INDEXABLE === '1' ? [`${SITE_CONFIG.domain}/webshop/sitemap.xml`] : []),
     ],
     // NOTE: 'host' directive is NOT supported by Google — removed
   };
