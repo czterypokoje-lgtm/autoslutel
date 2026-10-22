@@ -185,7 +185,7 @@ export default function Navigation() {
             </svg>
             <span>{SITE_CONFIG.phone}</span>
           </a>
-          <Link href="/contact" className={styles.ctaBtn} id="nav-offerte-cta">
+          <Link href="/afspraak" className={styles.ctaBtn} id="nav-offerte-cta">
             Offerte Aanvragen
           </Link>
         </div>
@@ -245,6 +245,7 @@ export default function Navigation() {
             <a href="/webshop" className={styles.mobileLink}>Webshop: onderdelen bestellen</a>
             <Link href="/blog" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Blog &amp; Advies</Link>
             <Link href="/over-ons" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Over Ons</Link>
+            <Link href="/afspraak" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Afspraak Maken</Link>
             <Link href="/contact" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Contact</Link>
           </div>
         </>
