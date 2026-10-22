@@ -82,6 +82,7 @@ export default async function OrdersPage({
     <>
       <div className={styles.head}>
         <h1 className={styles.title}>Bestellingen</h1>
+        <Link className={styles.link} href="/admin/orders/inkoop">A-Key inkoop vandaag →</Link>
         <span className={styles.count}>{rows.length} getoond</span>
         <form className={styles.search} method="get" action="/admin/orders">
           {status && <input type="hidden" name="status" value={status} />}
