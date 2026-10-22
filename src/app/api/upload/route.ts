@@ -65,6 +65,20 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: 'Geen bestand ontvangen.' }, { status: 400 });
   }
 
+  /*
+   * Every other blob-upload route in this app (chat/upload, profiel/foto,
+   * products/[slug]/image, jobs/[id]/photos & /signature, netwerk/marktplaats)
+   * checks this before calling put() and returns a clear 503. This one
+   * didn't — a missing or rotated token fell straight into the generic
+   * catch below as "Uploaden mislukt.", which is indistinguishable from a
+   * real upload failure and was the single customer-facing upload nobody
+   * could diagnose from the error message alone.
+   */
+  if (!process.env.bbauto_READ_WRITE_TOKEN) {
+    console.error('[upload] bbauto_READ_WRITE_TOKEN is not set — customer photo upload is down');
+    return NextResponse.json({ error: 'Foto-opslag is niet geconfigureerd.' }, { status: 503 });
+  }
+
   try {
     // Content-Length can be absent or wrong, so also enforce the cap on the
     // stream itself. This aborts the upload rather than trusting the header.
