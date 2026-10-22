@@ -60,10 +60,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
     }
 
-    // Honeypot: a real person never fills a hidden field. Answer 200 so a bot
-    // cannot tell it was rejected, but store nothing.
-    if (typeof body.company === 'string' && body.company.trim() !== '') {
-      return NextResponse.json({ success: true }, { status: 200 });
+    /*
+     * Honeypot. It used to be a hidden field called "company" — and Chrome's
+     * autofill fills "company" with the visitor's business name. Every such
+     * customer got "ontvangen" while nothing was stored or sent. The field is
+     * now named so autofill leaves it alone (hp), and even a filled honeypot
+     * only drops the submission when it looks like a bot: a link in it, or no
+     * phone number at all. A real lead with a phone number is never thrown away.
+     */
+    const trap = [body.hp, body.company].find((v) => typeof v === 'string' && v.trim() !== '') as string | undefined;
+    if (trap) {
+      const looksLikeBot = /https?:|www\.|<|>/i.test(trap) || !(typeof body.phone === 'string' && body.phone.replace(/\D/g, '').length >= 9);
+      if (looksLikeBot) return NextResponse.json({ success: true }, { status: 200 });
+      console.warn('[leads] honeypot filled but the lead has a phone number; keeping it');
     }
 
     const ip = getClientIp(request);

@@ -241,7 +241,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
         postcode,
         phone,
         source: 'hero_wizard',
-        company: honeypot,
+        hp: honeypot,
         gclid: cookie('gclid'),
         wbraid: cookie('wbraid'),
         gbraid: cookie('gbraid'),
@@ -479,7 +479,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
             {/* Honeypot — hidden from people, tempting to bots. */}
             <input
               type="text"
-              name="company"
+              name="hp_website_url"
               className={styles.hp}
               value={honeypot}
               onChange={(e) => setHoneypot(e.target.value)}

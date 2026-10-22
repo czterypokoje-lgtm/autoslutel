@@ -122,7 +122,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         phone: phoneState,
         photoUrl,
         source: city ? 'city_form' : 'hero_form',
-        company: honeypot, // honeypot — must stay empty
+        hp: honeypot, // honeypot — must stay empty
         gclid: getCookie('gclid'),
         wbraid: getCookie('wbraid'),
         gbraid: getCookie('gbraid'),
@@ -343,7 +343,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         {/* Honeypot — visually hidden, never announced, never tab-reachable. */}
         <input
           type="text"
-          name="company"
+          name="hp_website_url"
           value={honeypot}
           onChange={(e) => setHoneypot(e.target.value)}
           tabIndex={-1}
