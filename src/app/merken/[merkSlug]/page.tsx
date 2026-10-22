@@ -8,6 +8,7 @@ import path from 'path';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
 import { isNoindexBrand } from '@/config/thinPages';
+
 import { ARRIVAL_TITLE } from '@/config/arrival';
 import { DEEP_DIVE } from '@/config/deepDives';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
@@ -23,6 +24,12 @@ import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import styles from './page.module.css';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
+
+/** Makes the webshop has at least five articles for (its src/lib/brands.json). */
+const SHOP_MAKES = new Set(['Hyundai','Opel','Renault','Toyota','Citroën','Ford','Kia','Honda','Peugeot','BMW','Volkswagen','Fiat','Mercedes-Benz','Chrysler','Nissan','Audi','Dacia','Seat','Škoda','Suzuki','Lexus','Mazda','Chevrolet','Land Rover','Volvo','Alfa Romeo','Mitsubishi','Porsche','Subaru','Jeep','Mini','Smart','Jaguar','Daewoo','Dodge','Saab','Rover','Isuzu','Iveco','SsangYong']);
+/** The webshop's make slug: accents dropped, everything else a dash. */
+const shopSlug = (make: string) =>
+  make.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 export async function generateStaticParams() {
   return BRANDS.map(b => ({ merkSlug: `${b.nameSlug}-autosleutel-bijmaken` }));
@@ -655,6 +662,30 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             </div>
           </div>
         </section>
+
+        {/* ── WEBSHOP ──
+            For the visitor who only needs the part (a housing, a battery, a
+            remote) and no technician, and for search engines: the brand pages
+            here already rank, and this is the link that tells them the
+            webshop's page for the same make belongs to the same answer. A
+            plain <a>, because /webshop is a separate app behind a rewrite. */}
+        {SHOP_MAKES.has(brand.name) && (
+          <section style={{ padding: '2.5rem 0', background: '#ffffff' }}>
+            <div className="container">
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', border: '1px solid #e5e7eb', borderRadius: 12, padding: '1.5rem' }}>
+                <div style={{ maxWidth: 640 }}>
+                  <h2 style={{ margin: '0 0 .4rem', fontSize: '1.35rem' }}>Alleen een onderdeel nodig voor uw {brand.name}?</h2>
+                  <p style={{ margin: 0, color: '#475569', lineHeight: 1.6 }}>
+                    Sleutelbehuizingen, afstandsbedieningen, smart keys en batterijen voor {brand.name} bestelt u in onze webshop. Zoek op kenteken; frezen en elektronica overzetten kunt u erbij kiezen.
+                  </p>
+                </div>
+                <a href={`/webshop/merk/${shopSlug(brand.name)}`} style={{ background: '#b93c20', color: '#fff', fontWeight: 700, padding: '.8rem 1.2rem', borderRadius: 8, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  {brand.name}-onderdelen in de webshop →
+                </a>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── KWIJT OF KAPOT ──
             "autosleutel kwijt <merk>" is its own query family in Search Console
