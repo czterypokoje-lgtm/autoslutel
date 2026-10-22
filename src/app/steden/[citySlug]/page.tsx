@@ -45,6 +45,8 @@ const SeoComponents: Record<string, React.FC> = {
 
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import PartnerLocation from '@/components/PartnerLocation/PartnerLocation';
+import { partnerFor } from '@/config/partners';
 
 // Haversine distance formula
 function deg2rad(deg: number) {
@@ -248,6 +250,8 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
    * No local address is claimed: there is no branch here, and areaServed is the
    * honest way to say where the van goes.
    */
+  const partner = partnerFor(citySlug);
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -261,6 +265,50 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
       name: city.city,
       containedInPlace: { '@type': 'AdministrativeArea', name: city.region },
     },
+    /*
+     * A city where somebody is genuinely based says so, and only that city.
+     *
+     * The rule above still holds: no local address is claimed and there is no
+     * branch here. `availableChannel` does not claim one either —
+     * ServiceChannel.serviceLocation reads "a place this service can be
+     * obtained from", and the provider of it stays the one business under
+     * BIZ_ID. That distinction is the entire reason this is not a second
+     * LocalBusiness node carrying a second address, which is what produced
+     * the 62 phantom businesses the first time round.
+     *
+     * Spreads to nothing for the other 74 cities, so the markup can never
+     * imply a presence PARTNER_LOCATIONS does not back.
+     */
+    ...(partner
+      ? {
+          availableChannel: {
+            '@type': 'ServiceChannel',
+            name: `Servicepunt ${partner.district ?? partner.city}`,
+            servicePhone: SITE_CONFIG.phoneTel,
+            serviceUrl: `${SITE_CONFIG.domain}/steden/${citySlug}`,
+            serviceLocation: {
+              '@type': 'Place',
+              ...(partner.businessName ? { name: partner.businessName } : {}),
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: partner.street,
+                postalCode: partner.postalCode,
+                addressLocality: partner.city,
+                addressCountry: 'NL',
+              },
+              ...(partner.geo
+                ? {
+                    geo: {
+                      '@type': 'GeoCoordinates',
+                      latitude: parseFloat(partner.geo.lat),
+                      longitude: parseFloat(partner.geo.lng),
+                    },
+                  }
+                : {}),
+            },
+          },
+        }
+      : {}),
   };
 
   const breadcrumbSchema = {
@@ -688,6 +736,20 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                 const SeoComp = SeoComponents[citySlug];
                 return <SeoComp />;
               })()}
+            </div>
+          </section>
+        )}
+
+        {/*
+          * Where our technician for this city is based, where there is one.
+          *
+          * Renders nothing for every other city, which is the point: it is
+          * the one block on a city page that a template cannot produce.
+          */}
+        {partner && (
+          <section className={styles.section}>
+            <div className="container">
+              <PartnerLocation citySlug={citySlug} cityName={city.city} />
             </div>
           </section>
         )}

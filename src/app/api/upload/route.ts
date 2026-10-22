@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import sharp from 'sharp';
 import convert from 'heic-convert';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
+import { MAX_UPLOAD_BYTES, TOO_LARGE_MESSAGE } from '@/lib/uploadLimits';
 
 /**
  * Customer photo upload for the lead form.
@@ -18,7 +19,14 @@ import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
-const MAX_BYTES = 8 * 1024 * 1024; // 8 MB
+/*
+ * Deliberately below Vercel's own 4.5 MB body limit — see uploadLimits.ts.
+ * This used to be 8 MB, which put every file between 4.5 and 8 MB past the
+ * platform's ceiling: it never reached this handler, the browser got a
+ * non-JSON error page back, and the form showed "Netwerkfout bij uploaden"
+ * for what was only an oversized photo.
+ */
+const MAX_BYTES = MAX_UPLOAD_BYTES;
 
 const ALLOWED: Record<string, string> = {
   'image/jpeg': 'jpg',
@@ -56,7 +64,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const declaredLength = Number(request.headers.get('content-length') || 0);
   if (declaredLength > MAX_BYTES) {
     return NextResponse.json(
-      { error: 'Bestand is te groot. Maximaal 8 MB.' },
+      { error: TOO_LARGE_MESSAGE },
       { status: 413 }
     );
   }
@@ -135,7 +143,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   } catch (error) {
     if (error instanceof Error && error.message === 'FILE_TOO_LARGE') {
       return NextResponse.json(
-        { error: 'Bestand is te groot. Maximaal 8 MB.' },
+        { error: TOO_LARGE_MESSAGE },
         { status: 413 }
       );
     }

@@ -9,7 +9,8 @@ declare global {
 import { useState, useMemo, useEffect } from "react";
 import { CAR_MODELS, BRANDS_LIST, SERVICES_LIST, YEARS_LIST } from "@/data/carModels";
 import { SITE_CONFIG } from "@/config/site.config";
-import { toWebp } from "@/lib/toWebp";
+import { shrinkToFit } from "@/lib/toWebp";
+import { MAX_UPLOAD_BYTES, TOO_LARGE_MESSAGE } from "@/lib/uploadLimits";
 import { reportLeadConversion } from "@/lib/leadTracking";
 import { tagLeadClaritySession } from "@/lib/clarity";
 import styles from "./LeadCaptureForm.module.css";
@@ -62,20 +63,60 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
     setUploadError("");
 
     try {
-      const file = await toWebp(rawFile).catch(() => rawFile);
+      /*
+       * Shrink until it fits, and refuse here if it still does not.
+       *
+       * A body over Vercel's 4.5 MB limit never reaches /api/upload: the
+       * platform answers with its own error page, which is not JSON, so the
+       * parse below used to throw and every oversized photo was reported as
+       * "Netwerkfout bij uploaden" — a network error for a file that simply
+       * was too big, on a form whose whole job is to collect that file.
+       */
+      const file = await shrinkToFit(rawFile, MAX_UPLOAD_BYTES).catch(() => rawFile);
+      if (file.size > MAX_UPLOAD_BYTES) {
+        setUploadError(TOO_LARGE_MESSAGE);
+        return;
+      }
+
       const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
         method: 'POST',
         body: file,
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        setPhotoUrl(data.url);
-      } else {
-        setUploadError(data.error || "Fout bij uploaden");
+      /*
+       * Read the body as text and parse it ourselves. Our own handler always
+       * answers JSON, so anything that is not JSON came from in front of it —
+       * a platform limit, a timeout, a proxy — and the status is then the only
+       * thing worth telling the customer.
+       */
+      const raw = await response.text();
+      let data: { url?: string; error?: string } | null = null;
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        data = null;
       }
+
+      if (response.ok && data?.url) {
+        setPhotoUrl(data.url);
+        return;
+      }
+
+      if (data?.error) {
+        setUploadError(data.error);
+        return;
+      }
+
+      console.error('Upload failed without a readable response', response.status, raw.slice(0, 200));
+      setUploadError(
+        response.status === 413
+          ? TOO_LARGE_MESSAGE
+          : "Uploaden lukte niet. Probeer het opnieuw of stuur de foto via WhatsApp."
+      );
     } catch (err) {
-      setUploadError("Netwerkfout bij uploaden");
+      // Genuinely no response: offline, DNS, the tab losing its connection.
+      console.error('Upload request never completed', err);
+      setUploadError("Geen verbinding. Controleer uw internet en probeer het opnieuw.");
     } finally {
       setIsUploading(false);
     }

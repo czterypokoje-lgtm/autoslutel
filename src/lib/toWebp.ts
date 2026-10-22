@@ -37,3 +37,46 @@ export async function toWebp(file: File, maxDimension = 1600, quality = 0.82): P
 
   return new File([blob], file.name.replace(/\.\w+$/, '.webp'), { type: 'image/webp' });
 }
+
+/**
+ * The same conversion, but repeated until the result fits in `budget` bytes.
+ *
+ * One pass at 1600px is enough for an ordinary phone photo and is all that
+ * toWebp promises. It is not enough for a 48-megapixel one, and the file that
+ * comes back from a single pass can still be over the upload limit — at which
+ * point the upload fails at Vercel's body limit, before any handler of ours
+ * can say why. Rather than letting that happen, step the image down until it
+ * fits.
+ *
+ * Returns whatever it managed, even if that is still too large — including the
+ * untouched original when the browser could not decode the file at all, which
+ * is the normal case for HEIC outside Safari. The caller checks the size and
+ * is the one that tells the customer; this function's job is to try.
+ */
+export async function shrinkToFit(file: File, budget: number): Promise<File> {
+  if (file.size <= budget) {
+    const converted = await toWebp(file).catch(() => file);
+    if (converted.size <= budget) return converted;
+    file = converted;
+  }
+
+  /* Each step is a real reduction rather than a nudge: a pass that saves ten
+     percent costs a decode and an encode on a phone and still does not fit. */
+  const steps: Array<[number, number]> = [
+    [1600, 0.82],
+    [1280, 0.75],
+    [1024, 0.7],
+    [800, 0.65],
+  ];
+
+  let best = file;
+  for (const [dimension, quality] of steps) {
+    const attempt = await toWebp(file, dimension, quality).catch(() => null);
+    // Undecodable (HEIC on most browsers): no later step will fare better.
+    if (!attempt || attempt === file) break;
+    if (attempt.size < best.size) best = attempt;
+    if (attempt.size <= budget) return attempt;
+  }
+
+  return best;
+}
