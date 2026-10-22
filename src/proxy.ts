@@ -181,6 +181,16 @@ async function handlePaidLanding(
   const dest = request.headers.get('sec-fetch-dest');
   if (dest && dest !== 'document') return null;
 
+  /*
+   * Speculative loads. Chrome fetches likely search results ahead of the tap,
+   * often through Google's own proxy, and the page it fetched never runs
+   * JavaScript and never gets our cookie back — so every one became a
+   * "silent" landing from a Google address. Such a load is not a click: if
+   * the person does tap, Google charges that tap, not this fetch.
+   */
+  const purpose = `${request.headers.get('sec-purpose') ?? ''} ${request.headers.get('purpose') ?? ''}`;
+  if (/prefetch/i.test(purpose)) return null;
+
   const userAgent = request.headers.get('user-agent') ?? '';
   // A declared crawler does not click ads, and charging it with fraud would
   // put Googlebot's own ranges on an exclusion list.

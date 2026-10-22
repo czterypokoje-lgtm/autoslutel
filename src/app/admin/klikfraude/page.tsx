@@ -1,8 +1,8 @@
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Notice, Empty, HelpSteps, ui } from '../_ui';
-import { ShieldAlert, MousePointerClick, EyeOff, Ban } from 'lucide-react';
-import { judgeAll, type AdVisit, type Judgement } from '@/lib/clickFraud';
+import { ShieldAlert, MousePointerClick, EyeOff, Ban, Globe } from 'lucide-react';
+import { judgeAll, countClicks, type AdVisit, type Judgement } from '@/lib/clickFraud';
 import CopyBoxes from './CopyBoxes';
 
 export const dynamic = 'force-dynamic';
@@ -34,8 +34,8 @@ function isoDaysAgo(days: number): string {
   return new Date(Date.now() - days * 86_400_000).toISOString();
 }
 
-const tone = (tier: Judgement['tier']) =>
-  tier === 'fraude' ? 'stop' : tier === 'verdacht' ? 'warn' : 'ok';
+const tone = (j: Judgement) =>
+  j.sharedNetwork ? 'info' : j.tier === 'fraude' ? 'stop' : j.tier === 'verdacht' ? 'warn' : 'ok';
 
 /**
  * What our ad budget was actually spent on.
@@ -99,7 +99,10 @@ export default async function KlikfraudePage({
 
   const fraud = judgements.filter((j) => j.tier === 'fraude');
   const suspect = judgements.filter((j) => j.tier === 'verdacht');
-  const silent = visits.filter((v) => !v.js_ran).length;
+  const clicks = countClicks(visits);
+  const silent = judgements.reduce((n, j) => n + (j.sharedNetwork ? 0 : j.silent), 0);
+  const shared = judgements.filter((j) => j.sharedNetwork);
+  const sharedClicks = shared.reduce((n, j) => n + j.clicks, 0);
 
   /* Only the convicted tier may be excluded. A `verdacht` address in this box
      would mean a person pasting a guess into a live campaign. */
@@ -113,7 +116,7 @@ export default async function KlikfraudePage({
     [...fraud, ...suspect].some((j) => j.ip === v.ip)
   );
   const evidence = [
-    'datum;ip;land;gclid;campagne;js;oordeel',
+    'datum;ip;land;gclid;campagne;js;oordeel;klikken van dit adres',
     ...evidenceRows.map((v) => {
       const judgement = judgements.find((j) => j.ip === v.ip);
       const clickId = v.gclid ?? v.wbraid ?? v.gbraid ?? v.msclkid ?? '';
@@ -125,6 +128,7 @@ export default async function KlikfraudePage({
         v.campaign_id ?? '',
         v.js_ran ? 'ja' : 'nee',
         judgement?.tier ?? '',
+        judgement?.clicks ?? '',
       ].join(';');
     }),
   ].join('\n');
@@ -146,16 +150,22 @@ export default async function KlikfraudePage({
       <StatGrid>
         <Stat
           label="Betaalde klikken"
-          value={visits.length}
-          foot={`${judgements.length} verschillende adressen`}
+          value={clicks}
+          foot={`${visits.length} paginaladingen, ${judgements.length} adressen`}
           icon={<MousePointerClick size={15} />}
         />
         <Stat
           label="Zonder JavaScript"
           value={silent}
-          foot="pagina opgehaald, browser nooit gezien"
+          foot="klikken zonder browser, buiten Google-netwerken"
           icon={<EyeOff size={15} />}
           tone={silent ? 'warn' : 'ok'}
+        />
+        <Stat
+          label="Via Google-netwerk"
+          value={sharedClicks}
+          foot="VPN by Google / Chrome: echte mensen, nooit uitsluiten"
+          icon={<Globe size={15} />}
         />
         <Stat
           label="Uit te sluiten"
@@ -178,6 +188,7 @@ export default async function KlikfraudePage({
           'Kijk eerst in Google Ads bij de kolom «Ongeldige klikken». Wat daar staat, heeft Google zelf al gecrediteerd — dat opnieuw claimen kost alleen een ticket.',
           'Neem de IP-uitsluitingen hieronder over in de zoekcampagne: Instellingen → Aanvullende instellingen → IP-uitsluitingen. Maximaal 500 reeksen. Performance Max kent geen IP-uitsluitingen.',
           'Stuur het bewijsblok mee met een verzoek om creditering, met de gclid erin: zonder die code neemt support de claim niet in behandeling.',
+          'Adressen van «VPN by Google» en Google-proxy zijn gedeeld door duizenden Pixel- en Chrome-gebruikers. Die komen nooit in de uitsluitlijst en tellen niet als bewijs.',
           'Sluit nooit een adres uit dat hier «verdacht» is. Een bot die wegkomt kost één klik; een klant die je uitsluit kost elke klik die hij nog zou doen, en dat ziet niemand.',
         ]}
       />
@@ -199,6 +210,7 @@ export default async function KlikfraudePage({
                 <th>IP</th>
                 <th>Land</th>
                 <th>Klikken</th>
+                <th>Ladingen</th>
                 <th>Stil</th>
                 <th>Laatste</th>
                 <th>Waarom</th>
@@ -208,12 +220,13 @@ export default async function KlikfraudePage({
             {judgements.map((j) => (
               <tr key={j.ip}>
                 <td>
-                  <Badge tone={tone(j.tier)}>{j.tier}</Badge>
+                  <Badge tone={tone(j)}>{j.sharedNetwork ?? j.tier}</Badge>
                 </td>
                 <td>
                   <code>{j.ip}</code>
                 </td>
                 <td>{j.country ?? '—'}</td>
+                <td>{j.clicks}</td>
                 <td>{j.visits}</td>
                 <td>{j.silent}</td>
                 <td>{DATE.format(new Date(j.lastSeen))}</td>
