@@ -21,12 +21,12 @@
  *   overzetten  the electronics move out of their old key into the new one
  *   programmeren the transponder is taught to the car — on the car itself
  *
- * They are one choice rather than a set of tick boxes because they contain
- * each other: our technician cuts and programmes on location, and a key we
- * transfer is cut in the same handling. Ticking two would charge twice for
- * the same work.
+ * In the buy box cutting and transfer are two tick boxes (two separate jobs);
+ * underneath each basket line still carries one option, with 'cut_and_send'
+ * for both. The technician does everything on location, so that one stays on
+ * its own.
  */
-export type ServiceOption = 'product_only' | 'cut_only' | 'send_in' | 'mobile_tech';
+export type ServiceOption = 'product_only' | 'cut_only' | 'send_in' | 'cut_and_send' | 'mobile_tech';
 
 /**
  * Charged once per basket line, not per unit: one call-out or one parcel
@@ -39,14 +39,16 @@ export type ServiceOption = 'product_only' | 'cut_only' | 'send_in' | 'mobile_te
 export const SERVICE_SURCHARGE: Record<ServiceOption, number> = {
   product_only: 0,
   cut_only: 19.95,  // we cut the blade to a key code or kenteken and post it
-  send_in: 29.95,   // we transfer the electronics and cut the blade
+  send_in: 29.95,   // the customer posts the old key, we move its electronics into the new one
+  cut_and_send: 49.9, // both: two separate jobs, so both prices
   mobile_tech: 169, // technician comes out, cuts and programmes on location
 };
 
 export const SERVICE_LABEL: Record<ServiceOption, string> = {
   product_only: 'Alleen product',
   cut_only: 'Frezen op sleutelcode',
-  send_in: 'Opsturen — wij zetten over',
+  send_in: 'Elektronica overzetten',
+  cut_and_send: 'Frezen + elektronica overzetten',
   mobile_tech: 'Monteur aan huis',
 };
 
@@ -54,7 +56,8 @@ export const SERVICE_LABEL: Record<ServiceOption, string> = {
 export const SERVICE_DESCRIPTION: Record<ServiceOption, string> = {
   product_only: 'U ontvangt het artikel zoals het is.',
   cut_only: 'U geeft uw sleutelcode of kenteken door, wij frezen de baard en sturen hem op.',
-  send_in: 'U stuurt uw oude sleutel op, wij zetten de elektronica over en frezen de baard.',
+  send_in: 'U stuurt uw oude sleutel op, wij zetten de elektronica over in de nieuwe.',
+  cut_and_send: 'Wij zetten de elektronica over én frezen de baard op uw sleutelcode.',
   mobile_tech: 'Wij komen naar uw auto, frezen de sleutel en leren hem in.',
 };
 
@@ -63,6 +66,7 @@ export const SERVICE_NEEDS: Record<ServiceOption, { kenteken: boolean; oldKey: b
   product_only: { kenteken: false, oldKey: false },
   cut_only: { kenteken: true, oldKey: false },
   send_in: { kenteken: true, oldKey: true },
+  cut_and_send: { kenteken: true, oldKey: true },
   mobile_tech: { kenteken: true, oldKey: false },
 };
 
@@ -70,6 +74,7 @@ export const SERVICE_OPTIONS: ServiceOption[] = [
   'product_only',
   'cut_only',
   'send_in',
+  'cut_and_send',
   'mobile_tech',
 ];
 
@@ -101,6 +106,12 @@ const SERVICES_BY_CATEGORY: Record<string, ServiceOption[]> = {
 };
 
 /** The services this product can be bought with. Always at least the article. */
+/** Cutting and transfer are per key; a technician call-out is one visit. */
+export const serviceTotal = (s: ServiceOption, quantity: number) =>
+  s === 'mobile_tech' ? SERVICE_SURCHARGE[s] : SERVICE_SURCHARGE[s] * quantity;
+
 export function servicesFor(category: string | null | undefined): ServiceOption[] {
-  return SERVICES_BY_CATEGORY[category ?? ''] ?? ['product_only'];
+  const list = SERVICES_BY_CATEGORY[category ?? ''] ?? ['product_only'];
+  // Cutting and transfer are two separate jobs; where both exist, both together can be ordered.
+  return list.includes('cut_only') && list.includes('send_in') ? [...list, 'cut_and_send'] : list;
 }
