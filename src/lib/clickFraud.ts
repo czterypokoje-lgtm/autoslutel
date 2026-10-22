@@ -117,6 +117,10 @@ export type FraudTier = 'ok' | 'verdacht' | 'fraude';
 export interface Judgement {
   ip: string;
   tier: FraudTier;
+  /** Set when the address is a shared Google network: never judged, never excluded. */
+  sharedNetwork: string | null;
+  /** Distinct paid clicks (click ids). Google charges per click, not per page load. */
+  clicks: number;
   points: number;
   /** Dutch, because these are read by the office and pasted into a ticket. */
   reasons: string[];
@@ -142,6 +146,71 @@ export const SUSPECT_POINTS = 3;
  * VPNs, and read their email from a hotel in Spain.
  */
 const SERVED_COUNTRIES = new Set(['NL', 'BE', 'DE', '']);
+
+/*
+ * Shared Google networks. Every address here carries thousands of unrelated
+ * people at once: Pixel phones and Google One route through "VPN by Google",
+ * and Chrome fetches pages through Google's own proxies. Judged per IP they
+ * look like one machine clicking all day — the October 2026 list called most
+ * of them `fraude` — while the click ids show many different people, each
+ * charged once. Excluding one of these blocks every customer behind it.
+ */
+const SHARED_NETWORKS: { cidr: string; name: string }[] = [
+  { cidr: '162.120.128.0/17', name: 'VPN by Google' },
+  { cidr: '72.14.192.0/18', name: 'Google-proxy' },
+  { cidr: '193.186.4.0/24', name: 'Google-proxy' },
+  { cidr: '66.249.64.0/19', name: 'Google (advertentiecontrole)' },
+];
+
+function ipv4ToInt(ip: string): number | null {
+  const parts = ip.split('.');
+  if (parts.length !== 4) return null;
+  let n = 0;
+  for (const part of parts) {
+    const octet = Number(part);
+    if (!Number.isInteger(octet) || octet < 0 || octet > 255) return null;
+    n = n * 256 + octet;
+  }
+  return n;
+}
+
+/** Name of the shared Google network an address belongs to, or null. */
+export function sharedNetwork(ip: string | null): string | null {
+  if (!ip) return null;
+  if (ip.toLowerCase().startsWith('2001:4860:')) return 'Google-proxy';
+  const n = ipv4ToInt(ip);
+  if (n === null) return null;
+  for (const { cidr, name } of SHARED_NETWORKS) {
+    const [base, bits] = cidr.split('/');
+    const size = 2 ** (32 - Number(bits));
+    const start = ipv4ToInt(base!)!;
+    if (n >= start && n < start + size) return name;
+  }
+  return null;
+}
+
+const clickIdOf = (v: AdVisit) => v.gclid ?? v.wbraid ?? v.gbraid ?? v.msclkid ?? null;
+
+/**
+ * Page loads folded into paid clicks. A customer who reloads, or comes back
+ * from the same ad an hour later, carries the same click id and was charged
+ * once — five rows of one gclid are one click, not five. A click counts as
+ * silent only when none of its loads ever ran JavaScript.
+ */
+function foldClicks(visits: AdVisit[]): { first: number; silent: boolean }[] {
+  const byId = new Map<string, AdVisit[]>();
+  visits.forEach((v, i) => {
+    const key = clickIdOf(v) ?? `row:${i}`;
+    byId.set(key, [...(byId.get(key) ?? []), v]);
+  });
+  return [...byId.values()].map((loads) => ({
+    first: Math.min(...loads.map((l) => new Date(l.created_at).getTime())),
+    silent: loads.every((l) => !l.js_ran),
+  }));
+}
+
+/** Distinct paid clicks in a list of page loads. */
+export const countClicks = (visits: AdVisit[]) => foldClicks(visits).length;
 
 /** Silent landings, scored in bands rather than per-click. */
 function silentPoints(silent: number): number {
@@ -252,10 +321,34 @@ export function judgeIp(visits: AdVisit[]): Judgement | null {
   const times = visits.map((v) => new Date(v.created_at).getTime()).filter(Number.isFinite);
   const sortedTimes = [...times].sort((a, b) => a - b);
 
-  const silent = visits.filter((v) => !v.js_ran).length;
+  const network = sharedNetwork(visits[0]!.ip);
+  const clicks = foldClicks(visits);
+  const silent = clicks.filter((c) => c.silent).length;
   const webdrivers = visits.filter((v) => v.webdriver === true).length;
   const interacted = visits.filter((v) => v.interacted).length;
   const country = visits.find((v) => v.country)?.country ?? null;
+
+  const base = {
+    ip,
+    sharedNetwork: network,
+    visits: visits.length,
+    clicks: clicks.length,
+    silent,
+    country,
+    firstSeen: new Date(sortedTimes[0] ?? Date.now()).toISOString(),
+    lastSeen: new Date(sortedTimes[sortedTimes.length - 1] ?? Date.now()).toISOString(),
+    clickIds: unique(visits.map(clickIdOf)),
+    campaigns: unique(visits.map((v) => v.campaign_id)),
+  };
+
+  if (network) {
+    return {
+      ...base,
+      tier: 'ok',
+      points: 0,
+      reasons: [`gedeeld adres van ${network}: duizenden gebruikers, nooit uitsluiten`],
+    };
+  }
 
   const reasons: string[] = [];
   let points = 0;
@@ -264,7 +357,7 @@ export function judgeIp(visits: AdVisit[]): Judgement | null {
   if (silentScore) {
     points += silentScore;
     reasons.push(
-      `${silent} van ${visits.length} betaalde landingen zonder dat er JavaScript liep`
+      `${silent} van ${clicks.length} betaalde klikken zonder dat er JavaScript liep`
     );
   }
 
@@ -280,15 +373,16 @@ export function judgeIp(visits: AdVisit[]): Judgement | null {
 
   /* Sheer volume. One address producing twenty paid clicks in a month is not
      a household, whatever the other signals say. */
-  if (visits.length >= 20) {
+  if (clicks.length >= 20) {
     points += 3;
-    reasons.push(`${visits.length} betaalde klikken van één adres`);
-  } else if (visits.length >= 10) {
+    reasons.push(`${clicks.length} betaalde klikken van één adres`);
+  } else if (clicks.length >= 10) {
     points += 2;
-    reasons.push(`${visits.length} betaalde klikken van één adres`);
+    reasons.push(`${clicks.length} betaalde klikken van één adres`);
   }
 
-  const cadence = cadencePoints(times);
+  // Rhythm between clicks, not reloads: a customer refreshing one page is not a loop.
+  const cadence = cadencePoints(clicks.map((c) => c.first));
   if (cadence.points) {
     points += cadence.points;
     if (cadence.reason) reasons.push(cadence.reason);
@@ -301,7 +395,7 @@ export function judgeIp(visits: AdVisit[]): Judgement | null {
 
   /* Nobody out of five or more ever touched anything. One point: a price page
      answers the question without a click. */
-  if (visits.length >= 5 && interacted === 0) {
+  if (clicks.length >= 5 && interacted === 0) {
     points += 1;
     reasons.push('geen enkele klik of toetsaanslag op de pagina, bij alle bezoeken');
   }
@@ -313,19 +407,7 @@ export function judgeIp(visits: AdVisit[]): Judgement | null {
   const tier: FraudTier =
     points >= FRAUD_POINTS ? 'fraude' : points >= SUSPECT_POINTS ? 'verdacht' : 'ok';
 
-  return {
-    ip,
-    tier,
-    points,
-    reasons,
-    visits: visits.length,
-    silent,
-    country,
-    firstSeen: new Date(sortedTimes[0] ?? Date.now()).toISOString(),
-    lastSeen: new Date(sortedTimes[sortedTimes.length - 1] ?? Date.now()).toISOString(),
-    clickIds: unique(visits.map((v) => v.gclid ?? v.wbraid ?? v.gbraid ?? v.msclkid)),
-    campaigns: unique(visits.map((v) => v.campaign_id)),
-  };
+  return { ...base, tier, points, reasons };
 }
 
 /** Group a window of visits by address and judge each one, worst first. */
