@@ -87,10 +87,10 @@ export default function robots(): MetadataRoute.Robots {
        * The webshop (/webshop, a separate Vercel project) has its own sitemap.
        * Crawlers only read this robots.txt on this domain, so it must be named
        * here — but only once the shop is open to search engines, or Search
-       * Console fills with "submitted URL marked noindex". Set SHOP_INDEXABLE=1
-       * here and in the shop project together.
+       * Console fills with "submitted URL marked noindex". Open since
+       * 22-10-2026; SHOP_INDEXABLE=0 here and in the shop project closes it.
        */
-      ...(process.env.SHOP_INDEXABLE === '1' ? [`${SITE_CONFIG.domain}/webshop/sitemap.xml`] : []),
+      ...(process.env.SHOP_INDEXABLE !== '0' ? [`${SITE_CONFIG.domain}/webshop/sitemap.xml`] : []),
     ],
     // NOTE: 'host' directive is NOT supported by Google — removed
   };
