@@ -170,6 +170,8 @@ export default function Navigation() {
 
           <Link href="/steden" className={styles.navLink}>Steden</Link>
           <Link href="/prijzen" className={styles.navLink}>Prijzen</Link>
+          {/* Plain <a>: /webshop is a separate app behind a rewrite, not a route of this one. */}
+          <a href="/webshop" className={styles.navLink}>Webshop</a>
           <Link href="/blog" className={styles.navLink}>Blog &amp; Advies</Link>
           <Link href="/kennisbank" className={styles.navLink}>Kennisbank</Link>
           <Link href="/over-ons" className={styles.navLink}>Over Ons</Link>
@@ -240,6 +242,7 @@ export default function Navigation() {
             <div className={styles.mobileDivider} />
             <Link href="/steden" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Steden</Link>
             <Link href="/prijzen" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Prijzen</Link>
+            <a href="/webshop" className={styles.mobileLink}>Webshop: onderdelen bestellen</a>
             <Link href="/blog" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Blog &amp; Advies</Link>
             <Link href="/over-ons" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Over Ons</Link>
             <Link href="/contact" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Contact</Link>

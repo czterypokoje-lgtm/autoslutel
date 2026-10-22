@@ -137,6 +137,20 @@ export default function Footer() {
               <li><Link href="/zakelijk">Zakelijk &amp; partners</Link></li>
               <li><Link href="/monteur-worden">Monteur worden</Link></li>
             </ul>
+            {/*
+              The webshop's main entry points, from every page of this site:
+              the links that let search engines find and rank the shop fastest.
+              Plain <a>: /webshop is a separate app behind a rewrite.
+            */}
+            <h3 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Webshop</h3>
+            <ul className={styles.linkList}>
+              <li><a href="/webshop/categorie/afstandsbedieningen">Autosleutels met afstandsbediening</a></li>
+              <li><a href="/webshop/categorie/behuizingen">Sleutelbehuizingen</a></li>
+              <li><a href="/webshop/categorie/smart-keys">Smart keys</a></li>
+              <li><a href="/webshop/categorie/batterijen">Sleutelbatterijen</a></li>
+              <li><a href="/webshop/advies">Advies over autosleutels</a></li>
+              <li><a href="/webshop" style={{ color: 'var(--orange-400)', fontWeight: 600 }}>Naar de webshop →</a></li>
+            </ul>
             <h3 className={styles.colTitle} style={{ marginTop: '1.5rem' }}>Blog &amp; Advies</h3>
             <ul className={styles.linkList}>
               <li><Link href="/blog/autosleutel-batterij-vervangen-stappenplan">Batterij Vervangen</Link></li>
