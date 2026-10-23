@@ -54,8 +54,17 @@ const nextConfig: NextConfig = {
    * tells Next to require these straight from node_modules in the deployed
    * function instead of bundling them, which is where the platform's own
    * install step already put the correct native binary.
+   *
+   * sharp is the same class of dependency, same failure, but louder: unlike
+   * the invoice route, /api/upload imports it unconditionally at the top of
+   * the file, so a bundled-instead-of-required sharp doesn't degrade one
+   * feature quietly — it throws at module load and the whole route 500s on
+   * every request, HEIC or not. Moving it from devDependencies to
+   * dependencies (see package.json) was necessary but not sufficient: the
+   * bundler still needs to be told not to touch it, same as the four
+   * packages above.
    */
-  serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'xlsx'],
+  serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'xlsx', 'sharp'],
   /*
    * The third layer of the same problem. pdfjs-dist loads its worker script
    * with a dynamically computed path — "Setting up fake worker failed:
