@@ -125,11 +125,20 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
      * click listener in PhoneConversionTracker never sees it — it only
      * watches real anchor clicks. Without this the busiest WhatsApp path on
      * the site reported no WhatsApp event at all.
+     *
+     * Named differently from a real click_to_whatsapp on purpose: this form
+     * already reported the lead two statements up (reportLeadConversion —
+     * lead_form_submit, generate_lead, the direct Ads conversion). Reusing
+     * click_to_whatsapp here used to also trip the GTM trigger behind the
+     * "Klik op WhatsApp" ad conversion, so one submission counted as two
+     * conversions — the saved lead and a WhatsApp click that was never a
+     * separate user action. Still visible in GA4/Bing under its own name,
+     * just not wired to an ad conversion it would double up.
      */
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: 'click_to_whatsapp', link_url: 'form_handoff' });
+    window.dataLayer.push({ event: 'lead_form_whatsapp_handoff', link_url: 'form_handoff' });
     window.uetq = window.uetq || [];
-    window.uetq.push('event', 'click_to_whatsapp', { event_category: 'whatsapp' });
+    window.uetq.push('event', 'lead_form_whatsapp_handoff', { event_category: 'whatsapp' });
 
     const win = window.open(buildWhatsAppUrl(), "_blank", "noopener,noreferrer");
     if (!win) {
