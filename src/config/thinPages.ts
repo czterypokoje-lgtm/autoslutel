@@ -8,9 +8,8 @@
  *    Sittard-Geleen, Heerlen, Maastricht) and none of them earned a single
  *    impression. A page for a town the van does not drive to is the textbook
  *    doorway page, and it dilutes the cities that do earn clicks.
- *  - The five districts are near-copies of their parent city page and drew no
- *    impressions of their own. Amsterdam Noord is NOT here: it answers a real
- *    query ("autosleutel bijmaken amsterdam noord", 175 impressions, pos 12.6).
+ *  - District pages (Amsterdam Oost/Zuid/Centrum/Noord, Utrecht Centrum/Zuid) are
+ *    all indexable: each answers real district queries in Search Console.
  *  - Brands: the twelve the brand audit marked "Cut" (Oldsmobile, Buick, Cadillac, Chrysler, Cobra,
  *    Ferrari, GMC, Holden, Lada, Lincoln, McLaren, Proton) were deleted and redirect to /merken. The
  *    fourteen marked "Hold 60 days" (Infiniti, Isuzu, Chery, Dacia, Daewoo, DAF, Dodge, Iveco,
@@ -29,8 +28,10 @@ export const NOINDEX_CITY_SLUGS: ReadonlySet<string> = new Set([
   // Gelderland, Flevoland). Dordrecht is Zuid-Holland and is indexed.
   'breda', 'eindhoven', 'helmond', 'roermond',
   'venlo', 'sittard-geleen', 'heerlen', 'maastricht',
-  // districts that duplicate their parent city
-  'utrecht-centrum', 'utrecht-zuid', 'amsterdam-centrum', 'amsterdam-zuid', 'amsterdam-oost',
+  // Districts are NOT listed here any more (23 Oct 2026). Search Console, 1 Jul - 22 Oct, proved the
+  // "no impressions" claim wrong: amsterdam-oost 1,208 impressions / 9 clicks, amsterdam-centrum 100,
+  // plus real queries such as "sleutelmaker amsterdam oost", "sleutel bijmaken amsterdam zuid(oost)"
+  // and "sleutel bijmaken utrecht centrum" (pos 9). All district pages are indexable again.
 ]);
 
 export const NOINDEX_BRAND_SLUGS: ReadonlySet<string> = new Set([

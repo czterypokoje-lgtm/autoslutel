@@ -31,9 +31,8 @@ export default async function WhatsAppRedirectPage({
   const TARGET_WA_URL = whatsAppUrl((await searchParams).ref);
   return (
     <>
-      <head>
-        <meta httpEquiv="refresh" content={`0;url=${TARGET_WA_URL}`} />
-      </head>
+      {/* No <head> wrapper: React hoists this into the layout's head. A second <head> was a crawl error. */}
+      <meta httpEquiv="refresh" content={`0;url=${TARGET_WA_URL}`} />
       <main style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f172a', color: '#fff', padding: '2rem', textAlign: 'center' }}>
         <div style={{ maxWidth: '420px', background: '#1e293b', padding: '2.5rem', borderRadius: '16px', border: '1px solid #334155', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
           <div style={{ width: '64px', height: '64px', background: '#25d366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2rem' }}>

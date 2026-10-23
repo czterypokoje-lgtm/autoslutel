@@ -184,10 +184,13 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     ),
     alternates: {
       canonical: pageUrl,
-      languages: {
-        'nl-NL': pageUrl,
-        'x-default': pageUrl,
-      },
+      // hreflang only on indexable pages: a noindex page in an hreflang set gets the set ignored.
+      ...(!isNoindexCity(citySlug) && {
+        languages: {
+          'nl-NL': pageUrl,
+          'x-default': pageUrl,
+        },
+      }),
     },
     openGraph: {
       type: 'website',

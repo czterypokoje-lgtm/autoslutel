@@ -93,10 +93,13 @@ export async function generateMetadata(props: { params: Promise<{ merkSlug: stri
     ...(isNoindexBrand(brand.nameSlug) && { robots: { index: false, follow: true } }),
     alternates: {
       canonical: pageUrl,
-      languages: {
-        'nl-NL': pageUrl,
-        'x-default': pageUrl,
-      },
+      // hreflang only on indexable pages: a noindex page in an hreflang set gets the set ignored.
+      ...(!isNoindexBrand(brand.nameSlug) && {
+        languages: {
+          'nl-NL': pageUrl,
+          'x-default': pageUrl,
+        },
+      }),
     },
     openGraph: {
       type: 'website',
