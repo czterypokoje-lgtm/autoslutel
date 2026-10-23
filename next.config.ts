@@ -441,45 +441,22 @@ const nextConfig: NextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
           },
-          {
-            /*
-             * Every host here is one actually observed loading on this site
-             * (checked live, not guessed): GA4 + GTM (googletagmanager.com),
-             * Clarity's loader and recorder (clarity.ms, scripts.clarity.ms),
-             * Bing UET (bat.bing.net/.com), the OpenAI ads pixel
-             * (bzrcdn.openai.com), brand logos (wikimedia, simpleicons), and
-             * the Vercel Blob store lead/monteur photos are served from
-             * (SITE_CONFIG.blobStorageDomain). fonts.googleapis.com is kept
-             * even though this app self-hosts via next/font — harmless if
-             * unused, and the webshop zone needs it.
-             *
-             * 'unsafe-inline' on script-src and style-src is a real
-             * trade-off, not an oversight: this app is full of inline
-             * style={{}} and a few inline bootstrap scripts (Consent Mode
-             * defaults has to run before anything else can). A nonce-based
-             * policy would remove it, but that is a larger, riskier change
-             * than this pass — CSP without it still blocks the main thing
-             * that matters, loading a script from a domain that is not on
-             * this list.
-             *
-             * Supabase is only here for the CRM's realtime chat
-             * (src/lib/supabase/browser.ts) — wildcarded by host since the
-             * project ref is an env var, not something to hardcode.
-             */
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.clarity.ms https://scripts.clarity.ms https://bat.bing.net https://bat.bing.com https://bzrcdn.openai.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: blob: https://upload.wikimedia.org https://cdn.simpleicons.org https://omqnxprotjfbyqqq.public.blob.vercel-storage.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://bat.bing.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://bzrcdn.openai.com https://*.supabase.co wss://*.supabase.co",
-              "frame-ancestors 'none'",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self' https://wa.me https://api.whatsapp.com",
-            ].join('; '),
-          },
+          /*
+           * A Content-Security-Policy was added here (23 Oct) and reverted
+           * the same day: it blocked GA4 (region1.google-analytics.com —
+           * the real collection host, not www.google-analytics.com),
+           * Clarity (s.clarity.ms — not the host guessed), and most of
+           * Google Ads' conversion/remarketing pixels
+           * (pagead2.googlesyndication.com, ad.doubleclick.net,
+           * www.google.com/ccm, www.google.com/rmkt), for hours, silently
+           * — confirmed via real console CSP violations, not suspected.
+           * These vendors spread collection across more hosts, some
+           * regional/rotating, than a one-pass manual allowlist safely
+           * covers. Re-add only as Content-Security-Policy-Report-Only
+           * first, watched against real traffic for a few days with
+           * nothing actually blocked, before ever switching it to enforcing
+           * again.
+           */
         ],
       },
     ];
