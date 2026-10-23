@@ -797,6 +797,90 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
 
 
+        {/* ── PARTNERGARAGE (Amsterdam only) ──────────────────────
+          Garage NRD is a real, named, independently-verified business —
+          Draaierweg 10, 1032 KS Amsterdam. The call and appointment buttons
+          both go to Autosleutel24, never to the garage: naming a real
+          partner at a real address is what makes this a legitimate local
+          citation; an unnamed pin would not be. Keyed by city.slug since
+          there is only the one partnership today — add more entries here
+          if that changes, no need to build a lookup table for a single
+          case. */}
+        {city.slug === 'amsterdam' && (
+          <section style={{ padding: '3.5rem 0', background: '#f9fafb' }}>
+            <div className="container">
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+                WERKGEBIED AMSTERDAM
+              </p>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1.5rem 0' }}>
+                In samenwerking met onze partnergarage
+              </h2>
+              <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 18, overflow: 'hidden', display: 'flex', flexWrap: 'wrap' }}>
+                <div style={{ position: 'relative', background: '#eef1ea', minHeight: 280, flex: '1 1 320px' }}>
+                  <svg viewBox="0 0 400 280" width="100%" height="100%" style={{ display: 'block' }} role="img" aria-label="Kaart met locatie van Garage NRD, Draaierweg 10, Amsterdam-Noord">
+                    <rect width="400" height="280" fill="#eef1ea" />
+                    <path d="M-20 50 Q 120 5 260 60 T 440 50 L440 100 Q 300 135 180 100 T -20 105 Z" fill="#d7e8f2" />
+                    <g stroke="#fff" strokeWidth="7" fill="none" strokeLinecap="round">
+                      <path d="M0 130 L400 138" />
+                      <path d="M60 0 L90 280" />
+                      <path d="M230 0 L210 280" />
+                    </g>
+                    <text x="200" y="22" textAnchor="middle" fontSize="11" fontWeight="700" fill="#6b7280" opacity="0.8" fontFamily="var(--ff-body, sans-serif)">AMSTERDAM-NOORD</text>
+                    <text x="140" y="85" textAnchor="middle" fontSize="10" fill="#6b7280" opacity="0.6" fontStyle="italic" fontFamily="var(--ff-body, sans-serif)">het IJ</text>
+                    <g transform="translate(206 36)">
+                      <circle r="15" fill="var(--orange-500)" opacity="0.18" />
+                      <path d="M0 -22 C 11 -22 19 -14 19 -3 C 19 11 0 24 0 24 C 0 24 -19 11 -19 -3 C -19 -14 -11 -22 0 -22 Z" fill="var(--orange-500)" stroke="#fff" strokeWidth="2" />
+                      <circle cy="-3" r="6" fill="#fff" />
+                    </g>
+                  </svg>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(255,255,255,0.92)', borderTop: '1px solid #e5e7eb', padding: '0.6rem 0.9rem', fontSize: '0.72rem', color: '#6b7280' }}>
+                    Draaierweg 10, Amsterdam-Noord
+                  </div>
+                </div>
+                <div style={{ padding: '2rem 1.9rem', display: 'flex', flexDirection: 'column', flex: '1 1 320px' }}>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.3rem' }}>Garage NRD</div>
+                  <div style={{ fontSize: '0.92rem', color: '#6b7280', marginBottom: '1.1rem', lineHeight: 1.5 }}>
+                    Draaierweg 10<br />1032 KS Amsterdam (Amsterdam-Noord)
+                  </div>
+                  <p style={{ fontSize: '0.92rem', color: '#6b7280', lineHeight: 1.6, marginBottom: '1.4rem' }}>
+                    Voor spoedgevallen in Amsterdam werken wij samen met <strong style={{ color: '#0f172a' }}>Garage NRD</strong>, zodat onze monteur ook dicht bij het centrum snel ter plaatse kan zijn. Rechtstreeks contact met Autosleutel24 blijft de snelste weg naar een prijs en een afspraak.
+                  </p>
+                  <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+                    <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', background: 'var(--orange-500)', color: '#fff', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', borderRadius: 10, padding: '0.95rem 1.2rem' }}>
+                      Bel Autosleutel24: {SITE_CONFIG.phone}
+                    </a>
+                    <Link href="/afspraak" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', background: 'transparent', color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', borderRadius: 10, padding: '0.95rem 1.2rem', border: '1.5px solid var(--orange-500)' }}>
+                      Maak een afspraak
+                    </Link>
+                    <span style={{ fontSize: '0.76rem', color: '#9ca3af', textAlign: 'center' }}>
+                      Beide knoppen gaan naar Autosleutel24 — nooit naar de garage.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  '@context': 'https://schema.org',
+                  '@type': 'LocalBusiness',
+                  name: 'Garage NRD',
+                  address: {
+                    '@type': 'PostalAddress',
+                    streetAddress: 'Draaierweg 10',
+                    postalCode: '1032 KS',
+                    addressLocality: 'Amsterdam',
+                    addressCountry: 'NL',
+                  },
+                  telephone: '+31206362339',
+                  url: 'https://www.garage-nrd.nl/',
+                }),
+              }}
+            />
+          </section>
+        )}
+
         {/* FAQ SECTION */}
         <FaqSection customFaqs={mappedFaqs} cityName={city.city} pageUrl={pageUrl} />
 
