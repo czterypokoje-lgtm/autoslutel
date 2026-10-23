@@ -9,7 +9,6 @@ declare global {
 import { useState, useMemo, useEffect } from "react";
 import { CAR_MODELS, BRANDS_LIST, SERVICES_LIST, YEARS_LIST } from "@/data/carModels";
 import { SITE_CONFIG } from "@/config/site.config";
-import { toWebp } from "@/lib/toWebp";
 import { reportLeadConversion } from "@/lib/leadTracking";
 import { tagLeadClaritySession } from "@/lib/clarity";
 import styles from "./LeadCaptureForm.module.css";
@@ -36,9 +35,6 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
   const [location, setLocation] = useState(city);
   const [phoneState, setPhoneState] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [photoUrl, setPhotoUrl] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState("");
   // Honeypot: hidden from people, irresistible to bots. A filled value makes
   // the server discard the submission.
   const [honeypot, setHoneypot] = useState("");
@@ -54,33 +50,6 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
     setModel("");
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawFile = e.target.files?.[0];
-    if (!rawFile) return;
-
-    setIsUploading(true);
-    setUploadError("");
-
-    try {
-      const file = await toWebp(rawFile).catch(() => rawFile);
-      const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
-        method: 'POST',
-        body: file,
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setPhotoUrl(data.url);
-      } else {
-        setUploadError(data.error || "Fout bij uploaden");
-      }
-    } catch (err) {
-      setUploadError("Netwerkfout bij uploaden");
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
   function buildWhatsAppUrl() {
     const parts = [
       "Hallo Autosleutel24!",
@@ -91,7 +60,6 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       service ? `Service: ${service}` : null,
       `Locatie: ${location || "Niet ingevuld"}`,
       phoneState ? `Telefoon: ${phoneState}` : null,
-      photoUrl ? `Foto bijlage: ${photoUrl.replace(SITE_CONFIG.blobStorageDomain, typeof window !== "undefined" ? window.location.origin + "/f" : "")}` : null,
       "",
       "Kunt u mij zo snel mogelijk helpen? Graag hoor ik de prijs en aankomsttijd.",
     ].filter(p => p !== null).join("\n");
@@ -120,7 +88,6 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         location,
         // Sent as its own field so the lead can be deduplicated and routed.
         phone: phoneState,
-        photoUrl,
         source: city ? 'city_form' : 'hero_form',
         hp: honeypot, // honeypot — must stay empty
         gclid: getCookie('gclid'),
@@ -313,31 +280,14 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
           />
         </div>
 
-        {/* Photo Upload */}
-        <div className={styles.fileUploadWrapper}>
-          <label className={`${styles.fileUploadLabel} ${photoUrl ? styles.success : ''}`}>
-            <span className={styles.fieldIcon} aria-hidden>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            </span>
-            <span className={styles.fileUploadText}>
-              {isUploading ? "Uploaden..." : photoUrl ? "Foto geüpload!" : "Voeg sleutelfoto toe"}
-            </span>
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={handleFileUpload} 
-              className={styles.fileInput}
-              disabled={isUploading}
-            />
-          </label>
-          {uploadError && <div className={styles.errorText}>{uploadError}</div>}
-          {photoUrl && (
-            <div className={styles.previewContainer}>
-              <img src={photoUrl} alt="Preview" className={styles.imagePreview} />
-              <button type="button" onClick={() => setPhotoUrl("")} className={styles.removePhotoBtn} aria-label="Verwijder foto">&times;</button>
-            </div>
-          )}
-        </div>
+        {/*
+          Photo upload removed: /api/upload was crashing on every request
+          (sharp module-load failure in the serverless function) and people
+          were abandoning the whole form after hitting it. WhatsApp handoff
+          above already lets anyone send a photo of their key that way
+          instead -- no capability lost, just routed through the path that
+          actually works. Re-add here once /api/upload is confirmed fixed.
+        */}
 
         {/* Submit */}
         {/* Honeypot — visually hidden, never announced, never tab-reachable. */}
