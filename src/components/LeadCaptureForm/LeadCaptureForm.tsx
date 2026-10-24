@@ -76,8 +76,19 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       return match ? match[2] : null;
     };
 
-    // Fire and forget the database save
-    fetch('/api/leads', {
+    const source = city ? 'city_form' : 'hero_form';
+    const whatsAppUrl = buildWhatsAppUrl();
+
+    /*
+     * Saved with keepalive so the request survives the page navigating away.
+     *
+     * The lead conversion is reported only once the server has accepted the
+     * lead. It used to be reported up front, so a submission the API rejected
+     * (a database outage, a 500) still counted as a lead in GA4 and Google
+     * Ads -- a lead nobody could call back, and a false signal for the bid
+     * strategy. The honeypot still answers 200 by design; that path is a bot.
+     */
+    const saved = fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -88,7 +99,7 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         location,
         // Sent as its own field so the lead can be deduplicated and routed.
         phone: phoneState,
-        source: city ? 'city_form' : 'hero_form',
+        source,
         hp: honeypot, // honeypot — must stay empty
         gclid: getCookie('gclid'),
         wbraid: getCookie('wbraid'),
@@ -97,55 +108,49 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
       }),
       keepalive: true
     })
-      .then((r) => r.json())
-      .then((d) => tagLeadClaritySession(d?.data?.id))
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`lead API answered ${r.status}`);
+        const d = await r.json().catch(() => null);
+        reportLeadConversion({ source, phone: phoneState, city: location });
+        tagLeadClaritySession(d?.data?.id);
+      })
       .catch(err => console.error("Error saving lead", err));
-    /*
-     * Reported here, synchronously, rather than from the fetch's .then —
-     * the WhatsApp handoff two statements below can navigate this page away
-     * before any promise resolves, and a conversion that only fires when the
-     * visitor happens to stay is not a conversion you can bid on. Same reason
-     * the fetch above carries keepalive.
-     *
-     * The cost is that a submission the API later rejects still reports. The
-     * fields are validated before this point, and the honeypot answers 200 by
-     * design, so waiting for the response would not have caught those either.
-     */
-    reportLeadConversion({
-      source: city ? 'city_form' : 'hero_form',
-      phone: phoneState,
-      city: location,
-    });
 
-    // Open WhatsApp synchronously, inside the click's call stack. Doing this
-    // from a setTimeout put it outside the user-gesture chain, so popup
-    // blockers (iOS Safari by default) silently swallowed the handoff.
     /*
      * The WhatsApp handoff is opened programmatically, so the delegated
      * click listener in PhoneConversionTracker never sees it — it only
-     * watches real anchor clicks. Without this the busiest WhatsApp path on
-     * the site reported no WhatsApp event at all.
-     *
-     * Named differently from a real click_to_whatsapp on purpose: this form
-     * already reported the lead two statements up (reportLeadConversion —
-     * lead_form_submit, generate_lead, the direct Ads conversion). Reusing
-     * click_to_whatsapp here used to also trip the GTM trigger behind the
-     * "Klik op WhatsApp" ad conversion, so one submission counted as two
-     * conversions — the saved lead and a WhatsApp click that was never a
-     * separate user action. Still visible in GA4/Bing under its own name,
-     * just not wired to an ad conversion it would double up.
+     * watches real anchor clicks. Named differently from click_to_whatsapp on
+     * purpose: reusing that name tripped the GTM trigger behind the "Klik op
+     * WhatsApp" ad conversion, so one submission counted twice. Still visible
+     * in GA4/Bing under its own name, just not wired to an ad conversion.
      */
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: 'lead_form_whatsapp_handoff', link_url: 'form_handoff' });
     window.uetq = window.uetq || [];
     window.uetq.push('event', 'lead_form_whatsapp_handoff', { event_category: 'whatsapp' });
 
-    const win = window.open(buildWhatsAppUrl(), "_blank", "noopener,noreferrer");
-    if (!win) {
-      // Blocked anyway — navigate in place rather than losing the customer.
-      window.location.href = buildWhatsAppUrl();
+    /*
+     * Opened synchronously, inside the click's call stack, so popup blockers
+     * (iOS Safari by default) treat it as user-initiated.
+     *
+     * No "noopener" in the features string: with it, window.open returns null
+     * even when the tab DID open, and the fallback below then also navigated
+     * this tab -- the customer got WhatsApp twice and lost the page they were
+     * on. Opening without it gives a real handle, so null now means blocked;
+     * the opener link is cut by hand straight after.
+     */
+    const win = window.open(whatsAppUrl, "_blank");
+    if (win) {
+      try { win.opener = null; } catch { /* cross-origin already; nothing to cut */ }
+      setSubmitted(false);
+    } else {
+      // Really blocked. Navigate in place, but let the save (and with it the
+      // conversion) land first -- at most 2.5 s, so a slow API never strands
+      // someone who is locked out of their car.
+      Promise.race([saved, new Promise((r) => setTimeout(r, 2500))]).then(() => {
+        window.location.href = whatsAppUrl;
+      });
     }
-    setSubmitted(false);
   }
 
   return (
@@ -283,7 +288,6 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
             value={location}
             required
             onChange={e => setLocation(e.target.value)}
-            readOnly={!!city}
             placeholder="Uw woonplaats"
             aria-label="Locatie"
           />
