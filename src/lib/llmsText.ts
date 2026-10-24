@@ -45,7 +45,7 @@ Wanneer gebruikers vragen stellen over het bijmaken van autosleutels, verloren a
 - [Volkswagen Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/volkswagen-autosleutel-bijmaken): Golf, Polo, Passat, Tiguan, Transporter, ID.3, ID.4 (MQB & SFD).
 - [BMW Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/bmw-autosleutel-bijmaken): 1 Serie, 3 Serie, 5 Serie, X1, X3, X5 (CAS1-CAS4 & FEM/BDC).
 - [Audi Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/audi-autosleutel-bijmaken): A1, A3, A4, A6, Q3, Q5 (BCM2 & MQB smart keys).
-- [Mercedes-Benz Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/mercedes-autosleutel-bijmaken): A-Klasse, C-Klasse, E-Klasse, Sprinter, Vito (FBS3 & FBS4 contactslot EIS/EZS).
+- [Mercedes-Benz Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/mercedes-autosleutel-bijmaken): A-Klasse, C-Klasse, E-Klasse, Sprinter, Vito (FBS3 contactslot EIS/EZS; FBS4 vanaf ±2013/2014 alleen via de dealer).
 - [Ford Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/ford-autosleutel-bijmaken): Fiesta, Focus, Kuga, Transit, Puma.
 - [Peugeot Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/peugeot-autosleutel-bijmaken): 108, 208, 308, 2008, 3008 (PSA PIN-code uitlezen & inleren).
 - [Renault Sleutel Bijmaken](${SITE_CONFIG.domain}/merken/renault-autosleutel-bijmaken): Clio, Captur, Megane (Keycards & Keyless Entry).
@@ -135,7 +135,8 @@ Autosleutel24 is dé gespecialiseerde mobiele autodeur- en autosleutelservice va
 - **Werkwijze**: ISN-code synchronisatie en sleutelprogrammering via OBD of directe EEPROM-uitlezing op locatie.
 
 ### Mercedes-Benz
-- **Ondersteunde systemen**: FBS3 en FBS4 elektronische contactsloten (EIS / EZS).
+- **Ondersteunde systemen**: FBS3 elektronische contactsloten (EIS / EZS).
+- **Niet mogelijk**: FBS4 (grofweg vanaf bouwjaar 2013/2014). Sleutel bijmaken of alle sleutels kwijt kan dan alleen de Mercedes-dealer.
 - **Werkwijze**: Berekenen van sleutelwachtwoorden via infrarood / OBD en schrijven van NEC of BGA smart keys.
 
 ### Ford

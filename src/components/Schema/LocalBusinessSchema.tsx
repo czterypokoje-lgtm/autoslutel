@@ -83,13 +83,13 @@ export default function LocalBusinessSchema() {
       { '@type': 'City', 'name': 'Huizen' },
       { '@type': 'City', 'name': 'Zeewolde' },
       { '@type': 'City', 'name': 'Bilthoven' },
-      { '@type': 'City', 'name': 'Den Haag', 'sameAs': 'https://en.wikipedia.org/wiki/The_Hague' },
       { '@type': 'City', 'name': 'Amsterdam-Zuid' },
-      // Real technician coverage, not just the Bussum-radius reach: the
-      // office confirmed staff actually stationed in these two on top of
-      // Den Haag and Amsterdam above.
-      { '@type': 'City', 'name': 'Rotterdam', 'sameAs': 'https://en.wikipedia.org/wiki/Rotterdam' },
       { '@type': 'City', 'name': 'Alkmaar' },
+      // Gelderland, matching the Business Profile service area. Rotterdam and
+      // Den Haag were taken out on 24 Oct 2026: the office focuses on Utrecht
+      // and the region around it, and dropped them from Ads and the profile.
+      { '@type': 'City', 'name': 'Arnhem', 'sameAs': 'https://en.wikipedia.org/wiki/Arnhem' },
+      { '@type': 'City', 'name': 'Apeldoorn', 'sameAs': 'https://en.wikipedia.org/wiki/Apeldoorn' },
     ],
     priceRange: '€€',
     paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'iDEAL', 'Pin'],

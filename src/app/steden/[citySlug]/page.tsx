@@ -259,9 +259,17 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     serviceType: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
     url: `${SITE_CONFIG.domain}/steden/${citySlug}`,
     provider: getBaseLocalBusinessSchema(),
+    /*
+     * The city's own coordinates, on the place served -- not on the business.
+     * Until 30 Sep each city page carried these as the business's `geo`, which
+     * claimed a branch in every city; they went with that node and the city
+     * pages lost their only machine-readable "this is about <city>" location.
+     * On areaServed they say where the service is, which is true.
+     */
     areaServed: {
       '@type': 'City',
       name: city.city,
+      geo: { '@type': 'GeoCoordinates', latitude: Number(city.geo.lat), longitude: Number(city.geo.lng) },
       containedInPlace: { '@type': 'AdministrativeArea', name: city.region },
     },
   };
@@ -864,7 +872,10 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify({
                   '@context': 'https://schema.org',
-                  '@type': 'LocalBusiness',
+                  // A garage, under its own @id: a bare LocalBusiness with an
+                  // address on this page read as a second Autosleutel24 location.
+                  '@type': 'AutoRepair',
+                  '@id': 'https://www.garage-nrd.nl/#business',
                   name: 'Garage NRD',
                   address: {
                     '@type': 'PostalAddress',

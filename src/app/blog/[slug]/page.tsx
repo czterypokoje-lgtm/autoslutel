@@ -114,7 +114,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           name: 'Hoe lang duurt het inlezen en maken van de sleutel?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Gemiddeld duurt het proces ter plaatse 30 tot 60 minuten. Bij complexere startonderbrekersystemen (zoals CAS4/FEM bij BMW of FBS4 bij Mercedes) kan het tot 2 uur duren.',
+            text: 'Gemiddeld duurt het proces ter plaatse 30 tot 60 minuten. Bij complexere startonderbrekersystemen (zoals CAS4/FEM bij BMW) kan het tot 2 uur duren.',
           },
         },
         {

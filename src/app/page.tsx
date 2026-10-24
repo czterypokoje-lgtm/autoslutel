@@ -23,11 +23,18 @@ import FeatureCards from '@/components/FeatureCards/FeatureCards';
 import GalleryMarquee from '@/components/GallerySlider/GalleryMarquee';
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
 
+/*
+ * Utrecht back in the homepage title (24 Oct 2026). From 8 Jul to 7 Aug it read
+ * "Autosleutel Bijmaken Utrecht | ..." and the homepage ranked 2-4 for
+ * "autosleutel bijmaken utrecht"; after Utrecht was dropped, clicks on Utrecht
+ * queries stopped within three weeks and /steden/utrecht (position ~22) never
+ * took over. Utrecht is the core area, so the strongest page says so again.
+ */
 export const metadata: Metadata = {
   title: {
-    absolute: `Autosleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE} | 24/7`,
+    absolute: `Autosleutel Bijmaken Utrecht | ${ARRIVAL_TITLE} | 24/7`,
   },
-  description: `Autosleutel bijmaken of alle sleutels kwijt? Binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
+  description: `Autosleutel bijmaken of kwijt in Utrecht, Amersfoort, Arnhem of Apeldoorn? Binnen ${ARRIVAL} ter plaatse, schadevrij openen & inleren. Bel direct!`,
   alternates: {
     canonical: SITE_CONFIG.domain,
     languages: {
@@ -38,8 +45,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: SITE_CONFIG.domain,
-    title: `Autosleutel Bijmaken of Kwijt? ${ARRIVAL_TITLE} | 24/7`,
-    description: `Autosleutel bijmaken of alle sleutels kwijt? Binnen ${ARRIVAL} ter plaatse in de Randstad, schadevrij openen & inleren. Goedkoper dan de dealer. Bel direct!`,
+    title: `Autosleutel Bijmaken Utrecht | ${ARRIVAL_TITLE} | 24/7`,
+    description: `Autosleutel bijmaken of kwijt in Utrecht, Amersfoort, Arnhem of Apeldoorn? Binnen ${ARRIVAL} ter plaatse, schadevrij openen & inleren. Bel direct!`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel24 mobiele autosleutelspecialist' }],
   },
 };

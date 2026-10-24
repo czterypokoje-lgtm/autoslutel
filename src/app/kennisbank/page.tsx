@@ -110,7 +110,7 @@ export default function KennisbankPage() {
                   Moderne personenauto&apos;s en bedrijfswagens zijn sinds eind jaren &apos;90 uitgerust met een elektronische startonderbreker (immobilizer). In de behuizing van uw autosleutel bevindt zich een transponderchip of een geavanceerde smart key module. Wanneer u de sleutel in het contactslot steekt of de startknop indrukt, zendt de ringantenne rond het slot een elektromagnetisch signaal uit. De chip antwoordt met een unieke, versleutelde digitale code (zoals Hitag2, Hitag AES, Megamos Crypto ID48 of Texas Crypto 4D). Alleen wanneer de Motor Management Module (ECU) en de immobilizermodule deze code herkennen, wordt de brandstofpomp en ontsteking vrijgegeven.
                 </p>
                 <p>
-                  Autosleutel24 beschikt over geavanceerde OBD2-programmeersoftware om rechtstreeks te communiceren met complexe beveiligingsmodules, waaronder BMW CAS/FEM/BDC-systemen, Volkswagen/Audi MQB-platforms, Renault Handsfree kaarten en Mercedes-Benz FBS3/FBS4 contactsloten (EZS/EIS). Wij lezen de unieke sleuteldata veilig uit en schrijven nieuwe sleutels direct in het geheugen van uw voertuig.
+                  Autosleutel24 beschikt over geavanceerde OBD2-programmeersoftware om rechtstreeks te communiceren met complexe beveiligingsmodules, waaronder BMW CAS/FEM/BDC-systemen, Volkswagen/Audi MQB-platforms, Renault Handsfree kaarten en Mercedes-Benz FBS3 contactsloten (EZS/EIS). Wij lezen de unieke sleuteldata veilig uit en schrijven nieuwe sleutels direct in het geheugen van uw voertuig.
                 </p>
               </section>
 
