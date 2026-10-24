@@ -75,8 +75,14 @@ const DEFAULT_REVIEW: BannerReview =
 export default function VerifiedReviewBanner({ review }: { review?: BannerReview } = {}) {
   const { name, meta, text } = review ?? DEFAULT_REVIEW;
 
+  /*
+   * data-nosnippet: Google was quoting this review ("De monteur kwam netjes
+   * ... 5.0 Bekijk alle 10 reviews op Google") as the search-result
+   * description of the pages it sits on, instead of their meta description.
+   * The banner stays on the page for visitors; it just never becomes the snippet.
+   */
   return (
-    <div className={styles.bannerContainer}>
+    <div className={styles.bannerContainer} data-nosnippet="">
       <div className={styles.inner}>
         
         {/* Left Section */}
