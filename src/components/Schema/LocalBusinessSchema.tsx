@@ -5,7 +5,13 @@ import { MY_MAPS_VIEWER_URL } from '@/config/myMaps';
 export default function LocalBusinessSchema() {
   const localBusinessSchema = {
     '@context': 'https://schema.org',
-    '@type': ['LocalBusiness', 'AutomotiveBusiness', 'Locksmith'],
+    /*
+     * No 'Locksmith' (25 Oct 2026). Google does not allow locksmith ads in the
+     * Netherlands, the Business Profile's category is "Key duplication
+     * service", and the ads that run are car-key ads. The site should describe
+     * the same business the profile and the ads do.
+     */
+    '@type': ['LocalBusiness', 'AutomotiveBusiness'],
     '@id': BIZ_ID,
     name: SITE_CONFIG.name,
     alternateName: 'Autosleutel24',
