@@ -26,7 +26,7 @@ export const businessRef = { '@id': BIZ_ID } as const;
  */
 export function getBaseLocalBusinessSchema() {
   return {
-    '@type': 'Locksmith',
+    '@type': 'AutomotiveBusiness',
     '@id': BIZ_ID,
     name: SITE_CONFIG.fullName,
     url: SITE_CONFIG.domain,

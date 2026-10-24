@@ -90,7 +90,7 @@ export default function SleutelBijmakenPage() {
       {
         "@type": "Question",
         "name": "Hoe lang duurt het om een autosleutel bij te maken?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Een standaard transponder sleutel duurt 20-30 minuten. Een smart key met keyless entry duurt 30-60 minuten. Een Mercedes FBS4 sleutel met online component protection duurt 45-60 minuten." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Een standaard transponder sleutel duurt 20-30 minuten. Een smart key met keyless entry duurt 30-60 minuten. Let op: Mercedes met FBS4 (grofweg vanaf 2013/2014) kunnen wij niet inleren — dat kan alleen de dealer." }
       },
       {
         "@type": "Question",
@@ -399,7 +399,7 @@ return (
                     </summary>
                     <p className={styles.faqAnswer}>
                       Een standaard transponder sleutel duurt 20-30 minuten. Een smart key met keyless entry duurt 30-60 minuten. 
-                      Een Mercedes FBS4 sleutel met online component protection duurt 45-60 minuten.
+                      Let op: Mercedes met FBS4 (grofweg vanaf 2013/2014) kunnen wij niet inleren — dat kan alleen de dealer.
                     </p>
                   </details>
 

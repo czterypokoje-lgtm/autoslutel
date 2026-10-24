@@ -237,11 +237,11 @@ export default function MerkenPage() {
         <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
           <h2>Autosleutels Programmeren en Bijmaken voor Alle {BRAND_COUNT} Automerken in Nederland</h2>
           <p>
-            Moderne auto&apos;s zijn uitgerust met complexe elektronische antidiefstalsystemen. Elke autofabrikant hanteert eigen beveiligingsprotocollen, startonderbrekers en transpondersystemen — van BMW CAS4/FEM en Volkswagen MQB tot Mercedes-Benz FBS3/FBS4 en Renault Keycards. Waar reguliere garages vaak vastlopen op merk-specifieke softwarebeveiliging of u doorsturen naar een dure merkdealer, is <strong>{SITE_CONFIG.name}</strong> gespecialiseerd in het sleutelbeheer van álle {BRAND_COUNT} gangbare automerken.
+            Moderne auto&apos;s zijn uitgerust met complexe elektronische antidiefstalsystemen. Elke autofabrikant hanteert eigen beveiligingsprotocollen, startonderbrekers en transpondersystemen — van BMW CAS4/FEM en Volkswagen MQB tot Mercedes-Benz FBS3 en Renault Keycards. Waar reguliere garages vaak vastlopen op merk-specifieke softwarebeveiliging of u doorsturen naar een dure merkdealer, is <strong>{SITE_CONFIG.name}</strong> gespecialiseerd in het sleutelbeheer van álle {BRAND_COUNT} gangbare automerken.
           </p>
           <h3>1. Europese Automerken: VAG Group, BMW Group &amp; Mercedes-Benz</h3>
           <p>
-            Duitse autofabrikanten lopen wereldwijd voorop als het gaat om complexe cryptografische voertuigbeveiliging. Binnen de Volkswagen Groep (Volkswagen, Audi, Seat, Skoda en Porsche) wordt gewerkt met onder andere de 4e en 5e generatie immobilisers en de moderne MQB- en MLB-platforms met Security Gateway (SFD). Bij BMW en Mini maken wij verbinding met EWS, CAS (1 t/m 4+), FEM en BDC modules. Voor Mercedes-Benz en Smart programmeren wij infrarood sleutels (Chromen sleutels) op de Electronic Ignition Switch (EIS/EZS) systemen binnen FBS3 en FBS4 protocollen.
+            Duitse autofabrikanten lopen wereldwijd voorop als het gaat om complexe cryptografische voertuigbeveiliging. Binnen de Volkswagen Groep (Volkswagen, Audi, Seat, Skoda en Porsche) wordt gewerkt met onder andere de 4e en 5e generatie immobilisers en de moderne MQB- en MLB-platforms met Security Gateway (SFD). Bij BMW en Mini maken wij verbinding met EWS, CAS (1 t/m 4+), FEM en BDC modules. Voor Mercedes-Benz en Smart programmeren wij infrarood sleutels (Chromen sleutels) op de Electronic Ignition Switch (EIS/EZS) systemen met FBS3. Mercedes met FBS4 (grofweg vanaf 2013/2014) kan alleen de dealer inleren; dat zeggen wij u vooraf.
           </p>
           <h3>2. Franse &amp; Italiaanse Automerken: PSA, Renault &amp; Stellantis</h3>
           <p>

@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
 import { isScenario } from '@/lib/scenarios';
 import { notifyNewLead } from '@/lib/leadNotify';
@@ -215,56 +215,61 @@ export async function POST(request: Request) {
     }
 
     /*
-     * Tell somebody. Until this line existed the route ended at the insert:
-     * the lead was stored correctly and then sat there, because nothing on
-     * any phone or in any inbox said it had arrived.
+     * Tell somebody, after the customer has their answer.
      *
-     * Awaited, not fired and forgotten. On a serverless runtime the function
-     * can be frozen the moment the response is returned, so a floating
-     * promise here is an alert that sometimes sends — which is worse than one
-     * that never does, because nobody goes looking for the missing half.
+     * The lead is committed at this point. The alerts used to be awaited
+     * before responding, and the email provider alone may take 10 s while the
+     * wizard gives up after 8 s -- so a request that was saved could be shown
+     * to the customer as "not received", inviting a second submission or a
+     * lost customer. `after` keeps the function alive until these finish (up
+     * to the route's max duration) without holding the response, which keeps
+     * the guarantee the old await gave on a serverless runtime: no alert is
+     * dropped because the function froze early.
      *
-     * Wrapped anyway: the lead is already committed at this point, and a mail
-     * provider having a bad minute must not turn that into an error page for
-     * a customer who is standing next to a locked car.
+     * Each one is still wrapped: a provider having a bad minute must not
+     * surface anywhere the customer can see.
      */
-    try {
-      await notifyNewLead({
-        ...enrichedRow,
-        location,
-        status: initialStatus ?? 'new',
-      });
-    } catch (notifyError) {
-      console.error('[leads] lead saved but the alert failed', notifyError);
-    }
-
-    /*
-     * OpenAI Ads Server-Side Event
-     * Sends a highly valuable lead_created event with hashed email/phone to 
-     * maximize match rates (Email/External ID coverage).
-     */
-    if (body.consentMarketing === true) {
+    const leadId = (data as { id?: string } | null)?.id;
+    const referer = request.headers.get('referer') || 'https://www.autosleutel24.nl/';
+    const userAgent = request.headers.get('user-agent') || undefined;
+    after(async () => {
       try {
-        await sendOpenAiEvent({
-          eventName: 'lead_created',
-          oppref,
-          /* action_source web requires a source_url; the form's page is the referer. */
-          sourceUrl: request.headers.get('referer') || 'https://www.autosleutel24.nl/',
-          email: email,
-          phone: phone,
-          ip: ip,
-          userAgent: request.headers.get('user-agent') || undefined,
-          amount: quotedPrice || undefined,
-          currency: quotedPrice ? 'EUR' : undefined,
+        await notifyNewLead({
+          ...enrichedRow,
+          location,
+          status: initialStatus ?? 'new',
         });
-      } catch (e) {
-        console.error('[leads] OpenAI Ads event failed', e);
+      } catch (notifyError) {
+        console.error('[leads] lead saved but the alert failed', leadId, notifyError);
       }
-    }
+
+      /*
+       * OpenAI Ads Server-Side Event
+       * Sends a highly valuable lead_created event with hashed email/phone to
+       * maximize match rates (Email/External ID coverage).
+       */
+      if (body.consentMarketing === true) {
+        try {
+          await sendOpenAiEvent({
+            eventName: 'lead_created',
+            oppref,
+            /* action_source web requires a source_url; the form's page is the referer. */
+            sourceUrl: referer,
+            email: email,
+            phone: phone,
+            ip: ip,
+            userAgent,
+            amount: quotedPrice || undefined,
+            currency: quotedPrice ? 'EUR' : undefined,
+          });
+        } catch (e) {
+          console.error('[leads] OpenAI Ads event failed', e);
+        }
+      }
+    });
 
     // The token lets the same browser add its follow-up answers (/api/leads/details).
-    const id = (data as { id?: string } | null)?.id;
-    return NextResponse.json({ success: true, data: id ? { id, token: leadToken(id) } : data }, { status: 200 });
+    return NextResponse.json({ success: true, data: leadId ? { id: leadId, token: leadToken(leadId) } : data }, { status: 200 });
   } catch (error) {
     console.error('Error in /api/leads route:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

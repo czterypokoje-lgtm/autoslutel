@@ -975,7 +975,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €125,- tot €249,-. Ideaal als goedkope noodoplossing.</li>
         <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €{SITE_CONFIG.prices.klapsleutel},- tot €349,- voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
         <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €249,- tot €349,- voor premium merken (BMW, Audi, Toyota, Volvo).</li>
-        <li><strong>Complexe immobilizers (o.a. Mercedes FBS4 of nieuwe VAG MQB48):</strong> Vanaf €299,- tot €599,- vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren.</li>
+        <li><strong>Complexe immobilizers (o.a. nieuwe VAG MQB48):</strong> Vanaf €299,- tot €599,- vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren. Mercedes met FBS4 (grofweg vanaf 2013/2014) kan alleen de dealer inleren.</li>
       </ul>
 
       <h3>Welke documenten heeft u nodig?</h3>
@@ -1005,7 +1005,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <details style={{ borderBottom: '1px solid #e2e8f0', padding: '1rem 0' }}>
         <summary style={{ fontWeight: 700, cursor: 'pointer' }}>Hoe lang duurt het maken van een sleutel op locatie?</summary>
         <p style={{ marginTop: '0.5rem', color: '#475569' }}>
-          Gemiddeld duurt het proces 30 tot 60 minuten ter plaatse. Bij zeer complexe startonderbrekersystemen (zoals BMW BDC/FEM of Mercedes FBS4) kan het inleren en programmeren op de bench circa 60 tot 120 minuten in beslag nemen.
+          Gemiddeld duurt het proces 30 tot 60 minuten ter plaatse. Bij zeer complexe startonderbrekersystemen (zoals BMW BDC/FEM) kan het inleren en programmeren op de bench circa 60 tot 120 minuten in beslag nemen.
         </p>
       </details>
 
@@ -1624,7 +1624,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>De rol van geavanceerde technologie</h3>
       <p>
-        Moderne autosleutels zijn feitelijk kleine computers. Het programmeren van een nieuwe sleutel vereist dat de autoslotenmaker verbinding maakt met het interne netwerk (de CAN-bus) van uw auto om de unieke startcode in te leren. Bij Autosleutel24 maken wij gebruik van de nieuwste CNC-lasersnijmachines en OBD-programmeerapparatuur, waardoor we zelfs de meest beveiligde voertuigen (zoals het MQB-platform van Volkswagen of FBS4 van Mercedes) direct ter plekke kunnen voorzien van een nieuwe sleutel.
+        Moderne autosleutels zijn feitelijk kleine computers. Het programmeren van een nieuwe sleutel vereist dat de autoslotenmaker verbinding maakt met het interne netwerk (de CAN-bus) van uw auto om de unieke startcode in te leren. Bij Autosleutel24 maken wij gebruik van de nieuwste CNC-lasersnijmachines en OBD-programmeerapparatuur, waardoor we zelfs de meest beveiligde voertuigen (zoals het MQB-platform van Volkswagen) direct ter plekke kunnen voorzien van een nieuwe sleutel. Alleen Mercedes met FBS4 (grofweg vanaf 2013/2014) moet naar de dealer.
       </p>
 
       <h3>Veelgestelde vragen over auto slotenmakers</h3>

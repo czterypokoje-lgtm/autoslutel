@@ -18,6 +18,9 @@ async function callTelegram(method: string, payload: Record<string, unknown>): P
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      // Bounded like the email call: a hung Telegram request must not hold
+      // the function open until the platform kills it.
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) {
       console.error(`Telegram ${method} failed:`, await res.text());

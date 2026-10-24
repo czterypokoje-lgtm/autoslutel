@@ -391,10 +391,10 @@ export const DIENSTEN: Service[] = [
     slug: 'smart-key-programmeren',
     title: 'Smart Key / Keyless Entry Programmeren',
     metaTitle: 'Smart Key Programmeren | Keyless Go & Proximity Sleutels',
-    metaDesc: 'Keyless entry & smart keys programmeren op locatie. Specialist in BMW CAS4/FEM/BDC, VAG MQB, Mercedes FBS3/FBS4. 12 maanden garantie. Bel!',
+    metaDesc: 'Keyless entry & smart keys programmeren op locatie. Specialist in BMW CAS4/FEM/BDC, VAG MQB en Mercedes FBS3. 12 maanden garantie. Bel!',
     h1: 'Smart Key & Keyless Entry Programmeren — Proximity Specialist',
     intro: 'Smart key of keyless entry programmeren? Wij werken met dealer-niveau apparatuur voor BMW, Mercedes en VAG op locatie.',
-    system: 'BMW CAS4+ / FEM / BDC / BDC2, Mercedes-Benz FBS3 / FBS4 / EIS / ELV, VAG MQB / MQB48 / MLB / SFD, JLR KVM / RFA / BCM',
+    system: 'BMW CAS4+ / FEM / BDC / BDC2, Mercedes-Benz FBS3 / EIS / ELV, VAG MQB / MQB48 / MLB / SFD, JLR KVM / RFA / BCM',
     priceFrom: `Vanaf €${SITE_CONFIG.prices.smartKey},-`,
     duration: '45–90 minuten',
     directAnswer:
@@ -406,7 +406,7 @@ export const DIENSTEN: Service[] = [
       'Keyless-Go (starten zonder sleutel in de lader) en Keyless Entry testen'
     ],
     faq: [
-      { q: 'Wat is het verschil tussen FBS3 en FBS4 bij Mercedes?', a: 'FBS3 is de oudere generatie (inleersleutels via infrarood). FBS4 is de nieuwste generatie (2014+). Wij hebben speciale hardware (zoals G-Box 3 en AVDI) om ook complexe FBS3-systemen en specifieke FBS4-sleutels succesvol te programmeren.' },
+      { q: 'Wat is het verschil tussen FBS3 en FBS4 bij Mercedes?', a: 'FBS3 is de oudere generatie (inleersleutels via infrarood). FBS4 is de nieuwste generatie (grofweg vanaf 2013/2014). FBS3-sleutels programmeren wij op locatie met dealer-niveau apparatuur. FBS4 kunnen wij niet inleren — dat kan alleen de Mercedes-dealer. Twijfelt u welk systeem uw auto heeft? Stuur ons het kenteken, dan zeggen wij het vooraf.' },
       { q: 'Kan een verloren Keyless sleutel worden misbruikt?', a: 'Nee. Bij het inleren van de nieuwe smart key wissen wij de verloren of gestolen sleutel direct uit het geheugen van het voertuig. De verloren sleutel kan de auto dan niet meer openen of starten.' }
     ],
     relatedSlugs: ['transponder-programmeren', 'afstandsbediening-bijmaken']
