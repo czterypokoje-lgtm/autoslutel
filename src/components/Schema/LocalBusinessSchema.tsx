@@ -91,11 +91,15 @@ export default function LocalBusinessSchema() {
       { '@type': 'City', 'name': 'Bilthoven' },
       { '@type': 'City', 'name': 'Amsterdam-Zuid' },
       { '@type': 'City', 'name': 'Alkmaar' },
-      // Gelderland, matching the Business Profile service area. Rotterdam and
-      // Den Haag were taken out on 24 Oct 2026: the office focuses on Utrecht
-      // and the region around it, and dropped them from Ads and the profile.
+      // Gelderland, matching the Business Profile service area.
       { '@type': 'City', 'name': 'Arnhem', 'sameAs': 'https://en.wikipedia.org/wiki/Arnhem' },
       { '@type': 'City', 'name': 'Apeldoorn', 'sameAs': 'https://en.wikipedia.org/wiki/Apeldoorn' },
+      // Den Haag and its region are back (25 Oct 2026): the owner gets good jobs
+      // there and re-enabled it in Ads. Rotterdam stays out -- too far to drive.
+      { '@type': 'City', 'name': 'Den Haag', 'sameAs': 'https://en.wikipedia.org/wiki/The_Hague' },
+      { '@type': 'City', 'name': 'Zoetermeer' },
+      { '@type': 'City', 'name': 'Delft' },
+      { '@type': 'City', 'name': 'Rijswijk' },
     ],
     priceRange: '€€',
     paymentAccepted: ['Cash', 'Credit Card', 'Bank Transfer', 'iDEAL', 'Pin'],
