@@ -22,6 +22,7 @@ import { BRANDS } from '@/config/brands';
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import { headingsFor } from '@/config/serviceHeadings';
 import { captionFromFilename } from '@/lib/imageCaption';
 import { isFlyer } from '@/lib/jobPhotos';
 import styles from '@/app/diensten/[slug]/page.module.css';
@@ -46,6 +47,7 @@ import path from 'path';
 export default function ServiceLayout({ slug, basePath }: { slug: string; basePath: string }) {
   const service = DIENSTEN.find(s => s.slug === slug);
   if (!service) notFound();
+  const headings = headingsFor(service.slug, service.title);
 
   const p1Cities = CITIES.filter(c => c.priority === 'P1').slice(0, 8);
   const popularBrands = BRANDS.filter(b => b.priority === 'P1').slice(0, 8);
@@ -293,7 +295,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
         {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
         <FeatureCards 
-          title={`Specialist in ${service.title}`}
+          title={`Uw specialist voor ${headings.topic}`}
           subtitle={<><span style={{ color: '#f97316' }}>AutoSleutel24</span> lost het snel voor u op, direct op locatie.</>}
           features={[
               {
@@ -348,9 +350,21 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
             <div className={styles.contentGrid}>
               <div className={styles.mainContent}>
 
+                {/* Answer-first steps: the list Google's AI Overview quotes for "wat moet ik doen als…". */}
+                {headings.steps && (
+                  <div>
+                    <h2>{headings.steps.question}</h2>
+                    <ol className={styles.bulletList}>
+                      {headings.steps.items.map((item) => (
+                        <li key={item.slice(0, 40)}>{item}</li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
                 {/* Section 1: Wanneer Heeft U Dienst Nodig */}
                 <div>
-                  <h2>Wanneer Heeft U {service.title} Nodig?</h2>
+                  <h2>{headings.when}</h2>
                   {/* The direct answer, as ordinary text in the body. It used to be a boxed block in the hero, which pushed the call buttons down; here it still answers the question for anyone (or anything) reading the page. */}
                   {service.directAnswer && <p>{service.directAnswer}</p>}
                   <p>
@@ -411,7 +425,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   </div>
                 ) : (
                   <div>
-                    <h2>Wat Kost {service.title}? — Transparante Prijzen</h2>
+                    <h2>{headings.cost}</h2>
                     <p>
                       Wij geloven in eerlijke en heldere tarieven zonder verborgen kosten achteraf. Omdat wij rechtstreeks vanuit onze volledig uitgeruste mobiele servicebussen werken, bespaart u bij ons tot wel 50% vergeleken met de officiële merkdealer — én u hoeft geen dure wegsleepkosten te betalen!
                     </p>
@@ -545,14 +559,14 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 <details style={{ margin: '2rem 0' }}>
                   <summary style={{ cursor: 'pointer', fontSize: '1.3rem', fontWeight: 800 }}>{`Voor welke merken bieden wij ${service.title}?`}</summary>
                   <BrandsLogoGrid
-                    title={isLost ? 'Uw merk? Wij maken de sleutel ter plaatse' : `Voor Welke Merken Bieden Wij ${service.title}?`}
+                    title={isLost ? 'Uw merk? Wij maken de sleutel ter plaatse' : 'Voor welke automerken komen wij?'}
                     subtitle="Onze programmeerapparatuur en Lishi-openingsgereedschappen ondersteunen meer dan 95% van alle automerken op de Nederlandse wegen. Wij zijn specialist in onder andere:"
                   />
                 </details>
 
                 {/* Section 5: Waar Komen Wij */}
                 <div>
-                  <h2>In Welke Regio&apos;s Bieden Wij {service.title}?</h2>
+                  <h2>{headings.regions}</h2>
                   <p>
                     Met een netwerk van aangesloten autosleutelspecialisten bedienen wij dagelijks een groot werkgebied in Nederland. Wij komen onder meer in:
                   </p>
@@ -606,7 +620,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
                 {/* Section 6: FAQ Accordion */}
                 <div>
-                  <h2>Veelgestelde Vragen over {service.title}</h2>
+                  <h2>Veelgestelde vragen over {headings.topic}</h2>
                   {service.faq.slice(0, 6).map((f, i) => (
                     <details key={i} className={styles.faqItem}>
                       <summary className={styles.faqQuestion}>
@@ -663,7 +677,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
 
             {/* Bottom CTA block */}
             <div className={styles.ctaBlock}>
-              <h2>{service.title} Nodig? Bel Onze Mobiele Spoedservice</h2>
+              <h2>Hulp nodig? Bel onze mobiele spoedservice</h2>
               <p>Geen lange wachttijden, geen dure sleepkosten naar de garage. Wij zijn 24 uur per dag, 7 dagen per week beschikbaar en komen direct naar u toe.</p>
               <div className={styles.ctaBtnsGrid}>
                 <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary} id={`svc-cta-${slug}-phone`}>
@@ -690,7 +704,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                       GERELATEERDE KENNIS &amp; ADVIES
                     </p>
                     <h2 className={styles.relatedBlogsTitle}>
-                      Handige artikelen over {service.title}
+                      Handige artikelen over {headings.topic}
                     </h2>
                     <div className={styles.relatedBlogsGrid}>
                       {relatedPosts.map((post) => (
@@ -723,7 +737,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                 KLANTBEOORDELINGEN
               </p>
               <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2rem 0', textAlign: 'center' }}>
-                Wat Onze Klanten Zeggen over {service.title}
+                Wat klanten zeggen over {headings.topic}
               </h2>
               <GoogleReviewsCta limit={3} />
             </section>
