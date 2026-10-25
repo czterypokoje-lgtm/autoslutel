@@ -810,43 +810,30 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
         {/* ── PARTNER LOCATION ──────────────────────────────────
           A real partner garage in this city (src/config/partnerLocations.ts),
-          named with its address and an auto-loading Google map. The call and
-          appointment buttons go to Autosleutel24, never to the partner. */}
+          shown with its address and an auto-loading Google map. Contact is
+          our own number only -- the partner's phone is never shown. */}
         {partner && (
           <section style={{ padding: '3.5rem 0', background: '#f9fafb' }}>
             <div className="container">
-              <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
-                ONZE PARTNER IN {city.city.toUpperCase()}
-              </p>
-              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1.5rem 0' }}>
-                Autosleutel bijmaken in {city.city} bij {partner.name}
-              </h2>
-              <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 18, overflow: 'hidden', display: 'flex', flexWrap: 'wrap' }}>
-                <div style={{ position: 'relative', background: '#eef1ea', minHeight: 320, flex: '1 1 320px' }}>
+              {/* Owner's layout (25 Oct 2026): heading, address, contact -- next to the map. No partner text. */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2.5rem', alignItems: 'stretch' }}>
+                <div style={{ flex: '1 1 320px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.15, margin: '0 0 1.25rem 0' }}>
+                    Autosleutel bijmaken in {city.city} bij {partner.shortName}.
+                  </h2>
+                  <p style={{ fontSize: '1.05rem', color: '#374151', margin: '0 0 2rem 0', lineHeight: 1.5 }}>
+                    {partner.street}, {partner.postalCode} {partner.locality}
+                  </p>
+                  <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0' }}>Contact</h3>
+                  <p style={{ fontSize: '1.1rem', color: '#374151', margin: '0 0 0.6rem 0' }}>
+                    Mobiel: <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: '#0f172a', fontWeight: 600 }}>{SITE_CONFIG.phone}</a>
+                  </p>
+                </div>
+                <div style={{ flex: '1 1 380px', minHeight: 380, borderRadius: 12, overflow: 'hidden', border: '1px solid #e5e7eb' }}>
                   <PartnerGarageMap
                     query={partnerMapsQuery(partner)}
-                    title={`${partner.name} op Google Maps — ${partner.street}, ${partner.district ?? partner.locality}`}
+                    title={`Kaart: ${partner.street}, ${partner.postalCode} ${partner.locality}`}
                   />
-                </div>
-                <div style={{ padding: '2rem 1.9rem', display: 'flex', flexDirection: 'column', flex: '1 1 320px' }}>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.3rem' }}>{partner.name}</div>
-                  <div style={{ fontSize: '0.92rem', color: '#6b7280', marginBottom: '1.1rem', lineHeight: 1.5 }}>
-                    {partner.street}<br />{partner.postalCode} {partner.locality}{partner.district ? ` (${partner.district})` : ''}
-                  </div>
-                  <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(partnerMapsQuery(partner))}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.88rem', fontWeight: 600, color: '#2563eb', marginBottom: '1.1rem' }}>
-                    Openen in Google Maps →
-                  </a>
-                  <p style={{ fontSize: '0.92rem', color: '#6b7280', lineHeight: 1.6, marginBottom: '1.4rem' }}>
-                    {partner.intro}
-                  </p>
-                  <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-                    <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', background: 'var(--orange-500)', color: '#fff', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', borderRadius: 10, padding: '0.95rem 1.2rem' }}>
-                      Bel Autosleutel24: {SITE_CONFIG.phone}
-                    </a>
-                    <Link href="/afspraak" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', background: 'transparent', color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', borderRadius: 10, padding: '0.95rem 1.2rem', border: '1.5px solid var(--orange-500)' }}>
-                      Maak een afspraak
-                    </Link>
-                  </div>
                 </div>
               </div>
             </div>
@@ -867,7 +854,6 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                     addressLocality: partner.locality,
                     addressCountry: 'NL',
                   },
-                  ...(partner.telephone ? { telephone: partner.telephone } : {}),
                   ...(partner.url ? { url: partner.url } : {}),
                 }),
               }}
