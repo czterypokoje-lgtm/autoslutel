@@ -528,6 +528,11 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                   {city.avgJobDuration && <> — gemiddelde duur ter plaatse: {city.avgJobDuration}.</>}
                 </p>
               )}
+              {city.localGuide?.map((para) => (
+                <p key={para.slice(0, 40)} style={{ color: 'var(--gray-700)', lineHeight: 1.7, marginTop: '1rem' }}>
+                  {para}
+                </p>
+              ))}
             </div>
           </section>
         )}
