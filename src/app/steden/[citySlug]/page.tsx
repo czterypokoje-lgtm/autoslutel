@@ -46,9 +46,7 @@ const SeoComponents: Record<string, React.FC> = {
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import PartnerGarageMap from '@/components/PartnerGarageMap';
-
-/* Plain link to the partner garage on Google Maps; lives here, not in the client component, so this server page gets a string. */
-const PARTNER_GARAGE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Garage NRD, Draaierweg 10, 1032 KS Amsterdam')}`;
+import { partnerForCity, partnerMapsQuery } from '@/config/partnerLocations';
 
 // Haversine distance formula
 function deg2rad(deg: number) {
@@ -288,6 +286,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
     ],
   };
 
+  const partner = partnerForCity(city.slug);
   const cityFaqs = getFaqForCity(city.city, arrival);
   const mappedFaqs = cityFaqs.map(f => ({ question: f.q, answer: f.a }));
 
@@ -809,38 +808,36 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
 
 
 
-        {/* ── PARTNERGARAGE (Amsterdam only) ──────────────────────
-          Garage NRD is a real, named, independently-verified business —
-          Draaierweg 10, 1032 KS Amsterdam. The call and appointment buttons
-          both go to Autosleutel24, never to the garage: naming a real
-          partner at a real address is what makes this a legitimate local
-          citation; an unnamed pin would not be. Keyed by city.slug since
-          there is only the one partnership today — add more entries here
-          if that changes, no need to build a lookup table for a single
-          case. */}
-        {city.slug === 'amsterdam' && (
+        {/* ── PARTNER LOCATION ──────────────────────────────────
+          A real partner garage in this city (src/config/partnerLocations.ts),
+          named with its address and an auto-loading Google map. The call and
+          appointment buttons go to Autosleutel24, never to the partner. */}
+        {partner && (
           <section style={{ padding: '3.5rem 0', background: '#f9fafb' }}>
             <div className="container">
               <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
-                WERKGEBIED AMSTERDAM
+                ONZE PARTNER IN {city.city.toUpperCase()}
               </p>
               <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1.5rem 0' }}>
-                In samenwerking met onze partnergarage
+                Autosleutel bijmaken in {city.city} bij {partner.name}
               </h2>
               <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 18, overflow: 'hidden', display: 'flex', flexWrap: 'wrap' }}>
-                <div style={{ position: 'relative', background: '#eef1ea', minHeight: 280, flex: '1 1 320px' }}>
-                  <PartnerGarageMap />
+                <div style={{ position: 'relative', background: '#eef1ea', minHeight: 320, flex: '1 1 320px' }}>
+                  <PartnerGarageMap
+                    query={partnerMapsQuery(partner)}
+                    title={`${partner.name} op Google Maps — ${partner.street}, ${partner.district ?? partner.locality}`}
+                  />
                 </div>
                 <div style={{ padding: '2rem 1.9rem', display: 'flex', flexDirection: 'column', flex: '1 1 320px' }}>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.3rem' }}>Garage NRD</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.3rem' }}>{partner.name}</div>
                   <div style={{ fontSize: '0.92rem', color: '#6b7280', marginBottom: '1.1rem', lineHeight: 1.5 }}>
-                    Draaierweg 10<br />1032 KS Amsterdam (Amsterdam-Noord)
+                    {partner.street}<br />{partner.postalCode} {partner.locality}{partner.district ? ` (${partner.district})` : ''}
                   </div>
-                  <a href={PARTNER_GARAGE_MAPS_URL} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.88rem', fontWeight: 600, color: '#2563eb', marginBottom: '1.1rem' }}>
+                  <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(partnerMapsQuery(partner))}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.88rem', fontWeight: 600, color: '#2563eb', marginBottom: '1.1rem' }}>
                     Openen in Google Maps →
                   </a>
                   <p style={{ fontSize: '0.92rem', color: '#6b7280', lineHeight: 1.6, marginBottom: '1.4rem' }}>
-                    Voor spoedgevallen in Amsterdam werken wij samen met <strong style={{ color: '#0f172a' }}>Garage NRD</strong>, zodat onze monteur ook dicht bij het centrum snel ter plaatse kan zijn. Rechtstreeks contact met Autosleutel24 blijft de snelste weg naar een prijs en een afspraak.
+                    {partner.intro}
                   </p>
                   <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
                     <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', background: 'var(--orange-500)', color: '#fff', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', borderRadius: 10, padding: '0.95rem 1.2rem' }}>
@@ -849,9 +846,6 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
                     <Link href="/afspraak" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.55rem', background: 'transparent', color: 'var(--orange-500)', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', borderRadius: 10, padding: '0.95rem 1.2rem', border: '1.5px solid var(--orange-500)' }}>
                       Maak een afspraak
                     </Link>
-                    <span style={{ fontSize: '0.76rem', color: '#9ca3af', textAlign: 'center' }}>
-                      Beide knoppen gaan naar Autosleutel24 — nooit naar de garage.
-                    </span>
                   </div>
                 </div>
               </div>
@@ -861,20 +855,20 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify({
                   '@context': 'https://schema.org',
-                  // A garage, under its own @id: a bare LocalBusiness with an
-                  // address on this page read as a second Autosleutel24 location.
-                  '@type': 'AutoRepair',
-                  '@id': 'https://www.garage-nrd.nl/#business',
-                  name: 'Garage NRD',
+                  // The partner under its own type and @id: a bare LocalBusiness
+                  // with an address on this page would read as a second Autosleutel24.
+                  '@type': partner.schemaType,
+                  '@id': `${partner.url ?? `${SITE_CONFIG.domain}/steden/${city.slug}`}#partner`,
+                  name: partner.name,
                   address: {
                     '@type': 'PostalAddress',
-                    streetAddress: 'Draaierweg 10',
-                    postalCode: '1032 KS',
-                    addressLocality: 'Amsterdam',
+                    streetAddress: partner.street,
+                    postalCode: partner.postalCode,
+                    addressLocality: partner.locality,
                     addressCountry: 'NL',
                   },
-                  telephone: '+31206362339',
-                  url: 'https://www.garage-nrd.nl/',
+                  ...(partner.telephone ? { telephone: partner.telephone } : {}),
+                  ...(partner.url ? { url: partner.url } : {}),
                 }),
               }}
             />
