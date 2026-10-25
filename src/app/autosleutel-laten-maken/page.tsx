@@ -27,8 +27,9 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
  */
 
 export const metadata: Metadata = {
-  title: { absolute: 'Autosleutel Laten Maken: Dealer, Slotenmaker of Mobiel?' },
-  description: `Autosleutel laten maken? Vergelijk dealer, slotenmaker en mobiele specialist op prijs en tijd. Bij ons op locatie, met de prijs vooraf en 12 maanden garantie.`,
+  // "nieuwe autosleutel laten maken" is 320 searches/month in NL, "autosleutel op locatie" 110 (Keyword Planner, Oct 2026).
+  title: { absolute: 'Nieuwe Autosleutel Laten Maken: Dealer of Op Locatie?' },
+  description: `Nieuwe autosleutel laten maken? Vergelijk de dealer met een specialist die op locatie komt: prijs, tijd en garantie. Bij ons de prijs vooraf.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/autosleutel-laten-maken`,
     languages: {
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${SITE_CONFIG.domain}/autosleutel-laten-maken`,
-    title: 'Autosleutel laten maken: dealer, slotenmaker of mobiel?',
+    title: 'Nieuwe autosleutel laten maken: dealer of op locatie?',
     description:
       'Drie manieren om een autosleutel te laten maken, wat elke route kost en hoe lang het duurt.',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Autosleutel laten maken — Autosleutel24' }],
@@ -101,8 +102,8 @@ export default function AutosleutelLatenMaken() {
 
       <SplitHero
         crumbs={[{ label: 'Home', href: '/' }, { label: 'Autosleutel laten maken' }]}
-        titleTop="Autosleutel Laten Maken?"
-        titleAccent="Kies de Route die bij Uw Situatie Past"
+        titleTop="Nieuwe Autosleutel Laten Maken?"
+        titleAccent="Bij de Dealer of Op Locatie"
         lead="Een nieuwe autosleutel laat u maken bij de dealer, bij een slotenmaker of bij een specialist die naar u toe komt. Het verschil zit in tijd, prijs en of uw auto ergens naartoe moet."
         facts={<HeroQuickFacts price={`Vanaf €${SITE_CONFIG.prices.transponder},-`} />}
         image={{

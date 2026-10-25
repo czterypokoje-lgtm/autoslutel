@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: {
     absolute: 'Over Autosleutel24 | Ervaren Specialist',
   },
-  description: `Maak kennis met Autosleutel24. Onder leiding van Berkan Acarol bieden wij professionele, mobiele autosleutelservice in de gehele Randstad en Midden-Nederland.`,
+  description: `Maak kennis met Autosleutel24: mobiele autosleutelservice vanuit het Gooi, dagelijks in Utrecht en omgeving, Amersfoort, Arnhem, Apeldoorn en Amsterdam.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/over-ons`,
     languages: {
@@ -116,7 +116,7 @@ export default function OverOnsPage() {
           <div>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.6rem' }}>Onze Mobiele Service<br/>📍 Actief in de Hele Randstad</h2>
             <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>Wij werken volledig mobiel: onze servicebussen zijn rijdende werkplaatsen, met alle apparatuur en sleutels aan boord.</p>
-            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Wij rijden dagelijks uit naar klanten in de hele Randstad en Midden-Nederland. Zo helpen wij snel en op locatie in onder andere Amsterdam, Rotterdam, Den Haag, Amersfoort, Almere en het Gooi.</p>
+            <p style={{ color: 'var(--gray-700)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>Vanuit het Gooi rijden wij dagelijks naar klanten in Utrecht en omgeving: Nieuwegein, Zeist, Houten en Amersfoort. Verder helpen wij op locatie in Arnhem, Apeldoorn, Amsterdam, Almere en het Gooi zelf.</p>
           </div>
           <div>
             <img 
