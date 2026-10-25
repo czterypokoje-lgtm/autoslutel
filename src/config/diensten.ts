@@ -119,6 +119,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'sleutel-in-auto',
+    heroImage: { src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp', alt: "Monteur van Autosleutel24 opent een autodeur schadevrij nadat de sleutel in de auto is blijven liggen" },
     title: 'Sleutel in Auto',
     metaTitle: 'Sleutel in Auto Laten Liggen? 30-60 Min Ter Plaatse | 24/7',
     metaDesc: 'Sleutel in de auto laten liggen en deuren op slot? Binnen 30-60 min ter plaatse, wij openen uw auto schadevrij. 24/7 spoedhulp. Bel nu!',
@@ -146,6 +147,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'deur-dichtgevallen',
+    heroImage: { src: '/images/seo/auto-slotenmaker-bmw-openen-amsterdam.webp', alt: "Geopende BMW na een dichtgevallen deur, met de autosleutel in de hand" },
     title: 'Deur Dichtgevallen',
     metaTitle: 'Autodeur Dichtgevallen? 30-60 Min Ter Plaatse | 24/7',
     metaDesc: 'Deur van de auto dichtgevallen en de sleutel ligt binnen? Binnen 30-60 min ter plaatse, schadevrij geopend. 24/7 spoedhulp. Bel nu!',
@@ -173,6 +175,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'kofferbak-openen',
+    heroImage: { src: '/images/seo/auto_deur_openen_slotenmaker_utrecht_schadevrij.webp', alt: "Monteur van Autosleutel24 opent een auto schadevrij op locatie" },
     title: 'Kofferbak Openen',
     metaTitle: 'Kofferbak Dicht, Sleutel Binnen? 30-60 Min Ter Plaatse',
     metaDesc: 'Sleutel in de kofferbak en de auto zit op slot? Binnen 30-60 min ter plaatse, wij openen uw kofferbak schadevrij. Bel nu voor spoedhulp!',
@@ -200,6 +203,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'sleutel-afgebroken-in-slot',
+    heroImage: { src: '/images/seo/autosleutels-repareren-inventaris-amsterdam.webp', alt: "Monteur werkt aan een autosleutel in de bankschroef om een afgebroken sleutel te vervangen" },
     title: 'Sleutel Afgebroken in Slot',
     metaTitle: 'Autosleutel Afgebroken in Slot? Eruit + Nieuwe Sleutel',
     metaDesc: 'Autosleutel afgebroken in het deurslot of contactslot? Wij halen de afgebroken sleutel schadevrij uit het slot en maken direct een nieuwe sleutel ter plaatse.',
@@ -341,6 +345,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'transponder-programmeren',
+    heroImage: { src: '/images/seo/reserve_autosleutel_transponder_programmeren_utrecht.webp', alt: "Klapsleutel met transponderchip, net geprogrammeerd door Autosleutel24" },
     title: 'Transponder Programmeren',
     metaTitle: 'Transponder Sleutel Programmeren | Chip Inleren op Locatie',
     metaDesc: 'Transponder sleutel programmeren op locatie. Specialist in Megamos ID48, PCF7936, Hitag Pro & DST-AES chips. 12 maanden garantie. Bel nu!',
@@ -365,6 +370,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'afstandsbediening-bijmaken',
+    heroImage: { src: '/images/seo/autosleutel_bijmaken_utrecht_car_keys.webp', alt: "Hand met een bijgemaakte autosleutel met afstandsbediening" },
     title: 'Afstandsbediening Bijmaken',
     metaTitle: 'Autosleutel met Afstandsbediening Bijmaken | 30-60 Min',
     metaDesc: 'Wat is de prijs autosleutel bijmaken met afstandsbediening? Bekijk onze tarieven. Wij programmeren elk type autosleutel op locatie. 12 mnd garantie.',
@@ -389,6 +395,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'smart-key-programmeren',
+    heroImage: { src: '/images/seo/smart-key-keyless-programmeren-autosleutel24-utrecht.webp', alt: "Start-stopknop van een auto met keyless entry, na het programmeren van een smart key" },
     title: 'Smart Key / Keyless Entry Programmeren',
     metaTitle: 'Smart Key Programmeren | Keyless Go & Proximity Sleutels',
     metaDesc: 'Keyless entry & smart keys programmeren op locatie. Specialist in BMW CAS4/FEM/BDC, VAG MQB en Mercedes FBS3. 12 maanden garantie. Bel!',
@@ -413,6 +420,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'reservesleutel-maken',
+    heroImage: { src: '/images/seo/auto-slotenmaker-audi-inleren-amersfoort.webp', alt: "Originele Audi-sleutel en nieuw gemaakte reservesleutel voor het dashboard" },
     title: 'Reservesleutel Laten Maken',
     metaTitle: 'Reservesleutel Auto Laten Maken | 12 Mnd Garantie | Mobiel',
     metaDesc: 'Extra reservesleutel voor uw auto laten maken? Wij programmeren reservesleutels voor alle merken op locatie. Goedkoper dan dealer. Bel nu!',
@@ -438,6 +446,7 @@ export const DIENSTEN: Service[] = [
 
   {
     slug: 'noodopening-auto',
+    heroImage: { src: '/images/seo/auto-slotenmaker-volkswagen-golf-almere.webp', alt: "Volkswagen Golf weer open na een noodopening, met de autosleutels erbij" },
     title: 'Noodopening',
     metaTitle: 'Noodopening Auto | 30-60 Min Ter Plaatse | 24/7 Spoed',
     metaDesc: 'Noodopening van uw auto nodig? Binnen 30-60 min ter plaatse, schadevrij geopend door experts. 24/7 spoed. Bel direct!',
@@ -467,11 +476,12 @@ export const DIENSTEN: Service[] = [
   // ── 4. BATTERIJ VERVANGEN ─────────────────────────────────
   {
     slug: 'batterij-vervangen',
+    heroImage: { src: '/images/seo/autosleutel_reparatie_hero.webp', alt: "Geopende autosleutels met zichtbare knoopcelbatterij, klaar om te vervangen" },
     title: 'Batterij Vervangen',
     metaTitle: 'Autosleutel Batterij Vervangen | Binnen 30-60 Min',
     metaDesc: 'Autosleutel batterij leeg? Wij vervangen uw autosleutel batterij op locatie voor een vaste prijs, vooraf afgesproken. Varta, Panasonic, Duracell. Bel!',
     h1: 'Batterij Autosleutel Vervangen — Vaste Prijs op Locatie',
-    intro: 'Sleutelbatterij leeg of reageert traag? Wij vervangen hem op locatie met A-merk batterij voor een vaste prijs van €15,-–20.',
+    intro: 'Sleutelbatterij leeg of reageert traag? Wij vervangen hem op locatie met A-merk batterij voor een vaste prijs van €15,- tot €20,-.',
     system: 'Knoopcellen: CR2032, CR2025, CR1620, CR1616, CR2450 (Duracell, Panasonic, Varta)',
     priceFrom: 'Vaste prijs €15,- – €20,-',
     duration: '5–10 minuten',
@@ -495,6 +505,7 @@ export const DIENSTEN: Service[] = [
   // ── 5. AUTOSLEUTEL REPARATIE ──────────────────────────────
   {
     slug: 'autosleutels-repareren',
+    heroImage: { src: '/images/seo/autosleutel_reparatie_utrecht_amsterdam_mobiel.webp', alt: "Monteur repareert een autosleutel op de werkbank" },
     title: 'Autosleutels Repareren',
     metaTitle: 'Autosleutel Kapot? Repareren op Locatie | Binnen 30-60 Min',
     metaDesc: 'Autosleutel kapot? Wij repareren uw autosleutel op locatie in Utrecht en omstreken. Nieuwe behuizing, knoppen solderen, batterij vervangen. Bel direct!',
@@ -528,6 +539,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'behuizing-vervangen',
+    heroImage: { src: '/images/seo/autosleutels-repareren-onderdelen-almere.webp', alt: "Bakken met nieuwe sleutelbehuizingen en onderdelen voor autosleutels" },
     title: 'Behuizing Vervangen',
     metaTitle: 'Sleutelbehuizing Vervangen Auto | Nieuwe Sleutelbehuizing',
     metaDesc: 'Autosleutel behuizing kapot of versleten? Wij vervangen uw sleutelbehuizing ter plaatse door een nieuw, stevig exemplaar van OEM kwaliteit.',
@@ -555,6 +567,7 @@ export const DIENSTEN: Service[] = [
   },
   {
     slug: 'knoppen-repareren',
+    heroImage: { src: '/images/seo/autosleutels-repareren-werkplaats-utrecht.webp', alt: "Werkbank met soldeerstation voor het repareren van sleutelknoppen" },
     title: 'Knoppen Repareren',
     metaTitle: 'Autosleutel Knoppen Kapot? Repareren | Micro-Switches',
     metaDesc: 'Werken de knoppen van uw autosleutel niet meer? Wij solderen nieuwe micro-switches op de printplaat. Snel klaar op locatie. Bel nu!',
