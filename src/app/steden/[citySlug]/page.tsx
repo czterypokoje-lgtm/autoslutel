@@ -45,6 +45,10 @@ const SeoComponents: Record<string, React.FC> = {
 
 import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
+import PartnerGarageMap from '@/components/PartnerGarageMap';
+
+/* Plain link to the partner garage on Google Maps; lives here, not in the client component, so this server page gets a string. */
+const PARTNER_GARAGE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Garage NRD, Draaierweg 10, 1032 KS Amsterdam')}`;
 
 // Haversine distance formula
 function deg2rad(deg: number) {
@@ -825,31 +829,16 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               </h2>
               <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 18, overflow: 'hidden', display: 'flex', flexWrap: 'wrap' }}>
                 <div style={{ position: 'relative', background: '#eef1ea', minHeight: 280, flex: '1 1 320px' }}>
-                  <svg viewBox="0 0 400 280" width="100%" height="100%" style={{ display: 'block' }} role="img" aria-label="Kaart met locatie van Garage NRD, Draaierweg 10, Amsterdam-Noord">
-                    <rect width="400" height="280" fill="#eef1ea" />
-                    <path d="M-20 50 Q 120 5 260 60 T 440 50 L440 100 Q 300 135 180 100 T -20 105 Z" fill="#d7e8f2" />
-                    <g stroke="#fff" strokeWidth="7" fill="none" strokeLinecap="round">
-                      <path d="M0 130 L400 138" />
-                      <path d="M60 0 L90 280" />
-                      <path d="M230 0 L210 280" />
-                    </g>
-                    <text x="200" y="22" textAnchor="middle" fontSize="11" fontWeight="700" fill="#6b7280" opacity="0.8" fontFamily="var(--ff-body, sans-serif)">AMSTERDAM-NOORD</text>
-                    <text x="140" y="85" textAnchor="middle" fontSize="10" fill="#6b7280" opacity="0.6" fontStyle="italic" fontFamily="var(--ff-body, sans-serif)">het IJ</text>
-                    <g transform="translate(206 36)">
-                      <circle r="15" fill="var(--orange-500)" opacity="0.18" />
-                      <path d="M0 -22 C 11 -22 19 -14 19 -3 C 19 11 0 24 0 24 C 0 24 -19 11 -19 -3 C -19 -14 -11 -22 0 -22 Z" fill="var(--orange-500)" stroke="#fff" strokeWidth="2" />
-                      <circle cy="-3" r="6" fill="#fff" />
-                    </g>
-                  </svg>
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(255,255,255,0.92)', borderTop: '1px solid #e5e7eb', padding: '0.6rem 0.9rem', fontSize: '0.72rem', color: '#6b7280' }}>
-                    Draaierweg 10, Amsterdam-Noord
-                  </div>
+                  <PartnerGarageMap />
                 </div>
                 <div style={{ padding: '2rem 1.9rem', display: 'flex', flexDirection: 'column', flex: '1 1 320px' }}>
                   <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.3rem' }}>Garage NRD</div>
                   <div style={{ fontSize: '0.92rem', color: '#6b7280', marginBottom: '1.1rem', lineHeight: 1.5 }}>
                     Draaierweg 10<br />1032 KS Amsterdam (Amsterdam-Noord)
                   </div>
+                  <a href={PARTNER_GARAGE_MAPS_URL} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.88rem', fontWeight: 600, color: '#2563eb', marginBottom: '1.1rem' }}>
+                    Openen in Google Maps →
+                  </a>
                   <p style={{ fontSize: '0.92rem', color: '#6b7280', lineHeight: 1.6, marginBottom: '1.4rem' }}>
                     Voor spoedgevallen in Amsterdam werken wij samen met <strong style={{ color: '#0f172a' }}>Garage NRD</strong>, zodat onze monteur ook dicht bij het centrum snel ter plaatse kan zijn. Rechtstreeks contact met Autosleutel24 blijft de snelste weg naar een prijs en een afspraak.
                   </p>
