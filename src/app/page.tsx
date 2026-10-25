@@ -127,7 +127,7 @@ export default function HomePage() {
           <div className={styles.heroTopContent}>
             <HeroTrustBadge />
             <h1>
-              Autosleutel Kwijt of Defect?<br />
+              Nieuwe Autosleutel Bijmaken op Locatie in Utrecht<br />
               <span style={{ color: 'var(--orange-500)' }}>Binnen 30–60 Min Ter Plaatse!</span>
             </h1>
             <p className={styles.heroSplitLead}>
