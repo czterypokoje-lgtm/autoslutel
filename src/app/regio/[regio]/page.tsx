@@ -163,7 +163,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
 
       <section className="section">
         <div className="container" style={{ maxWidth: 960 }}>
-          <h2 style={{ marginBottom: '1rem' }}>Steden in {region.name} waar wij komen</h2>
+          <h2 style={{ marginBottom: '1rem' }}>Steden in de provincie {region.name} waar wij komen</h2>
           <p style={{ color: 'var(--gray-600)', lineHeight: 1.7, marginBottom: '1.5rem' }}>
             Kies uw stad voor de wijken, de werkwijze en de prijs. Staat uw plaats er niet bij, bel dan
             gewoon: wij komen ook naar de dorpen en gemeenten eromheen.

@@ -26,7 +26,9 @@ export const SERVICE_REGIONS: readonly ServiceRegion[] = [
   {
     slug: 'utrecht',
     name: 'Utrecht',
-    label: 'Utrecht',
+    // "provincie": a bare "Utrecht" reads as the city, while this page lists
+    // Amersfoort, Veenendaal and the rest of the province.
+    label: 'de provincie Utrecht',
     intro: 'Utrecht en de omliggende gemeenten zijn ons kernwerkgebied: van Houten en Zeist tot Amersfoort en Woerden.',
   },
   {
