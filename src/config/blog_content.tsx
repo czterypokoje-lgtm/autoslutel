@@ -741,7 +741,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           <tr>
             <th>Merk / Groep</th>
             <th>Type Sleutel</th>
-            <th>Gemiddelde Prijs Slotenmaker</th>
+            <th>Prijs Autosleutel24</th>
             <th>Dealerprijs indicatie</th>
           </tr>
         </thead>
@@ -749,31 +749,31 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
           <tr>
             <td><strong>Volkswagen / Audi / Seat</strong></td>
             <td>Transponder / Smart Key (MQB)</td>
-            <td>€125,- – €199,-</td>
+            <td>Vanaf €{SITE_CONFIG.prices.transponder},- (smart key vanaf €{SITE_CONFIG.prices.smartKey},-)</td>
             <td>€300,- – €450,-</td>
           </tr>
           <tr>
             <td><strong>BMW / Mini</strong></td>
             <td>Smart Key (CAS/FEM/BDC)</td>
-            <td>€199,- – €249,-</td>
+            <td>Vanaf €{SITE_CONFIG.prices.smartKey},-</td>
             <td>€350,- – €550,-</td>
           </tr>
           <tr>
             <td><strong>Mercedes-Benz</strong></td>
-            <td>Infrarood Sleutel (FBS3/FBS4)</td>
-            <td>€199,- – €269,-</td>
+            <td>Infrarood Sleutel (FBS3; FBS4 vanaf ±2013/2014 alleen via de dealer)</td>
+            <td>Vanaf €{SITE_CONFIG.prices.smartKey},- (FBS3)</td>
             <td>€400,- – €600,-</td>
           </tr>
           <tr>
             <td><strong>Toyota / Lexus</strong></td>
             <td>Proximity Smart Key</td>
-            <td>€189,- – €239,-</td>
+            <td>Vanaf €{SITE_CONFIG.prices.smartKey},-</td>
             <td>€350,- – €480,-</td>
           </tr>
           <tr>
             <td><strong>Ford / Opel / Peugeot</strong></td>
             <td>Afstandsbediening Klapsleutel</td>
-            <td>€129,- – €179,-</td>
+            <td>Vanaf €{SITE_CONFIG.prices.klapsleutel},-</td>
             <td>€250,- – €380,-</td>
           </tr>
         </tbody>
@@ -972,10 +972,9 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         De kosten voor het bijmaken van een sleutel bij verlies van alle sleutels (All Keys Lost) liggen logischerwijs hoger dan wanneer u een reservesleutel laat kopiëren op basis van een werkend origineel. Dit komt door de benodigde noodopening en het decodeerwerk. Gemiddeld kunt u uitgaan van de volgende tarieven:
       </p>
       <ul>
-        <li><strong>Standaard autosleutel (met transponder chip):</strong> Vanaf €125,- tot €249,-. Ideaal als goedkope noodoplossing.</li>
-        <li><strong>Afstandsbediening klapsleutel (centrale vergrendeling):</strong> Vanaf €{SITE_CONFIG.prices.klapsleutel},- tot €349,- voor de meeste gangbare merken (Opel, Ford, Peugeot, Renault, VW).</li>
-        <li><strong>Smart Key / Keyless Entry (startknop):</strong> Vanaf €249,- tot €349,- voor premium merken (BMW, Audi, Toyota, Volvo).</li>
-        <li><strong>Complexe immobilizers (o.a. nieuwe VAG MQB48):</strong> Vanaf €299,- tot €599,- vanwege de noodzaak om online dealer-tokens aan te vragen of modules op de bench te programmeren. Mercedes met FBS4 (grofweg vanaf 2013/2014) kan alleen de dealer inleren.</li>
+        <li><strong>Alle sleutels kwijt (noodopening, nieuwe sleutel en oude sleutels wissen):</strong> Vanaf €{SITE_CONFIG.prices.allKeysLost},-.</li>
+        <li><strong>Ter vergelijking, met een werkend origineel:</strong> reservesleutel vanaf €{SITE_CONFIG.prices.transponder},-, klapsleutel met afstandsbediening vanaf €{SITE_CONFIG.prices.klapsleutel},-, smart key vanaf €{SITE_CONFIG.prices.smartKey},-.</li>
+        <li><strong>Complexe immobilizers (o.a. nieuwe VAG MQB48):</strong> prijs vooraf op aanvraag, omdat er online dealer-tokens of bench-programmering nodig kunnen zijn. Mercedes met FBS4 (grofweg vanaf 2013/2014) kan alleen de dealer inleren.</li>
       </ul>
 
       <h3>Welke documenten heeft u nodig?</h3>
@@ -991,7 +990,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
       <details style={{ borderBottom: '1px solid #e2e8f0', padding: '1rem 0' }}>
         <summary style={{ fontWeight: 700, cursor: 'pointer' }}>Wat kost een autosleutel bijmaken zonder origineel?</summary>
         <p style={{ marginTop: '0.5rem', color: '#475569' }}>
-          De tarieven starten vanaf €125,- voor oudere auto&apos;s en eenvoudige sleutels. Voor moderne smart keys ligt de prijs gemiddeld tussen de €299,- en €499,-. Dit is inclusief de noodopening ter plaatse, het decoderen van het slot en het inleren van de chip.
+          Zonder origineel (alle sleutels kwijt) starten de tarieven vanaf €{SITE_CONFIG.prices.allKeysLost},-, inclusief de noodopening ter plaatse, het decoderen van het slot en het inleren van de chip. Voor smart keys hangt de prijs af van merk en model; u hoort de exacte prijs vooraf.
         </p>
       </details>
 
@@ -1035,7 +1034,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
                 "name": "Wat kost een autosleutel bijmaken zonder origineel?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "De kosten beginnen vanaf €149,- voor eenvoudige sleutels en liggen gemiddeld tussen de €299,- en €499,- voor smart keys. Dit is inclusief noodopening en programmering ter plaatse."
+                  "text": `Zonder origineel (alle sleutels kwijt) beginnen de kosten vanaf €${SITE_CONFIG.prices.allKeysLost},-, inclusief noodopening en programmering ter plaatse. Voor smart keys hangt de prijs af van merk en model; u hoort de exacte prijs vooraf.`
                 }
               },
               {
@@ -1094,7 +1093,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
             <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
               <th style={{ padding: '1rem' }}>Merk / Technologie</th>
               <th style={{ padding: '1rem' }}>Kosten Dealer (excl. slepen)</th>
-              <th style={{ padding: '1rem' }}>Kosten Mobiele Specialist (all-in)</th>
+              <th style={{ padding: '1rem' }}>Autosleutel24 (all-in)</th>
               <th style={{ padding: '1rem' }}>Gemiddelde Besparing</th>
             </tr>
           </thead>
@@ -1102,37 +1101,37 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Volkswagen Golf 7 (Klapsleutel)</strong></td>
               <td style={{ padding: '1rem' }}>€280,- – €360,-</td>
-              <td style={{ padding: '1rem' }}>€125,- – €179,-</td>
+              <td style={{ padding: '1rem' }}>Vanaf €{SITE_CONFIG.prices.klapsleutel},-</td>
               <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>BMW 3-Serie (F30 Smart Key)</strong></td>
               <td style={{ padding: '1rem' }}>€380,- – €480,-</td>
-              <td style={{ padding: '1rem' }}>€199,- – €249,-</td>
+              <td style={{ padding: '1rem' }}>Vanaf €{SITE_CONFIG.prices.smartKey},-</td>
               <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Mercedes C-Klasse (FBS3 Infrarood)</strong></td>
               <td style={{ padding: '1rem' }}>€410,- – €520,-</td>
-              <td style={{ padding: '1rem' }}>€199,- – €269,-</td>
+              <td style={{ padding: '1rem' }}>Vanaf €{SITE_CONFIG.prices.smartKey},-</td>
               <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Opel Corsa E (Afstandsbediening)</strong></td>
               <td style={{ padding: '1rem' }}>€220,- – €290,-</td>
-              <td style={{ padding: '1rem' }}>€129,- – €159,-</td>
+              <td style={{ padding: '1rem' }}>Vanaf €{SITE_CONFIG.prices.remote},-</td>
               <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Toyota Yaris (Proximity Smart Key)</strong></td>
               <td style={{ padding: '1rem' }}>€350,- – €450,-</td>
-              <td style={{ padding: '1rem' }}>€189,- – €229,-</td>
+              <td style={{ padding: '1rem' }}>Vanaf €{SITE_CONFIG.prices.smartKey},-</td>
               <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
             <tr style={{ borderBottom: '1px solid #e2e8f0' }}>
               <td style={{ padding: '1rem' }}><strong>Ford Transit (Bedrijfswagen smart key)</strong></td>
               <td style={{ padding: '1rem' }}>€320,- – €420,-</td>
-              <td style={{ padding: '1rem' }}>€169,- – €219,-</td>
+              <td style={{ padding: '1rem' }}>Vanaf €{SITE_CONFIG.prices.smartKey},-</td>
               <td style={{ padding: '1rem', color: '#22c55e', fontWeight: 700 }}>Flinke besparing</td>
             </tr>
           </tbody>
@@ -1175,7 +1174,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         <br />
         <em>Dealer-aanpak:</em> De auto moet worden weggesleept naar de dealer in Utrecht (€150,-). De dealer bestelt de sleutel in Duitsland. Levertijd: 5 werkdagen. Het gezin moet vervangend vervoer regelen of de vakantie afbreken. Kosten: €350,- sleutel + €150,- slepen + €200,- vervangend vervoer = €700,-.
         <br />
-        <em>Slotenmaker-aanpak:</em> Onze monteur komt binnen 30 minuten naar de recreatieplas. We openen de Passat schadevrij en programmeren een nieuwe smart key. Binnen een uur rijdt het gezin weer verder. Kosten: €199,- all-in. <strong>Totale besparing: €501,- en geen vakantiestress.</strong>
+        <em>Slotenmaker-aanpak:</em> Onze monteur komt binnen 30 minuten naar de recreatieplas. We openen de Passat schadevrij en programmeren een nieuwe smart key. Binnen een uur rijdt het gezin weer verder. Kosten: vanaf €{SITE_CONFIG.prices.allKeysLost},- all-in. <strong>Totale besparing: ruim €{700 - Number(SITE_CONFIG.prices.allKeysLost)},- en geen vakantiestress.</strong>
       </p>
 
       <h4>Scenario 2: De reservesleutel voor een student</h4>
@@ -1193,7 +1192,7 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         <br />
         <em>Dealer-aanpak:</em> De bus moet naar de dealer gesleept worden (€180,-). De dealer heeft een wachttijd van 4 dagen voor de sleutel. De koerier mist 4 dagen omzet en moet een huurbus regelen. Totale kosten: €380,- sleutel + €180,- slepen + €400,- huurbus + €800,- omzetverlies = €1.760.
         <br />
-        <em>Slotenmaker-aanpak:</em> Wij sturen onze mobiele bus met spoed naar de locatie van de gestrande Sprinter. We openen de deuren en programmeren een nieuwe infrarood sleutel direct op locatie. De koerier kan na 45 minuten zijn route vervolgen. Kosten: €249,- all-in. <strong>Totale besparing: ruim €1.500.</strong>
+        <em>Slotenmaker-aanpak:</em> Wij sturen onze mobiele bus met spoed naar de locatie van de gestrande Sprinter. We openen de deuren en programmeren een nieuwe infrarood sleutel direct op locatie. De koerier kan na 45 minuten zijn route vervolgen. Kosten: vanaf €{SITE_CONFIG.prices.allKeysLost},- all-in. <strong>Totale besparing: ruim €{1760 - Number(SITE_CONFIG.prices.allKeysLost)},-.</strong>
       </p>
 
       <h3>Conclusie</h3>
@@ -1272,10 +1271,10 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
 
       <h3>Kosten van het bijmaken van een autosleutel</h3>
       <p>
-        De kosten van het bijmaken van een autosleutel variëren afhankelijk van het type sleutel en de complexiteit van de technologie. Mechanische sleutels zonder chip zijn erg goedkoop. Transpondersleutels (inclusief het inleren) variëren vaak van €89,- tot €150,-.
+        De kosten van het bijmaken van een autosleutel variëren afhankelijk van het type sleutel en de complexiteit van de technologie. Mechanische sleutels zonder chip zijn erg goedkoop. Een transpondersleutel inclusief het inleren kost bij ons vanaf €{SITE_CONFIG.prices.transponder},-.
       </p>
       <p>
-        Slimme sleutels of keyless entry-sleutels zijn de duurste om bij te maken omdat ze gebruik maken van geavanceerde RFID- en cryptografische technologieën. Dit kan oplopen tot €150,- – €300,-. Bij Autosleutel24 geven we echter altijd vooraf een vaste, transparante prijsopgave.
+        Slimme sleutels of keyless entry-sleutels zijn de duurste om bij te maken omdat ze gebruik maken van geavanceerde RFID- en cryptografische technologieën. Bij ons vanaf €{SITE_CONFIG.prices.smartKey},-. Bij Autosleutel24 geven we echter altijd vooraf een vaste, transparante prijsopgave.
       </p>
 
       <h3>Tips voor het kiezen van een betrouwbare slotenmaker</h3>
