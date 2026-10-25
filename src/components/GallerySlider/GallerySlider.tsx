@@ -35,22 +35,22 @@ export default function GallerySlider({ images, title = "Onze service in de hele
 
   const isFewImages = images.length <= 4;
 
+  // Caption under the photo, not on top of it: an overlay darkened every
+  // photo, and inside the service pages' content column the page's own
+  // paragraph styles turned the white caption grey and unreadable.
   const renderImageCard = (img: GalleryImage, index: number) => (
-    <div key={index} className={isFewImages ? '' : styles.slide}>
+    <figure key={index} className={`${styles.card} ${isFewImages ? '' : styles.slide}`}>
       <div className={styles.imageCard}>
-        <Image 
-          src={img.src} 
-          alt={img.caption} 
+        <Image
+          src={img.src}
+          alt={img.caption}
           fill
           className={styles.image}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
-        <div className={styles.overlay}>
-          {/* Using a p tag instead of h3 to avoid global heading style conflicts */}
-          <p className={styles.caption}>{img.caption}</p>
-        </div>
       </div>
-    </div>
+      <figcaption className={styles.caption}>{img.caption}</figcaption>
+    </figure>
   );
 
   return (
