@@ -18,70 +18,114 @@ export interface GalleryProject {
 
 export const REAL_GALLERY_PROJECTS: GalleryProject[] = [
   /*
-   * Zaandam, Purmerend en Hoofddorp. De bestanden stonden al in public/images
-   * en werden door de stadspagina als hero-foto gebruikt, maar waren nooit in
-   * deze lijst opgenomen — dus viel de galerij op die pagina's terug op
-   * willekeurige BMW- en Audi-foto's uit andere steden.
-   *
-   * De stadsnaam staat bewust in de alt-tekst: de galerij op een stadspagina
-   * filtert op precies dat, dus zonder de naam verschijnt de foto nooit op de
-   * pagina waar hij voor gemaakt is.
+   * Real job photographs only (25 Oct 2026): the eight staged city images
+   * (Breda, Gouda, Zaandam, ...) are out, the 15 job photos in
+   * public/images/gallery that were never listed are in.
    */
   {
-    id: 105,
-    src: '/images/autosleutel-bijmaken-zaandam.webp',
-    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Zaandam',
-    width: 1376,
-    height: 768
+    id: 56,
+    src: '/images/gallery/autosleutel_mercedes_benz_sleutel_programmeren_almere_centrum.webp',
+    alt: 'Mercedes-Benz sleutel geprogrammeerd op locatie in Almere Centrum',
+    width: 520,
+    height: 425
   },
   {
-    id: 106,
-    src: '/images/autosleutel-bijmaken-purmerend.webp',
-    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Purmerend',
-    width: 1376,
-    height: 768
+    id: 57,
+    src: '/images/gallery/autosleutel_nissan_qashqai_sleutel_bijmaken_almere_stad.webp',
+    alt: 'Nissan Qashqai sleutel bijgemaakt op locatie in Almere Stad',
+    width: 520,
+    height: 385
   },
   {
-    id: 107,
-    src: '/images/autosleutel-bijmaken-hoofddorp.webp',
-    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Hoofddorp',
-    width: 1376,
-    height: 768
+    id: 58,
+    src: '/images/gallery/autosleutel_nissan_reservesleutel_almere_poort.webp',
+    alt: 'Nissan reservesleutel gemaakt op locatie in Almere Poort',
+    width: 520,
+    height: 385
   },
   {
-    id: 100,
-    src: '/images/autosleutel-bijmaken-breda.webp',
-    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Breda',
-    width: 1024,
-    height: 1024
+    id: 59,
+    src: '/images/gallery/autosleutel_opel_astra_reservesleutel_almere_buiten.webp',
+    alt: 'Opel Astra reservesleutel gemaakt op locatie in Almere Buiten',
+    width: 520,
+    height: 399
   },
   {
-    id: 101,
-    src: '/images/autosleutel-bijmaken-gouda.webp',
-    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Gouda',
-    width: 1024,
-    height: 1024
+    id: 60,
+    src: '/images/gallery/autosleutel_opel_corsa_sleutel_bijmaken_almere_haven.webp',
+    alt: 'Opel Corsa sleutel bijgemaakt op locatie in Almere Haven',
+    width: 520,
+    height: 385
   },
   {
-    id: 102,
-    src: '/images/autosleutel-bijmaken-haarlem.webp',
-    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Haarlem',
-    width: 1024,
-    height: 1024
+    id: 61,
+    src: '/images/gallery/autosleutel_porsche_911_macan_sleutel_amersfoort_vathorst.webp',
+    alt: 'Porsche sleutel bijgemaakt op locatie in Amersfoort Vathorst',
+    width: 520,
+    height: 385
   },
   {
-    id: 103,
-    src: '/images/autosleutel-bijmaken-lelystad.webp',
-    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Lelystad',
-    width: 1024,
-    height: 1024
+    id: 62,
+    src: '/images/gallery/autosleutel_porsche_cayenne_sleutel_bijmaken_amersfoort_centrum.webp',
+    alt: 'Porsche Cayenne sleutel bijgemaakt op locatie in Amersfoort Centrum',
+    width: 520,
+    height: 385
   },
   {
-    id: 104,
-    src: '/images/autosleutel-bijmaken-nieuwegein.webp',
-    alt: 'Nieuwe autosleutel bijmaken en inleren op locatie in Nieuwegein',
-    width: 1376,
-    height: 768
+    id: 63,
+    src: '/images/gallery/autosleutel_porsche_panamera_reservesleutel_amersfoort_noord.webp',
+    alt: 'Porsche Panamera reservesleutel gemaakt op locatie in Amersfoort Noord',
+    width: 520,
+    height: 390
+  },
+  {
+    id: 64,
+    src: '/images/gallery/autosleutel_porsche_reservesleutel_amersfoort_zuid.webp',
+    alt: 'Porsche reservesleutel gemaakt op locatie in Amersfoort Zuid',
+    width: 520,
+    height: 336
+  },
+  {
+    id: 65,
+    src: '/images/gallery/autosleutel_porsche_smartkey_bijmaken_amersfoort_west.webp',
+    alt: 'Porsche smart key bijgemaakt op locatie in Amersfoort West',
+    width: 520,
+    height: 390
+  },
+  {
+    id: 66,
+    src: '/images/gallery/autosleutel_skoda_octavia_reservesleutel_hilversum.webp',
+    alt: 'Skoda reservesleutel gemaakt op locatie in Hilversum',
+    width: 520,
+    height: 352
+  },
+  {
+    id: 67,
+    src: '/images/gallery/autosleutel_toyota_corolla_reservesleutel_zeist.webp',
+    alt: 'Toyota Corolla reservesleutel gemaakt op locatie in Zeist',
+    width: 520,
+    height: 427
+  },
+  {
+    id: 68,
+    src: '/images/gallery/autosleutel_volkswagen_golf_reservesleutel_maarssen.webp',
+    alt: 'Volkswagen Golf reservesleutel gemaakt op locatie in Maarssen',
+    width: 520,
+    height: 408
+  },
+  {
+    id: 69,
+    src: '/images/gallery/autosleutel_volkswagen_polo_sleutel_programmeren_houten.webp',
+    alt: 'Volkswagen sleutel geprogrammeerd op locatie in Houten',
+    width: 520,
+    height: 390
+  },
+  {
+    id: 70,
+    src: '/images/gallery/autosleutel_volvo_xc60_v40_sleutel_bijmaken_nieuwegein.webp',
+    alt: 'Volvo XC60 sleutel bijgemaakt op locatie in Nieuwegein',
+    width: 520,
+    height: 390
   },
   {
     id: 1,
