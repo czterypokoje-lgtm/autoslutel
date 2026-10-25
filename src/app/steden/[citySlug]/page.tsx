@@ -182,7 +182,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     ...(isNoindexCity(citySlug) && { robots: { index: false, follow: true } }),
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} ter plaatse, dag en nacht. Prijs vooraf. Bel nu!`
+        `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} bij uw auto, dag en nacht. Vaste prijs vooraf, 12 maanden garantie. Bel nu!`
     ),
     alternates: {
       canonical: pageUrl,

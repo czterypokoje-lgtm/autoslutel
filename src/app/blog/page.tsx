@@ -18,7 +18,7 @@ export default function BlogPage() {
       <script id="bc-blog" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Blog', path: '/blog' }])) }} />
       <section style={{ background: 'linear-gradient(135deg, #070e1a 0%, #0a1628 100%)', padding: '5rem 2rem', textAlign: 'center' }}>
         <span className="section-label">BLOG & TIPS</span>
-        <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Autosleutel Tips & Nieuws</h1>
+        <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Autosleutel Blog: Kosten, Tips en Oplossingen</h1>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 600, margin: '0 auto' }}>
           Alles wat u moet weten over autosleutels, kosten, merken, en beveiliging.
         </p>
