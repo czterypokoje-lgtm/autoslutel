@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
+import FaqSection from '@/components/FaqSection/FaqSection';
 
 export const metadata: Metadata = {
   title: {
@@ -12,10 +13,15 @@ export const metadata: Metadata = {
      * biggest leak on the site after /diensten/autosleutel-bijmaken. The
      * "kosten" and "prijs" query families are 5,947 impressions between them
      * and the old title led with "Prijzen", which is not the word they use.
+     *
+     * 25 Oct 2026: the question itself. "wat kost een nieuwe autosleutel" is the
+     * search that converted best in Google Ads (2 clicks, 2 conversions), and
+     * the cost family is ~960 searches a month in NL (Keyword Planner):
+     * bijmaken kosten 320, kwijt kosten 210, wat kost een nieuwe autosleutel 110.
      */
-    absolute: `Autosleutel Bijmaken Kosten | Vaste Prijs Vooraf`,
+    absolute: `Wat Kost een Nieuwe Autosleutel? Prijzen Bijmaken & Kwijt`,
   },
-  description: `Wat kost een autosleutel bijmaken? Vaste prijzen per type sleutel: transponder, klapsleutel en smart key. Geen verrassingen achteraf.`,
+  description: `Wat kost een autosleutel bijmaken, of een nieuwe sleutel als u alles kwijt bent? Vaste all-in prijs vooraf, voorrijden inbegrepen. Bel of app ons.`,
   alternates: {
     canonical: `${SITE_CONFIG.domain}/prijzen`,
     languages: {
@@ -126,6 +132,39 @@ const offerCatalogSchema = {
   }),
 };
 
+/*
+ * The cost questions people actually type (Search Console, Keyword Planner and
+ * the Ads search terms of Oct 2026), answered from the price table above and
+ * SITE_CONFIG.prices -- never a number typed only here. FaqSection renders the
+ * FAQPage JSON-LD from the same list.
+ */
+const costFaqs = [
+  {
+    question: 'Wat kost een nieuwe autosleutel?',
+    answer: `Een reservesleutel bijmaken kost vanaf €${SITE_CONFIG.prices.transponder},- voor een transpondersleutel, vanaf €${SITE_CONFIG.prices.klapsleutel},- voor een klapsleutel met afstandsbediening en vanaf €${SITE_CONFIG.prices.smartKey},- voor een smart key of keyless sleutel. De exacte prijs hangt af van merk, model en bouwjaar; u hoort hem vooraf.`,
+  },
+  {
+    question: 'Wat kost een autosleutel als ik alle sleutels kwijt ben?',
+    answer: `Zonder werkende sleutel begint het bij €${SITE_CONFIG.prices.allKeysLost},- voor een transponder- of klapsleutel (tot €399). Voor een smart key ligt het tussen €349 en €449. Het is iets duurder dan een reservesleutel, omdat de sleutelcode opnieuw uit de auto gehaald moet worden.`,
+  },
+  {
+    question: 'Wat kost een autosleutel bijmaken met afstandsbediening?',
+    answer: `Een klapsleutel met afstandsbediening bijmaken kost vanaf €${SITE_CONFIG.prices.klapsleutel},- (tot €249), inclusief programmeren van de afstandsbediening en de startchip.`,
+  },
+  {
+    question: 'Betaal ik voorrijkosten?',
+    answer: 'Nee. Voorrijden zit bij de prijs in. Wij komen naar uw auto, thuis, op het werk of langs de weg.',
+  },
+  {
+    question: 'Hoe weet ik de exacte prijs?',
+    answer: `Geef uw automerk, model en bouwjaar (of uw kenteken) door via ${SITE_CONFIG.phone} of WhatsApp. U krijgt de prijs voordat wij vertrekken; zegt u nee, dan betaalt u niets.`,
+  },
+  {
+    question: 'Kunnen jullie elke auto helpen?',
+    answer: 'Bijna elke auto vanaf bouwjaar 2000. Niet mogelijk: Mercedes met FBS4 (grofweg vanaf 2013/2014), dat kan alleen de dealer, en auto’s van vóór 2000. Dat zeggen wij u vooraf.',
+  },
+];
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -145,7 +184,14 @@ export default function PrijzenPage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <p className={styles.label}>TARIEVEN</p>
-          <h1>Prijsoverzicht — Indicatieve Tarieven</h1>
+          <h1>Wat Kost een Autosleutel? Prijzen voor Bijmaken &amp; Kwijt</h1>
+          {/* The answer first, in one paragraph: what Google's snippet and an AI assistant quote. */}
+          <p className={styles.heroSub}>
+            Een reservesleutel bijmaken kost vanaf €{SITE_CONFIG.prices.transponder},- voor een transpondersleutel,
+            vanaf €{SITE_CONFIG.prices.klapsleutel},- voor een klapsleutel met afstandsbediening en vanaf €{SITE_CONFIG.prices.smartKey},- voor
+            een smart key. Bent u alle sleutels kwijt, dan begint het bij €{SITE_CONFIG.prices.allKeysLost},-. Dit zijn all-in
+            vanafprijzen: voorrijden zit erbij.
+          </p>
           <p className={styles.heroSub}>
             Exacte prijs wordt altijd <strong>vóór aanvang</strong> van de werkzaamheden afgesproken. 
             Bij de officiële autodealer bent u vaak <strong>flink duurder</strong> uit. Bovendien betaalt u bij ons <strong>géén wegsleepkosten</strong> omdat wij naar u toe komen!
@@ -310,13 +356,13 @@ export default function PrijzenPage() {
 
         {/* ── COMPREHENSIVE PRIJZEN SEO GUIDE ARTICLE ── */}
         <div className="seo-article-block" style={{ marginTop: '3.5rem', marginBottom: '3.5rem' }}>
-          <h2>Transparante Tarieven voor Autosleutels en Slotenmaker Service op Locatie</h2>
+          <h2>Transparante Tarieven voor Autosleutels op Locatie</h2>
           <p>
             Bij het bijmaken of vervangen van een autosleutel spelen verschillende technische factoren een rol in de prijsopbouw. Waar een eenvoudige reservesleutel zonder afstandsbediening relatief goedkoop is, vereist een moderne Keyless Entry of Keyless Go sleutel (smart key) geavanceerde elektronica en professionele programmeersoftware. <strong>{SITE_CONFIG.name}</strong> garandeert u altijd vooraf een vaste en transparante all-in prijs, zodat u nooit wordt geconfronteerd met onverwachte kosten.
           </p>
           <h3>Waarom zijn wij vaak goedkoper dan de officiële merkdealer?</h3>
           <p>
-            Officiële merkdealers berekenen vaak hoge uurtarieven, logistieke bestel- en administratiekosten én verplichte takel- of wegsleepkosten naar hun showroom. Onze ervaren mobiele slotenmakers komen met een compleet uitgeruste servicebus direct naar uw voertuig toe. Wij snijden de sleutelbaard met CNC-gestuurde snijmachines ter plaatse en leren de transponderchip in via de OBD2-diagnosepoort.
+            Officiële merkdealers berekenen vaak hoge uurtarieven, logistieke bestel- en administratiekosten én verplichte takel- of wegsleepkosten naar hun showroom. Onze ervaren mobiele monteurs komen met een compleet uitgeruste servicebus direct naar uw voertuig toe. Wij snijden de sleutelbaard met CNC-gestuurde snijmachines ter plaatse en leren de transponderchip in via de OBD2-diagnosepoort.
           </p>
           <h3>Verschil in Prijs tussen Mechanische Sleutels, Klapsleutels en Smart Keys</h3>
           <p>
@@ -331,6 +377,8 @@ export default function PrijzenPage() {
             Wanneer u uw autosleutel bent verloren of als deze is gestolen, valt het vervangen van uw sleutelset en het wissen van de oude sleutelcodes vaak onder de dekking van uw WA Extra (Beperkt Casco) of Allrisk autoverzekering. U ontvangt van ons altijd een officiële en gespecificeerde KVK-factuur die u direct kunt indienen bij uw verzekeraar. Bovendien krijgt u op alle geleverde autosleutels 12 maanden schriftelijke garantie.
           </p>
         </div>
+
+        <FaqSection customFaqs={costFaqs} pageUrl={`${SITE_CONFIG.domain}/prijzen`} />
 
         {/* CTA */}
         <div className={styles.cta}>
