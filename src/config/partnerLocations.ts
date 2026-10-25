@@ -1,7 +1,7 @@
 /*
  * Partner locations: a real garage or workshop, per city, that our technicians
- * work with. Each entry puts a "Autosleutel bijmaken in <city> bij <partner>"
- * section with an auto-loading Google map of the partner on that city page.
+ * work with. Each entry puts an address card with an auto-loading Google map
+ * on that city page. The partner's name stays out of the visible page.
  *
  * Only real, public business addresses belong here -- never a technician's
  * home address, and never an address you do not actually work with. Only our
@@ -13,8 +13,6 @@ export type PartnerLocation = {
   /** City slug from CITIES, e.g. 'amsterdam'. */
   citySlug: string;
   name: string;
-  /** Short name for the heading: "Autosleutel bijmaken in <city> bij <shortName>". */
-  shortName: string;
   street: string;
   postalCode: string;
   locality: string;
@@ -23,23 +21,18 @@ export type PartnerLocation = {
   url?: string;
   /** schema.org type of the partner itself, e.g. 'AutoRepair'. */
   schemaType: string;
-  /** One honest sentence on how the partnership works. */
-  intro: string;
 };
 
 export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
   {
     citySlug: 'amsterdam',
     name: 'Garage NRD',
-    shortName: 'NRD',
     street: 'Draaierweg 10',
     postalCode: '1032 KS',
     locality: 'Amsterdam',
     district: 'Amsterdam-Noord',
     url: 'https://www.garage-nrd.nl/',
     schemaType: 'AutoRepair',
-    intro:
-      'Voor spoedgevallen in Amsterdam werken wij samen met Garage NRD, zodat onze monteur ook dicht bij het centrum snel ter plaatse kan zijn. Rechtstreeks contact met Autosleutel24 blijft de snelste weg naar een prijs en een afspraak.',
   },
 ];
 
