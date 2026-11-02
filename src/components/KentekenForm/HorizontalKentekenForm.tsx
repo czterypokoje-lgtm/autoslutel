@@ -171,6 +171,18 @@ export default function HorizontalKentekenForm() {
         </div>
         <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--color-navy-surface)' }}>Aanvraag Ontvangen!</h3>
         <p style={{ color: '#475569', fontSize: '1.1rem', maxWidth: '400px', margin: '0 auto' }}>Bedankt voor uw aanvraag. We hebben uw gegevens ontvangen en bellen u binnen 5 minuten met de exacte prijs.</p>
+        {/* Something to do while they wait, on the one page whose visitors
+            came to buy a part rather than book a monteur. */}
+        {vehicle && (
+          <a
+            href={`/webshop/catalogus?make=${encodeURIComponent(vehicle.merk)}`}
+            className={styles.shopLink}
+            id="kenteken-shop-link-success"
+            style={{ marginTop: '1.5rem' }}
+          >
+            Bekijk alvast de sleutels voor uw {vehicle.merk} in onze webshop →
+          </a>
+        )}
       </div>
     );
   }
@@ -315,6 +327,27 @@ export default function HorizontalKentekenForm() {
           <span className={styles.priceHint}>
             {quote.service} vanaf <strong>€{quote.from}</strong>
           </span>
+        )}
+
+        {/*
+          * The branch this page was missing.
+          *
+          * Somebody searching "autosleutel bestellen op kenteken" has said, in
+          * the query itself, that they want to buy a key — and every route off
+          * this page turned them into a service lead instead. The RDW lookup
+          * above has already told us the make, so the one thing they asked for
+          * is a link away. It sits beside the callback rather than replacing
+          * it: a customer who has lost every key does need the monteur, and
+          * only they know which case they are.
+          */}
+        {vehicle && (
+          <a
+            href={`/webshop/catalogus?make=${encodeURIComponent(vehicle.merk)}`}
+            className={styles.shopLink}
+            id="kenteken-shop-link"
+          >
+            Liever zelf bestellen? Bekijk de sleutels die op uw {vehicle.merk} passen →
+          </a>
         )}
       </div>
     </div>

@@ -322,3 +322,19 @@
     font-size: 1.2rem;
   }
 }
+
+/* The route into the webshop, once the RDW lookup knows the make. Quieter
+   than the callback button beside it — it is the second-most-likely thing a
+   visitor wants, not the first — but a real link, not a footnote. */
+.shopLink {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-top: .75rem;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--color-navy-surface, #0d2137);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.shopLink:hover { color: var(--color-accent, #e8520a); }

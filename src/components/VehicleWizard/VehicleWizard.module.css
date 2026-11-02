@@ -403,3 +403,23 @@ textarea.input {
   line-height: 1.5;
   font-family: inherit;
 }
+
+/* Photo upload. The input itself is hidden and the label is the control, so
+   the tap target is the whole row rather than a browser-styled button nobody
+   can make match the form. */
+.photo { display: block; margin-top: .6rem; cursor: pointer; }
+.photoInput { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.photoLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: .6rem .8rem;
+  border: 1.5px dashed var(--navy-100, #cde0f0);
+  border-radius: 9px;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--navy-500, #1d4a74);
+}
+.photo:hover .photoLabel { border-color: var(--color-accent, #e8520a); color: var(--navy-800, #0d2137); }
+.photoInput:focus-visible + .photoLabel { outline: 2px solid var(--color-accent, #e8520a); outline-offset: 2px; }

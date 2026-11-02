@@ -13,6 +13,7 @@ import { tagLeadClaritySession } from '@/lib/clarity';
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styles from './VehicleWizard.module.css';
 import { serviceLimit } from '@/lib/serviceLimits';
+import { toWebp } from '@/lib/toWebp';
 import { SITE_CONFIG } from '@/config/site.config';
 import {
   PushButtonIcon,
@@ -105,6 +106,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
   const [phone, setPhone] = useState('');
   const [postcode, setPostcode] = useState(city);
   const [note, setNote] = useState('');
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [honeypot, setHoneypot] = useState('');
   const [sending, setSending] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -190,6 +193,31 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
     workingKey === 'no' ? 'akl' : 'add-key',
   );
 
+  /*
+   * A photo of the key, which is the single most useful thing for quoting one.
+   *
+   * LeadCaptureForm — the fallback almost nobody reaches — has had this since
+   * the beginning; the wizard that everyone actually meets had no way to
+   * accept one. Re-encoded in the browser first (toWebp also rescues iPhone
+   * HEIC), because this is routinely a 3-12 MB file going out over a weak
+   * signal from somebody standing next to their car.
+   */
+  async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.files?.[0];
+    if (!raw) return;
+    setUploading(true);
+    try {
+      const file = await toWebp(raw).catch(() => raw);
+      const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, { method: 'POST', body: file });
+      const data = await res.json();
+      if (res.ok && data.url) setPhotoUrl(data.url);
+    } catch {
+      /* Silent: the photo is a bonus, and the lead is what matters. */
+    } finally {
+      setUploading(false);
+    }
+  }
+
   function buildWhatsAppUrl() {
     const lines = [
       'Hallo Autosleutel24!',
@@ -202,6 +230,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       postcode ? `Postcode: ${postcode}` : null,
       phone ? `Telefoon: ${phone}` : null,
       note ? `Toelichting: ${note}` : null,
+      photoUrl ? `Foto: ${photoUrl.replace(SITE_CONFIG.blobStorageDomain, typeof window !== 'undefined' ? `${window.location.origin}/f` : '')}` : null,
       '',
       'Graag hoor ik de prijs en de aankomsttijd.',
     ].filter(Boolean);
@@ -298,11 +327,11 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
        not with the lead itself so a database without column `note` (migration
        0076) loses the sentence and never the lead. Fire-and-forget: the office
        already has a phone number either way. */
-    if (note.trim() && json?.data?.id && json?.data?.token) {
+    if ((note.trim() || photoUrl) && json?.data?.id && json?.data?.token) {
       void fetch('/api/leads/details', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: json.data.id, token: json.data.token, note }),
+        body: JSON.stringify({ id: json.data.id, token: json.data.token, note, photoUrl }),
         keepalive: true,
       }).catch(() => null);
     }
@@ -510,6 +539,13 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
                 rows={3}
                 maxLength={500}
               />
+            </label>
+
+            <label className={styles.photo}>
+              <input type="file" accept="image/*" capture="environment" onChange={uploadPhoto} className={styles.photoInput} />
+              <span className={styles.photoLabel}>
+                {uploading ? 'Foto uploaden…' : photoUrl ? '✓ Foto toegevoegd' : '📷 Foto van uw sleutel toevoegen (optioneel)'}
+              </span>
             </label>
 
             {/* Honeypot — hidden from people, tempting to bots. */}

@@ -38,6 +38,11 @@ export async function POST(request: Request) {
      note, never the lead. */
   const note = text(body?.note, 500);
   if (note) update.note = note;
+  /* A photo of the key, uploaded after the lead was already saved at step 2.
+     photo_url has existed since the first schema, so this one needs no
+     migration — only a route that will write it. */
+  const photoUrl = text(body?.photoUrl, 500);
+  if (photoUrl) update.photo_url = photoUrl;
   const price = Number(body?.quotedPrice);
   if (Number.isFinite(price) && price > 0 && price < 10000) update.quoted_price = price;
   if (!Object.keys(update).length) return NextResponse.json({ success: true });
