@@ -14,6 +14,9 @@ declare global {
   }
 }
 
+/** The RDW register shouts — CITROEN, VOLKSWAGEN. Don't put that in a sentence. */
+const titleCase = (s: string) => s.replace(/\S+/g, (w) => w[0] + w.slice(1).toLowerCase());
+
 export default function HorizontalKentekenForm() {
   const [kenteken, setKenteken] = useState('');
   const [postcode, setPostcode] = useState('');
@@ -180,7 +183,7 @@ export default function HorizontalKentekenForm() {
             id="kenteken-shop-link-success"
             style={{ marginTop: '1.5rem' }}
           >
-            Bekijk alvast de sleutels voor uw {vehicle.merk} in onze webshop →
+            Bekijk alvast de sleutels voor uw {titleCase(vehicle.merk)} in onze webshop →
           </a>
         )}
       </div>
@@ -346,7 +349,7 @@ export default function HorizontalKentekenForm() {
             className={styles.shopLink}
             id="kenteken-shop-link"
           >
-            Liever zelf bestellen? Bekijk de sleutels die op uw {vehicle.merk} passen →
+            Liever zelf bestellen? Bekijk de sleutels die op uw {titleCase(vehicle.merk)} passen →
           </a>
         )}
       </div>
