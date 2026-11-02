@@ -5,6 +5,8 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 import FaqSection from '@/components/FaqSection/FaqSection';
+import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
+import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 
 export const metadata: Metadata = {
   title: {
@@ -379,6 +381,19 @@ export default function PrijzenPage() {
         </div>
 
         <FaqSection customFaqs={costFaqs} pageUrl={`${SITE_CONFIG.domain}/prijzen`} />
+
+        {/*
+          * The wizard, on the page where intent is highest.
+          *
+          * Somebody reading a price list has decided they need the service and
+          * is checking whether they can afford us — further down the funnel
+          * than anyone on the homepage. This page offered them a telephone
+          * number, a WhatsApp link and a link to a form on another page, and
+          * nothing they could fill in here.
+          */}
+        <div style={{ margin: '3.5rem 0', display: 'flex', justifyContent: 'center' }}>
+          <VehicleWizard fallback={<LeadCaptureForm phone={SITE_CONFIG.phone} theme="light" />} />
+        </div>
 
         {/* CTA */}
         <div className={styles.cta}>

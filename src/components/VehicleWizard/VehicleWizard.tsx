@@ -104,6 +104,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
 
   const [phone, setPhone] = useState('');
   const [postcode, setPostcode] = useState(city);
+  const [note, setNote] = useState('');
   const [honeypot, setHoneypot] = useState('');
   const [sending, setSending] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -200,6 +201,7 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       `Start met: ${startType === 'push' ? 'Startknop' : 'Sleutel in contact'}`,
       postcode ? `Postcode: ${postcode}` : null,
       phone ? `Telefoon: ${phone}` : null,
+      note ? `Toelichting: ${note}` : null,
       '',
       'Graag hoor ik de prijs en de aankomsttijd.',
     ].filter(Boolean);
@@ -291,6 +293,19 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
       phone,
       postcode,
     });
+
+    /* The customer's own words, onto the row that now exists. Sent here and
+       not with the lead itself so a database without column `note` (migration
+       0076) loses the sentence and never the lead. Fire-and-forget: the office
+       already has a phone number either way. */
+    if (note.trim() && json?.data?.id && json?.data?.token) {
+      void fetch('/api/leads/details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: json.data.id, token: json.data.token, note }),
+        keepalive: true,
+      }).catch(() => null);
+    }
 
     setSending(false);
     go(3);
@@ -476,6 +491,27 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               </div>
             </div>
 
+            {/*
+              * Say it in your own words.
+              *
+              * Postcode and telephone are a menu; "sleutel afgebroken in het
+              * contactslot" and "auto staat in een parkeergarage" are not, and
+              * either one changes whether this job is a twenty-minute visit or
+              * a tow. Optional on purpose — it must never become a third thing
+              * standing between a locked-out customer and the callback.
+              */}
+            <label className={styles.field} style={{ marginTop: '0.7rem' }}>
+              <span className={styles.label}>Wat is er aan de hand? (optioneel)</span>
+              <textarea
+                className={styles.input}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Bijv. sleutel afgebroken in het contactslot, auto staat in de parkeergarage"
+                rows={3}
+                maxLength={500}
+              />
+            </label>
+
             {/* Honeypot — hidden from people, tempting to bots. */}
             <input
               type="text"
@@ -502,6 +538,28 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
             <button type="submit" className={styles.cta} disabled={sending}>
               {sending ? 'Versturen…' : 'Bel mij terug'}
             </button>
+
+            {/*
+              * The way out for someone who will not type a phone number.
+              *
+              * Both fields above are required, so this screen had one exit and
+              * it was the back button. buildWhatsAppUrl() has always assembled
+              * the whole enquiry — plate, car, postcode, note — and until now
+              * nothing in this component called it; the fallback form wires the
+              * identical function in three places. This opens their own
+              * WhatsApp with the message written, which needs no field here
+              * filled in at all.
+              */}
+            <a
+              href={buildWhatsAppUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${styles.urgentBtn} ${styles.waBtn} ${styles.waHandoff}`}
+              id="wizard-whatsapp-handoff"
+              onClick={() => reportLeadConversion({ source: 'hero_wizard_whatsapp', phone, postcode })}
+            >
+              <WhatsAppIcon /> Liever appen? Stuur dit via WhatsApp
+            </a>
           </form>
         )}
         {/* ── 3. How does the car start ── */}

@@ -33,6 +33,11 @@ export async function POST(request: Request) {
   const update: Record<string, unknown> = {};
   const service = text(body?.service, 120);
   if (service) update.service = service;
+  /* What the customer typed themselves (migration 0076). Carried here rather
+     than on /api/leads so that a database without the column yet costs us a
+     note, never the lead. */
+  const note = text(body?.note, 500);
+  if (note) update.note = note;
   const price = Number(body?.quotedPrice);
   if (Number.isFinite(price) && price > 0 && price < 10000) update.quoted_price = price;
   if (!Object.keys(update).length) return NextResponse.json({ success: true });

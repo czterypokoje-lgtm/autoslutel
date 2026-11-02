@@ -385,3 +385,21 @@
 
 /* Shown once the lead is saved (step 3): the rest is optional. */
 .saved { margin: 0 0 .9rem; padding: .6rem .8rem; border-radius: 10px; background: rgba(34, 197, 94, .14); color: #bbf7d0; font-weight: 600; font-size: .92rem; line-height: 1.4; }
+
+/* The WhatsApp hand-off at the foot of the contact step. It borrows
+   .urgentBtn's look but stands alone rather than in the two-button row at the
+   top, so it needs its own width and a gap above it. */
+.waHandoff {
+  flex: none;
+  width: 100%;
+  margin-top: .7rem;
+}
+
+/* The free-text box. .input is sized for one line; a textarea needs room to
+   breathe and must not be draggable sideways out of the card. */
+textarea.input {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.5;
+  font-family: inherit;
+}
