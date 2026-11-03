@@ -11,8 +11,18 @@ import 'server-only';
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
 /** Best-effort, on purpose: never on the critical path of whatever triggered it. */
-async function callTelegram(method: string, payload: Record<string, unknown>): Promise<void> {
-  if (!TOKEN) return;
+/**
+ * Returns whether Telegram actually accepted the message.
+ *
+ * Still never throws — a notification failing must not break the thing it was
+ * reporting on, which is why every error here is caught. But "never throws"
+ * had quietly become "callers cannot tell", and that is a different promise:
+ * the review-request cron marks customers as asked once the office has been
+ * handed their details, and without a return value it would mark them after a
+ * send that never arrived. Callers that do not care can keep ignoring this.
+ */
+async function callTelegram(method: string, payload: Record<string, unknown>): Promise<boolean> {
+  if (!TOKEN) return false;
   try {
     const res = await fetch(`https://api.telegram.org/bot${TOKEN}/${method}`, {
       method: 'POST',
@@ -24,9 +34,12 @@ async function callTelegram(method: string, payload: Record<string, unknown>): P
     });
     if (!res.ok) {
       console.error(`Telegram ${method} failed:`, await res.text());
+      return false;
     }
+    return true;
   } catch (err) {
     console.error(`Telegram ${method} failed:`, err instanceof Error ? err.message : err);
+    return false;
   }
 }
 
@@ -40,9 +53,9 @@ async function callTelegram(method: string, payload: Record<string, unknown>): P
  * model number occasionally looks like a link to Telegram and a preview card
  * under a two-line job is noise.
  */
-export async function sendTelegram(chatId: string | null | undefined, message: string): Promise<void> {
-  if (!chatId) return;
-  await callTelegram('sendMessage', {
+export async function sendTelegram(chatId: string | null | undefined, message: string): Promise<boolean> {
+  if (!chatId) return false;
+  return callTelegram('sendMessage', {
     chat_id: chatId,
     text: message,
     parse_mode: 'HTML',
