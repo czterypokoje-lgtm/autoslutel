@@ -423,3 +423,26 @@ textarea.input {
 }
 .photo:hover .photoLabel { border-color: var(--color-accent, #e8520a); color: var(--navy-800, #0d2137); }
 .photoInput:focus-visible + .photoLabel { outline: 2px solid var(--color-accent, #e8520a); outline-offset: 2px; }
+
+/* The send-failed warning. Its colours used to be inline and chosen for the
+   dark hero: pale red text and a WHITE telephone number, which on today's
+   white card meant the number — the only thing left to do when the form has
+   just failed — could not be seen at all. */
+.saveFailed {
+  margin: 0 0 .75rem;
+  padding: .7rem .85rem;
+  border: 1px solid #f0b7a6;
+  border-left: 3px solid #a3320f;
+  border-radius: 8px;
+  background: #fdf1ed;
+  color: #7f2a0d;
+  font-size: .9rem;
+  line-height: 1.5;
+}
+.saveFailed a {
+  color: #a3320f;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}

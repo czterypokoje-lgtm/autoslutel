@@ -560,14 +560,19 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
               aria-hidden="true"
             />
 
+            {/*
+              * The colours here were white and pale red, inline — written when
+              * this wizard sat on the dark hero. The card is white now, so the
+              * telephone number rendered white on white: at the one moment the
+              * form has failed and calling is the only thing left, the number
+              * was invisible and the warning itself barely legible. Moved to
+              * the stylesheet, in the same dark red .lookupErr already uses.
+              */}
             {saveFailed && (
-              <p role="alert" style={{ margin: '0 0 0.75rem', fontSize: '0.9rem', lineHeight: 1.5, color: '#fca5a5' }}>
+              <p role="alert" className={styles.saveFailed}>
                 Versturen lukte niet — wij hebben uw aanvraag niet ontvangen.
                 Probeer het opnieuw of bel ons direct op{' '}
-                <a href={`tel:${SITE_CONFIG.phoneTel}`} style={{ color: '#fff', textDecoration: 'underline' }}>
-                  {SITE_CONFIG.phone}
-                </a>
-                .
+                <a href={`tel:${SITE_CONFIG.phoneTel}`}>{SITE_CONFIG.phone}</a>.
               </p>
             )}
 
