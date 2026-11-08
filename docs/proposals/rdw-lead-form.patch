@@ -1,0 +1,61 @@
+diff --git a/src/app/api/leads/route.ts b/src/app/api/leads/route.ts
+index 94a0bb49..881ae59f 100644
+--- a/src/app/api/leads/route.ts
++++ b/src/app/api/leads/route.ts
+@@ -6,6 +6,7 @@ import { notifyNewLead } from '@/lib/leadNotify';
+ import { toE164NL } from '@/lib/phone';
+ import { sendOpenAiEvent } from '@/lib/openaiAds';
+ import { leadToken } from '@/lib/leadToken';
++import { lookupPlate, normalizePlate } from '@/lib/rdwPlate';
+ 
+ /**
+  * Lead capture.
+@@ -232,6 +233,48 @@ export async function POST(request: Request) {
+     const leadId = (data as { id?: string } | null)?.id;
+     const referer = request.headers.get('referer') || 'https://www.autosleutel24.nl/';
+     const userAgent = request.headers.get('user-agent') || undefined;
++    /*
++     * PROPOSAL, not live: store the RDW facts on the lead.
++     *
++     * Needs migration 0078_rdw_vehicle_facts.sql AND RDW_STORE_ENABLED=1 in the
++     * environment, so it can be deployed first and switched on after the
++     * columns exist. It is a separate UPDATE inside `after`, never part of the
++     * insert: a missing column must not push the lead into the legacy insert
++     * (that would lose phone and consent), and a slow or failing RDW must not
++     * touch the customer's answer. The plate form posts the plate in `model`.
++     */
++    if (process.env.RDW_STORE_ENABLED === '1' && leadId && source.startsWith('kenteken_form')) {
++      after(async () => {
++        try {
++          const found = await lookupPlate(normalizePlate(model).plate);
++          const v = found.vehicle;
++          if (found.status !== 'ok' || !v) return;
++          const { error: rdwError } = await supabase
++            .from('leads')
++            .update({
++              kenteken: normalizePlate(model).plate,
++              rdw_make: v.make,
++              rdw_model: v.model,
++              rdw_first_registration: v.first_registration,
++              rdw_version: [v.version.type, v.version.variant, v.version.uitvoering].filter(Boolean).join(' ') || null,
++              rdw_fuel: v.fuel.join(' + ') || null,
++              rdw_colour: v.colour,
++              rdw_catalogue_price: v.catalogue_price,
++              rdw_last_owner_change: v.last_owner_change,
++              rdw_apk_expiry: v.apk_expiry,
++              rdw_taxi: v.taxi,
++              rdw_export: v.export,
++              rdw_key_hint: v.key_hint,
++              rdw_checked_at: new Date().toISOString(),
++            })
++            .eq('id', leadId);
++          if (rdwError) console.error('[leads] RDW facts not stored for', leadId, rdwError.code);
++        } catch {
++          /* Not a plate, or RDW is slow: the lead is saved and stays as it is. */
++        }
++      });
++    }
++
+     after(async () => {
+       try {
+         await notifyNewLead({
