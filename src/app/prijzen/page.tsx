@@ -5,6 +5,7 @@ import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
 import styles from './page.module.css';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 import FaqSection from '@/components/FaqSection/FaqSection';
+import { WatHeeftUNodig } from '@/components/KeyFacts/KeyFacts';
 
 export const metadata: Metadata = {
   title: {
@@ -377,6 +378,9 @@ export default function PrijzenPage() {
             Wanneer u uw autosleutel bent verloren of als deze is gestolen, valt het vervangen van uw sleutelset en het wissen van de oude sleutelcodes vaak onder de dekking van uw WA Extra (Beperkt Casco) of Allrisk autoverzekering. U ontvangt van ons altijd een officiële en gespecificeerde KVK-factuur die u direct kunt indienen bij uw verzekeraar. Bovendien krijgt u op alle geleverde autosleutels 12 maanden schriftelijke garantie.
           </p>
         </div>
+
+        {/* The price half of the pattern is this whole page; this is the other half. */}
+        <WatHeeftUNodig />
 
         <FaqSection customFaqs={costFaqs} pageUrl={`${SITE_CONFIG.domain}/prijzen`} />
 

@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
 import { ARRIVAL_TITLE } from '@/config/arrival';
+import { WatHeeftUNodig } from '@/components/KeyFacts/KeyFacts';
 
 export const metadata: Metadata = {
   title: {
@@ -310,6 +311,9 @@ return (
                     </li>
                   </ul>
                 </div>
+
+                {/* The checklist half of what the AI Overview cites; the price table above is the other half. */}
+                <WatHeeftUNodig bare />
 
                 {/* Section 2.5: Onze Service Galerij */}
                 <div>

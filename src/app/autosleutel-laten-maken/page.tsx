@@ -9,6 +9,7 @@ import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import { KeyPriceTable, WatHeeftUNodig } from '@/components/KeyFacts/KeyFacts';
 
 /*
  * "Laten maken" is the biggest keyword family in Search Console for this
@@ -160,40 +161,15 @@ export default function AutosleutelLatenMaken() {
         </div>
       </section>
 
-      <section className="section-alt">
-        <div className="container" style={{ maxWidth: 860 }}>
-          <h2 style={{ marginBottom: '1rem' }}>Wat heeft u nodig om een autosleutel te laten maken?</h2>
-          <p style={{ color: 'var(--gray-600)', lineHeight: 1.7 }}>
-            Om diefstal te voorkomen maken wij alleen een sleutel bij voor de rechtmatige eigenaar.
-            Houd daarom twee dingen bij de hand: een geldig legitimatiebewijs en het kentekenbewijs
-            (deel 1B of de kentekencard). Uw kenteken is genoeg om merk, model en bouwjaar op te
-            zoeken, dus u hoeft niet te weten welk type sleutel uw auto heeft.
-          </p>
-          <div style={{ overflowX: 'auto', marginTop: '1.5rem' }}>
-            <table className="price-table" style={{ width: '100%', borderCollapse: 'collapse', background: '#fff' }}>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Type sleutel laten maken</th>
-                  <th style={{ textAlign: 'left', padding: '0.9rem' }}>Vanaf</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td style={{ padding: '0.9rem' }}>Transpondersleutel</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.transponder},-</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Klapsleutel met afstandsbediening</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.klapsleutel},-</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Smart key / keyless</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.smartKey},-</strong></td></tr>
-                <tr><td style={{ padding: '0.9rem' }}>Alle sleutels kwijt</td><td style={{ padding: '0.9rem' }}><strong>€{SITE_CONFIG.prices.allKeysLost},-</strong></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
-            Bedragen zijn vanafprijzen en afhankelijk van merk, model en
-            bouwjaar. U hoort de exacte prijs telefonisch voordat wij vertrekken.{' '}
-            <Link href="/prijzen" style={{ color: 'var(--orange-600)', fontWeight: 600 }}>
-              Bekijk het volledige prijsoverzicht →
-            </Link>
-          </p>
-        </div>
-      </section>
+      {/*
+        * This page had the only copy of the price table and the document
+        * checklist on the site, which is a plausible reason it ranks 11 while
+        * /diensten/autosleutel-bijmaken ranks 15. Both now come from
+        * components/KeyFacts so every striking-distance page gets them and
+        * there is one set of numbers to keep right.
+        */}
+      <WatHeeftUNodig heading="Wat heeft u nodig om een autosleutel te laten maken?" />
+      <KeyPriceTable heading="Wat kost een autosleutel laten maken?" />
 
       <section className="section">
         <div className="container" style={{ maxWidth: 860 }}>

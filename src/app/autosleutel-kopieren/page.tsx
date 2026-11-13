@@ -7,6 +7,7 @@ import VehicleWizard from '@/components/VehicleWizard/VehicleWizard';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import { KeyPriceTable, WatHeeftUNodig } from '@/components/KeyFacts/KeyFacts';
 
 /*
  * "Kopiëren" is close enough to "bijmaken" to be dangerous, so this page is
@@ -191,6 +192,16 @@ export default function AutosleutelKopieren() {
           </p>
         </div>
       </section>
+
+      {/*
+        * "Kopiëren" is the cheapest-sounding word for the job, so the reader
+        * who arrives on it is the one most likely to be shopping on price.
+        * Answering the price here, in numbers, is what the AI Overview for
+        * this family rewards -- and it is the honest correction to the
+        * three-euro expectation the word carries.
+        */}
+      <KeyPriceTable heading="Wat kost een autosleutel kopiëren of bijmaken?" />
+      <WatHeeftUNodig />
 
       <section className="section">
         <div className="container" style={{ maxWidth: 860 }}>

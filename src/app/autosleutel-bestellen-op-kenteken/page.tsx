@@ -8,6 +8,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import styles from './page.module.css';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
+import { KeyPriceTable, WatHeeftUNodig, KEY_FACTS_FAQ } from '@/components/KeyFacts/KeyFacts';
 
 export const metadata: Metadata = {
   title: {
@@ -22,7 +23,8 @@ export default function KentekenBestellenPage() {
     { q: 'Hoe snel heb ik een prijs als ik mijn kenteken doorstuur?', a: 'Tijdens onze openingstijden reageren wij via WhatsApp of telefoon vrijwel direct (vaak al binnen 5 tot 10 minuten). U weet direct waar u aan toe bent.' },
     { q: 'Maken jullie sleutels voor alle automerken?', a: 'Ja! Omdat we op kenteken zoeken, kunnen we voor vrijwel elk merk een sleutel leveren en inleren. Of het nu gaat om een Volkswagen, BMW, Ford, Renault, of zelfs Amerikaanse merken zoals Jeep en Dodge. Ook voor moderne Keyless Go (smart keys) bent u bij ons aan het juiste adres.' },
     { q: 'Moet ik vooraf betalen?', a: 'Nee, bij Autosleutel24 betaalt u nooit vooraf. U betaalt pas op locatie (via Pin of contant) nadat wij de sleutel succesvol hebben ingeleerd en getest op uw auto.' },
-    { q: 'Wat als ik al mijn autosleutels kwijt ben? Werkt het dan ook via kenteken?', a: 'Absoluut. Zelfs als u helemaal geen sleutel meer heeft, kunnen wij aan de hand van het kenteken en het chassisnummer (VIN) een compleet nieuwe sleutel "vanaf nul" genereren, frezen en inleren op de boordcomputer van uw auto.' }
+    { q: 'Wat als ik al mijn autosleutels kwijt ben? Werkt het dan ook via kenteken?', a: 'Ja, maar niet doordat uw kenteken de sleutelcode verraadt — dat doet het niet. Met het kenteken en het chassisnummer (VIN) weten wij welke sleutelbaard, chip en frequentie uw auto nodig heeft. De code zelf halen wij ter plaatse uit het slot of uit de boordcomputer van uw auto. Daarna frezen wij de sleutel op die code en leren hem in op de startonderbreker, bij u op locatie. Wij vragen uw legitimatiebewijs en het kentekenbewijs voordat wij beginnen.' },
+    ...KEY_FACTS_FAQ,
   ];
 
   const schema = {
@@ -140,6 +142,16 @@ export default function KentekenBestellenPage() {
             ))}
           </div>
         </div>
+
+        {/*
+          * This page ranks 10.4 for "autosleutel bestellen op kenteken" with
+          * 464 impressions, so the price and the checklist belong here rather
+          * than one click away on /prijzen — and the kenteken/sleutelcode
+          * distinction belongs on the page that is literally about the
+          * kenteken.
+          */}
+        <KeyPriceTable heading="Wat kost een autosleutel bestellen op kenteken?" />
+        <WatHeeftUNodig heading="Wat heeft u nodig naast uw kenteken?" />
 
         {/* Video — no VideoObject here; the watch page is /autosleutel-kwijt */}
         <div style={{ padding: '3rem 0' }}>

@@ -8,6 +8,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { CITIES } from '@/config/cities';
 import { isNoindexCity } from '@/config/thinPages';
+import { KeyPriceTable, WatHeeftUNodig } from '@/components/KeyFacts/KeyFacts';
 import { ARRIVAL, ARRIVAL_TITLE } from '@/config/arrival';
 import { SERVICE_REGIONS } from '@/config/regions';
 import { BRANDS } from '@/config/brands';
@@ -136,11 +137,26 @@ export async function generateStaticParams() {
  * "Op Locatie" to an ellipsis.
  */
 function cityTitle(name: string): string {
-  // Every city leads with the arrival time, which is what converted best. The shorter
-  // "30-60 Min" form is for the longer town names (Alphen aan den Rijn) that overflow 60.
+  /*
+   * The price goes in front of the arrival time.
+   *
+   * The city pages are not a ranking problem any more -- "autosleutel
+   * bijmaken utrecht" is position 8.1 on 493 impressions, amstelveen 8.9 on
+   * 165, almere 6.9 on 117 -- and between them they earned three clicks.
+   * A page-one listing that nobody clicks is a snippet problem, and the
+   * thing the SERP above it is answering is the cost: the AI Overview for
+   * this family leads with a price table, and the competitor Google cites
+   * states a flat number in plain text.
+   *
+   * So the number that was only ever in the body now sits in the title.
+   * The arrival time stays where it still fits; it is what converted best
+   * once people were on the page, but it is not what stops the scroll on a
+   * SERP where every rival also promises to come out.
+   */
   const candidates = [
-    `Autosleutel Bijmaken ${name} | ${ARRIVAL_TITLE}`,
-    `Autosleutel Bijmaken ${name} | 30-60 Min`,
+    `Autosleutel Bijmaken ${name} | Vanaf €${SITE_CONFIG.prices.transponder}, ${ARRIVAL_TITLE}`,
+    `Autosleutel Bijmaken ${name} | Vanaf €${SITE_CONFIG.prices.transponder}, 30-60 Min`,
+    `Autosleutel Bijmaken ${name} | Vanaf €${SITE_CONFIG.prices.transponder}`,
     `Autosleutel Bijmaken ${name} | Op Locatie`,
   ];
   return candidates.find((t) => t.length <= 60) ?? candidates[candidates.length - 1];
@@ -182,7 +198,7 @@ export async function generateMetadata({ params }: { params: Promise<{ citySlug:
     ...(isNoindexCity(citySlug) && { robots: { index: false, follow: true } }),
     description: clampMeta(
       city.customMetaDesc ||
-        `Autosleutel laten maken of bijmaken in ${city.city}? Binnen ${ARRIVAL} bij uw auto, dag en nacht. Vaste prijs vooraf, 12 maanden garantie. Bel nu!`
+        `Autosleutel bijmaken in ${city.city}? Vanaf €${SITE_CONFIG.prices.transponder} all-in: frezen én inleren op de startonderbreker. Monteur binnen ${ARRIVAL} bij uw auto, dag en nacht.`
     ),
     alternates: {
       canonical: pageUrl,
@@ -626,6 +642,19 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
             </div>
           </div>
         </section>
+
+        {/*
+          * The price and the checklist, on all 62 city pages.
+          *
+          * The city queries are the ones ranking on page one and getting no
+          * clicks at all -- "autosleutel bijmaken amstelveen" 165 impressions
+          * at position 8.9 and zero clicks, almere 117 at 6.9 and zero. The
+          * snippet promises an arrival time and no number; the AI Overview
+          * above it answers the price outright. These two blocks are the
+          * answer the SERP is already giving, on our page.
+          */}
+        <KeyPriceTable where={city.city} />
+        <WatHeeftUNodig where={city.city} />
 
         {/* Comparison Table */}
         <section className={styles.section}>
