@@ -126,7 +126,8 @@ export default function AfspraakForm() {
 
   return (
     <form className={styles.card} onSubmit={handleSubmit}>
-      <h2 className={styles.title}>Afspraak maken, zo geregeld</h2>
+      {/* The page's only heading, so it is the H1. /afspraak had none and is linked site-wide. */}
+      <h1 className={styles.title}>Afspraak maken, zo geregeld</h1>
       <p className={styles.subtitle}>
         Plan eenvoudig uw afspraak wanneer het u uitkomt. Laat uw gegevens achter en wij nemen
         snel contact met u op om alles af te stemmen. Duidelijk, snel en zonder gedoe.
