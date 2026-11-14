@@ -6,6 +6,7 @@ import { CITIES } from '@/config/cities';
 import { haversineKm } from '@/lib/cityTechnician';
 import { SITE_CONFIG } from '@/config/site.config';
 import styles from './NearestCity.module.css';
+import { cityPath } from '@/config/cityUrls';
 
 /*
  * "In de buurt" is a question about where the reader is, and the browser is
@@ -57,7 +58,7 @@ export default function NearestCity() {
             <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.call}>
               Bel {SITE_CONFIG.phone}
             </a>
-            <Link href={`/steden/${match.slug}`} className={styles.secondary}>
+            <Link href={cityPath(match.slug)} className={styles.secondary}>
               Bekijk {match.city} →
             </Link>
           </div>

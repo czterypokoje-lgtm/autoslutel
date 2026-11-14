@@ -7,6 +7,7 @@ import { SITE_CONFIG } from '@/config/site.config';
 import { MY_MAPS_VIEWER_URL } from '@/config/myMaps';
 import InstantServiceMap from '../InstantServiceMap';
 import styles from './ServiceAreaMap.module.css';
+import { cityPath } from '@/config/cityUrls';
 
 /*
  * The service area: the map, the provinces and the towns, as one section.
@@ -81,7 +82,7 @@ export default function ServiceAreaMap() {
                 <ul className={styles.chips}>
                   {shown.map((c) => (
                     <li key={c.slug}>
-                      <Link href={`/steden/${c.slug}`}>{c.city}</Link>
+                      <Link href={cityPath(c.slug)}>{c.city}</Link>
                     </li>
                   ))}
                   {more > 0 && (

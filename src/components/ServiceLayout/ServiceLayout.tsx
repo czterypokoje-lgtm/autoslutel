@@ -28,6 +28,7 @@ import { isFlyer } from '@/lib/jobPhotos';
 import styles from '@/app/diensten/[slug]/page.module.css';
 import fs from 'fs';
 import path from 'path';
+import { cityPath } from '@/config/cityUrls';
 
 /*
  * The whole service page, as a component two routes can render.
@@ -578,7 +579,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                   <p>
                     {CITIES.filter((c) => c.priority === 'P1').map((c, i, all) => (
                       <span key={c.slug}>
-                        <Link href={`/steden/${c.slug}`}>{c.city}</Link>
+                        <Link href={cityPath(c.slug)}>{c.city}</Link>
                         {i < all.length - 1 ? ' · ' : ''}
                       </span>
                     ))}
@@ -589,7 +590,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                     <ul className={styles.bulletList}>
                       {CITIES.filter((c) => c.priority !== 'P1').map((c) => (
                         <li key={c.slug}>
-                          <Link href={`/steden/${c.slug}`}>
+                          <Link href={cityPath(c.slug)}>
                             {c.city}
                           </Link>
                           {` — ${c.region}`}
@@ -789,7 +790,7 @@ export default function ServiceLayout({ slug, basePath }: { slug: string; basePa
                       Bekijk alle steden →
                     </Link>
                     {p1Cities.map(c => (
-                      <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
+                      <Link key={c.slug} href={cityPath(c.slug)} className="seo-hub-link">
                         {`${service.title} ${c.city} →`}
                       </Link>
                     ))}
