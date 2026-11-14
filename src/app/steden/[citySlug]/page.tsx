@@ -162,6 +162,23 @@ function cityTitle(name: string): string {
   return candidates.find((t) => t.length <= 60) ?? candidates[candidates.length - 1];
 }
 
+/*
+ * The districts of this city that have a page of their own.
+ *
+ * They are ordinary CITIES entries whose slug is "<city>-<district>", and
+ * they earn real traffic -- /steden/amsterdam-oost alone is 1.208
+ * impressions. Nothing linked to them from the parent city page, which is
+ * the one page certain to be crawled for that city.
+ *
+ * Derived rather than configured: a district page is created by adding it to
+ * CITIES, and this picks it up with no second list to keep in step. Cities
+ * with no district pages render no block -- naming wijken we have no page for
+ * would be inventing coverage.
+ */
+function districtsOf(citySlug: string) {
+  return CITIES.filter((c) => c.slug.startsWith(`${citySlug}-`) && !isNoindexCity(c.slug));
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ citySlug: string }> }): Promise<Metadata> {
   const { citySlug } = await params;
   const city = CITIES.find(c => c.slug === citySlug);
@@ -231,6 +248,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const city = CITIES.find(c => c.slug === citySlug);
   if (!city) notFound();
   const pageUrl = `${SITE_CONFIG.domain}/steden/${citySlug}`;
+  const districts = districtsOf(citySlug);
 
   /* Who actually covers this city, and how far away they really are. Null
      only when the roster could not be read at all. */
@@ -246,9 +264,13 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
   const arrivalText = arrival ?? ARRIVAL;
   const arrivalPhrase = arrival ? `gemiddeld binnen ${arrival}` : `binnen ${ARRIVAL}`;
 
-  // Find 3 geographically closest cities
+  // Find 3 geographically closest cities.
+  // Districts of this city are excluded: they are always the nearest points on
+  // the map and would fill all three slots with links the wijken block above
+  // already carries, leaving a "nabijgelegen steden" list with no cities in it.
+  const districtSlugs = new Set(districts.map((d) => d.slug));
   const closestCities = CITIES
-    .filter(c => c.slug !== citySlug && c.geo && city.geo)
+    .filter(c => c.slug !== citySlug && !districtSlugs.has(c.slug) && c.geo && city.geo)
     .map(c => ({
       ...c,
       distance: getDistanceFromLatLonInKm(
@@ -501,7 +523,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <section style={{ padding: '2.5rem 0', background: '#ffffff' }}>
             <div className="container" style={{ maxWidth: 760 }}>
               <h2 style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.45rem)', marginBottom: '0.75rem' }}>
-                Veelvoorkomende merken in {city.city}
+                Welke automerken komen wij het vaakst tegen in {city.city}?
               </h2>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, lineHeight: 1.9 }}>
                 {[...new Set((city.popularBrands ?? []).filter((b) => DEEP_DIVE[b]))].map((brand) => (
@@ -531,7 +553,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
           <section style={{ padding: '3rem 0', background: '#fff' }}>
             <div className="container" style={{ maxWidth: '760px', margin: '0 auto' }}>
               <h2 style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '1rem' }}>
-                Autosleutel service in {city.city}
+                Hoe werkt autosleutel bijmaken in {city.city}?
               </h2>
               {city.localFact && (
                 <p style={{ color: 'var(--gray-700)', lineHeight: 1.7, marginBottom: city.commonJob ? '1rem' : 0 }}>
@@ -602,7 +624,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {/* All services in this city */}
         <section className={styles.sectionAlt}>
           <div className="container">
-            <h2 style={{ textAlign: 'center', marginBottom: '3rem' }}>Onze Diensten in {city.city}</h2>
+            <h2 style={{ textAlign: 'center', marginBottom: '3rem' }}>Welke autosleutels maken wij bij in {city.city}?</h2>
             <div className={styles.serviceCardsGrid}>
               <Link href={`/diensten/autosleutel-bijmaken`} className={styles.serviceCardBig}>
                 <div className={styles.serviceCardImg}>
@@ -659,7 +681,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         {/* Comparison Table */}
         <section className={styles.section}>
           <div className="container">
-            <h2 className={styles.tableTitle}>Waarom Ons? Bespaar 30–50% vs Dealer in {city.city}</h2>
+            <h2 className={styles.tableTitle}>Wat kost een autosleutel bij de dealer in {city.city} — en wat bij ons?</h2>
             <p className={styles.tableDesc}>
               Dealer-niveau apparatuur, transparante prijzen, dezelfde dag service. Wij komen naar u toe in {city.city}.
             </p>
@@ -777,6 +799,26 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
         <section style={{ padding: '2rem 0', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
           <div className="container">
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'space-between' }}>
+              {districts.length > 0 && (
+                <div style={{ flex: '1 1 300px' }}>
+                  <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>
+                    In welke wijken van {city.city} komen wij?
+                  </h3>
+                  <p style={{ color: 'var(--gray-600)', fontSize: '0.92rem', lineHeight: 1.6, margin: '0 0 0.75rem' }}>
+                    Onze monteur komt in heel {city.city}. Voor deze wijken hebben wij een eigen pagina
+                    met de dichtstbijzijnde monteur en de aanrijtijd:
+                  </p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {districts.map((d) => (
+                      <li key={d.slug}>
+                        <Link href={`/steden/${d.slug}`} style={{ color: 'var(--orange-600)', textDecoration: 'none', fontWeight: 500 }}>
+                          Autosleutel bijmaken {d.city} &rarr;
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div style={{ flex: '1 1 300px' }}>
                 <h3 style={{ fontSize: '1.1rem', color: 'var(--navy-900)', marginBottom: '1rem' }}>Nabijgelegen steden</h3>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -834,7 +876,7 @@ export default async function CityPage({ params }: { params: Promise<{ citySlug:
               KLANTBEOORDELINGEN
             </p>
             <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
-              Wat Klanten Zeggen over Autosleutel24 in {city.city}
+              Wat zeggen klanten in {city.city} over Autosleutel24?
             </h2>
             <GoogleReviewsCta />
           </div>

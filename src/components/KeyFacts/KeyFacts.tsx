@@ -89,6 +89,34 @@ export function KeyPriceTable({ where, heading, bare }: { where?: string; headin
             </tbody>
           </table>
         </div>
+        {/*
+          * The breakdown, because the page Google quotes has one.
+          *
+          * Werkspot -- the source the AI Overview lifts its price table from
+          * -- prices the labour separately (sleutelsnijden EUR 15-60,
+          * programmeren EUR 50-100, uurloon EUR 60-90), and the locksmiths
+          * ranking for the city queries add a call-out fee and night
+          * surcharges on top (MasLocks: EUR 29 voorrijkosten, +EUR 20 after
+          * 17:30, +EUR 40 after 21:00, +EUR 90 after 23:30). A reader who has
+          * just been shown those lines is asking what OUR number leaves out.
+          *
+          * The honest answer is "nothing", and the way to say it is with the
+          * zeroes written down. A sentence claiming "all-in" is a promise;
+          * a table of EUR 0,- rows is checkable.
+          */}
+        <h3 style={{ marginTop: '2rem', marginBottom: '0.75rem', fontSize: '1.05rem' }}>Waar bestaat die prijs uit?</h3>
+        <div style={{ overflowX: 'auto' }}>
+          <table className="price-table" style={{ width: '100%', borderCollapse: 'collapse', background: '#fff' }}>
+            <tbody>
+              <tr><td style={cell}>Voorrijden, waar u ook staat</td><td style={cell}><strong>€0,-</strong></td></tr>
+              <tr><td style={cell}>De sleutel frezen op de code van uw auto</td><td style={cell}><strong>Inbegrepen</strong></td></tr>
+              <tr><td style={cell}>Programmeren op de startonderbreker</td><td style={cell}><strong>Inbegrepen</strong></td></tr>
+              <tr><td style={cell}>Toeslag &apos;s avonds, &apos;s nachts of in het weekend</td><td style={cell}><strong>€0,-</strong></td></tr>
+              <tr><td style={cell}>Wegslepen naar de dealer</td><td style={cell}><strong>Niet nodig — wij komen naar de auto</strong></td></tr>
+              <tr><td style={cell}>Garantie op de geleverde sleutel</td><td style={cell}><strong>12 maanden</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
         <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', marginTop: '1rem' }}>
           Vanafprijzen, afhankelijk van merk, model en bouwjaar. U hoort de exacte prijs telefonisch
           voordat wij vertrekken.{' '}
