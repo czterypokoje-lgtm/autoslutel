@@ -24,6 +24,7 @@ import HowItWorks from '@/components/HowItWorks/HowItWorks';
 import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
 import styles from './page.module.css';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
+import { KeyPriceTable, WatHeeftUNodig } from '@/components/KeyFacts/KeyFacts';
 
 /** Makes the webshop has at least five articles for (its src/lib/brands.json). */
 const SHOP_MAKES = new Set(['Hyundai','Opel','Renault','Toyota','Citroën','Ford','Kia','Honda','Peugeot','BMW','Volkswagen','Fiat','Mercedes-Benz','Chrysler','Nissan','Audi','Dacia','Seat','Škoda','Suzuki','Lexus','Mazda','Chevrolet','Land Rover','Volvo','Alfa Romeo','Mitsubishi','Porsche','Subaru','Jeep','Mini','Smart','Jaguar','Daewoo','Dodge','Saab','Rover','Isuzu','Iveco','SsangYong']);
@@ -694,6 +695,20 @@ export default async function BrandPage(props: { params: Promise<{ merkSlug: str
             "autosleutel kwijt <merk>" is its own query family in Search Console
             (audi 210 impressions, mercedes 251, both around position 45-57) and
             none of the sections above answered it under that wording. */}
+        {/*
+          * The brand pages are the site's second-biggest surface -- 47 pages,
+          * 31.944 impressions, 23 clicks, positions 28-52 -- and they were the
+          * one surface left out when the price table and the checklist went on
+          * everything ranking 11-20. They carry service cards with a "vanaf"
+          * figure and a dealer comparison, but never the per-type price table
+          * and never what the customer has to bring.
+          *
+          * Prices are national, so the blocks are not per brand; the heading
+          * names the brand because that is the query being answered.
+          */}
+        <KeyPriceTable heading={`Wat kost een ${brand.name} autosleutel bijmaken?`} />
+        <WatHeeftUNodig heading={`Wat heeft u nodig voor een nieuwe ${brand.name} sleutel?`} />
+
         <section id="sleutel-kwijt" style={{ padding: '3.5rem 0', background: 'var(--gray-50)' }}>
           <div className="container">
             <div className="seo-article-block" style={{ marginTop: 0 }}>
