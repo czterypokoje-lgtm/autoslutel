@@ -4,6 +4,7 @@ import { CITIES } from '@/config/cities';
 import fs from 'fs';
 import crypto from 'crypto';
 import path from 'path';
+import { cityPath } from '@/config/cityUrls';
 
 const BASE = SITE_CONFIG.domain;
 
@@ -185,7 +186,7 @@ function cityImageEntries() {
   ownCache ??= cityOwnImages();
   const own = ownCache;
   return CITIES.map((city) => ({
-    loc: `${BASE}/steden/${city.slug}`,
+    loc: `${BASE}${cityPath(city.slug)}`,
     images: Array.from({ length: 8 })
       .map((_, i) => `/images/cities/${city.slug}/autosleutel-bijmaken-${city.slug}-${i + 1}.webp`)
       .filter((url) => own.has(url))

@@ -10,6 +10,7 @@ import ServiceAreaMap from '@/components/ServiceAreaMap/ServiceAreaMap';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import { CITIES } from '@/config/cities';
 import { KeyPriceTable, WatHeeftUNodig } from '@/components/KeyFacts/KeyFacts';
+import { cityPath } from '@/config/cityUrls';
 
 /*
  * The best-converting local query on the site, with nowhere to land.
@@ -134,7 +135,7 @@ export default function InDeBuurt() {
                 {CITIES.filter((c) => c.region === region).map((c) => (
                   <Link
                     key={c.slug}
-                    href={`/steden/${c.slug}`}
+                    href={cityPath(c.slug)}
                     style={{
                       padding: '0.45rem 0.85rem',
                       background: '#fff',

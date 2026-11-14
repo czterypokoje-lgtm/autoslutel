@@ -17,6 +17,7 @@ import { getBaseLocalBusinessSchema } from '@/utils/schema';
 import styles from './page.module.css';
 import { ARRIVAL_TITLE } from '@/config/arrival';
 import { WatHeeftUNodig } from '@/components/KeyFacts/KeyFacts';
+import { cityPath } from '@/config/cityUrls';
 
 export const metadata: Metadata = {
   title: {
@@ -372,7 +373,7 @@ return (
                   <ul className={styles.bulletList} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.5rem' }}>
                     {CITIES.map(city => (
                       <li key={city.slug}>
-                        <Link href={`/steden/${city.slug}`}>{city.city}</Link>
+                        <Link href={cityPath(city.slug)}>{city.city}</Link>
                       </li>
                     ))}
                   </ul>

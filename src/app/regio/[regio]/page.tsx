@@ -13,6 +13,7 @@ import HeroQuickFacts from '@/components/HeroQuickFacts/HeroQuickFacts';
 import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import InstantServiceMap from '@/components/InstantServiceMap';
+import { cityPath } from '@/config/cityUrls';
 
 /*
  * One page per province the business wants to be found in.
@@ -119,7 +120,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
       containsPlace: cities.map((c) => ({
         '@type': 'City',
         name: c.city,
-        url: `${SITE_CONFIG.domain}/steden/${c.slug}`,
+        url: `${SITE_CONFIG.domain}${cityPath(c.slug)}`,
         geo: { '@type': 'GeoCoordinates', latitude: c.geo.lat, longitude: c.geo.lng },
       })),
     },
@@ -172,7 +173,7 @@ export default async function RegioPage(props: { params: Promise<{ regio: string
             {cities.map((c) => (
               <li key={c.slug} style={{ border: '1px solid var(--gray-200)', borderRadius: 10, padding: '1rem', background: '#fff' }}>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '0.35rem' }}>
-                  <Link href={`/steden/${c.slug}`} style={link}>{c.city}</Link>
+                  <Link href={cityPath(c.slug)} style={link}>{c.city}</Link>
                 </h3>
                 <p style={{ color: 'var(--gray-600)', fontSize: '0.92rem', lineHeight: 1.55 }}>
                   {c.subAreas.slice(0, 4).join(', ')}

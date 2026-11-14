@@ -6,6 +6,7 @@ import { SERVICE_REGIONS } from '@/config/regions';
 import { isNoindexCity } from '@/config/thinPages';
 import InstantServiceMap from '@/components/InstantServiceMap';
 import styles from './page.module.css';
+import { cityPath } from '@/config/cityUrls';
 
 export const metadata: Metadata = {
   title: {
@@ -65,7 +66,7 @@ export default function Steden() {
       item: {
         '@type': 'Place',
         name: city.city,
-        url: `${SITE_CONFIG.domain}/steden/${city.slug}`,
+        url: `${SITE_CONFIG.domain}${cityPath(city.slug)}`,
         geo: { '@type': 'GeoCoordinates', latitude: city.geo.lat, longitude: city.geo.lng },
         containedInPlace: { '@type': 'AdministrativeArea', name: city.region },
       },
@@ -123,7 +124,7 @@ export default function Steden() {
               <ul className={styles.seoList}>
                 {cities.map(c => (
                   <li key={c.slug}>
-                    <Link href={`/steden/${c.slug}`} id={`stad-${c.slug}`}>
+                    <Link href={cityPath(c.slug)} id={`stad-${c.slug}`}>
                       <strong style={{ color: 'var(--orange-500)' }}>{c.city}</strong>
                     </Link>
                   </li>

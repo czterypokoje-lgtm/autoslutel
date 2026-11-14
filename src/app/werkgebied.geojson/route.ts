@@ -3,6 +3,7 @@ import { SERVICE_REGIONS } from '@/config/regions';
 import { isNoindexCity } from '@/config/thinPages';
 import { SITE_CONFIG } from '@/config/site.config';
 import { ARRIVAL } from '@/config/arrival';
+import { cityPath } from '@/config/cityUrls';
 
 /*
  * The service area as GeoJSON: one Point per town, with its province, its page and
@@ -22,7 +23,7 @@ export function GET() {
     properties: {
       name: c.city,
       province: c.region,
-      url: `${SITE_CONFIG.domain}/steden/${c.slug}`,
+      url: `${SITE_CONFIG.domain}${cityPath(c.slug)}`,
       service: 'Autosleutel bijmaken, autosleutel kwijt, auto openen',
       arrival: `Binnen ${ARRIVAL} ter plaatse`,
       provider: SITE_CONFIG.fullName,

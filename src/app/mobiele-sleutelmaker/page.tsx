@@ -9,6 +9,7 @@ import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
 import VerifiedReviewBanner from '@/components/VerifiedReviewBanner/VerifiedReviewBanner';
 import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
 import { CITIES } from '@/config/cities';
+import { cityPath } from '@/config/cityUrls';
 
 /*
  * A page about WHO we are, not about what we do.
@@ -233,7 +234,7 @@ export default function MobieleSleutelmaker() {
                   {CITIES.filter((c) => c.priority === 'P1')
                     .slice(0, 10)
                     .map((c) => (
-                      <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
+                      <Link key={c.slug} href={cityPath(c.slug)} className="seo-hub-link">
                         {`Sleutelmaker ${c.city} →`}
                       </Link>
                     ))}

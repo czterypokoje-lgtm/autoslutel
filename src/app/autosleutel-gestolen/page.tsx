@@ -10,6 +10,7 @@ import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
 import { DIENSTEN, REDIRECTED_SERVICE_SLUGS } from '@/config/diensten';
 import { BRANDS } from '@/config/brands';
 import { CITIES } from '@/config/cities';
+import { cityPath } from '@/config/cityUrls';
 
 /*
  * Stolen is not the same job as lost, which is why this is not a section of
@@ -279,7 +280,7 @@ export default function AutosleutelGestolen() {
                   {CITIES.filter((c) => c.priority === 'P1')
                     .slice(0, 8)
                     .map((c) => (
-                      <Link key={c.slug} href={`/steden/${c.slug}`} className="seo-hub-link">
+                      <Link key={c.slug} href={cityPath(c.slug)} className="seo-hub-link">
                         {`Autosleutel gestolen ${c.city} →`}
                       </Link>
                     ))}

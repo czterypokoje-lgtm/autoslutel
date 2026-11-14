@@ -10,6 +10,7 @@ import { BLOG_POSTS, REDIRECTED_BLOG_SLUGS } from '@/config/services';
 import { lastModifiedFor } from '@/lib/contentDates';
 import fs from 'fs';
 import path from 'path';
+import { cityPath } from '@/config/cityUrls';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_CONFIG.domain;
@@ -91,8 +92,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images.push(`${base}/images/autosleutel-bijmaken-${c.slug}.webp`);
     }
     return {
-      url: `${base}/steden/${c.slug}`,
-      lastModified: lastModifiedFor(`/steden/${c.slug}`, 'steden'),
+      url: `${base}${cityPath(c.slug)}`,
+      lastModified: lastModifiedFor(cityPath(c.slug), 'steden'),
       changeFrequency: 'monthly' as const,
       priority: 0.85,
       images,
