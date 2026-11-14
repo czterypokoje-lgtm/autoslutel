@@ -637,6 +637,28 @@ export const BLOG_CONTENT: Record<string, React.ReactNode> = {
         <li><strong>Tesla:</strong> Model S en X key fobs gebruiken een CR2032 batterij. Model 3 en Y maken primair gebruik van keycards (RFID), maar als u de optionele key fob gebruikt, zit hier ook een CR2032 in.</li>
       </ul>
 
+      {/*
+        * The product, on the page that ranks for wanting it.
+        *
+        * "batterijen autosleutel vervangen" is 3.600 searches a month in NL at
+        * a competition index of 11 -- the second biggest keyword in the market
+        * and one almost nobody bids on. This page holds position 18,5 on 1.084
+        * impressions for that family and earned one click, because it answers
+        * the question completely and then offers nothing to buy. The only link
+        * to the battery category was the site footer.
+        *
+        * The reader has just been told the exact cell their car takes. That is
+        * the moment the shop is useful, not an interruption.
+        */}
+      <p>
+        <strong>Zelf vervangen?</strong> Wij verkopen de knoopcellen hierboven los in onze
+        webshop — CR2032, CR2025, CR2450 en LIR2025 van Duracell, Varta en Panasonic.{' '}
+        <Link href="/webshop/categorie/batterijen">Bekijk de sleutelbatterijen</Link>. Twijfelt u
+        of de behuizing ook versleten is, dan vindt u bij{' '}
+        <Link href="/webshop/categorie/behuizingen">sleutelbehuizingen</Link> het bijpassende
+        setje voor uw merk.
+      </p>
+
       <h3>Zelf de batterij vervangen van autosleutel: Instructies per model</h3>
       
       <h4>1. VW & Skoda sleutel batterij vervangen</h4>
