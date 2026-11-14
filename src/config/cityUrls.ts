@@ -16,6 +16,13 @@
  * amsterdam 9.7 on 330 for none. They are where a URL change can be measured
  * and where there is almost nothing to lose.
  *
+ * The hyphen, not a nested /autosleutel-bijmaken/<stad>: four of the six
+ * pages outranking us for this query family use the hyphenated form at root
+ * depth and only one nests it. Next cannot express `autosleutel-bijmaken-[stad]`
+ * as a dynamic segment, so each pilot city is its own small route file. That is
+ * fine for four and is the reason to keep the pilot small -- rolling this out
+ * to all 75 means generating the folders, not adding a line here.
+ *
  * Judge it on those four in Search Console after three to four weeks. If the
  * click-through rate moves, empty this set into every slug; if it does not,
  * delete the set and the redirect and nothing else has to be undone.
@@ -29,6 +36,6 @@ export const CITY_URL_PILOT: ReadonlySet<string> = new Set([
 
 /** The canonical path for a city page. The single source for links, canonicals, schema and the sitemap. */
 export const cityPath = (slug: string): string =>
-  CITY_URL_PILOT.has(slug) ? `/autosleutel-bijmaken/${slug}` : `/steden/${slug}`;
+  CITY_URL_PILOT.has(slug) ? `/autosleutel-bijmaken-${slug}` : `/steden/${slug}`;
 
 export const isPilotCity = (slug: string) => CITY_URL_PILOT.has(slug);
