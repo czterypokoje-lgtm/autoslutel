@@ -2,6 +2,8 @@ import { requireCrmUser, OFFICE_ROLES } from '@/lib/crmSession';
 import OfficeOverview from './OfficeOverview';
 import MonteurOverview from './MonteurOverview';
 import { parsePeriod } from './dashboardData';
+import KfcDashboard, { parseKfcPeriod } from './KfcDashboard';
+import { IS_KEYFORCARS } from '@/config/install';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,11 +15,20 @@ export const dynamic = 'force-dynamic';
 export default async function OverzichtPage({
   searchParams,
 }: {
-  searchParams: Promise<{ periode?: string }>;
+  searchParams: Promise<{ periode?: string; webshop?: string }>;
 }) {
   const user = await requireCrmUser('/admin/overzicht');
 
-  const { periode } = await searchParams;
+  const { periode, webshop } = await searchParams;
+  // KeyForCars: our office dashboard, then their three web shops underneath.
+  if (IS_KEYFORCARS) {
+    return (
+      <>
+        <OfficeOverview period={parsePeriod(periode)} />
+        <KfcDashboard period={parseKfcPeriod(webshop)} embedded />
+      </>
+    );
+  }
   if (user.role && OFFICE_ROLES.includes(user.role)) {
     return <OfficeOverview period={parsePeriod(periode)} />;
   }

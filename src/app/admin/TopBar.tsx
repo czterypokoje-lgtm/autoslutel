@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Bot, Search } from 'lucide-react';
 import styles from './admin.module.css';
 import type { CrmRole } from '@/lib/crmSession';
+import { IS_KEYFORCARS } from '@/config/install';
 
 /**
  * The bar above every CRM page on desktop: search, the AI agent, and you.
@@ -22,6 +23,32 @@ export default function TopBar({
   photoUrl?: string | null;
 }) {
   const office = role === 'owner' || role === 'kantoor';
+  const avatar = photoUrl ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={photoUrl} alt="" className={styles.avatarPhoto} />
+  ) : (
+    initials
+  );
+
+  // KeyForCars has no customers or AI agent screen: the bar searches products instead.
+  if (IS_KEYFORCARS) {
+    return (
+      <header className={styles.topBar}>
+        <form action="/admin/voorraad/p" method="get" className={styles.topSearch} role="search">
+          <Search size={17} strokeWidth={2} aria-hidden="true" />
+          <input
+            type="search"
+            name="q"
+            placeholder="Zoek product: code, EAN, naam of auto en bouwjaar…"
+            aria-label="Zoek product"
+          />
+        </form>
+        <div className={styles.topRight}>
+          <span className={styles.topAvatar} title={email ?? ''}>{avatar}</span>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className={styles.topBar}>

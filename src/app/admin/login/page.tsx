@@ -2,6 +2,7 @@ import styles from '../admin.module.css';
 import LoginForm from './LoginForm';
 import lg from './login.module.css';
 import { safeNext } from '../auth/safeNext';
+import { BRAND, IS_KEYFORCARS } from '@/config/install';
 
 export default async function LoginPage({
   searchParams,
@@ -14,14 +15,21 @@ export default async function LoginPage({
     <div className={`crm ${lg.split}`}>
       <div className={lg.brand}>
         <span className={lg.logo}>
-          Autosleutel<span>24</span>
+          {IS_KEYFORCARS ? 'KeyForCars' : <>Autosleutel<span>24</span></>}
           <small>CRM</small>
         </span>
-        <div>
-          <div className={lg.pitch}>Elke klus, elke sleutel, elke euro op één plek.</div>
-          <div className={lg.pitchSub}>Voor kantoor en monteurs: aan het bureau of op de telefoon in de bus.</div>
-        </div>
-        <span className={lg.foot}>Alleen voor medewerkers en monteurs van Autosleutel24.</span>
+        {IS_KEYFORCARS ? (
+          <div>
+            <div className={lg.pitch}>Drie webshops, één magazijn, één overzicht.</div>
+            <div className={lg.pitchSub}>Bestellingen, voorraad en etiketten: aan het bureau of op de telefoon in het magazijn.</div>
+          </div>
+        ) : (
+          <div>
+            <div className={lg.pitch}>Elke klus, elke sleutel, elke euro op één plek.</div>
+            <div className={lg.pitchSub}>Voor kantoor en monteurs: aan het bureau of op de telefoon in de bus.</div>
+          </div>
+        )}
+        <span className={lg.foot}>{BRAND.staff}</span>
       </div>
       <div className={lg.side}>
         <div className={lg.card}>

@@ -43,6 +43,8 @@ const crmReadonly =
 const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_CRM_READONLY: crmReadonly,
+    // Inlined so client components (the menu) know which install this is.
+    CRM_INSTALL: process.env.CRM_INSTALL ?? '',
   },
   /*
    * pdf-parse pulls in @napi-rs/canvas, a native compiled binary — the class
@@ -79,6 +81,9 @@ const nextConfig: NextConfig = {
    */
   outputFileTracingIncludes: {
     '/api/admin/invoice': ['./node_modules/pdfjs-dist/**/*.mjs', './node_modules/pdf-parse/dist/**/*'],
+    // KeyForCars product profiles: read with readFileSync at runtime (src/lib/productProfiles.ts).
+    '/api/admin/voorraad-local': ['./src/data/keyforcars-profiles.json'],
+    '/admin/voorraad/**': ['./src/data/keyforcars-profiles.json'],
   },
   /*
    * The mirror image of the problem above, and it broke a deploy outright:
@@ -467,6 +472,15 @@ const nextConfig: NextConfig = {
            * again.
            */
         ],
+      },
+      {
+        // The stock screens scan barcodes with the phone camera; everywhere else it stays off.
+        source: '/admin/voorraad/:path*',
+        headers: [{ key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=(self), payment=(self)' }],
+      },
+      {
+        source: '/admin/voorraad',
+        headers: [{ key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=(self), payment=(self)' }],
       },
     ];
   },

@@ -7,6 +7,9 @@ import Sidebar from './Sidebar';
 import MobileTabBar from './MobileTabBar';
 import TopBar from './TopBar';
 import { CRM_READONLY, READONLY_MESSAGE } from '@/lib/readonly';
+import { CRM_PREVIEW } from '@/lib/supabase/env';
+import { BRAND, IS_KEYFORCARS } from '@/config/install';
+import PreviewLanguage from './PreviewLanguage';
 
 /**
  * The CRM shell.
@@ -24,7 +27,8 @@ import { CRM_READONLY, READONLY_MESSAGE } from '@/lib/readonly';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'CRM · Autosleutel24',
+  // The site-wide "| Autosleutel24" suffix must not reach another company's tab title.
+  title: IS_KEYFORCARS ? { absolute: BRAND.crm, template: '%s' } : 'CRM · Autosleutel24',
   robots: { index: false, follow: false, nocache: true },
   /*
    * Without this, "Voeg toe aan beginscherm" still works — every browser can
@@ -34,7 +38,7 @@ export const metadata: Metadata = {
    */
   appleWebApp: {
     capable: true,
-    title: 'Autosleutel24 CRM',
+    title: BRAND.crm,
     statusBarStyle: 'black-translucent',
   },
 };
@@ -76,7 +80,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const isMonteur = user?.role === 'monteur';
 
-  return (
+  const panel = (
     <div className={`crm ${styles.shell}`}>
       {user && (
         <Sidebar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
@@ -97,4 +101,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       )}
     </div>
   );
+
+  // KeyForCars reads Dutch and English: the switch sits in the corner of every screen.
+  return IS_KEYFORCARS || CRM_PREVIEW ? <PreviewLanguage>{panel}</PreviewLanguage> : panel;
 }

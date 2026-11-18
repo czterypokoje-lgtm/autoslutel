@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { CRM_PREVIEW } from '@/lib/supabase/env';
 
 /**
  * The CRM's Data Access Layer.
@@ -34,6 +35,9 @@ function readRole(appMetadata: Record<string, unknown> | undefined): CrmRole | n
 
 /** The signed-in CRM user, or null. Never throws. */
 export async function getCrmUser(): Promise<CrmUser | null> {
+  if (CRM_PREVIEW) {
+    return { id: '00000000-0000-4000-8000-000000000000', email: 'preview@example.invalid', role: 'owner' };
+  }
   let supabase;
   try {
     supabase = await createSupabaseServerClient();
@@ -99,7 +103,7 @@ export async function requireCrmUser(returnTo?: string): Promise<CrmUser> {
 export async function requireOfficeUserApi(): Promise<
   { user: CrmUser; response?: never } | { user?: never; response: Response }
 > {
-  const user = await getCrmUser();
+  const user = CRM_PREVIEW ? null : await getCrmUser();
 
   if (!user) {
     return {

@@ -289,6 +289,12 @@
   font-variant-numeric: tabular-nums;
 }
 
+.reportWideLabels .rankedRow { grid-template-columns: minmax(0, 1fr) auto; }
+.reportWideLabels .rankedTrack { grid-column: 1 / -1; grid-row: 2; height: 8px; }
+.reportWideLabels .rankedLabel, .reportWideLabels .donutKeyLabel { white-space: normal; overflow-wrap: anywhere; }
+.reportWideLabels .donutKeyValue { white-space: nowrap; }
+.reportWideLabels .donutWrap { justify-content: center; }
+
 /* The wide row (chart beside a ranking) stacks before either half gets too
    narrow to read; a 240px line chart is a squiggle, not a chart. */
 .wideRow {

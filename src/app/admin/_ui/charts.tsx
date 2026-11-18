@@ -245,9 +245,13 @@ export function RankedBars({
 export function Donut({
   slices,
   format,
+  showValues = false,
+  ariaLabel = 'Verdeling',
 }: {
   slices: { label: string; value: number }[];
   format: (value: number) => string;
+  showValues?: boolean;
+  ariaLabel?: string;
 }) {
   const total = slices.reduce((sum, slice) => sum + slice.value, 0);
   if (!slices.length || total <= 0) return <div className={styles.chartEmpty}>Nog geen gegevens.</div>;
@@ -259,7 +263,7 @@ export function Donut({
 
   return (
     <div className={styles.donutWrap}>
-      <svg viewBox="0 0 160 160" className={styles.donut} role="img" aria-label="Verdeling">
+      <svg viewBox="0 0 160 160" className={styles.donut} role="img" aria-label={ariaLabel}>
         <g transform="translate(80,80) rotate(-90)">
           {slices.map((slice, index) => {
             const fraction = slice.value / total;
@@ -288,7 +292,7 @@ export function Donut({
             <span className={styles.legendDot} style={{ background: PALETTE[index % PALETTE.length] }} />
             <span className={styles.donutKeyLabel}>{slice.label}</span>
             <span className={styles.donutKeyValue}>
-              {((slice.value / total) * 100).toFixed(1)}%
+              {showValues && `${format(slice.value)} · `}{((slice.value / total) * 100).toFixed(1)}%
             </span>
           </div>
         ))}

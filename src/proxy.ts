@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server';
 import type { NextFetchEvent, NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { isAuthorized, adminAuthConfigured } from '@/lib/adminAuth';
-import { SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/supabase/env';
+import { CRM_PREVIEW, SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/supabase/env';
 import { CRM_READONLY, READONLY_MESSAGE, isSafeMethod } from '@/lib/readonly';
+import { IS_KEYFORCARS, installServes } from '@/config/install';
+import { LAN_COOKIE, hasLanCookie, lanMode, lanToken, lanTokenMatches } from '@/lib/lanPreview';
 import { AD_CLICK_PARAMS, readClickOrigin } from '@/lib/adClickId';
 import { getClientIp, rateLimit } from '@/lib/rateLimit';
 import {
@@ -71,6 +73,28 @@ function crmHeaders(response: NextResponse): NextResponse {
 
 async function handleCrm(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
+  if (CRM_PREVIEW) {
+    const host = request.headers.get('host') ?? '';
+    if (lanMode() && lanTokenMatches(request.nextUrl.searchParams.get('k'))) {
+      const url = new URL(request.url);
+      url.searchParams.delete('k');
+      const response = NextResponse.redirect(url);
+      response.cookies.set(LAN_COOKIE, lanToken(), { httpOnly: true, sameSite: 'strict', path: '/', maxAge: 8 * 3600 });
+      return crmHeaders(response);
+    }
+    // nextUrl.hostname is the dev server's own name ("localhost") in next dev, whatever the
+    // visitor typed; the Host header is what the request actually came in on.
+    const local = ['127.0.0.1', 'localhost', '[::1]'].includes(host.replace(/:\d+$/, ''));
+    const allowedHere = lanMode() ? hasLanCookie(request.headers.get('cookie')) : local;
+    if (!allowedHere || pathname.startsWith('/api/')) {
+      return crmHeaders(new NextResponse(null, { status: 404 }));
+    }
+    if (!isSafeMethod(request.method)) return crmHeaders(new NextResponse(null, { status: 405 }));
+    if (pathname === '/admin/login' || pathname.startsWith('/admin/auth/')) {
+      return crmHeaders(NextResponse.redirect(new URL('/admin/overzicht', request.url)));
+    }
+    return crmHeaders(NextResponse.next());
+  }
   const isPublic = CRM_PUBLIC.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`)
   );
@@ -121,7 +145,8 @@ async function handleCrm(request: NextRequest): Promise<NextResponse> {
   }
 
   if (user && pathname === '/admin/login') {
-    return crmHeaders(NextResponse.redirect(new URL('/admin/leads', request.url)));
+    const home = IS_KEYFORCARS ? '/admin/overzicht' : '/admin/leads';
+    return crmHeaders(NextResponse.redirect(new URL(home, request.url)));
   }
 
   return crmHeaders(response);
@@ -249,6 +274,25 @@ async function handlePaidLanding(
 
 export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const { pathname } = request.nextUrl;
+
+  /*
+   * A customer install answers only its own screens. Everything else in this
+   * codebase — our public site, our other CRM modules, our crons and webhooks —
+   * is a plain 404 there, before any auth or database call.
+   */
+  if (IS_KEYFORCARS) {
+    if (!installServes(pathname)) {
+      return new NextResponse(null, {
+        status: 404,
+        headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' },
+      });
+    }
+    if (pathname === '/') return NextResponse.redirect(new URL('/admin/overzicht', request.url));
+  }
+
+  if (CRM_PREVIEW && pathname === '/api/admin/voorraad-local') {
+    return crmHeaders(NextResponse.next());
+  }
 
   // Local read-only copy: nothing may write — no CRM save, no server action,
   // no public form posting a real lead. Signing in talks to Supabase directly.

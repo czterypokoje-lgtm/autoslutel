@@ -6,11 +6,15 @@ import { stockStatus } from '@/lib/stockStatus';
 import StockForm from './StockForm';
 import PartOrders, { type PartOrderRow } from './PartOrders';
 import v from './voorraad.module.css';
+import { CRM_PREVIEW } from '@/lib/supabase/env';
+import { IS_KEYFORCARS } from '@/config/install';
+import KeyForCarsStock from './KeyForCarsStock';
+import catalog from '@/data/keyforcars-stock.json';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Voorraad | Autosleutel24',
+  title: CRM_PREVIEW || IS_KEYFORCARS ? 'Voorraad | KeyForCars' : 'Voorraad | Autosleutel24',
 };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -46,8 +50,12 @@ interface StockRow {
  * nowhere to go. Without a price on the stock row every material booked to a
  * job lands with a null cost, and the whole job-costing chain reads zero.
  */
-export default async function VoorraadPage() {
+export default async function VoorraadPage({ searchParams }: { searchParams: Promise<{ demo?: string }> }) {
   await requireOfficeUser('/admin/voorraad');
+  if (CRM_PREVIEW || IS_KEYFORCARS) {
+    const demo = (await searchParams).demo === '1';
+    return <KeyForCarsStock key={demo ? 'demo' : 'local'} catalog={catalog} demo={demo} />;
+  }
   const supabase = await createSupabaseServerClient();
 
   const [stockResult, techResult, movesResult, orderResult] = await Promise.all([

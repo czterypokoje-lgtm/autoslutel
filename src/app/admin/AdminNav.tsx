@@ -26,6 +26,8 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import styles from './admin.module.css';
+import { usePreviewLanguage } from './PreviewLanguage';
+import { IS_KEYFORCARS } from '@/config/install';
 import type { CrmRole } from '@/lib/crmSession';
 
 /**
@@ -138,9 +140,66 @@ function allHrefs(nav: NavItem[]): string[] {
   return nav.flatMap((i) => (i.children ? i.children.map((c) => c.href) : i.href ? [i.href] : []));
 }
 
+/**
+ * KeyForCars's install: three web shops and one warehouse, no technicians.
+ * Every other screen answers 404 there (src/config/install.ts).
+ */
+const KEYFORCARS_NAV: NavItem[] = [
+  { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/overzicht' },
+  { label: 'Leads', icon: Inbox, href: '/admin/leads' },
+  { label: 'Gesprekken', icon: PhoneCall, href: '/admin/gesprekken', ai: true },
+  {
+    label: 'Planning',
+    icon: CalendarDays,
+    children: [
+      { href: '/admin/jobs', label: 'Agenda' },
+      { href: '/admin/jobs/nieuw', label: 'Klus inplannen' },
+    ],
+  },
+  { label: 'Klanten', icon: Users, href: '/admin/klanten' },
+  { label: 'Bestellingen', icon: Package, href: '/admin/orders' },
+  {
+    label: 'Voorraad',
+    icon: Boxes,
+    children: [
+      { href: '/admin/voorraad', label: 'Magazijn' },
+      { href: '/admin/voorraad/p', label: 'Productzoeker' },
+    ],
+  },
+  {
+    label: 'Geld',
+    icon: Euro,
+    children: [
+      { href: '/admin/facturen', label: 'Facturen' },
+      { href: '/admin/uitgaven', label: 'Uitgaven' },
+    ],
+  },
+  {
+    label: 'Rapporten',
+    icon: BarChart3,
+    children: [
+      { href: '/admin/rapport', label: 'Prestaties' },
+      { href: '/admin/winst', label: 'Winst & verbruik' },
+      { href: '/admin/rapportage', label: 'Rapportage' },
+      { href: '/admin/attributie', label: 'Advertentieklikken' },
+      { href: '/admin/whatsapp-advertenties', label: 'WhatsApp en advertenties' },
+      { href: '/admin/klikfraude', label: 'Klikfraude' },
+    ],
+  },
+  { label: 'Instellingen', icon: Settings, href: '/admin/instellingen' },
+];
+
+/*
+ * The stock screens use the camera, which needs the destination document's
+ * own Permissions-Policy header — so they are opened as a full page load,
+ * not a client-side navigation that would keep the previous page's policy.
+ */
+const fullLoad = (href: string) => href === '/admin/voorraad' || href.startsWith('/admin/voorraad/');
+
 export default function AdminNav({ role }: { role: CrmRole | null }) {
+  const { t } = usePreviewLanguage();
   const pathname = usePathname() ?? '';
-  const nav = role === 'monteur' ? MONTEUR_NAV : OFFICE_NAV;
+  const nav = IS_KEYFORCARS ? KEYFORCARS_NAV : role === 'monteur' ? MONTEUR_NAV : OFFICE_NAV;
 
   /*
    * The most specific match wins, so /admin/jobs/nieuw lights up
@@ -155,7 +214,7 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
   const [toggled, setToggled] = useState<Record<string, boolean>>({});
 
   return (
-    <nav className={styles.nav} aria-label="Hoofdmenu">
+    <nav className={styles.nav} aria-label={t('Hoofdmenu')}>
       {nav.map((item) => {
         const Icon = item.icon;
 
@@ -169,7 +228,7 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
               className={on ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}
             >
               <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
-              <span className={styles.navLabel}>{item.label}</span>
+              <span className={styles.navLabel}>{t(item.label)}</span>
               {item.ai && <span className={styles.navAi}>AI</span>}
             </Link>
           );
@@ -191,7 +250,7 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
               }}
             >
               <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
-              <span className={styles.navLabel}>{item.label}</span>
+              <span className={styles.navLabel}>{t(item.label)}</span>
               {open ? (
                 <ChevronDown size={16} className={styles.navChevron} aria-hidden="true" />
               ) : (
@@ -202,15 +261,16 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
               <div className={styles.navSub}>
                 {item.children.map((c) => {
                   const on = c.href === active;
+                  const NavLink = fullLoad(c.href) ? 'a' : Link;
                   return (
-                    <Link
+                    <NavLink
                       key={c.href}
                       href={c.href}
                       aria-current={on ? 'page' : undefined}
                       className={on ? `${styles.navSubLink} ${styles.navSubLinkActive}` : styles.navSubLink}
                     >
-                      {c.label}
-                    </Link>
+                      {t(c.label)}
+                    </NavLink>
                   );
                 })}
               </div>

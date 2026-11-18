@@ -1,0 +1,6 @@
+.env*
+local-data/
+.next/
+node_modules/
+supabase/.temp/
+supabase/.branches/

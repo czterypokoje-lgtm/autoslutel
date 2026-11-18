@@ -1030,3 +1030,9 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
 }
 
 .labelSpaced { margin-top: 14px; }
+.languageBanner { display: inline-flex; align-items: center; gap: 5px; padding: 3px 5px 3px 10px; pointer-events: auto; white-space: nowrap; }
+.languageBanner button { border: 1px solid transparent; border-radius: 99px; padding: 3px 6px; color: #813111; background: transparent; font: inherit; cursor: pointer; }
+.languageBanner button[aria-pressed=true] { border-color: #eab79c; background: white; }
+/* Bottom-right corner on every width: at the top it covered the search bar. */
+.languageBanner { inset: auto 16px 16px auto; transform: none; }
+@media (max-width: 600px) { .languageBanner { inset: auto 10px 10px auto; } }

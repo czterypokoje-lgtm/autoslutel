@@ -55,3 +55,6 @@ unused-images/
 # Conversion exports: contain customer PII, never commit
 google_ads_conversions.csv
 *conversions*.csv
+
+# KeyForCars stock pilot: local counts and photos, never commit
+local-data/

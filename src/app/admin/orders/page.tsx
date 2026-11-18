@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
+import KfcOrders from './KfcOrders';
+import { IS_KEYFORCARS } from '@/config/install';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,11 +27,12 @@ const TABS = [
 export default async function OrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; q?: string }>;
+  searchParams: Promise<{ status?: string; q?: string; shop?: string }>;
 }) {
   await requireOfficeUser('/admin/orders');
 
   const sp = await searchParams;
+  if (IS_KEYFORCARS) return <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} />;
   const status = TABS.some((t) => t.value === sp.status) ? sp.status : undefined;
   const search = (sp.q ?? '').replace(/[,()%*\\]/g, ' ').trim().slice(0, 60);
 

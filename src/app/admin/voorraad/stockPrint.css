@@ -1,0 +1,14 @@
+/*
+ * Label printing: page-level rules that cannot live in a CSS module, because
+ * they target <html> and <body> rather than one of our own classes (webpack's
+ * CSS modules refuse such selectors). They only match while a label sheet is
+ * on the page, so they are inert everywhere else.
+ */
+@media print {
+  /* The sheet is rendered straight under <body>; everything else is removed from layout,
+     not just hidden, so no blank pages follow the labels. */
+  body:has(> [data-stock-print] article) > :not([data-stock-print]) { display: none !important; }
+  html:has(body > [data-stock-print] article), body:has(> [data-stock-print] article) {
+    margin: 0 !important; padding: 0 !important; background: #fff !important; min-height: 0 !important; height: auto !important;
+  }
+}

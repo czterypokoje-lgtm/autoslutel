@@ -7,6 +7,7 @@ import styles from './admin.module.css';
 import AdminNav from './AdminNav';
 import SignOutButton from './SignOutButton';
 import type { CrmRole } from '@/lib/crmSession';
+import { IS_KEYFORCARS } from '@/config/install';
 
 /**
  * The sidebar, and the phone-width behaviour it needs and desktop never does.
@@ -51,7 +52,7 @@ export default function Sidebar({
             <KeyRound size={16} strokeWidth={2.2} />
           </span>
           <span>
-            Autosleutel<span className={styles.brand24}>24</span>
+            {IS_KEYFORCARS ? 'KeyForCars' : <>Autosleutel<span className={styles.brand24}>24</span></>}
           </span>
           <span className={styles.brandRole}>{role === 'monteur' ? 'Monteur' : 'CRM'}</span>
         </Link>
@@ -59,12 +60,20 @@ export default function Sidebar({
         
         {/* Only office roles have the global search to Klanten */}
         {(role === 'owner' || role === 'kantoor') && (
-          <Link href="/admin/klanten" className={`${styles.iconGhost} ${styles.mobileOnly}`} title="Zoeken">
+          <Link
+            href={IS_KEYFORCARS ? '/admin/voorraad/p' : '/admin/klanten'}
+            className={`${styles.iconGhost} ${styles.mobileOnly}`}
+            title="Zoeken"
+          >
             <Search size={16} strokeWidth={1.9} aria-hidden="true" />
           </Link>
         )}
 
-        <Link href="/admin/mijn-profiel" className={`${styles.avatar} ${styles.mobileOnly}`} title={email ?? 'Profiel'}>
+        <Link
+          href={IS_KEYFORCARS ? '/admin/overzicht' : '/admin/mijn-profiel'}
+          className={`${styles.avatar} ${styles.mobileOnly}`}
+          title={email ?? 'Profiel'}
+        >
           {photoUrl ? (
             /*
               Plain <img>, not next/image: the file sits in blob storage under
@@ -105,16 +114,18 @@ export default function Sidebar({
         </div>
 
         <div className={styles.sidebarBottom}>
-          <a
-            className={styles.navLink}
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="De site openen zoals een bezoeker hem ziet"
-          >
-            <ExternalLink size={16} strokeWidth={1.9} aria-hidden="true" />
-            Site bekijken
-          </a>
+          {!IS_KEYFORCARS && (
+            <a
+              className={styles.navLink}
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="De site openen zoals een bezoeker hem ziet"
+            >
+              <ExternalLink size={16} strokeWidth={1.9} aria-hidden="true" />
+              Site bekijken
+            </a>
+          )}
 
           <SignOutButton />
 
