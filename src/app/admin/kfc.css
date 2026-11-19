@@ -157,7 +157,10 @@
  * Screens ported 1:1 from Studio Admin (arhamkhnz/next-shadcn-admin-dashboard)
  * keep that template's neutral primary instead of the brand orange.
  */
-.kfc-neutral { --primary: oklch(0.205 0 0); --primary-foreground: oklch(0.985 0 0); }
+.kfc-neutral {
+  --primary: oklch(0.205 0 0); --primary-foreground: oklch(0.985 0 0);
+  --chart-1: oklch(0.87 0 0); --chart-2: oklch(0.556 0 0); --chart-3: oklch(0.439 0 0); --chart-4: oklch(0.371 0 0); --chart-5: oklch(0.269 0 0);
+}
 .dark .kfc-neutral { --primary: oklch(0.922 0 0); --primary-foreground: oklch(0.205 0 0); }
 
 /*

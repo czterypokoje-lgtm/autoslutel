@@ -83,7 +83,7 @@ const GROUPS: Group[] = [
 const TITLES: Record<string, string> = {
   overzicht: 'Dashboard', orders: 'Bestellingen', klanten: 'Klanten', voorraad: 'Voorraad', inkoop: 'Inkoop', leads: 'Leads',
   gesprekken: 'Gesprekken', facturen: 'Facturen', uitgaven: 'Uitgaven', bank: 'Bank', 'best-verkocht': 'Best verkocht', winst: 'Winst & verbruik',
-  rapport: 'Prestaties', attributie: 'Advertentieklikken', instellingen: 'Instellingen', p: 'Productzoeker', nieuw: 'Nieuw', jobs: 'Planning',
+  rapport: 'Prestaties', attributie: 'Advertentieklikken', instellingen: 'Instellingen', p: 'Productzoeker', nieuw: 'Nieuw', lijst: 'Alle leads', jobs: 'Planning',
   bestellingen: 'Bestellingen', picken: 'Picklijst',
 };
 
