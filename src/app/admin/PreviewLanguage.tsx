@@ -376,7 +376,7 @@ export function PreviewInput({ placeholder, 'aria-label': label, ...props }: Com
   return <input {...props} placeholder={placeholder && t(placeholder)} aria-label={label && t(label)} />;
 }
 
-export default function PreviewLanguage({ children }: { children: ReactNode }) {
+export default function PreviewLanguage({ children, floating = true }: { children: ReactNode; floating?: boolean }) {
   const english = useSyncExternalStore(subscribe, () => localStorage.getItem(storageKey) === 'en', () => false);
   useEffect(() => {
     const root = document.documentElement;
@@ -386,11 +386,19 @@ export default function PreviewLanguage({ children }: { children: ReactNode }) {
   }, [english]);
   return <Language.Provider value={english}>
     {children}
-    <div role="group" aria-label={english ? 'Interface language' : 'Interfacetaal'} className={`${styles.readonlyBanner} ${styles.languageBanner}`}>
+    {floating && <LanguageToggle />}
+  </Language.Provider>;
+}
+
+/** The NL/EN switch. Floating bottom-right by default; `inline` for a place in a header bar. */
+export function LanguageToggle({ inline = false, className = '' }: { inline?: boolean; className?: string }) {
+  const english = useContext(Language);
+  return (
+    <div role="group" aria-label={english ? 'Interface language' : 'Interfacetaal'} className={`${inline ? styles.languageInline : styles.readonlyBanner} ${styles.languageBanner} ${className}`}>
       {['NL', 'EN'].map((lang) => <button key={lang} type="button" aria-pressed={english === (lang === 'EN')} onClick={() => {
         localStorage.setItem(storageKey, lang.toLowerCase());
         window.dispatchEvent(new Event(storageKey));
       }}>{lang}</button>)}
     </div>
-  </Language.Provider>;
+  );
 }

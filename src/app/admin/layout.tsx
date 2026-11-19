@@ -117,7 +117,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // KeyForCars: the shadcn shell (KfcShell) once signed in; the login page keeps the plain panel.
   if (IS_KEYFORCARS && user) {
     return (
-      <PreviewLanguage>
+      <PreviewLanguage floating={false}>
         <KfcShell role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
           {readonlyStatus}
           {children}

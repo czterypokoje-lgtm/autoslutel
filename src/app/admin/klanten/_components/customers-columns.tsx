@@ -123,7 +123,7 @@ export function customersColumns(t: T): ColumnDef<DataTableFeatures, CustomerRow
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <AvatarCell name={row.original.company} lastEntry={row.original.last_entry} />
-          <div className="min-w-0">
+          <div className="max-w-[36vw] min-w-0 md:max-w-none">
             <Link href={`/admin/klanten/${row.original.id}`} className="text-foreground block truncate text-sm font-medium hover:underline">
               {row.original.company}
             </Link>

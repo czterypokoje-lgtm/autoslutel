@@ -102,8 +102,8 @@ export function OrderLines({ order, canAct, onOrder }: { order: ShopOrder; canAc
             <TableRow>
               {canAct && live && <TableHead className="w-10" />}
               <TableHead>Artikel</TableHead><TableHead>Locatie</TableHead>
-              <TableHead className="text-right">Aantal</TableHead><TableHead className="text-right">Gereserveerd</TableHead>
-              <TableHead>Beschikbaar nu</TableHead><TableHead>Status</TableHead>
+              <TableHead className="text-right">Aantal</TableHead><TableHead className="hidden text-right md:table-cell">Gereserveerd</TableHead>
+              <TableHead className="hidden md:table-cell">Beschikbaar nu</TableHead><TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -123,12 +123,12 @@ function Line({ line, pickable, busy, picked, onPick }: { line: ShopLine; pickab
       {pickable && <TableCell><input type="checkbox" aria-label="Gepickt" className="size-4" disabled={!canPick || busy === line.id} checked={picked} onChange={(e) => onPick(e.target.checked)} /></TableCell>}
       <TableCell>
         <div className="font-medium">{line.sku || '—'}</div>
-        <div className="text-muted-foreground max-w-96 truncate text-xs">{line.name}{!line.article_code && ' · niet gekoppeld aan een artikel'}</div>
+        <div className="text-muted-foreground max-w-20 truncate text-xs md:max-w-96">{line.name}{!line.article_code && ' · niet gekoppeld aan een artikel'}</div>
       </TableCell>
       <TableCell className="whitespace-nowrap">{line.shelf ? `${line.shelf} / ${line.box}` : <span className="text-muted-foreground">—</span>}</TableCell>
       <TableCell className="text-right tabular-nums">{line.quantity}</TableCell>
-      <TableCell className="text-right tabular-nums">{line.reserved}</TableCell>
-      <TableCell className="text-xs">
+      <TableCell className="hidden text-right tabular-nums md:table-cell">{line.reserved}</TableCell>
+      <TableCell className="hidden text-xs md:table-cell">
         {line.article_code && (line.available !== undefined ? <>
           <span className="tabular-nums">{line.available}</span>
           {line.state === 'short' && (line.incoming ? <span className="text-muted-foreground"> · {line.incoming} onderweg</span> : <span className="text-muted-foreground"> · niets besteld</span>)}

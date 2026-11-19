@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import {
   BarChart3, Boxes, ChevronRight, Euro, Inbox, KeyRound, LayoutDashboard, LogOut, Package, PackageCheck, PhoneCall,
   Settings, ShoppingCart, Users, type LucideIcon,
@@ -17,7 +17,7 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbS
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
-import { usePreviewLanguage } from './PreviewLanguage';
+import { LanguageToggle, usePreviewLanguage } from './PreviewLanguage';
 import type { CrmRole } from '@/lib/crmSession';
 
 /*
@@ -100,6 +100,9 @@ function matches(pathname: string, view: string | null, href: string) {
 export default function KfcShell({ children, role, email, initials, photoUrl, fontClass = '' }: {
   children: ReactNode; role: CrmRole | null; email: string | null; initials: string; photoUrl: string | null; fontClass?: string;
 }) {
+  // Radix portals (mobile menu sheet, dialogs, dropdowns) render on <body>, outside the shell div:
+  // the class on body makes the kfc.css resets and tokens reach them too.
+  useEffect(() => { document.body.classList.add('kfc-shell'); return () => document.body.classList.remove('kfc-shell'); }, []);
   const pathname = usePathname() ?? '';
   const view = useSearchParams()?.get('view') ?? null;
   const { t, english } = usePreviewLanguage();
@@ -222,6 +225,7 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
               ))}
             </BreadcrumbList>
           </Breadcrumb>
+          <LanguageToggle inline className="ml-auto" />
         </header>
         {/* `crm crm-keyforcars` keeps theme.css variables alive for pages not yet rebuilt on shadcn. */}
         <main className="crm crm-keyforcars flex min-w-0 flex-1 flex-col gap-4 p-4 md:p-6" data-appearance="studio">{children}</main>

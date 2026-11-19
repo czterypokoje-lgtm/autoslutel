@@ -91,7 +91,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
         </form>
       </div>
 
-      {canImport && <ImportPanel shops={importShops} />}
+      {canImport && <div className="max-md:order-last"><ImportPanel shops={importShops} /></div>}
       {!live && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs"><PreviewText>Voorbeeldbestellingen. Echte producten en prijzen, verzonnen klanten en aantallen.</PreviewText></p>}
 
       <div className="flex flex-wrap gap-2">
@@ -107,6 +107,22 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
 
       <Card>
         <CardContent className="p-0">
+          <ul className="divide-y md:hidden">
+            {shown.map((order) => (
+              <li key={`m-${order.shop}-${order.number}`} className="flex flex-col gap-1.5 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <Link className="font-semibold" href={`/admin/bestellingen/${order.id ?? `${order.shop}--${order.number}`}`}>#{order.number}</Link>
+                  <span className="font-medium tabular-nums">{MONEY.format(order.totalExcl / 100)}</span>
+                </div>
+                <div className="text-muted-foreground text-xs">{order.shop} · {WHEN.format(new Date(order.created))} · {order.country}</div>
+                <div className="text-xs">
+                  {order.lines.map((line) => <div key={line.sku} className="truncate">{line.quantity} × <span className="font-medium">{line.sku}</span> <span className="text-muted-foreground">{line.name.slice(0, 40)}</span></div>)}
+                </div>
+                <div className="flex flex-wrap gap-1 pt-0.5"><Badge variant={STATUS[order.status].variant}><PreviewText>{STATUS[order.status].label}</PreviewText></Badge>{order.fulfilment && order.fulfilment !== 'external' && <FulfilmentBadge value={order.fulfilment} />}</div>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden md:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -140,6 +156,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
       {pageCount > 1 && (

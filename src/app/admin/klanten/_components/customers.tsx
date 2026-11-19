@@ -17,6 +17,7 @@ import { Kbd } from '@/components/ui/kbd';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { dataTableFeatures } from '@/lib/data-table-features';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { usePreviewLanguage } from '../../PreviewLanguage';
 import { CustomerDialog } from '../KfcCustomers';
 
@@ -45,6 +46,12 @@ export function Customers({ rows, initialStatus, initialQuery }: {
     ...(initialQuery ? [{ id: 'search', value: initialQuery }] : []),
   ]);
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({ search: false, country: false });
+  // Phones: name, overdue and status; the rest stays one tap away under "Kolommen".
+  const isMobile = useIsMobile();
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time narrowing once the viewport is known
+    if (isMobile) setColumnVisibility((v) => ({ ...v, terms: false, open_cents: false, overdue_cents: false, lastEntry: false }));
+  }, [isMobile]);
   const [pagination, setPagination] = React.useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
 
   const table = useTable({

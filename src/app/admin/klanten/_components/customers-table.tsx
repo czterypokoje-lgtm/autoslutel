@@ -33,7 +33,7 @@ export function CustomersTable({ table, t }: { table: ReactTable<DataTableFeatur
   return (
     <div className="flex flex-1 flex-col gap-4">
       <div>
-        <Table className="**:data-[slot='table-cell']:px-4 **:data-[slot='table-head']:px-4">
+        <Table className="**:data-[slot='table-cell']:px-2 **:data-[slot='table-head']:px-2 md:**:data-[slot='table-cell']:px-4 md:**:data-[slot='table-head']:px-4">
           <TableHeader className="[&_tr]:border-t">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -55,7 +55,7 @@ export function CustomersTable({ table, t }: { table: ReactTable<DataTableFeatur
                   data-state={table.state.rowSelection[row.id] && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-3 py-4 align-middle">
+                    <TableCell key={cell.id} className="px-2 py-3 align-middle md:px-3 md:py-4">
                       <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}

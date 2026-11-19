@@ -352,3 +352,11 @@
 .shelfLabel[data-size='a4-70x37'] .shelfBarcode { height: 4.5mm; }
 .shelfLabel[data-size='a4-70x37'] .shelfMeta { font-size: 1.6mm; }
 .shelfLabel[data-size='a4-70x37'] .shelfQr { width: 7.5mm; height: 7.5mm; }
+
+/* Phones: title on top, the action buttons in a two-column grid below it instead of a narrow stack beside it. */
+@media (max-width: 640px) {
+  .heading { flex-direction: column; align-items: stretch; }
+  .labelActions { display: grid; grid-template-columns: 1fr 1fr; justify-content: stretch; }
+  .labelActions > * { width: 100%; }
+  .labelActions > .primary { grid-column: 1 / -1; }
+}

@@ -107,7 +107,7 @@ export function PickBoard({ orders: fromServer, now }: { orders: ShopOrder[]; no
     printLabels(batch.filter((o) => !!o.label_url || labelled.has(o.id))); // only what really has a label
   }
 
-  const chip = (on: boolean) => cn('rounded-md px-2.5 py-1 text-sm transition-colors', on ? 'bg-primary text-primary-foreground' : 'hover:bg-muted');
+  const chip = (on: boolean) => cn('rounded-md px-2.5 py-1 text-sm whitespace-nowrap transition-colors', on ? 'bg-primary text-primary-foreground' : 'hover:bg-muted');
 
   return (
     <div className="flex flex-col gap-5">
