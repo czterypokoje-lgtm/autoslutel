@@ -1,4 +1,4 @@
-import { requireOfficeUser } from '@/lib/crmSession';
+import { requireOfficeUser, requireWarehouseUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Empty, Notice } from '../_ui';
 import { Boxes, Euro, TriangleAlert, CircleHelp } from 'lucide-react';
@@ -52,7 +52,8 @@ interface StockRow {
  * job lands with a null cost, and the whole job-costing chain reads zero.
  */
 export default async function VoorraadPage({ searchParams }: { searchParams: Promise<{ demo?: string; view?: string }> }) {
-  await requireOfficeUser('/admin/voorraad');
+  // KeyForCars: warehouse and picker work here too; prices are stripped server-side.
+  await (IS_KEYFORCARS ? requireWarehouseUser : requireOfficeUser)('/admin/voorraad');
   if (CRM_PREVIEW || IS_KEYFORCARS) {
     const params = await searchParams;
     const demo = params.demo === '1';

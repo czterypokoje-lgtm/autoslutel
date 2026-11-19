@@ -20,15 +20,8 @@ export default async function OverzichtPage({
   const user = await requireCrmUser('/admin/overzicht');
 
   const { periode, webshop } = await searchParams;
-  // KeyForCars: our office dashboard, then their three web shops underneath.
-  if (IS_KEYFORCARS) {
-    return (
-      <>
-        <OfficeOverview period={parsePeriod(periode)} />
-        <KfcDashboard period={parseKfcPeriod(webshop)} embedded />
-      </>
-    );
-  }
+  // KeyForCars: the web-shop owner's dashboard; the locksmith office view does not apply.
+  if (IS_KEYFORCARS) return <KfcDashboard period={parseKfcPeriod(webshop)} />;
   if (user.role && OFFICE_ROLES.includes(user.role)) {
     return <OfficeOverview period={parsePeriod(periode)} />;
   }

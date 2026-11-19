@@ -1,3 +1,6 @@
+import { IS_KEYFORCARS } from '@/config/install';
+import { listCustomers } from '@/lib/kfcReceivables';
+import KfcCustomers from './KfcCustomers';
 import Link from 'next/link';
 import { MessageCircle, Phone, Search } from 'lucide-react';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -36,7 +39,14 @@ const initials = (name: string | null) =>
  * Every customer once, keyed on the phone number (crm_customers): who they
  * are, how often they asked, what they bought, and a call or WhatsApp away.
  */
-export default async function KlantenPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+export default async function KlantenPage({ searchParams }: { searchParams: Promise<{ q?: string; view?: string }> }) {
+  if (IS_KEYFORCARS) {
+    await requireOfficeUser('/admin/klanten');
+    const sp = await searchParams;
+    const view = sp.view === 'overdue' ? 'overdue' : 'all';
+    const rows = await listCustomers({ q: sp.q?.trim(), overdue: view === 'overdue' });
+    return <KfcCustomers rows={rows} view={view} q={sp.q ?? ''} />;
+  }
   await requireOfficeUser('/admin/klanten');
 
   const { q } = await searchParams;

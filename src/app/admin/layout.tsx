@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './theme.css';
+import './kfc.css';
 import styles from './admin.module.css';
 import { getCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -12,6 +13,7 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { BRAND, IS_KEYFORCARS } from '@/config/install';
 import PreviewLanguage, { PreviewText } from './PreviewLanguage';
 import KeyForCarsAppearance from './KeyForCarsAppearance';
+import KfcShell from './KfcShell';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--ff-crm-studio', preload: false });
 
@@ -109,6 +111,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     </Shell>
   );
 
+  // KeyForCars: the shadcn shell (KfcShell) once signed in; the login page keeps the plain panel.
+  if (IS_KEYFORCARS && user) {
+    return (
+      <PreviewLanguage>
+        <KfcShell role={user.role} email={user.email} initials={initials} photoUrl={photoUrl}>
+          {readonlyStatus}
+          {children}
+        </KfcShell>
+      </PreviewLanguage>
+    );
+  }
   // KeyForCars reads Dutch and English: the switch sits in the corner of every screen.
   return IS_KEYFORCARS || CRM_PREVIEW ? <PreviewLanguage>{panel}</PreviewLanguage> : panel;
 }

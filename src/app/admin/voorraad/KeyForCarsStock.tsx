@@ -66,6 +66,8 @@ function saveLabelSize(size: LabelSize) {
 export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInvoice }: { initialCatalog: StockArticle[]; demo: boolean; view: InventoryView; canLinkInvoice: boolean }) {
   const { t, english } = usePreviewLanguage();
   const [state, setState] = useState(EMPTY_STOCK);
+  /** Physical · unusable · reserved · available · incoming per article (ledger install only). */
+  const [positions, setPositions] = useState<Record<string, { physical: number; unusable: number; reserved: number; available: number; incoming: number }>>({});
   const [stockReady, setStockReady] = useState(false);
   const [fullCatalog, setFullCatalog] = useState<StockArticle[]>();
   const [catalogFailed, setCatalogFailed] = useState(false);
@@ -122,12 +124,16 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
       try {
         const query = new URLSearchParams();
         if (demo) query.set('demo', '1');
+        else query.set('positions', '1');
         if (compactCatalog) query.set('movementCatalog', '1');
         const response = await fetch(`${api}?${query}`, { signal: controller.signal, cache: 'no-store' });
         if (!response.ok) throw new Error();
         const stock = await response.json();
         if (!controller.signal.aborted) {
-          setState(compactCatalog ? stock.state : stock);
+          setState(stock.state ?? stock);
+          if (Array.isArray(stock.positions)) {
+            setPositions(Object.fromEntries(stock.positions.map((row: { article_code: string }) => [row.article_code, row])));
+          }
           if (compactCatalog) {
             setFullCatalog(stock.catalog);
             setCatalogFailed(false);
@@ -406,7 +412,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         <button type="button" className={styles.secondary} onClick={() => shareMovement(lastMovement)}>{t("Delen via WhatsApp")}</button>
         {lastMovement.move.photo && <a href={`${api}?movement=${lastMovement.move.id}${demo ? '&demo=1' : ''}`} download={`keyforcars-${lastMovement.move.id}.jpg`}>{t("Foto downloaden")}</a>}
       </section>}
-      {ready && view === 'reorder' && <StockReorder state={state} catalog={articles} />}
+      {ready && view === 'reorder' && <StockReorder state={state} catalog={articles} incoming={Object.fromEntries(Object.entries(positions).map(([code, row]) => [code, row.incoming]))} />}
       {ready && (view === 'reports' || view === 'journal') && <StockReports key={view} state={state} catalog={articles} demo={demo} view={view} />}
 
       {view === 'products' && <div className={styles.columns}>
@@ -462,6 +468,8 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
                       const first = locations[0];
                       return first ? `${t('Locatie')}: ${first.shelf} / ${first.box} · ${first.quantity} ${t('st.')}${locations.length > 1 ? ` (+${locations.length - 1})` : ''}` : t('Locatie niet opgegeven');
                     })()}</small>}
+                    {stockReady && positions[article.id] && <small className={styles.shelfHint}>{(({ physical, unusable, reserved, available, incoming }) =>
+                      `${t('Fysiek')} ${physical} · ${t('Onbruikbaar')} ${unusable} · ${t('Gereserveerd')} ${reserved} · ${t('Beschikbaar')} ${available} · ${t('Onderweg')} ${incoming}`)(positions[article.id])}</small>}
                   </span>
                 </button>
                 {article.sku && <Link prefetch={false} className={styles.profileShortcut} href={`/admin/voorraad/p?q=${encodeURIComponent(article.sku)}${demo ? '&demo=1' : ''}`}>{t('Productprofiel')}</Link>}

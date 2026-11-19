@@ -65,6 +65,8 @@ export default function InvoiceForm({
   initial,
   previousClients,
   preview = false,
+  customers,
+  initialCustomerId,
 }: {
   technicians: { id: string; name: string }[];
   showTechnicianPicker: boolean;
@@ -74,6 +76,8 @@ export default function InvoiceForm({
   initial?: InvoiceFormValues;
   previousClients?: any[];
   preview?: boolean;
+  customers?: { id: string; company: string; email: string | null; phone: string | null; street: string | null; postcode: string | null; city: string | null; vat_number: string | null }[];
+  initialCustomerId?: string | null;
 }) {
   const router = useRouter();
   const isEdit = Boolean(invoiceId);
@@ -94,6 +98,7 @@ export default function InvoiceForm({
   }
 
 
+  const [customerId, setCustomerId] = useState<string>(initialCustomerId ?? '');
   const [billerName, setBillerName] = useState(initial?.billerName ?? biller.name);
   const [billerStreet, setBillerStreet] = useState(initial?.billerStreet ?? '');
   const [billerPostcode, setBillerPostcode] = useState(initial?.billerPostcode ?? '');
@@ -209,6 +214,7 @@ export default function InvoiceForm({
       biller_btw: billerBtw,
       biller_iban: billerIban,
       client_name: clientName,
+      customer_id: customerId || null,
       client_street: clientStreet,
       client_postcode: clientPostcode,
       client_city: clientCity,
@@ -283,6 +289,20 @@ export default function InvoiceForm({
                   ) : (
                     <>
                       <option value="">-- Kies bekende klant --</option>
+        {customers && customers.length > 0 && (
+          <label style={{ display: 'grid', gap: 4, marginBottom: 12 }}>
+            <div style={{ fontSize: 13, fontWeight: 600 }}>Zakelijke klant (rekening)</div>
+            <select className="border-input h-9 rounded-md border bg-transparent px-3 text-sm" value={customerId} onChange={(e) => {
+              const id = e.target.value; setCustomerId(id);
+              const c = customers.find((x) => x.id === id);
+              if (c) { setClientName(c.company); setClientStreet(c.street ?? ''); setClientPostcode(c.postcode ?? ''); setClientCity(c.city ?? ''); setClientEmail(c.email ?? ''); setClientPhone(c.phone ?? ''); setClientBtw(c.vat_number ?? ''); }
+            }}>
+              <option value="">Geen rekening (particulier / contant)</option>
+              {customers.map((c) => <option key={c.id} value={c.id}>{c.company}</option>)}
+            </select>
+            <div style={{ fontSize: 12, color: 'var(--crm-muted)' }}>Met een klant gekozen wordt de factuur bij verzenden op de rekening geboekt.</div>
+          </label>
+        )}
                       {previousClients.map((c, i) => (
                         <option key={i} value={c.client_name}>{c.client_name}</option>
                       ))}

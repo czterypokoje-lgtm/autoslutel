@@ -300,6 +300,7 @@ const dictionary: Record<string, string> = {
   'Voorbeeldgegevens · automatisch bijgewerkt zodra een gebeurtenis binnenkomt.': 'Sample data · updates when an event arrives.',
   'Telling': 'Count', 'Ontvangst': 'Receipt', 'Uitgifte': 'Stock issue', 'Verkoop': 'Sale', 'Retour': 'Return', 'Verplaatsing': 'Transfer',
   'st.': 'units', 'saldo onbekend': 'balance unknown', 'Bak': 'Bin', 'Locatie': 'Location',
+  'Fysiek': 'Physical', 'Onbruikbaar': 'Unusable', 'Gereserveerd': 'Reserved', 'Beschikbaar': 'Available',
   'Sluiten': 'Close', 'Foto maken': 'Take photo', 'Telefooncamera / foto kiezen': 'Use phone camera / choose photo',
   'Camera openen…': 'Opening camera…', 'Livecamera vereist HTTPS. Gebruik de telefooncamera of kies een foto.': 'Live camera requires HTTPS. Use the phone camera or choose a photo.',
   'Sta cameratoegang toe in je browser of kies een foto.': 'Allow camera access in your browser or choose a photo.',

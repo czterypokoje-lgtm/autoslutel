@@ -6,10 +6,12 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { PageHead, Notice } from '../../_ui';
 import { PreviewText } from '../../PreviewLanguage';
 import InvoiceForm from '../InvoiceForm';
+import { customerOptions } from '@/lib/kfcReceivables';
 
 export const dynamic = 'force-dynamic';
 
-export default async function NieuweFactuurPage() {
+export default async function NieuweFactuurPage({ searchParams }: { searchParams: Promise<{ klant?: string }> }) {
+  const { klant } = await searchParams;
   const user = await requireCrmUser('/admin/facturen/nieuw');
   const keyForCarsBiller = { name: BRAND.name, email: '', phone: '', kvk: '', btw: '', iban: '' };
   if (CRM_PREVIEW) {
@@ -52,7 +54,9 @@ export default async function NieuweFactuurPage() {
       />
       <InvoiceForm
         technicians={technicians as { id: string; name: string }[]}
-        showTechnicianPicker={user.role !== 'monteur'}
+        showTechnicianPicker={!IS_KEYFORCARS && user.role !== 'monteur'}
+        customers={IS_KEYFORCARS ? await customerOptions() : undefined}
+        initialCustomerId={klant ?? null}
         biller={IS_KEYFORCARS ? keyForCarsBiller : {
           name: SITE_CONFIG.fullName,
           email: SITE_CONFIG.email,
