@@ -106,7 +106,7 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
           selectedId={active?.id ?? null}
           now={now}
           title={navItems.find((n) => n.id === view)?.title ?? t('Postvak IN')}
-          className={cn('md:border-r', 'transition-transform duration-300 ease-out will-change-transform max-md:col-start-1 max-md:row-start-1', showThread && 'max-md:pointer-events-none max-md:-translate-x-full')}
+          className={cn('md:border-r', showThread && 'max-md:hidden')}
           onSelectConversation={(c) => { setSelected(c.id); setShowThread(true); }}
         />
         {active ? (
@@ -116,10 +116,10 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
             showBackButton={isMobile}
             onBack={() => setShowThread(false)}
             onOpenContact={() => setShowContact(true)}
-            className={cn('transition-transform duration-300 ease-out will-change-transform max-md:col-start-1 max-md:row-start-1', showThread ? 'max-md:translate-x-0' : 'max-md:pointer-events-none max-md:translate-x-full')}
+            className={cn(!showThread && 'max-md:hidden')}
           />
         ) : (
-          <div className="text-muted-foreground grid place-items-center text-sm max-md:hidden">{t('Geen gesprekken in deze weergave.')}</div>
+          <div className={cn('text-muted-foreground grid place-items-center text-sm', !showThread && 'max-md:hidden')}>{t('Geen gesprekken in deze weergave.')}</div>
         )}
         <div aria-hidden={!showContact} className={cn('hidden overflow-hidden border-l transition-colors duration-300 lg:block', !showContact && 'pointer-events-none border-l-transparent')}>
           <div className={cn('h-full w-80 transition-[opacity,transform] duration-300 ease-out', showContact ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0')}>
