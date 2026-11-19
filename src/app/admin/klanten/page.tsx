@@ -1,6 +1,6 @@
 import { IS_KEYFORCARS } from '@/config/install';
 import { listCustomers } from '@/lib/kfcReceivables';
-import KfcCustomers from './KfcCustomers';
+import { Customers } from './_components/customers';
 import Link from 'next/link';
 import { MessageCircle, Phone, Search } from 'lucide-react';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -43,9 +43,8 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
   if (IS_KEYFORCARS) {
     await requireOfficeUser('/admin/klanten');
     const sp = await searchParams;
-    const view = sp.view === 'overdue' ? 'overdue' : 'all';
-    const rows = await listCustomers({ q: sp.q?.trim(), overdue: view === 'overdue' });
-    return <KfcCustomers rows={rows} view={view} q={sp.q ?? ''} />;
+    // Filtering happens in the table; ?view=overdue and ?q= only preset it (old links keep working).
+    return <Customers rows={await listCustomers()} initialStatus={sp.view === 'overdue' ? 'Vervallen' : undefined} initialQuery={sp.q?.trim()} />;
   }
   await requireOfficeUser('/admin/klanten');
 
