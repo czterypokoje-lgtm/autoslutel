@@ -53,3 +53,5 @@ begin
     grant execute on function public.kfc_pick_line(uuid, boolean) to service_role;
   end if;
 end $$;
+
+notify pgrst, 'reload schema';
