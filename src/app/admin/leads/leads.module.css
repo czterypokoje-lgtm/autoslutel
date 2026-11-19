@@ -65,6 +65,10 @@
   overflow-x: auto;
   padding-bottom: 4px;
 }
+/* Phones: two rows of chips beat a hidden horizontal scroll. */
+@media (max-width: 640px) {
+  .tabs { flex-wrap: wrap; overflow: visible; }
+}
 
 .tab {
   display: flex;

@@ -1,3 +1,4 @@
+import { IS_KEYFORCARS } from '@/config/install';
 import { notFound } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -87,7 +88,10 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
       <div className={styles.sheet} id="invoice-sheet">
         <div className={styles.top}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt={inv.biller_name} className={styles.logo} />
+          {/* /logo.png is Autosleutel24's mark; another install prints its own name instead. */}
+          {IS_KEYFORCARS
+            ? <strong className={styles.logo} style={{ fontSize: 22, letterSpacing: '-0.02em' }}>{inv.biller_name}</strong>
+            : <img src="/logo.png" alt={inv.biller_name} className={styles.logo} />}
           <div className={styles.topRight}>
             <h1 className={styles.h1}>Factuur {inv.invoice_number}</h1>
             <p className={styles.issueDate}>
