@@ -72,6 +72,17 @@ export async function getShopOrder(id: string): Promise<ShopOrder | null> {
   return order;
 }
 
+/** Several orders at once, for the bulk label sheet. Keeps the order of `ids`. */
+export async function getShopOrdersByIds(ids: string[]): Promise<ShopOrder[]> {
+  if (!ids.length) return [];
+  const { data, error } = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`).in('id', ids.slice(0, 200));
+  if (error) throw new StockError(`Bestellingen lezen mislukt: ${error.message}`, 500);
+  const byId = new Map((data ?? []).map((row) => [String((row as { id: string }).id), toOrder(row)]));
+  const orders = ids.map((id) => byId.get(id)).filter((o): o is ShopOrder => !!o);
+  await decorate(orders.flatMap((o) => o.lines));
+  return orders;
+}
+
 async function decorate(lines: ShopLine[]) {
   const codes = [...new Set(lines.map((l) => l.article_code).filter((c): c is string => !!c))];
   if (!codes.length) return;
@@ -97,7 +108,7 @@ async function decorate(lines: ShopLine[]) {
 /** Paid, not yet shipped, oldest first: what the warehouse works through. */
 export async function pickList(): Promise<ShopOrder[]> {
   const { data, error } = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`)
-    .eq('status', 'processing').in('fulfilment', ['open', 'picked']).order('created_at').limit(100);
+    .eq('status', 'processing').in('fulfilment', ['open', 'picked']).order('created_at').limit(500);
   if (error) throw new StockError(`Picklijst lezen mislukt: ${error.message}`, 500);
   const orders = (data ?? []).map(toOrder);
   await decorate(orders.flatMap((o) => o.lines));
