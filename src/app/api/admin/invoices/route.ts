@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server';
 import { getCrmUser, CRM_ROLES } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SITE_CONFIG } from '@/config/site.config';
+import { BRAND, IS_KEYFORCARS } from '@/config/install';
+
+/* Blank biller fields fall back to the company's own details — never to the other install's. */
+const BILLER_DEFAULTS = IS_KEYFORCARS
+  ? { fullName: BRAND.name, email: null, phone: null, kvk: null, btw: null, iban: null }
+  : SITE_CONFIG;
 
 export const dynamic = 'force-dynamic';
 
@@ -115,15 +121,15 @@ export async function POST(request: Request) {
   const { data: invoice, error } = await supabase
     .from('sales_invoices')
     .insert({
-      biller_name: text(body.biller_name, 200) ?? SITE_CONFIG.fullName,
+      biller_name: text(body.biller_name, 200) ?? BILLER_DEFAULTS.fullName,
       biller_street: text(body.biller_street, 200),
       biller_postcode: text(body.biller_postcode, 20),
       biller_city: text(body.biller_city, 100),
-      biller_email: text(body.biller_email, 200) ?? SITE_CONFIG.email,
-      biller_phone: text(body.biller_phone, 40) ?? SITE_CONFIG.phone,
-      biller_kvk: text(body.biller_kvk, 40) ?? SITE_CONFIG.kvk,
-      biller_btw: text(body.biller_btw, 40) ?? SITE_CONFIG.btw,
-      biller_iban: text(body.biller_iban, 40) ?? SITE_CONFIG.iban,
+      biller_email: text(body.biller_email, 200) ?? BILLER_DEFAULTS.email,
+      biller_phone: text(body.biller_phone, 40) ?? BILLER_DEFAULTS.phone,
+      biller_kvk: text(body.biller_kvk, 40) ?? BILLER_DEFAULTS.kvk,
+      biller_btw: text(body.biller_btw, 40) ?? BILLER_DEFAULTS.btw,
+      biller_iban: text(body.biller_iban, 40) ?? BILLER_DEFAULTS.iban,
       client_name: clientName,
       customer_id: typeof body.customer_id === 'string' && /^[a-f0-9-]{36}$/i.test(body.customer_id) ? body.customer_id : null,
       client_street: text(body.client_street, 200),

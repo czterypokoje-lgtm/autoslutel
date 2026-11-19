@@ -119,6 +119,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* Geist, loaded by admin/layout.tsx (next/font) and put on the shell as a CSS variable. */
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /*
@@ -130,7 +133,7 @@
   .kfc-shell {
     background: var(--background);
     color: var(--foreground);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Inter", sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
   .kfc-shell *, .kfc-shell *::before, .kfc-shell *::after { border: 0 solid var(--border); box-sizing: border-box; }
@@ -142,3 +145,94 @@
   .kfc-shell ul { list-style: none; }
   .kfc-shell table { border-collapse: collapse; }
 }
+
+/*
+ * Studio Admin screens size headings with utilities, as preflight would allow.
+ * Unlayered (the public globals.css heading rules are unlayered too) but with
+ * :where(), so a single utility class on the heading still wins.
+ */
+:where(.kfc-neutral) :is(h1, h2, h3, h4) { font: inherit; letter-spacing: inherit; color: inherit; margin: 0; }
+
+/*
+ * Screens ported 1:1 from Studio Admin (arhamkhnz/next-shadcn-admin-dashboard)
+ * keep that template's neutral primary instead of the brand orange.
+ */
+.kfc-neutral { --primary: oklch(0.205 0 0); --primary-foreground: oklch(0.985 0 0); }
+.dark .kfc-neutral { --primary: oklch(0.922 0 0); --primary-foreground: oklch(0.205 0 0); }
+
+/*
+ * Invoice print: the paper is portalled to <body> and is the only thing printed.
+ * Scoped with :has() so pages without a print root (labels, old PDFs) print as before.
+ */
+[data-print-root] { display: none; }
+@media print {
+  body:has([data-print-root]) > *:not([data-print-root]) { display: none !important; }
+  body:has([data-print-root]) [data-print-root] {
+    display: block !important; width: 210mm !important; height: 297mm !important; margin: 0 !important; overflow: hidden !important; background: white !important;
+  }
+  [data-print-root] [data-print-paper] { width: 210mm !important; height: 297mm !important; margin: 0 !important; box-shadow: none !important; }
+  [data-print-root] [data-print-paper], [data-print-root] [data-print-paper] * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+@page { margin: 0; }
+
+/* Variants the current shadcn components use (from the shadcn package tailwind.css). */
+@custom-variant data-open {
+  &:where([data-state="open"]),
+  &:where([data-open]:not([data-open="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-closed {
+  &:where([data-state="closed"]),
+  &:where([data-closed]:not([data-closed="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-checked {
+  &:where([data-state="checked"]),
+  &:where([data-checked]:not([data-checked="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-unchecked {
+  &:where([data-state="unchecked"]),
+  &:where([data-unchecked]:not([data-unchecked="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-selected {
+  &:where([data-selected="true"]) {
+    @slot;
+  }
+}
+
+@custom-variant data-disabled {
+  &:where([data-disabled="true"]),
+  &:where([data-disabled]:not([data-disabled="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-active {
+  &:where([data-state="active"]),
+  &:where([data-active]:not([data-active="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-horizontal {
+  &:where([data-orientation="horizontal"]) {
+    @slot;
+  }
+}
+
+@custom-variant data-vertical {
+  &:where([data-orientation="vertical"]) {
+    @slot;
+  }
+}
+

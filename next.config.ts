@@ -41,6 +41,8 @@ const crmReadonly =
   (READONLY_BRANCHES.includes(process.env.VERCEL_GIT_COMMIT_REF ?? '') ? '1' : '0');
 
 const nextConfig: NextConfig = {
+  // The in-app preview browser reaches the dev server as 127.0.0.1, not localhost.
+  allowedDevOrigins: ["127.0.0.1"],
   env: {
     NEXT_PUBLIC_CRM_READONLY: crmReadonly,
     // Inlined so client components (the menu) know which install this is.

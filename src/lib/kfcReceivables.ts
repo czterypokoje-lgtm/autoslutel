@@ -105,7 +105,7 @@ export async function reverseEntry(entryId: number, key: string, user: CrmUser, 
 }
 
 /** For the invoice form's customer picker. */
-export async function customerOptions(): Promise<Pick<Customer, 'id' | 'company' | 'email' | 'phone' | 'street' | 'postcode' | 'city' | 'vat_number'>[]> {
-  const { data } = await db().from('kfc_customers').select('id, company, email, phone, street, postcode, city, vat_number').is('merged_into', null).is('anonymised_at', null).order('company');
+export async function customerOptions(): Promise<Pick<Customer, 'id' | 'company' | 'email' | 'phone' | 'street' | 'postcode' | 'city' | 'vat_number' | 'terms_days'>[]> {
+  const { data } = await db().from('kfc_customers').select('id, company, email, phone, street, postcode, city, vat_number, terms_days').is('merged_into', null).is('anonymised_at', null).order('company');
   return data ?? [];
 }

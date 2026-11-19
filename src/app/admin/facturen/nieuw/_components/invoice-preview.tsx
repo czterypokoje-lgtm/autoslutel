@@ -1,0 +1,75 @@
+'use client';
+
+import * as React from 'react';
+
+import { Download, Printer } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { usePreviewLanguage } from '../../../PreviewLanguage';
+
+import { INVOICE_PAPER_HEIGHT, INVOICE_PAPER_SCALE, INVOICE_PAPER_WIDTH, type InvoiceFormValues } from './data';
+import { InvoicePaper } from './invoice-paper';
+import { PrintInvoice } from './print-invoice';
+import { useVisibleCenterPosition } from './use-visible-center-position';
+
+/* Both buttons open the print dialog: "Download PDF" is the browser's own "save as PDF" there. */
+function handlePrint() {
+  window.print();
+}
+
+export function InvoicePreview({ invoice }: { invoice: InvoiceFormValues }) {
+  const { t } = usePreviewLanguage();
+  const previewBodyRef = React.useRef<HTMLDivElement>(null);
+  const paperLayout = useVisibleCenterPosition(previewBodyRef, {
+    height: INVOICE_PAPER_HEIGHT,
+    maxScale: INVOICE_PAPER_SCALE,
+    width: INVOICE_PAPER_WIDTH,
+  });
+
+  return (
+    <>
+      <PrintInvoice invoice={invoice} />
+      <div className="bg-card flex flex-col rounded-xl border">
+        <div className="flex items-center justify-between px-4 py-4">
+          <h2 className="text-lg font-medium">{t('Voorbeeld')}</h2>
+          <ButtonGroup>
+            <Button type="button" variant="outline" onClick={handlePrint}>
+              <Printer data-icon="inline-start" />
+              {t('Afdrukken')}
+            </Button>
+            <Button type="button" variant="outline" onClick={handlePrint}>
+              <Download data-icon="inline-start" />
+              {t('Download PDF')}
+            </Button>
+          </ButtonGroup>
+        </div>
+
+        <div
+          ref={previewBodyRef}
+          className="@container/preview relative min-h-[calc(100svh-15rem)] flex-1 rounded-b-xl bg-stone-200 p-4 dark:bg-stone-800"
+        >
+          {paperLayout === null ? (
+            <div className="text-muted-foreground absolute inset-0 grid place-items-center text-sm">
+              {t('Voorbeeld laden')}
+            </div>
+          ) : null}
+          <div
+            style={{
+              height: paperLayout ? INVOICE_PAPER_HEIGHT * paperLayout.scale : INVOICE_PAPER_HEIGHT * INVOICE_PAPER_SCALE,
+              top: paperLayout?.top ?? '50%',
+              transform: paperLayout === null ? 'translate(-50%, -50%)' : 'translateX(-50%)',
+              width: paperLayout ? INVOICE_PAPER_WIDTH * paperLayout.scale : INVOICE_PAPER_WIDTH * INVOICE_PAPER_SCALE,
+            }}
+            className="absolute left-1/2 opacity-0 data-[ready=true]:opacity-100"
+            data-ready={paperLayout !== null}
+          >
+            <div style={{ transform: `scale(${paperLayout?.scale ?? INVOICE_PAPER_SCALE})` }} className="origin-top-left">
+              <InvoicePaper invoice={invoice} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

@@ -97,8 +97,8 @@ function matches(pathname: string, view: string | null, href: string) {
   return pathname === path || pathname.startsWith(`${path}/`);
 }
 
-export default function KfcShell({ children, role, email, initials, photoUrl }: {
-  children: ReactNode; role: CrmRole | null; email: string | null; initials: string; photoUrl: string | null;
+export default function KfcShell({ children, role, email, initials, photoUrl, fontClass = '' }: {
+  children: ReactNode; role: CrmRole | null; email: string | null; initials: string; photoUrl: string | null; fontClass?: string;
 }) {
   const pathname = usePathname() ?? '';
   const view = useSearchParams()?.get('view') ?? null;
@@ -113,7 +113,7 @@ export default function KfcShell({ children, role, email, initials, photoUrl }: 
   };
 
   return (
-    <SidebarProvider className="kfc-shell min-h-svh">
+    <SidebarProvider className={`kfc-shell min-h-svh ${fontClass}`}>
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <SidebarMenu>

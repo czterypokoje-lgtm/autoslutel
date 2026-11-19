@@ -7,6 +7,7 @@ import { PageHead, Notice } from '../../_ui';
 import { PreviewText } from '../../PreviewLanguage';
 import InvoiceForm from '../InvoiceForm';
 import { customerOptions } from '@/lib/kfcReceivables';
+import { Invoice as KfcInvoice } from './_components/invoice';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,16 @@ export default async function NieuweFactuurPage({ searchParams }: { searchParams
         <Notice><PreviewText>Factuurvoorbeeld: bedragen worden berekend in het formulier. Opslaan vereist een werkende CRM-verbinding.</PreviewText></Notice>
         <InvoiceForm technicians={[]} showTechnicianPicker={false} biller={keyForCarsBiller} preview />
       </>
+    );
+  }
+  // KeyForCars: the Studio Admin invoice screen (form + live A4 preview), billing ledger customers.
+  if (IS_KEYFORCARS) {
+    return (
+      <KfcInvoice
+        customers={await customerOptions()}
+        initialCustomerId={klant ?? null}
+        from={{ name: BRAND.name, email: '', phone: '', website: '', street: '', postcode: '', city: '', kvk: '', btw: '', iban: '', accountName: BRAND.name }}
+      />
     );
   }
   const supabase = await createSupabaseServerClient();

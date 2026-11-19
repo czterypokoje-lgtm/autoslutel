@@ -240,7 +240,7 @@ body {
  * (navy, 28px, semibold) without touching thirty stylesheets. An inline style
  * on a heading inside a card still wins.
  */
-.crm main h1 {
+.crm main h1:not(.kfc-neutral *) {
   font-size: 28px;
   font-weight: 600;
   color: var(--crm-nav);
@@ -248,5 +248,5 @@ body {
   line-height: 1.2;
 }
 @media (max-width: 640px) {
-  .crm main h1 { font-size: 24px; }
+  .crm main h1:not(.kfc-neutral *) { font-size: 24px; }
 }

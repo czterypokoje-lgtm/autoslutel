@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import './theme.css';
 import './kfc.css';
 import styles from './admin.module.css';
@@ -16,6 +16,9 @@ import KeyForCarsAppearance from './KeyForCarsAppearance';
 import KfcShell from './KfcShell';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--ff-crm-studio', preload: false });
+// KeyForCars shell: Geist, the Studio Admin template font.
+const geist = Geist({ subsets: ['latin'], display: 'swap', variable: '--font-geist', preload: false });
+const geistMono = Geist_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-geist-mono', preload: false });
 
 /**
  * The CRM shell.
@@ -115,7 +118,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (IS_KEYFORCARS && user) {
     return (
       <PreviewLanguage>
-        <KfcShell role={user.role} email={user.email} initials={initials} photoUrl={photoUrl}>
+        <KfcShell role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
           {readonlyStatus}
           {children}
         </KfcShell>
