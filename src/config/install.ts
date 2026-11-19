@@ -43,6 +43,8 @@ const KEYFORCARS_HIDDEN = [
 /** Outside the CRM, only the asset paths the proxy matcher does not skip. */
 const KEYFORCARS_OUTSIDE = [
   '/vendor', // barcode decoder .wasm
+  '/api/woo', // WooCommerce order webhooks (signature-checked in the route)
+  '/api/cron/kfc-reconcile', // nightly import check (CRON_SECRET)
   '/_next', // dev reload
   '/__nextjs_original-stack-frame', // dev error overlay
 ];

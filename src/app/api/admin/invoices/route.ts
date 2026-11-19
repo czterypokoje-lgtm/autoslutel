@@ -125,6 +125,7 @@ export async function POST(request: Request) {
       biller_btw: text(body.biller_btw, 40) ?? SITE_CONFIG.btw,
       biller_iban: text(body.biller_iban, 40) ?? SITE_CONFIG.iban,
       client_name: clientName,
+      customer_id: typeof body.customer_id === 'string' && /^[a-f0-9-]{36}$/i.test(body.customer_id) ? body.customer_id : null,
       client_street: text(body.client_street, 200),
       client_postcode: text(body.client_postcode, 20),
       client_city: text(body.client_city, 100),

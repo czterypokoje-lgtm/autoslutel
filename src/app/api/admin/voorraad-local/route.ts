@@ -2,7 +2,8 @@ import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import catalog from '@/data/keyforcars-stock.json';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { hasLanCookie, lanMode } from '@/lib/lanPreview';
-import { requireOfficeUserApi } from '@/lib/crmSession';
+import { requireWarehouseUserApi } from '@/lib/crmSession';
+import { kfcGet, kfcPost } from '@/lib/kfcInventory';
 import { IS_KEYFORCARS } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { loadStock, readPhoto, saveStock, writePhoto, type StockSlot } from '@/lib/kfcStockStore';
@@ -10,6 +11,8 @@ import { EMPTY_STOCK, STOCK_OPERATIONS, type StockBin, type StockMove, type Stoc
 import { findProfile } from '@/lib/productProfiles';
 
 export const runtime = 'nodejs';
+/** Online KeyForCars install: the ledger tables (0090). Local pilot and ?demo=1 keep the JSON record. */
+const LEDGER = IS_KEYFORCARS && !CRM_PREVIEW;
 const articles = new Set(catalog.map(({ id }) => id));
 let catalogResponse: { body: string; etag: string } | undefined;
 const articleCode = /^KFC-[123]-[0-9]+$/;
@@ -53,7 +56,7 @@ async function allowed(request: Request): Promise<boolean> {
     return /^(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/.test(host);
   }
   if (!IS_KEYFORCARS) return false;
-  return !(await requireOfficeUserApi()).response;
+  return !(await requireWarehouseUserApi()).response;
 }
 
 async function readStock(demo = false): Promise<{ state: StockState; version: number }> {
@@ -119,6 +122,7 @@ export async function GET(request: Request) {
     const skus = [...new Set(profiles.split(',').map((sku) => sku.trim()).filter((sku) => /^[A-Za-z0-9._\-/ ]{1,80}$/.test(sku)))].slice(0, 300);
     return reply(Object.fromEntries(skus.map((sku) => [sku, findProfile(sku) ?? null])));
   }
+  if (LEDGER && !demo) return kfcGet(query);
   const movement = query.get('movement');
   if (movement) {
     if (!/^[a-f0-9-]{36}$/i.test(movement)) return reply({}, 404);
@@ -141,11 +145,12 @@ export async function GET(request: Request) {
   return image ? jpeg(image) : reply({}, 404);
 }
 
-/** Same-origin only: https online, http on the local pilot. */
+/** Same-origin only: https online, http on the local pilot and in `next dev`. */
 function sameOrigin(request: Request) {
   const origin = request.headers.get('origin');
   const host = request.headers.get('host');
-  return origin === `https://${host}` || (CRM_PREVIEW && origin === `http://${host}`);
+  const http = CRM_PREVIEW || process.env.NODE_ENV === 'development';
+  return origin === `https://${host}` || (http && origin === `http://${host}`);
 }
 
 export async function POST(request: Request) {
@@ -162,6 +167,7 @@ export async function POST(request: Request) {
   }
   const input = await request.json().catch(() => null);
   if (!input || typeof input !== 'object') return reply({ error: 'Ongeldige invoer.' }, 400);
+  if (LEDGER && !demo && !external) return kfcPost(input as Record<string, unknown>);
 
   const { state, version } = await readStock(demo);
   const save: Save = (next) => saveStock(slotOf(demo), next, version);
