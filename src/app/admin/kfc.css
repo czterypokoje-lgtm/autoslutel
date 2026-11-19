@@ -154,6 +154,14 @@
 :where(.kfc-neutral) :is(h1, h2, h3, h4) { font: inherit; letter-spacing: inherit; color: inherit; margin: 0; }
 
 /*
+ * The public globals.css styles bare ul/li (disc bullets, grey text, margins)
+ * unlayered, which beats the layered reset above. Same specificity via :where(),
+ * loaded later, so it wins here while utilities on the element still win over it.
+ */
+:where(.kfc-shell) :is(ul, ol) { list-style: none; margin: 0; padding: 0; }
+:where(.kfc-shell) li { color: inherit; line-height: inherit; margin: 0; }
+
+/*
  * Screens ported 1:1 from Studio Admin (arhamkhnz/next-shadcn-admin-dashboard)
  * keep that template's neutral primary instead of the brand orange.
  */

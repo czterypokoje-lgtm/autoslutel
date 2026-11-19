@@ -1,4 +1,5 @@
 import { requireCrmUser } from '@/lib/crmSession';
+import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Badge, Empty, ui } from '../_ui';
 import Link from 'next/link';
@@ -10,7 +11,7 @@ import { EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Uitgaven | Autosleutel24',
+  title: `Uitgaven | ${BRAND.name}`,
 };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });

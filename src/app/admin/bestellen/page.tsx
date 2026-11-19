@@ -1,4 +1,5 @@
 import { requireCrmUser } from '@/lib/crmSession';
+import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, CardHead, Badge, Empty, Notice } from '../_ui';
 import { getProducts, filterProducts, shelfPrice, type CatalogProduct } from '@/lib/catalog';
@@ -8,7 +9,7 @@ import styles from './bestellen.module.css';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Onderdelen bestellen | Autosleutel24' };
+export const metadata = { title: `Onderdelen bestellen | ${BRAND.name}` };
 
 /** How many cards one page shows. More is a scroll nobody finishes. */
 const PAGE_SIZE = 48;

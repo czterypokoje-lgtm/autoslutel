@@ -1,4 +1,5 @@
 import { requireOfficeUser } from '@/lib/crmSession';
+import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Notice, Empty, HelpSteps, ui } from '../_ui';
 import { ShieldAlert, MousePointerClick, EyeOff, Ban, Globe } from 'lucide-react';
@@ -8,7 +9,7 @@ import CopyBoxes from './CopyBoxes';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Klikfraude | Autosleutel24',
+  title: `Klikfraude | ${BRAND.name}`,
 };
 
 /** Default window. Google's own invalid-click credits are handled monthly. */

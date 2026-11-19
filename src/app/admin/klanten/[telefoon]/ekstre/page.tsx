@@ -18,7 +18,7 @@ export default async function StatementPage({ params }: { params: Promise<{ tele
   const { customer, balance, entries } = data;
   const rows = [...entries].reverse();
   return (
-    <div className="mx-auto max-w-3xl bg-white p-8 text-sm text-black print:p-0">
+    <div className="mx-auto max-w-3xl bg-white p-4 text-sm text-black sm:p-8 print:p-0">
       <style>{`@media print { aside, header, [data-slot=sidebar-wrapper] > :not([data-slot=sidebar-inset]) { display: none !important } }`}</style>
       <div className="mb-6 flex items-start justify-between">
         <div><h1 className="text-xl font-semibold">Rekeningoverzicht · Ekstre</h1><p>{customer.company}</p>{customer.street && <p>{customer.street}, {customer.postcode} {customer.city}</p>}{customer.vat_number && <p>Btw {customer.vat_number}</p>}</div>

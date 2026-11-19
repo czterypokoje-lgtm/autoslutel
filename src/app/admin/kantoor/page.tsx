@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BRAND } from '@/config/install';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Notice, Empty } from '../_ui';
 import { Hourglass, ShieldAlert, Radio } from 'lucide-react';
 import { DESKS, deskOf, feedText, type DeskKey } from '@/lib/jobRoomLive';
@@ -8,7 +9,7 @@ import { fmtTime, loadLive } from '../live/loadLive';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Kantoor | Autosleutel24',
+  title: `Kantoor | ${BRAND.name}`,
 };
 
 const STATE_LABEL = { working: 'Bezig', waiting: 'Wacht op goedkeuring', idle: 'Rustig', error: 'Storing' } as const;

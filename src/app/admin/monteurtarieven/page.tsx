@@ -1,4 +1,5 @@
 import { requireOfficeUser } from '@/lib/crmSession';
+import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Empty, Notice } from '../_ui';
 import { Euro, Users, TriangleAlert, Car } from 'lucide-react';
@@ -8,7 +9,7 @@ import RateFilters from './RateFilters';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Monteurtarieven | Autosleutel24' };
+export const metadata = { title: `Monteurtarieven | ${BRAND.name}` };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 

@@ -95,11 +95,11 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
       {!live && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs"><PreviewText>Voorbeeldbestellingen. Echte producten en prijzen, verzonnen klanten en aantallen.</PreviewText></p>}
 
       <div className="flex flex-wrap gap-2">
-        <div className="flex gap-1 rounded-lg border p-1">
+        <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
           <Filter on={!shop} href={link({ shop: undefined })}><PreviewText>Alle</PreviewText></Filter>
           {SHOPS.map((s) => <Filter key={s} on={shop === s} href={link({ shop: s })}>{s}</Filter>)}
         </div>
-        <div className="flex gap-1 rounded-lg border p-1">
+        <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
           <Filter on={!status} href={link({ status: undefined })}><PreviewText>Elke status</PreviewText></Filter>
           {(Object.keys(STATUS) as OrderStatus[]).map((s) => <Filter key={s} on={status === s} href={link({ status: s })}><PreviewText>{STATUS[s].label}</PreviewText></Filter>)}
         </div>

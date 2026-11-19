@@ -211,8 +211,8 @@ export default async function KfcDashboard({ period }: { period: KfcPeriod; embe
           <CardContent>
             <ul className="grid gap-2.5">
               {best.map((row) => (
-                <li key={row.label} className="grid gap-1 text-sm">
-                  <div className="flex justify-between gap-4"><span className="truncate">{row.label}</span><span className="font-medium tabular-nums">{number(row.value)}</span></div>
+                <li key={row.label} className="grid min-w-0 gap-1 text-sm">
+                  <div className="flex min-w-0 justify-between gap-4"><span className="min-w-0 truncate">{row.label}</span><span className="font-medium tabular-nums">{number(row.value)}</span></div>
                   <div className="bg-muted h-1.5 overflow-hidden rounded-full"><div className="bg-primary h-full rounded-full" style={{ width: `${Math.max(3, (row.value / topUnits) * 100)}%` }} /></div>
                 </li>
               ))}

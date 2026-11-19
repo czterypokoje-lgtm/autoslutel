@@ -53,7 +53,7 @@ export default function KfcBank({ view, lines, suggestions, customers }: { view:
           <Button asChild size="sm" variant="outline"><Link href="/admin/klanten?view=overdue">Vervallen klanten</Link></Button>
         </div>
       </div>
-      <div className="flex gap-1 self-start rounded-lg border p-1">
+      <div className="flex max-w-full gap-1 self-start overflow-x-auto rounded-lg border p-1">
         {TABS.map(([key, slug, label]) => <Button key={key} asChild size="sm" variant={view === key ? 'default' : 'ghost'}><Link href={`/admin/bank/${slug}`}>{label}</Link></Button>)}
       </div>
       {note && <p className="text-muted-foreground text-sm">{note}</p>}

@@ -1,4 +1,5 @@
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Notice, Empty } from '../_ui';
+import { BRAND } from '@/config/install';
 import { Activity, Hourglass, ShieldAlert, Radio } from 'lucide-react';
 import { feedText } from '@/lib/jobRoomLive';
 import LiveRefresh from './LiveRefresh';
@@ -7,7 +8,7 @@ import { fmtTime, loadLive } from './loadLive';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Live | Autosleutel24',
+  title: `Live | ${BRAND.name}`,
 };
 
 const toneOfStatus = (s: string) => (s === 'blocked' || s === 'error' ? 'stop' : s === 'processed' ? 'ok' : 'info');

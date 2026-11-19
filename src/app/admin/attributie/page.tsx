@@ -1,4 +1,5 @@
 import { requireOfficeUser } from '@/lib/crmSession';
+import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Notice } from '../_ui';
 import { MousePointerClick, Link2, Euro, CircleHelp } from 'lucide-react';
@@ -10,7 +11,7 @@ import CampaignNames, { type CampaignSeen } from './CampaignNames';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Advertentieklikken koppelen | Autosleutel24',
+  title: `Advertentieklikken koppelen | ${BRAND.name}`,
 };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
