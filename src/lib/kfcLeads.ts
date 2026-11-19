@@ -46,7 +46,8 @@ export function relative(iso: string, now: number) {
 
 export async function leadsDashboard(now = new Date()): Promise<LeadsDashboard> {
   const supabase = await createSupabaseServerClient();
-  const since = new Date(now.getTime() - 365 * DAY).toISOString();
+  // Reach back to 1 Jan last year so the YoY comparison has last year's full Jan-to-now span, not just its tail.
+  const since = new Date(now.getFullYear() - 1, 0, 1).toISOString();
   const leads = await fetchAll<LeadLite>((a, b) =>
     supabase.from('leads')
       .select('id, created_at, updated_at, name, phone_e164, brand, model, service, location, postcode, source, status, sale_price, quoted_price, first_contact_at')
@@ -54,7 +55,9 @@ export async function leadsDashboard(now = new Date()): Promise<LeadsDashboard> 
   );
   const t = now.getTime();
   const ageDays = (l: LeadLite) => (t - new Date(l.created_at).getTime()) / DAY;
-  const within = (from: number, to: number) => leads.filter((l) => { const d = ageDays(l); return d >= from && d < to; });
+  /* Every metric except YoY stays scoped to the trailing 365 days, as before `since` reached back further. */
+  const year = leads.filter((l) => ageDays(l) < 365);
+  const within = (from: number, to: number) => year.filter((l) => { const d = ageDays(l); return d >= from && d < to; });
 
   /* 30 days in six 5-day buckets, oldest first, like the template's "1-5 … 26-30". */
   const last30 = within(0, 30);
@@ -83,12 +86,13 @@ export async function leadsDashboard(now = new Date()): Promise<LeadsDashboard> 
     months.push({ key: `${d.getFullYear()}-${d.getMonth()}`, month: d.toLocaleDateString('nl-NL', { month: 'short', year: 'numeric' }), revenue: 0 });
   }
   const byKey = new Map(months.map((m) => [m.key, m]));
-  for (const l of sold(leads)) {
+  for (const l of sold(year)) {
     const d = new Date(l.created_at);
     const m = byKey.get(`${d.getFullYear()}-${d.getMonth()}`);
     if (m) m.revenue += price(l);
   }
   const ytd = months.filter((m) => m.key.startsWith(`${now.getFullYear()}-`)).reduce((s, m) => s + m.revenue, 0);
+  /* YoY needs last year's full span, so this one reads from the full `leads` (back to 1 Jan last year), not `year`. */
   const lastYearSameSpan = revenue(leads.filter((l) => { const d = new Date(l.created_at); return d.getFullYear() === now.getFullYear() - 1 && d.getMonth() <= now.getMonth(); }));
 
   const count = (list: LeadLite[], key: (l: LeadLite) => string | null | undefined) => {
@@ -101,14 +105,14 @@ export async function leadsDashboard(now = new Date()): Promise<LeadsDashboard> 
   const rest = sources.slice(4).reduce((s, [, n]) => s + n, 0);
   if (rest > 0) bySource.push({ source: 'other', leads: rest });
 
-  const byService = count(leads, (l) => l.service).slice(0, 6).map(([name, total]) => {
-    const actual = leads.filter((l) => (l.service || 'unknown') === name && l.status === 'sold').length;
+  const byService = count(year, (l) => l.service).slice(0, 6).map(([name, total]) => {
+    const actual = year.filter((l) => (l.service || 'unknown') === name && l.status === 'sold').length;
     return { name: name.length > 22 ? `${name.slice(0, 21)}…` : name, actual, remaining: total - actual };
   });
 
-  const n = (s: string[]) => leads.filter((l) => s.includes(l.status)).length;
+  const n = (s: string[]) => year.filter((l) => s.includes(l.status)).length;
   const funnel = [
-    { stage: 'Leads', value: leads.length },
+    { stage: 'Leads', value: year.length },
     { stage: 'Gekwalificeerd', value: n(['qualified', 'contacted', 'sold']) },
     { stage: 'Gebeld', value: n(['contacted', 'sold']) },
     { stage: 'Verkocht', value: n(['sold']) },
@@ -126,9 +130,9 @@ export async function leadsDashboard(now = new Date()): Promise<LeadsDashboard> 
 
   const hours = (iso: string | null) => (iso ? (t - new Date(iso).getTime()) / 3_600_000 : Infinity);
   const actions = {
-    staleNew: leads.filter((l) => l.status === 'new' && hours(l.created_at) > 1).length,
-    noContact: leads.filter((l) => (l.status === 'new' || l.status === 'qualified') && !l.first_contact_at && hours(l.created_at) > 24).length,
-    quietQuotes: leads.filter((l) => l.quoted_price != null && (l.status === 'qualified' || l.status === 'contacted') && hours(l.updated_at ?? l.created_at) > 24 * 7).length,
+    staleNew: year.filter((l) => l.status === 'new' && hours(l.created_at) > 1).length,
+    noContact: year.filter((l) => (l.status === 'new' || l.status === 'qualified') && !l.first_contact_at && hours(l.created_at) > 24).length,
+    quietQuotes: year.filter((l) => l.quoted_price != null && (l.status === 'qualified' || l.status === 'contacted') && hours(l.updated_at ?? l.created_at) > 24 * 7).length,
   };
 
   return {
@@ -143,7 +147,7 @@ export async function leadsDashboard(now = new Date()): Promise<LeadsDashboard> 
     funnel,
     regions,
     actions,
-    recent: leads.slice(0, 15).map((l) => ({ ...l, lastActivity: relative(l.updated_at ?? l.created_at, t) })),
+    recent: year.slice(0, 15).map((l) => ({ ...l, lastActivity: relative(l.updated_at ?? l.created_at, t) })),
     monthLabel: new Date(now.getFullYear(), now.getMonth() - 1, 1).toLocaleDateString('nl-NL', { month: 'long' }),
   };
 }

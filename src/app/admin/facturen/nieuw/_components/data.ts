@@ -56,6 +56,9 @@ export interface InvoiceToDetails {
 export interface InvoiceFormValues {
   referenceNumber: string;
   issuedDate: string;
+  /* Derived, never typed: the ledger's due date is issue_date + terms_days
+     (trigger kfc_post_invoice in 0093). Kept in the model only because the
+     client selector refreshes it; everything shown reads getInvoiceDueDate. */
   paymentDueDate: string;
   from: InvoiceFromDetails;
   to: InvoiceToDetails;
@@ -102,6 +105,11 @@ export const invoiceTaxOptions: InvoiceTaxOption[] = [
 export function dueDateFor(issuedDate: string, termsDays: number) {
   const issued = new Date(issuedDate);
   return format(addDays(Number.isNaN(issued.getTime()) ? new Date() : issued, termsDays), 'yyyy-MM-dd');
+}
+
+/** The date the ledger will carry: issue date + the customer's payment term. */
+export function getInvoiceDueDate(invoice: InvoiceFormValues) {
+  return dueDateFor(invoice.issuedDate, invoice.to?.termsDays ?? walkInClient.termsDays);
 }
 
 export function defaultInvoiceValues(from: InvoiceFromDetails, to: InvoiceToDetails): InvoiceFormValues {
@@ -154,44 +162,80 @@ export function getInvoiceDiscount(invoice: InvoiceFormValues) {
   return Math.min(Math.max(discount, 0), subtotal);
 }
 
-export function getInvoiceTax(invoice: InvoiceFormValues) {
-  const taxRate = getInvoiceTaxOption(invoice).rate;
-  return Math.max(getInvoiceSubtotal(invoice) - getInvoiceDiscount(invoice), 0) * (taxRate / 100);
-}
-
 export function getInvoiceCredit(invoice: InvoiceFormValues) {
   return Number.isFinite(invoice.creditApplied) ? Math.max(invoice.creditApplied, 0) : 0;
 }
 
-export function getInvoiceTotal(invoice: InvoiceFormValues) {
-  return Math.max(getInvoiceSubtotal(invoice) - getInvoiceDiscount(invoice), 0) + getInvoiceTax(invoice) - getInvoiceCredit(invoice);
+const cents = (n: number) => Math.round(n * 100);
+
+/**
+ * The invoice-wide discount split over the lines, in whole cents: a
+ * proportional floor first, then the leftover cents one at a time over the
+ * lines that still have room. Never negative, never more than the line it sits
+ * on — so no line base can turn negative — and the shares add up to the
+ * capped discount exactly.
+ */
+export function allocateLineDiscounts(items: InvoiceLineItem[], discount: number): number[] {
+  const amounts = items.map((item) => cents(getLineAmount(item)));
+  const subtotal = amounts.reduce((sum, amount) => sum + amount, 0);
+  const target = Math.min(Math.max(cents(discount), 0), subtotal);
+  const shares = amounts.map((amount) => (subtotal > 0 ? Math.min(Math.floor((target * amount) / subtotal), amount) : 0));
+  let left = target - shares.reduce((sum, share) => sum + share, 0);
+  for (let index = 0; left > 0 && index < shares.length; index++) {
+    const room = Math.min(amounts[index] - shares[index], left);
+    shares[index] += room;
+    left -= room;
+  }
+  return shares.map((share) => share / 100);
 }
 
 /**
- * The existing route stores discount and vat per line. The invoice-level
- * discount is spread proportionally (cents), the rounding remainder on the
- * last line, so the stored total equals what the preview showed.
+ * Exactly the arithmetic /api/admin/invoices does with the payload below: per
+ * line a base of amount − its allocated discount, vat per line on that base,
+ * both sums rounded once, credit capped at what is owed. The preview and the
+ * stored row can therefore never show two different totals.
  */
-export function toApiPayload(invoice: InvoiceFormValues) {
+export function getInvoiceTotals(invoice: InvoiceFormValues) {
   const items = getInvoiceItems(invoice);
   const rate = getInvoiceTaxOption(invoice).rate;
-  const subtotal = getInvoiceSubtotal(invoice);
   const discount = round2(getInvoiceDiscount(invoice));
-  let allocated = 0;
-  const lines = items.map((item, index) => {
-    const last = index === items.length - 1;
-    const share = last ? round2(discount - allocated) : round2(subtotal > 0 ? (discount * getLineAmount(item)) / subtotal : 0);
-    allocated = round2(allocated + share);
-    return { description: item.description.trim(), quantity: item.quantity, unitPrice: item.unitPrice, discount: share, vatRate: rate };
+  const lineDiscounts = allocateLineDiscounts(items, discount);
+  let net = 0;
+  let vat = 0;
+  items.forEach((item, index) => {
+    const base = getLineAmount(item) - lineDiscounts[index];
+    net += base;
+    vat += base * (rate / 100);
   });
+  net = Math.max(round2(net), 0);
+  vat = Math.max(round2(vat), 0);
+  const credit = Math.min(round2(getInvoiceCredit(invoice)), round2(net + vat));
+  return { items, rate, discount, lineDiscounts, net, vat, credit, total: round2(net + vat - credit) };
+}
+
+export function getInvoiceTax(invoice: InvoiceFormValues) {
+  return getInvoiceTotals(invoice).vat;
+}
+
+export function getInvoiceTotal(invoice: InvoiceFormValues) {
+  return getInvoiceTotals(invoice).total;
+}
+
+/** The route stores discount and vat per line; the shares come from the same math. */
+export function toApiPayload(invoice: InvoiceFormValues) {
+  const { items, rate, lineDiscounts, credit } = getInvoiceTotals(invoice);
+  const lines = items.map((item, index) => ({
+    description: item.description.trim(), quantity: item.quantity, unitPrice: item.unitPrice, discount: lineDiscounts[index], vatRate: rate,
+  }));
   const { from, to } = invoice;
   return {
+    issue_date: invoice.issuedDate,
     biller_name: from.name, biller_street: from.street, biller_postcode: from.postcode, biller_city: from.city,
     biller_email: from.email, biller_phone: from.phone, biller_kvk: from.kvk, biller_btw: from.btw, biller_iban: from.iban,
     client_name: to.name, customer_id: to.id === WALK_IN_ID ? null : to.id,
     client_street: to.street, client_postcode: to.postcode, client_city: to.city,
     client_email: to.email, client_phone: to.phone, client_btw: to.btw,
-    credit_applied: getInvoiceCredit(invoice),
+    credit_applied: credit,
     notes: invoice.notes,
     lines,
   };

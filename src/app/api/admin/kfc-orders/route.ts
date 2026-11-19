@@ -2,7 +2,7 @@ import { IS_KEYFORCARS } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUserApi, seesPrices } from '@/lib/crmSession';
 import { StockError } from '@/lib/kfcInventory';
-import { clearSampleData, loadSampleData, markPicked, shipOrder } from '@/lib/kfcOrders';
+import { clearSampleData, getShopOrder, loadSampleData, markPicked, shipOrder } from '@/lib/kfcOrders';
 import { importPage, isWooShop, wooConfigured } from '@/lib/kfcWoo';
 import { createLabel, setTracking } from '@/lib/kfcShipping';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
@@ -16,7 +16,9 @@ const uuid = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
 /**
  * Shop orders: import one page (office), pick a line and ship an order
  * (warehouse). The backfill runs page by page from the browser, so a
- * 12-month history never hits a function time limit.
+ * 12-month history never hits a function time limit. Pick, label, tracking
+ * and ship reply with the fresh order, so the screens patch one card instead
+ * of reloading the page.
  */
 export async function POST(request: Request) {
   if (!IS_KEYFORCARS || CRM_PREVIEW) return reply({}, 404);
@@ -49,21 +51,23 @@ export async function POST(request: Request) {
     }
     if (input.action === 'pick') {
       if (typeof input.line !== 'string' || !uuid.test(input.line)) return reply({ error: 'Ongeldige regel.' }, 400);
-      await markPicked(input.line, input.picked !== false);
-      return reply({ ok: true });
+      const orderId = await markPicked(input.line, input.picked !== false);
+      return reply({ ok: true, order: await getShopOrder(orderId) });
     }
     if (input.action === 'label') {
       if (typeof input.id !== 'string' || !uuid.test(input.id)) return reply({ error: 'Ongeldige invoer.' }, 400);
-      return reply(await createLabel(input.id));
+      const label = await createLabel(input.id);
+      return reply({ ...label, order: await getShopOrder(input.id) });
     }
     if (input.action === 'tracking') {
       if (typeof input.id !== 'string' || !uuid.test(input.id)) return reply({ error: 'Ongeldige invoer.' }, 400);
       await setTracking(input.id, String(input.carrier ?? ''), String(input.tracking ?? ''));
-      return reply({ ok: true });
+      return reply({ ok: true, order: await getShopOrder(input.id) });
     }
     if (input.action === 'ship') {
       if (typeof input.id !== 'string' || !uuid.test(input.id) || typeof input.key !== 'string' || !uuid.test(input.key)) return reply({ error: 'Ongeldige invoer.' }, 400);
-      return reply(await shipOrder(input.id, input.key, user));
+      const shipped = await shipOrder(input.id, input.key, user);
+      return reply({ ...shipped, order: await getShopOrder(input.id) });
     }
     return reply({ error: 'Onbekende actie.' }, 400);
   } catch (error) {

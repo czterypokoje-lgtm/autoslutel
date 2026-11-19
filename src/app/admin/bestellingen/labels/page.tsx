@@ -19,8 +19,9 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
   const { ids, print } = await searchParams;
   const list = (ids ?? '').split(',').filter((id) => /^[a-f0-9-]{36}$/i.test(id));
   const orders = await getShopOrdersByIds(list);
-  const own = orders.filter((o) => !o.carrier || o.carrier === 'eigen');
+  const own = orders.filter((o) => o.carrier === 'eigen');
   const external = orders.filter((o) => o.carrier && o.carrier !== 'eigen');
+  const missing = orders.filter((o) => !o.carrier); // label creation failed or never ran — don't drop these silently
   return (
     <div className="mx-auto max-w-md bg-white p-6 text-black print:max-w-none print:p-0">
       <style>{LABEL_PRINT_CSS}</style>
@@ -31,6 +32,9 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
             {external.length} {external.length === 1 ? 'bestelling heeft' : 'bestellingen hebben'} een Sendcloud-label:{' '}
             <a className="underline" href={`/api/admin/kfc-orders/labels?ids=${external.map((o) => o.id).join(',')}`} target="_blank" rel="noopener noreferrer">download die als één PDF</a>.
           </p>
+        )}
+        {missing.length > 0 && (
+          <p className="text-red-600">{missing.length} {missing.length === 1 ? 'bestelling heeft' : 'bestellingen hebben'} nog geen label.</p>
         )}
         <PrintNow auto={own.length > 0 && print !== '0'} />
       </div>

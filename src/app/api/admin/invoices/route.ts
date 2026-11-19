@@ -44,6 +44,23 @@ interface LineInput {
   vatRate: number;
 }
 
+/*
+ * sales_invoices.issue_date is what the ledger dates the receivable on and
+ * counts the due date from (trigger kfc_post_invoice). A typo there is a
+ * receivable that was never due or has been overdue for a year, so the window
+ * is narrow: at most a day ahead (a client clock may run early, and Amsterdam
+ * can already be a day past UTC), at most two years back. Absent = the column
+ * default, today in Amsterdam.
+ */
+function issueDate(value: unknown): string | null | undefined {
+  if (value === null || value === undefined || value === '') return undefined;
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const date = new Date(`${value}T12:00:00Z`);
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value) return null;
+  const days = (date.getTime() - Date.now()) / 86_400_000;
+  return days > 1.5 || days < -730 ? null : value;
+}
+
 function readLine(raw: unknown): LineInput | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Record<string, unknown>;
@@ -87,18 +104,31 @@ export async function POST(request: Request) {
   }
   const goodLines = lines as LineInput[];
 
-  const creditApplied = money(body.credit_applied) ?? 0;
+  const issue = issueDate(body.issue_date);
+  if (issue === null) {
+    return NextResponse.json({ error: 'Ongeldige factuurdatum' }, { status: 400 });
+  }
 
   /* Totals, computed once here — never taken from the client as a number. */
   let subtotal = 0;
   let vatTotal = 0;
   for (const l of goodLines) {
     const base = l.quantity * l.unitPrice - l.discount;
+    /* A discount larger than the line it sits on would credit money through a
+       field meant to reduce one. No such invoice exists; reject it. */
+    if (base < 0) {
+      return NextResponse.json({ error: 'Een korting is hoger dan de regel zelf' }, { status: 400 });
+    }
     subtotal += base;
     vatTotal += base * (l.vatRate / 100);
   }
   subtotal = Math.round(subtotal * 100) / 100;
   vatTotal = Math.round(vatTotal * 100) / 100;
+  if (subtotal < 0 || vatTotal < 0) {
+    return NextResponse.json({ error: 'De regels leveren een negatief factuurtotaal op' }, { status: 400 });
+  }
+  /* Credit can only settle what is owed — never turn the invoice into a payout. */
+  const creditApplied = Math.min(money(body.credit_applied) ?? 0, Math.round((subtotal + vatTotal) * 100) / 100);
   const total = Math.round((subtotal + vatTotal - creditApplied) * 100) / 100;
 
   const supabase = await createSupabaseServerClient();
@@ -121,6 +151,7 @@ export async function POST(request: Request) {
   const { data: invoice, error } = await supabase
     .from('sales_invoices')
     .insert({
+      ...(issue ? { issue_date: issue } : {}),
       biller_name: text(body.biller_name, 200) ?? BILLER_DEFAULTS.fullName,
       biller_street: text(body.biller_street, 200),
       biller_postcode: text(body.biller_postcode, 20),

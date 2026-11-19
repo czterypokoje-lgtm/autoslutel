@@ -9,10 +9,10 @@ export const CHANNEL_LABEL: Record<string, string> = { phone: 'Telefoon', whatsa
 export const displayName = (c: Conversation) => c.lead?.name || c.phone || 'Onbekend nummer';
 
 export function groupOf(createdAt: string, now: number): Group {
-  const d = new Date(createdAt);
-  const today = new Date(now); today.setHours(0, 0, 0, 0);
-  if (d.getTime() >= today.getTime()) return 'Vandaag';
-  if (d.getTime() >= today.getTime() - 86_400_000) return 'Gisteren';
+  // Compare calendar dates in Europe/Amsterdam, not process-local time — the server runs UTC, the browser Amsterdam.
+  const key = new Date(createdAt).toLocaleDateString('nl-NL', { timeZone: 'Europe/Amsterdam' });
+  if (key === new Date(now).toLocaleDateString('nl-NL', { timeZone: 'Europe/Amsterdam' })) return 'Vandaag';
+  if (key === new Date(now - 86_400_000).toLocaleDateString('nl-NL', { timeZone: 'Europe/Amsterdam' })) return 'Gisteren';
   return 'Eerder';
 }
 

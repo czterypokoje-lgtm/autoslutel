@@ -116,17 +116,19 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
   const goodLines = lines as LineInput[];
 
-  const creditApplied = money(body.credit_applied) ?? 0;
-
   let subtotal = 0;
   let vatTotal = 0;
   for (const l of goodLines) {
     const base = l.quantity * l.unitPrice - l.discount;
+    /* Same guard as the create route: a discount above its line would credit money. */
+    if (base < 0) return NextResponse.json({ error: 'Een korting is hoger dan de regel zelf' }, { status: 400 });
     subtotal += base;
     vatTotal += base * (l.vatRate / 100);
   }
   subtotal = Math.round(subtotal * 100) / 100;
   vatTotal = Math.round(vatTotal * 100) / 100;
+  /* Credit settles what is owed, never more: an edit cannot turn an invoice into a payout. */
+  const creditApplied = Math.min(money(body.credit_applied) ?? 0, Math.round((subtotal + vatTotal) * 100) / 100);
   const total = Math.round((subtotal + vatTotal - creditApplied) * 100) / 100;
 
   const asked = text(body.technician_id, 40);

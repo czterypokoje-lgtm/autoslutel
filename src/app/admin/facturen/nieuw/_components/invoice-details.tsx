@@ -12,16 +12,17 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/in
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { usePreviewLanguage } from '../../../PreviewLanguage';
 
-import { dueDateFor, type InvoiceFormValues } from './data';
+import { dueDateFor, getInvoiceDueDate, type InvoiceFormValues } from './data';
 
 export function InvoiceDetails() {
-  const { control, register, getValues, setValue } = useFormContext<InvoiceFormValues>();
+  const { control, register, getValues, setValue, watch } = useFormContext<InvoiceFormValues>();
   const { t } = usePreviewLanguage();
 
-  const dateFields: Array<{ id: string; label: string; name: 'issuedDate' | 'paymentDueDate' }> = [
-    { id: 'issued-date', label: t('Factuurdatum'), name: 'issuedDate' },
-    { id: 'payment-due-date', label: t('Vervaldatum'), name: 'paymentDueDate' },
-  ];
+  /* Read-only on purpose: the ledger computes the due date from the invoice
+     date and the customer's payment term (trigger kfc_post_invoice), so a
+     typed-in date would only disagree with the receivable. */
+  const values = watch();
+  const dueDate = getInvoiceDueDate(values);
 
   return (
     <section className="flex flex-col gap-3">
@@ -40,29 +41,32 @@ export function InvoiceDetails() {
         </Field>
 
         <div className="grid gap-5 md:grid-cols-2">
-          {dateFields.map((dateField) => (
-            <Controller
-              key={dateField.name}
-              control={control}
-              name={dateField.name}
-              render={({ field }) => (
-                <Field className="gap-1">
-                  <FieldLabel className="text-xs" htmlFor={dateField.id}>
-                    {dateField.label}
-                  </FieldLabel>
-                  <DatePicker
-                    id={dateField.id}
-                    value={field.value}
-                    onChange={(value) => {
-                      field.onChange(value);
-                      // Moving the invoice date keeps the payment term; the due date can still be overridden afterwards.
-                      if (dateField.name === 'issuedDate') setValue('paymentDueDate', dueDateFor(value, getValues('to.termsDays')));
-                    }}
-                  />
-                </Field>
-              )}
-            />
-          ))}
+          <Controller
+            control={control}
+            name="issuedDate"
+            render={({ field }) => (
+              <Field className="gap-1">
+                <FieldLabel className="text-xs" htmlFor="issued-date">
+                  {t('Factuurdatum')}
+                </FieldLabel>
+                <DatePicker
+                  id="issued-date"
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    setValue('paymentDueDate', dueDateFor(value, getValues('to.termsDays')));
+                  }}
+                />
+              </Field>
+            )}
+          />
+
+          <Field className="gap-1">
+            <FieldLabel className="text-xs">{t('Vervaldatum')}</FieldLabel>
+            <p className="text-muted-foreground flex h-9 items-center text-sm">
+              {format(parseISO(dueDate), 'PPP', { locale: nl })} · {t('betaaltermijn')} {values.to?.termsDays ?? 0} {t('dagen')}
+            </p>
+          </Field>
         </div>
       </FieldGroup>
     </section>

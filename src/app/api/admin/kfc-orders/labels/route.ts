@@ -27,13 +27,24 @@ export async function GET(request: Request) {
   const byId = new Map((data ?? []).map((o) => [o.id as string, o]));
   const auth = `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}`;
   const merged = await PDFDocument.create();
+  // Fetch 5 at a time instead of one-by-one — stays well under the 120s cap for a full batch.
+  const CONCURRENCY = 5;
+  const fetched: ({ bytes: ArrayBuffer } | { missing: string } | null)[] = [];
+  for (let i = 0; i < ids.length; i += CONCURRENCY) {
+    const batch = ids.slice(i, i + CONCURRENCY);
+    fetched.push(...await Promise.all(batch.map(async (id) => {
+      const order = byId.get(id);
+      if (!order?.label_url || order.carrier === 'eigen') return order ? { missing: `${order.shop} #${order.number}` } : null;
+      const res = await fetch(order.label_url as string, { headers: { Authorization: auth }, cache: 'no-store' }).catch(() => null);
+      if (!res?.ok) return { missing: `${order.shop} #${order.number}` };
+      return { bytes: await res.arrayBuffer() };
+    })));
+  }
   const missing: string[] = [];
-  for (const id of ids) {
-    const order = byId.get(id);
-    if (!order?.label_url || order.carrier === 'eigen') { if (order) missing.push(`${order.shop} #${order.number}`); continue; }
-    const res = await fetch(order.label_url as string, { headers: { Authorization: auth }, cache: 'no-store' }).catch(() => null);
-    if (!res?.ok) { missing.push(`${order.shop} #${order.number}`); continue; }
-    const doc = await PDFDocument.load(await res.arrayBuffer());
+  for (const entry of fetched) {
+    if (!entry) continue;
+    if ('missing' in entry) { missing.push(entry.missing); continue; }
+    const doc = await PDFDocument.load(entry.bytes);
     for (const page of await merged.copyPages(doc, doc.getPageIndices())) merged.addPage(page);
   }
   if (merged.getPageCount() === 0) return Response.json({ error: `Geen Sendcloud-labels gevonden${missing.length ? ` (${missing.join(', ')})` : ''}.` }, { status: 404 });

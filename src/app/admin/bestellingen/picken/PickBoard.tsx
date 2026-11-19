@@ -2,13 +2,13 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { cn } from 'cn';
 import { Printer, Tag, Zap } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { ShopOrder } from '@/lib/kfcOrders';
+import { LABEL_BATCH_MAX } from '@/lib/kfcLabels';
 import { OrderLines, WHEN } from '../OrderParts';
 
 /*
@@ -33,14 +33,16 @@ function dayKey(iso: string, now: number) {
   return DAY.format(d);
 }
 
-async function post(body: unknown): Promise<{ error?: string; label_url?: string }> {
-  const r = await fetch('/api/admin/kfc-orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(() => null);
+async function post(body: unknown, signal?: AbortSignal): Promise<{ error?: string; label_url?: string; order?: ShopOrder }> {
+  const r = await fetch('/api/admin/kfc-orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal }).catch(() => null);
   const data = await r?.json().catch(() => null);
   return r?.ok ? (data ?? {}) : { error: data?.error ?? 'Mislukt.' };
 }
 
-export function PickBoard({ orders, now }: { orders: ShopOrder[]; now: number }) {
-  const router = useRouter();
+export function PickBoard({ orders: fromServer, now }: { orders: ShopOrder[]; now: number }) {
+  const [patched, setPatched] = React.useState<Record<string, ShopOrder>>({}); // orders the API handed back, over the server render
+  const abort = React.useRef<AbortController | null>(null);
+  React.useEffect(() => () => abort.current?.abort(), []); // leaving the page stops the bulk run
   const [shop, setShop] = React.useState<string>('all');
   const [status, setStatus] = React.useState<Status>('all');
   const [label, setLabel] = React.useState<LabelFilter>('all');
@@ -48,6 +50,7 @@ export function PickBoard({ orders, now }: { orders: ShopOrder[]; now: number })
   const [progress, setProgress] = React.useState<string>('');
   const [busy, setBusy] = React.useState(false);
 
+  const orders = React.useMemo(() => fromServer.map((o) => patched[o.id] ?? o).filter((o) => o.fulfilment !== 'shipped'), [fromServer, patched]); // shipped leaves the board
   const shops = React.useMemo(() => Array.from(new Set(orders.map((o) => o.shop))).sort(), [orders]);
   const visible = orders.filter((o) =>
     (shop === 'all' || o.shop === shop) && (status === 'all' || statusOf(o) === status) && (label === 'all' || (label === 'none' ? !o.label_url : !!o.label_url)));
@@ -63,29 +66,45 @@ export function PickBoard({ orders, now }: { orders: ShopOrder[]; now: number })
   const count = (f: (o: ShopOrder) => boolean) => orders.filter(f).length;
 
   function toggle(id: string, on: boolean) { setSelected((s) => { const n = new Set(s); if (on) n.add(id); else n.delete(id); return n; }); }
+  const apply = React.useCallback((order: ShopOrder) => setPatched((p) => ({ ...p, [order.id]: order })), []);
 
-  /* Labels one by one (createLabel is idempotent), then one print job for everything that has one. */
-  async function makeLabels(list: ShopOrder[]) {
-    setBusy(true);
-    const failed: string[] = [];
-    for (let i = 0; i < list.length; i++) {
-      setProgress(`Label ${i + 1} van ${list.length}…`);
-      const r = await post({ action: 'label', id: list[i].id });
-      if (r.error) failed.push(`#${list[i].number}: ${r.error}`);
+  /* Three at a time (createLabel is idempotent); returns the ids that have a label afterwards. */
+  async function makeLabels(batch: ShopOrder[]): Promise<Set<string>> {
+    const labelled = new Set<string>();
+    if (batch.length > LABEL_BATCH_MAX) {
+      setProgress(`${batch.length} labels in één keer gaat niet; maximaal ${LABEL_BATCH_MAX}. Selecteer een kleinere groep of filter per shop.`);
+      return labelled;
     }
+    const controller = new AbortController();
+    abort.current = controller;
+    setBusy(true);
+    setProgress(`0 van ${batch.length} labels gemaakt…`);
+    const failed: string[] = [];
+    let next = 0, done = 0;
+    const worker = async () => {
+      while (next < batch.length && !controller.signal.aborted) {
+        const order = batch[next++];
+        const r = await post({ action: 'label', id: order.id }, controller.signal);
+        if (controller.signal.aborted) return;
+        if (r.error) failed.push(`#${order.number}: ${r.error}`);
+        else if (r.order) { apply(r.order); if (r.order.label_url) labelled.add(r.order.id); }
+        setProgress(`${++done} van ${batch.length} labels gemaakt…`);
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+    if (controller.signal.aborted) return labelled;
     setBusy(false);
-    setProgress(failed.length ? `${list.length - failed.length} labels gemaakt, ${failed.length} mislukt: ${failed.join(' · ')}` : `${list.length} labels gemaakt.`);
-    router.refresh();
-    return failed.length === 0;
+    setProgress(failed.length ? `${labelled.size} labels gemaakt, ${failed.length} mislukt: ${failed.join(' · ')}` : `${batch.length} labels gemaakt.`);
+    return labelled;
   }
-  function printLabels(list: ShopOrder[]) {
-    const ids = list.map((o) => o.id);
-    if (ids.length) window.open(`/admin/bestellingen/labels?ids=${ids.join(',')}`, '_blank', 'noopener');
+  function printLabels(batch: ShopOrder[]) {
+    if (batch.length > LABEL_BATCH_MAX) { setProgress(`${batch.length} labels in één keer printen gaat niet; maximaal ${LABEL_BATCH_MAX}. Selecteer een kleinere groep of filter per shop.`); return; }
+    if (batch.length) window.open(`/admin/bestellingen/labels?ids=${batch.map((o) => o.id).join(',')}`, '_blank', 'noopener');
   }
   async function patPat() {
-    const list = target;
-    const ok = await makeLabels(list.filter((o) => !o.label_url));
-    if (ok || list.some((o) => o.label_url)) printLabels(list);
+    const batch = target;
+    const labelled = await makeLabels(batch.filter((o) => !o.label_url));
+    printLabels(batch.filter((o) => !!o.label_url || labelled.has(o.id))); // only what really has a label
   }
 
   const chip = (on: boolean) => cn('rounded-md px-2.5 py-1 text-sm transition-colors', on ? 'bg-primary text-primary-foreground' : 'hover:bg-muted');
@@ -142,7 +161,7 @@ export function PickBoard({ orders, now }: { orders: ShopOrder[]; now: number })
                 <span className="text-muted-foreground text-sm">{order.shop} · {WHEN.format(new Date(order.created_at))} · {order.country}</span>
                 {order.label_url && <span className="text-muted-foreground text-xs">label {order.carrier === 'eigen' ? 'eigen' : order.carrier}{order.tracking_code && ` · ${order.tracking_code}`}</span>}
               </div>
-              <OrderLines order={order} canAct />
+              <OrderLines order={order} canAct onOrder={apply} />
             </div>
           ))}
         </section>

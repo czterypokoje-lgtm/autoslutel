@@ -5,13 +5,9 @@ import { formatCurrency } from '@/lib/utils';
 
 import {
   addressLines,
-  getInvoiceCredit,
-  getInvoiceDiscount,
-  getInvoiceItems,
+  getInvoiceDueDate,
   getInvoiceSubtotal,
-  getInvoiceTax,
-  getInvoiceTaxOption,
-  getInvoiceTotal,
+  getInvoiceTotals,
   getLineAmount,
   INVOICE_PAPER_HEIGHT,
   INVOICE_PAPER_WIDTH,
@@ -21,10 +17,11 @@ import {
 
 /* The A4 sheet. Dutch only: it is what the customer receives. */
 export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
-  const taxOption = getInvoiceTaxOption(invoice);
+  const { items, rate, discount, vat, credit, total } = getInvoiceTotals(invoice);
   const discountValue = Number.isFinite(invoice.discountValue) ? invoice.discountValue : 0;
   const discountLabel = invoice.discountType === 'percent' ? `Korting ${discountValue}%` : 'Korting';
-  const credit = getInvoiceCredit(invoice);
+  /* The due date is never typed: the ledger derives it from the invoice date. */
+  const dueDate = getInvoiceDueDate(invoice);
   const { from, to } = invoice;
 
   return (
@@ -48,7 +45,7 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
           <div>
             <p>Factuurnummer: {invoice.referenceNumber || 'volgt bij opslaan'}</p>
             <p>Factuurdatum: {paperDate(invoice.issuedDate)}</p>
-            <p>Vervaldatum: {paperDate(invoice.paymentDueDate)}</p>
+            <p>Vervaldatum: {paperDate(dueDate)}</p>
           </div>
           <div>
             <p>Betaling</p>
@@ -86,7 +83,7 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
             <span className="text-right">Prijs</span>
             <span className="text-right">Totaal</span>
           </div>
-          {getInvoiceItems(invoice).map((item) => (
+          {items.map((item) => (
             <div
               key={item.id}
               className="grid grid-cols-[1fr_74px_116px_116px] border-b border-[oklch(0.86_0_0)] px-3 py-4"
@@ -108,11 +105,11 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
               </div>
               <div className="flex justify-between gap-8">
                 <span>{discountLabel}</span>
-                <span>{formatInvoiceCurrency(getInvoiceDiscount(invoice))}</span>
+                <span>{formatInvoiceCurrency(discount)}</span>
               </div>
               <div className="flex justify-between gap-8">
-                <span>Btw {taxOption.rate}%</span>
-                <span>{formatInvoiceCurrency(getInvoiceTax(invoice))}</span>
+                <span>Btw {rate}%</span>
+                <span>{formatInvoiceCurrency(vat)}</span>
               </div>
               {credit > 0 && (
                 <div className="flex justify-between gap-8">
@@ -124,7 +121,7 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
             <div className="border-y-2 border-current py-3">
               <div className="flex justify-between gap-8">
                 <span className="font-semibold uppercase">Te betalen</span>
-                <span className="font-semibold">{formatInvoiceCurrency(getInvoiceTotal(invoice))}</span>
+                <span className="font-semibold">{formatInvoiceCurrency(total)}</span>
               </div>
             </div>
           </section>
@@ -140,7 +137,7 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
           <p>{from.website}</p>
         </div>
         <div>
-          <p>Gelieve te betalen vóór {paperDate(invoice.paymentDueDate)}.</p>
+          <p>Gelieve te betalen vóór {paperDate(dueDate)}.</p>
           <p>Opgesteld door {from.name}</p>
         </div>
       </footer>

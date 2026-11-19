@@ -25,29 +25,40 @@ const FULFILMENT: Record<Fulfilment, [string, 'default' | 'secondary' | 'outline
 export function LineBadge({ state }: { state: LineState }) { const [l, v] = LINE[state]; return <Badge variant={v}>{l}</Badge>; }
 export function FulfilmentBadge({ value }: { value: Fulfilment }) { const [l, v] = FULFILMENT[value]; return <Badge variant={v}>{l}</Badge>; }
 
-async function post(body: unknown): Promise<{ error?: string; writeback?: string }> {
+async function post(body: unknown): Promise<{ error?: string; writeback?: string; order?: ShopOrder }> {
   const r = await fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(() => null);
   const data = await r?.json().catch(() => null);
   return r?.ok ? (data ?? {}) : { error: data?.error ?? 'Opslaan mislukt.' };
 }
 
-/** Lines table with pick checkboxes and the ship button; used by the detail page and the pick list. */
-export function OrderLines({ order, canAct }: { order: ShopOrder; canAct: boolean }) {
+/**
+ * Lines table with pick checkboxes and the ship button; used by the detail
+ * page and the pick list. With `onOrder` the caller takes the fresh order the
+ * API returns and patches its own state; without it we fall back to a refresh.
+ */
+export function OrderLines({ order, canAct, onOrder }: { order: ShopOrder; canAct: boolean; onOrder?: (order: ShopOrder) => void }) {
   const router = useRouter();
   const [busy, setBusy] = useState('');
   const [note, setNote] = useState('');
   const [scan, setScan] = useState('');
+  const [ticks, setTicks] = useState<Record<string, boolean>>({}); // optimistic pick ticks; only rolled back on failure
   const live = order.status === 'processing' && (order.fulfilment === 'open' || order.fulfilment === 'picked');
   const shippable = live && !!order.label_url && order.lines.filter((l) => l.state !== 'cancelled' && l.article_code).every((l) => l.state === 'picked' || l.state === 'reserved');
   const short = order.lines.filter((l) => l.state === 'short');
 
-  async function run(key: string, body: unknown, done?: (r: { writeback?: string }) => void) {
+  async function run(key: string, body: unknown, done?: (r: { writeback?: string }) => void): Promise<boolean> {
     setBusy(key); setNote('');
     const result = await post(body);
     setBusy('');
-    if (result.error) { setNote(result.error); return; }
+    if (result.error) { setNote(result.error); return false; }
     done?.(result);
-    router.refresh();
+    if (result.order && onOrder) onOrder(result.order); else router.refresh();
+    return true;
+  }
+
+  async function pick(line: ShopLine, picked: boolean) {
+    setTicks((t) => ({ ...t, [line.id]: picked }));
+    if (!(await run(line.id, { action: 'pick', line: line.id, picked }))) setTicks((t) => { const n = { ...t }; delete n[line.id]; return n; });
   }
 
   return (
@@ -65,7 +76,7 @@ export function OrderLines({ order, canAct }: { order: ShopOrder; canAct: boolea
             if (!hit) { setNote(`${code}: niet in deze bestelling.`); return; }
             if (hit.state === 'picked') { setNote(`${hit.sku || code} is al gepickt.`); return; }
             if (hit.reserved <= 0) { setNote(`${hit.sku || code}: niets gereserveerd, eerst voorraad tellen of ontvangen.`); return; }
-            run(hit.id, { action: 'pick', line: hit.id, picked: true });
+            pick(hit, true);
           }}>
             <input className="border-input h-8 w-44 rounded-md border bg-transparent px-2 text-sm" placeholder="Scan artikel…" aria-label="Scan artikel" value={scan} onChange={(e) => setScan(e.target.value)} autoComplete="off" />
           </form>
@@ -96,7 +107,7 @@ export function OrderLines({ order, canAct }: { order: ShopOrder; canAct: boolea
             </TableRow>
           </TableHeader>
           <TableBody>
-            {order.lines.map((line) => <Line key={line.id} line={line} pickable={canAct && live} busy={busy} onPick={(picked) => run(line.id, { action: 'pick', line: line.id, picked })} />)}
+            {order.lines.map((line) => <Line key={line.id} line={line} pickable={canAct && live} busy={busy} picked={ticks[line.id] ?? line.state === 'picked'} onPick={(p) => pick(line, p)} />)}
           </TableBody>
         </Table>
         {note && <p className="text-muted-foreground px-6 py-3 text-sm">{note}</p>}
@@ -105,11 +116,11 @@ export function OrderLines({ order, canAct }: { order: ShopOrder; canAct: boolea
   );
 }
 
-function Line({ line, pickable, busy, onPick }: { line: ShopLine; pickable: boolean; busy: string; onPick: (picked: boolean) => void }) {
+function Line({ line, pickable, busy, picked, onPick }: { line: ShopLine; pickable: boolean; busy: string; picked: boolean; onPick: (picked: boolean) => void }) {
   const canPick = pickable && (line.state === 'reserved' || line.state === 'picked' || line.state === 'short') && line.reserved > 0;
   return (
-    <TableRow className={line.state === 'picked' ? 'bg-muted/40' : undefined}>
-      {pickable && <TableCell><input type="checkbox" aria-label="Gepickt" className="size-4" disabled={!canPick || busy === line.id} checked={line.state === 'picked'} onChange={(e) => onPick(e.target.checked)} /></TableCell>}
+    <TableRow className={picked ? 'bg-muted/40' : undefined}>
+      {pickable && <TableCell><input type="checkbox" aria-label="Gepickt" className="size-4" disabled={!canPick || busy === line.id} checked={picked} onChange={(e) => onPick(e.target.checked)} /></TableCell>}
       <TableCell>
         <div className="font-medium">{line.sku || '—'}</div>
         <div className="text-muted-foreground max-w-96 truncate text-xs">{line.name}{!line.article_code && ' · niet gekoppeld aan een artikel'}</div>

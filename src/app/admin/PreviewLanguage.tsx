@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useSyncExternalStore, type ComponentProps, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useSyncExternalStore, type ComponentProps, type ReactNode } from 'react';
 import styles from './admin.module.css';
 
 const storageKey = 'keyforcars-preview-language';
@@ -355,7 +355,9 @@ function subscribe(callback: () => void) {
 
 export function usePreviewLanguage() {
   const english = useContext(Language);
-  return { english, t: (dutch: string) => english ? dictionary[dutch] ?? dutch : dutch };
+  // Stable across renders so components keying off `t` (e.g. table columns) don't rebuild every keystroke.
+  const t = useCallback((dutch: string) => english ? dictionary[dutch] ?? dutch : dutch, [english]);
+  return { english, t };
 }
 
 export function PreviewText({ children }: { children: string }) {

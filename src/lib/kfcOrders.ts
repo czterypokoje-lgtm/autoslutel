@@ -1,5 +1,6 @@
 import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { LABEL_BATCH_MAX } from '@/lib/kfcLabels';
 import { StockError } from '@/lib/kfcInventory';
 import { pushCompleted, isWooShop } from '@/lib/kfcWoo';
 import type { CrmUser } from '@/lib/crmSession';
@@ -72,10 +73,13 @@ export async function getShopOrder(id: string): Promise<ShopOrder | null> {
   return order;
 }
 
+export { LABEL_BATCH_MAX };
+
 /** Several orders at once, for the bulk label sheet. Keeps the order of `ids`. */
 export async function getShopOrdersByIds(ids: string[]): Promise<ShopOrder[]> {
   if (!ids.length) return [];
-  const { data, error } = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`).in('id', ids.slice(0, 200));
+  if (ids.length > LABEL_BATCH_MAX) throw new StockError(`Maximaal ${LABEL_BATCH_MAX} bestellingen per keer.`, 400);
+  const { data, error } = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`).in('id', ids);
   if (error) throw new StockError(`Bestellingen lezen mislukt: ${error.message}`, 500);
   const byId = new Map((data ?? []).map((row) => [String((row as { id: string }).id), toOrder(row)]));
   const orders = ids.map((id) => byId.get(id)).filter((o): o is ShopOrder => !!o);
@@ -115,16 +119,17 @@ export async function pickList(): Promise<ShopOrder[]> {
   return orders;
 }
 
-export async function markPicked(lineId: string, picked: boolean): Promise<void> {
-  const line = await db().from('kfc_shop_order_lines').select('id, order_id, quantity, reserved, state').eq('id', lineId).maybeSingle();
-  if (!line.data) throw new StockError('Regel niet gevonden.', 404);
-  if (!['short', 'reserved', 'picked'].includes(line.data.state)) throw new StockError('Deze regel kan niet gepickt worden.', 409);
-  const next = picked ? { picked: line.data.reserved, state: 'picked' } : { picked: 0, state: line.data.reserved >= line.data.quantity ? 'reserved' : 'short' };
-  const { error } = await db().from('kfc_shop_order_lines').update(next).eq('id', lineId);
-  if (error) throw new StockError(`Picken opslaan mislukt: ${error.message}`, 500);
-  const rest = await db().from('kfc_shop_order_lines').select('state').eq('order_id', line.data.order_id).neq('state', 'cancelled');
-  const allPicked = (rest.data ?? []).every((l) => l.state === 'picked' || l.state === 'shipped');
-  await db().from('kfc_shop_orders').update({ fulfilment: allPicked ? 'picked' : 'open' }).eq('id', line.data.order_id).in('fulfilment', ['open', 'picked']);
+/** Pick: one RPC that locks the order and writes line plus fulfilment in one transaction. Returns the order id, for the re-read. */
+export async function markPicked(lineId: string, picked: boolean): Promise<string> {
+  const { data, error } = await db().rpc('kfc_pick_line', { p_line: lineId, p_picked: picked });
+  if (error) {
+    if (error.message.includes('KFC_NO_LINE')) throw new StockError('Regel niet gevonden.', 404);
+    if (error.message.includes('KFC_LINE_STATE')) throw new StockError('Deze regel kan niet gepickt worden.', 409);
+    // 42883 is Postgres, PGRST202 is PostgREST not knowing the function yet.
+    if (error.code === '42883' || error.code === 'PGRST202') throw new StockError('Picken werkt nog niet. Voer supabase/migrations/0099_kfc_pick_rpc.sql uit.', 500);
+    throw new StockError(`Picken opslaan mislukt: ${error.message}`, 500);
+  }
+  return data as string;
 }
 
 /** Ship: one RPC for the stock side, then best-effort write-back to the shop. */
