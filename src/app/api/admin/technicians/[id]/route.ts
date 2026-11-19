@@ -1,0 +1,195 @@
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
+import { requireOfficeUserApi } from '@/lib/crmSession';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { parseWerkgebied } from '@/lib/crmJobs';
+
+export const dynamic = 'force-dynamic';
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const HEX_COLOUR = /^#[0-9a-f]{6}$/i;
+
+function text(value: unknown, max: number): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed.slice(0, max) : null;
+}
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { response } = await requireOfficeUserApi();
+  if (response) return response;
+
+  const { id } = await params;
+  if (!UUID.test(id)) {
+    return NextResponse.json({ error: 'Ongeldig id' }, { status: 400 });
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
+  }
+
+  const patch: Record<string, unknown> = {};
+
+  if ('name' in body) {
+    const name = text(body.name, 120);
+    if (!name) return NextResponse.json({ error: 'Naam is verplicht' }, { status: 400 });
+    patch.name = name;
+  }
+  if ('phone' in body) patch.phone = text(body.phone, 40);
+  if ('user_id' in body) {
+    const value = body.user_id;
+    if (value !== null && (typeof value !== 'string' || !UUID.test(value))) {
+      return NextResponse.json({ error: 'Ongeldige gebruiker' }, { status: 400 });
+    }
+    patch.user_id = value;
+  }
+  if ('active' in body) patch.active = body.active === true;
+  if ('werkgebied' in body) patch.werkgebied = parseWerkgebied(body.werkgebied);
+
+  /*
+   * The public half of a technician's profile (0058). Until these are filled
+   * a city page can name nobody, the dispatch geography gate has nothing to
+   * test, and fillTravelCost bails before it measures anything — three
+   * separate symptoms of the same empty columns.
+   */
+  if ('base_city' in body) patch.base_city = text(body.base_city, 120);
+  if ('gbp_url' in body) {
+    const url = text(body.gbp_url, 500);
+    if (url && !/^https:\/\//i.test(url)) {
+      return NextResponse.json({ error: 'Google-profiel moet met https:// beginnen' }, { status: 400 });
+    }
+    patch.gbp_url = url;
+  }
+  if ('certifications' in body) {
+    /* A comma-separated string from the form, or an array from an API caller.
+       Blank entries dropped so a trailing comma does not store an empty
+       certification and publish it on 62 city pages. */
+    const raw = Array.isArray(body.certifications)
+      ? body.certifications
+      : String(body.certifications ?? '').split(',');
+    patch.certifications = raw
+      .map((v) => String(v).trim())
+      .filter(Boolean)
+      .slice(0, 12);
+  }
+  for (const key of ['base_lat', 'base_lng'] as const) {
+    if (!(key in body)) continue;
+    const value = body[key];
+    if (value === null || value === '') { patch[key] = null; continue; }
+    const n = Number(value);
+    const limit = key === 'base_lat' ? 90 : 180;
+    if (!Number.isFinite(n) || Math.abs(n) > limit) {
+      return NextResponse.json({ error: 'Ongeldige coördinaat' }, { status: 400 });
+    }
+    patch[key] = n;
+  }
+  if ('color' in body) {
+    const colour = text(body.color, 7);
+    if (colour && !HEX_COLOUR.test(colour)) {
+      return NextResponse.json({ error: 'Ongeldige kleur' }, { status: 400 });
+    }
+    if (colour) patch.color = colour;
+  }
+
+  if (Object.keys(patch).length === 0) {
+    return NextResponse.json({ error: 'Niets om te wijzigen' }, { status: 400 });
+  }
+
+  let supabase;
+  try {
+    supabase = await createSupabaseServerClient();
+  } catch {
+    return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
+  }
+
+  const { data, error } = await supabase
+    .from('technicians')
+    .update(patch)
+    .eq('id', id)
+    .select('id, name, phone, active, werkgebied, color, user_id, base_city, base_lat, base_lng, certifications, gbp_url')
+    .maybeSingle();
+
+  if (error) {
+    console.error('Technician update failed:', error.message);
+    return NextResponse.json({ error: 'Opslaan mislukt' }, { status: 500 });
+  }
+  if (!data) {
+    return NextResponse.json({ error: 'Monteur niet gevonden' }, { status: 404 });
+  }
+
+  return NextResponse.json({ technician: data });
+}
+
+/*
+ * jobs.technician_id is "on delete set null" (0013_technician_platform.sql),
+ * so removing a technician never touches or hides their job history — those
+ * rows just become unassigned, exactly like a job nobody has claimed yet.
+ *
+ * A linked login is cleaned up too rather than left behind: the invite route
+ * already treats "a login with no technician record behind it" as a fault
+ * worth deleting over (see its own comment), and a technician removed here
+ * without removing their auth user would be the same problem in reverse —
+ * an account that can still sign in and would land on a page with nothing
+ * on it.
+ */
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { response } = await requireOfficeUserApi();
+  if (response) return response;
+
+  const { id } = await params;
+  if (!UUID.test(id)) {
+    return NextResponse.json({ error: 'Ongeldig id' }, { status: 400 });
+  }
+
+  let supabase;
+  try {
+    supabase = await createSupabaseServerClient();
+  } catch {
+    return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
+  }
+
+  const { data: technician, error: fetchError } = await supabase
+    .from('technicians')
+    .select('id, user_id')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (fetchError) {
+    console.error('Technician lookup failed:', fetchError.message);
+    return NextResponse.json({ error: 'Verwijderen mislukt' }, { status: 500 });
+  }
+  if (!technician) {
+    return NextResponse.json({ error: 'Monteur niet gevonden' }, { status: 404 });
+  }
+
+  const { error: deleteError } = await supabase.from('technicians').delete().eq('id', id);
+  if (deleteError) {
+    console.error('Technician delete failed:', deleteError.message);
+    return NextResponse.json({ error: 'Verwijderen mislukt' }, { status: 500 });
+  }
+
+  // Best-effort: the technician row is already gone either way, and a
+  // failed login cleanup is not worth surfacing as an error to the office.
+  if (technician.user_id) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (url && serviceKey) {
+      const adminAuth = createClient(url, serviceKey, {
+        auth: { autoRefreshToken: false, persistSession: false },
+      }).auth.admin;
+      const { error: authError } = await adminAuth.deleteUser(technician.user_id);
+      if (authError) console.error('Technician login cleanup failed:', authError.message);
+    }
+  }
+
+  return NextResponse.json({ success: true });
+}

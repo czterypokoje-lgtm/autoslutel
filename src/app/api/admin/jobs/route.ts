@@ -1,0 +1,324 @@
+import { isScenario, scenarioFromLabel } from '@/lib/scenarios';
+import { NextResponse, after } from 'next/server';
+import { requireOfficeUserApi } from '@/lib/crmSession';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { TIME_SLOTS, trimTime } from '@/lib/crmJobs';
+import { jobBriefing } from '@/lib/whatsapp';
+import { sendTelegram } from '@/lib/telegram';
+import { CALL_CLICK_WINDOW_MINUTES } from '@/lib/adClickId';
+
+export const dynamic = 'force-dynamic';
+
+/**
+ * Create a job — normally from a lead ("Plan in"), sometimes by hand.
+ *
+ * The write goes through the caller's session client, so the office-only RLS
+ * policy on `jobs` is the guard that actually holds.
+ */
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function text(value: unknown, max: number): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed.slice(0, max) : null;
+}
+
+function price(value: unknown): number | null | 'invalid' {
+  if (value === null || value === undefined || value === '') return null;
+  const n = typeof value === 'number' ? value : Number(String(value).replace(',', '.'));
+  if (!Number.isFinite(n) || n < 0 || n > 99_999_999) return 'invalid';
+  return Math.round(n * 100) / 100;
+}
+
+/** Matches the numeric(5,2) check constraint on jobs.commission_pct. */
+function percentage(value: unknown): number | null | 'invalid' {
+  if (value === null || value === undefined || value === '') return null;
+  const n = typeof value === 'number' ? value : Number(String(value).replace(',', '.'));
+  if (!Number.isFinite(n) || n < 0 || n > 100) return 'invalid';
+  return Math.round(n * 100) / 100;
+}
+
+function year(value: unknown): number | null | 'invalid' {
+  if (value === null || value === undefined || value === '') return null;
+  const n = Number(value);
+  if (!Number.isInteger(n) || n < 1950 || n > new Date().getFullYear() + 1) return 'invalid';
+  return n;
+}
+
+function bool(value: unknown): boolean | null {
+  return typeof value === 'boolean' ? value : null;
+}
+
+export async function POST(request: Request) {
+  const { response } = await requireOfficeUserApi();
+  if (response) return response;
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
+  }
+
+  const customerPhone = text(body.customer_phone, 40);
+  if (!customerPhone || customerPhone.replace(/\D/g, '').length < 9) {
+    return NextResponse.json(
+      { error: 'Vul het telefoonnummer van de klant in (minimaal 9 cijfers). Zonder nummer kunnen we de klant niet bellen of de klus aan de aanvraag koppelen.' },
+      { status: 400 },
+    );
+  }
+
+  const scheduledDate = text(body.scheduled_date, 10);
+  if (!scheduledDate || !/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate)) {
+    return NextResponse.json({ error: 'Kies een datum' }, { status: 400 });
+  }
+
+  const slotStart = trimTime(text(body.slot_start, 8) ?? '');
+  const slotEnd = trimTime(text(body.slot_end, 8) ?? '');
+  const knownSlot = TIME_SLOTS.some(
+    (s) => s.start === slotStart && s.end === slotEnd
+  );
+  // A custom window is allowed, but it still has to be a window.
+  if (!slotStart || !slotEnd || (!knownSlot && slotEnd <= slotStart)) {
+    return NextResponse.json({ error: 'Kies een geldig tijdvak' }, { status: 400 });
+  }
+
+  const leadId = text(body.lead_id, 40);
+  const orderId = text(body.order_id, 40);
+  const technicianId = text(body.technician_id, 40);
+
+  for (const [label, value] of [
+    ['lead_id', leadId],
+    ['order_id', orderId],
+    ['technician_id', technicianId],
+  ] as const) {
+    if (value && !UUID.test(value)) {
+      return NextResponse.json({ error: `Ongeldige ${label}` }, { status: 400 });
+    }
+  }
+
+  const quoted = price(body.quoted_price);
+  if (quoted === 'invalid') {
+    return NextResponse.json({ error: 'Ongeldig bedrag' }, { status: 400 });
+  }
+
+  const carYear = year(body.car_year);
+  if (carYear === 'invalid') {
+    return NextResponse.json({ error: 'Ongeldig bouwjaar' }, { status: 400 });
+  }
+
+  /*
+   * Commission is stored on the job, both as the rate and as the euro amount
+   * it worked out to.
+   *
+   * The rate, because a tier can change and what someone was owed on a job
+   * they already did must not change with it. The amount, because
+   * crm_report_commission and crm_report_make both sum jobs.commission_amount
+   * — nothing was writing that column on a manually planned job, so those
+   * reports only ever saw whatever had been filled in by hand.
+   */
+  const commissionPct = percentage(body.commission_pct);
+  if (commissionPct === 'invalid') {
+    return NextResponse.json(
+      { error: 'Commissie moet tussen 0 en 100 liggen' },
+      { status: 400 }
+    );
+  }
+
+  /*
+   * The euro amount is taken as sent, not recomputed from the percentage.
+   * The office can agree a flat "wij houden €75" that is not a round
+   * percentage of the price, and recomputing here would quietly replace the
+   * figure they actually agreed with a rounded one.
+   */
+  const sentAmount = price(body.commission_amount);
+  if (sentAmount === 'invalid') {
+    return NextResponse.json({ error: 'Ongeldig commissiebedrag' }, { status: 400 });
+  }
+  if (sentAmount !== null && quoted !== null && sentAmount > quoted) {
+    return NextResponse.json(
+      { error: 'Commissie kan niet hoger zijn dan de afgesproken prijs' },
+      { status: 400 }
+    );
+  }
+
+  const commissionAmount =
+    sentAmount ??
+    (commissionPct !== null && quoted !== null
+      ? Math.round(quoted * commissionPct) / 100
+      : null);
+
+  let supabase;
+  try {
+    supabase = await createSupabaseServerClient();
+  } catch {
+    return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
+  }
+
+  /*
+   * A job with no lead_id came in by phone — it never touched /api/leads, so
+   * it carries no click id. The closest unclaimed tel:/WhatsApp click within
+   * CALL_CLICK_WINDOW_MINUTES is, in practice, almost always the one that
+   * caused this call (one phone line, one business). A job that already has
+   * a lead_id got its click id (if any) from that lead instead — see
+   * api/export-conversions, which reads both sources.
+   */
+  let claimedClick: {
+    id: string;
+    gclid: string | null;
+    wbraid: string | null;
+    gbraid: string | null;
+    msclkid: string | null;
+    created_at: string;
+  } | null = null;
+
+  if (!leadId) {
+    const windowStart = new Date(Date.now() - CALL_CLICK_WINDOW_MINUTES * 60_000).toISOString();
+    const { data: candidate, error: candidateError } = await supabase
+      .from('call_clicks')
+      .select('id, gclid, wbraid, gbraid, msclkid, created_at')
+      .is('claimed_by_job_id', null)
+      .gte('created_at', windowStart)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (candidateError) {
+      console.error('call_clicks lookup failed:', candidateError.message);
+    } else {
+      claimedClick = candidate;
+    }
+  }
+
+  const row = {
+    lead_id: leadId,
+    order_id: orderId,
+    technician_id: technicianId,
+    scheduled_date: scheduledDate,
+    slot_start: slotStart,
+    slot_end: slotEnd,
+    street: text(body.street, 200),
+    postcode: text(body.postcode, 12)?.toUpperCase().replace(/\s+/g, '') ?? null,
+    city: text(body.city, 120),
+    kenteken: text(body.kenteken, 12)?.toUpperCase().replace(/\s+/g, '') ?? null,
+    car_make: text(body.car_make, 60),
+    car_model: text(body.car_model, 60),
+    car_year: carYear,
+    keyless: bool(body.keyless),
+    customer_name: text(body.customer_name, 120),
+    customer_phone: customerPhone,
+    service_type: text(body.service_type, 120),
+    /* The office picks "Sleutel bijmaken" from a list; that IS the scenario,
+       and without storing it as one no price list can be read for this job. */
+    scenario: body.scenario && isScenario(body.scenario)
+      ? body.scenario
+      : scenarioFromLabel(text(body.service_type, 120)),
+    quoted_price: quoted,
+    commission_pct: commissionPct,
+    commission_amount: commissionAmount,
+    notes: text(body.notes, 2000),
+    status: 'gepland',
+    lat: null as number | null,
+    lng: null as number | null,
+    gclid: claimedClick?.gclid ?? null,
+    wbraid: claimedClick?.wbraid ?? null,
+    gbraid: claimedClick?.gbraid ?? null,
+    msclkid: claimedClick?.msclkid ?? null,
+    click_captured_at: claimedClick?.created_at ?? null,
+  };
+
+  if (row.postcode && row.city) {
+    const { geocodeAddress } = await import('@/lib/googleMaps');
+    const coords = await geocodeAddress(row.postcode, row.city);
+    if (coords) {
+      row.lat = coords.lat;
+      row.lng = coords.lng;
+    }
+  } else if (row.postcode) {
+    // No city typed at all — fill the gap from the postcode itself rather
+    // than leave the job showing a bare postcode with nowhere to drive to.
+    // A city the office *did* type is left alone: it may be a specific
+    // neighbourhood ("Amsterdam Zuid") more precise than what a postcode
+    // lookup alone would return.
+    const { resolvePostcode } = await import('@/lib/googleMaps');
+    const resolved = await resolvePostcode(row.postcode);
+    if (resolved.city) row.city = resolved.city;
+    if (resolved.coords) {
+      row.lat = resolved.coords.lat;
+      row.lng = resolved.coords.lng;
+    }
+  }
+
+  const { data, error } = await supabase.from('jobs').insert(row).select('id').single();
+
+  if (error) {
+    console.error('CRM job insert failed:', error.message);
+    return NextResponse.json({ error: 'Inplannen mislukt' }, { status: 500 });
+  }
+
+  /*
+   * Claimed only now that the job actually exists — an insert that fails
+   * above must leave the click available for the next attempt or the next
+   * real job, not burn it on a job that was never created.
+   *
+   * The `is('claimed_by_job_id', null)` guard is the same race-safety as the
+   * lookup above: if two jobs were somehow created back to back, only the
+   * first to reach this line keeps the click.
+   */
+  if (claimedClick) {
+    const { error: claimError } = await supabase
+      .from('call_clicks')
+      .update({ claimed_by_job_id: data.id })
+      .eq('id', claimedClick.id)
+      .is('claimed_by_job_id', null);
+    if (claimError) {
+      console.error('call_clicks claim failed:', claimError.message);
+    }
+  }
+
+  /*
+   * A planned lead is no longer new. Moving it to `qualified` also stamps
+   * `first_contact_at` through the trigger from 0003, which is what the
+   * response-time report will later be built on.
+   *
+   * Deliberately not fatal: the job exists, and a lead stuck on `new` is a far
+   * smaller problem than an error that makes the planner try again and create
+   * a second job.
+   */
+  if (leadId) {
+    const { error: leadError } = await supabase
+      .from('leads')
+      .update({ status: 'qualified' })
+      .eq('id', leadId)
+      .eq('status', 'new');
+    if (leadError) {
+      console.error('Lead status not updated after planning:', leadError.message);
+    }
+  }
+
+  /*
+   * A manual assignment, unlike the voice agent's job_offers flow, is a
+   * decision the office already made — the technician isn't asked to accept
+   * it, so this is a "here's your job" notice, not a "here's an offer" one.
+   */
+  if (technicianId) {
+    const briefing = jobBriefing(row, 'assigned');
+    after(async () => {
+      const { data: tech } = await supabase
+        .from('technicians')
+        .select('telegram_chat_id')
+        .eq('id', technicianId)
+        .maybeSingle();
+      if (!tech?.telegram_chat_id) return;
+      await sendTelegram(
+        tech.telegram_chat_id,
+        `Nieuwe klus ingepland!\n\n${briefing}\n\nBekijk: https://autosleutel24.nl/admin/vandaag`
+      );
+    });
+  }
+
+  return NextResponse.json(
+    { job: data },
+    { status: 201, headers: { 'Cache-Control': 'no-store' } }
+  );
+}

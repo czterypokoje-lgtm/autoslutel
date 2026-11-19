@@ -1,0 +1,859 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import { ChevronDown, ChevronRight, Plus, Search } from 'lucide-react';
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
+import { SCENARIOS, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
+import type { CatalogMake } from '@/lib/carCatalog';
+import { TOP_BRANDS, brandRank, isTopBrand, isExcludedMake } from '@/lib/topBrands';
+import { pickerModels } from '@/lib/carCatalogExtra';
+import { specificity } from '@/lib/capability';
+import styles from './prices.module.css';
+
+export interface PriceEntry {
+  id: string;
+  make: string;
+  model: string | null;
+  scenario: Scenario;
+  from_year: number | null;
+  to_year: number | null;
+  excluded: boolean;
+  keyless: boolean | null;
+  price: number | string | null;
+}
+
+const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+
+interface Draft {
+  model: string;
+  fromYear: string;
+  toYear: string;
+  scenario: Scenario;
+  keyless: string; // '' = beide
+  price: string;
+}
+
+const EMPTY_DRAFT: Draft = {
+  model: '',
+  fromYear: '',
+  toYear: '',
+  scenario: 'bijmaken',
+  keyless: '',
+  price: '',
+};
+
+function toIntOrNull(v: string): number | null {
+  const n = Number(v);
+  return v.trim() && Number.isInteger(n) && n > 1950 && n < 2100 ? n : null;
+}
+
+/** A copy of `source` without the listed keys. */
+function omit<T>(source: Record<string, T>, keys: string[]): Record<string, T> {
+  const next = { ...source };
+  for (const key of keys) delete next[key];
+  return next;
+}
+
+function keylessLabel(v: boolean | null): string {
+  return v === true ? 'Keyless' : v === false ? 'Baard/contact' : 'Beide';
+}
+
+/**
+ * Broad rows first, narrower ones under them.
+ *
+ * The same order dispatch resolves in (see specificity in lib/capability):
+ * a row covering 2005–2016 is the general rule, and one covering 2012–2013 is
+ * the exception to it. Reading them in that order is the only way the table
+ * says what actually happens for a 2012 car.
+ */
+function ordered(rows: PriceEntry[]): PriceEntry[] {
+  return [...rows].sort((a, b) => {
+    const model = (a.model ?? '').localeCompare(b.model ?? '', 'nl');
+    if (model !== 0) return model;
+    const scenario = a.scenario.localeCompare(b.scenario);
+    if (scenario !== 0) return scenario;
+    return specificity(a) - specificity(b);
+  });
+}
+
+/**
+ * Is this row an exception to a broader one for the same car and scenario?
+ * Only used to indent it — dispatch decides the same thing for itself.
+ */
+function isNarrowerThanSibling(row: PriceEntry, siblings: PriceEntry[]): boolean {
+  const mine = specificity(row);
+  return siblings.some(
+    (other) =>
+      other.id !== row.id &&
+      (other.model ?? null) === (row.model ?? null) &&
+      other.scenario === row.scenario &&
+      specificity(other) < mine
+  );
+}
+
+/**
+ * A monteur's own price list, which is the same declaration as their coverage:
+ * a priced row means "I do this car, for this much", and it is what makes them
+ * reachable by dispatch (see coversCar in lib/capability.ts).
+ *
+ * Organised brand-first because that is how the question arrives — a monteur
+ * knows they do Volkswagens and wants to say what a Golf costs, not to scroll
+ * one flat list of every car ever made. The twenty makes that actually turn up
+ * in real jobs come first; everything else is behind "overige merken".
+ */
+export default function PriceTree({
+  technicianId,
+  catalog,
+  rows: initialRows,
+  readOnly = false,
+}: {
+  technicianId: string;
+  catalog: CatalogMake[];
+  rows: PriceEntry[];
+  /** The office viewing someone else's list: visible, not editable. */
+  readOnly?: boolean;
+}) {
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
+  const [rows, setRows] = useState<PriceEntry[]>(initialRows);
+  const [openMake, setOpenMake] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [drafts, setDrafts] = useState<Record<string, Draft>>({});
+  /** Pending edits per row id, flushed by saveAll(). */
+  const [dirty, setDirty] = useState<Record<string, Partial<PriceEntry>>>({});
+  /*
+   * Exactly what was typed, per cell, keyed "<rowId>:<field>".
+   *
+   * The inputs are controlled, and parsing on every keystroke made them
+   * impossible to type in: "2005" is rejected at "2", "20" and "200" before
+   * it becomes a year, so each character was wiped as it was entered, and a
+   * price could never take a decimal because "25," parses back to "25". The
+   * raw string is what the box shows; the parsed value is what gets saved.
+   */
+  const [text, setText] = useState<Record<string, string>>({});
+  const [saved, setSaved] = useState(false);
+
+  const byMake = useMemo(() => {
+    const map = new Map<string, PriceEntry[]>();
+    for (const row of rows) {
+      const key = row.make.toLowerCase();
+      const list = map.get(key) ?? [];
+      list.push(row);
+      map.set(key, list);
+    }
+    return map;
+  }, [rows]);
+
+  /* Top twenty first, then the rest of the catalogue alphabetically. */
+  const makes = useMemo(() => {
+    const names = new Map<string, string>();
+    for (const b of TOP_BRANDS) names.set(b.toLowerCase(), b);
+    for (const m of catalog) if (!names.has(m.make.toLowerCase())) names.set(m.make.toLowerCase(), m.make);
+    // A make a monteur already priced always shows, even outside the catalogue.
+    for (const r of rows) if (!names.has(r.make.toLowerCase())) names.set(r.make.toLowerCase(), r.make);
+
+    const all = [...names.values()].filter((m) => !isExcludedMake(m));
+    const q = search.trim().toLowerCase();
+    const filtered = q ? all.filter((m) => m.toLowerCase().includes(q)) : all;
+    return filtered.sort((a, b) => {
+      const ra = brandRank(a);
+      const rb = brandRank(b);
+      return ra !== rb ? ra - rb : a.localeCompare(b, 'nl');
+    });
+  }, [catalog, rows, search]);
+
+  const modelsFor = (make: string): string[] =>
+    pickerModels(
+      make,
+      catalog.find((m) => m.make.toLowerCase() === make.toLowerCase())?.models.map((m) => m.model) ?? []
+    );
+
+  /*
+   * Every model of the make, already listed, whether or not it has been
+   * priced yet.
+   *
+   * The unpriced ones are not rows in the database — they exist only on
+   * screen until a price is typed into one. Writing a row per model per
+   * monteur up front would be thousands of rows that mean nothing, and worse,
+   * each would make the monteur dispatchable for a car they never agreed a
+   * price for. A placeholder here costs nothing and says the same thing:
+   * "this model exists, name your price."
+   */
+  const placeholdersFor = (make: string, saved: PriceEntry[]): PriceEntry[] => {
+    const taken = new Set(
+      saved.filter((r) => r.model).map((r) => `${r.model!.toLowerCase()}|${r.scenario}`)
+    );
+    return modelsFor(make)
+      .filter((model) => !taken.has(`${model.toLowerCase()}|bijmaken`))
+      .map((model) => ({
+        id: `new:${make}:${model}`,
+        make,
+        model,
+        scenario: 'bijmaken' as Scenario,
+        from_year: null,
+        to_year: null,
+        excluded: false,
+        keyless: null,
+        price: null,
+      }));
+  };
+
+  const draftFor = (make: string): Draft => drafts[make] ?? EMPTY_DRAFT;
+  const setDraft = (make: string, patch: Partial<Draft>) =>
+    setDrafts((d) => ({ ...d, [make]: { ...(d[make] ?? EMPTY_DRAFT), ...patch } }));
+
+  function explain(message: string): string {
+    if (/column .*price|does not exist|schema cache/i.test(message)) {
+      return 'De prijskolom bestaat nog niet — voer supabase/migrations/0038_technician_pricing.sql uit.';
+    }
+    if (/duplicate key|unique/i.test(message)) {
+      /* Mentions the bouwjaar because it is part of the key from 0061 on. A
+         monteur who reads the old wording, sees two rows differing only by
+         year, and concludes the screen is broken is reading it correctly —
+         it was, until the index included the years. */
+      return 'Je hebt al een prijs voor deze combinatie van model, bouwjaar, scenario en sleuteltype.';
+    }
+    /* technician_coverage_years_check: to_year >= from_year. Should be caught
+       before the save now, but a raw Postgres constraint name on screen tells
+       a monteur nothing about which car to fix. */
+    if (/technician_coverage_years_check|years_check/i.test(message)) {
+      return 'Het tot-bouwjaar ligt vóór het van-bouwjaar. Draai ze om, of laat er één leeg.';
+    }
+    return message;
+  }
+
+  async function addRow(make: string) {
+    const draft = draftFor(make);
+    const priceValue = Number(draft.price.replace(',', '.'));
+    if (!draft.price.trim() || !Number.isFinite(priceValue) || priceValue <= 0) {
+      setError('Vul een geldige prijs in.');
+      return;
+    }
+
+    /* Same guard as saveAll: the database refuses to_year < from_year, and the
+       raw constraint name it returns tells a monteur nothing. */
+    const draftFrom = toIntOrNull(draft.fromYear);
+    const draftTo = toIntOrNull(draft.toYear);
+    if (draftFrom != null && draftTo != null && draftTo < draftFrom) {
+      setError('Het tot-bouwjaar ligt vóór het van-bouwjaar. Draai ze om, of laat er één leeg.');
+      return;
+    }
+
+    setBusy(true);
+    setError(null);
+    const { data, error: insertError } = await supabase
+      .from('technician_coverage')
+      .insert({
+        technician_id: technicianId,
+        make,
+        model: draft.model.trim() || null,
+        scenario: draft.scenario,
+        keyless: draft.keyless === '' ? null : draft.keyless === 'true',
+        from_year: toIntOrNull(draft.fromYear),
+        to_year: toIntOrNull(draft.toYear),
+        excluded: false,
+        price: priceValue,
+      })
+      .select('id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+      .single();
+    setBusy(false);
+
+    if (insertError) {
+      setError(explain(insertError.message));
+      return;
+    }
+    setRows((r) => [...r, data as PriceEntry]);
+    setDrafts((d) => ({ ...d, [make]: EMPTY_DRAFT }));
+  }
+
+  /*
+   * Edits are held until "Opslaan", not written on every blur.
+   *
+   * Setting up a price list means touching a lot of cells in a row — years,
+   * scenario, sleuteltype, price — and saving each one separately made a
+   * dozen writes out of one decision, with no way to change your mind. The
+   * table shows pending values; `dirty` is what will be sent.
+   */
+  /*
+   * Takes the whole row, not just its id, because a placeholder is not in
+   * `rows` yet — it is built during render from the model list. Editing one
+   * used to map over `rows`, find nothing and drop the change on the floor:
+   * the typed price stayed visible (it lives in the text buffer) while the
+   * row itself was never recorded, so saving had nothing to write and the
+   * button appeared to do nothing. The first edit materialises it instead.
+   */
+  function editRow(row: PriceEntry, patch: Partial<PriceEntry>) {
+    setRows((r) =>
+      r.some((existing) => existing.id === row.id)
+        ? r.map((existing) => (existing.id === row.id ? { ...existing, ...patch } : existing))
+        : [...r, { ...row, ...patch }]
+    );
+    setDirty((d) => ({ ...d, [row.id]: { ...(d[row.id] ?? {}), ...patch } }));
+    setError(null);
+    setSaved(false);
+  }
+
+  /** What a cell should display: what is being typed, else what is stored. */
+  function cellText(id: string, field: string, stored: number | string | null): string {
+    const typed = text[`${id}:${field}`];
+    return typed ?? (stored == null ? '' : String(stored));
+  }
+
+  function typeInto(id: string, field: string, raw: string) {
+    setText((t) => ({ ...t, [`${id}:${field}`]: raw }));
+  }
+
+  function updatePrice(row: PriceEntry, raw: string) {
+    typeInto(row.id, 'price', raw);
+    const trimmed = raw.trim();
+    if (trimmed === '') {
+      editRow(row, { price: null });
+      return;
+    }
+    const priceValue = Number(trimmed.replace(',', '.'));
+    // A half-typed "25," is kept on screen but not written until it parses.
+    if (!Number.isFinite(priceValue) || priceValue < 0) return;
+    editRow(row, { price: priceValue });
+  }
+
+  function updateYear(row: PriceEntry, field: 'from_year' | 'to_year', raw: string) {
+    typeInto(row.id, field, raw);
+    const trimmed = raw.trim();
+    if (trimmed === '') {
+      editRow(row, { [field]: null } as Partial<PriceEntry>);
+      return;
+    }
+    // Only a complete, plausible year is stored; "20" stays visible meanwhile.
+    const parsed = toIntOrNull(trimmed);
+    if (parsed === null) return;
+    editRow(row, { [field]: parsed } as Partial<PriceEntry>);
+  }
+
+  /*
+   * Only edits that can actually be written count as pending.
+   *
+   * Typing a bouwjaar into a model that has no price yet is not a change
+   * waiting to be saved — there is no row to save it to, and one is only
+   * created once a price is named. Counting those made the bar show work
+   * that pressing Opslaan could never clear.
+   */
+  const savableIds = Object.keys(dirty).filter((id) => {
+    if (!id.startsWith('new:')) return true;
+    const row = rows.find((r) => r.id === id);
+    return row != null && row.price != null;
+  });
+  const pendingCount = savableIds.length;
+  /* Rows started but still missing the one thing that makes them real. */
+  const unpricedCount = Object.keys(dirty).length - pendingCount;
+
+  /*
+   * Saved one row at a time rather than in a single statement: PostgREST has
+   * no multi-row update with different values per row, and an upsert would
+   * need every column of every row resent. A failure stops there and says so,
+   * leaving the rows it has not reached still marked as pending.
+   */
+  /**
+   * Rows whose bouwjaren are the wrong way round.
+   *
+   * The database refuses these (technician_coverage_years_check) and the save
+   * loop stops at the first failure, so one inverted pair silently threw away
+   * every other price typed in the same session and showed a raw constraint
+   * name. Caught here instead, by name, before anything is written.
+   */
+  function invertedYears(): PriceEntry[] {
+    return rows.filter((r) => {
+      if (!savableIds.includes(r.id)) return false;
+      return r.from_year != null && r.to_year != null && r.to_year < r.from_year;
+    });
+  }
+
+  async function saveAll() {
+    if (savableIds.length === 0) return;
+
+    const bad = invertedYears();
+    if (bad.length > 0) {
+      const naming = bad
+        .map((r) => `${r.make}${r.model ? ` ${r.model}` : ''} (${r.from_year}–${r.to_year})`)
+        .join(', ');
+      setError(
+        bad.length === 1
+          ? `Bij ${naming} ligt het tot-bouwjaar vóór het van-bouwjaar. Draai ze om, of laat er één leeg.`
+          : `Bij deze auto's ligt het tot-bouwjaar vóór het van-bouwjaar: ${naming}. Draai ze om, of laat er één leeg.`
+      );
+      return;
+    }
+
+    setBusy(true);
+    setError(null);
+
+    const written: string[] = [];
+
+    for (const id of savableIds) {
+      const patch = dirty[id];
+      /*
+       * A placeholder has no database row yet — its id is the synthetic
+       * "new:make:model". Editing one is an insert, and it only becomes a row
+       * at all once it carries a price, because an unpriced row would make
+       * the monteur dispatchable for a car with no agreed price.
+       */
+      if (id.startsWith('new:')) {
+        const row = rows.find((r) => r.id === id);
+        if (!row || row.price == null) continue;
+        const { data, error: insertError } = await supabase
+          .from('technician_coverage')
+          .insert({
+            technician_id: technicianId,
+            make: row.make,
+            model: row.model,
+            scenario: row.scenario,
+            keyless: row.keyless,
+            from_year: row.from_year,
+            to_year: row.to_year,
+            excluded: row.excluded,
+            price: row.price,
+          })
+          .select('id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+          .single();
+        if (insertError) {
+          setBusy(false);
+          setError(explain(insertError.message));
+          // Keep what was already written out of the pending count.
+          if (written.length) setDirty((d) => omit(d, written));
+          return;
+        }
+        // Swap the placeholder for the row the database actually created.
+        setRows((r) => r.map((x) => (x.id === id ? (data as PriceEntry) : x)));
+      } else {
+        const { error: updateError } = await supabase
+          .from('technician_coverage')
+          .update(patch)
+          .eq('id', id);
+        if (updateError) {
+          setBusy(false);
+          setError(explain(updateError.message));
+          if (written.length) setDirty((d) => omit(d, written));
+          return;
+        }
+      }
+      written.push(id);
+    }
+
+    setDirty((d) => omit(d, written));
+
+    setBusy(false);
+    setSaved(true);
+    setText({});
+  }
+
+  /** Throws away pending edits by reloading what the server actually holds. */
+  async function discardAll() {
+    const { data, error: reloadError } = await supabase
+      .from('technician_coverage')
+      .select('id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+      .eq('technician_id', technicianId);
+    if (reloadError) {
+      setError(explain(reloadError.message));
+      return;
+    }
+    setRows((data ?? []) as PriceEntry[]);
+    setDirty({});
+    setText({});
+    setSaved(false);
+  }
+
+  /*
+   * An exception: the same model, pre-filled with the parent's years so the
+   * monteur only narrows them. It starts excluded — "these years I do not
+   * do" — and naming a price turns it into "these years cost something else"
+   * instead. Both are the same row; coversCar ranks the narrower span higher,
+   * so whichever it says wins for those years.
+   */
+  async function addException(row: PriceEntry) {
+    setBusy(true);
+    setError(null);
+    const { data, error: insertError } = await supabase
+      .from('technician_coverage')
+      .insert({
+        technician_id: technicianId,
+        make: row.make,
+        model: row.model,
+        scenario: row.scenario,
+        keyless: row.keyless,
+        from_year: row.from_year,
+        to_year: row.to_year,
+        excluded: true,
+        price: null,
+      })
+      .select('id, make, model, scenario, from_year, to_year, excluded, keyless, price')
+      .single();
+    setBusy(false);
+    if (insertError) {
+      setError(explain(insertError.message));
+      return;
+    }
+    setRows((r) => [...r, data as PriceEntry]);
+  }
+
+  async function removeRow(id: string) {
+    if (!confirm('Deze prijs verwijderen? Je krijgt deze klussen dan niet meer aangeboden.')) return;
+    const previous = rows;
+    setRows((r) => r.filter((row) => row.id !== id));
+    const { error: deleteError } = await supabase.from('technician_coverage').delete().eq('id', id);
+    if (deleteError) {
+      setRows(previous);
+      setError(explain(deleteError.message));
+    }
+  }
+
+  return (
+    <div className={styles.wrap}>
+      {error && <p className={styles.error}>{error}</p>}
+
+      {/*
+        Sticky so it stays reachable: a brand like Volkswagen runs to twenty
+        rows, and a save button at the bottom of that is a save button nobody
+        finds after editing the row they opened the page for.
+      */}
+      {!readOnly && (pendingCount > 0 || unpricedCount > 0 || saved) && (
+        <div className={pendingCount > 0 ? styles.saveBar : styles.saveBarDone}>
+          <span className={styles.saveText}>
+            {pendingCount > 0
+              ? `${pendingCount} ${pendingCount === 1 ? 'wijziging' : 'wijzigingen'} nog niet opgeslagen`
+              : unpricedCount > 0
+                ? `${unpricedCount} ${unpricedCount === 1 ? 'regel wacht' : 'regels wachten'} nog op een prijs`
+                : 'Alles opgeslagen.'}
+          </span>
+          {pendingCount > 0 && (
+            <>
+              <button
+                type="button"
+                className={styles.ghostBtn}
+                disabled={busy}
+                onClick={() => void discardAll()}
+              >
+                Ongedaan maken
+              </button>
+              <button
+                type="button"
+                className={styles.addBtn}
+                disabled={busy}
+                onClick={() => void saveAll()}
+              >
+                {busy ? 'Opslaan…' : 'Opslaan'}
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      <div className={styles.searchRow}>
+        <Search size={15} aria-hidden="true" />
+        <input
+          className={styles.search}
+          placeholder="Zoek een merk…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.brandGrid}>
+        {makes.map((make) => {
+          const mine = byMake.get(make.toLowerCase()) ?? [];
+          const open = openMake === make;
+          return (
+            <div key={make} className={open ? `${styles.brandCard} ${styles.brandCardOpen}` : styles.brandCard}>
+              <button
+                type="button"
+                className={styles.brandHead}
+                onClick={() => setOpenMake(open ? null : make)}
+                aria-expanded={open}
+              >
+                {open ? <ChevronDown size={15} aria-hidden="true" /> : <ChevronRight size={15} aria-hidden="true" />}
+                <span className={styles.brandName}>{make}</span>
+                {mine.length > 0 && <span className={styles.count}>{mine.length}</span>}
+                {!isTopBrand(make) && <span className={styles.rare}>overig</span>}
+              </button>
+
+              {open && (
+                <div className={styles.brandBody}>
+                  {/*
+                    The empty state used to hide the whole table whenever a
+                    make had no saved rows — which is every make before a
+                    monteur starts — so the model placeholders it was supposed
+                    to be listing never appeared at all. Only a make we have
+                    no models for is genuinely empty now.
+                  */}
+                  {mine.length === 0 && placeholdersFor(make, mine).length === 0 ? (
+                    <p className={styles.empty}>Geen modellen bekend voor {make}.</p>
+                  ) : (
+                    <div className={styles.tableWrap}>
+                      <table className={styles.table}>
+                        <thead>
+                          <tr>
+                            <th>Model</th>
+                            <th>Bouwjaar</th>
+                            <th>Scenario</th>
+                            <th>Sleutel</th>
+                            <th style={{ textAlign: 'right' }}>Prijs</th>
+                            {!readOnly && <th />}
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {ordered([...mine, ...placeholdersFor(make, mine)]).map((row) => {
+                          const isException = row.excluded || isNarrowerThanSibling(row, mine);
+                          /* Not saved yet: only a price makes it real. */
+                          const isNew = row.id.startsWith('new:');
+                          /* Started but still missing the price that creates it. */
+                          const needsPrice = isNew && row.price == null;
+                          return (
+                          <tr
+                            key={row.id}
+                            className={
+                              needsPrice
+                                ? styles.newRow
+                                : isException
+                                  ? styles.exceptionRow
+                                  : undefined
+                            }
+                          >
+                            <td className={row.model ? styles.strong : styles.muted}>
+                              {isException && <span className={styles.exceptionMark}>↳</span>}
+                              {row.model ?? 'Heel merk'}
+                            </td>
+                            <td>
+                              {readOnly ? (
+                                <span className={styles.muted}>
+                                  {row.from_year || row.to_year
+                                    ? `${row.from_year ?? ''}–${row.to_year ?? ''}`
+                                    : 'alle'}
+                                </span>
+                              ) : (
+                                <span className={styles.yearCell}>
+                                  <input
+                                    className={styles.yearInput}
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={4}
+                                    placeholder="alle"
+                                    value={cellText(row.id, 'from_year', row.from_year)}
+                                    aria-label="Bouwjaar vanaf"
+                                    onChange={(e) =>
+                                      updateYear(row, 'from_year', e.target.value.replace(/\D/g, ''))
+                                    }
+                                  />
+                                  <span className={styles.dash}>–</span>
+                                  <input
+                                    className={styles.yearInput}
+                                    type="text"
+                                    inputMode="numeric"
+                                    maxLength={4}
+                                    placeholder="nu"
+                                    value={cellText(row.id, 'to_year', row.to_year)}
+                                    aria-label="Bouwjaar tot"
+                                    onChange={(e) =>
+                                      updateYear(row, 'to_year', e.target.value.replace(/\D/g, ''))
+                                    }
+                                  />
+                                </span>
+                              )}
+                            </td>
+                            <td>
+                              {readOnly ? (
+                                SCENARIO_INFO[row.scenario]?.label ?? row.scenario
+                              ) : (
+                                <select
+                                  className={styles.rowSelect}
+                                  value={row.scenario}
+                                  aria-label="Scenario"
+                                  onChange={(e) =>
+                                    editRow(row, { scenario: e.target.value as Scenario })
+                                  }
+                                >
+                                  {SCENARIOS.map((sc) => (
+                                    <option key={sc} value={sc}>
+                                      {SCENARIO_INFO[sc].label}
+                                    </option>
+                                  ))}
+                                </select>
+                              )}
+                            </td>
+                            <td className={styles.muted}>
+                              {readOnly ? (
+                                keylessLabel(row.keyless)
+                              ) : (
+                                <select
+                                  className={styles.rowSelect}
+                                  value={row.keyless === null ? '' : String(row.keyless)}
+                                  aria-label="Sleuteltype"
+                                  onChange={(e) =>
+                                    editRow(row, {
+                                      keyless: e.target.value === '' ? null : e.target.value === 'true',
+                                    })
+                                  }
+                                >
+                                  <option value="">Beide</option>
+                                  <option value="true">Keyless</option>
+                                  <option value="false">Baard/contact</option>
+                                </select>
+                              )}
+                            </td>
+                            <td className={styles.money}>
+                              {row.excluded ? (
+                                <span className={styles.notDone}>doet hij niet</span>
+                              ) : readOnly ? (
+                                row.price == null ? (
+                                  <span className={styles.muted}>geen prijs</span>
+                                ) : (
+                                  MONEY.format(Number(row.price))
+                                )
+                              ) : (
+                                <input
+                                  className={styles.priceInput}
+                                  value={cellText(row.id, 'price', row.price)}
+                                  placeholder="—"
+                                  inputMode="decimal"
+                                  aria-label={`Prijs voor ${row.model ?? make}`}
+                                  onChange={(e) =>
+                                    updatePrice(row, e.target.value.replace(/[^0-9.,]/g, ''))
+                                  }
+                                />
+                              )}
+                            </td>
+                            {!readOnly && (
+                              <td className={styles.rowActions}>
+                                {needsPrice ? (
+                                  <span className={styles.muted}>vul een prijs in</span>
+                                ) : isNew ? (
+                                  <span className={styles.pendingNew}>wordt toegevoegd</span>
+                                ) : (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className={styles.ghostBtn}
+                                      title={
+                                        row.excluded
+                                          ? 'Toch doen, tegen een eigen prijs'
+                                          : 'Deze jaren doe ik niet'
+                                      }
+                                      onClick={() => editRow(row, { excluded: !row.excluded })}
+                                    >
+                                      {row.excluded ? 'Toch wel' : 'Doe ik niet'}
+                                    </button>
+                                    {!row.excluded && (
+                                      <button
+                                        type="button"
+                                        className={styles.ghostBtn}
+                                        disabled={busy}
+                                        title="Andere prijs of uitzondering voor een paar bouwjaren"
+                                        onClick={() => void addException(row)}
+                                      >
+                                        Uitzondering
+                                      </button>
+                                    )}
+                                    <button
+                                      type="button"
+                                      className={styles.ghostBtn}
+                                      onClick={() => void removeRow(row.id)}
+                                    >
+                                      Verwijderen
+                                    </button>
+                                  </>
+                                )}
+                              </td>
+                            )}
+                          </tr>
+                          );
+                        })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {!readOnly && (
+                    <div className={styles.addRow}>
+                      <select
+                        className={styles.cell}
+                        value={draftFor(make).model}
+                        onChange={(e) => setDraft(make, { model: e.target.value })}
+                        aria-label="Model"
+                      >
+                        <option value="">Heel merk</option>
+                        {modelsFor(make).map((m) => (
+                          <option key={m} value={m}>
+                            {m}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        className={styles.cell}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={4}
+                        placeholder="vanaf"
+                        value={draftFor(make).fromYear}
+                        onChange={(e) =>
+                          setDraft(make, { fromYear: e.target.value.replace(/\D/g, '') })
+                        }
+                        aria-label="Bouwjaar vanaf"
+                      />
+                      <input
+                        className={styles.cell}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={4}
+                        placeholder="tot"
+                        value={draftFor(make).toYear}
+                        onChange={(e) => setDraft(make, { toYear: e.target.value.replace(/\D/g, '') })}
+                        aria-label="Bouwjaar tot"
+                      />
+                      <select
+                        className={styles.cell}
+                        value={draftFor(make).scenario}
+                        onChange={(e) => setDraft(make, { scenario: e.target.value as Scenario })}
+                        aria-label="Scenario"
+                      >
+                        {SCENARIOS.map((s) => (
+                          <option key={s} value={s}>
+                            {SCENARIO_INFO[s].label}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        className={styles.cell}
+                        value={draftFor(make).keyless}
+                        onChange={(e) => setDraft(make, { keyless: e.target.value })}
+                        aria-label="Sleuteltype"
+                      >
+                        <option value="">Beide</option>
+                        <option value="true">Keyless</option>
+                        <option value="false">Baard/contact</option>
+                      </select>
+                      <input
+                        className={styles.cell}
+                        placeholder="€ prijs"
+                        inputMode="decimal"
+                        value={draftFor(make).price}
+                        onChange={(e) => setDraft(make, { price: e.target.value })}
+                        aria-label="Prijs"
+                      />
+                      <button
+                        type="button"
+                        className={styles.addBtn}
+                        disabled={busy}
+                        onClick={() => void addRow(make)}
+                      >
+                        <Plus size={14} aria-hidden="true" />
+                        {busy ? 'Bezig…' : 'Toevoegen'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

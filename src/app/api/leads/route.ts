@@ -1,0 +1,278 @@
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse, after } from 'next/server';
+import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rateLimit';
+import { isScenario } from '@/lib/scenarios';
+import { notifyNewLead } from '@/lib/leadNotify';
+import { toE164NL } from '@/lib/phone';
+import { sendOpenAiEvent } from '@/lib/openaiAds';
+import { leadToken } from '@/lib/leadToken';
+
+/**
+ * Lead capture.
+ *
+ * Public by necessity, so it is protected by a honeypot field, a per-IP rate
+ * limit, and length caps on every string before anything reaches the database.
+ *
+ * Phone number: historically the phone was concatenated into `location`, which
+ * made deduplication and routing impossible. This route now writes a dedicated
+ * `phone` / `phone_e164` column when the database has them, and falls back to
+ * the legacy shape when it does not — so it is safe to deploy before running
+ * supabase/migrations/0001_leads_sellable.sql, and upgrades itself afterwards.
+ */
+
+export const dynamic = 'force-dynamic';
+
+const RATE_LIMIT = 8; // submissions
+const RATE_WINDOW = 3600; // per hour, per IP
+
+const MAX = {
+  brand: 60,
+  model: 80,
+  year: 10,
+  service: 120,
+  location: 200,
+  postcode: 12,
+  phone: 40,
+  name: 120,
+  email: 160,
+  photoUrl: 500,
+  clickId: 200,
+} as const;
+
+/** Trim, cap, and drop anything that is not a usable string. */
+function clean(value: unknown, max: number): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  return trimmed.slice(0, max);
+}
+
+
+export async function POST(request: Request) {
+  try {
+    // Order matters: reject bots and malformed input before touching any
+    // infrastructure, so a spam flood never reaches the database or the
+    // rate limiter's backing store.
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
+    }
+
+    /*
+     * Honeypot. It used to be a hidden field called "company" — and Chrome's
+     * autofill fills "company" with the visitor's business name. Every such
+     * customer got "ontvangen" while nothing was stored or sent. The field is
+     * now named so autofill leaves it alone (hp), and even a filled honeypot
+     * only drops the submission when it looks like a bot: a link in it, or no
+     * phone number at all. A real lead with a phone number is never thrown away.
+     */
+    const trap = [body.hp, body.company].find((v) => typeof v === 'string' && v.trim() !== '') as string | undefined;
+    if (trap) {
+      const looksLikeBot = /https?:|www\.|<|>/i.test(trap) || !(typeof body.phone === 'string' && body.phone.replace(/\D/g, '').length >= 9);
+      if (looksLikeBot) return NextResponse.json({ success: true }, { status: 200 });
+      console.warn('[leads] honeypot filled but the lead has a phone number; keeping it');
+    }
+
+    const ip = getClientIp(request);
+    const limit = await rateLimit(`leads:${ip}`, RATE_LIMIT, RATE_WINDOW);
+    if (!limit.ok) return tooManyRequests(RATE_WINDOW);
+
+    const brand = clean(body.brand, MAX.brand);
+    const model = clean(body.model, MAX.model);
+    const year = clean(body.year, MAX.year);
+    const service = clean(body.service, MAX.service);
+    const location = clean(body.location, MAX.location);
+    const phone = clean(body.phone, MAX.phone);
+    const postcode = clean(body.postcode, MAX.postcode);
+    const name = clean(body.name, MAX.name);
+    const email = clean(body.email, MAX.email);
+    const photoUrl = clean(body.photoUrl, MAX.photoUrl);
+    const source = clean(body.source, 40) ?? 'unknown';
+    const gclid = clean(body.gclid, MAX.clickId);
+    const wbraid = clean(body.wbraid, MAX.clickId);
+    const gbraid = clean(body.gbraid, MAX.clickId);
+    /*
+     * Microsoft Advertising's click id. The column has existed since 0045 and
+     * the forms now send it, but this route never read it — so it arrived in
+     * the request body and was dropped, and every Bing click stayed
+     * unattributable exactly the way Google's did before gclid was stored.
+     */
+    const msclkid = clean(body.msclkid, MAX.clickId);
+    /* ChatGPT ads' oppref, from the first-party click cookie adClickId.ts writes
+       on landing — the forms don't post it, and it must arrive unaltered. */
+    let oppref: string | null = null;
+    try {
+      const raw = request.headers.get('cookie')?.match(/(?:^|;\s*)as24_clickid=([^;]+)/)?.[1];
+      const value = raw ? JSON.parse(decodeURIComponent(raw)).oppref : null;
+      oppref = typeof value === 'string' && value ? value.slice(0, 500) : null;
+    } catch {
+      /* unreadable cookie: the lead is simply not attributable to ChatGPT */
+    }
+
+    // What the visitor chose (working key vs. all lost) and the indicative
+    // price shown for it, from forms that ask (see publicQuote.ts). Never
+    // trusted beyond a plausible range — this is a quote, not an invoice.
+    const scenario = isScenario(body.scenario) ? body.scenario : null;
+    const quotedPriceNum = Number(body.quotedPrice);
+    const quotedPrice =
+      Number.isFinite(quotedPriceNum) && quotedPriceNum > 0 && quotedPriceNum < 10000 ? quotedPriceNum : null;
+
+    // Reject an entirely empty submission rather than storing a blank row.
+    if (!brand && !model && !service && !location && !phone) {
+      return NextResponse.json({ error: 'Onvoldoende gegevens' }, { status: 400 });
+    }
+
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.storage_SUPABASE_URL;
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.storage_SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Missing Supabase environment variables');
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    /*
+     * Auto-flagged, not auto-dropped. The same phone number submitting again
+     * within 72 hours is almost always the same person retrying a form or
+     * clicking a second ad, not a second independent lead — but the row is
+     * still kept (never silently discarded) so the office can see it and the
+     * offline-conversions export can exclude it from what gets reported to
+     * Google Ads as a real conversion.
+     */
+    const phoneE164ForDupeCheck = toE164NL(phone);
+    let initialStatus: string | undefined;
+    if (phoneE164ForDupeCheck) {
+      const since = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
+      const { data: recent } = await supabase
+        .from('leads')
+        .select('id')
+        .eq('phone_e164', phoneE164ForDupeCheck)
+        .gte('created_at', since)
+        .limit(1);
+      if (recent && recent.length > 0) initialStatus = 'duplicate';
+    }
+
+    const legacyRow = {
+      brand,
+      model,
+      year,
+      service,
+      // Keep the legacy combined value so existing exports and views keep working.
+      location: phone ? `${location ?? ''} (Tel: ${phone})`.trim() : location,
+      photo_url: photoUrl,
+      gclid,
+      wbraid,
+      gbraid,
+    };
+
+    const enrichedRow = {
+      ...legacyRow,
+      location, // clean location once the dedicated phone column exists
+      phone,
+      phone_e164: toE164NL(phone),
+      postcode: postcode ? postcode.toUpperCase().replace(/\s+/g, '') : null,
+      name,
+      email,
+      source,
+      consent_marketing: body.consentMarketing === true,
+      consent_at: body.consentMarketing === true ? new Date().toISOString() : null,
+      scenario,
+      quoted_price: quotedPrice,
+      /* Enriched row only — the legacy fallback shape predates this column,
+         and adding it there would break the very fallback it exists for. */
+      msclkid,
+      oppref,
+      ...(initialStatus ? { status: initialStatus } : {}),
+    };
+
+    /*
+     * .select('id') so the response can hand the id back to the browser —
+     * without it Supabase returns no row at all on insert, and the client
+     * has no way to tag this exact lead in anything (Clarity's custom tags,
+     * a "thanks, we'll call you" reference number, etc).
+     */
+    let { data, error } = await supabase.from('leads').insert([enrichedRow]).select('id').single();
+
+    // PGRST204 / 42703 = column not found. The migration has not been run yet;
+    // fall back to the shape the current table does have.
+    if (error && (error.code === 'PGRST204' || error.code === '42703')) {
+      console.warn(
+        'leads table is missing the new columns — falling back to legacy insert. ' +
+          'Run supabase/migrations/0001_leads_sellable.sql to enable phone/consent capture.'
+      );
+      ({ data, error } = await supabase.from('leads').insert([legacyRow]).select('id').single());
+    }
+
+    if (error) {
+      console.error('Error inserting lead into Supabase:', error);
+      return NextResponse.json({ error: 'Opslaan mislukt' }, { status: 500 });
+    }
+
+    /*
+     * Tell somebody, after the customer has their answer.
+     *
+     * The lead is committed at this point. The alerts used to be awaited
+     * before responding, and the email provider alone may take 10 s while the
+     * wizard gives up after 8 s -- so a request that was saved could be shown
+     * to the customer as "not received", inviting a second submission or a
+     * lost customer. `after` keeps the function alive until these finish (up
+     * to the route's max duration) without holding the response, which keeps
+     * the guarantee the old await gave on a serverless runtime: no alert is
+     * dropped because the function froze early.
+     *
+     * Each one is still wrapped: a provider having a bad minute must not
+     * surface anywhere the customer can see.
+     */
+    const leadId = (data as { id?: string } | null)?.id;
+    const referer = request.headers.get('referer') || 'https://www.autosleutel24.nl/';
+    const userAgent = request.headers.get('user-agent') || undefined;
+    after(async () => {
+      try {
+        await notifyNewLead({
+          ...enrichedRow,
+          id: leadId,
+          location,
+          status: initialStatus ?? 'new',
+        });
+      } catch (notifyError) {
+        console.error('[leads] lead saved but the alert failed', leadId, notifyError);
+      }
+
+      /*
+       * OpenAI Ads Server-Side Event
+       * Sends a highly valuable lead_created event with hashed email/phone to
+       * maximize match rates (Email/External ID coverage).
+       */
+      if (body.consentMarketing === true) {
+        try {
+          await sendOpenAiEvent({
+            eventName: 'lead_created',
+            oppref,
+            /* action_source web requires a source_url; the form's page is the referer. */
+            sourceUrl: referer,
+            email: email,
+            phone: phone,
+            ip: ip,
+            userAgent,
+            amount: quotedPrice || undefined,
+            currency: quotedPrice ? 'EUR' : undefined,
+          });
+        } catch (e) {
+          console.error('[leads] OpenAI Ads event failed', e);
+        }
+      }
+    });
+
+    // The token lets the same browser add its follow-up answers (/api/leads/details).
+    return NextResponse.json({ success: true, data: leadId ? { id: leadId, token: leadToken(leadId) } : data }, { status: 200 });
+  } catch (error) {
+    console.error('Error in /api/leads route:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

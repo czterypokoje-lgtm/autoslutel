@@ -1,0 +1,93 @@
+/* ---- Brand page "Onze Diensten" cards ----
+ * Extracted from inline styles so the mobile breakpoint below can override
+ * them — an inline style attribute always beats a class rule, media query
+ * or not, so this grid had to move into CSS to become responsive at all.
+ */
+.dienstenGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+}
+
+.dienstCard {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2.5rem 2rem 2rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.dienstCardImg {
+  width: 100%;
+  height: 160px;
+  position: relative;
+  margin-bottom: 1.75rem;
+}
+
+.dienstCardTitle {
+  color: #0f172a;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.dienstCardDesc {
+  color: #64748b;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.dienstCardFooter {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dienstCardPrice {
+  color: var(--orange-500);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.dienstCardBtn {
+  color: var(--navy-700);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  /*
+   * Same fix as the homepage and city-page services grids: four tall
+   * cards stacked vertically pushed this section over a full screen of
+   * scrolling on a phone. A horizontal swipe carousel keeps one card
+   * (plus a teaser of the next) in view instead — scroll-snap only, no JS.
+   */
+  .dienstenGrid {
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.85rem;
+    padding: 0 1.25rem 0.75rem;
+    margin: 0 -1.25rem;
+    scrollbar-width: none;
+  }
+  .dienstenGrid::-webkit-scrollbar { display: none; }
+  .dienstCard {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+  .dienstCardImg { height: 120px; margin-bottom: 1.25rem; }
+  .dienstCardTitle { font-size: 1.05rem; margin-bottom: 0.5rem; }
+  .dienstCardDesc { font-size: 0.87rem; }
+  .dienstCardFooter { margin-top: 1.25rem; }
+}

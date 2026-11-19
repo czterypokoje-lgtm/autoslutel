@@ -1,0 +1,201 @@
+.brandsSection {
+  padding: 4rem 0;
+  background: #ffffff; /* Bright background */
+}
+.brandsLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .brandsLayout {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 4rem;
+  }
+}
+
+/* Left Hero Image Area */
+
+/*
+ * Hidden below 1024px, which is exactly the breakpoint where .brandsLayout
+ * stops being a row. Beside the grid this photo frames the section; stacked
+ * above it on a phone it is a full screen of stock photography standing
+ * between the visitor and the logos they came to tap.
+ */
+.brandsHero {
+  /* The original `display: flex` lives in the 1024px rule below; leaving it
+     here too would sit *after* this none and quietly win. */
+  display: none;
+  flex: 0 0 100%;
+  max-width: 500px;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+@media (min-width: 1024px) {
+  .brandsHero {
+    display: flex;
+    flex: 0 0 400px; /* fixed width for the image column on desktop */
+  }
+}
+.heroImg {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px -15px rgba(0,0,0,0.15);
+  object-fit: cover;
+}
+
+/* Right Content Area */
+.brandsContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.brandsSeoHeader {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+.brandsHeading {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy-900) !important;
+  margin-bottom: 0.6rem;
+  letter-spacing: -0.02em;
+}
+.brandsLead {
+  font-size: 1.1rem;
+  color: var(--gray-600) !important;
+  line-height: 1.6;
+}
+
+/* 8/4/2 Grid */
+.brandsLogoGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+@media (max-width: 1024px) {
+  .brandsLogoGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .brandsLogoGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.brandLogoItem {
+  display: flex;
+}
+.brandLogoCard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.25rem 0.5rem;
+  background: #ffffff;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  box-shadow: 0 2px 8px -2px rgba(0,0,0,0.04);
+}
+.brandLogoCard:hover {
+  background: var(--gray-50);
+  transform: translateY(-3px);
+  border-color: var(--orange-400);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.brandLogoImg {
+  width: 60px;
+  height: 40px;
+  object-fit: contain;
+  /* Removed grayscale filters, full color display */
+}
+
+.brandLogoName {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--navy-800);
+  text-align: center;
+  line-height: 1.2;
+  transition: color 0.2s ease;
+}
+.brandLogoCard:hover .brandLogoName {
+  color: var(--orange-600);
+}
+
+
+
+
+/* ── SHOW ALL MERKEN ───────────────────────────────────────────────────────
+ *
+ * A <details> holding the logos past the first row. No JavaScript, no
+ * hydration, and the hidden cards are ordinary markup, so every /merken link
+ * is in the HTML whether it is open or not.
+ */
+
+.moreBrands {
+  /* Matches .brandsLogoGrid's gap, so the toggle sits one grid row below the
+     logos rather than at some unrelated distance. */
+  margin-top: 12px;
+}
+
+.moreToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  background: var(--navy-800);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+
+  /* Safari still draws its own disclosure triangle without both of these. */
+  list-style: none;
+}
+
+.moreToggle::-webkit-details-marker {
+  display: none;
+}
+
+.moreToggle:hover {
+  background: var(--navy-700);
+}
+
+.moreToggle:focus-visible {
+  outline: 3px solid var(--orange-400);
+  outline-offset: 2px;
+}
+
+/* One label for each state, so the control says what it will do next. */
+.moreClose {
+  display: none;
+}
+
+.moreBrands[open] .moreOpen {
+  display: none;
+}
+
+.moreBrands[open] .moreClose {
+  display: inline;
+}
+
+.restGrid {
+  margin-top: 12px;
+}

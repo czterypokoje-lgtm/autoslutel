@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <circle cx="60" cy="60" r="58" fill="#ffffff" stroke="#e5e7eb" stroke-width="2"/>
+  <path d="M60 28 L92 38 V64 Q92 84 60 94 Q28 84 28 64 V38 Z" fill="#3b1f0f"/>
+  <path d="M60 32 L88 41 V64 Q88 81 60 90 Q32 81 32 64 V41 Z" fill="#5a3418"/>
+  <text x="60" y="66" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="22" fill="#FFB500" text-anchor="middle">UPS</text>
+</svg>

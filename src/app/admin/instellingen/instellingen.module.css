@@ -1,0 +1,107 @@
+.groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.icon {
+  flex: none;
+  margin-top: 1px;
+}
+
+.icon.live { color: var(--crm-ok); }
+.icon.partial { color: var(--crm-warn); }
+.icon.off { color: var(--crm-muted); }
+
+.body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+}
+
+.tag {
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tag.live { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.tag.partial { background: var(--crm-warn-bg); color: var(--crm-warn); }
+.tag.off { background: var(--crm-sunk); color: var(--crm-muted); }
+
+.what {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.detail {
+  font-size: var(--fs-micro);
+  color: var(--crm-text);
+}
+
+/* The variable names, not their values — a set one reads as ink, a missing
+   one stays grey, so the gap is visible without printing a secret. */
+.vars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.vars code {
+  font-size: 10.5px;
+  padding: 1px 6px;
+  border-radius: var(--crm-r-sm);
+  border: 1px solid var(--crm-rule);
+  word-break: break-all;
+}
+
+.varSet {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+.varMissing {
+  background: transparent;
+  color: var(--crm-muted);
+  opacity: 0.75;
+}
+
+.foot {
+  margin: var(--sp-5) 0 0;
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+  max-width: 62ch;
+}

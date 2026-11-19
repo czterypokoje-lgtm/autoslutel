@@ -1,0 +1,7 @@
+.addFold { margin-bottom: var(--sp-6); }
+.addSummary { display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border-radius: 8px; background: var(--crm-accent); color: #ffffff; font-weight: 600; cursor: pointer; list-style: none; }
+.addSummary::-webkit-details-marker { display: none; }
+.addFold[open] .addSummary { margin-bottom: 12px; }
+.emptyVans { margin: 0 0 var(--sp-6); font-size: 13.5px; color: var(--crm-muted); }
+.minus { color: var(--crm-stop); font-weight: 600; }
+.plus { color: var(--crm-ok); font-weight: 600; }

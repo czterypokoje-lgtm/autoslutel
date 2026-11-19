@@ -1,0 +1,517 @@
+/*
+ * The CRM's primitives.
+ *
+ * Every page used to bring its own stylesheet, and eleven of them had grown to
+ * 3,234 lines carrying 60 different hardcoded colours, 16 corner radii and 28
+ * font sizes. Three of those pages were built on a light Tailwind palette, so
+ * they rendered as white cards floating in a near-black app.
+ *
+ * This is the fix, and it is components rather than a stylesheet on purpose: a
+ * CSS file with good rules in it gets ignored by the next page, whereas a page
+ * that has no <Card> of its own has to import this one.
+ *
+ * Nothing here sets a colour, size or gap that is not a token.
+ */
+
+/* ── page ────────────────────────────────────────────────────────────── */
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-6);
+}
+
+.headText { min-width: 0; }
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.015em;
+  color: var(--crm-nav);
+}
+
+.sub {
+  margin: 6px 0 0;
+  color: var(--crm-muted);
+  font-size: var(--fs-base);
+  max-width: 68ch;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: var(--sp-8) 0 var(--sp-3);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+}
+
+.section svg { color: var(--crm-muted); }
+
+/* ── card ────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  overflow: hidden;
+}
+
+.cardPad { padding: var(--sp-5) var(--sp-6); }
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.cardTitle {
+  margin: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+}
+
+/* A "Bekijk alles →" link inside a card title sits on the right, not glued
+   to the title text. */
+.cardTitle a {
+  margin-left: auto;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--crm-accent);
+  text-decoration: none;
+}
+
+/* ── row ─────────────────────────────────────────────────────────────── */
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--crm-rule);
+  min-width: 0;
+}
+
+.row:last-child { border-bottom: none; }
+.row:hover { background: rgba(255, 255, 255, 0.02); }
+
+.rowMain {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.rowTitleLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+  color: var(--crm-ink);
+  text-decoration: none;
+}
+
+a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+.rowNote {
+  font-size: var(--fs-label);
+  color: var(--crm-muted);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.rowActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+
+/* ── stat tile ───────────────────────────────────────────────────────── */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-5);
+}
+
+.stat {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: var(--sp-4) var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.statTop {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--crm-muted);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-medium);
+}
+
+.statIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--crm-r-sm);
+  display: grid;
+  place-items: center;
+  background: var(--crm-raised);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.statValue {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.statFoot {
+  font-size: var(--fs-label);
+  color: var(--crm-muted);
+}
+
+/* ── badge ───────────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px var(--sp-2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-raised);
+  color: var(--crm-text);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.badge svg { color: var(--crm-muted); }
+.badgeOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.badgeWarn { background: var(--crm-warn-bg); color: var(--crm-warn); }
+.badgeStop { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.badgeInfo { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.badgeOk svg, .badgeWarn svg, .badgeStop svg, .badgeInfo svg { color: currentColor; }
+
+/* ── buttons ─────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  height: 34px;
+  padding: 0 var(--sp-3);
+  border-radius: var(--crm-r);
+  border: 1px solid var(--crm-rule2);
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) { background: var(--crm-sunk); color: var(--crm-ink); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.btnPrimary {
+  border-color: transparent;
+  background: var(--crm-ink);
+  color: var(--crm-on-ink);
+  font-weight: var(--fw-semibold);
+}
+.btnPrimary:hover:not(:disabled) { background: var(--crm-ink-hover); color: var(--crm-on-ink); }
+
+.btnDanger { border-color: var(--crm-stop); color: var(--crm-stop); }
+.btnDanger:hover:not(:disabled) { background: var(--crm-stop-bg); color: var(--crm-stop); }
+
+.btnIcon { width: 34px; padding: 0; }
+
+/* ── fields ──────────────────────────────────────────────────────────── */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-text);
+}
+
+.hint { font-size: var(--fs-label); color: var(--crm-muted); }
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 34px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+}
+
+textarea.input { height: auto; padding: var(--sp-2) var(--sp-3); line-height: 1.5; }
+.input::placeholder { color: var(--crm-muted); }
+
+.input:focus {
+  outline: none;
+  border-color: var(--crm-rule2);
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+/* ── table ───────────────────────────────────────────────────────────── */
+
+.tableWrap { overflow-x: auto; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.table th {
+  text-align: left;
+  padding: var(--sp-3) var(--sp-5);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-muted);
+  border-bottom: 1px solid var(--crm-rule);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--crm-rule);
+  color: var(--crm-text);
+  vertical-align: middle;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+:global([data-appearance="studio"]) .title { font-size: clamp(22px, 2vw, 29px); font-weight: 700; letter-spacing: -.035em; }
+:global([data-appearance="studio"]) .table th { background: var(--crm-sunk); }
+:global([data-appearance="studio"]) .table tbody tr:nth-child(even) { background: #f8faff; }
+:global([data-appearance="studio"]) .table tbody tr:hover { background: var(--crm-accent-soft); }
+.numeric { text-align: right; }
+
+/* ── empty & notices ─────────────────────────────────────────────────── */
+
+.empty {
+  padding: var(--sp-12) var(--sp-5);
+  text-align: center;
+  color: var(--crm-muted);
+  font-size: var(--fs-sm);
+}
+
+.notice {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--crm-r);
+  font-size: var(--fs-sm);
+  margin-bottom: var(--sp-4);
+}
+
+.noticeOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.noticeBad { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.noticeInfo { background: var(--crm-steel-bg); color: var(--crm-steel); }
+
+@media (max-width: 720px) {
+  .row { flex-wrap: wrap; padding: var(--sp-3) var(--sp-4); }
+  /*
+     width:100% without wrapping only widened the row the buttons overflowed
+     from. Agenda puts five controls here — Dag/Week, three nav buttons and
+     "Nieuwe klus" — which is well past a phone's width on one line, so the
+     segmented switch was rendering clipped mid-word. */
+  .actions { margin-left: 0; width: 100%; flex-wrap: wrap; }
+  .table th, .table td { padding: var(--sp-2) var(--sp-3); }
+}
+
+
+/* ── LocalFalcon-style blocks ─────────────────────────────────────────── */
+
+/** Small capitals above a group of tiles: QUICK START, NU DOEN … */
+.label {
+  margin: 0 0 var(--sp-3);
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--crm-muted);
+}
+
+.tileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-8);
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  min-height: 76px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.tile:hover { border-color: var(--crm-rule2); }
+
+.tileIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: var(--crm-sunk);
+  color: var(--crm-nav);
+}
+
+.tileTitle {
+  display: block;
+  font-size: 16px;
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+}
+
+.tileSub {
+  display: block;
+  font-size: 13px;
+  color: var(--crm-muted);
+}
+
+/* The three big coloured tiles at the top of the dashboard. */
+.tileBig {
+  min-height: 112px;
+  padding: 22px;
+  border: 0;
+  color: #ffffff;
+}
+.tileBig .tileIcon { width: 56px; height: 56px; background: rgba(255, 255, 255, 0.14); color: #ffffff; }
+.tileBig .tileTitle { color: #ffffff; font-size: 19px; }
+.tileBig .tileSub { color: rgba(255, 255, 255, 0.82); }
+.tileBig:hover { filter: brightness(1.06); }
+
+.toneNavy { background: var(--crm-nav); }
+.toneAccent { background: var(--crm-accent); }
+.toneBlue { background: var(--crm-blue); }
+
+:global(.crm-keyforcars) .tileBig {
+  background: var(--crm-panel);
+  border-color: var(--crm-rule);
+  border-radius: 12px;
+}
+:global(.crm-keyforcars) .tileBig .tileIcon { background: var(--crm-accent-soft); color: var(--crm-accent); }
+:global(.crm-keyforcars) .tileBig .tileTitle { color: var(--crm-ink); }
+:global(.crm-keyforcars) .tileBig .tileSub { color: var(--crm-muted); }
+:global(.crm-keyforcars) .tileBig:hover { border-color: var(--crm-accent); filter: none; }
+
+/* Tones for a small tile's icon. */
+.iconOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.iconWarn { background: var(--crm-warn-bg); color: var(--crm-warn); }
+.iconStop { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.iconSteel { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.iconAi { background: var(--crm-ai-bg); color: var(--crm-ai); }
+
+.tileAi { border-color: #d9cffc; background: #faf8ff; }
+
+/** "Hoe werkt het?" — numbered steps, folded away once you know them. */
+.help {
+  margin: 0 0 var(--sp-6);
+  padding: 14px 18px;
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+}
+
+.help summary {
+  cursor: pointer;
+  font-weight: var(--fw-semibold);
+  color: var(--crm-accent);
+  list-style: none;
+}
+.help summary::-webkit-details-marker { display: none; }
+
+.helpSteps {
+  margin: 14px 0 2px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.helpSteps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.helpNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--crm-rule2);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: var(--crm-muted);
+  flex-shrink: 0;
+}

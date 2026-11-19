@@ -1,0 +1,13 @@
+.shell { max-width: 1000px; }
+.layout { display: grid; grid-template-columns: minmax(160px, 220px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.menu, .scenario { background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: 10px; }
+.menu { display: grid; padding: 6px; gap: 3px; }
+.menu button { padding: 9px 10px; text-align: left; border: 0; border-radius: 6px; background: transparent; color: var(--crm-text); cursor: pointer; }
+.menu button:hover, .menu button[aria-pressed=true] { background: var(--crm-accent-soft); color: var(--crm-accent); }
+.scenario { display: grid; gap: 14px; padding: 18px; }
+.scenario h2 { margin: 0; color: var(--crm-ink); font-size: 19px; }
+.scenario > p { margin: 0; color: var(--crm-text); }
+.scenario > small { color: var(--crm-muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.results { margin: 0; padding: 10px 14px 10px 32px; background: var(--crm-accent-soft); border-radius: 8px; }
+@media (max-width: 660px) { .layout { grid-template-columns: 1fr; } }

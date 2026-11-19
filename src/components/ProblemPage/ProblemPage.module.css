@@ -1,0 +1,174 @@
+/* Styles for ProblemPage. Colours and spacing come from the tokens in globals.css. */
+
+.facts {
+  list-style: none;
+  margin: 0.75rem 0 0.25rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.9rem;
+  font-size: 0.95rem;
+  color: var(--gray-800);
+}
+
+.facts li::before {
+  content: '✓';
+  color: var(--color-success);
+  font-weight: 800;
+  margin-right: 0.4rem;
+}
+
+.narrow {
+  max-width: 900px;
+}
+
+.sectionTitle {
+  margin-bottom: 1rem;
+}
+
+.intro {
+  color: var(--gray-600);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.safety {
+  border-left: 4px solid var(--color-danger);
+  background: var(--orange-100);
+  color: var(--gray-900);
+  padding: 0.9rem 1.1rem;
+  border-radius: 8px;
+  margin-bottom: 1.75rem;
+  line-height: 1.6;
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.stepNumber {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--orange-500);
+  color: var(--color-text-white);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.stepTitle {
+  display: block;
+  color: var(--gray-900);
+}
+
+.muted {
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+.cases {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.case {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+}
+
+.case h3 {
+  font-size: 1.05rem;
+  margin: 0 0 0.4rem;
+  color: var(--gray-900);
+}
+
+.case p {
+  margin: 0 0 0.6rem;
+}
+
+.link {
+  color: var(--orange-600);
+  font-weight: 600;
+}
+
+.twoCols {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.list {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+
+.listTitle {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.btnCall,
+.btnWa,
+.btnForm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.7rem 1.3rem;
+  border-radius: 10px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btnCall {
+  background: var(--orange-500);
+  color: var(--color-text-white);
+}
+
+.btnCall:hover {
+  background: var(--orange-600);
+}
+
+.btnWa {
+  background: var(--color-success);
+  color: var(--color-text-white);
+}
+
+.btnForm {
+  border: 2px solid var(--navy-800);
+  color: var(--navy-800);
+}
+
+@media (max-width: 480px) {
+  .btnCall,
+  .btnWa,
+  .btnForm {
+    flex: 1 1 100%;
+  }
+}

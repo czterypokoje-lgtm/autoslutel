@@ -1,0 +1,651 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import styles from '../jobs.module.css';
+import { TIME_SLOTS } from '@/lib/crmJobs';
+import { CarPicker, ServicePicker, clean, type PickerMake } from './CarPicker';
+
+export interface PlanLead {
+  id: string;
+  name: string | null;
+  phone: string | null;
+  phone_e164: string | null;
+  postcode: string | null;
+  location: string | null;
+  brand: string | null;
+  model: string | null;
+  year: string | null;
+  kenteken: string | null;
+  service: string | null;
+  source: string | null;
+  created_at: string;
+}
+
+interface SuggestionView {
+  id: string;
+  name: string;
+  inRegion: boolean;
+  reason: string;
+  /** The rate this monteur agreed to, or null when they have no subscription row. */
+  commissionPct: number | null;
+}
+
+/** Falls back to the same 25% the payout and balance screens assume. */
+const DEFAULT_COMMISSION_PCT = 25;
+
+export default function PlanForm({
+  lead,
+  order,
+  date,
+  suggestions,
+  initialSlot,
+  initialTechnicianId,
+  cars,
+}: {
+  lead: PlanLead | null;
+  order: { id: string; order_number: string; total_inc: number } | null;
+  date: string;
+  suggestions: SuggestionView[];
+  /** Set when this form opened from a click on an empty hour in the calendar. */
+  initialSlot?: string;
+  initialTechnicianId?: string;
+  /** Every make and model in the catalogue, for the pickers. */
+  cars: PickerMake[];
+}) {
+  const router = useRouter();
+
+  const [scheduledDate, setScheduledDate] = useState(date);
+  // 10:00–12:00 is the first slot of a normal working day; night windows exist
+  // but should never be the default. A click on the calendar overrides both.
+  const [slot, setSlot] = useState(initialSlot ?? '10:00');
+  const [technicianId, setTechnicianId] = useState<string>(
+    initialTechnicianId ?? suggestions[0]?.id ?? ''
+  );
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState(lead?.location ?? '');
+  const [postcode, setPostcode] = useState(lead?.postcode ?? '');
+  const [kenteken, setKenteken] = useState(lead?.kenteken ?? '');
+  const [service, setService] = useState(lead?.service ?? '');
+  // A lead that came through the site already says which car it is; a walk-in
+  // planned by hand starts blank and the office types it in.
+  const [carMake, setCarMake] = useState(lead?.brand ?? '');
+  const [carModel, setCarModel] = useState(lead?.model ?? '');
+  const [carYear, setCarYear] = useState(lead?.year ?? '');
+  const [keylessChoice, setKeylessChoice] = useState<'' | 'true' | 'false'>('');
+  /*
+   * Customer name and phone used to be read straight off the lead, with no
+   * field to type them. A job planned without a lead — the phone-in, which is
+   * most of them — therefore reached the database with no lead_id AND no
+   * customer_phone: nothing to call the customer on, and nothing to attribute
+   * the job by. 39 of 65 finished jobs are in that state, which is most of
+   * why ad attribution sits at 2%.
+   */
+  const [customerName, setCustomerName] = useState(lead?.name ?? '');
+  const [customerPhone, setCustomerPhone] = useState(lead?.phone_e164 ?? lead?.phone ?? '');
+
+  /*
+   * Linking a phone-in back to the lead it came from.
+   *
+   * A job planned without arriving via ?lead= carries no lead_id, and the
+   * click id that paid for the customer lives on the lead. 39 of 65 finished
+   * jobs are in that state. The office already types the number; this is what
+   * turns it into the link, without asking them to go and look.
+   *
+   * Only offered — never applied on its own. Two people share a number more
+   * often than a CRM expects, and a wrongly linked job would report someone
+   * else's ad click as the cause of this sale.
+   */
+  const [linkedLeadId, setLinkedLeadId] = useState<string | null>(lead?.id ?? null);
+  const [matches, setMatches] = useState<
+    { id: string; name: string | null; service: string | null; created_at: string; hasClickId: boolean }[]
+  >([]);
+  const [dismissed, setDismissed] = useState(false);
+
+  /* Enough of a number to be worth looking up. Derived, not stored: the
+     effect below must not clear state synchronously, so whether to SHOW a
+     match is computed at render instead of being another setState. */
+  const phoneDigits = customerPhone.replace(/\D/g, '');
+  const lookupWorthIt = !linkedLeadId && !order && !dismissed && phoneDigits.length >= 9;
+
+  useEffect(() => {
+    if (!lookupWorthIt) return;
+
+    let cancelled = false;
+    /* Debounced: this fires while somebody is still typing the number. */
+    const timer = setTimeout(() => {
+      fetch(`/api/admin/leads/by-phone?phone=${encodeURIComponent(customerPhone)}`)
+        .then((r) => (r.ok ? r.json() : { leads: [] }))
+        .then((json) => { if (!cancelled) setMatches(json.leads ?? []); })
+        .catch(() => { if (!cancelled) setMatches([]); });
+    }, 400);
+
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [customerPhone, lookupWorthIt]);
+  // A webshop order is already paid, so the agreed price is known exactly.
+  const [quoted, setQuoted] = useState(order ? String(order.total_inc) : '');
+  /*
+   * Commission is recorded on the job itself, not read from the monteur's
+   * profile later: a rate is an agreement made when the work is handed over,
+   * and changing someone's tier next month must not silently rewrite what
+   * they were owed on a job they already did. The field starts from their
+   * agreed rate and the office can override it for this one job.
+   */
+  const [commissionPct, setCommissionPct] = useState('');
+  const [commissionAmount, setCommissionAmount] = useState('');
+  /*
+   * Which box the office typed in last decides which one is the truth and
+   * which is calculated from it. Not a formatting detail: a round percentage
+   * rarely gives a round euro amount, so forcing either one to always be
+   * derived means the office can never simply agree "wij houden €75" on a
+   * job. Whichever they last touched wins; the other follows.
+   */
+  const [lastEdited, setLastEdited] = useState<'pct' | 'amount' | null>(null);
+  const [notes, setNotes] = useState('');
+  const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  /*
+   * Derived rather than synced through an effect: the field shows the selected
+   * monteur's agreed rate until the office types over it, and switching
+   * monteur before that picks up the new rate on its own. Doing this with a
+   * useEffect + setState would re-render on every selection change and could
+   * overwrite something already typed.
+   */
+  const agreedPct =
+    suggestions.find((s) => s.id === technicianId)?.commissionPct ?? null;
+
+  const num = (s: string) => Number(s.replace(',', '.'));
+  const quotedNumber = num(quoted);
+  const haveQuote = Number.isFinite(quotedNumber) && quotedNumber > 0;
+
+  /*
+   * One of these two is typed and the other is calculated. Before the office
+   * has touched either, both come from the monteur's agreed rate.
+   */
+  let shownPct: string;
+  let shownAmount: string;
+  if (lastEdited === 'amount') {
+    shownAmount = commissionAmount;
+    const amt = num(commissionAmount);
+    shownPct =
+      haveQuote && Number.isFinite(amt) ? String(Math.round((amt / quotedNumber) * 1000) / 10) : '';
+  } else {
+    shownPct = lastEdited === 'pct' ? commissionPct : String(agreedPct ?? DEFAULT_COMMISSION_PCT);
+    const pct = num(shownPct);
+    shownAmount =
+      haveQuote && Number.isFinite(pct) ? (Math.round(quotedNumber * pct) / 100).toFixed(2) : '';
+  }
+
+  const pctNumber = num(shownPct);
+  const amountNumber = num(shownAmount);
+  const splitIsReal =
+    haveQuote &&
+    Number.isFinite(amountNumber) &&
+    amountNumber >= 0 &&
+    amountNumber <= quotedNumber &&
+    Number.isFinite(pctNumber) &&
+    pctNumber >= 0 &&
+    pctNumber <= 100;
+  const ourCut = splitIsReal ? amountNumber : null;
+  const technicianGets = splitIsReal ? quotedNumber - amountNumber : null;
+  /* Catches "commissie hoger dan de prijs", which is always a typo. */
+  const splitIsImpossible =
+    haveQuote && Number.isFinite(amountNumber) && amountNumber > quotedNumber;
+  const euro = (n: number) =>
+    new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(n);
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (customerPhone.replace(/\D/g, '').length < 9) {
+      setError('Vul het telefoonnummer van de klant in (minimaal 9 cijfers).');
+      return;
+    }
+    setSaving(true);
+    setError('');
+
+    const window = TIME_SLOTS.find((s) => s.start === slot);
+
+    const response = await fetch('/api/admin/jobs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        // One or the other, never both: the id is the same value in the
+        // order case and would otherwise be written into a lead column.
+        lead_id: order ? null : linkedLeadId,
+        order_id: order?.id ?? null,
+        customer_name: customerName.trim() || null,
+        customer_phone: customerPhone.trim() || null,
+        technician_id: technicianId || null,
+        scheduled_date: scheduledDate,
+        slot_start: window?.start ?? slot,
+        slot_end: window?.end ?? '',
+        street,
+        postcode,
+        city,
+        kenteken,
+        car_make: clean(carMake) || null,
+        car_model: clean(carModel) || null,
+        car_year: clean(carYear) || null,
+        keyless: keylessChoice === '' ? null : keylessChoice === 'true',
+        service_type: clean(service),
+        quoted_price: quoted,
+        // Both, because the office may have agreed a flat euro amount that is
+        // not a round percentage of the price — sending only one would make
+        // the server recompute it and lose the number actually agreed.
+        commission_pct: shownPct,
+        commission_amount: shownAmount,
+        notes,
+      }),
+    }).catch(() => null);
+
+    if (!response || !response.ok) {
+      const body = await response?.json().catch(() => null);
+      setError(body?.error ?? 'Inplannen mislukt. Probeer opnieuw.');
+      setSaving(false);
+      return;
+    }
+
+    router.push(`/admin/jobs?datum=${scheduledDate}`);
+    router.refresh();
+  }
+
+  return (
+    <form className={styles.planWrap} onSubmit={submit}>
+      <div className={styles.panel}>
+        <h2>Klus</h2>
+
+        <div className={styles.grid2}>
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="datum">
+              Datum
+            </label>
+            <input
+              id="datum"
+              className={styles.control}
+              type="date"
+              required
+              value={scheduledDate}
+              onChange={(e) => setScheduledDate(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="tijdvak">
+              Tijdvak
+            </label>
+            <select
+              id="tijdvak"
+              className={styles.control}
+              value={slot}
+              onChange={(e) => setSlot(e.target.value)}
+            >
+              {TIME_SLOTS.map((s) => (
+                <option key={s.start} value={s.start}>
+                  {s.start}–{s.end}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="klantnaam">
+              Naam klant
+            </label>
+            <input
+              id="klantnaam"
+              className={styles.control}
+              autoComplete="off"
+              placeholder="Naam van de klant"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="klanttelefoon">
+              Telefoon klant <span aria-hidden="true" style={{ color: '#dc2626' }}>*</span>
+            </label>
+            {/*
+              * Required, and it is the single highest-value field on this form.
+              *
+              * Measured on the live database: of 85 jobs, 38 carry a phone and
+              * exactly 38 carry a lead_id -- the same 38. A job gets linked to
+              * its lead when, and only when, somebody typed the number. The
+              * other 47 are invisible to Google Ads forever: 39 finished jobs
+              * have no lead, and not one of them has a phone or even a name to
+              * match on afterwards. EUR 17,765 of finished work, EUR 775 of it
+              * attributable.
+              *
+              * The number is what turns guessing into matching. With it, the
+              * lookup below finds the lead, the lead carries the gclid, and
+              * the conversion can be reported honestly. Without it the only
+              * alternative is pairing an ad click to a job by how close they
+              * are in time -- and the median gap between a call click and the
+              * nearest job being created is 55.6 hours, which is not a match,
+              * it is a coin toss with the ad budget riding on it.
+              */}
+            <input
+              id="klanttelefoon"
+              className={styles.control}
+              type="tel"
+              inputMode="tel"
+              required
+              autoComplete="off"
+              placeholder="06 12 34 56 78"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+            />
+            {linkedLeadId && !lead && (
+              <p style={{ fontSize: '0.8rem', color: '#059669', marginTop: '0.35rem' }}>
+                Gekoppeld aan een eerdere aanvraag — de klus telt mee in de advertentierapportage.{' '}
+                <button
+                  type="button"
+                  onClick={() => setLinkedLeadId(null)}
+                  style={{ border: 'none', background: 'none', padding: 0, color: '#64748b', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  ontkoppelen
+                </button>
+              </p>
+            )}
+            {lookupWorthIt && matches.length > 0 && (
+              <div style={{ marginTop: '0.5rem', padding: '0.6rem 0.75rem', background: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: 8 }}>
+                <div style={{ fontSize: '0.82rem', color: '#0f172a', marginBottom: '0.4rem' }}>
+                  Dit nummer stond al bij {matches.length === 1 ? 'een eerdere aanvraag' : `${matches.length} eerdere aanvragen`}:
+                </div>
+                {matches.map((m) => (
+                  <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
+                    <span style={{ fontSize: '0.82rem', color: '#334155' }}>
+                      {m.created_at.slice(0, 10)}
+                      {m.name ? ` · ${m.name}` : ''}
+                      {m.service ? ` · ${m.service}` : ''}
+                      {/* The only reason the office should care which one to pick. */}
+                      {m.hasClickId ? ' · via advertentie' : ''}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => { setLinkedLeadId(m.id); setMatches([]); }}
+                      style={{ fontSize: '0.78rem', border: '1px solid #0284c7', background: '#fff', color: '#0284c7', borderRadius: 6, padding: '0.15rem 0.5rem', cursor: 'pointer' }}
+                    >
+                      Koppelen
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setDismissed(true)}
+                  style={{ fontSize: '0.78rem', border: 'none', background: 'none', padding: 0, color: '#64748b', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  Nieuwe klant, niet koppelen
+                </button>
+              </div>
+            )}
+          </div>
+
+          <ServicePicker value={service} onChange={setService} />
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="prijs">
+              Afgesproken prijs (€)
+            </label>
+            <input
+              id="prijs"
+              className={styles.control}
+              inputMode="decimal"
+              placeholder="249.00"
+              value={quoted}
+              onChange={(e) => setQuoted(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="commissiePct">
+              Onze commissie (%)
+            </label>
+            <input
+              id="commissiePct"
+              className={styles.control}
+              inputMode="decimal"
+              placeholder="25"
+              value={shownPct}
+              onChange={(e) => {
+                setLastEdited('pct');
+                setCommissionPct(e.target.value);
+              }}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="commissieBedrag">
+              Onze commissie (€)
+            </label>
+            <input
+              id="commissieBedrag"
+              className={styles.control}
+              inputMode="decimal"
+              placeholder="62.25"
+              value={shownAmount}
+              onChange={(e) => {
+                setLastEdited('amount');
+                setCommissionAmount(e.target.value);
+              }}
+            />
+          </div>
+
+          <div className={styles.fieldWide}>
+            <p className={splitIsImpossible ? styles.hintBad : styles.hint}>
+              {splitIsImpossible ? (
+                <>Commissie is hoger dan de afgesproken prijs — controleer het bedrag.</>
+              ) : ourCut !== null && technicianGets !== null ? (
+                <>
+                  Wij houden <strong>{euro(ourCut)}</strong> · monteur krijgt{' '}
+                  <strong>{euro(technicianGets)}</strong>
+                </>
+              ) : agreedPct !== null ? (
+                `Afgesproken tarief van deze monteur: ${agreedPct}% — vul een prijs in voor de verdeling`
+              ) : (
+                `Geen afspraak vastgelegd — standaard ${DEFAULT_COMMISSION_PCT}%`
+              )}
+            </p>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="straat">
+              Straat en huisnummer
+            </label>
+            <input
+              id="straat"
+              className={styles.control}
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="pc">
+              Postcode
+            </label>
+            <input
+              id="pc"
+              className={styles.control}
+              value={postcode}
+              onChange={(e) => setPostcode(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="plaats">
+              Plaats
+            </label>
+            <input
+              id="plaats"
+              className={styles.control}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="kent">
+              Kenteken
+            </label>
+            <input
+              id="kent"
+              className={styles.control}
+              value={kenteken}
+              onChange={(e) => setKenteken(e.target.value)}
+            />
+          </div>
+
+          <CarPicker
+            cars={cars}
+            make={carMake}
+            model={carModel}
+            year={carYear}
+            onMake={setCarMake}
+            onModel={setCarModel}
+            onYear={setCarYear}
+            onKeyType={setKeylessChoice}
+          />
+
+          <div className={styles.field}>
+            <label className={styles.fieldLabel} htmlFor="keyless">
+              Sleuteltype
+            </label>
+            <select
+              id="keyless"
+              className={styles.control}
+              value={keylessChoice}
+              onChange={(e) => setKeylessChoice(e.target.value as '' | 'true' | 'false')}
+            >
+              <option value="">Onbekend</option>
+              <option value="false">Sleutel (contactslot)</option>
+              <option value="true">Keyless (start-knop)</option>
+            </select>
+          </div>
+        </div>
+
+        <div className={styles.field} style={{ marginTop: 12 }}>
+          <label className={styles.fieldLabel} htmlFor="notitie">
+            Notitie voor de monteur
+          </label>
+          <textarea
+            id="notitie"
+            className={styles.control}
+            rows={3}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+        </div>
+
+        <p className={styles.note}>
+          Het tijdvak is wat de klant te horen krijgt. Een exacte tijd beloven
+          werkt in spoedwerk niet: de klus ervoor loopt uit en de belofte is
+          gebroken voordat iemand vertrokken is.
+        </p>
+
+        <div className={styles.actions}>
+          <button className={styles.primary} type="submit" disabled={saving}>
+            {saving ? 'Inplannen…' : 'Klus inplannen'}
+          </button>
+          <Link
+            className={styles.secondary}
+            href={lead ? '/admin/leads' : '/admin/jobs'}
+          >
+            Annuleren
+          </Link>
+          {error && <div className={styles.error}>{error}</div>}
+        </div>
+      </div>
+
+      <div className={styles.panel}>
+        {order && (
+          <>
+            <h2>Bestelling</h2>
+            <div className={styles.summary}>
+              <span className={styles.summaryKey}>Ordernummer</span>
+              <span className={styles.summaryVal}>{order.order_number}</span>
+              <span className={styles.summaryKey}>Al betaald</span>
+              <span className={styles.summaryVal}>€ {order.total_inc.toFixed(2)}</span>
+            </div>
+          </>
+        )}
+
+        {lead && !order && (
+          <>
+            <h2>Lead</h2>
+            <div className={styles.summary}>
+              <span className={styles.summaryKey}>Klant</span>
+              <span className={styles.summaryVal}>{lead.name ?? 'geen naam'}</span>
+              <span className={styles.summaryKey}>Telefoon</span>
+              <span className={styles.summaryVal}>
+                {lead.phone_e164 ? (
+                  <a href={`tel:${lead.phone_e164}`}>{lead.phone_e164}</a>
+                ) : (
+                  '—'
+                )}
+              </span>
+              <span className={styles.summaryKey}>Voertuig</span>
+              <span className={styles.summaryVal}>
+                {[lead.brand, lead.model, lead.year].filter(Boolean).join(' ') || '—'}
+              </span>
+              <span className={styles.summaryKey}>Bron</span>
+              <span className={styles.summaryVal}>{lead.source ?? 'unknown'}</span>
+            </div>
+          </>
+        )}
+
+        <h2>Monteur</h2>
+        {suggestions.length === 0 ? (
+          <p className={styles.note}>
+            Geen beschikbare monteurs voor deze dag.
+          </p>
+        ) : (
+          <>
+            {suggestions.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={
+                  technicianId === s.id
+                    ? `${styles.suggestion} ${styles.suggestionActive}`
+                    : styles.suggestion
+                }
+                onClick={() => setTechnicianId(s.id)}
+              >
+                <span>
+                  <span className={styles.suggestionName}>{s.name}</span>
+                  <span className={styles.suggestionWhy}>{s.reason}</span>
+                </span>
+                {s.inRegion && <span className={styles.regionTag}>regio</span>}
+              </button>
+            ))}
+            <button
+              type="button"
+              className={
+                technicianId === ''
+                  ? `${styles.suggestion} ${styles.suggestionActive}`
+                  : styles.suggestion
+              }
+              onClick={() => setTechnicianId('')}
+            >
+              <span>
+                <span className={styles.suggestionName}>Nog niet toewijzen</span>
+                <span className={styles.suggestionWhy}>
+                  plan de klus vast in, kies later wie gaat
+                </span>
+              </span>
+            </button>
+          </>
+        )}
+
+        <p className={styles.note}>
+          De volgorde is een voorstel op basis van werkgebied en drukte, geen
+          toewijzing. Verkeer, voorraad in de bus en een klant die om een
+          bepaalde monteur vraagt weet dit scherm niet.
+        </p>
+      </div>
+    </form>
+  );
+}

@@ -1,0 +1,61 @@
+/* Start wizard — four numbered steps, one card per step. */
+
+.steps { list-style: none; margin: 0 0 18px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; max-width: 760px; }
+.steps li { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--crm-r); background: var(--crm-panel); border: 1px solid var(--crm-rule); font-size: 13.5px; }
+.stepNum { width: 26px; height: 26px; flex: none; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; background: var(--crm-sunk); color: var(--crm-muted); }
+.stepName { font-weight: 600; color: var(--crm-muted); }
+.stepNow { border-color: var(--crm-accent) !important; }
+.stepNow .stepNum { background: var(--crm-accent); color: #ffffff; }
+.stepNow .stepName { color: var(--crm-ink); }
+.stepDone .stepNum { background: var(--crm-ok); color: #ffffff; }
+.stepDone .stepName { color: var(--crm-ok); }
+
+.panel { max-width: 760px; background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r-lg); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.h2 { margin: 0; font-size: 19px; font-weight: 600; color: var(--crm-ink); }
+.note { margin: -6px 0 0; color: var(--crm-muted); font-size: 14px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > span { font-size: 13px; font-weight: 600; color: var(--crm-ink); }
+.field small { color: var(--crm-muted); font-size: 12.5px; }
+.field input, .field select {
+  height: 44px; padding: 0 12px; border: 1px solid var(--crm-rule2); border-radius: 8px;
+  background: #ffffff; font: inherit; font-size: 15px; color: var(--crm-ink);
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--crm-accent); box-shadow: 0 0 0 3px var(--crm-accent-soft); }
+
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.makeCard { border: 1px solid var(--crm-rule); border-radius: var(--crm-r); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.check, .checkOn {
+  display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px;
+  border: 1px solid var(--crm-rule2); border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--crm-ink);
+}
+.checkOn { border-color: var(--crm-accent); background: var(--crm-accent-soft); }
+.check input, .checkOn input { width: 18px; height: 18px; accent-color: var(--crm-accent); }
+
+.add { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: var(--crm-accent); font: inherit; font-weight: 600; cursor: pointer; padding: 4px 0; }
+
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.plan, .planOn { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 2px solid var(--crm-rule); border-radius: var(--crm-r); cursor: pointer; }
+.planOn { border-color: var(--crm-accent); background: #fffaf6; }
+.plan input, .planOn input { position: absolute; top: 14px; right: 14px; accent-color: var(--crm-accent); }
+.planName { font-size: 17px; font-weight: 600; color: var(--crm-ink); }
+.planFee { font-weight: 600; color: var(--crm-nav); }
+.planText { font-size: 13px; color: var(--crm-muted); }
+
+.error { margin: 0; padding: 10px 12px; border-radius: var(--crm-r-sm); background: var(--crm-stop-bg); color: var(--crm-stop); font-weight: 600; font-size: 14px; }
+
+.actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
+.primary, .secondary { height: 46px; padding: 0 22px; border-radius: 10px; font: inherit; font-weight: 600; cursor: pointer; }
+.primary { border: 0; background: var(--crm-accent); color: #ffffff; }
+.primary:hover { background: var(--crm-accent-hover); }
+.secondary { border: 1px solid var(--crm-rule2); background: var(--crm-panel); color: var(--crm-ink); }
+.primary:disabled, .secondary:disabled { opacity: 0.6; }
+
+@media (max-width: 640px) {
+  .steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .stepName { display: none; }
+  .steps li { justify-content: center; }
+  .pair, .checks, .plans { grid-template-columns: 1fr; }
+  .actions > * { flex: 1; }
+}

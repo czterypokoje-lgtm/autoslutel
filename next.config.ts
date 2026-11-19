@@ -1,0 +1,562 @@
+import type { NextConfig } from "next";
+import { SITE_CONFIG } from "./src/config/site.config";
+
+const brands = [
+  'volkswagen', 'bmw', 'mercedes', 'audi', 'toyota', 'peugeot', 'ford', 'renault', 
+  'opel', 'volvo', 'skoda', 'nissan', 'kia', 'hyundai', 'honda', 'fiat', 'citroen', 
+  'seat', 'mazda', 'suzuki', 'mitsubishi', 'mini', 'dacia', 'land-rover', 'porsche', 
+  'lexus', 'jaguar', 'alfa-romeo', 'smart', 'jeep', 'chevrolet', 'subaru', 'lancia', 
+  'ds', 'saab', 'dodge', 'ssangyong'
+];
+
+const brandRedirects = brands.map(brand => ({
+  source: `/merken/${brand}`,
+  destination: `/merken/${brand}-autosleutel-bijmaken`,
+  permanent: true,
+}));
+
+/*
+ * Brands removed after the brand audit (no NL market or dealer-only key
+ * programming, and no impressions). Both URL shapes go to the overview rather
+ * than 404 so old links and any indexed copy resolve.
+ */
+const removedBrands = [
+  'oldsmobile', 'buick', 'cadillac', 'chrysler', 'cobra', 'ferrari',
+  'gmc', 'holden', 'lada', 'lincoln', 'mclaren', 'proton',
+];
+const removedBrandRedirects = removedBrands.flatMap(brand => [
+  { source: `/merken/${brand}-autosleutel-bijmaken`, destination: '/merken', permanent: true },
+  { source: `/merken/${brand}`, destination: '/merken', permanent: true },
+]);
+
+/*
+ * The CRM redesign is reviewed on the `integrate` / `redesign` branches, whose
+ * Vercel previews share the production database. Those builds are read-only
+ * (src/lib/readonly.ts): real data on screen, every save refused. main and
+ * production are unaffected. An explicit NEXT_PUBLIC_CRM_READONLY wins.
+ */
+const READONLY_BRANCHES = ['integrate', 'redesign'];
+const crmReadonly =
+  process.env.NEXT_PUBLIC_CRM_READONLY ??
+  (READONLY_BRANCHES.includes(process.env.VERCEL_GIT_COMMIT_REF ?? '') ? '1' : '0');
+
+const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_CRM_READONLY: crmReadonly,
+    // Inlined so client components (the menu) know which install this is.
+    CRM_INSTALL: process.env.CRM_INSTALL ?? '',
+  },
+  /*
+   * pdf-parse pulls in @napi-rs/canvas, a native compiled binary — the class
+   * of dependency Next's bundler cannot package into a serverless function
+   * correctly. Left un-configured, the invoice route builds fine, deploys
+   * fine, and then silently returns empty text on every real request: the
+   * failure is caught (route.ts) and logged as a warning, not thrown, so it
+   * never shows up as an error, only as "0 regel(s)" on every invoice. This
+   * tells Next to require these straight from node_modules in the deployed
+   * function instead of bundling them, which is where the platform's own
+   * install step already put the correct native binary.
+   *
+   * sharp is the same class of dependency, same failure, but louder: unlike
+   * the invoice route, /api/upload imports it unconditionally at the top of
+   * the file, so a bundled-instead-of-required sharp doesn't degrade one
+   * feature quietly — it throws at module load and the whole route 500s on
+   * every request, HEIC or not. Moving it from devDependencies to
+   * dependencies (see package.json) was necessary but not sufficient: the
+   * bundler still needs to be told not to touch it, same as the four
+   * packages above.
+   */
+  serverExternalPackages: ['pdf-parse', 'pdfjs-dist', '@napi-rs/canvas', 'xlsx', 'sharp'],
+  /*
+   * The third layer of the same problem. pdfjs-dist loads its worker script
+   * with a dynamically computed path — "Setting up fake worker failed:
+   * Cannot find module '/var/task/node_modules/pdfjs-dist/legacy/build/
+   * pdf.worker.mjs'" — and Vercel's own file-tracing step (separate from
+   * Next's bundler, and unaffected by serverExternalPackages) only copies
+   * node_modules files it can see referenced by a static import. A
+   * dynamically-built path is invisible to it, so the worker file — needed
+   * only at runtime, never imported by name anywhere in this codebase —
+   * never made it into the deployed function. This forces it in regardless
+   * of what the tracer's static analysis finds.
+   */
+  outputFileTracingIncludes: {
+    '/api/admin/invoice': ['./node_modules/pdfjs-dist/**/*.mjs', './node_modules/pdf-parse/dist/**/*'],
+    // KeyForCars product profiles: read with readFileSync at runtime (src/lib/productProfiles.ts).
+    '/api/admin/voorraad-local': ['./src/data/keyforcars-profiles.json'],
+    '/admin/voorraad/**': ['./src/data/keyforcars-profiles.json'],
+  },
+  /*
+   * The mirror image of the problem above, and it broke a deploy outright:
+   *
+   *   The Vercel Function "diensten/afstandsbediening-bijmaken" is 304.43mb
+   *   uncompressed which exceeds the maximum uncompressed size limit of 250mb
+   *
+   * /diensten/[slug] lists a service's photos with
+   * readdirSync(path.join(process.cwd(), 'public', 'images', slug)). Because
+   * `slug` is only known at runtime, the tracer cannot work out which folder
+   * is meant and conservatively pulls in all of public/images — 322 MB of
+   * photographs — as if the function needed them. Hence 304 MB.
+   *
+   * It needs none of them. Every one of these routes is prerendered
+   * (generateStaticParams, no dynamicParams, no revalidate), so the filenames
+   * are baked into the HTML at build time and the images themselves are served
+   * from the CDN, never from the function. The directory read happens during
+   * the build, which runs against the full repo and is unaffected by this.
+   *
+   * Scoped to the one route that has the problem: /merken/[merkSlug] does the
+   * same trick against a *static* path, so the tracer resolves it and pulls in
+   * only public/images/merken (21 MB). Should a service page ever be rendered
+   * on demand, the readdirSync is inside a try/catch that falls back to an
+   * empty list rather than throwing.
+   */
+  outputFileTracingExcludes: {
+    /*
+     * The brackets are escaped because these keys are matched with picomatch,
+     * where an unescaped [slug] is a character class meaning "one of s, l, u,
+     * g" — it silently matches nothing here, which is exactly how the first
+     * attempt at this failed while looking correct. The docs' own example
+     * escapes them the same way.
+     */
+    '/diensten/\\[slug\\]': ['./public/**/*'],
+    /*
+     * Same route, second URL. The body of /diensten/[slug] became
+     * ServiceLayout so /autosleutel-kwijt could render the identical page,
+     * and the readdirSync came with it — so the tracer pulled all 322 MB of
+     * public/images into this function too and the build failed at 308.81 MB.
+     *
+     * The reasoning above applies unchanged: the page is prerendered, the
+     * filenames are baked into the HTML at build time, and the photographs
+     * are served from the CDN and never from the function.
+     */
+    '/autosleutel-kwijt': ['./public/**/*'],
+  },
+  images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.simpleicons.org',
+      },
+    ],
+  },
+  async redirects() {
+    return [
+      ...brandRedirects,
+      ...removedBrandRedirects,
+      /*
+       * Search-term URLs people (and old links) guess. All were 404s while
+       * the phrase behind them has real demand, so each goes to the one page
+       * that answers it rather than to the homepage.
+       */
+      { source: "/autosleutel-bijmaken", destination: "/diensten/autosleutel-bijmaken", permanent: true },
+      // Straight to the spare-key page: their old targets now redirect there too.
+      { source: "/autosleutel-laten-bijmaken", destination: "/diensten/autosleutel-bijmaken", permanent: true },
+      { source: "/autosleutel-namaken", destination: "/diensten/autosleutel-bijmaken", permanent: true },
+      { source: "/autosleutel-verloren", destination: "/autosleutel-kwijt", permanent: true },
+      { source: "/renault-sleutelkaart", destination: "/renault-sleutelkaart-kwijt-of-kapot", permanent: true },
+      { source: "/renault-keycard", destination: "/renault-sleutelkaart-kwijt-of-kapot", permanent: true },
+      /*
+       * The per-model pages are gone — 664 routes that measured 94-97%
+       * identical to each other, which is scaled content abuse and is
+       * penalised across the whole domain rather than page by page. The model
+       * names now live as text on the parent brand page.
+       *
+       * Redirected rather than deleted: these URLs are in Google's index and
+       * may be linked from elsewhere, and answering 664 of them with a 404 is
+       * its own bad signal. A 301 to the brand page passes on whatever they
+       * earned and sends the visitor somewhere that answers the same question.
+       */
+      {
+        source: "/merken/:merkSlug/:modelSlug",
+        destination: "/merken/:merkSlug",
+        permanent: true,
+      },
+      {
+        source: "/blog/sleutel-kwijt-utrecht-stappenplan",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/alle-sleutels-kwijt-wat-nu-utrecht",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/sleutel-kwijt-auto-hulp-oplossingen",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/sleutel-kwijt-auto-vind-snel-oplossingen",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/blog/volkswagen-sleutel-bijmaken-kosten-opties-tips",
+        destination: "/blog/volkswagen-sleutel-bijmaken",
+        permanent: true,
+      },
+      {
+        source: "/blog/auto-herkent-sleutel-niet-meer-oorzaken-oplossingen",
+        destination: "/blog/auto-herkent-sleutel-niet-meer",
+        permanent: true,
+      },
+      /*
+       * Cannibalisation: five pairs measured at 100% title-token overlap, each
+       * a blog post competing with the page that should own the query. The
+       * blog side loses in every case — a thin article against a service page
+       * with schema, pricing and a conversion path.
+       *
+       * The four older redirects above pointed at
+       * /blog/autosleutel-kwijt-wat-nu-stappenplan, which now moves on to
+       * /autosleutel-kwijt; they were repointed at the final destination in
+       * the same edit rather than left to chain through it.
+       */
+      {
+        source: "/blog/autosleutel-bestellen-op-kenteken",
+        destination: "/autosleutel-bestellen-op-kenteken",
+        permanent: true,
+      },
+      {
+        source: "/blog/autosleutel-kwijt-wat-nu-stappenplan",
+        destination: "/autosleutel-kwijt",
+        permanent: true,
+      },
+      {
+        source: "/locaties",
+        destination: "/steden",
+        permanent: true,
+      },
+      {
+        source: "/locaties/:slug",
+        destination: "/steden/:slug",
+        permanent: true,
+      },
+      {
+        source: "/merken/:merkSlug-sleutel-programmeren",
+        destination: "/merken/:merkSlug-autosleutel-bijmaken",
+        permanent: true,
+      },
+      {
+        source: "/merken/:merkSlug-sleutel-programmeren/:modelSlug",
+        destination: "/merken/:merkSlug-autosleutel-bijmaken/:modelSlug",
+        permanent: true,
+      },
+      {
+        source: "/steden/:citySlug/:merkSlug-sleutel-programmeren",
+        destination: "/steden/:citySlug/:merkSlug-autosleutel-bijmaken",
+        permanent: true,
+      },
+      {
+        source: "/diensten/:serviceSlug-eindhoven",
+        destination: "/diensten/:serviceSlug-utrecht",
+        permanent: true,
+      },
+      {
+        source: "/blog/:blogSlug-eindhoven",
+        destination: "/blog/:blogSlug-utrecht",
+        permanent: true,
+      },
+      /*
+       * sleutel-bijmaken → /diensten/autosleutel-bijmaken.
+       *
+       * Two pages for "autosleutel bijmaken", same headings in the same
+       * order. The destination's slug carries the query verbatim.
+       */
+      {
+        source: '/diensten/sleutel-bijmaken',
+        destination: '/diensten/autosleutel-bijmaken',
+        permanent: true,
+      },
+      /*
+       * Three more spare-key pages folded into the same one (12 Nov 2026).
+       * Search Console: they split the same queries between them and all sat
+       * at average position 60-90. See src/config/problemPages.ts.
+       */
+      { source: '/autosleutel-laten-maken', destination: '/diensten/autosleutel-bijmaken', permanent: true },
+      { source: '/autosleutel-kopieren', destination: '/diensten/autosleutel-bijmaken', permanent: true },
+      { source: '/diensten/reservesleutel-maken', destination: '/diensten/autosleutel-bijmaken', permanent: true },
+
+      /*
+       * Alle sleutels kwijt → /autosleutel-kwijt.
+       *
+       * Not a rename: two pages were competing for one intent. Somebody
+       * searching "autosleutel kwijt" has almost always lost the only working
+       * key, which IS the all-keys-lost case, so the service page and the
+       * landing page were the same job written twice -- and the service page
+       * published the title "Autosleutel Kwijt" while doing it.
+       */
+      {
+        source: '/diensten/alle-sleutels-kwijt-auto',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
+
+      // ── Autodeur openen → Auto openen zonder sleutel (rename) ────
+      {
+        source: '/diensten/autodeur-openen',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      {
+        source: '/auto-op-slot',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      {
+        source: '/auto-openen-zonder-sleutel',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      // ── Legacy / Crawled service slug redirects ──────────────────
+      {
+        source: '/diensten/transponder-sleutel-programmeren',
+        destination: '/diensten/transponder-programmeren',
+        permanent: true,
+      },
+      {
+        source: '/diensten/contact-reparatie',
+        destination: '/diensten/contactslot-auto-vervangen',
+        permanent: true,
+      },
+      {
+        source: '/diensten/contactslot-reparatie',
+        destination: '/diensten/contactslot-auto-vervangen',
+        permanent: true,
+      },
+      {
+        source: '/diensten/contactslot-vervangen-reparatie',
+        destination: '/diensten/contactslot-auto-vervangen',
+        permanent: true,
+      },
+      {
+        source: '/diensten/alarm-programmeren',
+        destination: '/diensten/autosleutels-repareren',
+        permanent: true,
+      },
+      // ── Verwijderde beveiliging pagina's → auto slotenmaker ──────
+      {
+        source: '/diensten/auto-beveiliging',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/diensten/autoalarm-programmeren',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/diensten/ghost-immobiliser',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/steden/:citySlug/auto-beveiliging',
+        destination: '/steden/:citySlug',
+        permanent: true,
+      },
+      {
+        source: '/steden/:citySlug/autoalarm-programmeren',
+        destination: '/steden/:citySlug',
+        permanent: true,
+      },
+      {
+        source: '/steden/:citySlug/ghost-immobiliser',
+        destination: '/steden/:citySlug',
+        permanent: true,
+      },
+      {
+        source: '/steden/:citySlug/ghost-immobiliser-installeren',
+        destination: '/steden/:citySlug',
+        permanent: true,
+      },
+      {
+        source: '/diensten/ghost-immobiliser-installeren',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+
+      {
+        source: '/auto-beveiliging',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/autoalarm-programmeren',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      {
+        source: '/ghost-immobiliser',
+        destination: '/diensten/auto-slotenmaker',
+        permanent: true,
+      },
+      // ── Blog duplicate / thin content → canonical hub ──
+      {
+        source: '/blog/auto-openen-zonder-sleutel-tips-hulp',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      {
+        source: '/blog/auto-openen-zonder-sleutel-schadevrij',
+        destination: '/diensten/auto-openen-zonder-sleutel',
+        permanent: true,
+      },
+      {
+        source: '/blog/autosleutel-bijmaken-tips-snel-veilig',
+        destination: '/diensten/autosleutel-bijmaken',
+        permanent: true,
+      },
+      {
+        source: '/blog/sleutel-bijmaken-auto-mobiele-service',
+        destination: '/diensten/autosleutel-bijmaken',
+        permanent: true,
+      },
+
+      {
+        source: '/diensten/autosleutel-kwijt',
+        destination: '/autosleutel-kwijt',
+        permanent: true,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(self), payment=(self)',
+          },
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          /*
+           * A Content-Security-Policy was added here (23 Oct) and reverted
+           * the same day: it blocked GA4 (region1.google-analytics.com —
+           * the real collection host, not www.google-analytics.com),
+           * Clarity (s.clarity.ms — not the host guessed), and most of
+           * Google Ads' conversion/remarketing pixels
+           * (pagead2.googlesyndication.com, ad.doubleclick.net,
+           * www.google.com/ccm, www.google.com/rmkt), for hours, silently
+           * — confirmed via real console CSP violations, not suspected.
+           * These vendors spread collection across more hosts, some
+           * regional/rotating, than a one-pass manual allowlist safely
+           * covers. Re-add only as Content-Security-Policy-Report-Only
+           * first, watched against real traffic for a few days with
+           * nothing actually blocked, before ever switching it to enforcing
+           * again.
+           */
+        ],
+      },
+      {
+        // The stock screens scan barcodes with the phone camera; everywhere else it stays off.
+        source: '/admin/voorraad/:path*',
+        headers: [{ key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=(self), payment=(self)' }],
+      },
+      {
+        source: '/admin/voorraad',
+        headers: [{ key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=(self), payment=(self)' }],
+      },
+    ];
+  },
+  async rewrites() {
+    /*
+     * ── AD LANDING ZONE (/lp) ─────────────────────────────────────────────
+     *
+     * Google Ads requires the final URL to be on the same domain as the
+     * display URL: an ad showing autosleutel24.nl whose final URL redirects
+     * to autosleutelnamaken.nl is disapproved as a destination mismatch. So
+     * the higher-converting design cannot be linked to — it has to be served
+     * from this domain. It is a separate Next app (Desktop/Namaken) deployed
+     * on its own, proxied in here as a multi-zone: basePath '/lp' and
+     * assetPrefix '/lp-assets' over there, these three rewrites over here.
+     *
+     * Unset LP_ZONE_ORIGIN and nothing is added — the zone is inert until the
+     * Namaken deploy has a URL, rather than rewriting /lp/* into a 404.
+     *
+     * The /lp pages send X-Robots-Tag: noindex themselves, so they cannot
+     * cannibalise the /diensten/* and /steden/* URLs they duplicate. They are
+     * deliberately NOT blocked in robots.ts: a Disallow reaching AdsBot-Google
+     * is what makes a URL ineligible as an ad destination — the mechanism used
+     * there on purpose for /blog/.
+     */
+    const lpOrigin = process.env.LP_ZONE_ORIGIN;
+    const lpZone = lpOrigin
+      ? [
+          { source: '/lp', destination: `${lpOrigin}/lp` },
+          { source: '/lp/:path*', destination: `${lpOrigin}/lp/:path*` },
+          { source: '/lp-assets/_next/:path*', destination: `${lpOrigin}/lp-assets/_next/:path*` },
+        ]
+      : [];
+
+    /*
+     * The webshop is its own Next app (repo czterypokoje-lgtm/shop), sold by
+     * CarKey24 (KvK 42155437) and built with basePath '/webshop'. These lines
+     * show it at www.autosleutel24.nl/webshop, so the shop Mollie checks and
+     * the shop customers use are at the same address. Set SHOP_ZONE_ORIGIN to
+     * the shop's Vercel URL (no trailing slash) to switch it on.
+     */
+    const shopOrigin = process.env.SHOP_ZONE_ORIGIN?.trim().replace(/\/+$/, '');
+    const shopZone = shopOrigin
+      ? [
+          { source: '/webshop', destination: `${shopOrigin}/webshop` },
+          { source: '/webshop/:path*', destination: `${shopOrigin}/webshop/:path*` },
+        ]
+      : [];
+
+    return [
+      ...lpZone,
+      ...shopZone,
+      {
+        // Serves customer lead photos from our own domain.
+        // Scoped to the `leads/` prefix that /api/upload writes, so the blob
+        // store cannot be used to host arbitrary paths under autosleutel24.nl.
+        source: '/f/leads/:filename',
+        destination: `${SITE_CONFIG.blobStorageDomain}/leads/:filename`,
+      },
+      {
+        /* Technician profile photos, same reasoning as the lead photos above:
+           served from our own domain so a city page's images are first-party
+           and no third-party host has to be listed in images.remotePatterns.
+           Scoped to the `monteurs/` prefix that /api/admin/profiel/foto
+           writes, so the blob store cannot host arbitrary paths here either. */
+        source: '/f/monteurs/:path*',
+        destination: `${SITE_CONFIG.blobStorageDomain}/monteurs/:path*`,
+      },
+      {
+        // Legacy photos uploaded before the `leads/` prefix existed, so links
+        // in already-sent WhatsApp messages keep resolving. Image extensions
+        // only — nothing new is ever written to the blob root any more.
+        source: '/f/:filename(.*\\.(?:jpg|jpeg|png|webp|heic|heif))',
+        destination: `${SITE_CONFIG.blobStorageDomain}/:filename`,
+      },
+    ];
+  },
+};
+
+export default nextConfig;

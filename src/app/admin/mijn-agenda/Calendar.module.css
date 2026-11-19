@@ -1,0 +1,115 @@
+/* Mijn agenda — a month you can read at a glance, one day in detail. */
+
+.page { display: flex; flex-direction: column; gap: 18px; }
+
+.head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.title { margin: 0; font-size: 28px; font-weight: 600; color: var(--crm-nav); letter-spacing: -0.015em; }
+.sub { margin: 6px 0 0; color: var(--crm-muted); font-size: 15px; }
+
+.feed { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.feedBtn {
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px;
+  border-radius: 8px; background: var(--crm-nav); color: #ffffff; font-weight: 600; font-size: 14px; text-decoration: none;
+}
+.feedCopy {
+  display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px;
+  border: 1px solid var(--crm-rule2); border-radius: 8px; background: var(--crm-panel);
+  font: inherit; font-size: 13px; font-weight: 600; color: var(--crm-ink); cursor: pointer;
+}
+
+.stats {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r); overflow: hidden;
+}
+.stats > div { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px; border-right: 1px solid var(--crm-rule); }
+.stats > div:last-child { border-right: 0; }
+.stats span { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--crm-muted); }
+.stats b { font-size: 21px; font-weight: 600; color: var(--crm-ink); }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+
+/* ── month ── */
+.cal { background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r); padding: 14px; }
+.calHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.month { font-size: 18px; font-weight: 600; color: var(--crm-ink); text-transform: capitalize; }
+.nav {
+  width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--crm-rule2);
+  background: var(--crm-panel); color: var(--crm-ink); display: grid; place-items: center; cursor: pointer;
+}
+
+.grid { display: grid; grid-template-columns: 34px repeat(7, minmax(0, 1fr)); gap: 4px; }
+.week { display: contents; }
+.wk, .dow { font-size: 11.5px; font-weight: 600; color: var(--crm-muted); text-align: center; padding-bottom: 4px; text-transform: uppercase; }
+.wkNum { font-size: 11.5px; color: var(--crm-muted); display: grid; place-items: center; }
+
+.day {
+  all: unset; box-sizing: border-box; cursor: pointer;
+  min-height: 72px; padding: 6px 7px; border-radius: 8px;
+  border: 1px solid var(--crm-rule); background: var(--crm-panel);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.day:hover { border-color: var(--crm-rule2); background: var(--crm-sunk); }
+.day:focus-visible { outline: 2px solid var(--crm-accent); }
+.dayOut { opacity: 0.45; }
+.dayAway { background: repeating-linear-gradient(135deg, #fbeee9 0 6px, #ffffff 6px 12px); }
+.dayToday .dayNum { background: var(--crm-accent); color: #ffffff; }
+.daySel { border: 2px solid var(--crm-nav); }
+.dayNum {
+  align-self: flex-start; min-width: 24px; height: 24px; padding: 0 5px; border-radius: 12px;
+  display: grid; place-items: center; font-size: 13px; font-weight: 600; color: var(--crm-ink);
+}
+.jobs { display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
+.jobCount { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--crm-ink); }
+.awayTag { font-size: 11.5px; font-weight: 700; color: var(--crm-stop); }
+
+.pip { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--crm-steel); }
+.pip_gepland { background: #2563eb; }
+.pip_onderweg, .pip_bezig { background: #d97706; }
+.pip_afgerond { background: #16a34a; }
+.awaySwatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: repeating-linear-gradient(135deg, #f3c5b4 0 3px, #ffffff 3px 6px); border: 1px solid #f0b4b4; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; font-size: 12.5px; color: var(--crm-muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* ── chosen day ── */
+.side {
+  position: sticky; top: 0;
+  background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r);
+  padding: 16px; display: flex; flex-direction: column; gap: 12px;
+}
+.sideTitle { margin: 0; font-size: 17px; font-weight: 600; color: var(--crm-ink); text-transform: capitalize; }
+.blockBtn, .freeBtn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 46px; border-radius: 10px; font: inherit; font-weight: 600; cursor: pointer;
+}
+.blockBtn { border: 1px solid var(--crm-rule2); background: var(--crm-panel); color: var(--crm-ink); }
+.freeBtn { border: 0; background: var(--crm-ok); color: #ffffff; }
+.blockBtn:disabled, .freeBtn:disabled { opacity: 0.6; }
+.awayNote { margin: 0; font-size: 13px; color: var(--crm-stop); }
+.muted { margin: 0; color: var(--crm-muted); font-size: 14px; }
+
+.jobList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.job { border: 1px solid var(--crm-rule); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 5px; }
+.jobTop { display: flex; justify-content: space-between; align-items: center; }
+.jobTop b { color: var(--crm-ink); }
+.jobLine { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--crm-text); }
+.jobLine svg { color: var(--crm-muted); }
+.jobPrice { font-weight: 600; color: var(--crm-ink); }
+.plate { margin-left: 6px; padding: 0 6px; border: 1px solid var(--crm-rule2); border-radius: 4px; font-size: 12px; }
+
+.status { font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: var(--crm-steel-bg); color: var(--crm-steel); }
+.st_onderweg, .st_bezig { background: var(--crm-warn-bg); color: var(--crm-warn); }
+.st_afgerond { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.st_geannuleerd { background: #eef1f5; color: #64748b; }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  .side { position: static; }
+}
+@media (max-width: 560px) {
+  .grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+  .wk, .wkNum { display: none; }
+  .day { min-height: 54px; padding: 4px; }
+  .jobCount { display: none; }
+  .stats b { font-size: 18px; }
+}

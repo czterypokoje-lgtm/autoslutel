@@ -1,0 +1,667 @@
+/*
+ * Leads layout styles.
+ */
+
+.filtersBar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  padding: var(--sp-4);
+  border-radius: var(--crm-r-lg);
+  margin-bottom: var(--sp-4);
+}
+
+.searchBox {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--crm-bg);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--crm-r-sm);
+  border: 1px solid var(--crm-rule);
+}
+
+.searchInput {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: var(--fs-sm);
+  color: var(--crm-ink);
+  outline: none;
+}
+
+.toggles {
+  display: flex;
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-sm);
+  overflow: hidden;
+}
+
+.toggleBtn {
+  background: var(--crm-panel);
+  border: none;
+  border-right: 1px solid var(--crm-rule);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--crm-text);
+  cursor: pointer;
+}
+.toggleBtn:last-child {
+  border-right: none;
+}
+.toggleBtn.active {
+  background: var(--crm-sunk);
+  font-weight: var(--fw-semibold);
+  color: var(--crm-ink);
+}
+
+.tabs {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 6px 14px;
+  border-radius: 99px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  font-size: var(--fs-sm);
+  color: var(--crm-text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab.active {
+  background: var(--crm-accent-soft);
+  color: var(--crm-accent-hover);
+  border-color: var(--crm-accent);
+  font-weight: var(--fw-semibold);
+}
+
+.layout {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: flex-start;
+}
+
+.listCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.drawerCol {
+  width: 400px;
+  flex: none;
+  position: sticky;
+  top: 24px;
+}
+
+.drawerCard {
+  background: var(--crm-panel);
+  border-radius: var(--crm-r-lg);
+  border: 1px solid var(--crm-rule);
+  
+  display: flex;
+  flex-direction: column;
+  /*
+   * Was `height: calc(100vh - 48px)` — a fixed full-viewport panel whatever
+   * it contained. A lead with a number, a car and no notes filled the top
+   * fifth and left a half-metre of empty white above three buttons pinned to
+   * the bottom of the screen. It now sizes to its content and only starts
+   * scrolling when there is genuinely more than fits.
+   */
+  height: auto;
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+}
+
+.drawerHead {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--crm-rule);
+}
+
+.drawerTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--sp-2);
+}
+
+.drawerCar {
+  font-size: var(--fs-md, 15px);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+}
+
+.drawerSub {
+  font-size: var(--fs-sm);
+  color: var(--crm-muted);
+}
+
+.drawerPrice {
+  text-align: right;
+  font-size: var(--fs-md, 15px);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+}
+
+.drawerPriceSub {
+  text-align: right;
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.drawerNav {
+  display: flex;
+  border-bottom: 1px solid var(--crm-rule);
+  background: var(--crm-raised);
+}
+
+.drawerTab {
+  flex: 1;
+  text-align: center;
+  padding: var(--sp-2) 0;
+  font-size: var(--fs-sm);
+  color: var(--crm-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.drawerTab.active {
+  color: var(--crm-accent-hover);
+  border-bottom-color: var(--crm-accent);
+  font-weight: var(--fw-semibold);
+}
+
+.drawerBody {
+  padding: var(--sp-4);
+  /* min-height:0 lets this shrink; flex:1 alone would hold the old height. */
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.drawerSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.drawerRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: var(--crm-text);
+}
+
+.drawerFoot {
+  padding: var(--sp-3) var(--sp-4);
+  border-top: 1px solid var(--crm-rule);
+  display: flex;
+  gap: var(--sp-2);
+  background: var(--crm-panel);
+}
+
+.btnPrimary {
+  flex: 1;
+  background: var(--crm-accent);
+  color: var(--crm-on-accent);
+  border: none;
+  border-radius: var(--crm-r-sm);
+  padding: var(--sp-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+}
+
+.btnSecondary {
+  flex: 1;
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  padding: var(--sp-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+}
+
+/* Rich Rows */
+.richRow {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  /* Roughly 24px shorter per row, so about two more leads fit on a laptop
+     screen without anything becoming harder to read or to tap. */
+  padding: var(--sp-3) var(--sp-4);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.richRow:hover {
+  background: var(--crm-sunk);
+}
+.richRow.selected {
+  border-color: var(--crm-accent);
+  background: var(--crm-accent-soft);
+}
+
+.rowCarPhoto {
+  width: 60px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: var(--crm-r-sm);
+}
+
+.rowInfo {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.rowTitle {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.rowMeta {
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+.rowLocation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.rowPrice {
+  flex: 1;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--crm-ink);
+}
+
+.rowStatus {
+  flex: 1;
+}
+
+.rowAssignee {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--crm-rule2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--crm-muted);
+}
+.assigneeName {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--crm-ink);
+}
+.fitScore {
+  font-size: var(--fs-micro);
+  color: var(--crm-ok);
+  font-weight: var(--fw-bold);
+}
+
+/* MOBILE RESPONSIVE STYLES */
+@media (max-width: 1024px) {
+  .layout {
+    flex-direction: column;
+  }
+  .drawerCol {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    /* Same fault as the desktop panel: a short lead should not open a sheet
+       covering 85% of the phone. It grows to its content and stops at 85vh. */
+    height: auto;
+    max-height: 85vh;
+    z-index: 1000;
+  }
+  .drawerCard {
+    height: auto;
+    max-height: 85vh;
+    border-radius: var(--crm-r-lg) var(--crm-r-lg) 0 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  }
+}
+
+@media (max-width: 768px) {
+  .richRow {
+    flex-wrap: wrap;
+    position: relative;
+    align-items: flex-start;
+    padding-top: 16px;
+  }
+  
+  .richRow > input[type="checkbox"] {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+  
+  .rowInfo {
+    flex: 1 1 calc(100% - 70px);
+    padding-right: 30px; /* avoid checkbox overlap */
+  }
+  
+  .rowPrice, .rowStatus, .rowAssignee {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--crm-rule);
+    padding-top: 10px;
+    margin-top: 4px;
+    text-align: right;
+  }
+  
+  .rowPrice {
+    flex-direction: row-reverse;
+  }
+  
+  .rowStatus {
+    flex-direction: row-reverse;
+  }
+  
+  .rowAssignee {
+    flex-direction: row;
+  }
+}
+
+/* ── TRIAGE ───────────────────────────────────────────────────────────────
+ *
+ * Four buttons on the row, so a lead can be moved out of 'new' without
+ * opening anything. The redesign had removed every way to change a status,
+ * which is part of why 151 of 199 leads are sitting there.
+ *
+ * Icon-only by design: this column is narrow and the row is scanned, not
+ * read. Each button carries title and aria-label, so the meaning is one
+ * hover or one screen-reader stop away.
+ */
+.triage {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.triageBtn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.triageBtn:hover {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+  border-color: var(--crm-rule2);
+}
+
+/* The current status, so the row says what it is as well as what it can do. */
+.triageOn {
+  background: var(--crm-accent);
+  border-color: var(--crm-accent);
+  color: var(--crm-on-accent);
+}
+
+.triageOn:hover {
+  background: var(--crm-accent-hover);
+  border-color: var(--crm-accent-hover);
+  color: var(--crm-on-accent);
+}
+
+.triageBtn:focus-visible {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: 2px;
+}
+
+.triageBusy,
+.triageFailed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  font-size: var(--fs-micro);
+  white-space: nowrap;
+}
+
+.triageBusy {
+  color: var(--crm-muted);
+}
+
+.triageBusy svg {
+  animation: triageSpin 0.9s linear infinite;
+}
+
+@keyframes triageSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* A failed save has to be visible on the row. The optimistic update is rolled
+   back underneath this, so what is shown is the truth again. */
+.triageFailed {
+  color: var(--crm-stop);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .triageBusy svg { animation: none; }
+}
+
+/* ── lead notes ──────────────────────────────────────────────────────── */
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.noteCompose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.noteInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-panel);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 72px;
+}
+
+.noteInput:focus {
+  outline: 2px solid var(--crm-accent);
+  outline-offset: -1px;
+  border-color: var(--crm-accent);
+}
+
+.noteActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+
+.noteHint {
+  font-size: 10.5px;
+  color: var(--crm-muted);
+}
+
+.noteSave {
+  min-height: 34px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent);
+  color: var(--crm-on-accent);
+  font: inherit;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+}
+
+.noteSave:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.noteList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.note {
+  padding: 10px 12px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-sunk);
+  /* The accent edge marks a note as something a person wrote, distinct from
+     the read-only facts on the Algemeen tab. */
+  border-left: 3px solid var(--crm-accent);
+}
+
+.noteMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  font-size: 10.5px;
+  color: var(--crm-muted);
+  margin-bottom: 3px;
+}
+
+.noteAuthor {
+  font-weight: var(--fw-semibold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.noteBody {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--crm-text);
+  /* Notes are typed with line breaks and must keep them. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.noteEmpty {
+  margin: 0;
+  font-size: var(--fs-micro);
+  color: var(--crm-muted);
+}
+
+.noteError {
+  margin: 0;
+  font-size: var(--fs-micro);
+  color: var(--crm-stop);
+  line-height: 1.5;
+}
+
+/* ── pager ───────────────────────────────────────────────────────────────
+ *
+ * .pager and .pageLink were referenced by the markup and never defined, so
+ * the control rendered as unstyled inline text — "Vorige1 / 2Volgende" with
+ * no spacing and a tap target the height of one line of type, which on a
+ * phone is close to unhittable.
+ */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  margin: var(--sp-5) 0 var(--sp-8);
+  font-size: var(--fs-sm);
+  color: var(--crm-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.pageLink,
+.pager > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px is the minimum comfortable touch target; the old inline text was
+     about 18px tall. */
+  min-height: 44px;
+  padding: 0 var(--sp-4);
+  border-radius: var(--crm-r-sm);
+  text-decoration: none;
+}
+
+.pageLink {
+  border: 1px solid var(--crm-rule);
+  background: var(--crm-panel);
+  color: var(--crm-accent-hover);
+  font-weight: var(--fw-semibold);
+}
+
+.pageLink:hover {
+  background: var(--crm-sunk);
+}
+
+/* The disabled ends and the "1 / 2" counter: present, clearly not buttons. */
+.pager > span {
+  color: var(--crm-muted);
+  opacity: 0.65;
+}

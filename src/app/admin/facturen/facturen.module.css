@@ -1,0 +1,12 @@
+.moneyCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sub {
+  display: block;
+  font-size: 12px;
+  color: var(--crm-muted);
+  margin-top: 2px;
+}

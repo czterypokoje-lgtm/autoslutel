@@ -1,0 +1,409 @@
+/*
+ * A monteur's price list, brand first.
+ *
+ * The grid collapses to one column on a phone: a monteur setting prices is
+ * usually doing it in the van, and a two-column card grid at 375px leaves no
+ * room for the price row inside an opened brand.
+ */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-stop-bg);
+  color: var(--crm-stop);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-muted);
+  height: 38px;
+}
+
+.search {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.brandGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+/* An opened brand takes the whole row — its table needs the width. */
+.brandCardOpen {
+  grid-column: 1 / -1;
+}
+
+.brandCard {
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-panel);
+  overflow: hidden;
+}
+
+.brandHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  background: transparent;
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.brandHead:hover {
+  background: var(--crm-bg);
+}
+
+.brandName {
+  flex: 1;
+}
+
+/* How many cars this monteur has already priced for the brand. */
+.count {
+  min-width: 20px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--crm-accent-soft);
+  color: var(--crm-accent);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.rare {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--crm-muted);
+}
+
+.brandBody {
+  padding: 0 12px 12px;
+  border-top: 1px solid var(--crm-rule2);
+}
+
+.empty {
+  margin: 12px 0;
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.table th {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--crm-rule2);
+  color: var(--crm-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--crm-rule);
+  vertical-align: middle;
+}
+
+.strong {
+  color: var(--crm-ink);
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--crm-muted);
+}
+
+.money {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--crm-ink);
+  font-weight: 700;
+}
+
+.priceInput {
+  width: 96px;
+  padding: 4px 8px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.priceInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+/* The new-price row: seven controls that wrap rather than scroll sideways. */
+.addRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--crm-rule2);
+}
+
+.cell {
+  flex: 1 1 110px;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13px;
+  height: 32px;
+  box-sizing: border-box;
+}
+
+.cell:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent);
+  color: var(--crm-on-accent);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.addBtn:hover:not(:disabled) {
+  background: var(--crm-accent-hover);
+}
+
+.addBtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.ghostBtn {
+  padding: 4px 10px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: transparent;
+  color: var(--crm-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ghostBtn:hover {
+  color: var(--crm-ink);
+  border-color: var(--crm-ink);
+}
+
+@media (max-width: 560px) {
+  .brandGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Seven inputs side by side do not fit a phone; two per row does. */
+  .cell {
+    flex: 1 1 calc(50% - 3px);
+  }
+
+  .addBtn {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+/* ── exceptions ───────────────────────────────────────────────────────
+   A narrower row is an exception to a broader one for the same car. It is
+   indented and tinted so the table reads the way dispatch resolves it:
+   general rule first, the years that deviate underneath. */
+
+.exceptionRow td:first-child {
+  padding-left: 18px;
+}
+
+.exceptionRow {
+  background: color-mix(in srgb, var(--crm-accent) 4%, transparent);
+}
+
+.exceptionMark {
+  margin-right: 6px;
+  color: var(--crm-muted);
+}
+
+.notDone {
+  color: var(--crm-stop);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.yearCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.yearInput {
+  width: 62px;
+  padding: 4px 6px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.yearInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+.dash {
+  color: var(--crm-muted);
+}
+
+.rowActions {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── save bar ─────────────────────────────────────────────────────────
+   Sticks to the top of the list while editing. A brand like Volkswagen
+   runs past twenty rows, and a save button below all of them is one a
+   monteur never finds after editing the row they came for. */
+
+.saveBar,
+.saveBarDone {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-radius: var(--crm-r-sm);
+  border: 1px solid var(--crm-accent);
+  background: var(--crm-panel);
+}
+
+.saveBarDone {
+  border-color: var(--crm-rule2);
+}
+
+.saveText {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--crm-ink);
+}
+
+.rowSelect {
+  padding: 4px 6px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 12.5px;
+  max-width: 100%;
+}
+
+.rowSelect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+/* A model that exists but has no price yet — present so the monteur can see
+   the whole line-up, dimmed so it is clear nothing is agreed for it. */
+.newRow td {
+  opacity: 0.62;
+}
+
+.newRow input,
+.newRow select {
+  opacity: 1;
+}
+
+/* A placeholder that has been given a price: it will exist after Opslaan. */
+.pendingNew {
+  color: var(--crm-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ── Mobile responsiveness for the table ── */
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .brandBody {
+    padding: 0 0 12px 0; /* Let scroll hit the very edge */
+  }
+  .tableWrap {
+    padding: 0 12px; /* Inner padding so content isn't flush */
+  }
+  .table {
+    min-width: 580px; /* Force table wide enough to not squash inputs */
+  }
+  .table th, .table td {
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,7 @@
+.bar { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 24px; }
+.presets { display: inline-flex; border: 1px solid var(--crm-accent); border-radius: 8px; overflow: hidden; align-self: flex-end; }
+.preset, .presetOn { height: 38px; padding: 0 14px; border: 0; border-right: 1px solid #f1c3ab; background: var(--crm-panel); color: var(--crm-accent); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.preset:last-child, .presetOn:last-child { border-right: 0; }
+.presetOn { background: var(--crm-accent); color: #ffffff; }
+.label { font-size: 13px; font-weight: 600; color: var(--crm-text); margin-bottom: 6px; }
+.note { font-size: 13px; color: var(--crm-text); }

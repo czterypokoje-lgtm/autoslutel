@@ -1,0 +1,339 @@
+"use client";
+
+declare global {
+  interface Window {
+    dataLayer?: unknown[];
+    uetq?: unknown[];
+  }
+}
+import { useState, useMemo, useEffect } from "react";
+import { CAR_MODELS, BRANDS_LIST, SERVICES_LIST, YEARS_LIST } from "@/data/carModels";
+import { SITE_CONFIG } from "@/config/site.config";
+import { reportLeadConversion } from "@/lib/leadTracking";
+import { tagLeadClaritySession } from "@/lib/clarity";
+import styles from "./LeadCaptureForm.module.css";
+
+declare global {
+  interface Window {
+    oaiq?: ((...args: unknown[]) => void) & { q: unknown[][] };
+  }
+}
+
+interface Props {
+  city?: string;
+  phone: string;
+  theme?: 'dark' | 'light';
+  initialBrand?: string;
+  initialModel?: string;
+}
+
+export default function LeadCaptureForm({ city = "", phone, theme = 'dark', initialBrand = "", initialModel = "" }: Props) {
+  const [brand, setBrand] = useState(initialBrand);
+  const [model, setModel] = useState(initialModel);
+  const [year, setYear] = useState("");
+  const [service, setService] = useState("");
+  const [location, setLocation] = useState(city);
+  const [phoneState, setPhoneState] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  // Honeypot: hidden from people, irresistible to bots. A filled value makes
+  // the server discard the submission.
+  const [honeypot, setHoneypot] = useState("");
+
+  const models = useMemo(() => {
+    if (!brand) return [];
+    const key = brand.replace(/ /g, "_");
+    return CAR_MODELS[brand] || CAR_MODELS[key] || [];
+  }, [brand]);
+
+  const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setBrand(e.target.value);
+    setModel("");
+  };
+
+  function buildWhatsAppUrl() {
+    const parts = [
+      "Hallo Autosleutel24!",
+      "",
+      brand ? `Merk: ${brand}` : null,
+      model ? `Model: ${model}` : null,
+      year ? `Bouwjaar: ${year}` : null,
+      service ? `Service: ${service}` : null,
+      `Locatie: ${location || "Niet ingevuld"}`,
+      phoneState ? `Telefoon: ${phoneState}` : null,
+      "",
+      "Kunt u mij zo snel mogelijk helpen? Graag hoor ik de prijs en aankomsttijd.",
+    ].filter(p => p !== null).join("\n");
+    return `https://wa.me/${SITE_CONFIG.phoneTel.replace(/\D/g,"")}?text=${encodeURIComponent(parts)}`;
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitted(true);
+
+    // Read ad parameters from cookies
+    const getCookie = (name: string) => {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    };
+
+    const source = city ? 'city_form' : 'hero_form';
+    const whatsAppUrl = buildWhatsAppUrl();
+
+    /*
+     * Saved with keepalive so the request survives the page navigating away.
+     *
+     * The lead conversion is reported only once the server has accepted the
+     * lead. It used to be reported up front, so a submission the API rejected
+     * (a database outage, a 500) still counted as a lead in GA4 and Google
+     * Ads -- a lead nobody could call back, and a false signal for the bid
+     * strategy. The honeypot still answers 200 by design; that path is a bot.
+     */
+    const saved = fetch('/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        brand,
+        model,
+        year,
+        service,
+        location,
+        // Sent as its own field so the lead can be deduplicated and routed.
+        phone: phoneState,
+        source,
+        hp: honeypot, // honeypot — must stay empty
+        gclid: getCookie('gclid'),
+        wbraid: getCookie('wbraid'),
+        gbraid: getCookie('gbraid'),
+        msclkid: getCookie('msclkid'),
+      }),
+      keepalive: true
+    })
+      .then(async (r) => {
+        if (!r.ok) throw new Error(`lead API answered ${r.status}`);
+        const d = await r.json().catch(() => null);
+        reportLeadConversion({ source, phone: phoneState, city: location });
+        tagLeadClaritySession(d?.data?.id);
+      })
+      .catch(err => console.error("Error saving lead", err));
+
+    /*
+     * The WhatsApp handoff is opened programmatically, so the delegated
+     * click listener in PhoneConversionTracker never sees it — it only
+     * watches real anchor clicks. Named differently from click_to_whatsapp on
+     * purpose: reusing that name tripped the GTM trigger behind the "Klik op
+     * WhatsApp" ad conversion, so one submission counted twice. Still visible
+     * in GA4/Bing under its own name, just not wired to an ad conversion.
+     */
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: 'lead_form_whatsapp_handoff', link_url: 'form_handoff' });
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', 'lead_form_whatsapp_handoff', { event_category: 'whatsapp' });
+
+    /*
+     * Opened synchronously, inside the click's call stack, so popup blockers
+     * (iOS Safari by default) treat it as user-initiated.
+     *
+     * No "noopener" in the features string: with it, window.open returns null
+     * even when the tab DID open, and the fallback below then also navigated
+     * this tab -- the customer got WhatsApp twice and lost the page they were
+     * on. Opening without it gives a real handle, so null now means blocked;
+     * the opener link is cut by hand straight after.
+     */
+    const win = window.open(whatsAppUrl, "_blank");
+    if (win) {
+      try { win.opener = null; } catch { /* cross-origin already; nothing to cut */ }
+      setSubmitted(false);
+    } else {
+      // Really blocked. Navigate in place, but let the save (and with it the
+      // conversion) land first -- at most 2.5 s, so a slow API never strands
+      // someone who is locked out of their car.
+      Promise.race([saved, new Promise((r) => setTimeout(r, 2500))]).then(() => {
+        window.location.href = whatsAppUrl;
+      });
+    }
+  }
+
+  return (
+    <div className={`${styles.wrapper} ${theme === 'light' ? styles.light : ''}`}>
+      {/* Bel Nu and WhatsApp come first: someone locked out wants to call, not fill in fields. */}
+      <p className={styles.urgency}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Noodgeval of spoed? Contacteer ons direct:
+      </p>
+
+      <div className={styles.directBtns}>
+        <a
+          href={`tel:${SITE_CONFIG.phoneTel}`}
+          className={styles.callBtn}
+          id="city-lead-call"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+          Bel Nu: {SITE_CONFIG.phone}
+        </a>
+        <a
+          href={buildWhatsAppUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.waBtn}
+          id="city-lead-whatsapp"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+
+      <form className={styles.form} onSubmit={handleSubmit} id="city-lead-form">
+        {/* Brand */}
+        <div className={styles.field}>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 00-.84-.99L16 11l-2.7-3.6a2 2 0 00-1.6-.8H9.3a2 2 0 00-1.6.8L5 11l-5.16.86a1 1 0 00-.84.99V16h3m12 0a2 2 0 100 4 2 2 0 000-4zm-14 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+          </span>
+          <select
+            className={styles.select}
+            value={brand}
+            required
+            onChange={handleBrandChange}
+            aria-label="Automerk"
+          >
+            <option value="">Merk</option>
+            {BRANDS_LIST.map(b => (
+              <option key={b} value={b}>{b}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Model */}
+        <div className={styles.field}>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </span>
+          <select
+            className={styles.select}
+            value={model}
+            required
+            onChange={e => setModel(e.target.value)}
+            aria-label="Model"
+            disabled={!brand}
+          >
+            <option value="">Model</option>
+            {models.map(m => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Year */}
+        <div className={styles.field}>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
+          <select
+            className={styles.select}
+            value={year}
+            required
+            onChange={e => setYear(e.target.value)}
+            aria-label="Bouwjaar"
+          >
+            <option value="">Jaar</option>
+            {YEARS_LIST.map(y => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Service */}
+        <div className={styles.field}>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          </span>
+          <select
+            className={styles.select}
+            value={service}
+            required
+            onChange={e => setService(e.target.value)}
+            aria-label="Dienst"
+          >
+            <option value="">Service</option>
+            {SERVICES_LIST.map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+
+        
+        {/* Phone Number */}
+        <div className={styles.field}>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+          </span>
+          <input
+            className={styles.select}
+            type="tel"
+            value={phoneState}
+            onChange={e => setPhoneState(e.target.value)}
+            placeholder="Uw telefoonnummer"
+            aria-label="Telefoonnummer"
+            required
+          />
+        </div>
+
+        {/* Location */}
+        <div className={styles.field}>
+          <span className={styles.fieldIcon} aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <input
+            className={styles.select}
+            type="text"
+            value={location}
+            required
+            onChange={e => setLocation(e.target.value)}
+            placeholder="Uw woonplaats"
+            aria-label="Locatie"
+          />
+        </div>
+
+        {/*
+          Photo upload removed: /api/upload was crashing on every request
+          (sharp module-load failure in the serverless function) and people
+          were abandoning the whole form after hitting it. WhatsApp handoff
+          above already lets anyone send a photo of their key that way
+          instead -- no capability lost, just routed through the path that
+          actually works. Re-add here once /api/upload is confirmed fixed.
+        */}
+
+        {/* Submit */}
+        {/* Honeypot — visually hidden, never announced, never tab-reachable. */}
+        <input
+          type="text"
+          name="hp_website_url"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: 'hidden',
+            clip: 'rect(0 0 0 0)',
+            whiteSpace: 'nowrap',
+            border: 0,
+          }}
+        />
+        <button
+          type="submit"
+          className={styles.submitBtn}
+          id="city-lead-submit"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          {submitted ? "Verzenden..." : "Ontvang prijs & aankomsttijd"}
+        </button>
+      </form>
+
+    </div>
+  );
+}

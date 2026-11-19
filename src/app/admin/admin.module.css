@@ -1,0 +1,1115 @@
+/*
+ * The CRM shell.
+ *
+ * A sidebar that never scrolls away, a content column that does, and one card
+ * idiom for everything inside it: a rounded panel holding rows separated by
+ * hairlines. Every list in this CRM — jobs, products, leads, technicians —
+ * is that same card, so the eye learns the shape once.
+ *
+ * The classes at the bottom (.note, .label, .input, .card, .button) are the
+ * ones the thirty-nine page components already use; they keep their names so
+ * this is a reskin and not a rewrite of every screen.
+ */
+
+.shell {
+  /* A fixed frame: the menu always runs full height and the page scrolls
+     inside .column. The public site's body has overflow-x: hidden, which
+     breaks position: sticky, so a sticky sidebar stopped halfway down. */
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  font-family: var(--ff-body), 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.006em;
+  /* Money and clock columns have to line up. */
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: row;
+}
+
+/* ── sidebar ───────────────────────────────────────────────────────────
+ * Navy, always. The menu is the one dark surface in the CRM, so the white
+ * work area beside it reads as "the page" without any further framing.
+ */
+
+.sidebar {
+  width: 256px;
+  background: var(--crm-nav);
+  color: var(--crm-nav-text);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 64px;
+  padding: 0 16px 0 18px;
+  background: var(--crm-nav-deep);
+  flex-shrink: 0;
+}
+
+.brand {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  font-size: 19px;
+  margin-right: auto;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.brand24 { color: #fb923c; }
+
+.brandRole {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--crm-nav-muted);
+  margin-left: 2px;
+}
+
+.brandMark {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--crm-accent);
+  color: var(--crm-on-accent);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.iconGhost {
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: none;
+  color: var(--crm-nav-muted);
+  border-radius: var(--crm-r-sm);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.iconGhost:hover { background: var(--crm-nav-hover); color: #ffffff; }
+
+.avatar {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fb923c;
+  color: var(--crm-nav-deep);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+/* Desktop has the top bar for search and the avatar. */
+.mobileOnly { display: none; }
+
+.navDrawer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.navWrapper {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 8px 0;
+}
+.navWrapper::-webkit-scrollbar { display: none; }
+
+.nav {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Kept for pages that still render a group label of their own. */
+.groupLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--crm-nav-muted);
+  padding: 0 20px;
+  margin: 16px 0 6px;
+}
+
+.navLink {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 18px 0 20px;
+  border: none;
+  background: none;
+  color: var(--crm-nav-text);
+  text-decoration: none;
+  font: inherit;
+  font-weight: 500;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.navLink svg { flex-shrink: 0; color: var(--crm-nav-muted); }
+
+.navLink:hover { background: var(--crm-nav-hover); color: #ffffff; }
+.navLink:hover svg { color: #ffffff; }
+
+.navLinkActive,
+.navLinkActive:hover {
+  background: var(--crm-nav-deep);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* The one place the brand colour appears in navigation. */
+.navLinkActive svg,
+.navLinkActive:hover svg { color: #fb923c; }
+
+.navLabel { flex: 1; }
+
+.navChevron { color: var(--crm-nav-muted) !important; }
+
+/* Marks a screen filled by the AI agent. */
+.navAi {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #c9bcff;
+  border: 1px solid rgba(201, 188, 255, 0.45);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.navSub {
+  background: var(--crm-nav-deep);
+  padding: 4px 0 8px;
+}
+
+.navSubLink {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 16px 0 53px;
+  color: var(--crm-nav-muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.navSubLink:hover { color: #ffffff; }
+
+.navSubLinkActive,
+.navSubLinkActive:hover {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/** A count sitting at the right of a nav item. */
+.navCount {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--crm-accent);
+  border-radius: 999px;
+  padding: 1px 7px;
+  text-align: center;
+}
+
+.sidebarBottom {
+  padding: 10px 0 12px;
+  border-top: 1px solid var(--crm-nav-rule);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarBottom .navLink { min-height: 40px; font-size: 14px; }
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px 0;
+  color: var(--crm-nav-muted);
+  font-size: 12px;
+  min-width: 0;
+}
+
+.whoEmail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.role {
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--crm-nav-rule);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.signout {
+  background: none;
+  border: none;
+  color: var(--crm-nav-text);
+  min-height: 40px;
+  padding: 0 18px 0 20px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.signout svg { color: var(--crm-nav-muted); }
+.signout:hover { color: #ffffff; background: var(--crm-nav-hover); }
+
+.version {
+  font-size: 10.5px;
+  color: var(--crm-nav-muted);
+  padding: 8px 20px 0;
+}
+
+/* ── top bar ─────────────────────────────────────────────────────────── */
+
+.column {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.topBar {
+  height: 64px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 0 0 28px;
+  background: var(--crm-nav);
+}
+
+.topSearch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  width: min(460px, 100%);
+  padding: 0 14px;
+  border-radius: 8px;
+  background: var(--crm-nav-deep);
+  color: var(--crm-nav-muted);
+}
+
+.topSearch input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+}
+
+.topSearch input::placeholder { color: var(--crm-nav-muted); }
+.topSearch:focus-within { box-shadow: 0 0 0 2px #fb923c; }
+
+.topRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 100%;
+}
+
+.topAgent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  padding-left: 16px;
+  color: #ddd5ff;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.topAgentDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+}
+
+.topAgentIcon {
+  width: 64px;
+  height: 100%;
+  margin-left: 6px;
+  background: var(--crm-ai);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+}
+
+.topAgent:hover .topAgentIcon { background: #5b3fd6; }
+
+.topAvatar {
+  width: 38px;
+  height: 38px;
+  margin-right: 22px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fb923c;
+  color: var(--crm-nav-deep);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* ── content column ──────────────────────────────────────────────────── */
+
+.main {
+  flex: 1;
+  padding: 30px 40px 60px;
+  min-width: 0;
+}
+
+/**
+ * Every page opens the same way: what this screen is, one line saying what
+ * you do here, and the actions for it pinned right.
+ */
+.pageHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--crm-ink);
+}
+
+.pageSub {
+  margin: 4px 0 0;
+  color: var(--crm-muted);
+  font-size: 13.5px;
+  max-width: 62ch;
+}
+
+.pageActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  padding: 0 10px;
+  height: 34px;
+  color: var(--crm-muted);
+}
+
+.searchBox:focus-within {
+  border-color: var(--crm-rule2);
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+.searchInput {
+  border: none;
+  background: none;
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 13.5px;
+  width: 180px;
+  outline: none;
+}
+
+.searchInput::placeholder { color: var(--crm-muted); }
+
+/** The one control on a page that commits something. */
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 13px;
+  border: none;
+  border-radius: var(--crm-r);
+  background: var(--crm-ink);
+  color: var(--crm-on-ink);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.primaryBtn:hover { background: var(--crm-ink-hover); }
+
+.ghostBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  background: var(--crm-panel);
+  color: var(--crm-text);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ghostBtn:hover {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+/* ── the list idiom ──────────────────────────────────────────────────── */
+
+.listCard {
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--crm-rule);
+  min-width: 0;
+}
+
+.row:last-child { border-bottom: none; }
+.row:hover { background: rgba(255, 255, 255, 0.02); }
+
+.rowMain {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rowTitleLine {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--crm-ink);
+  text-decoration: none;
+}
+
+a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+/** The identifier under the name: a slug, an article code, a plate. */
+.rowSlug {
+  font-size: 12.5px;
+  color: var(--crm-muted);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-raised);
+  color: var(--crm-text);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip svg { color: var(--crm-muted); }
+
+.chipWarn { background: var(--crm-warn-bg); color: var(--crm-warn); }
+.chipWarn svg { color: currentColor; }
+.chipOk { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.chipOk svg { color: currentColor; }
+.chipStop { background: var(--crm-stop-bg); color: var(--crm-stop); }
+.chipStop svg { color: currentColor; }
+.chipSteel { background: var(--crm-steel-bg); color: var(--crm-steel); }
+.chipSteel svg { color: currentColor; }
+
+.rowActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/** Icon buttons sit in one rounded group, as on the reference. */
+.iconGroup {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r);
+  overflow: hidden;
+}
+
+.iconBtn {
+  width: 32px;
+  height: 30px;
+  border: none;
+  border-right: 1px solid var(--crm-rule2);
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.iconBtn:last-child { border-right: none; }
+
+.iconBtn:hover {
+  background: var(--crm-sunk);
+  color: var(--crm-ink);
+}
+
+/** A switch, for the one setting a row can carry. */
+.switch {
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  border: none;
+  background: var(--crm-raised);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--crm-muted);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.switchOn { background: var(--crm-ink); }
+.switchOn::after { transform: translateX(14px); background: var(--crm-on-ink); }
+
+/** Nothing here yet — said in one line, with the way out. */
+.empty {
+  padding: 44px 20px;
+  text-align: center;
+  color: var(--crm-muted);
+  font-size: 13.5px;
+}
+
+/* ── centred single-card pages: login, geen toegang ──────────────────── */
+
+.centre {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  font-family: var(--ff-body), 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--crm-panel);
+  border: 1px solid var(--crm-rule);
+  border-radius: var(--crm-r-lg);
+  padding: 28px;
+  
+}
+
+.card h1 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--crm-ink);
+  letter-spacing: -0.025em;
+}
+
+.card p {
+  margin: 0 0 18px;
+  color: var(--crm-muted);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--crm-text);
+  margin-bottom: 6px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  border: 1px solid var(--crm-rule2);
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-bg);
+  color: var(--crm-ink);
+  font: inherit;
+  font-size: 14px;
+}
+
+.input::placeholder { color: var(--crm-muted); }
+
+.input:focus {
+  outline: none;
+  border-color: var(--crm-rule2);
+  box-shadow: 0 0 0 3px var(--crm-accent-soft);
+}
+
+.button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: var(--crm-r-sm);
+  background: var(--crm-accent);
+  color: var(--crm-on-accent);
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) { background: var(--crm-accent-hover); }
+.button:disabled { opacity: 0.55; cursor: default; }
+
+.linkButton {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  border: none;
+  background: none;
+  color: var(--crm-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.linkButton:hover:not(:disabled) {
+  color: var(--crm-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.linkButton:disabled { opacity: 0.55; cursor: default; }
+
+.note {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: var(--crm-r-sm);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.noteOk {
+  background: var(--crm-ok-bg);
+  color: var(--crm-ok);
+  border: 1px solid rgba(110, 231, 183, 0.25);
+}
+
+.noteBad {
+  background: var(--crm-stop-bg);
+  color: var(--crm-stop);
+  border: 1px solid rgba(252, 165, 165, 0.25);
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--crm-muted);
+  font-size: 13px;
+}
+
+/* ── narrow ──────────────────────────────────────────────────────────── */
+
+.mobileMenuBtn,
+.backdrop,
+.drawerClose,
+.tabBar {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  /* A phone scrolls the whole page; the drawer covers the menu. */
+  .shell { flex-direction: column; height: auto; overflow: visible; }
+  .column { height: auto; overflow: visible; }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 0;
+  }
+
+  .brandRow { height: 56px; padding: 0 12px; }
+  .mobileOnly { display: grid; }
+  .topBar { display: none; }
+  .brand { font-size: 17px; }
+
+  .mobileMenuBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    color: #ffffff;
+    border-radius: var(--crm-r-sm);
+    cursor: pointer;
+  }
+
+  .mobileMenuBtn:hover { background: var(--crm-nav-hover); }
+
+  /*
+   * Everything desktop shows permanently — every group, every label, the
+   * webshop link, sign-out, the account line — unchanged inside here. Only
+   * *where* it sits changes: off-screen behind a slide-in drawer instead of
+   * a strip nobody could read.
+   */
+  .navDrawer {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 60;
+    width: min(84vw, 300px);
+    height: 100vh;
+    background: var(--crm-nav);
+    /*
+     * Bottom padding reserves the fixed .tabBar's own height (62px + its
+     * safe-area inset) so "Webshop bekijken" and sign-out never end up
+     * sitting in the same band as its icons for a monteur — the drawer
+     * z-index beats the tab bar's, but that only decides who paints on top
+     * where they overlap; it does not stop the overlap from looking wrong.
+     */
+    padding: 12px 0 calc(74px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /*
+     * translate3d + backface-visibility force this onto its own GPU layer
+     * before the slide starts, not mid-transition. Without it, mobile
+     * Safari can composite two paints of the drawer's text on top of each
+     * other while it moves — every label reading doubled and offset, which
+     * is exactly what a plain translateX did here.
+     */
+    transform: translate3d(-100%, 0, 0);
+    transition: transform 0.2s ease;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
+  }
+
+  .navDrawerOpen { transform: translate3d(0, 0, 0); }
+
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .drawerClose {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 8px;
+    right: -40px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--crm-panel);
+    color: var(--crm-ink);
+    cursor: pointer;
+  }
+
+  .main { padding: 18px 14px 48px; }
+  .pageActions { margin-left: 0; width: 100%; }
+  .searchInput { width: 100%; }
+  .searchBox { flex: 1; }
+
+  .row { flex-wrap: wrap; padding: 13px 14px; }
+  .rowActions { margin-left: auto; }
+
+  /*
+   * Room for the tab bar below, so the last card in any list is not sitting
+   * half-hidden behind it — the fixed bar occupies space no scroll ever
+   * reaches otherwise.
+   */
+  .mainWithTabBar {
+    padding-bottom: calc(48px + 62px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /*
+   * The monteur's four daily tools, thumb-reachable without opening the
+   * drawer. Aanbod (offers) sits raised and orange in the middle: an offer
+   * expires on a clock, so it is the one tab a technician must find without
+   * hunting for it.
+   */
+  .tabBar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    height: 62px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--crm-nav);
+  }
+
+  .tabItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: var(--crm-nav-text);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .tabItemActive {
+    color: #fb923c;
+  }
+
+  .tabCenter {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .tabCenterBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--crm-accent);
+    color: var(--crm-on-accent);
+    border: 4px solid var(--crm-nav);
+    transform: translateY(-16px);
+    box-shadow: 0 4px 16px rgba(234, 88, 12, 0.5);
+  }
+}
+
+
+/* The uploaded profile photo, filling the avatar circle. object-fit so a
+   rectangular logo is cropped to the circle rather than squashed into it. */
+.avatarPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Local read-only copy only (NEXT_PUBLIC_CRM_READONLY=1). */
+.readonlyBanner {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #fff4ec;
+  border: 1px solid #f6c9ad;
+  color: #9a3412;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.labelSpaced { margin-top: 14px; }
+.languageBanner { display: inline-flex; align-items: center; gap: 5px; padding: 3px 5px 3px 10px; pointer-events: auto; white-space: nowrap; }
+.languageBanner button { border: 1px solid transparent; border-radius: 99px; padding: 3px 6px; color: #813111; background: transparent; font: inherit; cursor: pointer; }
+.languageBanner button[aria-pressed=true] { border-color: #eab79c; background: white; }
+/* Bottom-right corner on every width: at the top it covered the search bar. */
+.languageBanner { inset: auto 16px 16px auto; transform: none; }
+@media (max-width: 600px) { .languageBanner { inset: auto 10px 10px auto; } }
+
+:global(.crm-keyforcars) .sidebar { border-inline-end: 1px solid var(--crm-rule); background: var(--crm-sidebar); }
+:global(.crm-keyforcars) .navDrawer { background: var(--crm-sidebar); }
+:global(.crm-keyforcars) .brand { color: var(--crm-ink); font-weight: 750; }
+:global(.crm-keyforcars) .brandRow { background: var(--crm-sidebar); }
+:global(.crm-keyforcars) .navLinkActive svg { color: var(--crm-accent); }
+:global(.crm-keyforcars) .navLinkActive,
+:global(.crm-keyforcars) .navSubLinkActive { color: var(--crm-accent); background: var(--crm-accent-soft); }
+:global(.crm-keyforcars) .topBar { padding-inline: 28px 20px; border-bottom: 1px solid var(--crm-rule); background: var(--crm-panel); }
+:global(.crm-keyforcars) .topSearch { background: var(--crm-sunk); border: 1px solid var(--crm-rule); }
+:global(.crm-keyforcars) .topSearch input { color: var(--crm-ink); }
+:global(.crm-keyforcars) .topAvatar { background: var(--crm-accent); color: white; }
+:global(.crm-keyforcars) .main { max-width: 1560px; width: 100%; margin-inline: auto; }
+:global(.crm-keyforcars).shell { --ff-body: var(--ff-accent); font-size: 14px; line-height: 1.55; }
+:global(.crm-keyforcars) .main :is(h1, h2, h3, h4, th),
+:global(.crm-keyforcars) :is(.navLabel, .navSubLink) { text-transform: capitalize; }
+.shell[data-appearance="studio"] { --ff-body: var(--ff-crm-studio); }
+.shell[data-appearance="studio"] .main { max-width: 1440px; padding-bottom: 72px; }
+.shell[data-appearance="studio"][data-surface="document"] .main { max-width: 1150px; }
+.shell[data-appearance="studio"] .nav { padding: 8px; }
+.shell[data-appearance="studio"] :is(.navLink, .navSubLink) { border-radius: 7px; }
+.shell[data-appearance="studio"] .navLinkActive { box-shadow: inset 3px 0 var(--crm-accent); }
+.shell[data-appearance="studio"] .topSearch { height: 34px; }
+.shell[data-appearance="studio"] .brandMark { border-radius: 10px; }
+.appearanceSwitch { position: fixed; inset: auto 107px 16px auto; z-index: 1000; display: flex; gap: 4px; padding: 4px; border: 1px solid var(--crm-rule2); border-radius: 999px; background: var(--crm-panel); box-shadow: 0 3px 12px #153c3020; }
+.appearanceSwitch button { border: 1px solid transparent; border-radius: 999px; padding: 3px 8px; font: inherit; font-size: 12px; line-height: 1.4; color: var(--crm-accent); background: transparent; cursor: pointer; }
+.appearanceSwitch button[aria-pressed=true] { background: var(--crm-accent-soft); border-color: var(--crm-rule2); font-weight: 650; }
+@media (max-width: 600px) { .appearanceSwitch { inset: auto 99px 10px auto; } }
+@media print { .appearanceSwitch, .languageBanner { display: none; } }
+:global(.crm-keyforcars) .navLink { min-height: 37px; font-size: 13px; gap: 10px; }
+:global(.crm-keyforcars) .navLink svg { width: 16px; height: 16px; }
+:global(.crm-keyforcars) .navSubLink { min-height: 30px; padding-inline-start: 45px; font-size: 13px; }
+:global(.crm-keyforcars) .navSub { margin: 3px 8px 8px 22px; padding-inline-start: 6px; border-inline-start: 2px solid var(--crm-rule2); background: transparent; }
+:global(.crm-keyforcars) .navSubLink { margin-block: 2px; padding-inline: 10px; border-radius: 6px; }
+:global(.crm-keyforcars) .navSubLinkActive { box-shadow: inset 3px 0 var(--crm-accent); font-weight: 700; }
+:global(.crm-keyforcars) .navLink:hover,
+:global(.crm-keyforcars) .navLink:hover svg,
+:global(.crm-keyforcars) .navSubLink:hover { color: var(--crm-accent); }
+@media (min-width: 901px) {
+  :global(.crm-keyforcars) .sidebar { width: 222px; }
+  :global(.crm-keyforcars) .brandRow, :global(.crm-keyforcars) .topBar { height: 54px; }
+  :global(.crm-keyforcars) .main { padding-top: 22px; }
+}
+.languageBanner { padding: 4px; background: #fff; border: 1px solid #b6cec8; box-shadow: 0 3px 12px #153c3020; }
+.languageBanner button { color: #145d51; min-width: 32px; }
+.languageBanner button[aria-pressed=true] { background: #e0f1ec; border-color: #b6cec8; }
+.integrationGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; margin-top: 24px; }
+.integrationCard { background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: 12px; padding: 22px; }
+.integrationCard svg { color: var(--crm-accent); }
+.integrationCard h2 { margin: 10px 0 4px; font-size: 17px; }
+.integrationCard p { margin: 0; color: var(--crm-muted); }
+.integrationPrimary { display: inline-flex; align-items: center; gap: 6px; padding: 8px 13px; border: 1px solid var(--crm-accent); border-radius: 8px; background: var(--crm-accent); color: white; font-weight: 650; }
+.integrationPrimary:disabled { opacity: .55; }
+.integrationStatus { display: inline-block; margin-block: 12px; padding: 3px 8px; border-radius: 999px; background: var(--crm-accent-soft); color: var(--crm-accent); font-size: 12px; }
+.integrationLink { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; color: var(--crm-accent); text-decoration: underline; }
+.integrationDialog { position: fixed; inset: 0; margin: auto; width: min(540px, calc(100% - 28px)); max-height: calc(100dvh - 28px); overflow: auto; padding: 24px; border: 1px solid var(--crm-rule2); border-radius: 16px; color: var(--crm-ink); background: var(--crm-panel); box-shadow: 0 18px 65px #14213d40; }
+.integrationDialog::backdrop { background: #172d2a66; }
+.integrationDialog p { margin-block: 8px 16px; color: var(--crm-muted); }
+.integrationChoices { display: grid; gap: 8px; margin: 0; padding: 0; border: 0; }
+.integrationChoices legend { margin-bottom: 8px; font-weight: 650; }
+.integrationChoice { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 10px; align-items: center; padding: 9px 12px; border: 1px solid var(--crm-rule); border-radius: 9px; cursor: pointer; }
+.integrationChoice:has(:checked) { background: var(--crm-accent-soft); border-color: var(--crm-accent); }
+.integrationChoice small { display: block; color: var(--crm-muted); }
+.integrationCancel { padding: 8px 13px; border: 1px solid var(--crm-rule2); border-radius: 8px; color: var(--crm-ink); background: var(--crm-panel); cursor: pointer; }
+.integrationCardTop { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+.integrationHelp { position: relative; }
+.integrationHelp summary { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; color: #fff; background: linear-gradient(135deg, #2457aa, #146358); font-weight: 700; cursor: pointer; list-style: none; }
+.integrationHelp summary::-webkit-details-marker { display: none; }
+.integrationHelp > div { position: absolute; z-index: 5; inset: 36px 0 auto auto; width: min(225px, 64vw); padding: 12px; border: 1px solid var(--crm-rule2); border-radius: 8px; background: var(--crm-panel); box-shadow: 0 6px 18px #14213d26; }
+.integrationHelp p { margin-top: 5px; }
+.quickCreate { position: relative; }
+.quickCreate summary { list-style: none; cursor: pointer; white-space: nowrap; background: var(--crm-accent); color: var(--crm-on-accent); border-radius: 7px; padding: 7px 12px; font-weight: 650; }
+.quickCreate > div { position: absolute; z-index: 40; inset: calc(100% + 6px) 0 auto auto; min-width: 160px; padding: 5px; border: 1px solid var(--crm-rule2); border-radius: 8px; background: var(--crm-panel); box-shadow: 0 5px 18px #14213d26; }
+.quickCreate a { display: block; padding: 6px 9px; color: var(--crm-ink); border-radius: 5px; }
+.quickCreate a:hover, .quickCreate a:focus-visible { background: var(--crm-sunk); }
+.integrationActions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px; }
+.readonlyInline { color: var(--crm-muted); font-size: 12px; margin-bottom: 10px; }

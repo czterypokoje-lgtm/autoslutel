@@ -1,0 +1,55 @@
+/* Mijn saldo — the balance first, then where it came from. */
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px 22px;
+  margin-bottom: var(--sp-6);
+  border-radius: var(--crm-r-lg);
+  background: var(--crm-nav);
+  color: #ffffff;
+}
+.heroMain { display: flex; flex-direction: column; gap: 4px; }
+.heroLabel { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--crm-nav-muted); }
+.heroValue { font-size: 36px; font-weight: 600; line-height: 1.1; }
+.heroSub { font-size: 14px; color: var(--crm-nav-text); }
+
+.payout { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.payoutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--crm-accent);
+  color: #ffffff;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.payoutBtn:hover:not(:disabled) { background: var(--crm-accent-hover); }
+.payoutBtn:disabled { background: var(--crm-nav-hover); color: var(--crm-nav-muted); cursor: default; }
+.msgOk { font-size: 13px; font-weight: 600; color: #86efac; }
+.msgBad { font-size: 13px; font-weight: 600; color: #fca5a5; }
+
+.chartHead { display: flex; align-items: center; gap: var(--sp-4); flex-wrap: wrap; margin-bottom: var(--sp-5); }
+.push { margin-left: auto; }
+.cardTitle { color: var(--crm-ink); font-size: var(--fs-base); font-weight: 600; }
+.cardTitleBlock { display: block; margin-bottom: var(--sp-4); color: var(--crm-ink); font-size: var(--fs-base); font-weight: 600; }
+
+.car { display: inline-flex; align-items: center; gap: 8px; color: var(--crm-ink); }
+.logo { width: 20px; height: 20px; object-fit: contain; }
+.muted { color: var(--crm-muted); }
+.strong { color: var(--crm-ink); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .payout { align-items: stretch; width: 100%; }
+  .payoutBtn { justify-content: center; width: 100%; }
+  .heroValue { font-size: 32px; }
+}

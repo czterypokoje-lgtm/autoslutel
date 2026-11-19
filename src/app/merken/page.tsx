@@ -1,0 +1,267 @@
+import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
+import Link from 'next/link';
+import Image from 'next/image';
+import { BRANDS, BRAND_COUNT } from '@/config/brands';
+import { SITE_CONFIG } from '@/config/site.config';
+
+export const metadata: Metadata = {
+  title: {
+    absolute: 'Autosleutel Bijmaken per Merk | BMW, VW, Mercedes & Meer',
+  },
+  description: 'Autosleutel bijmaken voor elk merk: BMW, Volkswagen, Mercedes, Audi, Peugeot, Ford en meer. Wij programmeren op locatie, goedkoper dan de dealer. Bel nu!',
+  alternates: { canonical: `${SITE_CONFIG.domain}/merken` },
+};
+
+const groups = [
+  { title: 'Meest Gevraagd', brands: BRANDS.filter(b => b.priority === 'P1') },
+  { title: 'Populaire Merken', brands: BRANDS.filter(b => b.priority === 'P2') },
+  { title: 'Alle Overige Merken', brands: BRANDS.filter(b => b.priority === 'P3') },
+];
+
+export default function MerkenPage() {
+  const p1Brands = BRANDS.filter(b => b.priority === 'P1');
+  const p2Brands = BRANDS.filter(b => b.priority === 'P2');
+  const p3Brands = BRANDS.filter(b => b.priority === 'P3');
+
+  return (
+    <main>
+      <script id="bc-merken" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Merken', path: '/merken' }])) }} />
+      {/* Hero */}
+      <section style={{ background: 'var(--navy-900)', padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden', position: 'relative' }}>
+        <Image
+          src="/autosleutel-merken-bijmaken-utrecht-amsterdam.webp"
+          alt="Autosleutel bijmaken voor diverse merken"
+          fill
+          priority
+          fetchPriority="high"
+          quality={70}
+          style={{ objectFit: 'cover', opacity: 0.6, zIndex: 0 }}
+          sizes="100vw"
+        />
+        {/* Dark overlay for text readability */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.75)', zIndex: 1, pointerEvents: 'none' }} />
+        
+        <script id="merken-image-gps" type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "contentUrl": "https://www.autosleutel24.nl/autosleutel-merken-bijmaken-utrecht-amsterdam.webp",
+            "name": "Autosleutel merken bijmaken Utrecht & Amsterdam",
+            "description": `Volledig overzicht van de ${BRAND_COUNT} automerken waarvoor Autosleutel24 autosleutels programmeert en bijmaakt in Utrecht en Amsterdam.`,
+            "contentLocation": {
+              "@type": "Place",
+              "name": "Utrecht, Amsterdam",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 52.0907,
+                "longitude": 5.1214
+              }
+            }
+          })
+        }} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--orange-400)', marginBottom: '0.75rem' }}>MERKEN</p>
+          <h1 style={{ color: '#fff', marginBottom: '1rem' }}>{BRAND_COUNT} Automerken — Alle Sleutelsystemen</h1>
+          <p style={{ color: 'rgba(255,255,255,0.85)', maxWidth: 650, margin: '0 auto 2.5rem', fontSize: '1.05rem', lineHeight: '1.6' }}>
+            Van BMW CAS4+ tot VW MQB SFD en Toyota G-chip. Dealer-niveau tools voor elk merk. Mobiel aan huis.
+          </p>
+          <a href={`tel:${SITE_CONFIG.phoneTel}`} className="btn btn-primary" id="merken-hero-phone">{SITE_CONFIG.phone}</a>
+        </div>
+      </section>
+
+      {/* Main Content Area */}
+      <div className="container" style={{ padding: '3.5rem 2rem', maxWidth: '1000px', margin: '0 auto' }}>
+        
+        {/* Webmaster-style Services & SEO block */}
+        <div style={{
+          background: '#fff',
+          border: '1px solid var(--gray-200)',
+          borderRadius: '8px',
+          padding: '2rem',
+          marginBottom: '3.5rem',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--navy-900)', marginBottom: '1rem', borderBottom: '1px solid var(--gray-200)', paddingBottom: '0.5rem' }}>
+            Onze Sleutelservices &amp; Programmering
+          </h2>
+          <p style={{ fontSize: '0.92rem', color: 'var(--gray-700)', lineHeight: 1.55, marginBottom: '1.5rem' }}>
+            Als mobiele autosleutelspecialist leveren wij een breed scala aan diensten ter plaatse. Wij programmeren uw transpondersleutel, dupliceren uw smart key of openen uw voertuig schadevrij bij buitensluiting. Onze ervaren specialisten werken snel en vakkundig.
+          </p>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+            gap: '1rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Autosleutel bijmaken</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Reservesleutels frezen en inleren voor alle merken.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Transponder programmeren</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Immobilizer chips coderen en synchroniseren.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Smart key inleren</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Keyless entry en comfortsleutels aanmelden op de ECU.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Schadevrij auto openen</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Lishi lockpicking bij buitensluiting of sleutel in auto.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Sleutelbehuizing reparatie</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Micro-switches solderen en knoopcelbatterijen vervangen.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem' }}>✓</span>
+              <div>
+                <strong>Contactslot diagnose</strong>
+                <div style={{ fontSize: '0.82rem', color: 'var(--gray-500)', marginTop: '0.1rem' }}>Defecte sloten uitlezen, repareren of deactiveren.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 1. MEEST GEVRAAGD (GRID STYLE WITH CHECKMARKS & ORANGE LINKS) */}
+        <div style={{ marginBottom: '3.5rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
+            Meest Gevraagde Automerken (Mobiel Coderen)
+          </h2>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+            gap: '1.5rem 1rem'
+          }}>
+            {p1Brands.map(b => (
+              <div key={b.slug} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem', lineHeight: '1.2' }}>✓</span>
+                <div>
+                  <Link 
+                    href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} 
+                    id={`merk-${b.slug}`}
+                    style={{ color: 'var(--orange-500)', textDecoration: 'underline', fontWeight: 700, fontSize: '0.95rem' }}
+                  >
+                    {b.name}
+                  </Link>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--gray-500)', marginTop: '0.15rem', lineHeight: 1.35 }}>
+                    {b.name} autosleutel bijmaken • {b.system}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 2. POPULAIRE MERKEN (GRID STYLE WITH CHECKMARKS & ORANGE LINKS) */}
+        <div style={{ marginBottom: '3.5rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
+            Populaire Automerken
+          </h2>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+            gap: '1.5rem 1rem'
+          }}>
+            {p2Brands.map(b => (
+              <div key={b.slug} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem', lineHeight: '1.2' }}>✓</span>
+                <div>
+                  <Link 
+                    href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} 
+                    id={`merk-${b.slug}`}
+                    style={{ color: 'var(--orange-500)', textDecoration: 'underline', fontWeight: 700, fontSize: '0.95rem' }}
+                  >
+                    {b.name}
+                  </Link>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--gray-500)', marginTop: '0.15rem', lineHeight: 1.35 }}>
+                    {b.name} autosleutel programmeren • {b.system}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. OVERIGE MERKEN (GRID STYLE WITH CHECKMARKS & ORANGE LINKS) */}
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, paddingBottom: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--gray-300)', color: 'var(--navy-900)' }}>
+            Overige Automerken
+          </h2>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+            gap: '1.5rem 1rem'
+          }}>
+            {p3Brands.map(b => (
+              <div key={b.slug} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '1.1rem', lineHeight: '1.2' }}>✓</span>
+                <div>
+                  <Link 
+                    href={`/merken/${b.nameSlug}-autosleutel-bijmaken`} 
+                    id={`merk-${b.slug}`}
+                    style={{ color: 'var(--orange-500)', textDecoration: 'underline', fontWeight: 700, fontSize: '0.95rem' }}
+                  >
+                    {b.name}
+                  </Link>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--gray-500)', marginTop: '0.15rem', lineHeight: 1.35 }}>
+                    {b.name} sleutel inleren • {b.system}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── COMPREHENSIVE MERKEN SEO GUIDE ARTICLE ── */}
+        <div className="seo-article-block" style={{ marginTop: '3rem', marginBottom: '3rem' }}>
+          <h2>Autosleutels Programmeren en Bijmaken voor Alle {BRAND_COUNT} Automerken in Nederland</h2>
+          <p>
+            Moderne auto&apos;s zijn uitgerust met complexe elektronische antidiefstalsystemen. Elke autofabrikant hanteert eigen beveiligingsprotocollen, startonderbrekers en transpondersystemen — van BMW CAS4/FEM en Volkswagen MQB tot Mercedes-Benz FBS3 en Renault Keycards. Waar reguliere garages vaak vastlopen op merk-specifieke softwarebeveiliging of u doorsturen naar een dure merkdealer, is <strong>{SITE_CONFIG.name}</strong> gespecialiseerd in het sleutelbeheer van álle {BRAND_COUNT} gangbare automerken.
+          </p>
+          <h3>1. Europese Automerken: VAG Group, BMW Group &amp; Mercedes-Benz</h3>
+          <p>
+            Duitse autofabrikanten lopen wereldwijd voorop als het gaat om complexe cryptografische voertuigbeveiliging. Binnen de Volkswagen Groep (Volkswagen, Audi, Seat, Skoda en Porsche) wordt gewerkt met onder andere de 4e en 5e generatie immobilisers en de moderne MQB- en MLB-platforms met Security Gateway (SFD). Bij BMW en Mini maken wij verbinding met EWS, CAS (1 t/m 4+), FEM en BDC modules. Voor Mercedes-Benz en Smart programmeren wij infrarood sleutels (Chromen sleutels) op de Electronic Ignition Switch (EIS/EZS) systemen met FBS3. Mercedes met FBS4 (grofweg vanaf 2013/2014) kan alleen de dealer inleren; dat zeggen wij u vooraf.
+          </p>
+          <h3>2. Franse &amp; Italiaanse Automerken: PSA, Renault &amp; Stellantis</h3>
+          <p>
+            Franse en Italiaanse merken zoals Peugeot, Citroën, DS Automobiles, Fiat, Alfa Romeo en Renault maken gebruik van BSI (Body Systems Interface) en UCH (Unité de Contrôle Habitacle) modules. Vooral Renault en Dacia staan bekend om hun Keycard Handsfree systemen. Wij lezen de beveiligingspincodes direct uit de BSI of UCH en leren binnen enkele minuten een nieuwe afstandsbediening of sleutelkaart in, zelfs bij volledige sleutelverlies situaties.
+          </p>
+          <h3>3. Aziatische &amp; Amerikaanse Merken: Toyota, Ford, Kia &amp; Hyundai</h3>
+          <p>
+            Aziatische autofabrikanten zoals Toyota, Lexus, Kia, Hyundai, Nissan, Honda en Mazda werken met G-chip, H-chip en Smart Key proximity systemen die vaak beveiligd zijn met ID4D, ID46, ID47 of ID8A transponders. Voor Amerikaanse merken zoals Ford en Jeep programmeren wij PATS (Passive Anti-Theft System) transponders en FOBIK sleutels.
+          </p>
+          <h3>Professionele Diagnose en CNC-Sleutelfrezen</h3>
+          <p>
+            Onze servicebussen zijn uitgerust met professionele diagnosecomputers en professionele software. Hierdoor kunnen wij rechtstreeks communiceren met de immobiliser, ECU of BSI van uw voertuig via de OBD2-poort. Wij slijpen mechanische sleutelbladen met uiterste precisie op onze computergestuurde CNC-frezen op basis van uw chassisnummer (VIN) of de sleutelcode.
+          </p>
+          <h3>Smart Keys, Keyless Go en All Keys Lost per Merk</h3>
+          <p>
+            Of u nu een gloednieuwe elektrische auto rijdt met Keyless Entry of een klassieke personenwagen: wij programmeren transponderchips, afstandsbedieningen en proximity keys op locatie. Ook wanneer u alle sleutels kwijt bent (All Keys Lost), openen wij uw voertuig schadevrij met Lishi tools en genereren wij direct een nieuwe sleutelset met 12 maanden garantie.
+          </p>
+        </div>
+
+      </div>
+    </main>
+  );
+}

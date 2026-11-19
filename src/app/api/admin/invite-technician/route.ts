@@ -1,0 +1,169 @@
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
+import { requireOfficeUserApi } from '@/lib/crmSession';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { DEFAULT_TECHNICIAN_COLOUR } from '@/lib/crmColours';
+
+export const dynamic = 'force-dynamic';
+
+const HEX_COLOUR = /^#[0-9a-f]{6}$/i;
+
+function text(value: unknown, max: number): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed.slice(0, max) : null;
+}
+
+export async function POST(request: Request) {
+  const { response } = await requireOfficeUserApi();
+  if (response) return response;
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
+  }
+
+  const name = text(body.name, 120);
+  if (!name) {
+    return NextResponse.json({ error: 'Naam is verplicht' }, { status: 400 });
+  }
+
+  const email = text(body.email, 120);
+  if (!email || !email.includes('@')) {
+    return NextResponse.json({ error: 'Geldig e-mailadres is verplicht' }, { status: 400 });
+  }
+
+  const colour = text(body.color, 7);
+  const activeColour = colour && HEX_COLOUR.test(colour) ? colour : DEFAULT_TECHNICIAN_COLOUR;
+
+  const password = text(body.password, 72);
+  if (password && password.length < 8) {
+    return NextResponse.json({ error: 'Wachtwoord moet minimaal 8 tekens zijn' }, { status: 400 });
+  }
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) {
+    return NextResponse.json({ error: 'CRM configuratie mist' }, { status: 503 });
+  }
+
+  const adminAuth = createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  }).auth.admin;
+
+  /*
+   * An invite link, not a password.
+   *
+   * This route used to create every technician with the literal password
+   * "password123" and email_confirm: true, because SMTP is not set up. That
+   * made every account openable by anyone who knew the address — and the
+   * password was in the repository. A monteur session reads jobs, customer
+   * names, phone numbers and addresses.
+   *
+   * generateLink creates the user and hands us the one-time link without
+   * needing mail delivery: the office sends it over WhatsApp, which this CRM
+   * already does, and the technician sets their own password on arrival.
+   *
+   * redirectTo is explicit rather than left to Supabase's project-level
+   * default: that default is still the dev "Site URL" (localhost), which
+   * generateLink otherwise falls back to silently — the invite link looks
+   * fine, opens, and drops the technician on a localhost address that
+   * doesn't exist for them. /admin/auth/callback is the route that actually
+   * exchanges Supabase's code for a session; this must point there, not at
+   * a bare origin.
+   *
+   * The link flow has turned out fragile in practice — email clients that
+   * pre-fetch links for security scanning silently burn the one-time token
+   * before the office ever forwards it — so a password set here directly is
+   * offered as an alternative, not a replacement: still one password per
+   * technician, chosen by the office each time, never a shared or repo-
+   * committed default like the old "password123". email_confirm skips the
+   * link entirely since a password the office just typed already proves
+   * they intended this account to exist.
+   */
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.autosleutel24.nl';
+  let userId: string;
+  let actionLink: string | null = null;
+
+  if (password) {
+    const { data, error: createError } = await adminAuth.createUser({
+      email,
+      password,
+      email_confirm: true,
+    });
+    if (createError || !data?.user) {
+      console.error('Invite failed:', createError?.message);
+      return NextResponse.json(
+        { error: 'Uitnodigen mislukt — bestaat dit e-mailadres al?' },
+        { status: 500 }
+      );
+    }
+    userId = data.user.id;
+  } else {
+    const { data, error: createError } = await adminAuth.generateLink({
+      type: 'invite',
+      email,
+      options: { redirectTo: `${base}/admin/auth/callback` },
+    });
+    if (createError || !data?.user) {
+      console.error('Invite failed:', createError?.message);
+      return NextResponse.json(
+        { error: 'Uitnodigen mislukt — bestaat dit e-mailadres al?' },
+        { status: 500 }
+      );
+    }
+    userId = data.user.id;
+    actionLink = data.properties?.action_link ?? null;
+  }
+
+  /* The role decides what they can see; without it they land on geen-toegang. */
+  const { error: roleError } = await adminAuth.updateUserById(userId, {
+    app_metadata: { role: 'monteur' },
+  });
+
+  if (roleError) {
+    await adminAuth.deleteUser(userId);
+    console.error('Role assignment failed:', roleError.message);
+    return NextResponse.json({ error: 'Rol toekennen mislukt' }, { status: 500 });
+  }
+
+  // 3. Create the technician record
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from('technicians')
+    .insert({
+      user_id: userId,
+      name,
+      color: activeColour,
+      active: true,
+      werkgebied: [], // Will be filled in wizard
+    })
+    .select('id, name')
+    .single();
+
+  if (error) {
+    /*
+     * Take the login back out. A half-made technician — a login with no record
+     * behind it — signs in successfully and then sees nothing, which is the
+     * hardest kind of fault to diagnose from a phone call.
+     */
+    await adminAuth.deleteUser(userId);
+    console.error('Technician insert failed:', error.message);
+    return NextResponse.json({ error: `Monteur opslaan mislukt: ${error.message}` }, { status: 500 });
+  }
+
+  return NextResponse.json(
+    {
+      technician: data,
+      /*
+       * Handed back once, and never stored. The office sends it on; if it is
+       * lost, invite again rather than looking it up — there is nowhere to look.
+       */
+      inviteLink: actionLink,
+      passwordSet: Boolean(password),
+    },
+    { status: 201 }
+  );
+}

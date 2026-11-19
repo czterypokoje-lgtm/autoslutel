@@ -1,0 +1,90 @@
+/*
+ * The desktop table has six columns plus a tap target for confirming each
+ * line — the exact shape that broke the stock table and the leads list
+ * before this. That one had no scroll wrapper at all, so on a phone it was
+ * worse than those: not just hard to read, but a table a technician
+ * actually has to interact with (ticking which lines are real) squeezed
+ * into a horizontal scroll nobody could operate with a thumb.
+ */
+.desktopTable {
+  display: block;
+}
+
+.cards {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .desktopTable {
+    display: none;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: var(--sp-3) 0;
+  }
+}
+
+.lineCard {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: flex-start;
+  padding: var(--sp-3);
+  border-radius: var(--crm-r);
+  background: var(--crm-sunk);
+}
+
+.lineCardConfirmed {
+  background: var(--crm-ok-bg);
+}
+
+.lineCardMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.lineCardDesc {
+  color: var(--crm-ink);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.lineCardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--crm-muted);
+  font-size: var(--fs-sm);
+}
+
+.lineCardPrice {
+  color: var(--crm-text);
+}
+
+.toggleBtn {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--crm-rule2);
+  background: var(--crm-panel);
+  color: var(--crm-muted);
+  cursor: pointer;
+}
+
+.toggleBtnOn {
+  border-color: var(--crm-ok);
+  color: var(--crm-ok);
+}
+
+.toggleBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

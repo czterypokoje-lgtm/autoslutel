@@ -1,0 +1,60 @@
+/* Monteurs — one card per technician, invite form beside the team. */
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 18px; align-items: start; }
+.team { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.invite { position: sticky; top: 0; }
+.logins { grid-column: 1 / -1; }
+
+.card { background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: var(--crm-r-lg); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.cardOff { opacity: 0.65; }
+.editCard { gap: 10px; }
+.cardTop { display: flex; align-items: center; gap: 12px; }
+.avatar, .avatarInitial { width: 48px; height: 48px; flex: none; border-radius: 50%; }
+.avatar { object-fit: cover; border: 1px solid var(--crm-rule2); }
+.avatarInitial { display: grid; place-items: center; color: #ffffff; font-size: 19px; font-weight: 700; }
+.name { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.name a { font-size: 16px; font-weight: 600; color: var(--crm-ink); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.name a:hover { color: var(--crm-accent); }
+.name span { font-size: 13px; color: var(--crm-muted); }
+.colourDot { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--crm-sunk); color: var(--crm-text); }
+.badgeOn { background: var(--crm-ok-bg); color: var(--crm-ok); }
+.badgeOff { background: #eef1f5; color: #475569; }
+.badgeWarn { background: var(--crm-warn-bg); color: var(--crm-warn); }
+
+.areas { display: flex; flex-wrap: wrap; gap: 5px; }
+.area { font-size: 12px; padding: 2px 7px; border: 1px solid var(--crm-rule2); border-radius: 5px; color: var(--crm-text); }
+.noArea { font-size: 12.5px; color: var(--crm-warn); font-weight: 600; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding-top: 10px; border-top: 1px solid var(--crm-rule); }
+.btn, .btnPrimary { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: 8px; font: inherit; font-size: 13.5px; font-weight: 600; text-decoration: none; cursor: pointer; }
+.btn { border: 1px solid var(--crm-rule2); background: var(--crm-panel); color: var(--crm-ink); }
+.btnPrimary { border: 0; background: var(--crm-nav); color: #ffffff; }
+
+.more { position: relative; margin-left: auto; }
+.more summary { list-style: none; cursor: pointer; height: 34px; padding: 0 12px; display: inline-flex; align-items: center; border-radius: 8px; font-size: 13.5px; font-weight: 600; color: var(--crm-muted); }
+.more summary::-webkit-details-marker { display: none; }
+.more[open] summary, .more summary:hover { background: var(--crm-sunk); color: var(--crm-ink); }
+.menu { position: absolute; right: 0; top: 38px; z-index: 10; width: 250px; padding: 8px; background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: 10px; box-shadow: 0 8px 24px rgba(22, 35, 58, 0.14); display: flex; flex-direction: column; gap: 2px; }
+.menu button { all: unset; box-sizing: border-box; cursor: pointer; padding: 9px 10px; border-radius: 6px; font-size: 13.5px; color: var(--crm-ink); }
+.menu button:hover { background: var(--crm-sunk); }
+.menu .danger { color: var(--crm-stop); }
+.menuField { display: flex; flex-direction: column; gap: 4px; padding: 6px 10px 10px; border-bottom: 1px solid var(--crm-rule); margin-bottom: 4px; font-size: 12px; font-weight: 600; color: var(--crm-muted); }
+.menuField select { height: 34px; border: 1px solid var(--crm-rule2); border-radius: 6px; font: inherit; font-size: 13px; }
+
+.inlineForm { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 1px solid var(--crm-rule); }
+.secret { display: grid; gap: 8px; padding: 12px; border-radius: 8px; background: var(--crm-warn-bg); color: var(--crm-ink); font-size: 13.5px; }
+.secret input { width: 100%; height: 36px; padding: 0 10px; border: 1px solid var(--crm-rule2); border-radius: 6px; font-family: ui-monospace, monospace; font-size: 13px; }
+
+.swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+.swatch, .swatchOn { width: 28px; height: 28px; border-radius: 6px; cursor: pointer; border: 1px solid var(--crm-rule2); }
+.swatchOn { border: 2px solid var(--crm-ink); }
+.mt { margin-top: 10px; }
+.hint { font-size: 12px; color: var(--crm-muted); }
+.rowWrap { display: flex; gap: 8px; flex-wrap: wrap; }
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  .invite { position: static; }
+}

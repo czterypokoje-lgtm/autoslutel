@@ -1,0 +1,338 @@
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
+import { isAuthorized, adminAuthConfigured } from '@/lib/adminAuth';
+
+/**
+ * Google Ads offline-conversion export.
+ *
+ * This route reads personal data (leads) with the Supabase service-role key,
+ * which bypasses Row Level Security. It MUST never be publicly reachable.
+ * Access requires the EXPORT_SECRET bearer token; without a correct token the
+ * route answers 404 so its existence is not advertised.
+ *
+ * Set EXPORT_SECRET in the Vercel project environment before deploying.
+ *
+ * Split into two lists, not one, because a lead with a gclid is not
+ * automatically a conversion worth bidding on:
+ *   - `positive`: qualified or sold — a real conversion, reported once.
+ *   - `negative`: spam or duplicate — the click itself was never a real
+ *     conversion, reported as a Google Ads "conversion adjustment"
+ *     (RETRACTION) so Smart Bidding stops treating that click as a signal
+ *     to find more like it. Without this half, every spam form-fill trains
+ *     the algorithm to spend more money finding more spam.
+ * A lead sitting at `new`, `contacted` or a non-spam `rejected` is reported
+ * as neither — the office hasn't decided yet, and guessing is worse than
+ * waiting.
+ */
+
+export const dynamic = 'force-dynamic';
+
+/*
+ * The job is joined in for its revenue.
+ *
+ * The CSV has always had a Conversion Value column and the office had to type
+ * every figure into it by hand, defaulting to 0 — so an export done quickly
+ * told Google every click was worth nothing, which is worse than sending no
+ * value at all: it trains Smart Bidding that this traffic has no worth.
+ *
+ * jobs.lead_id is the link. Only a finished job counts; a planned one has not
+ * earned anything yet and reporting its quote as revenue would be inventing
+ * a number.
+ */
+const EXPORT_COLUMNS =
+  'id, created_at, service, status, gclid, wbraid, gbraid, jobs (status, final_price, completed_at)';
+
+/*
+ * A conversion is a finished job, not a hopeful lead.
+ *
+ * This export used to emit a conversion for every lead at `qualified` or
+ * `sold`. The office's account of what those statuses mean in practice:
+ * "customer is not accept most of them and some of them we miss and dont
+ * reply". So `qualified` means the job was possible, which is a long way from
+ * the customer saying yes.
+ *
+ * Measured at the time of the change: 16 leads with a click id sat at
+ * qualified/sold, 2 had a job at all, and 0 had a completed paid one. Ten had
+ * already been reported to Google under a conversion action literally named
+ * "Job Completed". Smart Bidding was being taught that a person who asks for
+ * a price and walks away is the outcome to find more of.
+ *
+ * So the money event is the source now: a job at `afgerond` with a
+ * final_price, attributed through its lead's click id. That yields far fewer
+ * conversions — one, when this was written — and every one of them is revenue
+ * that actually arrived.
+ *
+ * `leads` is a left join, not `!inner`, on purpose: a job created "by hand"
+ * (see api/admin/jobs) for a phone-in customer has no lead_id at all, and
+ * carries its own gclid/wbraid/gbraid/msclkid/click_captured_at instead,
+ * claimed from call_clicks at creation time. See supabase/migrations/
+ * 0053_call_click_attribution.sql for why that table exists.
+ */
+const POSITIVE_FROM_JOBS =
+  'id, final_price, gross_margin, completed_at, scheduled_date, lead_id, ' +
+  'gclid, wbraid, gbraid, msclkid, click_captured_at, customer_phone, ' +
+  'leads (id, gclid, wbraid, gbraid, msclkid, email, phone, phone_e164, created_at)';
+
+/* Google will not accept a conversion for a click older than this. */
+const CLICK_WINDOW_DAYS = 90;
+
+function unauthorized() {
+  // 404 rather than 401: do not confirm that this endpoint exists.
+  return new NextResponse(null, { status: 404 });
+}
+
+function supabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.storage_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.storage_SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !supabaseKey) return null;
+  return createClient(supabaseUrl, supabaseKey);
+}
+
+export async function GET(request: Request) {
+  // Defence in depth: middleware already gates this path, but a route that
+  // reads personal data with the service-role key must check for itself too.
+  if (!adminAuthConfigured()) {
+    console.error('Admin credentials are not configured — refusing to export leads');
+    return unauthorized();
+  }
+  if (!isAuthorized(request)) {
+    return unauthorized();
+  }
+
+  const supabase = supabaseClient();
+  if (!supabase) {
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+  }
+
+  try {
+    /*
+     * Two queries, because the two halves need opposite filters — and the
+     * single query they used to share had the negative half exactly backwards.
+     *
+     * A conversion is sent once: `exported_at is null`.
+     *
+     * A RETRACT is not a conversion, it is an instruction about one Google
+     * already holds. Sending it for a lead that was never exported asks
+     * Google to cancel something that does not exist, and it answers exactly
+     * that — all four rows of the first retraction upload came back with
+     * "This conversion does not exist. Double-check all the parameters."
+     *
+     * So a retraction requires the opposite: the lead WAS exported as a good
+     * conversion, and has since been marked spam or duplicate. That is the
+     * only case where there is something on Google's side to withdraw.
+     */
+    const clickIdFilter = 'gclid.not.is.null,wbraid.not.is.null,gbraid.not.is.null';
+
+    const [positiveResult, negativeResult] = await Promise.all([
+      supabase
+        .from('jobs')
+        .select(POSITIVE_FROM_JOBS)
+        .eq('status', 'afgerond')
+        /*
+         * jobs.exported_at, not leads.exported_at: positives are read from
+         * jobs (see the comment above), so that is also where "already
+         * reported" has to live. Before this column existed nothing filtered
+         * a positive row out once exported, so every completed job with a
+         * value was re-offered on every visit to this page, forever.
+         */
+        .is('exported_at', null)
+        .order('completed_at', { ascending: false })
+        .limit(500),
+
+      supabase
+        .from('leads')
+        .select(EXPORT_COLUMNS)
+        .or(clickIdFilter)
+        .not('exported_at', 'is', null)
+        .is('retracted_at', null)
+        .in('status', ['spam', 'duplicate'])
+        .order('created_at', { ascending: false })
+        .limit(500),
+    ]);
+
+    const error = positiveResult.error ?? negativeResult.error;
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    /*
+     * The two halves no longer share a shape: positives come from jobs,
+     * negatives from leads. Mapped separately rather than merged and sorted
+     * apart again, which is the arrangement that let a lead masquerade as a
+     * completed job in the first place.
+     */
+    interface JobRow {
+      id: string;
+      final_price: number | string | null;
+      gross_margin: number | string | null;
+      completed_at: string | null;
+      scheduled_date: string | null;
+      lead_id: string | null;
+      gclid: string | null;
+      wbraid: string | null;
+      gbraid: string | null;
+      msclkid: string | null;
+      click_captured_at: string | null;
+      customer_phone: string | null;
+      leads: { id: string; gclid: string | null; wbraid: string | null; gbraid: string | null; msclkid: string | null; email: string | null; phone: string | null; phone_e164: string | null; created_at: string } | null;
+    }
+
+    const cutoff = Date.now() - CLICK_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+
+    /*
+     * E.164, strictly — no spaces, no separators.
+     *
+     * Google matches an enhanced conversion on a SHA-256 hash of this string,
+     * so "+316 1175 1231" and "+31611751231" are two different customers as
+     * far as the match is concerned, and the first one matches nobody.
+     * phone_e164 is right on 225 of 228 rows but is not guaranteed, and the
+     * raw `phone` column is whatever the visitor typed.
+     */
+    const toE164 = (...candidates: (string | null | undefined)[]): string | null => {
+      for (const raw of candidates) {
+        if (!raw) continue;
+        let d = String(raw).replace(/[^\d+]/g, '');
+        if (d.startsWith('00')) d = `+${d.slice(2)}`;
+        else if (d.startsWith('0')) d = `+31${d.slice(1)}`;
+        else if (!d.startsWith('+')) d = `+31${d}`;
+        if (/^\+[1-9]\d{7,14}$/.test(d)) return d;
+      }
+      return null;
+    };
+
+    const positive = ((positiveResult.data ?? []) as unknown as JobRow[])
+      .map((job) => {
+        const lead = job.leads;
+        /* Prefer the lead's click id (the original, form-based path); fall
+           back to the job's own, claimed from call_clicks for a phone-only
+           job that never had a lead at all. */
+        const clickId = lead?.gclid ?? lead?.wbraid ?? lead?.gbraid ?? job.gclid ?? job.wbraid ?? job.gbraid ?? null;
+        /* When did that click happen? A lead's created_at if there is one,
+           otherwise the moment call_clicks recorded it. */
+        const clickedAt = lead?.created_at ?? job.click_captured_at ?? null;
+        /*
+         * The money the business keeps, not what the customer paid.
+         * gross_margin is final_price less the technician payout and costs
+         * (migration 0059). Reporting the customer price told Smart Bidding a
+         * job with a large payout was worth as much as one done in-house; the
+         * margin is what an ad click actually earned. A job with no margin
+         * (zero or a loss) is not offered: a 0 would teach Google the click
+         * was worthless, and it is better to send nothing than a wrong value.
+         */
+        const value = Number(job.gross_margin ?? 0);
+        /* Microsoft's click id travels the same two paths as Google's — the
+           lead's first, then the job's own from a claimed call click. Reading
+           only the job's meant the five leads that actually carry one were
+           invisible, because nothing propagates a lead's msclkid onto its
+           job. It has been stored all along and reported nowhere. */
+        const msclkid = lead?.msclkid ?? job.msclkid ?? null;
+        /*
+         * The identity fallback. 57 of 59 jobs with revenue carry no click id
+         * at all, but most carry a phone number — and Google can match an
+         * enhanced conversion on a hashed phone or email when the click id is
+         * gone. This is what turns 2 reportable conversions into 26.
+         */
+        const email = (lead?.email ?? '').trim().toLowerCase() || null;
+        const phone = toE164(lead?.phone_e164, lead?.phone, job.customer_phone);
+        return { job, lead, clickId, msclkid, email, phone, clickedAt, value };
+      })
+      /* Four reasons a finished job is not reportable, none of them faults:
+         no click paid for it, no money was recorded, the click has aged out
+         of Google's window, or (should not happen, but the data can't prove
+         a click's age without a timestamp) there is no time to check. */
+      /* Either network's click id makes the job reportable. Requiring
+         Google's meant a job whose only trace was an msclkid was dropped here
+         and never reached the Microsoft export at all. */
+      /* A click id, a Microsoft click id, or an identity Google can match on.
+         Requiring a click id meant 57 of 59 paid jobs were dropped here and
+         never offered to any export. */
+      .filter((r) => (r.clickId || r.msclkid || r.email || r.phone) && r.value > 0 && r.clickedAt && new Date(r.clickedAt).getTime() >= cutoff)
+      .map((r) => ({
+        id: r.job.id,
+        status: 'afgerond',
+        gclid: r.lead?.gclid ?? r.job.gclid,
+        wbraid: r.lead?.wbraid ?? r.job.wbraid,
+        gbraid: r.lead?.gbraid ?? r.job.gbraid,
+        msclkid: r.msclkid,
+        email: r.email,
+        phone: r.phone,
+        created_at: r.clickedAt!,
+        job_value: Math.round(r.value * 100) / 100,
+        job_count: 1,
+        /* The conversion happened when the work finished, not when the form
+           was submitted. Falls back to the scheduled day at midday when a job
+           was closed without a completion timestamp. */
+        conversion_time: r.job.completed_at ?? (r.job.scheduled_date ? `${r.job.scheduled_date}T12:00:00Z` : null),
+      }));
+
+    const negative = ((negativeResult.data ?? []) as unknown as {
+      id: string; status: string; created_at: string;
+      gclid: string | null; wbraid: string | null; gbraid: string | null;
+    }[]).map((lead) => ({
+      ...lead,
+      msclkid: null,
+      email: null,
+      phone: null,
+      job_value: null,
+      job_count: 0,
+      conversion_time: null,
+    }));
+
+    return NextResponse.json(
+      { success: true, positive, negative },
+      {
+        status: 200,
+        headers: {
+          // Never let a CDN or browser cache personal data.
+          'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+          'X-Robots-Tag': 'noindex, nofollow',
+        },
+      }
+    );
+  } catch {
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+/**
+ * Marks rows as exported once their CSV has actually been downloaded, so the
+ * next export run never reports the same click to Google Ads twice.
+ *
+ * `kind` picks the table: positive ids are jobs (see POSITIVE_FROM_JOBS
+ * above), negative ids are leads — the two halves come from different
+ * tables and always have, this just makes the PATCH say so explicitly
+ * instead of assuming every id it's ever given is a lead.
+ */
+export async function PATCH(request: Request) {
+  if (!adminAuthConfigured()) return unauthorized();
+  if (!isAuthorized(request)) return unauthorized();
+
+  let body: { ids?: unknown; kind?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
+  }
+
+  const ids = Array.isArray(body.ids) ? body.ids.filter((id): id is string => typeof id === 'string') : [];
+  if (!ids.length) {
+    return NextResponse.json({ error: 'Geen ids opgegeven' }, { status: 400 });
+  }
+  const table = body.kind === 'positive' ? 'jobs' : 'leads';
+
+  const supabase = supabaseClient();
+  if (!supabase) {
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+  }
+
+  const { error } = await supabase
+    .from(table)
+    .update({ exported_at: new Date().toISOString() })
+    .in('id', ids);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+  return NextResponse.json({ success: true, count: ids.length });
+}

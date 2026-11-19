@@ -1,0 +1,468 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { getRelatedBlogPosts } from '@/config/services';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
+import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import Image from 'next/image';
+import styles from './page.module.css';
+import { ARRIVAL } from '@/config/arrival';
+import { getBaseLocalBusinessSchema, serviceRegionNodes } from '@/utils/schema';
+
+export const metadata: Metadata = {
+  title: {
+    absolute: 'Auto Openen Zonder Sleutel? 30-60 Min Ter Plaatse | 24/7',
+  },
+  // 186 characters truncated in results, and what Google cut was the price
+  // and the call to action — the two things that earn the click.
+  description: `Auto openen zonder sleutel? Binnen ${ARRIVAL} ter plaatse, schadevrij, prijs vooraf. 24/7 bereikbaar. Bel direct!`,
+  alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` },
+};
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Auto Openen Zonder Sleutel",
+  // The business is described once, in the root layout; this refers to it.
+  "provider": getBaseLocalBusinessSchema(),
+  "areaServed": serviceRegionNodes(),
+  "serviceType": "Auto openen zonder sleutel, schadevrij buitensluiting, kofferbak openen",
+  "offers": {
+    "@type": "Offer",
+    "price": SITE_CONFIG.prices.unlock,
+    "priceCurrency": "EUR",
+    "priceSpecification": {
+      "@type": "PriceSpecification",
+      "description": "All-in vanafprijs"
+    }
+  }
+};
+
+const faqItems = [
+  {
+    q: "Hoe werkt een auto openen zonder sleutel?",
+    a: "Een mobiele auto-slotenmaker gebruikt gespecialiseerd Lishi lockpick-gereedschap dat precies is ontworpen voor uw slotcilinder. De technicus schuift de tool in het sleutelgat en tast de inwendige pennen (wafers/stackers) mechanisch af. Zodra alle pennen zijn uitgelijnd, draait de cilinder open — zonder kracht, zonder schade. Bij modernere auto's met elektronisch vergrendelde portieren wordt tevens een OBD-tool of long-range decoder gebruikt om het CAN-bus netwerk te ontgrendelen."
+  },
+  {
+    q: "Mijn autosleutels liggen in de auto, wat nu?",
+    a: "Bel Autosleutel24 direct op 06 11 75 12 31. Wij vragen uw automerk, model en exacte locatie. Onze mobiele slotenmaker rijdt onmiddellijk naar u toe en is gemiddeld binnen 30 minuten ter plaatse. U hoeft geen sleepwagen, dealer of garage te bellen. Wij openen de auto ter plekke schadevrij en u ontvangt een officiële verzekeringsklare factuur."
+  },
+  {
+    q: "Welke systemen vergelijken voor auto openen zonder sleutel?",
+    a: "Er zijn drie hoofdtechnieken: (1) Mechanische opening via Lishi decoders — het meest schadevrije en betrouwbare systeem voor het overgrote deel van de markt; (2) OBD-poort bypass voor auto's met elektronische deadlock zoals BMW en Mercedes; (3) Slim-Jim/long-reach tools voor oudere voertuigen. Autosleutel24 gebruikt uitsluitend methode (1) en (2) en nooit destructieve technieken."
+  },
+  {
+    q: "Wat zijn de kosten voor het openen van mijn auto (buitensluiting)?",
+    a: "Bij Autosleutel24 betaalt u een vaste all-in prijs vanaf €149,- voor het schadevrij openen van uw autodeur bij een buitensluiting. U ontvangt de prijsopgave altijd vóór wij uitrijden — geen verborgen kosten achteraf."
+  },
+  {
+    q: "Welke auto merken kunnen worden geopend zonder sleutel?",
+    a: "Wij kunnen vrijwel alle gangbare personenautomerken schadevrij openen: Volkswagen, BMW, Mercedes-Benz, Audi, Toyota, Ford, Opel, Renault, Peugeot, Citroën, Nissan, Hyundai, Kia, Seat, Skoda, Volvo, Porsche en meer. Zelfs auto's met een dubbel vergrendelingssysteem (deadlock) of keyless-only systemen zijn voor onze specialisten geen probleem."
+  },
+  {
+    q: "Hoe snel kan mijn auto worden geopend als de sleutels erbinnen liggen?",
+    a: "Na uw telefonische melding rijdt de dichtstbijzijnde mobiele slotenmaker direct uit. In de regio Utrecht, Amsterdam, Almere en Amersfoort zijn wij gemiddeld binnen 25–40 minuten ter plaatse. Op rustige uren (overdag doordeweeks) kan dit zelfs korter zijn. Nooit meer dan 60 minuten in het gebied dat wij bedienen."
+  },
+  {
+    q: "Zijn er auto openen zonder sleutel apps die het mogelijk maken?",
+    a: "Sommige moderne auto's (Tesla, bepaalde BMW's/Mercedes met Connected App) bieden een fabrieksapp waarmee u het voertuig op afstand kunt ontgrendelen via uw smartphone — mits u de app vooraf heeft ingesteld en actief abonnement heeft. Als die mogelijkheid ontbreekt of de app niet werkt, is een ervaren mobiele locksmith de snelste en veiligste oplossing. Let op: onbekende third-party apps die beweren sloten te openen zijn oplichting."
+  },
+  {
+    q: "Kan ik mijn auto openen als ik geen reservesleutel heb?",
+    a: "Ja, absoluut. U hebt geen reservesleutel nodig. Via mechanische decoding kan de cilinder worden geopend. Als u daarna ook een nieuwe reservesleutel wilt, kunnen wij die direct ter plaatse programmeren. Zo rijdt u dezelfde dag weg met een reserve en laat u nooit meer een sleutel in de auto achter."
+  },
+  {
+    q: "Welke installatiebedrijven voor auto openen zonder sleutel zijn actief in Nederland?",
+    a: `In Nederland zijn meerdere mobiele locksmith-bedrijven actief, maar de kwaliteit verschilt sterk. Let op ervaren vakmannen die werken met professioneel Lishi-gereedschap en vaste transparante tarieven communiceren vóór aankomst. Autosleutel24 is actief in de regio Utrecht, Amsterdam, Almere en Amersfoort en staat bekendom schadevrij openen en eerlijke all-in prijzen — aantoonbaar via een ${SITE_CONFIG.rating}-sterren beoordeling op Google.`
+  },
+  {
+    q: "Wordt auto openen zonder sleutel vergoed door mijn verzekering?",
+    a: "Bij WA+ (Beperkt Casco) of All-risk dekking worden kosten voor een buitensluiting soms vergoed als onderdeel van uw pechhulpdekking — check uw polis. Verzekeringsmaatschappijen vragen altijd een originele factuur met btw en specificatie. Deze ontvangt u direct van ons. Sommige pechhulpabonnementen (ANWB, Wegenwacht) dekken dit ook — bel hen eerst als u die dekking heeft."
+  },
+  {
+    q: "Diensten voor auto openen met sleutel erin — wat biedt een mobiele slotenmaker?",
+    a: "Een goede mobiele auto-slotenmaker biedt: (1) Schadevrije opening van portieren en kofferbak; (2) Correcte identiteitsverificatie vóór opening (kopie rijbewijs + kentekenbewijs); (3) Een officiële factuur voor uw verzekeraar; (4) Optioneel: direct een nieuwe reservesleutel programmeren ter plaatse. Dit is volledig anders dan 'glasbrekers' of amateurs die met een kleerhanger of koevoet werken en schade veroorzaken."
+  }
+];
+
+const steps = [
+  {
+    num: 1,
+    title: "Bel of WhatsApp direct",
+    desc: "Geef uw locatie, automerk en model door. Wij geven u direct een vaste all-in prijs."
+  },
+  {
+    num: 2,
+    title: "Mobiele slotenmaker onderweg",
+    desc: "De dichtstbijzijnde specialist rijdt onmiddellijk uit. Gemiddeld binnen 30 minuten bij u."
+  },
+  {
+    num: 3,
+    title: "Identiteitscontrole",
+    desc: "Wij vragen uw rijbewijs + kentekenpapieren. Dit is verplicht voor uw veiligheid én de onze."
+  },
+  {
+    num: 4,
+    title: "Schadevrije opening",
+    desc: "Via Lishi decoder wordt de cilinder mechanisch geopend. 0% schade, 100% betrouwbaar."
+  },
+  {
+    num: 5,
+    title: "Direct op weg + eventueel reservesleutel",
+    desc: "U betaalt de afgesproken prijs. Wij programmeren op verzoek direct een reservesleutel ter plaatse."
+  }
+];
+
+const trustItems = [
+  '24/7 Spoedhulp',
+  'Binnen 30 min ter plaatse',
+  'Schadevrij',
+  'Vaste prijs vooraf',
+  'Ervaren slotenmaker',
+  'Verzekeringsklare factuur'
+];
+
+export default function AutoOpenenZonderSleutelPage() {
+  const faqPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.a
+      }
+    }))
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_CONFIG.domain },
+      { "@type": "ListItem", "position": 2, "name": "Diensten", "item": `${SITE_CONFIG.domain}/diensten` },
+      { "@type": "ListItem", "position": 3, "name": "Auto Openen Zonder Sleutel", "item": `${SITE_CONFIG.domain}/diensten/auto-openen-zonder-sleutel` }
+    ]
+  };
+
+  return (
+    <>
+      <script id="aozs-service-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script id="aozs-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema) }} />
+      <script id="aozs-breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <main>
+
+        {/* ── HERO ─────────────────────────────────────────────────── */}
+        <section className={styles.hero}>
+          <div className={styles.heroInner}>
+            <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+              <Link href="/">Home</Link> <span>/</span>
+              <Link href="/diensten">Diensten</Link> <span>/</span>
+              <span>Auto Openen Zonder Sleutel</span>
+            </nav>
+            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+              <HeroTrustBadge />
+            </div>
+            <h1>Auto Openen Zonder Sleutel — Binnen 30–60 Min Ter Plaatse &amp; Schadevrij</h1>
+            <p className={styles.heroLead}>
+              Buitengesloten? Wij openen uw auto <strong>schadevrij</strong>, gemiddeld binnen 30 min ter plaatse.
+            </p>
+            <div style={{ marginTop: '2rem' }}>
+              <LeadCaptureForm phone={SITE_CONFIG.phone} />
+            </div>
+          </div>
+        </section>
+
+        <BrandsMarquee />
+
+
+
+        {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+        <FeatureCards 
+          title="Schadevrij Auto Openen."
+          subtitle={<>Buitengesloten? <span style={{ color: '#f97316' }}>AutoSleutel24</span> opent uw auto zonder enige schade.</>}
+          features={[
+              {
+                id: 'feature-1',
+                icon: <Image src="/images/icon_map.webp" alt="Snel op locatie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Binnen 30-60 min Ter Plaatse',
+                description: `Buitengesloten? Wij zijn direct naar u onderweg. Onze monteur is altijd in de buurt.`,
+                linkText: 'Vind een monteur',
+                linkUrl: '#contact'
+              },
+              {
+                id: 'feature-2',
+                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Zonder Sleepwagen',
+                description: 'We openen uw deuren direct op uw locatie. Uw auto hoeft niet weggesleept te worden.',
+                linkText: 'Meer over mobiele service',
+                linkUrl: '/diensten'
+              },
+              {
+                id: 'feature-3',
+                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Vaste prijs vooraf',
+                description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen met openen.',
+                linkText: 'Bekijk onze tarieven',
+                linkUrl: '/prijzen'
+              },
+              {
+                id: 'feature-4',
+                icon: <Image src="/images/icon_car_check.webp" alt="Schadevrij" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Schadevrij Openen',
+                description: 'Wij openen uw auto zónder de ruit in te slaan of het slot te beschadigen.',
+                linkText: 'Lees meer over ons',
+                linkUrl: '/over-ons'
+              }
+            ]}
+          />
+
+        {/* 3 steps HowTo */}
+        <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <HowItWorks variant="lockout" />
+          </div>
+        </div>
+
+        {/* ── MAIN CONTENT ─────────────────────────────────────────── */}
+        <section className={styles.section}>
+          <div className={styles.container}>
+            <div className={styles.contentGrid}>
+              <div className={styles.mainContent}>
+
+                {/* Section 1: Wanneer nodig */}
+                <div>
+                  <h2>Wanneer Heeft U Auto Openen Zonder Sleutel Nodig?</h2>
+                  <p>
+                    Er zijn meerdere situaties waarbij u uw auto moet openen zonder uw eigen sleutel. In al deze gevallen is Autosleutel24 uw snelste en meest schadevrije optie:
+                  </p>
+                  <ul className={styles.bulletList}>
+                    <li><strong>Sleutel in de auto laten liggen:</strong> U heeft de auto verlaten, de deuren vielen in het slot en de sleutel ligt nog op de stoel of in het contact. Bel ons — wij openen de portieren schadevrij.</li>
+                    <li><strong>Deur dichtgevallen met sleutel erin:</strong> U deed de deur dicht en de auto vergrendelde automatisch. Ook dit lossen wij op zonder een ruit in te slaan.</li>
+                    <li><strong>Kofferbak zit op slot met sleutel erin:</strong> De kofferbak of haatchback-deur is dicht en de sleutel ligt van binnen. Wij openen via het portierslot of de kofferbalklok.</li>
+                    <li><strong>Alle sleutels kwijt (buitensluiting):</strong> U heeft geen enkele sleutel meer — verloren of gestolen. Wij openen de auto en programmeren dezelfde dag een nieuwe sleutel.</li>
+                    <li><strong>Gebroken of vastgelopen sleutel in het slot:</strong> De sleutelbaard is afgebroken in de cilinder. Wij verwijderen het fragment en openen de auto.</li>
+                  </ul>
+                </div>
+
+
+
+
+
+                {/* Section 4: Tarieven */}
+                <div>
+                  <h2>Kosten Auto Openen Zonder Sleutel — Transparante Tarieven</h2>
+                  <div className={styles.tableWrapper}>
+                    <table className={styles.pricingTable}>
+                      <thead>
+                        <tr>
+                          <th>Dienst</th>
+                          <th>Tijdstip</th>
+                          <th>Prijs (All-in)</th>
+                          <th>Duur</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Autodeur / kofferbak schadevrij openen</td>
+                          <td>Overdag (07:00–22:00)</td>
+                          <td><strong>€149,-</strong></td>
+                          <td>10–20 min</td>
+                        </tr>
+                        <tr>
+                          <td>Autodeur / kofferbak schadevrij openen</td>
+                          <td>Nacht &amp; weekend</td>
+                          <td><strong>€115,-</strong></td>
+                          <td>10–20 min</td>
+                        </tr>
+                        <tr>
+                          <td>Openen + nieuwe reservesleutel programmeren</td>
+                          <td>Alle tijden</td>
+                          <td><strong>€199,-</strong></td>
+                          <td>30-60 min</td>
+                        </tr>
+                        <tr>
+                          <td>Openen bij deadlock systeem (BMW, Audi, VW)</td>
+                          <td>Alle tijden</td>
+                          <td><strong>€125,-</strong></td>
+                          <td>20–30 min</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className={styles.callout}>
+                    <strong>Prijsgarantie:</strong> U ontvangt altijd telefonisch of via WhatsApp een vaste all-in prijsopgave vóór onze specialist uitrijdt. Wat wij opgeven, is wat u betaalt. Geen nachtclubpraktijken waarbij de prijs na aankomst verdubbelt.
+                  </div>
+                </div>
+
+                {/* Gallery */}
+                <div>
+                  <h2>Onze Mobiele Locksmith in Actie — Galerij</h2>
+                  <p>Wij openen dagelijks tientallen auto&apos;s schadevrij in de regio. Hieronder een greep uit recente werkzaamheden:</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', margin: '1.5rem 0' }}>
+                    <img
+                      src="/images/seo/auto-slotenmaker-bmw-openen-amsterdam.webp"
+                      alt="Schadevrij openen van een autodeur bij buitensluiting"
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
+                    />
+                    <img
+                      src="/images/seo/auto-slotenmaker-werkplaats-utrecht.webp"
+                      alt="Lishi decoder gebruikt door ervaren monteur"
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
+                    />
+                    <img
+                      src="/images/seo/auto-slotenmaker-volkswagen-golf-almere.webp"
+                      alt="Autodeur schadevrij geopend na buitensluiting"
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
+                    />
+                    <img
+                      src="/images/seo/auto-slotenmaker-audi-inleren-amersfoort.webp"
+                      alt="Buitensluiting opgelost en reservesleutel geprogrammeerd"
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }}
+                    />
+                  </div>
+                </div>
+
+
+
+                {/* FAQ Section */}
+                <div>
+                  <h2>Veelgestelde Vragen over Auto Openen Zonder Sleutel</h2>
+                  <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+                    Antwoorden op de meest gezochte vragen — zodat u snel en goed geïnformeerd een beslissing kunt nemen.
+                  </p>
+                  {faqItems.map((item, idx) => (
+                    <details key={idx} className={styles.faqItem}>
+                      <summary className={styles.faqQuestion}>
+                        {item.q}
+                        <span className={styles.faqChevron}>+</span>
+                      </summary>
+                      <p className={styles.faqAnswer}>{item.a}</p>
+                    </details>
+                  ))}
+                </div>
+
+              </div>
+
+              {/* ── SIDEBAR ──────────────────────────────────────────── */}
+              <aside className={styles.sidebar}>
+                <div className={styles.sideCard}>
+                  <h3>Auto Op Slot? Bel Direct</h3>
+                  <p>Wij zijn 24/7 bereikbaar. Gemiddeld binnen 30 minuten bij u — ook &apos;s nachts.</p>
+                  <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.sidePhone} id="aozs-sidebar-phone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true">
+                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+                    </svg>
+                    Bel: {SITE_CONFIG.phone}
+                  </a>
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.sideWa} id="aozs-sidebar-wa">
+                    WhatsApp Direct
+                  </a>
+                  <div className={styles.sideList}>
+                    {[
+                      'schadevrij',
+                      'Vaste prijs vooraf',
+                      'Verzekeringsklare factuur',
+                      'Binnen 30 min ter plaatse',
+                      '24/7 beschikbaar',
+                      'Ervaren slotenmaker'
+                    ].map(item => (
+                      <div key={item} className={styles.sideListItem}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{ color: '#22c55e', flexShrink: 0 }} aria-hidden="true">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className={styles.sideCard} style={{ background: '#f0fdf4', borderColor: '#bbf7d0' }}>
+                  <h3 style={{ color: '#166534' }}>Geen Sleutel Meer?</h3>
+                  <p style={{ color: '#15803d', fontSize: '0.88rem' }}>
+                    Na het openen kunnen wij direct ter plaatse een nieuwe reservesleutel programmeren. Nooit meer buitengesloten.
+                  </p>
+                  <Link href="/diensten/autosleutel-bijmaken" className={styles.btnOutline} id="aozs-side-bijmaken" style={{ marginTop: '0.75rem', display: 'inline-block' }}>
+                    Reservesleutel Bijmaken →
+                  </Link>
+                </div>
+              </aside>
+            </div>
+
+            {/* ── BOTTOM CTA ────────────────────────────────────────── */}
+            <div className={styles.ctaBlock}>
+              <h2>Auto Openen Zonder Sleutel — Bel Direct</h2>
+              <p>Onze mobiele locksmith staat binnen 30 min bij u. Vaste prijs, nul schade, verzekeringsklare factuur.</p>
+              <div className={styles.ctaBtnsGrid}>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary} id="aozs-bottom-phone">
+                  Bel: {SITE_CONFIG.phone}
+                </a>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWhatsapp} id="aozs-bottom-wa">
+                  WhatsApp Direct
+                </a>
+              </div>
+              <span className={styles.microText}>24/7 beschikbaar — ook &apos;s nachts en in het weekend</span>
+            </div>
+          </div>
+        </section>
+
+        {/* ── RELATED BLOGS ────────────────────────────────────────── */}
+        {(() => {
+          const relatedPosts = getRelatedBlogPosts('auto-openen-zonder-sleutel');
+          if (!relatedPosts || relatedPosts.length === 0) return null;
+          return (
+            <section className={styles.relatedBlogsSection}>
+              <div className={styles.relatedBlogsContainer}>
+                <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+                  GERELATEERDE KENNIS &amp; ADVIES
+                </p>
+                <h2 className={styles.relatedBlogsTitle}>
+                  Handige Artikelen over Auto Openen &amp; Buitensluiting
+                </h2>
+                <div className={styles.relatedBlogsGrid}>
+                  {relatedPosts.map((post) => (
+                    <Link
+                      key={post.slug}
+                      href={`/blog/${post.slug}`}
+                      className={styles.blogPostCard}
+                      id={`aozs-related-blog-${post.slug}`}
+                    >
+                      <div className={styles.blogPostMeta}>
+                        <span className={styles.blogPostReadTime}>{post.readTime} lezen</span>
+                        <span className={styles.blogPostDate}>
+                          {new Date(post.publishDate).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </span>
+                      </div>
+                      <h3 className={styles.blogPostTitle}>{post.title}</h3>
+                      <p className={styles.blogPostExcerpt}>{post.excerpt}</p>
+                      <span className={styles.blogPostLink}>Lees artikel →</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        })()}
+
+        {/* ── REVIEWS ──────────────────────────────────────────────── */}
+        <section className={styles.reviews}>
+          <div className={styles.container}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+              KLANTBEOORDELINGEN
+            </p>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
+              Wat Klanten Zeggen over Auto Openen Zonder Sleutel
+            </h2>
+            <GoogleReviewsCta />
+          </div>
+        </section>
+
+      </main>
+    </>
+  );
+}

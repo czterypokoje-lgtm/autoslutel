@@ -1,0 +1,448 @@
+import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/utils/schema';
+import Link from 'next/link';
+import { getRelatedBlogPosts } from '@/config/services';
+import GoogleReviewsCta from '@/components/GoogleReviewsCta/GoogleReviewsCta';
+import { SITE_CONFIG, WHATSAPP_URL } from '@/config/site.config';
+import { getBaseLocalBusinessSchema, serviceRegionNodes } from '@/utils/schema';
+import LeadCaptureForm from '@/components/LeadCaptureForm/LeadCaptureForm';
+import HowItWorks from '@/components/HowItWorks/HowItWorks';
+import BrandsMarquee from '@/components/BrandsMarquee/BrandsMarquee';
+import FeatureCards from '@/components/FeatureCards/FeatureCards';
+import HeroTrustBadge from '@/components/HeroTrustBadge/HeroTrustBadge';
+import Image from 'next/image';
+import styles from './page.module.css';
+
+export const metadata: Metadata = {
+  title: {
+    absolute: 'Auto Slotenmaker | 24/7 Mobiel & Schadevrij | Autosleutel24',
+  },
+  description: 'Spoed auto slotenmaker nodig? Wij openen uw auto schadevrij en maken direct een nieuwe sleutel ter plaatse. Binnen 30-60 min, prijs vooraf. Bel 24/7.',
+  alternates: { canonical: `${SITE_CONFIG.domain}/diensten/auto-slotenmaker` },
+};
+
+export default function AutoSlotenmakerPage() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Auto Slotenmaker",
+    "provider": getBaseLocalBusinessSchema(),
+    "areaServed": serviceRegionNodes(),
+    "serviceType": "Auto slotenmaker, autodeur openen, autoslot reparatie, reservesleutel bijmaken",
+    "priceRange": "€€",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Auto Slotenmaker Diensten",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Autodeur Schadevrij Openen",
+            "description": "Auto openen zonder sleutel bij buitensluiting"
+          },
+          "price": SITE_CONFIG.prices.unlock,
+          "priceCurrency": "EUR"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Autoslot Reparatie",
+            "description": "Deurslot of contactslot repareren na inbraakschade of slijtage"
+          },
+          "price": SITE_CONFIG.prices.ignition,
+          "priceCurrency": "EUR"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Nieuwe Autosleutel Maken",
+            "description": "Autosleutel ter plaatse frezen en programmeren"
+          },
+          "price": SITE_CONFIG.prices.transponder,
+          "priceCurrency": "EUR"
+        }
+      ]
+    }
+  };
+
+  const trustItems = [
+    '24/7 Spoedservice',
+    'Binnen 30 min ter plaatse',
+    'Schadevrij openen',
+    'Direct nieuwe sleutel',
+    'Vaste prijzen vooraf',
+    'Ervaren monteurs'
+  ];
+
+  const faqItems = [
+    {
+      q: 'Hoe vind ik een betrouwbare auto slotenmaker in de buurt?',
+      a: 'Een betrouwbare autoslotenmaker werkt met vaste all-in tarieven die vooraf worden gecommuniceerd. Autosleutel24 is volledig mobiel actief in de regio Utrecht, Amsterdam, Almere, Amersfoort en Hilversum. Wij zijn binnen 30 tot 45 minuten op uw locatie met een compleet uitgeruste servicebus.'
+    },
+    {
+      q: 'Wat kost een auto slotenmaker voor het openen van mijn auto?',
+      a: 'Bij Autosleutel24 kost het schadevrij openen van uw autodeur bij een buitensluiting vanaf €149,-. Wij hanteren een vaste prijsgarantie: het tarief dat vooraf telefonisch of via WhatsApp is afgesproken, is de uiteindelijke prijs.'
+    },
+    {
+      q: 'Kan een auto slotenmaker ook een nieuwe sleutel maken als ik alles kwijt ben?',
+      a: 'Ja, absoluut. In tegenstelling tot reguliere slotenmakers die alleen sloten openen, beschikken onze auto slotenmakers over geavanceerde diagnoseapparatuur. Wij decoderen het slot mechanisch om een sleutelbaard te slijpen en programmeren de transponder direct in de computer van uw auto.'
+    },
+    {
+      q: 'Wordt de auto slotenmaker gedekt door mijn verzekering?',
+      a: 'In veel gevallen wel. Indien u WA+ (Beperkt Casco) of All-risk verzekerd bent en er sprake is van diefstal of inbraakschade aan uw autosloten, vergoeden verzekeraars de kosten. U ontvangt van ons altijd een officiële factuur met btw en specificatie voor uw verzekeringsmaatschappij.'
+    },
+    {
+      q: 'What is het verschil tussen Autosleutel24 en de autodealer?',
+      a: 'De autodealer vereist dat u uw auto laat wegslepen naar hun werkplaats en hanteert vaak leertijden van enkele dagen tot weken voor een nieuwe sleutel. Autosleutel24 komt naar u toe en regelt alles direct ter plaatse binnen 30-60 minuten, tegen een tarief dat tot wel 50% lager ligt dan bij de merkdealer.'
+    }
+  ];
+
+  const faqPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.a
+      }
+    }))
+  };
+  const steps = [
+    {
+      num: 1,
+      title: 'Neem contact op',
+      desc: 'Bel of stuur een WhatsApp-bericht. Geef uw automerk, model en exacte locatie door. U ontvangt direct een vaste all-in prijsopgave.'
+    },
+    {
+      num: 2,
+      title: 'Monteur onderweg',
+      desc: 'Onze mobiele auto slotenmaker vertrekt direct naar uw locatie. Binnen 30-60 minuten is de bus bij u ter plaatse.'
+    },
+    {
+      num: 3,
+      title: 'Schadevrije opening',
+      desc: 'Met behulp van Lishi lockpicks en specialistisch gereedschap openen we de autodeur of kofferbak schadevrij.'
+    },
+    {
+      num: 4,
+      title: 'Direct weer op weg',
+      desc: 'Indien nodig repareren we uw slot of programmeren we direct een nieuwe sleutel. U betaalt veilig per pin of contant.'
+    }
+  ];
+
+  return (
+    <>
+      <script id="bc-slotenmaker" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Diensten', path: '/diensten' }, { name: 'Auto slotenmaker', path: '/diensten/auto-slotenmaker' }])) }} />
+      <script id="auto-slotenmaker-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script id="auto-slotenmaker-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema) }} />
+      <main>
+        {/* Hero */}
+        <section className={styles.hero}>
+          <div className={styles.heroInner}>
+            <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+              <Link href="/">Home</Link> <span>/</span> <Link href="/diensten">Diensten</Link> <span>/</span> <span>Auto Slotenmaker</span>
+            </nav>
+            <div style={{ marginBottom: '1.25rem', marginTop: '0.25rem' }}>
+              <HeroTrustBadge />
+            </div>
+            <h1>24/7 Mobiele Auto Slotenmaker — Snel &amp; Schadevrij op Locatie</h1>
+            <p className={styles.heroLead}>
+              Buitengesloten of slot defect? <strong>Schadevrij geopend binnen 30 min</strong> — direct nieuwe sleutel ter plaatse.
+            </p>
+            <div style={{ marginTop: '2rem' }}>
+              <LeadCaptureForm phone={SITE_CONFIG.phone} />
+            </div>
+          </div>
+        </section>
+
+        <BrandsMarquee />
+
+
+
+        {/* ── TRUST FEATURE CARDS ───────────────────────────────────────────── */}
+        <FeatureCards 
+          title="Auto Slotenmaker Nodig?"
+          subtitle={<><span style={{ color: '#f97316' }}>AutoSleutel24</span> is uw betrouwbare partner, 24/7 op locatie.</>}
+          features={[
+              {
+                id: 'feature-1',
+                icon: <Image src="/images/icon_van.webp" alt="Mobiele Service" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Autosleutel Kwijt? Direct Hulp',
+                description: 'We komen direct naar uw locatie voor reparatie of vervanging.',
+                linkText: 'Meer over mobiele service',
+                linkUrl: '/diensten'
+              },
+              {
+                id: 'feature-2',
+                icon: <Image src="/images/icon_map.webp" alt="Lokaal in de buurt" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Auto Op Slot? Schadevrij openen',
+                description: `Binnen ${SITE_CONFIG.responseTime} minuten ter plaatse. Onze lokale monteur is altijd in de buurt.`,
+                linkText: 'Vind een monteur',
+                linkUrl: '#contact'
+              },
+              {
+                id: 'feature-3',
+                icon: <Image src="/images/icon_price.webp" alt="Vaste prijs" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: 'Vaste prijs vooraf',
+                description: 'Geen verrassingen achteraf. U weet direct wat u betaalt voordat we beginnen.',
+                linkText: 'Bekijk onze tarieven',
+                linkUrl: '/prijzen'
+              },
+              {
+                id: 'feature-4',
+                icon: <Image src="/images/icon_car_check.webp" alt="Garantie" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '12 Maanden Garantie',
+                description: 'Wij bieden standaard 12 maanden volledige garantie op al onze sleutels.',
+                linkText: 'Bekijk waar wij service verlenen',
+                linkUrl: '/steden'
+              },
+              {
+                id: 'feature-5',
+                icon: <Image src="/images/icon_insurance.webp" alt="24/7 Spoedhulp" width={90} height={90} style={{ borderRadius: '12px' }} />,
+                title: '24/7 Spoedhulp Bel Nu',
+                description: '12 maanden garantie op ons werk. Dag en nacht bereikbaar voor alle noodgevallen.',
+                linkText: 'Bel direct',
+                linkUrl: `tel:${SITE_CONFIG.phoneTel}`
+              }
+            ]}
+          />
+
+        {/* 3 steps HowTo */}
+        <div style={{ padding: '3.5rem 0', background: '#ffffff' }}>
+          <div className="container">
+            <HowItWorks variant="lockout" />
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <section className={styles.section}>
+          <div className={styles.container}>
+            <div className={styles.contentGrid}>
+              <div className={styles.mainContent}>
+                
+                {/* Section 1 */}
+                <div>
+                  <h2>Wanneer Heeft U een Auto Slotenmaker Nodig?</h2>
+                  <p>
+                    Een buitensluiting of defect autoslot komt altijd ongelegen. Gelukkig hoeft u uw auto niet te laten wegslepen. Onze gespecialiseerde automotive slotenmaker komt direct naar u toe voor de volgende problemen:
+                  </p>
+                  <ul className={styles.bulletList}>
+                    <li><strong>Sleutel in dichte auto vergeten:</strong> Uw deuren zijn in het slot fallen terwijl de sleutel nog in het contact of de kofferbak ligt. Wij openen uw auto volledig schadevrij.</li>
+                    <li><strong>Autosleutel kwijt of gestolen:</strong> Als u al uw sleutels verloren bent, maken en programmeren wij ter plekke een nieuwe werkende sleutel. De oude sleutel programmeren we direct uit de startonderbreker.</li>
+                    <li><strong>Afgebroken autosleutel:</strong> Uw sleutelbaard is afgebroken in de deur of het contactslot. Wij verwijderen het fragment en slijpen ter plekke een nieuwe sleutel.</li>
+                    <li><strong>Vastgelopen of defect contactslot:</strong> De sleutel draait niet meer om in het contactslot. Wij demonteren en reviseren uw contactslot direct op locatie.</li>
+                  </ul>
+                </div>
+
+                {/* Section 2 */}
+                <div>
+                  <h2>Tarieven Auto Slotenmaker — Eerlijk &amp; Transparant</h2>
+                  <div className={styles.tableWrapper}>
+                    <table className={styles.pricingTable}>
+                      <thead>
+                        <tr>
+                          <th>Dienst</th>
+                          <th>Toelichting</th>
+                          <th>Prijs (Vanaf)</th>
+                          <th>Tijdsduur</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Autodeur schadevrij openen</td>
+                          <td>Bij buitensluiting, sleutel in auto</td>
+                          <td><strong>€149,-</strong></td>
+                          <td>10-15 min</td>
+                        </tr>
+                        <tr>
+                          <td>Nieuwe reservesleutel maken</td>
+                          <td>Inclusief programmeren transponder</td>
+                          <td><strong>€{SITE_CONFIG.prices.transponder},- – €299,-</strong></td>
+                          <td>20-30 min</td>
+                        </tr>
+                        <tr>
+                          <td>Alle sleutels kwijt (All Keys Lost)</td>
+                          <td>Genereren van een nieuwe sleutelbaard</td>
+                          <td><strong>€299,- – €500,-</strong></td>
+                          <td>30-60 min</td>
+                        </tr>
+                        <tr>
+                          <td>Contactslot / Deurslot reparatie</td>
+                          <td>Demonteren, reviseren en reinigen</td>
+                          <td><strong>€299,-</strong></td>
+                          <td>45 min</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className={styles.callout}>
+                    <strong>Geen Verborgen Kosten:</strong> In tegenstelling tot schimmige slotenmakersdiensten die met loktarieven werken, krijgt u bij ons vooraf een vaste prijsopgave. 
+                    <br/><br/>
+                    <strong>Goed om te weten:</strong> Officiële autodealers zijn vaak <strong>flink duurder</strong>. Daarnaast bespaart u bij ons op dure wegsleepkosten, want <strong>wij rekenen geen sleepkosten</strong> en helpen u direct ter plaatse!
+                  </div>
+                </div>
+
+                {/* Section 2.5: Onze Service Galerij */}
+                <div>
+                  <h2>Onze Auto Slotenmakersdienst aan het Werk — Galerij</h2>
+                  <p>
+                    Wij zijn trots op ons vakmanschap. Hieronder ziet u een greep uit onze recente werkzaamheden, van het schadevrij openen van deuren tot complexe transponderreparaties:
+                  </p>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: '1rem',
+                    margin: '1.5rem 0'
+                  }}>
+                    <img 
+                      src="/images/seo/auto-slotenmaker-werkplaats-utrecht.webp" 
+                      alt="Professioneel solderen van microswitches en inleren van transponderchips" 
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                    />
+                    <img 
+                      src="/images/seo/auto-slotenmaker-bmw-openen-amsterdam.webp" 
+                      alt="Schadevrij openen van autodeur bij buitensluiting" 
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                    />
+                    <img 
+                      src="/images/seo/auto-slotenmaker-volkswagen-golf-almere.webp" 
+                      alt="Programmeren en slijpen van een reserve klapsleutel" 
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                    />
+                    <img 
+                      src="/images/seo/auto-slotenmaker-audi-inleren-amersfoort.webp" 
+                      alt="Smart key inleren en transponder programmeren" 
+                      style={{ width: '100%', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.06)', objectFit: 'cover', aspectRatio: '4/3' }} 
+                    />
+                  </div>
+                </div>
+
+
+
+                {/* Section 4 */}
+                <div>
+                  <h2>Waarom Kiezen voor Autosleutel24 als Uw Auto Slotenmaker?</h2>
+                  <p>
+                    Wanneer u met pech staat, wilt u snel, betrouwbaar en zonder extra rompslomp geholpen worden. Autosleutel24 biedt grote voordelen ten opzichte van reguliere garages of autodealers:
+                  </p>
+                  <ul className={styles.bulletList}>
+                    <li><strong>100% Mobiele Service:</strong> U hoeft uw auto niet te laten wegslepen naar een dealer. Wij komen met onze mobiele bus naar uw huis, werk, of langs de snelweg.</li>
+                    <li><strong>Schadevrij Openen:</strong> Dankzij geavanceerd Lishi lockpick-gereedschap manipuleren wij het deurslot via de cilinder. Dit laat geen enkele kras of schade achter op uw lak of de rubbers.</li>
+                    <li><strong>Direct Nieuwe Sleutels Slijpen:</strong> Onze servicebussen zijn uitgerust met computergestuurde CNC-lasersleutelmachines en inleersoftware om direct een nieuwe sleutel te programmeren.</li>
+                    <li><strong>Beschikbaar in Heel Midden-Nederland:</strong> Wij rijden snel uit in Utrecht, Amsterdam, Almere, Amersfoort en Hilversum. Gemiddeld zijn we binnen 30-60 minuten ter plaatse.</li>
+                  </ul>
+                </div>
+
+                {/* FAQ Section */}
+                <div>
+                  <h2>Veelgestelde Vragen over de Auto Slotenmaker</h2>
+                  {faqItems.map((item, idx) => (
+                    <details key={idx} className={styles.faqItem}>
+                      <summary className={styles.faqQuestion}>
+                        {item.q}
+                        <span className={styles.faqChevron}>+</span>
+                      </summary>
+                      <p className={styles.faqAnswer}>{item.a}</p>
+                    </details>
+                  ))}
+                </div>
+
+              </div>
+
+              {/* Sidebar */}
+              <aside className={styles.sidebar}>
+                <div className={styles.sideCard}>
+                  <h3>Direct Hulp Nodig?</h3>
+                  <p>Bel of WhatsApp ons. Wij zijn 24/7 bereikbaar en gemiddeld binnen 30 minuten bij u.</p>
+                  <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.sidePhone} id="asm-sidebar-phone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                    Bel: {SITE_CONFIG.phone}
+                  </a>
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.sideWa} id="asm-sidebar-wa">WhatsApp Direct</a>
+                  <div className={styles.sideList}>
+                    {['Geen sleepkosten', 'Vaste prijs vooraf', 'Verzekeringsklare factuur', '12 maanden garantie', '24/7 beschikbaar'].map(item => (
+                      <div key={item} className={styles.sideListItem}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14" style={{color:'#22c55e',flexShrink:0}} aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </aside>
+
+            </div>
+
+            {/* Bottom CTA block */}
+            <div className={styles.ctaBlock}>
+              <h2>Auto Slotenmaker Nodig? Bel Direct</h2>
+              <p>Onze mobiele specialist staat binnen 30 min bij u ter plaatse. Vaste prijs, geen verrassingen.</p>
+              <div className={styles.ctaBtnsGrid}>
+                <a href={`tel:${SITE_CONFIG.phoneTel}`} className={styles.btnPrimary} id="asm-bottom-phone">Bel: {SITE_CONFIG.phone}</a>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className={styles.btnWhatsapp} id="asm-bottom-wa">WhatsApp Direct</a>
+              </div>
+              <span className={styles.microText}>24/7 beschikbaar — ook &apos;s nachts en in het weekend</span>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ── RELATED BLOGS SECTION ────────────────────────────────── */}
+        {(() => {
+          const relatedPosts = getRelatedBlogPosts('auto-slotenmaker');
+          if (!relatedPosts || relatedPosts.length === 0) return null;
+          return (
+            <section className={styles.relatedBlogsSection}>
+              <div className={styles.relatedBlogsContainer}>
+                <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+                  GERELATEERDE KENNIS &amp; ADVIES
+                </p>
+                <h2 className={styles.relatedBlogsTitle}>
+                  Handige artikelen over Auto Slotenmaker &amp; Beveiliging
+                </h2>
+                <div className={styles.relatedBlogsGrid}>
+                  {relatedPosts.map((post) => (
+                    <Link
+                      key={post.slug}
+                      href={`/blog/${post.slug}`}
+                      className={styles.blogPostCard}
+                      id={`asm-related-blog-${post.slug}`}
+                    >
+                      <div className={styles.blogPostMeta}>
+                        <span className={styles.blogPostReadTime}>{post.readTime} lezen</span>
+                        <span className={styles.blogPostDate}>
+                          {new Date(post.publishDate).toLocaleDateString('nl-NL', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </span>
+                      </div>
+                      <h3 className={styles.blogPostTitle}>{post.title}</h3>
+                      <p className={styles.blogPostExcerpt}>{post.excerpt}</p>
+                      <span className={styles.blogPostLink}>Lees artikel →</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </section>
+          );
+        })()}
+
+        {/* ── REVIEWS SECTION ────────────────────────────────────── */}
+        <section className={styles.reviews}>
+          <div className={styles.container}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
+              KLANTBEOORDELINGEN
+            </p>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1rem 0', borderBottom: '2px solid #f1f5f9', paddingBottom: '0.75rem' }}>
+              Wat Klanten Zeggen over de Auto Slotenmaker
+            </h2>
+            <GoogleReviewsCta />
+          </div>
+        </section>
+
+      </main>
+    </>
+  );
+}
