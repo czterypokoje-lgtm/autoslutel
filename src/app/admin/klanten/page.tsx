@@ -1,7 +1,9 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
-import { IS_KEYFORCARS } from '@/config/install';
+import { IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
 import { listCustomers } from '@/lib/kfcReceivables';
 import { Customers } from './_components/customers';
+import StudioKlanten from './_studio/StudioKlanten';
+import type { CustomerRow } from './_studio/data';
 import Link from 'next/link';
 import { MessageCircle, Phone, Search } from 'lucide-react';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -14,19 +16,6 @@ export const dynamic = 'force-dynamic';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 const DATE = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/Amsterdam' });
-
-interface CustomerRow {
-  phone_e164: string;
-  name: string | null;
-  email: string | null;
-  first_seen: string;
-  last_seen: string;
-  lead_count: number;
-  sold_count: number;
-  total_value: number | string;
-  consent_marketing: boolean | null;
-  postcode: string | null;
-}
 
 const initials = (name: string | null) =>
   (name ?? '?')
@@ -81,6 +70,9 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
   }
 
   const rows = (data ?? []) as unknown as CustomerRow[];
+  // Same rows, same ?q=, same links — a shadcn table instead of the CSS list.
+  if (STUDIO_UI) return <StudioKlanten rows={rows} search={search} />;
+
   const buyers = rows.filter((c) => c.sold_count > 0).length;
   const turnover = rows.reduce((t, c) => t + Number(c.total_value ?? 0), 0);
   const consent = rows.filter((c) => c.consent_marketing).length;

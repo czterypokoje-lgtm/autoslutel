@@ -3,7 +3,9 @@ import OfficeOverview from './OfficeOverview';
 import MonteurOverview from './MonteurOverview';
 import { parsePeriod } from './dashboardData';
 import KfcDashboard, { parseKfcPeriod } from './KfcDashboard';
-import { IS_KEYFORCARS } from '@/config/install';
+import StudioOfficeOverview from './_studio/StudioOfficeOverview';
+import StudioMonteurOverview from './_studio/StudioMonteurOverview';
+import { IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,8 +25,11 @@ export default async function OverzichtPage({
   // KeyForCars: the web-shop owner's dashboard; the locksmith office view does not apply.
   if (IS_KEYFORCARS) return <KfcDashboard period={parseKfcPeriod(webshop)} />;
   if (user.role && OFFICE_ROLES.includes(user.role)) {
+    // Same numbers, same links — shadcn cards instead of the hand-rolled CSS.
+    if (STUDIO_UI) return <StudioOfficeOverview period={parsePeriod(periode)} />;
     return <OfficeOverview period={parsePeriod(periode)} />;
   }
 
+  if (STUDIO_UI) return <StudioMonteurOverview user={user} period={parsePeriod(periode)} />;
   return <MonteurOverview user={user} period={parsePeriod(periode)} />;
 }
