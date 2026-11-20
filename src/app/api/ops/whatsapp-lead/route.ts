@@ -1,8 +1,8 @@
-import { NextResponse, after } from 'next/server';
-import { checkOps, logOps } from '@/lib/opsAuth';
+import { NextResponse } from 'next/server';
+import { checkOps } from '@/lib/opsAuth';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { notifyNewLead } from '@/lib/leadNotify';
 import { toE164NL } from '@/lib/phone';
+import { ensureWhatsappLead } from '@/lib/whatsappLead';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,43 +26,9 @@ export async function POST(request: Request) {
   if (!phone) return NextResponse.json({ error: 'Ongeldig nummer' }, { status: 400 });
   const text = typeof body?.text === 'string' ? body.text.replace(/\s+/g, ' ').trim().slice(0, 500) : '';
 
-  const supabase = createSupabaseAdminClient();
-  const last9 = phone.slice(-9);
-  const [lead, job] = await Promise.all([
-    supabase.from('leads').select('id').or(`phone_e164.eq.${phone},phone.ilike.%${last9}`).limit(1),
-    supabase.from('jobs').select('id').ilike('customer_phone', `%${last9}`).limit(1),
-  ]);
-  const failed = lead.error ?? job.error;
-  if (failed) {
-    console.error('ops whatsapp-lead read failed:', failed.message);
-    return NextResponse.json({ error: 'Lezen mislukt' }, { status: 500 });
-  }
-  if (lead.data?.length || job.data?.length) {
-    return NextResponse.json({ created: false, known: lead.data?.length ? 'lead' : 'job' });
-  }
-
-  const row = { phone, phone_e164: phone, source: 'whatsapp' };
-  const { data, error } = await supabase.from('leads').insert([row]).select('id').single();
-  if (error || !data) {
-    console.error('ops whatsapp-lead insert failed:', error?.message);
-    return NextResponse.json({ error: 'Opslaan mislukt' }, { status: 500 });
-  }
-  const leadId = (data as { id: string }).id;
-
-  if (text) {
-    const note = await supabase
-      .from('lead_notes')
-      .insert([{ lead_id: leadId, body: `Eerste WhatsApp: ${text}`, author_email: 'whatsapp' }]);
-    if (note.error) console.error('ops whatsapp-lead note failed:', note.error.message);
-  }
-
-  await logOps(supabase, 'lead.whatsapp', { leadId });
-  after(async () => {
-    try {
-      await notifyNewLead({ ...row, id: leadId, service: text ? text.slice(0, 120) : null, status: 'new' });
-    } catch (notifyError) {
-      console.error('[whatsapp-lead] lead saved but the alert failed', leadId, notifyError);
-    }
-  });
-  return NextResponse.json({ created: true, leadId });
+  /* Shared with the Meta webhook (src/lib/whatsappLead.ts), so both paths make the same lead. */
+  const result = await ensureWhatsappLead(createSupabaseAdminClient(), phone, text);
+  if (result.error) return NextResponse.json({ error: result.error }, { status: 500 });
+  if (!result.created) return NextResponse.json({ created: false, known: result.known });
+  return NextResponse.json({ created: true, leadId: result.leadId });
 }
