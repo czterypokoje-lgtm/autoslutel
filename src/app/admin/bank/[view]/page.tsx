@@ -4,7 +4,7 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { invoiceDueDate } from '@/lib/invoiceDue';
 import BankPreview from '../BankPreview';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { listLines, suggest } from '@/lib/kfcBank';
 import { customerOptions } from '@/lib/kfcReceivables';
 import KfcBank from '../KfcBank';
@@ -13,7 +13,7 @@ export default async function BankPage({ params }: { params: Promise<{ view: str
   const { view } = await params;
   if (view !== 'rekeningen' && view !== 'transacties' && view !== 'betalingen' && view !== 'verwacht') notFound();
   await requireOfficeUser(`/admin/bank/${view}`);
-  if (IS_KEYFORCARS && !CRM_PREVIEW && view !== 'verwacht') {
+  if (WAREHOUSE && !CRM_PREVIEW && view !== 'verwacht') {
     const status = view === 'betalingen' ? 'matched' : view === 'rekeningen' ? 'ignored' : 'open';
     const lines = await listLines(status);
     const [suggestions, customers] = await Promise.all([status === 'open' ? suggest(lines) : Promise.resolve({}), customerOptions()]);

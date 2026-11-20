@@ -29,6 +29,15 @@ export const IS_KEYFORCARS = INSTALL === 'keyforcars';
  */
 export const STUDIO_UI = IS_KEYFORCARS || process.env.CRM_UI === 'studio';
 
+/**
+ * The warehouse and e-commerce modules (stock ledger, pick list, purchasing,
+ * shipping, webshop orders, bank import, agent centre, staff assistant).
+ * Always on for KeyForCars; Autosleutel24 opts in per deployment with
+ * CRM_WAREHOUSE=1 once its database has the kfc_* migrations. Like CRM_UI it
+ * is fixed at build time (next.config env), so a rebuild is needed to change it.
+ */
+export const WAREHOUSE = IS_KEYFORCARS || process.env.CRM_WAREHOUSE === '1';
+
 export const BRAND = IS_KEYFORCARS
   ? { name: 'KeyForCars', crm: 'KeyForCars CRM', staff: 'Alleen voor medewerkers van KeyForCars.' }
   : { name: 'Autosleutel24', crm: 'Autosleutel24 CRM', staff: 'Alleen voor medewerkers en monteurs van Autosleutel24.' };

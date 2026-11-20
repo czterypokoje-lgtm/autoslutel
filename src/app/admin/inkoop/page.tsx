@@ -1,6 +1,6 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { notFound } from 'next/navigation';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUser, seesPrices } from '@/lib/crmSession';
 import { listPurchaseOrders, type PurchaseOrder } from '@/lib/kfcInventory';
@@ -17,7 +17,7 @@ export const metadata = { title: 'Inkoop | KeyForCars' };
  * Incoming on the stock screen is exactly the open quantity here.
  */
 export default async function InkoopPage() {
-  if (!IS_KEYFORCARS || CRM_PREVIEW) notFound();
+  if (!WAREHOUSE || CRM_PREVIEW) notFound();
   const user = await requireWarehouseUser('/admin/inkoop');
   let orders: PurchaseOrder[] = [];
   let error = '';

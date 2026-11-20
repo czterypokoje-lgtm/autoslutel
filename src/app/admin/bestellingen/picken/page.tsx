@@ -1,6 +1,6 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { notFound } from 'next/navigation';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUser } from '@/lib/crmSession';
 import { pickList } from '@/lib/kfcOrders';
@@ -14,7 +14,7 @@ const requestNow = () => Date.now();
 
 /** Paid orders waiting in the warehouse, per day, oldest first; labels in bulk. */
 export default async function PickPage() {
-  if (!IS_KEYFORCARS || CRM_PREVIEW) notFound();
+  if (!WAREHOUSE || CRM_PREVIEW) notFound();
   await requireWarehouseUser('/admin/bestellingen/picken');
   const orders = await pickList();
   return (

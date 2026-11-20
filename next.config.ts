@@ -49,6 +49,7 @@ const nextConfig: NextConfig = {
     CRM_INSTALL: process.env.CRM_INSTALL ?? '',
     // Same for the UI switch (src/config/install.ts STUDIO_UI): decided per deployment at build time.
     CRM_UI: process.env.CRM_UI ?? '',
+    CRM_WAREHOUSE: process.env.CRM_WAREHOUSE ?? '',
   },
   /*
    * pdf-parse pulls in @napi-rs/canvas, a native compiled binary — the class

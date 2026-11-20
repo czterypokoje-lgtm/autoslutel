@@ -4,7 +4,7 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
 import KfcOrders from './KfcOrders';
-import { IS_KEYFORCARS } from '@/config/install';
+import { IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,7 +33,8 @@ export default async function OrdersPage({
   await requireOfficeUser('/admin/orders');
 
   const sp = await searchParams;
-  if (IS_KEYFORCARS) return <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} requestedPage={sp.page} canImport />;
+  // Warehouse installs: the order ledger. The WooCommerce import panel is KeyForCars's; Autosleutel24 imports its own webshop.
+  if (WAREHOUSE) return <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} requestedPage={sp.page} canImport={IS_KEYFORCARS} />;
   const status = TABS.some((t) => t.value === sp.status) ? sp.status : undefined;
   const search = (sp.q ?? '').replace(/[,()%*\\]/g, ' ').trim().slice(0, 60);
 

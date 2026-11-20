@@ -1,4 +1,4 @@
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireOfficeUserApi } from '@/lib/crmSession';
 import { StockError } from '@/lib/kfcInventory';
@@ -10,7 +10,7 @@ const uuid = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
 
 /** Bank statements: import a file's text, match a line to a customer, set a line aside. Office only. */
 export async function POST(request: Request) {
-  if (!IS_KEYFORCARS || CRM_PREVIEW) return reply({}, 404);
+  if (!WAREHOUSE || CRM_PREVIEW) return reply({}, 404);
   const { user, response } = await requireOfficeUserApi();
   if (response) return response;
   const input = await request.json().catch(() => null);

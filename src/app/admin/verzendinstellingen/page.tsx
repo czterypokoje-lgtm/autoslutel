@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { sendcloudConfigured } from '@/lib/kfcShipping';
 import { PreviewText } from '../PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -7,7 +7,7 @@ import { shippingTestEnabled } from '@/lib/kfcShippingTest';
 import { CarrierSetup } from '../verzending/CarrierSetup';
 
 export default async function ShippingSettingsPage() {
-  if (!IS_KEYFORCARS) notFound();
+  if (!WAREHOUSE) notFound();
   await requireOfficeUser('/admin/verzendinstellingen');
   return <div className="grid gap-5">
     {shippingTestEnabled ? <CarrierSetup /> : <h1 className="text-2xl font-semibold"><PreviewText>Verzendinstellingen</PreviewText></h1>}

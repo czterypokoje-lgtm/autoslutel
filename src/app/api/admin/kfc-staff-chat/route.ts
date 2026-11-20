@@ -4,7 +4,7 @@ import { getProducts } from '@/lib/catalog';
 import { reviewAgentIds } from '../../../../../supabase/functions/_shared/kfcCallReview';
 import { DEMO_BOT_AGENT } from '@/lib/kfcDemoBotRules';
 import { askLocalStaffModel, wrongLanguage } from '@/lib/kfcLocalStaffModel';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { requireWarehouseUserApi, seesPrices } from '@/lib/crmSession';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
@@ -16,7 +16,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
  * intent or answers small talk, and its output never reaches a query.
  */
 export async function POST(request: Request) {
-  if (!IS_KEYFORCARS) return new Response(null, { status: 404 });
+  if (!WAREHOUSE) return new Response(null, { status: 404 });
   const { user, response } = await requireWarehouseUserApi();
   if (response) return response;
   const body = await request.json().catch(() => null);

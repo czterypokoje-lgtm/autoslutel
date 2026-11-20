@@ -1,4 +1,4 @@
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUserApi, seesPrices } from '@/lib/crmSession';
 import { StockError, createPurchaseOrder, listPurchaseOrders, receivePurchaseLine, setPurchaseOrderStatus } from '@/lib/kfcInventory';
@@ -15,7 +15,7 @@ const reply = (data: unknown, status = 200) => Response.json(data, { status, hea
 const uuid = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
 
 async function gate() {
-  if (!IS_KEYFORCARS || CRM_PREVIEW) return { user: undefined, response: reply({}, 404) };
+  if (!WAREHOUSE || CRM_PREVIEW) return { user: undefined, response: reply({}, 404) };
   return requireWarehouseUserApi();
 }
 

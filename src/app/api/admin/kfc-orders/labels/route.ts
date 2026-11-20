@@ -1,5 +1,5 @@
 import { PDFDocument } from 'pdf-lib';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUserApi } from '@/lib/crmSession';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
@@ -15,7 +15,7 @@ const uuid = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
  * them directly; this fetches and merges them server-side (pdf-lib).
  */
 export async function GET(request: Request) {
-  if (!IS_KEYFORCARS || CRM_PREVIEW) return new Response(null, { status: 404 });
+  if (!WAREHOUSE || CRM_PREVIEW) return new Response(null, { status: 404 });
   const { response } = await requireWarehouseUserApi();
   if (response) return response;
   const ids = (new URL(request.url).searchParams.get('ids') ?? '').split(',').filter((id) => uuid.test(id)).slice(0, 200);

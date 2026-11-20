@@ -4,7 +4,7 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { hasLanCookie, lanMode } from '@/lib/lanPreview';
 import { requireWarehouseUserApi } from '@/lib/crmSession';
 import { kfcGet, kfcPost } from '@/lib/kfcInventory';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { loadStock, readPhoto, saveStock, writePhoto, type StockSlot } from '@/lib/kfcStockStore';
 import { EMPTY_STOCK, STOCK_OPERATIONS, type StockBin, type StockMove, type StockState } from '@/lib/keyforcarsStock';
@@ -12,7 +12,7 @@ import { findProfile } from '@/lib/productProfiles';
 
 export const runtime = 'nodejs';
 /** Online KeyForCars install: the ledger tables (0090). Local pilot and ?demo=1 keep the JSON record. */
-const LEDGER = IS_KEYFORCARS && !CRM_PREVIEW;
+const LEDGER = WAREHOUSE && !CRM_PREVIEW;
 const articles = new Set(catalog.map(({ id }) => id));
 let catalogResponse: { body: string; etag: string } | undefined;
 const articleCode = /^KFC-[123]-[0-9]+$/;
@@ -55,7 +55,7 @@ async function allowed(request: Request): Promise<boolean> {
     if (lanMode()) return hasLanCookie(request.headers.get('cookie'));
     return /^(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/.test(host);
   }
-  if (!IS_KEYFORCARS) return false;
+  if (!WAREHOUSE) return false;
   return !(await requireWarehouseUserApi()).response;
 }
 

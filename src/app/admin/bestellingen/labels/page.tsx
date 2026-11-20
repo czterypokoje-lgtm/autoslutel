@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { requireWarehouseUser } from '@/lib/crmSession';
 import { getShopOrdersByIds } from '@/lib/kfcOrders';
 import { LABEL_PRINT_CSS, LabelSheet } from '../LabelSheet';
@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
  * Orders whose label lives at Sendcloud are listed with their PDF instead.
  */
 export default async function LabelsPage({ searchParams }: { searchParams: Promise<{ ids?: string; print?: string }> }) {
-  if (!IS_KEYFORCARS) notFound();
+  if (!WAREHOUSE) notFound();
   await requireWarehouseUser('/admin/bestellingen/picken');
   // &print=0 shows the sheet without opening the print dialog (checking a batch before the run).
   const { ids, print } = await searchParams;

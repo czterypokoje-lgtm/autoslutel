@@ -23,7 +23,7 @@ import { Separator } from '@/components/ui/separator';
 import { StaffChat } from './StaffChat';
 import { LanguageToggle, usePreviewLanguage } from './PreviewLanguage';
 import type { CrmRole } from '@/lib/crmSession';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
+import { BRAND, IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
 import { MONTEUR_NAV, OFFICE_NAV, type NavItem } from './AdminNav';
 import MobileTabBar from './MobileTabBar';
 import styles from './admin.module.css';
@@ -100,11 +100,33 @@ const fromNav = (label: string, nav: NavItem[]): Group[] => [{ label, items: nav
 const AUTOSLEUTEL_OFFICE = fromNav('Kantoor', OFFICE_NAV);
 const AUTOSLEUTEL_MONTEUR = fromNav('Monteur', MONTEUR_NAV);
 
+/**
+ * Autosleutel24 with CRM_WAREHOUSE=1: the same Magazijn block KeyForCars has
+ * (stock ledger, pick list, purchasing; shipping is appended per role below),
+ * the agent centre, and the finance, bank and webshop-margin entries folded
+ * into the existing Geld and Rapporten menus. The old store-and-vans stock
+ * keeps its place under Voorraad at its new address.
+ */
+const withWarehouse = (groups: Group[]): Group[] => {
+  const [kantoor] = groups;
+  const items = kantoor.items.map((item) => {
+    if (item.label === 'Voorraad') return { ...item, children: [{ label: 'Magazijn en bussen', href: '/admin/voorraad/bussen' }, ...(item.children ?? []).filter((child) => child.href !== '/admin/voorraad')] };
+    if (item.label === 'Geld') return { ...item, children: [{ label: 'Financieel overzicht', href: '/admin/financien' }, ...(item.children ?? []), { label: 'Bank', href: '/admin/bank/transacties' }] };
+    if (item.label === 'Rapporten') return { ...item, children: [...(item.children ?? []), { label: 'Webshopmarge', href: '/admin/winst/webshop' }] };
+    return item;
+  });
+  const agentCentre = GROUPS.flatMap((group) => group.items).find((item) => item.label === 'Agentcentrum');
+  const magazijn = GROUPS.find((group) => group.label === 'Magazijn')!;
+  return [{ label: 'Kantoor', items: agentCentre ? [...items, agentCentre] : items }, magazijn];
+};
+const AUTOSLEUTEL_OFFICE_WAREHOUSE = withWarehouse(AUTOSLEUTEL_OFFICE);
+
 const TITLES: Record<string, string> = {
   overzicht: 'Dashboard', orders: 'Bestellingen', klanten: 'Klanten', voorraad: 'Voorraad', inkoop: 'Inkoop', leads: 'Leads',
   'bot-conversations': 'ElevenLabs-gesprekken', gesprekken: 'Gesprekken', financien: 'Financieel overzicht', facturen: 'Facturen', uitgaven: 'Uitgaven', bank: 'Bank', 'best-verkocht': 'Best verkocht', winst: 'Winst & verbruik',
   rapport: 'Prestaties', attributie: 'Advertentieklikken', instellingen: 'Instellingen', budget: 'AI-budget', 'agent-centrum': 'Agentcentrum', p: 'Productzoeker', nieuw: 'Nieuw', lijst: 'Alle leads', jobs: 'Planning',
   verzending: 'Verzending', agenda: 'Werkplaatsagenda', verzendinstellingen: 'Verzendinstellingen', bestellingen: 'Bestellingen', picken: 'Picklijst',
+  bussen: 'Magazijn en bussen', webshop: 'Webshopmarge',
   // Autosleutel24 screens
   aanbod: 'Aanbod', biedingen: 'Biedingen', vandaag: 'Vandaag', monteurs: 'Monteurs', bestellen: 'Onderdelen bestellen', kas: 'Kas & uitbetalingen',
   tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', klikfraude: 'Klikfraude',
@@ -164,14 +186,14 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
     label: 'Verzending',
     items: shippingPages.length ? [{ label: 'Verzending', icon: PackageCheck, children: shippingPages }] : [],
   };
-  const groups = IS_KEYFORCARS ? GROUPS : role === 'monteur' ? AUTOSLEUTEL_MONTEUR : AUTOSLEUTEL_OFFICE;
+  const groups = IS_KEYFORCARS ? GROUPS : role === 'monteur' ? AUTOSLEUTEL_MONTEUR : WAREHOUSE ? AUTOSLEUTEL_OFFICE_WAREHOUSE : AUTOSLEUTEL_OFFICE;
   const visible = groups.flatMap((group) => {
     const items = group.items.filter((item) => office || !item.office);
-    if (IS_KEYFORCARS && group.label === 'Kantoor' && role === 'owner') {
+    if (WAREHOUSE && group.label === 'Kantoor' && role === 'owner') {
       items.push({ label: 'AI-budget', href: '/admin/instellingen/budget', icon: Euro });
     }
     const current = { ...group, items };
-    return IS_KEYFORCARS && group.label === 'Magazijn' ? [current, shipping] : [current];
+    return WAREHOUSE && group.label === 'Magazijn' ? [current, shipping] : [current];
   }).filter((group) => group.items.length);
 
   const destinations = visible.flatMap((group) => group.items.flatMap((item) =>
@@ -326,7 +348,7 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
       </SidebarInset>
       {/* Autosleutel24 monteurs keep their thumb bar (Vandaag · Mijn bus · Aanbod · Mijn agenda) on phones. */}
       {role === 'monteur' && <MobileTabBar />}
-      {IS_KEYFORCARS && role && ['owner', 'kantoor', 'magazijn', 'inpak'].includes(role) && <StaffChat office={office} />}
+      {WAREHOUSE && role && ['owner', 'kantoor', 'magazijn', 'inpak'].includes(role) && <StaffChat office={office} />}
     </SidebarProvider>
   );
 }

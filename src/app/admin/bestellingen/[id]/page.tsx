@@ -2,7 +2,7 @@ import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { IS_KEYFORCARS } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUser, seesPrices } from '@/lib/crmSession';
 import { getShopOrder, type ShopOrder } from '@/lib/kfcOrders';
@@ -20,7 +20,7 @@ export const dynamic = 'force-dynamic';
 
 /** One shop order: what was ordered, what is reserved, pick and ship. */
 export default async function OrderPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ tracking?: string }> }) {
-  if (!IS_KEYFORCARS || CRM_PREVIEW) notFound();
+  if (!WAREHOUSE || CRM_PREVIEW) notFound();
   const user = await requireWarehouseUser('/admin/bestellingen');
   const { id } = await params;
   // Sample orders (before the first import) link as "<shop>--<number>" and open read-only.
