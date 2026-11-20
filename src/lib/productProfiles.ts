@@ -2,7 +2,7 @@ import 'server-only';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { IS_KEYFORCARS } from '@/config/install';
-import { catalogProfiles, PROFILES_FILE } from '@/lib/stockCatalog';
+import { catalogProfiles } from '@/lib/stockCatalog';
 
 /**
  * Product profiles: what a key is and which cars it fits, one per SKU.
@@ -49,7 +49,12 @@ function profiles() {
   if (!cache) {
     let all: ProductProfileData[] = [];
     try {
-      const file = JSON.parse(readFileSync(join(process.cwd(), ...PROFILES_FILE), 'utf8'));
+      // Two literal paths on purpose: Vercel's file tracer resolves path.join with string
+      // literals; a spread array made it pull the whole project (322 MB of public/images)
+      // into every function that imports this module.
+      const file = JSON.parse(IS_KEYFORCARS
+        ? readFileSync(join(process.cwd(), 'src', 'data', 'keyforcars-profiles.json'), 'utf8')
+        : readFileSync(join(process.cwd(), 'src', 'lib', 'catalog.json'), 'utf8'));
       all = IS_KEYFORCARS ? (file as ProductProfileData[]) : catalogProfiles(file.products);
     } catch {
       // No profile file yet: every lookup finds nothing instead of crashing the page.
