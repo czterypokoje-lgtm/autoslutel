@@ -1,6 +1,8 @@
 import 'server-only';
 import catalog from '@/data/keyforcars-stock.json';
 import prices from '@/data/keyforcars-prices.json';
+import { IS_KEYFORCARS } from '@/config/install';
+import { OWN_SHOP } from '@/lib/kfcOwnShop';
 
 /**
  * Sample orders for the KeyForCars preview.
@@ -15,8 +17,12 @@ import prices from '@/data/keyforcars-prices.json';
  * screens read the same SampleOrder shape.
  */
 
-export const SHOPS = ['keyforcars.nl', 'klapsleutels.nl', 'remkeys.com'] as const;
-export type Shop = (typeof SHOPS)[number];
+/** The three WooCommerce shops. Sample orders only ever come from these. */
+export const KFC_SHOPS = ['keyforcars.nl', 'klapsleutels.nl', 'remkeys.com'] as const;
+export type KfcShop = (typeof KFC_SHOPS)[number];
+export type Shop = KfcShop | typeof OWN_SHOP;
+/** What this install sells through: three shops on KeyForCars, our own webshop on Autosleutel24. */
+export const SHOPS: readonly Shop[] = IS_KEYFORCARS ? KFC_SHOPS : [OWN_SHOP];
 export type OrderStatus = 'processing' | 'completed' | 'on-hold' | 'cancelled' | 'refunded';
 
 export interface SampleLine {
@@ -104,11 +110,11 @@ function pickProduct(random: () => number) {
   return ranked[Math.min(low, Math.floor(ranked.length * 0.62))];
 }
 
-const SHOP_WEIGHTS: [Shop, number][] = [['keyforcars.nl', 0.46], ['klapsleutels.nl', 0.34], ['remkeys.com', 0.2]];
-const NUMBER_BASE: Record<Shop, number> = { 'keyforcars.nl': 48210, 'klapsleutels.nl': 31540, 'remkeys.com': 90870 };
+const SHOP_WEIGHTS: [KfcShop, number][] = [['keyforcars.nl', 0.46], ['klapsleutels.nl', 0.34], ['remkeys.com', 0.2]];
+const NUMBER_BASE: Record<KfcShop, number> = { 'keyforcars.nl': 48210, 'klapsleutels.nl': 31540, 'remkeys.com': 90870 };
 const ABROAD = ['DE', 'BE', 'FR', 'GB', 'AT', 'IT', 'ES', 'PL'];
 
-function pickShop(random: () => number): Shop {
+function pickShop(random: () => number): KfcShop {
   let r = random();
   for (const [shop, weight] of SHOP_WEIGHTS) {
     if ((r -= weight) <= 0) return shop;
@@ -122,7 +128,7 @@ function ordersForDay(dayIndex: number, dayStart: number, now: number): SampleOr
   const weekend = weekday === 0 || weekday === 6;
   const count = Math.round(weekend ? 14 + random() * 12 : 28 + random() * 22);
   const ageDays = Math.floor((now - dayStart) / DAY);
-  const counters: Record<Shop, number> = { 'keyforcars.nl': 0, 'klapsleutels.nl': 0, 'remkeys.com': 0 };
+  const counters: Record<KfcShop, number> = { 'keyforcars.nl': 0, 'klapsleutels.nl': 0, 'remkeys.com': 0 };
   const orders: SampleOrder[] = [];
 
   for (let i = 0; i < count; i++) {

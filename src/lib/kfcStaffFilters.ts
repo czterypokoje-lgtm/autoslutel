@@ -13,7 +13,8 @@
 export type StaffTopic = 'orders' | 'stock' | 'finance' | 'customers' | 'conversations';
 export type StaffFulfilment = 'open' | 'picked' | 'shipped' | 'cancelled' | 'external';
 export type StaffChannel = 'phone' | 'whatsapp' | 'email' | 'web';
-export const STAFF_SHOPS = ['keyforcars.nl', 'klapsleutels.nl', 'remkeys.com'] as const;
+/** Every shop name the assistant may be asked about: the three WooCommerce shops (KeyForCars) and our own webshop (Autosleutel24). A name the install does not sell through simply matches no orders. */
+export const STAFF_SHOPS = ['keyforcars.nl', 'klapsleutels.nl', 'remkeys.com', 'autosleutel24.nl'] as const;
 export type StaffShop = typeof STAFF_SHOPS[number];
 export interface StaffPeriod { from: string; to: string }
 /** year: a month or quarter without a year. unclear: period words we cannot pin down. invalid: an impossible date. */
@@ -150,6 +151,7 @@ function readFulfilment(lower: string): StaffFulfilment[] | undefined {
 }
 
 function readShop(lower: string): StaffShop | undefined {
+  if (/\bautosleutel\s?24(?:\.nl)?\b/.test(lower)) return 'autosleutel24.nl';
   if (/\bklapsleutels(?:\.nl)?\b/.test(lower)) return 'klapsleutels.nl';
   if (/\bremkeys(?:\.com)?\b/.test(lower)) return 'remkeys.com';
   if (/\bkeyforcars\.nl\b|\b(?:shop|store|webshop|winkel|site)\s+keyforcars\b|\bkeyforcars\s+(?:shop|store|webshop|winkel|site)\b/.test(lower)) return 'keyforcars.nl';

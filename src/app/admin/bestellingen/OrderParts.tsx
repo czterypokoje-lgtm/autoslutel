@@ -195,4 +195,40 @@ export function ImportPanel({ shops }: { shops: { shop: string; configured: bool
   );
 }
 
+/**
+ * Autosleutel24: its own webshop writes into `public.orders` in this same
+ * database, so there is nothing to fetch — one request reads that table into
+ * the ledger. No per-shop keys, no paging from the browser.
+ */
+export function OwnImportPanel({ orders, last }: { orders: number; last: string | null }) {
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState('');
+  const { t } = usePreviewLanguage();
+  async function run(days: number) {
+    setBusy(true); setNote('bezig…');
+    const result = await post({ action: 'import-own', days }) as { error?: string; fetched?: number; inserted?: number; updated?: number };
+    setBusy(false);
+    setNote(result.error ?? `klaar · ${result.inserted ?? 0} nieuw, ${result.updated ?? 0} bijgewerkt (${result.fetched ?? 0} gelezen)`);
+    router.refresh();
+  }
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base"><PreviewText>{"Webshoporders importeren"}</PreviewText></CardTitle>
+        <CardDescription><PreviewText>{"Haalt de bestellingen van autosleutel24.nl uit de webshoptabel in deze database. Daarna houdt de nachtelijke controle alles bij."}</PreviewText></CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-wrap items-center gap-3 text-sm">
+        <span className="text-muted-foreground tabular-nums">{orders} orders</span>
+        <span className="text-muted-foreground text-xs">{last ? `${t('laatste import')} ${WHEN.format(new Date(last))}` : t('nog niet geïmporteerd')}</span>
+        <span className="ml-auto flex gap-2">
+          <Button size="sm" variant="outline" disabled={busy} onClick={() => run(90)}><Download className="size-4" /> <PreviewText>{"90 dagen"}</PreviewText></Button>
+          <Button size="sm" variant="outline" disabled={busy} onClick={() => run(0)}><PreviewText>{"Alles"}</PreviewText></Button>
+        </span>
+        {note && <span className="text-muted-foreground w-full text-xs">{t(note)}</span>}
+      </CardContent>
+    </Card>
+  );
+}
+
 export function PickIcon() { return <PackageCheck className="size-4" />; }

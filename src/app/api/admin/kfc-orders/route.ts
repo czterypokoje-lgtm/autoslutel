@@ -1,9 +1,10 @@
-import { WAREHOUSE } from '@/config/install';
+import { IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUserApi, seesPrices } from '@/lib/crmSession';
 import { StockError } from '@/lib/kfcInventory';
 import { clearSampleData, getShopOrder, loadSampleData, markPicked, shipOrder } from '@/lib/kfcOrders';
 import { importPage, isWooShop, wooConfigured } from '@/lib/kfcWoo';
+import { importOwnOrders } from '@/lib/kfcOwnShop';
 import { createLabel, setTracking } from '@/lib/kfcShipping';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 
@@ -40,11 +41,21 @@ export async function POST(request: Request) {
       if (run?.data) await db.from('kfc_import_runs').update({ finished_at: new Date().toISOString(), orders: result.fetched }).eq('id', run.data.id);
       return reply(result);
     }
+    if (input.action === 'import-own') {
+      // Autosleutel24 only: its webshop writes into public.orders in this same database.
+      if (IS_KEYFORCARS) return reply({ error: 'Onbekende actie.' }, 400);
+      if (!seesPrices(user)) return reply({ error: 'Alleen kantoor importeert.' }, 403);
+      const days = Number.isInteger(input.days) && input.days > 0 ? Math.min(input.days, 1825) : 0;
+      const since = days ? new Date(Date.now() - days * 86_400_000).toISOString() : undefined;
+      return reply(await importOwnOrders({ since }));
+    }
     if (input.action === 'sample-load') {
+      if (!IS_KEYFORCARS) return reply({ error: 'Onbekende actie.' }, 400);
       if (!seesPrices(user)) return reply({ error: 'Alleen kantoor.' }, 403);
       return reply(await loadSampleData(user));
     }
     if (input.action === 'sample-clear') {
+      if (!IS_KEYFORCARS) return reply({ error: 'Onbekende actie.' }, 400);
       if (!seesPrices(user)) return reply({ error: 'Alleen kantoor.' }, 403);
       await clearSampleData();
       return reply({ ok: true });

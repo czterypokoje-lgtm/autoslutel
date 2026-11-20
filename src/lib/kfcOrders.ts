@@ -3,6 +3,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { LABEL_BATCH_MAX } from '@/lib/kfcLabels';
 import { StockError } from '@/lib/kfcInventory';
 import { pushCompleted, isWooShop } from '@/lib/kfcWoo';
+import { OWN_SHOP, pushOwnShipped } from '@/lib/kfcOwnShop';
 import type { CrmUser } from '@/lib/crmSession';
 import { sampleOrders, type SampleOrder, type OrderStatus } from '@/lib/kfcSampleOrders';
 
@@ -149,9 +150,11 @@ export async function shipOrder(id: string, key: string, user: CrmUser): Promise
     if (error.message.includes('KFC_NO_ORDER')) throw new StockError('Bestelling niet gevonden.', 404);
     throw new StockError(`Verzenden mislukt: ${error.message}`, 500);
   }
-  const order = await db().from('kfc_shop_orders').select('shop, woo_order_id').eq('id', id).single();
+  const order = await db().from('kfc_shop_orders').select('shop, woo_order_id, number').eq('id', id).single();
   try {
-    if (order.data && isWooShop(order.data.shop)) await pushCompleted(order.data.shop, order.data.woo_order_id);
+    // Our own webshop sits in this same database: the write-back is a status update on public.orders.
+    if (order.data?.shop === OWN_SHOP) await pushOwnShipped(order.data.number);
+    else if (order.data && isWooShop(order.data.shop)) await pushCompleted(order.data.shop, order.data.woo_order_id);
     return { writeback: 'done' };
   } catch {
     return { writeback: 'pending' }; // the nightly reconcile retries
