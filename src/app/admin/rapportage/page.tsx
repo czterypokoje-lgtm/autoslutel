@@ -1,10 +1,12 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { STUDIO_UI } from '@/config/install';
 import styles from '../klanten/klanten.module.css';
 import { PageHead } from '../_ui';
 import { sourceLabel } from '../overzicht/dashboardData';
 import { SCENARIO_INFO, isScenario, type Scenario } from '@/lib/scenarios';
+import StudioRapportagePage from './StudioRapportagePage';
 import r from './rapportage.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -62,6 +64,25 @@ export default async function RapportagePage() {
   ].find((r) => r.error);
   if (failed?.error) {
     const missing = /does not exist|relation|permission denied/i.test(failed.error.message);
+    if (STUDIO_UI) {
+      return (
+        <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+          <p className="text-destructive text-sm">
+            <PreviewText>{`De rapportage kon niet worden geladen: ${failed.error.message}`}</PreviewText>
+            {missing && (
+              <>
+                <br />
+                <PreviewText>
+                  {
+                    'Voer supabase/migrations/0006_customers_reports.sql, supabase/migrations/0036_revenue_analysis.sql en supabase/migrations/0037_capability_gaps.sql uit.'
+                  }
+                </PreviewText>
+              </>
+            )}
+          </p>
+        </div>
+      );
+    }
     return (
       <div className={styles.warning}>
         De rapportage kon niet worden geladen: {failed.error.message}
@@ -98,6 +119,26 @@ export default async function RapportagePage() {
   const allLeads = sources.reduce((t, [, x]) => t + x.leads, 0);
   const allSold = sources.reduce((t, [, x]) => t + x.verkocht, 0);
   const missed = (capabilityGap.data ?? []).reduce((t, row) => t + Number(row.gemiste_leads ?? 0), 0);
+
+  if (STUDIO_UI) {
+    return (
+      <StudioRapportagePage
+        sources={sources}
+        latestWeek={latestWeek}
+        service={service.data ?? []}
+        technician={technician.data ?? []}
+        region={region.data ?? []}
+        make={make.data ?? []}
+        makeRegion={makeRegion.data ?? []}
+        commission={commission.data ?? []}
+        capabilityGap={capabilityGap.data ?? []}
+        allLeads={allLeads}
+        allSold={allSold}
+        missed={missed}
+      />
+    );
+  }
+
   const REPORTS = [
     { id: 'bron', n: 1, title: 'Lead → klus per bron', value: `${percent(allSold, allLeads)} verkocht · beste: ${sources[0] ? sourceLabel(sources[0][0]) : '—'}` },
     { id: 'dienst', n: 2, title: 'Kluswaarde per dienst', value: `${(service.data ?? []).length} diensten` },

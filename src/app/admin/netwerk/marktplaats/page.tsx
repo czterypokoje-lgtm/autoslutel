@@ -2,9 +2,15 @@ import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { waLink } from '@/lib/whatsapp';
 import { SITE_CONFIG } from '@/config/site.config';
+import { STUDIO_UI } from '@/config/install';
 import NewListingForm from './NewListingForm';
 import ListingActions from './ListingActions';
+import StudioNewListingForm from './StudioNewListingForm';
+import StudioListingActions from './StudioListingActions';
 import styles from './marktplaats.module.css';
+import { PreviewText } from '../../PreviewLanguage';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +59,16 @@ export default async function MarktplaatsPage() {
     const subTier = Array.isArray(sub) ? sub[0]?.tier : sub?.tier;
     const mayEnter = meRow?.verified === true || subTier === 'pro' || subTier === 'premium';
     if (!mayEnter) {
+      if (STUDIO_UI) {
+        return (
+          <div className="kfc-neutral flex flex-col gap-2 p-6">
+            <h1 className="text-lg font-medium"><PreviewText>Alleen voor Pro en geverifieerde monteurs</PreviewText></h1>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              <PreviewText>De marktplaats voor tools en onderdelen hoort bij een Pro-account. Vraag het kantoor om toegang.</PreviewText>
+            </p>
+          </div>
+        );
+      }
       return (
         <div className={styles.panel} style={{ padding: 24 }}>
           <h1 style={{ fontSize: 18, margin: '0 0 8px' }}>Alleen voor Pro en geverifieerde monteurs</h1>
@@ -73,6 +89,21 @@ export default async function MarktplaatsPage() {
 
   if (error) {
     const missing = /does not exist|relation/i.test(error.message);
+    if (STUDIO_UI) {
+      return (
+        <div className="kfc-neutral flex flex-col gap-4 p-6">
+          <p className="text-destructive text-sm">
+            <PreviewText>{`Marktplaats kon niet worden geladen: ${error.message}`}</PreviewText>
+            {missing && (
+              <>
+                <br />
+                <PreviewText>Voer supabase/migrations/0031_marketplace_listings.sql uit.</PreviewText>
+              </>
+            )}
+          </p>
+        </div>
+      );
+    }
     return (
       <div className={styles.body}>
         <p>Marktplaats kon niet worden geladen: {error.message}</p>
@@ -93,6 +124,79 @@ export default async function MarktplaatsPage() {
     : { data: [] };
 
   const sellerOf = new Map((technicians ?? []).map((t) => [t.id, t]));
+
+  if (STUDIO_UI) {
+    return (
+      <div className="flex flex-col gap-4 p-4 md:p-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Marktplaats</PreviewText></h1>
+          <p className="text-muted-foreground text-sm"><PreviewText>Tools en onderdelen die monteurs niet meer gebruiken.</PreviewText></p>
+        </div>
+
+        <StudioNewListingForm />
+
+        {listings.length === 0 ? (
+          <p className="text-muted-foreground text-sm"><PreviewText>Nog geen advertenties.</PreviewText></p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {listings.map((listing) => {
+              const seller = listing.technician_id ? sellerOf.get(listing.technician_id) : null;
+              const sellerName = seller?.name ?? 'Kantoor';
+              const cover = listing.photos[0] ?? null;
+              const price = listing.price === null || listing.price === '' ? null : Number(listing.price);
+              const isOwner = listing.posted_by === user.id;
+              const wa = waLink(
+                seller?.phone ?? SITE_CONFIG.whatsapp,
+                `Hoi, ik zag "${listing.title}" op Marktplaats — is dit nog beschikbaar?`
+              );
+
+              return (
+                <div key={listing.id} className={`overflow-hidden rounded-xl border bg-card ${listing.status === 'sold' ? 'opacity-60' : ''}`}>
+                  {cover ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- remote, already sized listing photo
+                    <img className="aspect-square w-full object-cover" src={cover} alt={listing.title} />
+                  ) : (
+                    <div className="bg-muted text-muted-foreground flex aspect-square w-full items-center justify-center text-xs">
+                      <PreviewText>Geen foto</PreviewText>
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-1.5 p-3">
+                    <span className="text-sm font-medium">{listing.title}</span>
+                    {listing.description && <span className="text-muted-foreground line-clamp-2 text-xs">{listing.description}</span>}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold">{price === null ? '—' : MONEY.format(price)}</span>
+                      <Badge
+                        variant="outline"
+                        className={
+                          listing.status === 'sold'
+                            ? undefined
+                            : 'border-emerald-200 bg-emerald-100 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/15 dark:text-emerald-300'
+                        }
+                      >
+                        <PreviewText>{listing.status === 'sold' ? 'Verkocht' : 'Beschikbaar'}</PreviewText>
+                      </Badge>
+                    </div>
+                    <span className="text-muted-foreground text-xs">{sellerName}</span>
+
+                    {isOwner ? (
+                      listing.status === 'available' && <StudioListingActions id={listing.id} />
+                    ) : (
+                      wa &&
+                      listing.status === 'available' && (
+                        <Button size="sm" asChild>
+                          <a href={wa} target="_blank" rel="noreferrer"><PreviewText>Contact via WhatsApp</PreviewText></a>
+                        </Button>
+                      )
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={styles.body}>

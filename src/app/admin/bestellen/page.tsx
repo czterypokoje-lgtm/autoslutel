@@ -1,12 +1,15 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireCrmUser } from '@/lib/crmSession';
-import { BRAND } from '@/config/install';
+import { BRAND, STUDIO_UI } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, CardHead, Badge, Empty, Notice } from '../_ui';
 import { getProducts, filterProducts, shelfPrice, type CatalogProduct } from '@/lib/catalog';
 import { cleanPhoto } from '@/lib/productPhoto';
 import OrderGrid, { type ShopProduct } from './OrderGrid';
+import StudioOrderGrid from './StudioOrderGrid';
 import styles from './bestellen.module.css';
+import { Card as SCard, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge as SBadge } from '@/components/ui/badge';
 
 export const dynamic = 'force-dynamic';
 
@@ -130,11 +133,81 @@ export default async function BestellenPage({
         .limit(10)
     : { data: [] };
 
+  const sub = `${all.length.toLocaleString('nl-NL')} artikelen. Vraag aan wat u nodig heeft; kantoor bestelt het.`;
+
+  if (STUDIO_UI) {
+    return (
+      <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Onderdelen bestellen</PreviewText></h1>
+          <p className="text-muted-foreground text-sm"><PreviewText>{sub}</PreviewText></p>
+        </div>
+
+        {!me && (
+          <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            <PreviewText>Uw login is niet aan een monteur gekoppeld, dus u kunt niets aanvragen. Kantoor kan dit koppelen bij Monteurs.</PreviewText>
+          </p>
+        )}
+
+        <StudioOrderGrid
+          products={slice.map(toShop)}
+          total={filtered.length}
+          page={page}
+          pages={pages}
+          q={params.q ?? ''}
+          cat={params.cat ?? ''}
+          merk={params.merk ?? ''}
+          categories={[...categories.entries()].sort((a, b) => b[1] - a[1])}
+          makes={[...makes.entries()].sort((a, b) => b[1] - a[1]).slice(0, 24)}
+          canOrder={Boolean(me)}
+        />
+
+        {(mine ?? []).length > 0 && (
+          <SCard>
+            <CardHeader>
+              <CardTitle><PreviewText>Uw laatste aanvragen</PreviewText></CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              {(mine ?? []).map((order) => (
+                <div key={order.id} className="flex items-center justify-between gap-3 border-t pt-3 first:border-t-0 first:pt-0">
+                  <div className="flex flex-col">
+                    <span className="font-medium">{`${order.quantity}× ${order.description}`}</span>
+                    <span className="text-muted-foreground text-xs">
+                      {order.article_code ? `${order.article_code} · ` : ''}
+                      {String(order.created_at).slice(0, 10)}
+                      {order.status_note ? ` · ${order.status_note}` : ''}
+                    </span>
+                  </div>
+                  <SBadge
+                    variant={order.status === 'afgewezen' ? 'destructive' : 'outline'}
+                    className={
+                      order.status === 'geleverd'
+                        ? 'border-emerald-200 bg-emerald-100 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/15 dark:text-emerald-300'
+                        : order.status === 'afgewezen'
+                          ? undefined
+                          : 'border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/15 dark:text-amber-300'
+                    }
+                  >
+                    {order.status}
+                  </SBadge>
+                </div>
+              ))}
+            </CardContent>
+          </SCard>
+        )}
+
+        {!filtered.length && (
+          <p className="text-muted-foreground text-sm"><PreviewText>Niets gevonden. Probeer een artikelnummer of een automerk.</PreviewText></p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       <PageHead
         title="Onderdelen bestellen"
-        sub={`${all.length.toLocaleString('nl-NL')} artikelen. Vraag aan wat u nodig heeft; kantoor bestelt het.`}
+        sub={sub}
       />
 
       {!me && (
