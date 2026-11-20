@@ -1,13 +1,13 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { notFound } from 'next/navigation';
-import { WAREHOUSE } from '@/config/install';
+import { BRAND, WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUser } from '@/lib/crmSession';
 import { pickList } from '@/lib/kfcOrders';
 import { PickBoard } from './PickBoard';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Picklijst | KeyForCars' };
+export const metadata = { title: `Picklijst | ${BRAND.name}` };
 
 /** Request time, named so the clock read is not "during render". */
 const requestNow = () => Date.now();

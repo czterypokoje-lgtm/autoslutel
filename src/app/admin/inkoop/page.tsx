@@ -1,13 +1,13 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { notFound } from 'next/navigation';
-import { WAREHOUSE } from '@/config/install';
+import { BRAND, WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUser, seesPrices } from '@/lib/crmSession';
 import { listPurchaseOrders, type PurchaseOrder } from '@/lib/kfcInventory';
 import Inkoop from './Inkoop';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Inkoop | KeyForCars' };
+export const metadata = { title: `Inkoop | ${BRAND.name}` };
 
 /**
  * Purchase orders: what is on order at the supplier, and goods received.
