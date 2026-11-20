@@ -23,7 +23,7 @@ export interface SearchHit {
  * types the code and presses Enter, so the box keeps focus and submits a
  * plain GET: the next scan works without touching the screen.
  */
-export default function ProfileSearch({ query, hits, demo, total }: { query: string; hits?: SearchHit[]; demo: boolean; total?: number }) {
+export default function ProfileSearch({ query, hits, demo, total, example }: { query: string; hits?: SearchHit[]; demo: boolean; total?: number; example: string }) {
   const { english, t } = usePreviewLanguage();
   const input = useRef<HTMLInputElement>(null);
   const [camera, setCamera] = useState(false);
@@ -76,7 +76,7 @@ export default function ProfileSearch({ query, hits, demo, total }: { query: str
         <span>{english ? 'Select a code' : 'Kies een code'}</span>
         {codes.map(code => <button type="button" className={styles.secondary} key={code} onClick={() => searchCode(code)}>{code}</button>)}
       </div>}
-      {!query && <button type="button" className={styles.secondary} onClick={() => searchCode('ALRK03')}>{english ? 'Try an example: ALRK03' : 'Probeer een voorbeeld: ALRK03'}</button>}
+      {!query && <button type="button" className={styles.secondary} onClick={() => searchCode(example)}>{english ? `Try an example: ${example}` : `Probeer een voorbeeld: ${example}`}</button>}
       {hits && (hits.length ? (
         <ul className={styles.list}>
           {hits.map((hit) => (

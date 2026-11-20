@@ -1,12 +1,18 @@
 import 'server-only';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { IS_KEYFORCARS } from '@/config/install';
+import { catalogProfiles, PROFILES_FILE } from '@/lib/stockCatalog';
 
 /**
- * Product profiles: what a key is and which cars it fits, one per SKU across
- * remkeys.com, keyforcars.nl and klapsleutels.nl. Built by
- * scripts/build-profiles.mjs; read on the server only, because the file is a
- * few megabytes and holds the whole catalogue.
+ * Product profiles: what a key is and which cars it fits, one per SKU.
+ *
+ * On KeyForCars they come from remkeys.com, keyforcars.nl and klapsleutels.nl,
+ * built by scripts/build-profiles.mjs. On Autosleutel24 there is no such
+ * scrape, so they are derived from the shop's own key catalogue instead —
+ * src/lib/stockCatalog.ts decides which. Either way: read on the server only
+ * and on first use, because the file is a few megabytes and holds the whole
+ * catalogue.
  */
 
 export interface VehicleFit { text: string; vehicle: string; from: number | null; to: number | null }
@@ -43,7 +49,8 @@ function profiles() {
   if (!cache) {
     let all: ProductProfileData[] = [];
     try {
-      all = JSON.parse(readFileSync(join(process.cwd(), 'src', 'data', 'keyforcars-profiles.json'), 'utf8')) as ProductProfileData[];
+      const file = JSON.parse(readFileSync(join(process.cwd(), ...PROFILES_FILE), 'utf8'));
+      all = IS_KEYFORCARS ? (file as ProductProfileData[]) : catalogProfiles(file.products);
     } catch {
       // No profile file yet: every lookup finds nothing instead of crashing the page.
     }

@@ -86,10 +86,17 @@ const nextConfig: NextConfig = {
    */
   outputFileTracingIncludes: {
     '/api/admin/invoice': ['./node_modules/pdfjs-dist/**/*.mjs', './node_modules/pdf-parse/dist/**/*'],
-    // KeyForCars product profiles: read with readFileSync at runtime (src/lib/productProfiles.ts).
-    '/api/admin/voorraad-local': ['./src/data/keyforcars-profiles.json'],
-    '/api/admin/product-names': ['./src/data/keyforcars-profiles.json'],
-    '/admin/voorraad/**': ['./src/data/keyforcars-profiles.json'],
+    /*
+     * Product profiles: read with readFileSync at runtime
+     * (src/lib/productProfiles.ts), so the tracer sees no static import. Both
+     * installs' sources are listed because which one is read is decided by
+     * CRM_INSTALL at build time — KeyForCars's built profile file, or, on
+     * Autosleutel24, the key catalogue the profiles are derived from
+     * (src/lib/stockCatalog.ts).
+     */
+    '/api/admin/voorraad-local': ['./src/data/keyforcars-profiles.json', './src/lib/catalog.json'],
+    '/api/admin/product-names': ['./src/data/keyforcars-profiles.json', './src/lib/catalog.json'],
+    '/admin/voorraad/**': ['./src/data/keyforcars-profiles.json', './src/lib/catalog.json'],
   },
   /*
    * The mirror image of the problem above, and it broke a deploy outright:

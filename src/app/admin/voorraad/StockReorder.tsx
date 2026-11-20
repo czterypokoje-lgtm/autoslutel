@@ -5,6 +5,7 @@ import { ClipboardCopy, PackageSearch, ShoppingCart } from 'lucide-react';
 import { REORDER_DEFAULTS, reorderAdvice, type ReorderStatus, type StockArticle, type StockState } from '@/lib/keyforcarsStock';
 import { usePreviewLanguage } from '../PreviewLanguage';
 import styles from './keyforcars.module.css';
+import { BRAND } from '@/config/install';
 
 const STATUS: Record<ReorderStatus, { label: string; className: string }> = {
   order: { label: 'Nu bestellen', className: 'statusOrder' },
@@ -39,7 +40,7 @@ export default function StockReorder({ state, catalog, incoming = {} }: { state:
   const visible = showAll ? lines : lines.filter((line) => line.status !== 'ok');
 
   function copyOrderList() {
-    const text = [`KeyForCars · ${t('Bestellijst')} ${new Date().toLocaleDateString(locale)}`,
+    const text = [`${BRAND.name} · ${t('Bestellijst')} ${new Date().toLocaleDateString(locale)}`,
       ...toOrder.map((line) => {
         const article = articles.get(line.article);
         return `${line.suggest}× ${article?.sku || line.article} · ${article?.name || line.article}`;
