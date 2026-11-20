@@ -162,7 +162,8 @@ export async function POST(request: Request) {
       biller_btw: text(body.biller_btw, 40) ?? BILLER_DEFAULTS.btw,
       biller_iban: text(body.biller_iban, 40) ?? BILLER_DEFAULTS.iban,
       client_name: clientName,
-      customer_id: typeof body.customer_id === 'string' && /^[a-f0-9-]{36}$/i.test(body.customer_id) ? body.customer_id : null,
+      // sales_invoices.customer_id exists only on KeyForCars (migration 0093); Autosleutel24's table has no such column.
+      ...(IS_KEYFORCARS ? { customer_id: typeof body.customer_id === 'string' && /^[a-f0-9-]{36}$/i.test(body.customer_id) ? body.customer_id : null } : {}),
       client_street: text(body.client_street, 200),
       client_postcode: text(body.client_postcode, 20),
       client_city: text(body.client_city, 100),
