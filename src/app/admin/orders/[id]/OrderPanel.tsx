@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../../klanten/klanten.module.css';
@@ -122,7 +123,7 @@ export default function OrderPanel({ order }: { order: OrderDetail }) {
             disabled={busy}
             onClick={() => send({ status, carrier, tracking_code: tracking, internal_note: note })}
           >
-            {busy ? 'Opslaan…' : 'Opslaan'}
+            <PreviewText>{busy ? 'Opslaan…' : 'Opslaan'}</PreviewText>
           </button>
           <a className={jobStyles.secondary} href={mailto}>
             Mail de klant
@@ -139,14 +140,14 @@ export default function OrderPanel({ order }: { order: OrderDetail }) {
       </div>
 
       <div className={styles.panel}>
-        <h2>Retour</h2>
+        <h2><PreviewText>{"Retour"}</PreviewText></h2>
         {order.return_requested_at ? (
           <div className={styles.summary}>
             <span className={styles.summaryKey}>Aangevraagd</span>
             <span className={styles.summaryVal}>
               {order.return_requested_at.slice(0, 10)}
             </span>
-            <span className={styles.summaryKey}>Reden</span>
+            <span className={styles.summaryKey}><PreviewText>{"Reden"}</PreviewText></span>
             <span className={styles.summaryVal}>{order.return_reason ?? '—'}</span>
           </div>
         ) : (
@@ -170,7 +171,7 @@ export default function OrderPanel({ order }: { order: OrderDetail }) {
               </p>
             )}
             <div className={jobStyles.field}>
-              <label className={jobStyles.fieldLabel} htmlFor="rr">Reden</label>
+              <label className={jobStyles.fieldLabel} htmlFor="rr"><PreviewText>{"Reden"}</PreviewText></label>
               <input id="rr" className={jobStyles.control} value={reason}
                 onChange={(e) => setReason(e.target.value)} />
             </div>

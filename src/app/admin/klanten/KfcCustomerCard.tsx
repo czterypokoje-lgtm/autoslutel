@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -34,11 +35,11 @@ export default function KfcCustomerCard({ customer, balance, entries, openInvoic
           <Button asChild variant="ghost" size="sm" className="-ml-2"><Link href="/admin/klanten">← Klanten</Link></Button>
           <h1 className="text-2xl font-semibold tracking-tight">{customer.company}</h1>
           <p className="text-muted-foreground text-sm">{[customer.contact_name, customer.email, customer.phone, customer.vat_number].filter(Boolean).join(' · ')}</p>
-          <p className="text-muted-foreground text-sm">Betalingstermijn {customer.terms_days} dagen{customer.credit_limit_cents != null && ` · limiet ${MONEY.format(customer.credit_limit_cents / 100)}`}{customer.reverse_charge && ' · btw verlegd'}</p>
+          <p className="text-muted-foreground text-sm">Betalingstermijn {customer.terms_days} <PreviewText>{"dagen"}</PreviewText>{customer.credit_limit_cents != null && ` · limiet ${MONEY.format(customer.credit_limit_cents / 100)}`}{customer.reverse_charge && ' · btw verlegd'}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <EntryDialog customer={customer} openInvoices={openInvoices} onSaved={(m) => { setNote(m); router.refresh(); }} />
-          <Button asChild variant="outline" size="sm"><Link href={`/admin/facturen/nieuw?klant=${customer.id}`}><FileText className="size-4" /> Nieuwe factuur</Link></Button>
+          <Button asChild variant="outline" size="sm"><Link href={`/admin/facturen/nieuw?klant=${customer.id}`}><FileText className="size-4" /> <PreviewText>{"Nieuwe factuur"}</PreviewText></Link></Button>
           <Button asChild variant="outline" size="sm"><Link href={`/admin/klanten/${customer.id}/ekstre`} target="_blank"><Printer className="size-4" /> Ekstre · Rekeningoverzicht</Link></Button>
           {customer.email && balance.overdue_cents > 0 && (
             <Button asChild variant="outline" size="sm">
@@ -55,12 +56,12 @@ export default function KfcCustomerCard({ customer, balance, entries, openInvoic
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Card><CardHeader className="pb-1"><CardDescription>Open saldo · Açık bakiye</CardDescription><CardTitle className="text-3xl tabular-nums">{MONEY.format(balance.open_cents / 100)}</CardTitle></CardHeader><CardContent className="text-muted-foreground text-xs">{balance.open_cents < 0 ? 'Tegoed van de klant' : 'Wat de klant nog moet betalen'}</CardContent></Card>
-        <Card className={balance.overdue_cents > 0 ? 'border-destructive/50 bg-destructive/5' : undefined}><CardHeader className="pb-1"><CardDescription>Vervallen · Vadesi geçen</CardDescription><CardTitle className={`text-3xl tabular-nums ${balance.overdue_cents > 0 ? 'text-destructive' : ''}`}>{MONEY.format(balance.overdue_cents / 100)}</CardTitle></CardHeader><CardContent className="text-muted-foreground text-xs">{balance.oldest_overdue ? `oudste vervaldatum ${balance.oldest_overdue}` : 'niets over de vervaldatum'}</CardContent></Card>
+        <Card><CardHeader className="pb-1"><CardDescription><PreviewText>{"Open saldo · Açık bakiye"}</PreviewText></CardDescription><CardTitle className="text-3xl tabular-nums">{MONEY.format(balance.open_cents / 100)}</CardTitle></CardHeader><CardContent className="text-muted-foreground text-xs"><PreviewText>{balance.open_cents < 0 ? 'Tegoed van de klant' : 'Wat de klant nog moet betalen'}</PreviewText></CardContent></Card>
+        <Card className={balance.overdue_cents > 0 ? 'border-destructive/50 bg-destructive/5' : undefined}><CardHeader className="pb-1"><CardDescription><PreviewText>{"Vervallen · Vadesi geçen"}</PreviewText></CardDescription><CardTitle className={`text-3xl tabular-nums ${balance.overdue_cents > 0 ? 'text-destructive' : ''}`}>{MONEY.format(balance.overdue_cents / 100)}</CardTitle></CardHeader><CardContent className="text-muted-foreground text-xs">{balance.oldest_overdue ? `oudste vervaldatum ${balance.oldest_overdue}` : 'niets over de vervaldatum'}</CardContent></Card>
       </div>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Ouderdom · Yaşlandırma</CardTitle><CardDescription>Open facturen naar vervaldatum. Elke kolom is een link naar die facturen.</CardDescription></CardHeader>
+        <CardHeader><CardTitle className="text-base"><PreviewText>{"Ouderdom · Yaşlandırma"}</PreviewText></CardTitle><CardDescription><PreviewText>{"Open facturen naar vervaldatum. Elke kolom is een link naar die facturen."}</PreviewText></CardDescription></CardHeader>
         <CardContent className="grid grid-cols-2 gap-2 sm:grid-cols-5">
           {BUCKETS.map(([key, label]) => (
             <a key={key} href="#open" className={`rounded-lg border p-3 ${Number(balance[key]) > 0 && key !== 'not_due' ? 'border-destructive/40' : ''}`}>
@@ -73,10 +74,10 @@ export default function KfcCustomerCard({ customer, balance, entries, openInvoic
 
       {openInvoices.length > 0 && (
         <Card id="open">
-          <CardHeader><CardTitle className="text-base">Open facturen</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base"><PreviewText>{"Open facturen"}</PreviewText></CardTitle></CardHeader>
           <CardContent className="p-0">
             <Table>
-              <TableHeader><TableRow><TableHead>Factuur</TableHead><TableHead>Datum</TableHead><TableHead>Vervalt</TableHead><TableHead className="text-right">Bedrag</TableHead><TableHead className="text-right">Open</TableHead></TableRow></TableHeader>
+              <TableHeader><TableRow><TableHead><PreviewText>{"Factuur"}</PreviewText></TableHead><TableHead><PreviewText>{"Datum"}</PreviewText></TableHead><TableHead><PreviewText>{"Vervalt"}</PreviewText></TableHead><TableHead className="text-right"><PreviewText>{"Bedrag"}</PreviewText></TableHead><TableHead className="text-right">Open</TableHead></TableRow></TableHeader>
               <TableBody>
                 {openInvoices.map((e) => (
                   <TableRow key={e.id}>
@@ -94,12 +95,12 @@ export default function KfcCustomerCard({ customer, balance, entries, openInvoic
       )}
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Boekingen</CardTitle><CardDescription>Nieuwste eerst. Een fout wordt tegengeboekt, nooit gewijzigd.</CardDescription></CardHeader>
+        <CardHeader><CardTitle className="text-base"><PreviewText>{"Boekingen"}</PreviewText></CardTitle><CardDescription><PreviewText>{"Nieuwste eerst. Een fout wordt tegengeboekt, nooit gewijzigd."}</PreviewText></CardDescription></CardHeader>
         <CardContent className="p-0">
           <Table>
-            <TableHeader><TableRow><TableHead>Datum</TableHead><TableHead>Soort</TableHead><TableHead>Omschrijving</TableHead><TableHead className="text-right">Debet</TableHead><TableHead className="text-right">Credit</TableHead><TableHead className="text-right">Saldo</TableHead><TableHead className="w-10" /></TableRow></TableHeader>
+            <TableHeader><TableRow><TableHead><PreviewText>{"Datum"}</PreviewText></TableHead><TableHead><PreviewText>{"Soort"}</PreviewText></TableHead><TableHead><PreviewText>{"Omschrijving"}</PreviewText></TableHead><TableHead className="text-right"><PreviewText>{"Debet"}</PreviewText></TableHead><TableHead className="text-right">Credit</TableHead><TableHead className="text-right"><PreviewText>{"Saldo"}</PreviewText></TableHead><TableHead className="w-10" /></TableRow></TableHeader>
             <TableBody>
-              {entries.length === 0 && <TableRow><TableCell colSpan={7} className="text-muted-foreground py-8 text-center">Nog geen boekingen.</TableCell></TableRow>}
+              {entries.length === 0 && <TableRow><TableCell colSpan={7} className="text-muted-foreground py-8 text-center"><PreviewText>{"Nog geen boekingen."}</PreviewText></TableCell></TableRow>}
               {entries.map((e) => (
                 <TableRow key={e.id}>
                   <TableCell className="whitespace-nowrap">{e.entry_date}</TableCell>
@@ -145,26 +146,26 @@ function EntryDialog({ customer, openInvoices, onSaved }: { customer: Customer; 
       <DialogContent>
         <DialogHeader><DialogTitle>Boeking voor {customer.company}</DialogTitle></DialogHeader>
         <form onSubmit={save} className="grid gap-3">
-          <div className="grid gap-1.5"><Label htmlFor="e-type">Soort</Label>
+          <div className="grid gap-1.5"><Label htmlFor="e-type"><PreviewText>{"Soort"}</PreviewText></Label>
             <select id="e-type" className="border-input h-9 rounded-md border bg-transparent px-3 text-sm" value={type} onChange={(e) => setType(e.target.value as typeof type)}>
-              <option value="payment">Betaling ontvangen</option><option value="credit_note">Creditnota</option><option value="write_off">Afboeken (klein restant)</option><option value="refund">Terugbetaling aan klant</option><option value="opening">Beginsaldo (± bedrag)</option>
+              <option value="payment"><PreviewText>{"Betaling ontvangen"}</PreviewText></option><option value="credit_note"><PreviewText>{"Creditnota"}</PreviewText></option><option value="write_off"><PreviewText>{"Afboeken (klein restant)"}</PreviewText></option><option value="refund"><PreviewText>{"Terugbetaling aan klant"}</PreviewText></option><option value="opening"><PreviewText>{"Beginsaldo (± bedrag)"}</PreviewText></option>
             </select>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-1.5"><Label htmlFor="e-amount">Bedrag €</Label><Input id="e-amount" inputMode="decimal" required value={amount} onChange={(e) => setAmount(e.target.value)} /></div>
-            <div className="grid gap-1.5"><Label htmlFor="e-date">Datum</Label><Input id="e-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
+            <div className="grid gap-1.5"><Label htmlFor="e-amount"><PreviewText>{"Bedrag €"}</PreviewText></Label><Input id="e-amount" inputMode="decimal" required value={amount} onChange={(e) => setAmount(e.target.value)} /></div>
+            <div className="grid gap-1.5"><Label htmlFor="e-date"><PreviewText>{"Datum"}</PreviewText></Label><Input id="e-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
           </div>
           {(type === 'payment' || type === 'credit_note' || type === 'write_off') && openInvoices.length > 0 && (
-            <div className="grid gap-1.5"><Label htmlFor="e-inv">Op factuur</Label>
+            <div className="grid gap-1.5"><Label htmlFor="e-inv"><PreviewText>{"Op factuur"}</PreviewText></Label>
               <select id="e-inv" className="border-input h-9 rounded-md border bg-transparent px-3 text-sm" value={invoice} onChange={(e) => setInvoice(e.target.value)}>
-                <option value="">Oudste vervaldatum eerst (automatisch)</option>
+                <option value=""><PreviewText>{"Oudste vervaldatum eerst (automatisch)"}</PreviewText></option>
                 {openInvoices.map((i) => <option key={i.id} value={i.id}>{i.invoice_number ?? TYPE[i.entry_type]} · open {MONEY.format((i.open_cents ?? 0) / 100)}</option>)}
               </select>
             </div>
           )}
-          <div className="grid gap-1.5"><Label htmlFor="e-note">Omschrijving</Label><Input id="e-note" value={text} onChange={(e) => setText(e.target.value)} placeholder="bijv. bankoverschrijving 19 nov" /></div>
+          <div className="grid gap-1.5"><Label htmlFor="e-note"><PreviewText>{"Omschrijving"}</PreviewText></Label><Input id="e-note" value={text} onChange={(e) => setText(e.target.value)} placeholder="bijv. bankoverschrijving 19 nov" /></div>
           {error && <p className="text-destructive text-sm">{error}</p>}
-          <div><Button disabled={busy}>Boeken</Button></div>
+          <div><Button disabled={busy}><PreviewText>{"Boeken"}</PreviewText></Button></div>
         </form>
       </DialogContent>
     </Dialog>

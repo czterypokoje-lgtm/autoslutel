@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useEffect } from 'react';
 import { Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ export function PrintNow({ auto }: { auto: boolean }) {
   }, [auto]);
   return (
     <Button type="button" size="sm" variant="outline" className="w-fit" onClick={() => window.print()}>
-      <Printer data-icon="inline-start" /> Afdrukken
+      <Printer data-icon="inline-start" /> <PreviewText>{"Afdrukken"}</PreviewText>
     </Button>
   );
 }

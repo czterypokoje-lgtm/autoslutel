@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -209,7 +210,7 @@ export default async function KlikfraudePage({
               <>
                 <th>Oordeel</th>
                 <th>IP</th>
-                <th>Land</th>
+                <th><PreviewText>{"Land"}</PreviewText></th>
                 <th>Klikken</th>
                 <th>Ladingen</th>
                 <th>Stil</th>

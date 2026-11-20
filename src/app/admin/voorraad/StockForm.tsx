@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardHead, ui } from '../_ui';
@@ -89,7 +90,7 @@ export default function StockForm({
             Waar ligt het
           </div>
           <select value={holder} onChange={(e) => setHolder(e.target.value)} className={ui.input}>
-            <option value="">Magazijn</option>
+            <option value=""><PreviewText>{"Magazijn"}</PreviewText></option>
             {technicians.map((tech) => (
               <option key={tech.id} value={tech.id}>
                 Bus — {tech.name}
@@ -100,7 +101,7 @@ export default function StockForm({
 
         <label>
           <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>
-            Omschrijving
+            <PreviewText>{"Omschrijving"}</PreviewText>
           </div>
           <input
             type="text"
@@ -119,7 +120,7 @@ export default function StockForm({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
           <label>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--crm-text)', marginBottom: 6 }}>
-              Aantal
+              <PreviewText>{"Aantal"}</PreviewText>
             </div>
             <input
               type="number"
@@ -166,10 +167,10 @@ export default function StockForm({
 
         <div style={{ display: 'flex', gap: '1rem' }}>
           <button type="button" className={ui.btn} onClick={() => setOpen(false)} disabled={busy}>
-            Sluiten
+            <PreviewText>{"Sluiten"}</PreviewText>
           </button>
           <button type="submit" className={`${ui.btn} ${ui.btnPrimary}`} disabled={busy}>
-            {busy ? 'Opslaan…' : 'Opslaan'}
+            <PreviewText>{busy ? 'Opslaan…' : 'Opslaan'}</PreviewText>
           </button>
         </div>
       </form>

@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { BRAND } from '@/config/install';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Notice, Empty } from '../_ui';
@@ -51,7 +52,7 @@ export default async function KantoorPage({
 
       <Card>
         <CardHead>Bureaus</CardHead>
-        <Table head={<><th>Bureau</th><th>Status</th><th>Klus</th><th>Laatste actie</th><th>Tijd</th><th>Wacht</th></>}>
+        <Table head={<><th>Bureau</th><th>Status</th><th><PreviewText>{"Klus"}</PreviewText></th><th>Laatste actie</th><th><PreviewText>{"Tijd"}</PreviewText></th><th>Wacht</th></>}>
           {live.desks.map((d) => (
             <tr key={d.key}>
               <td><Link href={`/admin/kantoor?bureau=${d.key}`}>{d.label}</Link></td>
@@ -71,7 +72,7 @@ export default async function KantoorPage({
           {selectedEvents.length === 0 ? (
             <Empty>Nog geen gebeurtenissen voor dit bureau.</Empty>
           ) : (
-            <Table head={<><th>Tijd</th><th>Klus</th><th>Soort</th><th>Tekst</th><th>Status</th></>}>
+            <Table head={<><th><PreviewText>{"Tijd"}</PreviewText></th><th><PreviewText>{"Klus"}</PreviewText></th><th><PreviewText>{"Soort"}</PreviewText></th><th>Tekst</th><th>Status</th></>}>
               {selectedEvents.map((e) => (
                 <tr key={e.id}>
                   <td>{fmtTime(e.created_at)}</td>

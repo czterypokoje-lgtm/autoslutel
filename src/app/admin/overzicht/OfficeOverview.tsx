@@ -209,11 +209,11 @@ export default async function OfficeOverview({ period }: { period: Period }) {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Monteur</th>
-                  <th>Vandaag</th>
+                  <th><PreviewText>{"Monteur"}</PreviewText></th>
+                  <th><PreviewText>{"Vandaag"}</PreviewText></th>
                   <th className={styles.num}>Week</th>
-                  <th className={styles.num}>Omzet week</th>
-                  <th className={styles.num}>Winst week</th>
+                  <th className={styles.num}><PreviewText>{"Omzet week"}</PreviewText></th>
+                  <th className={styles.num}><PreviewText>{"Winst week"}</PreviewText></th>
                 </tr>
               </thead>
               <tbody>
@@ -225,10 +225,10 @@ export default async function OfficeOverview({ period }: { period: Period }) {
                     </td>
                     <td>
                       {t.todayTotal === 0 ? (
-                        <span className={styles.muted}>vrij</span>
+                        <span className={styles.muted}><PreviewText>{"vrij"}</PreviewText></span>
                       ) : (
                         <>
-                          {t.todayDone}/{t.todayTotal} klaar {t.todayBusy && <Badge tone="warn">onderweg</Badge>}
+                          {t.todayDone}/{t.todayTotal} <PreviewText>{"klaar"}</PreviewText> {t.todayBusy && <Badge tone="warn"><PreviewText>{"onderweg"}</PreviewText></Badge>}
                         </>
                       )}
                     </td>
@@ -261,7 +261,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
                       <span className={styles.grow}>
                         <b>{j.car}</b>
                         <span className={styles.muted}>
-                          {j.place} · {j.technician ?? <span className={styles.warnText}>geen monteur</span>}
+                          {j.place} · {j.technician ?? <span className={styles.warnText}><PreviewText>{"geen monteur"}</PreviewText></span>}
                         </span>
                       </span>
                       <Badge tone={st.tone}>{st.label}</Badge>
@@ -280,7 +280,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
             <span>
               <KeyRound size={17} aria-hidden="true" /> <PreviewText>Tweede sleutel verkopen</PreviewText> · {d.spareKeys.length}
             </span>
-            {d.spareKeyPrice !== null && <span className={styles.muted}>gem. bijmaken {money(d.spareKeyPrice)}</span>}
+            {d.spareKeyPrice !== null && <span className={styles.muted}><PreviewText>{"gem. bijmaken"}</PreviewText> {money(d.spareKeyPrice)}</span>}
           </header>
           <p className={styles.explain}>
             <PreviewText>Klanten met alle sleutels kwijt rijden nu met één sleutel. Bied een reservesleutel aan: zelfde auto, tevreden klant, snelle klus. Ze verdwijnen hier zodra ze een bijmaak-klus boeken.</PreviewText>
@@ -310,7 +310,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
                       </a>
                     )}
                     <a href={`tel:${c.phone}`} className={styles.ghostBtn}>
-                      Bellen
+                      <PreviewText>{"Bellen"}</PreviewText>
                     </a>
                   </li>
                 );
@@ -360,10 +360,10 @@ export default async function OfficeOverview({ period }: { period: Period }) {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Bron</th>
+                <th><PreviewText>{"Bron"}</PreviewText></th>
                 <th className={styles.num}>Leads</th>
-                <th className={styles.num}>Verkocht</th>
-                <th className={styles.num}>Conversie</th>
+                <th className={styles.num}><PreviewText>{"Verkocht"}</PreviewText></th>
+                <th className={styles.num}><PreviewText>{"Conversie"}</PreviewText></th>
               </tr>
             </thead>
             <tbody>

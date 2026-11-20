@@ -1,0 +1,26 @@
+[Unit]
+Description=KeyForCars local OpenClaw gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=kfc-claw
+Group=kfc-claw
+WorkingDirectory=/srv/keyforcars-openclaw
+Environment=HOME=/srv/keyforcars-openclaw
+Environment=PATH=/opt/node-v24.22.3-linux-x64/bin:/usr/sbin:/usr/bin:/bin
+Environment=OPENCLAW_STATE_DIR=/srv/keyforcars-openclaw/state
+Environment=OPENCLAW_CONFIG_PATH=/srv/keyforcars-openclaw/state/openclaw.json
+ExecStart=/opt/node-v24.22.3-linux-x64/bin/node /srv/keyforcars-openclaw/node_modules/.bin/openclaw gateway run
+Restart=on-failure
+RestartSec=5
+MemoryMax=950M
+MemorySwapMax=1G
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

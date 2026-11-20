@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText, usePreviewLanguage } from '@/app/admin/PreviewLanguage';
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -20,6 +21,7 @@ async function post(body: unknown): Promise<{ error?: string; added?: number; sk
 const TABS: ['open' | 'matched' | 'ignored', string, string][] = [['open', 'transacties', 'Te koppelen'], ['matched', 'betalingen', 'Gekoppeld'], ['ignored', 'rekeningen', 'Apart gezet']];
 
 export default function KfcBank({ view, lines, suggestions, customers }: { view: 'open' | 'matched' | 'ignored'; lines: BankLine[]; suggestions: Record<string, Suggestion[]>; customers: { id: string; company: string }[] }) {
+  const { t } = usePreviewLanguage();
   const router = useRouter();
   const file = useRef<HTMLInputElement>(null);
   const [note, setNote] = useState('');
@@ -45,30 +47,30 @@ export default function KfcBank({ view, lines, suggestions, customers }: { view:
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Bank</h1>
-          <p className="text-muted-foreground text-sm">Bankafschrift (CAMT.053 of CSV) naast de openstaande facturen. Een ontvangen bedrag koppelt u aan een klant; dat boekt de betaling.</p>
+          <p className="text-muted-foreground text-sm">{t("Bankafschrift (CAMT.053 of CSV) naast de openstaande facturen. Een ontvangen bedrag koppelt u aan een klant; dat boekt de betaling.")}</p>
         </div>
         <div className="flex items-center gap-2">
           <input ref={file} type="file" accept=".xml,.csv,.txt" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
-          <Button size="sm" disabled={busy === 'upload'} onClick={() => file.current?.click()}><Upload className="size-4" /> Afschrift importeren</Button>
-          <Button asChild size="sm" variant="outline"><Link href="/admin/klanten?view=overdue">Vervallen klanten</Link></Button>
+          <Button size="sm" disabled={busy === 'upload'} onClick={() => file.current?.click()}><Upload className="size-4" /> {t("Afschrift importeren")}</Button>
+          <Button asChild size="sm" variant="outline"><Link href="/admin/klanten?view=overdue">{t("Vervallen klanten")}</Link></Button>
         </div>
       </div>
       <div className="flex max-w-full gap-1 self-start overflow-x-auto rounded-lg border p-1">
-        {TABS.map(([key, slug, label]) => <Button key={key} asChild size="sm" variant={view === key ? 'default' : 'ghost'}><Link href={`/admin/bank/${slug}`}>{label}</Link></Button>)}
+        {TABS.map(([key, slug, label]) => <Button key={key} asChild size="sm" variant={view === key ? 'default' : 'ghost'}><Link href={`/admin/bank/${slug}`}>{t(label)}</Link></Button>)}
       </div>
-      {note && <p className="text-muted-foreground text-sm">{note}</p>}
+      {note && <p className="text-muted-foreground text-sm">{t(note)}</p>}
       <Card>
-        <CardHeader><CardTitle className="text-base">{TABS.find((t) => t[0] === view)?.[2]} · {lines.length}</CardTitle><CardDescription>{view === 'open' ? 'Ontvangen bedragen zonder boeking. Het voorstel (★) komt uit factuurnummer, bedrag of klantnaam.' : view === 'matched' ? 'Geboekt als betaling op de rekening van de klant.' : 'Uitgaand, betaalprovider-uitbetalingen (Mollie e.d.) en handmatig apart gezet.'}</CardDescription></CardHeader>
+        <CardHeader><CardTitle className="text-base">{t(TABS.find((tab) => tab[0] === view)?.[2] ?? "")} · {lines.length}</CardTitle><CardDescription>{t(view === 'open' ? 'Ontvangen bedragen zonder boeking. Het voorstel (★) komt uit factuurnummer, bedrag of klantnaam.' : view === 'matched' ? 'Geboekt als betaling op de rekening van de klant.' : 'Uitgaand, betaalprovider-uitbetalingen (Mollie e.d.) en handmatig apart gezet.')}</CardDescription></CardHeader>
         <CardContent className="p-0">
           <Table>
-            <TableHeader><TableRow><TableHead>Datum</TableHead><TableHead>Tegenpartij</TableHead><TableHead>Omschrijving</TableHead><TableHead className="text-right">Bedrag</TableHead><TableHead>{view === 'open' ? 'Koppelen aan' : view === 'matched' ? 'Boeking' : 'Reden'}</TableHead><TableHead /></TableRow></TableHeader>
+            <TableHeader><TableRow><TableHead><PreviewText>{"Datum"}</PreviewText></TableHead><TableHead><PreviewText>{"Tegenpartij"}</PreviewText></TableHead><TableHead><PreviewText>{"Omschrijving"}</PreviewText></TableHead><TableHead className="text-right"><PreviewText>{"Bedrag"}</PreviewText></TableHead><TableHead>{t(view === 'open' ? 'Koppelen aan' : view === 'matched' ? 'Boeking' : 'Reden')}</TableHead><TableHead /></TableRow></TableHeader>
             <TableBody>
-              {lines.length === 0 && <TableRow><TableCell colSpan={6} className="text-muted-foreground py-10 text-center">{view === 'open' ? 'Niets te koppelen. Importeer een afschrift.' : 'Nog niets.'}</TableCell></TableRow>}
+              {lines.length === 0 && <TableRow><TableCell colSpan={6} className="text-muted-foreground py-10 text-center">{t(view === 'open' ? 'Niets te koppelen. Importeer een afschrift.' : 'Nog niets.')}</TableCell></TableRow>}
               {lines.map((line) => {
                 const sug = suggestions[line.id] ?? [];
                 const picked = choice[line.id] ?? (sug[0] ? `${sug[0].customer_id}|${sug[0].invoice_entry_id ?? ''}` : '');
                 return (
-                  <TableRow key={line.id}>
+                  <TableRow key={line.id} id={line.id}>
                     <TableCell className="whitespace-nowrap">{line.booked_on}</TableCell>
                     <TableCell><div className="font-medium">{line.counterparty_name ?? '—'}</div><div className="text-muted-foreground text-xs">{line.counterparty_iban}</div></TableCell>
                     <TableCell className="text-muted-foreground max-w-80 truncate text-xs">{line.description}</TableCell>
@@ -76,20 +78,20 @@ export default function KfcBank({ view, lines, suggestions, customers }: { view:
                     <TableCell>
                       {view === 'open' && (
                         <select className="border-input h-8 max-w-72 rounded-md border bg-transparent px-2 text-sm" value={picked} onChange={(e) => setChoice({ ...choice, [line.id]: e.target.value })}>
-                          <option value="">Kies klant…</option>
+                          <option value="">{t("Kies klant…")}</option>
                           {sug.map((s) => <option key={`${s.customer_id}|${s.invoice_entry_id ?? ''}`} value={`${s.customer_id}|${s.invoice_entry_id ?? ''}`}>★ {s.company}{s.invoice_number ? ` · ${s.invoice_number}` : ''} ({s.reason})</option>)}
                           {customers.filter((c) => !sug.some((s) => s.customer_id === c.id)).map((c) => <option key={c.id} value={`${c.id}|`}>{c.company}</option>)}
                         </select>
                       )}
-                      {view === 'matched' && <Badge variant="secondary">betaling #{line.matched_entry_id}</Badge>}
+                      {view === 'matched' && <Badge variant="secondary">{t("betaling")} #{line.matched_entry_id}</Badge>}
                       {view === 'ignored' && <Badge variant="outline">{line.ignore_reason}</Badge>}
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       {view === 'open' && <>
-                        <Button size="sm" disabled={!picked || busy === line.id} onClick={() => { const [customer, inv] = picked.split('|'); act(line.id, { action: 'match', line: line.id, customer, invoice_entry_id: inv ? Number(inv) : null, key: crypto.randomUUID() }); }}>Boek</Button>
-                        <Button size="sm" variant="ghost" disabled={busy === line.id} onClick={() => act(line.id, { action: 'status', line: line.id, status: 'ignored' })}>Apart</Button>
+                        <Button size="sm" disabled={!picked || busy === line.id} onClick={() => { const [customer, inv] = picked.split('|'); act(line.id, { action: 'match', line: line.id, customer, invoice_entry_id: inv ? Number(inv) : null, key: crypto.randomUUID() }); }}>{t("Boek")}</Button>
+                        <Button size="sm" variant="ghost" disabled={busy === line.id} onClick={() => act(line.id, { action: 'status', line: line.id, status: 'ignored' })}>{t("Apart")}</Button>
                       </>}
-                      {view === 'ignored' && line.amount_cents > 0 && <Button size="sm" variant="ghost" onClick={() => act(line.id, { action: 'status', line: line.id, status: 'open' })}>Terug</Button>}
+                      {view === 'ignored' && line.amount_cents > 0 && <Button size="sm" variant="ghost" onClick={() => act(line.id, { action: 'status', line: line.id, status: 'open' })}><PreviewText>{"Terug"}</PreviewText></Button>}
                     </TableCell>
                   </TableRow>
                 );

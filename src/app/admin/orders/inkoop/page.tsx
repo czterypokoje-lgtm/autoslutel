@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -59,7 +60,7 @@ export default async function InkoopPage() {
     <>
       <div className={styles.head}>
         <h1 className={styles.title}>A-Key inkoop vandaag</h1>
-        <span className={styles.count}>{orderIds.length} betaalde bestelling{orderIds.length === 1 ? '' : 'en'} nog niet besteld</span>
+        <span className={styles.count}>{orderIds.length} betaalde bestelling<PreviewText>{orderIds.length === 1 ? '' : 'en'}</PreviewText> nog niet besteld</span>
         <Link className={styles.link} href="/admin/orders">← Bestellingen</Link>
       </div>
 
@@ -77,7 +78,7 @@ export default async function InkoopPage() {
           <div className={styles.wrap}>
             <table className={styles.table}>
               <thead>
-                <tr><th>A-Key code</th><th>Aantal</th><th>Artikel (A-Key)</th><th>Inkoop p/st</th><th>Totaal</th><th>Voor bestelling</th></tr>
+                <tr><th>A-Key code</th><th><PreviewText>{"Aantal"}</PreviewText></th><th>Artikel (A-Key)</th><th>Inkoop p/st</th><th><PreviewText>{"Totaal"}</PreviewText></th><th>Voor bestelling</th></tr>
               </thead>
               <tbody>
                 {rows.map((r) => (

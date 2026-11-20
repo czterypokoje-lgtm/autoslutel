@@ -13,7 +13,7 @@ import ProductFacts from './ProductFacts';
 import { inventoryCategory } from './inventoryCategories';
 import { inventoryHref, inventoryViews, type InventoryView } from './inventoryViews';
 import { articleIndex, trustedUnknownCode } from '@/lib/stockBulkCount';
-import { usePreviewLanguage } from '../PreviewLanguage';
+import { PreviewProductName, usePreviewLanguage } from '../PreviewLanguage';
 import styles from './keyforcars.module.css';
 import StockHelp from './StockHelp';
 import './stockPrint.css';
@@ -462,7 +462,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
                 }} />
                 <button type="button" className={styles.article} onClick={() => select(article)} aria-pressed={article.id === selected.id}>
                   {article.image ? <img src={article.image} alt="" loading="lazy" referrerPolicy="no-referrer" /> : <Barcode size={22} />}
-                  <span><strong>{article.name}</strong><small>{article.sku || article.id} · {t(inventoryCategory(article)[1])}</small>
+                  <span><strong><PreviewProductName sku={article.sku}>{article.name}</PreviewProductName></strong><small>{article.sku || article.id} · {t(inventoryCategory(article)[1])}</small>
                     {stockReady && <small className={styles.shelfHint}>{(() => {
                       const locations = state.bins.filter(bin => bin.article === article.id);
                       const first = locations[0];
@@ -535,7 +535,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
             <div className={styles.sectionHeading}><ClipboardList size={20} aria-hidden="true" /><h2>{t("Voorraad boeken")}</h2><StockHelp /></div>
             <div className={styles.bookingProduct}>
               {displayedArticle.image ? <img src={displayedArticle.image} alt="" referrerPolicy="no-referrer" /> : <Package size={24} aria-hidden="true" />}
-              <div><strong>{selected.name}</strong><small>{selected.sku || selected.id}{demo && ` · ${t('Proefvoorraad')}`}</small></div>
+              <div><strong><PreviewProductName sku={selected.sku}>{selected.name}</PreviewProductName></strong><small>{selected.sku || selected.id}{demo && ` · ${t('Proefvoorraad')}`}</small></div>
             </div>
             <div className={styles.formGrid}>
               <label>{t("Beweging")}<select value={operation} onChange={(event) => setOperation(event.target.value as Operation)}>

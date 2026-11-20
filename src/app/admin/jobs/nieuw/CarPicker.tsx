@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useMemo } from 'react';
 import styles from '../jobs.module.css';
 
@@ -65,7 +66,7 @@ function PickOrType({
             onChange={(e) => onChange(e.target.value || OTHER)}
           />
           <button type="button" className={styles.pickBack} onClick={() => onChange('')}>
-            Lijst
+            <PreviewText>{"Lijst"}</PreviewText>
           </button>
         </div>
       ) : (

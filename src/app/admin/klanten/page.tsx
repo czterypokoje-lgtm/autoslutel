@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { IS_KEYFORCARS } from '@/config/install';
 import { listCustomers } from '@/lib/kfcReceivables';
 import { Customers } from './_components/customers';
@@ -94,18 +95,18 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
       <form className={k.search} method="get" action="/admin/klanten" role="search">
         <Search size={18} aria-hidden="true" />
         <input type="search" name="q" defaultValue={search} placeholder="Zoek op naam, telefoon, e-mail of postcode" aria-label="Zoek klant" />
-        <button type="submit">Zoeken</button>
+        <button type="submit"><PreviewText>{"Zoeken"}</PreviewText></button>
         {search && (
           <Link href="/admin/klanten" className={k.clear}>
-            Wis
+            <PreviewText>{"Wis"}</PreviewText>
           </Link>
         )}
       </form>
 
       <div className={k.stats}>
-        <div><span>{search ? 'Gevonden' : 'Klanten'}</span><b>{rows.length}</b></div>
+        <div><span><PreviewText>{search ? 'Gevonden' : 'Klanten'}</PreviewText></span><b>{rows.length}</b></div>
         <div><span>Kochten iets</span><b>{buyers}</b></div>
-        <div><span>Omzet</span><b>{MONEY.format(turnover)}</b></div>
+        <div><span><PreviewText>{"Omzet"}</PreviewText></span><b>{MONEY.format(turnover)}</b></div>
         <div><span>Mag gemaild worden</span><b>{consent}</b></div>
       </div>
 
@@ -130,7 +131,7 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
                 </Link>
                 <span className={k.counts}>
                   <span className={k.chip}>{c.lead_count} aanvra{c.lead_count === 1 ? 'ag' : 'gen'}</span>
-                  {c.sold_count > 0 && <span className={`${k.chip} ${k.chipOk}`}>{c.sold_count} verkocht</span>}
+                  {c.sold_count > 0 && <span className={`${k.chip} ${k.chipOk}`}>{c.sold_count} <PreviewText>{"verkocht"}</PreviewText></span>}
                 </span>
                 <span className={k.money}>{MONEY.format(Number(c.total_value ?? 0))}</span>
                 <span className={k.last}>{DATE.format(new Date(c.last_seen))}</span>

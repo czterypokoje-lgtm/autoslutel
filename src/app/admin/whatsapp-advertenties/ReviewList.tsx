@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge, Card, CardHead, Empty, Notice, ui } from '../_ui';
@@ -118,9 +119,9 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
               <thead>
                 <tr>
                   <th>Code</th>
-                  <th>Datum</th>
+                  <th><PreviewText>{"Datum"}</PreviewText></th>
                   <th>Tel.</th>
-                  <th>Auto</th>
+                  <th><PreviewText>{"Auto"}</PreviewText></th>
                   <th>Prijs in gesprek</th>
                   <th>Assistent</th>
                   <th>Besluit</th>

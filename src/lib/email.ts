@@ -1,3 +1,4 @@
+import { providerRequestsEnabled } from '@/lib/providerRequests';
 import { SITE_CONFIG } from '@/config/site.config';
 
 /**
@@ -45,6 +46,7 @@ function asHtml(text: string): string {
 }
 
 export async function sendMail({ to, subject, text, replyTo }: Mail): Promise<boolean> {
+  if (!providerRequestsEnabled()) return false;
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     console.error(

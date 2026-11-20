@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { QRCodeSVG } from 'qrcode.react';
 import type { ShopOrder } from '@/lib/kfcOrders';
 
@@ -22,7 +23,7 @@ export function LabelSheet({ order }: { order: ShopOrder }) {
       </section>
       <section className="mt-6 text-sm" style={{ pageBreakBefore: 'always' }}>
         <h2 className="mb-2 text-base font-semibold">Pakbon · {ref}</h2>
-        <table className="w-full border-collapse text-xs"><thead><tr className="border-b text-left"><th className="py-1">Aantal</th><th>SKU</th><th>Artikel</th></tr></thead>
+        <table className="w-full border-collapse text-xs"><thead><tr className="border-b text-left"><th className="py-1"><PreviewText>{"Aantal"}</PreviewText></th><th>SKU</th><th><PreviewText>{"Artikel"}</PreviewText></th></tr></thead>
           <tbody>{order.lines.filter((l) => l.state !== 'cancelled').map((l) => <tr key={l.id} className="border-b border-gray-200"><td className="py-1">{l.quantity}</td><td>{l.sku}</td><td>{l.name}</td></tr>)}</tbody></table>
       </section>
     </>

@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { notFound } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -62,7 +63,7 @@ export default async function FactuurBewerkenPage({ params }: { params: Promise<
       />
       {invoice.status !== 'concept' && (
         <Notice tone="info">
-          Deze factuur staat op &ldquo;{invoice.status === 'betaald' ? 'Betaald' : 'Verzonden'}&rdquo;. Een
+          Deze factuur staat op &ldquo;<PreviewText>{invoice.status === 'betaald' ? 'Betaald' : 'Verzonden'}</PreviewText>&rdquo;. Een
           bewerking hier verandert alleen de inhoud, niet die status — pas een al verstuurde factuur alleen aan
           als de klant nog geen kopie heeft.
         </Notice>

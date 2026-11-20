@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Notice, Empty } from '../_ui';
 import { BRAND } from '@/config/install';
 import { Activity, Hourglass, ShieldAlert, Radio } from 'lucide-react';
@@ -59,7 +60,7 @@ export default async function LivePage() {
         {live.outbox.length === 0 ? (
           <Empty>Geen berichten in de wachtrij.</Empty>
         ) : (
-          <Table head={<><th>Klus</th><th>Soort</th><th>Voor</th><th>Tier</th><th>Status</th><th>Wacht</th></>}>
+          <Table head={<><th><PreviewText>{"Klus"}</PreviewText></th><th><PreviewText>{"Soort"}</PreviewText></th><th>Voor</th><th>Tier</th><th>Status</th><th>Wacht</th></>}>
             {live.outbox.slice(0, 30).map((o) => (
               <tr key={o.id}>
                 <td style={{ whiteSpace: 'nowrap' }}>{live.codeOf(o.job_room_id)}</td>
@@ -79,7 +80,7 @@ export default async function LivePage() {
         {live.events.length === 0 ? (
           <Empty>Nog niets ontvangen.</Empty>
         ) : (
-          <Table head={<><th>Tijd</th><th>Klus</th><th></th><th>Soort</th><th>Tekst</th><th>Status</th></>}>
+          <Table head={<><th><PreviewText>{"Tijd"}</PreviewText></th><th><PreviewText>{"Klus"}</PreviewText></th><th></th><th><PreviewText>{"Soort"}</PreviewText></th><th>Tekst</th><th>Status</th></>}>
             {live.events.slice(0, 60).map((e) => (
               <tr key={e.id}>
                 <td>{fmtTime(e.created_at)}</td>

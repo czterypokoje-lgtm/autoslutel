@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { format, parseISO } from 'date-fns';
 import { nl } from 'date-fns/locale';
 
@@ -38,7 +39,7 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
             <rect y="28" width="20" height="20" rx="3" fill="currentColor" />
             <rect x="28" y="28" width="20" height="20" rx="3" fill="currentColor" />
           </svg>
-          <h2 className="text-4xl tracking-widest uppercase">Factuur</h2>
+          <h2 className="text-4xl tracking-widest uppercase"><PreviewText>{"Factuur"}</PreviewText></h2>
         </div>
 
         <section className="grid grid-cols-2 gap-14 text-sm leading-relaxed">
@@ -56,7 +57,7 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
 
         <section className="grid grid-cols-2 gap-14 text-sm leading-relaxed">
           <div>
-            <p className="mb-4 font-semibold uppercase">Van</p>
+            <p className="mb-4 font-semibold uppercase"><PreviewText>{"Van"}</PreviewText></p>
             <p>{from.name}</p>
             {addressLines(from).map((line) => (
               <p key={line}>{line}</p>
@@ -78,10 +79,10 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
       <div className="flex flex-col gap-5">
         <section className="text-sm">
           <div className="grid grid-cols-[1fr_74px_116px_116px] bg-stone-200 px-3 py-3 font-semibold uppercase">
-            <span>Omschrijving</span>
-            <span className="text-right">Aantal</span>
-            <span className="text-right">Prijs</span>
-            <span className="text-right">Totaal</span>
+            <span><PreviewText>{"Omschrijving"}</PreviewText></span>
+            <span className="text-right"><PreviewText>{"Aantal"}</PreviewText></span>
+            <span className="text-right"><PreviewText>{"Prijs"}</PreviewText></span>
+            <span className="text-right"><PreviewText>{"Totaal"}</PreviewText></span>
           </div>
           {items.map((item) => (
             <div
@@ -108,7 +109,7 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
                 <span>{formatInvoiceCurrency(discount)}</span>
               </div>
               <div className="flex justify-between gap-8">
-                <span>Btw {rate}%</span>
+                <span><PreviewText>{"Btw"}</PreviewText> {rate}%</span>
                 <span>{formatInvoiceCurrency(vat)}</span>
               </div>
               {credit > 0 && (

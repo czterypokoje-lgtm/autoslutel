@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import Link from 'next/link';
 import { ExternalLink, KeyRound, Menu, Search, X } from 'lucide-react';
@@ -125,7 +126,7 @@ export default function Sidebar({
               title="De site openen zoals een bezoeker hem ziet"
             >
               <ExternalLink size={16} strokeWidth={1.9} aria-hidden="true" />
-              Site bekijken
+              <PreviewText>{"Site bekijken"}</PreviewText>
             </a>
           )}
 

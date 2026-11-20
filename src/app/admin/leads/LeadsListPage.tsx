@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -286,7 +287,7 @@ export default async function LeadsListPage({
         <p className={styles.warning}>
           <strong>{lateCount}</strong>{' '}
           {lateCount === 1 ? 'lead staat' : 'leads staan'} langer dan{' '}
-          {STALE_MINUTES} minuten op <em>nieuw</em>.
+          {STALE_MINUTES} minuten op <em><PreviewText>{"nieuw"}</PreviewText></em>.
         </p>
       )}
 
@@ -325,7 +326,7 @@ export default async function LeadsListPage({
         {/* A GET form submits only its own fields — without this, searching
             while filtered to Google Ads leads quietly returns all of them. */}
         {adsOnly && <input type="hidden" name="ads" value="1" />}
-        
+
         <div className={styles.searchBox}>
           <input
             id="q"

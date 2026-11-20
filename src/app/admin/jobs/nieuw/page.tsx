@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -177,7 +178,7 @@ export default async function NewJobPage({
   return (
     <>
       <div className={styles.head}>
-        <h1 className={styles.title}>Klus inplannen</h1>
+        <h1 className={styles.title}><PreviewText>{"Klus inplannen"}</PreviewText></h1>
         <span className={styles.count}>
           {order ? 'vanuit een webshopbestelling' : lead ? 'vanuit een lead' : 'handmatig'}
         </span>
@@ -204,7 +205,7 @@ export default async function NewJobPage({
         <p className={styles.warning}>
           Er zijn nog geen monteurs. Voeg ze eerst toe bij{' '}
           <Link className={styles.link} href="/admin/monteurs">
-            Monteurs
+            <PreviewText>{"Monteurs"}</PreviewText>
           </Link>{' '}
           — zonder monteurs heeft de agenda geen kolommen en kan er niemand
           worden toegewezen.

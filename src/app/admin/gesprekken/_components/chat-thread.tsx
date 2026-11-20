@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import * as React from 'react';
 import Link from 'next/link';
 import { cn } from 'cn';
@@ -185,7 +186,7 @@ function ReplyComposer({ phone, placeholder }: { phone: string | null; placehold
       <Composer value={text} onChange={setText} placeholder={placeholder} disabled={!phone}>
         <InputGroupButton type="submit" variant="default" size="icon-sm" className="ml-auto" disabled={!href || !text.trim()}>
           <Send />
-          <span className="sr-only">Verstuur via WhatsApp</span>
+          <span className="sr-only"><PreviewText>{"Verstuur via WhatsApp"}</PreviewText></span>
         </InputGroupButton>
       </Composer>
     </form>
@@ -205,11 +206,11 @@ function NoteComposer({ leadId, placeholder }: { leadId: string | null; placehol
   return (
     <form className="w-full" onSubmit={submit}>
       <Composer value={text} onChange={(v) => { setText(v); setState('idle'); }} placeholder={placeholder} disabled={!leadId}>
-        {state === 'saved' && <span className="text-muted-foreground text-xs">Notitie opgeslagen bij de lead.</span>}
-        {state === 'error' && <span className="text-destructive text-xs">Opslaan mislukt.</span>}
+        {state === 'saved' && <span className="text-muted-foreground text-xs"><PreviewText>{"Notitie opgeslagen bij de lead."}</PreviewText></span>}
+        {state === 'error' && <span className="text-destructive text-xs"><PreviewText>{"Opslaan mislukt."}</PreviewText></span>}
         <InputGroupButton type="submit" variant="default" size="icon-sm" className="ml-auto" disabled={!leadId || !text.trim() || state === 'busy'}>
           <Send />
-          <span className="sr-only">Notitie opslaan</span>
+          <span className="sr-only"><PreviewText>{"Notitie opslaan"}</PreviewText></span>
         </InputGroupButton>
       </Composer>
     </form>

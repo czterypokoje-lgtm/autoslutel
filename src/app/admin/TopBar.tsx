@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { Bot, Search } from 'lucide-react';
 import styles from './admin.module.css';
@@ -81,7 +82,7 @@ export default function TopBar({
         {office && (
           <Link href="/admin/gesprekken" className={styles.topAgent} title="Gesprekken van de AI-agent">
             <span className={styles.topAgentDot} aria-hidden="true" />
-            AI-agent
+            <PreviewText>{"AI-agent"}</PreviewText>
             <span className={styles.topAgentIcon} aria-hidden="true">
               <Bot size={18} strokeWidth={1.9} />
             </span>

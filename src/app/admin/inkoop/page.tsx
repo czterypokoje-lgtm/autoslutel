@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { notFound } from 'next/navigation';
 import { IS_KEYFORCARS } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
@@ -28,8 +29,8 @@ export default async function InkoopPage() {
   return (
     <>
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Inkoop</h1>
-        <p className="text-muted-foreground text-sm">Wat bij de leverancier besteld staat en wat is ontvangen. Ontvangst boekt de voorraad; de inkoopfactuur zet alleen de prijs.</p>
+        <h1 className="text-2xl font-semibold tracking-tight"><PreviewText>{"Inkoop"}</PreviewText></h1>
+        <p className="text-muted-foreground text-sm"><PreviewText>{"Wat bij de leverancier besteld staat en wat is ontvangen. Ontvangst boekt de voorraad; de inkoopfactuur zet alleen de prijs."}</PreviewText></p>
       </div>
       {error ? <p className="text-destructive text-sm">{error}</p> : <Inkoop orders={orders} canEdit={seesPrices(user)} />}
     </>

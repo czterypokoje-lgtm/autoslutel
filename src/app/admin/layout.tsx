@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 import './theme.css';
 import './kfc.css';
 import styles from './admin.module.css';
@@ -14,11 +14,12 @@ import { BRAND, IS_KEYFORCARS } from '@/config/install';
 import PreviewLanguage, { PreviewText } from './PreviewLanguage';
 import KeyForCarsAppearance from './KeyForCarsAppearance';
 import KfcShell from './KfcShell';
+import { shippingTestEnabled } from '@/lib/kfcShippingTest';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--ff-crm-studio', preload: false });
+const inter = localFont({ src: '../fonts/inter-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--ff-crm-studio', preload: false });
 // KeyForCars shell: Geist, the Studio Admin template font.
-const geist = Geist({ subsets: ['latin'], display: 'swap', variable: '--font-geist', preload: false });
-const geistMono = Geist_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-geist-mono', preload: false });
+const geist = localFont({ src: '../fonts/geist-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--font-geist', preload: false });
+const geistMono = localFont({ src: '../fonts/geist-mono-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--font-geist-mono', preload: false });
 
 /**
  * The CRM shell.
@@ -117,8 +118,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // KeyForCars: the shadcn shell (KfcShell) once signed in; the login page keeps the plain panel.
   if (IS_KEYFORCARS && user) {
     return (
-      <PreviewLanguage floating={false}>
-        <KfcShell role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
+      <PreviewLanguage floating={false} loadNames>
+        <KfcShell shippingTest={shippingTestEnabled} role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
           {readonlyStatus}
           {children}
         </KfcShell>

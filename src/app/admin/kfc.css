@@ -247,3 +247,70 @@
   }
 }
 
+
+/* Shared KeyForCars workspace surfaces. */
+body.kfc-shell {
+  --background: #f4f5f7;
+  --foreground: #172336;
+  --card: #fff;
+  --card-foreground: #172336;
+  --border: #e1e5eb;
+  --input: #d8dfe8;
+  --muted: #edf0f4;
+  --muted-foreground: #526176;
+  --primary: #a83215;
+  --primary-foreground: #fff;
+  --ring: #a83215;
+  --sidebar: #f0f2f5;
+  --sidebar-foreground: #243247;
+  --sidebar-accent: #e5eaf1;
+  --sidebar-accent-foreground: #172336;
+  --sidebar-border: #dfe4ec;
+  --chart-1: #b43b1b;
+  --chart-2: #367b78;
+  --chart-3: #34577e;
+}
+.kfc-brand-mark { background: #192b42; color: #fff; }
+.kfc-workspace { background: #f7f8fa; }
+.kfc-shell [data-variant="inset"] ~ .kfc-workspace { border: 1px solid var(--border); }
+.kfc-toolbar { background: var(--card); border-radius: inherit; border-end-start-radius: 0; border-end-end-radius: 0; }
+.kfc-content { width: 100%; max-width: 1600px; margin-inline: auto; }
+.kfc-shell [data-sidebar="menu-button"][data-active="true"],
+.kfc-shell [data-sidebar="menu-sub-button"][data-active="true"] {
+  color: #8e2a13;
+  background: #f9e9e3;
+}
+.kfc-shell [data-slot="card"] { box-shadow: 0 1px 2px #15263d0a; }
+.kfc-shell [data-slot="table-cell"] { border-color: var(--border); }
+.kfc-shell [data-slot="table-header"] { background: #f2f4f8; }
+.kfc-shell [data-slot="table-head"] { color: #47566b; font-weight: 600; }
+.kfc-dashboard-title { font-size: clamp(1.6rem, 2.6vw, 2.25rem); line-height: 1.15; }
+.kfc-kpi-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.kfc-shell .kfc-kpi { gap: .6rem; min-width: 0; }
+.kfc-shell .kfc-kpi-primary { border-color: #ecd0c3; background: #fff7f3; }
+.kfc-dashboard-charts { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.kfc-shell :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+@media (min-width: 850px) {
+  .kfc-kpi-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1120px) {
+  .kfc-dashboard-charts { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+}
+@media (min-width: 1420px) {
+  .kfc-kpi-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kfc-shell :is([data-slot="sidebar-gap"], [data-slot="sidebar-container"], .kfc-page-search) {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Workshop calendar (/admin/agenda): outside opening hours and closures/blocks. */
+.kfc-cal-closed {
+  background-color: color-mix(in srgb, var(--muted-foreground) 9%, transparent);
+}
+.kfc-cal-blocked {
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, #f59e0b 22%, transparent) 0 6px, transparent 6px 12px);
+  color: var(--muted-foreground);
+}

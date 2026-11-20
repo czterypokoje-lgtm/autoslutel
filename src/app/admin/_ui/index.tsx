@@ -1,3 +1,4 @@
+import { PreviewText } from '../PreviewLanguage';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import styles from './ui.module.css';
@@ -30,8 +31,8 @@ export function PageHead({
   return (
     <div className={styles.head}>
       <div className={styles.headText}>
-        <h1 className={styles.title}>{title}</h1>
-        {sub && <p className={styles.sub}>{sub}</p>}
+        <h1 className={styles.title}>{typeof title === 'string' ? <PreviewText>{title}</PreviewText> : title}</h1>
+        {sub && <p className={styles.sub}>{typeof sub === 'string' ? <PreviewText>{sub}</PreviewText> : sub}</p>}
       </div>
       {actions && <div className={styles.actions}>{actions}</div>}
     </div>
@@ -144,7 +145,7 @@ export function Stat({
         {icon && <span className={join(styles.statIcon, toneClass)}>{icon}</span>}
       </div>
       <div className={styles.statValue}>{value}</div>
-      {foot && <div className={styles.statFoot}>{foot}</div>}
+      {foot && <div className={styles.statFoot}>{typeof foot === "string" ? <PreviewText>{foot}</PreviewText> : foot}</div>}
     </div>
   );
 }

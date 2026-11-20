@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireCrmUser } from '@/lib/crmSession';
 import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -138,8 +139,7 @@ export default async function BestellenPage({
 
       {!me && (
         <Notice tone="bad">
-          Uw login is niet aan een monteur gekoppeld, dus u kunt niets aanvragen. Kantoor kan dit
-          koppelen bij Monteurs.
+          <PreviewText>{"Uw login is niet aan een monteur gekoppeld, dus u kunt niets aanvragen. Kantoor kan dit koppelen bij Monteurs."}</PreviewText>
         </Notice>
       )}
 
@@ -158,7 +158,7 @@ export default async function BestellenPage({
 
       {(mine ?? []).length > 0 && (
         <Card>
-          <CardHead>Uw laatste aanvragen</CardHead>
+          <CardHead><PreviewText>{"Uw laatste aanvragen"}</PreviewText></CardHead>
           <div className={styles.requests}>
             {(mine ?? []).map((order) => (
               <div key={order.id} className={styles.request}>

@@ -3,11 +3,10 @@ import { Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { PreviewText } from '../PreviewLanguage';
+import { PreviewProductName, PreviewText, PreviewStyledInput } from '../PreviewLanguage';
 import { SHOPS, sampleOrders, type OrderStatus, type SampleOrder } from '@/lib/kfcSampleOrders';
-import { listShopOrders, shopOrdersExist } from '@/lib/kfcOrders';
+import { listShopOrders, sampleShopOrdersExist, shopOrdersExist } from '@/lib/kfcOrders';
 import { WOO_SHOPS, wooConfigured, type WooShop } from '@/lib/kfcWoo';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { FulfilmentBadge, ImportPanel } from '../bestellingen/OrderParts';
@@ -39,13 +38,15 @@ function Filter({ on, href, children }: { on: boolean; href: string; children: R
 type Row = SampleOrder & { id?: string; fulfilment?: Fulfilment };
 
 export default async function KfcOrders({ shop, status, q, requestedPage, canImport = false }: { shop?: string; status?: string; q?: string; requestedPage?: string; canImport?: boolean }) {
+  const dispatched = status === 'dispatched';
   const query = (q ?? '').trim().toUpperCase();
   const requested = Number(requestedPage);
-  const live = await shopOrdersExist().catch(() => false);
+  const [live, hasSamples] = await Promise.all([shopOrdersExist().catch(() => false), sampleShopOrdersExist().catch(() => false)]);
+  const showSampleNotice = !live || hasSamples;
   let shown: Row[]; let total: number; let page: number;
   if (live) {
     page = Number.isInteger(requested) && requested > 0 ? requested : 1;
-    const result = await listShopOrders({ shop, status, q: query, page, limit: LIMIT });
+    const result = await listShopOrders({ shop, status: dispatched ? undefined : status, fulfilment: dispatched ? 'shipped' : undefined, q: query, page, limit: LIMIT });
     total = result.total;
     shown = result.orders.map((o) => ({
       id: o.id, fulfilment: o.fulfilment, number: o.number, shop: o.shop as SampleOrder['shop'], created: o.created_at,
@@ -87,12 +88,12 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
           {shop && <input type="hidden" name="shop" value={shop} />}
           {status && <input type="hidden" name="status" value={status} />}
           <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
-          <Input type="search" name="q" defaultValue={q} placeholder="Zoek op ordernummer of SKU" aria-label="Zoek bestelling" className="pl-8" />
+          <PreviewStyledInput type="search" name="q" defaultValue={q} placeholder="Zoek op ordernummer of SKU" aria-label="Zoek bestelling" className="pl-8" />
         </form>
       </div>
 
       {canImport && <div className="max-md:order-last"><ImportPanel shops={importShops} /></div>}
-      {!live && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs"><PreviewText>Voorbeeldbestellingen. Echte producten en prijzen, verzonnen klanten en aantallen.</PreviewText></p>}
+      {showSampleNotice && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs"><PreviewText>Voorbeeldbestellingen. Echte producten en prijzen, verzonnen klanten en aantallen.</PreviewText></p>}
 
       <div className="flex flex-wrap gap-2">
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
@@ -101,6 +102,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
         </div>
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
           <Filter on={!status} href={link({ status: undefined })}><PreviewText>Elke status</PreviewText></Filter>
+          <Filter on={dispatched} href={link({ status: 'dispatched' })}><PreviewText>Verzonden in CRM</PreviewText></Filter>
           {(Object.keys(STATUS) as OrderStatus[]).map((s) => <Filter key={s} on={status === s} href={link({ status: s })}><PreviewText>{STATUS[s].label}</PreviewText></Filter>)}
         </div>
       </div>
@@ -116,7 +118,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
                 </div>
                 <div className="text-muted-foreground text-xs">{order.shop} · {WHEN.format(new Date(order.created))} · {order.country}</div>
                 <div className="text-xs">
-                  {order.lines.map((line) => <div key={line.sku} className="truncate">{line.quantity} × <span className="font-medium">{line.sku}</span> <span className="text-muted-foreground">{line.name.slice(0, 40)}</span></div>)}
+                  {order.lines.map((line) => <div key={line.sku} className="truncate">{line.quantity} × <span className="font-medium">{line.sku}</span> <span className="text-muted-foreground"><PreviewProductName sku={line.sku} limit={40}>{line.name}</PreviewProductName></span></div>)}
                 </div>
                 <div className="flex flex-wrap gap-1 pt-0.5"><Badge variant={STATUS[order.status].variant}><PreviewText>{STATUS[order.status].label}</PreviewText></Badge>{order.fulfilment && order.fulfilment !== 'external' && <FulfilmentBadge value={order.fulfilment} />}</div>
               </li>
@@ -145,7 +147,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
                     {order.lines.map((line) => (
                       <div key={line.sku} className="text-sm">
                         {line.quantity} × <Link prefetch={false} className="font-medium underline-offset-4 hover:underline" href={`/admin/voorraad/p/${encodeURIComponent(line.sku)}`}>{line.sku}</Link>{' '}
-                        <span className="text-muted-foreground">{line.name.slice(0, 48)}</span>
+                        <span className="text-muted-foreground"><PreviewProductName sku={line.sku} limit={48}>{line.name}</PreviewProductName></span>
                       </div>
                     ))}
                   </TableCell>

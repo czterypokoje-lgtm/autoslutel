@@ -45,6 +45,7 @@ const KEYFORCARS_OUTSIDE = [
   '/vendor', // barcode decoder .wasm
   '/api/woo', // WooCommerce order webhooks (signature-checked in the route)
   '/api/cron/kfc-reconcile', // nightly import check (CRON_SECRET)
+  '/api/agent/workshop', // ElevenLabs Workshop Service tools (KFC_WORKSHOP_AGENT_TOKEN); other /api/agent routes stay closed
   '/_next', // dev reload
   '/__nextjs_original-stack-frame', // dev error overlay
 ];

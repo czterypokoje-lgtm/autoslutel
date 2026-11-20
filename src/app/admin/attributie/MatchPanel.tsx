@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -112,7 +113,7 @@ export default function MatchPanel({
     <>
       <div className={styles.bar}>
         <button className={ui.btn} onClick={() => goToDate(shift(-1))}>
-          ← Vorige dag
+          <PreviewText>{"← Vorige dag"}</PreviewText>
         </button>
         <input
           type="date"
@@ -123,11 +124,11 @@ export default function MatchPanel({
           style={{ maxWidth: 180 }}
         />
         <button className={ui.btn} onClick={() => goToDate(shift(1))} disabled={date >= today}>
-          Volgende dag →
+          <PreviewText>{"Volgende dag →"}</PreviewText>
         </button>
         {date !== today && (
           <button className={ui.btn} onClick={() => goToDate(today)}>
-            Vandaag
+            <PreviewText>{"Vandaag"}</PreviewText>
           </button>
         )}
       </div>
@@ -147,23 +148,23 @@ export default function MatchPanel({
 
       <Card>
         <CardHead>
-          Advertentieklikken — {open.length} vrij, {clicks.length} totaal
+          <PreviewText>Advertentieklikken</PreviewText> — {open.length} <PreviewText>vrij</PreviewText>, {clicks.length} <PreviewText>{"totaal"}</PreviewText>
         </CardHead>
 
         {!clicks.length ? (
-          <Empty>Geen advertentieklikken op deze dag.</Empty>
+          <Empty><PreviewText>{"Geen advertentieklikken op deze dag."}</PreviewText></Empty>
         ) : (
           <div className={styles.scroll}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Tijd</th>
-                  <th>Netwerk</th>
-                  <th>Campagne</th>
-                  <th>Zoekterm</th>
-                  <th>Pagina</th>
+                  <th><PreviewText>{"Tijd"}</PreviewText></th>
+                  <th><PreviewText>{"Netwerk"}</PreviewText></th>
+                  <th><PreviewText>{"Campagne"}</PreviewText></th>
+                  <th><PreviewText>{"Zoekterm"}</PreviewText></th>
+                  <th><PreviewText>{"Pagina"}</PreviewText></th>
                   <th>Code</th>
-                  <th>Koppel aan klus</th>
+                  <th><PreviewText>{"Koppel aan klus"}</PreviewText></th>
                 </tr>
               </thead>
               <tbody>
@@ -196,11 +197,11 @@ export default function MatchPanel({
                     <td className={styles.ref}>{click.ref ?? '—'}</td>
                     <td>
                       {click.claimed ? (
-                        <span className={styles.muted}>Al gekoppeld</span>
+                        <span className={styles.muted}><PreviewText>{"Al gekoppeld"}</PreviewText></span>
                       ) : !click.hasClickId ? (
-                        <span className={styles.muted}>Geen klik-id — niets te melden</span>
+                        <span className={styles.muted}><PreviewText>{"Geen klik-id — niets te melden"}</PreviewText></span>
                       ) : !candidates.length ? (
-                        <span className={styles.muted}>Geen vrije klus</span>
+                        <span className={styles.muted}><PreviewText>{"Geen vrije klus"}</PreviewText></span>
                       ) : (
                         <div className={styles.pick}>
                           <select
@@ -241,24 +242,24 @@ export default function MatchPanel({
 
       <Card>
         <CardHead>
-          Klussen deze en volgende dag — {candidates.length} zonder bron, {jobs.length} totaal
+          <PreviewText>Klussen deze en volgende dag</PreviewText> — {candidates.length} <PreviewText>zonder bron</PreviewText>, {jobs.length} <PreviewText>{"totaal"}</PreviewText>
         </CardHead>
 
         {!jobs.length ? (
-          <Empty>Geen klussen gepland op deze dag.</Empty>
+          <Empty><PreviewText>{"Geen klussen gepland op deze dag."}</PreviewText></Empty>
         ) : (
           <div className={styles.scroll}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Afspraak</th>
-                  <th>Ingevoerd</th>
-                  <th>Klant</th>
-                  <th>Telefoon</th>
-                  <th>Auto</th>
-                  <th>Plaats</th>
-                  <th>Waarde</th>
-                  <th>Bron</th>
+                  <th><PreviewText>{"Afspraak"}</PreviewText></th>
+                  <th><PreviewText>{"Ingevoerd"}</PreviewText></th>
+                  <th><PreviewText>{"Klant"}</PreviewText></th>
+                  <th><PreviewText>{"Telefoon"}</PreviewText></th>
+                  <th><PreviewText>{"Auto"}</PreviewText></th>
+                  <th><PreviewText>{"Plaats"}</PreviewText></th>
+                  <th><PreviewText>{"Waarde"}</PreviewText></th>
+                  <th><PreviewText>{"Bron"}</PreviewText></th>
                 </tr>
               </thead>
               <tbody>
@@ -277,9 +278,9 @@ export default function MatchPanel({
                     <td>{job.value ? MONEY.format(job.value) : '—'}</td>
                     <td>
                       {job.attributed ? (
-                        <Badge tone="ok">Bekend</Badge>
+                        <Badge tone="ok"><PreviewText>{"Bekend"}</PreviewText></Badge>
                       ) : (
-                        <Badge tone="warn">Onbekend</Badge>
+                        <Badge tone="warn"><PreviewText>{"Onbekend"}</PreviewText></Badge>
                       )}
                     </td>
                   </tr>
@@ -291,7 +292,7 @@ export default function MatchPanel({
       </Card>
 
       <Notice>
-        <strong>Hoe u dit zeker weet.</strong> De code in de kolom Code is het enige harde bewijs:
+        <strong><PreviewText>{"Hoe u dit zeker weet."}</PreviewText></strong> <PreviewText>{"De code in de kolom Code is het enige harde bewijs:"}</PreviewText>
         die staat in het WhatsApp-bericht van de klant. Verder gaat het om herkennen — de minuut
         van de klik, de campagne die ervoor betaalde en de pagina die ze lazen, naast uw eigen
         gesprek. Twijfelt u? Koppel niet. Een verkeerde klik naar Google leert Smart Bidding het

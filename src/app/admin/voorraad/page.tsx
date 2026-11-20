@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser, requireWarehouseUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Empty, Notice } from '../_ui';
@@ -205,11 +206,11 @@ export default async function VoorraadPage({ searchParams }: { searchParams: Pro
             <Table
               head={
                 <>
-                  <th>Omschrijving</th>
-                  <th>Aantal</th>
+                  <th><PreviewText>{"Omschrijving"}</PreviewText></th>
+                  <th><PreviewText>{"Aantal"}</PreviewText></th>
                   <th>Minimum</th>
-                  <th>Kostprijs</th>
-                  <th>Waarde</th>
+                  <th><PreviewText>{"Kostprijs"}</PreviewText></th>
+                  <th><PreviewText>{"Waarde"}</PreviewText></th>
                 </>
               }
             >
@@ -255,10 +256,10 @@ export default async function VoorraadPage({ searchParams }: { searchParams: Pro
             head={
               <>
                 <th>Wanneer</th>
-                <th>Artikel</th>
+                <th><PreviewText>{"Artikel"}</PreviewText></th>
                 <th>Verandering</th>
                 <th>Daarna</th>
-                <th>Reden</th>
+                <th><PreviewText>{"Reden"}</PreviewText></th>
               </>
             }
           >

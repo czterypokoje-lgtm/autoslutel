@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { IS_KEYFORCARS } from '@/config/install';
 import { getCustomer } from '@/lib/kfcReceivables';
 import KfcCustomerCard from '../KfcCustomerCard';
@@ -127,9 +128,9 @@ export default async function KlantPage({
           </span>
         </div>
         <div className={k.heroActions}>
-          <a href={`tel:${phone}`} className={k.btnGhost}><Phone size={16} /> Bellen</a>
+          <a href={`tel:${phone}`} className={k.btnGhost}><Phone size={16} /> <PreviewText>{"Bellen"}</PreviewText></a>
           {wa && <a href={wa} target="_blank" rel="noopener noreferrer" className={k.btnGhost}><MessageCircle size={16} /> WhatsApp</a>}
-          <Link href="/admin/jobs/nieuw" className={k.btnPrimary}><CalendarPlus size={16} /> Klus inplannen</Link>
+          <Link href="/admin/jobs/nieuw" className={k.btnPrimary}><CalendarPlus size={16} /> <PreviewText>{"Klus inplannen"}</PreviewText></Link>
         </div>
       </header>
 
@@ -137,7 +138,7 @@ export default async function KlantPage({
         <div><span>Klant sinds</span><b>{DATE.format(new Date(customer.first_seen as string))}</b></div>
         <div><span>Aanvragen</span><b>{(leads ?? []).length}</b></div>
         <div><span>Klussen afgerond</span><b>{jobsDone}</b></div>
-        <div><span>Omzet</span><b>{MONEY.format(Number(customer.total_value ?? 0))}</b></div>
+        <div><span><PreviewText>{"Omzet"}</PreviewText></span><b>{MONEY.format(Number(customer.total_value ?? 0))}</b></div>
       </div>
 
       <div className={k.cols}>

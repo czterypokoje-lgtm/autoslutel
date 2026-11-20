@@ -3,10 +3,10 @@ import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { PreviewDate, PreviewText } from '../PreviewLanguage';
+import { PreviewProductName, PreviewDate, PreviewText } from '../PreviewLanguage';
 import { RevenueBars, ShopDonut } from './KfcCharts';
 import { SHOPS, SOLD, sampleCatalogue, sampleOrders, type SampleOrder } from '@/lib/kfcSampleOrders';
-import { ordersForDashboard, shopOrdersExist } from '@/lib/kfcOrders';
+import { ordersForDashboard, sampleShopOrdersExist, shopOrdersExist } from '@/lib/kfcOrders';
 import { rankProducts } from './productRanking';
 
 /**
@@ -70,7 +70,7 @@ function Kpi({ label, value, now, before, foot, strong }: {
   label: string; value: string; now?: number; before?: number; foot: string; strong?: boolean;
 }) {
   return (
-    <Card className={strong ? 'border-primary/40 bg-primary/5' : undefined}>
+    <Card className={strong ? 'kfc-kpi kfc-kpi-primary' : 'kfc-kpi'}>
       <CardHeader className="pb-2">
         <CardDescription><PreviewText>{label}</PreviewText></CardDescription>
         <CardTitle className="text-2xl font-semibold tabular-nums">{value}</CardTitle>
@@ -86,12 +86,19 @@ function Kpi({ label, value, now, before, foot, strong }: {
 /** Every figure on the dashboard, for this moment and period. */
 async function readKfcDashboard(period: KfcPeriod) {
   const now = Date.now();
-  const live = await shopOrdersExist().catch(() => false);
   const { days } = PERIODS.find((p) => p.id === period)!;
   const from = dayKey(now - (days - 1) * DAY);
   const prevFrom = dayKey(now - (2 * days - 1) * DAY);
-
-  const all = live ? await ordersForDashboard() : sampleOrders(now);
+  // Both checks and the order read start together; the read covers this period, the one before and 90 days for "not sold".
+  const window = Math.max(2 * days, 90) + 1;
+  const [live, hasSamples, liveOrders] = await Promise.all([
+    shopOrdersExist().catch(() => false),
+    sampleShopOrdersExist().catch(() => false),
+    ordersForDashboard(window).catch(() => null),
+  ]);
+  const showSampleNotice = !live || hasSamples;
+  if (live && !liveOrders) throw Error('Dashboard orders unavailable');
+  const all = live ? liveOrders! : sampleOrders(now);
   const sold = all.filter(order => SOLD.includes(order.status)).map(order => ({ order, date: dayKey(order.created) }));
   const current = sold.filter(({ date }) => date >= from);
   const inPeriod = current.map(({ order }) => order);
@@ -138,7 +145,7 @@ async function readKfcDashboard(period: KfcPeriod) {
 
   const best = rankProducts(inPeriod)
     .slice(0, 10)
-    .map(({ sku, name, units }) => ({ label: `${sku} · ${name}`, value: units }));
+    .map(({ sku, name, units }) => ({ sku, name, value: units }));
 
   // "Do not reorder": priced products without a single sale in 90 days.
   const ninety = dayKey(now - 89 * DAY);
@@ -146,7 +153,7 @@ async function readKfcDashboard(period: KfcPeriod) {
   const catalogue = sampleCatalogue();
   const unsold = catalogue.filter((product) => !soldRecently.has(product.sku));
 
-  return { now, days, cur, prev, onHold, bars, byShop, best, unsold, catalogue, live };
+  return { now, days, cur, prev, onHold, bars, byShop, best, unsold, catalogue, showSampleNotice };
 }
 
 /**
@@ -154,14 +161,14 @@ async function readKfcDashboard(period: KfcPeriod) {
  * revenue per shop, best sellers, and what has not sold in 90 days.
  */
 export default async function KfcDashboard({ period }: { period: KfcPeriod; embedded?: boolean }) {
-  const { now, days, cur, prev, onHold, bars, byShop, best, unsold, catalogue, live } = await readKfcDashboard(period);
+  const { now, days, cur, prev, onHold, bars, byShop, best, unsold, catalogue, showSampleNotice } = await readKfcDashboard(period);
   const topUnits = best[0]?.value ?? 1;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight"><PreviewText>Dashboard</PreviewText></h1>
+          <h1 className="kfc-dashboard-title font-semibold tracking-tight"><PreviewText>Dashboard</PreviewText></h1>
           <p className="text-muted-foreground text-sm"><PreviewDate value={now} /></p>
         </div>
         <div className="flex gap-1 rounded-lg border p-1">
@@ -173,11 +180,11 @@ export default async function KfcDashboard({ period }: { period: KfcPeriod; embe
         </div>
       </div>
 
-      {!live && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs">
+      {showSampleNotice && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs">
         <PreviewText>Proefversie met voorbeeldbestellingen: echte producten en prijzen uit de webshops, verzonnen aantallen. In de echte versie komen hier de bestellingen van keyforcars.nl, klapsleutels.nl en remkeys.com binnen.</PreviewText>
       </p>}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="kfc-kpi-strip">
         <Kpi label="Bestellingen" value={number(cur.orders)} now={cur.orders} before={prev.orders} foot="betaald of verzonden" />
         <Kpi strong label="Omzet excl. btw" value={euro(cur.revenue)} now={cur.revenue} before={prev.revenue} foot="producten en verzending, zonder 21% btw" />
         <Kpi label="Stuks verkocht" value={number(cur.units)} now={cur.units} before={prev.units} foot="alle drie de webshops" />
@@ -187,63 +194,65 @@ export default async function KfcDashboard({ period }: { period: KfcPeriod; embe
         <Kpi label="Marge" value="—" foot="zodra de inkoopprijzen bekend zijn" />
       </div>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle><PreviewText>Omzet excl. btw</PreviewText></CardTitle>
-            <CardDescription><PreviewText>{days === 1 ? 'per uur' : days <= 30 ? 'per dag' : 'per week'}</PreviewText></CardDescription>
-          </div>
-          <Button asChild variant="outline" size="sm"><Link href="/admin/orders"><PreviewText>Alle bestellingen →</PreviewText></Link></Button>
-        </CardHeader>
-        <CardContent><RevenueBars bars={bars} /></CardContent>
-      </Card>
+      <div className="kfc-dashboard-charts">
+        <Card className="min-w-0">
+          <CardHeader className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <CardTitle><PreviewText>Omzet excl. btw</PreviewText></CardTitle>
+              <CardDescription><PreviewText>{days === 1 ? 'per uur' : days <= 30 ? 'per dag' : 'per week'}</PreviewText></CardDescription>
+            </div>
+            <Button asChild variant="outline" size="sm"><Link href="/admin/orders"><PreviewText>Alle bestellingen →</PreviewText></Link></Button>
+          </CardHeader>
+          <CardContent><RevenueBars bars={bars} /></CardContent>
+        </Card>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+        <Card className="min-w-0">
           <CardHeader><CardTitle><PreviewText>Omzet per webshop</PreviewText></CardTitle></CardHeader>
           <CardContent><ShopDonut slices={byShop} /></CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+      </div>
+      <div className="grid gap-4 xl:grid-cols-2">
+        <Card className="min-w-0">
+          <CardHeader className="flex flex-wrap items-center justify-between gap-2">
             <CardTitle><PreviewText>Best verkocht (stuks)</PreviewText></CardTitle>
             <Button asChild variant="ghost" size="sm"><Link href="/admin/best-verkocht"><PreviewText>Bekijk ranglijst</PreviewText></Link></Button>
           </CardHeader>
           <CardContent>
             <ul className="grid gap-2.5">
               {best.map((row) => (
-                <li key={row.label} className="grid min-w-0 gap-1 text-sm">
-                  <div className="flex min-w-0 justify-between gap-4"><span className="min-w-0 truncate">{row.label}</span><span className="font-medium tabular-nums">{number(row.value)}</span></div>
+                <li key={row.sku} className="grid min-w-0 gap-1 text-sm">
+                  <div className="flex min-w-0 justify-between gap-4"><span className="min-w-0 truncate">{row.sku} · <PreviewProductName sku={row.sku}>{row.name}</PreviewProductName></span><span className="font-medium tabular-nums">{number(row.value)}</span></div>
                   <div className="bg-muted h-1.5 overflow-hidden rounded-full"><div className="bg-primary h-full rounded-full" style={{ width: `${Math.max(3, (row.value / topUnits) * 100)}%` }} /></div>
                 </li>
               ))}
             </ul>
           </CardContent>
         </Card>
-      </div>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle><PreviewText>Niet verkocht in 90 dagen</PreviewText> · {number(unsold.length)} / {number(catalogue.length)}</CardTitle>
-            <CardDescription><PreviewText>Niet bijbestellen zonder eerst te tellen. Dit zijn de eerste 12.</PreviewText></CardDescription>
-          </div>
-          <Button asChild variant="outline" size="sm"><Link href="/admin/voorraad"><PreviewText>Naar de voorraad →</PreviewText></Link></Button>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader><TableRow><TableHead>SKU</TableHead><TableHead><PreviewText>Product</PreviewText></TableHead><TableHead className="text-right"><PreviewText>Prijs</PreviewText></TableHead></TableRow></TableHeader>
-            <TableBody>
-              {unsold.slice(0, 12).map((product) => (
-                <TableRow key={product.sku}>
-                  <TableCell><Link className="font-medium underline-offset-4 hover:underline" href={`/admin/voorraad/p/${encodeURIComponent(product.sku)}`}>{product.sku}</Link></TableCell>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell className="text-right tabular-nums">{euro(product.price)}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+        <Card className="min-w-0">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle><PreviewText>Niet verkocht in 90 dagen</PreviewText> · {number(unsold.length)} / {number(catalogue.length)}</CardTitle>
+              <CardDescription><PreviewText>Niet bijbestellen zonder eerst te tellen. Dit zijn de eerste 12.</PreviewText></CardDescription>
+            </div>
+            <Button asChild variant="outline" size="sm"><Link href="/admin/voorraad"><PreviewText>Naar de voorraad →</PreviewText></Link></Button>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader><TableRow><TableHead>SKU</TableHead><TableHead><PreviewText>Product</PreviewText></TableHead><TableHead className="text-right"><PreviewText>Prijs</PreviewText></TableHead></TableRow></TableHeader>
+              <TableBody>
+                {unsold.slice(0, 12).map((product) => (
+                  <TableRow key={product.sku}>
+                    <TableCell><Link className="font-medium underline-offset-4 hover:underline" href={`/admin/voorraad/p/${encodeURIComponent(product.sku)}`}>{product.sku}</Link></TableCell>
+                    <TableCell><PreviewProductName sku={product.sku}>{product.name}</PreviewProductName></TableCell>
+                    <TableCell className="text-right tabular-nums">{euro(product.price)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

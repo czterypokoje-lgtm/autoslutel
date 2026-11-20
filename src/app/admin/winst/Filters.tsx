@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Download, RefreshCw } from 'lucide-react';
@@ -77,7 +78,7 @@ export default function Filters({ from, to }: { from: string; to: string }) {
         ))}
       </div>
       <label>
-        <div className={w.label}>Van</div>
+        <div className={w.label}><PreviewText>{"Van"}</PreviewText></div>
         <input type="date" value={van} onChange={(e) => setVan(e.target.value)} className={ui.input} />
       </label>
       <label>
@@ -94,7 +95,7 @@ export default function Filters({ from, to }: { from: string; to: string }) {
       </a>
 
       <button type="button" className={ui.btn} onClick={backfill} disabled={busy}>
-        <RefreshCw size={16} /> {busy ? 'Bezig…' : 'Brandstof aanvullen'}
+        <RefreshCw size={16} /> <PreviewText>{busy ? 'Bezig…' : 'Brandstof aanvullen'}</PreviewText>
       </button>
 
       {note && <span className={w.note}>{note}</span>}

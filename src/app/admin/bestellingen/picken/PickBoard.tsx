@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText, usePreviewLanguage } from '@/app/admin/PreviewLanguage';
 import * as React from 'react';
 import Link from 'next/link';
 import { cn } from 'cn';
@@ -20,17 +21,16 @@ import { OrderLines, WHEN } from '../OrderParts';
 
 type Status = 'all' | 'open' | 'picked' | 'short';
 type LabelFilter = 'all' | 'none' | 'has';
-const DAY = new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Amsterdam' });
 
 const hasShort = (o: ShopOrder) => o.lines.some((l) => l.state === 'short');
 const statusOf = (o: ShopOrder): Exclude<Status, 'all'> => (hasShort(o) ? 'short' : o.fulfilment === 'picked' ? 'picked' : 'open');
 
-function dayKey(iso: string, now: number) {
+function dayKey(iso: string, now: number, english: boolean) {
   const d = new Date(iso); const today = new Date(now);
   const key = d.toLocaleDateString('nl-NL', { timeZone: 'Europe/Amsterdam' });
-  if (key === today.toLocaleDateString('nl-NL', { timeZone: 'Europe/Amsterdam' })) return 'Vandaag';
-  if (key === new Date(now - 864e5).toLocaleDateString('nl-NL', { timeZone: 'Europe/Amsterdam' })) return 'Gisteren';
-  return DAY.format(d);
+  if (key === today.toLocaleDateString('nl-NL', { timeZone: 'Europe/Amsterdam' })) return english ? 'Today' : 'Vandaag';
+  if (key === new Date(now - 864e5).toLocaleDateString('nl-NL', { timeZone: 'Europe/Amsterdam' })) return english ? 'Yesterday' : 'Gisteren';
+  return new Intl.DateTimeFormat(english ? 'en-GB' : 'nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Amsterdam' }).format(d);
 }
 
 async function post(body: unknown, signal?: AbortSignal): Promise<{ error?: string; label_url?: string; order?: ShopOrder }> {
@@ -40,6 +40,7 @@ async function post(body: unknown, signal?: AbortSignal): Promise<{ error?: stri
 }
 
 export function PickBoard({ orders: fromServer, now }: { orders: ShopOrder[]; now: number }) {
+  const { english, t } = usePreviewLanguage();
   const [patched, setPatched] = React.useState<Record<string, ShopOrder>>({}); // orders the API handed back, over the server render
   const abort = React.useRef<AbortController | null>(null);
   React.useEffect(() => () => abort.current?.abort(), []); // leaving the page stops the bulk run
@@ -55,7 +56,7 @@ export function PickBoard({ orders: fromServer, now }: { orders: ShopOrder[]; no
   const visible = orders.filter((o) =>
     (shop === 'all' || o.shop === shop) && (status === 'all' || statusOf(o) === status) && (label === 'all' || (label === 'none' ? !o.label_url : !!o.label_url)));
   const groups = visible.reduce<{ day: string; orders: ShopOrder[] }[]>((acc, o) => {
-    const day = dayKey(o.created_at, now);
+    const day = dayKey(o.created_at, now, english);
     const g = acc.find((x) => x.day === day);
     if (g) g.orders.push(o); else acc.push({ day, orders: [o] });
     return acc;
@@ -113,53 +114,53 @@ export function PickBoard({ orders: fromServer, now }: { orders: ShopOrder[]; no
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
-          <button type="button" className={chip(shop === 'all')} onClick={() => setShop('all')}>Alle shops</button>
+          <button type="button" className={chip(shop === 'all')} onClick={() => setShop('all')}><PreviewText>{"Alle shops"}</PreviewText></button>
           {shops.map((s) => <button key={s} type="button" className={chip(shop === s)} onClick={() => setShop(s)}>{s} <span className="opacity-70">{count((o) => o.shop === s)}</span></button>)}
         </div>
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
           {([['all', 'Alles'], ['open', 'Te picken'], ['picked', 'Gepickt'], ['short', 'Tekort']] as [Status, string][]).map(([k, l]) => (
-            <button key={k} type="button" className={chip(status === k)} onClick={() => setStatus(k)}>{l} {k !== 'all' && <span className="opacity-70">{count((o) => statusOf(o) === k)}</span>}</button>
+            <button key={k} type="button" className={chip(status === k)} onClick={() => setStatus(k)}>{t(l)} {k !== 'all' && <span className="opacity-70">{count((o) => statusOf(o) === k)}</span>}</button>
           ))}
         </div>
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
           {([['all', 'Alle labels'], ['none', 'Zonder label'], ['has', 'Met label']] as [LabelFilter, string][]).map(([k, l]) => (
-            <button key={k} type="button" className={chip(label === k)} onClick={() => setLabel(k)}>{l} {k !== 'all' && <span className="opacity-70">{count((o) => (k === 'none' ? !o.label_url : !!o.label_url))}</span>}</button>
+            <button key={k} type="button" className={chip(label === k)} onClick={() => setLabel(k)}>{t(l)} {k !== 'all' && <span className="opacity-70">{count((o) => (k === 'none' ? !o.label_url : !!o.label_url))}</span>}</button>
           ))}
         </div>
       </div>
 
       <div className="bg-card sticky top-0 z-10 flex flex-wrap items-center gap-2 rounded-lg border p-2 shadow-xs">
         <label className="flex items-center gap-2 px-1 text-sm">
-          <Checkbox checked={visible.length > 0 && visible.every((o) => selected.has(o.id))} onCheckedChange={(v) => setSelected(v ? new Set(visible.map((o) => o.id)) : new Set())} aria-label="Alles zichtbaar selecteren" />
-          {selected.size ? `${selected.size} geselecteerd` : `${visible.length} zichtbaar`}
+          <Checkbox checked={visible.length > 0 && visible.every((o) => selected.has(o.id))} onCheckedChange={(v) => setSelected(v ? new Set(visible.map((o) => o.id)) : new Set())} aria-label={t("Alles zichtbaar selecteren")} />
+          {selected.size ? `${selected.size} ${t("geselecteerd")}` : `${visible.length} ${t("zichtbaar")}`}
         </label>
-        <span className="text-muted-foreground text-sm">· {withoutLabel.length} zonder label</span>
+        <span className="text-muted-foreground text-sm">· {withoutLabel.length} <PreviewText>{"zonder label"}</PreviewText></span>
         <div className="ml-auto flex flex-wrap gap-2">
           <Button size="sm" variant="outline" disabled={busy || withoutLabel.length === 0} onClick={() => makeLabels(withoutLabel)}>
-            <Tag data-icon="inline-start" /> Labels maken ({withoutLabel.length})
+            <Tag data-icon="inline-start" /> {t("Labels maken")} ({withoutLabel.length})
           </Button>
           <Button size="sm" variant="outline" disabled={busy || target.every((o) => !o.label_url)} onClick={() => printLabels(target.filter((o) => !!o.label_url))}>
             <Printer data-icon="inline-start" /> Print labels ({target.filter((o) => !!o.label_url).length})
           </Button>
-          <Button size="sm" disabled={busy || target.length === 0} onClick={patPat} title="Labels maken voor alles zonder label en daarna alles in één keer printen">
-            <Zap data-icon="inline-start" /> Alles labelen + printen ({target.length})
+          <Button size="sm" disabled={busy || target.length === 0} onClick={patPat} title={t("Labels maken voor alles zonder label en daarna alles in één keer printen")}>
+            <Zap data-icon="inline-start" /> {t("Alles labelen + printen")} ({target.length})
           </Button>
         </div>
         {progress && <p className="text-muted-foreground w-full px-1 text-xs">{progress}</p>}
       </div>
 
-      {visible.length === 0 && <p className="text-muted-foreground rounded-lg border border-dashed px-4 py-10 text-center text-sm">Niets te picken in deze selectie.</p>}
+      {visible.length === 0 && <p className="text-muted-foreground rounded-lg border border-dashed px-4 py-10 text-center text-sm"><PreviewText>{"Niets te picken in deze selectie."}</PreviewText></p>}
 
       {groups.map((group) => (
         <section key={group.day} className="flex flex-col gap-4">
-          <h2 className="text-muted-foreground flex items-baseline gap-2 text-sm font-medium capitalize">{group.day} <span className="text-xs font-normal">· {group.orders.length} {group.orders.length === 1 ? 'bestelling' : 'bestellingen'}</span></h2>
+          <h2 className="text-muted-foreground flex items-baseline gap-2 text-sm font-medium capitalize">{group.day} <span className="text-xs font-normal">· {group.orders.length} {t(group.orders.length === 1 ? 'bestelling' : 'bestellingen')}</span></h2>
           {group.orders.map((order) => (
             <div key={order.id} className="flex flex-col gap-2">
               <div className="flex flex-wrap items-center gap-3">
-                <Checkbox checked={selected.has(order.id)} onCheckedChange={(v) => toggle(order.id, !!v)} aria-label={`Selecteer #${order.number}`} />
+                <Checkbox checked={selected.has(order.id)} onCheckedChange={(v) => toggle(order.id, !!v)} aria-label={`${t("Selecteer")} #${order.number}`} />
                 <Link href={`/admin/bestellingen/${order.id}`} className="text-lg font-semibold underline-offset-4 hover:underline">#{order.number}</Link>
-                <span className="text-muted-foreground text-sm">{order.shop} · {WHEN.format(new Date(order.created_at))} · {order.country}</span>
-                {order.label_url && <span className="text-muted-foreground text-xs">label {order.carrier === 'eigen' ? 'eigen' : order.carrier}{order.tracking_code && ` · ${order.tracking_code}`}</span>}
+                <span className="text-muted-foreground text-sm">{order.shop} · {english ? new Date(order.created_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' }) : WHEN.format(new Date(order.created_at))} · {order.country}</span>
+                {order.label_url && <span className="text-muted-foreground text-xs">label {order.carrier === 'eigen' ? t('eigen') : order.carrier}{order.tracking_code && ` · ${order.tracking_code}`}</span>}
               </div>
               <OrderLines order={order} canAct onOrder={apply} />
             </div>

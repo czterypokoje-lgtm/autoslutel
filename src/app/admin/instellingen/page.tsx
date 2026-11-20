@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { PageHead, Card, CardHead, Notice } from '../_ui';
 import styles from './instellingen.module.css';
@@ -175,15 +176,14 @@ export default async function InstellingenPage() {
 
       {leadsReachNobody && (
         <Notice tone="bad">
-          Er is geen enkel kanaal ingesteld voor nieuwe leads. Een aanvraag wordt
-          wel opgeslagen, maar niemand krijgt er bericht van.
+          <PreviewText>{"Er is geen enkel kanaal ingesteld voor nieuwe leads. Een aanvraag wordt wel opgeslagen, maar niemand krijgt er bericht van."}</PreviewText>
         </Notice>
       )}
 
       <div className={styles.groups}>
         {groups.map((group) => (
           <Card key={group.title}>
-            <CardHead>{group.title}</CardHead>
+            <CardHead><PreviewText>{group.title}</PreviewText></CardHead>
             <ul className={styles.list}>
               {group.items.map((item) => (
                 <li key={item.name} className={styles.row}>
@@ -199,13 +199,13 @@ export default async function InstellingenPage() {
 
                   <span className={styles.body}>
                     <span className={styles.name}>
-                      {item.name}
+                      <PreviewText>{item.name}</PreviewText>
                       <span className={`${styles.tag} ${styles[item.state]}`}>
-                        {item.state === 'live' ? 'actief' : item.state === 'partial' ? 'deels' : 'uit'}
+                        <PreviewText>{item.state === 'live' ? 'actief' : item.state === 'partial' ? 'deels' : 'uit'}</PreviewText>
                       </span>
                     </span>
-                    <span className={styles.what}>{item.what}</span>
-                    <span className={styles.detail}>{item.detail}</span>
+                    <span className={styles.what}><PreviewText>{item.what}</PreviewText></span>
+                    <span className={styles.detail}><PreviewText>{item.detail}</PreviewText></span>
                     <span className={styles.vars}>
                       {item.vars.map((v) => (
                         <code key={v} className={has(v) ? styles.varSet : styles.varMissing}>
@@ -222,9 +222,7 @@ export default async function InstellingenPage() {
       </div>
 
       <p className={styles.foot}>
-        Een grijze naam betekent dat de instelling ontbreekt. Zet ze in Vercel
-        onder Project → Settings → Environment Variables; een nieuwe waarde
-        werkt pas na de eerstvolgende deploy.
+        <PreviewText>{"Een grijze naam betekent dat de instelling ontbreekt. Zet ze in Vercel onder Project → Settings → Environment Variables; een nieuwe waarde werkt pas na de eerstvolgende deploy."}</PreviewText>
       </p>
     </>
   );

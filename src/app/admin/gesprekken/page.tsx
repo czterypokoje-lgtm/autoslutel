@@ -1,3 +1,4 @@
+import { PreviewText } from '../PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Empty, Notice } from '../_ui';
@@ -177,7 +178,7 @@ export default async function GesprekkenPage() {
 
       {error && (
         <Notice tone="bad">
-          Kon de gesprekken niet laden: {error.message}
+          <PreviewText>Kon de gesprekken niet laden</PreviewText>: {error.message}
         </Notice>
       )}
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { Fragment, useState, useEffect } from 'react';
 import { getBrandLogo } from '@/lib/brandLogos';
 import styles from './leads.module.css';
@@ -221,7 +222,7 @@ function LeadDetailDrawer({ lead, onClose }: { lead: LeadRow; onClose: () => voi
               {postError && <p className={styles.noteError}>{postError}</p>}
             </div>
 
-            {notesState === 'loading' && <p className={styles.noteEmpty}>Laden…</p>}
+            {notesState === 'loading' && <p className={styles.noteEmpty}><PreviewText>{"Laden…"}</PreviewText></p>}
             {notesState === 'error' && (
               <p className={styles.noteError}>
                 Notities konden niet worden geladen. Staat migratie

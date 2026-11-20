@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, Check } from 'lucide-react';
@@ -134,7 +135,7 @@ export default function OrderGrid({
           style={{ flex: '1 1 260px' }}
         />
         <button type="submit" className={`${ui.btn} ${ui.btnPrimary}`}>
-          <Search size={16} /> Zoek
+          <Search size={16} /> <PreviewText>{"Zoek"}</PreviewText>
         </button>
         {(q || cat || merk) && (
           <button
@@ -145,7 +146,7 @@ export default function OrderGrid({
               router.push('/admin/bestellen');
             }}
           >
-            <X size={16} /> Wis
+            <X size={16} /> <PreviewText>{"Wis"}</PreviewText>
           </button>
         )}
       </form>
@@ -179,7 +180,7 @@ export default function OrderGrid({
       {error && <p className={styles.error}>{error}</p>}
 
       <p className={styles.count}>
-        {total.toLocaleString('nl-NL')} artikel{total === 1 ? '' : 'en'}
+        {total.toLocaleString('nl-NL')} <PreviewText>{"artikel"}</PreviewText>{total === 1 ? '' : 'en'}
         {pages > 1 ? ` · pagina ${page} van ${pages}` : ''}
       </p>
 
@@ -195,7 +196,7 @@ export default function OrderGrid({
               /* Either no photo at all, or every one we have carries the
                  supplier's logo. The article number is what identifies the
                  part anyway. */
-              <div className={styles.photoEmpty}>geen eigen foto</div>
+              <div className={styles.photoEmpty}><PreviewText>{"geen eigen foto"}</PreviewText></div>
             )}
 
             <div className={styles.body}>
@@ -206,7 +207,7 @@ export default function OrderGrid({
               <div className={styles.specs}>
                 {product.frequency && <span>{product.frequency}</span>}
                 {product.chip && <span>chip {product.chip}</span>}
-                {product.buttons ? <span>{product.buttons} knoppen</span> : null}
+                {product.buttons ? <span>{product.buttons} <PreviewText>{"knoppen"}</PreviewText></span> : null}
               </div>
 
               {product.fits.length > 0 ? (

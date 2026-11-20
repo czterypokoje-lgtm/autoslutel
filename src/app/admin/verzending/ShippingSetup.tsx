@@ -79,7 +79,7 @@ export default function ShippingSetup() {
   return (
     <section className={styles.page}>
       <PageHead
-        title={t('Verzending')}
+        title={t('Zending maken')}
         sub={local('Kies een vervoerder voor een zending vanuit Nederland.', 'Choose a carrier for a shipment from the Netherlands.')}
         actions={<Link href="/admin/facturen/nieuw" className={ui.btn}><FilePlus2 size={16} aria-hidden="true" />{t('Nieuwe factuur')}</Link>}
       />

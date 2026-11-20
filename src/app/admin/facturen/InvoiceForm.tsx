@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ui } from '../_ui';
@@ -374,11 +375,11 @@ export default function InvoiceForm({
         )}
         <div className={styles.linesHead}>
           <span>Beschrijving</span>
-          <span>Aantal</span>
-          <span>Prijs</span>
+          <span><PreviewText>{"Aantal"}</PreviewText></span>
+          <span><PreviewText>{"Prijs"}</PreviewText></span>
           <span>Korting</span>
           <span>Btw %</span>
-          <span className={styles.right}>Totaal</span>
+          <span className={styles.right}><PreviewText>{"Totaal"}</PreviewText></span>
           <span />
         </div>
         {lines.map((line, i) => {
@@ -472,7 +473,7 @@ export default function InvoiceForm({
               <span>{MONEY.format(totals.subtotal)}</span>
             </div>
             <div className={styles.totalsLine}>
-              <span>Btw</span>
+              <span><PreviewText>{"Btw"}</PreviewText></span>
               <span>{MONEY.format(totals.vat)}</span>
             </div>
             {totals.credit > 0 && (
@@ -482,7 +483,7 @@ export default function InvoiceForm({
               </div>
             )}
             <div className={styles.totalsLineFinal}>
-              <span>Totaal</span>
+              <span><PreviewText>{"Totaal"}</PreviewText></span>
               <span>{MONEY.format(totals.total)}</span>
             </div>
           </div>

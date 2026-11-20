@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewProductName, PreviewText, usePreviewLanguage } from '@/app/admin/PreviewLanguage';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
@@ -13,7 +14,6 @@ import type { PurchaseOrder } from '@/lib/kfcInventory';
 
 const api = '/api/admin/inkoop';
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
-const DAY = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/Amsterdam' });
 const STATUS: Record<PurchaseOrder['status'], [string, 'default' | 'secondary' | 'outline' | 'destructive']> = {
   draft: ['Concept', 'outline'], ordered: ['Besteld', 'default'], received: ['Ontvangen', 'secondary'], cancelled: ['Geannuleerd', 'destructive'],
 };
@@ -44,17 +44,17 @@ export default function Inkoop({ orders, canEdit }: { orders: PurchaseOrder[]; c
 
   return (
     <div className="flex flex-col gap-6">
-      {error && <p className="text-destructive text-sm">{error}</p>}
+      {error && <p className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
       {canEdit && <NewOrder onSaved={() => router.refresh()} />}
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">Open <span className="text-muted-foreground font-normal">· {open.length}</span></h2>
         {open.length === 0
-          ? <p className="text-muted-foreground rounded-lg border border-dashed px-4 py-8 text-center text-sm">Niets besteld. Het bestelvoorstel onder Voorraad opent hier een concept.</p>
+          ? <p className="text-muted-foreground rounded-lg border border-dashed px-4 py-8 text-center text-sm"><PreviewText>{"Niets besteld. Het bestelvoorstel onder Voorraad opent hier een concept."}</PreviewText></p>
           : open.map((order) => <Order key={order.id} order={order} canEdit={canEdit} busy={busy} run={run} />)}
       </section>
       {closed.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold">Afgehandeld <span className="text-muted-foreground font-normal">· {closed.length}</span></h2>
+          <h2 className="text-lg font-semibold"><PreviewText>{"Afgehandeld"}</PreviewText> <span className="text-muted-foreground font-normal">· {closed.length}</span></h2>
           {closed.slice(0, 20).map((order) => <Order key={order.id} order={order} canEdit={false} busy={busy} run={run} />)}
         </section>
       )}
@@ -63,6 +63,8 @@ export default function Inkoop({ orders, canEdit }: { orders: PurchaseOrder[]; c
 }
 
 function Order({ order, canEdit, busy, run }: { order: PurchaseOrder; canEdit: boolean; busy: string; run: (key: string, body: unknown) => Promise<void> }) {
+  const { english, t } = usePreviewLanguage();
+  const day = new Intl.DateTimeFormat(english ? 'en-GB' : 'nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/Amsterdam' });
   const [label, variant] = STATUS[order.status];
   const [receiving, setReceiving] = useState<Record<string, { quantity: string; shelf: string; box: string }>>({});
   const field = (line: string, key: 'quantity' | 'shelf' | 'box', value: string) =>
@@ -73,15 +75,15 @@ function Order({ order, canEdit, busy, run }: { order: PurchaseOrder; canEdit: b
     <Card>
       <CardHeader className="flex flex-row flex-wrap items-center gap-3">
         <CardTitle className="text-base">{order.supplier}</CardTitle>
-        <Badge variant={variant}>{label}</Badge>
+        <Badge variant={variant}>{t(label)}</Badge>
         <CardDescription>
-          {order.status === 'ordered' && order.expected_on ? `verwacht ${DAY.format(new Date(order.expected_on))}` : `aangemaakt ${DAY.format(new Date(order.created_at))}`}
+          {order.status === 'ordered' && order.expected_on ? `${english ? "expected" : "verwacht"} ${day.format(new Date(order.expected_on))}` : `${english ? "created" : "aangemaakt"} ${day.format(new Date(order.created_at))}`}
           {order.note && ` · ${order.note}`}
         </CardDescription>
         {canEdit && order.status === 'draft' && (
           <div className="ml-auto flex gap-2">
-            <Button size="sm" disabled={busy === order.id} onClick={() => run(order.id, { action: 'status', id: order.id, status: 'ordered' })}>Markeer als besteld</Button>
-            <Button size="sm" variant="outline" disabled={busy === order.id} onClick={() => run(order.id, { action: 'status', id: order.id, status: 'cancelled' })}>Annuleer</Button>
+            <Button size="sm" disabled={busy === order.id} onClick={() => run(order.id, { action: 'status', id: order.id, status: 'ordered' })}><PreviewText>{"Markeer als besteld"}</PreviewText></Button>
+            <Button size="sm" variant="outline" disabled={busy === order.id} onClick={() => run(order.id, { action: 'status', id: order.id, status: 'cancelled' })}><PreviewText>{"Annuleer"}</PreviewText></Button>
           </div>
         )}
       </CardHeader>
@@ -89,10 +91,10 @@ function Order({ order, canEdit, busy, run }: { order: PurchaseOrder; canEdit: b
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Artikel</TableHead><TableHead>SKU</TableHead>
-              <TableHead className="text-right">Besteld</TableHead><TableHead className="text-right">Ontvangen</TableHead><TableHead className="text-right">Open</TableHead>
-              {showCost && <TableHead className="text-right">Inkoopprijs</TableHead>}
-              {order.status === 'ordered' && <TableHead>Ontvangst boeken</TableHead>}
+              <TableHead><PreviewText>{"Artikel"}</PreviewText></TableHead><TableHead>SKU</TableHead>
+              <TableHead className="text-right"><PreviewText>{"Besteld"}</PreviewText></TableHead><TableHead className="text-right"><PreviewText>{"Ontvangen"}</PreviewText></TableHead><TableHead className="text-right">Open</TableHead>
+              {showCost && <TableHead className="text-right"><PreviewText>{"Inkoopprijs"}</PreviewText></TableHead>}
+              {order.status === 'ordered' && <TableHead><PreviewText>{"Ontvangst boeken"}</PreviewText></TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -102,7 +104,7 @@ function Order({ order, canEdit, busy, run }: { order: PurchaseOrder; canEdit: b
               const key = `${order.id}/${line.id}`;
               return (
                 <TableRow key={line.id}>
-                  <TableCell className="max-w-72 truncate font-medium">{line.name}</TableCell>
+                  <TableCell className="max-w-72 truncate font-medium"><PreviewProductName sku={line.sku}>{line.name}</PreviewProductName></TableCell>
                   <TableCell>{line.sku}</TableCell>
                   <TableCell className="text-right tabular-nums">{line.quantity}</TableCell>
                   <TableCell className="text-right tabular-nums">{line.received}</TableCell>
@@ -114,11 +116,11 @@ function Order({ order, canEdit, busy, run }: { order: PurchaseOrder; canEdit: b
                         <form className="flex gap-2" onSubmit={(e) => { e.preventDefault();
                           run(key, { action: 'receive', line: line.id, quantity: Number(draft.quantity || openQty), shelf: draft.shelf, box: draft.box, key: crypto.randomUUID() }); }}>
                           <Input className="w-20" type="number" min={1} max={openQty} placeholder={String(openQty)} value={draft.quantity} onChange={(e) => field(line.id, 'quantity', e.target.value)} />
-                          <Input className="w-28" placeholder="Stelling" required value={draft.shelf} onChange={(e) => field(line.id, 'shelf', e.target.value.toUpperCase())} />
-                          <Input className="w-24" placeholder="Bak" required value={draft.box} onChange={(e) => field(line.id, 'box', e.target.value.toUpperCase())} />
-                          <Button size="sm" disabled={busy === key}>Ontvangen</Button>
+                          <Input className="w-28" placeholder={t("Stelling")} required value={draft.shelf} onChange={(e) => field(line.id, 'shelf', e.target.value.toUpperCase())} />
+                          <Input className="w-24" placeholder={t("Bak")} required value={draft.box} onChange={(e) => field(line.id, 'box', e.target.value.toUpperCase())} />
+                          <Button size="sm" disabled={busy === key}><PreviewText>{"Ontvangen"}</PreviewText></Button>
                         </form>
-                      ) : <span className="text-muted-foreground text-sm">compleet</span>}
+                      ) : <span className="text-muted-foreground text-sm"><PreviewText>{"compleet"}</PreviewText></span>}
                     </TableCell>
                   )}
                 </TableRow>
@@ -132,6 +134,7 @@ function Order({ order, canEdit, busy, run }: { order: PurchaseOrder; canEdit: b
 }
 
 function NewOrder({ onSaved }: { onSaved: () => void }) {
+  const { t } = usePreviewLanguage();
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
   const [supplier, setSupplier] = useState('');
   const [expected, setExpected] = useState('');
@@ -172,24 +175,24 @@ function NewOrder({ onSaved }: { onSaved: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Nieuwe inkooporder</CardTitle>
-        <CardDescription>Een concept; bestellen en ontvangen gebeurt per order hieronder.</CardDescription>
+        <CardTitle><PreviewText>{"Nieuwe inkooporder"}</PreviewText></CardTitle>
+        <CardDescription><PreviewText>{"Een concept; bestellen en ontvangen gebeurt per order hieronder."}</PreviewText></CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={save} className="grid gap-4">
           <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
-            <div className="grid gap-1.5"><Label htmlFor="po-supplier">Leverancier</Label><Input id="po-supplier" required value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder="bijv. KeyDIY Europe" /></div>
-            <div className="grid gap-1.5"><Label htmlFor="po-expected">Verwacht op</Label><Input id="po-expected" type="date" value={expected} onChange={(e) => setExpected(e.target.value)} /></div>
+            <div className="grid gap-1.5"><Label htmlFor="po-supplier"><PreviewText>{"Leverancier"}</PreviewText></Label><Input id="po-supplier" required value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder={t("bijv. KeyDIY Europe")} /></div>
+            <div className="grid gap-1.5"><Label htmlFor="po-expected"><PreviewText>{"Verwacht op"}</PreviewText></Label><Input id="po-expected" type="date" value={expected} onChange={(e) => setExpected(e.target.value)} /></div>
           </div>
-          <div className="grid gap-1.5"><Label htmlFor="po-note">Notitie</Label><Input id="po-note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="optioneel" /></div>
+          <div className="grid gap-1.5"><Label htmlFor="po-note"><PreviewText>{"Notitie"}</PreviewText></Label><Input id="po-note" value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("optioneel")} /></div>
           <div className="relative grid gap-1.5">
-            <Label htmlFor="po-search">Artikel toevoegen</Label>
-            <Input id="po-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="SKU of naam, minimaal 2 tekens" autoComplete="off" />
+            <Label htmlFor="po-search"><PreviewText>{"Artikel toevoegen"}</PreviewText></Label>
+            <Input id="po-search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("SKU of naam, minimaal 2 tekens")} autoComplete="off" />
             {matches.length > 0 && (
               <div className="bg-popover text-popover-foreground absolute top-full right-0 left-0 z-20 mt-1 max-h-64 overflow-auto rounded-md border shadow-md">
                 {matches.map((item) => (
                   <button type="button" key={item.id} onClick={() => add(item)} className="hover:bg-accent block w-full px-3 py-2 text-left text-sm">
-                    <span className="font-medium">{item.sku}</span> <span className="text-muted-foreground">· {item.name}</span>
+                    <span className="font-medium">{item.sku}</span> <span className="text-muted-foreground">· <PreviewProductName sku={item.sku}>{item.name}</PreviewProductName></span>
                   </button>
                 ))}
               </div>
@@ -197,21 +200,21 @@ function NewOrder({ onSaved }: { onSaved: () => void }) {
           </div>
           {lines.length > 0 && (
             <Table>
-              <TableHeader><TableRow><TableHead>Artikel</TableHead><TableHead className="w-28 text-right">Aantal</TableHead><TableHead className="w-40 text-right">Inkoopprijs € (optioneel)</TableHead><TableHead className="w-12" /></TableRow></TableHeader>
+              <TableHeader><TableRow><TableHead><PreviewText>{"Artikel"}</PreviewText></TableHead><TableHead className="w-28 text-right"><PreviewText>{"Aantal"}</PreviewText></TableHead><TableHead className="w-40 text-right"><PreviewText>{"Inkoopprijs € (optioneel)"}</PreviewText></TableHead><TableHead className="w-12" /></TableRow></TableHeader>
               <TableBody>
                 {lines.map((line, index) => (
                   <TableRow key={line.article}>
                     <TableCell className="max-w-96 truncate">{line.label}</TableCell>
                     <TableCell className="text-right"><Input className="ml-auto w-24" type="number" min={1} required value={line.quantity} onChange={(e) => edit(index, 'quantity', e.target.value)} /></TableCell>
                     <TableCell className="text-right"><Input className="ml-auto w-28" inputMode="decimal" value={line.cost} onChange={(e) => edit(index, 'cost', e.target.value)} placeholder="—" /></TableCell>
-                    <TableCell><Button type="button" variant="ghost" size="icon" aria-label="Regel verwijderen" onClick={() => setLines(lines.filter((_, i) => i !== index))}><Trash2 className="size-4" /></Button></TableCell>
+                    <TableCell><Button type="button" variant="ghost" size="icon" aria-label={t("Regel verwijderen")} onClick={() => setLines(lines.filter((_, i) => i !== index))}><Trash2 className="size-4" /></Button></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           )}
-          {error && <p className="text-destructive text-sm">{error}</p>}
-          <div><Button disabled={busy || lines.length === 0}>Concept opslaan</Button></div>
+          {error && <p className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
+          <div><Button disabled={busy || lines.length === 0}><PreviewText>{"Concept opslaan"}</PreviewText></Button></div>
         </form>
       </CardContent>
     </Card>

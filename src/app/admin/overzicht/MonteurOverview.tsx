@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { CalendarDays, Car, Handshake, MapPin, Package, Wallet, Wrench } from 'lucide-react';
@@ -65,7 +66,7 @@ function ranges(period: Period, today: string) {
 }
 
 function Trend({ cur, prev }: { cur: number; prev: number }) {
-  if (!prev) return <span className={dash.trendNone}>geen vergelijking</span>;
+  if (!prev) return <span className={dash.trendNone}><PreviewText>{"geen vergelijking"}</PreviewText></span>;
   const change = Math.round(((cur - prev) / prev) * 100);
   return (
     <span className={change >= 0 ? dash.trendUp : dash.trendDown}>
@@ -194,7 +195,7 @@ export default async function MonteurOverview({ user, period }: { user: CrmUser;
             Volgende klus
             {upcoming.length > 0 && (
               <span className={styles.heroCount}>
-                · {upcoming.length} {upcoming.length === 1 ? 'klus' : 'klussen'} nog te gaan
+                · {upcoming.length} <PreviewText>{upcoming.length === 1 ? 'klus' : 'klussen'}</PreviewText> nog te gaan
               </span>
             )}
           </CardHead>
@@ -246,7 +247,7 @@ export default async function MonteurOverview({ user, period }: { user: CrmUser;
 
       <InvestmentBar investment={START_INVESTMENT} earned={earnedMonth} jobs={monthJobs.length} monthName={monthName} />
 
-      <Label>Snel naar</Label>
+      <Label><PreviewText>{"Snel naar"}</PreviewText></Label>
       <TileGrid>
         <Tile
           big
@@ -299,7 +300,7 @@ export default async function MonteurOverview({ user, period }: { user: CrmUser;
 
       <section className={dash.card}>
         <header className={dash.cardHead}>
-          <span>Per dag · laatste {days} dagen</span>
+          <span>Per dag · laatste {days} <PreviewText>{"dagen"}</PreviewText></span>
           <Link href="/admin/mijn-saldo">Saldo →</Link>
         </header>
         <SalesChart data={series} barLabel="Omzet" lineLabel="Jij verdiende" countLabel="klussen" />
@@ -316,7 +317,7 @@ export default async function MonteurOverview({ user, period }: { user: CrmUser;
           <table className={dash.table}>
             <thead>
               <tr>
-                <th>Datum</th>
+                <th><PreviewText>{"Datum"}</PreviewText></th>
                 <th>Auto en klus</th>
                 <th>Waar</th>
                 <th className={dash.num}>Klant betaalde</th>

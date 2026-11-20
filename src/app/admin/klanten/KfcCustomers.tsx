@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -29,8 +30,8 @@ export default function KfcCustomers({ rows, view, q }: { rows: (Customer & Bala
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Klanten</h1>
-          <p className="text-muted-foreground text-sm">Zakelijke klanten met een rekening: dealers, slotenmakers, garages. {rows.length} {view === 'overdue' ? 'met vervallen bedragen' : 'klanten'}{overdueTotal > 0 && ` · ${MONEY.format(overdueTotal / 100)} vervallen`}.</p>
+          <h1 className="text-2xl font-semibold tracking-tight"><PreviewText>{"Klanten"}</PreviewText></h1>
+          <p className="text-muted-foreground text-sm"><PreviewText>{"Zakelijke klanten met een rekening: dealers, slotenmakers, garages."}</PreviewText> {rows.length} <PreviewText>{view === 'overdue' ? 'met vervallen bedragen' : 'klanten'}</PreviewText>{overdueTotal > 0 && ` · ${MONEY.format(overdueTotal / 100)} vervallen`}.</p>
         </div>
         <div className="flex gap-2">
           <form method="get" action="/admin/klanten" className="relative">
@@ -42,19 +43,19 @@ export default function KfcCustomers({ rows, view, q }: { rows: (Customer & Bala
         </div>
       </div>
       <div className="flex gap-1 self-start rounded-lg border p-1">
-        <Button asChild size="sm" variant={view === 'all' ? 'default' : 'ghost'}><Link href="/admin/klanten">Alle klanten</Link></Button>
-        <Button asChild size="sm" variant={view === 'overdue' ? 'default' : 'ghost'}><Link href="/admin/klanten?view=overdue">Vadesi geçen · Vervallen</Link></Button>
+        <Button asChild size="sm" variant={view === 'all' ? 'default' : 'ghost'}><Link href="/admin/klanten"><PreviewText>{"Alle klanten"}</PreviewText></Link></Button>
+        <Button asChild size="sm" variant={view === 'overdue' ? 'default' : 'ghost'}><Link href="/admin/klanten?view=overdue"><PreviewText>{"Vadesi geçen · Vervallen"}</PreviewText></Link></Button>
       </div>
       <Card>
         <CardContent className="p-0">
           <Table>
-            <TableHeader><TableRow><TableHead>Bedrijf</TableHead><TableHead>Termijn</TableHead><TableHead className="text-right">Open</TableHead><TableHead className="text-right">Vervallen</TableHead><TableHead>Oudste vervallen</TableHead><TableHead>Laatste boeking</TableHead></TableRow></TableHeader>
+            <TableHeader><TableRow><TableHead><PreviewText>{"Bedrijf"}</PreviewText></TableHead><TableHead><PreviewText>{"Termijn"}</PreviewText></TableHead><TableHead className="text-right">Open</TableHead><TableHead className="text-right"><PreviewText>{"Vervallen"}</PreviewText></TableHead><TableHead><PreviewText>{"Oudste vervallen"}</PreviewText></TableHead><TableHead><PreviewText>{"Laatste boeking"}</PreviewText></TableHead></TableRow></TableHeader>
             <TableBody>
-              {rows.length === 0 && <TableRow><TableCell colSpan={6} className="text-muted-foreground py-10 text-center">{view === 'overdue' ? 'Niets vervallen.' : 'Nog geen klanten. Maak de eerste aan.'}</TableCell></TableRow>}
+              {rows.length === 0 && <TableRow><TableCell colSpan={6} className="text-muted-foreground py-10 text-center"><PreviewText>{view === 'overdue' ? 'Niets vervallen.' : 'Nog geen klanten. Maak de eerste aan.'}</PreviewText></TableCell></TableRow>}
               {rows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell><Link className="font-medium underline-offset-4 hover:underline" href={`/admin/klanten/${r.id}`}>{r.company}</Link>{r.city && <span className="text-muted-foreground text-xs"> · {r.city}</span>}</TableCell>
-                  <TableCell className="text-muted-foreground">{r.terms_days} dagen</TableCell>
+                  <TableCell className="text-muted-foreground">{r.terms_days} <PreviewText>{"dagen"}</PreviewText></TableCell>
                   <TableCell className="text-right tabular-nums">{MONEY.format(r.open_cents / 100)}</TableCell>
                   <TableCell className="text-right tabular-nums">{r.overdue_cents > 0 ? <Badge variant="destructive">{MONEY.format(r.overdue_cents / 100)}</Badge> : <span className="text-muted-foreground">—</span>}</TableCell>
                   <TableCell className="text-muted-foreground">{r.oldest_overdue ?? '—'}</TableCell>
@@ -91,7 +92,7 @@ export function CustomerDialog({ customer, onSaved }: { customer?: Customer; onS
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{customer ? <Button variant="outline" size="sm">Gegevens wijzigen</Button> : <Button size="sm"><Plus className="size-4" /> Nieuwe klant</Button>}</DialogTrigger>
+      <DialogTrigger asChild>{customer ? <Button variant="outline" size="sm"><PreviewText>{"Gegevens wijzigen"}</PreviewText></Button> : <Button size="sm"><Plus className="size-4" /> <PreviewText>{"Nieuwe klant"}</PreviewText></Button>}</DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-lg">
         <DialogHeader><DialogTitle>{customer ? customer.company : 'Nieuwe zakelijke klant'}</DialogTitle></DialogHeader>
         <form onSubmit={save} className="grid gap-3 sm:grid-cols-2">
@@ -104,7 +105,7 @@ export function CustomerDialog({ customer, onSaved }: { customer?: Customer; onS
           <div className="grid gap-1.5"><Label htmlFor="c-limit">Kredietlimiet € (leeg = geen)</Label><Input id="c-limit" inputMode="decimal" value={limit} onChange={(e) => setLimit(e.target.value)} /></div>
           <label className="flex items-center gap-2 self-end text-sm"><input type="checkbox" className="size-4" checked={reverse} onChange={(e) => setReverse(e.target.checked)} /> Btw verlegd (EU-dealer)</label>
           {error && <p className="text-destructive text-sm sm:col-span-2">{error}</p>}
-          <div className="sm:col-span-2"><Button disabled={busy}>{customer ? 'Opslaan' : 'Klant aanmaken'}</Button></div>
+          <div className="sm:col-span-2"><Button disabled={busy}><PreviewText>{customer ? 'Opslaan' : 'Klant aanmaken'}</PreviewText></Button></div>
         </form>
       </DialogContent>
     </Dialog>
