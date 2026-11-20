@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MousePointerClick } from 'lucide-react';
@@ -134,7 +135,7 @@ export default function AdClickPanel({ jobId }: { jobId: string }) {
           style={{ padding: '0.35rem 0.6rem', border: '1px solid #cbd5e1', borderRadius: 6, width: '10rem', textTransform: 'uppercase' }}
         />
         <button type="submit" className={`${ui.btn} ${jd.smallBtn}`} disabled={busy || !code.trim()}>
-          Zoek
+          <PreviewText>{"Zoek"}</PreviewText>
         </button>
       </form>
 

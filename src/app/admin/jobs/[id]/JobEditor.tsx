@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../jobs.module.css';
@@ -168,7 +169,7 @@ export default function JobEditor({
   return (
     <div className={styles.planWrap}>
       <div className={styles.panel}>
-        <h2>Planning</h2>
+        <h2><PreviewText>{"Planning"}</PreviewText></h2>
         <div className={styles.grid2}>
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="st">Status</label>
@@ -185,7 +186,7 @@ export default function JobEditor({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor="mt">Monteur</label>
+            <label className={styles.fieldLabel} htmlFor="mt"><PreviewText>{"Monteur"}</PreviewText></label>
             <select
               id="mt"
               className={styles.control}
@@ -200,7 +201,7 @@ export default function JobEditor({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor="dt">Datum</label>
+            <label className={styles.fieldLabel} htmlFor="dt"><PreviewText>{"Datum"}</PreviewText></label>
             <input
               id="dt"
               className={styles.control}
@@ -322,7 +323,7 @@ export default function JobEditor({
               value={keylessChoice}
               onChange={(e) => setKeylessChoice(e.target.value as '' | 'true' | 'false')}
             >
-              <option value="">Onbekend</option>
+              <option value=""><PreviewText>{"Onbekend"}</PreviewText></option>
               <option value="false">Sleutel (contactslot)</option>
               <option value="true">Keyless (start-knop)</option>
             </select>
@@ -337,9 +338,9 @@ export default function JobEditor({
               onChange={(e) => setScenarioChoice(e.target.value)}
             >
               <option value="">Overig / Onbekend</option>
-              <option value="bijmaken">Sleutel bijmaken</option>
-              <option value="alle_sleutels_kwijt">Alle sleutels kwijt</option>
-              <option value="reparatie">Sleutel repareren</option>
+              <option value="bijmaken"><PreviewText>{"Sleutel bijmaken"}</PreviewText></option>
+              <option value="alle_sleutels_kwijt"><PreviewText>{"Alle sleutels kwijt"}</PreviewText></option>
+              <option value="reparatie"><PreviewText>{"Sleutel repareren"}</PreviewText></option>
               <option value="slot">Slot of cilinder</option>
             </select>
           </div>
@@ -358,7 +359,7 @@ export default function JobEditor({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.fieldLabel} htmlFor="pc">Postcode</label>
+            <label className={styles.fieldLabel} htmlFor="pc"><PreviewText>{"Postcode"}</PreviewText></label>
             <input
               id="pc"
               className={styles.control}
@@ -370,7 +371,7 @@ export default function JobEditor({
         </div>
 
         <div className={`${styles.field} ${jd.mt}`}>
-          <label className={styles.fieldLabel} htmlFor="nt">Notitie</label>
+          <label className={styles.fieldLabel} htmlFor="nt"><PreviewText>{"Notitie"}</PreviewText></label>
           <textarea
             id="nt"
             className={styles.control}
@@ -387,7 +388,7 @@ export default function JobEditor({
         </p>
         <div className={jd.costGrid}>
           <div className={jd.costIn}>
-            <h3 className={jd.costHead}>Omzet</h3>
+            <h3 className={jd.costHead}><PreviewText>{"Omzet"}</PreviewText></h3>
             
             <div className={`${styles.field} ${jd.mb}`}>
               <label className={styles.fieldLabel}>Oproep / Voorrijkosten (€)</label>
@@ -408,7 +409,7 @@ export default function JobEditor({
           </div>
 
           <div className={jd.costOut}>
-            <h3 className={jd.costHead}>Kosten</h3>
+            <h3 className={jd.costHead}><PreviewText>{"Kosten"}</PreviewText></h3>
             
             <div className={`${styles.field} ${jd.mb}`}>
               <label className={styles.fieldLabel}>Inkoop materialen (€)</label>
@@ -441,7 +442,7 @@ export default function JobEditor({
 
         {job.gross_margin !== null && (
           <div className={job.gross_margin > 0 ? jd.marginOk : jd.marginBad}>
-            <span>Brutowinst</span>
+            <span><PreviewText>{"Brutowinst"}</PreviewText></span>
             <b>
               {job.gross_margin > 0 ? '+ ' : ''}€ {Number(job.gross_margin).toFixed(2).replace('.', ',')}
             </b>
@@ -466,7 +467,7 @@ export default function JobEditor({
       <div className={styles.panel}>
         <h2>Gegevens</h2>
         <div className={styles.summary}>
-          <span className={styles.summaryKey}>Adres</span>
+          <span className={styles.summaryKey}><PreviewText>{"Adres"}</PreviewText></span>
           <span className={styles.summaryVal}>
             {[job.street, job.postcode, job.city].filter(Boolean).join(', ') || '—'}
           </span>
@@ -482,7 +483,7 @@ export default function JobEditor({
           <span className={styles.summaryVal}>
             {job.started_at ? job.started_at.slice(0, 16).replace('T', ' ') : '—'}
           </span>
-          <span className={styles.summaryKey}>Afgerond</span>
+          <span className={styles.summaryKey}><PreviewText>{"Afgerond"}</PreviewText></span>
           <span className={styles.summaryVal}>
             {job.completed_at ? job.completed_at.slice(0, 16).replace('T', ' ') : '—'}
           </span>

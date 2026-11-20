@@ -6,10 +6,13 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { PageHead, Notice } from '../../_ui';
 import { PreviewText } from '../../PreviewLanguage';
 import InvoiceForm from '../InvoiceForm';
+import { customerOptions } from '@/lib/kfcReceivables';
+import { Invoice as KfcInvoice } from './_components/invoice';
 
 export const dynamic = 'force-dynamic';
 
-export default async function NieuweFactuurPage() {
+export default async function NieuweFactuurPage({ searchParams }: { searchParams: Promise<{ klant?: string }> }) {
+  const { klant } = await searchParams;
   const user = await requireCrmUser('/admin/facturen/nieuw');
   const keyForCarsBiller = { name: BRAND.name, email: '', phone: '', kvk: '', btw: '', iban: '' };
   if (CRM_PREVIEW) {
@@ -19,6 +22,16 @@ export default async function NieuweFactuurPage() {
         <Notice><PreviewText>Factuurvoorbeeld: bedragen worden berekend in het formulier. Opslaan vereist een werkende CRM-verbinding.</PreviewText></Notice>
         <InvoiceForm technicians={[]} showTechnicianPicker={false} biller={keyForCarsBiller} preview />
       </>
+    );
+  }
+  // KeyForCars: the Studio Admin invoice screen (form + live A4 preview), billing ledger customers.
+  if (IS_KEYFORCARS) {
+    return (
+      <KfcInvoice
+        customers={await customerOptions()}
+        initialCustomerId={klant ?? null}
+        from={{ name: BRAND.name, email: '', phone: '', website: '', street: '', postcode: '', city: '', kvk: '', btw: '', iban: '', accountName: BRAND.name }}
+      />
     );
   }
   const supabase = await createSupabaseServerClient();
@@ -52,7 +65,9 @@ export default async function NieuweFactuurPage() {
       />
       <InvoiceForm
         technicians={technicians as { id: string; name: string }[]}
-        showTechnicianPicker={user.role !== 'monteur'}
+        showTechnicianPicker={!IS_KEYFORCARS && user.role !== 'monteur'}
+        customers={IS_KEYFORCARS ? await customerOptions() : undefined}
+        initialCustomerId={klant ?? null}
         biller={IS_KEYFORCARS ? keyForCarsBiller : {
           name: SITE_CONFIG.fullName,
           email: SITE_CONFIG.email,

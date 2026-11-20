@@ -113,3 +113,7 @@ export function profileCount() {
   const { all } = profiles();
   return { total: all.length, withFits: all.filter((profile) => profile.fits.length).length, withEan: all.filter((profile) => profile.ean.length).length };
 }
+
+export function productNamesInEnglish() {
+  return Object.fromEntries(profiles().all.map(({ sku, name }) => [sku.toUpperCase(), name]));
+}

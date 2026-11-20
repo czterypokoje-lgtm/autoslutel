@@ -1,4 +1,5 @@
-import { requireOfficeUser } from '@/lib/crmSession';
+import { PreviewText } from '@/app/admin/PreviewLanguage';
+import { requireOfficeUser, requireWarehouseUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Empty, Notice } from '../_ui';
 import { Boxes, Euro, TriangleAlert, CircleHelp } from 'lucide-react';
@@ -52,7 +53,8 @@ interface StockRow {
  * job lands with a null cost, and the whole job-costing chain reads zero.
  */
 export default async function VoorraadPage({ searchParams }: { searchParams: Promise<{ demo?: string; view?: string }> }) {
-  await requireOfficeUser('/admin/voorraad');
+  // KeyForCars: warehouse and picker work here too; prices are stripped server-side.
+  await (IS_KEYFORCARS ? requireWarehouseUser : requireOfficeUser)('/admin/voorraad');
   if (CRM_PREVIEW || IS_KEYFORCARS) {
     const params = await searchParams;
     const demo = params.demo === '1';
@@ -204,11 +206,11 @@ export default async function VoorraadPage({ searchParams }: { searchParams: Pro
             <Table
               head={
                 <>
-                  <th>Omschrijving</th>
-                  <th>Aantal</th>
+                  <th><PreviewText>{"Omschrijving"}</PreviewText></th>
+                  <th><PreviewText>{"Aantal"}</PreviewText></th>
                   <th>Minimum</th>
-                  <th>Kostprijs</th>
-                  <th>Waarde</th>
+                  <th><PreviewText>{"Kostprijs"}</PreviewText></th>
+                  <th><PreviewText>{"Waarde"}</PreviewText></th>
                 </>
               }
             >
@@ -254,10 +256,10 @@ export default async function VoorraadPage({ searchParams }: { searchParams: Pro
             head={
               <>
                 <th>Wanneer</th>
-                <th>Artikel</th>
+                <th><PreviewText>{"Artikel"}</PreviewText></th>
                 <th>Verandering</th>
                 <th>Daarna</th>
-                <th>Reden</th>
+                <th><PreviewText>{"Reden"}</PreviewText></th>
               </>
             }
           >

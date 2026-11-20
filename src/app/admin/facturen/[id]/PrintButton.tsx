@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -98,7 +99,7 @@ export default function PrintButton({ invoiceId, status }: { invoiceId: string; 
           ))}
         </select>
         <Link href={`/admin/facturen/${invoiceId}/bewerken`} className={styles.editBtn}>
-          Bewerken
+          <PreviewText>{"Bewerken"}</PreviewText>
         </Link>
         <button type="button" className={styles.printBtn} onClick={() => window.print()}>
           Afdrukken / Opslaan als PDF
@@ -111,7 +112,7 @@ export default function PrintButton({ invoiceId, status }: { invoiceId: string; 
             disabled={deleting}
             title="Alleen een concept kan worden verwijderd"
           >
-            {deleting ? 'Verwijderen…' : 'Verwijderen'}
+            <PreviewText>{deleting ? 'Verwijderen…' : 'Verwijderen'}</PreviewText>
           </button>
         )}
       </div>

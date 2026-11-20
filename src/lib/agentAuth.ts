@@ -38,6 +38,21 @@ export function checkAgent(request: Request): AgentAuth {
   return { ok: true };
 }
 
+/**
+ * The KeyForCars Workshop Service agent's own secret, separate from
+ * AGENT_API_TOKEN. Only the two workshop routes accept it, so the write right
+ * to the workshop calendar belongs to that agent's appointment flow and to no
+ * other agent (the webshop support agent and the staff chat never hold it).
+ */
+export function checkWorkshopAgent(request: Request): AgentAuth {
+  const secret = process.env.KFC_WORKSHOP_AGENT_TOKEN;
+  if (!secret || secret.length < 32) return { ok: false, status: 503, error: 'Niet beschikbaar' };
+  const header = request.headers.get('authorization') ?? '';
+  const token = header.startsWith('Bearer ') ? header.slice(7).trim() : '';
+  if (!token || !same(token, secret)) return { ok: false, status: 401, error: 'Geen toegang' };
+  return { ok: true };
+}
+
 /* ── reading what the agent sends ────────────────────────────────────── */
 
 export const asText = (value: unknown, max = 80): string | null => {

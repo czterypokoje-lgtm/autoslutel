@@ -1,4 +1,7 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
+import { IS_KEYFORCARS } from '@/config/install';
+import KfcReports from './KfcReports';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Empty, Notice } from '../_ui';
 import { RankedBars, Donut, LineChart, chart } from '../_ui/charts';
@@ -8,9 +11,7 @@ import Filters from './Filters';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Winst & verbruik | Autosleutel24',
-};
+export const metadata = { title: IS_KEYFORCARS ? 'Winst & rapporten | KeyForCars' : 'Winst & verbruik | Autosleutel24' };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 const money = (value: number) => MONEY.format(value);
@@ -27,6 +28,7 @@ export default async function WinstPage({
   searchParams: Promise<{ van?: string; tot?: string }>;
 }) {
   await requireOfficeUser('/admin/winst');
+  if (IS_KEYFORCARS) return <KfcReports />;
   const supabase = await createSupabaseServerClient();
   const params = await searchParams;
 
@@ -136,7 +138,7 @@ export default async function WinstPage({
 
           <Card>
             <CardHead>Per stad</CardHead>
-            <Table head={<><th>Stad</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></>}>
+            <Table head={<><th>Stad</th><th><PreviewText>{"Klussen"}</PreviewText></th><th>Blijft over</th><th>Per klus</th></>}>
               {byCity.map((row) => (
                 <tr key={row.label}>
                   <td>{row.label}</td>
@@ -150,7 +152,7 @@ export default async function WinstPage({
 
           <Card>
             <CardHead>Per automerk</CardHead>
-            <Table head={<><th>Merk</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></>}>
+            <Table head={<><th>Merk</th><th><PreviewText>{"Klussen"}</PreviewText></th><th>Blijft over</th><th>Per klus</th></>}>
               {byMake.map((row) => (
                 <tr key={row.label}>
                   <td>{row.label}</td>
@@ -164,7 +166,7 @@ export default async function WinstPage({
 
           <Card>
             <CardHead>Per soort werk</CardHead>
-            <Table head={<><th>Soort</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></>}>
+            <Table head={<><th><PreviewText>{"Soort"}</PreviewText></th><th><PreviewText>{"Klussen"}</PreviewText></th><th>Blijft over</th><th>Per klus</th></>}>
               {byScenario.map((row) => (
                 <tr key={row.label}>
                   <td>{row.label}</td>
@@ -177,8 +179,8 @@ export default async function WinstPage({
           </Card>
 
           <Card>
-            <CardHead>Per monteur</CardHead>
-            <Table head={<><th>Monteur</th><th>Klussen</th><th>Blijft over</th><th>Per klus</th></>}>
+            <CardHead><PreviewText>{"Per monteur"}</PreviewText></CardHead>
+            <Table head={<><th><PreviewText>{"Monteur"}</PreviewText></th><th><PreviewText>{"Klussen"}</PreviewText></th><th>Blijft over</th><th>Per klus</th></>}>
               {byTechnician.map((row) => (
                 <tr key={row.label}>
                   <td>{row.label}</td>
@@ -198,7 +200,7 @@ export default async function WinstPage({
                 busscherm, bij de klus.
               </Empty>
             ) : (
-              <Table head={<><th>Onderdeel</th><th>Stuks</th><th>Klussen</th><th>Inkoopwaarde</th></>}>
+              <Table head={<><th>Onderdeel</th><th><PreviewText>{"Stuks"}</PreviewText></th><th><PreviewText>{"Klussen"}</PreviewText></th><th>Inkoopwaarde</th></>}>
                 {byProduct.map((row) => (
                   <tr key={row.label}>
                     <td>{row.label}</td>
@@ -217,7 +219,7 @@ export default async function WinstPage({
             * gap and a genuine zero look identical.
             */}
           <Notice tone={gaps.parts > jobs.length / 2 ? 'bad' : 'info'}>
-            <strong>Betrouwbaarheid.</strong> Van {jobs.length} klussen in deze periode:{' '}
+            <strong>Betrouwbaarheid.</strong> <PreviewText>{"Van"}</PreviewText> {jobs.length} klussen in deze periode:{' '}
             {gaps.price} zonder prijs, {gaps.city} zonder stad, {gaps.fuel} zonder gemeten
             brandstof, {gaps.parts} zonder materiaalregels, {gaps.times} zonder bruikbare tijden.
             Wat niet is vastgelegd telt als nul en maakt die klussen winstgevender dan ze waren.

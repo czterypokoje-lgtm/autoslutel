@@ -1,4 +1,6 @@
+import { PreviewText } from '../PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
+import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Notice } from '../_ui';
 import { MousePointerClick, Link2, Euro, CircleHelp } from 'lucide-react';
@@ -10,7 +12,7 @@ import CampaignNames, { type CampaignSeen } from './CampaignNames';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Advertentieklikken koppelen | Autosleutel24',
+  title: `Advertentieklikken koppelen | ${BRAND.name}`,
 };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -203,7 +205,7 @@ export default async function AttributiePage({
         <Stat
           label="Klikken deze dag"
           value={clicks.length}
-          foot={`${open.length} nog vrij`}
+          foot={<>{open.length} <PreviewText>nog vrij</PreviewText></>}
           icon={<MousePointerClick size={18} />}
         />
         <Stat
@@ -215,7 +217,7 @@ export default async function AttributiePage({
         <Stat
           label="Klussen zonder bron"
           value={unattributed.length}
-          foot={`van ${jobs.filter((j) => j.scheduledDate === date).length} deze dag`}
+          foot={<>{jobs.filter((j) => j.scheduledDate === date).length} <PreviewText>deze dag</PreviewText></>}
           icon={<CircleHelp size={18} />}
           tone={unattributed.length ? 'warn' : 'ok'}
         />

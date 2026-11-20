@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -98,29 +99,29 @@ export default async function OrderPage({
             <div className={styles.summary} style={{ marginTop: 12 }}>
               <span className={styles.summaryKey}>Subtotaal</span>
               <span className={styles.summaryVal}>{MONEY.format(Number(order.subtotal_inc ?? 0))}</span>
-              <span className={styles.summaryKey}>Verzending</span>
+              <span className={styles.summaryKey}><PreviewText>{"Verzending"}</PreviewText></span>
               <span className={styles.summaryVal}>{MONEY.format(Number(order.shipping_cost ?? 0))}</span>
-              <span className={styles.summaryKey}>Btw</span>
+              <span className={styles.summaryKey}><PreviewText>{"Btw"}</PreviewText></span>
               <span className={styles.summaryVal}>{MONEY.format(Number(order.total_vat ?? 0))}</span>
-              <span className={styles.summaryKey}>Totaal</span>
+              <span className={styles.summaryKey}><PreviewText>{"Totaal"}</PreviewText></span>
               <span className={styles.summaryVal}>{MONEY.format(Number(order.total_inc ?? 0))}</span>
             </div>
           </div>
 
           <div className={styles.panel}>
-            <h2>Klant</h2>
+            <h2><PreviewText>{"Klant"}</PreviewText></h2>
             <div className={styles.summary}>
-              <span className={styles.summaryKey}>Naam</span>
+              <span className={styles.summaryKey}><PreviewText>{"Naam"}</PreviewText></span>
               <span className={styles.summaryVal}>{order.name as string}</span>
-              <span className={styles.summaryKey}>E-mail</span>
+              <span className={styles.summaryKey}><PreviewText>{"E-mail"}</PreviewText></span>
               <span className={styles.summaryVal}>
                 <a href={`mailto:${order.email as string}`}>{order.email as string}</a>
               </span>
-              <span className={styles.summaryKey}>Telefoon</span>
+              <span className={styles.summaryKey}><PreviewText>{"Telefoon"}</PreviewText></span>
               <span className={styles.summaryVal}>
                 {order.phone ? <a href={`tel:${order.phone as string}`}>{order.phone as string}</a> : '—'}
               </span>
-              <span className={styles.summaryKey}>Adres</span>
+              <span className={styles.summaryKey}><PreviewText>{"Adres"}</PreviewText></span>
               <span className={styles.summaryVal}>
                 {[order.street, order.postcode, order.city].filter(Boolean).join(', ')}
               </span>
@@ -133,7 +134,7 @@ export default async function OrderPage({
         <div>
           {order.needs_technician === true && (
             <div className={styles.panel}>
-              <h2>Monteur</h2>
+              <h2><PreviewText>{"Monteur"}</PreviewText></h2>
               {(jobs ?? []).length === 0 ? (
                 <>
                   <p className={styles.note}>

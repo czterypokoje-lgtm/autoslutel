@@ -1,4 +1,6 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireCrmUser } from '@/lib/crmSession';
+import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, CardHead, Badge, Empty, Notice } from '../_ui';
 import { getProducts, filterProducts, shelfPrice, type CatalogProduct } from '@/lib/catalog';
@@ -8,7 +10,7 @@ import styles from './bestellen.module.css';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Onderdelen bestellen | Autosleutel24' };
+export const metadata = { title: `Onderdelen bestellen | ${BRAND.name}` };
 
 /** How many cards one page shows. More is a scroll nobody finishes. */
 const PAGE_SIZE = 48;
@@ -137,8 +139,7 @@ export default async function BestellenPage({
 
       {!me && (
         <Notice tone="bad">
-          Uw login is niet aan een monteur gekoppeld, dus u kunt niets aanvragen. Kantoor kan dit
-          koppelen bij Monteurs.
+          <PreviewText>{"Uw login is niet aan een monteur gekoppeld, dus u kunt niets aanvragen. Kantoor kan dit koppelen bij Monteurs."}</PreviewText>
         </Notice>
       )}
 
@@ -157,7 +158,7 @@ export default async function BestellenPage({
 
       {(mine ?? []).length > 0 && (
         <Card>
-          <CardHead>Uw laatste aanvragen</CardHead>
+          <CardHead><PreviewText>{"Uw laatste aanvragen"}</PreviewText></CardHead>
           <div className={styles.requests}>
             {(mine ?? []).map((order) => (
               <div key={order.id} className={styles.request}>

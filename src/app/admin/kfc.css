@@ -1,0 +1,316 @@
+/*
+ * Tailwind v4 + shadcn tokens for the KeyForCars admin branch.
+ *
+ * Loaded by the admin layout only, and WITHOUT Tailwind's preflight reset:
+ * the public site and the Autosleutel24 admin keep their own CSS modules
+ * untouched, and only utility classes plus these tokens are added. Primary is
+ * the brand orange the CRM already uses; everything else is shadcn neutral.
+ */
+/*
+ * Utilities are imported UNLAYERED on purpose: the public site's globals.css
+ * has an unlayered `* { margin: 0; padding: 0 }` reset, and unlayered CSS
+ * always beats layered CSS, so layered utilities would lose `p-6` to it.
+ * Unlayered, a utility (one class) outranks the `*` reset by specificity.
+ */
+@layer theme, base;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.985 0.002 247);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.62 0.19 41);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.62 0.19 41);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.62 0.19 41);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.72 0.17 45);
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.72 0.17 45);
+  --sidebar-primary-foreground: oklch(0.145 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Geist, loaded by admin/layout.tsx (next/font) and put on the shell as a CSS variable. */
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/*
+ * The shell root: the few base rules preflight would otherwise give us. They
+ * live in @layer base, below utilities in the cascade, so a utility class on a
+ * component always wins over them.
+ */
+@layer base {
+  .kfc-shell {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .kfc-shell *, .kfc-shell *::before, .kfc-shell *::after { border: 0 solid var(--border); box-sizing: border-box; }
+  .kfc-shell button, .kfc-shell input, .kfc-shell select, .kfc-shell textarea { font: inherit; color: inherit; background: transparent; }
+  .kfc-shell button { cursor: pointer; }
+  .kfc-shell img, .kfc-shell svg { display: block; max-width: 100%; }
+  .kfc-shell a { color: inherit; text-decoration: none; }
+  .kfc-shell h1, .kfc-shell h2, .kfc-shell h3, .kfc-shell p, .kfc-shell ul { margin: 0; padding: 0; }
+  .kfc-shell ul { list-style: none; }
+  .kfc-shell table { border-collapse: collapse; }
+}
+
+/*
+ * Studio Admin screens size headings with utilities, as preflight would allow.
+ * Unlayered (the public globals.css heading rules are unlayered too) but with
+ * :where(), so a single utility class on the heading still wins.
+ */
+:where(.kfc-neutral) :is(h1, h2, h3, h4) { font: inherit; letter-spacing: inherit; color: inherit; margin: 0; }
+
+/*
+ * The public globals.css styles bare ul/li (disc bullets, grey text, margins)
+ * unlayered, which beats the layered reset above. Same specificity via :where(),
+ * loaded later, so it wins here while utilities on the element still win over it.
+ */
+:where(.kfc-shell) :is(ul, ol) { list-style: none; margin: 0; padding: 0; }
+:where(.kfc-shell) li { color: inherit; line-height: inherit; margin: 0; }
+
+/*
+ * Screens ported 1:1 from Studio Admin (arhamkhnz/next-shadcn-admin-dashboard)
+ * keep that template's neutral primary instead of the brand orange.
+ */
+.kfc-neutral {
+  --primary: oklch(0.205 0 0); --primary-foreground: oklch(0.985 0 0);
+  --chart-1: oklch(0.87 0 0); --chart-2: oklch(0.556 0 0); --chart-3: oklch(0.439 0 0); --chart-4: oklch(0.371 0 0); --chart-5: oklch(0.269 0 0);
+}
+.dark .kfc-neutral { --primary: oklch(0.922 0 0); --primary-foreground: oklch(0.205 0 0); }
+
+/*
+ * Invoice print: the paper is portalled to <body> and is the only thing printed.
+ * Scoped with :has() so pages without a print root (labels, old PDFs) print as before.
+ */
+[data-print-root] { display: none; }
+@media print {
+  body:has([data-print-root]) > *:not([data-print-root]) { display: none !important; }
+  body:has([data-print-root]) [data-print-root] {
+    display: block !important; width: 210mm !important; height: 297mm !important; margin: 0 !important; overflow: hidden !important; background: white !important;
+  }
+  [data-print-root] [data-print-paper] { width: 210mm !important; height: 297mm !important; margin: 0 !important; box-shadow: none !important; }
+  [data-print-root] [data-print-paper], [data-print-root] [data-print-paper] * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+@page { margin: 0; }
+
+/* Variants the current shadcn components use (from the shadcn package tailwind.css). */
+@custom-variant data-open {
+  &:where([data-state="open"]),
+  &:where([data-open]:not([data-open="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-closed {
+  &:where([data-state="closed"]),
+  &:where([data-closed]:not([data-closed="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-checked {
+  &:where([data-state="checked"]),
+  &:where([data-checked]:not([data-checked="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-unchecked {
+  &:where([data-state="unchecked"]),
+  &:where([data-unchecked]:not([data-unchecked="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-selected {
+  &:where([data-selected="true"]) {
+    @slot;
+  }
+}
+
+@custom-variant data-disabled {
+  &:where([data-disabled="true"]),
+  &:where([data-disabled]:not([data-disabled="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-active {
+  &:where([data-state="active"]),
+  &:where([data-active]:not([data-active="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-horizontal {
+  &:where([data-orientation="horizontal"]) {
+    @slot;
+  }
+}
+
+@custom-variant data-vertical {
+  &:where([data-orientation="vertical"]) {
+    @slot;
+  }
+}
+
+
+/* Shared KeyForCars workspace surfaces. */
+body.kfc-shell {
+  --background: #f4f5f7;
+  --foreground: #172336;
+  --card: #fff;
+  --card-foreground: #172336;
+  --border: #e1e5eb;
+  --input: #d8dfe8;
+  --muted: #edf0f4;
+  --muted-foreground: #526176;
+  --primary: #a83215;
+  --primary-foreground: #fff;
+  --ring: #a83215;
+  --sidebar: #f0f2f5;
+  --sidebar-foreground: #243247;
+  --sidebar-accent: #e5eaf1;
+  --sidebar-accent-foreground: #172336;
+  --sidebar-border: #dfe4ec;
+  --chart-1: #b43b1b;
+  --chart-2: #367b78;
+  --chart-3: #34577e;
+}
+.kfc-brand-mark { background: #192b42; color: #fff; }
+.kfc-workspace { background: #f7f8fa; }
+.kfc-shell [data-variant="inset"] ~ .kfc-workspace { border: 1px solid var(--border); }
+.kfc-toolbar { background: var(--card); border-radius: inherit; border-end-start-radius: 0; border-end-end-radius: 0; }
+.kfc-content { width: 100%; max-width: 1600px; margin-inline: auto; }
+.kfc-shell [data-sidebar="menu-button"][data-active="true"],
+.kfc-shell [data-sidebar="menu-sub-button"][data-active="true"] {
+  color: #8e2a13;
+  background: #f9e9e3;
+}
+.kfc-shell [data-slot="card"] { box-shadow: 0 1px 2px #15263d0a; }
+.kfc-shell [data-slot="table-cell"] { border-color: var(--border); }
+.kfc-shell [data-slot="table-header"] { background: #f2f4f8; }
+.kfc-shell [data-slot="table-head"] { color: #47566b; font-weight: 600; }
+.kfc-dashboard-title { font-size: clamp(1.6rem, 2.6vw, 2.25rem); line-height: 1.15; }
+.kfc-kpi-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.kfc-shell .kfc-kpi { gap: .6rem; min-width: 0; }
+.kfc-shell .kfc-kpi-primary { border-color: #ecd0c3; background: #fff7f3; }
+.kfc-dashboard-charts { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.kfc-shell :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+@media (min-width: 850px) {
+  .kfc-kpi-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1120px) {
+  .kfc-dashboard-charts { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+}
+@media (min-width: 1420px) {
+  .kfc-kpi-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kfc-shell :is([data-slot="sidebar-gap"], [data-slot="sidebar-container"], .kfc-page-search) {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Workshop calendar (/admin/agenda): outside opening hours and closures/blocks. */
+.kfc-cal-closed {
+  background-color: color-mix(in srgb, var(--muted-foreground) 9%, transparent);
+}
+.kfc-cal-blocked {
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, #f59e0b 22%, transparent) 0 6px, transparent 6px 12px);
+  color: var(--muted-foreground);
+}

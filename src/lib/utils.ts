@@ -55,3 +55,22 @@ export function formatProductDescription(html: string): string {
   // 3. Wrap in a tight layout class
   return `<div class="product-desc-cleaned">${cleaned}</div>`;
 }
+
+/** "Test Dealer BV" → "TDB". Used for avatar fallbacks. */
+export const getInitials = (str: string): string => {
+  if (typeof str !== 'string' || !str.trim()) return '?';
+  return str.trim().split(/\s+/).filter(Boolean).map((word) => word[0]).join('').toUpperCase() || '?';
+};
+
+export function formatCurrency(
+  amount: number,
+  opts?: { currency?: string; locale?: string; minimumFractionDigits?: number; maximumFractionDigits?: number; noDecimals?: boolean },
+) {
+  const { currency = 'EUR', locale = 'nl-NL', minimumFractionDigits, maximumFractionDigits, noDecimals } = opts ?? {};
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: noDecimals ? 0 : minimumFractionDigits,
+    maximumFractionDigits: noDecimals ? 0 : maximumFractionDigits,
+  }).format(amount);
+}

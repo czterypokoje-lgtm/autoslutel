@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, X, Pencil, Trash2 } from 'lucide-react';
@@ -89,7 +90,7 @@ export default function ExpenseActions({ expense }: { expense: ExpenseRow }) {
         {error && <span className={x.err}>{error}</span>}
         <div className={x.btnRow}>
           <button className={`${ui.btn} ${x.small}`} onClick={() => { setEditing(false); setError(null); }} disabled={busy}>
-            Annuleren
+            <PreviewText>{"Annuleren"}</PreviewText>
           </button>
           <button
             className={`${ui.btn} ${x.small} ${x.save}`}
@@ -103,7 +104,7 @@ export default function ExpenseActions({ expense }: { expense: ExpenseRow }) {
               is_reimbursable: reimbursable,
             })}
           >
-            {busy ? 'Opslaan…' : 'Opslaan'}
+            <PreviewText>{busy ? 'Opslaan…' : 'Opslaan'}</PreviewText>
           </button>
         </div>
       </div>
@@ -117,10 +118,10 @@ export default function ExpenseActions({ expense }: { expense: ExpenseRow }) {
         {expense.status === 'pending' && (
           <>
             <button className={`${ui.btn} ${x.small} ${x.ok}`} onClick={() => void send('PATCH', { status: 'approved' })} disabled={busy}>
-              <Check size={14} /> Goedkeuren
+              <Check size={14} /> <PreviewText>Goedkeuren</PreviewText>
             </button>
             <button className={`${ui.btn} ${x.small} ${x.bad}`} onClick={() => void send('PATCH', { status: 'rejected' })} disabled={busy}>
-              <X size={14} /> Afwijzen
+              <X size={14} /> <PreviewText>Afwijzen</PreviewText>
             </button>
           </>
         )}
@@ -128,14 +129,14 @@ export default function ExpenseActions({ expense }: { expense: ExpenseRow }) {
           /* Approving is not the end of the story: a wrong figure stays wrong,
              and someone has to be able to put it back. */
           <button className={`${ui.btn} ${x.small}`} onClick={() => void send('PATCH', { status: 'pending' })} disabled={busy}>
-            Terug naar open
+            <PreviewText>Terug naar open</PreviewText>
           </button>
         )}
         <button className={`${ui.btn} ${x.small}`} onClick={() => setEditing(true)} disabled={busy}>
-          <Pencil size={14} /> Bewerken
+          <Pencil size={14} /> <PreviewText>{"Bewerken"}</PreviewText>
         </button>
         <button className={`${ui.btn} ${x.small} ${x.bad}`} onClick={remove} disabled={busy}>
-          <Trash2 size={14} /> Verwijderen
+          <Trash2 size={14} /> <PreviewText>{"Verwijderen"}</PreviewText>
         </button>
       </div>
     </div>

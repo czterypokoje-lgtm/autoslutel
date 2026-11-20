@@ -15,11 +15,19 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
  * the token against the Auth server. A forged or stale cookie fails here.
  */
 
-export const CRM_ROLES = ['owner', 'kantoor', 'monteur'] as const;
+export const CRM_ROLES = ['owner', 'kantoor', 'monteur', 'magazijn', 'inpak'] as const;
 export type CrmRole = (typeof CRM_ROLES)[number];
 
 /** Roles allowed to see leads, jobs, orders and invoices. */
 export const OFFICE_ROLES: readonly CrmRole[] = ['owner', 'kantoor'];
+/**
+ * KeyForCars warehouse (magazijn) and picker (inpak): stock, counts, purchase
+ * receipts and pick lists. They never receive prices, margins or balances;
+ * the server strips those before responding (kfcInventory.ts).
+ */
+export const WAREHOUSE_ROLES: readonly CrmRole[] = ['owner', 'kantoor', 'magazijn', 'inpak'];
+/** True when this user may see purchase prices and money. */
+export const seesPrices = (user: CrmUser) => !!user.role && OFFICE_ROLES.includes(user.role);
 
 export interface CrmUser {
   id: string;
@@ -119,4 +127,27 @@ export async function requireOfficeUserApi(): Promise<
   }
 
   return { user };
+}
+
+/** Route handlers on the KeyForCars stock API: office, warehouse and picker. */
+export async function requireWarehouseUserApi(): Promise<
+  { user: CrmUser; response?: never } | { user?: never; response: Response }
+> {
+  const user = CRM_PREVIEW ? null : await getCrmUser();
+  if (!user) return { response: Response.json({ error: 'Niet ingelogd' }, { status: 401 }) };
+  if (!user.role || !WAREHOUSE_ROLES.includes(user.role)) {
+    return { response: Response.json({ error: 'Geen toegang' }, { status: 403 }) };
+  }
+  return { user };
+}
+
+/** Pages the warehouse and picker may open (stock, purchasing, pick list). */
+export async function requireWarehouseUser(returnTo?: string): Promise<CrmUser> {
+  const user = await getCrmUser();
+  if (!user) {
+    const next = returnTo ? `?next=${encodeURIComponent(returnTo)}` : '';
+    redirect(`/admin/login${next}`);
+  }
+  if (!user.role || !WAREHOUSE_ROLES.includes(user.role)) redirect('/admin/geen-toegang');
+  return user;
 }

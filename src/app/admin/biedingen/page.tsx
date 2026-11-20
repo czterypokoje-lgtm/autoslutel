@@ -1,4 +1,5 @@
 import { requireOfficeUser } from '@/lib/crmSession';
+import { BRAND } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, CardHead, Empty, Notice } from '../_ui';
 import { SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
@@ -6,7 +7,7 @@ import AwardPanel, { type BidRow } from './AwardPanel';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Biedingen | Autosleutel24' };
+export const metadata = { title: `Biedingen | ${BRAND.name}` };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 

@@ -41,6 +41,8 @@ const crmReadonly =
   (READONLY_BRANCHES.includes(process.env.VERCEL_GIT_COMMIT_REF ?? '') ? '1' : '0');
 
 const nextConfig: NextConfig = {
+  // The in-app preview browser reaches the dev server as 127.0.0.1, not localhost.
+  allowedDevOrigins: ["127.0.0.1"],
   env: {
     NEXT_PUBLIC_CRM_READONLY: crmReadonly,
     // Inlined so client components (the menu) know which install this is.
@@ -83,6 +85,7 @@ const nextConfig: NextConfig = {
     '/api/admin/invoice': ['./node_modules/pdfjs-dist/**/*.mjs', './node_modules/pdf-parse/dist/**/*'],
     // KeyForCars product profiles: read with readFileSync at runtime (src/lib/productProfiles.ts).
     '/api/admin/voorraad-local': ['./src/data/keyforcars-profiles.json'],
+    '/api/admin/product-names': ['./src/data/keyforcars-profiles.json'],
     '/admin/voorraad/**': ['./src/data/keyforcars-profiles.json'],
   },
   /*
@@ -482,6 +485,10 @@ const nextConfig: NextConfig = {
         source: '/admin/voorraad',
         headers: [{ key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=(self), payment=(self)' }],
       },
+      ...((process.env.KFC_DEMO_MODE === '1' || (process.env.NODE_ENV === 'development' && process.env.KFC_SHIPPING_TEST === '1')) ? [{
+        source: '/api/admin/shipping-test/label',
+        headers: [{ key: 'X-Frame-Options', value: 'SAMEORIGIN' }],
+      }] : []),
     ];
   },
   async rewrites() {

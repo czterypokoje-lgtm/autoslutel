@@ -1,3 +1,5 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
+import { IS_KEYFORCARS } from '@/config/install';
 import { notFound } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -87,9 +89,12 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
       <div className={styles.sheet} id="invoice-sheet">
         <div className={styles.top}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt={inv.biller_name} className={styles.logo} />
+          {/* /logo.png is Autosleutel24's mark; another install prints its own name instead. */}
+          {IS_KEYFORCARS
+            ? <strong className={styles.logo} style={{ fontSize: 22, letterSpacing: '-0.02em' }}>{inv.biller_name}</strong>
+            : <img src="/logo.png" alt={inv.biller_name} className={styles.logo} />}
           <div className={styles.topRight}>
-            <h1 className={styles.h1}>Factuur {inv.invoice_number}</h1>
+            <h1 className={styles.h1}><PreviewText>{"Factuur"}</PreviewText> {inv.invoice_number}</h1>
             <p className={styles.issueDate}>
               Datum van uitgifte: <strong>{DATE.format(new Date(inv.issue_date))}</strong>
             </p>
@@ -127,11 +132,11 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
           <thead>
             <tr>
               <th className={styles.left}>Beschrijving</th>
-              <th>Aantal</th>
-              <th className={styles.right}>Prijs</th>
+              <th><PreviewText>{"Aantal"}</PreviewText></th>
+              <th className={styles.right}><PreviewText>{"Prijs"}</PreviewText></th>
               <th className={styles.right}>Korting</th>
-              <th className={styles.right}>Btw</th>
-              <th className={styles.right}>Totaal</th>
+              <th className={styles.right}><PreviewText>{"Btw"}</PreviewText></th>
+              <th className={styles.right}><PreviewText>{"Totaal"}</PreviewText></th>
             </tr>
           </thead>
           <tbody>

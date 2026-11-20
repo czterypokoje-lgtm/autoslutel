@@ -180,6 +180,7 @@ const KEYFORCARS_NAV: NavItem[] = [
       { href: '/admin/voorraad', label: 'Artikelen' },
       { href: '/admin/voorraad/p', label: 'Productzoeker' },
       { href: inventoryHref('reorder'), label: 'Bestelvoorstel' },
+      { href: '/admin/inkoop', label: 'Inkoop' },
       { href: inventoryHref('reports'), label: 'Voorraadrapporten' },
       { href: inventoryHref('journal'), label: 'Voorraadlogboek' },
     ],

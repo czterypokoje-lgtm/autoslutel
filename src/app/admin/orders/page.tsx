@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -32,7 +33,7 @@ export default async function OrdersPage({
   await requireOfficeUser('/admin/orders');
 
   const sp = await searchParams;
-  if (IS_KEYFORCARS) return <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} requestedPage={sp.page} />;
+  if (IS_KEYFORCARS) return <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} requestedPage={sp.page} canImport />;
   const status = TABS.some((t) => t.value === sp.status) ? sp.status : undefined;
   const search = (sp.q ?? '').replace(/[,()%*\\]/g, ' ').trim().slice(0, 60);
 
@@ -84,7 +85,7 @@ export default async function OrdersPage({
   return (
     <>
       <div className={styles.head}>
-        <h1 className={styles.title}>Bestellingen</h1>
+        <h1 className={styles.title}><PreviewText>{"Bestellingen"}</PreviewText></h1>
         <Link className={styles.link} href="/admin/orders/inkoop">A-Key inkoop vandaag →</Link>
         <span className={styles.count}>{rows.length} getoond</span>
         <form className={styles.search} method="get" action="/admin/orders">
@@ -96,7 +97,7 @@ export default async function OrdersPage({
             defaultValue={search}
             placeholder="ordernummer, e-mail, postcode"
           />
-          <button className={styles.apply} type="submit">Zoek</button>
+          <button className={styles.apply} type="submit"><PreviewText>{"Zoek"}</PreviewText></button>
         </form>
       </div>
 
@@ -108,7 +109,7 @@ export default async function OrdersPage({
       {queue.length > 0 && (
         <div className={styles.warning}>
           <strong>{queue.length}</strong> betaalde bestelling
-          {queue.length === 1 ? '' : 'en'} met monteur wacht nog op een afspraak:
+          <PreviewText>{queue.length === 1 ? '' : 'en'}</PreviewText> met monteur wacht nog op een afspraak:
           {' '}
           {queue.map((o, i) => (
             <span key={o.id as string}>
@@ -144,13 +145,13 @@ export default async function OrdersPage({
           <thead>
             <tr>
               <th>Order</th>
-              <th>Klant</th>
-              <th>Plaats</th>
+              <th><PreviewText>{"Klant"}</PreviewText></th>
+              <th><PreviewText>{"Plaats"}</PreviewText></th>
               <th>Status</th>
               <th>Monteur nodig</th>
               <th>Track &amp; trace</th>
-              <th style={{ textAlign: 'right' }}>Totaal</th>
-              <th>Datum</th>
+              <th style={{ textAlign: 'right' }}><PreviewText>{"Totaal"}</PreviewText></th>
+              <th><PreviewText>{"Datum"}</PreviewText></th>
             </tr>
           </thead>
           <tbody>
@@ -221,7 +222,7 @@ export default async function OrdersPage({
                 <span className={`${styles.badge} ${styles.no}`}>{o.status as string}</span>
               </div>
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Plaats</span>
+                <span className={styles.cardLabel}><PreviewText>{"Plaats"}</PreviewText></span>
                 <span className={styles.cardValue}>{[o.postcode, o.city].filter(Boolean).join(' ') || '—'}</span>
               </div>
               <div className={styles.cardRow}>
@@ -233,11 +234,11 @@ export default async function OrdersPage({
                 <span className={styles.cardValue}>{(o.tracking_code as string) ?? '—'}</span>
               </div>
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Totaal</span>
+                <span className={styles.cardLabel}><PreviewText>{"Totaal"}</PreviewText></span>
                 <span className={styles.cardValue}>{MONEY.format(Number(o.total_inc ?? 0))}</span>
               </div>
               <div className={styles.cardRow}>
-                <span className={styles.cardLabel}>Datum</span>
+                <span className={styles.cardLabel}><PreviewText>{"Datum"}</PreviewText></span>
                 <span className={styles.cardValue}>{DATE.format(new Date(o.created_at as string))}</span>
               </div>
             </div>

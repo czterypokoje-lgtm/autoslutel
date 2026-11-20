@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Sans, Chivo } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import './framer-theme.css';
 import Script from 'next/script';
@@ -30,16 +30,20 @@ import { IS_KEYFORCARS } from '@/config/install';
  * on is a visible change to every heading on the site and is a design
  * decision, not a cleanup one -- see the token comment in framer-theme.css.
  */
-const ibmPlexSans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+const ibmPlexSans = localFont({
+  src: [
+    { path: './fonts/ibm-plex-sans-latin-400-normal.woff2', weight: '400' },
+    { path: './fonts/ibm-plex-sans-latin-500-normal.woff2', weight: '500' },
+    { path: './fonts/ibm-plex-sans-latin-600-normal.woff2', weight: '600' },
+    { path: './fonts/ibm-plex-sans-latin-700-normal.woff2', weight: '700' },
+  ],
   display: 'swap',
   variable: '--ff-body',
 });
 
-const chivo = Chivo({
-  subsets: ['latin'],
-  weight: ['500'],
+const chivo = localFont({
+  src: './fonts/chivo-latin-500-normal.woff2',
+  weight: '500',
   display: 'swap',
   variable: '--ff-accent',
 });

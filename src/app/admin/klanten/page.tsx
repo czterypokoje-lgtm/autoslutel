@@ -1,3 +1,7 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
+import { IS_KEYFORCARS } from '@/config/install';
+import { listCustomers } from '@/lib/kfcReceivables';
+import { Customers } from './_components/customers';
 import Link from 'next/link';
 import { MessageCircle, Phone, Search } from 'lucide-react';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -36,7 +40,13 @@ const initials = (name: string | null) =>
  * Every customer once, keyed on the phone number (crm_customers): who they
  * are, how often they asked, what they bought, and a call or WhatsApp away.
  */
-export default async function KlantenPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+export default async function KlantenPage({ searchParams }: { searchParams: Promise<{ q?: string; view?: string }> }) {
+  if (IS_KEYFORCARS) {
+    await requireOfficeUser('/admin/klanten');
+    const sp = await searchParams;
+    // Filtering happens in the table; ?view=overdue and ?q= only preset it (old links keep working).
+    return <Customers rows={await listCustomers()} initialStatus={sp.view === 'overdue' ? 'Vervallen' : undefined} initialQuery={sp.q?.trim()} />;
+  }
   await requireOfficeUser('/admin/klanten');
 
   const { q } = await searchParams;
@@ -85,18 +95,18 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
       <form className={k.search} method="get" action="/admin/klanten" role="search">
         <Search size={18} aria-hidden="true" />
         <input type="search" name="q" defaultValue={search} placeholder="Zoek op naam, telefoon, e-mail of postcode" aria-label="Zoek klant" />
-        <button type="submit">Zoeken</button>
+        <button type="submit"><PreviewText>{"Zoeken"}</PreviewText></button>
         {search && (
           <Link href="/admin/klanten" className={k.clear}>
-            Wis
+            <PreviewText>{"Wis"}</PreviewText>
           </Link>
         )}
       </form>
 
       <div className={k.stats}>
-        <div><span>{search ? 'Gevonden' : 'Klanten'}</span><b>{rows.length}</b></div>
+        <div><span><PreviewText>{search ? 'Gevonden' : 'Klanten'}</PreviewText></span><b>{rows.length}</b></div>
         <div><span>Kochten iets</span><b>{buyers}</b></div>
-        <div><span>Omzet</span><b>{MONEY.format(turnover)}</b></div>
+        <div><span><PreviewText>{"Omzet"}</PreviewText></span><b>{MONEY.format(turnover)}</b></div>
         <div><span>Mag gemaild worden</span><b>{consent}</b></div>
       </div>
 
@@ -121,7 +131,7 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
                 </Link>
                 <span className={k.counts}>
                   <span className={k.chip}>{c.lead_count} aanvra{c.lead_count === 1 ? 'ag' : 'gen'}</span>
-                  {c.sold_count > 0 && <span className={`${k.chip} ${k.chipOk}`}>{c.sold_count} verkocht</span>}
+                  {c.sold_count > 0 && <span className={`${k.chip} ${k.chipOk}`}>{c.sold_count} <PreviewText>{"verkocht"}</PreviewText></span>}
                 </span>
                 <span className={k.money}>{MONEY.format(Number(c.total_value ?? 0))}</span>
                 <span className={k.last}>{DATE.format(new Date(c.last_seen))}</span>

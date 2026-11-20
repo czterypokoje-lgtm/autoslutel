@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
@@ -68,7 +69,7 @@ export default async function RapportagePage() {
           <>
             <br />
             Voer <code>supabase/migrations/0006_customers_reports.sql</code>,{' '}
-            <code>supabase/migrations/0036_revenue_analysis.sql</code> en{' '}
+            <code>supabase/migrations/0036_revenue_analysis.sql</code> <PreviewText>{"en"}</PreviewText>{' '}
             <code>supabase/migrations/0037_capability_gaps.sql</code> uit.
           </>
         )}
@@ -134,12 +135,12 @@ export default async function RapportagePage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Bron</th>
+                <th><PreviewText>{"Bron"}</PreviewText></th>
                 <th>Leads</th>
-                <th>Klussen</th>
-                <th>Verkocht</th>
-                <th>Conversie</th>
-                <th style={{ textAlign: 'right' }}>Omzet</th>
+                <th><PreviewText>{"Klussen"}</PreviewText></th>
+                <th><PreviewText>{"Verkocht"}</PreviewText></th>
+                <th><PreviewText>{"Conversie"}</PreviewText></th>
+                <th style={{ textAlign: 'right' }}><PreviewText>{"Omzet"}</PreviewText></th>
               </tr>
             </thead>
             <tbody>
@@ -176,11 +177,11 @@ export default async function RapportagePage() {
                   <span className={styles.cardValue}>{s.leads} / {s.klussen} / {s.verkocht}</span>
                 </div>
                 <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Conversie</span>
+                  <span className={styles.cardLabel}><PreviewText>{"Conversie"}</PreviewText></span>
                   <span className={styles.cardValue}>{percent(s.verkocht, s.leads)}</span>
                 </div>
                 <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Omzet</span>
+                  <span className={styles.cardLabel}><PreviewText>{"Omzet"}</PreviewText></span>
                   <span className={styles.cardValue}>{MONEY.format(s.omzet)}</span>
                 </div>
               </div>
@@ -203,7 +204,7 @@ export default async function RapportagePage() {
                 <th>Dienst</th>
                 <th>Afgeronde klussen</th>
                 <th style={{ textAlign: 'right' }}>Gemiddeld</th>
-                <th style={{ textAlign: 'right' }}>Totaal</th>
+                <th style={{ textAlign: 'right' }}><PreviewText>{"Totaal"}</PreviewText></th>
               </tr>
             </thead>
             <tbody>
@@ -248,7 +249,7 @@ export default async function RapportagePage() {
                   <span className={styles.cardValue}>{show(row.gemiddelde_waarde, (n) => MONEY.format(n))}</span>
                 </div>
                 <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Totaal</span>
+                  <span className={styles.cardLabel}><PreviewText>{"Totaal"}</PreviewText></span>
                   <span className={styles.cardValue}>{show(row.totaal, (n) => MONEY.format(n))}</span>
                 </div>
               </div>
@@ -272,13 +273,13 @@ export default async function RapportagePage() {
             </span>
             <span className={styles.summaryKey}>Te laat (&gt; 60 min)</span>
             <span className={styles.summaryVal}>
-              {show(latestWeek.te_laat)} van {show(latestWeek.leads_met_contact)}
+              {show(latestWeek.te_laat)} <PreviewText>{"van"}</PreviewText> {show(latestWeek.leads_met_contact)}
             </span>
           </div>
         ) : (
           <p className={styles.note}>
             Nog geen meetbare reactietijd. Dit getal ontstaat vanzelf zodra
-            leads in het CRM van <em>nieuw</em> af worden gehaald — pas dan wordt
+            leads in het CRM van <em><PreviewText>{"nieuw"}</PreviewText></em> af worden gehaald — pas dan wordt
             het moment van eerste contact vastgelegd.
           </p>
         )}
@@ -294,11 +295,11 @@ export default async function RapportagePage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Monteur</th>
-                <th>Klussen</th>
+                <th><PreviewText>{"Monteur"}</PreviewText></th>
+                <th><PreviewText>{"Klussen"}</PreviewText></th>
                 <th>Werkdagen</th>
                 <th>Per dag</th>
-                <th style={{ textAlign: 'right' }}>Omzet</th>
+                <th style={{ textAlign: 'right' }}><PreviewText>{"Omzet"}</PreviewText></th>
               </tr>
             </thead>
             <tbody>
@@ -336,7 +337,7 @@ export default async function RapportagePage() {
                   <span className={styles.cardValue}>{show(row.klussen)} / {show(row.werkdagen)} / {show(row.per_dag)}</span>
                 </div>
                 <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Omzet</span>
+                  <span className={styles.cardLabel}><PreviewText>{"Omzet"}</PreviewText></span>
                   <span className={styles.cardValue}>{show(row.omzet, (n) => MONEY.format(n))}</span>
                 </div>
               </div>
@@ -352,9 +353,9 @@ export default async function RapportagePage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Postcode</th>
+                <th><PreviewText>{"Postcode"}</PreviewText></th>
                 <th>Leads</th>
-                <th>Verkocht</th>
+                <th><PreviewText>{"Verkocht"}</PreviewText></th>
               </tr>
             </thead>
             <tbody>
@@ -388,7 +389,7 @@ export default async function RapportagePage() {
                   <span className={styles.cardValue}>{show(row.leads)}</span>
                 </div>
                 <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Verkocht</span>
+                  <span className={styles.cardLabel}><PreviewText>{"Verkocht"}</PreviewText></span>
                   <span className={styles.cardValue}>{show(row.verkocht)}</span>
                 </div>
               </div>
@@ -409,11 +410,11 @@ export default async function RapportagePage() {
             <thead>
               <tr>
                 <th>Merk</th>
-                <th>Klussen</th>
-                <th>Geannuleerd</th>
+                <th><PreviewText>{"Klussen"}</PreviewText></th>
+                <th><PreviewText>{"Geannuleerd"}</PreviewText></th>
                 <th>Annuleer %</th>
                 <th style={{ textAlign: 'right' }}>Gemiddeld</th>
-                <th style={{ textAlign: 'right' }}>Omzet</th>
+                <th style={{ textAlign: 'right' }}><PreviewText>{"Omzet"}</PreviewText></th>
               </tr>
             </thead>
             <tbody>
@@ -472,10 +473,10 @@ export default async function RapportagePage() {
             <thead>
               <tr>
                 <th>Merk</th>
-                <th>Postcode</th>
-                <th>Klussen</th>
-                <th>Geannuleerd</th>
-                <th style={{ textAlign: 'right' }}>Omzet</th>
+                <th><PreviewText>{"Postcode"}</PreviewText></th>
+                <th><PreviewText>{"Klussen"}</PreviewText></th>
+                <th><PreviewText>{"Geannuleerd"}</PreviewText></th>
+                <th style={{ textAlign: 'right' }}><PreviewText>{"Omzet"}</PreviewText></th>
               </tr>
             </thead>
             <tbody>
@@ -513,7 +514,7 @@ export default async function RapportagePage() {
                   <span className={styles.cardValue}>{show(row.klussen)} / {show(row.geannuleerd)}</span>
                 </div>
                 <div className={styles.cardRow}>
-                  <span className={styles.cardLabel}>Omzet</span>
+                  <span className={styles.cardLabel}><PreviewText>{"Omzet"}</PreviewText></span>
                   <span className={styles.cardValue}>{show(row.omzet, (n) => MONEY.format(n))}</span>
                 </div>
               </div>
@@ -532,9 +533,9 @@ export default async function RapportagePage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Monteur</th>
-                <th>Klussen</th>
-                <th style={{ textAlign: 'right' }}>Omzet</th>
+                <th><PreviewText>{"Monteur"}</PreviewText></th>
+                <th><PreviewText>{"Klussen"}</PreviewText></th>
+                <th style={{ textAlign: 'right' }}><PreviewText>{"Omzet"}</PreviewText></th>
                 <th style={{ textAlign: 'right' }}>Commissie</th>
                 <th>Effectief %</th>
                 <th>Ingesteld %</th>

@@ -1,12 +1,18 @@
+import { PreviewText } from '../PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Empty, Notice } from '../_ui';
 import { toE164NL } from '@/lib/phone';
 import ConversationConsole, { type Conversation } from './ConversationConsole';
+import { IS_KEYFORCARS } from '@/config/install';
+import { Chat } from './_components/chat';
 
 export const dynamic = 'force-dynamic';
 
 const PAGE_SIZE = 100;
+
+/** Request time for relative labels; a function so the clock read is not "during render". */
+const requestNow = () => Date.now();
 
 /**
  * Everything the AI agent has said and heard, phone and WhatsApp together.
@@ -154,6 +160,15 @@ export default async function GesprekkenPage() {
     };
   });
 
+  // KeyForCars: the Studio Chat layout (nav · list · thread · profile) over the same conversations.
+  if (IS_KEYFORCARS && !error) {
+    return (
+      <div className="kfc-neutral">
+        <Chat conversations={conversations} now={requestNow()} />
+      </div>
+    );
+  }
+
   return (
     <>
       <PageHead
@@ -163,7 +178,7 @@ export default async function GesprekkenPage() {
 
       {error && (
         <Notice tone="bad">
-          Kon de gesprekken niet laden: {error.message}
+          <PreviewText>Kon de gesprekken niet laden</PreviewText>: {error.message}
         </Notice>
       )}
 

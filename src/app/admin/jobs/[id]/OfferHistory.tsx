@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { Card, CardHead, Table, Badge, Empty } from '../../_ui';
 import { TIER_TERMS, type Tier } from '@/lib/subscription';
 
@@ -45,7 +46,7 @@ export default function OfferHistory({ offers }: { offers: OfferRow[] }) {
   if (!offers.length) {
     return (
       <Card padded>
-        <CardHead>Aanbod</CardHead>
+        <CardHead><PreviewText>{"Aanbod"}</PreviewText></CardHead>
         <Empty>Deze klus is nog aan niemand aangeboden.</Empty>
       </Card>
     );
@@ -60,7 +61,7 @@ export default function OfferHistory({ offers }: { offers: OfferRow[] }) {
         head={
           <>
             <th>#</th>
-            <th>Monteur</th>
+            <th><PreviewText>{"Monteur"}</PreviewText></th>
             <th>Tier</th>
             <th>Score</th>
             <th>Aangeboden</th>

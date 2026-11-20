@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -124,13 +125,13 @@ export default async function JobsPage({
       <aside className={styles.side}>
         <Link className={styles.sideNew} href={`/admin/jobs/nieuw?datum=${date}`}>
           <Plus size={17} strokeWidth={2.2} />
-          Klus inplannen
+          <PreviewText>{"Klus inplannen"}</PreviewText>
         </Link>
 
         <MiniMonth date={date} today={today} view={view} from={from} to={to} />
 
         <div className={styles.sideBlock}>
-          <span className={styles.sideLabel}>Monteurs</span>
+          <span className={styles.sideLabel}><PreviewText>{"Monteurs"}</PreviewText></span>
           {techs.map((t) => {
             const count = rows.filter((j) => j.technician_id === t.id && j.status !== 'geannuleerd').length;
             return (
@@ -144,7 +145,7 @@ export default async function JobsPage({
           {unassignedCount > 0 && (
             <div className={styles.sideTech}>
               <span className={styles.sideDot} style={{ background: '#9d201c' }} />
-              <span className={styles.sideName}>Zonder monteur</span>
+              <span className={styles.sideName}><PreviewText>{"Zonder monteur"}</PreviewText></span>
               <span className={`${styles.sideCount} ${styles.sideCountWarn}`}>{unassignedCount}</span>
             </div>
           )}
@@ -168,7 +169,7 @@ export default async function JobsPage({
       <div className={styles.agendaMain}>
         <div className={styles.toolbar}>
           <Link className={ui.btn} href={`/admin/jobs?datum=${today}${view === 'week' ? '&weergave=week' : ''}`}>
-            Vandaag
+            <PreviewText>{"Vandaag"}</PreviewText>
           </Link>
           <Link
             className={`${ui.btn} ${ui.btnIcon}`}
@@ -207,7 +208,7 @@ export default async function JobsPage({
           Er zijn nog geen actieve monteurs, dus de dagweergave heeft geen
           kolommen. Voeg ze toe bij{' '}
           <Link className={styles.link} href="/admin/monteurs">
-            Monteurs
+            <PreviewText>{"Monteurs"}</PreviewText>
           </Link>
           .
         </p>
@@ -691,7 +692,7 @@ function AgendaList({
   if (days.length === 0) {
     return (
       <div className={styles.agenda}>
-        <p className={styles.agendaEmpty}>Geen klussen in deze periode.</p>
+        <p className={styles.agendaEmpty}><PreviewText>{"Geen klussen in deze periode."}</PreviewText></p>
       </div>
     );
   }
@@ -713,10 +714,10 @@ function AgendaList({
             <h2 className={`${styles.agendaDayHead} ${isToday ? styles.agendaDayHeadToday : ''}`}>
               <span className={styles.agendaDayName}>
                 {dayLabel.format(new Date(`${day}T12:00:00Z`))}
-                {isToday && <span className={styles.agendaToday}>vandaag</span>}
+                {isToday && <span className={styles.agendaToday}><PreviewText>{"vandaag"}</PreviewText></span>}
               </span>
               <span className={styles.agendaCount}>
-                {dayJobs.length} {dayJobs.length === 1 ? 'klus' : 'klussen'}
+                {dayJobs.length} <PreviewText>{dayJobs.length === 1 ? 'klus' : 'klussen'}</PreviewText>
               </span>
             </h2>
 

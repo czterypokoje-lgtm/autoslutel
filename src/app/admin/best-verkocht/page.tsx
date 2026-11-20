@@ -3,7 +3,7 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { sampleOrders, SHOPS, SOLD } from '@/lib/kfcSampleOrders';
 import { findProfile } from '@/lib/productProfiles';
 import { Card, Notice, PageHead, Table, ui } from '../_ui';
-import { PreviewInput, PreviewText } from '../PreviewLanguage';
+import { PreviewProductName, PreviewInput, PreviewText } from '../PreviewLanguage';
 import catalog from '@/data/keyforcars-stock.json';
 import { inventoryCategory, inventoryCategories } from '../voorraad/inventoryCategories';
 import { dayKey } from '../overzicht/KfcDashboard';
@@ -90,7 +90,7 @@ export default async function BestSellersPage({ searchParams }: { searchParams: 
             const price = money.format(product.minPrice / 100);
             return <tr key={product.sku} className={styles.rankingRows}>
               <td>{product.sku}</td>
-              <td><Link prefetch={false} href={`/admin/voorraad/p?q=${encodeURIComponent(product.sku)}`}>{product.name}</Link></td>
+              <td><Link prefetch={false} href={`/admin/voorraad/p?q=${encodeURIComponent(product.sku)}`}><PreviewProductName sku={product.sku}>{product.name}</PreviewProductName></Link></td>
               <td>{brand || '—'}</td>
               <td><PreviewText>{productCategory}</PreviewText></td>
               <td className={styles.rankingNumber}>{product.minPrice === product.maxPrice ? price : `${price} – ${money.format(product.maxPrice / 100)}`}</td>

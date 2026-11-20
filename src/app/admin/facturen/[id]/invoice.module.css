@@ -6,8 +6,8 @@
  * from here) class names.
  */
 @media print {
-  :global(aside),
-  :global(nav[aria-label='Snelmenu']) {
+  :global(body):has(.page) :global(aside),
+  :global(body):has(.page) :global(nav[aria-label='Snelmenu']) {
     display: none !important;
   }
 }

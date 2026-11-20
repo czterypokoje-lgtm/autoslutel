@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowDownLeft, ArrowUpRight, BarChart3, CalendarDays, Camera, ChartNoAxesCombined, History, List, PieChart, Radio } from 'lucide-react';
@@ -81,7 +82,7 @@ export default function StockReports({ state, catalog, demo, view: section }: { 
         {section === 'journal' && <details>
           <summary>{english ? 'Movement Details' : 'Boekingsdetails'}</summary>
           <dl className={styles.moveMetrics}>
-            <div><dt>{english ? 'Reference' : 'Referentie'}</dt><dd>{move.id ?? move.bot?.eventId ?? '—'}</dd></div>
+            <div><dt><PreviewText>{english ? 'Reference' : 'Referentie'}</PreviewText></dt><dd>{move.id ?? move.bot?.eventId ?? '—'}</dd></div>
             <div><dt>{english ? 'Previous stock' : 'Voorraad vóór boeking'}</dt><dd>{move.after === null ? '—' : move.after - move.delta}</dd></div>
             <div><dt>{afterLabel}</dt><dd>{move.after === null ? t('Onbekend') : move.after}</dd></div>
             <div><dt>{t('Bedrag')}</dt><dd>{move.amountCents === undefined ? '—' : money.format(move.amountCents / 100)}</dd></div>
@@ -96,10 +97,10 @@ export default function StockReports({ state, catalog, demo, view: section }: { 
           {move.operation !== 'count' && <div><dt>{afterLabel}</dt><dd>{move.after === null ? t('Onbekend') : `${move.after} ${t('st.')}`}</dd></div>}
         </dl>
         {move.operation === 'sale' && (move.invoiceId ? (
-          <Link className={styles.journalProfile} prefetch={false} href={`/admin/facturen/${encodeURIComponent(move.invoiceId)}`}>{english ? 'Invoice' : 'Factuur'} <ArrowUpRight size={14} aria-hidden="true" /></Link>
+          <Link className={styles.journalProfile} prefetch={false} href={`/admin/facturen/${encodeURIComponent(move.invoiceId)}`}><PreviewText>{english ? 'Invoice' : 'Factuur'}</PreviewText> <ArrowUpRight size={14} aria-hidden="true" /></Link>
         ) : sampleInvoice ? (
           <details className={styles.sampleInvoice}>
-            <summary className={styles.journalProfile}>{english ? 'Invoice' : 'Factuur'} <ArrowUpRight size={14} aria-hidden="true" /></summary>
+            <summary className={styles.journalProfile}><PreviewText>{english ? 'Invoice' : 'Factuur'}</PreviewText> <ArrowUpRight size={14} aria-hidden="true" /></summary>
             <div><strong>{english ? 'Sample Invoice' : 'Voorbeeldfactuur'}</strong><br />
               TEST-{move.id?.replace('sales-example-', '')}<br />
               {article?.sku || move.article} · {quantity} {t('st.')}<br />

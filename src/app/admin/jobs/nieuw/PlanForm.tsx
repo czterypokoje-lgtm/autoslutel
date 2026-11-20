@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -254,12 +255,12 @@ export default function PlanForm({
   return (
     <form className={styles.planWrap} onSubmit={submit}>
       <div className={styles.panel}>
-        <h2>Klus</h2>
+        <h2><PreviewText>{"Klus"}</PreviewText></h2>
 
         <div className={styles.grid2}>
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="datum">
-              Datum
+              <PreviewText>{"Datum"}</PreviewText>
             </label>
             <input
               id="datum"
@@ -464,7 +465,7 @@ export default function PlanForm({
 
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="pc">
-              Postcode
+              <PreviewText>{"Postcode"}</PreviewText>
             </label>
             <input
               id="pc"
@@ -476,7 +477,7 @@ export default function PlanForm({
 
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="plaats">
-              Plaats
+              <PreviewText>{"Plaats"}</PreviewText>
             </label>
             <input
               id="plaats"
@@ -519,7 +520,7 @@ export default function PlanForm({
               value={keylessChoice}
               onChange={(e) => setKeylessChoice(e.target.value as '' | 'true' | 'false')}
             >
-              <option value="">Onbekend</option>
+              <option value=""><PreviewText>{"Onbekend"}</PreviewText></option>
               <option value="false">Sleutel (contactslot)</option>
               <option value="true">Keyless (start-knop)</option>
             </select>
@@ -553,7 +554,7 @@ export default function PlanForm({
             className={styles.secondary}
             href={lead ? '/admin/leads' : '/admin/jobs'}
           >
-            Annuleren
+            <PreviewText>{"Annuleren"}</PreviewText>
           </Link>
           {error && <div className={styles.error}>{error}</div>}
         </div>
@@ -562,7 +563,7 @@ export default function PlanForm({
       <div className={styles.panel}>
         {order && (
           <>
-            <h2>Bestelling</h2>
+            <h2><PreviewText>{"Bestelling"}</PreviewText></h2>
             <div className={styles.summary}>
               <span className={styles.summaryKey}>Ordernummer</span>
               <span className={styles.summaryVal}>{order.order_number}</span>
@@ -576,9 +577,9 @@ export default function PlanForm({
           <>
             <h2>Lead</h2>
             <div className={styles.summary}>
-              <span className={styles.summaryKey}>Klant</span>
+              <span className={styles.summaryKey}><PreviewText>{"Klant"}</PreviewText></span>
               <span className={styles.summaryVal}>{lead.name ?? 'geen naam'}</span>
-              <span className={styles.summaryKey}>Telefoon</span>
+              <span className={styles.summaryKey}><PreviewText>{"Telefoon"}</PreviewText></span>
               <span className={styles.summaryVal}>
                 {lead.phone_e164 ? (
                   <a href={`tel:${lead.phone_e164}`}>{lead.phone_e164}</a>
@@ -590,13 +591,13 @@ export default function PlanForm({
               <span className={styles.summaryVal}>
                 {[lead.brand, lead.model, lead.year].filter(Boolean).join(' ') || '—'}
               </span>
-              <span className={styles.summaryKey}>Bron</span>
+              <span className={styles.summaryKey}><PreviewText>{"Bron"}</PreviewText></span>
               <span className={styles.summaryVal}>{lead.source ?? 'unknown'}</span>
             </div>
           </>
         )}
 
-        <h2>Monteur</h2>
+        <h2><PreviewText>{"Monteur"}</PreviewText></h2>
         {suggestions.length === 0 ? (
           <p className={styles.note}>
             Geen beschikbare monteurs voor deze dag.

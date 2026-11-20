@@ -303,7 +303,9 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     );
   }
 
-  if (!pathname.startsWith('/api/')) {
+  // The country block is spam defence for the Autosleutel24 public site;
+  // the KeyForCars CRM has staff and testers abroad and no public pages.
+  if (!IS_KEYFORCARS && !pathname.startsWith('/api/')) {
     const country = request.headers.get('x-vercel-ip-country') ?? '';
     const userAgent = request.headers.get('user-agent') ?? '';
     if (BLOCKED_COUNTRIES.has(country) && !KNOWN_CRAWLER.test(userAgent)) {

@@ -166,7 +166,8 @@ export interface ReorderLine {
 const DAY = 86_400_000;
 const STATUS_ORDER: ReorderStatus[] = ['order', 'uncounted', 'soon', 'dead', 'ok'];
 
-export function reorderAdvice(state: StockState, now: Date, settings: ReorderSettings = REORDER_DEFAULTS): ReorderLine[] {
+/** `incoming`: units already on order at the supplier per article (kfc_stock_position), subtracted from the suggestion. */
+export function reorderAdvice(state: StockState, now: Date, settings: ReorderSettings = REORDER_DEFAULTS, incoming: Record<string, number> = {}): ReorderLine[] {
   const windowStart = now.getTime() - settings.windowDays * DAY;
   const deadSince = now.getTime() - 90 * DAY;
   const ids = new Set([
@@ -201,7 +202,7 @@ export function reorderAdvice(state: StockState, now: Date, settings: ReorderSet
     else if (expected > 0 && (!lastUse || Date.parse(lastUse) < deadSince)) status = 'dead';
 
     const target = Math.max(reorderPoint + 1, Math.ceil(perDay * (settings.leadDays + settings.coverDays)));
-    const suggest = status === 'order' || status === 'soon' || status === 'uncounted' ? Math.max(0, target - (expected ?? 0)) : 0;
+    const suggest = status === 'order' || status === 'soon' || status === 'uncounted' ? Math.max(0, target - (expected ?? 0) - (incoming[article] ?? 0)) : 0;
     lines.push({ article, status, shelf, expected, minimum, lastCount, usedInWindow, perDay, coverDays, reorderPoint, suggest, unitCostCents, lastUse });
   }
   return lines.sort((a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status)

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 import './theme.css';
+import './kfc.css';
 import styles from './admin.module.css';
 import { getCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -12,8 +13,13 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { BRAND, IS_KEYFORCARS } from '@/config/install';
 import PreviewLanguage, { PreviewText } from './PreviewLanguage';
 import KeyForCarsAppearance from './KeyForCarsAppearance';
+import KfcShell from './KfcShell';
+import { shippingTestEnabled } from '@/lib/kfcShippingTest';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--ff-crm-studio', preload: false });
+const inter = localFont({ src: '../fonts/inter-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--ff-crm-studio', preload: false });
+// KeyForCars shell: Geist, the Studio Admin template font.
+const geist = localFont({ src: '../fonts/geist-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--font-geist', preload: false });
+const geistMono = localFont({ src: '../fonts/geist-mono-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--font-geist-mono', preload: false });
 
 /**
  * The CRM shell.
@@ -109,6 +115,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     </Shell>
   );
 
+  // KeyForCars: the shadcn shell (KfcShell) once signed in; the login page keeps the plain panel.
+  if (IS_KEYFORCARS && user) {
+    return (
+      <PreviewLanguage floating={false} loadNames>
+        <KfcShell shippingTest={shippingTestEnabled} role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
+          {readonlyStatus}
+          {children}
+        </KfcShell>
+      </PreviewLanguage>
+    );
+  }
   // KeyForCars reads Dutch and English: the switch sits in the corner of every screen.
   return IS_KEYFORCARS || CRM_PREVIEW ? <PreviewLanguage>{panel}</PreviewLanguage> : panel;
 }
