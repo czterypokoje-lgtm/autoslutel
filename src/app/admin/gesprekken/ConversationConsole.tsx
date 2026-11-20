@@ -8,6 +8,7 @@ import {
   Wrench, Inbox, ChevronDown, UserPlus, CalendarPlus, Sparkles,
 } from 'lucide-react';
 import { waLink } from '@/lib/whatsapp';
+import InboxComposer from './InboxComposer';
 import styles from './gesprekken.module.css';
 
 export interface Conversation {
@@ -18,8 +19,22 @@ export interface Conversation {
   outcome: string | null;
   durationSecs: number | null;
   summary: string | null;
-  turns: { role: 'agent' | 'user'; message: string }[];
+  turns: { role: 'agent' | 'user'; message: string; author?: string; status?: string; at?: string }[];
   createdAt: string;
+  /* Present for inbox threads (WhatsApp / e-mail / form), absent for ElevenLabs call transcripts. */
+  thread?: {
+    id: string;
+    channel: 'whatsapp' | 'email' | 'form';
+    name: string | null;
+    aiMode: 'off' | 'draft' | 'auto';
+    status: 'open' | 'closed';
+    email: string | null;
+    subject: string | null;
+    canReply: 'whatsapp' | 'email' | null;
+    windowOpen: boolean;
+    draft: string | null;
+    unread: number;
+  };
   lead: {
     id: string;
     name: string | null;
@@ -44,6 +59,8 @@ const CHANNEL = {
   phone: { label: 'Telefoon', Icon: Phone },
   whatsapp: { label: 'WhatsApp', Icon: MessageCircle },
   sms: { label: 'SMS', Icon: MessageCircle },
+  email: { label: 'E-mail', Icon: Inbox },
+  form: { label: 'Formulier', Icon: Inbox },
   webchat: { label: 'Webchat', Icon: MessageCircle },
   unknown: { label: 'Onbekend', Icon: HelpCircle },
 } as const;
@@ -180,7 +197,7 @@ export default function ConversationConsole({ conversations }: { conversations: 
       ].sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime())
     : [];
 
-  const title = selected ? selected.lead?.name || selected.phone || 'Onbekende beller' : '';
+  const title = selected ? selected.lead?.name || selected.thread?.name || selected.phone || selected.thread?.email || 'Onbekende beller' : '';
 
   return (
     <div className={`${styles.console} ${selected ? styles.hasSelection : ''}`}>
@@ -347,6 +364,11 @@ export default function ConversationConsole({ conversations }: { conversations: 
                 <Link className={styles.pill} href="/admin/jobs/nieuw"><CalendarPlus size={14} /> <PreviewText>{"Klus inplannen"}</PreviewText></Link>
               )}
             </div>
+            {selected.thread && (
+              <section className={styles.card}>
+                <InboxComposer key={selected.id} thread={selected.thread} phone={selected.phone} />
+              </section>
+            )}
           </main>
 
           {/* ── pane 3 ───────────────────────────────────────────────────── */}

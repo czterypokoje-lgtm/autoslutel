@@ -17,7 +17,7 @@ import { ChatThread } from './chat-thread';
 import { groupOf } from './data';
 
 export type View = 'inbox' | 'today' | 'unassigned' | 'appointment';
-export type Channel = 'phone' | 'whatsapp' | 'email' | 'webchat';
+export type Channel = 'phone' | 'whatsapp' | 'email' | 'form';
 
 export function Chat({ conversations, now }: { conversations: Conversation[]; now: number }) {
   const { t } = usePreviewLanguage();
@@ -36,6 +36,8 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
     appointment: conversations.filter((c) => c.job).length,
     phone: conversations.filter((c) => c.channel === 'phone').length,
     whatsapp: conversations.filter((c) => c.channel === 'whatsapp').length,
+    email: conversations.filter((c) => c.channel === 'email').length,
+    form: conversations.filter((c) => c.channel === 'form').length,
   }), [conversations, now]);
 
   const visible = useMemo(() => conversations.filter((c) =>
@@ -50,12 +52,12 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
     { id: 'unassigned', title: t('Zonder lead'), icon: UserRoundX, label: counts.unassigned },
     { id: 'appointment', title: t('Met afspraak'), icon: Calendar, label: counts.appointment },
   ];
-  /* Only the agent's two channels carry conversations today; e-mail and the website chatbot are not connected yet. */
+  /* Phone = the ElevenLabs agent's calls; WhatsApp, e-mail and forms = the inbox (0105). */
   const channelItems: { id: Channel; title: string; icon: LucideIcon; label?: number; disabled?: boolean }[] = [
     { id: 'phone', title: t('Telefoon'), icon: Phone, label: counts.phone },
     { id: 'whatsapp', title: 'WhatsApp', icon: MessageCircle, label: counts.whatsapp },
-    { id: 'email', title: t('E-mail'), icon: Mail, disabled: true },
-    { id: 'webchat', title: t('Website chat'), icon: MessageSquareText, disabled: true },
+    { id: 'email', title: t('E-mail'), icon: Mail, label: counts.email },
+    { id: 'form', title: t('Websiteformulier'), icon: MessageSquareText, label: counts.form },
   ];
 
   return (

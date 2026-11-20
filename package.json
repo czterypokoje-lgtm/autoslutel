@@ -11,6 +11,7 @@
     "catalog": "node scripts/build-catalog.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.12.0",
     "@dnd-kit/abstract": "^0.5.3",
     "@dnd-kit/react": "^0.5.3",
     "@fullcalendar/react": "7.1.5",

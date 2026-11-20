@@ -55,6 +55,7 @@ const KEYFORCARS_OUTSIDE = [
   '/api/woo', // WooCommerce order webhooks (signature-checked in the route)
   '/api/cron/kfc-reconcile', // nightly import check (CRON_SECRET)
   '/api/agent/workshop', // ElevenLabs Workshop Service tools (KFC_WORKSHOP_AGENT_TOKEN); other /api/agent routes stay closed
+  '/api/webhooks', // Meta WhatsApp + Resend inbound (signature-checked in the routes)
   '/_next', // dev reload
   '/__nextjs_original-stack-frame', // dev error overlay
 ];

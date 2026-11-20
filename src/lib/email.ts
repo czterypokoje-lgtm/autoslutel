@@ -28,6 +28,8 @@ export interface Mail {
   /** Plain text. Line breaks are turned into paragraphs for the HTML part. */
   text: string;
   replyTo?: string;
+  /** Extra headers, e.g. In-Reply-To / References so a reply threads in the customer's mail client. */
+  headers?: Record<string, string>;
 }
 
 /** Very small text-to-HTML: paragraphs only, everything escaped. */
@@ -45,14 +47,19 @@ function asHtml(text: string): string {
   return `<div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.6;color:#0f172a;max-width:600px">${body}</div>`;
 }
 
-export async function sendMail({ to, subject, text, replyTo }: Mail): Promise<boolean> {
-  if (!providerRequestsEnabled()) return false;
+export async function sendMail(mail: Mail): Promise<boolean> {
+  return Boolean(await deliverMail(mail));
+}
+
+/** Same as sendMail, but hands back the provider's id so the inbox can track the message. */
+export async function deliverMail({ to, subject, text, replyTo, headers }: Mail): Promise<{ id: string } | null> {
+  if (!providerRequestsEnabled()) return null;
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     console.error(
       `[email] RESEND_API_KEY is not configured — "${subject}" to ${to} was not sent`
     );
-    return false;
+    return null;
   }
 
   const from = process.env.MAIL_FROM ?? `${SITE_CONFIG.name} <${SITE_CONFIG.email}>`;
@@ -71,18 +78,20 @@ export async function sendMail({ to, subject, text, replyTo }: Mail): Promise<bo
         text,
         html: asHtml(text),
         reply_to: replyTo ?? SITE_CONFIG.email,
+        ...(headers && Object.keys(headers).length ? { headers } : {}),
       }),
       signal: AbortSignal.timeout(10000),
     });
 
     if (!res.ok) {
       console.error('[email] provider rejected the message', await res.text());
-      return false;
+      return null;
     }
-    return true;
+    const json = (await res.json().catch(() => null)) as { id?: string } | null;
+    return { id: json?.id ?? '' };
   } catch (error) {
     console.error('[email] send failed', error);
-    return false;
+    return null;
   }
 }
 

@@ -17,10 +17,12 @@ import { MessageScroller, MessageScrollerButton, MessageScrollerContent, Message
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { BRAND } from '@/config/install';
 import { getInitials } from '@/lib/utils';
 import { waLink } from '@/lib/whatsapp';
 import { usePreviewLanguage } from '../../PreviewLanguage';
 import type { Conversation } from '../ConversationConsole';
+import InboxComposer from '../InboxComposer';
 
 import { CHANNEL_LABEL, clock, displayName, duration, longDate, OUTCOME_LABEL } from './data';
 
@@ -35,7 +37,7 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
   const { t } = usePreviewLanguage();
   const name = displayName(conversation);
   const sub = [t(CHANNEL_LABEL[conversation.channel] ?? conversation.channel), duration(conversation.durationSecs), conversation.outcome ? t(OUTCOME_LABEL[conversation.outcome] ?? conversation.outcome) : null].filter(Boolean).join(' · ');
-  const wa = waLink(conversation.phone, `Goedendag${conversation.lead?.name ? ` ${conversation.lead.name.split(' ')[0]}` : ''}, hier KeyForCars. `);
+  const wa = waLink(conversation.phone, `Goedendag${conversation.lead?.name ? ` ${conversation.lead.name.split(' ')[0]}` : ''}, hier ${BRAND.name}. `);
 
   return (
     <div className={cn('flex h-full flex-col py-3', className)}>
@@ -129,7 +131,18 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
               {conversation.turns.map((turn, index) => {
                 const isOutbound = turn.role === 'agent';
                 const align = isOutbound ? 'end' : 'start';
-                const senderName = isOutbound ? 'KeyForCars assistent' : name;
+                const byPerson = isOutbound && !!turn.author && turn.author !== 'ai';
+                const senderName = isOutbound ? (byPerson ? turn.author! : `${BRAND.name} assistent`) : name;
+                const isDraft = turn.status === 'draft';
+                const footer = !isOutbound
+                  ? t('Klant')
+                  : isDraft
+                    ? t('Concept van de assistent — nog niet verstuurd')
+                    : turn.status === 'failed'
+                      ? t('Niet verzonden')
+                      : byPerson
+                        ? turn.author!
+                        : t('Assistent');
                 return (
                   <MessageScrollerItem key={index} messageId={String(index)} scrollAnchor={isOutbound}>
                     <Message align={align}>
@@ -142,11 +155,11 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
                       </MessageAvatar>
                       <MessageContent>
                         <BubbleGroup>
-                          <Bubble variant={isOutbound ? 'default' : 'muted'} align={align}>
-                            <BubbleContent>{turn.message}</BubbleContent>
+                          <Bubble variant={isOutbound ? 'default' : 'muted'} align={align} className={cn(isDraft && 'opacity-60', turn.status === 'failed' && 'line-through')}>
+                            <BubbleContent className="whitespace-pre-wrap">{turn.message}</BubbleContent>
                           </Bubble>
                         </BubbleGroup>
-                        <MessageFooter>{isOutbound ? t('Assistent') : t('Klant')}</MessageFooter>
+                        <MessageFooter>{footer}</MessageFooter>
                       </MessageContent>
                     </Message>
                   </MessageScrollerItem>
@@ -166,7 +179,13 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
           </TabsList>
 
           <TabsContent value="reply" className="m-0">
-            <ReplyComposer phone={conversation.phone} placeholder={conversation.phone ? t('Typ een WhatsApp-bericht… (opent in WhatsApp)') : t('Geen nummer bij dit gesprek.')} />
+            {conversation.thread ? (
+              <div className="p-2">
+                <InboxComposer key={conversation.id} thread={conversation.thread} phone={conversation.phone} />
+              </div>
+            ) : (
+              <ReplyComposer phone={conversation.phone} placeholder={conversation.phone ? t('Typ een WhatsApp-bericht… (opent in WhatsApp)') : t('Geen nummer bij dit gesprek.')} />
+            )}
           </TabsContent>
           <TabsContent value="note" className="m-0">
             <NoteComposer leadId={conversation.lead?.id ?? null} placeholder={conversation.lead ? t('Schrijf een interne notitie bij deze lead…') : t('Geen lead gekoppeld aan dit nummer; notities horen bij een lead.')} />
