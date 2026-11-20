@@ -8,12 +8,22 @@ import { Textarea } from '@/components/ui/textarea';
 import { usePreviewLanguage } from '../../../PreviewLanguage';
 
 import { ClientSelector } from './client-selector';
-import type { CustomerOption, InvoiceFormValues } from './data';
+import type { CustomerOption, InvoiceFormValues, PreviousClientOption } from './data';
 import { InvoiceAdjustments } from './invoice-adjustments';
 import { InvoiceDetails } from './invoice-details';
 import { InvoiceItems } from './invoice-items';
 
-export function InvoiceForm({ customers }: { customers: CustomerOption[] }) {
+export function InvoiceForm({ customers, freeTextClient, previousClients, technicians, readOnlyIssueDate, quickAddPriceList }: {
+  customers: CustomerOption[];
+  /** Autosleutel24 mode — see ClientSelector. */
+  freeTextClient?: boolean;
+  previousClients?: PreviousClientOption[];
+  technicians?: { id: string; name: string }[];
+  /** Editing: the PATCH route never moves issue_date, so it is shown, not offered. */
+  readOnlyIssueDate?: boolean;
+  /** Autosleutel24: the office price list as ready-made lines. */
+  quickAddPriceList?: boolean;
+}) {
   const { t } = usePreviewLanguage();
 
   return (
@@ -26,11 +36,11 @@ export function InvoiceForm({ customers }: { customers: CustomerOption[] }) {
         </TabsList>
 
         <TabsContent value="invoice" className="flex flex-col gap-4">
-          <InvoiceDetails />
+          <InvoiceDetails readOnlyIssueDate={readOnlyIssueDate} />
           <Separator />
-          <ClientSelector customers={customers} />
+          <ClientSelector customers={customers} freeText={freeTextClient} previousClients={previousClients} technicians={technicians} />
           <Separator />
-          <InvoiceItems />
+          <InvoiceItems quickAddPriceList={quickAddPriceList} />
           <Separator />
           <InvoiceAdjustments />
         </TabsContent>
@@ -66,7 +76,7 @@ export function InvoiceForm({ customers }: { customers: CustomerOption[] }) {
 
 type TextPath = 'from.iban' | 'from.accountName' | 'creditApplied' | 'from.name' | 'from.email' | 'from.street' | 'from.phone'
   | 'from.postcode' | 'from.city' | 'from.kvk' | 'from.btw' | 'from.website'
-  | 'to.name' | 'to.email' | 'to.street' | 'to.postcode' | 'to.city' | 'to.btw';
+  | 'to.name' | 'to.email' | 'to.street' | 'to.postcode' | 'to.city' | 'to.btw' | 'to.phone';
 
 export function TextField({ name, label, type = 'text', step }: { name: TextPath; label: string; type?: string; step?: string }) {
   const { register } = useFormContext<InvoiceFormValues>();

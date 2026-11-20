@@ -55,6 +55,14 @@ export interface InvoiceToDetails {
 
 export interface InvoiceFormValues {
   referenceNumber: string;
+  /**
+   * Autosleutel24 only: "op naam van monteur" — not who typed the invoice but
+   * who it is FOR, which is what puts it in that monteur's own Facturen
+   * screen. Absent on KeyForCars, where the route resolves it from the signed
+   * in user, and `toApiPayload` then sends the same null the route already
+   * derived for an office user.
+   */
+  technicianId?: string;
   issuedDate: string;
   /* Derived, never typed: the ledger's due date is issue_date + terms_days
      (trigger kfc_post_invoice in 0093). Kept in the model only because the
@@ -89,6 +97,29 @@ export const walkInClient: InvoiceToDetails = {
   id: WALK_IN_ID, name: '', email: '', phone: '', street: '', postcode: '', city: '', btw: '', termsDays: 14,
 };
 
+/**
+ * Autosleutel24 has no ledger accounts: the "bekende klanten" list is simply
+ * the distinct client blocks off earlier invoices, exactly the rows the old
+ * InvoiceForm offered under "Kies bekende klant".
+ */
+export interface PreviousClientOption {
+  client_name: string;
+  client_street?: string | null;
+  client_postcode?: string | null;
+  client_city?: string | null;
+  client_email?: string | null;
+  client_phone?: string | null;
+  client_btw?: string | null;
+}
+
+export function previousClientToDetails(c: PreviousClientOption, termsDays: number): InvoiceToDetails {
+  return {
+    id: WALK_IN_ID, name: c.client_name ?? '', email: c.client_email ?? '', phone: c.client_phone ?? '',
+    street: c.client_street ?? '', postcode: c.client_postcode ?? '', city: c.client_city ?? '',
+    btw: c.client_btw ?? '', termsDays,
+  };
+}
+
 export function customerToDetails(c: CustomerOption): InvoiceToDetails {
   return {
     id: c.id, name: c.company, email: c.email ?? '', phone: c.phone ?? '', street: c.street ?? '',
@@ -116,6 +147,7 @@ export function defaultInvoiceValues(from: InvoiceFromDetails, to: InvoiceToDeta
   const issuedDate = format(new Date(), 'yyyy-MM-dd');
   return {
     referenceNumber: '',
+    technicianId: '',
     issuedDate,
     paymentDueDate: dueDateFor(issuedDate, to.termsDays),
     from,
@@ -235,6 +267,8 @@ export function toApiPayload(invoice: InvoiceFormValues) {
     client_name: to.name, customer_id: to.id === WALK_IN_ID ? null : to.id,
     client_street: to.street, client_postcode: to.postcode, client_city: to.city,
     client_email: to.email, client_phone: to.phone, client_btw: to.btw,
+    /* Null for an office user either way — the route ignores it for a monteur. */
+    technician_id: invoice.technicianId || null,
     credit_applied: credit,
     notes: invoice.notes,
     lines,

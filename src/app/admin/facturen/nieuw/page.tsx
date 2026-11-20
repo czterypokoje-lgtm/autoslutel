@@ -1,7 +1,7 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SITE_CONFIG } from '@/config/site.config';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
+import { BRAND, IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { PageHead, Notice } from '../../_ui';
 import { PreviewText } from '../../PreviewLanguage';
@@ -56,6 +56,33 @@ export default async function NieuweFactuurPage({ searchParams }: { searchParams
       ? []
       : ((await supabase.from('technicians').select('id, name').eq('active', true).order('name'))
           .data ?? []);
+
+  /* Autosleutel24's Studio look: the same Studio screen, with a free-text
+     client, the price list and (for the office) the monteur picker. */
+  if (STUDIO_UI) {
+    return (
+      <KfcInvoice
+        customers={[]}
+        initialCustomerId={null}
+        freeTextClient
+        previousClients={uniqueClients}
+        technicians={user.role === 'monteur' ? undefined : (technicians as { id: string; name: string }[])}
+        from={{
+          name: SITE_CONFIG.fullName,
+          email: SITE_CONFIG.email,
+          phone: SITE_CONFIG.phone,
+          website: SITE_CONFIG.domain,
+          street: '',
+          postcode: '',
+          city: '',
+          kvk: SITE_CONFIG.kvk,
+          btw: SITE_CONFIG.btw,
+          iban: SITE_CONFIG.iban,
+          accountName: SITE_CONFIG.fullName,
+        }}
+      />
+    );
+  }
 
   return (
     <>

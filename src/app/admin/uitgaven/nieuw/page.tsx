@@ -1,7 +1,9 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { STUDIO_UI } from '@/config/install';
 import { PageHead } from '../../_ui';
 import ExpenseForm from './ExpenseForm';
+import { StudioExpenseForm } from './_components/expense-form';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +19,16 @@ export default async function NieuweUitgavePage() {
   }
 
   const { data: technicians } = await supabase.from('technicians').select('id, name').eq('active', true);
+
+  if (STUDIO_UI) {
+    return (
+      <StudioExpenseForm
+        technicians={(technicians ?? []) as { id: string; name: string }[]}
+        isOffice={isOffice}
+        myTechId={myTechId}
+      />
+    );
+  }
 
   return (
     <>

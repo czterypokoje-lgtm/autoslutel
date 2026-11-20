@@ -1,6 +1,7 @@
 import { PreviewShortDate, PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireCrmUser } from '@/lib/crmSession';
-import { BRAND } from '@/config/install';
+import { BRAND, STUDIO_UI } from '@/config/install';
+import { Expenses, type StudioExpense } from './_components/expenses';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Badge, Empty, ui } from '../_ui';
 import Link from 'next/link';
@@ -59,6 +60,26 @@ export default async function UitgavenPage() {
   const list = expenses ?? [];
   const sumOf = (st: string) => list.filter((e) => e.status === st).reduce((t, e) => t + Number(e.amount || 0), 0);
   const countOf = (st: string) => list.filter((e) => e.status === st).length;
+
+  if (STUDIO_UI) {
+    return (
+      <Expenses
+        isOffice={isOffice}
+        rows={list.map((exp) => ({
+          id: exp.id,
+          category: exp.category,
+          description: exp.description,
+          amount: exp.amount,
+          date_incurred: exp.date_incurred,
+          supplier_name: exp.supplier_name ?? null,
+          is_reimbursable: exp.is_reimbursable === true,
+          status: exp.status,
+          technician_name: exp.technician?.name ?? null,
+          receipt_href: (exp.receipt_url && receipts.get(exp.receipt_url)) || null,
+        })) satisfies StudioExpense[]}
+      />
+    );
+  }
 
   return (
     <>

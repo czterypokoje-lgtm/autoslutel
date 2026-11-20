@@ -14,7 +14,7 @@ import { usePreviewLanguage } from '../../../PreviewLanguage';
 
 import { dueDateFor, getInvoiceDueDate, type InvoiceFormValues } from './data';
 
-export function InvoiceDetails() {
+export function InvoiceDetails({ readOnlyIssueDate = false }: { readOnlyIssueDate?: boolean }) {
   const { control, register, getValues, setValue, watch } = useFormContext<InvoiceFormValues>();
   const { t } = usePreviewLanguage();
 
@@ -49,14 +49,26 @@ export function InvoiceDetails() {
                 <FieldLabel className="text-xs" htmlFor="issued-date">
                   {t('Factuurdatum')}
                 </FieldLabel>
-                <DatePicker
-                  id="issued-date"
-                  value={field.value}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    setValue('paymentDueDate', dueDateFor(value, getValues('to.termsDays')));
-                  }}
-                />
+                {/* Editing: /api/admin/invoices/<id> never moves issue_date, so
+                    offering a picker here would be a control that silently does
+                    nothing. */}
+                {readOnlyIssueDate ? (
+                  <p className="text-muted-foreground flex h-9 items-center text-sm">
+                    {(() => {
+                      const issued = parseDateValue(field.value);
+                      return issued ? format(issued, 'PPP', { locale: nl }) : '—';
+                    })()}
+                  </p>
+                ) : (
+                  <DatePicker
+                    id="issued-date"
+                    value={field.value}
+                    onChange={(value) => {
+                      field.onChange(value);
+                      setValue('paymentDueDate', dueDateFor(value, getValues('to.termsDays')));
+                    }}
+                  />
+                )}
               </Field>
             )}
           />
