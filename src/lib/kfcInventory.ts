@@ -5,6 +5,7 @@ import { readPhoto, writePhoto } from '@/lib/kfcStockStore';
 import { getCrmUser, seesPrices, type CrmUser } from '@/lib/crmSession';
 import type { StockArticle, StockBatch, StockBin, StockMove, StockState } from '@/lib/keyforcarsStock';
 import catalog from '@/data/keyforcars-stock.json';
+import { ARTICLE_CODE, WORKSHOP_PREFIX } from '@/lib/stockCatalog';
 
 /*
  * The KeyForCars stock ledger (migration 0090) behind the existing stock UI.
@@ -25,7 +26,7 @@ export type Position = { article_code: string; physical: number; unusable: numbe
 
 const admin = () => createSupabaseAdminClient();
 const binCode = /^[A-Z0-9-]{1,24}$/;
-const articleCode = /^KFC-[123]-[0-9]+$/;
+const articleCode = ARTICLE_CODE; // KFC-… on KeyForCars, AS24-… on Autosleutel24 (src/lib/stockCatalog.ts)
 const MOVE_LIMIT = 2000;
 
 /** Thrown by the RPCs; mapped to the messages the UI already shows. */
@@ -67,7 +68,7 @@ export async function loadState(user: CrmUser): Promise<StockState> {
   const db = admin();
   const [locs, workshop, levels, moves, photos, batches] = await Promise.all([
     locations(),
-    db.from('kfc_articles').select('code, name, sku, image, category').like('code', 'KFC-3-%').order('code'),
+    db.from('kfc_articles').select('code, name, sku, image, category').like('code', `${WORKSHOP_PREFIX}%`).order('code'),
     db.from('kfc_stock_levels').select('article_code, location_id, quantity, minimum'),
     db.from('kfc_stock_moves')
       .select('article_code, location_id, delta, quantity_after, unit_cost_cents, reason, sales_invoice_id, count_batch_id, note, photo_path, created_at, idempotency_key')
@@ -240,8 +241,8 @@ export async function bulkCount(batchId: string, photos: string[], lines: { arti
 /** A workshop article made on the spot (no shop listing): KFC-3-<n>. */
 export async function newArticle(name: string, sku: string): Promise<string> {
   const db = admin();
-  const { count } = await db.from('kfc_articles').select('code', { count: 'exact', head: true }).like('code', 'KFC-3-%');
-  const code = `KFC-3-${(count ?? 0) + 1}`;
+  const { count } = await db.from('kfc_articles').select('code', { count: 'exact', head: true }).like('code', `${WORKSHOP_PREFIX}%`);
+  const code = `${WORKSHOP_PREFIX}${(count ?? 0) + 1}`;
   const { error } = await db.from('kfc_articles').insert({ code, name, sku, category: 'Werkplaats' });
   if (error) throw new StockError(`Artikel aanmaken mislukt: ${error.message}`, 500);
   return code;

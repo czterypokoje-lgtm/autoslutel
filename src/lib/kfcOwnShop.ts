@@ -109,6 +109,14 @@ const text = (value: string | null | undefined) => value?.trim() || null;
  * ('AS24-2026-00042'). Six bytes of SHA-1 over the order number is stable per
  * order, fits a JavaScript safe integer, and will not collide in this lifetime.
  */
+/**
+ * The ledger article code for a shop product: 'AS24-1-' + the first 32 bits of
+ * sha1(slug), the same derivation scripts/build-as24-stock.mjs uses for the
+ * article master, so an order line finds its article without a lookup table.
+ */
+export const ownArticleCode = (slug: string) =>
+  `AS24-1-${parseInt(createHash('sha1').update(slug).digest('hex').slice(0, 8), 16)}`;
+
 export const ownOrderKey = (orderNumber: string) =>
   createHash('sha1').update(orderNumber).digest().readUIntBE(0, 6);
 
@@ -133,7 +141,8 @@ export function mapOwnOrder(row: OwnOrderRow): MappedOwnOrder {
       : cents(item.unitPrice ?? item.price) * quantity + cents(item.surcharge);
     return {
       woo_line_id: index + 1,
-      sku: (item.sku || item.supplierCode || item.slug || '').trim(),
+      // The article master's SKU is the supplier code; the checkout's `sku` is the catalogue product id.
+      sku: (item.supplierCode || item.sku || item.slug || '').trim(),
       name: (item.title || item.name || 'Onbekend artikel').slice(0, 200),
       quantity,
       unit_incl_cents: quantity ? Math.round(lineIncl / quantity) : null,
@@ -197,13 +206,24 @@ export async function upsertOwnOrder(row: OwnOrderRow): Promise<'inserted' | 'up
   if (saved.error) throw new Error(`Bestelling ${row.order_number}: ${saved.error.message}`);
 
   if (lines.length) {
+    // The article code is derived from the product slug exactly as scripts/build-as24-stock.mjs
+    // derives it, so a line finds its article without a lookup table; the SKU match is the fallback.
+    const items = (Array.isArray(row.items) ? row.items : []) as OwnItem[];
+    const hints = lines.map((_, index) => (items[index]?.slug ? ownArticleCode(items[index].slug!) : null));
+    const codes = [...new Set(hints.filter((code): code is string => !!code))];
+    const known = codes.length ? await db.from('kfc_articles').select('code').in('code', codes) : { data: [] as { code: string }[] };
+    const knownCodes = new Set((known.data ?? []).map((a) => a.code));
     const skus = [...new Set(lines.map((line) => line.sku.toUpperCase()).filter(Boolean))];
     const articles = skus.length
       ? await db.from('kfc_articles').select('code, sku').in('sku', skus)
       : { data: [] as { code: string; sku: string }[] };
     const bySku = new Map((articles.data ?? []).map((a) => [a.sku.toUpperCase(), a.code]));
     const result = await db.from('kfc_shop_order_lines').upsert(
-      lines.map((line) => ({ ...line, order_id: saved.data.id, article_code: bySku.get(line.sku.toUpperCase()) ?? null })),
+      lines.map((line, index) => ({
+        ...line,
+        order_id: saved.data.id,
+        article_code: (hints[index] && knownCodes.has(hints[index]!)) ? hints[index] : bySku.get(line.sku.toUpperCase()) ?? null,
+      })),
       { onConflict: 'order_id,woo_line_id' },
     );
     if (result.error) throw new Error(`Regels ${row.order_number}: ${result.error.message}`);
