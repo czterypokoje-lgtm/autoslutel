@@ -21,7 +21,8 @@ export const SERVICE_OPTIONS = [
   'Transponder programmeren',
 ];
 
-const OTHER = '__anders__';
+/** Exported so the Studio twin of this picker uses the same sentinel. */
+export const OTHER = '__anders__';
 const THIS_YEAR = new Date().getFullYear();
 
 /**

@@ -14,6 +14,8 @@ import { Badge } from '../../_ui';
 import { getBrandLogo } from '@/lib/brandLogos';
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import jd from './job-detail.module.css';
+import { STUDIO_UI } from '@/config/install';
+import StudioJobDetail from '../_studio/job-detail';
 
 const SOURCE_LABEL: Record<string, string> = {
   autosleutel24: 'Kantoor',
@@ -96,6 +98,23 @@ export default async function JobPage({
       technician_name: tech?.name ?? 'Onbekende monteur',
     };
   });
+
+  const openOffers = (offers ?? []).filter((o) => o.response === null).length;
+
+  /* Studio (shadcn) look. Same job, same payments, same offers, and the same
+     action components underneath — only the markup differs. */
+  if (STUDIO_UI) {
+    return (
+      <StudioJobDetail
+        job={job as unknown as JobDetail & { job_source: string | null; lead_id: string | null }}
+        crew={crew}
+        payments={(payments ?? []) as PaymentRow[]}
+        offers={offerRows}
+        briefingLink={briefingLink}
+        openOffers={openOffers}
+      />
+    );
+  }
 
   const car = [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ');
   const logo = getBrandLogo(job.car_make as string | null);
@@ -201,10 +220,7 @@ export default async function JobPage({
         */}
       {job.status !== 'afgerond' && job.status !== 'geannuleerd' && (
         <div style={{ margin: '1.5rem 0' }}>
-          <OfferButton
-            jobId={job.id as string}
-            alreadyOpen={(offers ?? []).filter((o) => o.response === null).length}
-          />
+          <OfferButton jobId={job.id as string} alreadyOpen={openOffers} />
         </div>
       )}
 
