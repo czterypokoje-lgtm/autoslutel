@@ -8,6 +8,8 @@ import styles from '../jobs.module.css';
 import PlanForm, { type PlanLead } from './PlanForm';
 import { catalogTree } from '@/lib/carCatalog';
 import type { PickerMake } from './CarPicker';
+import { STUDIO_UI } from '@/config/install';
+import StudioNewJob from '../_studio/new-job';
 
 export const dynamic = 'force-dynamic';
 
@@ -175,6 +177,26 @@ export default async function NewJobPage({
     models: c.models.map((m) => ({ model: m.model, from: m.fromYear, to: m.toYear, keyless: m.keyless, blade: m.nonKeyless })),
   }));
 
+  const slotParam = slot && /^\d{2}:\d{2}$/.test(slot) ? slot : undefined;
+
+  /* Studio (shadcn) look. Same lead, same suggestions, same form fields and
+     the same POST to /api/admin/jobs — only the markup differs. */
+  if (STUDIO_UI) {
+    return (
+      <StudioNewJob
+        lead={lead}
+        order={order}
+        date={date}
+        suggestions={suggestions}
+        initialSlot={slotParam}
+        initialTechnicianId={monteur}
+        cars={cars}
+        recentWork={recentWork}
+        noTechnicians={technicians?.length === 0}
+      />
+    );
+  }
+
   return (
     <>
       <div className={styles.head}>
@@ -217,7 +239,7 @@ export default async function NewJobPage({
         order={order}
         date={date}
         suggestions={suggestions}
-        initialSlot={slot && /^\d{2}:\d{2}$/.test(slot) ? slot : undefined}
+        initialSlot={slotParam}
         initialTechnicianId={monteur}
         cars={cars}
       />
