@@ -20,6 +20,15 @@ export type Install = 'autosleutel24' | 'keyforcars';
 export const INSTALL: Install = process.env.CRM_INSTALL === 'keyforcars' ? 'keyforcars' : 'autosleutel24';
 export const IS_KEYFORCARS = INSTALL === 'keyforcars';
 
+/**
+ * The shadcn shell and the Studio screens (leads dashboard, chat). Always on
+ * for KeyForCars. Autosleutel24 opts in per deployment with CRM_UI=studio, so
+ * the live CRM keeps its old look until that variable is set and gets it back
+ * the moment it is removed. Screens that read KeyForCars-only tables stay
+ * behind IS_KEYFORCARS regardless of this flag.
+ */
+export const STUDIO_UI = IS_KEYFORCARS || process.env.CRM_UI === 'studio';
+
 export const BRAND = IS_KEYFORCARS
   ? { name: 'KeyForCars', crm: 'KeyForCars CRM', staff: 'Alleen voor medewerkers van KeyForCars.' }
   : { name: 'Autosleutel24', crm: 'Autosleutel24 CRM', staff: 'Alleen voor medewerkers en monteurs van Autosleutel24.' };

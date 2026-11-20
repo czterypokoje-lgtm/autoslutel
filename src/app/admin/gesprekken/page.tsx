@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Empty, Notice } from '../_ui';
 import { toE164NL } from '@/lib/phone';
 import ConversationConsole, { type Conversation } from './ConversationConsole';
-import { IS_KEYFORCARS } from '@/config/install';
+import { STUDIO_UI } from '@/config/install';
 import { Chat } from './_components/chat';
 
 export const dynamic = 'force-dynamic';
@@ -160,8 +160,8 @@ export default async function GesprekkenPage() {
     };
   });
 
-  // KeyForCars: the Studio Chat layout (nav · list · thread · profile) over the same conversations.
-  if (IS_KEYFORCARS && !error) {
+  // Studio UI: the chat layout (nav · list · thread · profile) over the same conversations.
+  if (STUDIO_UI && !error) {
     return (
       <div className="kfc-neutral">
         <Chat conversations={conversations} now={requestNow()} />

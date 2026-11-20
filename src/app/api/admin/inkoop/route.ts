@@ -15,7 +15,7 @@ const reply = (data: unknown, status = 200) => Response.json(data, { status, hea
 const uuid = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
 
 async function gate() {
-  if (!IS_KEYFORCARS || CRM_PREVIEW) return { response: reply({}, 404) };
+  if (!IS_KEYFORCARS || CRM_PREVIEW) return { user: undefined, response: reply({}, 404) };
   return requireWarehouseUserApi();
 }
 

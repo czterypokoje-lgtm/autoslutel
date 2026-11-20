@@ -49,7 +49,7 @@ interface Leaf {
   label: string;
 }
 
-interface NavItem {
+export interface NavItem {
   label: string;
   icon: LucideIcon;
   href?: string;
@@ -58,7 +58,7 @@ interface NavItem {
   children?: Leaf[];
 }
 
-const OFFICE_NAV: NavItem[] = [
+export const OFFICE_NAV: NavItem[] = [
   { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/overzicht' },
   { label: 'Leads', icon: Inbox, href: '/admin/leads' },
   { label: 'Gesprekken', icon: PhoneCall, href: '/admin/gesprekken', ai: true },
@@ -112,7 +112,7 @@ const OFFICE_NAV: NavItem[] = [
   { label: 'Instellingen', icon: Settings, href: '/admin/instellingen' },
 ];
 
-const MONTEUR_NAV: NavItem[] = [
+export const MONTEUR_NAV: NavItem[] = [
   { label: 'Overzicht', icon: LayoutDashboard, href: '/admin/overzicht' },
   { label: 'Vandaag', icon: Truck, href: '/admin/vandaag' },
   { label: 'Aanbod', icon: Handshake, href: '/admin/aanbod' },

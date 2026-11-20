@@ -10,7 +10,7 @@ import MobileTabBar from './MobileTabBar';
 import TopBar from './TopBar';
 import { CRM_READONLY, READONLY_MESSAGE } from '@/lib/readonly';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
+import { BRAND, IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
 import PreviewLanguage, { PreviewText } from './PreviewLanguage';
 import KeyForCarsAppearance from './KeyForCarsAppearance';
 import KfcShell from './KfcShell';
@@ -115,10 +115,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     </Shell>
   );
 
-  // KeyForCars: the shadcn shell (KfcShell) once signed in; the login page keeps the plain panel.
-  if (IS_KEYFORCARS && user) {
+  // The shadcn shell (KfcShell) once signed in: always on KeyForCars, on Autosleutel24 behind CRM_UI=studio. The login page keeps the plain panel.
+  if (STUDIO_UI && user) {
     return (
-      <PreviewLanguage floating={false} loadNames>
+      <PreviewLanguage floating={false} loadNames={IS_KEYFORCARS}>
         <KfcShell shippingTest={shippingTestEnabled} role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
           {readonlyStatus}
           {children}

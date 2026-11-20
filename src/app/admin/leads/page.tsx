@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { List } from 'lucide-react';
-import { IS_KEYFORCARS } from '@/config/install';
+import { STUDIO_UI } from '@/config/install';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { leadsDashboard } from '@/lib/kfcLeads';
 import { Button } from '@/components/ui/button';
@@ -14,9 +14,9 @@ import { PreviewText } from '../PreviewLanguage';
 export const dynamic = 'force-dynamic';
 
 export default async function LeadsPage(props: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  if (!IS_KEYFORCARS) return <LeadsListPage {...props} />;
+  if (!STUDIO_UI) return <LeadsListPage {...props} />;
 
-  // KeyForCars: the Studio Admin CRM dashboard; the list with filters lives one level down.
+  // Studio UI: the CRM dashboard over the shared leads table; the list with filters lives one level down.
   await requireOfficeUser('/admin/leads');
   const data = await leadsDashboard();
   return (

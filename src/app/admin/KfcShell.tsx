@@ -23,6 +23,10 @@ import { Separator } from '@/components/ui/separator';
 import { StaffChat } from './StaffChat';
 import { LanguageToggle, usePreviewLanguage } from './PreviewLanguage';
 import type { CrmRole } from '@/lib/crmSession';
+import { BRAND, IS_KEYFORCARS } from '@/config/install';
+import { MONTEUR_NAV, OFFICE_NAV, type NavItem } from './AdminNav';
+import MobileTabBar from './MobileTabBar';
+import styles from './admin.module.css';
 
 /*
  * The KeyForCars shell: shadcn sidebar + header, modelled on the Kiranism
@@ -91,11 +95,21 @@ const GROUPS: Group[] = [
   },
 ];
 
+/** Autosleutel24 keeps its own menus (AdminNav) and only borrows the shell; monteurs get theirs. */
+const fromNav = (label: string, nav: NavItem[]): Group[] => [{ label, items: nav.map((item) => ({ label: item.label, icon: item.icon, href: item.href, children: item.children })) }];
+const AUTOSLEUTEL_OFFICE = fromNav('Kantoor', OFFICE_NAV);
+const AUTOSLEUTEL_MONTEUR = fromNav('Monteur', MONTEUR_NAV);
+
 const TITLES: Record<string, string> = {
   overzicht: 'Dashboard', orders: 'Bestellingen', klanten: 'Klanten', voorraad: 'Voorraad', inkoop: 'Inkoop', leads: 'Leads',
   'bot-conversations': 'ElevenLabs-gesprekken', gesprekken: 'Gesprekken', financien: 'Financieel overzicht', facturen: 'Facturen', uitgaven: 'Uitgaven', bank: 'Bank', 'best-verkocht': 'Best verkocht', winst: 'Winst & verbruik',
   rapport: 'Prestaties', attributie: 'Advertentieklikken', instellingen: 'Instellingen', budget: 'AI-budget', 'agent-centrum': 'Agentcentrum', p: 'Productzoeker', nieuw: 'Nieuw', lijst: 'Alle leads', jobs: 'Planning',
   verzending: 'Verzending', agenda: 'Werkplaatsagenda', verzendinstellingen: 'Verzendinstellingen', bestellingen: 'Bestellingen', picken: 'Picklijst',
+  // Autosleutel24 screens
+  aanbod: 'Aanbod', biedingen: 'Biedingen', vandaag: 'Vandaag', monteurs: 'Monteurs', bestellen: 'Onderdelen bestellen', kas: 'Kas & uitbetalingen',
+  tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', klikfraude: 'Klikfraude',
+  live: 'Live', kantoor: 'Kantoor', netwerk: 'Netwerk', 'mijn-agenda': 'Mijn agenda', 'mijn-klussen': 'Mijn klussen', 'mijn-bus': 'Mijn bus', 'mijn-saldo': 'Saldo',
+  'mijn-vak': 'Mijn vak', 'mijn-profiel': 'Profiel',
 };
 
 /** The stock screens use the camera, which needs a full page load for its Permissions-Policy. */
@@ -150,13 +164,14 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
     label: 'Verzending',
     items: shippingPages.length ? [{ label: 'Verzending', icon: PackageCheck, children: shippingPages }] : [],
   };
-  const visible = GROUPS.flatMap((group) => {
+  const groups = IS_KEYFORCARS ? GROUPS : role === 'monteur' ? AUTOSLEUTEL_MONTEUR : AUTOSLEUTEL_OFFICE;
+  const visible = groups.flatMap((group) => {
     const items = group.items.filter((item) => office || !item.office);
-    if (group.label === 'Kantoor' && role === 'owner') {
+    if (IS_KEYFORCARS && group.label === 'Kantoor' && role === 'owner') {
       items.push({ label: 'AI-budget', href: '/admin/instellingen/budget', icon: Euro });
     }
     const current = { ...group, items };
-    return group.label === 'Magazijn' ? [current, shipping] : [current];
+    return IS_KEYFORCARS && group.label === 'Magazijn' ? [current, shipping] : [current];
   }).filter((group) => group.items.length);
 
   const destinations = visible.flatMap((group) => group.items.flatMap((item) =>
@@ -181,7 +196,7 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
                     <KeyRound className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">KeyForCars</span>
+                    <span className="truncate font-semibold">{BRAND.name}</span>
                     <span className="text-muted-foreground truncate text-xs">CRM</span>
                   </div>
                 </Link>
@@ -270,7 +285,7 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
           <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block"><Link href="/admin/overzicht">KeyForCars</Link></BreadcrumbItem>
+              <BreadcrumbItem className="hidden md:block"><Link href="/admin/overzicht">{BRAND.name}</Link></BreadcrumbItem>
               {crumbs.map((crumb, index) => (
                 <span key={crumb} className="contents">
                   <BreadcrumbSeparator className="hidden md:block" />
@@ -290,7 +305,7 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
               <DialogContent className="kfc-page-search">
                 <DialogHeader>
                   <DialogTitle>{english ? 'Find a page' : 'Pagina zoeken'}</DialogTitle>
-                  <DialogDescription>{english ? 'Open a page in KeyForCars.' : 'Open een pagina in KeyForCars.'}</DialogDescription>
+                  <DialogDescription>{english ? `Open a page in ${BRAND.name}.` : `Open een pagina in ${BRAND.name}.`}</DialogDescription>
                 </DialogHeader>
                 <Input type="search" autoFocus value={search} onChange={(event) => setSearch(event.target.value)} aria-label={english ? 'Page name' : 'Paginanaam'} />
                 <div className="grid max-h-60 gap-1 overflow-y-auto">
@@ -303,13 +318,15 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
                 </div>
               </DialogContent>
             </Dialog>
-            <LanguageToggle inline />
+            {IS_KEYFORCARS && <LanguageToggle inline />}
           </div>
         </header>
         {/* `crm crm-keyforcars` keeps theme.css variables alive for pages not yet rebuilt on shadcn. */}
-        <main className="crm crm-keyforcars kfc-content flex min-w-0 flex-1 flex-col gap-4 p-4 md:p-6" data-appearance="studio">{children}</main>
+        <main className={`crm crm-keyforcars kfc-content flex min-w-0 flex-1 flex-col gap-4 p-4 md:p-6 ${role === 'monteur' ? styles.mainWithTabBar : ''}`} data-appearance="studio">{children}</main>
       </SidebarInset>
-      {role && ['owner', 'kantoor', 'magazijn', 'inpak'].includes(role) && <StaffChat office={office} />}
+      {/* Autosleutel24 monteurs keep their thumb bar (Vandaag · Mijn bus · Aanbod · Mijn agenda) on phones. */}
+      {role === 'monteur' && <MobileTabBar />}
+      {IS_KEYFORCARS && role && ['owner', 'kantoor', 'magazijn', 'inpak'].includes(role) && <StaffChat office={office} />}
     </SidebarProvider>
   );
 }

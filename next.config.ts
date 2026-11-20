@@ -47,6 +47,8 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_CRM_READONLY: crmReadonly,
     // Inlined so client components (the menu) know which install this is.
     CRM_INSTALL: process.env.CRM_INSTALL ?? '',
+    // Same for the UI switch (src/config/install.ts STUDIO_UI): decided per deployment at build time.
+    CRM_UI: process.env.CRM_UI ?? '',
   },
   /*
    * pdf-parse pulls in @napi-rs/canvas, a native compiled binary — the class
