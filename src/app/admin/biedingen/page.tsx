@@ -1,9 +1,10 @@
 import { requireOfficeUser } from '@/lib/crmSession';
-import { BRAND } from '@/config/install';
+import { BRAND, STUDIO_UI } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Card, CardHead, Empty, Notice } from '../_ui';
 import { SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import AwardPanel, { type BidRow } from './AwardPanel';
+import StudioBiedingen, { type BidJob } from './StudioBiedingen';
 
 export const dynamic = 'force-dynamic';
 
@@ -88,6 +89,16 @@ export default async function BiedingenPage() {
       end: row.bid_end,
     });
     byJob.set(row.job_id, entry);
+  }
+
+  if (STUDIO_UI) {
+    const jobs: BidJob[] = [...byJob.entries()].map(([jobId, job]) => ({
+      jobId,
+      label: job.label,
+      askedFor: job.askedFor,
+      bids: job.bids,
+    }));
+    return <StudioBiedingen jobs={jobs} />;
   }
 
   return (
