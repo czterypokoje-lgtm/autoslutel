@@ -51,7 +51,20 @@ export async function afterInbound(thread: Thread, message: Message, opts: { not
     const draft = await draftReply(thread, history);
     if (!draft) return;
 
-    if (thread.ai_mode === 'auto' && !draft.needsHuman) {
+    /*
+     * Auto only when three things hold: the thread says so, the global kill
+     * switch (INBOX_AI_AUTO=0) is not pulled, and the assistant is not the only
+     * one talking. Three assistant replies in a row with no person on our side
+     * means the other end is a bot or an auto-responder; that conversation is
+     * handed to a person instead of looping.
+     */
+    const recentAi = history.slice(-6).filter((m) => m.direction === 'out' && m.author === 'ai' && m.status === 'sent').length;
+    const autoAllowed = thread.ai_mode === 'auto' && process.env.INBOX_AI_AUTO !== '0' && recentAi < 3;
+    if (thread.ai_mode === 'auto' && !autoAllowed && recentAi >= 3) {
+      await tellOffice(`⏸ Assistent gestopt bij ${b(who(thread))}: drie antwoorden zonder reactie van een medewerker. Neem over.\n${link()}`);
+    }
+
+    if (autoAllowed && !draft.needsHuman) {
       const sent = await sendReply(thread, draft.reply, 'ai');
       if (!sent.ok) {
         await addMessage(thread, { direction: 'out', author: 'ai', body: draft.reply, status: 'draft', meta: { reason: draft.reason, autoFailed: sent.error } });

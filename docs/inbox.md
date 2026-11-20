@@ -131,3 +131,42 @@ curl -s "https://www.autosleutel24.nl/api/webhooks/whatsapp?hub.mode=subscribe&h
 curl -s -o /dev/null -w '%{http_code}\n' -X POST https://www.autosleutel24.nl/api/webhooks/whatsapp -d '{}'
 curl -s -o /dev/null -w '%{http_code}\n' -X POST https://www.autosleutel24.nl/api/webhooks/resend -d '{}'
 ```
+
+## Veilig en stabiel live
+
+Wat er al in zit: beide webhooks weigeren alles zonder geldige handtekening en antwoorden 503
+zolang hun secret ontbreekt; het provider-id is uniek, dus een retry slaat niets dubbel op;
+alleen `owner` en `kantoor` kunnen lezen en schrijven (RLS); de assistent heeft geen tools,
+staat standaard op `draft`, en een menselijke reply zet `auto` uit.
+
+Extra remmen:
+
+- `INBOX_AI_AUTO=0` in Vercel = noodstop: elke `auto`-thread gedraagt zich als `draft`,
+  zonder deploy of databasewijziging. Terug met `1` of door de variabele te verwijderen.
+- Drie assistent-antwoorden op rij zonder medewerker ertussen → de assistent stopt op die
+  thread en meldt het op Telegram. Dit vangt gesprekken met een andere bot of autoresponder.
+- `maxDuration = 120` op de drie routes, zodat een trage modelaanroep niet halverwege wordt
+  afgekapt.
+
+Uitrol in deze volgorde, elke stap los terug te draaien:
+
+1. Migratie 0105 (lege tabellen, raakt niets bestaands).
+2. `ANTHROPIC_API_KEY` → formulieren krijgen concepten. Lees er een week lang 20–30 van voordat
+   iemand een thread op `auto` zet; begin met `auto` alleen op WhatsApp, waar antwoorden kort zijn.
+3. Resend-webhook eerst op de preview-URL, met je eigen testmail; daarna pas op productie.
+4. Meta-webhook pas als `wacli` uit kan; de registratie beëindigt die sessie toch.
+
+Beheer:
+
+- Secrets alleen in Vercel-env, nooit `NEXT_PUBLIC_`. Het Meta System-User-token heeft geen
+  vervaldatum: bij een vermoeden van een lek direct intrekken in Business Settings en een nieuw
+  maken. `RESEND_WEBHOOK_SECRET` kun je in Resend met één klik roteren.
+- Fouten zijn zichtbaar op drie plekken: Vercel → Logs (`[inbox]`, `[whatsapp]`, `[resend]`),
+  Resend → Webhooks (afgewezen leveringen + retries), Meta → App → Webhooks (foutpercentage).
+- Supabase: zet Point-in-Time Recovery aan op het Autosleutel24-project als dat nog niet zo
+  is; de inbox bevat klantcorrespondentie.
+- AVG: verwerkingsregister aanvullen met Meta (WhatsApp Business Data Processing Terms),
+  Resend (DPA) en Anthropic (DPA, geen training op API-verkeer); privacyverklaring noemt dat
+  berichten met AI-ondersteuning worden beantwoord. Bewaartermijn nog niet geautomatiseerd:
+  een nachtelijke cron die gesloten threads ouder dan 12 maanden verwijdert is tien regels,
+  zodra je de termijn kiest.

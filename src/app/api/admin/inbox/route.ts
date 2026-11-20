@@ -6,6 +6,8 @@ import { sendReply } from '@/lib/inbox/send';
 import { addMessage, getThread, threadMessages, type AiMode } from '@/lib/inbox/store';
 
 export const dynamic = 'force-dynamic';
+/* The model call behind a draft can take a minute; the default limit would cut it off mid-reply. */
+export const maxDuration = 120;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const MAX_BODY = 4000;

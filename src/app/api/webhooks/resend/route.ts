@@ -4,6 +4,8 @@ import { afterInbound } from '@/lib/inbox/handleInbound';
 import { addMessage, emailThread } from '@/lib/inbox/store';
 
 export const dynamic = 'force-dynamic';
+/* The model call behind a draft can take a minute; the default limit would cut it off mid-reply. */
+export const maxDuration = 120;
 
 /**
  * Resend `email.received` webhook: a mail forwarded from the office mailbox

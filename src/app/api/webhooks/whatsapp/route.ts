@@ -7,6 +7,8 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { ensureWhatsappLead } from '@/lib/whatsappLead';
 
 export const dynamic = 'force-dynamic';
+/* The model call behind a draft can take a minute; the default limit would cut it off mid-reply. */
+export const maxDuration = 120;
 
 /**
  * Meta WhatsApp Cloud API webhook.
