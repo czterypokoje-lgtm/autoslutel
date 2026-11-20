@@ -1,5 +1,5 @@
 import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
-import catalog from '@/data/keyforcars-stock.json';
+import { ARTICLE_CODE, stockCatalog as catalog, WORKSHOP_PREFIX } from '@/lib/stockCatalog';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { hasLanCookie, lanMode } from '@/lib/lanPreview';
 import { requireWarehouseUserApi } from '@/lib/crmSession';
@@ -15,10 +15,16 @@ export const runtime = 'nodejs';
 const LEDGER = WAREHOUSE && !CRM_PREVIEW;
 const articles = new Set(catalog.map(({ id }) => id));
 let catalogResponse: { body: string; etag: string } | undefined;
-const articleCode = /^KFC-[123]-[0-9]+$/;
 const binCode = /^[A-Z0-9-]{1,24}$/;
+/**
+ * The three articles the ?demo=1 walkthrough books movements on. KeyForCars's
+ * own cards when they are there, otherwise simply the first three of this
+ * install's catalogue — the demo is about the screens, not these keys.
+ */
 const demoSkus = ['ALRK05', 'ALRK03', 'ALRK04'];
-const demoArticles = demoSkus.map((sku) => catalog.find((article) => article.sku === sku)!);
+const demoArticles = demoSkus.every((sku) => catalog.some((article) => article.sku === sku))
+  ? demoSkus.map((sku) => catalog.find((article) => article.sku === sku)!)
+  : catalog.slice(0, 3);
 
 type Save = (state: StockState) => Promise<boolean>;
 
@@ -140,7 +146,7 @@ export async function GET(request: Request) {
     }
     return reply(state);
   }
-  if (!articleCode.test(photo) || !(await readStock()).state.photos[photo]) return reply({}, 404);
+  if (!ARTICLE_CODE.test(photo) || !(await readStock()).state.photos[photo]) return reply({}, 404);
   const image = await readPhoto(`${photo}.jpg`);
   return image ? jpeg(image) : reply({}, 404);
 }
@@ -176,7 +182,7 @@ export async function POST(request: Request) {
   if (input.operation === 'photo') {
     if (demo) return reply({ error: 'Wijzig de etiketfoto via de lokale voorraad.' }, 400);
     const { article, photo } = input;
-    if (typeof article !== 'string' || !articleCode.test(article) || !hasArticle(article) ||
+    if (typeof article !== 'string' || !ARTICLE_CODE.test(article) || !hasArticle(article) ||
         typeof photo !== 'string' || photo.length > 240_000 || !/^[A-Za-z0-9+/]+={0,2}$/.test(photo)) {
       return reply({ error: 'Kies een kleinere geldige foto.' }, 400);
     }
@@ -193,7 +199,7 @@ export async function POST(request: Request) {
     const name = typeof input.name === 'string' ? input.name.trim() : '';
     const sku = typeof input.sku === 'string' ? input.sku.trim() : '';
     if (!name || name.length > 180 || sku.length > 80) return reply({ error: 'Controleer de artikelnaam en SKU.' }, 400);
-    const id = `KFC-3-${state.workshop.length + 1}`;
+    const id = `${WORKSHOP_PREFIX}${state.workshop.length + 1}`;
     state.workshop.push({ id, name, sku, image: '', category: 'Werkplaats', sources: [] });
     if (!(await save(state))) return conflict();
     return reply({ state, id });

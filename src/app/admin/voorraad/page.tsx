@@ -3,7 +3,7 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { BRAND, WAREHOUSE } from '@/config/install';
 import KeyForCarsStock from './KeyForCarsStock';
 import VanStockPage from './VanStock';
-import catalog from '@/data/keyforcars-stock.json';
+import { stockCatalog } from '@/lib/stockCatalog';
 import { inventoryView } from './inventoryViews';
 
 export const dynamic = 'force-dynamic';
@@ -25,7 +25,7 @@ export default async function VoorraadPage({ searchParams }: { searchParams: Pro
     const params = await searchParams;
     const demo = params.demo === '1';
     const view = inventoryView(params.view);
-    return <KeyForCarsStock key={`${demo}/${view}`} initialCatalog={catalog.slice(0, view === 'products' ? 12 : 1)} demo={demo} canLinkInvoice={!CRM_PREVIEW && !demo} view={view} />;
+    return <KeyForCarsStock key={`${demo}/${view}`} initialCatalog={stockCatalog.slice(0, view === 'products' ? 12 : 1)} demo={demo} canLinkInvoice={!CRM_PREVIEW && !demo} view={view} />;
   }
   await requireOfficeUser('/admin/voorraad');
   return <VanStockPage />;

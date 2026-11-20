@@ -9,6 +9,7 @@ import { createPortal } from 'react-dom';
 import { Barcode, Camera, ChevronLeft, ChevronRight, ClipboardList, Images, Package, Plus, Printer, Save, ScanLine, X } from 'lucide-react';
 import { EMPTY_STOCK, STOCK_OPERATIONS, stockChange, type StockArticle, type StockBin, type StockMove } from '@/lib/keyforcarsStock';
 import { labelCode } from './StockLabel';
+import { BRAND } from '@/config/install';
 import ProductFacts from './ProductFacts';
 import { inventoryCategory } from './inventoryCategories';
 import { inventoryHref, inventoryViews, type InventoryView } from './inventoryViews';
@@ -284,7 +285,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
   }
 
   function shareMovement({ move, article, file }: NonNullable<typeof lastMovement>) {
-    const text = `KeyForCars · ${t(STOCK_OPERATIONS[move.operation as Operation])}\n${article.name} (${article.sku || article.id})\nAantal: ${Math.abs(move.delta)}${move.shelf ? `\nLocatie: ${move.shelf} / ${move.box}` : ''}${move.note ? `\n${move.note}` : ''}\nReferentie: ${move.id}`;
+    const text = `${BRAND.name} · ${t(STOCK_OPERATIONS[move.operation as Operation])}\n${article.name} (${article.sku || article.id})\nAantal: ${Math.abs(move.delta)}${move.shelf ? `\nLocatie: ${move.shelf} / ${move.box}` : ''}${move.note ? `\n${move.note}` : ''}\nReferentie: ${move.id}`;
     if (file && navigator.canShare?.({ files: [file] })) {
       void navigator.share({ text, files: [file] }).catch((error) => {
         if (error.name !== 'AbortError') setNotice('Delen mislukt. Gebruik de WhatsApp-tekst en voeg de foto handmatig toe.');
