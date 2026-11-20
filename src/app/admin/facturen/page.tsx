@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { STUDIO_UI } from '@/config/install';
 import { PageHead, Notice, ui } from '../_ui';
 import FacturenTable from './FacturenTable';
+import type { InvoiceRow } from './_components/data';
+import { Invoices } from './_components/invoices';
 import { getBrandLogo } from '@/lib/brandLogos';
 
 export const dynamic = 'force-dynamic';
@@ -55,6 +58,36 @@ export default async function FacturenPage() {
 
   const { data, error } = await query;
 
+  /* Same query, same role split — only the markup differs. */
+  const rows = ((data ?? []) as unknown as Record<string, unknown>[]).map((r) => {
+    const job = (Array.isArray(r.job) ? r.job[0] : r.job) as { car_make?: string | null } | null;
+    const tech = (Array.isArray(r.technician) ? r.technician[0] : r.technician) as { name?: string } | null;
+    return {
+      ...(r as object),
+      job,
+      technician_name: tech?.name ?? null,
+      logo: getBrandLogo(job?.car_make ?? null),
+    } as never;
+  });
+
+  if (STUDIO_UI) {
+    if (error) {
+      return (
+        <>
+          <PageHead title="Facturen" />
+          <Notice tone="bad">Facturen konden niet worden geladen: {error.message}</Notice>
+        </>
+      );
+    }
+    return (
+      <Invoices
+        rows={rows as unknown as InvoiceRow[]}
+        showTechnician={user.role !== 'monteur'}
+        isMonteur={user.role === 'monteur'}
+      />
+    );
+  }
+
   return (
     <>
       <PageHead
@@ -72,19 +105,7 @@ export default async function FacturenPage() {
           Facturen konden niet worden geladen: {error.message}
         </Notice>
       ) : (
-        <FacturenTable
-          showTechnician={user.role !== 'monteur'}
-          rows={((data ?? []) as unknown as Record<string, unknown>[]).map((r) => {
-            const job = (Array.isArray(r.job) ? r.job[0] : r.job) as { car_make?: string | null } | null;
-            const tech = (Array.isArray(r.technician) ? r.technician[0] : r.technician) as { name?: string } | null;
-            return {
-              ...(r as object),
-              job,
-              technician_name: tech?.name ?? null,
-              logo: getBrandLogo(job?.car_make ?? null),
-            } as never;
-          })}
-        />
+        <FacturenTable showTechnician={user.role !== 'monteur'} rows={rows} />
       )}
       
       {user.role === 'monteur' && (

@@ -1,9 +1,10 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
-import { IS_KEYFORCARS } from '@/config/install';
+import { IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
 import { notFound } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import PrintButton from './PrintButton';
+import StudioPrintBar from './StudioPrintBar';
 import styles from './invoice.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -84,7 +85,10 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className={styles.page}>
-      <PrintButton invoiceId={inv.id} status={inv.status} />
+      {/* Only the on-screen controls change; the printed sheet below is the same markup in both looks. */}
+      {STUDIO_UI
+        ? <StudioPrintBar invoiceId={inv.id} status={inv.status} />
+        : <PrintButton invoiceId={inv.id} status={inv.status} />}
 
       <div className={styles.sheet} id="invoice-sheet">
         <div className={styles.top}>
