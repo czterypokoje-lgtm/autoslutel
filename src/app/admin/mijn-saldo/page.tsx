@@ -4,7 +4,9 @@ import { PageHead, Card, CardHead, Badge, Empty, Notice, Table, ui } from '../_u
 import { HighlightCard, LineChart, Legend, BarChart, RankedBars, Donut, chart } from '../_ui/charts';
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import { priceOf, earnedOn, computeAvailable } from '@/lib/technicianBalance';
+import { STUDIO_UI } from '@/config/install';
 import PayoutForm from './PayoutForm';
+import StudioSaldo, { type SaldoJobRow } from './StudioSaldo';
 import { getBrandLogo } from '@/lib/brandLogos';
 import styles from './saldo.module.css';
 
@@ -136,6 +138,48 @@ export default async function MijnSaldoPage() {
     isScenario(job.scenario) ? SCENARIO_INFO[job.scenario].label : (job.service_type ?? null)
   ).slice(0, 6);
   const places = tally((job) => job.city).slice(0, 5);
+
+  if (STUDIO_UI) {
+    const chartData = MONTHS.slice(0, upTo).map((month, i) => ({
+      month,
+      thisYear: thisYear[i] ?? 0,
+      lastYear: hasLastYear ? (previousYear[i] ?? 0) : null,
+    }));
+
+    const rows: SaldoJobRow[] = done.slice(0, 50).map((job, i) => ({
+      id: job.id ?? String(i),
+      date: job.scheduled_date,
+      make: job.car_make,
+      model: job.car_model,
+      logo: getBrandLogo(job.car_make),
+      service: isScenario(job.scenario) ? SCENARIO_INFO[job.scenario].label : (job.service_type ?? 'Overig'),
+      price: priceOf(job),
+      commission: priceOf(job) - earnedOn(job),
+      earned: earnedOn(job),
+    }));
+
+    return (
+      <StudioSaldo
+        available={available}
+        earnedTotal={earnedTotal}
+        paidOut={paidOut}
+        pending={pending}
+        doneCount={done.length}
+        countDelta={delta(countThis, countLast)}
+        revenue={revenue}
+        revenueDelta={delta(revenueThis, revenueLast)}
+        avgDelta={delta(avgThis, avgLast)}
+        chartData={chartData}
+        thisYearLabel={`${year}`}
+        lastYearLabel={`${year - 1}`}
+        hasLastYear={hasLastYear}
+        makes={makes}
+        kinds={kinds}
+        places={places}
+        rows={rows}
+      />
+    );
+  }
 
   return (
     <>

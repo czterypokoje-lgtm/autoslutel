@@ -5,7 +5,9 @@ import { getBrandLogo } from '@/lib/brandLogos';
 import { SCENARIO_INFO, isScenario } from '@/lib/scenarios';
 import { priceFor, type PricedCoverageRow } from '@/lib/capability';
 import { slotLabel } from '@/lib/crmJobs';
+import { STUDIO_UI } from '@/config/install';
 import OfferList, { type OfferRow } from './OfferList';
+import StudioOfferList from './StudioOfferList';
 
 export const dynamic = 'force-dynamic';
 
@@ -120,6 +122,27 @@ export default async function AanbodPage() {
         },
       ];
     });
+
+  if (STUDIO_UI) {
+    return (
+      <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight">Aanbod</h1>
+          <p className="text-muted-foreground text-sm">
+            Klussen die bij jouw vak en gebied passen. Wie het eerst accepteert, krijgt de klus. Nee zeggen kost niets.
+          </p>
+        </div>
+        <HelpSteps
+          steps={[
+            'Kijk naar de auto, de plaats en de tijd.',
+            'Accepteren: de klus staat meteen in Vandaag, met het volledige adres.',
+            'Geen tijd of niet jouw vak? Tik Nee, de volgende monteur krijgt hem.',
+          ]}
+        />
+        <StudioOfferList offers={offers} />
+      </div>
+    );
+  }
 
   return (
     <>

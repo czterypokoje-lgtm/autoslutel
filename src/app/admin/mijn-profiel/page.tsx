@@ -1,8 +1,10 @@
 import { requireCrmUser, OFFICE_ROLES } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { STUDIO_UI } from '@/config/install';
 import styles from '../vandaag/vandaag.module.css';
 import pf from './profiel.module.css';
 import ProfileForm, { type Profile, type Business } from './ProfileForm';
+import StudioProfileForm from './StudioProfileForm';
 import { technicianColour } from '@/lib/crmColours';
 import { connectToken } from '@/lib/telegramConnect';
 
@@ -172,5 +174,6 @@ export default async function MijnProfielPage() {
     business,
   };
 
+  if (STUDIO_UI) return <StudioProfileForm profile={profile} />;
   return <ProfileForm profile={profile} />;
 }

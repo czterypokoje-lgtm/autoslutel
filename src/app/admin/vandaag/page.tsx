@@ -2,8 +2,10 @@ import { redirect } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate } from '@/lib/crmJobs';
+import { STUDIO_UI } from '@/config/install';
 import styles from './vandaag.module.css';
 import VanScreen, { type VanJob } from './VanScreen';
+import StudioVanScreen from './StudioVanScreen';
 import { getBrandLogo } from '@/lib/brandLogos';
 
 export const dynamic = 'force-dynamic';
@@ -108,9 +110,22 @@ export default async function VandaagPage({
     .gt('quantity', 0)
     .order('description');
 
+  const vanJobs = ((data ?? []) as unknown as VanJob[]).map((j) => ({ ...j, logo: getBrandLogo(j.car_make) }));
+
+  if (STUDIO_UI) {
+    return (
+      <StudioVanScreen
+        jobs={vanJobs}
+        technicianName={me?.name ?? null}
+        today={today}
+        vanStock={vanStock || []}
+      />
+    );
+  }
+
   return (
     <VanScreen
-      jobs={((data ?? []) as unknown as VanJob[]).map((j) => ({ ...j, logo: getBrandLogo(j.car_make) }))}
+      jobs={vanJobs}
       technicianName={me?.name ?? null}
       today={today}
       vanStock={vanStock || []}
