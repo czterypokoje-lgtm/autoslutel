@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { isoDate } from '@/lib/crmJobs';
 import { technicianColour } from '@/lib/crmColours';
+import { STUDIO_UI } from '@/config/install';
 import { PageHead } from '../_ui';
 import SalesChart from '../overzicht/SalesChart';
 import { SPAN_LABEL, type Bucket, type Report, type Span } from './reportData';
+import StudioReportView from './StudioReportView';
 import r from './rapport.module.css';
 
 const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
@@ -50,6 +52,8 @@ function BucketTable({ title, rows, total }: { title: string; rows: Bucket[]; to
 
 /** The report itself, given its numbers. */
 export default function ReportView({ d, anchor }: { d: Report; anchor: string }) {
+  if (STUDIO_UI) return <StudioReportView d={d} anchor={anchor} />;
+
   const span = d.span;
   const c = d.cur;
   const p = d.prev;

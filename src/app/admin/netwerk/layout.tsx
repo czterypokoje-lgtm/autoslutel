@@ -1,7 +1,9 @@
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { STUDIO_UI } from '@/config/install';
 import styles from './netwerk.module.css';
 import NetworkSidebar from './NetworkSidebar';
+import StudioNetworkSidebar from './StudioNetworkSidebar';
 
 export const dynamic = 'force-dynamic';
 
@@ -100,6 +102,15 @@ export default async function NetwerkLayout({
     { title: 'Regio’s', type: 'region', prefix: '#' },
     { title: 'Gesprekken', type: 'dm', prefix: '@' },
   ];
+
+  if (STUDIO_UI) {
+    return (
+      <div className="kfc-neutral flex h-[calc(100svh-8rem)] min-h-125 overflow-hidden rounded-lg border">
+        <StudioNetworkSidebar servers={all} isOffice={isOffice} groups={groups} channels={mine} presence={presenceById} />
+        <div className="min-w-0 flex-1 overflow-y-auto">{children}</div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.layout}>
