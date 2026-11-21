@@ -110,6 +110,7 @@ const KEYFORCARS_OUTSIDE = [
   '/vendor', // barcode decoder .wasm
   '/api/woo', // WooCommerce order webhooks (signature-checked in the route)
   '/api/cron/kfc-reconcile', // nightly import check (CRON_SECRET)
+  '/api/cron/kfc-woo-stock', // stock push to the Woo shops (CRON_SECRET; off until WOO_<SHOP>_STOCK_PUSH is set)
   '/api/agent/workshop', // ElevenLabs Workshop Service tools (KFC_WORKSHOP_AGENT_TOKEN); other /api/agent routes stay closed
   '/api/webhooks/resend', // Resend inbound e-mail for Gesprekken (signature-checked); Meta WhatsApp stays closed
   '/_next', // dev reload

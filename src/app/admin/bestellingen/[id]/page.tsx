@@ -1,17 +1,18 @@
-import { PreviewProductName, PreviewText } from '@/app/admin/PreviewLanguage';
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { canBookReturns, requireWarehouseUser, seesPrices } from '@/lib/crmSession';
-import { getShopOrder, shopReturnHistory, type ShopOrder } from '@/lib/kfcOrders';
+import { getShopOrder, type ShopOrder } from '@/lib/kfcOrders';
 import { readSendcloudTracking } from '@/lib/sendcloudTracking';
 import { sampleOrders } from '@/lib/kfcSampleOrders';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { returnLocations } from '@/lib/kfcInventory';
-import { FulfilmentBadge, OrderLines, ReturnLine } from '../OrderParts';
+import { receiveLocations, returnPanel } from '@/lib/kfcReturns';
+import { FulfilmentBadge, OrderLines } from '../OrderParts';
+import { ReturnPanel } from '../ReturnPanel';
 
 // Formatters live here, not in the client module: a server component cannot call a client export.
 const WHEN = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' });
@@ -28,10 +29,10 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const sample = !/^[a-f0-9-]{36}$/i.test(id) ? sampleOrder(decodeURIComponent(id)) : null;
   const order = sample ?? (await getShopOrder(id));
   if (!order) notFound();
-  const history = await shopReturnHistory(sample ? [] : order.lines);
-  const lines = new Map(order.lines.map((line) => [line.id, line]));
-  const returnable = canBookReturns(user) ? order.lines.filter((line) => (history.quantities.get(line.id) ?? 0) > 0) : [];
-  const locations = returnable.length ? await returnLocations() : [];
+  // Refund ↔ return per line and "Retour ontvangen" (0132); replaces the plain return form of 0113.
+  const returns = sample ? null : await returnPanel(order.id);
+  const canBook = canBookReturns(user) && !!returns?.lines.some((line) => line.open > 0 && line.article_code);
+  const locations = canBook ? await receiveLocations() : [];
   const prices = seesPrices(user);
   const trackingCode = !sample && order.carrier !== 'eigen' ? order.tracking_code : null;
   const tracking = trackingCode && (await searchParams).tracking === '1'
@@ -52,26 +53,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       </div>
       {sample && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs">Voorbeeldbestelling. Picken en verzenden werken zodra de echte bestellingen van de webshops zijn geïmporteerd.</p>}
       <OrderLines order={order} canAct={!sample} />
-      {returnable.length > 0 && <Card>
-        <CardHeader><CardTitle><PreviewText>Fysieke retour</PreviewText></CardTitle></CardHeader>
-        <CardContent className="grid gap-4">
-          {returnable.map((line) => <ReturnLine key={line.id} line={line} maximum={history.quantities.get(line.id)!} locations={locations} />)}
-        </CardContent>
-      </Card>}
-      {history.returns.length > 0 && <Card>
-        <CardHeader><CardTitle><PreviewText>Retourgeschiedenis</PreviewText></CardTitle></CardHeader>
-        <CardContent>
-          <ul className="divide-y text-sm">
-            {history.returns.map((move) => {
-              const line = lines.get(move.order_line_id)!;
-              return <li key={move.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
-                <span><PreviewProductName sku={line.sku}>{line.name}</PreviewProductName> · {move.delta} ×</span>
-                <span><PreviewText>Retour geboekt op</PreviewText> <time dateTime={move.created_at}>{WHEN.format(new Date(move.created_at))}</time></span>
-              </li>;
-            })}
-          </ul>
-        </CardContent>
-      </Card>}
+      {returns && <ReturnPanel orderId={order.id} panel={returns} locations={locations} canBook={canBook} prices={prices} />}
       {trackingCode && <Card><CardHeader><CardTitle><PreviewText>Vervoerder volgen</PreviewText></CardTitle></CardHeader>
         <CardContent className="grid gap-2 text-sm">
           {tracking?.state === 'available' ? <>

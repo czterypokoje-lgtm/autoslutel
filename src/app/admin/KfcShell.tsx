@@ -7,6 +7,7 @@ import {
   AudioLines, BarChart3, Boxes, CalendarDays, ChevronRight, Euro, Inbox, KeyRound, LayoutDashboard, LogOut, Package, PackageCheck, PhoneCall, Search,
   Settings, ShoppingCart, Store, Users, type LucideIcon,
 } from 'lucide-react';
+import { RefreshCw, Undo2 } from 'lucide-react';
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
@@ -63,6 +64,7 @@ const GROUPS: Group[] = [
         ],
       },
       { label: 'Picklijst', icon: PackageCheck, href: '/admin/bestellingen/picken' },
+      { label: 'Retouren', icon: Undo2, href: '/admin/retouren' },
       { label: 'Inkoop', icon: Package, href: '/admin/inkoop' },
     ],
   },
@@ -88,6 +90,10 @@ const GROUPS: Group[] = [
       {
         label: 'Rapporten', icon: BarChart3, office: true, children: reportLinks,
       },
+      { label: 'Webshop-sync', icon: RefreshCw, office: true, children: [
+        { label: 'Sync-status', href: '/admin/webshop-sync' },
+        { label: 'Koppelingen', href: '/admin/webshop-sync/koppelingen' },
+      ] },
       { label: 'Instellingen', icon: Settings, href: '/admin/instellingen', office: true },
     ],
   },
@@ -124,6 +130,7 @@ const TITLES: Record<string, string> = {
   rapport: 'Prestaties', attributie: 'Advertentieklikken', instellingen: 'Instellingen', budget: 'AI-budget', 'agent-centrum': 'Agentcentrum', p: 'Productzoeker', nieuw: 'Nieuw', lijst: 'Alle leads', jobs: 'Planning',
   verzending: 'Verzending', agenda: 'Werkplaatsagenda', verzendinstellingen: 'Verzendinstellingen', bestellingen: 'Bestellingen', picken: 'Picklijst',
   bussen: 'Magazijn en bussen', webshop: 'Webshopmarge', montage: 'Montage', rapporten: 'Alle rapporten', kassa: 'Kassa',
+  retouren: 'Retouren', 'webshop-sync': 'Webshop-sync', koppelingen: 'Webshopkoppelingen',
   // Autosleutel24 screens
   aanbod: 'Aanbod', biedingen: 'Biedingen', vandaag: 'Vandaag', monteurs: 'Monteurs', bestellen: 'Onderdelen bestellen', kas: 'Kas & uitbetalingen',
   tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', 'whatsapp-analyse': 'WhatsApp-analyse', klikfraude: 'Klikfraude',
