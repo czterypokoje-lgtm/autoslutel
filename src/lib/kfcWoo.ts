@@ -49,17 +49,44 @@ export interface WooOrder {
 const cents = (value: string | number | null | undefined) => Math.round(Number(value ?? 0) * 100);
 const gmt = (value: string | null | undefined) => (value ? `${value}Z` : null);
 
-async function wooFetch(shop: WooShop, path: string, init: RequestInit = {}) {
+/**
+ * One authenticated request to a shop. Basic auth first. Some hosts drop the
+ * Authorization header before WordPress sees it, and WooCommerce then answers
+ * 401 to a valid key; its documented way around that is the key pair as query
+ * parameters (HTTPS only), so a 401 is retried once that way. The timeout keeps
+ * a hung shop from holding the import, the nightly reconcile or the "ship"
+ * write-back until the platform kills the function.
+ */
+export async function wooRequest(shop: WooShop, path: string, init: RequestInit = {}, timeoutMs = 20_000): Promise<Response> {
   const { key, secret } = wooCredentials(shop);
   if (!key || !secret) throw new Error(`WooCommerce credentials for ${shop} are not configured.`);
-  const response = await fetch(`https://${shop}/wp-json/wc/v3${path}`, {
-    ...init,
-    headers: { Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}`, 'Content-Type': 'application/json', ...(init.headers ?? {}) },
-    cache: 'no-store',
-    // A hung shop must not hold the import, the nightly reconcile or the "ship" write-back until the platform kills the function.
-    signal: init.signal ?? AbortSignal.timeout(20_000),
-  });
-  if (!response.ok) throw new Error(`${shop} ${path}: HTTP ${response.status}`);
+  const url = `https://${shop}/wp-json/wc/v3${path}`;
+  const headers = { 'Content-Type': 'application/json', ...(init.headers ?? {}) };
+  const signal = () => init.signal ?? AbortSignal.timeout(timeoutMs);
+  const first = await fetch(url, { ...init, cache: 'no-store', signal: signal(), headers: { Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}`, ...headers } });
+  if (first.status !== 401) return first;
+  const pair = new URLSearchParams({ consumer_key: key, consumer_secret: secret }).toString();
+  return fetch(`${url}${url.includes('?') ? '&' : '?'}${pair}`, { ...init, cache: 'no-store', signal: signal(), headers });
+}
+
+/** WooCommerce's own words for a refusal ({code, message}), so the screen says why and not only "HTTP 401". */
+export async function wooReason(response: Response): Promise<string> {
+  const body = (await response.text().catch(() => '')).slice(0, 400);
+  try {
+    const json = JSON.parse(body) as { code?: string; message?: string };
+    return [json.code, json.message].filter(Boolean).join(': ').slice(0, 200);
+  } catch {
+    return body.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+  }
+}
+
+async function wooFetch(shop: WooShop, path: string, init: RequestInit = {}) {
+  const response = await wooRequest(shop, path, init);
+  if (!response.ok) {
+    const reason = await wooReason(response);
+    // The path without its query: a retried request carries the key pair there.
+    throw new Error(`${shop} ${path.split('?')[0]}: HTTP ${response.status}${reason ? ` (${reason})` : ''}`);
+  }
   return response;
 }
 

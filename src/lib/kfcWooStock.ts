@@ -3,7 +3,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { CRM_READONLY } from '@/lib/readonly';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { IS_KEYFORCARS } from '@/config/install';
-import { WOO_SHOPS, wooConfigured, wooCredentials, type WooShop } from '@/lib/kfcWoo';
+import { WOO_SHOPS, wooConfigured, wooCredentials, wooRequest, type WooShop } from '@/lib/kfcWoo';
 
 /*
  * Stock push: CRM ledger → WooCommerce (migration 0132).
@@ -51,12 +51,8 @@ class WooHttpError extends Error {
 async function wooCall<T>(shop: WooShop, path: string, init: RequestInit = {}): Promise<{ body: T; headers: Headers }> {
   const { key, secret } = wooCredentials(shop);
   if (!key || !secret) throw new Error(`WooCommerce-sleutels voor ${shop} ontbreken.`);
-  const response = await fetch(`https://${shop}/wp-json/wc/v3${path}`, {
-    ...init,
-    headers: { Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}`, 'Content-Type': 'application/json', ...(init.headers ?? {}) },
-    cache: 'no-store',
-    signal: AbortSignal.timeout(25_000),
-  });
+  // Same request as the order import: Basic auth, and query-string auth when the host drops the header (kfcWoo.wooRequest).
+  const response = await wooRequest(shop, path, init, 25_000);
   if (!response.ok) {
     const text = (await response.text().catch(() => '')).slice(0, 200);
     throw new WooHttpError(response.status, `${shop} ${path.split('?')[0]}: HTTP ${response.status} ${text}`.trim());
