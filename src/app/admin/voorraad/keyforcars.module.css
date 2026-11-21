@@ -230,7 +230,9 @@
   .printSheet { display: block; position: static; padding: 0; }
   .printSheet[data-size='a4-70x37'] { display: grid; grid-template-columns: repeat(3, 70mm); grid-auto-rows: 37mm; }
   .printSheet .shelfLabel { break-inside: avoid; }
-  .printSheet:not([data-size='a4-70x37']) .shelfLabel:not(:last-child) { break-after: page; }
+  .printSheet:not([data-size='a4-70x37']):not([data-size='100x50-4']) .shelfLabel:not(:last-child) { break-after: page; }
+  .printSheet[data-size='100x50-4'] .shelfLabel:nth-of-type(4n):not(:last-of-type) { break-after: page; }
+  .printSheet[data-size='100x50-4'] .shelfLabel:not(:nth-of-type(4n)):not(:last-of-type) { border-bottom: 0.2mm dashed #999; }
   .printSheet[data-size='a4-70x37'] .shelfLabel:nth-child(24n + 1):not(:first-child) { break-before: page; }
 }
 

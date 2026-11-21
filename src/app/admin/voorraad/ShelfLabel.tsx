@@ -9,6 +9,8 @@ import { usePreviewLanguage } from '../PreviewLanguage';
 export const LABEL_SIZES = {
   '62x100': { name: '62 × 100 mm (Brother)', page: '62mm 100mm', rows: 6 },
   '100x50': { name: '100 × 50 mm (termisch)', page: '100mm 50mm', rows: 9 },
+  // The 100 x 50 label four to a page (Brother 102 mm roll), with a cut line between them.
+  '100x50-4': { name: '100 × 50 mm, 4 onder elkaar (Brother 102 mm rol)', page: '100mm 200mm', rows: 9 },
   'a4-70x37': { name: 'A4-vel 70 × 37 mm (24 per vel)', page: 'A4', rows: 7 },
 } as const;
 export type LabelSize = keyof typeof LABEL_SIZES;
@@ -80,7 +82,7 @@ export default function ShelfLabel({ article, bin, code, profile, size }: {
 
   // Every part is a direct child so each size can place it on its own grid.
   return (
-    <article className={styles.shelfLabel} data-size={size}>
+    <article className={styles.shelfLabel} data-size={size === '100x50-4' ? '100x50' : size}>
       {image ? <img className={styles.shelfPhoto} src={image} alt="" referrerPolicy="no-referrer" loading="eager" decoding="sync" /> : <span className={styles.shelfPhoto} />}
       <header className={styles.shelfTitle}>
         <strong className={styles.shelfSku}>{article.sku || article.id}</strong>
