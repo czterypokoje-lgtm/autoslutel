@@ -21,7 +21,7 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
   const { codes = '' } = await searchParams;
   const asked = [...new Set(codes.split(',').map((c) => c.trim().toUpperCase()).filter((c) => ARTICLE_CODE.test(c) || SKU.test(c)))].slice(0, 500);
   type Row = { code: string; name: string; sku: string; sale_price_cents: number | null; locations: string[] };
-  type Photo = { code: string; sku: string | null; image: string | null; photo_version: string | null };
+  type Photo = { code: string; sku: string | null; image: string | null; photo_version: string | null; ean: string[] | null };
   const db = createSupabaseAdminClient();
   const skus = asked.filter((c) => !ARTICLE_CODE.test(c));
   const { data: bySkuRows } = skus.length ? await db.from('kfc_articles').select('code, sku').in('sku', skus) : { data: [] };
@@ -31,17 +31,19 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
   const [{ data }, { data: photoRows }] = wanted.length
     ? await Promise.all([
       db.from('kfc_article_overview').select('code, name, sku, sale_price_cents, locations').in('code', wanted),
-      db.from('kfc_articles').select('code, sku, image, photo_version').in('code', wanted),
+      db.from('kfc_articles').select('code, sku, image, photo_version, ean').in('code', wanted),
     ])
     : [{ data: [] as Row[] }, { data: [] as Photo[] }];
   const byCode = new Map(((data ?? []) as Row[]).map((r) => [r.code, r]));
   // Our own photo first (taken in the CRM), else the catalogue picture.
   const photos = new Map(((photoRows ?? []) as Photo[]).map((r) => [r.code,
     r.photo_version ? `/api/admin/voorraad-local?foto=${encodeURIComponent(r.code)}&v=${r.photo_version}` : (r.image || null)]));
+  // The drawer's own number (a learned all-digit barcode) is printed, so the drawer keeps its number.
+  const numbers = new Map(((photoRows ?? []) as Photo[]).map((r) => [r.code, (r.ean ?? []).find((e) => /^\d{8,14}$/.test(e.trim()))?.trim() ?? null]));
   const articles: LabelArticle[] = wanted.flatMap((code) => {
     const r = byCode.get(code);
     // Location without the warehouse name: shelf / box is what the label sits on.
-    return r ? [{ code: r.code, name: r.name, sku: r.sku, price: r.sale_price_cents, location: (r.locations[0] ?? '').split('/').slice(1).join('/'), photo: photos.get(code) ?? null }] : [];
+    return r ? [{ code: r.code, name: r.name, sku: r.sku, price: r.sale_price_cents, location: (r.locations[0] ?? '').split('/').slice(1).join('/'), photo: photos.get(code) ?? null, number: numbers.get(code) ?? null }] : [];
   });
   return <LabelPrint articles={articles} showPrice={seesPrices(user)} />;
 }

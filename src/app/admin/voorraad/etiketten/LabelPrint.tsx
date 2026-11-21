@@ -6,11 +6,11 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { euro } from '@/lib/kfcReportColumns';
-import { Code39 } from '../StockLabel';
+import { LabelBarcode } from '../StockLabel';
 import { usePreviewLanguage } from '../../PreviewLanguage';
 import '../stockPrint.css';
 
-export interface LabelArticle { code: string; name: string; sku: string; price: number | null; location: string; photo?: string | null }
+export interface LabelArticle { code: string; name: string; sku: string; price: number | null; location: string; photo?: string | null; number?: string | null }
 
 const SIZES = {
   '62x29': { nl: '62 × 29 mm (Brother)', page: '62mm 29mm', w: '62mm', h: '29mm', sheet: false, perPage: 1 },
@@ -73,7 +73,8 @@ export default function LabelPrint({ articles, showPrice }: { articles: LabelArt
             <div style={{ fontSize: '17pt', fontWeight: 800, letterSpacing: '0.02em', lineHeight: 1.1 }}>{label.sku || label.code}</div>
             {label.location && <div style={{ fontSize: '8.5pt' }}>{label.location}</div>}
           </div>
-          <Code39 code={barcode} className="block h-[11mm] w-full" />
+          <LabelBarcode number={label.number} code={barcode} className="block h-[11mm] w-full" />
+          {label.number && <div style={{ fontSize: '8pt', textAlign: 'center', letterSpacing: '0.08em' }}>{label.number}</div>}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between' }}>
           {qr}
@@ -91,7 +92,8 @@ export default function LabelPrint({ articles, showPrice }: { articles: LabelArt
         <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, gap: '0.8mm' }}>
           <strong style={{ fontSize: '7.5pt', lineHeight: 1.1, maxHeight: '3.3em', overflow: 'hidden' }}>{label.name}</strong>
           <span style={{ fontSize: '6.5pt' }}>{label.sku || label.code}{label.location ? ` · ${label.location}` : ''}</span>
-          <Code39 code={barcode} />
+          <LabelBarcode number={label.number} code={barcode} />
+          {label.number && <span style={{ fontSize: '6pt', textAlign: 'center' }}>{label.number}</span>}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'space-between' }}>
           {qr}

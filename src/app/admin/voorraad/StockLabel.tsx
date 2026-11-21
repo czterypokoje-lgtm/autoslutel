@@ -1,5 +1,6 @@
 import type { StockArticle, StockBin } from '@/lib/keyforcarsStock';
 import { QRCodeSVG } from 'qrcode.react';
+import { ean13Modules, ean13Valid } from '@/lib/ean13';
 import styles from './keyforcars.module.css';
 import { usePreviewLanguage } from '../PreviewLanguage';
 
@@ -21,6 +22,27 @@ const patterns: Record<string, number> = {
 export function labelCode(article: StockArticle, unique: (sku: string) => boolean) {
   const sku = article.sku.trim().toUpperCase();
   return sku && unique(sku) && [...sku].every((symbol) => symbol in patterns && symbol !== '*') ? sku : article.id;
+}
+
+/** An EAN-13 as SVG with 11/7-module quiet zones; renders nothing for an invalid number. */
+export function Ean13({ code, className }: { code: string; className?: string }) {
+  const modules = ean13Modules(code);
+  if (!modules) return null;
+  return (
+    <svg className={className} viewBox={`0 0 ${modules.length + 18} 36`} preserveAspectRatio="none" role="img" aria-label={`EAN-13: ${code}`}>
+      {[...modules].map((bit, index) => bit === '1' ? <rect key={index} x={index + 11} width={1} height={36} /> : null)}
+    </svg>
+  );
+}
+
+/**
+ * The barcode a shelf label carries: the shop's own drawer number when it has
+ * one (EAN-13 when valid, else Code 39 of the number), otherwise our code.
+ * Either way the scanner finds the article: the number is a learned barcode.
+ */
+export function LabelBarcode({ number, code, className }: { number?: string | null; code: string; className?: string }) {
+  if (number && ean13Valid(number)) return <Ean13 code={number} className={className} />;
+  return <Code39 code={number || code} className={className} />;
 }
 
 /** A Code 39 barcode as SVG: wide elements three times the narrow ones, ten-module quiet zones. */

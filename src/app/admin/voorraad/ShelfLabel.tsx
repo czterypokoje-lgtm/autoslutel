@@ -1,7 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react';
 import type { StockArticle, StockBin } from '@/lib/keyforcarsStock';
 import type { ProductProfileData, VehicleFit } from '@/lib/productProfiles';
-import { Code39 } from './StockLabel';
+import { LabelBarcode } from './StockLabel';
 import styles from './keyforcars.module.css';
 import { usePreviewLanguage } from '../PreviewLanguage';
 
@@ -60,10 +60,12 @@ export function modelRows(fits: VehicleFit[], rows: number) {
  * Chip, frequency and buttons follow in one line; photo to compare with the
  * part; barcode + QR carry the product number for the scanner.
  */
-export default function ShelfLabel({ article, bin, code, profile, size }: {
+export default function ShelfLabel({ article, bin, code, number, profile, size }: {
   article: StockArticle;
   bin?: StockBin;
   code: string;
+  /** The shop's own drawer number (a learned barcode, e.g. 3921962874003): printed instead of our code. */
+  number?: string | null;
   profile: ProductProfileData | null;
   size: LabelSize;
 }) {
@@ -106,8 +108,8 @@ export default function ShelfLabel({ article, bin, code, profile, size }: {
       </ul>
 
       <footer className={styles.shelfCodes}>
-        <Code39 code={code} className={styles.shelfBarcode} />
-        <span className={styles.shelfMeta}>{code}{location ? ` · ${location}` : ''}</span>
+        <LabelBarcode number={number} code={code} className={styles.shelfBarcode} />
+        <span className={styles.shelfMeta}>{number || code}{location ? ` · ${location}` : ''}</span>
       </footer>
       <QRCodeSVG className={styles.shelfQr} value={code} size={64} marginSize={2} level="M" />
     </article>

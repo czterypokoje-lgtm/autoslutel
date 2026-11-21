@@ -98,6 +98,12 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
   const [scanReview, setScanReview] = useState(false);
   /** Barcode → article id, learned on the shop floor (the manufacturer's EAN on a product). */
   const [barcodes, setBarcodes] = useState<Record<string, string>>({});
+  // A drawer's own number (learned barcode, all digits) per article: the shelf label prints it, so the drawer keeps its number.
+  const drawerNumbers = useMemo(() => {
+    const numbers = new Map<string, string>();
+    for (const [barcode, article] of Object.entries(barcodes)) if (/^\d{8,14}$/.test(barcode) && !numbers.has(article)) numbers.set(article, barcode);
+    return numbers;
+  }, [barcodes]);
   /** A scanned code no article has yet; `to` is the article the person then picked for it. */
   const [unknownScan, setUnknownScan] = useState<{ code: string; to?: string }>();
   const [linking, setLinking] = useState(false);
@@ -553,7 +559,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
             </div>
             {/* What you see is what prints: the same label, at the chosen size. */}
             <div className={styles.labelPreview}>
-              <ShelfLabel article={displayedArticle} bin={currentBin} code={codeFor(displayedArticle)} profile={selectedProfile ?? null} size={labelSize} />
+              <ShelfLabel article={displayedArticle} bin={currentBin} code={codeFor(displayedArticle)} number={drawerNumbers.get(displayedArticle.id)} profile={selectedProfile ?? null} size={labelSize} />
             </div>
             {!!selected.sources.length && <div className={styles.sources}>{selected.sources.map((source) => (
               <a key={source.shop} href={source.url} target="_blank" rel="noreferrer">{source.shop} ↗</a>
@@ -631,7 +637,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         <div className={styles.printSheet} data-stock-print data-size={labelSize}>
           <style>{`@page { size: ${LABEL_SIZES[labelSize].page}; margin: 0; }`}</style>
           {printJob.labels.map(({ article, bin }) => <ShelfLabel key={`${article.id}/${bin?.shelf}/${bin?.box}`} article={article} bin={bin}
-            code={codeFor(article)} profile={printJob.profiles[article.sku.trim().toUpperCase()] ?? null} size={labelSize} />)}
+            code={codeFor(article)} number={drawerNumbers.get(article.id)} profile={printJob.profiles[article.sku.trim().toUpperCase()] ?? null} size={labelSize} />)}
         </div>,
         document.body,
       )}
