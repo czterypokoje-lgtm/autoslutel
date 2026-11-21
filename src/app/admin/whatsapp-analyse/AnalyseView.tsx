@@ -542,8 +542,8 @@ export default function AnalyseView({ quotes: raw }: { quotes: Quote[] }) {
             <Select label="Model" value={filters.model} onChange={(v) => setFilter('model', v)} options={models.map((m) => [m, m])} />
             <Field label="Bouwjaar van / tot">
               <div className="flex gap-1">
-                <Input className="h-8" inputMode="numeric" placeholder="2010" value={filters.jaarVan} onChange={(e) => setFilter('jaarVan', e.target.value.replace(/\D/g, ''))} />
-                <Input className="h-8" inputMode="numeric" placeholder="2024" value={filters.jaarTot} onChange={(e) => setFilter('jaarTot', e.target.value.replace(/\D/g, ''))} />
+                <Input className="h-8" inputMode="numeric" placeholder="van" value={filters.jaarVan} onChange={(e) => setFilter('jaarVan', e.target.value.replace(/\D/g, ''))} />
+                <Input className="h-8" inputMode="numeric" placeholder="tot" value={filters.jaarTot} onChange={(e) => setFilter('jaarTot', e.target.value.replace(/\D/g, ''))} />
               </div>
             </Field>
             <Select label="Klus" value={filters.klus} onChange={(v) => setFilter('klus', v)} options={[...Object.entries(SCENARIO), ['onbekend', 'Onbekend']]} />
