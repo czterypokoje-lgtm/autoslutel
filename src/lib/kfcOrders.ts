@@ -229,7 +229,7 @@ export async function loadSampleData(user: CrmUser): Promise<{ orders: number; l
     const { data } = await db().from('kfc_articles').select('code, sku').in('sku', skus.slice(i, i + 500));
     for (const a of data ?? []) articles.set(a.sku.toUpperCase(), a.code);
   }
-  const shopIndex: Record<string, number> = { 'keyforcars.nl': 1, 'klapsleutels.nl': 2, 'remkeys.com': 3 };
+  const shopIndex: Record<string, number> = { 'keyforcars.nl': 1, 'klapsleutels.nl': 2 };
   const rows = all.map((o) => ({
     shop: o.shop, woo_order_id: 900000000 + shopIndex[o.shop] * 1000000 + Number(o.number), number: o.number, status: o.status,
     created_at: o.created, modified_at: o.created, paid_at: o.status === 'processing' || o.status === 'completed' ? o.created : null,

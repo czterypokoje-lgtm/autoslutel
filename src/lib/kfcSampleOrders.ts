@@ -18,7 +18,7 @@ import { OWN_SHOP } from '@/lib/kfcOwnShop';
  */
 
 /** The three WooCommerce shops. Sample orders only ever come from these. */
-export const KFC_SHOPS = ['keyforcars.nl', 'klapsleutels.nl', 'remkeys.com'] as const;
+export const KFC_SHOPS = ['keyforcars.nl', 'klapsleutels.nl'] as const;
 export type KfcShop = (typeof KFC_SHOPS)[number];
 export type Shop = KfcShop | typeof OWN_SHOP;
 /** What this install sells through: three shops on KeyForCars, our own webshop on Autosleutel24. */
@@ -110,9 +110,8 @@ function pickProduct(random: () => number) {
   return ranked[Math.min(low, Math.floor(ranked.length * 0.62))];
 }
 
-const SHOP_WEIGHTS: [KfcShop, number][] = [['keyforcars.nl', 0.46], ['klapsleutels.nl', 0.34], ['remkeys.com', 0.2]];
-const NUMBER_BASE: Record<KfcShop, number> = { 'keyforcars.nl': 48210, 'klapsleutels.nl': 31540, 'remkeys.com': 90870 };
-const ABROAD = ['DE', 'BE', 'FR', 'GB', 'AT', 'IT', 'ES', 'PL'];
+const SHOP_WEIGHTS: [KfcShop, number][] = [['keyforcars.nl', 0.58], ['klapsleutels.nl', 0.42]];
+const NUMBER_BASE: Record<KfcShop, number> = { 'keyforcars.nl': 48210, 'klapsleutels.nl': 31540 };
 
 function pickShop(random: () => number): KfcShop {
   let r = random();
@@ -128,7 +127,7 @@ function ordersForDay(dayIndex: number, dayStart: number, now: number): SampleOr
   const weekend = weekday === 0 || weekday === 6;
   const count = Math.round(weekend ? 14 + random() * 12 : 28 + random() * 22);
   const ageDays = Math.floor((now - dayStart) / DAY);
-  const counters: Record<KfcShop, number> = { 'keyforcars.nl': 0, 'klapsleutels.nl': 0, 'remkeys.com': 0 };
+  const counters: Record<KfcShop, number> = { 'keyforcars.nl': 0, 'klapsleutels.nl': 0 };
   const orders: SampleOrder[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -149,13 +148,11 @@ function ordersForDay(dayIndex: number, dayStart: number, now: number): SampleOr
       lines.push({ sku: product.sku, name: product.name, image: product.image, quantity, unitIncl: product.price });
     }
     const abroad = random();
-    const country = shop === 'remkeys.com'
-      ? (abroad < 0.35 ? 'NL' : ABROAD[Math.floor(random() * ABROAD.length)])
-      : (abroad < 0.9 ? 'NL' : 'BE');
+    const country = abroad < 0.9 ? 'NL' : 'BE';
     const roll = random();
     if (created > now) continue;
 
-    const shippingIncl = shop === 'remkeys.com' && country !== 'NL' ? 995 : 495;
+    const shippingIncl = 495;
     const linesIncl = lines.reduce((sum, line) => sum + line.unitIncl * line.quantity, 0);
     const totalIncl = linesIncl + shippingIncl;
     const status: OrderStatus =

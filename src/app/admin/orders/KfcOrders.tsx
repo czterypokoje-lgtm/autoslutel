@@ -44,7 +44,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
   const query = (q ?? '').trim().toUpperCase();
   const requested = Number(requestedPage);
   const [live, hasSamples] = await Promise.all([shopOrdersExist().catch(() => false), sampleShopOrdersExist().catch(() => false)]);
-  // The sample orders are KeyForCars's three shops; Autosleutel24 shows its own empty ledger instead.
+  // The sample orders are KeyForCars's shops; Autosleutel24 shows its own empty ledger instead.
   const showSampleNotice = IS_KEYFORCARS && (!live || hasSamples);
   let shown: Row[]; let total: number; let page: number;
   if (live || !IS_KEYFORCARS) {
@@ -94,7 +94,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight"><PreviewText>Bestellingen</PreviewText></h1>
-          <p className="text-muted-foreground text-sm">{SHOPS.length > 1 ? <PreviewText>Alle drie de webshops</PreviewText> : SHOPS[0]} · {orders.length}</p>
+          <p className="text-muted-foreground text-sm">{SHOPS.length > 1 ? <PreviewText>Alle webshops</PreviewText> : SHOPS[0]} · {orders.length}</p>
         </div>
         <form method="get" action="/admin/orders" className="relative w-full max-w-xs">
           {shop && <input type="hidden" name="shop" value={shop} />}

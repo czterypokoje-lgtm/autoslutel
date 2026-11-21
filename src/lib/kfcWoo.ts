@@ -9,7 +9,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
  * Credentials come from the environment, one pair per shop:
  *   WOO_<SHOP>_KEY, WOO_<SHOP>_SECRET          REST API key (read/write)
  *   WOO_<SHOP>_WEBHOOK_SECRET                  the webhook's secret
- * with <SHOP> = KEYFORCARS, KLAPSLEUTELS, REMKEYS. The owner creates them in
+ * with <SHOP> = KEYFORCARS, KLAPSLEUTELS. The owner creates them in
  * WooCommerce (Settings → Advanced → REST API) and pastes them into Vercel.
  *
  * Import rules (docs/kfc-crm-plan.md §5.2): unique on (shop, order id), an
@@ -21,7 +21,6 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 export const WOO_SHOPS = {
   'keyforcars.nl': 'KEYFORCARS',
   'klapsleutels.nl': 'KLAPSLEUTELS',
-  'remkeys.com': 'REMKEYS',
 } as const;
 export type WooShop = keyof typeof WOO_SHOPS;
 export const isWooShop = (value: string): value is WooShop => value in WOO_SHOPS;
