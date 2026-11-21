@@ -10,7 +10,7 @@ import { Code39 } from '../StockLabel';
 import { usePreviewLanguage } from '../../PreviewLanguage';
 import '../stockPrint.css';
 
-export interface LabelArticle { code: string; name: string; sku: string; price: number | null; location: string }
+export interface LabelArticle { code: string; name: string; sku: string; price: number | null; location: string; photo?: string | null }
 
 const SIZES = {
   '62x29': { nl: '62 × 29 mm (Brother)', page: '62mm 29mm', w: '62mm', h: '29mm', sheet: false },
@@ -56,7 +56,11 @@ export default function LabelPrint({ articles, showPrice }: { articles: LabelArt
           const barcode = label.sku && code39Safe(label.sku.toUpperCase()) ? label.sku.toUpperCase() : label.code;
           return (
             <article key={label.key} style={{ width: spec.w, height: spec.h, boxSizing: 'border-box', padding: '2mm', overflow: 'hidden', breakAfter: spec.sheet ? 'auto' : 'page',
-              display: 'grid', gridTemplateColumns: '1fr auto', gap: '1.5mm', fontFamily: 'system-ui, sans-serif', color: '#000', background: '#fff' }}>
+              display: 'grid', gridTemplateColumns: label.photo ? 'auto 1fr auto' : '1fr auto', gap: '1.5mm', fontFamily: 'system-ui, sans-serif', color: '#000', background: '#fff' }}>
+              {label.photo && (
+                // eslint-disable-next-line @next/next/no-img-element -- print sheet: a plain image, sized in mm
+                <img src={label.photo} alt="" style={{ width: big ? '30mm' : '19mm', height: '100%', maxHeight: `calc(${spec.h} - 4mm)`, objectFit: 'contain', alignSelf: 'center' }} />
+              )}
               <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, gap: '0.8mm' }}>
                 <strong style={{ fontSize: big ? '11pt' : '7.5pt', lineHeight: 1.1, maxHeight: '3.3em', overflow: 'hidden' }}>{label.name}</strong>
                 <span style={{ fontSize: big ? '9pt' : '6.5pt' }}>{label.sku || label.code}{label.location ? ` · ${label.location}` : ''}</span>

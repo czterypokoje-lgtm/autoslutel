@@ -59,7 +59,8 @@ export interface BulkLine {
  * KFC. A label QR may hold a profile link (…/p/ALRK03); the code is its end.
  */
 export function normaliseCode(value: string) {
-  const link = value.trim().match(/^https?:\/\/[^\s]*\/p\/([^/?#\s]+)/i);
+  // Profile link (/p/ALRK03) or the article page our printed shelf label's QR holds (/admin/voorraad/artikel/KFC-1-2703).
+  const link = value.trim().match(/^https?:\/\/[^\s]*\/(?:p|admin\/voorraad\/artikel)\/([^/?#\s]+)/i);
   let code = value.trim();
   if (link) {
     try { code = decodeURIComponent(link[1]); } catch { code = link[1]; }
