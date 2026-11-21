@@ -7,6 +7,7 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { canBookReturns, requireWarehouseUser, seesPrices } from '@/lib/crmSession';
 import { getShopOrder, type ShopOrder } from '@/lib/kfcOrders';
 import { readSendcloudTracking } from '@/lib/sendcloudTracking';
+import { postnlTrackUrl } from '@/lib/postnl';
 import { sampleOrders } from '@/lib/kfcSampleOrders';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -35,7 +36,8 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const locations = canBook ? await receiveLocations() : [];
   const prices = seesPrices(user);
   const trackingCode = !sample && order.carrier !== 'eigen' ? order.tracking_code : null;
-  const tracking = trackingCode && (await searchParams).tracking === '1'
+  const viaPostnl = order.carrier === 'postnl';
+  const tracking = trackingCode && !viaPostnl && (await searchParams).tracking === '1'
     ? await readSendcloudTracking(trackingCode, process.env.SENDCLOUD_PUBLIC_KEY, process.env.SENDCLOUD_SECRET_KEY) : null;
   return (
     <div className="flex flex-col gap-6">
@@ -54,7 +56,9 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       {sample && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs">Voorbeeldbestelling. Picken en verzenden werken zodra de echte bestellingen van de webshops zijn geïmporteerd.</p>}
       <OrderLines order={order} canAct={!sample} />
       {returns && <ReturnPanel orderId={order.id} panel={returns} locations={locations} canBook={canBook} prices={prices} />}
-      {trackingCode && <Card><CardHeader><CardTitle><PreviewText>Vervoerder volgen</PreviewText></CardTitle></CardHeader>
+      {trackingCode && viaPostnl && <p className="text-sm"><a className="underline" target="_blank" rel="noreferrer"
+        href={postnlTrackUrl(trackingCode, order.country ?? null, 'ship_postcode' in order ? order.ship_postcode ?? null : null)}>Volg bij PostNL · {trackingCode}</a></p>}
+      {trackingCode && !viaPostnl && <Card><CardHeader><CardTitle><PreviewText>Vervoerder volgen</PreviewText></CardTitle></CardHeader>
         <CardContent className="grid gap-2 text-sm">
           {tracking?.state === 'available' ? <>
             {tracking.event ? <p>{tracking.event.status.replaceAll('-', ' ')} · {WHEN.format(new Date(tracking.event.timestamp))}</p>

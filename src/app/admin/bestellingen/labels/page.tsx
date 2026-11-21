@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 /**
  * Every own label (+ pakbon) for a batch of orders on one print job:
  * /admin/bestellingen/labels?ids=a,b,c — what "print all labels" opens.
- * Orders whose label lives at Sendcloud are listed with their PDF instead.
+ * Orders with a carrier label (PostNL, Sendcloud) are listed with their PDF instead.
  */
 export default async function LabelsPage({ searchParams }: { searchParams: Promise<{ ids?: string; print?: string }> }) {
   if (!WAREHOUSE) notFound();
@@ -29,7 +29,7 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
         <p className="font-medium">{own.length} {own.length === 1 ? 'label' : 'labels'} + pakbonnen in één afdruk.</p>
         {external.length > 0 && (
           <p className="text-gray-600">
-            {external.length} {external.length === 1 ? 'bestelling heeft' : 'bestellingen hebben'} een Sendcloud-label:{' '}
+            {external.length} {external.length === 1 ? 'bestelling heeft' : 'bestellingen hebben'} een vervoerderslabel (PostNL of Sendcloud):{' '}
             <a className="underline" href={`/api/admin/kfc-orders/labels?ids=${external.map((o) => o.id).join(',')}`} target="_blank" rel="noopener noreferrer">download die als één PDF</a>.
           </p>
         )}
