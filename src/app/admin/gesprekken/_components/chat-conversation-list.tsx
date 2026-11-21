@@ -17,6 +17,7 @@ import { usePreviewLanguage } from '../../PreviewLanguage';
 import type { Conversation } from '../ConversationConsole';
 
 import { displayName, type Group, groupOf, previewOf, shortTime, subjectOf } from './data';
+import { TOPIC_CLASS, TOPIC_LABEL, topicOf } from './topics';
 
 const GROUP_ORDER: Group[] = ['Vandaag', 'Gisteren', 'Eerder'];
 type Outcome = 'all' | 'success' | 'failure';
@@ -83,6 +84,7 @@ export function ChatConversationList({ conversations, selectedId, now, title, on
                       const isSelected = selectedId === conversation.id;
                       const name = displayName(conversation);
                       const Icon = CHANNEL_ICON[conversation.channel] ?? CircleHelp;
+                      const topic = topicOf(conversation);
                       return (
                         <button
                           key={conversation.id}
@@ -108,6 +110,11 @@ export function ChatConversationList({ conversations, selectedId, now, title, on
                                   <div className="text-muted-foreground truncate text-xs leading-4">{previewOf(conversation)}</div>
                                 </div>
                                 <div className="flex items-center gap-1">
+                                  {topic !== 'overig' && (
+                                    <span className={cn('rounded px-1.5 py-0.5 text-[10px] leading-3 font-medium whitespace-nowrap', TOPIC_CLASS[topic])}>
+                                      {t(TOPIC_LABEL[topic])}
+                                    </span>
+                                  )}
                                   <div className="text-muted-foreground grid size-5 place-items-center"><Icon className="size-3 opacity-70" /></div>
                                   {conversation.outcome === 'failure' && (
                                     <div className="bg-destructive/90 text-primary-foreground grid size-5 place-items-center rounded-full text-xs">!</div>

@@ -25,6 +25,7 @@ import type { Conversation } from '../ConversationConsole';
 import InboxComposer from '../InboxComposer';
 
 import { CHANNEL_LABEL, clock, displayName, duration, longDate, OUTCOME_LABEL } from './data';
+import { topicOf } from './topics';
 
 export function ChatThread({ conversation, showBackButton, onBack, onOpenContact, className }: {
   conversation: Conversation;
@@ -181,7 +182,18 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
           <TabsContent value="reply" className="m-0">
             {conversation.thread ? (
               <div className="p-2">
-                <InboxComposer key={conversation.id} thread={conversation.thread} phone={conversation.phone} />
+                <InboxComposer
+                  key={conversation.id}
+                  thread={conversation.thread}
+                  phone={conversation.phone}
+                  context={{
+                    topic: topicOf(conversation),
+                    name: conversation.lead?.name || conversation.thread.name,
+                    car: conversation.lead?.car || conversation.job?.car || null,
+                    date: conversation.job?.date ? longDate(conversation.job.date) : null,
+                    slot: conversation.job?.slot ?? null,
+                  }}
+                />
               </div>
             ) : (
               <ReplyComposer phone={conversation.phone} placeholder={conversation.phone ? t('Typ een WhatsApp-bericht… (opent in WhatsApp)') : t('Geen nummer bij dit gesprek.')} />

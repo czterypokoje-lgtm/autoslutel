@@ -2,7 +2,7 @@
 
 import { type CSSProperties, useMemo, useState } from 'react';
 import { cn } from 'cn';
-import { Bot, Calendar, CircleHelp, Inbox, Mail, MessageCircle, MessageSquare, MessageSquareText, Phone, type LucideIcon, UserRoundX } from 'lucide-react';
+import { Bot, Calendar, CalendarCheck, CircleHelp, Euro, Inbox, Mail, MessageCircle, MessageSquare, MessageSquareText, Package, Phone, Receipt, type LucideIcon, UserRoundX, Wrench } from 'lucide-react';
 
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
@@ -15,6 +15,7 @@ import { ChatConversationList } from './chat-conversation-list';
 import { ChatProfileDetails } from './chat-profile-details';
 import { ChatThread } from './chat-thread';
 import { groupOf } from './data';
+import { topicOf, type Topic } from './topics';
 
 export type View = 'inbox' | 'today' | 'unassigned' | 'appointment';
 export type Channel = 'phone' | 'whatsapp' | 'email' | 'form' | 'webchat' | 'sms' | 'unknown';
@@ -27,29 +28,53 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
   const { t } = usePreviewLanguage();
   const [view, setView] = useState<View>('inbox');
   const [channel, setChannel] = useState<Channel | null>(null);
+  const [topic, setTopic] = useState<Topic | null>(null);
   const [selected, setSelected] = useState<string | null>(conversations[0]?.id ?? null);
+
+  /*
+   * Suppliers and robots (Shopify bills, Google notices) are not customers:
+   * they stay out of every view until "Systeem & leverancier" is picked, so
+   * Postvak IN is only people who need an answer.
+   */
+  const topics = useMemo(() => new Map(conversations.map((c) => [c.id, topicOf(c)])), [conversations]);
+  const customers = useMemo(() => conversations.filter((c) => topics.get(c.id) !== 'systeem'), [conversations, topics]);
+  const pool = topic === 'systeem' ? conversations : customers;
   const [showContact, setShowContact] = useState(false);
   const [showThread, setShowThread] = useState(false);
   const isLg = useIsLg();
   const isMobile = useIsMobile();
 
   const counts = useMemo(() => ({
-    inbox: conversations.length,
-    today: conversations.filter((c) => groupOf(c.createdAt, now) === 'Vandaag').length,
-    unassigned: conversations.filter((c) => !c.lead).length,
-    appointment: conversations.filter((c) => c.job).length,
-    phone: conversations.filter((c) => channelOf(c) === 'phone').length,
-    whatsapp: conversations.filter((c) => channelOf(c) === 'whatsapp').length,
-    email: conversations.filter((c) => channelOf(c) === 'email').length,
-    form: conversations.filter((c) => channelOf(c) === 'form').length,
-    webchat: conversations.filter((c) => channelOf(c) === 'webchat').length,
-    sms: conversations.filter((c) => channelOf(c) === 'sms').length,
-    unknown: conversations.filter((c) => channelOf(c) === 'unknown').length,
-  }), [conversations, now]);
+    inbox: customers.length,
+    today: customers.filter((c) => groupOf(c.createdAt, now) === 'Vandaag').length,
+    unassigned: customers.filter((c) => !c.lead).length,
+    appointment: customers.filter((c) => c.job).length,
+    aanvraag: conversations.filter((c) => topics.get(c.id) === 'aanvraag').length,
+    bestelling: conversations.filter((c) => topics.get(c.id) === 'bestelling').length,
+    afspraak: conversations.filter((c) => topics.get(c.id) === 'afspraak').length,
+    service: conversations.filter((c) => topics.get(c.id) === 'service').length,
+    systeem: conversations.filter((c) => topics.get(c.id) === 'systeem').length,
+    phone: customers.filter((c) => channelOf(c) === 'phone').length,
+    whatsapp: customers.filter((c) => channelOf(c) === 'whatsapp').length,
+    email: customers.filter((c) => channelOf(c) === 'email').length,
+    form: customers.filter((c) => channelOf(c) === 'form').length,
+    webchat: customers.filter((c) => channelOf(c) === 'webchat').length,
+    sms: customers.filter((c) => channelOf(c) === 'sms').length,
+    unknown: customers.filter((c) => channelOf(c) === 'unknown').length,
+  }), [conversations, customers, topics, now]);
 
-  const visible = useMemo(() => conversations.filter((c) =>
+  const visible = useMemo(() => pool.filter((c) =>
     (view === 'inbox' || (view === 'today' && groupOf(c.createdAt, now) === 'Vandaag') || (view === 'unassigned' && !c.lead) || (view === 'appointment' && !!c.job))
-    && (!channel || channelOf(c) === channel)), [conversations, view, channel, now]);
+    && (!channel || channelOf(c) === channel)
+    && (!topic || topics.get(c.id) === topic)), [pool, view, channel, topic, topics, now]);
+
+  const topicItems: { id: Topic; title: string; icon: LucideIcon; label: number }[] = [
+    { id: 'aanvraag', title: t('Prijsaanvragen'), icon: Euro, label: counts.aanvraag },
+    { id: 'bestelling', title: t('Bestellingen'), icon: Package, label: counts.bestelling },
+    { id: 'afspraak', title: t('Afspraken'), icon: CalendarCheck, label: counts.afspraak },
+    { id: 'service', title: t('Service & klachten'), icon: Wrench, label: counts.service },
+    { id: 'systeem', title: t('Systeem & leveranciers'), icon: Receipt, label: counts.systeem },
+  ];
 
   const active = visible.find((c) => c.id === selected) ?? visible[0] ?? null;
 
@@ -91,6 +116,25 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
             </SidebarMenu>
           </SidebarGroup>
           <SidebarGroup>
+            <SidebarGroupLabel className="font-normal">{t('Onderwerp')}</SidebarGroupLabel>
+            <SidebarMenu className="gap-1">
+              {topicItems.map((item) => (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton
+                    className="[&_svg]:size-3.5"
+                    size="sm"
+                    isActive={topic === item.id}
+                    onClick={() => { setTopic(topic === item.id ? null : item.id); setShowThread(false); }}
+                  >
+                    <item.icon />
+                    <span className="font-medium">{item.title}</span>
+                  </SidebarMenuButton>
+                  <SidebarMenuBadge className="font-medium">{item.label}</SidebarMenuBadge>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroup>
+          <SidebarGroup>
             <SidebarGroupLabel className="font-normal">{t('Kanalen')}</SidebarGroupLabel>
             <SidebarMenu className="gap-1">
               {channelItems.map((item) => (
@@ -117,7 +161,7 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
           conversations={visible}
           selectedId={active?.id ?? null}
           now={now}
-          title={navItems.find((n) => n.id === view)?.title ?? t('Postvak IN')}
+          title={(topic && topicItems.find((n) => n.id === topic)?.title) || (navItems.find((n) => n.id === view)?.title ?? t('Postvak IN'))}
           className={cn('md:border-r', showThread && 'max-md:hidden')}
           onSelectConversation={(c) => { setSelected(c.id); setShowThread(true); }}
         />

@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { waLink } from '@/lib/whatsapp';
 import type { Conversation } from './ConversationConsole';
+import { REPLY_TEMPLATES, fillTemplate, openPlaceholders, type TemplateContext } from './_components/templates';
+import { TOPIC_LABEL, type Topic } from './_components/topics';
 
 type ThreadInfo = NonNullable<Conversation['thread']>;
 
@@ -21,7 +23,16 @@ const MODE_LABEL: Record<ThreadInfo['aiMode'], string> = {
  * starts as the assistant's latest draft when there is one; sending as a
  * person is the takeover — the server drops 'auto' on the thread by itself.
  */
-export default function InboxComposer({ thread, phone }: { thread: ThreadInfo; phone: string | null }) {
+export default function InboxComposer({
+  thread,
+  phone,
+  context,
+}: {
+  thread: ThreadInfo;
+  phone: string | null;
+  /* Optional: the conversation's topic and the facts that fill a template. */
+  context?: TemplateContext & { topic: Topic };
+}) {
   const router = useRouter();
   const [text, setText] = React.useState(thread.draft ?? '');
   const [mode, setMode] = React.useState<ThreadInfo['aiMode']>(thread.aiMode);
@@ -48,6 +59,12 @@ export default function InboxComposer({ thread, phone }: { thread: ThreadInfo; p
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
+    // A template's [prijs] or [link] must be filled in by a person before anything goes out.
+    const open = openPlaceholders(text);
+    if (open.length) {
+      setNote({ tone: 'bad', text: `Vul eerst in: ${open.join(', ')}` });
+      return;
+    }
     const ok = await call({ action: 'send', text: text.trim() }, 'send');
     if (ok) {
       setText('');
@@ -87,6 +104,22 @@ export default function InboxComposer({ thread, phone }: { thread: ThreadInfo; p
         : null;
   const wa = phone ? waLink(phone, text) : null;
 
+  /* Templates for this conversation's topic first, then the rest. */
+  const topic = context?.topic;
+  const templateGroups = (['aanvraag', 'bestelling', 'afspraak', 'service', 'algemeen'] as const)
+    .slice()
+    .sort((a, b) => Number(b === topic) - Number(a === topic))
+    .map((g) => ({ g, items: REPLY_TEMPLATES.filter((tpl) => tpl.topic === g) }))
+    .filter((x) => x.items.length);
+  const applyTemplate = (id: string) => {
+    const tpl = REPLY_TEMPLATES.find((x) => x.id === id);
+    if (!tpl) return;
+    const filled = fillTemplate(tpl.text, context ?? { name: thread.name, car: null, date: null, slot: null });
+    setText((prev) => (prev.trim() ? `${prev.trimEnd()}\n\n${filled}` : filled));
+    const open = openPlaceholders(filled);
+    setNote(open.length ? { tone: 'bad', text: `Vul nog in: ${open.join(', ')}` } : null);
+  };
+
   return (
     <form onSubmit={send} className="flex flex-col gap-2 text-sm">
       <div className="flex flex-wrap items-center gap-2">
@@ -100,7 +133,8 @@ export default function InboxComposer({ thread, phone }: { thread: ThreadInfo; p
           disabled={busy !== null}
           onChange={(e) => changeMode(e.target.value as ThreadInfo['aiMode'])}
         >
-          {(Object.keys(MODE_LABEL) as ThreadInfo['aiMode'][]).map((m) => (
+          {/* 'auto' is not offered (owner: drafts only); it is listed only so a thread already on it shows truthfully and can be switched off. */}
+          {(Object.keys(MODE_LABEL) as ThreadInfo['aiMode'][]).filter((m) => m !== 'auto' || mode === 'auto').map((m) => (
             <option key={m} value={m}>{MODE_LABEL[m]}</option>
           ))}
         </select>
@@ -120,6 +154,22 @@ export default function InboxComposer({ thread, phone }: { thread: ThreadInfo; p
         <Button type="button" variant="outline" size="sm" disabled={busy !== null} onClick={draft}>
           <Sparkles className="size-3.5" /> {busy === 'draft' ? 'Even denken…' : 'AI-concept'}
         </Button>
+        <select
+          aria-label="Sjabloon"
+          className="border-input bg-background h-8 max-w-48 rounded-md border px-2 text-xs"
+          value=""
+          disabled={busy !== null}
+          onChange={(e) => applyTemplate(e.target.value)}
+        >
+          <option value="">Sjabloon…</option>
+          {templateGroups.map(({ g, items }) => (
+            <optgroup key={g} label={g === 'algemeen' ? 'Algemeen' : TOPIC_LABEL[g]}>
+              {items.map((tpl) => (
+                <option key={tpl.id} value={tpl.id}>{tpl.label}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
         {blocked && wa && text.trim() && (
           <a className="text-xs underline" href={wa} target="_blank" rel="noopener noreferrer">Open in WhatsApp op je telefoon</a>
         )}
