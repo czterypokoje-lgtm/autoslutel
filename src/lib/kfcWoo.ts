@@ -25,13 +25,18 @@ export const WOO_SHOPS = {
 export type WooShop = keyof typeof WOO_SHOPS;
 export const isWooShop = (value: string): value is WooShop => value in WOO_SHOPS;
 
-export function wooCredentials(shop: WooShop) {
+/**
+ * A shop setting from the environment. Names are case-sensitive, and the shop
+ * part gets typed in lower case (WOO_keyforcars_SECRET): both spellings count,
+ * and stray spaces around a pasted value are dropped.
+ */
+export function wooSetting(shop: WooShop, name: string): string {
   const tag = WOO_SHOPS[shop];
-  return {
-    key: process.env[`WOO_${tag}_KEY`] ?? '',
-    secret: process.env[`WOO_${tag}_SECRET`] ?? '',
-    webhook: process.env[`WOO_${tag}_WEBHOOK_SECRET`] ?? '',
-  };
+  return (process.env[`WOO_${tag}_${name}`] ?? process.env[`WOO_${tag.toLowerCase()}_${name}`] ?? process.env[`woo_${tag.toLowerCase()}_${name.toLowerCase()}`] ?? '').trim();
+}
+
+export function wooCredentials(shop: WooShop) {
+  return { key: wooSetting(shop, 'KEY'), secret: wooSetting(shop, 'SECRET'), webhook: wooSetting(shop, 'WEBHOOK_SECRET') };
 }
 export const wooConfigured = (shop: WooShop) => { const c = wooCredentials(shop); return !!(c.key && c.secret); };
 

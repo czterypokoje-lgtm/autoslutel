@@ -3,7 +3,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { CRM_READONLY } from '@/lib/readonly';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { IS_KEYFORCARS } from '@/config/install';
-import { WOO_SHOPS, wooConfigured, wooCredentials, wooRequest, type WooShop } from '@/lib/kfcWoo';
+import { WOO_SHOPS, wooConfigured, wooCredentials, wooRequest, wooSetting, type WooShop } from '@/lib/kfcWoo';
 
 /*
  * Stock push: CRM ledger → WooCommerce (migration 0132).
@@ -29,7 +29,7 @@ export const SHOPS = Object.keys(WOO_SHOPS) as WooShop[];
 
 export function pushMode(shop: WooShop): PushMode {
   if (!IS_KEYFORCARS || !wooConfigured(shop)) return 'off';
-  const raw = (process.env[`WOO_${WOO_SHOPS[shop]}_STOCK_PUSH`] ?? '').trim().toLowerCase();
+  const raw = wooSetting(shop, 'STOCK_PUSH').toLowerCase();
   const mode: PushMode = raw === 'on' || raw === '1' || raw === 'true' ? 'on' : raw === 'dry' ? 'dry' : 'off';
   return mode === 'on' && (CRM_READONLY || CRM_PREVIEW) ? 'dry' : mode;
 }
