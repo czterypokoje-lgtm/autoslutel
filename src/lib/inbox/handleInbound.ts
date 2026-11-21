@@ -59,7 +59,12 @@ export async function afterInbound(thread: Thread, message: Message, opts: { not
      * handed to a person instead of looping.
      */
     const recentAi = history.slice(-6).filter((m) => m.direction === 'out' && m.author === 'ai' && m.status === 'sent').length;
-    const autoAllowed = thread.ai_mode === 'auto' && process.env.INBOX_AI_AUTO !== '0' && recentAi < 3;
+    /*
+     * Opt-in, not opt-out: the owner decided on 7 Nov 2026 that nothing goes to
+     * a customer without a person's OK. Auto-send only runs when INBOX_AI_AUTO
+     * is explicitly '1'; unset means drafts only, whatever the thread says.
+     */
+    const autoAllowed = thread.ai_mode === 'auto' && process.env.INBOX_AI_AUTO === '1' && recentAi < 3;
     if (thread.ai_mode === 'auto' && !autoAllowed && recentAi >= 3) {
       await tellOffice(`⏸ Assistent gestopt bij ${b(who(thread))}: drie antwoorden zonder reactie van een medewerker. Neem over.\n${link()}`);
     }

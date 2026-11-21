@@ -70,6 +70,7 @@ export function StudioExpenseForm({ technicians, isOffice, myTechId }: {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        purchase_order_id: new URLSearchParams(window.location.search).get('inkoop'),
         category,
         description,
         amount: numAmount,

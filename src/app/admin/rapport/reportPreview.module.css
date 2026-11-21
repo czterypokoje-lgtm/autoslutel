@@ -1,0 +1,46 @@
+.layout { display: grid; align-items: start; gap: 16px; grid-template-columns: minmax(195px, 230px) minmax(0, 1fr); }
+.tools { display: grid; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.tools h2 { font-weight: 700; }
+.field { display: grid; gap: 5px; font-size: .875rem; font-weight: 600; }
+.field select { border: 1px solid var(--border); border-radius: 6px; padding: 7px; background: var(--background); color: var(--foreground); }
+.columns { display: grid; gap: 7px; margin-block: 4px; font-size: .875rem; }
+.columns legend { margin-bottom: 6px; font-weight: 600; }
+.columns label { display: flex; align-items: center; gap: 8px; }
+.tools p { color: var(--muted-foreground); font-size: .875rem; }
+.sheet { background: white; color: #15202b; border: 1px solid #dfe4e8; border-radius: 8px; padding: clamp(16px, 3vw, 36px); overflow-x: auto; font-size: .875rem; }
+.layout:has(select[name='report-orientation'] option[value='portrait']:checked) .sheet { width: 100%; max-width: 794px; justify-self: center; }
+.layout:has(input[name='location']:not(:checked)) .sheet [data-report-column='location'],
+.layout:has(input[name='cost']:not(:checked)) .sheet [data-report-column='cost'],
+.layout:has(input[name='price']:not(:checked)) .sheet [data-report-column='price'],
+.layout:has(input[name='discount']:not(:checked)) .sheet [data-report-column='discount'] { display: none; }
+.sheet h1 { color: #15202b !important; font-size: 1.65rem; font-weight: 700; }
+.sheet p { margin-block: 5px; }
+.sheet dl { display: flex; gap: .75rem 1.5rem; flex-wrap: wrap; margin-block: 1rem; }
+.sheet dt { color: #455463; }
+.sheet dd { font-weight: 700; }
+.brand { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid #dfe4e8; }
+.brand img { max-height: 40px; width: auto; }
+.sheet table { table-layout: auto; width: 100%; border-collapse: collapse; text-align: left; font-size: .8rem; }
+.sheet th, .sheet td { padding: 6px; border-bottom: 1px solid #dfe4e8; vertical-align: top; }
+.sheet th { font-weight: 700; white-space: nowrap; }
+.sheet td { white-space: normal; overflow-wrap: anywhere; }
+@media print { .sheet table { font-size: 8pt; } .sheet th, .sheet td { padding: 3px; } }
+@media (max-width: 760px) { .layout { grid-template-columns: 1fr; } }
+@media print {
+  @page reportLandscape {
+    size: A4 landscape;
+    margin: 12mm;
+    @bottom-center { content: counter(page) " / " counter(pages); font-size: 9pt; }
+  }
+  @page reportPortrait {
+    size: A4 portrait;
+    margin: 12mm;
+    @bottom-center { content: counter(page) " / " counter(pages); font-size: 9pt; }
+  }
+  :global(body:has([data-report-sheet]) *:not([data-report-sheet]):not([data-report-sheet] *):not(:has([data-report-sheet]))) { display: none !important; }
+  :global(body:has([data-report-sheet]) *:has([data-report-sheet])) { display: block !important; overflow: visible !important; height: auto !important; max-height: none !important; margin: 0 !important; padding: 0 !important; border: 0 !important; background: white !important; }
+  .sheet { page: reportLandscape; overflow: visible; border: 0; padding: 0; }
+  .layout:has(select[name='report-orientation'] option[value='portrait']:checked) .sheet { page: reportPortrait; max-width: none; }
+  .sheet thead { display: table-header-group; }
+  .sheet tr { break-inside: avoid; }
+}

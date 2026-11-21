@@ -62,12 +62,32 @@ async function wooFetch(shop: WooShop, path: string, init: RequestInit = {}) {
   return response;
 }
 
+async function syncRefunds(shop: WooShop, order: WooOrder, orderId: string) {
+  const db = createSupabaseAdminClient();
+  for (const summary of order.refunds ?? []) {
+    const { data: previous, error: readError } = await db.from('kfc_shop_order_refunds')
+      .select('created_at').eq('order_id', orderId).eq('woo_refund_id', summary.id).maybeSingle();
+    if (readError) throw readError;
+    if (previous?.created_at) continue;
+    const response = await wooFetch(shop, `/orders/${order.id}/refunds/${summary.id}`);
+    const detail = await response.json();
+    const { error } = await db.from('kfc_shop_order_refunds').upsert({
+      order_id: orderId, woo_refund_id: summary.id, amount_cents: Math.abs(cents(summary.total)),
+      created_at: gmt(detail.date_created_gmt), raw: detail,
+    }, { onConflict: 'order_id,woo_refund_id' });
+    if (error) throw error;
+  }
+}
+
 /** Store or refresh one order. Returns 'inserted' | 'updated' | 'unchanged'. */
 export async function upsertOrder(shop: WooShop, order: WooOrder): Promise<'inserted' | 'updated' | 'unchanged'> {
   const db = createSupabaseAdminClient();
   const modified = gmt(order.date_modified_gmt)!;
   const existing = await db.from('kfc_shop_orders').select('id, modified_at, fulfilment').eq('shop', shop).eq('woo_order_id', order.id).maybeSingle();
-  if (existing.data && existing.data.modified_at >= modified) return 'unchanged';
+  if (existing.data && Date.parse(existing.data.modified_at) >= Date.parse(modified)) {
+    await syncRefunds(shop, order, existing.data.id);
+    return 'unchanged';
+  }
 
   const closed = ['cancelled', 'refunded', 'failed', 'trash'].includes(order.status);
   const fulfilment = existing.data
@@ -102,11 +122,7 @@ export async function upsertOrder(shop: WooShop, order: WooOrder): Promise<'inse
     const result = await db.from('kfc_shop_order_lines').upsert(lines, { onConflict: 'order_id,woo_line_id' });
     if (result.error) throw new Error(`Lines ${shop}#${order.number}: ${result.error.message}`);
   }
-  if (order.refunds?.length) {
-    await db.from('kfc_shop_order_refunds').upsert(order.refunds.map((refund) => ({
-      order_id: orderId, woo_refund_id: refund.id, amount_cents: Math.abs(cents(refund.total)), raw: refund,
-    })), { onConflict: 'order_id,woo_refund_id' });
-  }
+  await syncRefunds(shop, order, orderId);
   return existing.data ? 'updated' : 'inserted';
 }
 

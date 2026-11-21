@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { cn } from 'cn';
-import { ChevronDown, MessageCircle, Phone, Search } from 'lucide-react';
+import { Bot, ChevronDown, CircleHelp, Mail, MessageCircle, MessageSquare, MessageSquareText, Phone, Search, type LucideIcon } from 'lucide-react';
+
+const CHANNEL_ICON: Record<string, LucideIcon> = { phone: Phone, whatsapp: MessageCircle, email: Mail, form: MessageSquareText, webchat: Bot, sms: MessageSquare };
 
 import { Avatar, AvatarBadge, AvatarFallback } from '@/components/ui/avatar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -15,6 +17,8 @@ import { usePreviewLanguage } from '../../PreviewLanguage';
 import type { Conversation } from '../ConversationConsole';
 
 import { displayName, type Group, groupOf, previewOf, shortTime, subjectOf } from './data';
+import { ConversationTags } from './ConversationTags';
+import { tagsOf, TOPIC_CLASS, TOPIC_LABEL, topicOf } from './topics';
 
 const GROUP_ORDER: Group[] = ['Vandaag', 'Gisteren', 'Eerder'];
 type Outcome = 'all' | 'success' | 'failure';
@@ -35,7 +39,7 @@ export function ChatConversationList({ conversations, selectedId, now, title, on
     const q = query.trim().toLowerCase();
     return conversations.filter((c) =>
       (outcome === 'all' || c.outcome === outcome)
-      && (!q || [displayName(c), c.phone, c.summary, c.lead?.car, ...c.turns.map((x) => x.message)].some((s) => s?.toLowerCase().includes(q))));
+      && (!q || [displayName(c), c.phone, c.summary, c.lead?.car, ...tagsOf(c).map(tag => "#"+tag), ...c.turns.map((x) => x.message)].some((s) => s?.toLowerCase().includes(q))));
   }, [conversations, outcome, query]);
 
   const groups = GROUP_ORDER.map((group) => ({ group, conversations: filtered.filter((c) => groupOf(c.createdAt, now) === group) })).filter((g) => g.conversations.length);
@@ -68,7 +72,7 @@ export function ChatConversationList({ conversations, selectedId, now, title, on
       <div className="flex min-h-0 flex-1 flex-col">
         <ScrollArea type="hover" className="h-full min-h-0 flex-1 overflow-hidden [&_[data-orientation=vertical][data-slot=scroll-area-scrollbar]]:w-1.5">
           <div className="flex flex-col gap-3 pt-0">
-            {groups.length === 0 && <p className="text-muted-foreground px-4 py-6 text-sm">{t('Geen gesprekken gevonden.')}</p>}
+            {groups.length === 0 && <p className="text-muted-foreground px-4 py-6 text-sm"><Search className="mb-3 size-6"/>{t('Geen gesprekken gevonden.')} {t('Kies een andere map of pas je filters aan.')}</p>}
             {groups.map(({ group, conversations }) => (
               <Collapsible key={group} defaultOpen>
                 <CollapsibleTrigger className="text-muted-foreground hover:text-foreground flex w-full items-center justify-between gap-1 px-3 py-2 text-xs font-medium [&[data-state=open]>svg]:rotate-180">
@@ -80,7 +84,8 @@ export function ChatConversationList({ conversations, selectedId, now, title, on
                     {conversations.map((conversation) => {
                       const isSelected = selectedId === conversation.id;
                       const name = displayName(conversation);
-                      const Icon = conversation.channel === 'whatsapp' ? MessageCircle : Phone;
+                      const Icon = CHANNEL_ICON[conversation.channel] ?? CircleHelp;
+                      const topic = topicOf(conversation);
                       return (
                         <button
                           key={conversation.id}
@@ -100,12 +105,18 @@ export function ChatConversationList({ conversations, selectedId, now, title, on
                                 <div className="truncate text-sm leading-5 font-medium">{name}</div>
                                 <span className="text-muted-foreground text-xs leading-5 text-nowrap">{shortTime(conversation.createdAt, now)}</span>
                               </div>
-                              <div className="flex min-w-0 items-end gap-2">
-                                <div className="w-0 flex-1 overflow-hidden">
-                                  <div className="text-foreground/90 truncate text-xs leading-4 font-medium">{subjectOf(conversation)}</div>
-                                  <div className="text-muted-foreground truncate text-xs leading-4">{previewOf(conversation)}</div>
+                              <div className="mt-1 grid min-w-0 gap-2">
+                                <div className="min-w-0">
+                                  <div className="text-foreground/90 truncate text-xs leading-4 font-medium">{t(subjectOf(conversation))}</div>
+                                  <div className="text-muted-foreground line-clamp-2 break-words text-sm leading-5">{previewOf(conversation)}</div>
                                 </div>
-                                <div className="flex items-center gap-1">
+                                <div className="flex flex-wrap items-center gap-1">
+                                  <ConversationTags conversation={conversation} />
+                                  {topic !== 'overig' && (
+                                    <span className={cn('rounded px-1.5 py-0.5 text-[10px] leading-3 font-medium whitespace-nowrap', TOPIC_CLASS[topic])}>
+                                      {t(TOPIC_LABEL[topic])}
+                                    </span>
+                                  )}
                                   <div className="text-muted-foreground grid size-5 place-items-center"><Icon className="size-3 opacity-70" /></div>
                                   {conversation.outcome === 'failure' && (
                                     <div className="bg-destructive/90 text-primary-foreground grid size-5 place-items-center rounded-full text-xs">!</div>

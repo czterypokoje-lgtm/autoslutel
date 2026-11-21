@@ -1,6 +1,7 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { jobAccountOptions } from '@/lib/jobAccounts';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate, suggestTechnicians, type TechnicianLike } from '@/lib/crmJobs';
@@ -179,11 +180,14 @@ export default async function NewJobPage({
 
   const slotParam = slot && /^\d{2}:\d{2}$/.test(slot) ? slot : undefined;
 
+  const accounts = await jobAccountOptions();
+
   /* Studio (shadcn) look. Same lead, same suggestions, same form fields and
      the same POST to /api/admin/jobs — only the markup differs. */
   if (STUDIO_UI) {
     return (
       <StudioNewJob
+        accounts={accounts}
         lead={lead}
         order={order}
         date={date}
@@ -235,6 +239,7 @@ export default async function NewJobPage({
       )}
 
       <PlanForm
+        accounts={accounts}
         lead={lead}
         order={order}
         date={date}

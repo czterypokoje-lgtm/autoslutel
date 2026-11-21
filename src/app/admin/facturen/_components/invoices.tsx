@@ -97,8 +97,9 @@ export function Invoices({ rows, showTechnician, isMonteur }: {
         </Link>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 [&>button:last-child]:max-sm:col-span-2">
         <MetricCard
+          accent="border-l-blue-500"
           active={filter === 'open'}
           icon={<FileText className="size-4" />}
           label={t('Openstaand')}
@@ -107,6 +108,7 @@ export function Invoices({ rows, showTechnician, isMonteur }: {
           onClick={() => setFilter('open')}
         />
         <MetricCard
+          accent="border-l-rose-500"
           active={filter === 'laat'}
           icon={<Clock className="size-4" />}
           label={t('Te laat')}
@@ -116,6 +118,7 @@ export function Invoices({ rows, showTechnician, isMonteur }: {
           onClick={() => setFilter('laat')}
         />
         <MetricCard
+          accent="border-l-emerald-500"
           active={filter === 'betaald'}
           icon={<CheckCircle className="size-4" />}
           label={t('Betaald deze maand')}
@@ -203,8 +206,9 @@ export function Invoices({ rows, showTechnician, isMonteur }: {
   );
 }
 
-function MetricCard({ active, icon, label, value, valueClass, note, onClick }: {
+function MetricCard({ active, accent, icon, label, value, valueClass, note, onClick }: {
   active: boolean;
+  accent: string;
   icon: React.ReactNode;
   label: string;
   value: string;
@@ -219,6 +223,7 @@ function MetricCard({ active, icon, label, value, valueClass, note, onClick }: {
       aria-pressed={active}
       className={cn(
         'bg-card text-card-foreground ring-foreground/10 hover:bg-muted/40 flex cursor-pointer flex-col gap-1 rounded-xl px-4 py-4 text-left ring-1 transition-colors',
+        'min-w-0 border-l-4', accent,
         active && 'ring-primary/60 bg-muted/30',
       )}
     >

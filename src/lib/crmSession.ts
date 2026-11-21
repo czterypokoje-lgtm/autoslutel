@@ -29,6 +29,8 @@ export const WAREHOUSE_ROLES: readonly CrmRole[] = ['owner', 'kantoor', 'magazij
 /** True when this user may see purchase prices and money. */
 export const seesPrices = (user: CrmUser) => !!user.role && OFFICE_ROLES.includes(user.role);
 
+export const canBookReturns = (user: CrmUser) => seesPrices(user) || user.role === 'magazijn';
+
 export interface CrmUser {
   id: string;
   email: string | null;

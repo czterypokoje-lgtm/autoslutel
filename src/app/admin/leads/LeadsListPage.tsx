@@ -283,6 +283,8 @@ export default async function LeadsListPage({
         sub="Beheer alle leads en klussen op één plek."
       />
 
+      <Link href="/admin/leads/opvolging" className="text-sm underline underline-offset-4"><PreviewText>Leadopvolging</PreviewText></Link>
+
       {lateCount > 0 && (
         <p className={styles.warning}>
           <strong>{lateCount}</strong>{' '}

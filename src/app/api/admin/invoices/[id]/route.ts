@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCrmUser } from '@/lib/crmSession';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { jobInvoiceSourcesValid, readJobInvoiceLineSource, type JobInvoiceLineSource } from '@/lib/jobInvoiceSources';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -33,7 +35,7 @@ function money(value: unknown): number | null {
   return Number.isFinite(n) && n >= 0 && n < 100_000_000 ? Math.round(n * 100) / 100 : null;
 }
 
-interface LineInput {
+interface LineInput extends JobInvoiceLineSource {
   description: string;
   quantity: number;
   unitPrice: number;
@@ -53,7 +55,8 @@ function readLine(raw: unknown): LineInput | null {
   const vatRate = money(r.vatRate);
   if (quantity <= 0 || unitPrice === null || vatRate === null) return null;
 
-  return { description, quantity, unitPrice, discount, vatRate };
+  const source = readJobInvoiceLineSource(r);
+  return source && { description, quantity, unitPrice, discount, vatRate, ...source };
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -115,6 +118,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     );
   }
   const goodLines = lines as LineInput[];
+  let agreedTotal: number | null = null;
+  if (goodLines.some((line) => line.job_line_kind)) {
+    const { data: invoice, error } = await supabase.from('sales_invoices').select('job_id').eq('id', id).maybeSingle();
+    if (error || !invoice) return NextResponse.json({ error: 'Factuur niet gevonden' }, { status: 404 });
+    const { data: job } = await supabase.from('jobs').select('final_price, quoted_price').eq('id', invoice.job_id).maybeSingle();
+    agreedTotal = job?.final_price ?? job?.quoted_price ?? null;
+    if (!await jobInvoiceSourcesValid(createSupabaseAdminClient(), invoice.job_id, goodLines)) {
+      return NextResponse.json({ error: 'Ongeldige koppeling met gebruikte voorraad.' }, { status: 400 });
+    }
+  }
 
   let subtotal = 0;
   let vatTotal = 0;
@@ -133,6 +146,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   const asked = text(body.technician_id, 40);
   const technicianId = user.role === 'monteur' ? undefined : asked && UUID.test(asked) ? asked : null;
+
+  if (agreedTotal !== null && Math.round((subtotal + vatTotal) * 100) !== Math.round(agreedTotal * 100)) {
+    return NextResponse.json({ error: 'Het factuurtotaal moet overeenkomen met het afgesproken totaal.' }, { status: 409 });
+  }
 
   const { error: headerError } = await supabase
     .from('sales_invoices')
@@ -183,6 +200,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       unit_price: l.unitPrice,
       discount: l.discount,
       vat_rate: l.vatRate,
+      job_line_kind: l.job_line_kind,
+      job_stock_id: l.job_stock_id,
     }))
   );
 

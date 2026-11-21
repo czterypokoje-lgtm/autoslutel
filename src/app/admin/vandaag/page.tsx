@@ -2,10 +2,13 @@ import { redirect } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate } from '@/lib/crmJobs';
-import { STUDIO_UI } from '@/config/install';
+import { STUDIO_UI, WAREHOUSE } from '@/config/install';
 import styles from './vandaag.module.css';
 import VanScreen, { type VanJob } from './VanScreen';
 import StudioVanScreen from './StudioVanScreen';
+import { VanMaterialQueue } from './VanMaterialUse';
+import { technicianVanStock } from '@/lib/vanStock';
+import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { getBrandLogo } from '@/lib/brandLogos';
 
 export const dynamic = 'force-dynamic';
@@ -103,32 +106,18 @@ export default async function VandaagPage({
    * hold is how a job gets charged for something that was never fitted, and
    * how the count goes wrong without anyone noticing until a stocktake.
    */
-  const { data: vanStock } = await supabase
+  const ledger = WAREHOUSE && !CRM_PREVIEW && user.role === 'monteur' && technicianId
+    ? await technicianVanStock(technicianId) : null;
+  const { data: vanStock } = ledger ? { data: [] } : await supabase
     .from('stock_items')
     .select('id, description, quantity, unit_cost')
     .eq('technician_id', technicianId || '00000000-0000-0000-0000-000000000000')
     .gt('quantity', 0)
     .order('description');
 
-  const vanJobs = ((data ?? []) as unknown as VanJob[]).map((j) => ({ ...j, logo: getBrandLogo(j.car_make) }));
+  const vanJobs = ((data ?? []) as unknown as VanJob[]).map((j) => ({ ...j, warehouseEnabled: WAREHOUSE, logo: getBrandLogo(j.car_make) }));
 
-  if (STUDIO_UI) {
-    return (
-      <StudioVanScreen
-        jobs={vanJobs}
-        technicianName={me?.name ?? null}
-        today={today}
-        vanStock={vanStock || []}
-      />
-    );
-  }
-
-  return (
-    <VanScreen
-      jobs={vanJobs}
-      technicianName={me?.name ?? null}
-      today={today}
-      vanStock={vanStock || []}
-    />
-  );
+  const Screen = STUDIO_UI ? StudioVanScreen : VanScreen;
+  const screen = <Screen jobs={vanJobs} technicianName={me?.name ?? null} today={today} vanStock={vanStock || []} />;
+  return ledger ? <VanMaterialQueue owner={user.id} stock={ledger}>{screen}</VanMaterialQueue> : screen;
 }

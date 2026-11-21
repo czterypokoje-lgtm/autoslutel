@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
 import {
   AudioLines, BarChart3, Boxes, CalendarDays, ChevronRight, Euro, Inbox, KeyRound, LayoutDashboard, LogOut, Package, PackageCheck, PhoneCall, Search,
-  Settings, ShoppingCart, Users, type LucideIcon,
+  Settings, ShoppingCart, Store, Users, type LucideIcon,
 } from 'lucide-react';
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset,
@@ -24,7 +24,7 @@ import { StaffChat } from './StaffChat';
 import { LanguageToggle, usePreviewLanguage } from './PreviewLanguage';
 import type { CrmRole } from '@/lib/crmSession';
 import { BRAND, IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
-import { MONTEUR_NAV, OFFICE_NAV, type NavItem } from './AdminNav';
+import { MONTEUR_NAV, OFFICE_NAV, reportLinks, type NavItem } from './AdminNav';
 import MobileTabBar from './MobileTabBar';
 import styles from './admin.module.css';
 
@@ -51,6 +51,7 @@ const GROUPS: Group[] = [
   {
     label: 'Magazijn',
     items: [
+      { label: 'Kassa', icon: Store, href: '/admin/kassa' },
       {
         label: 'Voorraad', icon: Boxes, children: [
           { label: 'Artikelen', href: '/admin/voorraad' },
@@ -58,6 +59,7 @@ const GROUPS: Group[] = [
           { label: 'Bestelvoorstel', href: '/admin/voorraad?view=reorder' },
           { label: 'Voorraadrapporten', href: '/admin/voorraad?view=reports' },
           { label: 'Voorraadlogboek', href: '/admin/voorraad?view=journal' },
+          { label: 'Montage', href: '/admin/voorraad/montage' },
         ],
       },
       { label: 'Picklijst', icon: PackageCheck, href: '/admin/bestellingen/picken' },
@@ -77,18 +79,14 @@ const GROUPS: Group[] = [
       {
         label: 'Geld', icon: Euro, office: true, children: [
           { label: 'Financieel overzicht', href: '/admin/financien' },
+          { label: 'Inkoop', href: '/admin/inkoop' },
           { label: 'Facturen', href: '/admin/facturen' },
           { label: 'Uitgaven', href: '/admin/uitgaven' },
           { label: 'Bank', href: '/admin/bank/transacties' },
         ],
       },
       {
-        label: 'Rapporten', icon: BarChart3, office: true, children: [
-          { label: 'Best verkocht', href: '/admin/best-verkocht' },
-          { label: 'Winst & verbruik', href: '/admin/winst' },
-          { label: 'Prestaties', href: '/admin/rapport' },
-          { label: 'Advertentieklikken', href: '/admin/attributie' },
-        ],
+        label: 'Rapporten', icon: BarChart3, office: true, children: reportLinks,
       },
       { label: 'Instellingen', icon: Settings, href: '/admin/instellingen', office: true },
     ],
@@ -111,8 +109,7 @@ const withWarehouse = (groups: Group[]): Group[] => {
   const [kantoor] = groups;
   const items = kantoor.items.map((item) => {
     if (item.label === 'Voorraad') return { ...item, children: [{ label: 'Magazijn en bussen', href: '/admin/voorraad/bussen' }, ...(item.children ?? []).filter((child) => child.href !== '/admin/voorraad')] };
-    if (item.label === 'Geld') return { ...item, children: [{ label: 'Financieel overzicht', href: '/admin/financien' }, ...(item.children ?? []), { label: 'Bank', href: '/admin/bank/transacties' }] };
-    if (item.label === 'Rapporten') return { ...item, children: [...(item.children ?? []), { label: 'Webshopmarge', href: '/admin/winst/webshop' }] };
+    if (item.label === 'Geld') return { ...item, children: [{ label: 'Financieel overzicht', href: '/admin/financien' }, {label:'Inkoop',href:'/admin/inkoop'}, ...(item.children ?? []), { label: 'Bank', href: '/admin/bank/transacties' }] };
     return item;
   });
   const agentCentre = GROUPS.flatMap((group) => group.items).find((item) => item.label === 'Agentcentrum');
@@ -126,10 +123,10 @@ const TITLES: Record<string, string> = {
   'bot-conversations': 'ElevenLabs-gesprekken', gesprekken: 'Gesprekken', financien: 'Financieel overzicht', facturen: 'Facturen', uitgaven: 'Uitgaven', bank: 'Bank', 'best-verkocht': 'Best verkocht', winst: 'Winst & verbruik',
   rapport: 'Prestaties', attributie: 'Advertentieklikken', instellingen: 'Instellingen', budget: 'AI-budget', 'agent-centrum': 'Agentcentrum', p: 'Productzoeker', nieuw: 'Nieuw', lijst: 'Alle leads', jobs: 'Planning',
   verzending: 'Verzending', agenda: 'Werkplaatsagenda', verzendinstellingen: 'Verzendinstellingen', bestellingen: 'Bestellingen', picken: 'Picklijst',
-  bussen: 'Magazijn en bussen', webshop: 'Webshopmarge',
+  bussen: 'Magazijn en bussen', webshop: 'Webshopmarge', montage: 'Montage', rapporten: 'Alle rapporten', kassa: 'Kassa',
   // Autosleutel24 screens
   aanbod: 'Aanbod', biedingen: 'Biedingen', vandaag: 'Vandaag', monteurs: 'Monteurs', bestellen: 'Onderdelen bestellen', kas: 'Kas & uitbetalingen',
-  tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', klikfraude: 'Klikfraude',
+  tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', 'whatsapp-analyse': 'WhatsApp-analyse', klikfraude: 'Klikfraude',
   live: 'Live', kantoor: 'Kantoor', netwerk: 'Netwerk', 'mijn-agenda': 'Mijn agenda', 'mijn-klussen': 'Mijn klussen', 'mijn-bus': 'Mijn bus', 'mijn-saldo': 'Saldo',
   'mijn-vak': 'Mijn vak', 'mijn-profiel': 'Profiel',
 };
@@ -141,6 +138,7 @@ function matches(pathname: string, view: string | null, href: string, channel: s
   const [path, query] = href.split('?');
   if (path === '/admin/bot-conversations') return pathname === path && (query ? query === 'channel=' + channel : !channel);
   if (query) return pathname === path && query === `view=${view}`;
+  if (path === '/admin/rapport' || path === '/admin/winst') return pathname === path;
   if (path === '/admin/verzending') return pathname === path && !view;
   if (path === '/admin/voorraad') return pathname === path && !view;
   return pathname === path || pathname.startsWith(`${path}/`);
@@ -340,11 +338,11 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
                 </div>
               </DialogContent>
             </Dialog>
-            {IS_KEYFORCARS && <LanguageToggle inline />}
+            <LanguageToggle inline />
           </div>
         </header>
         {/* `crm crm-keyforcars` keeps theme.css variables alive for pages not yet rebuilt on shadcn. */}
-        <main className={`crm crm-keyforcars kfc-content flex min-w-0 flex-1 flex-col gap-4 p-4 md:p-6 ${role === 'monteur' ? styles.mainWithTabBar : ''}`} data-appearance="studio">{children}</main>
+        <main className={`crm crm-keyforcars kfc-content flex min-w-0 flex-1 flex-col gap-4 p-4 md:p-6 ${role === 'monteur' ? styles.mainWithTabBar : ''}`} data-appearance="studio" data-original-report={(['/admin/rapport', '/admin/rapportage', '/admin/winst', '/admin/winst/webshop'].includes(pathname)) || undefined}>{children}</main>
       </SidebarInset>
       {/* Autosleutel24 monteurs keep their thumb bar (Vandaag · Mijn bus · Aanbod · Mijn agenda) on phones. */}
       {role === 'monteur' && <MobileTabBar />}

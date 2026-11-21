@@ -178,9 +178,11 @@ export function Legend({ items }: { items: { label: string; dashed?: boolean }[]
 
 export function BarChart({
   bars,
+  reportStyle = false,
   format = (v) => String(Math.round(v)),
 }: {
   bars: { label: string; value: number }[];
+  reportStyle?: boolean;
   format?: (value: number) => string;
 }) {
   const peak = Math.max(...bars.map((b) => b.value), 0);
@@ -196,17 +198,18 @@ export function BarChart({
           <span key={fraction}>{format(max * fraction)}</span>
         ))}
       </div>
-      <div className={styles.barPlot}>
+      <div className={styles.barPlot} style={reportStyle ? { gap: 0 } : undefined}>
         {bars.map((bar, index) => (
           <div key={bar.label} className={styles.barCol} title={`${bar.label}: ${format(bar.value)}`}>
             <div
               className={styles.bar}
               style={{
                 height: `${(bar.value / max) * 100}%`,
-                background: PALETTE[index % PALETTE.length],
+                background: reportStyle ? 'var(--crm-accent)' : PALETTE[index % PALETTE.length],
+                width: reportStyle ? '62%' : undefined,
               }}
             />
-            <span className={styles.barLabel}>{bar.label}</span>
+            {(!reportStyle || index % Math.ceil(bars.length / 7) === 0) && <span className={styles.barLabel}>{bar.label}</span>}
           </div>
         ))}
       </div>

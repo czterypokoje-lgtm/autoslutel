@@ -17,6 +17,7 @@ import StudioPlanForm from './plan-form';
  */
 export default function StudioNewJob({
   lead,
+  accounts,
   order,
   date,
   suggestions,
@@ -26,6 +27,7 @@ export default function StudioNewJob({
   recentWork,
   noTechnicians,
 }: {
+  accounts: React.ComponentProps<typeof StudioPlanForm>["accounts"];
   lead: PlanLead | null;
   order: { id: string; order_number: string; total_inc: number } | null;
   date: string;
@@ -73,6 +75,7 @@ export default function StudioNewJob({
       )}
 
       <StudioPlanForm
+        accounts={accounts}
         lead={lead}
         order={order}
         date={date}

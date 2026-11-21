@@ -1,7 +1,7 @@
 import { IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
-import { requireWarehouseUserApi, seesPrices } from '@/lib/crmSession';
-import { StockError } from '@/lib/kfcInventory';
+import { canBookReturns, requireWarehouseUserApi, seesPrices } from '@/lib/crmSession';
+import { returnShopLine, StockError } from '@/lib/kfcInventory';
 import { clearSampleData, getShopOrder, loadSampleData, markPicked, shipOrder } from '@/lib/kfcOrders';
 import { importPage, isWooShop, wooConfigured } from '@/lib/kfcWoo';
 import { importOwnOrders } from '@/lib/kfcOwnShop';
@@ -58,6 +58,16 @@ export async function POST(request: Request) {
       if (!IS_KEYFORCARS) return reply({ error: 'Onbekende actie.' }, 400);
       if (!seesPrices(user)) return reply({ error: 'Alleen kantoor.' }, 403);
       await clearSampleData();
+      return reply({ ok: true });
+    }
+    if (input.action === 'return') {
+      if (!canBookReturns(user)) return reply({ error: 'Geen toegang' }, 403);
+      const { line, location, key, quantity } = input;
+      if (![line, location, key].every((value) => typeof value === 'string' && uuid.test(value)) ||
+          !Number.isInteger(quantity) || quantity < 1 || quantity > 2147483647) {
+        return reply({ error: 'Ongeldige invoer.' }, 400);
+      }
+      await returnShopLine(line, quantity, location, key, user);
       return reply({ ok: true });
     }
     if (input.action === 'pick') {

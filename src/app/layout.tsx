@@ -172,14 +172,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ── GOOGLE BUSINESS PROFILE LINK ── */}
         <link rel="me" href={SITE_CONFIG.social.google} />
 
-        {/* ── STRUCTURED DATA ── */}
+      </head>
+      <body>
+        {/* Keep JSON-LD with the other structured data, outside the extension-managed head. */}
         <script
           id="schema-website"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-      </head>
-      <body>
         {/* The one full description of the business; every other page's markup refers to it by @id. */}
         <LocalBusinessSchema />
         <Script id="consent-defaults">
@@ -230,10 +230,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
 
         {/* Google Ads Standalone gtag.js (AW-18511036958) - Added to guarantee conversions bypassing GTM complexity */}
-        <Script id="google-ads-script" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=AW-18511036958" />
         <Script id="google-ads-config">
           {`
             if ((window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') && !window.location.pathname.startsWith('/admin')) {
+              const adsScript = document.createElement('script');
+              adsScript.async = true;
+              adsScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-18511036958';
+              document.head.appendChild(adsScript);
               window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               // Page views on, so the tag shows as active and remarketing lists fill.

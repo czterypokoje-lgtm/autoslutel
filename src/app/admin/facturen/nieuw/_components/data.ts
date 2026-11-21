@@ -1,4 +1,5 @@
 import { addDays, format } from 'date-fns';
+import type { JobInvoiceLineSource } from '@/lib/jobInvoiceSources';
 
 /*
  * Form model for the KeyForCars invoice screen (ported from Studio Admin's
@@ -7,7 +8,7 @@ import { addDays, format } from 'date-fns';
  * existing /api/admin/invoices route expects, so the API is untouched.
  */
 
-export interface InvoiceLineItem {
+export interface InvoiceLineItem extends Partial<JobInvoiceLineSource> {
   id: string;
   description: string;
   quantity: number;
@@ -258,6 +259,7 @@ export function toApiPayload(invoice: InvoiceFormValues) {
   const { items, rate, lineDiscounts, credit } = getInvoiceTotals(invoice);
   const lines = items.map((item, index) => ({
     description: item.description.trim(), quantity: item.quantity, unitPrice: item.unitPrice, discount: lineDiscounts[index], vatRate: rate,
+    job_line_kind: item.job_line_kind, job_stock_id: item.job_stock_id,
   }));
   const { from, to } = invoice;
   return {
