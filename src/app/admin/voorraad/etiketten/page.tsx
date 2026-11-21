@@ -3,7 +3,7 @@ import { BRAND, WAREHOUSE } from '@/config/install';
 import { requireWarehouseUser, seesPrices } from '@/lib/crmSession';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { ARTICLE_CODE } from '@/lib/stockCatalog';
-import { findProfile } from '@/lib/productProfiles';
+import { labelProfiles } from '@/lib/labelProfiles';
 import LabelPrint, { type LabelArticle } from './LabelPrint';
 
 export const dynamic = 'force-dynamic';
@@ -41,12 +41,13 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
     r.photo_version ? `/api/admin/voorraad-local?foto=${encodeURIComponent(r.code)}&v=${r.photo_version}` : (r.image || null)]));
   // The drawer's own number (a learned all-digit barcode) is printed, so the drawer keeps its number.
   const numbers = new Map(((photoRows ?? []) as Photo[]).map((r) => [r.code, (r.ean ?? []).find((e) => /^\d{8,14}$/.test(e.trim()))?.trim() ?? null]));
+  const profiles = await labelProfiles([...new Set(((data ?? []) as Row[]).map((r) => r.sku).filter(Boolean))]);
   const articles: LabelArticle[] = wanted.flatMap((code) => {
     const r = byCode.get(code);
     // Location without the warehouse name: shelf / box is what the label sits on.
     return r ? [{ code: r.code, name: r.name, sku: r.sku, price: r.sale_price_cents, location: (r.locations[0] ?? '').split('/').slice(1).join('/'), photo: photos.get(code) ?? null, number: numbers.get(code) ?? null,
       // Models, key blade, chip: the same profile the drawer label in Voorraad prints.
-      profile: (r.sku ? findProfile(r.sku) : null) ?? null }] : [];
+      profile: (r.sku ? profiles[r.sku] : null) ?? null }] : [];
   });
   // Asked for but not printable: unknown code or SKU, or a SKU on several articles. Shown, so nothing drops silently.
   const printed = new Set(articles.flatMap((a) => [a.code, a.sku.toUpperCase()]));
