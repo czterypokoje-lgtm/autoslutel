@@ -39,6 +39,8 @@ export interface ProductProfileData {
   fits: VehicleFit[];
   links: { shop: string; url: string }[];
   ean: string[];
+  /** Set when `fits` are derived: the products this part belongs to (its blade), not a vehicle list of its own. */
+  via?: string[];
 }
 
 export interface ProfileHit { profile: ProductProfileData; fits: VehicleFit[] }
@@ -119,6 +121,17 @@ export function searchProfiles(query: string, limit = 40): ProfileHit[] {
   hits.sort((a, b) => a.score - b.score || a.profile.sku.localeCompare(b.profile.sku));
   const results = hits.slice(0, limit).map(({ profile, fits }) => ({ profile, fits }));
   return exact ? [{ profile: exact, fits: [] }, ...results.slice(0, limit - 1)] : results;
+}
+
+/**
+ * Catalogue products that take this part as their key blade (AUKB01 -> AURC04,
+ * AURK06 ...): where a part without a vehicle list of its own fits.
+ */
+export function bladeUsers(sku: string): string[] {
+  const code = sku.trim().toUpperCase();
+  return profiles().all
+    .filter((profile) => profile.sku.toUpperCase() !== code && profile.facts.blade.some((blade) => blade.trim().toUpperCase() === code))
+    .map((profile) => profile.sku);
 }
 
 export function profileCount() {

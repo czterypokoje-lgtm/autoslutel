@@ -42,7 +42,9 @@ export default function ShelfLabel({ article, bin, code, number, profile, size }
     ['Frequentie', facts?.frequency.length ? facts.frequency.slice(0, 2).join(' / ') : '—'],
     ['Knoppen', facts?.buttons ? facts.buttons.replace(/\s*(?:buttons?|knoppen|knops)\s*/i, '') : '—'],
   ];
-  const models = profile ? modelRows(profile.fits, LABEL_SIZES[size].rows) : { lines: [], more: 0 };
+  // Derived models (a blade fits where its key fits) take one row for the "via" line.
+  const via = profile?.via?.length ? `via ${profile.via.slice(0, 3).join(', ')}${profile.via.length > 3 ? ' …' : ''}` : '';
+  const models = profile ? modelRows(profile.fits, LABEL_SIZES[size].rows - (via ? 1 : 0)) : { lines: [], more: 0 };
   const image = profile?.image || article.image;
   const location = [bin?.shelf, bin?.box].filter(Boolean).join(' · ');
 
@@ -64,6 +66,7 @@ export default function ShelfLabel({ article, bin, code, number, profile, size }
       </dl>
 
       <ul className={styles.shelfModels}>
+        {via && <li className={styles.shelfMore}>{via}</li>}
         {models.lines.map((row, index) => row.make
           ? <li key={index} className={styles.shelfMake}>{row.make}</li>
           : <li key={index}><span>{row.model}</span><b>{row.years}</b></li>)}

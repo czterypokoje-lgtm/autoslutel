@@ -1,6 +1,7 @@
 import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { findProfile, type ProductProfileData } from '@/lib/productProfiles';
+import { bladeUsers, findProfile, type ProductProfileData } from '@/lib/productProfiles';
+import { plausibleFit } from '@/app/admin/voorraad/ShelfLabelRows';
 
 /**
  * Product profiles for shelf labels and the product view, with the CRM's own
@@ -27,7 +28,11 @@ const empty = (sku: string, name: string): ProductProfileData => ({
   facts: { kind: '', chips: [], frequency: [], blade: [], buttons: '' }, specs: [], fits: [], links: [], ean: [],
 });
 
-export async function labelProfiles(skus: string[]): Promise<Record<string, ProductProfileData | null>> {
+/** Models a label would print: CRM rows, or catalogue rows that read like a model with a year. */
+const hasModels = (profile: ProductProfileData | null | undefined) =>
+  !!profile?.fits.some((fit) => fit.text === 'crm' || (fit.from !== null && plausibleFit(fit.vehicle)));
+
+export async function labelProfiles(skus: string[], derive = true): Promise<Record<string, ProductProfileData | null>> {
   const result: Record<string, ProductProfileData | null> = Object.fromEntries(skus.map((sku) => [sku, findProfile(sku) ?? null]));
   const wanted = [...new Set(skus.map((sku) => sku.trim().toUpperCase()).filter(Boolean))];
   if (!wanted.length) return result;
@@ -77,6 +82,25 @@ export async function labelProfiles(skus: string[]): Promise<Record<string, Prod
   } catch (error) {
     // The CRM tables cannot be read: labels fall back to the catalogue rather than fail.
     console.error('[labels] CRM specs/fitments unavailable', error);
+  }
+  // A part with no vehicle list of its own (a blade like AUKB01) fits where the products
+  // that use it fit: their models, marked `via`, derived here and never stored.
+  if (derive) {
+    const parents = new Map(skus.filter((sku) => !hasModels(result[sku])).map((sku) => [sku, bladeUsers(sku).slice(0, 8)]));
+    const all = [...new Set([...parents.values()].flat())];
+    if (all.length) {
+      const parentProfiles = await labelProfiles(all, false);
+      for (const [sku, list] of parents) {
+        const used = list.filter((parent) => hasModels(parentProfiles[parent]));
+        if (!used.length) continue;
+        const seen = new Set<string>();
+        const fits = used.flatMap((parent) => parentProfiles[parent]!.fits).filter((fit) => {
+          const key = `${fit.vehicle}|${fit.from}|${fit.to}`.toLowerCase();
+          return !seen.has(key) && !!seen.add(key);
+        });
+        result[sku] = { ...(result[sku] ?? empty(sku, '')), fits, via: used };
+      }
+    }
   }
   return result;
 }
