@@ -7,10 +7,13 @@ import { Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { euro } from '@/lib/kfcReportColumns';
 import { LabelBarcode } from '../StockLabel';
+import ShelfLabel, { LABEL_SIZES, type LabelSize } from '../ShelfLabel';
+import type { ProductProfileData } from '@/lib/productProfiles';
+import shelfStyles from '../keyforcars.module.css';
 import { usePreviewLanguage } from '../../PreviewLanguage';
 import '../stockPrint.css';
 
-export interface LabelArticle { code: string; name: string; sku: string; price: number | null; location: string; photo?: string | null; number?: string | null }
+export interface LabelArticle { code: string; name: string; sku: string; price: number | null; location: string; photo?: string | null; number?: string | null; profile?: ProductProfileData | null }
 
 const SIZES = {
   '62x29': { nl: '62 × 29 mm (Brother)', page: '62mm 29mm', w: '62mm', h: '29mm', sheet: false, perPage: 1 },
@@ -19,14 +22,18 @@ const SIZES = {
   'a4-70x37': { nl: 'A4-vel 70 × 37 mm (24 per vel)', page: 'A4', w: '70mm', h: '37mm', sheet: true, perPage: 1 },
 } as const;
 type Size = keyof typeof SIZES;
-const SIZE_KEY = 'kfc-shelf-label-size';
-function subscribeSize(callback: () => void) {
+/** The drawer label (photo, models, key blade, chip: ShelfLabel) at a LABEL_SIZES size, or the plain price label (`price:` + SIZES). */
+const CHOICE_KEY = 'kfc-label-choice';
+type Choice = LabelSize | `price:${Size}`;
+const DEFAULT_CHOICE: Choice = '100x50-4';
+const validChoice = (value: string | null): value is Choice => !!value && (value in LABEL_SIZES || (value.startsWith('price:') && value.slice(6) in SIZES));
+function subscribeChoice(callback: () => void) {
   window.addEventListener('storage', callback);
-  window.addEventListener(SIZE_KEY, callback);
-  return () => { window.removeEventListener('storage', callback); window.removeEventListener(SIZE_KEY, callback); };
+  window.addEventListener(CHOICE_KEY, callback);
+  return () => { window.removeEventListener('storage', callback); window.removeEventListener(CHOICE_KEY, callback); };
 }
-function readSize(): Size {
-  try { const saved = localStorage.getItem(SIZE_KEY); return saved && saved in SIZES ? saved as Size : '62x29'; } catch { return '62x29'; }
+function readChoice(): Choice {
+  try { const saved = localStorage.getItem(CHOICE_KEY); return validChoice(saved) ? saved : DEFAULT_CHOICE; } catch { return DEFAULT_CHOICE; }
 }
 const noSubscribe = () => () => {};
 const code39Safe = (value: string) => /^[A-Z0-9 .$/+%-]+$/.test(value);
@@ -40,10 +47,12 @@ const code39Safe = (value: string) => /^[A-Z0-9 .$/+%-]+$/.test(value);
  */
 export default function LabelPrint({ articles, showPrice }: { articles: LabelArticle[]; showPrice: boolean }) {
   const { english } = usePreviewLanguage();
-  const size = useSyncExternalStore(subscribeSize, readSize, () => '62x29' as Size);
+  const choice = useSyncExternalStore(subscribeChoice, readChoice, () => DEFAULT_CHOICE);
+  const drawer = !choice.startsWith('price:');
+  const size: Size = drawer ? '62x29' : choice.slice(6) as Size;
   const mounted = useSyncExternalStore(noSubscribe, () => true, () => false);
   const [copies, setCopies] = useState(1);
-  const choose = (next: Size) => { try { localStorage.setItem(SIZE_KEY, next); } catch { /* private mode: this page only */ } window.dispatchEvent(new Event(SIZE_KEY)); };
+  const choose = (next: Choice) => { try { localStorage.setItem(CHOICE_KEY, next); } catch { /* private mode: this page only */ } window.dispatchEvent(new Event(CHOICE_KEY)); };
   const spec = SIZES[size];
   const big = size.startsWith('100x50');
   const origin = mounted ? window.location.origin : "";
@@ -103,7 +112,19 @@ export default function LabelPrint({ articles, showPrice }: { articles: LabelArt
     );
   };
 
-  const sheet = (
+  const drawerSize = drawer ? choice as LabelSize : '100x50';
+  const shelfLabel = (label: (typeof labels)[number]) => {
+    const [shelf = '', box = ''] = label.location.split('/');
+    const article = { id: label.code, name: label.name, sku: label.sku, image: label.photo ?? '', category: '', sources: [] };
+    return <ShelfLabel key={label.key} article={article} bin={label.location ? { article: label.code, shelf, box, quantity: 0, minimum: 0 } : undefined}
+      code={label.sku && code39Safe(label.sku.toUpperCase()) ? label.sku.toUpperCase() : label.code} number={label.number} profile={label.profile ?? null} size={drawerSize} />;
+  };
+  const sheet = drawer ? (
+    <div className={shelfStyles.printSheet} data-stock-print="" data-size={drawerSize}>
+      <style>{`@page { size: ${LABEL_SIZES[drawerSize].page}; margin: 0; }`}</style>
+      {labels.map(shelfLabel)}
+    </div>
+  ) : (
     <div data-stock-print="" className="hidden print:block">
       <style>{`@media print { @page { size: ${spec.page}; margin: ${spec.sheet ? '8mm 0 0 0' : '0'}; } }`}</style>
       <div style={spec.sheet ? { display: 'grid', gridTemplateColumns: 'repeat(3, 70mm)' } : undefined}>
@@ -117,8 +138,13 @@ export default function LabelPrint({ articles, showPrice }: { articles: LabelArt
       <h1 className="text-2xl font-medium tracking-tight">{english ? 'Print labels' : 'Etiketten printen'}</h1>
       <div className="bg-card flex flex-wrap items-end gap-3 rounded-xl border p-3">
         <label className="grid gap-1 text-xs font-medium">{english ? 'Label size' : 'Formaat'}
-          <select className="border-input bg-background h-9 rounded-md border px-2 text-sm" value={size} onChange={(e) => choose(e.target.value as Size)}>
-            {Object.entries(SIZES).map(([id, s]) => <option key={id} value={id}>{s.nl}</option>)}
+          <select className="border-input bg-background h-9 rounded-md border px-2 text-sm" value={choice} onChange={(e) => choose(e.target.value as Choice)}>
+            <optgroup label={english ? 'Drawer label (models, key blade)' : 'Ladelabel (modellen, sleutelbaard)'}>
+              {Object.entries(LABEL_SIZES).map(([id, s]) => <option key={id} value={id}>{s.name}</option>)}
+            </optgroup>
+            <optgroup label={english ? 'Price label' : 'Prijsetiket'}>
+              {Object.entries(SIZES).map(([id, s]) => <option key={id} value={`price:${id}`}>{s.nl}</option>)}
+            </optgroup>
           </select></label>
         <label className="grid gap-1 text-xs font-medium">{english ? 'Copies each' : 'Aantal per artikel'}
           <input className="border-input bg-background h-9 w-20 rounded-md border px-2 text-sm" type="number" min={1} max={50} value={copies}
@@ -128,8 +154,10 @@ export default function LabelPrint({ articles, showPrice }: { articles: LabelArt
       {articles.length === 0 && <p className="text-muted-foreground text-sm">{english ? 'No items selected.' : 'Geen artikelen gekozen.'}</p>}
       {labels.length > 0 && (
         <section aria-label={english ? 'Preview' : 'Voorbeeld'} className="grid gap-2">
-          <p className="text-muted-foreground text-xs">{english ? 'Preview, real size' : 'Voorbeeld, ware grootte'}{spec.perPage > 1 ? (english ? ` · ${spec.perPage} per page` : ` · ${spec.perPage} per pagina`) : ''}</p>
-          <div className="flex flex-col items-start gap-0 overflow-x-auto rounded-xl border bg-white p-3">{labels.slice(0, spec.perPage > 1 ? spec.perPage : 2).map(view)}</div>
+          <p className="text-muted-foreground text-xs">{english ? 'Preview, real size' : 'Voorbeeld, ware grootte'}{(drawer ? drawerSize === '100x50-4' : spec.perPage > 1) ? (english ? ' · 4 per page' : ' · 4 per pagina') : ''}</p>
+          <div className="flex flex-col items-start gap-2 overflow-x-auto rounded-xl border bg-white p-3">
+            {drawer ? labels.slice(0, drawerSize === '100x50-4' ? 4 : 2).map(shelfLabel) : labels.slice(0, spec.perPage > 1 ? spec.perPage : 2).map(view)}
+          </div>
         </section>
       )}
       <ul className="divide-y rounded-xl border">

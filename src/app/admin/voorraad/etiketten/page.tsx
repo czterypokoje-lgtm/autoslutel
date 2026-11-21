@@ -3,6 +3,7 @@ import { BRAND, WAREHOUSE } from '@/config/install';
 import { requireWarehouseUser, seesPrices } from '@/lib/crmSession';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { ARTICLE_CODE } from '@/lib/stockCatalog';
+import { findProfile } from '@/lib/productProfiles';
 import LabelPrint, { type LabelArticle } from './LabelPrint';
 
 export const dynamic = 'force-dynamic';
@@ -43,7 +44,9 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
   const articles: LabelArticle[] = wanted.flatMap((code) => {
     const r = byCode.get(code);
     // Location without the warehouse name: shelf / box is what the label sits on.
-    return r ? [{ code: r.code, name: r.name, sku: r.sku, price: r.sale_price_cents, location: (r.locations[0] ?? '').split('/').slice(1).join('/'), photo: photos.get(code) ?? null, number: numbers.get(code) ?? null }] : [];
+    return r ? [{ code: r.code, name: r.name, sku: r.sku, price: r.sale_price_cents, location: (r.locations[0] ?? '').split('/').slice(1).join('/'), photo: photos.get(code) ?? null, number: numbers.get(code) ?? null,
+      // Models, key blade, chip: the same profile the drawer label in Voorraad prints.
+      profile: (r.sku ? findProfile(r.sku) : null) ?? null }] : [];
   });
   return <LabelPrint articles={articles} showPrice={seesPrices(user)} />;
 }
