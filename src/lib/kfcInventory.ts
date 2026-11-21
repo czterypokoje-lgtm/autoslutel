@@ -51,6 +51,22 @@ export class StockError extends Error {
   constructor(message: string, readonly status = 400) { super(message); }
 }
 
+/**
+ * PostgREST returns at most 1,000 rows per call; page through for larger reads.
+ * Lives here, next to StockError, so every kfc module can use it without an
+ * import cycle (kfcOrders re-exports it for its existing importers).
+ */
+export async function fetchAll<T>(build: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>, pageSize = 1000, max = 50000): Promise<T[]> {
+  const out: T[] = [];
+  for (let from = 0; from < max; from += pageSize) {
+    const { data, error } = await build(from, from + pageSize - 1);
+    if (error) throw new StockError(`Lezen mislukt: ${error.message}`, 500);
+    out.push(...(data ?? []));
+    if (!data || data.length < pageSize) break;
+  }
+  return out;
+}
+
 function rpcError(error: { message: string }): StockError {
   for (const [code, [message, status]] of Object.entries(RPC_MESSAGES)) {
     if (error.message.includes(code)) return new StockError(message, status);
@@ -90,20 +106,23 @@ export async function loadState(user: CrmUser): Promise<StockState> {
   const [locs, workshop, levels, moves, photos, batches] = await Promise.all([
     locations(),
     db.from('kfc_articles').select('code, name, sku, image, category').like('code', `${WORKSHOP_PREFIX}%`).order('code'),
-    db.from('kfc_stock_levels').select('article_code, location_id, quantity, minimum'),
+    // Paged: past 1,000 bins a single call silently dropped the rest, and the screen showed stock as missing.
+    fetchAll<{ article_code: string; location_id: string; quantity: number; minimum: number }>((a, b) =>
+      db.from('kfc_stock_levels').select('article_code, location_id, quantity, minimum').order('article_code').order('location_id').range(a, b)),
     db.from('kfc_stock_moves')
       .select('article_code, location_id, delta, quantity_after, unit_cost_cents, reason, sales_invoice_id, count_batch_id, note, photo_path, created_at, idempotency_key')
       .order('created_at', { ascending: false }).limit(MOVE_LIMIT),
-    db.from('kfc_articles').select('code, photo_version').not('photo_version', 'is', null),
+    fetchAll<{ code: string; photo_version: string }>((a, b) =>
+      db.from('kfc_articles').select('code, photo_version').not('photo_version', 'is', null).order('code').range(a, b)),
     db.from('kfc_count_batches').select('id, line_count, created_at, kfc_count_photos (sha256)').order('created_at', { ascending: false }).limit(500),
   ]);
-  for (const result of [workshop, levels, moves, photos, batches]) {
+  for (const result of [workshop, moves, batches]) {
     if (result.error) throw new StockError(`Voorraad lezen mislukt: ${result.error.message}`, 500);
   }
   const at = (id: string | null) => (id ? locs.get(id) : undefined);
   const state: StockState = {
     workshop: (workshop.data ?? []).map((row) => ({ id: row.code, name: row.name, sku: row.sku, image: row.image, category: row.category, sources: [] }) as StockArticle),
-    bins: (levels.data ?? []).map((row): StockBin => ({
+    bins: levels.map((row): StockBin => ({
       article: row.article_code, shelf: at(row.location_id)?.shelf ?? '', box: at(row.location_id)?.box ?? '',
       quantity: row.quantity, minimum: row.minimum,
     })),
@@ -120,7 +139,7 @@ export async function loadState(user: CrmUser): Promise<StockState> {
       if (row.count_batch_id) move.batch = row.count_batch_id;
       return move;
     }),
-    photos: Object.fromEntries((photos.data ?? []).map((row) => [row.code, row.photo_version as string])),
+    photos: Object.fromEntries(photos.map((row) => [row.code, row.photo_version])),
     batches: (batches.data ?? []).map((row): StockBatch => ({
       id: row.id, time: row.created_at, lines: row.line_count,
       photos: ((row.kfc_count_photos as { sha256: string }[] | null) ?? []).map((p) => p.sha256),
@@ -135,10 +154,8 @@ function stripPrices(state: StockState): StockState {
 
 /** Physical · unusable · reserved · available · incoming, for articles that have any of them. */
 export async function positions(): Promise<Position[]> {
-  const { data, error } = await admin().from('kfc_stock_position').select('*')
-    .or('physical.neq.0,reserved.neq.0,incoming.neq.0');
-  if (error) throw new StockError(`Voorraadstanden lezen mislukt: ${error.message}`, 500);
-  return data as Position[];
+  return fetchAll<Position>((a, b) => admin().from('kfc_stock_position').select('*')
+    .or('physical.neq.0,reserved.neq.0,incoming.neq.0').order('article_code').range(a, b));
 }
 
 export async function articleExists(code: string): Promise<boolean> {

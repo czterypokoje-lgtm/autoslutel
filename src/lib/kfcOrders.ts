@@ -1,8 +1,8 @@
 import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { LABEL_BATCH_MAX } from '@/lib/kfcLabels';
-import { StockError } from '@/lib/kfcInventory';
-import { pushCompleted, isWooShop } from '@/lib/kfcWoo';
+import { StockError, fetchAll } from '@/lib/kfcInventory';
+import { pushCompleted, isWooShop, wooConfigured, WOO_SHOPS, type WooShop } from '@/lib/kfcWoo';
 import { OWN_SHOP, pushOwnShipped } from '@/lib/kfcOwnShop';
 import type { CrmUser } from '@/lib/crmSession';
 import { sampleOrders, type SampleOrder, type OrderStatus } from '@/lib/kfcSampleOrders';
@@ -26,17 +26,8 @@ export interface ShopOrder {
 
 const db = () => createSupabaseAdminClient();
 
-/** PostgREST returns at most 1,000 rows per call; page through for larger reads. */
-export async function fetchAll<T>(build: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>, pageSize = 1000, max = 50000): Promise<T[]> {
-  const out: T[] = [];
-  for (let from = 0; from < max; from += pageSize) {
-    const { data, error } = await build(from, from + pageSize - 1);
-    if (error) throw new StockError(`Lezen mislukt: ${error.message}`, 500);
-    out.push(...(data ?? []));
-    if (!data || data.length < pageSize) break;
-  }
-  return out;
-}
+/** The paging helper now lives next to StockError in kfcInventory; re-exported for the modules that import it from here. */
+export { fetchAll };
 
 const ORDER_COLUMNS = 'id, shop, woo_order_id, number, status, fulfilment, created_at, paid_at, shipped_at, shop_completed_at, country, total_incl_cents, total_excl_cents, shipping_incl_cents, ship_name, ship_company, ship_street, ship_postcode, ship_city, ship_phone, ship_email, carrier, tracking_code, label_url, label_created_at';
 const LINE_COLUMNS = 'id, sku, article_code, name, quantity, reserved, picked, state, unit_incl_cents';
@@ -262,6 +253,16 @@ export async function loadSampleData(user: CrmUser): Promise<{ orders: number; l
 
 /** Wipes orders, reservations, moves and levels. Only for the demo period, before the shops are connected. */
 export async function clearSampleData(): Promise<void> {
+  /* The wipe is unconditional (every order, movement and stock level, not only
+     the sample rows), so it only runs while there is nothing real to lose. */
+  if ((Object.keys(WOO_SHOPS) as WooShop[]).some(wooConfigured)) {
+    throw new StockError('Wissen kan niet meer: er is een webshop gekoppeld. Dit zou alle echte bestellingen en voorraadstanden verwijderen.', 409);
+  }
+  const real = await db().from('kfc_shop_orders').select('id', { count: 'exact', head: true }).lt('woo_order_id', 900000000);
+  if (real.error) throw new StockError(`Wissen gestopt: bestellingen controleren mislukt (${real.error.message}).`, 500);
+  if ((real.count ?? 0) > 0) {
+    throw new StockError('Wissen kan niet meer: er staan echte bestellingen in het systeem.', 409);
+  }
   for (const [table, col] of [['kfc_shop_order_refunds', 'id'], ['kfc_shop_order_lines', 'id'], ['kfc_shop_orders', 'id'], ['kfc_reservations', 'id'], ['kfc_stock_moves', 'id'], ['kfc_stock_levels', 'article_code'], ['kfc_import_runs', 'id']] as const) {
     const { error } = await db().from(table).delete().not(col, 'is', null);
     if (error) throw new StockError(`Wissen mislukt (${table}): ${error.message}`, 500);

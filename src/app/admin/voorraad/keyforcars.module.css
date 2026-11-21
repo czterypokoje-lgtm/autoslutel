@@ -360,3 +360,18 @@
   .labelActions > * { width: 100%; }
   .labelActions > .primary { grid-column: 1 / -1; }
 }
+
+/*
+ * Phones: iOS Safari zooms the whole page when a focused field is smaller than
+ * 16 px, so counting on a phone meant pinching back out after every field.
+ * 16 px text and a 44 px touch height on small screens; desktop keeps its
+ * compact fields. Last in the file so it wins over the 36/40 px rules above.
+ */
+@media (max-width: 640px) {
+  .workspace :is(input:not([type=checkbox]), select, textarea),
+  .bulk :is(input:not([type=checkbox]), select),
+  .camera :is(input:not([type=checkbox]), select) { font-size: 16px; min-height: 44px; }
+  .workspace :is(.primary, .secondary),
+  .bulk :is(.primary, .secondary),
+  .camera :is(.primary, .secondary) { min-height: 44px; }
+}

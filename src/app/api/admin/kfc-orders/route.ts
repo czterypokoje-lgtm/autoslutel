@@ -56,7 +56,8 @@ export async function POST(request: Request) {
     }
     if (input.action === 'sample-clear') {
       if (!IS_KEYFORCARS) return reply({ error: 'Onbekende actie.' }, 400);
-      if (!seesPrices(user)) return reply({ error: 'Alleen kantoor.' }, 403);
+      // Deletes every order and every stock level: the owner only, and only before go-live (see clearSampleData).
+      if (user.role !== 'owner') return reply({ error: 'Alleen de eigenaar kan alles wissen.' }, 403);
       await clearSampleData();
       return reply({ ok: true });
     }
