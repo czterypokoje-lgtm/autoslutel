@@ -103,6 +103,7 @@ export const OFFICE_NAV: NavItem[] = [
       { href: '/admin/rapportage', label: 'Rapportage' },
       { href: '/admin/attributie', label: 'Advertentieklikken' },
       { href: '/admin/whatsapp-advertenties', label: 'WhatsApp en advertenties' },
+      { href: '/admin/whatsapp-analyse', label: 'WhatsApp-analyse' },
       { href: '/admin/klikfraude', label: 'Klikfraude' },
       { href: '/admin/live', label: 'Live' },
       { href: '/admin/kantoor', label: 'Kantoor' },

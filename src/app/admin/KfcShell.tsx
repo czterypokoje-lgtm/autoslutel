@@ -129,7 +129,7 @@ const TITLES: Record<string, string> = {
   bussen: 'Magazijn en bussen', webshop: 'Webshopmarge',
   // Autosleutel24 screens
   aanbod: 'Aanbod', biedingen: 'Biedingen', vandaag: 'Vandaag', monteurs: 'Monteurs', bestellen: 'Onderdelen bestellen', kas: 'Kas & uitbetalingen',
-  tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', klikfraude: 'Klikfraude',
+  tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', 'whatsapp-analyse': 'WhatsApp-analyse', klikfraude: 'Klikfraude',
   live: 'Live', kantoor: 'Kantoor', netwerk: 'Netwerk', 'mijn-agenda': 'Mijn agenda', 'mijn-klussen': 'Mijn klussen', 'mijn-bus': 'Mijn bus', 'mijn-saldo': 'Saldo',
   'mijn-vak': 'Mijn vak', 'mijn-profiel': 'Profiel',
 };
