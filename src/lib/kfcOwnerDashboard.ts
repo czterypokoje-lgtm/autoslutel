@@ -52,9 +52,18 @@ export async function ownerDashboard() {
     db.from('kfc_purchase_orders').select('id, status, supplier, expected_on, kfc_purchase_order_lines(quantity, received, unit_cost_cents)').in('status', ['draft', 'ordered']).limit(2000),
     fetchAll<Order>((a, b) => db.from('kfc_shop_orders').select('id, number, shop, created_at, total_excl_cents')
       .eq('status', 'processing').in('fulfilment', ['open', 'picked']).order('created_at').range(a, b), 1000, 10000),
-    db.from('kfc_shop_order_refunds').select('amount_cents, created_at').gte('created_at', amsterdamMidnight(monthStart)),
-    db.from('kfc_pos_payments').select('method, amount_cents, created_at').gte('created_at', amsterdamMidnight(from)).limit(20000),
+    // Paged: one call returns at most 1,000 rows, which a busy month passes — the totals would silently stop there.
+    fetchAll<{ amount_cents: number }>((a, b) => db.from('kfc_shop_order_refunds').select('amount_cents, created_at')
+      .gte('created_at', amsterdamMidnight(monthStart)).order('id').range(a, b)),
+    // The till tables may not be deployed yet: only that case reads as "till not in use". Any other failure is an error.
+    fetchAll<Payment>((a, b) => db.from('kfc_pos_payments').select('method, amount_cents, created_at')
+      .gte('created_at', amsterdamMidnight(from)).order('id').range(a, b))
+      .catch((error: unknown) => {
+        if (/schema cache|does not exist/i.test(error instanceof Error ? error.message : '')) return null;
+        throw error;
+      }),
   ]);
+  if (pos.error) throw new Error(`Inkooporders lezen mislukt: ${pos.error.message}`);
 
   const byDay = new Map(days.map((d) => [d.key, d]));
   const inRange = (a: string, b: string) => days.filter((d) => d.key >= a && d.key <= b);
@@ -71,11 +80,11 @@ export async function ownerDashboard() {
 
   // Till: null when the kassa tables are not deployed on this database yet.
   let till: null | Record<'today' | 'week' | 'month', Record<'cash' | 'pin' | 'other', number>> = null;
-  if (!payments.error) {
+  if (payments) {
     const empty = () => ({ cash: 0, pin: 0, other: 0 });
     till = { today: empty(), week: empty(), month: empty() };
     const bounds = { today: amsterdamMidnight(today), week: amsterdamMidnight(monday), month: amsterdamMidnight(monthStart) };
-    for (const p of (payments.data ?? []) as Payment[]) {
+    for (const p of payments) {
       const method = (['cash', 'pin'].includes(p.method) ? p.method : 'other') as 'cash' | 'pin' | 'other';
       for (const key of ['today', 'week', 'month'] as const) if (p.created_at >= bounds[key]) till[key][method] += p.amount_cents;
     }
@@ -100,7 +109,7 @@ export async function ownerDashboard() {
     webshop: { open: orders.length, value: orders.reduce((s, o) => s + (o.total_excl_cents ?? 0), 0),
       oldest: orders[0] ? { id: orders[0].id, number: orders[0].number, created_at: orders[0].created_at } : null,
       olderThan2Days: orders.filter((o) => Date.now() - Date.parse(o.created_at) > 2 * DAY).length },
-    refundsMonth: (refunds.data ?? []).reduce((s: number, r: { amount_cents: number }) => s + r.amount_cents, 0),
+    refundsMonth: refunds.reduce((s, r) => s + r.amount_cents, 0),
     till,
   };
 }

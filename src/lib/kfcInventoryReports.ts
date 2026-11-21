@@ -127,13 +127,13 @@ const ARTICLE_COLS = [C('code', 'Artikel', 'Item', 'code'), C('name', 'Naam', 'N
 
 async function balance(p: ReportParams): Promise<ReportData> {
   type Level = { article_code: string; quantity: number; minimum: number; last_counted_at: string | null;
-    kfc_articles: { name: string; sku: string; category: string; purchase_price_cents: number | null } | null;
+    kfc_articles: { name: string; sku: string; category: string; purchase_price_cents: number | null; avg_cost_cents: number | null } | null;
     kfc_locations: { warehouse: string; shelf: string; box: string; kind: string; technician_id: string | null } | null };
-  type Loose = { article_code: string; name: string; sku: string; category: string; quantity: number; unit_cost_cents: number | null };
+  type Loose = { article_code: string; name: string; sku: string; category: string; quantity: number; unit_cost_cents: number | null; value_cents: number; cost_estimated: boolean };
   const [levels, loose, vans] = await Promise.all([
     fetchAll<Level>((a, b) => {
       let query = db().from('kfc_stock_levels')
-        .select('article_code, quantity, minimum, last_counted_at, kfc_articles!inner(name, sku, category, purchase_price_cents), kfc_locations!inner(warehouse, shelf, box, kind, technician_id)')
+        .select('article_code, quantity, minimum, last_counted_at, kfc_articles!inner(name, sku, category, purchase_price_cents, avg_cost_cents), kfc_locations!inner(warehouse, shelf, box, kind, technician_id)')
         .neq('quantity', 0);
       if (p.category) query = query.eq('kfc_articles.category', p.category);
       if (p.warehouse) query = query.eq('kfc_locations.warehouse', p.warehouse);
@@ -148,35 +148,39 @@ async function balance(p: ReportParams): Promise<ReportData> {
   const detail: ReportRow[] = [
     ...levels.map((l) => {
       const loc = l.kfc_locations!;
-      const cost = l.kfc_articles?.purchase_price_cents ?? null;
+      // Moving average cost (0137); the last purchase price only when no average is known (flagged).
+      const avg = l.kfc_articles?.avg_cost_cents ?? null;
+      const cost = avg !== null ? Number(avg) : l.kfc_articles?.purchase_price_cents ?? null;
       return {
         code: l.article_code, name: l.kfc_articles?.name ?? '', sku: l.kfc_articles?.sku ?? '', category: l.kfc_articles?.category ?? '',
         warehouse: loc.warehouse, location: locationLabel(loc.warehouse, loc.shelf, loc.box, loc.kind, loc.technician_id ? vans.get(loc.technician_id) : undefined),
         quantity: l.quantity, minimum: l.minimum, last_counted_at: l.last_counted_at,
-        unit_cost_cents: cost, value_cents: loc.kind === 'quarantine' ? 0 : Math.max(l.quantity, 0) * (cost ?? 0),
+        unit_cost_cents: cost, value_cents: loc.kind === 'quarantine' ? 0 : Math.round(Math.max(l.quantity, 0) * (cost ?? 0)),
+        estimated: avg === null,
       };
     }),
     ...loose.map((l) => ({
       code: l.article_code, name: l.name, sku: l.sku, category: l.category, warehouse: '(geen locatie)', location: '(geen locatie)',
       quantity: Number(l.quantity), minimum: null, last_counted_at: null, unit_cost_cents: l.unit_cost_cents,
-      value_cents: Math.max(Number(l.quantity), 0) * (l.unit_cost_cents ?? 0),
+      value_cents: Number(l.value_cents), estimated: l.cost_estimated,
     })),
   ].filter((row) => matchesQuery(p.q, row.code, row.name, row.sku));
 
   const totals: ReportSummary[] = [
     { nl: 'Stuks', en: 'Units', value: sum(detail, 'quantity'), type: 'int' },
-    { nl: 'Waarde (inkoopprijs)', en: 'Value (purchase price)', value: sum(detail, 'value_cents'), type: 'money', money: true },
+    { nl: 'Waarde (gem. kostprijs)', en: 'Value (average cost)', value: sum(detail, 'value_cents'), type: 'money', money: true },
     { nl: 'Artikelen', en: 'Items', value: new Set(detail.map((r) => r.code)).size, type: 'int' },
     { nl: 'Zonder kostprijs', en: 'Without cost', value: detail.filter((r) => r.unit_cost_cents === null && Number(r.quantity) > 0).length, type: 'int',
       tone: detail.some((r) => r.unit_cost_cents === null && Number(r.quantity) > 0) ? 'warn' : undefined },
   ];
-  const notes = [{ nl: 'Waarde = stuks × huidige inkoopprijs; quarantaine telt niet mee in de waarde. Negatieve standen tellen als 0.',
-    en: 'Value = units × current purchase price; quarantine is not valued. Negative balances count as 0.' }];
+  const notes = [{ nl: 'Waarde = stuks × gemiddelde kostprijs; zonder gemiddelde de laatste inkoopprijs (geschat). Quarantaine telt niet mee in de waarde. Negatieve standen tellen als 0.',
+    en: 'Value = units × moving average cost; without an average the last purchase price (estimated). Quarantine is not valued. Negative balances count as 0.' }];
 
   if (p.group === 'detail') {
     return { columns: [...ARTICLE_COLS, C('location', 'Locatie', 'Location', 'text'), C('quantity', 'Aantal', 'Qty', 'int'),
       C('minimum', 'Minimum', 'Minimum', 'int', { optional: true }), C('last_counted_at', 'Laatst geteld', 'Last counted', 'date', { optional: true }),
-      C('unit_cost_cents', 'Inkoopprijs', 'Unit cost', 'money', { money: true }), C('value_cents', 'Waarde', 'Value', 'money', { money: true })],
+      C('unit_cost_cents', 'Gem. kostprijs', 'Average cost', 'money', { money: true }), C('value_cents', 'Waarde', 'Value', 'money', { money: true }),
+      C('estimated', 'Geschat', 'Estimated', 'text', { optional: true })],
       rows: detail.sort((a, b) => String(a.code).localeCompare(String(b.code)) || String(a.location).localeCompare(String(b.location))), summary: totals, notes };
   }
   const key = p.group === 'warehouse' ? 'warehouse' : p.group === 'category' ? 'category' : 'code';
@@ -198,7 +202,7 @@ async function balance(p: ReportParams): Promise<ReportData> {
   }).sort((a, b) => Number(b.value_cents) - Number(a.value_cents) || Number(b.quantity) - Number(a.quantity));
   const columns = key === 'code'
     ? [...ARTICLE_COLS, C('locations', 'Locaties', 'Locations', 'int'), C('quantity', 'Aantal', 'Qty', 'int'),
-      C('unit_cost_cents', 'Inkoopprijs', 'Unit cost', 'money', { money: true }), C('value_cents', 'Waarde', 'Value', 'money', { money: true })]
+      C('unit_cost_cents', 'Gem. kostprijs', 'Average cost', 'money', { money: true }), C('value_cents', 'Waarde', 'Value', 'money', { money: true })]
     : [C(key, key === 'warehouse' ? 'Magazijn' : 'Categorie', key === 'warehouse' ? 'Warehouse' : 'Category', 'text'), C('articles', 'Artikelen', 'Items', 'int'),
       C('quantity', 'Aantal', 'Qty', 'int'), C('value_cents', 'Waarde', 'Value', 'money', { money: true })];
   return { columns, rows, summary: totals, notes };
@@ -223,8 +227,8 @@ async function valuation(p: ReportParams): Promise<ReportData> {
     { nl: 'Artikelen', en: 'Items', value: new Set(detail.map((r) => r.code)).size, type: 'int' },
     { nl: 'Geschatte kostprijs', en: 'Estimated cost', value: detail.filter((r) => r.estimated).length, type: 'int' },
   ];
-  const notes = [{ nl: 'Kostprijs = laatste ontvangst- of montagekostprijs tot en met die dag; zonder ontvangst de huidige inkoopprijs (geschat).',
-    en: 'Cost = last receipt or assembly cost up to that day; without a receipt the current purchase price (estimated).' }];
+  const notes = [{ nl: 'Kostprijs = gemiddelde kostprijs zoals die op die dag was. Vóór de invoering van de gemiddelde kostprijs (migratie 0137): de laatste ontvangst- of montagekostprijs tot en met die dag, anders de huidige inkoopprijs (geschat).',
+    en: 'Cost = moving average cost as it was on that day. Before the average was introduced (migration 0137): the last receipt or assembly cost up to that day, else the current purchase price (estimated).' }];
   if (p.group === 'detail') {
     return { columns: [...ARTICLE_COLS, C('location', 'Locatie', 'Location', 'text'), C('quantity', 'Aantal', 'Qty', 'int'),
       C('unit_cost_cents', 'Kostprijs', 'Unit cost', 'money', { money: true }), C('value_cents', 'Waarde', 'Value', 'money', { money: true }),
@@ -399,6 +403,8 @@ type Overview = {
   last_counted_at: string | null; suppliers: string[]; last_supplier: string | null; last_po_cost_cents: number | null; last_received_at: string | null;
   last_sold_at: string | null; last_move_at: string | null; sold_30d: number; sold_90d: number; sold_365d: number; stock_state: string; margin_pct: number | null;
   created_at: string; updated_at: string;
+  /** Moving average cost in cents, 4 decimals (0137); null = unknown. stock_value_cents uses it, else the purchase price (value_estimated). */
+  avg_cost_cents: number | null; value_estimated: boolean;
 };
 
 async function reorder(p: ReportParams): Promise<ReportData> {
@@ -452,20 +458,23 @@ async function reorder(p: ReportParams): Promise<ReportData> {
 
 async function counts(p: ReportParams): Promise<ReportData> {
   type Row = { id: number; created_at: string; article_code: string; delta: number; quantity_after: number | null; count_batch_id: string | null; note: string | null;
-    kfc_articles: { name: string; sku: string; category: string; purchase_price_cents: number | null } | null;
+    unit_cost_cents: number | null;
+    kfc_articles: { name: string; sku: string; category: string; purchase_price_cents: number | null; avg_cost_cents: number | null } | null;
     kfc_locations: { warehouse: string; shelf: string; box: string; kind: string } | null };
   const ends = shiftDays(p.to, 1);
   const data = await fetchAll<Row>((a, b) => typed<Row>(db().from('kfc_stock_moves')
-    .select('id, created_at, article_code, delta, quantity_after, count_batch_id, note, kfc_articles(name, sku, category, purchase_price_cents), kfc_locations(warehouse, shelf, box, kind)')
+    .select('id, created_at, article_code, delta, quantity_after, count_batch_id, note, unit_cost_cents, kfc_articles(name, sku, category, purchase_price_cents, avg_cost_cents), kfc_locations(warehouse, shelf, box, kind)')
     .eq('reason', 'count').gte('created_at', amsterdamMidnight(p.from)).lt('created_at', amsterdamMidnight(ends))
     .order('created_at', { ascending: false }).order('id', { ascending: false }).range(a, b)));
   const rows: ReportRow[] = data.filter((m) => matchesQuery(p.q, m.article_code, m.kfc_articles?.name, m.kfc_articles?.sku)).map((m) => {
-    const cost = m.kfc_articles?.purchase_price_cents ?? null;
+    // The cost stamped on the count (the average at that moment, 0137); older counts: average, then purchase price.
+    const avg = m.kfc_articles?.avg_cost_cents ?? null;
+    const cost = m.unit_cost_cents ?? (avg !== null ? Number(avg) : m.kfc_articles?.purchase_price_cents ?? null);
     return {
       created_at: m.created_at, code: m.article_code, name: m.kfc_articles?.name ?? '', sku: m.kfc_articles?.sku ?? '', category: m.kfc_articles?.category ?? '',
       location: locationLabel(m.kfc_locations?.warehouse ?? null, m.kfc_locations?.shelf ?? null, m.kfc_locations?.box ?? null, m.kfc_locations?.kind ?? null),
       before: m.quantity_after === null ? null : m.quantity_after - m.delta, counted: m.quantity_after, difference: m.delta,
-      value_cents: cost === null ? null : cost * m.delta, batch: m.count_batch_id ? `Bulk ${m.count_batch_id.slice(0, 8)}` : 'Los', note: m.note ?? '',
+      value_cents: cost === null ? null : Math.round(cost * m.delta), batch: m.count_batch_id ? `Bulk ${m.count_batch_id.slice(0, 8)}` : 'Los', note: m.note ?? '',
     };
   });
   const plus = rows.filter((r) => Number(r.difference) > 0), minus = rows.filter((r) => Number(r.difference) < 0);
@@ -480,8 +489,8 @@ async function counts(p: ReportParams): Promise<ReportData> {
       { nl: 'Minder gevonden (stuks)', en: 'Missing (units)', value: -sum(minus, 'difference'), type: 'int', tone: minus.length ? 'warn' : undefined },
       { nl: 'Netto waarde verschil', en: 'Net difference value', value: sum(rows, 'value_cents'), type: 'money', money: true },
     ],
-    notes: [{ nl: 'Een telling zonder verschil maakt geen boeking en staat hier dus niet; de teldatum staat wel bij de bak. Waarde tegen de huidige inkoopprijs.',
-      en: 'A count without a difference books nothing and is not listed; the count date is kept on the bin. Valued at the current purchase price.' }],
+    notes: [{ nl: 'Een telling zonder verschil maakt geen boeking en staat hier dus niet; de teldatum staat wel bij de bak. Waarde tegen de gemiddelde kostprijs op het moment van tellen (oudere tellingen: huidige gemiddelde, anders inkoopprijs).',
+      en: 'A count without a difference books nothing and is not listed; the count date is kept on the bin. Valued at the average cost at the time of the count (older counts: current average, else purchase price).' }],
   };
 }
 
@@ -536,8 +545,8 @@ async function sales(p: ReportParams, mode: 'sales' | 'profit' | 'top'): Promise
         ? { nl: 'Aandeel in totale omzet', en: 'Share of total revenue', value: allRevenue ? Math.round(revenue / allRevenue * 1000) / 10 : null, type: 'pct', money: true }
         : { nl: 'Stuks verkocht', en: 'Units sold', value: sum(rows, 'quantity'), type: 'int' },
     ],
-    notes: [{ nl: 'Op leverdatum (verzending, kassabon of factuur), retouren verlagen aantal en omzet. Webshop: regeltotaal excl. btw; kassa/factuur: de factuurregel; anders schapprijs ÷ 1,21 (geschat). Kostprijs: kostprijs op de boeking, anders huidige inkoopprijs (geschat).',
-      en: 'By delivery date (shipment, till receipt or invoice); returns reduce units and revenue. Web shop: line total excl. VAT; till/invoice: the invoice line; otherwise shelf price ÷ 1.21 (estimated). Cost: cost on the movement, else current purchase price (estimated).' }],
+    notes: [{ nl: 'Op leverdatum (verzending, kassabon of factuur), retouren verlagen aantal en omzet. Webshop: regeltotaal excl. btw; kassa/factuur: de factuurregel; anders schapprijs ÷ 1,21 (geschat). Kostprijs: kostprijs op de boeking (vastgelegd bij de verkoop), anders huidige gemiddelde kostprijs of inkoopprijs (geschat).',
+      en: 'By delivery date (shipment, till receipt or invoice); returns reduce units and revenue. Web shop: line total excl. VAT; till/invoice: the invoice line; otherwise shelf price ÷ 1.21 (estimated). Cost: cost on the movement (fixed at the sale), else current average cost or purchase price (estimated).' }],
   };
 }
 
@@ -566,7 +575,8 @@ export const ARTICLE_COLUMNS: ReportColumn[] = [
   C('last_sold_at', 'Laatst verkocht', 'Last sold', 'date', { optional: true }), C('last_received_at', 'Laatst ontvangen', 'Last received', 'date', { optional: true }),
   C('last_counted_at', 'Laatst geteld', 'Last counted', 'date', { optional: true }),
   C('condition', 'Conditie', 'Condition', 'text', { optional: true }), C('tracking', 'Registratie', 'Tracking', 'text', { optional: true }),
-  C('purchase_price_cents', 'Inkoopprijs', 'Purchase price', 'money', { money: true }),
+  C('purchase_price_cents', 'Laatste inkoopprijs', 'Last purchase price', 'money', { money: true }),
+  C('avg_cost_cents', 'Gem. kostprijs', 'Average cost', 'money', { money: true, optional: true }),
   C('sale_price_cents', 'Verkoopprijs incl. btw', 'Sale price incl. VAT', 'money', { money: true }),
   C('margin_pct', 'Marge', 'Margin', 'pct', { money: true, optional: true }),
   C('stock_value_cents', 'Voorraadwaarde', 'Stock value', 'money', { money: true }),
@@ -703,7 +713,7 @@ export async function articleDetail(code: string, office: boolean) {
     .sort((a, b) => (b.po.ordered_at ?? b.po.created_at).localeCompare(a.po.ordered_at ?? a.po.created_at));
   const hideMoney = <T extends Record<string, unknown>>(row: T, keys: string[]): T => office ? row : Object.fromEntries(Object.entries(row).filter(([k]) => !keys.includes(k))) as T;
   return {
-    article: hideMoney(article as Overview, ['purchase_price_cents', 'sale_price_cents', 'stock_value_cents', 'margin_pct', 'last_po_cost_cents']) as Overview,
+    article: hideMoney(article as Overview, ['purchase_price_cents', 'avg_cost_cents', 'value_estimated', 'sale_price_cents', 'stock_value_cents', 'margin_pct', 'last_po_cost_cents']) as Overview,
     levels: ((levels.data ?? []) as unknown as Level[]).map((l) => ({
       ...l, location: locationLabel(l.kfc_locations?.warehouse ?? null, l.kfc_locations?.shelf ?? null, l.kfc_locations?.box ?? null, l.kfc_locations?.kind ?? null,
         l.kfc_locations?.technician_id ? vans.get(l.kfc_locations.technician_id) : undefined),

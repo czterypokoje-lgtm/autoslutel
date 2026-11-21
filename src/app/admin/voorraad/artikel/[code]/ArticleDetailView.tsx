@@ -91,9 +91,12 @@ export default function ArticleDetailView({ detail, office }: { detail: ArticleD
       </section>
 
       {office && (
-        <section className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6" aria-label={L('Prijzen en marge', 'Prices and margin')}>
-          <Kpi label={L('Inkoopprijs', 'Purchase price')} value={euro(a.purchase_price_cents, english)} tone={a.purchase_price_cents === null ? 'warn' : undefined}
+        <section className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-7" aria-label={L('Prijzen en marge', 'Prices and margin')}>
+          <Kpi label={L('Laatste inkoopprijs', 'Last purchase price')} value={euro(a.purchase_price_cents, english)} tone={a.purchase_price_cents === null ? 'warn' : undefined}
             foot={a.last_po_cost_cents !== null && a.last_po_cost_cents !== undefined ? `${L('Laatste inkooporder', 'Last PO')}: ${euro(a.last_po_cost_cents, english)}` : undefined} />
+          <Kpi label={L('Gem. kostprijs', 'Average cost')} value={euro(a.avg_cost_cents === null || a.avg_cost_cents === undefined ? null : Number(a.avg_cost_cents), english)}
+            tone={a.avg_cost_cents === null || a.avg_cost_cents === undefined ? 'warn' : undefined}
+            foot={a.avg_cost_cents === null || a.avg_cost_cents === undefined ? L('Onbekend: waarde op inkoopprijs', 'Unknown: valued at purchase price') : L('Waardering voorraad en verkopen', 'Values stock and sales')} />
           <Kpi label={L('Verkoopprijs incl. btw', 'Sale price incl. VAT')} value={euro(a.sale_price_cents, english)} foot={saleExcl !== null ? `${euro(saleExcl, english)} ${L('excl. btw', 'excl. VAT')}` : undefined} />
           <Kpi label={L('Marge op prijslijst', 'List margin')} value={a.margin_pct === null || a.margin_pct === undefined ? '—' : `${a.margin_pct}%`}
             foot={saleExcl !== null && a.purchase_price_cents !== null && a.purchase_price_cents !== undefined ? `${euro(saleExcl - a.purchase_price_cents, english)} ${L('per stuk', 'per unit')}` : undefined} />

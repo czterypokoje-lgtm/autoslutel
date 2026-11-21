@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { BRAND, WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireCrmUser } from '@/lib/crmSession';
-import { canUsePos, openSession, sessionSummary, type PosSummary } from '@/lib/kfcPos';
+import { canManagePos, canUsePos, openSession, sessionSummary, type PosSummary } from '@/lib/kfcPos';
 import Kassa from './Kassa';
 
 export const dynamic = 'force-dynamic';
@@ -34,8 +34,8 @@ export default async function KassaPage() {
         <p className="text-muted-foreground text-sm"><PreviewText>{"Scan, reken af en print de bon. Elke verkoop boekt de factuur, de voorraad en de betaling in één keer."}</PreviewText></p>
       </div>
       {error
-        ? <p className="text-destructive text-sm">{error}</p>
-        : <Kassa initial={summary} cashier={user.email ?? ''} />}
+        ? <p className="text-destructive text-sm" role="alert">{error}</p>
+        : <Kassa initial={summary} cashier={user.email ?? ''} office={canManagePos(user)} />}
     </>
   );
 }

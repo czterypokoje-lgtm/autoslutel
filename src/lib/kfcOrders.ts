@@ -151,22 +151,38 @@ export async function markPicked(lineId: string, picked: boolean): Promise<strin
 export async function shipOrder(id: string, key: string, user: CrmUser): Promise<{ writeback: 'done' | 'pending' }> {
   const { error } = await db().rpc('kfc_ship_order', { p_order: id, p_key: key, p_created_by: user.id });
   if (error) {
+    // 0138: the database refuses an order with a line that is not fully reserved and picked.
+    if (error.message.includes('KFC_NOT_PICKED')) throw new StockError(SHIP_NOT_PICKED, 409);
     if (error.message.includes('KFC_CENTRAL_STOCK_REQUIRED')) throw new StockError('Onvoldoende voorraad in het centrale magazijn.', 409);
     if (error.message.includes('KFC_NOT_PAID')) throw new StockError('Deze bestelling is niet betaald (status is niet processing).', 409);
     if (error.message.includes('KFC_STOCK_RESERVED_FOR_JOB')) throw new StockError('Voorraad is gereserveerd voor een klus.', 409);
     if (error.message.includes('KFC_NO_ORDER')) throw new StockError('Bestelling niet gevonden.', 404);
     throw new StockError(`Verzenden mislukt: ${error.message}`, 500);
   }
+  // The stock side is committed; from here on only the shop's status is at stake.
+  // Anything we cannot confirm is 'pending', so the nightly reconcile retries it.
   const order = await db().from('kfc_shop_orders').select('shop, woo_order_id, number').eq('id', id).single();
+  if (order.error || !order.data) {
+    console.error(`shipOrder ${id}: order not readable for the shop write-back`, order.error);
+    return { writeback: 'pending' };
+  }
   try {
     // Our own webshop sits in this same database: the write-back is a status update on public.orders.
-    if (order.data?.shop === OWN_SHOP) await pushOwnShipped(order.data.number);
-    else if (order.data && isWooShop(order.data.shop)) await pushCompleted(order.data.shop, order.data.woo_order_id);
+    if (order.data.shop === OWN_SHOP) await pushOwnShipped(order.data.number);
+    else if (isWooShop(order.data.shop)) await pushCompleted(order.data.shop, order.data.woo_order_id);
     return { writeback: 'done' };
-  } catch {
-    return { writeback: 'pending' }; // the nightly reconcile retries
+  } catch (writeback) {
+    console.error(`shipOrder ${id}: shop write-back for ${order.data.shop} #${order.data.number} failed`, writeback);
+    return { writeback: 'pending' };
   }
 }
+
+/**
+ * What the warehouse sees when the database refuses to ship (KFC_NOT_PICKED).
+ * OrderParts.tsx (a client component, so it cannot import this server-only
+ * module) keeps the same text to recognise it and refresh a stale screen.
+ */
+const SHIP_NOT_PICKED = 'Nog niet alles is gepickt. Pick eerst alle regels.';
 
 /** The dashboard's shape: the last `days` days of orders, as SampleOrder. */
 /**

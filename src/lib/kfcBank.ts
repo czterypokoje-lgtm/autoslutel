@@ -2,6 +2,7 @@ import 'server-only';
 import { createHash } from 'node:crypto';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { StockError } from '@/lib/kfcInventory';
+import { euroToCents } from '@/lib/money';
 import type { CrmUser } from '@/lib/crmSession';
 
 /*
@@ -21,7 +22,6 @@ export interface Suggestion { customer_id: string; company: string; invoice_entr
 const db = () => createSupabaseAdminClient();
 const PSP = /\b(mollie|stripe|paypal|adyen|buckaroo|multisafepay|pay\.nl|klarna|ideal)\b/i;
 const tag = (xml: string, name: string) => xml.match(new RegExp(`<${name}[^>]*>([^<]*)</${name}>`))?.[1]?.trim() ?? null;
-const cents = (text: string) => Math.round(Number(text.replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, '')) * 100);
 
 /** CAMT.053: one <Ntry> per line. Regex is enough for the fields we keep. */
 export function parseCamt053(xml: string): ParsedLine[] {
@@ -57,7 +57,13 @@ export function parseCsv(text: string): ParsedLine[] {
     const date = c[iDate] ?? '';
     const dmy = date.match(/^(\d{2})[-/](\d{2})[-/](\d{4})/);
     const booked = /^\d{4}-\d{2}-\d{2}/.test(date) ? date.slice(0, 10) : /^\d{8}$/.test(date) ? `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}` : dmy ? `${dmy[3]}-${dmy[2]}-${dmy[1]}` : '';
-    let amount = cents(c[iAmount] ?? '0');
+    /* One reading for both notations (src/lib/money.ts): "1.234,56" and
+       "1234.56". The old parser dropped every dot, so a dot-decimal export
+       booked € 1.234,56 as € 123.456,00. A dated row whose amount cannot be
+       read stops the import with its line number instead of being skipped. */
+    const typed = euroToCents(c[iAmount] ?? '', { signed: true });
+    if (Number.isNaN(typed) && booked) throw new StockError(`Regel ${index + 2}: het bedrag "${c[iAmount]}" is niet te lezen. Er is niets geïmporteerd.`);
+    let amount = typed === null || Number.isNaN(typed) ? 0 : typed;
     if (iSign >= 0 && /^(af|debet|d|debit)$/i.test(c[iSign] ?? '')) amount = -Math.abs(amount);
     const name = iName >= 0 ? c[iName] || null : null, desc = iDesc >= 0 ? c[iDesc] || null : null;
     const ref = (iRef >= 0 && c[iRef]) || createHash('sha1').update(`${booked}|${amount}|${name}|${desc}|${index}`).digest('hex').slice(0, 24);
@@ -116,6 +122,7 @@ export async function matchLine(lineId: string, customerId: string, invoiceEntry
   const { error } = await db().rpc('kfc_match_bank_line', { p_line: lineId, p_customer: customerId, p_key: key, p_created_by: user.id, p_allocations: allocations });
   if (error) {
     if (error.message.includes('KFC_NOT_A_RECEIPT')) throw new StockError('Alleen ontvangen bedragen kunnen aan een klant gekoppeld worden.', 409);
+    if (error.message.includes('KFC_PERIOD_LOCKED')) throw new StockError('Deze periode is afgesloten. Boek op een latere datum of laat de eigenaar de periode heropenen.', 409);
     throw new StockError(`Koppelen mislukt: ${error.message}`, 500);
   }
 }

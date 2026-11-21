@@ -40,6 +40,8 @@ test('S6: partial return books back what came back, never more than shipped, sal
 
   assert.match((await giveBack(1, 'early')).error?.message ?? '', /KFC_NOT_SHIPPED/, 'nothing can come back before it was shipped');
 
+  // 0138: an order ships only when every line is picked (the line was reserved by the allocate trigger on insert).
+  assert.equal((await db.rpc('kfc_pick_line', { p_line: lineId, p_picked: true })).error, null);
   const shipped = await db.rpc('kfc_ship_order', { p_order: orderId, p_key: `${tag}-ship` });
   assert.equal(shipped.error, null, shipped.error?.message);
   assert.equal(await level(), 0, 'all three left the shelf');

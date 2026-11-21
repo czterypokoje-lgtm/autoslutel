@@ -20,7 +20,7 @@ Nav: KfcShell → Overzicht → *Eigenaarsoverzicht*; Magazijn → Voorraad → 
 ## Data rules
 
 - **Sales line** (`kfc_sales_lines`): every `sale` / `return` move. Channel: `webshop` (order line), `kassa` (invoice + note `Kassa …`, as `kfc_pos_sale` writes it), `factuur` (other invoice), `overig` (manual booking). Revenue excl. VAT: web shop = order line `total_excl_cents` pro rata; invoice = the invoice line whose description is the article name or `name (SKU)`; otherwise shelf price ÷ 1.21 (flag `revenue_estimated`). Cost = move `unit_cost_cents`, else current purchase price (flag `cost_estimated`). Returns are negative lines. Date = move date (shipment / till / invoice booking).
-- **Stock value** = (physical − unusable, floored at 0) × current purchase price. Quarantine is not valued. Valuation on a date uses the last receipt/assembly unit cost up to that day.
+- **Stock value** = (physical − unusable, floored at 0) × moving average cost (`avg_cost_cents`, 0137; purchase price only when no average is known, flag `value_estimated`). Quarantine is not valued. Valuation on a date uses the average recorded on the last move up to that day (`avg_cost_after_cents`); for dates before 0137 the last receipt/assembly unit cost up to that day. Sales cost = the cost stamped on the move (see *Gemiddelde kostprijs* below).
 - **Stock state**: negatief (physical < 0), nul (= 0), laag (minimum > 0 and available ≤ sum of shelf minimums), else op voorraad.
 - **Supplier** of an article = supplier of its latest non-cancelled purchase order (`kfc_purchase_orders.supplier` is text today). If the cariler session (0130) introduces a supplier table, `kfc_article_overview.suppliers / last_supplier` is the place to switch.
 - **Till** (`kfc_pos_payments`, migration 0129 on `feat/kassa`) is read defensively: if the table is missing the dashboard says the till is not in use. Amounts there are incl. VAT.
@@ -29,6 +29,28 @@ Nav: KfcShell → Overzicht → *Eigenaarsoverzicht*; Magazijn → Voorraad → 
 ## Migration 0131
 
 Read-only, idempotent, server-only (no grants to anon / authenticated; select / execute for `service_role`): indexes on `kfc_stock_moves` (reason+time, invoice, order line, location+time, batch) and `kfc_articles` (category, status); views `kfc_sales_lines`, `kfc_article_overview`; functions `kfc_sales_report`, `kfc_article_movement`, `kfc_stock_valuation`, `kfc_stock_ledger`, `kfc_stock_ageing`, `kfc_article_totals`. The app calls the functions with `{ get: true }` (GET), so they also work on the read-only copy. **Not applied to any database from this branch** — apply with the normal migration flow after review. Until it is applied, the new screens show "Staat migratie 0131 … op deze database?" instead of crashing.
+
+## Gemiddelde kostprijs (migratie 0137)
+
+**Wat het is.** Elk artikel heeft een *gemiddelde kostprijs*: wat één stuk op de plank je gemiddeld gekost heeft. De voorraadwaarde is aantal × gemiddelde kostprijs. De *laatste inkoopprijs* blijft daarnaast bestaan en wordt nog gebruikt voor het bestelvoorstel, het vergelijken van leveranciers en de "marge op prijslijst".
+
+**Wanneer het verandert.** Alleen als er stuks binnenkomen met een bekende kostprijs:
+
+- ontvangst op een inkooporder met prijs, montage (onderdelen + arbeid), retour van een klant tegen de oorspronkelijke kostprijs;
+- nieuw gemiddelde = (voorraad × oud gemiddelde + aantal × kostprijs) ÷ (voorraad + aantal). Voorraad = alle locaties samen, ook quarantaine en bussen;
+- staat de voorraad op 0 of lager, dan wordt het gemiddelde gewoon de kostprijs van deze ontvangst.
+
+Het gemiddelde verandert **niet** bij verkoop, uitgifte, afschrijving, verplaatsen tussen locaties of een telverschil. Een ontvangst zónder prijs verandert het gemiddelde ook niet (de stuks tellen mee tegen het huidige gemiddelde). Een inkoopfactuur die achteraf een andere prijs zet, past alleen de laatste inkoopprijs aan, niet het gemiddelde.
+
+**Wat er op de boeking staat.** Een verkoop, uitgifte, verplaatsing of telling zonder eigen kostprijs krijgt de gemiddelde kostprijs van dat moment (afgerond op centen) op de boeking. Is er nog geen gemiddelde bekend, dan blijft de kostprijs leeg (nooit € 0) en tonen de rapporten "geschat".
+
+**Gevolg voor de marge.** De kostprijs van een verkoop wordt vastgelegd op het moment van verkopen. Verandert de inkoopprijs later, dan blijven de marges van eerdere verkopen gelijk. Dit geldt voor verkopen geboekt ná migratie 0137; oudere verkopen zonder kostprijs op de boeking worden nog steeds geschat met het huidige gemiddelde (of de inkoopprijs) en zijn als "geschat" gemarkeerd.
+
+Let op: de webshopverzending en de uitgifte aan klussen geven zelf de *laatste inkoopprijs* mee als kostprijs; die blijft staan. Alleen de kassa en handmatige boekingen zonder bedrag krijgen het gemiddelde.
+
+**Startwaarde.** Bij het toepassen van 0137 krijgt elk artikel één keer de laatste inkoopprijs als startgemiddelde. Artikelen die later worden aangemaakt hebben pas een gemiddelde na hun eerste ontvangst met prijs.
+
+**Waar je het ziet.** Artikelpagina: "Gem. kostprijs" naast "Laatste inkoopprijs" (alleen voor rollen die prijzen zien). Artikellijst: kolom "Gem. kostprijs" (kolomkiezer). Voorraadstand, voorraadwaarde op datum, ouderdom, telverschillen en het eigenaarsoverzicht rekenen met het gemiddelde.
 
 ## Not done / follow-ups
 

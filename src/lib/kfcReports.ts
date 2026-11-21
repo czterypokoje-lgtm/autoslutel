@@ -30,13 +30,16 @@ export async function reports() {
     fetchAll<Sale>((a, b) => db.from('kfc_stock_moves').select('delta, unit_cost_cents, created_at, order_line_id, reason').in('reason', ['sale', 'return']).not('order_line_id', 'is', null).gte('created_at', since).order('id').range(a, b)),
     fetchAll<Line>((a, b) => db.from('kfc_shop_order_lines').select('id, order_id, sku, name, total_excl_cents').order('id').range(a, b)),
     fetchAll<{ id: string; shop: string; number: string }>((a, b) => db.from('kfc_shop_orders').select('id, shop, number').order('id').range(a, b)),
-    fetchAll<Record<string, unknown>>((a, b) => db.from('kfc_stock_levels').select('article_code, quantity, kfc_articles (purchase_price_cents, name, sku), kfc_locations (kind)').order('article_code').range(a, b)),
-    db.from('kfc_customer_balance').select('open_cents, overdue_cents, not_due, d1_30, d31_60, d61_90, d90p'),
+    fetchAll<Record<string, unknown>>((a, b) => db.from('kfc_stock_levels').select('article_code, quantity, kfc_articles (purchase_price_cents, avg_cost_cents, name, sku), kfc_locations (kind)').order('article_code').range(a, b)),
+    // Paged and checked like the rest: a failed or cut-off read would report the debtors as € 0.
+    fetchAll<{ open_cents: number; overdue_cents: number; not_due: number; d1_30: number; d31_60: number; d61_90: number; d90p: number }>((a, b) =>
+      db.from('kfc_customer_balance').select('customer_id, open_cents, overdue_cents, not_due, d1_30, d31_60, d61_90, d90p').order('customer_id').range(a, b)),
     db.from('kfc_articles').select('code', { count: 'exact', head: true }),
     fetchAll<{ article_code: string }>((a, b) => db.from('kfc_stock_moves').select('article_code').eq('reason', 'sale').gte('created_at', new Date(Date.now() - 90 * 864e5).toISOString()).order('id').range(a, b)),
     fetchAll<Refund>((a, b) => db.from('kfc_shop_order_refunds').select('id, order_id, amount_cents, created_at, raw')
       .or(`created_at.is.null,created_at.gte.${since}`).order('id').range(a, b)),
   ]);
+  if (articles.error) throw new Error(`Artikelen tellen mislukt: ${articles.error.message}`);
   const orderOf = new Map(orders.map((order) => [order.id, order]));
   const lineOf = new Map(lines.map((l) => [l.id, l]));
   const margin = new Map<string, MarginRow>();
@@ -76,17 +79,19 @@ export async function reports() {
   }).sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
   const sold = new Set(recent.map((r) => r.article_code));
   const perArticle = new Map<string, { quantity: number; price: number | null; name: string; sku: string }>();
-  for (const row of levels as unknown as { article_code: string; quantity: number; kfc_articles: { purchase_price_cents: number | null; name: string; sku: string } | null; kfc_locations: { kind: string } | null }[]) {
+  for (const row of levels as unknown as { article_code: string; quantity: number; kfc_articles: { purchase_price_cents: number | null; avg_cost_cents: number | null; name: string; sku: string } | null; kfc_locations: { kind: string } | null }[]) {
     if (row.kfc_locations?.kind !== 'shelf' || row.quantity <= 0) continue;
-    const a = perArticle.get(row.article_code) ?? { quantity: 0, price: row.kfc_articles?.purchase_price_cents ?? null, name: row.kfc_articles?.name ?? row.article_code, sku: row.kfc_articles?.sku ?? '' };
+    // Stock is valued at the moving average cost (0137); the last purchase price only when no average is known.
+    const avg = row.kfc_articles?.avg_cost_cents ?? null;
+    const a = perArticle.get(row.article_code) ?? { quantity: 0, price: avg !== null ? Number(avg) : row.kfc_articles?.purchase_price_cents ?? null, name: row.kfc_articles?.name ?? row.article_code, sku: row.kfc_articles?.sku ?? '' };
     a.quantity += row.quantity; perArticle.set(row.article_code, a);
   }
   let value = 0, unpriced = 0, deadUnits = 0; const dead: { code: string; sku: string; name: string; quantity: number }[] = [];
   for (const [code, a] of perArticle) {
-    if (a.price === null) unpriced++; else value += a.quantity * a.price;
+    if (a.price === null) unpriced++; else value += Math.round(a.quantity * a.price);
     if (!sold.has(code)) { deadUnits += a.quantity; dead.push({ code, sku: a.sku, name: a.name, quantity: a.quantity }); }
   }
-  const aging = (balances.data ?? []).reduce((s, b) => ({ open: s.open + b.open_cents, overdue: s.overdue + b.overdue_cents, not_due: s.not_due + b.not_due, d1_30: s.d1_30 + b.d1_30, d31_60: s.d31_60 + b.d31_60, d61_90: s.d61_90 + b.d61_90, d90p: s.d90p + b.d90p }), { open: 0, overdue: 0, not_due: 0, d1_30: 0, d31_60: 0, d61_90: 0, d90p: 0 });
+  const aging = balances.reduce((s, b) => ({ open: s.open + b.open_cents, overdue: s.overdue + b.overdue_cents, not_due: s.not_due + b.not_due, d1_30: s.d1_30 + b.d1_30, d31_60: s.d31_60 + b.d31_60, d61_90: s.d61_90 + b.d61_90, d90p: s.d90p + b.d90p }), { open: 0, overdue: 0, not_due: 0, d1_30: 0, d31_60: 0, d61_90: 0, d90p: 0 });
   return {
     refundDetails, sales,
     margin: [...margin.values()].sort((a, b) => b.month.localeCompare(a.month) || a.shop.localeCompare(b.shop)),

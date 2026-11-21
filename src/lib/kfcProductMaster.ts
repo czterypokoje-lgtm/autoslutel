@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { IS_KEYFORCARS } from '@/config/install';
 import { ARTICLE_CODE } from '@/lib/stockCatalog';
+import { euroToCents } from '@/lib/money';
 import type { CrmUser } from '@/lib/crmSession';
 
 /*
@@ -324,14 +325,14 @@ function readSheet(bytes: Buffer, fileName: string): string[][] {
 
 /** "€ 1.234,56", "12,5", "12.50", 12.5 → cents. Empty → undefined (keep). */
 export function parseMoney(raw: string): number | undefined | 'bad' {
-  let s = raw.replace(/[€\s]/g, '').replace(/^eur/i, '');
-  if (!s) return undefined;
-  const comma = s.lastIndexOf(','), dot = s.lastIndexOf('.');
-  if (comma > -1 && dot > -1) s = comma > dot ? s.replace(/\./g, '').replace(',', '.') : s.replace(/,/g, '');
-  else if (comma > -1) s = s.replace(',', '.');
-  if (!/^\d+(\.\d+)?$/.test(s)) return 'bad';
-  const cents = Math.round(Number(s) * 100);
-  return cents <= 2147483647 ? cents : 'bad';
+  /* The shared reading (src/lib/money.ts). In a file "1.500" is refused, not
+     guessed: it used to import as € 1,50 where the sheet meant € 1.500. */
+  let cents = euroToCents(raw, { dutchThousands: false });
+  if (cents === null) return undefined;
+  // A computed spreadsheet cell (cost × 1,21 → 14.990000000000002) is a number, not a typed amount: round it.
+  const computed = raw.trim();
+  if (Number.isNaN(cents) && /^\d+\.\d{4,}$/.test(computed)) cents = Math.round(Number(computed) * 100);
+  return Number.isNaN(cents) || cents > 2147483647 ? 'bad' : cents;
 }
 
 const STATUS_WORDS: Record<string, ArticleStatus> = {

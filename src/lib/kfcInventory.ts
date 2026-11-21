@@ -45,6 +45,16 @@ const RPC_MESSAGES: Record<string, [string, number]> = {
   KFC_UNKNOWN_ARTICLE: ['Onbekend artikel.', 400],
   KFC_BAD_LABOUR: ['Controleer het arbeidsloon.', 400],
   kfc_count_photos_pkey: ['Een of meer foto\'s zijn al eerder geteld. Haal ze uit de selectie.', 409],
+  // Purchase order close (0139).
+  KFC_PO_NOT_ORDERED: ['Alleen een bestelde inkooporder kan worden afgesloten.', 409],
+  KFC_PO_REASON_REQUIRED: ['Geef een reden voor het afsluiten.', 400],
+  KFC_PO_FULLY_RECEIVED: ['Alles is al ontvangen; deze order hoeft niet afgesloten te worden.', 409],
+  KFC_PO_NOT_FOUND: ['Inkooporder niet gevonden.', 404],
+  KFC_PO_CLOSED: ['Deze inkooporder is afgesloten; er kan niets meer op ontvangen worden.', 409],
+  KFC_PO_CANCELLED: ['Deze inkooporder is geannuleerd; er kan niets op ontvangen worden.', 409],
+  // Raised by other migrations; listed here so their errors read well everywhere.
+  KFC_NOT_PICKED: ['Nog niet alles is gepickt. Pick eerst alle regels.', 409],
+  KFC_PERIOD_LOCKED: ['Deze periode is afgesloten. Boek op een latere datum of laat de eigenaar de periode heropenen.', 409],
 };
 
 export class StockError extends Error {
@@ -513,15 +523,18 @@ export async function kfcPost(input: Record<string, unknown>): Promise<Response>
 
 export interface PurchaseLine { photos: number[]; id: string; article_code: string; name: string; sku: string; quantity: number; received: number; unit_cost_cents: number | null }
 export interface PurchaseOrder {
-  id: string; supplier: string; supplier_id: string | null; status: 'draft' | 'ordered' | 'received' | 'cancelled'; expected_on: string | null;
+  id: string; supplier: string; supplier_id: string | null; status: PurchaseOrderStatus; expected_on: string | null;
   note: string | null; created_at: string; ordered_at: string | null; received_at: string | null; lines: PurchaseLine[];
   /** The supplier's invoice number, and whether its PDF/photo is attached (0111). */
   invoice_ref: string | null; document_type: string | null;
+  /** Closed short (0139): the rest will not come. Lines keep ordered and received. */
+  closed_at: string | null; close_reason: string | null;
 }
+export type PurchaseOrderStatus = 'draft' | 'ordered' | 'received' | 'cancelled' | 'closed';
 
 export async function listPurchaseOrders(user: CrmUser): Promise<PurchaseOrder[]> {
   const { data, error } = await admin().from('kfc_purchase_orders')
-    .select('id, supplier, supplier_id, status, expected_on, note, created_at, ordered_at, received_at, invoice_ref, document_type, kfc_purchase_order_lines (id, article_code, quantity, received, unit_cost_cents, kfc_stock_moves(id,kfc_receipt_photos(move_id)), kfc_articles (name, sku))')
+    .select('id, supplier, supplier_id, status, expected_on, note, created_at, ordered_at, received_at, invoice_ref, document_type, closed_at, close_reason, kfc_purchase_order_lines (id, article_code, quantity, received, unit_cost_cents, kfc_stock_moves(id,kfc_receipt_photos(move_id)), kfc_articles (name, sku))')
     .order('created_at', { ascending: false }).limit(200);
   if (error) throw new StockError(`Inkooporders lezen mislukt: ${error.message}`, 500);
   const prices = seesPurchasePrices(user);
@@ -531,6 +544,7 @@ export async function listPurchaseOrders(user: CrmUser): Promise<PurchaseOrder[]
       id: row.id, supplier: row.supplier, supplier_id: row.supplier_id ?? null, status: row.status, expected_on: row.expected_on, note: row.note,
       created_at: row.created_at, ordered_at: row.ordered_at, received_at: row.received_at,
       invoice_ref: row.invoice_ref ?? null, document_type: row.document_type ?? null,
+      closed_at: row.closed_at ?? null, close_reason: row.close_reason ?? null,
       lines: lines.map((line) => ({
         photos: line.kfc_stock_moves.filter(move => move.kfc_receipt_photos?.move_id).map(move => move.id), id: line.id, article_code: line.article_code, name: line.kfc_articles?.name ?? line.article_code, sku: line.kfc_articles?.sku ?? '',
         quantity: line.quantity, received: line.received, unit_cost_cents: prices ? line.unit_cost_cents : null,
@@ -601,6 +615,19 @@ export async function setPurchaseOrderStatus(id: string, status: 'ordered' | 'ca
   const { error } = await db.from('kfc_purchase_orders')
     .update(status === 'ordered' ? { status, ordered_at: new Date().toISOString() } : { status }).eq('id', id);
   if (error) throw new StockError(`Status wijzigen mislukt: ${error.message}`, 500);
+}
+
+/**
+ * Close an ordered purchase order short (0139): the supplier will not deliver
+ * the rest. What was received stays; the rest stops counting as incoming.
+ * Calling it again on a closed order is a quiet no-op.
+ */
+export async function closePurchaseOrder(id: string, reason: string, user: CrmUser): Promise<void> {
+  const text = reason.trim();
+  if (!text) throw new StockError(RPC_MESSAGES.KFC_PO_REASON_REQUIRED[0], 400);
+  if (text.length > 500) throw new StockError('De reden is te lang (max. 500 tekens).');
+  const { error } = await admin().rpc('kfc_close_purchase_order', { p_po: id, p_reason: text, p_user: user.id });
+  if (error) throw rpcError(error);
 }
 
 // ---------------------------------------------------------------------------

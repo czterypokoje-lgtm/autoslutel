@@ -1,6 +1,7 @@
 import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { StockError } from '@/lib/kfcInventory';
+import { fetchAll } from '@/lib/kfcOrders';
 import type { CrmUser } from '@/lib/crmSession';
 import { ACCOUNT_PROBLEMS, accountProblem, normalizeIban, normalizeKvk, normalizePostcode, normalizeVat } from '@/lib/accountValidation';
 
@@ -24,12 +25,18 @@ const db = () => createSupabaseAdminClient();
 const COLS = 'id, company, contact_name, email, phone, vat_number, street, postcode, city, country, terms_days, credit_limit_cents, reverse_charge, note, created_at, account_kind, kvk, invoice_email, iban, bic, website';
 
 export async function listCustomers(filter: { q?: string; overdue?: boolean } = {}): Promise<(Customer & Balance)[]> {
-  let query = db().from('kfc_customers').select(COLS).is('merged_into', null).is('anonymised_at', null).order('company');
-  if (filter.q) query = query.ilike('company', `%${filter.q.replace(/[%_]/g, '')}%`);
-  const [customers, balances] = await Promise.all([query, db().from('kfc_customer_balance').select('*')]);
-  if (customers.error) throw new StockError(`Klanten lezen mislukt: ${customers.error.message}`, 500);
-  const byId = new Map((balances.data ?? []).map((b) => [b.customer_id, b]));
-  const rows = (customers.data as Customer[]).map((c) => ({ ...c, ...(byId.get(c.id) ?? { open_cents: 0, overdue_cents: 0, not_due: 0, d1_30: 0, d31_60: 0, d61_90: 0, d90p: 0, oldest_overdue: null, last_entry: null }) }));
+  const q = filter.q?.replace(/[%_]/g, '');
+  /* Paged and checked: PostgREST stops at 1,000 rows, and a customer missing
+     from the balances (cut off, or the read failed) would show as "owes € 0". */
+  const [customers, balances] = await Promise.all([
+    fetchAll<Customer>((a, b) => {
+      const query = db().from('kfc_customers').select(COLS).is('merged_into', null).is('anonymised_at', null);
+      return (q ? query.ilike('company', `%${q}%`) : query).order('company').order('id').range(a, b);
+    }),
+    fetchAll<Balance & { customer_id: string }>((a, b) => db().from('kfc_customer_balance').select('*').order('customer_id').range(a, b)),
+  ]);
+  const byId = new Map(balances.map((b) => [b.customer_id, b]));
+  const rows = customers.map((c) => ({ ...c, ...(byId.get(c.id) ?? { open_cents: 0, overdue_cents: 0, not_due: 0, d1_30: 0, d31_60: 0, d61_90: 0, d90p: 0, oldest_overdue: null, last_entry: null }) }));
   return filter.overdue ? rows.filter((r) => r.overdue_cents > 0).sort((a, b) => (a.oldest_overdue ?? '').localeCompare(b.oldest_overdue ?? '')) : rows;
 }
 
@@ -42,6 +49,10 @@ export async function getCustomer(id: string): Promise<{ customer: Customer; bal
   ]);
   if (customer.error) throw new StockError(`Klant lezen mislukt: ${customer.error.message}`, 500);
   if (!customer.data) return null;
+  // A failed read must not look like a clean account: no ledger, € 0 open, nothing overdue.
+  for (const [result, label] of [[balance, 'Saldo'], [ledger, 'Rekeningoverzicht'], [invoices, 'Open facturen']] as const) {
+    if (result.error) throw new StockError(`${label} lezen mislukt: ${result.error.message}`, 500);
+  }
   const open = new Map((invoices.data ?? []).map((i) => [i.entry_id, i.open_cents]));
   let running = 0;
   const entries: Entry[] = (ledger.data ?? []).map((row) => {
@@ -106,6 +117,7 @@ export async function postEntry(input: { customer: string; type: Exclude<EntryTy
   });
   if (error) {
     if (error.message.includes('KFC_BAD_AMOUNT')) throw new StockError('Het bedrag moet groter dan nul zijn.');
+    if (error.message.includes('KFC_PERIOD_LOCKED')) throw new StockError('Deze periode is afgesloten. Boek op een latere datum of laat de eigenaar de periode heropenen.', 409);
     throw new StockError(`Boeken mislukt: ${error.message}`, 500);
   }
   return data as number;
@@ -116,6 +128,7 @@ export async function reverseEntry(entryId: number, key: string, user: CrmUser, 
   if (error) {
     if (error.message.includes('KFC_ALREADY_REVERSED')) throw new StockError('Deze boeking is al tegengeboekt.', 409);
     if (error.message.includes('KFC_NO_ENTRY')) throw new StockError('Boeking niet gevonden.', 404);
+    if (error.message.includes('KFC_PERIOD_LOCKED')) throw new StockError('Deze periode is afgesloten. Boek op een latere datum of laat de eigenaar de periode heropenen.', 409);
     throw new StockError(`Tegenboeken mislukt: ${error.message}`, 500);
   }
 }

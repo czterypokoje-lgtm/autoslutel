@@ -168,8 +168,11 @@ export async function openReturns(days = 120): Promise<OpenReturn[]> {
       db().from('kfc_shop_orders').select('id, shop, number').in('id', chunk),
       db().from('kfc_shop_order_lines').select('id, order_id, woo_line_id, sku, name').in('order_id', chunk),
     ]);
+    // A failed read must not show as "Niets openstaand".
+    if (orders.error || lines.error) throw new StockError('Retouren lezen mislukt.', 500);
     const lineIds = (lines.data ?? []).map((line) => line.id);
-    const moves = lineIds.length ? await db().from('kfc_stock_moves').select('order_line_id, delta').in('order_line_id', lineIds).eq('reason', 'return') : { data: [] };
+    const moves = lineIds.length ? await db().from('kfc_stock_moves').select('order_line_id, delta').in('order_line_id', lineIds).eq('reason', 'return') : { data: [], error: null };
+    if (moves.error) throw new StockError('Retourboekingen lezen mislukt.', 500);
     const returned = new Map<string, number>();
     for (const move of moves.data ?? []) returned.set(move.order_line_id, (returned.get(move.order_line_id) ?? 0) + move.delta);
     for (const order of orders.data ?? []) {

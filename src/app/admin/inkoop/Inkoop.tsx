@@ -7,6 +7,8 @@ import { Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -14,12 +16,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { PurchaseOrder } from '@/lib/kfcInventory';
 import Link from 'next/link';
 import { SupplierDialog } from '@/app/admin/leveranciers/shared';
+import { euroToCents } from '@/lib/money';
 
 const api = '/api/admin/inkoop';
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 const STATUS: Record<PurchaseOrder['status'], [string, 'default' | 'secondary' | 'outline' | 'destructive']> = {
   draft: ['Concept', 'outline'], ordered: ['Besteld', 'default'], received: ['Ontvangen', 'secondary'], cancelled: ['Geannuleerd', 'destructive'],
+  closed: ['Afgesloten', 'secondary'],
 };
+/** Phone: 16 px text (no iOS zoom) and 44 px touch targets; compact again from sm up. */
+const TOUCH = 'h-11 text-base sm:h-9 sm:text-sm';
 type CatalogItem = { tracking?: string; cost?: string; id: string; name: string; sku: string };
 type DraftLine = { article: string; label: string; quantity: string; cost: string };
 type SupplierOption = { id: string; name: string; terms_days: number; lead_time_days: number | null; active: boolean; city: string | null };
@@ -47,11 +53,12 @@ export default function Inkoop({ orders, canEdit, initialSupplier = '' }: { orde
   }
 
   const open = orders.filter((o) => o.status === 'draft' || o.status === 'ordered');
-  const closed = orders.filter((o) => o.status === 'received' || o.status === 'cancelled');
+  // Finished: received in full, cancelled as a draft, or closed short (0139).
+  const closed = orders.filter((o) => o.status === 'received' || o.status === 'cancelled' || o.status === 'closed');
 
   return (
     <div className="flex flex-col gap-6">
-      {error && <p className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
+      {error && <p role="alert" className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
       {canEdit && <NewOrder initialSupplier={initialSupplier} onSaved={() => router.refresh()} />}
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">Open <span className="text-muted-foreground font-normal">· {open.length}</span></h2>
@@ -112,6 +119,110 @@ function InvoiceBox({ order, office, busy, run }: { order: PurchaseOrder; office
   );
 }
 
+/** Cancelling a draft used to fire on the first tap; now it asks first. */
+function CancelDraft({ order, busy, run }: { order: PurchaseOrder; busy: boolean; run: (key: string, body: unknown) => Promise<boolean> }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline" disabled={busy}><PreviewText>{"Annuleer"}</PreviewText></Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle><PreviewText>{"Concept annuleren?"}</PreviewText></DialogTitle>
+          <DialogDescription>{order.supplier} · {order.lines.length} {order.lines.length === 1 ? 'regel' : 'regels'}. <PreviewText>{"Het concept wordt geannuleerd en kan daarna niet meer besteld of ontvangen worden."}</PreviewText></DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="gap-2">
+          <Button type="button" variant="outline" className={TOUCH} onClick={() => setOpen(false)}><PreviewText>{"Terug"}</PreviewText></Button>
+          {/* A failure shows in the page's role="alert" line, so the dialog closes either way. */}
+          <Button type="button" variant="destructive" className={TOUCH} disabled={busy}
+            onClick={async () => { await run(order.id, { action: 'status', id: order.id, status: 'cancelled' }); setOpen(false); }}>
+            <PreviewText>{"Ja, annuleer concept"}</PreviewText>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/**
+ * Close an ordered order short (0139): the supplier will not send the rest.
+ * Shows per line what was ordered, received and what will not come, and asks why.
+ */
+function CloseShort({ order }: { order: PurchaseOrder }) {
+  const { t } = usePreviewLanguage();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [problem, setProblem] = useState('');
+  const rest = order.lines.reduce((sum, line) => sum + Math.max(line.quantity - line.received, 0), 0);
+  const received = order.lines.reduce((sum, line) => sum + line.received, 0);
+  // Posts directly (not via run) so a refusal shows inside the dialog, next to the reason.
+
+  async function confirm(e: React.FormEvent) {
+    e.preventDefault();
+    if (!reason.trim()) { setProblem(t('Geef een reden voor het afsluiten.')); return; }
+    setSaving(true); setProblem('');
+    const error = await post({ action: 'close', id: order.id, reason: reason.trim() });
+    setSaving(false);
+    if (error) { setProblem(error); return; }
+    setOpen(false); setReason('');
+    router.refresh();
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(next) => { setOpen(next); if (!next) setProblem(''); }}>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline" className={TOUCH} disabled={saving}><PreviewText>{"Sluit order af (rest komt niet)"}</PreviewText></Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle><PreviewText>{"Order afsluiten"}</PreviewText> · {order.supplier}</DialogTitle>
+          <DialogDescription>
+            {received > 0
+              ? <PreviewText>{"Wat ontvangen is blijft op voorraad. De rest telt niet meer als onderweg en er kan niets meer op deze order ontvangen worden."}</PreviewText>
+              : <PreviewText>{"Er is nog niets ontvangen. De hele order telt niet meer als onderweg en er kan niets meer op ontvangen worden."}</PreviewText>}
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={confirm} className="grid gap-4">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead><PreviewText>{"Artikel"}</PreviewText></TableHead>
+                <TableHead className="text-right"><PreviewText>{"Besteld"}</PreviewText></TableHead>
+                <TableHead className="text-right"><PreviewText>{"Ontvangen"}</PreviewText></TableHead>
+                <TableHead className="text-right"><PreviewText>{"Komt niet"}</PreviewText></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {order.lines.map((line) => (
+                <TableRow key={line.id}>
+                  <TableCell className="max-w-40 truncate"><PreviewProductName sku={line.sku}>{line.name}</PreviewProductName></TableCell>
+                  <TableCell className="text-right tabular-nums">{line.quantity}</TableCell>
+                  <TableCell className="text-right tabular-nums">{line.received}</TableCell>
+                  <TableCell className="text-right font-medium tabular-nums">{Math.max(line.quantity - line.received, 0)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <p className="text-sm"><PreviewText>{"Totaal dat niet komt"}</PreviewText>: <span className="font-medium tabular-nums">{rest}</span></p>
+          <div className="grid gap-1.5">
+            <Label htmlFor={`close-reason-${order.id}`}><PreviewText>{"Reden (verplicht)"}</PreviewText></Label>
+            <Textarea id={`close-reason-${order.id}`} required maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)}
+              className="min-h-20 text-base sm:text-sm" placeholder={t('Bijv. leverancier heeft de rest geannuleerd, niet meer leverbaar')} aria-invalid={!!problem || undefined} />
+          </div>
+          {problem && <p role="alert" className="text-destructive text-sm"><PreviewText>{problem}</PreviewText></p>}
+          <DialogFooter className="gap-2">
+            <Button type="button" variant="outline" className={TOUCH} onClick={() => setOpen(false)}><PreviewText>{"Terug"}</PreviewText></Button>
+            <Button type="submit" className={TOUCH} disabled={saving || !reason.trim()}><PreviewText>{"Order afsluiten"}</PreviewText></Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function Order({ order, canEdit, office, busy, run }: { order: PurchaseOrder; canEdit: boolean; office: boolean; busy: string; run: (key: string, body: unknown) => Promise<boolean> }) {
   const { english, t } = usePreviewLanguage();
   const day = new Intl.DateTimeFormat(english ? 'en-GB' : 'nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/Amsterdam' });
@@ -129,13 +240,23 @@ function Order({ order, canEdit, office, busy, run }: { order: PurchaseOrder; ca
         <CardTitle className="text-base">{office && order.supplier_id ? <Link className="underline-offset-4 hover:underline" href={`/admin/leveranciers/${order.supplier_id}`}>{order.supplier}</Link> : order.supplier}</CardTitle>
         <Badge variant={variant}>{t(label)}</Badge>
         <CardDescription>
-          {order.status === 'ordered' && order.expected_on ? `${english ? "expected" : "verwacht"} ${day.format(new Date(order.expected_on))}` : `${english ? "created" : "aangemaakt"} ${day.format(new Date(order.created_at))}`}
+          {order.status === 'closed' && order.closed_at
+            ? `${english ? "closed" : "afgesloten"} ${day.format(new Date(order.closed_at))}`
+            : order.status === 'ordered' && order.expected_on ? `${english ? "expected" : "verwacht"} ${day.format(new Date(order.expected_on))}` : `${english ? "created" : "aangemaakt"} ${day.format(new Date(order.created_at))}`}
           {order.note && ` · ${order.note}`}
         </CardDescription>
+        {order.status === 'closed' && order.close_reason && (
+          <p className="text-muted-foreground w-full text-sm"><PreviewText>{"Reden afsluiten"}</PreviewText>: {order.close_reason}</p>
+        )}
         {canEdit && order.status === 'draft' && (
           <div className="ml-auto flex gap-2">
             <Button size="sm" disabled={busy === order.id} onClick={() => run(order.id, { action: 'status', id: order.id, status: 'ordered' })}><PreviewText>{"Markeer als besteld"}</PreviewText></Button>
-            <Button size="sm" variant="outline" disabled={busy === order.id} onClick={() => run(order.id, { action: 'status', id: order.id, status: 'cancelled' })}><PreviewText>{"Annuleer"}</PreviewText></Button>
+            <CancelDraft order={order} busy={busy === order.id} run={run} />
+          </div>
+        )}
+        {canEdit && order.status === 'ordered' && (
+          <div className="ml-auto flex gap-2">
+            <CloseShort order={order} />
           </div>
         )}
         <InvoiceBox order={order} office={office} busy={busy} run={run} />
@@ -161,7 +282,11 @@ function Order({ order, canEdit, office, busy, run }: { order: PurchaseOrder; ca
                   <TableCell>{line.sku}</TableCell>
                   <TableCell className="text-right tabular-nums">{line.quantity}</TableCell>
                   <TableCell className="text-right tabular-nums">{line.received}</TableCell>
-                  <TableCell className="text-right tabular-nums">{openQty}</TableCell>
+                  <TableCell className="text-right tabular-nums">
+                    {order.status === 'closed' && openQty > 0
+                      ? <span className="text-muted-foreground" title={t('Komt niet meer: order afgesloten')}>0 <span className="text-xs">({openQty} {t('komt niet')})</span></span>
+                      : openQty}
+                  </TableCell>
                   {showCost && <TableCell className="text-right tabular-nums">{line.unit_cost_cents === null ? '—' : MONEY.format(line.unit_cost_cents / 100)}</TableCell>}
                   {order.status === 'ordered' && (
                     <TableCell>
@@ -293,9 +418,12 @@ function NewOrder({ onSaved, initialSupplier }: { onSaved: () => void; initialSu
   async function save(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true); setError('');
+    // An unreadable price used to travel as "no price" and be saved without a word (src/lib/money.ts).
+    const costs = lines.map((line) => euroToCents(line.cost));
+    if (costs.some((cost) => Number.isNaN(cost))) { setBusy(false); setError('Controleer de inkoopprijs: typ bijvoorbeeld 12,50.'); return; }
     const problem = await post({
       action: 'create', supplier_id: supplierId, supplier: suppliers.find((s) => s.id === supplierId)?.name ?? '', expected_on: expected || null, note, invoice_ref: invoiceRef,
-      lines: lines.map((line) => ({ article: line.article, quantity: Number(line.quantity), unit_cost_cents: line.cost === '' ? null : Math.round(Number(line.cost.replace(',', '.')) * 100) })),
+      lines: lines.map((line, index) => ({ article: line.article, quantity: Number(line.quantity), unit_cost_cents: costs[index] })),
     });
     setBusy(false);
     if (problem) { setError(problem); return; }
@@ -364,7 +492,7 @@ function NewOrder({ onSaved, initialSupplier }: { onSaved: () => void; initialSu
               </TableBody>
             </Table>
           )}
-          {error && <p className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
+          {error && <p role="alert" className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
           <div><Button disabled={busy || lines.length === 0 || !supplierId}><PreviewText>{"Concept opslaan"}</PreviewText></Button></div>
         </form>
       </CardContent>
@@ -427,7 +555,7 @@ function QuickArticle({ draft, onClose, onCreated }: { draft: { name: string; sk
             </div>
             {form.condition === 'used' && <p className="text-muted-foreground text-xs"><PreviewText>{"Tweedehands krijgt een eigen kaart en een eigen intern etiket, ook zonder barcode."}</PreviewText></p>}
           </fieldset>
-          {error && <p className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
+          {error && <p role="alert" className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
           <div className="flex gap-2">
             <Button disabled={busy}><PreviewText>{"Artikel toevoegen"}</PreviewText></Button>
             <Button type="button" variant="outline" onClick={onClose}><PreviewText>{"Annuleren"}</PreviewText></Button>

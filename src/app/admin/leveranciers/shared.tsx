@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ACCOUNT_PROBLEMS, accountProblem, normalizeIban, normalizeKvk, normalizeVat } from '@/lib/accountValidation';
 import type { Supplier, SupplierEntryType } from '@/lib/kfcSuppliers';
+import { euroToCents } from '@/lib/money';
 
 /* Shared bits of the supplier screens (crediteuren, 0130). */
 
@@ -21,13 +22,8 @@ export const ENTRY_LABEL: Record<SupplierEntryType, string> = {
   opening: 'Beginsaldo', write_off: 'Afgeboekt', reversal: 'Tegenboeking',
 };
 
-/** "12,50" or "12.50" or "1.234,50" → cents; '' → null; NaN when unreadable. */
-export function toCents(value: string): number | null {
-  const raw = value.replace(/[€\s]/g, '');
-  if (!raw) return null;
-  const normal = raw.includes(',') ? raw.replace(/\./g, '').replace(',', '.') : raw;
-  return Math.round(Number(normal) * 100);
-}
+/** "12,50", "12.50", "1.234,50" or "1.500" → cents; '' → null; NaN when unreadable (src/lib/money.ts). */
+export const toCents = (value: string): number | null => euroToCents(value);
 
 export async function post(body: unknown): Promise<{ error?: string; id?: string | number }> {
   const response = await fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(() => null);

@@ -23,6 +23,7 @@ const TAB_LABEL: Record<Tab, string> = {
 };
 const PO_STATUS: Record<SupplierOrder['status'], [string, 'default' | 'secondary' | 'outline' | 'destructive']> = {
   draft: ['Concept', 'outline'], ordered: ['Besteld', 'default'], received: ['Ontvangen', 'secondary'], cancelled: ['Geannuleerd', 'destructive'],
+  closed: ['Afgesloten', 'secondary'],
 };
 const BUCKETS: [keyof SupplierBalance, string][] = [['not_due', 'Nog niet vervallen'], ['d1_30', '0–30 dagen'], ['d31_60', '31–60'], ['d61_90', '61–90'], ['d90p', '> 90']];
 const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Amsterdam' }).format(new Date());

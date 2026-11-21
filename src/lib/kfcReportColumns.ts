@@ -59,12 +59,12 @@ export interface ReportMeta {
 
 export const REPORTS: ReportMeta[] = [
   { id: 'balance', section: 'voorraad', money: false, nl: 'Voorraadstand per locatie', en: 'Stock balance by location',
-    descNl: 'Aantal en waarde (inkoopprijs) per artikel, magazijn, stelling en bak.', descEn: 'Quantity and value (purchase price) per item, warehouse, shelf and bin.',
+    descNl: 'Aantal en waarde (gemiddelde kostprijs) per artikel, magazijn, stelling en bak.', descEn: 'Quantity and value (moving average cost) per item, warehouse, shelf and bin.',
     filters: ['q', 'category', 'warehouse', 'group'],
     groups: [{ id: 'detail', nl: 'Per artikel en locatie', en: 'Per item and location' }, { id: 'article', nl: 'Per artikel', en: 'Per item' },
       { id: 'warehouse', nl: 'Per magazijn', en: 'Per warehouse' }, { id: 'category', nl: 'Per categorie', en: 'Per category' }] },
   { id: 'valuation', section: 'voorraad', money: true, nl: 'Voorraadwaarde op datum', en: 'Stock valuation on date',
-    descNl: 'De voorraad zoals die op een gekozen dag was, gewaardeerd tegen de laatste inkoopprijs van dat moment.', descEn: 'Stock as it was on a chosen day, valued at the last purchase price of that moment.',
+    descNl: 'De voorraad zoals die op een gekozen dag was, gewaardeerd tegen de gemiddelde kostprijs van dat moment.', descEn: 'Stock as it was on a chosen day, valued at the moving average cost of that moment.',
     filters: ['date', 'category', 'warehouse', 'group'],
     groups: [{ id: 'article', nl: 'Per artikel', en: 'Per item' }, { id: 'detail', nl: 'Per artikel en locatie', en: 'Per item and location' },
       { id: 'warehouse', nl: 'Per magazijn', en: 'Per warehouse' }, { id: 'category', nl: 'Per categorie', en: 'Per category' }] },

@@ -3,6 +3,7 @@
  * functions, used by the server (the real gate) and by the forms (early
  * feedback). Messages are Dutch; the screens pass them through t().
  */
+import { euroToCents } from '@/lib/money';
 
 /** KvK: Dutch Chamber of Commerce number, exactly 8 digits. Spaces and dots are dropped. */
 export const normalizeKvk = (value: unknown) => (typeof value === 'string' ? value.replace(/[\s.]/g, '') : '');
@@ -102,15 +103,14 @@ export const normalizePostcode = (value: string, country: string) => {
  */
 export function customerFromForm(form: FormData) {
   const get = (key: string) => String(form.get(key) ?? '').trim();
-  const raw = get('credit_limit').replace(/[€\s]/g, '');
-  const limit = raw.includes(',') ? raw.replace(/\./g, '').replace(',', '.') : raw;
   return {
     account_kind: (get('account_kind') || null) as 'person' | 'company' | null,
     company: get('company'), contact_name: get('contact_name'), phone: get('phone'), email: get('email'),
     kvk: get('kvk'), vat_number: get('vat_number'), invoice_email: get('invoice_email'), iban: get('iban'), bic: get('bic'), website: get('website'),
     street: get('street'), postcode: get('postcode'), city: get('city'), country: get('country') || 'NL',
     terms_days: Number(get('terms_days') || 30),
-    credit_limit_cents: limit === '' ? null : Math.round(Number(limit) * 100),
+    // "1.500" is fifteen hundred euro; unreadable → NaN, which accountProblem() refuses as 'limit' (src/lib/money.ts).
+    credit_limit_cents: euroToCents(get('credit_limit')),
     reverse_charge: form.get('reverse_charge') === 'on', note: get('note'),
   };
 }

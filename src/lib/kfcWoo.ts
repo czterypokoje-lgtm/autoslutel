@@ -57,6 +57,8 @@ async function wooFetch(shop: WooShop, path: string, init: RequestInit = {}) {
     ...init,
     headers: { Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}`, 'Content-Type': 'application/json', ...(init.headers ?? {}) },
     cache: 'no-store',
+    // A hung shop must not hold the import, the nightly reconcile or the "ship" write-back until the platform kills the function.
+    signal: init.signal ?? AbortSignal.timeout(20_000),
   });
   if (!response.ok) throw new Error(`${shop} ${path}: HTTP ${response.status}`);
   return response;

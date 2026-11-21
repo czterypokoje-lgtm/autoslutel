@@ -7,7 +7,7 @@ import {
   AudioLines, BarChart3, Boxes, CalendarDays, ChevronRight, Euro, Inbox, KeyRound, LayoutDashboard, LogOut, Package, PackageCheck, PhoneCall, Search,
   Settings, ShoppingCart, Store, Tags, UserCog, Users, type LucideIcon,
 } from 'lucide-react';
-import { RefreshCw, Truck, Undo2 } from 'lucide-react';
+import { Lock, RefreshCw, Truck, Undo2 } from 'lucide-react';
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
@@ -54,6 +54,8 @@ const GROUPS: Group[] = [
     label: 'Magazijn',
     items: [
       { label: 'Kassa', icon: Store, href: '/admin/kassa' },
+      // 0136: closed till sessions with their stored Z-reports.
+      { label: 'Z-rapporten', icon: BarChart3, href: '/admin/kassa/sessies' },
       {
         label: 'Voorraad', icon: Boxes, children: [
           { label: 'Artikelen', href: '/admin/voorraad' },
@@ -227,6 +229,10 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
     const items = servedItems(group.items.filter((item) => office || !item.office));
     if (WAREHOUSE && group.label === 'Kantoor' && office) {
       items.push({ label: 'Medewerkers', href: '/admin/instellingen/medewerkers', icon: UserCog });
+    }
+    if (WAREHOUSE && group.label === 'Kantoor' && office) {
+      // 0140: the owner locks or reopens; other office roles see the state read-only.
+      items.push({ label: 'Periode afsluiten', href: '/admin/instellingen/periode', icon: Lock });
     }
     if (WAREHOUSE && group.label === 'Kantoor' && role === 'owner') {
       items.push({ label: 'AI-budget', href: '/admin/instellingen/budget', icon: Euro });

@@ -108,23 +108,24 @@ export function PickBoard({ orders: fromServer, now }: { orders: ShopOrder[]; no
     printLabels(batch.filter((o) => !!o.label_url || labelled.has(o.id))); // only what really has a label
   }
 
-  const chip = (on: boolean) => cn('rounded-md px-2.5 py-1 text-sm whitespace-nowrap transition-colors', on ? 'bg-primary text-primary-foreground' : 'hover:bg-muted');
+  // 44 px tall on phones: these are tapped with a thumb in the warehouse.
+  const chip = (on: boolean) => cn('min-h-11 rounded-md px-2.5 py-1 text-sm whitespace-nowrap transition-colors sm:min-h-0', on ? 'bg-primary text-primary-foreground' : 'hover:bg-muted');
 
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
-          <button type="button" className={chip(shop === 'all')} onClick={() => setShop('all')}><PreviewText>{"Alle shops"}</PreviewText></button>
-          {shops.map((s) => <button key={s} type="button" className={chip(shop === s)} onClick={() => setShop(s)}>{s} <span className="opacity-70">{count((o) => o.shop === s)}</span></button>)}
+          <button type="button" aria-pressed={shop === 'all'} className={chip(shop === 'all')} onClick={() => setShop('all')}><PreviewText>{"Alle shops"}</PreviewText></button>
+          {shops.map((s) => <button key={s} type="button" aria-pressed={shop === s} className={chip(shop === s)} onClick={() => setShop(s)}>{s} <span className="opacity-70">{count((o) => o.shop === s)}</span></button>)}
         </div>
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
           {([['all', 'Alles'], ['open', 'Te picken'], ['picked', 'Gepickt'], ['short', 'Tekort']] as [Status, string][]).map(([k, l]) => (
-            <button key={k} type="button" className={chip(status === k)} onClick={() => setStatus(k)}>{t(l)} {k !== 'all' && <span className="opacity-70">{count((o) => statusOf(o) === k)}</span>}</button>
+            <button key={k} type="button" aria-pressed={status === k} className={chip(status === k)} onClick={() => setStatus(k)}>{t(l)} {k !== 'all' && <span className="opacity-70">{count((o) => statusOf(o) === k)}</span>}</button>
           ))}
         </div>
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-lg border p-1">
           {([['all', 'Alle labels'], ['none', 'Zonder label'], ['has', 'Met label']] as [LabelFilter, string][]).map(([k, l]) => (
-            <button key={k} type="button" className={chip(label === k)} onClick={() => setLabel(k)}>{t(l)} {k !== 'all' && <span className="opacity-70">{count((o) => (k === 'none' ? !o.label_url : !!o.label_url))}</span>}</button>
+            <button key={k} type="button" aria-pressed={label === k} className={chip(label === k)} onClick={() => setLabel(k)}>{t(l)} {k !== 'all' && <span className="opacity-70">{count((o) => (k === 'none' ? !o.label_url : !!o.label_url))}</span>}</button>
           ))}
         </div>
       </div>

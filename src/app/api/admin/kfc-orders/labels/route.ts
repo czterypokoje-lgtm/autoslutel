@@ -35,7 +35,8 @@ export async function GET(request: Request) {
     fetched.push(...await Promise.all(batch.map(async (id) => {
       const order = byId.get(id);
       if (!order?.label_url || order.carrier === 'eigen') return order ? { missing: `${order.shop} #${order.number}` } : null;
-      const res = await fetch(order.label_url as string, { headers: { Authorization: auth }, cache: 'no-store' }).catch(() => null);
+      // One slow label must not stall the whole batch: after 15 s it is listed as missing.
+      const res = await fetch(order.label_url as string, { headers: { Authorization: auth }, cache: 'no-store', signal: AbortSignal.timeout(15_000) }).catch(() => null);
       if (!res?.ok) return { missing: `${order.shop} #${order.number}` };
       return { bytes: await res.arrayBuffer() };
     })));

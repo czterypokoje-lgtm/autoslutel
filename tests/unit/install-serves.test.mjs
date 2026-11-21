@@ -30,6 +30,7 @@ const TABLE = [
   ['/admin/financien', true],
   ['/admin/rapporten', true],
   ['/admin/instellingen', true],
+  ['/admin/instellingen/periode', true], // period lock (0140)
   ['/admin/agenda', true],
   ['/api/admin/kfc-orders', true],
   ['/api/admin/kfc-klanten', true],
@@ -37,6 +38,7 @@ const TABLE = [
   ['/api/admin/inkoop', true],
   ['/api/admin/inbox', true],
   ['/api/admin/crm-users', true],
+  ['/api/admin/kfc-period', true], // period lock: GET office, POST owner
   ['/api/admin/workshop/appointments', true],
   ['/api/woo/orders', true],
   ['/api/cron/kfc-reconcile', true],

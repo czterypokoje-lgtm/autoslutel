@@ -39,7 +39,7 @@ export interface SupplierArticle {
   article_price_cents: number | null;
 }
 export interface SupplierOrder {
-  id: string; status: 'draft' | 'ordered' | 'received' | 'cancelled'; created_at: string; ordered_at: string | null; expected_on: string | null;
+  id: string; status: 'draft' | 'ordered' | 'received' | 'cancelled' | 'closed'; created_at: string; ordered_at: string | null; expected_on: string | null;
   received_at: string | null; invoice_ref: string | null; note: string | null; lines: number; quantity: number; received: number;
   ordered_cents: number; received_cents: number; invoiced_cents: number; late: boolean;
 }
@@ -107,6 +107,10 @@ export async function getSupplier(id: string): Promise<{
   ]);
   if (supplier.error) throw new StockError(`Leverancier lezen mislukt: ${supplier.error.message}`, 500);
   if (!supplier.data) return null;
+  // A failed read must not look like "nothing owed, no open invoices, no contacts".
+  for (const [result, label] of [[balance, 'Saldo'], [open, 'Open facturen'], [contacts, 'Contactpersonen']] as const) {
+    if (result.error) throw new StockError(`${label} lezen mislukt: ${result.error.message}`, 500);
+  }
 
   const openById = new Map((open.data ?? []).map((row) => [row.entry_id as number, num(row.open_cents)]));
   const reversed = new Set(ledger.filter((e) => e.reverses_entry_id).map((e) => e.reverses_entry_id));
@@ -287,6 +291,7 @@ const LEDGER_ERRORS: Record<string, [string, number]> = {
   KFC_BAD_ALLOCATION: ['Kies een openstaande factuur van deze leverancier.', 400],
   KFC_ALREADY_REVERSED: ['Deze boeking is al tegengeboekt.', 409],
   KFC_NO_ENTRY: ['Boeking niet gevonden.', 404],
+  KFC_PERIOD_LOCKED: ['Deze periode is afgesloten. Boek op een latere datum of laat de eigenaar de periode heropenen.', 409],
 };
 function ledgerError(message: string, fallback: string): StockError {
   for (const [code, [text, status]] of Object.entries(LEDGER_ERRORS)) if (message.includes(code)) return new StockError(text, status);

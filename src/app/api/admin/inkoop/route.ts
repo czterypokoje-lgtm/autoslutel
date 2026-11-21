@@ -2,14 +2,14 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUserApi, seesPrices } from '@/lib/crmSession';
-import { StockError, attachPurchaseDocument, createPurchaseOrder, findArticlesByScan, listPurchaseOrders, newArticle, purchaseDocument, receivePurchaseLine, setPurchaseInvoiceRef, setPurchaseOrderStatus } from '@/lib/kfcInventory';
+import { StockError, attachPurchaseDocument, closePurchaseOrder, createPurchaseOrder, findArticlesByScan, listPurchaseOrders, newArticle, purchaseDocument, receivePurchaseLine, setPurchaseInvoiceRef, setPurchaseOrderStatus } from '@/lib/kfcInventory';
 
 export const runtime = 'nodejs';
 
 /**
  * Purchase orders for the KeyForCars warehouse.
  *
- * Office creates, orders and cancels; warehouse and picker may list and
+ * Office creates, orders, cancels and closes short; warehouse and picker may list and
  * receive. Receiving is the only path that books 'received' stock moves.
  */
 const reply = (data: unknown, status = 200) => Response.json(data, { status, headers: { 'Cache-Control': 'no-store' } });
@@ -81,6 +81,13 @@ export async function POST(request: Request) {
       if (!seesPrices(user)) return reply({ error: 'Alleen kantoor wijzigt inkooporders.' }, 403);
       if (typeof input.id !== 'string' || !uuid.test(input.id) || !['ordered', 'cancelled'].includes(input.status)) return reply({ error: 'Ongeldige invoer.' }, 400);
       await setPurchaseOrderStatus(input.id, input.status);
+      return reply({ ok: true });
+    }
+    if (input.action === 'close') {
+      // Close an ordered order short (0139): the rest will not come. Same rule as ordering/cancelling: office only.
+      if (!seesPrices(user)) return reply({ error: 'Alleen kantoor wijzigt inkooporders.' }, 403);
+      if (typeof input.id !== 'string' || !uuid.test(input.id) || typeof input.reason !== 'string') return reply({ error: 'Ongeldige invoer.' }, 400);
+      await closePurchaseOrder(input.id, input.reason, user);
       return reply({ ok: true });
     }
     if (input.action === 'receive') {

@@ -130,7 +130,8 @@ async function Purchases({ params }: { params: Params }) {
   const group = params.groep === 'artikel' || params.groep === 'maand' ? params.groep : 'leverancier';
   const supplier = params.leverancier && /^[a-f0-9-]{36}$/i.test(params.leverancier) ? params.leverancier : undefined;
   const [facts, suppliers] = await Promise.all([
-    purchaseFacts({ from, to, supplier, statuses: ['ordered', 'received'] }),
+    // 'closed' (0139): goods received on an order that was closed short are still purchases.
+    purchaseFacts({ from, to, supplier, statuses: ['ordered', 'received', 'closed'] }),
     supplierOptions(),
   ]);
   const groups = new Map<string, { key: string; label: string; sub: string; lines: number; orders: Set<string>; quantity: number; received: number; ordered_cents: number; received_cents: number; unpriced: number }>();
@@ -217,7 +218,7 @@ async function OpenOrders({ late, params = {} }: { late: boolean; params?: Param
   const to = isoDate(params.tot) ?? now;
   const from = isoDate(params.van) ?? `${to.slice(0, 4)}-01-01`;
   if (late) {
-    receivedLate = (await purchaseFacts({ from, to, statuses: ['ordered', 'received'] }))
+    receivedLate = (await purchaseFacts({ from, to, statuses: ['ordered', 'received', 'closed'] }))
       .filter((f) => f.expected_on && f.last_receipt_at && f.last_receipt_at.slice(0, 10) > f.expected_on)
       .sort((a, b) => (b.last_receipt_at ?? '').localeCompare(a.last_receipt_at ?? ''));
   }

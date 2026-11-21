@@ -59,7 +59,9 @@ test('S4 and S5: one webshop or service reservation wins and confirmed use deduc
       await read(db.from('kfc_shop_order_lines').update({ state: 'open', quantity: 1 }).eq('id', line));
     }
     const shipment = await db.rpc('kfc_ship_order', { p_order: order, p_key: tag + '-ship' });
-    assert.match(shipment.error?.message ?? '', /KFC_STOCK_RESERVED_FOR_JOB/);
+    // 0138: the unit is held for the job, so the web line is not reserved and the order is refused
+    // before any stock is looked at. The older KFC_STOCK_RESERVED_FOR_JOB guard sits behind this one.
+    assert.match(shipment.error?.message ?? '', /KFC_NOT_PICKED|KFC_STOCK_RESERVED_FOR_JOB/);
     const [owner, worker] = await Promise.all([
       login(process.env.CRM_TEST_EMAIL, process.env.CRM_TEST_PASSWORD),
       login(process.env.CRM_TECH_EMAIL, process.env.CRM_TECH_PASSWORD),
