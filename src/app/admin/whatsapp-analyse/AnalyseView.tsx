@@ -376,9 +376,31 @@ function group(rows: Quote[], key: (q: Quote) => string | null): [string, Agg][]
   return [...m.entries()].map(([k, qs]) => [k, agg(qs)]);
 }
 
+/**
+ * The AI writes the make as the customer did, so one brand arrives under several
+ * spellings (Citroen / Citroën, Mercedes / Mercedes-AMG). One name per brand,
+ * or every report splits it in two.
+ */
+const MAKE_ALIAS: Record<string, string> = {
+  citroen: 'Citroën',
+  'citroën': 'Citroën',
+  mercedes: 'Mercedes-Benz',
+  'mercedes benz': 'Mercedes-Benz',
+  'mercedes-amg': 'Mercedes-Benz',
+  mb: 'Mercedes-Benz',
+  vw: 'Volkswagen',
+  'škoda': 'Skoda',
+  'alfa': 'Alfa Romeo',
+  'range rover': 'Land Rover',
+  onbekend: 'Onbekend',
+  '': 'Onbekend',
+};
+const canonMake = (make: string) => MAKE_ALIAS[norm(make)] ?? make.trim();
+
 // ---- the page -------------------------------------------------------------
 
-export default function AnalyseView({ quotes }: { quotes: Quote[] }) {
+export default function AnalyseView({ quotes: raw }: { quotes: Quote[] }) {
+  const quotes = useMemo(() => raw.map((q) => ({ ...q, make: canonMake(q.make) })), [raw]);
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
