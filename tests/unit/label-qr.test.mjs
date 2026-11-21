@@ -14,3 +14,7 @@ test('profile links and plain codes read as before', () => {
   assert.equal(normaliseCode(' alrc03 '), 'ALRC03');
   assert.equal(normaliseCode('HFC-1-12'), 'KFC-1-12');
 });
+
+test('a drawer-label QR with a SKU link reads as the SKU', () => {
+  assert.equal(normaliseCode('https://keyforcars-crm.vercel.app/admin/voorraad/artikel/ALRC01'), 'ALRC01');
+});

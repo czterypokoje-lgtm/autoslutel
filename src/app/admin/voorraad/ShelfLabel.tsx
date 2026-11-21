@@ -15,6 +15,14 @@ export const LABEL_SIZES = {
 } as const;
 export type LabelSize = keyof typeof LABEL_SIZES;
 
+/**
+ * The fitment list comes from a supplier catalogue and holds stray lines
+ * ("Batterij: CR", "• Laguna II", tool instructions). Only a line that starts
+ * with a car make and reads like a model is printed.
+ */
+const MAKE = /^(Abarth|Alfa Romeo|Aston Martin|Audi|Bentley|BMW|Buick|Cadillac|Chevrolet|Chrysler|Citro[eë]n|Cupra|Dacia|Daewoo|Daihatsu|Dodge|DS|Ferrari|Fiat|Ford|Honda|Hummer|Hyundai|Infiniti|Isuzu|Iveco|Jaguar|Jeep|Kia|Lamborghini|Lancia|Land Rover|Lexus|Lincoln|Maserati|Mazda|Mercedes(?:[- ]Benz)?|MG|Mini|Mitsubishi|Nissan|Opel|Peugeot|Polestar|Porsche|Range Rover|Renault|Rolls[- ]Royce|Rover|Saab|Seat|Skoda|Škoda|Smart|SsangYong|Subaru|Suzuki|Tesla|Toyota|Vauxhall|Volkswagen|VW|Volvo)\b/i;
+export const plausibleFit = (vehicle: string) => vehicle.length <= 50 && MAKE.test(vehicle.trim()) && !/[:•]|\b(?:suitable|support|keys?|all)\b/i.test(vehicle);
+
 const TWO_WORD_MAKE = /^(Alfa Romeo|Land Rover|Aston Martin|Rolls[- ]Royce|Mercedes[- ]Benz)\b/i;
 
 export interface ModelRow { make?: string; model?: string; years?: string }
@@ -27,7 +35,7 @@ export interface ModelRow { make?: string; model?: string; years?: string }
 export function modelRows(fits: VehicleFit[], rows: number) {
   const byMake = new Map<string, { model: string; years: string }[]>();
   for (const fit of fits) {
-    if (fit.from === null) continue;
+    if (fit.from === null || !plausibleFit(fit.vehicle)) continue;
     const make = fit.vehicle.match(TWO_WORD_MAKE)?.[1] ?? fit.vehicle.split(' ')[0];
     const model = fit.vehicle.slice(make.length).trim() || make;
     const years = `${fit.from}–${fit.to ?? ''}`;
@@ -112,7 +120,8 @@ export default function ShelfLabel({ article, bin, code, number, profile, size }
         <LabelBarcode number={number} code={code} className={styles.shelfBarcode} />
         <span className={styles.shelfMeta}>{number || code}{location ? ` · ${location}` : ''}</span>
       </footer>
-      <QRCodeSVG className={styles.shelfQr} value={code} size={64} marginSize={2} level="M" />
+      {/* A link, so a phone camera opens the article in the CRM; the stock scanner reads the code from it. */}
+      <QRCodeSVG className={styles.shelfQr} value={`${process.env.NEXT_PUBLIC_SITE_URL || (typeof window === 'undefined' ? '' : window.location.origin)}/admin/voorraad/artikel/${encodeURIComponent(code)}`} size={64} marginSize={2} level="L" />
     </article>
   );
 }
