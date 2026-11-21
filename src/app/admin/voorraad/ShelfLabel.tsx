@@ -38,7 +38,8 @@ export function modelRows(fits: VehicleFit[], rows: number) {
   const total = [...byMake.values()].reduce((sum, list) => sum + list.length, 0);
   const lines: ModelRow[] = [];
   let shown = 0;
-  const headings = byMake.size > 1;
+  // Always a make heading: "Alfa Romeo Giulietta 940" on one line was cut to "Alfa Romeo …" next to the years.
+  const headings = byMake.size > 0;
   for (const [make, list] of byMake) {
     if (headings) {
       if (lines.length + 2 > rows) break;
