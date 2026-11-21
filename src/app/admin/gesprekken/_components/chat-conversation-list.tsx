@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { cn } from 'cn';
-import { ChevronDown, MessageCircle, Phone, Search } from 'lucide-react';
+import { Bot, ChevronDown, CircleHelp, Mail, MessageCircle, MessageSquare, MessageSquareText, Phone, Search, type LucideIcon } from 'lucide-react';
+
+const CHANNEL_ICON: Record<string, LucideIcon> = { phone: Phone, whatsapp: MessageCircle, email: Mail, form: MessageSquareText, webchat: Bot, sms: MessageSquare };
 
 import { Avatar, AvatarBadge, AvatarFallback } from '@/components/ui/avatar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -80,7 +82,7 @@ export function ChatConversationList({ conversations, selectedId, now, title, on
                     {conversations.map((conversation) => {
                       const isSelected = selectedId === conversation.id;
                       const name = displayName(conversation);
-                      const Icon = conversation.channel === 'whatsapp' ? MessageCircle : Phone;
+                      const Icon = CHANNEL_ICON[conversation.channel] ?? CircleHelp;
                       return (
                         <button
                           key={conversation.id}

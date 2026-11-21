@@ -4,7 +4,7 @@ import type { Conversation } from '../ConversationConsole';
 export type Group = 'Vandaag' | 'Gisteren' | 'Eerder';
 
 export const OUTCOME_LABEL: Record<string, string> = { success: 'Gelukt', failure: 'Mislukt', unknown: 'Onbekend' };
-export const CHANNEL_LABEL: Record<string, string> = { phone: 'Telefoon', whatsapp: 'WhatsApp', sms: 'SMS', email: 'E-mail', form: 'Websiteformulier', unknown: 'Onbekend' };
+export const CHANNEL_LABEL: Record<string, string> = { phone: 'Telefoon', whatsapp: 'WhatsApp', sms: 'SMS', email: 'E-mail', form: 'Websiteformulier', webchat: 'Webchat', unknown: 'Overig' };
 
 export const displayName = (c: Conversation) => c.lead?.name || c.thread?.name || c.phone || c.thread?.email || 'Onbekend nummer';
 
