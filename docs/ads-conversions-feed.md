@@ -1,70 +1,81 @@
 # Daily conversions file for Google Ads
 
-Finished jobs go back to Google Ads every day, so Google learns which ads
-bring paying jobs. Google fetches the file by itself. Nobody downloads a CSV.
+Sales that came from an ad go back to Google Ads every day, so Google learns
+which ads bring paying customers instead of which bring clicks. Google fetches
+the file by itself. Nobody downloads a CSV.
+
+Only sales a person **confirmed** on `/admin/conversies` are in the file. The
+system proposes which click belongs to which sale; it never sends a guess.
 
 ## The address
 `https://<your-domain>/api/ads/conversions.csv`
 Username: `google-ads`. Password: the value you set below.
 Without the right username and password the address answers "not found".
 
-## What you must do yourself (3 things)
-1. In Vercel, project Environment Variables, add `ADS_FEED_PASSWORD`.
-   Use a hidden input, at least 24 characters, random. Never paste it in chat
-   or in a file. Below 24 characters the address stays switched off.
-   Then redeploy so it takes effect.
-2. In Google Ads: Goals > Conversions > Uploads > Schedules > new schedule.
-   Source "HTTPS", the address above, the username and password, every day.
-3. Check that a conversion action named exactly `Job Completed` exists in the
-   account that runs the ads today, of the type "Import" from clicks.
-   A different spelling and every row is refused.
+## What you must do yourself
+1. Supabase SQL editor: run `supabase/migrations/0109_ad_conversion_matches.sql`
+   (safe to run twice). Until then the screen shows a warning and the file is
+   empty apart from its two header lines.
+2. In Vercel, project Environment Variables, add `ADS_FEED_PASSWORD` (skip if it
+   is already there). Hidden input, at least 24 random characters, never in chat
+   or in a file. Below 24 characters the address stays switched off. Redeploy.
+3. In Google Ads, in the account that owns tag **AW-18511036958**:
+   Goals > Conversions > New conversion action > Import > "Other data sources
+   or CRMs" > Track conversions from clicks. Name it exactly `Job Completed`,
+   value "use different values", count "one". A different spelling and every
+   row is refused.
+4. Goals > Conversions > Uploads > Schedules > new schedule. Source "HTTPS",
+   the address above, the username and password, every day. Use "Preview"
+   first. Remove any older schedule that pointed at another conversions file
+   (for example one for the previous Google Ads account), so nothing is counted twice.
+5. Stop uploading `/api/export-conversions` and the WhatsApp-review download by
+   hand once the schedule runs: the same sales now come through this file.
 
 ## Test it once by hand
-In a terminal, typing the password when asked (it stays out of your history):
+On `/admin/conversies`, "Download proefbestand" gives exactly what Google
+would receive, without marking anything. Or in a terminal, typing the
+password when asked (it stays out of your history):
 `curl -u google-ads https://<your-domain>/api/ads/conversions.csv`
-You should see two header lines and one line per finished job. A wrong
-password gives an empty "not found". In Google Ads, use "Preview" on the
-schedule before switching it to daily.
 
 ## What is in the file
-One line per finished job that has an ad click id: click id, "Job Completed",
-the time the job was finished (Amsterdam time), the value in euros with a dot
-(the job's margin, the same figure the manual page uses), EUR.
-No names, phone numbers, emails, addresses or plates.
-Skipped: no click id, no value, completed before the click, click older than
-90 days. Counts of each are written to the audit log.
+One line per confirmed sale: click id (gclid, GBRAID or WBRAID column),
+"Job Completed", the time of the sale (Amsterdam time), the value in euros
+**excl. 21% BTW** with a dot, EUR. No names, phone numbers, emails,
+addresses or plates.
+
+The office types or checks the amount **incl. BTW** (what the customer paid);
+the screen shows the excl. BTW figure that goes to Google next to it. A job's
+`final_price` is incl. BTW. A WhatsApp price whose chat does not say incl. or
+excl. is taken as incl. (owner's rule, 21 Nov 2026) and marked "aangenomen".
+
+Left out: clicks older than 90 days (Google refuses them). The first time
+Google receives a row it is marked "door Google opgehaald"; from then on the
+office can no longer undo it in the CRM, only retract it in Google Ads.
+
+## Where the proposals come from (src/lib/conversionMatcher.ts)
+Sales: finished jobs, WhatsApp chats marked won (`whatsapp_quotes`), and
+WhatsApp ad reviews marked "gedaan". Evidence, strongest first:
+- hard: the click is on the job, on the job's own web form, or the office
+  claimed the click for the job (`/admin/attributie`);
+- strong: the WhatsApp ad code (`[K7F2]`) of the click appears in the review or
+  in the won chat, or was sent from the sale's phone number (migration 0088);
+- medium: another web form with the same phone number carries a click;
+- guess: a tap on the phone button up to 72 hours before the job was entered,
+  shown only when nothing better exists, with an extra confirmation.
+
+A click a person confirmed for one sale is shown as taken for every other
+sale. "Niet deze" hides that click for that sale for good.
 
 ## If Google sees a row again
-The file always repeats the last 90 days. A row Google already has (same
-click, same name, same time) is ignored, so a repeat fetch does no harm.
-
-## Jobs that came in by phone or WhatsApp
-A job without a click id of its own gets one more look (`src/lib/adAttribution.ts`).
-A click id is added only when the evidence points at ONE click and ONE job:
-- the job's own lead holds a click id (already how the file worked);
-- a person claimed a click for the job (the "ad click" panel on the job);
-- the WhatsApp ad code (`[K7F2]`) of a chat from the job's number points at a
-  click. This needs migration `0088_call_click_chat_phone.sql` and the server
-  that reads the WhatsApp chats to send `phone` with each code to
-  `POST /api/ops/ad-reviews`. Without both, this rule simply does nothing.
-- (off by default) another lead with the same number holds a click id; switch
-  on with `ADS_FEED_INCLUDE_LIKELY=1` only after looking at
-  `GET /api/ops/attribution-stats`.
-
-Nothing is added when two different clicks fit the job (the customer clicked
-twice), when the same code came from two numbers (a forwarded link), or when
-the click is already on another job or fits two jobs (a customer who returns
-with the same number). Those jobs stay without a click id on purpose: a wrong
-click id teaches Google to buy the wrong traffic. A click must be no later
-than the job and no older than 90 days before it. Counts are in the audit log
-(`recovered_certain`, `recovered_likely`, `skipped_duplicate_click`).
+The file always repeats every confirmed row of the last 90 days. A row Google
+already has (same click, same name, same time) is ignored.
 
 ## Not covered
-- Phone-call jobs without a click id that nobody claimed and no chat or lead
-  ties to the job (a plain call leaves no trace to match).
-- Jobs older than 90 days: Google forgets the click after 90 days.
-- Microsoft Ads (separate file, still manual).
+- Phone calls with no click trace at all (no form, no code, no tap).
+- WhatsApp wins that are older than 90 days: most of the imported history.
+- Microsoft Ads and ChatGPT ads (msclkid, oppref): not in this file.
 
 ## Good to know
-Google calls file imports "legacy" and recommends "enhanced conversions for
-leads" as the long-term route. This feed works today; plan the switch later.
+Google calls file imports "legacy" and recommends the Google Ads API (or its
+newer Data Manager API) for the long term. That route needs a developer token
+and OAuth secrets; switch when volume or Google's deprecation makes it worth it.
