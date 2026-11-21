@@ -23,7 +23,7 @@ const CATEGORIES = [
   { id: 'other', label: 'Overig' }
 ];
 
-export default function ExpenseForm({ technicians, isOffice, myTechId }: { technicians: any[], isOffice: boolean, myTechId: string | null }) {
+export default function ExpenseForm({ technicians, isOffice, myTechId }: { technicians: { id: string; name: string }[], isOffice: boolean, myTechId: string | null }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -51,6 +51,7 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        purchase_order_id: new URLSearchParams(window.location.search).get('inkoop'),
         category,
         description,
         amount: numAmount,

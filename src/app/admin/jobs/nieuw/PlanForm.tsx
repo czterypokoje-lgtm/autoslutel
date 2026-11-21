@@ -1,5 +1,8 @@
 'use client';
 
+import JobAccountFields from '../JobAccountFields';
+import type { JobAccountOption } from '@/lib/jobAccounts';
+
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -38,6 +41,7 @@ const DEFAULT_COMMISSION_PCT = 25;
 
 export default function PlanForm({
   lead,
+  accounts = [],
   order,
   date,
   suggestions,
@@ -45,6 +49,7 @@ export default function PlanForm({
   initialTechnicianId,
   cars,
 }: {
+  accounts?: JobAccountOption[];
   lead: PlanLead | null;
   order: { id: string; order_number: string; total_inc: number } | null;
   date: string;
@@ -83,6 +88,8 @@ export default function PlanForm({
    * the job by. 39 of 65 finished jobs are in that state, which is most of
    * why ad attribution sits at 2%.
    */
+  const [accountId, setAccountId] = useState("");
+  const [contactId, setContactId] = useState("");
   const [customerName, setCustomerName] = useState(lead?.name ?? '');
   const [customerPhone, setCustomerPhone] = useState(lead?.phone_e164 ?? lead?.phone ?? '');
 
@@ -216,6 +223,8 @@ export default function PlanForm({
         // order case and would otherwise be written into a lead column.
         lead_id: order ? null : linkedLeadId,
         order_id: order?.id ?? null,
+        billing_account_id: accountId || null,
+        communication_contact_id: contactId || null,
         customer_name: customerName.trim() || null,
         customer_phone: customerPhone.trim() || null,
         technician_id: technicianId || null,
@@ -254,6 +263,14 @@ export default function PlanForm({
 
   return (
     <form className={styles.planWrap} onSubmit={submit}>
+      {accounts.length > 0 && <div className="lg:col-span-2">
+        <JobAccountFields accounts={accounts} onSelect={(account, contact, name, phone) => {
+          setAccountId(account);
+          setContactId(contact);
+          if (name !== undefined) setCustomerName(name);
+          if (phone !== undefined) setCustomerPhone(phone);
+        }} />
+      </div>}
       <div className={styles.panel}>
         <h2><PreviewText>{"Klus"}</PreviewText></h2>
 
@@ -300,6 +317,7 @@ export default function PlanForm({
               autoComplete="off"
               placeholder="Naam van de klant"
               value={customerName}
+              readOnly={Boolean(contactId)}
               onChange={(e) => setCustomerName(e.target.value)}
             />
           </div>
@@ -336,6 +354,7 @@ export default function PlanForm({
               autoComplete="off"
               placeholder="06 12 34 56 78"
               value={customerPhone}
+              readOnly={Boolean(contactId)}
               onChange={(e) => setCustomerPhone(e.target.value)}
             />
             {linkedLeadId && !lead && (

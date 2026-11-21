@@ -16,6 +16,7 @@ const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR
 
 /** The list row: the stored expense plus the two joins and the signed bon link. */
 export interface StudioExpense extends ExpenseRow {
+  purchase_order_id: string | null;
   technician_name: string | null;
   receipt_href: string | null;
 }
@@ -115,6 +116,7 @@ export function Expenses({ rows, isOffice }: { rows: StudioExpense[]; isOffice: 
                       <TableCell className="py-4 align-middle">
                         <div className="max-w-[48vw] truncate text-sm md:max-w-xs">
                           <PreviewText>{expense.description}</PreviewText>
+                          {expense.purchase_order_id && <Link className="block underline" href={'/admin/inkoop#purchase-'+expense.purchase_order_id}><PreviewText>Inkooporder</PreviewText></Link>}
                         </div>
                         {expense.receipt_href && (
                           <a

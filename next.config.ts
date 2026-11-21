@@ -50,6 +50,8 @@ const nextConfig: NextConfig = {
     // Same for the UI switch (src/config/install.ts STUDIO_UI): decided per deployment at build time.
     CRM_UI: process.env.CRM_UI ?? '',
     CRM_WAREHOUSE: process.env.CRM_WAREHOUSE ?? '',
+    // KeyForCars workshop calendar + agent switch (src/config/install.ts WORKSHOP).
+    KFC_WORKSHOP: process.env.KFC_WORKSHOP ?? '',
   },
   /*
    * pdf-parse pulls in @napi-rs/canvas, a native compiled binary — the class

@@ -62,6 +62,10 @@ export async function POST(request: Request) {
     }
     case 'mode': {
       if (!MODES.includes(body.mode)) return NextResponse.json({ error: 'Ongeldige modus' }, { status: 400 });
+      // Owner's rule (7 Nov 2026): no automatic messages to customers unless explicitly switched on.
+      if (body.mode === 'auto' && process.env.INBOX_AI_AUTO !== '1') {
+        return NextResponse.json({ error: 'Automatisch antwoorden staat uit. De assistent maakt alleen concepten.' }, { status: 403 });
+      }
       const { error } = await db.from('inbox_threads').update({ ai_mode: body.mode }).eq('id', thread.id);
       if (error) return NextResponse.json({ error: 'Opslaan mislukt' }, { status: 500 });
       break;
@@ -73,7 +77,8 @@ export async function POST(request: Request) {
       break;
     }
     case 'read': {
-      await db.from('inbox_threads').update({ unread: 0 }).eq('id', thread.id);
+      const {error} = await db.from('inbox_threads').update({ unread: 0 }).eq('id', thread.id);
+      if(error) return NextResponse.json({error:'Opslaan mislukt'},{status:500});
       break;
     }
     default:

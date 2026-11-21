@@ -32,6 +32,7 @@ export default function StudioPriceRow({ row }: { row: PriceRowData }) {
   const [toYear, setToYear] = useState(row.to_year === null ? '' : String(row.to_year));
   const [keyless, setKeyless] = useState(row.keyless === null ? '' : String(row.keyless));
   const [price, setPrice] = useState(String(row.price));
+  const [servicePrice, setServicePrice] = useState(row.service_price == null ? '' : String(row.service_price));
   const [note, setNote] = useState(row.note ?? '');
 
   function cancel() {
@@ -42,6 +43,7 @@ export default function StudioPriceRow({ row }: { row: PriceRowData }) {
     setToYear(row.to_year === null ? '' : String(row.to_year));
     setKeyless(row.keyless === null ? '' : String(row.keyless));
     setPrice(String(row.price));
+    setServicePrice(row.service_price == null ? '' : String(row.service_price));
     setNote(row.note ?? '');
     setError('');
     setEditing(false);
@@ -50,7 +52,7 @@ export default function StudioPriceRow({ row }: { row: PriceRowData }) {
   async function save() {
     setBusy(true);
     setError('');
-    const result = await updatePrice(row.id, { make, model, scenario, fromYear, toYear, keyless, price, note });
+    const result = await updatePrice(row.id, { make, model, scenario, fromYear, toYear, keyless, price, servicePrice, note });
     setBusy(false);
     if ('error' in result) {
       setError(result.error);
@@ -74,7 +76,9 @@ export default function StudioPriceRow({ row }: { row: PriceRowData }) {
         <TableCell className="text-muted-foreground">
           {row.keyless === true ? 'Keyless' : row.keyless === false ? <PreviewText>Baard/contact</PreviewText> : <PreviewText>Beide</PreviewText>}
         </TableCell>
-        <TableCell className="text-right font-medium">{MONEY.format(row.price)}</TableCell>
+        <TableCell className="text-right font-medium">{MONEY.format(row.price)}
+          {row.service_price != null && <div className="text-muted-foreground text-xs"><PreviewText>Diensttarief excl. btw</PreviewText> {MONEY.format(row.service_price)}</div>}
+        </TableCell>
         <TableCell className="text-muted-foreground max-w-40 truncate" title={row.note ?? undefined}>
           {row.note ?? ''}
         </TableCell>
@@ -124,6 +128,9 @@ export default function StudioPriceRow({ row }: { row: PriceRowData }) {
       </TableCell>
       <TableCell>
         <Input value={price} onChange={(e) => setPrice(e.target.value)} aria-label="Prijs in euro" />
+        <label className="mt-2 block text-xs"><PreviewText>Diensttarief excl. btw</PreviewText>
+          <Input value={servicePrice} onChange={(e) => setServicePrice(e.target.value)} inputMode="decimal" />
+        </label>
       </TableCell>
       <TableCell>
         <Input value={note} placeholder="Optioneel" onChange={(e) => setNote(e.target.value)} aria-label="Notitie" />

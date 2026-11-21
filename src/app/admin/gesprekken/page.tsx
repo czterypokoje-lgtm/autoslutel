@@ -31,12 +31,14 @@ const requestNow = () => Date.now();
  * mean shipping every lead and job to the page to find two of them.
  */
 export default async function GesprekkenPage() {
-  await requireOfficeUser('/admin/gesprekken');
+  const operator = await requireOfficeUser('/admin/gesprekken');
   const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from('agent_conversations')
     .select('id, conversation_id, channel, phone, outcome, duration_secs, summary, transcript, created_at')
+    // Another brand's agent (KeyForCars, KEY24) or a session nobody spoke in: not our inbox (0108).
+    .not('channel', 'in', '(extern,leeg)')
     .order('created_at', { ascending: false })
     .limit(PAGE_SIZE);
 
@@ -247,7 +249,7 @@ export default async function GesprekkenPage() {
   if (STUDIO_UI && !error) {
     return (
       <div className="kfc-neutral">
-        <Chat conversations={conversations} now={requestNow()} />
+        <Chat operator={operator.id} conversations={conversations} now={requestNow()} />
       </div>
     );
   }

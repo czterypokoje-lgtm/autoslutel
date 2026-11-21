@@ -9,6 +9,10 @@ import { readonlyClientOptions } from '@/lib/readonly';
  * Every CRM read and write goes through this client, never the service-role
  * key — that is what makes the RLS policies in 0003_crm_roles.sql the real
  * guard. A bug in a page cannot leak rows the policy would refuse.
+ *
+ * requireSupabaseAuthConfig also runs the install guard (installGuard.ts): a
+ * KeyForCars deployment cannot get a client for the Autosleutel24 project, or
+ * the other way round.
  */
 export async function createSupabaseServerClient() {
   const { url, anonKey } = requireSupabaseAuthConfig();

@@ -2,7 +2,7 @@ import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowDownLeft, ArrowUpRight, BarChart3, CalendarDays, Camera, ChartNoAxesCombined, History, List, PieChart, Radio } from 'lucide-react';
-import { STOCK_OPERATIONS, STOCK_TIME_ZONE, sampleSales, stockDate, stockMonthRange, stockPeriodReport, stockReports, type StockArticle, type StockMove, type StockState } from '@/lib/keyforcarsStock';
+import { STOCK_OPERATIONS, STOCK_TIME_ZONE, moveLabel, sampleSales, stockDate, stockMonthRange, stockPeriodReport, stockReports, type StockArticle, type StockMove, type StockState } from '@/lib/keyforcarsStock';
 import styles from './keyforcars.module.css';
 import { usePreviewLanguage } from '../PreviewLanguage';
 import { Donut, RankedBars, chart } from '../_ui/charts';
@@ -73,7 +73,7 @@ export default function StockReports({ state, catalog, demo, view: section }: { 
     return <li key={move.id ?? move.bot?.eventId ?? `${move.time}/${index}`}>
       <span className={`${styles.moveIcon} ${move.delta < 0 ? styles.outflow : styles.inflow}`}><Direction size={17} aria-hidden="true" /></span>
       <div className={styles.moveBody}>
-        <small>{t(STOCK_OPERATIONS[move.operation as keyof typeof STOCK_OPERATIONS])} · {article?.sku || move.article}</small>
+        <small>{t(moveLabel(move.operation))} · {article?.sku || move.article}</small>
         <strong>{article?.sku ? <Link prefetch={false} href={`/admin/voorraad/p?q=${encodeURIComponent(article.sku)}${demo ? '&demo=1' : ''}`}>{article.name}</Link> : move.article}</strong>
         <span className={styles.moveLocation}>{move.shelf ? <><span>{t('Rallocatie')} <b>{move.shelf}</b></span><span>{t('Bak')} <b>{move.box}</b></span></> : t('Locatie niet opgegeven')}</span>
         {move.note && <span>{move.note}</span>}

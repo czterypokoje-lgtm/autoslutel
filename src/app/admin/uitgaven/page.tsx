@@ -67,6 +67,7 @@ export default async function UitgavenPage() {
         isOffice={isOffice}
         rows={list.map((exp) => ({
           id: exp.id,
+          purchase_order_id: exp.purchase_order_id,
           category: exp.category,
           description: exp.description,
           amount: exp.amount,

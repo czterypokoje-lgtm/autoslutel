@@ -25,6 +25,8 @@ import type { Conversation } from '../ConversationConsole';
 import InboxComposer from '../InboxComposer';
 
 import { CHANNEL_LABEL, clock, displayName, duration, longDate, OUTCOME_LABEL } from './data';
+import { ConversationTags } from './ConversationTags';
+import { briefOf, topicOf } from './topics';
 
 export function ChatThread({ conversation, showBackButton, onBack, onOpenContact, className }: {
   conversation: Conversation;
@@ -39,8 +41,11 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
   const sub = [t(CHANNEL_LABEL[conversation.channel] ?? conversation.channel), duration(conversation.durationSecs), conversation.outcome ? t(OUTCOME_LABEL[conversation.outcome] ?? conversation.outcome) : null].filter(Boolean).join(' · ');
   const wa = waLink(conversation.phone, `Goedendag${conversation.lead?.name ? ` ${conversation.lead.name.split(' ')[0]}` : ''}, hier ${BRAND.name}. `);
 
+  const phoneCall = conversation.channel === 'phone';
+  const [expanded,setExpanded] = React.useState(false);
+  const brief = briefOf(conversation);
   return (
-    <div className={cn('flex h-full flex-col py-3', className)}>
+    <div className={cn('flex h-full flex-col overflow-y-auto py-3', className)}>
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between gap-4 px-2">
           <div className="flex items-center gap-3">
@@ -112,17 +117,25 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
         <Separator />
       </div>
 
-      <MessageScrollerProvider autoScroll>
-        <MessageScroller className="min-h-0 flex-1">
+      <section className="m-3 grid shrink-0 max-h-[66svh] md:max-h-[45svh] overflow-y-auto gap-3 rounded-xl border border-blue-100 bg-slate-50 p-4 text-sm text-slate-900">
+        <h2 className="font-semibold">{t(phoneCall ? 'Gespreksverslag' : 'Samenvatting')}</h2>
+        {phoneCall && <p>{t('Beller')} · {t(name)} · {t('Duur')} · {duration(conversation.durationSecs) || t('Onbekend')}</p>}
+        {conversation.summary && <p className="leading-relaxed">{conversation.summary}</p>}
+        <dl className="grid gap-2 sm:grid-cols-2">
+          {[[ 'Vraag', brief.question ],['Bekend',brief.known],['Uitkomst',t(brief.outcome || 'Onbekend')],['Volgende stap',t(brief.next)]].map(([label,value])=>
+            <div key={label} className="min-w-0"><dt className="text-xs font-semibold text-slate-600">{t(label!)}</dt><dd className="break-words">{value || t('Onbekend')}</dd></div>)}
+        </dl>
+        <ConversationTags conversation={conversation}/>
+        {!phoneCall && brief.index >= 0 && <a className="underline" href={'#turn-'+conversation.id+'-'+brief.index}>{t('Bronbericht')}</a>}
+      </section>
+      {phoneCall && <button aria-expanded={expanded} className="mx-3 mb-2 self-start rounded-lg border px-3 py-2 text-sm font-medium" onClick={()=>setExpanded(!expanded)}>{t(expanded ? 'Transcript sluiten' : 'Volledig transcript openen')}</button>}
+      {(!phoneCall || expanded) && <MessageScrollerProvider autoScroll>
+        <MessageScroller className="min-h-48 flex-1">
           <MessageScrollerViewport>
             <MessageScrollerContent className="gap-6 px-2 py-8">
               <Marker variant="separator">
                 <MarkerContent>{longDate(conversation.createdAt)} · {clock(conversation.createdAt)}</MarkerContent>
               </Marker>
-
-              {conversation.summary && (
-                <p className="text-muted-foreground mx-auto max-w-prose text-center text-xs leading-relaxed">{conversation.summary}</p>
-              )}
 
               {conversation.turns.length === 0 && (
                 <p className="text-muted-foreground text-center text-sm">{t('Geen transcript bij dit gesprek.')}</p>
@@ -145,7 +158,7 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
                         : t('Assistent');
                 return (
                   <MessageScrollerItem key={index} messageId={String(index)} scrollAnchor={isOutbound}>
-                    <Message align={align}>
+                    <div id={'turn-'+conversation.id+'-'+index}><Message align={align}>
                       <MessageAvatar>
                         <Avatar>
                           <AvatarFallback className={cn('bg-muted text-foreground text-xs', isOutbound && 'bg-primary text-primary-foreground')}>
@@ -161,7 +174,7 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
                         </BubbleGroup>
                         <MessageFooter>{footer}</MessageFooter>
                       </MessageContent>
-                    </Message>
+                    </Message></div>
                   </MessageScrollerItem>
                 );
               })}
@@ -169,7 +182,7 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
           </MessageScrollerViewport>
           <MessageScrollerButton />
         </MessageScroller>
-      </MessageScrollerProvider>
+      </MessageScrollerProvider>}
 
       <div className="px-2">
         <Tabs defaultValue="reply" className="gap-0 rounded-md border">
@@ -181,7 +194,18 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
           <TabsContent value="reply" className="m-0">
             {conversation.thread ? (
               <div className="p-2">
-                <InboxComposer key={conversation.id} thread={conversation.thread} phone={conversation.phone} />
+                <InboxComposer
+                  key={conversation.id}
+                  thread={conversation.thread}
+                  phone={conversation.phone}
+                  context={{
+                    topic: topicOf(conversation),
+                    name: conversation.lead?.name || conversation.thread.name,
+                    car: conversation.lead?.car || conversation.job?.car || null,
+                    date: conversation.job?.date ? longDate(conversation.job.date) : null,
+                    slot: conversation.job?.slot ?? null,
+                  }}
+                />
               </div>
             ) : (
               <ReplyComposer phone={conversation.phone} placeholder={conversation.phone ? t('Typ een WhatsApp-bericht… (opent in WhatsApp)') : t('Geen nummer bij dit gesprek.')} />

@@ -314,3 +314,25 @@ body.kfc-shell {
   background: repeating-linear-gradient(135deg, color-mix(in srgb, #f59e0b 22%, transparent) 0 6px, transparent 6px 12px);
   color: var(--muted-foreground);
 }
+
+/* A consistent reading rhythm across the Studio workspace. */
+.kfc-content:not([data-original-report]) [data-slot="card-header"] { row-gap: .5rem; }
+.kfc-content:not([data-original-report]) [data-slot="table-row"]:focus-within { background-color: var(--accent); }
+.kfc-content:not([data-original-report]) :is(button, a, select):focus-visible { outline: 2px solid #2765a1; outline-offset: 2px; }
+@media (max-width: 767px) {
+  .kfc-content:not([data-original-report]) { padding-inline: .75rem; }
+  .kfc-content:not([data-original-report]) [data-slot="table-container"] { overflow-x: auto; }
+}
+
+.kfc-content:not([data-original-report]) [data-slot="card"] { border-color: color-mix(in srgb, var(--border) 85%, #6d87a6); box-shadow: 0 2px 6px rgb(31 52 80 / 5%); }
+.kfc-content:not([data-original-report]) [data-slot="table-head"] { background: var(--muted); font-weight: 600; }
+@media (min-width: 768px) {
+  .kfc-content:not([data-original-report]) [data-slot="table-cell"] { padding-block: .85rem; }
+}
+
+/* Preserve the Studio KPI layout on the original report pages. */
+[data-original-report] [data-stat-grid] { grid-template-columns: minmax(0,1fr); gap: 1rem; }
+@media (min-width: 640px) { [data-original-report] [data-stat-grid] { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (min-width: 1280px) { [data-original-report] [data-stat-grid] { grid-template-columns: repeat(4,minmax(0,1fr)); } }
+[data-original-report] [data-stat-card] { border-top-width: 0; }
+[data-original-report] [data-stat-value] { font-size: 1.5rem; line-height: 2rem; }

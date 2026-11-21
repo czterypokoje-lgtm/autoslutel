@@ -1,7 +1,7 @@
 'use client';
 
 import { PreviewProductName, PreviewText, usePreviewLanguage } from '@/app/admin/PreviewLanguage';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Download, PackageCheck, Tag, Truck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -139,6 +139,57 @@ function Line({ line, pickable, busy, picked, onPick }: { line: ShopLine; pickab
       </TableCell>
       <TableCell><LineBadge state={line.state} /></TableCell>
     </TableRow>
+  );
+}
+
+export function ReturnLine({ line, maximum, locations }: {
+  line: ShopLine; maximum: number; locations: { id: string; shelf: string; box: string }[];
+}) {
+  const router = useRouter();
+  const { t } = usePreviewLanguage();
+  const retry = useRef<{ quantity: number; location: string; key: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [remaining, setRemaining] = useState(maximum);
+  const [note, setNote] = useState('');
+  const available = Math.min(remaining, maximum);
+  return (
+    <form className="flex flex-wrap items-end gap-3" onSubmit={async (event) => {
+      event.preventDefault();
+      if (busy) return;
+      const form = new FormData(event.currentTarget);
+      const quantity = Number(form.get('quantity'));
+      const location = String(form.get('location'));
+      if (retry.current?.quantity !== quantity || retry.current.location !== location) {
+        retry.current = { quantity, location, key: crypto.randomUUID() };
+      }
+      setBusy(true);
+      const result = await post({ action: 'return', line: line.id, ...retry.current });
+      setBusy(false);
+      setNote(result.error ?? 'Retour geboekt.');
+      if (!result.error) {
+        retry.current = null;
+        setRemaining(available - quantity);
+        router.refresh();
+      }
+    }}>
+      <div className="mr-auto">
+        <PreviewProductName sku={line.sku}>{line.name}</PreviewProductName>
+        <p className="text-muted-foreground text-sm">{available} {t('nog retour mogelijk')}</p>
+      </div>
+      <label className="grid gap-1 text-sm">
+        {t('Aantal')}
+        <input className="border-input h-9 w-20 rounded-md border bg-transparent px-2" name="quantity" type="number" min={1} max={available} defaultValue={1} required disabled={busy || !available} />
+      </label>
+      <label className="grid gap-1 text-sm">
+        {t('Locatie')}
+        <select className="border-input bg-background h-9 rounded-md border px-2" name="location" defaultValue="" required disabled={busy || !available}>
+          <option value="" disabled>{t('Kies een retourlocatie')}</option>
+          {locations.map((location) => <option key={location.id} value={location.id}>{location.shelf} / {location.box}</option>)}
+        </select>
+      </label>
+      <Button size="sm" disabled={busy || !available || !locations.length}>{t('Retour boeken')}</Button>
+      <p role="status" className="text-muted-foreground w-full text-sm">{t(note)}</p>
+    </form>
   );
 }
 

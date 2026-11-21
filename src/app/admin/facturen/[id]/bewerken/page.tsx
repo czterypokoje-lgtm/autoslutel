@@ -22,7 +22,7 @@ export default async function FactuurBewerkenPage({ params }: { params: Promise<
     supabase.from('sales_invoices').select('*').eq('id', id).maybeSingle(),
     supabase
       .from('sales_invoice_lines')
-      .select('description, quantity, unit_price, discount, vat_rate')
+      .select('description, quantity, unit_price, discount, vat_rate, job_stock_id, job_line_kind')
       .eq('invoice_id', id)
       .order('line_no'),
     user.role === 'monteur'
@@ -58,6 +58,8 @@ export default async function FactuurBewerkenPage({ params }: { params: Promise<
       unitPrice: String(l.unit_price),
       discount: String(l.discount),
       vatRate: String(l.vat_rate),
+      job_stock_id: l.job_stock_id,
+      job_line_kind: l.job_line_kind,
     })),
   };
 
@@ -79,6 +81,8 @@ export default async function FactuurBewerkenPage({ params }: { params: Promise<
       description: l.description ?? '',
       quantity: Number(l.quantity) || 0,
       unitPrice: Number(l.unit_price) || 0,
+      job_stock_id: l.job_stock_id,
+      job_line_kind: l.job_line_kind,
     }));
     const studioInitial: StudioInvoiceFormValues = {
       referenceNumber: invoice.invoice_number ?? '',

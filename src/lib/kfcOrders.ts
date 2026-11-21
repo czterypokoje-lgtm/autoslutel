@@ -74,6 +74,8 @@ function toOrder(row: Record<string, unknown>): ShopOrder {
 
 /** Detail with, per line, the best shelf to pick from and the article's availability. */
 export async function getShopOrder(id: string): Promise<ShopOrder | null> {
+  // A stale or mistyped link is "not found", not a database error.
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
   const { data, error } = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`).eq('id', id).maybeSingle();
   if (error) throw new StockError(`Bestelling lezen mislukt: ${error.message}`, 500);
   if (!data) return null;
@@ -83,6 +85,18 @@ export async function getShopOrder(id: string): Promise<ShopOrder | null> {
 }
 
 export { LABEL_BATCH_MAX };
+
+export async function shopReturnHistory(lines: ShopLine[]) {
+  const ids = lines.filter((line) => line.state === 'shipped').map((line) => line.id);
+  const quantities = new Map<string, number>();
+  const moves = ids.length ? await fetchAll<{ id: number; order_line_id: string; delta: number; reason: 'sale' | 'return'; created_at: string }>((from, to) =>
+    db().from('kfc_stock_moves').select('id, order_line_id, delta, reason, created_at').in('order_line_id', ids)
+      .in('reason', ['sale', 'return']).order('created_at', { ascending: false }).order('id').range(from, to)) : [];
+  for (const move of moves) {
+    quantities.set(move.order_line_id, (quantities.get(move.order_line_id) ?? 0) - move.delta);
+  }
+  return { quantities, returns: moves.filter((move) => move.reason === 'return') };
+}
 
 /** Several orders at once, for the bulk label sheet. Keeps the order of `ids`. */
 export async function getShopOrdersByIds(ids: string[]): Promise<ShopOrder[]> {
@@ -100,8 +114,8 @@ async function decorate(lines: ShopLine[]) {
   const codes = [...new Set(lines.map((l) => l.article_code).filter((c): c is string => !!c))];
   if (!codes.length) return;
   const [levels, positions] = await Promise.all([
-    db().from('kfc_stock_levels').select('article_code, quantity, kfc_locations (shelf, box, kind)').in('article_code', codes).order('quantity', { ascending: false }),
-    db().from('kfc_stock_position').select('article_code, available, incoming').in('article_code', codes),
+    db().from('kfc_stock_levels').select('article_code, quantity, kfc_locations!inner (shelf, box, kind)').in('article_code', codes).is('kfc_locations.technician_id', null).order('quantity', { ascending: false }),
+    db().from('kfc_webshop_position').select('article_code, available, incoming').in('article_code', codes),
   ]);
   const shelfOf = new Map<string, { shelf: string; box: string }>();
   for (const row of levels.data ?? []) {
@@ -146,7 +160,9 @@ export async function markPicked(lineId: string, picked: boolean): Promise<strin
 export async function shipOrder(id: string, key: string, user: CrmUser): Promise<{ writeback: 'done' | 'pending' }> {
   const { error } = await db().rpc('kfc_ship_order', { p_order: id, p_key: key, p_created_by: user.id });
   if (error) {
+    if (error.message.includes('KFC_CENTRAL_STOCK_REQUIRED')) throw new StockError('Onvoldoende voorraad in het centrale magazijn.', 409);
     if (error.message.includes('KFC_NOT_PAID')) throw new StockError('Deze bestelling is niet betaald (status is niet processing).', 409);
+    if (error.message.includes('KFC_STOCK_RESERVED_FOR_JOB')) throw new StockError('Voorraad is gereserveerd voor een klus.', 409);
     if (error.message.includes('KFC_NO_ORDER')) throw new StockError('Bestelling niet gevonden.', 404);
     throw new StockError(`Verzenden mislukt: ${error.message}`, 500);
   }

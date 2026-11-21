@@ -36,6 +36,7 @@ export default function StudioPriceForm() {
       toYear: String(form.get('toYear') ?? ''),
       keyless: String(form.get('keyless') ?? ''),
       price: String(form.get('price') ?? ''),
+      servicePrice: String(form.get('servicePrice') ?? ''),
       note: String(form.get('note') ?? ''),
     });
 
@@ -98,6 +99,8 @@ export default function StudioPriceForm() {
         <div className="grid gap-1.5">
           <Label htmlFor="price"><PreviewText>Prijs (€)</PreviewText></Label>
           <Input id="price" name="price" required placeholder="195,00" />
+          <Label htmlFor="servicePrice"><PreviewText>Diensttarief excl. btw (€)</PreviewText></Label>
+          <Input id="servicePrice" name="servicePrice" inputMode="decimal" />
         </div>
         <div className="grid gap-1.5 sm:col-span-2">
           <Label htmlFor="note"><PreviewText>Notitie</PreviewText></Label>

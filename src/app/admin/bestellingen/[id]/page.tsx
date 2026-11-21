@@ -4,16 +4,18 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
-import { requireWarehouseUser, seesPrices } from '@/lib/crmSession';
+import { canBookReturns, requireWarehouseUser, seesPrices } from '@/lib/crmSession';
 import { getShopOrder, type ShopOrder } from '@/lib/kfcOrders';
 import { readSendcloudTracking } from '@/lib/sendcloudTracking';
 import { sampleOrders } from '@/lib/kfcSampleOrders';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { receiveLocations, returnPanel } from '@/lib/kfcReturns';
 import { FulfilmentBadge, OrderLines } from '../OrderParts';
+import { ReturnPanel } from '../ReturnPanel';
 
 // Formatters live here, not in the client module: a server component cannot call a client export.
-const WHEN = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' });
+const WHEN = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' });
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 
 export const dynamic = 'force-dynamic';
@@ -27,6 +29,10 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const sample = !/^[a-f0-9-]{36}$/i.test(id) ? sampleOrder(decodeURIComponent(id)) : null;
   const order = sample ?? (await getShopOrder(id));
   if (!order) notFound();
+  // Refund ↔ return per line and "Retour ontvangen" (0132); replaces the plain return form of 0113.
+  const returns = sample ? null : await returnPanel(order.id);
+  const canBook = canBookReturns(user) && !!returns?.lines.some((line) => line.open > 0 && line.article_code);
+  const locations = canBook ? await receiveLocations() : [];
   const prices = seesPrices(user);
   const trackingCode = !sample && order.carrier !== 'eigen' ? order.tracking_code : null;
   const tracking = trackingCode && (await searchParams).tracking === '1'
@@ -36,7 +42,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       <div className="flex flex-wrap items-center gap-3">
         <Button asChild variant="ghost" size="sm"><Link href="/admin/orders"><ArrowLeft className="size-4" /> <PreviewText>{"Bestellingen"}</PreviewText></Link></Button>
         <h1 className="text-2xl font-semibold tracking-tight">#{order.number}</h1>
-        <span className="text-muted-foreground text-sm">{order.shop} · {WHEN.format(new Date(order.created_at))} · {order.country}</span>
+        <span className="text-muted-foreground text-sm">{order.shop} · <PreviewText>Besteld op</PreviewText> <time dateTime={order.created_at}>{WHEN.format(new Date(order.created_at))}</time> · {order.country}</span>
         <FulfilmentBadge value={order.fulfilment} />
       </div>
       <div className="grid gap-4 md:grid-cols-4">
@@ -47,6 +53,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       </div>
       {sample && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs">Voorbeeldbestelling. Picken en verzenden werken zodra de echte bestellingen van de webshops zijn geïmporteerd.</p>}
       <OrderLines order={order} canAct={!sample} />
+      {returns && <ReturnPanel orderId={order.id} panel={returns} locations={locations} canBook={canBook} prices={prices} />}
       {trackingCode && <Card><CardHeader><CardTitle><PreviewText>Vervoerder volgen</PreviewText></CardTitle></CardHeader>
         <CardContent className="grid gap-2 text-sm">
           {tracking?.state === 'available' ? <>

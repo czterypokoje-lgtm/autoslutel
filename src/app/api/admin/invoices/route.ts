@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCrmUser, CRM_ROLES } from '@/lib/crmSession';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { jobInvoiceSourcesValid, readJobInvoiceLineSource, type JobInvoiceLineSource } from '@/lib/jobInvoiceSources';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SITE_CONFIG } from '@/config/site.config';
 import { BRAND, IS_KEYFORCARS } from '@/config/install';
@@ -36,7 +38,7 @@ function money(value: unknown): number | null {
   return Number.isFinite(n) && n >= 0 && n < 100_000_000 ? Math.round(n * 100) / 100 : null;
 }
 
-interface LineInput {
+interface LineInput extends JobInvoiceLineSource {
   description: string;
   quantity: number;
   unitPrice: number;
@@ -73,7 +75,8 @@ function readLine(raw: unknown): LineInput | null {
   const vatRate = money(r.vatRate);
   if (quantity <= 0 || unitPrice === null || vatRate === null) return null;
 
-  return { description, quantity, unitPrice, discount, vatRate };
+  const source = readJobInvoiceLineSource(r);
+  return source && { description, quantity, unitPrice, discount, vatRate, ...source };
 }
 
 export async function POST(request: Request) {
@@ -146,7 +149,27 @@ export async function POST(request: Request) {
     technicianId = asked && UUID.test(asked) ? asked : null;
   }
 
-  const jobId = text(body.job_id, 40);
+  const jobId = body.job_id;
+  let agreedTotal: number | null = null;
+  if (jobId != null) {
+    if (typeof jobId !== 'string' || !UUID.test(jobId)) {
+      return NextResponse.json({ error: 'Ongeldig job-id' }, { status: 400 });
+    }
+    const { data: job, error: jobError } = await supabase.from('jobs').select('id, final_price, quoted_price').eq('id', jobId).maybeSingle();
+    if (jobError) return NextResponse.json({ error: 'Klus ophalen mislukt' }, { status: 500 });
+    if (!job) return NextResponse.json({ error: 'Klus niet gevonden' }, { status: 404 });
+    agreedTotal = job.final_price ?? job.quoted_price;
+  }
+
+  if (goodLines.some((line) => line.job_line_kind) &&
+      !await jobInvoiceSourcesValid(createSupabaseAdminClient(), typeof jobId === 'string' ? jobId : null, goodLines)) {
+    return NextResponse.json({ error: 'Ongeldige koppeling met gebruikte voorraad.' }, { status: 400 });
+  }
+
+  if (agreedTotal !== null && goodLines.some((line) => line.job_line_kind) &&
+      Math.round((subtotal + vatTotal) * 100) !== Math.round(agreedTotal * 100)) {
+    return NextResponse.json({ error: 'Het factuurtotaal moet overeenkomen met het afgesproken totaal.' }, { status: 409 });
+  }
 
   const { data: invoice, error } = await supabase
     .from('sales_invoices')
@@ -177,7 +200,7 @@ export async function POST(request: Request) {
       total,
       created_by: user.id,
       technician_id: technicianId,
-      job_id: jobId && UUID.test(jobId) ? jobId : null,
+      job_id: jobId ?? null,
     })
     .select('id, invoice_number')
     .single();
@@ -202,6 +225,8 @@ export async function POST(request: Request) {
       unit_price: l.unitPrice,
       discount: l.discount,
       vat_rate: l.vatRate,
+      job_line_kind: l.job_line_kind,
+      job_stock_id: l.job_stock_id,
     }))
   );
 
