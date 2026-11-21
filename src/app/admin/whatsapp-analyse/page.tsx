@@ -1,7 +1,8 @@
+import { Suspense } from 'react';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PreviewText } from '../PreviewLanguage';
-import AnalyseView, { type Declined, type Loss, type PriceLine, type Quote } from './AnalyseView';
+import AnalyseView, { type Quote } from './AnalyseView';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,20 +15,15 @@ export default async function WhatsappAnalysePage() {
   await requireOfficeUser('/admin/whatsapp-analyse');
   const supabase = await createSupabaseServerClient();
 
-  const [quotes, prices, losses, declined] = await Promise.all([
-    supabase
-      .from('whatsapp_quotes')
-      .select(
-        'id, phone, contact_name, asked_at, quoted_at, first_reply_at, reply_minutes, context, make, model, year, scenario, problem, product, city, urgency, conditions, price_amount, price_max, price_kind, price_vat, price_vat_assumed, price_incl, quote_excerpt, outcome, lost_reason, lost_detail, declined_reason, declined_detail, price_objection, competitor_price, competitor, we_lowered_price, final_price_amount, job_id, confidence, review',
-      )
-      .order('asked_at', { ascending: false })
-      .limit(5000),
-    supabase.from('whatsapp_price_list').select('*').order('quotes', { ascending: false }),
-    supabase.from('whatsapp_loss_reasons').select('*').order('lost', { ascending: false }),
-    supabase.from('whatsapp_declined_cars').select('*').order('declined', { ascending: false }),
-  ]);
-
-  const error = quotes.error ?? prices.error ?? losses.error ?? declined.error;
+  // Every report on the page is computed from these rows in the browser, so the
+  // filters apply to all of them at once. A few hundred rows a year: cheap.
+  const { data, error } = await supabase
+    .from('whatsapp_quotes')
+    .select(
+      'id, phone, contact_name, asked_at, quoted_at, reply_minutes, context, make, model, year, kenteken, scenario, problem, product, city, postcode, urgency, requested_time, conditions, price_amount, price_max, price_kind, price_vat, price_vat_assumed, price_incl, quote_excerpt, outcome, lost_reason, lost_detail, declined_reason, declined_detail, price_objection, time_objection, competitor_price, competitor, customer_budget, we_lowered_price, final_price_amount, we_followed_up, source, job_id, confidence, review',
+    )
+    .order('asked_at', { ascending: false })
+    .limit(10000);
 
   return (
     <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
@@ -44,12 +40,9 @@ export default async function WhatsappAnalysePage() {
           <PreviewText>Voer supabase/migrations/0106_whatsapp_quotes.sql uit en importeer de WhatsApp-gegevens.</PreviewText>
         </p>
       ) : (
-        <AnalyseView
-          quotes={(quotes.data ?? []) as Quote[]}
-          prices={(prices.data ?? []) as PriceLine[]}
-          losses={(losses.data ?? []) as Loss[]}
-          declined={(declined.data ?? []) as Declined[]}
-        />
+        <Suspense>
+          <AnalyseView quotes={(data ?? []) as Quote[]} />
+        </Suspense>
       )}
     </div>
   );
