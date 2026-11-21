@@ -56,10 +56,12 @@ export default function LabelPrint({ articles, showPrice }: { articles: LabelArt
           const barcode = label.sku && code39Safe(label.sku.toUpperCase()) ? label.sku.toUpperCase() : label.code;
           return (
             <article key={label.key} style={{ width: spec.w, height: spec.h, boxSizing: 'border-box', padding: '2mm', overflow: 'hidden', breakAfter: spec.sheet ? 'auto' : 'page',
-              display: 'grid', gridTemplateColumns: label.photo ? 'auto 1fr auto' : '1fr auto', gap: '1.5mm', fontFamily: 'system-ui, sans-serif', color: '#000', background: '#fff' }}>
+              display: 'grid', gridTemplateColumns: label.photo ? 'auto minmax(0, 1fr) auto' : '1fr auto', gridTemplateRows: 'minmax(0, 1fr)',
+              gap: '1.5mm', fontFamily: 'system-ui, sans-serif', color: '#000', background: '#fff' }}>
               {label.photo && (
+                // A fixed box: a percentage height let Safari size the row to the picture and push the label out of the page.
                 // eslint-disable-next-line @next/next/no-img-element -- print sheet: a plain image, sized in mm
-                <img src={label.photo} alt="" style={{ width: big ? '30mm' : '19mm', height: '100%', maxHeight: `calc(${spec.h} - 4mm)`, objectFit: 'contain', alignSelf: 'center' }} />
+                <img src={label.photo} alt="" style={{ width: big ? '30mm' : '16mm', height: `calc(${spec.h} - 4mm)`, objectFit: 'contain', alignSelf: 'center' }} />
               )}
               <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, gap: '0.8mm' }}>
                 <strong style={{ fontSize: big ? '11pt' : '7.5pt', lineHeight: 1.1, maxHeight: '3.3em', overflow: 'hidden' }}>{label.name}</strong>
