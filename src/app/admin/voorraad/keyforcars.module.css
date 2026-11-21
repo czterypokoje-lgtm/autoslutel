@@ -307,7 +307,7 @@
 .shelfQr { grid-area: qr; align-self: end; justify-self: end; }
 
 /* 62 × 100 mm, Brother QL: one column, photo large enough to compare with the part. */
-.shelfLabel[data-size='62x100'] { width: 62mm; height: 100mm; padding: 2.5mm 3mm; gap: 1.4mm 2.5mm;
+.shelfLabel[data-size='62x100'] { width: 62mm; height: 100mm; padding: 4mm 3mm 2.5mm 4.5mm; gap: 1.4mm 2.5mm;
   grid-template-columns: 26mm minmax(0, 1fr); grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   grid-template-areas: 'photo title' 'blade blade' 'facts facts' 'models models' 'codes qr'; }
 .shelfLabel[data-size='62x100'] .shelfPhoto { width: 26mm; height: 26mm; }
@@ -323,7 +323,7 @@
 .shelfLabel[data-size='62x100'] .shelfQr { width: 12mm; height: 12mm; }
 
 /* 100 × 50 mm, thermal: photo, number, blade and facts left, models right, codes along the bottom. */
-.shelfLabel[data-size='100x50'] { width: 100mm; height: 50mm; padding: 2.5mm 3mm; gap: 1mm 2.5mm;
+.shelfLabel[data-size='100x50'] { width: 100mm; height: 50mm; padding: 4mm 3mm 2.5mm 5mm; gap: 1mm 2.5mm; /* extra top/left: label printers (Zebra) clip the first millimetres */
   grid-template-columns: 19mm minmax(0, 1fr) minmax(0, 1.05fr); grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   grid-template-areas: 'photo title models' 'photo blade models' 'facts facts models' '. . models' 'codes codes qr'; }
 .shelfLabel[data-size='100x50'] .shelfPhoto { width: 19mm; height: 19mm; }

@@ -48,5 +48,8 @@ export default async function LabelsPage({ searchParams }: { searchParams: Promi
       // Models, key blade, chip: the same profile the drawer label in Voorraad prints.
       profile: (r.sku ? findProfile(r.sku) : null) ?? null }] : [];
   });
-  return <LabelPrint articles={articles} showPrice={seesPrices(user)} />;
+  // Asked for but not printable: unknown code or SKU, or a SKU on several articles. Shown, so nothing drops silently.
+  const printed = new Set(articles.flatMap((a) => [a.code, a.sku.toUpperCase()]));
+  const missing = asked.filter((c) => !printed.has(c));
+  return <LabelPrint articles={articles} missing={missing} showPrice={seesPrices(user)} />;
 }

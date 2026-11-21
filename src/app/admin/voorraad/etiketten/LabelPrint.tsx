@@ -45,7 +45,7 @@ const code39Safe = (value: string) => /^[A-Z0-9 .$/+%-]+$/.test(value);
  * roles, the shelf price. Printed from a sheet rendered straight under <body>
  * (stockPrint.css hides everything else while it is there).
  */
-export default function LabelPrint({ articles, showPrice }: { articles: LabelArticle[]; showPrice: boolean }) {
+export default function LabelPrint({ articles, missing = [], showPrice }: { articles: LabelArticle[]; missing?: string[]; showPrice: boolean }) {
   const { english } = usePreviewLanguage();
   const choice = useSyncExternalStore(subscribeChoice, readChoice, () => DEFAULT_CHOICE);
   const drawer = !choice.startsWith('price:');
@@ -151,6 +151,11 @@ export default function LabelPrint({ articles, showPrice }: { articles: LabelArt
             onChange={(e) => setCopies(Math.min(50, Math.max(1, Number(e.target.value) || 1)))} /></label>
         <Button type="button" onClick={() => window.print()} disabled={!labels.length}><Printer aria-hidden="true" />{english ? `Print ${labels.length}` : `${labels.length} printen`}</Button>
       </div>
+      {missing.length > 0 && (
+        <p role="alert" className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+          {english ? `Not found, no label (${missing.length}): ` : `Niet gevonden, geen etiket (${missing.length}): `}<span className="font-mono">{missing.join(', ')}</span>
+        </p>
+      )}
       {articles.length === 0 && <p className="text-muted-foreground text-sm">{english ? 'No items selected.' : 'Geen artikelen gekozen.'}</p>}
       {labels.length > 0 && (
         <section aria-label={english ? 'Preview' : 'Voorbeeld'} className="grid gap-2">
