@@ -37,6 +37,8 @@ export default async function GesprekkenPage() {
   const { data, error } = await supabase
     .from('agent_conversations')
     .select('id, conversation_id, channel, phone, outcome, duration_secs, summary, transcript, created_at')
+    // Another brand's agent (KeyForCars, KEY24) or a session nobody spoke in: not our inbox (0108).
+    .not('channel', 'in', '(extern,leeg)')
     .order('created_at', { ascending: false })
     .limit(PAGE_SIZE);
 
