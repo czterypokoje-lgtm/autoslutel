@@ -95,6 +95,11 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
   const [lastMovement, setLastMovement] = useState<{ move: StockMove; article: StockArticle; file?: File }>();
   const [scanStatus, setScanStatus] = useState('');
   const [scanReview, setScanReview] = useState(false);
+  /** Barcode → article id, learned on the shop floor (the manufacturer's EAN on a product). */
+  const [barcodes, setBarcodes] = useState<Record<string, string>>({});
+  /** A scanned code no article has yet; `to` is the article the person then picked for it. */
+  const [unknownScan, setUnknownScan] = useState<{ code: string; to?: string }>();
+  const [linking, setLinking] = useState(false);
   const search = useRef<HTMLInputElement>(null);
   const details = useRef<HTMLElement>(null);
   const movementForm = useRef<HTMLFormElement>(null);
@@ -136,6 +141,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
           if (Array.isArray(stock.positions)) {
             setPositions(Object.fromEntries(stock.positions.map((row: { article_code: string }) => [row.article_code, row])));
           }
+          if (stock.barcodes && typeof stock.barcodes === 'object') setBarcodes(stock.barcodes);
           if (compactCatalog) {
             setFullCatalog(stock.catalog);
             setCatalogFailed(false);
@@ -212,8 +218,8 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
       categories.set(id, { label, count: (categories.get(id)?.count ?? 0) + 1 });
       return [article.id, id];
     }));
-    return { articles, categories, categoryByArticle, codeIndex: articleIndex(articles), byId: new Map(articles.map(article => [article.id, article])) };
-  }, [catalog, state.photos, state.workshop]);
+    return { articles, categories, categoryByArticle, codeIndex: articleIndex(articles, barcodes), byId: new Map(articles.map(article => [article.id, article])) };
+  }, [catalog, state.photos, state.workshop, barcodes]);
   // A SKU printed on a label must lead back to exactly one card, the same rule the counts use.
   const codeFor = (article: StockArticle) => labelCode(article, (sku) => codeIndex.get(sku) === article.id);
   const displayedArticle = byId.get(selected.id) ?? selected;
@@ -238,7 +244,22 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
   const selectedProfile = loadedProfile && loadedProfile.sku === selectedSku ? loadedProfile.profile : selectedSku ? undefined : null;
   const moves = state.moves.filter((move) => move.article === selected.id).slice(0, 30);
 
+  /** Bind a barcode to an article; resolves to the server's message when it refuses, null when done. */
+  async function linkBarcode(barcode: string, articleId: string): Promise<string | null> {
+    try {
+      const response = await fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ operation: 'linkBarcode', article: articleId, barcode }) });
+      const body = await response.json().catch(() => null);
+      if (!response.ok) return body?.error ?? 'Barcode koppelen mislukt.';
+      if (body?.barcodes && typeof body.barcodes === 'object') setBarcodes(body.barcodes);
+      return null;
+    } catch {
+      return 'Geen verbinding: de barcode is niet gekoppeld.';
+    }
+  }
+
   function select(article: StockArticle, scroll = true) {
+    // After an unknown scan, the article picked next is the one the barcode can be bound to.
+    setUnknownScan((scan) => (scan ? { ...scan, to: article.id } : scan));
     setScanReview(false);
     setSelected(article);
     setLocation(state.bins.find((bin) => bin.article === article.id));
@@ -251,10 +272,17 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
     setMovementPhoto(file);
     setScanReview(true);
     setScanStatus('Code lezen…');
+    setUnknownScan(undefined);
     try {
       // Same on-device decoder as the bulk count: reads every code in a full-size phone photo.
       const { scanPhotos } = await import('./bulkScanPool');
-      const matching = (code: string) => articles.filter((article) => [article.id, article.sku].some((value) => value.toUpperCase() === code));
+      // Our own code or SKU first; otherwise a barcode learned for exactly one article (codeIndex).
+      const matching = (code: string) => {
+        const own = articles.filter((article) => [article.id, article.sku].some((value) => value.toUpperCase() === code));
+        if (own.length) return own;
+        const learned = byId.get(codeIndex.get(code) ?? '');
+        return learned ? [learned] : [];
+      };
       let codes: string[] = [];
       let failure = '';
       await scanPhotos([file], { onResult: (result) => {
@@ -276,6 +304,8 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
       } else {
         const read = codes.length > 1 ? `${codes.length} codes gelezen: ${codes.join(', ')}` : `Code gelezen: ${code}`;
         setScanStatus(`${read}. Niet in de catalogus: zoek of kies het artikel voordat je boekt.`);
+        // Offer to bind this barcode to the article the person picks next, so the next scan finds it.
+        if (!demo) setUnknownScan({ code });
       }
     } catch (error) {
       const failure = error instanceof Error && error.message !== 'no code' ? `${error.message} ` : '';
@@ -399,6 +429,17 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         ))}
       </nav>
       {scanStatus && <p className={styles.muted} role="status">{scanStatus.startsWith('Gescand:') ? scanStatus.replace('Gescand', t('Gescand')) : t(scanStatus)}</p>}
+      {unknownScan?.to && unknownScan.to === selected.id && <p className={styles.notice}>
+        <button type="button" className={styles.primary} disabled={linking} onClick={async () => {
+          setLinking(true);
+          const problem = await linkBarcode(unknownScan.code, selected.id);
+          setLinking(false);
+          if (problem) { setNotice(problem); return; }
+          setScanStatus(`Barcode ${unknownScan.code} gekoppeld aan ${selected.sku || selected.id}. Vanaf nu wordt hij herkend.`);
+          setUnknownScan(undefined);
+        }}><Barcode size={16} aria-hidden="true" /> {t('Koppel barcode')} {unknownScan.code} {t('aan')} {selected.sku || selected.id}</button>{' '}
+        <button type="button" className={styles.secondary} onClick={() => setUnknownScan(undefined)}>{t('Niet koppelen')}</button>
+      </p>}
 
       {showNew && <form className={`${styles.panel} ${styles.inline}`} onSubmit={(event) => save(event, true)}>
         <label>{t("Artikelnaam")}<input name="name" required maxLength={180} /></label>
@@ -590,7 +631,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         </div>,
         document.body,
       )}
-      {bulk && <StockBulkCount state={state} articles={articles} demo={demo} onClose={() => setBulk(false)} onSaved={(next, saved) => {
+      {bulk && <StockBulkCount state={state} articles={articles} barcodes={barcodes} demo={demo} onClose={() => setBulk(false)} onSaved={(next, saved) => {
         setState(next);
         setBulk(false);
         setNotice(`${saved} tellingen opgeslagen.`);

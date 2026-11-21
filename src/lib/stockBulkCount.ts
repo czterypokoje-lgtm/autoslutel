@@ -67,7 +67,12 @@ export function normaliseCode(value: string) {
   return code.toUpperCase().replace(/^H(?=FC-[123]-\d+$)/, 'K');
 }
 
-export function articleIndex(articles: StockArticle[]) {
+/**
+ * What a scanned code may stand for: an article's own code, its SKU, or a
+ * barcode learned for it (`barcodes`: barcode → article id, e.g. the
+ * manufacturer's EAN on the product). Our own codes win over a barcode.
+ */
+export function articleIndex(articles: StockArticle[], barcodes: Record<string, string> = {}) {
   const index = new Map<string, string>();
   const ambiguous = new Set<string>();
   for (const article of articles) {
@@ -79,6 +84,11 @@ export function articleIndex(articles: StockArticle[]) {
   }
   // A SKU shared by two articles cannot be counted safely: treat it as unknown.
   for (const key of ambiguous) index.delete(key);
+  const known = new Set(articles.map((article) => article.id));
+  for (const [barcode, id] of Object.entries(barcodes)) {
+    const key = barcode.trim().toUpperCase();
+    if (key && known.has(id) && !index.has(key) && !ambiguous.has(key)) index.set(key, id);
+  }
   return index;
 }
 

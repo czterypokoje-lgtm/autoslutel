@@ -158,6 +158,57 @@ export async function positions(): Promise<Position[]> {
     .or('physical.neq.0,reserved.neq.0,incoming.neq.0').order('article_code').range(a, b));
 }
 
+/**
+ * Barcode → article code, for scanning: the manufacturer's EAN on a product,
+ * next to our own label code. Only barcodes that belong to exactly one
+ * article: a barcode on two cards cannot pick one, so it stays "unknown".
+ */
+export async function barcodeIndex(): Promise<Record<string, string>> {
+  const rows = await fetchAll<{ code: string; ean: string[] | null }>((a, b) =>
+    admin().from('kfc_articles').select('code, ean').neq('ean', '{}').order('code').range(a, b));
+  const index: Record<string, string> = {};
+  const shared = new Set<string>();
+  for (const row of rows) {
+    for (const raw of row.ean ?? []) {
+      const key = raw.trim().toUpperCase();
+      if (!key) continue;
+      if (index[key] && index[key] !== row.code) shared.add(key);
+      else index[key] = row.code;
+    }
+  }
+  for (const key of shared) delete index[key];
+  return index;
+}
+
+const BARCODE = /^[0-9A-Za-z.\-]{4,40}$/;
+
+/**
+ * Teach the system a barcode while counting: the scan was unknown, the person
+ * picked the article, and from now on that barcode finds it. Appends only
+ * (never removes one), through the same checked write the article editor uses
+ * (migration 0134): a barcode that already belongs to another article is
+ * refused there, and the change lands in the article's history.
+ */
+export async function linkBarcode(article: string, barcode: string, user: CrmUser): Promise<void> {
+  const code = barcode.trim();
+  if (!articleCode.test(article) || !BARCODE.test(code)) throw new StockError('Controleer de barcode (4 tot 40 letters, cijfers, punt of streepje).');
+  const db = admin();
+  const current = await db.from('kfc_articles').select('ean').eq('code', article).maybeSingle();
+  if (current.error) throw new StockError(`Artikel lezen mislukt: ${current.error.message}`, 500);
+  if (!current.data) throw new StockError('Onbekend artikel.', 404);
+  const ean = (current.data.ean as string[] | null) ?? [];
+  if (ean.some((existing) => existing.trim().toUpperCase() === code.toUpperCase())) return;
+  if (ean.length >= 20) throw new StockError('Dit artikel heeft al 20 barcodes.', 409);
+  const { error } = await db.rpc('kfc_bulk_update_articles', {
+    p_changes: [{ code: article, before: { ean }, after: { ean: [...ean, code] } }], p_user: user.id,
+  });
+  if (!error) return;
+  const taken = /KFC_DUPLICATE_BARCODE:(\S+)/.exec(error.message);
+  if (taken) throw new StockError(`Barcode ${taken[1]} hoort al bij een ander artikel.`, 409);
+  if (error.message.includes('KFC_CONFLICT')) throw new StockError('Het artikel is intussen gewijzigd. Probeer het opnieuw.', 409);
+  throw new StockError(`Barcode koppelen mislukt: ${error.message}`, 500);
+}
+
 export async function articleExists(code: string): Promise<boolean> {
   const { data } = await admin().from('kfc_articles').select('code').eq('code', code).maybeSingle();
   return !!data;
@@ -370,7 +421,9 @@ export async function kfcGet(query: URLSearchParams): Promise<Response> {
     const used = new Set(state.moves.map((move) => move.article));
     return reply({
       state,
-      ...(wantPositions ? { positions: await positions() } : {}),
+      // barcodes: what a scan may match besides our own label code (see barcodeIndex). An extra:
+      // if it cannot be read, scanning falls back to code and SKU and the stock screen still loads.
+      ...(wantPositions ? { positions: await positions(), barcodes: await barcodeIndex().catch((error: unknown) => { console.error('[stock] barcode index failed', error); return {}; }) } : {}),
       ...(wantCatalog ? { catalog: catalog.filter((article) => used.has(article.id)) } : {}),
     });
   } catch (error) {
@@ -387,6 +440,10 @@ export async function kfcPost(input: Record<string, unknown>): Promise<Response>
       if (typeof input.article !== 'string' || !articleCode.test(input.article)) throw new StockError('Onbekend artikel.');
       await setArticlePhoto(input.article, decodeJpeg(input.photo, 240_000));
       return reply({ state: await loadState(user) });
+    }
+    if (input.operation === 'linkBarcode') {
+      await linkBarcode(typeof input.article === 'string' ? input.article : '', typeof input.barcode === 'string' ? input.barcode : '', user);
+      return reply({ ok: true, barcodes: await barcodeIndex() });
     }
     if (input.operation === 'new') {
       const name = typeof input.name === 'string' ? input.name.trim() : '';
