@@ -50,9 +50,10 @@ const TABLE = [
   ['/admin/mijn-agenda', false],
   ['/admin/vandaag', false],
   ['/admin/orders/123', false],
-  // Shop: no jobs, leads, dispatch office
-  ['/admin/leads', false],
-  ['/admin/leads/lijst', false],
+  // Shop: leads yes (enquiries), no jobs or dispatch office
+  ['/admin/leads', true],
+  ['/admin/leads/lijst', true],
+  ['/admin/leads/opvolging', true],
   ['/admin/jobs', false],
   ['/admin/live', false],
   ['/admin/kantoor', false],
@@ -67,8 +68,8 @@ const TABLE = [
   ['/api/admin/netwerk', false],
   ['/api/admin/start', false],
   ['/api/admin/orders/123', false],
-  ['/api/admin/leads/abc/notes', false],
-  ['/api/admin/leads/by-phone', false],
+  ['/api/admin/leads/abc/notes', true],
+  ['/api/admin/leads/by-phone', true],
   ['/api/admin/jobs', false],
   ['/api/admin/jobs/abc/call-clicks', false],
   ['/api/admin/technicians', false],
@@ -106,8 +107,8 @@ test('Autosleutel24 serves every path', () => {
 });
 
 test('Prefix matching does not over-reach', () => {
-  // '/admin/leads' must not hide a screen that only starts with the same letters.
-  assert.equal(servesPath('/admin/leadsx', KFC), true);
+  // '/admin/jobs' must not hide a screen that only starts with the same letters.
+  assert.equal(servesPath('/admin/jobsx', KFC), true);
   assert.equal(servesPath('/admin/orders', KFC), true);
   assert.equal(servesPath('/api/admin/orders', KFC), true);
 });

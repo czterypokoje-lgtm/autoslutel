@@ -2,7 +2,7 @@ import 'server-only';
 import { createHash, randomUUID } from 'node:crypto';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { readPhoto, writePhoto } from '@/lib/kfcStockStore';
-import { getCrmUser, seesPrices, type CrmUser } from '@/lib/crmSession';
+import { getCrmUser, seesPurchasePrices, type CrmUser } from '@/lib/crmSession';
 import type { StockArticle, StockBatch, StockBin, StockMove, StockState } from '@/lib/keyforcarsStock';
 import catalog from '@/data/keyforcars-stock.json';
 import { ARTICLE_CODE, WORKSHOP_PREFIX } from '@/lib/stockCatalog';
@@ -126,7 +126,7 @@ export async function loadState(user: CrmUser): Promise<StockState> {
       photos: ((row.kfc_count_photos as { sha256: string }[] | null) ?? []).map((p) => p.sha256),
     })),
   };
-  return seesPrices(user) ? state : stripPrices(state);
+  return seesPurchasePrices(user) ? state : stripPrices(state);
 }
 
 function stripPrices(state: StockState): StockState {
@@ -450,7 +450,7 @@ export async function listPurchaseOrders(user: CrmUser): Promise<PurchaseOrder[]
     .select('id, supplier, supplier_id, status, expected_on, note, created_at, ordered_at, received_at, invoice_ref, document_type, kfc_purchase_order_lines (id, article_code, quantity, received, unit_cost_cents, kfc_stock_moves(id,kfc_receipt_photos(move_id)), kfc_articles (name, sku))')
     .order('created_at', { ascending: false }).limit(200);
   if (error) throw new StockError(`Inkooporders lezen mislukt: ${error.message}`, 500);
-  const prices = seesPrices(user);
+  const prices = seesPurchasePrices(user);
   return (data ?? []).map((row) => {
     const lines = (row.kfc_purchase_order_lines as unknown as { kfc_stock_moves: { id: number; kfc_receipt_photos: { move_id: number } | null }[]; id: string; article_code: string; quantity: number; received: number; unit_cost_cents: number | null; kfc_articles: { name: string; sku: string } | null }[]) ?? [];
     return {
@@ -568,7 +568,7 @@ export async function assemble(input: AssemblyInput, user: CrmUser): Promise<Ass
   return (await recentAssemblies(1, data.id))[0];
 }
 
-/** Purchase price per article, for the cost preview. Office only (the caller checks seesPrices). */
+/** Purchase price per article, for the cost preview. The caller checks seesPurchasePrices. */
 export async function articleCosts(codes: string[]): Promise<Record<string, number | null>> {
   const clean = [...new Set(codes.map((c) => c.trim().toUpperCase()).filter((c) => articleCode.test(c) || c.startsWith(WORKSHOP_PREFIX)))].slice(0, 60);
   if (!clean.length) return {};

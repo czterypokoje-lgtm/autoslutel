@@ -26,8 +26,17 @@ export const OFFICE_ROLES: readonly CrmRole[] = ['owner', 'kantoor'];
  * the server strips those before responding (kfcInventory.ts).
  */
 export const WAREHOUSE_ROLES: readonly CrmRole[] = ['owner', 'kantoor', 'magazijn', 'inpak'];
-/** True when this user may see purchase prices and money. */
+/** True when this user may see purchase prices and money (and do office-only stock work). */
 export const seesPrices = (user: CrmUser) => !!user.role && OFFICE_ROLES.includes(user.role);
+
+/**
+ * Display only: may this user *see* purchase prices on stock screens? Office
+ * always; a magazijn user when the owner switched it on for that person
+ * (app_metadata.prices, Instellingen › Medewerkers); picker never. It grants
+ * no office actions: those keep checking seesPrices.
+ */
+export const seesPurchasePrices = (user: CrmUser) =>
+  seesPrices(user) || (user.role === 'magazijn' && user.pricesAllowed === true);
 
 export const canBookReturns = (user: CrmUser) => seesPrices(user) || user.role === 'magazijn';
 
@@ -35,6 +44,8 @@ export interface CrmUser {
   id: string;
   email: string | null;
   role: CrmRole | null;
+  /** app_metadata.prices: a magazijn user allowed to see purchase prices (see seesPrices). */
+  pricesAllowed?: boolean;
 }
 
 function readRole(appMetadata: Record<string, unknown> | undefined): CrmRole | null {
@@ -64,6 +75,7 @@ export const getCrmUser = cache(async (): Promise<CrmUser | null> => {
     id: data.user.id,
     email: data.user.email ?? null,
     role: readRole(data.user.app_metadata),
+    pricesAllowed: data.user.app_metadata?.prices === true,
   };
 });
 

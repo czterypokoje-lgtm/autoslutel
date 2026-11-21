@@ -2,7 +2,7 @@ import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { notFound } from 'next/navigation';
 import { BRAND, WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
-import { requireWarehouseUser, seesPrices } from '@/lib/crmSession';
+import { requireWarehouseUser, seesPurchasePrices } from '@/lib/crmSession';
 import { recentAssemblies, type AssemblyRow } from '@/lib/kfcInventory';
 import Montage from './Montage';
 
@@ -17,7 +17,7 @@ export const metadata = { title: `Montage | ${BRAND.name}` };
 export default async function MontagePage() {
   if (!WAREHOUSE || CRM_PREVIEW) notFound();
   const user = await requireWarehouseUser('/admin/voorraad/montage');
-  const prices = seesPrices(user);
+  const prices = seesPurchasePrices(user);
   let rows: AssemblyRow[] = [];
   let error = '';
   try {

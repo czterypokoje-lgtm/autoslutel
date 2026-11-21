@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
 import {
   AudioLines, BarChart3, Boxes, CalendarDays, ChevronRight, Euro, Inbox, KeyRound, LayoutDashboard, LogOut, Package, PackageCheck, PhoneCall, Search,
-  Settings, ShoppingCart, Store, Users, type LucideIcon,
+  Settings, ShoppingCart, Store, Tags, UserCog, Users, type LucideIcon,
 } from 'lucide-react';
 import { RefreshCw, Truck, Undo2 } from 'lucide-react';
 import {
@@ -44,6 +44,7 @@ const GROUPS: Group[] = [
     label: 'Overzicht',
     items: [
       { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/overzicht', office: true },
+      { label: 'Eigenaarsoverzicht', icon: BarChart3, href: '/admin/rapporten/eigenaar', office: true },
       { label: 'Bestellingen', icon: ShoppingCart, href: '/admin/orders', office: true },
       { label: 'Klanten', icon: Users, href: '/admin/klanten', office: true },
       { label: 'Werkplaatsagenda', icon: CalendarDays, href: '/admin/agenda' },
@@ -60,6 +61,8 @@ const GROUPS: Group[] = [
           { label: 'Bestelvoorstel', href: '/admin/voorraad?view=reorder' },
           { label: 'Voorraadrapporten', href: '/admin/voorraad?view=reports' },
           { label: 'Voorraadlogboek', href: '/admin/voorraad?view=journal' },
+          { label: 'Artikellijst', href: '/admin/voorraad/artikelen' },
+          { label: 'Analyse en rapporten', href: '/admin/voorraad/analyse' },
           { label: 'Montage', href: '/admin/voorraad/montage' },
         ],
       },
@@ -67,6 +70,14 @@ const GROUPS: Group[] = [
       { label: 'Retouren', icon: Undo2, href: '/admin/retouren' },
       { label: 'Inkoop', icon: Package, href: '/admin/inkoop' },
       { label: 'Leveranciers', icon: Truck, href: '/admin/leveranciers', office: true },
+      {
+        label: 'Artikelbeheer', icon: Tags, office: true, children: [
+          { label: 'Datakwaliteit', href: '/admin/artikelbeheer/kwaliteit' },
+          { label: 'Categorieën', href: '/admin/artikelbeheer/categorieen' },
+          { label: 'Bulk bewerken', href: '/admin/artikelbeheer/bulk' },
+          { label: 'Import en export', href: '/admin/artikelbeheer/import' },
+        ],
+      },
     ],
   },
   {
@@ -140,6 +151,10 @@ const TITLES: Record<string, string> = {
   'mijn-vak': 'Mijn vak', 'mijn-profiel': 'Profiel',
   // Cariler (0130)
   leveranciers: 'Leveranciers', rekeningen: 'Debiteuren & crediteuren', relaties: 'Klantaccounts', ekstre: 'Ekstre',
+  // Inventory lists and owner reports (migration 0131)
+  artikelen: 'Artikellijst', artikel: 'Artikel', analyse: 'Analyse en rapporten', etiketten: 'Etiketten', eigenaar: 'Eigenaarsoverzicht',
+  // Product master data and staff (0134)
+  artikelbeheer: 'Artikelbeheer', kwaliteit: 'Datakwaliteit', categorieen: 'Categorieën', bulk: 'Bulk bewerken', import: 'Import en export', medewerkers: 'Medewerkers',
 };
 
 /**
@@ -210,6 +225,9 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
   const groups = IS_KEYFORCARS ? GROUPS : role === 'monteur' ? AUTOSLEUTEL_MONTEUR : WAREHOUSE ? AUTOSLEUTEL_OFFICE_WAREHOUSE : AUTOSLEUTEL_OFFICE;
   const visible = groups.flatMap((group) => {
     const items = servedItems(group.items.filter((item) => office || !item.office));
+    if (WAREHOUSE && group.label === 'Kantoor' && office) {
+      items.push({ label: 'Medewerkers', href: '/admin/instellingen/medewerkers', icon: UserCog });
+    }
     if (WAREHOUSE && group.label === 'Kantoor' && role === 'owner') {
       items.push({ label: 'AI-budget', href: '/admin/instellingen/budget', icon: Euro });
     }

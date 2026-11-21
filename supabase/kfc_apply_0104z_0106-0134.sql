@@ -30,30 +30,31 @@
 --   0128_purchase_expense.sql  sha256:ce247c644e8a
 --   0129_kfc_pos.sql  sha256:b9c2cd707eb4
 --   0130_kfc_cariler.sql  sha256:3ff2752f5ce1
+--   0131_kfc_inventory_reports.sql  sha256:37f2a5c07a92
 --   0132_kfc_woo_stock_sync.sql  sha256:f77d7397aaf7
 --   0133_install_marker.sql  sha256:28be3dd6fe8e
---
--- Missing (not merged yet when this file was built — rebuild before go-live):
---   0131  voorraadrapporten  — NOT IN THIS BUNDLE
---   0134  productdata / categorieën / gebruikers  — NOT IN THIS BUNDLE
+--   0134_kfc_product_master.sql  sha256:3eb529d8055a
 
 begin;
 
 -- Refuse the wrong database before touching anything.
+-- crm_install is read with EXECUTE: a static reference is planned even when
+-- the table is missing (KeyForCars at 0105 has none) and would abort the file.
 do $$
+declare v_marked text;
 begin
   if to_regclass('public.inbox_threads') is null then
     raise exception 'This database is not at migration 0105 (public.inbox_threads missing). Stop: wrong project, or 0001-0105 not applied.';
   end if;
-  if to_regclass('public.crm_install') is not null
-     and exists (select 1 from public.crm_install where profile <> 'keyforcars') then
+  if to_regclass('public.crm_install') is not null then
+    execute 'select profile from public.crm_install limit 1' into v_marked;
+  end if;
+  if v_marked is not null and v_marked <> 'keyforcars' then
     raise exception 'public.crm_install says this database is not KeyForCars. Stop.';
   end if;
   -- Autosleutel24 already has 0106+. A database that does, and is not marked
   -- keyforcars, is not the one this file is for.
-  if to_regclass('public.whatsapp_quotes') is not null and (
-       to_regclass('public.crm_install') is null
-       or not exists (select 1 from public.crm_install where profile = 'keyforcars')) then
+  if to_regclass('public.whatsapp_quotes') is not null and coalesce(v_marked, '') <> 'keyforcars' then
     raise exception 'This database already has migration 0106 and is not marked keyforcars (Autosleutel24?). Stop.';
   end if;
 end
@@ -2277,6 +2278,433 @@ grant execute on function public.kfc_reverse_supplier_entry(bigint, text, uuid, 
 
 notify pgrst, 'reload schema';
 
+-- ===== 0131_kfc_inventory_reports.sql =====
+-- ============================================================================
+-- 0131: KeyForCars inventory lists and owner reports (Nebim / ERPNext level).
+--
+-- Read-only views and report functions over the ledger of 0090 and later. Nothing
+-- here writes stock; every number is derived from kfc_stock_moves,
+-- kfc_stock_levels, kfc_purchase_order_lines and the documents a move links to.
+--
+--   kfc_article_overview     one row per article: master data, the five stock
+--                            numbers, minimum, value at purchase price, last
+--                            supplier, last receipt / sale, sales 30 / 90 / 365
+--                            days and a stock state (negatief · nul · laag ·
+--                            op_voorraad). The article master list pages,
+--                            filters and sorts on this view through PostgREST.
+--   kfc_sales_lines          every 'sale' and 'return' move as a sales line with
+--                            channel (webshop · kassa · factuur · overig), revenue
+--                            excl. VAT and cost. Returns are negative lines.
+--   kfc_sales_report()       sales per article / category / day / month / channel
+--   kfc_article_movement()   per article: stock, sold, revenue, profit, cover days
+--                            (slow / fast movers and ABC)
+--   kfc_stock_valuation()    quantity and value per article and location on a date
+--   kfc_stock_ledger()       every move with a running balance per article
+--   kfc_stock_ageing()       FIFO ageing of the current stock in day buckets
+--   kfc_article_totals()     counts and stock value for the article list header
+--
+-- Revenue rules (also in docs/voorraad-rapporten.md):
+--   webshop  the order line's total excl. VAT, pro rata the moved quantity;
+--   invoice  (kassa and other invoices) the invoice line whose description is the
+--            article name (+ " (SKU)"), as kfc_pos_sale writes it; when no line
+--            matches, the article's shelf price / 1.21 and the row is flagged
+--            revenue_estimated;
+--   cost     the move's unit_cost_cents, else the article's current purchase
+--            price (flagged cost_estimated).
+--
+-- Install isolation: these objects only read tables of the database they are
+-- created in; KeyForCars and Autosleutel24 each run their own Supabase project.
+--
+-- Server-only like 0090: nothing for anon or authenticated, select / execute for
+-- service_role only. Idempotent: create or replace / if not exists throughout.
+-- ============================================================================
+
+-- Indexes the reports filter on -----------------------------------------------
+create index if not exists kfc_stock_moves_reason_time_idx on public.kfc_stock_moves (reason, created_at);
+create index if not exists kfc_stock_moves_invoice_idx on public.kfc_stock_moves (sales_invoice_id) where sales_invoice_id is not null;
+create index if not exists kfc_stock_moves_order_line_idx on public.kfc_stock_moves (order_line_id) where order_line_id is not null;
+create index if not exists kfc_stock_moves_location_time_idx on public.kfc_stock_moves (location_id, created_at);
+create index if not exists kfc_stock_moves_batch_idx on public.kfc_stock_moves (count_batch_id) where count_batch_id is not null;
+create index if not exists kfc_articles_category_idx on public.kfc_articles (category);
+create index if not exists kfc_articles_status_idx on public.kfc_articles (status);
+
+-- ---------------------------------------------------------------------------
+-- Sales lines
+-- ---------------------------------------------------------------------------
+create or replace view public.kfc_sales_lines as
+select
+  m.id                                                   as move_id,
+  m.created_at,
+  (m.created_at at time zone 'Europe/Amsterdam')::date   as day,
+  m.article_code,
+  a.name,
+  a.sku,
+  a.category,
+  m.reason,
+  -m.delta                                               as quantity,  -- sale +, return −
+  case
+    when m.order_line_id is not null then 'webshop'
+    when m.sales_invoice_id is not null and coalesce(m.note, '') like 'Kassa %' then 'kassa'
+    when m.sales_invoice_id is not null then 'factuur'
+    else 'overig'
+  end                                                    as channel,
+  so.shop,
+  coalesce(so.number, si.invoice_number)                 as document,
+  m.order_line_id,
+  m.sales_invoice_id,
+  case
+    when sl.id is not null and sl.quantity > 0
+      then round(coalesce(sl.total_excl_cents, 0)::numeric * (-m.delta) / sl.quantity)::bigint
+    when il.unit_price is not null
+      then round((il.unit_price * il.quantity - il.discount) / il.quantity * 100 * (-m.delta))::bigint
+    else round(coalesce(a.sale_price_cents, 0)::numeric / 1.21 * (-m.delta))::bigint
+  end                                                    as revenue_cents,
+  (sl.id is null and il.unit_price is null)              as revenue_estimated,
+  (coalesce(m.unit_cost_cents, a.purchase_price_cents, 0)::bigint * (-m.delta)) as cost_cents,
+  (m.unit_cost_cents is null)                            as cost_estimated
+from public.kfc_stock_moves m
+join public.kfc_articles a on a.code = m.article_code
+left join public.kfc_shop_order_lines sl on sl.id = m.order_line_id
+left join public.kfc_shop_orders so on so.id = sl.order_id
+left join public.sales_invoices si on si.id = m.sales_invoice_id
+left join lateral (
+  select l.unit_price, l.quantity, l.discount
+  from public.sales_invoice_lines l
+  where m.sales_invoice_id is not null and l.invoice_id = m.sales_invoice_id
+    and l.description in (a.name, left(a.name || case when a.sku <> '' then ' (' || a.sku || ')' else '' end, 300))
+  order by l.line_no
+  limit 1
+) il on true
+where m.reason in ('sale', 'return');
+
+-- ---------------------------------------------------------------------------
+-- Article overview (master list)
+-- ---------------------------------------------------------------------------
+create or replace view public.kfc_article_overview as
+with levels as (
+  select l.article_code,
+         sum(l.minimum) filter (where loc.kind = 'shelf')                                   as minimum,
+         array_agg(distinct loc.warehouse) filter (where l.quantity <> 0)                   as warehouses,
+         array_agg(distinct loc.warehouse || '/' || loc.shelf || '/' || loc.box)
+           filter (where l.quantity <> 0)                                                    as locations,
+         max(l.last_counted_at)                                                              as last_counted_at
+  from public.kfc_stock_levels l
+  join public.kfc_locations loc on loc.id = l.location_id
+  group by l.article_code
+), moves as (
+  select article_code,
+         max(created_at) filter (where reason in ('received', 'assembly') and delta > 0) as last_received_at,
+         max(created_at) filter (where reason = 'sale')                                  as last_sold_at,
+         max(created_at)                                                                  as last_move_at,
+         coalesce(-sum(delta) filter (where reason in ('sale', 'return') and created_at >= now() - interval '30 days'), 0)  as sold_30d,
+         coalesce(-sum(delta) filter (where reason in ('sale', 'return') and created_at >= now() - interval '90 days'), 0)  as sold_90d,
+         coalesce(-sum(delta) filter (where reason in ('sale', 'return') and created_at >= now() - interval '365 days'), 0) as sold_365d
+  from public.kfc_stock_moves
+  group by article_code
+), suppliers as (
+  select pl.article_code,
+         array_agg(distinct po.supplier)                                                   as suppliers,
+         (array_agg(po.supplier order by coalesce(po.ordered_at, po.created_at) desc))[1]  as last_supplier,
+         (array_agg(pl.unit_cost_cents order by coalesce(po.ordered_at, po.created_at) desc)
+            filter (where pl.unit_cost_cents is not null))[1]                              as last_po_cost_cents
+  from public.kfc_purchase_order_lines pl
+  join public.kfc_purchase_orders po on po.id = pl.po_id
+  where po.status <> 'cancelled'
+  group by pl.article_code
+)
+select
+  a.code, a.name, a.sku, a.ean, a.category, a.status, a.condition, a.tracking, a.supplier_ref,
+  a.sale_price_cents, a.purchase_price_cents, a.photo_version, a.created_at, a.updated_at,
+  p.physical, p.unusable, p.reserved, p.available, p.incoming,
+  coalesce(lv.minimum, 0)::integer                                                   as minimum,
+  (greatest(p.physical - p.unusable, 0)::bigint * coalesce(a.purchase_price_cents, 0)) as stock_value_cents,
+  (a.purchase_price_cents is null)                                                   as unpriced,
+  coalesce(lv.warehouses, '{}')                                                      as warehouses,
+  coalesce(lv.locations, '{}')                                                       as locations,
+  lv.last_counted_at,
+  coalesce(s.suppliers, '{}')                                                        as suppliers,
+  s.last_supplier,
+  s.last_po_cost_cents,
+  mv.last_received_at, mv.last_sold_at, mv.last_move_at,
+  coalesce(mv.sold_30d, 0)::integer  as sold_30d,
+  coalesce(mv.sold_90d, 0)::integer  as sold_90d,
+  coalesce(mv.sold_365d, 0)::integer as sold_365d,
+  case
+    when p.physical < 0 then 'negatief'
+    when p.physical = 0 then 'nul'
+    when coalesce(lv.minimum, 0) > 0 and p.available <= lv.minimum then 'laag'
+    else 'op_voorraad'
+  end as stock_state,
+  case when a.sale_price_cents is null or a.purchase_price_cents is null or a.sale_price_cents = 0 then null
+       else round((a.sale_price_cents / 1.21 - a.purchase_price_cents) / (a.sale_price_cents / 1.21) * 100, 1)
+  end as margin_pct
+from public.kfc_articles a
+join public.kfc_stock_position p on p.article_code = a.code
+left join levels lv on lv.article_code = a.code
+left join moves mv on mv.article_code = a.code
+left join suppliers s on s.article_code = a.code;
+
+-- ---------------------------------------------------------------------------
+-- Sales report: grouped sales lines for a period.
+-- p_group: article · category · day · month · channel · shop
+-- ---------------------------------------------------------------------------
+create or replace function public.kfc_sales_report(
+  p_from date, p_to date, p_group text default 'article',
+  p_category text default '', p_channel text default '', p_query text default ''
+) returns table (
+  key text, label text, category text, quantity bigint, lines bigint,
+  revenue_cents bigint, cost_cents bigint, profit_cents bigint, margin_pct numeric,
+  estimated bigint, first_at timestamptz, last_at timestamptz
+) language sql stable set search_path = '' as $$
+  with scoped as (
+    select s.*,
+      case p_group
+        when 'category' then coalesce(nullif(s.category, ''), '(geen categorie)')
+        when 'day'      then to_char(s.day, 'YYYY-MM-DD')
+        when 'month'    then to_char(s.day, 'YYYY-MM')
+        when 'channel'  then s.channel
+        when 'shop'     then coalesce(s.shop, s.channel)
+        else s.article_code
+      end as k
+    from public.kfc_sales_lines s
+    where s.day between p_from and p_to
+      and (p_category = '' or s.category = p_category)
+      and (p_channel = '' or s.channel = p_channel)
+      and (p_query = '' or strpos(lower(s.article_code), lower(p_query)) > 0
+           or strpos(lower(s.name), lower(p_query)) > 0 or strpos(lower(s.sku), lower(p_query)) > 0)
+  )
+  select k,
+    case when p_group = 'article' then max(name) else k end,
+    case when p_group = 'article' then max(category) else null end,
+    sum(quantity)::bigint, count(*)::bigint,
+    sum(revenue_cents)::bigint, sum(cost_cents)::bigint, (sum(revenue_cents) - sum(cost_cents))::bigint,
+    case when sum(revenue_cents) = 0 then null
+         else round((sum(revenue_cents) - sum(cost_cents))::numeric / sum(revenue_cents) * 100, 1) end,
+    count(*) filter (where revenue_estimated or cost_estimated)::bigint,
+    min(created_at), max(created_at)
+  from scoped
+  group by k
+  order by case when p_group in ('day', 'month') then k end, sum(revenue_cents) desc;
+$$;
+
+-- ---------------------------------------------------------------------------
+-- Article movement: slow / fast movers and ABC (classification done in the app).
+-- ---------------------------------------------------------------------------
+create or replace function public.kfc_article_movement(p_from date, p_to date, p_category text default '')
+returns table (
+  code text, name text, sku text, category text, status text,
+  physical integer, available integer, stock_value_cents bigint,
+  sold bigint, revenue_cents bigint, profit_cents bigint,
+  last_sold_at timestamptz, last_received_at timestamptz, days_cover numeric
+) language sql stable set search_path = '' as $$
+  with sales as (
+    select article_code, sum(quantity)::bigint as sold, sum(revenue_cents)::bigint as revenue,
+           (sum(revenue_cents) - sum(cost_cents))::bigint as profit
+    from public.kfc_sales_lines
+    where day between p_from and p_to
+    group by article_code
+  )
+  select o.code, o.name, o.sku, o.category, o.status,
+    o.physical::integer, o.available::integer, o.stock_value_cents,
+    coalesce(s.sold, 0), coalesce(s.revenue, 0), coalesce(s.profit, 0),
+    o.last_sold_at, o.last_received_at,
+    case when coalesce(s.sold, 0) <= 0 then null
+         else round(o.physical::numeric / (s.sold::numeric / greatest(p_to - p_from + 1, 1)), 0) end
+  from public.kfc_article_overview o
+  left join sales s on s.article_code = o.code
+  where (p_category = '' or o.category = p_category)
+    and (o.physical <> 0 or s.article_code is not null);
+$$;
+
+-- ---------------------------------------------------------------------------
+-- Stock valuation on a date (end of that day, Amsterdam), per article and
+-- location, from the ledger. Value at the last known unit cost on that date
+-- (receipts / assemblies), else the current purchase price. Quarantine stock
+-- is listed with value 0.
+-- ---------------------------------------------------------------------------
+create or replace function public.kfc_stock_valuation(p_date date, p_warehouse text default '', p_category text default '')
+returns table (
+  article_code text, name text, sku text, category text,
+  location_id uuid, warehouse text, shelf text, box text, kind text, technician_id uuid,
+  quantity bigint, unit_cost_cents integer, value_cents bigint, cost_estimated boolean
+) language sql stable set search_path = '' as $$
+  with bound as (select (p_date + 1)::timestamp at time zone 'Europe/Amsterdam' as ends),
+  qty as (
+    select m.article_code, m.location_id, sum(m.delta)::bigint as quantity
+    from public.kfc_stock_moves m cross join bound
+    where m.created_at < bound.ends
+    group by m.article_code, m.location_id
+    having sum(m.delta) <> 0
+  ), cost as (
+    select distinct on (m.article_code) m.article_code, m.unit_cost_cents
+    from public.kfc_stock_moves m cross join bound
+    where m.created_at < bound.ends and m.delta > 0 and m.reason in ('received', 'assembly')
+      and m.unit_cost_cents is not null
+    order by m.article_code, m.created_at desc, m.id desc
+  )
+  select q.article_code, a.name, a.sku, a.category,
+    q.location_id, coalesce(loc.warehouse, '(geen locatie)'), loc.shelf, loc.box, coalesce(loc.kind, 'shelf'), loc.technician_id,
+    q.quantity,
+    coalesce(c.unit_cost_cents, a.purchase_price_cents),
+    case when coalesce(loc.kind, 'shelf') = 'quarantine' then 0::bigint
+         else greatest(q.quantity, 0) * coalesce(c.unit_cost_cents, a.purchase_price_cents, 0) end,
+    c.unit_cost_cents is null
+  from qty q
+  join public.kfc_articles a on a.code = q.article_code
+  left join public.kfc_locations loc on loc.id = q.location_id
+  left join cost c on c.article_code = q.article_code
+  where (p_warehouse = '' or coalesce(loc.warehouse, '(geen locatie)') = p_warehouse)
+    and (p_category = '' or a.category = p_category);
+$$;
+
+-- ---------------------------------------------------------------------------
+-- Stock ledger: every move in the period with the article's running balance
+-- (all locations) after the move, plus the opening balance before the period.
+-- One page at a time; p_page_size 0 = everything (for export, capped at 50 000).
+-- ---------------------------------------------------------------------------
+create or replace function public.kfc_stock_ledger(
+  p_from date, p_to date, p_article text default '', p_reason text default '', p_warehouse text default '',
+  p_query text default '', p_page integer default 1, p_page_size integer default 100
+) returns jsonb language sql stable set search_path = '' as $$
+  with bounds as (
+    select p_from::timestamp at time zone 'Europe/Amsterdam' as starts,
+           (p_to + 1)::timestamp at time zone 'Europe/Amsterdam' as ends
+  ), arts as (
+    select a.code, a.name, a.sku, a.category, a.purchase_price_cents from public.kfc_articles a
+    where (p_article = '' or a.code = p_article)
+      and (p_query = '' or strpos(lower(a.code), lower(p_query)) > 0 or strpos(lower(a.name), lower(p_query)) > 0
+           or strpos(lower(a.sku), lower(p_query)) > 0)
+  ), running as (
+    select m.id, m.created_at, m.article_code, m.location_id, m.delta, m.quantity_after, m.reason,
+      m.unit_cost_cents, m.note, m.order_line_id, m.sales_invoice_id, m.purchase_order_line_id, m.count_batch_id, m.created_by,
+      sum(m.delta) over (partition by m.article_code order by m.created_at, m.id) as balance
+    from public.kfc_stock_moves m
+    join arts on arts.code = m.article_code
+    cross join bounds
+    where m.created_at < bounds.ends
+  ), period as (
+    select r.*, arts.name, arts.sku, arts.category,
+      loc.warehouse, loc.shelf, loc.box,
+      coalesce(r.unit_cost_cents, arts.purchase_price_cents) * r.delta as value_cents,
+      po.supplier, so.number as order_number, si.invoice_number
+    from running r
+    join arts on arts.code = r.article_code
+    cross join bounds
+    left join public.kfc_locations loc on loc.id = r.location_id
+    left join public.kfc_purchase_order_lines pl on pl.id = r.purchase_order_line_id
+    left join public.kfc_purchase_orders po on po.id = pl.po_id
+    left join public.kfc_shop_order_lines sl on sl.id = r.order_line_id
+    left join public.kfc_shop_orders so on so.id = sl.order_id
+    left join public.sales_invoices si on si.id = r.sales_invoice_id
+    where r.created_at >= bounds.starts
+      and (p_reason = '' or r.reason = p_reason)
+      and (p_warehouse = '' or loc.warehouse = p_warehouse)
+  ), opening as (
+    select coalesce(sum(m.delta), 0) as qty
+    from public.kfc_stock_moves m join arts on arts.code = m.article_code cross join bounds
+    where m.created_at < bounds.starts
+  ), totals as (
+    select count(*) as n,
+      coalesce(sum(delta) filter (where delta > 0), 0) as incoming,
+      coalesce(-sum(delta) filter (where delta < 0), 0) as outgoing
+    from period
+  )
+  select jsonb_build_object(
+    'opening', (select qty from opening),
+    'count', totals.n, 'incoming', totals.incoming, 'outgoing', totals.outgoing,
+    'rows', coalesce((
+      select jsonb_agg(to_jsonb(v) order by v.created_at desc, v.id desc) from (
+        select * from period order by created_at desc, id desc
+        limit case when p_page_size <= 0 then 50000 else p_page_size end
+        offset case when p_page_size <= 0 then 0 else (greatest(p_page, 1)::bigint - 1) * p_page_size end
+      ) v), '[]'::jsonb)
+  ) from totals;
+$$;
+
+-- ---------------------------------------------------------------------------
+-- Stock ageing (FIFO): the current physical stock is taken to be the most
+-- recent inbound moves (receipt, assembly, return, positive count/correction;
+-- transfers are internal and skipped). Stock older than every recorded inbound
+-- has an unknown age and is counted in the oldest bucket.
+-- ---------------------------------------------------------------------------
+create or replace function public.kfc_stock_ageing(p_category text default '')
+returns table (
+  code text, name text, sku text, category text, physical integer, unit_cost_cents integer, value_cents bigint,
+  q_0_30 bigint, q_31_60 bigint, q_61_90 bigint, q_91_180 bigint, q_181_365 bigint, q_365p bigint,
+  oldest_days integer, avg_days numeric, last_received_at timestamptz, last_sold_at timestamptz
+) language sql stable set search_path = '' as $$
+  with stock as (
+    select o.code, o.name, o.sku, o.category, o.physical, o.purchase_price_cents, o.last_received_at, o.last_sold_at
+    from public.kfc_article_overview o
+    where o.physical > 0 and (p_category = '' or o.category = p_category)
+  ), inbound as (
+    select m.article_code, m.created_at, m.delta,
+      sum(m.delta) over (partition by m.article_code order by m.created_at desc, m.id desc) as cum
+    from public.kfc_stock_moves m
+    join stock s on s.code = m.article_code
+    where m.delta > 0 and m.reason <> 'transfer'
+  ), alloc as (
+    select i.article_code,
+      greatest(0, least(i.delta, s.physical - (i.cum - i.delta)))::bigint as qty,
+      (now() at time zone 'Europe/Amsterdam')::date - (i.created_at at time zone 'Europe/Amsterdam')::date as age
+    from inbound i join stock s on s.code = i.article_code
+  ), known as (
+    select article_code,
+      sum(qty) as qty,
+      sum(qty) filter (where age <= 30) as a30, sum(qty) filter (where age between 31 and 60) as a60,
+      sum(qty) filter (where age between 61 and 90) as a90, sum(qty) filter (where age between 91 and 180) as a180,
+      sum(qty) filter (where age between 181 and 365) as a365, sum(qty) filter (where age > 365) as a365p,
+      max(age) filter (where qty > 0) as oldest,
+      sum(qty * age) as weighted
+    from alloc group by article_code
+  )
+  select s.code, s.name, s.sku, s.category, s.physical::integer, s.purchase_price_cents,
+    s.physical::bigint * coalesce(s.purchase_price_cents, 0),
+    coalesce(k.a30, 0)::bigint, coalesce(k.a60, 0)::bigint, coalesce(k.a90, 0)::bigint,
+    coalesce(k.a180, 0)::bigint, coalesce(k.a365, 0)::bigint,
+    (coalesce(k.a365p, 0) + greatest(s.physical - coalesce(k.qty, 0), 0))::bigint,
+    case when s.physical > coalesce(k.qty, 0) then null else k.oldest end::integer,
+    case when coalesce(k.qty, 0) = 0 then null else round(k.weighted::numeric / k.qty, 0) end,
+    s.last_received_at, s.last_sold_at
+  from stock s left join known k on k.article_code = s.code;
+$$;
+
+-- ---------------------------------------------------------------------------
+-- Header totals of the article list in one pass over the overview.
+-- ---------------------------------------------------------------------------
+create or replace function public.kfc_article_totals()
+returns jsonb language sql stable set search_path = '' as $$
+  select jsonb_build_object(
+    'articles', count(*),
+    'in_stock', count(*) filter (where physical > 0),
+    'low',      count(*) filter (where stock_state = 'laag'),
+    'zero',     count(*) filter (where stock_state = 'nul'),
+    'negative', count(*) filter (where stock_state = 'negatief'),
+    'incoming', count(*) filter (where incoming > 0),
+    'value',    coalesce(sum(stock_value_cents), 0),
+    'unpriced', count(*) filter (where unpriced and physical > 0)
+  ) from public.kfc_article_overview;
+$$;
+
+-- Security ---------------------------------------------------------------------
+revoke all on public.kfc_sales_lines from public, anon, authenticated;
+revoke all on public.kfc_article_overview from public, anon, authenticated;
+grant select on public.kfc_sales_lines to service_role;
+grant select on public.kfc_article_overview to service_role;
+
+revoke all on function public.kfc_sales_report(date, date, text, text, text, text) from public, anon, authenticated;
+revoke all on function public.kfc_article_movement(date, date, text) from public, anon, authenticated;
+revoke all on function public.kfc_stock_valuation(date, text, text) from public, anon, authenticated;
+revoke all on function public.kfc_stock_ledger(date, date, text, text, text, text, integer, integer) from public, anon, authenticated;
+revoke all on function public.kfc_stock_ageing(text) from public, anon, authenticated;
+revoke all on function public.kfc_article_totals() from public, anon, authenticated;
+grant execute on function public.kfc_sales_report(date, date, text, text, text, text) to service_role;
+grant execute on function public.kfc_article_movement(date, date, text) to service_role;
+grant execute on function public.kfc_stock_valuation(date, text, text) to service_role;
+grant execute on function public.kfc_stock_ledger(date, date, text, text, text, text, integer, integer) to service_role;
+grant execute on function public.kfc_stock_ageing(text) to service_role;
+grant execute on function public.kfc_article_totals() to service_role;
+
 -- ===== 0132_kfc_woo_stock_sync.sql =====
 -- ============================================================================
 -- 0132: KeyForCars ↔ WooCommerce stock push, and returns back into stock.
@@ -2631,5 +3059,526 @@ $$;
 
 revoke all on function public.crm_install_profile() from public;
 grant execute on function public.crm_install_profile() to anon, authenticated, service_role;
+
+-- ===== 0134_kfc_product_master.sql =====
+-- ============================================================================
+-- 0134: KeyForCars product master data (ERPNext "Item Group" style).
+--
+--   kfc_categories           category tree: parent, name, sort, default VAT rate,
+--                            default margin. kfc_articles.category_id points here;
+--                            kfc_articles.category (free text) is kept and always
+--                            mirrors the leaf name, so older code keeps working.
+--   kfc_category_aliases     old names that were merged into another category; a
+--                            later write of the old text lands on the survivor
+--                            instead of re-creating the merged category.
+--   kfc_article_specs        one row per article: key type, frequency, chip,
+--                            buttons, blade, vehicle brand.
+--   kfc_article_fitments     make / model / year range the article fits.
+--   kfc_article_changes      audit trail of bulk edits and imports (old → new).
+--   kfc_barcode_duplicates   view: a barcode on more than one quantity-tracked
+--                            article. Reported, never deleted; new duplicates are
+--                            refused by the bulk editor and the import.
+--   kfc_article_quality      view: one row per article with data-quality flags.
+--   kfc_import_runs          (0091) also records article imports now: kind
+--                            'article_import', a checksum per file + options, so
+--                            the same file applied twice changes nothing.
+--
+-- RPCs: kfc_category_resolve (path → id, creates missing levels),
+-- kfc_merge_categories, kfc_bulk_update_articles, kfc_apply_article_import.
+--
+-- Server-only like the rest of kfc_*: RLS on, no policies, nothing granted to
+-- anon or authenticated; functions executable by service_role only. Idempotent.
+-- ============================================================================
+
+-- ---------------------------------------------------------------------------
+-- Category tree
+-- ---------------------------------------------------------------------------
+create table if not exists public.kfc_categories (
+  id                  uuid primary key default gen_random_uuid(),
+  parent_id           uuid references public.kfc_categories (id) on delete restrict,
+  name                text not null check (length(btrim(name)) between 1 and 80 and name !~ '[>›]'),
+  sort                integer not null default 0,
+  vat_rate            numeric(5,2) not null default 21 check (vat_rate >= 0 and vat_rate <= 100),
+  default_margin_pct  numeric(7,2) check (default_margin_pct is null or (default_margin_pct > -100 and default_margin_pct < 10000)),
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
+create unique index if not exists kfc_categories_sibling_name
+  on public.kfc_categories (coalesce(parent_id, '00000000-0000-0000-0000-000000000000'::uuid), lower(btrim(name)));
+create index if not exists kfc_categories_parent_idx on public.kfc_categories (parent_id);
+
+create table if not exists public.kfc_category_aliases (
+  alias        text primary key,             -- lower(btrim(old name))
+  category_id  uuid not null references public.kfc_categories (id) on delete cascade,
+  created_at   timestamptz not null default now()
+);
+
+-- A category may never become its own ancestor.
+create or replace function public.kfc_categories_guard()
+returns trigger language plpgsql set search_path = '' as $$
+begin
+  new.name := btrim(new.name);
+  if new.parent_id is not null and (tg_op = 'INSERT' or new.parent_id is distinct from old.parent_id) then
+    if new.parent_id = new.id or exists (
+      with recursive up as (
+        select id, parent_id from public.kfc_categories where id = new.parent_id
+        union all
+        select c.id, c.parent_id from public.kfc_categories c join up on c.id = up.parent_id
+      ) select 1 from up where up.id = new.id
+    ) then raise exception 'KFC_CATEGORY_CYCLE'; end if;
+  end if;
+  return new;
+end $$;
+drop trigger if exists kfc_categories_guard on public.kfc_categories;
+create trigger kfc_categories_guard before insert or update of parent_id, name on public.kfc_categories
+  for each row execute function public.kfc_categories_guard();
+
+-- Full path per category ("Sleutels › Volkswagen › Golf"), for lists and exports.
+create or replace view public.kfc_category_paths as
+with recursive tree as (
+  select id, parent_id, name, sort, 0 as depth, name::text as path, array[sort]::integer[] as sort_path, array[lower(name)] as name_path
+    from public.kfc_categories where parent_id is null
+  union all
+  select c.id, c.parent_id, c.name, c.sort, t.depth + 1, t.path || ' › ' || c.name, t.sort_path || c.sort, t.name_path || lower(c.name)
+    from public.kfc_categories c join tree t on c.parent_id = t.id
+  where t.depth < 12
+)
+select id, parent_id, name, depth, path, sort_path, name_path from tree;
+
+-- ---------------------------------------------------------------------------
+-- Article columns
+-- ---------------------------------------------------------------------------
+alter table public.kfc_articles add column if not exists category_id uuid;
+alter table public.kfc_articles add column if not exists min_stock integer;
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'kfc_articles_category_fk') then
+    alter table public.kfc_articles add constraint kfc_articles_category_fk
+      foreign key (category_id) references public.kfc_categories (id) on delete restrict;
+  end if;
+  if not exists (select 1 from pg_constraint where conname = 'kfc_articles_min_stock_check') then
+    alter table public.kfc_articles add constraint kfc_articles_min_stock_check check (min_stock is null or min_stock >= 0);
+  end if;
+end $$;
+create index if not exists kfc_articles_category_idx on public.kfc_articles (category_id);
+create index if not exists kfc_articles_ean_gin on public.kfc_articles using gin (ean);
+
+-- Free text → category: alias first, then a root with that name, then any
+-- category with that name, otherwise a new root category.
+create or replace function public.kfc_category_for_text(p_text text)
+returns uuid language plpgsql set search_path = '' as $$
+declare v_name text := left(btrim(regexp_replace(coalesce(p_text, ''), '[>›]', '-', 'g')), 80); v_id uuid;
+begin
+  if v_name = '' then return null; end if;
+  select category_id into v_id from public.kfc_category_aliases where alias = lower(v_name);
+  if found then return v_id; end if;
+  select id into v_id from public.kfc_categories where lower(name) = lower(v_name)
+    order by (parent_id is null) desc, sort, created_at limit 1;
+  if found then return v_id; end if;
+  insert into public.kfc_categories (name) values (v_name) on conflict do nothing returning id into v_id;
+  if v_id is null then
+    select id into v_id from public.kfc_categories where parent_id is null and lower(name) = lower(v_name);
+  end if;
+  return v_id;
+end $$;
+
+-- category_id is the master; the text column mirrors its name. A write that
+-- only sets the text (older RPCs, Woo import, quick article) is linked to the
+-- tree by kfc_category_for_text.
+create or replace function public.kfc_articles_category_sync()
+returns trigger language plpgsql set search_path = '' as $$
+begin
+  if new.category_id is not null and (tg_op = 'INSERT' or new.category_id is distinct from old.category_id) then
+    select name into new.category from public.kfc_categories where id = new.category_id;
+  elsif tg_op = 'UPDATE' and new.category_id is null and old.category_id is not null
+        and new.category is not distinct from old.category then
+    new.category := '';
+  elsif tg_op = 'INSERT' or new.category is distinct from old.category then
+    if btrim(coalesce(new.category, '')) = '' then
+      new.category := '';
+      new.category_id := null;
+    elsif new.category_id is null or not exists (
+      select 1 from public.kfc_categories where id = new.category_id and lower(name) = lower(btrim(new.category))
+    ) then
+      new.category_id := public.kfc_category_for_text(new.category);
+      select name into new.category from public.kfc_categories where id = new.category_id;
+    end if;
+  end if;
+  return new;
+end $$;
+drop trigger if exists kfc_articles_category_sync on public.kfc_articles;
+create trigger kfc_articles_category_sync before insert or update of category, category_id on public.kfc_articles
+  for each row execute function public.kfc_articles_category_sync();
+
+-- A renamed category renames the text on its articles.
+create or replace function public.kfc_categories_rename()
+returns trigger language plpgsql set search_path = '' as $$
+begin
+  if new.name is distinct from old.name then
+    update public.kfc_articles set category = new.name where category_id = new.id;
+  end if;
+  return null;
+end $$;
+drop trigger if exists kfc_categories_rename on public.kfc_categories;
+create trigger kfc_categories_rename after update of name on public.kfc_categories
+  for each row execute function public.kfc_categories_rename();
+
+-- Backfill: one root category per distinct text category, then link. Odd
+-- texts (">" in them, over 80 characters) go through the same resolver.
+update public.kfc_articles set category_id = public.kfc_category_for_text(category)
+ where category_id is null and btrim(category) <> '';
+
+-- Path → id ("Sleutels > Volkswagen"); creates the missing levels.
+create or replace function public.kfc_category_resolve(p_path text, p_create boolean default true)
+returns uuid language plpgsql set search_path = '' as $$
+declare v_part text; v_parent uuid := null; v_id uuid; v_first boolean := true;
+begin
+  if btrim(coalesce(p_path, '')) = '' then return null; end if;
+  foreach v_part in array regexp_split_to_array(p_path, '\s*[>›]\s*') loop
+    v_part := left(btrim(v_part), 80);
+    continue when v_part = '';
+    v_id := null;
+    select id into v_id from public.kfc_categories
+     where coalesce(parent_id, '00000000-0000-0000-0000-000000000000'::uuid) = coalesce(v_parent, '00000000-0000-0000-0000-000000000000'::uuid)
+       and lower(name) = lower(v_part);
+    if v_id is null and v_first then
+      select category_id into v_id from public.kfc_category_aliases where alias = lower(v_part);
+    end if;
+    if v_id is null then
+      if not p_create then return null; end if;
+      insert into public.kfc_categories (parent_id, name) values (v_parent, v_part) returning id into v_id;
+    end if;
+    v_parent := v_id;
+    v_first := false;
+  end loop;
+  return v_parent;
+end $$;
+
+-- Merge p_from into p_into: articles move, children move (same-named children
+-- merge recursively), the old name becomes an alias, p_from is deleted.
+create or replace function public.kfc_merge_categories(p_from uuid, p_into uuid)
+returns integer language plpgsql set search_path = '' as $$
+declare v_from public.kfc_categories; v_child record; v_twin uuid; v_moved integer := 0; v_n integer;
+begin
+  if p_from = p_into then raise exception 'KFC_MERGE_SELF'; end if;
+  select * into v_from from public.kfc_categories where id = p_from for update;
+  if not found or not exists (select 1 from public.kfc_categories where id = p_into) then raise exception 'KFC_NO_CATEGORY'; end if;
+  if exists (
+    with recursive up as (
+      select id, parent_id from public.kfc_categories where id = p_into
+      union all select c.id, c.parent_id from public.kfc_categories c join up on c.id = up.parent_id
+    ) select 1 from up where up.id = p_from
+  ) then raise exception 'KFC_MERGE_INTO_CHILD'; end if;
+
+  update public.kfc_articles set category_id = p_into, updated_at = now() where category_id = p_from;
+  get diagnostics v_moved = row_count;
+
+  for v_child in select id, name from public.kfc_categories where parent_id = p_from loop
+    v_twin := null;
+    select id into v_twin from public.kfc_categories where parent_id = p_into and lower(name) = lower(v_child.name);
+    if v_twin is not null then
+      v_n := public.kfc_merge_categories(v_child.id, v_twin);
+      v_moved := v_moved + v_n;
+    else
+      update public.kfc_categories set parent_id = p_into, updated_at = now() where id = v_child.id;
+    end if;
+  end loop;
+
+  update public.kfc_category_aliases set category_id = p_into where category_id = p_from;
+  insert into public.kfc_category_aliases (alias, category_id) values (lower(v_from.name), p_into)
+    on conflict (alias) do update set category_id = excluded.category_id;
+  delete from public.kfc_categories where id = p_from;
+  return v_moved;
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- Item attributes: specs (1:1) and vehicle fitments (1:n)
+-- ---------------------------------------------------------------------------
+create table if not exists public.kfc_article_specs (
+  article_code  text primary key references public.kfc_articles (code) on delete cascade,
+  brand         text,                     -- vehicle brand the article is for (Volkswagen, Kawasaki …)
+  key_type      text check (key_type is null or key_type in
+                  ('remote', 'smart', 'flip', 'transponder', 'blade', 'emergency', 'housing', 'card', 'chip', 'pcb', 'battery', 'tool', 'other')),
+  frequency     text,                     -- "433 MHz", "868 MHz", "125 kHz"
+  chip          text,                     -- "ID48", "Hitag AES", "4D63"
+  buttons       smallint check (buttons is null or buttons between 0 and 12),
+  blade         text,                     -- blade profile, e.g. HU66
+  updated_at    timestamptz not null default now()
+);
+
+create table if not exists public.kfc_article_fitments (
+  id            uuid primary key default gen_random_uuid(),
+  article_code  text not null references public.kfc_articles (code) on delete cascade,
+  make          text not null check (length(btrim(make)) between 1 and 60),
+  model         text not null default '',
+  year_from     smallint check (year_from is null or year_from between 1950 and 2100),
+  year_to       smallint check (year_to is null or year_to between 1950 and 2100),
+  note          text,
+  source        text not null default 'manual' check (source in ('manual', 'import', 'profile')),
+  created_at    timestamptz not null default now(),
+  constraint kfc_article_fitments_years check (year_to is null or year_from is null or year_to >= year_from)
+);
+create unique index if not exists kfc_article_fitments_unique
+  on public.kfc_article_fitments (article_code, lower(make), lower(model), coalesce(year_from, 0), coalesce(year_to, 0));
+create index if not exists kfc_article_fitments_vehicle_idx on public.kfc_article_fitments (lower(make), lower(model));
+
+-- ---------------------------------------------------------------------------
+-- Audit of bulk edits and imports
+-- ---------------------------------------------------------------------------
+create table if not exists public.kfc_article_changes (
+  id             bigserial primary key,
+  article_code   text not null references public.kfc_articles (code) on delete cascade,
+  source         text not null check (source in ('bulk', 'import')),
+  changes        jsonb not null,          -- {"field": [old, new]}
+  import_run_id  bigint,
+  created_by     uuid,
+  created_at     timestamptz not null default now()
+);
+create index if not exists kfc_article_changes_article_idx on public.kfc_article_changes (article_code, created_at desc);
+
+-- ---------------------------------------------------------------------------
+-- Barcodes and data quality
+-- ---------------------------------------------------------------------------
+create or replace view public.kfc_barcode_duplicates as
+select b.barcode, array_agg(distinct b.code order by b.code) as codes, count(distinct b.code)::integer as articles
+  -- Serial-tracked (used) articles share the barcode of the new product on purpose.
+  from (select code, btrim(unnest(ean)) as barcode from public.kfc_articles where tracking = 'quantity') b
+ where b.barcode <> ''
+ group by b.barcode
+having count(distinct b.code) > 1;
+
+create or replace view public.kfc_article_quality as
+with dup as (
+  select distinct unnest(codes) as code from public.kfc_barcode_duplicates
+), neg as (
+  select distinct article_code as code from public.kfc_stock_levels where quantity < 0
+)
+select a.code, a.name, a.sku, a.status, a.category_id, a.ean,
+       a.sale_price_cents, a.purchase_price_cents, a.min_stock, a.supplier_ref, a.tracking, a.condition,
+       coalesce(p.physical, 0) as physical,
+       (a.status <> 'discontinued' and cardinality(array_remove(a.ean, '')) = 0)          as no_barcode,
+       (a.category_id is null)                                                             as no_category,
+       (a.status <> 'discontinued' and coalesce(a.sale_price_cents, 0) = 0)                as no_price,
+       (a.status <> 'discontinued' and a.purchase_price_cents is null)                     as no_purchase_price,
+       (d.code is not null)                                                                as duplicate_barcode,
+       (n.code is not null or coalesce(p.physical, 0) < 0)                                 as negative_stock
+  from public.kfc_articles a
+  left join public.kfc_stock_position p on p.article_code = a.code
+  left join dup d on d.code = a.code
+  left join neg n on n.code = a.code;
+
+-- ---------------------------------------------------------------------------
+-- One article change: {before:{field:value}} must still match the row
+-- (someone may have changed it meanwhile), {after:{field:value}} is written.
+-- New barcodes may not belong to another article. Returns 'updated',
+-- 'unchanged', 'conflict' or 'missing'.
+-- ---------------------------------------------------------------------------
+create or replace function public.kfc_article_fields()
+returns text[] language sql immutable set search_path = '' as $$
+  select array['name', 'sku', 'ean', 'category_id', 'status', 'sale_price_cents', 'purchase_price_cents', 'min_stock', 'supplier_ref']
+$$;
+
+create or replace function public.kfc_apply_article_change(
+  p_code text, p_before jsonb, p_after jsonb, p_source text, p_run bigint, p_user uuid
+) returns text language plpgsql set search_path = '' as $$
+declare
+  v_row public.kfc_articles; v_new public.kfc_articles; v_old jsonb; v_key text; v_diff jsonb := '{}'::jsonb; v_bar text;
+begin
+  select * into v_row from public.kfc_articles where code = p_code for update;
+  if not found then return 'missing'; end if;
+  v_old := to_jsonb(v_row);
+  for v_key in select jsonb_object_keys(coalesce(p_before, '{}'::jsonb) || coalesce(p_after, '{}'::jsonb)) loop
+    if not v_key = any(public.kfc_article_fields()) then raise exception 'KFC_BAD_FIELD:%', v_key; end if;
+  end loop;
+  for v_key in select jsonb_object_keys(coalesce(p_before, '{}'::jsonb)) loop
+    if (v_old -> v_key) is distinct from (p_before -> v_key) then return 'conflict'; end if;
+  end loop;
+  v_new := jsonb_populate_record(v_row, coalesce(p_after, '{}'::jsonb));
+  if v_new.ean is distinct from v_row.ean then
+    select coalesce(array_agg(distinct btrim(e)), '{}') into v_new.ean from unnest(v_new.ean) e where btrim(e) <> '';
+    foreach v_bar in array v_new.ean loop
+      if v_row.tracking = 'quantity' and not v_bar = any(v_row.ean) and exists (
+        select 1 from public.kfc_articles where code <> p_code and tracking = 'quantity' and v_bar = any(ean)
+      ) then raise exception 'KFC_DUPLICATE_BARCODE:%', v_bar; end if;
+    end loop;
+  end if;
+  for v_key in select unnest(public.kfc_article_fields()) loop
+    if (v_old -> v_key) is distinct from (to_jsonb(v_new) -> v_key) then
+      v_diff := v_diff || jsonb_build_object(v_key, jsonb_build_array(v_old -> v_key, to_jsonb(v_new) -> v_key));
+    end if;
+  end loop;
+  if v_diff = '{}'::jsonb then return 'unchanged'; end if;
+  update public.kfc_articles set
+    name = v_new.name, sku = v_new.sku, ean = v_new.ean, category_id = v_new.category_id, status = v_new.status,
+    sale_price_cents = v_new.sale_price_cents, purchase_price_cents = v_new.purchase_price_cents,
+    min_stock = v_new.min_stock, supplier_ref = v_new.supplier_ref, updated_at = now()
+  where code = p_code;
+  insert into public.kfc_article_changes (article_code, source, changes, import_run_id, created_by)
+  values (p_code, p_source, v_diff, p_run, p_user);
+  return 'updated';
+end $$;
+
+-- Bulk edit: [{code, before, after}]. All or nothing: one conflict and the
+-- whole call is rolled back with the conflicting codes in the message.
+create or replace function public.kfc_bulk_update_articles(p_changes jsonb, p_user uuid default null)
+returns jsonb language plpgsql set search_path = '' as $$
+declare v_item jsonb; v_result text; v_conflicts text[] := '{}'; v_updated integer := 0;
+begin
+  if jsonb_typeof(p_changes) <> 'array' or jsonb_array_length(p_changes) > 5000 then raise exception 'KFC_BAD_BATCH'; end if;
+  for v_item in select * from jsonb_array_elements(p_changes) loop
+    v_result := public.kfc_apply_article_change(v_item ->> 'code', v_item -> 'before', v_item -> 'after', 'bulk', null, p_user);
+    if v_result in ('conflict', 'missing') then v_conflicts := v_conflicts || (v_item ->> 'code'); end if;
+    if v_result = 'updated' then v_updated := v_updated + 1; end if;
+  end loop;
+  if cardinality(v_conflicts) > 0 then
+    raise exception 'KFC_CONFLICT:%', array_to_string(v_conflicts, ',');
+  end if;
+  return jsonb_build_object('updated', v_updated);
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- Import runs: article imports share kfc_import_runs with the Woo importer.
+-- The kind check is widened by OR-ing onto whatever the current check is, so a
+-- kind another migration added is never lost.
+-- ---------------------------------------------------------------------------
+alter table public.kfc_import_runs add column if not exists checksum   text;
+alter table public.kfc_import_runs add column if not exists file_name  text;
+alter table public.kfc_import_runs add column if not exists summary    jsonb;
+alter table public.kfc_import_runs add column if not exists created_by uuid;
+do $$
+declare v_name text; v_def text;
+begin
+  select conname, pg_get_constraintdef(oid) into v_name, v_def from pg_constraint
+   where conrelid = 'public.kfc_import_runs'::regclass and contype = 'c' and pg_get_constraintdef(oid) ilike '%kind%'
+   limit 1;
+  if v_name is not null and v_def not ilike '%article_import%' then
+    execute format('alter table public.kfc_import_runs drop constraint %I', v_name);
+    execute format('alter table public.kfc_import_runs add constraint %I check (%s or kind = %L)',
+      v_name, regexp_replace(v_def, '^CHECK\s*', ''), 'article_import');
+  end if;
+end $$;
+create unique index if not exists kfc_import_runs_article_checksum
+  on public.kfc_import_runs (checksum) where kind = 'article_import' and error is null;
+
+-- p_rows: [{action:'create'|'update', code?, before?, after:{…}, category_path?, specs?, fitments?}]
+-- prepared by the server from the same file it showed in the dry run. All or
+-- nothing; a file already applied (same checksum) returns that run unchanged.
+create or replace function public.kfc_apply_article_import(
+  p_checksum text, p_file text, p_prefix text, p_rows jsonb, p_user uuid default null
+) returns jsonb language plpgsql set search_path = '' as $$
+declare
+  v_run public.kfc_import_runs; v_row jsonb; v_after jsonb; v_code text; v_next bigint; v_result text;
+  v_created integer := 0; v_updated integer := 0; v_unchanged integer := 0; v_fit jsonb; v_constraint text;
+  v_conflicts text[] := '{}'; v_bar text; v_ean text[];
+begin
+  if p_prefix not in ('KFC-1-', 'AS24-1-') then raise exception 'KFC_BAD_PREFIX'; end if;
+  if jsonb_typeof(p_rows) <> 'array' or jsonb_array_length(p_rows) > 20000 then raise exception 'KFC_BAD_BATCH'; end if;
+  select * into v_run from public.kfc_import_runs where kind = 'article_import' and checksum = p_checksum and error is null;
+  if found then return jsonb_build_object('replay', true, 'run', v_run.id, 'summary', v_run.summary, 'finished_at', v_run.finished_at); end if;
+
+  insert into public.kfc_import_runs (shop, kind, checksum, file_name, created_by)
+  values ('artikelen', 'article_import', p_checksum, left(p_file, 200), p_user) returning * into v_run;
+
+  for v_row in select * from jsonb_array_elements(p_rows) loop
+    v_after := coalesce(v_row -> 'after', '{}'::jsonb);
+    if coalesce(v_row ->> 'category_path', '') <> '' then
+      v_after := v_after || jsonb_build_object('category_id', public.kfc_category_resolve(v_row ->> 'category_path', true));
+    end if;
+    if v_row ->> 'action' = 'create' then
+      v_code := nullif(v_row ->> 'code', '');
+      if v_code is null then
+        perform pg_advisory_xact_lock(hashtext('kfc_article_code:' || p_prefix));
+        select coalesce(max(substr(code, length(p_prefix) + 1)::bigint), 0) + 1 into v_next
+          from public.kfc_articles where code ~ ('^' || p_prefix || '[0-9]{1,18}$');
+        v_code := p_prefix || v_next::text;
+      end if;
+      select coalesce(array_agg(distinct btrim(e)), '{}') into v_ean
+        from jsonb_array_elements_text(coalesce(v_after -> 'ean', '[]'::jsonb)) e where btrim(e) <> '';
+      foreach v_bar in array v_ean loop
+        if exists (select 1 from public.kfc_articles where tracking = 'quantity' and v_bar = any(ean)) then raise exception 'KFC_DUPLICATE_BARCODE:%', v_bar; end if;
+      end loop;
+      insert into public.kfc_articles (code, name, sku, ean, category_id, status, sale_price_cents, purchase_price_cents, min_stock, supplier_ref)
+      values (v_code, coalesce(v_after ->> 'name', v_code), coalesce(v_after ->> 'sku', ''), v_ean,
+              (v_after ->> 'category_id')::uuid, coalesce(v_after ->> 'status', 'held'),
+              (v_after ->> 'sale_price_cents')::integer, (v_after ->> 'purchase_price_cents')::integer,
+              (v_after ->> 'min_stock')::integer, nullif(v_after ->> 'supplier_ref', ''));
+      insert into public.kfc_article_changes (article_code, source, changes, import_run_id, created_by)
+      values (v_code, 'import', jsonb_build_object('created', jsonb_build_array(null, v_after)), v_run.id, p_user);
+      v_created := v_created + 1;
+    elsif v_row ->> 'action' = 'update' then
+      v_code := v_row ->> 'code';
+      v_result := public.kfc_apply_article_change(v_code, v_row -> 'before', v_after, 'import', v_run.id, p_user);
+      if v_result in ('conflict', 'missing') then v_conflicts := v_conflicts || v_code; end if;
+      if v_result = 'updated' then v_updated := v_updated + 1; else v_unchanged := v_unchanged + 1; end if;
+    else
+      continue;
+    end if;
+
+    if jsonb_typeof(v_row -> 'specs') = 'object' and v_row -> 'specs' <> '{}'::jsonb then
+      insert into public.kfc_article_specs (article_code) values (v_code) on conflict do nothing;
+      update public.kfc_article_specs s set
+        brand     = coalesce(v_row -> 'specs' ->> 'brand', s.brand),
+        key_type  = coalesce(v_row -> 'specs' ->> 'key_type', s.key_type),
+        frequency = coalesce(v_row -> 'specs' ->> 'frequency', s.frequency),
+        chip      = coalesce(v_row -> 'specs' ->> 'chip', s.chip),
+        buttons   = coalesce((v_row -> 'specs' ->> 'buttons')::smallint, s.buttons),
+        blade     = coalesce(v_row -> 'specs' ->> 'blade', s.blade),
+        updated_at = now()
+      where s.article_code = v_code;
+    end if;
+    for v_fit in select * from jsonb_array_elements(coalesce(v_row -> 'fitments', '[]'::jsonb)) loop
+      insert into public.kfc_article_fitments (article_code, make, model, year_from, year_to, source)
+      values (v_code, v_fit ->> 'make', coalesce(v_fit ->> 'model', ''), (v_fit ->> 'year_from')::smallint, (v_fit ->> 'year_to')::smallint, 'import')
+      on conflict do nothing;
+    end loop;
+  end loop;
+
+  if cardinality(v_conflicts) > 0 then raise exception 'KFC_CONFLICT:%', array_to_string(v_conflicts, ','); end if;
+
+  update public.kfc_import_runs set finished_at = now(), orders = v_created + v_updated,
+    summary = jsonb_build_object('created', v_created, 'updated', v_updated, 'unchanged', v_unchanged)
+   where id = v_run.id returning * into v_run;
+  return jsonb_build_object('replay', false, 'run', v_run.id, 'summary', v_run.summary, 'finished_at', v_run.finished_at);
+exception when unique_violation then
+  get stacked diagnostics v_constraint = constraint_name;
+  if v_constraint = 'kfc_import_runs_article_checksum' then
+    select * into v_run from public.kfc_import_runs where kind = 'article_import' and checksum = p_checksum and error is null;
+    return jsonb_build_object('replay', true, 'run', v_run.id, 'summary', v_run.summary, 'finished_at', v_run.finished_at);
+  end if;
+  raise;
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- Security: server-only.
+-- ---------------------------------------------------------------------------
+do $$
+declare t text;
+begin
+  foreach t in array array['kfc_categories', 'kfc_category_aliases', 'kfc_article_specs', 'kfc_article_fitments', 'kfc_article_changes'] loop
+    execute format('alter table public.%I enable row level security', t);
+    execute format('revoke all on public.%I from anon, authenticated', t);
+  end loop;
+end $$;
+revoke all on public.kfc_category_paths, public.kfc_barcode_duplicates, public.kfc_article_quality from anon, authenticated;
+revoke all on sequence public.kfc_article_changes_id_seq from anon, authenticated;
+
+revoke all on function public.kfc_categories_guard() from public, anon, authenticated;
+revoke all on function public.kfc_categories_rename() from public, anon, authenticated;
+revoke all on function public.kfc_articles_category_sync() from public, anon, authenticated;
+revoke all on function public.kfc_category_for_text(text) from public, anon, authenticated;
+revoke all on function public.kfc_category_resolve(text, boolean) from public, anon, authenticated;
+revoke all on function public.kfc_merge_categories(uuid, uuid) from public, anon, authenticated;
+revoke all on function public.kfc_article_fields() from public, anon, authenticated;
+revoke all on function public.kfc_apply_article_change(text, jsonb, jsonb, text, bigint, uuid) from public, anon, authenticated;
+revoke all on function public.kfc_bulk_update_articles(jsonb, uuid) from public, anon, authenticated;
+revoke all on function public.kfc_apply_article_import(text, text, text, jsonb, uuid) from public, anon, authenticated;
+grant execute on function public.kfc_category_resolve(text, boolean) to service_role;
+grant execute on function public.kfc_merge_categories(uuid, uuid) to service_role;
+grant execute on function public.kfc_bulk_update_articles(jsonb, uuid) to service_role;
+grant execute on function public.kfc_apply_article_import(text, text, text, jsonb, uuid) to service_role;
+-- Called inside the triggers and RPCs above, which run as the caller (service_role).
+grant execute on function public.kfc_category_for_text(text) to service_role;
+grant execute on function public.kfc_article_fields() to service_role;
+grant execute on function public.kfc_apply_article_change(text, jsonb, jsonb, text, bigint, uuid) to service_role;
 
 commit;

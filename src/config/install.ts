@@ -73,8 +73,8 @@ const KEYFORCARS_HIDDEN = [
   '/admin/producten',
   '/admin/mijn-',
   '/admin/orders/', // the list is KeyForCars's own; detail and purchase pages read our old webshop
-  // Jobs, leads and the dispatch office: KeyForCars has no technicians.
-  '/admin/leads',
+  // Jobs and the dispatch office: KeyForCars has no technicians. Leads stay:
+  // the shop gets enquiries and works them like Autosleutel24 does.
   '/admin/jobs',
   '/admin/live',
   '/admin/kantoor',
