@@ -51,3 +51,21 @@ export function modelRows(fits: VehicleFit[], rows: number) {
   }
   return { lines, more: total - shown };
 }
+
+/** Our own web shops, best first: a label's QR opens the product page there when it has one. */
+const OWN_SHOPS = ['keyforcars.nl', 'klapsleutels.nl'];
+
+/**
+ * Where a shelf label's QR leads: the product page in our shop, else another
+ * page we know for it (the supplier's), else the article in the CRM. A web
+ * link carries no stock code, so the bulk count ignores it and counts the
+ * label by its barcode.
+ */
+export function labelLink(sources: { shop: string; url: string }[], profileLinks: { shop: string; url: string }[], crmUrl: string) {
+  const web = (list: { shop: string; url: string }[]) => list.filter((link) => /^https:\/\//.test(link.url));
+  for (const shop of OWN_SHOPS) {
+    const own = web(sources).find((link) => link.shop === shop);
+    if (own) return own.url;
+  }
+  return web(sources)[0]?.url ?? web(profileLinks)[0]?.url ?? crmUrl;
+}

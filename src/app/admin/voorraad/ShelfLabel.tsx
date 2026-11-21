@@ -1,7 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react';
 import type { StockArticle, StockBin } from '@/lib/keyforcarsStock';
 import type { ProductProfileData } from '@/lib/productProfiles';
-import { modelRows } from './ShelfLabelRows';
+import { labelLink, modelRows } from './ShelfLabelRows';
 import { LabelBarcode } from './StockLabel';
 import styles from './keyforcars.module.css';
 import { usePreviewLanguage } from '../PreviewLanguage';
@@ -76,7 +76,8 @@ export default function ShelfLabel({ article, bin, code, number, profile, size }
         <span className={styles.shelfMeta}>{number || code}{location ? ` · ${location}` : ''}</span>
       </footer>
       {/* A link, so a phone camera opens the article in the CRM; the stock scanner reads the code from it. */}
-      <QRCodeSVG className={styles.shelfQr} value={`${process.env.NEXT_PUBLIC_SITE_URL || (typeof window === 'undefined' ? '' : window.location.origin)}/admin/voorraad/artikel/${encodeURIComponent(code)}`} size={64} marginSize={2} level="L" />
+      <QRCodeSVG className={styles.shelfQr} value={labelLink(article.sources ?? [], profile?.links ?? [],
+        `${process.env.NEXT_PUBLIC_SITE_URL || (typeof window === 'undefined' ? '' : window.location.origin)}/admin/voorraad/artikel/${encodeURIComponent(code)}`)} size={64} marginSize={2} level="L" />
     </article>
   );
 }

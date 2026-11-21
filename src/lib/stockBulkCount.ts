@@ -28,6 +28,8 @@ export interface DecodedCode {
  */
 export function trustedUnknownCode(code: DecodedCode, normalised: string) {
   const lines = code.lines ?? 0;
+  // A web link (the QR on our shelf labels points to the shop) names no stock code: the label's barcode counts it.
+  if (/^HTTPS?:\/\//.test(normalised)) return false;
   if (code.format === 'QRCode' || code.format === 'MicroQRCode' || code.format === 'DataMatrix') return true;
   if (['EAN13', 'EAN8', 'UPCA', 'UPCE'].includes(code.format)) return lines >= 3 && /^\d{8,14}$/.test(normalised);
   if (code.format === 'Code128') return lines >= 5 && normalised.length >= 6;

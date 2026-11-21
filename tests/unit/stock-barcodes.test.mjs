@@ -41,3 +41,10 @@ test('a photo with a manufacturer barcode counts once it is learned, and is "unk
   assert.equal(after.unknown.size, 0);
   assert.deepEqual(aggregate([after], new Set()).lines, [{ article: 'KFC-1-1', seen: 2, photos: 1 }]);
 });
+
+test('a shop link in a label QR is not an unknown code', async () => {
+  const { trustedUnknownCode, normaliseCode } = await import('../../src/lib/stockBulkCount.ts');
+  const url = 'https://www.keyforcars.nl/product/giulietta-mito-3-knops-klapsleutel-behuizing/';
+  assert.equal(trustedUnknownCode({ text: url, format: 'QRCode', lines: 0 }, normaliseCode(url)), false);
+  assert.equal(trustedUnknownCode({ text: 'XYZ123', format: 'QRCode', lines: 0 }, 'XYZ123'), true);
+});

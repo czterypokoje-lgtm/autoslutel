@@ -13,7 +13,7 @@ import shelfStyles from '../keyforcars.module.css';
 import { usePreviewLanguage } from '../../PreviewLanguage';
 import '../stockPrint.css';
 
-export interface LabelArticle { code: string; name: string; sku: string; price: number | null; location: string; photo?: string | null; number?: string | null; profile?: ProductProfileData | null }
+export interface LabelArticle { code: string; name: string; sku: string; price: number | null; location: string; photo?: string | null; number?: string | null; profile?: ProductProfileData | null; sources?: { shop: string; url: string }[] }
 
 const SIZES = {
   '62x29': { nl: '62 × 29 mm (Brother)', page: '62mm 29mm', w: '62mm', h: '29mm', sheet: false, perPage: 1 },
@@ -115,7 +115,7 @@ export default function LabelPrint({ articles, missing = [], showPrice }: { arti
   const drawerSize = drawer ? choice as LabelSize : '100x50';
   const shelfLabel = (label: (typeof labels)[number]) => {
     const [shelf = '', box = ''] = label.location.split('/');
-    const article = { id: label.code, name: label.name, sku: label.sku, image: label.photo ?? '', category: '', sources: [] };
+    const article = { id: label.code, name: label.name, sku: label.sku, image: label.photo ?? '', category: '', sources: label.sources ?? [] };
     return <ShelfLabel key={label.key} article={article} bin={label.location ? { article: label.code, shelf, box, quantity: 0, minimum: 0 } : undefined}
       code={label.sku && code39Safe(label.sku.toUpperCase()) ? label.sku.toUpperCase() : label.code} number={label.number} profile={label.profile ?? null} size={drawerSize} />;
   };

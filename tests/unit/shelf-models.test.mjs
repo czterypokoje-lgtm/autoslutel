@@ -20,3 +20,14 @@ test('a CRM fitment prints as entered, also without years', () => {
   const { lines } = modelRows([{ text: 'crm', vehicle: 'Mercedes-Benz Sprinter', from: null, to: null }, { text: 'crm', vehicle: 'Mercedes-Benz Vito', from: 2014, to: 2014 }], 9);
   assert.deepEqual(lines, [{ make: 'Mercedes-Benz' }, { model: 'Sprinter', years: '' }, { model: 'Vito', years: '2014–2014' }]);
 });
+
+test('label QR: our shop first, then another known page, then the CRM', async () => {
+  const { labelLink } = await import('../../src/app/admin/voorraad/ShelfLabelRows.ts');
+  const own = { shop: 'keyforcars.nl', url: 'https://www.keyforcars.nl/product/x/' };
+  const other = { shop: 'klapsleutels.nl', url: 'https://www.klapsleutels.nl/product/x/' };
+  const supplier = { shop: 'remkeys', url: 'https://remkeys.com/x' };
+  assert.equal(labelLink([other, own], [supplier], 'crm'), own.url);
+  assert.equal(labelLink([other], [supplier], 'crm'), other.url);
+  assert.equal(labelLink([], [supplier], 'crm'), supplier.url);
+  assert.equal(labelLink([], [], 'https://crm/admin/voorraad/artikel/X'), 'https://crm/admin/voorraad/artikel/X');
+});
