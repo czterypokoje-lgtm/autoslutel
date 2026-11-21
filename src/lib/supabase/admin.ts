@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { readonlyClientOptions } from '@/lib/readonly';
+import { assertSupabaseInstall } from './env';
 
 /**
  * A client that answers to nobody's session.
@@ -18,6 +19,8 @@ import { readonlyClientOptions } from '@/lib/readonly';
  * and the conversion export.
  */
 export function createSupabaseAdminClient(): SupabaseClient {
+  // The service-role key bypasses RLS: never hand it to the other install's database.
+  assertSupabaseInstall();
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.storage_SUPABASE_SERVICE_ROLE_KEY;

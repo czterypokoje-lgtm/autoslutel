@@ -23,7 +23,7 @@ import { Separator } from '@/components/ui/separator';
 import { StaffChat } from './StaffChat';
 import { LanguageToggle, usePreviewLanguage } from './PreviewLanguage';
 import type { CrmRole } from '@/lib/crmSession';
-import { BRAND, IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
+import { BRAND, IS_KEYFORCARS, WAREHOUSE, installServes } from '@/config/install';
 import { MONTEUR_NAV, OFFICE_NAV, reportLinks, type NavItem } from './AdminNav';
 import MobileTabBar from './MobileTabBar';
 import styles from './admin.module.css';
@@ -131,6 +131,18 @@ const TITLES: Record<string, string> = {
   'mijn-vak': 'Mijn vak', 'mijn-profiel': 'Profiel',
 };
 
+/**
+ * Never link to a screen this install answers with 404 (installServes, the
+ * same rule src/proxy.ts enforces): hidden links are dropped, and a menu whose
+ * links are all hidden disappears with them.
+ */
+const served = (href: string) => installServes(href.split('?')[0]);
+const servedItems = (items: Item[]): Item[] => items.flatMap((item) => {
+  if (!item.children) return item.href && served(item.href) ? [item] : [];
+  const children = item.children.filter((child) => served(child.href));
+  return children.length ? [{ ...item, children }] : [];
+});
+
 /** The stock screens use the camera, which needs a full page load for its Permissions-Policy. */
 const fullLoad = (href: string) => /^\/admin\/voorraad(?:[/?]|$)/.test(href);
 
@@ -186,7 +198,7 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
   };
   const groups = IS_KEYFORCARS ? GROUPS : role === 'monteur' ? AUTOSLEUTEL_MONTEUR : WAREHOUSE ? AUTOSLEUTEL_OFFICE_WAREHOUSE : AUTOSLEUTEL_OFFICE;
   const visible = groups.flatMap((group) => {
-    const items = group.items.filter((item) => office || !item.office);
+    const items = servedItems(group.items.filter((item) => office || !item.office));
     if (WAREHOUSE && group.label === 'Kantoor' && role === 'owner') {
       items.push({ label: 'AI-budget', href: '/admin/instellingen/budget', icon: Euro });
     }
