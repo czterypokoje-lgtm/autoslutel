@@ -76,6 +76,12 @@ function detectChannel(data: NonNullable<PostCallPayload['data']>): string {
   const source = String(meta.conversation_initiation_source ?? '').toLowerCase();
   if (source.includes('whatsapp')) return 'whatsapp';
   if (source.includes('twilio') || source.includes('phone')) return 'phone';
+  /*
+   * The embed widget on the webshop (convai-widget-embed) reports 'widget'.
+   * Measured on 21 Nov 2026: 14 such rows, all from the shop's chat button,
+   * none with a phone_call/whatsapp/sms object. It is a website chat.
+   */
+  if (source === 'widget') return 'webchat';
 
   return 'unknown';
 }
