@@ -6,19 +6,29 @@ import { Input } from '@/components/ui/input';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { fetchAll } from '@/lib/kfcOrders';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { addContact, createAccount } from './actions';
+import { IS_KEYFORCARS } from '@/config/install';
+import { ACCOUNT_PROBLEMS } from '@/lib/accountValidation';
+import AccountFields from '../AccountFields';
+import { addContact, createAccount, updateAccount } from './actions';
 
 export const dynamic = 'force-dynamic';
 
 const path = '/admin/klanten/relaties';
 const types = { person: 'Particulier', company: 'Bedrijf' };
 const messages = {
+  ...ACCOUNT_PROBLEMS,
   saved: 'Opgeslagen.',
   invalid: 'Controleer de naam, het type en het internationale telefoonnummer.',
   failed: 'Opslaan mislukt.',
   review: 'Dit telefoonnummer staat onder een andere naam of is inactief. Controleer het bestaande contact.',
 } as const;
-type Account = { id: string; company: string; phone: string | null; account_kind: keyof typeof types };
+// One cari system: the same kfc_customers rows and fields as the KeyForCars klanten screen (0130).
+const COLUMNS = 'id, company, phone, account_kind, contact_name, email, kvk, vat_number, invoice_email, iban, bic, website, street, postcode, city, country, terms_days, credit_limit_cents, reverse_charge, note';
+type Account = {
+  id: string; company: string; phone: string | null; account_kind: keyof typeof types; contact_name: string | null; email: string | null;
+  kvk: string | null; vat_number: string | null; invoice_email: string | null; iban: string | null; bic: string | null; website: string | null;
+  street: string | null; postcode: string | null; city: string | null; country: string; terms_days: number; credit_limit_cents: number | null; reverse_charge: boolean; note: string | null;
+};
 type Membership = { customer_id: string; contact_id: string; position: string; contacts: { phone_e164: string; display_name: string } };
 
 export default async function Accounts({ searchParams }: { searchParams: Promise<{ q?: string; account?: string; status?: string }> }) {
@@ -28,7 +38,7 @@ export default async function Accounts({ searchParams }: { searchParams: Promise
   const status = typeof params.status === 'string' && Object.hasOwn(messages, params.status) ? params.status as keyof typeof messages : null;
   const db = createSupabaseAdminClient();
   const [accounts, memberships] = await Promise.all([
-    fetchAll<Account>((a, b) => db.from('kfc_customers').select('id, company, phone, account_kind')
+    fetchAll<Account>((a, b) => db.from('kfc_customers').select(COLUMNS)
       .not('account_kind', 'is', null).is('merged_into', null).is('anonymised_at', null).order('company').order('id').range(a, b)),
     fetchAll<Membership>((a, b) => db.from('kfc_customer_contacts').select('customer_id, contact_id, position, contacts!inner(phone_e164, display_name)')
       .eq('contacts.active', true).order('customer_id').order('contact_id').range(a, b) as unknown as PromiseLike<{ data: Membership[] | null; error: { message: string } | null }>),
@@ -42,6 +52,7 @@ export default async function Accounts({ searchParams }: { searchParams: Promise
   const needle = search.toLowerCase();
   const phone = needle.replace(/[\s()-]/g, '').replace(/^00/, '+');
   const visible = accounts.filter((account) => !needle || account.company.toLowerCase().includes(needle) ||
+    account.kvk?.includes(needle) || account.vat_number?.toLowerCase().includes(needle) ||
     (phone && account.phone?.includes(phone)) || byAccount.get(account.id)?.some(({ contacts }) =>
       contacts.display_name.toLowerCase().includes(needle) || (phone && contacts.phone_e164.includes(phone))));
   const selected = accounts.find((account) => account.id === params.account);
@@ -74,6 +85,26 @@ export default async function Accounts({ searchParams }: { searchParams: Promise
           <CardHeader><CardTitle>{selected.company}</CardTitle></CardHeader>
           <CardContent className="grid gap-3">
             {selected.phone && <p>{selected.phone}</p>}
+            <dl className="text-muted-foreground grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+              {selected.kvk && <><dt>KvK</dt><dd>{selected.kvk}</dd></>}
+              {selected.vat_number && <><dt><PreviewText>Btw</PreviewText></dt><dd>{selected.vat_number}</dd></>}
+              {selected.invoice_email && <><dt><PreviewText>Factuur-e-mail</PreviewText></dt><dd>{selected.invoice_email}</dd></>}
+              {selected.iban && <><dt>IBAN</dt><dd>{selected.iban}</dd></>}
+              {selected.street && <><dt><PreviewText>Adres</PreviewText></dt><dd>{selected.street}, {selected.postcode} {selected.city} {selected.country}</dd></>}
+              <dt><PreviewText>Termijn</PreviewText></dt><dd>{selected.terms_days} <PreviewText>dagen</PreviewText>{selected.reverse_charge && ' · btw verlegd'}</dd>
+            </dl>
+            {selected.account_kind === 'company' && selected.country === 'NL' && !selected.kvk && <p className="text-destructive text-sm"><PreviewText>KvK-nummer ontbreekt. Vul de bedrijfsgegevens aan.</PreviewText></p>}
+            {IS_KEYFORCARS && <div className="flex flex-wrap gap-3 text-sm">
+              <Link className="underline underline-offset-4" href={`/admin/klanten/${selected.id}`}><PreviewText>Cari-kaart en saldo</PreviewText></Link>
+              <Link className="underline underline-offset-4" href={`/admin/klanten/${selected.id}/ekstre`} target="_blank"><PreviewText>Rekeningoverzicht</PreviewText></Link>
+            </div>}
+            <details className="rounded-md border p-3">
+              <summary className="cursor-pointer text-sm font-medium"><PreviewText>Gegevens wijzigen</PreviewText></summary>
+              <form action={updateAccount.bind(null, selected.id)} className="mt-3 grid gap-3">
+                <AccountFields key={selected.id} initial={selected} idPrefix={`edit-${selected.id}`} />
+                <Button><PreviewText>Opslaan</PreviewText></Button>
+              </form>
+            </details>
             {selected.account_kind === 'company' && <>
               <h2 className="font-medium"><PreviewText>Contactpersonen</PreviewText></h2>
               <ul className="divide-y">
@@ -93,12 +124,8 @@ export default async function Accounts({ searchParams }: { searchParams: Promise
         </Card>}
         <Card>
           <CardHeader><CardTitle><PreviewText>Nieuw klantaccount</PreviewText></CardTitle></CardHeader>
-          <CardContent><form action={createAccount} className="grid gap-2">
-            <label className="grid gap-1 text-sm"><PreviewText>Type klantaccount</PreviewText><select name="kind" className="border-input bg-background h-9 rounded-md border px-2">
-              <option value="person"><PreviewText>Particulier</PreviewText></option><option value="company"><PreviewText>Bedrijf</PreviewText></option>
-            </select></label>
-            <label className="grid gap-1 text-sm"><PreviewText>Naam</PreviewText><Input name="name" required maxLength={160} /></label>
-            <label className="grid gap-1 text-sm"><PreviewText>Telefoon internationaal</PreviewText><Input name="phone" type="tel" placeholder="+31…" /></label>
+          <CardContent><form action={createAccount} className="grid gap-3">
+            <AccountFields idPrefix="new" />
             <Button><PreviewText>Klantaccount toevoegen</PreviewText></Button>
           </form></CardContent>
         </Card>

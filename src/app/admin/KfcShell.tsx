@@ -7,7 +7,7 @@ import {
   AudioLines, BarChart3, Boxes, CalendarDays, ChevronRight, Euro, Inbox, KeyRound, LayoutDashboard, LogOut, Package, PackageCheck, PhoneCall, Search,
   Settings, ShoppingCart, Store, Users, type LucideIcon,
 } from 'lucide-react';
-import { RefreshCw, Undo2 } from 'lucide-react';
+import { RefreshCw, Truck, Undo2 } from 'lucide-react';
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
@@ -66,6 +66,7 @@ const GROUPS: Group[] = [
       { label: 'Picklijst', icon: PackageCheck, href: '/admin/bestellingen/picken' },
       { label: 'Retouren', icon: Undo2, href: '/admin/retouren' },
       { label: 'Inkoop', icon: Package, href: '/admin/inkoop' },
+      { label: 'Leveranciers', icon: Truck, href: '/admin/leveranciers', office: true },
     ],
   },
   {
@@ -85,6 +86,7 @@ const GROUPS: Group[] = [
           { label: 'Facturen', href: '/admin/facturen' },
           { label: 'Uitgaven', href: '/admin/uitgaven' },
           { label: 'Bank', href: '/admin/bank/transacties' },
+          { label: 'Debiteuren & crediteuren', href: '/admin/rekeningen' },
         ],
       },
       {
@@ -115,7 +117,7 @@ const withWarehouse = (groups: Group[]): Group[] => {
   const [kantoor] = groups;
   const items = kantoor.items.map((item) => {
     if (item.label === 'Voorraad') return { ...item, children: [{ label: 'Magazijn en bussen', href: '/admin/voorraad/bussen' }, ...(item.children ?? []).filter((child) => child.href !== '/admin/voorraad')] };
-    if (item.label === 'Geld') return { ...item, children: [{ label: 'Financieel overzicht', href: '/admin/financien' }, {label:'Inkoop',href:'/admin/inkoop'}, ...(item.children ?? []), { label: 'Bank', href: '/admin/bank/transacties' }] };
+    if (item.label === 'Geld') return { ...item, children: [{ label: 'Financieel overzicht', href: '/admin/financien' }, {label:'Inkoop',href:'/admin/inkoop'}, ...(item.children ?? []), { label: 'Bank', href: '/admin/bank/transacties' }, { label: 'Debiteuren & crediteuren', href: '/admin/rekeningen' }] };
     return item;
   });
   const agentCentre = GROUPS.flatMap((group) => group.items).find((item) => item.label === 'Agentcentrum');
@@ -136,6 +138,8 @@ const TITLES: Record<string, string> = {
   tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', 'whatsapp-analyse': 'WhatsApp-analyse', klikfraude: 'Klikfraude',
   live: 'Live', kantoor: 'Kantoor', netwerk: 'Netwerk', 'mijn-agenda': 'Mijn agenda', 'mijn-klussen': 'Mijn klussen', 'mijn-bus': 'Mijn bus', 'mijn-saldo': 'Saldo',
   'mijn-vak': 'Mijn vak', 'mijn-profiel': 'Profiel',
+  // Cariler (0130)
+  leveranciers: 'Leveranciers', rekeningen: 'Debiteuren & crediteuren', relaties: 'Klantaccounts', ekstre: 'Ekstre',
 };
 
 /**

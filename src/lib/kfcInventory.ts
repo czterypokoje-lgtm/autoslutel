@@ -439,7 +439,7 @@ export async function kfcPost(input: Record<string, unknown>): Promise<Response>
 
 export interface PurchaseLine { photos: number[]; id: string; article_code: string; name: string; sku: string; quantity: number; received: number; unit_cost_cents: number | null }
 export interface PurchaseOrder {
-  id: string; supplier: string; status: 'draft' | 'ordered' | 'received' | 'cancelled'; expected_on: string | null;
+  id: string; supplier: string; supplier_id: string | null; status: 'draft' | 'ordered' | 'received' | 'cancelled'; expected_on: string | null;
   note: string | null; created_at: string; ordered_at: string | null; received_at: string | null; lines: PurchaseLine[];
   /** The supplier's invoice number, and whether its PDF/photo is attached (0111). */
   invoice_ref: string | null; document_type: string | null;
@@ -447,14 +447,14 @@ export interface PurchaseOrder {
 
 export async function listPurchaseOrders(user: CrmUser): Promise<PurchaseOrder[]> {
   const { data, error } = await admin().from('kfc_purchase_orders')
-    .select('id, supplier, status, expected_on, note, created_at, ordered_at, received_at, invoice_ref, document_type, kfc_purchase_order_lines (id, article_code, quantity, received, unit_cost_cents, kfc_stock_moves(id,kfc_receipt_photos(move_id)), kfc_articles (name, sku))')
+    .select('id, supplier, supplier_id, status, expected_on, note, created_at, ordered_at, received_at, invoice_ref, document_type, kfc_purchase_order_lines (id, article_code, quantity, received, unit_cost_cents, kfc_stock_moves(id,kfc_receipt_photos(move_id)), kfc_articles (name, sku))')
     .order('created_at', { ascending: false }).limit(200);
   if (error) throw new StockError(`Inkooporders lezen mislukt: ${error.message}`, 500);
   const prices = seesPrices(user);
   return (data ?? []).map((row) => {
     const lines = (row.kfc_purchase_order_lines as unknown as { kfc_stock_moves: { id: number; kfc_receipt_photos: { move_id: number } | null }[]; id: string; article_code: string; quantity: number; received: number; unit_cost_cents: number | null; kfc_articles: { name: string; sku: string } | null }[]) ?? [];
     return {
-      id: row.id, supplier: row.supplier, status: row.status, expected_on: row.expected_on, note: row.note,
+      id: row.id, supplier: row.supplier, supplier_id: row.supplier_id ?? null, status: row.status, expected_on: row.expected_on, note: row.note,
       created_at: row.created_at, ordered_at: row.ordered_at, received_at: row.received_at,
       invoice_ref: row.invoice_ref ?? null, document_type: row.document_type ?? null,
       lines: lines.map((line) => ({
@@ -465,7 +465,7 @@ export async function listPurchaseOrders(user: CrmUser): Promise<PurchaseOrder[]
   });
 }
 
-export interface NewPurchaseOrder { supplier: string; expected_on?: string | null; note?: string | null; invoice_ref?: string | null; lines: { article: string; quantity: number; unit_cost_cents?: number | null }[] }
+export interface NewPurchaseOrder { supplier: string; supplier_id?: string | null; expected_on?: string | null; note?: string | null; invoice_ref?: string | null; lines: { article: string; quantity: number; unit_cost_cents?: number | null }[] }
 
 const cleanInvoiceRef = (value: string | null | undefined) => {
   const ref = (value ?? '').trim();
@@ -473,10 +473,32 @@ const cleanInvoiceRef = (value: string | null | undefined) => {
   return ref || null;
 };
 
+/**
+ * The supplier account for an order (0130): the picked supplier_id, or, for an
+ * old caller that still sends a name, the supplier with that name (created
+ * when new). The name on the order is the account's name at the time.
+ */
+async function orderSupplier(input: NewPurchaseOrder, user: CrmUser): Promise<{ id: string; name: string }> {
+  const db = admin();
+  if (input.supplier_id) {
+    const { data } = await db.from('kfc_suppliers').select('id, name, active').eq('id', input.supplier_id).maybeSingle();
+    if (!data) throw new StockError('Leverancier niet gevonden.', 404);
+    if (!data.active) throw new StockError('Deze leverancier staat op inactief.', 409);
+    return { id: data.id, name: data.name };
+  }
+  const name = input.supplier.trim();
+  if (!name || name.length > 120) throw new StockError('Kies een leverancier.');
+  const found = await db.from('kfc_suppliers').select('id, name').ilike('name', name.replace(/[\\%_]/g, (c) => '\\' + c)).limit(1);
+  if (found.data?.[0]) return found.data[0];
+  const created = await db.from('kfc_suppliers').insert({ name, created_by: user.id }).select('id, name').single();
+  if (created.error) throw new StockError(`Leverancier aanmaken mislukt: ${created.error.message}`, 500);
+  return created.data;
+}
+
 /** A draft purchase order. `article` may be the code (KFC-1-…) or the SKU. */
 export async function createPurchaseOrder(input: NewPurchaseOrder, user: CrmUser): Promise<string> {
-  const supplier = input.supplier.trim();
-  if (!supplier || supplier.length > 120) throw new StockError('Vul de leverancier in.');
+  const account = await orderSupplier(input, user);
+  const supplier = account.name;
   if (input.expected_on && !/^\d{4}-\d{2}-\d{2}$/.test(input.expected_on)) throw new StockError('Controleer de verwachte datum.');
   if (!input.lines.length || input.lines.length > 200) throw new StockError('Tussen 1 en 200 regels per inkooporder.');
   const db = admin();
@@ -490,7 +512,7 @@ export async function createPurchaseOrder(input: NewPurchaseOrder, user: CrmUser
     lines.push({ article_code: found.data[0].code, quantity: line.quantity, unit_cost_cents: line.unit_cost_cents ?? null });
   }
   const invoice_ref = cleanInvoiceRef(input.invoice_ref);
-  const po = await db.from('kfc_purchase_orders').insert({ supplier, expected_on: input.expected_on || null, note: input.note?.trim() || null, invoice_ref, created_by: user.id }).select('id').single();
+  const po = await db.from('kfc_purchase_orders').insert({ supplier, supplier_id: account.id, expected_on: input.expected_on || null, note: input.note?.trim() || null, invoice_ref, created_by: user.id }).select('id').single();
   if (po.error) throw new StockError(`Inkooporder aanmaken mislukt: ${po.error.message}`, 500);
   const inserted = await db.from('kfc_purchase_order_lines').insert(lines.map((line) => ({ ...line, po_id: po.data.id })));
   if (inserted.error) throw new StockError(`Regels opslaan mislukt: ${inserted.error.message}`, 500);

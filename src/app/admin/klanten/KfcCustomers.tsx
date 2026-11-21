@@ -1,6 +1,6 @@
 'use client';
 
-import { PreviewText } from '@/app/admin/PreviewLanguage';
+import { PreviewText, usePreviewLanguage } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -10,9 +10,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import type { Balance, Customer, CustomerInput } from '@/lib/kfcReceivables';
+import type { Balance, Customer } from '@/lib/kfcReceivables';
+import { ACCOUNT_PROBLEMS, accountProblem, customerFromForm, normalizeIban, normalizeKvk, normalizeVat } from '@/lib/accountValidation';
+import AccountFields from './AccountFields';
 
 export const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 const api = '/api/admin/kfc-klanten';
@@ -70,42 +71,40 @@ export default function KfcCustomers({ rows, view, q }: { rows: (Customer & Bala
   );
 }
 
-const FIELDS: [keyof CustomerInput, string, string?][] = [
-  ['company', 'Bedrijfsnaam'], ['contact_name', 'Contactpersoon'], ['email', 'E-mail', 'email'], ['phone', 'Telefoon'], ['vat_number', 'Btw-nummer'],
-  ['street', 'Straat en nummer'], ['postcode', 'Postcode'], ['city', 'Plaats'], ['country', 'Land (code)'], ['terms_days', 'Betalingstermijn (dagen)', 'number'],
-];
-
+/**
+ * Open or edit a customer account. One form for every cari (AccountFields):
+ * a company needs KvK, BTW, address and invoice e-mail; the server checks
+ * the same rules again (kfcReceivables.cleanCustomer).
+ */
 export function CustomerDialog({ customer, onSaved }: { customer?: Customer; onSaved: (id: string) => void }) {
+  const { t } = usePreviewLanguage();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [form, setForm] = useState<Record<string, string>>(() => Object.fromEntries(FIELDS.map(([k]) => [k, customer ? String(customer[k as keyof Customer] ?? '') : k === 'terms_days' ? '30' : k === 'country' ? 'NL' : ''])));
-  const [limit, setLimit] = useState(customer?.credit_limit_cents != null ? String(customer.credit_limit_cents / 100) : '');
-  const [reverse, setReverse] = useState(customer?.reverse_charge ?? false);
-  async function save(e: React.FormEvent) {
-    e.preventDefault(); setBusy(true); setError('');
-    const payload: CustomerInput = { ...form, terms_days: Number(form.terms_days), credit_limit_cents: limit === '' ? null : Math.round(Number(limit.replace(',', '.')) * 100), reverse_charge: reverse } as CustomerInput;
+  async function save(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); setError('');
+    const payload = customerFromForm(new FormData(e.currentTarget));
+    const problem = accountProblem({
+      kind: payload.account_kind, name: payload.company, kvk: normalizeKvk(payload.kvk), vat_number: normalizeVat(payload.vat_number), street: payload.street,
+      postcode: payload.postcode, city: payload.city, country: payload.country.toUpperCase(), invoice_email: payload.invoice_email, email: payload.email,
+      iban: normalizeIban(payload.iban), terms_days: payload.terms_days, credit_limit_cents: payload.credit_limit_cents,
+    });
+    if (problem) { setError(ACCOUNT_PROBLEMS[problem]); return; }
+    setBusy(true);
     const result = await post(customer ? { action: 'update', id: customer.id, customer: payload } : { action: 'create', customer: payload });
     setBusy(false);
     if (result.error) { setError(result.error); return; }
     setOpen(false); onSaved(customer?.id ?? result.id!);
   }
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(next) => { setOpen(next); setError(''); }}>
       <DialogTrigger asChild>{customer ? <Button variant="outline" size="sm"><PreviewText>{"Gegevens wijzigen"}</PreviewText></Button> : <Button size="sm"><Plus className="size-4" /> <PreviewText>{"Nieuwe klant"}</PreviewText></Button>}</DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-lg">
-        <DialogHeader><DialogTitle>{customer ? customer.company : 'Nieuwe zakelijke klant'}</DialogTitle></DialogHeader>
-        <form onSubmit={save} className="grid gap-3 sm:grid-cols-2">
-          {FIELDS.map(([key, label, type]) => (
-            <div key={key} className={`grid gap-1.5 ${key === 'company' || key === 'street' ? 'sm:col-span-2' : ''}`}>
-              <Label htmlFor={`c-${key}`}>{label}</Label>
-              <Input id={`c-${key}`} type={type ?? 'text'} required={key === 'company'} value={form[key]} onChange={(e) => setForm({ ...form, [key]: e.target.value })} />
-            </div>
-          ))}
-          <div className="grid gap-1.5"><Label htmlFor="c-limit">Kredietlimiet € (leeg = geen)</Label><Input id="c-limit" inputMode="decimal" value={limit} onChange={(e) => setLimit(e.target.value)} /></div>
-          <label className="flex items-center gap-2 self-end text-sm"><input type="checkbox" className="size-4" checked={reverse} onChange={(e) => setReverse(e.target.checked)} /> Btw verlegd (EU-dealer)</label>
-          {error && <p className="text-destructive text-sm sm:col-span-2">{error}</p>}
-          <div className="sm:col-span-2"><Button disabled={busy}><PreviewText>{customer ? 'Opslaan' : 'Klant aanmaken'}</PreviewText></Button></div>
+      <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-2xl">
+        <DialogHeader><DialogTitle>{customer ? customer.company : t('Nieuw klantaccount')}</DialogTitle></DialogHeader>
+        <form onSubmit={save} className="grid gap-4">
+          <AccountFields initial={customer ?? {}} defaultKind="company" idPrefix={customer ? `c-${customer.id}` : 'c-new'} />
+          {error && <p role="alert" className="text-destructive text-sm">{t(error)}</p>}
+          <div><Button disabled={busy}><PreviewText>{customer ? 'Opslaan' : 'Klant aanmaken'}</PreviewText></Button></div>
         </form>
       </DialogContent>
     </Dialog>

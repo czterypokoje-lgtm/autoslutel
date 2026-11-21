@@ -12,6 +12,8 @@ import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { PurchaseOrder } from '@/lib/kfcInventory';
+import Link from 'next/link';
+import { SupplierDialog } from '@/app/admin/leveranciers/shared';
 
 const api = '/api/admin/inkoop';
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -20,6 +22,9 @@ const STATUS: Record<PurchaseOrder['status'], [string, 'default' | 'secondary' |
 };
 type CatalogItem = { tracking?: string; cost?: string; id: string; name: string; sku: string };
 type DraftLine = { article: string; label: string; quantity: string; cost: string };
+type SupplierOption = { id: string; name: string; terms_days: number; lead_time_days: number | null; active: boolean; city: string | null };
+type SupplierPrice = { price_cents: number | null; supplier_sku: string | null; min_qty: number };
+const centsToInput = (cents: number) => String(cents / 100).replace('.', ',');
 
 async function post(body: unknown): Promise<string | null> {
   const response = await fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(() => null);
@@ -27,7 +32,7 @@ async function post(body: unknown): Promise<string | null> {
   return (await response?.json().catch(() => null))?.error ?? 'Opslaan mislukt.';
 }
 
-export default function Inkoop({ orders, canEdit }: { orders: PurchaseOrder[]; canEdit: boolean }) {
+export default function Inkoop({ orders, canEdit, initialSupplier = '' }: { orders: PurchaseOrder[]; canEdit: boolean; initialSupplier?: string }) {
   const router = useRouter();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState('');
@@ -47,7 +52,7 @@ export default function Inkoop({ orders, canEdit }: { orders: PurchaseOrder[]; c
   return (
     <div className="flex flex-col gap-6">
       {error && <p className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
-      {canEdit && <NewOrder onSaved={() => router.refresh()} />}
+      {canEdit && <NewOrder initialSupplier={initialSupplier} onSaved={() => router.refresh()} />}
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">Open <span className="text-muted-foreground font-normal">· {open.length}</span></h2>
         {open.length === 0
@@ -96,6 +101,7 @@ function InvoiceBox({ order, office, busy, run }: { order: PurchaseOrder; office
         <Button size="sm" variant="outline" disabled={busy === `${order.id}/ref` || ref === (order.invoice_ref ?? '')}>{t('Opslaan')}</Button>
       </form>
       <a href={'/admin/uitgaven/nieuw?inkoop='+order.id} className="underline">{t('Niet-voorraadkosten registreren')}</a>
+      {order.supplier_id && order.status !== 'draft' && order.status !== 'cancelled' && <Link href={`/admin/leveranciers/${order.supplier_id}?po=${order.id}`} className="underline underline-offset-4">{t('Inkoopfactuur boeken (crediteur)')}</Link>}
       {order.document_type && <a className="underline underline-offset-4" href={`${api}?document=${order.id}`} target="_blank" rel="noreferrer">{t('Factuur bekijken')}</a>}
       <label className={`cursor-pointer underline underline-offset-4 ${busy === `${order.id}/doc` ? 'pointer-events-none opacity-50' : ''}`}>
         {order.document_type ? t('Vervangen') : t('Factuur of bon toevoegen')}
@@ -120,7 +126,7 @@ function Order({ order, canEdit, office, busy, run }: { order: PurchaseOrder; ca
   return (
     <Card id={'purchase-'+order.id}>
       <CardHeader className="flex flex-row flex-wrap items-center gap-3">
-        <CardTitle className="text-base">{order.supplier}</CardTitle>
+        <CardTitle className="text-base">{office && order.supplier_id ? <Link className="underline-offset-4 hover:underline" href={`/admin/leveranciers/${order.supplier_id}`}>{order.supplier}</Link> : order.supplier}</CardTitle>
         <Badge variant={variant}>{t(label)}</Badge>
         <CardDescription>
           {order.status === 'ordered' && order.expected_on ? `${english ? "expected" : "verwacht"} ${day.format(new Date(order.expected_on))}` : `${english ? "created" : "aangemaakt"} ${day.format(new Date(order.created_at))}`}
@@ -203,10 +209,22 @@ function Order({ order, canEdit, office, busy, run }: { order: PurchaseOrder; ca
   );
 }
 
-function NewOrder({ onSaved }: { onSaved: () => void }) {
+/** Active suppliers for the picker; reloaded after a new supplier is made from the form. */
+function useSuppliers() {
+  const [suppliers, setSuppliers] = useState<SupplierOption[]>([]);
+  const [failed, setFailed] = useState(false);
+  const load = () => fetch('/api/admin/leveranciers').then((r) => (r.ok ? r.json() : Promise.reject())).then((body: { suppliers: SupplierOption[] }) => { setSuppliers(body.suppliers); setFailed(false); }).catch(() => setFailed(true));
+  useEffect(() => { void load(); }, []);
+  return { suppliers, failed, reload: load };
+}
+
+function NewOrder({ onSaved, initialSupplier }: { onSaved: () => void; initialSupplier: string }) {
   const { t } = usePreviewLanguage();
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
-  const [supplier, setSupplier] = useState('');
+  // The supplier is an account (0130), not free text: picked from the list, or made on the spot.
+  const { suppliers, failed: suppliersFailed, reload: reloadSuppliers } = useSuppliers();
+  const [supplierId, setSupplierId] = useState(initialSupplier);
+  const [prices, setPrices] = useState<{ supplier: string; map: Record<string, SupplierPrice> }>({ supplier: '', map: {} });
   const [expected, setExpected] = useState('');
   const [note, setNote] = useState('');
   const [invoiceRef, setInvoiceRef] = useState('');
@@ -227,10 +245,25 @@ function NewOrder({ onSaved }: { onSaved: () => void }) {
   }, [catalog, search]);
 
   const matches = scanMatches.length ? scanMatches : suggestions;
+  // Picking a supplier loads its agreed prices; lines without a typed price take them.
+  useEffect(() => {
+    if (!supplierId) return;
+    let current = true;
+    fetch('/api/admin/leveranciers?prices=' + supplierId).then((r) => (r.ok ? r.json() : { prices: {} })).then((body: { prices: Record<string, SupplierPrice> }) => {
+      if (!current) return;
+      setPrices({ supplier: supplierId, map: body.prices });
+      setLines((current) => current.map((line) => line.cost === '' && body.prices[line.article]?.price_cents != null ? { ...line, cost: centsToInput(body.prices[line.article].price_cents!) } : line));
+    }).catch(() => undefined);
+    return () => { current = false; };
+  }, [supplierId]);
   const add = (item: CatalogItem) => {
     setScanMatches([]);
     scanRequest.current++;
-    setLines(current => current.some(line => line.article === item.id) ? current : [...current, { article: item.id, label: `${item.id} · ${item.name}`, quantity: item.tracking === 'serial' ? '1' : '10', cost: item.cost ?? '' }]);
+    const agreed = prices.supplier === supplierId ? prices.map[item.id] : undefined;
+    const quantity = item.tracking === 'serial' ? 1 : Math.max(10, agreed?.min_qty ?? 1);
+    const label = `${item.id} · ${item.name}${agreed?.supplier_sku ? ` · ${t('lev.')} ${agreed.supplier_sku}` : ''}`;
+    const cost = agreed?.price_cents != null ? centsToInput(agreed.price_cents) : item.cost ?? '';
+    setLines(current => current.some(line => line.article === item.id) ? current : [...current, { article: item.id, label, quantity: String(quantity), cost }]);
     setSearch('');
     document.getElementById('po-search')?.focus();
   };
@@ -261,12 +294,12 @@ function NewOrder({ onSaved }: { onSaved: () => void }) {
     e.preventDefault();
     setBusy(true); setError('');
     const problem = await post({
-      action: 'create', supplier, expected_on: expected || null, note, invoice_ref: invoiceRef,
+      action: 'create', supplier_id: supplierId, supplier: suppliers.find((s) => s.id === supplierId)?.name ?? '', expected_on: expected || null, note, invoice_ref: invoiceRef,
       lines: lines.map((line) => ({ article: line.article, quantity: Number(line.quantity), unit_cost_cents: line.cost === '' ? null : Math.round(Number(line.cost.replace(',', '.')) * 100) })),
     });
     setBusy(false);
     if (problem) { setError(problem); return; }
-    setSupplier(''); setExpected(''); setNote(''); setInvoiceRef(''); setLines([]);
+    setSupplierId(''); setExpected(''); setNote(''); setInvoiceRef(''); setLines([]);
     onSaved();
   }
 
@@ -279,7 +312,18 @@ function NewOrder({ onSaved }: { onSaved: () => void }) {
       <CardContent>
         <form onSubmit={save} className="grid gap-4">
           <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
-            <div className="grid gap-1.5"><Label htmlFor="po-supplier"><PreviewText>{"Leverancier"}</PreviewText></Label><Input id="po-supplier" required value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder={t("bijv. KeyDIY Europe")} /></div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="po-supplier"><PreviewText>{"Leverancier"}</PreviewText></Label>
+              <div className="flex gap-2">
+                <select id="po-supplier" required value={supplierId} onChange={(e) => setSupplierId(e.target.value)} className="border-input bg-background h-9 min-w-0 flex-1 rounded-md border px-3 text-sm">
+                  <option value="">{t('Kies een leverancier…')}</option>
+                  {suppliers.filter((s) => s.active || s.id === supplierId).map((s) => <option key={s.id} value={s.id}>{s.name}{s.city ? ` · ${s.city}` : ''}</option>)}
+                </select>
+                <SupplierDialog onSaved={(id) => { void reloadSuppliers().then(() => setSupplierId(id)); }} trigger={<Button type="button" variant="outline" size="sm">{t('Nieuw')}</Button>} />
+              </div>
+              {suppliersFailed && <span className="text-destructive text-xs">{t('Leveranciers laden mislukt.')}</span>}
+              {supplierId && <Link className="text-muted-foreground text-xs underline underline-offset-4" href={`/admin/leveranciers/${supplierId}`}>{t('Leverancierskaart')}{(() => { const s = suppliers.find((x) => x.id === supplierId); return s ? ` · ${s.terms_days} ${t('dagen')}${s.lead_time_days != null ? ` · ${t('levertijd')} ${s.lead_time_days} ${t('dagen')}` : ''}` : ''; })()}</Link>}
+            </div>
             <div className="grid gap-1.5"><Label htmlFor="po-expected"><PreviewText>{"Verwacht op"}</PreviewText></Label><Input id="po-expected" type="date" value={expected} onChange={(e) => setExpected(e.target.value)} /></div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -321,7 +365,7 @@ function NewOrder({ onSaved }: { onSaved: () => void }) {
             </Table>
           )}
           {error && <p className="text-destructive text-sm"><PreviewText>{error}</PreviewText></p>}
-          <div><Button disabled={busy || lines.length === 0}><PreviewText>{"Concept opslaan"}</PreviewText></Button></div>
+          <div><Button disabled={busy || lines.length === 0 || !supplierId}><PreviewText>{"Concept opslaan"}</PreviewText></Button></div>
         </form>
       </CardContent>
       <QuickArticle draft={quick} onClose={() => setQuick(null)} onCreated={(item) => { setQuick(null); add(item); }} />

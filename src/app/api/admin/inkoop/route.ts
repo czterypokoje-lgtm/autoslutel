@@ -65,8 +65,9 @@ export async function POST(request: Request) {
     if (input.action === 'create') {
       if (!seesPrices(user)) return reply({ error: 'Alleen kantoor maakt inkooporders.' }, 403);
       const lines = Array.isArray(input.lines) ? input.lines : [];
+      if (input.supplier_id != null && (typeof input.supplier_id !== 'string' || !uuid.test(input.supplier_id))) return reply({ error: 'Kies een leverancier.' }, 400);
       const id = await createPurchaseOrder({
-        supplier: String(input.supplier ?? ''), expected_on: typeof input.expected_on === 'string' ? input.expected_on : null,
+        supplier: String(input.supplier ?? ''), supplier_id: input.supplier_id ?? null, expected_on: typeof input.expected_on === 'string' ? input.expected_on : null,
         note: typeof input.note === 'string' ? input.note : null,
         invoice_ref: typeof input.invoice_ref === 'string' ? input.invoice_ref : null,
         lines: lines.map((line: Record<string, unknown>) => ({
