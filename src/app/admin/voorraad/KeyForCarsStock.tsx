@@ -25,6 +25,7 @@ const StockReports = dynamic(() => import('./StockReports'));
 const StockReorder = dynamic(() => import('./StockReorder'));
 const StockBulkCount = dynamic(() => import('./StockBulkCount'));
 const StockCamera = dynamic(() => import('./StockCamera'));
+const StockLiveCount = dynamic(() => import('./StockLiveCount'));
 const pageSize = 12;
 type Operation = keyof typeof STOCK_OPERATIONS;
 
@@ -100,6 +101,8 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
   /** A scanned code no article has yet; `to` is the article the person then picked for it. */
   const [unknownScan, setUnknownScan] = useState<{ code: string; to?: string }>();
   const [linking, setLinking] = useState(false);
+  /** The continuous count: camera stays open, every label that comes into view adds one. */
+  const [live, setLive] = useState(false);
   const search = useRef<HTMLInputElement>(null);
   const details = useRef<HTMLElement>(null);
   const movementForm = useRef<HTMLFormElement>(null);
@@ -417,6 +420,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
           {view === 'products' && <>
           <button type="button" className={styles.primary} disabled={!fullCatalog} onClick={() => setCamera('scan')}><ScanLine size={16} /> Scan QR / barcode</button>
           <Link className={styles.secondary} href={`/admin/voorraad/p${demo ? '?demo=1' : ''}`}><Barcode size={16} /> {t('Productprofiel')}</Link>
+          <button type="button" className={styles.secondary} disabled={!ready} onClick={() => setLive(true)}><ScanLine size={16} /> {t('Doorlopend scannen')}</button>
           <button type="button" className={styles.secondary} disabled={!ready} onClick={() => setBulk(true)}><Images size={16} /> {t('Bulktelling')}</button>
           {!demo && <button type="button" className={styles.secondary} onClick={() => setShowNew(!showNew)}><Plus size={16} /> {t("Werkplaatsartikel")}</button>}
           </>}
@@ -636,6 +640,14 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         setBulk(false);
         setNotice(`${saved} tellingen opgeslagen.`);
       }} />}
+      {live && <StockLiveCount resolve={(code) => codeIndex.get(code) ?? null} byId={byId} articles={articles} bins={state.bins} demo={demo}
+        onClose={() => setLive(false)}
+        onSaved={(next, saved) => {
+          setState(next);
+          setLive(false);
+          setNotice(`${saved} tellingen opgeslagen.`);
+        }}
+        onLink={demo ? undefined : linkBarcode} />}
       {camera && <StockCamera onClose={() => setCamera(undefined)} onPhoto={(file) => {
         setCamera(undefined);
         if (camera === 'scan') void scanPhoto(file);

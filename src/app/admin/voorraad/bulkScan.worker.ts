@@ -10,7 +10,8 @@ import { sha256Hex } from '@/lib/sha256';
  * before it is instantiated, so a swapped file is refused instead of run.
  */
 
-export interface ScanRequest { id: number; file: Blob; maxSide: number }
+/** `live`: one camera frame of the continuous count — a single fast pass, no file hash. Absent for photos. */
+export interface ScanRequest { id: number; file: Blob; maxSide: number; live?: boolean }
 export interface ScanResponse {
   id: number;
   hash: string;
@@ -84,8 +85,27 @@ function merge(results: Found[]) {
   return symbols;
 }
 
-scope.onmessage = async ({ data: { id, file, maxSide } }) => {
+/**
+ * Live camera frames: the label is held up close inside the scan area, a new
+ * frame follows within a second, so one binarizer without rotation is enough
+ * and keeps a phone at a few frames per second.
+ */
+const LIVE_OPTIONS = { tryHarder: true, tryRotate: false, tryInvert: false, tryDownscale: true, maxNumberOfSymbols: 16 };
+
+async function liveFrame(id: number, file: Blob, maxSide: number, started: number) {
+  try {
+    await decoder();
+    const image = await pixels(file, maxSide);
+    const results = await readBarcodes(image, { ...LIVE_OPTIONS, binarizer: 'LocalAverage', formats: [...FORMATS] });
+    scope.postMessage({ id, hash: '', ms: performance.now() - started, codes: merge(results).map(({ text, format, lines }) => ({ text, format, lines })) });
+  } catch (error) {
+    scope.postMessage({ id, hash: '', codes: [], ms: performance.now() - started, error: error instanceof Error ? error.message : 'Beeld kon niet worden gelezen.' });
+  }
+}
+
+scope.onmessage = async ({ data: { id, file, maxSide, live } }) => {
   const started = performance.now();
+  if (live) return liveFrame(id, file, maxSide, started);
   let hash = '';
   try {
     [, hash] = await Promise.all([decoder(), file.arrayBuffer().then(sha256Hex)]);

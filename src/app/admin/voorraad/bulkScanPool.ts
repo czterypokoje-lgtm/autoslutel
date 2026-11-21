@@ -73,3 +73,63 @@ export async function scanPhotos(files: File[], options: {
 
   await Promise.all(Array.from({ length: lanes }, lane));
 }
+
+/**
+ * One long-lived decoder worker for the continuous camera count. `scanPhotos`
+ * starts fresh workers per batch, which would load and verify the WASM
+ * decoder again for every frame; this keeps one worker warm and decodes one
+ * frame at a time with the worker's lighter live pass. A second call while a
+ * frame is still being read is refused, a stuck or crashed worker is replaced.
+ */
+export function liveScanner(options: { maxSide?: number; timeoutMs?: number } = {}) {
+  const { maxSide = 1280, timeoutMs = 15_000 } = options;
+  const spawn = () => new Worker(new URL('./bulkScan.worker.ts', import.meta.url), { type: 'module' });
+  let worker: Worker | null = null;
+  let busy = false;
+  let closed = false;
+  let next = 0;
+  let stopPending: (() => void) | null = null;
+
+  function scan(file: File): Promise<ScanResponse> {
+    if (closed) return Promise.resolve({ id: -1, hash: '', codes: [], ms: 0, error: 'Gestopt.' });
+    if (busy) return Promise.resolve({ id: -1, hash: '', codes: [], ms: 0, error: 'Vorig beeld wordt nog gelezen.' });
+    busy = true;
+    worker ??= spawn();
+    const current = worker;
+    const id = next++;
+    const started = performance.now();
+    return new Promise<ScanResponse>((resolve) => {
+      let done = false;
+      const finish = (response: ScanResponse) => {
+        if (done) return;
+        done = true;
+        busy = false;
+        stopPending = null;
+        window.clearTimeout(timer);
+        current.onmessage = null;
+        current.onerror = null;
+        resolve(response);
+      };
+      const fail = (error: string) => {
+        current.terminate();
+        if (worker === current) worker = null;
+        finish({ id, hash: '', codes: [], ms: performance.now() - started, error });
+      };
+      const timer = window.setTimeout(() => fail('Beeld kon niet op tijd worden gelezen.'), timeoutMs);
+      stopPending = () => fail('Gestopt.');
+      current.onmessage = (event: MessageEvent<ScanResponse>) => finish(event.data);
+      current.onerror = (event) => { event.preventDefault(); fail('De codelezer is gestopt.'); };
+      const request: ScanRequest = { id, file, maxSide, live: true };
+      current.postMessage(request);
+    });
+  }
+
+  function close() {
+    closed = true;
+    stopPending?.();
+    worker?.terminate();
+    worker = null;
+  }
+
+  return { scan, close };
+}
