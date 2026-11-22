@@ -1,0 +1,5 @@
+.banner { padding: 12px 14px; border-radius: 8px; background: var(--crm-accent-soft); color: var(--crm-ink); }
+.steps { padding-inline-start: 20px; margin: 8px 0 0; }
+.steps li + li { margin-top: 8px; }
+.filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.filter select { min-height: 40px; }

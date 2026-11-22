@@ -1,6 +1,9 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { STUDIO_UI } from '@/config/install';
 import ChatClient from './ChatClient';
+import StudioChatClient from './StudioChatClient';
+import { PreviewText } from '../../PreviewLanguage';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +20,13 @@ export default async function ChannelPage({ params }: { params: Promise<{ channe
     .single();
 
   if (error || !channel) {
+    if (STUDIO_UI) {
+      return (
+        <div className="flex h-full items-center justify-center p-6 text-sm">
+          <PreviewText>Kanaal niet gevonden of geen toegang.</PreviewText>
+        </div>
+      );
+    }
     return <div>Kanaal niet gevonden of geen toegang.</div>;
   }
 
@@ -28,6 +38,10 @@ export default async function ChannelPage({ params }: { params: Promise<{ channe
     .is('parent_id', null)
     .order('created_at', { ascending: true })
     .limit(50);
+
+  if (STUDIO_UI) {
+    return <StudioChatClient channel={channel} initialMessages={initialMessages || []} />;
+  }
 
   return (
     <ChatClient

@@ -73,6 +73,45 @@
 .kpiStrong .trendDown { color: #fca5a5; }
 .kpiStrong .trendNone { color: var(--crm-nav-muted); }
 
+:global(.crm-keyforcars) .kpi { border-radius: 12px; }
+:global(.crm-keyforcars) .kpiStrong { background: var(--crm-accent-soft); border-color: var(--crm-rule2); }
+:global(.crm-keyforcars) .kpiStrong .kpiValue { color: var(--crm-accent); }
+:global(.crm-keyforcars) .kpiStrong .trendUp { color: var(--crm-ok); }
+:global(.crm-keyforcars) .kpiStrong .trendDown { color: var(--crm-stop); }
+:global(.crm-keyforcars) .period { border-color: var(--crm-rule); }
+:global(.crm-keyforcars) .kpis { grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr)); gap: 10px; margin-block: 12px 20px; }
+:global(.crm-keyforcars) .kpi { padding: 12px 14px; }
+:global(.crm-keyforcars) .kpiValue { font-size: clamp(17px, 2vw, 23px); }
+.newInvoice { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border-radius: 7px; color: white; background: var(--crm-accent); font-weight: 650; }
+.newInvoice:hover { background: var(--crm-accent-hover); color: white; }
+.recentOrders { margin: 0; padding: 0; list-style: none; }
+.recentOrders li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 8px 14px; }
+.recentOrders li + li { border-top: 1px solid var(--crm-rule); }
+.recentOrders li > span:last-child { text-align: right; }
+.recentOrders small { display: block; color: var(--crm-muted); }
+.recentOrders a { color: var(--crm-ink); }
+.recentOrders a:hover { text-decoration: underline; }
+.orderIcon { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--crm-accent-soft); color: var(--crm-accent); }
+.orderFilters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-block: 0 14px; }
+.orderFilters nav { flex-wrap: wrap; max-width: 100%; }
+.orderFilters form { flex: 1 1 220px; }
+.orderFilters form input[type=search] { width: 100%; }
+.salesFilters { display: flex; align-items: end; flex-wrap: wrap; gap: 10px; padding: 12px; border: 1px solid var(--crm-rule); border-radius: 10px; background: var(--crm-panel); }
+.salesFilters label { display: grid; gap: 5px; flex: 1 1 145px; min-width: 0; font-weight: 600; }
+.salesFilters input, .salesFilters select { width: 100%; min-width: 0; }
+:global([data-appearance="studio"]) .cardHead { background: #f9fbff; }
+:global([data-appearance="studio"]) .kpi { border-radius: 8px; border-top: 3px solid var(--crm-rule2); }
+:global([data-appearance="studio"]) .kpiStrong { border-top-color: var(--crm-accent); }
+.shopChart { min-width: 0; padding: 12px 18px 16px; }
+.shopRanks { padding-block: 8px 14px; }
+.shopRanks > div { gap: 0; }
+.shopRanks > div > div { padding: 7px 8px; border-radius: 5px; }
+.shopRanks > div > div:nth-child(even), .rankingRows:nth-child(even) { background: var(--crm-sunk); }
+.rankingRows td { overflow-wrap: anywhere; }
+.rankingRows td:last-child, .rankingNumber { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rankingStores { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.rankingStores li { display: flex; gap: 8px; justify-content: space-between; white-space: nowrap; }
+
 .kpiLabel {
   font-size: 12px;
   font-weight: var(--fw-semibold);

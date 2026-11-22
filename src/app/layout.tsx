@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Sans, Chivo } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import './framer-theme.css';
 import Script from 'next/script';
@@ -12,6 +12,7 @@ import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
 
 
 import { SITE_CONFIG } from '@/config/site.config';
+import { IS_KEYFORCARS } from '@/config/install';
 
 /*
  * The two fonts the stylesheet actually uses, self-hosted.
@@ -29,16 +30,20 @@ import { SITE_CONFIG } from '@/config/site.config';
  * on is a visible change to every heading on the site and is a design
  * decision, not a cleanup one -- see the token comment in framer-theme.css.
  */
-const ibmPlexSans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+const ibmPlexSans = localFont({
+  src: [
+    { path: './fonts/ibm-plex-sans-latin-400-normal.woff2', weight: '400' },
+    { path: './fonts/ibm-plex-sans-latin-500-normal.woff2', weight: '500' },
+    { path: './fonts/ibm-plex-sans-latin-600-normal.woff2', weight: '600' },
+    { path: './fonts/ibm-plex-sans-latin-700-normal.woff2', weight: '700' },
+  ],
   display: 'swap',
   variable: '--ff-body',
 });
 
-const chivo = Chivo({
-  subsets: ['latin'],
-  weight: ['500'],
+const chivo = localFont({
+  src: './fonts/chivo-latin-500-normal.woff2',
+  weight: '500',
   display: 'swap',
   variable: '--ff-accent',
 });
@@ -122,6 +127,13 @@ import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 import AdVisitBeacon from '@/components/Tracking/AdVisitBeacon';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  if (IS_KEYFORCARS) {
+    return (
+      <html lang="nl" className={`${ibmPlexSans.variable} ${chivo.variable}`}>
+        <body>{children}</body>
+      </html>
+    );
+  }
   return (
     <html lang="nl" className={`${ibmPlexSans.variable} ${chivo.variable}`}>
       <head>
@@ -160,14 +172,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ── GOOGLE BUSINESS PROFILE LINK ── */}
         <link rel="me" href={SITE_CONFIG.social.google} />
 
-        {/* ── STRUCTURED DATA ── */}
+      </head>
+      <body>
+        {/* Keep JSON-LD with the other structured data, outside the extension-managed head. */}
         <script
           id="schema-website"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-      </head>
-      <body>
         {/* The one full description of the business; every other page's markup refers to it by @id. */}
         <LocalBusinessSchema />
         <Script id="consent-defaults">
@@ -218,10 +230,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
 
         {/* Google Ads Standalone gtag.js (AW-18511036958) - Added to guarantee conversions bypassing GTM complexity */}
-        <Script id="google-ads-script" strategy="afterInteractive" src="https://www.googletagmanager.com/gtag/js?id=AW-18511036958" />
         <Script id="google-ads-config">
           {`
             if ((window.location.hostname === 'www.autosleutel24.nl' || window.location.hostname === 'autosleutel24.nl') && !window.location.pathname.startsWith('/admin')) {
+              const adsScript = document.createElement('script');
+              adsScript.async = true;
+              adsScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-18511036958';
+              document.head.appendChild(adsScript);
               window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
               // Page views on, so the tag shows as active and remarketing lists fill.

@@ -1,4 +1,7 @@
+import { PreviewShortDate, PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireCrmUser } from '@/lib/crmSession';
+import { BRAND, STUDIO_UI } from '@/config/install';
+import { Expenses, type StudioExpense } from './_components/expenses';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Badge, Empty, ui } from '../_ui';
 import Link from 'next/link';
@@ -10,7 +13,7 @@ import { EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Uitgaven | Autosleutel24',
+  title: `Uitgaven | ${BRAND.name}`,
 };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -57,8 +60,27 @@ export default async function UitgavenPage() {
   const list = expenses ?? [];
   const sumOf = (st: string) => list.filter((e) => e.status === st).reduce((t, e) => t + Number(e.amount || 0), 0);
   const countOf = (st: string) => list.filter((e) => e.status === st).length;
-  const shortDate = (iso: string) =>
-    new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+
+  if (STUDIO_UI) {
+    return (
+      <Expenses
+        isOffice={isOffice}
+        rows={list.map((exp) => ({
+          id: exp.id,
+          purchase_order_id: exp.purchase_order_id,
+          category: exp.category,
+          description: exp.description,
+          amount: exp.amount,
+          date_incurred: exp.date_incurred,
+          supplier_name: exp.supplier_name ?? null,
+          is_reimbursable: exp.is_reimbursable === true,
+          status: exp.status,
+          technician_name: exp.technician?.name ?? null,
+          receipt_href: (exp.receipt_url && receipts.get(exp.receipt_url)) || null,
+        })) satisfies StudioExpense[]}
+      />
+    );
+  }
 
   return (
     <>
@@ -72,31 +94,31 @@ export default async function UitgavenPage() {
         actions={
           <Link href="/admin/uitgaven/nieuw" className={`${ui.btn} ${ui.btnPrimary}`}>
             <Plus size={16} />
-            Nieuwe uitgave
+            <PreviewText>{"Nieuwe uitgave"}</PreviewText>
           </Link>
         }
       />
 
       <div className={x.stats}>
         <div className={countOf('pending') ? x.statWarn : undefined}>
-          <span>Te keuren</span>
+          <span><PreviewText>{"Te keuren"}</PreviewText></span>
           <b>{MONEY.format(sumOf('pending'))}</b>
-          <small>{countOf('pending')} bonnetjes</small>
+          <small>{countOf('pending')} <PreviewText>{"bonnetjes"}</PreviewText></small>
         </div>
         <div>
-          <span>Goedgekeurd, nog te betalen</span>
+          <span><PreviewText>{"Goedgekeurd, nog te betalen"}</PreviewText></span>
           <b>{MONEY.format(sumOf('approved'))}</b>
-          <small>{countOf('approved')} bonnetjes</small>
+          <small>{countOf('approved')} <PreviewText>{"bonnetjes"}</PreviewText></small>
         </div>
         <div>
-          <span>Betaald</span>
+          <span><PreviewText>{"Betaald"}</PreviewText></span>
           <b>{MONEY.format(sumOf('paid'))}</b>
-          <small>{countOf('paid')} bonnetjes</small>
+          <small>{countOf('paid')} <PreviewText>{"bonnetjes"}</PreviewText></small>
         </div>
       </div>
 
       {!list.length ? (
-        <Empty>Nog geen uitgaven geregistreerd.</Empty>
+        <Empty><PreviewText>{"Nog geen uitgaven geregistreerd."}</PreviewText></Empty>
       ) : (
         <ul className={x.list}>
           {list.map((exp) => {
@@ -105,12 +127,12 @@ export default async function UitgavenPage() {
               <li key={exp.id} className={x.item}>
                 <div className={x.itemMain}>
                   <div className={x.itemTop}>
-                    <b>{EXPENSE_CATEGORIES[exp.category] || exp.category}</b>
-                    <Badge tone={st.tone}>{st.label}</Badge>
-                    {exp.is_reimbursable && <Badge>Declaratie</Badge>}
+                    <b><PreviewText>{EXPENSE_CATEGORIES[exp.category] || exp.category}</PreviewText></b>
+                    <Badge tone={st.tone}><PreviewText>{st.label}</PreviewText></Badge>
+                    {exp.is_reimbursable && <Badge><PreviewText>{"Declaratie"}</PreviewText></Badge>}
                   </div>
                   <div className={x.itemMeta}>
-                    {shortDate(exp.date_incurred)} · {exp.description}
+                    <PreviewShortDate iso={exp.date_incurred} /> · <PreviewText>{exp.description}</PreviewText>
                   </div>
                   <div className={x.itemMeta}>
                     {exp.technician ? (
@@ -120,7 +142,7 @@ export default async function UitgavenPage() {
                     ) : (
                       isOffice && (
                         <span className={x.who}>
-                          <Building2 size={14} /> Kantoor
+                          <Building2 size={14} /> <PreviewText>{"Kantoor"}</PreviewText>
                         </span>
                       )
                     )}

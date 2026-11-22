@@ -1,14 +1,32 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
+import { BRAND, STUDIO_UI } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Badge, Notice, Empty, HelpSteps, ui } from '../_ui';
 import { ShieldAlert, MousePointerClick, EyeOff, Ban, Globe } from 'lucide-react';
 import { judgeAll, countClicks, type AdVisit, type Judgement } from '@/lib/clickFraud';
 import CopyBoxes from './CopyBoxes';
+import StudioCopyBoxes from './StudioCopyBoxes';
+import {
+  Card as SCard,
+  CardContent as SCardContent,
+  CardHeader as SCardHeader,
+  CardTitle as SCardTitle,
+} from '@/components/ui/card';
+import { Badge as SBadge } from '@/components/ui/badge';
+import {
+  Table as STable,
+  TableBody as STableBody,
+  TableCell as STableCell,
+  TableHead as STableHead,
+  TableHeader as STableHeader,
+  TableRow as STableRow,
+} from '@/components/ui/table';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Klikfraude | Autosleutel24',
+  title: `Klikfraude | ${BRAND.name}`,
 };
 
 /** Default window. Google's own invalid-click credits are handled monthly. */
@@ -81,6 +99,21 @@ export default async function KlikfraudePage({
     .limit(MAX_ROWS);
 
   if (error) {
+    if (STUDIO_UI) {
+      return (
+        <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Klikfraude</PreviewText></h1>
+            <p className="text-muted-foreground text-sm"><PreviewText>Bewijs tegen frauduleuze advertentieklikken</PreviewText></p>
+          </div>
+          <p className="text-destructive text-sm">
+            <PreviewText>
+              {`De tabel ad_visits is er nog niet. Voer supabase/migrations/0073_ad_visits_click_fraud.sql uit in de SQL-editor van Supabase; daarna vult dit scherm zichzelf vanaf de eerstvolgende advertentieklik. (${error.message})`}
+            </PreviewText>
+          </p>
+        </div>
+      );
+    }
     return (
       <>
         <PageHead title="Klikfraude" sub="Bewijs tegen frauduleuze advertentieklikken" />
@@ -132,6 +165,122 @@ export default async function KlikfraudePage({
       ].join(';');
     }),
   ].join('\n');
+
+  if (STUDIO_UI) {
+    const badgeClass = (t: ReturnType<typeof tone>) =>
+      t === 'stop'
+        ? undefined
+        : t === 'warn'
+          ? 'border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/15 dark:text-amber-300'
+          : t === 'info'
+            ? 'border-blue-200 bg-blue-100 text-blue-700 dark:border-blue-500/20 dark:bg-blue-500/15 dark:text-blue-300'
+            : 'border-emerald-200 bg-emerald-100 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/15 dark:text-emerald-300';
+
+    const kpis = [
+      { label: 'Betaalde klikken', value: clicks, foot: `${visits.length} paginaladingen, ${judgements.length} adressen`, icon: MousePointerClick },
+      { label: 'Zonder JavaScript', value: silent, foot: 'klikken zonder browser, buiten Google-netwerken', icon: EyeOff, warn: Boolean(silent) },
+      { label: 'Via Google-netwerk', value: sharedClicks, foot: 'VPN by Google / Chrome: echte mensen, nooit uitsluiten', icon: Globe },
+      { label: 'Uit te sluiten', value: fraud.length, foot: 'adressen met het oordeel fraude', icon: Ban, warn: fraud.length > 0 },
+      { label: 'Verdacht', value: suspect.length, foot: 'nog niet genoeg om uit te sluiten', icon: ShieldAlert, warn: suspect.length > 0 },
+    ];
+
+    return (
+      <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Klikfraude</PreviewText></h1>
+          <p className="text-muted-foreground text-sm">
+            <PreviewText>{`Betaalde advertentieklikken van de afgelopen ${days} dagen, beoordeeld per IP-adres`}</PreviewText>
+          </p>
+        </div>
+
+        <p className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-200">
+          <PreviewText>
+            Een klik wordt afgerekend in de veiling van Google, voordat deze site wordt opgevraagd. Dit scherm houdt dus
+            niets tegen — het levert de twee dingen die wél geld schelen: een lijst IP-adressen om uit te sluiten (stopt de
+            volgende klik) en onderbouwing voor een claim op ongeldige klikken (geeft de vorige terug).
+          </PreviewText>
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          {kpis.map((k) => (
+            <SCard key={k.label} className={k.warn ? 'border-amber-300 dark:border-amber-500/40' : undefined}>
+              <SCardContent className="flex flex-col gap-1 pt-6">
+                <span className="text-muted-foreground flex items-center gap-1.5 text-sm"><k.icon className="size-3.5" />{k.label}</span>
+                <span className="text-2xl font-semibold">{k.value}</span>
+                <span className="text-muted-foreground text-xs">{k.foot}</span>
+              </SCardContent>
+            </SCard>
+          ))}
+        </div>
+
+        <details className="rounded-lg border">
+          <summary className="cursor-pointer list-none px-4 py-3 font-medium select-none"><PreviewText>Hoe werkt het?</PreviewText></summary>
+          <ol className="flex flex-col gap-2 border-t p-4 text-sm">
+            {[
+              'Kijk eerst in Google Ads bij de kolom «Ongeldige klikken». Wat daar staat, heeft Google zelf al gecrediteerd — dat opnieuw claimen kost alleen een ticket.',
+              'Neem de IP-uitsluitingen hieronder over in de zoekcampagne: Instellingen → Aanvullende instellingen → IP-uitsluitingen. Maximaal 500 reeksen. Performance Max kent geen IP-uitsluitingen.',
+              'Stuur het bewijsblok mee met een verzoek om creditering, met de gclid erin: zonder die code neemt support de claim niet in behandeling.',
+              'Adressen van «VPN by Google» en Google-proxy zijn gedeeld door duizenden Pixel- en Chrome-gebruikers. Die komen nooit in de uitsluitlijst en tellen niet als bewijs.',
+              'Sluit nooit een adres uit dat hier «verdacht» is. Een bot die wegkomt kost één klik; een klant die je uitsluit kost elke klik die hij nog zou doen, en dat ziet niemand.',
+            ].map((step, i) => (
+              <li key={i} className="flex gap-2">
+                <span className="bg-muted text-muted-foreground flex size-5 shrink-0 items-center justify-center rounded-full text-xs">{i + 1}</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </details>
+
+        <StudioCopyBoxes exclusions={exclusions} evidence={evidence} />
+
+        <SCard>
+          <SCardHeader>
+            <SCardTitle><PreviewText>Beoordeling per adres</PreviewText></SCardTitle>
+          </SCardHeader>
+          <SCardContent className={judgements.length ? 'overflow-x-auto' : undefined}>
+            {judgements.length === 0 ? (
+              <p className="text-muted-foreground text-sm">
+                <PreviewText>Nog geen betaalde klikken vastgelegd in deze periode. Dit scherm vult zichzelf zodra er iemand via een advertentie binnenkomt.</PreviewText>
+              </p>
+            ) : (
+              <STable>
+                <STableHeader>
+                  <STableRow>
+                    <STableHead>Oordeel</STableHead>
+                    <STableHead>IP</STableHead>
+                    <STableHead><PreviewText>Land</PreviewText></STableHead>
+                    <STableHead>Klikken</STableHead>
+                    <STableHead>Ladingen</STableHead>
+                    <STableHead>Stil</STableHead>
+                    <STableHead>Laatste</STableHead>
+                    <STableHead>Waarom</STableHead>
+                  </STableRow>
+                </STableHeader>
+                <STableBody>
+                  {judgements.map((j) => (
+                    <STableRow key={j.ip}>
+                      <STableCell>
+                        <SBadge variant="outline" className={badgeClass(tone(j))}>{j.sharedNetwork ?? j.tier}</SBadge>
+                      </STableCell>
+                      <STableCell className="font-mono text-xs">{j.ip}</STableCell>
+                      <STableCell>{j.country ?? '—'}</STableCell>
+                      <STableCell>{j.clicks}</STableCell>
+                      <STableCell>{j.visits}</STableCell>
+                      <STableCell>{j.silent}</STableCell>
+                      <STableCell>{DATE.format(new Date(j.lastSeen))}</STableCell>
+                      <STableCell className="text-muted-foreground max-w-64 truncate" title={j.reasons.join('; ')}>
+                        {j.reasons.length ? j.reasons.join('; ') : 'niets bijzonders gezien'}
+                      </STableCell>
+                    </STableRow>
+                  ))}
+                </STableBody>
+              </STable>
+            )}
+          </SCardContent>
+        </SCard>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -208,7 +357,7 @@ export default async function KlikfraudePage({
               <>
                 <th>Oordeel</th>
                 <th>IP</th>
-                <th>Land</th>
+                <th><PreviewText>{"Land"}</PreviewText></th>
                 <th>Klikken</th>
                 <th>Ladingen</th>
                 <th>Stil</th>

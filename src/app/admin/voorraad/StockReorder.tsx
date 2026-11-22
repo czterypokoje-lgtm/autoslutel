@@ -5,6 +5,7 @@ import { ClipboardCopy, PackageSearch, ShoppingCart } from 'lucide-react';
 import { REORDER_DEFAULTS, reorderAdvice, type ReorderStatus, type StockArticle, type StockState } from '@/lib/keyforcarsStock';
 import { usePreviewLanguage } from '../PreviewLanguage';
 import styles from './keyforcars.module.css';
+import { BRAND } from '@/config/install';
 
 const STATUS: Record<ReorderStatus, { label: string; className: string }> = {
   order: { label: 'Nu bestellen', className: 'statusOrder' },
@@ -19,13 +20,15 @@ const STATUS: Record<ReorderStatus, { label: string; className: string }> = {
  * Lead time and cover are the office's own settings; everything else comes
  * from what was counted, sold and issued.
  */
-export default function StockReorder({ state, catalog }: { state: StockState; catalog: StockArticle[] }) {
+export default function StockReorder({ state, catalog, incoming = {} }: { state: StockState; catalog: StockArticle[]; incoming?: Record<string, number> }) {
   const { t, english } = usePreviewLanguage();
+  const [drafting, setDrafting] = useState(false);
+  const demoMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === '1';
   const [settings, setSettings] = useState(REORDER_DEFAULTS);
   const [showAll, setShowAll] = useState(false);
   const [copied, setCopied] = useState(false);
   const articles = new Map(catalog.map((article) => [article.id, article]));
-  const lines = reorderAdvice(state, new Date(), settings);
+  const lines = reorderAdvice(state, new Date(), settings, incoming);
   const locale = english ? 'en-GB' : 'nl-NL';
   const money = new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' });
   const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
@@ -37,7 +40,7 @@ export default function StockReorder({ state, catalog }: { state: StockState; ca
   const visible = showAll ? lines : lines.filter((line) => line.status !== 'ok');
 
   function copyOrderList() {
-    const text = [`KeyForCars · ${t('Bestellijst')} ${new Date().toLocaleDateString(locale)}`,
+    const text = [`${BRAND.name} · ${t('Bestellijst')} ${new Date().toLocaleDateString(locale)}`,
       ...toOrder.map((line) => {
         const article = articles.get(line.article);
         return `${line.suggest}× ${article?.sku || line.article} · ${article?.name || line.article}`;
@@ -63,6 +66,16 @@ export default function StockReorder({ state, catalog }: { state: StockState; ca
         <button type="button" className={styles.primary} disabled={!toOrder.length} onClick={copyOrderList}>
           <ClipboardCopy size={15} aria-hidden="true" /> {t(copied ? 'Gekopieerd' : 'Kopieer bestellijst')}
         </button>
+          {!demoMode && toOrder.length > 0 && <button type="button" className={styles.secondary} disabled={drafting} onClick={async () => {
+            setDrafting(true);
+            const response = await fetch('/api/admin/inkoop', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+              action: 'create', supplier: t('Bestelvoorstel'), note: `${t('Bestelvoorstel')} ${new Date().toLocaleDateString(locale)}`,
+              lines: toOrder.map((line) => ({ article: line.article, quantity: line.suggest, unit_cost_cents: line.unitCostCents })),
+            }) }).catch(() => null);
+            setDrafting(false);
+            if (response?.ok) window.location.href = '/admin/inkoop';
+            else window.alert((await response?.json().catch(() => null))?.error ?? t('Inkooporder aanmaken mislukt.'));
+          }}>{t('Maak inkooporder')}</button>}
       </div>
 
       <dl className={styles.reorderStats}>

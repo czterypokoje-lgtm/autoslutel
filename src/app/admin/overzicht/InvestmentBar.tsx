@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import styles from './overzicht.module.css';
 
 const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
@@ -33,7 +34,7 @@ export default function InvestmentBar({
         <span style={{ width: `${pct}%` }} className={beyond >= 0 ? styles.investBarDone : undefined} />
       </div>
       <span className={styles.investFoot}>
-        {EUR.format(earned)} verdiend in {jobs} {jobs === 1 ? 'klus' : 'klussen'} deze maand · {pct}% terugverdiend
+        {EUR.format(earned)} verdiend in {jobs} <PreviewText>{jobs === 1 ? 'klus' : 'klussen'}</PreviewText> deze maand · {pct}% terugverdiend
       </span>
     </section>
   );

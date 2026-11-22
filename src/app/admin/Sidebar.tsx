@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import Link from 'next/link';
 import { ExternalLink, KeyRound, Menu, Search, X } from 'lucide-react';
@@ -8,6 +9,7 @@ import AdminNav from './AdminNav';
 import SignOutButton from './SignOutButton';
 import type { CrmRole } from '@/lib/crmSession';
 import { IS_KEYFORCARS } from '@/config/install';
+import { usePreviewLanguage } from './PreviewLanguage';
 
 /**
  * The sidebar, and the phone-width behaviour it needs and desktop never does.
@@ -34,6 +36,7 @@ export default function Sidebar({
   photoUrl?: string | null;
 }) {
   const [open, setOpen] = useState(false);
+  const { t } = usePreviewLanguage();
 
   return (
     <aside className={styles.sidebar}>
@@ -42,7 +45,7 @@ export default function Sidebar({
           type="button"
           className={styles.mobileMenuBtn}
           onClick={() => setOpen(true)}
-          aria-label="Menu openen"
+          aria-label={t('Menu openen')}
         >
           <Menu size={20} strokeWidth={2} />
         </button>
@@ -63,7 +66,7 @@ export default function Sidebar({
           <Link
             href={IS_KEYFORCARS ? '/admin/voorraad/p' : '/admin/klanten'}
             className={`${styles.iconGhost} ${styles.mobileOnly}`}
-            title="Zoeken"
+            title={t('Zoeken')}
           >
             <Search size={16} strokeWidth={1.9} aria-hidden="true" />
           </Link>
@@ -104,7 +107,7 @@ export default function Sidebar({
             e.stopPropagation();
             setOpen(false);
           }}
-          aria-label="Menu sluiten"
+          aria-label={t('Menu sluiten')}
         >
           <X size={18} strokeWidth={2} />
         </button>
@@ -123,7 +126,7 @@ export default function Sidebar({
               title="De site openen zoals een bezoeker hem ziet"
             >
               <ExternalLink size={16} strokeWidth={1.9} aria-hidden="true" />
-              Site bekijken
+              <PreviewText>{"Site bekijken"}</PreviewText>
             </a>
           )}
 

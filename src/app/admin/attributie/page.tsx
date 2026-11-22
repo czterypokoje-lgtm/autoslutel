@@ -1,4 +1,6 @@
+import { PreviewText } from '../PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
+import { BRAND, STUDIO_UI } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Notice } from '../_ui';
 import { MousePointerClick, Link2, Euro, CircleHelp } from 'lucide-react';
@@ -6,11 +8,14 @@ import { readClickOrigin } from '@/lib/adClickId';
 import { isoDate } from '@/lib/crmJobs';
 import MatchPanel, { type ClickRow, type JobRow } from './MatchPanel';
 import CampaignNames, { type CampaignSeen } from './CampaignNames';
+import StudioMatchPanel from './StudioMatchPanel';
+import StudioCampaignNames from './StudioCampaignNames';
+import { Card as SCard, CardContent } from '@/components/ui/card';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Advertentieklikken koppelen | Autosleutel24',
+  title: `Advertentieklikken koppelen | ${BRAND.name}`,
 };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -98,6 +103,17 @@ export default async function AttributiePage({
     : clickAttempt;
 
   if (clickResult.error) {
+    if (STUDIO_UI) {
+      return (
+        <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Advertentieklikken</PreviewText></h1>
+            <p className="text-muted-foreground text-sm"><PreviewText>Koppel een telefoonklus aan de klik die hem veroorzaakte.</PreviewText></p>
+          </div>
+          <p className="text-destructive text-sm"><PreviewText>{`Klikken laden mislukte: ${clickResult.error.message}`}</PreviewText></p>
+        </div>
+      );
+    }
     return (
       <>
         <PageHead title="Advertentieklikken" sub="Koppel een telefoonklus aan de klik die hem veroorzaakte." />
@@ -192,6 +208,48 @@ export default async function AttributiePage({
   const unattributed = jobs.filter((j) => !j.attributed && j.scheduledDate === date);
   const value = unattributed.reduce((total, job) => total + (job.value ?? 0), 0);
 
+  if (STUDIO_UI) {
+    const kpis = [
+      { label: 'Klikken deze dag', value: String(clicks.length), icon: MousePointerClick, foot: <>{open.length} <PreviewText>nog vrij</PreviewText></> },
+      { label: 'Al gekoppeld', value: String(clicks.filter((c) => c.claimed).length), icon: Link2, foot: null },
+      {
+        label: 'Klussen zonder bron',
+        value: String(unattributed.length),
+        icon: CircleHelp,
+        foot: <>{jobs.filter((j) => j.scheduledDate === date).length} <PreviewText>deze dag</PreviewText></>,
+        warn: unattributed.length > 0,
+      },
+      { label: 'Omzet zonder bron', value: MONEY.format(value), icon: Euro, foot: <PreviewText>telt nu als organisch</PreviewText>, warn: value > 0 },
+    ];
+
+    return (
+      <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Advertentieklikken koppelen</PreviewText></h1>
+          <p className="text-muted-foreground text-sm">
+            <PreviewText>Welke klik hoorde bij welke klus. U weet het van de telefoon; de database niet.</PreviewText>
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {kpis.map((k) => (
+            <SCard key={k.label} className={k.warn ? 'border-amber-300 dark:border-amber-500/40' : undefined}>
+              <CardContent className="flex flex-col gap-1 pt-6">
+                <span className="text-muted-foreground flex items-center gap-1.5 text-sm"><k.icon className="size-4" /><PreviewText>{k.label}</PreviewText></span>
+                <span className="text-2xl font-semibold">{k.value}</span>
+                {k.foot && <span className="text-muted-foreground text-xs">{k.foot}</span>}
+              </CardContent>
+            </SCard>
+          ))}
+        </div>
+
+        <StudioCampaignNames campaigns={campaigns} />
+
+        <StudioMatchPanel date={date} today={today} clicks={clicks} jobs={jobs} />
+      </div>
+    );
+  }
+
   return (
     <>
       <PageHead
@@ -203,7 +261,7 @@ export default async function AttributiePage({
         <Stat
           label="Klikken deze dag"
           value={clicks.length}
-          foot={`${open.length} nog vrij`}
+          foot={<>{open.length} <PreviewText>nog vrij</PreviewText></>}
           icon={<MousePointerClick size={18} />}
         />
         <Stat
@@ -215,7 +273,7 @@ export default async function AttributiePage({
         <Stat
           label="Klussen zonder bron"
           value={unattributed.length}
-          foot={`van ${jobs.filter((j) => j.scheduledDate === date).length} deze dag`}
+          foot={<>{jobs.filter((j) => j.scheduledDate === date).length} <PreviewText>deze dag</PreviewText></>}
           icon={<CircleHelp size={18} />}
           tone={unattributed.length ? 'warn' : 'ok'}
         />

@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import Link from 'next/link';
 import {
@@ -7,6 +8,7 @@ import {
   Wrench, Inbox, ChevronDown, UserPlus, CalendarPlus, Sparkles,
 } from 'lucide-react';
 import { waLink } from '@/lib/whatsapp';
+import InboxComposer from './InboxComposer';
 import styles from './gesprekken.module.css';
 
 export interface Conversation {
@@ -17,8 +19,22 @@ export interface Conversation {
   outcome: string | null;
   durationSecs: number | null;
   summary: string | null;
-  turns: { role: 'agent' | 'user'; message: string }[];
+  turns: { role: 'agent' | 'user'; message: string; author?: string; status?: string; at?: string }[];
   createdAt: string;
+  /* Present for inbox threads (WhatsApp / e-mail / form), absent for ElevenLabs call transcripts. */
+  thread?: {
+    id: string;
+    channel: 'whatsapp' | 'email' | 'form';
+    name: string | null;
+    aiMode: 'off' | 'draft' | 'auto';
+    status: 'open' | 'closed';
+    email: string | null;
+    subject: string | null;
+    canReply: 'whatsapp' | 'email' | null;
+    windowOpen: boolean;
+    draft: string | null;
+    unread: number;
+  };
   lead: {
     id: string;
     name: string | null;
@@ -43,6 +59,8 @@ const CHANNEL = {
   phone: { label: 'Telefoon', Icon: Phone },
   whatsapp: { label: 'WhatsApp', Icon: MessageCircle },
   sms: { label: 'SMS', Icon: MessageCircle },
+  email: { label: 'E-mail', Icon: Inbox },
+  form: { label: 'Formulier', Icon: Inbox },
   webchat: { label: 'Webchat', Icon: MessageCircle },
   unknown: { label: 'Onbekend', Icon: HelpCircle },
 } as const;
@@ -179,7 +197,7 @@ export default function ConversationConsole({ conversations }: { conversations: 
       ].sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime())
     : [];
 
-  const title = selected ? selected.lead?.name || selected.phone || 'Onbekende beller' : '';
+  const title = selected ? selected.lead?.name || selected.thread?.name || selected.phone || selected.thread?.email || 'Onbekende beller' : '';
 
   return (
     <div className={`${styles.console} ${selected ? styles.hasSelection : ''}`}>
@@ -234,7 +252,7 @@ export default function ConversationConsole({ conversations }: { conversations: 
                         <span className={styles.listMeta}>{label}</span>
                         {duration(c.durationSecs) && <span className={styles.listMeta}>{duration(c.durationSecs)}</span>}
                         {c.lead && <span className={styles.chipMini}>lead</span>}
-                        {c.job && <span className={styles.chipMini}>klus</span>}
+                        {c.job && <span className={styles.chipMini}><PreviewText>{"klus"}</PreviewText></span>}
                       </span>
                     </span>
                   </button>
@@ -274,15 +292,15 @@ export default function ConversationConsole({ conversations }: { conversations: 
 
               <div className={styles.heroStats}>
                 <div className={styles.stat}>
-                  <span className={styles.statLabel}>Kanaal</span>
+                  <span className={styles.statLabel}><PreviewText>{"Kanaal"}</PreviewText></span>
                   <span className={styles.statValue}>{channelOf(selected.channel).label}</span>
                 </div>
                 <div className={styles.stat}>
-                  <span className={styles.statLabel}>Duur</span>
+                  <span className={styles.statLabel}><PreviewText>{"Duur"}</PreviewText></span>
                   <span className={styles.statValue}>{duration(selected.durationSecs) ?? '—'}</span>
                 </div>
                 <div className={styles.stat}>
-                  <span className={styles.statLabel}>Uitkomst</span>
+                  <span className={styles.statLabel}><PreviewText>{"Uitkomst"}</PreviewText></span>
                   <span className={`${styles.statChip} ${toneOf(selected.outcome)}`}>
                     {selected.outcome ? OUTCOME_LABEL[selected.outcome] ?? selected.outcome : '—'}
                   </span>
@@ -308,12 +326,12 @@ export default function ConversationConsole({ conversations }: { conversations: 
 
               <div className={styles.turns}>
                 {selected.turns.length === 0 ? (
-                  <p className={styles.ctxEmpty}>Geen transcript bij dit gesprek.</p>
+                  <p className={styles.ctxEmpty}><PreviewText>{"Geen transcript bij dit gesprek."}</PreviewText></p>
                 ) : (
                   selected.turns.map((turn, i) => (
                     <div key={i} className={turn.role === 'agent' ? styles.rowAgent : styles.rowUser}>
                       <span className={turn.role === 'agent' ? styles.whoAgent : styles.whoUser}>
-                        {turn.role === 'agent' ? 'Assistent' : 'Klant'}
+                        <PreviewText>{turn.role === 'agent' ? 'Assistent' : 'Klant'}</PreviewText>
                       </span>
                       <p className={styles.turnText}>{turn.message}</p>
                     </div>
@@ -338,20 +356,25 @@ export default function ConversationConsole({ conversations }: { conversations: 
               {selected.lead ? (
                 <Link className={styles.pill} href="/admin/leads"><Inbox size={14} /> Open lead</Link>
               ) : (
-                <Link className={styles.pill} href="/admin/klanten"><UserPlus size={14} /> Klant aanmaken</Link>
+                <Link className={styles.pill} href="/admin/klanten"><UserPlus size={14} /> <PreviewText>{"Klant aanmaken"}</PreviewText></Link>
               )}
               {selected.job ? (
                 <Link className={styles.pill} href={`/admin/jobs/${selected.job.id}`}><Wrench size={14} /> Open klus</Link>
               ) : (
-                <Link className={styles.pill} href="/admin/jobs/nieuw"><CalendarPlus size={14} /> Klus inplannen</Link>
+                <Link className={styles.pill} href="/admin/jobs/nieuw"><CalendarPlus size={14} /> <PreviewText>{"Klus inplannen"}</PreviewText></Link>
               )}
             </div>
+            {selected.thread && (
+              <section className={styles.card}>
+                <InboxComposer key={selected.id} thread={selected.thread} phone={selected.phone} />
+              </section>
+            )}
           </main>
 
           {/* ── pane 3 ───────────────────────────────────────────────────── */}
           <aside className={styles.contextPane}>
             <section className={styles.ctxCard}>
-              <h3 className={styles.ctxHead}>Reis van deze klant</h3>
+              <h3 className={styles.ctxHead}><PreviewText>{"Reis van deze klant"}</PreviewText></h3>
               <ol className={styles.journey}>
                 {journey.map((event, i) => {
                   const Icon = event.kind === 'lead' ? Inbox : event.kind === 'job' ? Wrench
@@ -376,7 +399,7 @@ export default function ConversationConsole({ conversations }: { conversations: 
                 })}
               </ol>
               {journey.length === 1 && (
-                <p className={styles.ctxEmpty}>Eerste contact — verder nog niets bekend van dit nummer.</p>
+                <p className={styles.ctxEmpty}><PreviewText>{"Eerste contact — verder nog niets bekend van dit nummer."}</PreviewText></p>
               )}
             </section>
 
@@ -390,12 +413,12 @@ export default function ConversationConsole({ conversations }: { conversations: 
                   <span className={styles.ctxStatus}>{selected.lead.status}</span>
                 </>
               ) : (
-                <p className={styles.ctxEmpty}>Dit nummer staat niet bij de leads.</p>
+                <p className={styles.ctxEmpty}><PreviewText>{"Dit nummer staat niet bij de leads."}</PreviewText></p>
               )}
             </section>
 
             <section className={styles.ctxCard}>
-              <h3 className={styles.ctxHead}>Klus</h3>
+              <h3 className={styles.ctxHead}><PreviewText>{"Klus"}</PreviewText></h3>
               {selected.job ? (
                 <>
                   <div className={styles.ctxRow}><Wrench size={13} /> {selected.job.service ?? 'dienst onbekend'}</div>
@@ -404,7 +427,7 @@ export default function ConversationConsole({ conversations }: { conversations: 
                   <span className={styles.ctxStatus}>{selected.job.status}</span>
                 </>
               ) : (
-                <p className={styles.ctxEmpty}>Geen klus op dit nummer.</p>
+                <p className={styles.ctxEmpty}><PreviewText>{"Geen klus op dit nummer."}</PreviewText></p>
               )}
             </section>
           </aside>

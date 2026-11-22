@@ -4,10 +4,12 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { LogOut } from 'lucide-react';
 import styles from './admin.module.css';
+import { usePreviewLanguage } from './PreviewLanguage';
 
 export default function SignOutButton() {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const { t } = usePreviewLanguage();
 
   async function signOut() {
     setBusy(true);
@@ -19,9 +21,9 @@ export default function SignOutButton() {
   }
 
   return (
-    <button className={styles.signout} onClick={signOut} disabled={busy} title="Uitloggen">
+    <button className={styles.signout} onClick={signOut} disabled={busy} title={t('Uitloggen')}>
       <LogOut size={16} strokeWidth={1.9} aria-hidden="true" />
-      <span>{busy ? 'Bezig…' : 'Uitloggen'}</span>
+      <span>{t(busy ? 'Bezig…' : 'Uitloggen')}</span>
     </button>
   );
 }

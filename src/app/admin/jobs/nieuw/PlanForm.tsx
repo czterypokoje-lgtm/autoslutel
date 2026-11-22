@@ -1,5 +1,9 @@
 'use client';
 
+import JobAccountFields from '../JobAccountFields';
+import type { JobAccountOption } from '@/lib/jobAccounts';
+
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -37,6 +41,7 @@ const DEFAULT_COMMISSION_PCT = 25;
 
 export default function PlanForm({
   lead,
+  accounts = [],
   order,
   date,
   suggestions,
@@ -44,6 +49,7 @@ export default function PlanForm({
   initialTechnicianId,
   cars,
 }: {
+  accounts?: JobAccountOption[];
   lead: PlanLead | null;
   order: { id: string; order_number: string; total_inc: number } | null;
   date: string;
@@ -82,6 +88,8 @@ export default function PlanForm({
    * the job by. 39 of 65 finished jobs are in that state, which is most of
    * why ad attribution sits at 2%.
    */
+  const [accountId, setAccountId] = useState("");
+  const [contactId, setContactId] = useState("");
   const [customerName, setCustomerName] = useState(lead?.name ?? '');
   const [customerPhone, setCustomerPhone] = useState(lead?.phone_e164 ?? lead?.phone ?? '');
 
@@ -215,6 +223,8 @@ export default function PlanForm({
         // order case and would otherwise be written into a lead column.
         lead_id: order ? null : linkedLeadId,
         order_id: order?.id ?? null,
+        billing_account_id: accountId || null,
+        communication_contact_id: contactId || null,
         customer_name: customerName.trim() || null,
         customer_phone: customerPhone.trim() || null,
         technician_id: technicianId || null,
@@ -253,13 +263,21 @@ export default function PlanForm({
 
   return (
     <form className={styles.planWrap} onSubmit={submit}>
+      {accounts.length > 0 && <div className="lg:col-span-2">
+        <JobAccountFields accounts={accounts} onSelect={(account, contact, name, phone) => {
+          setAccountId(account);
+          setContactId(contact);
+          if (name !== undefined) setCustomerName(name);
+          if (phone !== undefined) setCustomerPhone(phone);
+        }} />
+      </div>}
       <div className={styles.panel}>
-        <h2>Klus</h2>
+        <h2><PreviewText>{"Klus"}</PreviewText></h2>
 
         <div className={styles.grid2}>
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="datum">
-              Datum
+              <PreviewText>{"Datum"}</PreviewText>
             </label>
             <input
               id="datum"
@@ -299,6 +317,7 @@ export default function PlanForm({
               autoComplete="off"
               placeholder="Naam van de klant"
               value={customerName}
+              readOnly={Boolean(contactId)}
               onChange={(e) => setCustomerName(e.target.value)}
             />
           </div>
@@ -335,6 +354,7 @@ export default function PlanForm({
               autoComplete="off"
               placeholder="06 12 34 56 78"
               value={customerPhone}
+              readOnly={Boolean(contactId)}
               onChange={(e) => setCustomerPhone(e.target.value)}
             />
             {linkedLeadId && !lead && (
@@ -464,7 +484,7 @@ export default function PlanForm({
 
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="pc">
-              Postcode
+              <PreviewText>{"Postcode"}</PreviewText>
             </label>
             <input
               id="pc"
@@ -476,7 +496,7 @@ export default function PlanForm({
 
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor="plaats">
-              Plaats
+              <PreviewText>{"Plaats"}</PreviewText>
             </label>
             <input
               id="plaats"
@@ -519,7 +539,7 @@ export default function PlanForm({
               value={keylessChoice}
               onChange={(e) => setKeylessChoice(e.target.value as '' | 'true' | 'false')}
             >
-              <option value="">Onbekend</option>
+              <option value=""><PreviewText>{"Onbekend"}</PreviewText></option>
               <option value="false">Sleutel (contactslot)</option>
               <option value="true">Keyless (start-knop)</option>
             </select>
@@ -553,7 +573,7 @@ export default function PlanForm({
             className={styles.secondary}
             href={lead ? '/admin/leads' : '/admin/jobs'}
           >
-            Annuleren
+            <PreviewText>{"Annuleren"}</PreviewText>
           </Link>
           {error && <div className={styles.error}>{error}</div>}
         </div>
@@ -562,7 +582,7 @@ export default function PlanForm({
       <div className={styles.panel}>
         {order && (
           <>
-            <h2>Bestelling</h2>
+            <h2><PreviewText>{"Bestelling"}</PreviewText></h2>
             <div className={styles.summary}>
               <span className={styles.summaryKey}>Ordernummer</span>
               <span className={styles.summaryVal}>{order.order_number}</span>
@@ -576,9 +596,9 @@ export default function PlanForm({
           <>
             <h2>Lead</h2>
             <div className={styles.summary}>
-              <span className={styles.summaryKey}>Klant</span>
+              <span className={styles.summaryKey}><PreviewText>{"Klant"}</PreviewText></span>
               <span className={styles.summaryVal}>{lead.name ?? 'geen naam'}</span>
-              <span className={styles.summaryKey}>Telefoon</span>
+              <span className={styles.summaryKey}><PreviewText>{"Telefoon"}</PreviewText></span>
               <span className={styles.summaryVal}>
                 {lead.phone_e164 ? (
                   <a href={`tel:${lead.phone_e164}`}>{lead.phone_e164}</a>
@@ -590,13 +610,13 @@ export default function PlanForm({
               <span className={styles.summaryVal}>
                 {[lead.brand, lead.model, lead.year].filter(Boolean).join(' ') || '—'}
               </span>
-              <span className={styles.summaryKey}>Bron</span>
+              <span className={styles.summaryKey}><PreviewText>{"Bron"}</PreviewText></span>
               <span className={styles.summaryVal}>{lead.source ?? 'unknown'}</span>
             </div>
           </>
         )}
 
-        <h2>Monteur</h2>
+        <h2><PreviewText>{"Monteur"}</PreviewText></h2>
         {suggestions.length === 0 ? (
           <p className={styles.note}>
             Geen beschikbare monteurs voor deze dag.

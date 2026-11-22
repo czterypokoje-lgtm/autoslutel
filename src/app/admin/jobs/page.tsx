@@ -1,3 +1,4 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -8,37 +9,23 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { PageHead, ui } from '../_ui';
 import GridAutoScroll from './GridAutoScroll';
 import { getBrandLogo } from '@/lib/brandLogos';
+import { STUDIO_UI } from '@/config/install';
+import StudioAgenda from './_studio/agenda';
+import {
+  DAY_NAMES,
+  GRID_ID,
+  HOUR_H,
+  MONTHS_NL,
+  STATUS_LABEL,
+  carLine,
+  minutesOf,
+  packOverlaps,
+  spanOf,
+  type JobRow,
+  type TechRow,
+} from './grid';
 
 export const dynamic = 'force-dynamic';
-
-const DAY_NAMES = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'];
-
-interface JobRow {
-  id: string;
-  status: string;
-  technician_id: string | null;
-  scheduled_date: string;
-  slot_start: string | null;
-  slot_end: string | null;
-  street: string | null;
-  postcode: string | null;
-  city: string | null;
-  kenteken: string | null;
-  service_type: string | null;
-  job_source: string | null;
-  quoted_price: number | string | null;
-  car_make: string | null;
-  car_model: string | null;
-  car_year: number | null;
-}
-
-interface TechRow {
-  id: string;
-  name: string;
-  active: boolean;
-  color: string | null;
-  online: boolean;
-}
 
 export default async function JobsPage({
   searchParams,
@@ -107,6 +94,34 @@ export default async function JobsPage({
           timeZone: 'Europe/Amsterdam',
         }).format(new Date(`${date}T12:00:00Z`));
 
+  const sub = `${heading} · ${rows.length} ${rows.length === 1 ? 'klus' : 'klussen'}${unassignedCount ? ` · ${unassignedCount} zonder monteur` : ''}${doneCount ? ` · ${doneCount} afgerond` : ''}`;
+
+  /*
+   * The Studio (shadcn) agenda: the same rows, the same links, the same URL
+   * params, drawn with Cards and a Tailwind grid instead of this stylesheet.
+   * Everything above the gate is shared — the role check, the query, the date
+   * arithmetic — so the two looks cannot disagree about what day it is or
+   * which jobs are on it.
+   */
+  if (STUDIO_UI) {
+    return (
+      <StudioAgenda
+        jobs={rows}
+        technicians={techs}
+        date={date}
+        view={view}
+        from={from}
+        to={to}
+        today={today}
+        prev={prev}
+        next={next}
+        heading={heading}
+        sub={sub}
+        unassignedCount={unassignedCount}
+      />
+    );
+  }
+
   return (
     <>
       {/*
@@ -115,22 +130,19 @@ export default async function JobsPage({
         stylesheet: a week grid of technicians is not a list of rows, and
         forcing it through the row idiom would cost more than it saved.
       */}
-      <PageHead
-        title="Agenda"
-        sub={`${heading} · ${rows.length} ${rows.length === 1 ? 'klus' : 'klussen'}${unassignedCount ? ` · ${unassignedCount} zonder monteur` : ''}${doneCount ? ` · ${doneCount} afgerond` : ''}`}
-      />
+      <PageHead title="Agenda" sub={sub} />
 
       <div className={styles.agendaLayout}>
       <aside className={styles.side}>
         <Link className={styles.sideNew} href={`/admin/jobs/nieuw?datum=${date}`}>
           <Plus size={17} strokeWidth={2.2} />
-          Klus inplannen
+          <PreviewText>{"Klus inplannen"}</PreviewText>
         </Link>
 
         <MiniMonth date={date} today={today} view={view} from={from} to={to} />
 
         <div className={styles.sideBlock}>
-          <span className={styles.sideLabel}>Monteurs</span>
+          <span className={styles.sideLabel}><PreviewText>{"Monteurs"}</PreviewText></span>
           {techs.map((t) => {
             const count = rows.filter((j) => j.technician_id === t.id && j.status !== 'geannuleerd').length;
             return (
@@ -144,7 +156,7 @@ export default async function JobsPage({
           {unassignedCount > 0 && (
             <div className={styles.sideTech}>
               <span className={styles.sideDot} style={{ background: '#9d201c' }} />
-              <span className={styles.sideName}>Zonder monteur</span>
+              <span className={styles.sideName}><PreviewText>{"Zonder monteur"}</PreviewText></span>
               <span className={`${styles.sideCount} ${styles.sideCountWarn}`}>{unassignedCount}</span>
             </div>
           )}
@@ -168,7 +180,7 @@ export default async function JobsPage({
       <div className={styles.agendaMain}>
         <div className={styles.toolbar}>
           <Link className={ui.btn} href={`/admin/jobs?datum=${today}${view === 'week' ? '&weergave=week' : ''}`}>
-            Vandaag
+            <PreviewText>{"Vandaag"}</PreviewText>
           </Link>
           <Link
             className={`${ui.btn} ${ui.btnIcon}`}
@@ -207,7 +219,7 @@ export default async function JobsPage({
           Er zijn nog geen actieve monteurs, dus de dagweergave heeft geen
           kolommen. Voeg ze toe bij{' '}
           <Link className={styles.link} href="/admin/monteurs">
-            Monteurs
+            <PreviewText>{"Monteurs"}</PreviewText>
           </Link>
           .
         </p>
@@ -243,14 +255,6 @@ export default async function JobsPage({
   );
 }
 
-const STATUS_LABEL: Record<string, string> = {
-  gepland: 'Gepland',
-  onderweg: 'Onderweg',
-  bezig: 'Bezig',
-  afgerond: 'Afgerond',
-  geannuleerd: 'Geannuleerd',
-};
-
 /** The class that colours a job's status dot (and fades a cancelled job). */
 function statusClass(status: string): string {
   if (status === 'afgerond') return styles.stDone;
@@ -266,8 +270,6 @@ function BrandMark({ make }: { make: string | null }) {
   // eslint-disable-next-line @next/next/no-img-element
   return <img src={src} alt="" className={styles.eventLogo} />;
 }
-
-const MONTHS_NL = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
 
 /**
  * The month around the shown date, as links. Today is ringed, the shown day
@@ -315,71 +317,6 @@ function MiniMonth({ date, today, view, from, to }: { date: string; today: strin
       </div>
     </div>
   );
-}
-
-/** Pixels per hour of the grid. Every offset below is a multiple of this. */
-const HOUR_H = 56;
-const GRID_ID = 'day-grid-scroll';
-
-/** "14:30" → 870. Missing or unparsable time sits at the top rather than vanishing. */
-function minutesOf(time: string | null): number {
-  const m = /^(\d{2}):(\d{2})/.exec(String(time ?? ''));
-  return m ? Number(m[1]) * 60 + Number(m[2]) : 0;
-}
-
-/** "Toyota Aygo 2018", or null when nobody has said which car this is yet. */
-function carLine(job: { car_make: string | null; car_model: string | null; car_year: number | null }): string | null {
-  const line = [job.car_make, job.car_model, job.car_year].filter(Boolean).join(' ');
-  return line || null;
-}
-
-/**
- * Side-by-side columns for jobs whose times overlap, instead of stacking them
- * unreadably on top of each other. A day view never needs this (one
- * technician, one job at a time, in the ordinary case), but the week board
- * shows every technician in one column per day, and two people legitimately
- * both working 10:00–12:00 on the same day is not an edge case there.
- *
- * Greedy: sort by start, give each job the first column whose last occupant
- * has already ended, and once a run of mutually-overlapping jobs closes,
- * stamp all of them with how many columns that run actually used.
- */
-function packOverlaps<T extends { id: string; start: number; end: number }>(
-  items: T[]
-): Map<string, { col: number; cols: number }> {
-  const sorted = [...items].sort((a, b) => a.start - b.start);
-  const result = new Map<string, { col: number; cols: number }>();
-  const columnsEnd: number[] = [];
-  let clusterIds: string[] = [];
-  let clusterEnd = -Infinity;
-
-  const flush = () => {
-    if (!clusterIds.length) return;
-    const cols = Math.max(...clusterIds.map((id) => result.get(id)!.col)) + 1;
-    for (const id of clusterIds) result.get(id)!.cols = cols;
-    clusterIds = [];
-    columnsEnd.length = 0;
-  };
-
-  for (const item of sorted) {
-    if (item.start >= clusterEnd) {
-      flush();
-      clusterEnd = -Infinity;
-    }
-    let col = columnsEnd.findIndex((end) => end <= item.start);
-    if (col === -1) {
-      col = columnsEnd.length;
-      columnsEnd.push(item.end);
-    } else {
-      columnsEnd[col] = item.end;
-    }
-    result.set(item.id, { col, cols: 1 });
-    clusterIds.push(item.id);
-    clusterEnd = Math.max(clusterEnd, item.end);
-  }
-  flush();
-
-  return result;
 }
 
 /**
@@ -492,10 +429,7 @@ function DayBoard({
             )}
 
             {(() => {
-              const times = col.jobs.map((j) => {
-                const start = minutesOf(j.slot_start);
-                return { id: j.id, start, end: Math.max(minutesOf(j.slot_end) || start + 120, start + 30) };
-              });
+              const times = col.jobs.map(spanOf);
               const layout = packOverlaps(times);
               const byId = new Map(times.map((t) => [t.id, t]));
 
@@ -583,10 +517,7 @@ function WeekBoard({
       {days.map((day, index) => {
         const dayJobs = jobs.filter((j) => j.scheduled_date === day);
         const isToday = day === today;
-        const times = dayJobs.map((j) => {
-          const start = minutesOf(j.slot_start);
-          return { id: j.id, start, end: Math.max(minutesOf(j.slot_end) || start + 120, start + 30) };
-        });
+        const times = dayJobs.map(spanOf);
         const layout = packOverlaps(times);
         const byId = new Map(times.map((t) => [t.id, t]));
 
@@ -691,7 +622,7 @@ function AgendaList({
   if (days.length === 0) {
     return (
       <div className={styles.agenda}>
-        <p className={styles.agendaEmpty}>Geen klussen in deze periode.</p>
+        <p className={styles.agendaEmpty}><PreviewText>{"Geen klussen in deze periode."}</PreviewText></p>
       </div>
     );
   }
@@ -713,10 +644,10 @@ function AgendaList({
             <h2 className={`${styles.agendaDayHead} ${isToday ? styles.agendaDayHeadToday : ''}`}>
               <span className={styles.agendaDayName}>
                 {dayLabel.format(new Date(`${day}T12:00:00Z`))}
-                {isToday && <span className={styles.agendaToday}>vandaag</span>}
+                {isToday && <span className={styles.agendaToday}><PreviewText>{"vandaag"}</PreviewText></span>}
               </span>
               <span className={styles.agendaCount}>
-                {dayJobs.length} {dayJobs.length === 1 ? 'klus' : 'klussen'}
+                {dayJobs.length} <PreviewText>{dayJobs.length === 1 ? 'klus' : 'klussen'}</PreviewText>
               </span>
             </h2>
 

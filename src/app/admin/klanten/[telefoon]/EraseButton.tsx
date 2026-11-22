@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../klanten.module.css';
@@ -51,7 +52,7 @@ export default function EraseButton({ phone }: { phone: string }) {
     <>
       {armed ? (
         <button className={styles.dangerBtn} onClick={erase} disabled={busy}>
-          {busy ? 'Bezig…' : 'Ja, definitief verwijderen'}
+          <PreviewText>{busy ? 'Bezig…' : 'Ja, definitief verwijderen'}</PreviewText>
         </button>
       ) : (
         <button className={styles.dangerBtn} onClick={() => setArmed(true)}>

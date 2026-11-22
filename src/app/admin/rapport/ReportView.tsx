@@ -1,10 +1,13 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { isoDate } from '@/lib/crmJobs';
 import { technicianColour } from '@/lib/crmColours';
+import { STUDIO_UI } from '@/config/install';
 import { PageHead } from '../_ui';
 import SalesChart from '../overzicht/SalesChart';
 import { SPAN_LABEL, type Bucket, type Report, type Span } from './reportData';
+import StudioReportView from './StudioReportView';
 import r from './rapport.module.css';
 
 const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
@@ -28,7 +31,7 @@ function BucketTable({ title, rows, total }: { title: string; rows: Bucket[]; to
     <section className={r.card}>
       <h3>{title}</h3>
       {rows.length === 0 ? (
-        <p className={r.empty}>Geen klussen in deze periode.</p>
+        <p className={r.empty}><PreviewText>{"Geen klussen in deze periode."}</PreviewText></p>
       ) : (
         <ul className={r.bars}>
           {rows.map((b) => (
@@ -49,6 +52,8 @@ function BucketTable({ title, rows, total }: { title: string; rows: Bucket[]; to
 
 /** The report itself, given its numbers. */
 export default function ReportView({ d, anchor }: { d: Report; anchor: string }) {
+  if (STUDIO_UI) return <StudioReportView d={d} anchor={anchor} />;
+
   const span = d.span;
   const c = d.cur;
   const p = d.prev;
@@ -97,35 +102,35 @@ export default function ReportView({ d, anchor }: { d: Report; anchor: string })
       {/* ── the business ── */}
       <div className={r.kpis}>
         <div className={`${r.kpi} ${r.kpiMain}`}>
-          <span>Omzet</span>
+          <span><PreviewText>{"Omzet"}</PreviewText></span>
           <b>{money(c.revenue)}</b>
           <small>
             <Delta cur={c.revenue} prev={p.revenue} /> · {prevName} {money(p.revenue)}
           </small>
         </div>
         <div className={r.kpi}>
-          <span>Brutowinst</span>
+          <span><PreviewText>{"Brutowinst"}</PreviewText></span>
           <b>{money(c.margin)}</b>
           <small>
             <Delta cur={c.margin} prev={p.margin} /> · {pct(c.margin, c.revenue)} van omzet
           </small>
         </div>
         <div className={r.kpi}>
-          <span>Onze commissie</span>
+          <span><PreviewText>{"Onze commissie"}</PreviewText></span>
           <b>{money(c.commission)}</b>
           <small>
             <Delta cur={c.commission} prev={p.commission} /> · van monteurs
           </small>
         </div>
         <div className={r.kpi}>
-          <span>Klussen</span>
+          <span><PreviewText>{"Klussen"}</PreviewText></span>
           <b>{c.jobs}</b>
           <small>
             <Delta cur={c.jobs} prev={p.jobs} /> · {c.cancelled} geannuleerd
           </small>
         </div>
         <div className={r.kpi}>
-          <span>Gemiddelde klus</span>
+          <span><PreviewText>{"Gemiddelde klus"}</PreviewText></span>
           <b>{money(c.jobs ? c.revenue / c.jobs : null)}</b>
           <small>
             <Delta cur={c.jobs ? c.revenue / c.jobs : null} prev={p.jobs ? p.revenue / p.jobs : null} />
@@ -135,11 +140,11 @@ export default function ReportView({ d, anchor }: { d: Report; anchor: string })
           <span>Leads</span>
           <b>{c.leads}</b>
           <small>
-            <Delta cur={c.leads} prev={p.leads} /> · {pct(c.sold, c.leads)} verkocht
+            <Delta cur={c.leads} prev={p.leads} /> · {pct(c.sold, c.leads)} <PreviewText>{"verkocht"}</PreviewText>
           </small>
         </div>
         <div className={r.kpi}>
-          <span>Advertenties</span>
+          <span><PreviewText>{"Advertenties"}</PreviewText></span>
           <b>{c.adSpend === null ? 'Niet gekoppeld' : money(c.adSpend)}</b>
           <small>
             {c.adSpend === null ? (
@@ -152,14 +157,14 @@ export default function ReportView({ d, anchor }: { d: Report; anchor: string })
           </small>
         </div>
         <div className={r.kpi}>
-          <span>Uitgaven</span>
+          <span><PreviewText>{"Uitgaven"}</PreviewText></span>
           <b>{money(c.expenses)}</b>
           <small>
             <Delta cur={c.expenses} prev={p.expenses} lowerIsBetter /> · bonnetjes
           </small>
         </div>
         <div className={`${r.kpi} ${r.kpiNet}`}>
-          <span>Netto over</span>
+          <span><PreviewText>{"Netto over"}</PreviewText></span>
           <b>{money(net(c))}</b>
           <small>
             <Delta cur={net(c)} prev={net(p)} /> · winst − advertenties − uitgaven
@@ -176,24 +181,24 @@ export default function ReportView({ d, anchor }: { d: Report; anchor: string })
 
       {/* ── every technician ── */}
       <section className={r.card}>
-        <h3>Per monteur</h3>
+        <h3><PreviewText>{"Per monteur"}</PreviewText></h3>
         {d.technicians.length === 0 ? (
-          <p className={r.empty}>Geen monteurs met klussen in deze periode.</p>
+          <p className={r.empty}><PreviewText>{"Geen monteurs met klussen in deze periode."}</PreviewText></p>
         ) : (
           <div className={r.tableWrap}>
             <table className={r.table}>
               <thead>
                 <tr>
-                  <th>Monteur</th>
-                  <th className={r.num}>Klussen</th>
-                  <th className={r.num}>Omzet</th>
+                  <th><PreviewText>{"Monteur"}</PreviewText></th>
+                  <th className={r.num}><PreviewText>{"Klussen"}</PreviewText></th>
+                  <th className={r.num}><PreviewText>{"Omzet"}</PreviewText></th>
                   <th className={r.num}>vs {prevName}</th>
-                  <th className={r.num}>Brutowinst</th>
-                  <th className={r.num}>Onze commissie</th>
-                  <th className={r.num}>Monteur verdiende</th>
-                  <th className={r.num}>Gem. klus</th>
-                  <th className={r.num}>Aanbod geaccepteerd</th>
-                  <th className={r.num}>Geannuleerd</th>
+                  <th className={r.num}><PreviewText>{"Brutowinst"}</PreviewText></th>
+                  <th className={r.num}><PreviewText>{"Onze commissie"}</PreviewText></th>
+                  <th className={r.num}><PreviewText>{"Monteur verdiende"}</PreviewText></th>
+                  <th className={r.num}><PreviewText>{"Gem. klus"}</PreviewText></th>
+                  <th className={r.num}><PreviewText>{"Aanbod geaccepteerd"}</PreviewText></th>
+                  <th className={r.num}><PreviewText>{"Geannuleerd"}</PreviewText></th>
                 </tr>
               </thead>
               <tbody>
@@ -225,7 +230,7 @@ export default function ReportView({ d, anchor }: { d: Report; anchor: string })
                 ))}
                 {d.unassigned.jobs > 0 && (
                   <tr>
-                    <td className={r.muted}>Zonder monteur</td>
+                    <td className={r.muted}><PreviewText>{"Zonder monteur"}</PreviewText></td>
                     <td className={r.num}>{d.unassigned.jobs}</td>
                     <td className={r.num}>{EUR.format(d.unassigned.revenue)}</td>
                     <td colSpan={7} />
@@ -234,7 +239,7 @@ export default function ReportView({ d, anchor }: { d: Report; anchor: string })
               </tbody>
               <tfoot>
                 <tr>
-                  <td>Totaal</td>
+                  <td><PreviewText>{"Totaal"}</PreviewText></td>
                   <td className={r.num}>{c.jobs}</td>
                   <td className={r.num}>{EUR.format(c.revenue)}</td>
                   <td className={r.num}>
@@ -259,9 +264,9 @@ export default function ReportView({ d, anchor }: { d: Report; anchor: string })
         <BucketTable title="Per automerk" rows={d.byMake} total={c.revenue} />
         <BucketTable title="Per plaats" rows={d.byCity} total={c.revenue} />
         <section className={r.card}>
-          <h3>Leads per bron</h3>
+          <h3><PreviewText>{"Leads per bron"}</PreviewText></h3>
           {d.bySource.length === 0 ? (
-            <p className={r.empty}>Geen leads in deze periode.</p>
+            <p className={r.empty}><PreviewText>{"Geen leads in deze periode."}</PreviewText></p>
           ) : (
             <ul className={r.bars}>
               {d.bySource.map((s) => (

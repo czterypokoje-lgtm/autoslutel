@@ -1,0 +1,277 @@
+'use client';
+
+import { useState, useSyncExternalStore } from 'react';
+import { useRouter } from 'next/navigation';
+import { CalendarCheck, CalendarX, ChevronLeft, ChevronRight, Copy, MapPin, Wrench } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { cn } from 'cn';
+import type { AgendaDay } from './MyAgenda';
+
+export type { AgendaDay };
+
+const MONTHS = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+const DOW = ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'];
+const STATUS: Record<string, string> = { gepland: 'Gepland', onderweg: 'Onderweg', bezig: 'Bezig', afgerond: 'Afgerond', geannuleerd: 'Geannuleerd' };
+const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+const PIP_CLASS: Record<string, string> = {
+  gepland: 'bg-muted-foreground/40',
+  onderweg: 'bg-amber-500',
+  bezig: 'bg-amber-500',
+  afgerond: 'bg-green-500',
+};
+
+/** ISO week number of a yyyy-mm-dd date. */
+function isoWeek(iso: string): number {
+  const d = new Date(`${iso}T12:00:00Z`);
+  const day = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - day + 3);
+  const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  return 1 + Math.round(((d.getTime() - firstThursday.getTime()) / 86_400_000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+}
+
+const longDate = (iso: string) =>
+  new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+
+export default function StudioMyAgenda({
+  days,
+  name,
+  icalToken,
+  currentMonth,
+}: {
+  days: AgendaDay[];
+  name: string;
+  icalToken: string | null;
+  currentMonth: string;
+}) {
+  const router = useRouter();
+  const today = days.find((d) => d.isToday)?.date ?? days.find((d) => d.date.startsWith(currentMonth))?.date ?? days[0]?.date;
+  const [selected, setSelected] = useState<string | undefined>(today);
+  const [busy, setBusy] = useState('');
+  const [copied, setCopied] = useState(false);
+  const active = days.find((d) => d.date === selected);
+
+  async function toggleAway(day: AgendaDay) {
+    setBusy(day.date);
+    await fetch('/api/admin/availability', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: day.date, available: day.away }),
+    }).catch(() => null);
+    setBusy('');
+    router.refresh();
+  }
+
+  const [y, m] = currentMonth.split('-').map(Number);
+  const shift = (delta: number) => {
+    const d = new Date(Date.UTC(y, m - 1 + delta, 1));
+    router.push(`?month=${d.toISOString().slice(0, 7)}`);
+  };
+
+  const monthDays = days.filter((d) => d.date.startsWith(currentMonth));
+  const monthJobs = monthDays.reduce((t, d) => t + d.jobs.filter((j) => j.status !== 'geannuleerd').length, 0);
+  const monthValue = monthDays.reduce((t, d) => t + d.jobs.reduce((s, j) => s + (j.price || 0), 0), 0);
+  const daysOff = monthDays.filter((d) => d.away).length;
+
+  const host = useSyncExternalStore(
+    () => () => {},
+    () => window.location.host,
+    () => ''
+  );
+  const feed = icalToken && host ? `${host}/api/agenda/${icalToken}` : null;
+
+  return (
+    <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight">Mijn agenda</h1>
+          <p className="text-muted-foreground text-sm">{name} · tik een dag om je klussen te zien of de dag vrij te nemen.</p>
+        </div>
+        {feed && (
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="lg" className="h-10 text-sm" asChild>
+              <a href={`webcal://${feed}`}>
+                <CalendarCheck size={16} aria-hidden="true" data-icon="inline-start" />
+                Zet in je telefoon-agenda
+              </a>
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                void navigator.clipboard?.writeText(`https://${feed}`);
+                setCopied(true);
+              }}
+            >
+              <Copy size={14} aria-hidden="true" data-icon="inline-start" />
+              {copied ? 'Gekopieerd' : 'Kopieer link'}
+            </Button>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        <Card>
+          <CardContent className="flex flex-col gap-1">
+            <span className="text-muted-foreground text-xs">Klussen in {MONTHS[m - 1]}</span>
+            <b className="text-xl font-medium tabular-nums">{monthJobs}</b>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex flex-col gap-1">
+            <span className="text-muted-foreground text-xs">Verwachte omzet</span>
+            <b className="text-xl font-medium tabular-nums">{EUR.format(monthValue)}</b>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex flex-col gap-1">
+            <span className="text-muted-foreground text-xs">Vrije dagen</span>
+            <b className="text-xl font-medium tabular-nums">{daysOff}</b>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="flex flex-col gap-4 lg:flex-row">
+        <Card className="lg:flex-1">
+          <CardContent className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <Button type="button" variant="ghost" size="icon" onClick={() => shift(-1)} aria-label="Vorige maand">
+                <ChevronLeft size={18} />
+              </Button>
+              <span className="text-sm font-medium capitalize">
+                {MONTHS[m - 1]} {y}
+              </span>
+              <Button type="button" variant="ghost" size="icon" onClick={() => shift(1)} aria-label="Volgende maand">
+                <ChevronRight size={18} />
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-8 gap-1 text-center">
+              <span className="text-muted-foreground text-xs" />
+              {DOW.map((d) => (
+                <span key={d} className="text-muted-foreground text-xs">
+                  {d}
+                </span>
+              ))}
+              {Array.from({ length: Math.ceil(days.length / 7) }, (_, w) => (
+                <div key={w} className="col-span-8 grid grid-cols-8 gap-1">
+                  <span className="text-muted-foreground grid place-items-center text-[11px]">
+                    {days[w * 7] ? isoWeek(days[w * 7].date) : ''}
+                  </span>
+                  {days.slice(w * 7, w * 7 + 7).map((d) => {
+                    const live = d.jobs.filter((j) => j.status !== 'geannuleerd');
+                    return (
+                      <button
+                        key={d.date}
+                        type="button"
+                        onClick={() => setSelected(d.date)}
+                        className={cn(
+                          'flex aspect-square flex-col items-center justify-center gap-0.5 rounded-lg text-sm transition-colors',
+                          !d.date.startsWith(currentMonth) && 'text-muted-foreground/40',
+                          d.away && 'bg-amber-500/10',
+                          d.isToday && 'ring-1 ring-primary',
+                          d.date === selected && 'bg-muted font-semibold'
+                        )}
+                      >
+                        <span>{Number(d.date.slice(8))}</span>
+                        {d.away ? (
+                          <span className="text-[9px] text-amber-600 dark:text-amber-400">vrij</span>
+                        ) : live.length > 0 ? (
+                          <span className="flex items-center gap-0.5">
+                            {live.slice(0, 3).map((j) => (
+                              <span key={j.id} className={cn('size-1.5 rounded-full', PIP_CLASS[j.status] ?? 'bg-muted-foreground')} />
+                            ))}
+                          </span>
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <i className="size-1.5 rounded-full bg-muted-foreground/40" /> gepland
+              </span>
+              <span className="flex items-center gap-1.5">
+                <i className="size-1.5 rounded-full bg-amber-500" /> onderweg / bezig
+              </span>
+              <span className="flex items-center gap-1.5">
+                <i className="size-1.5 rounded-full bg-green-500" /> afgerond
+              </span>
+              <span className="flex items-center gap-1.5">
+                <i className="size-1.5 rounded-full bg-amber-500/30" /> vrij
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:w-80 lg:shrink-0">
+          <CardContent className="flex flex-col gap-3">
+            {!active ? (
+              <p className="text-muted-foreground text-sm">Tik een dag in de kalender.</p>
+            ) : (
+              <>
+                <h2 className="text-base font-medium capitalize">{longDate(active.date)}</h2>
+
+                <Button
+                  type="button"
+                  variant={active.away ? 'default' : 'outline'}
+                  size="lg"
+                  className="h-11 text-base"
+                  onClick={() => toggleAway(active)}
+                  disabled={busy === active.date}
+                >
+                  {active.away ? <CalendarCheck size={17} data-icon="inline-start" /> : <CalendarX size={17} data-icon="inline-start" />}
+                  {busy === active.date ? 'Bezig…' : active.away ? 'Toch beschikbaar' : 'Deze dag vrij nemen'}
+                </Button>
+                {active.away && (
+                  <p className="text-sm text-muted-foreground">
+                    Je staat vrij{active.reason ? `: ${active.reason}` : ''}. Je krijgt deze dag geen aanbod.
+                  </p>
+                )}
+
+                {active.jobs.length === 0 ? (
+                  <p className="text-muted-foreground text-sm">Geen klussen op deze dag.</p>
+                ) : (
+                  <ul className="flex flex-col gap-2">
+                    {active.jobs.map((job) => (
+                      <li key={job.id} className="rounded-lg border p-3">
+                        <div className="flex items-center justify-between">
+                          <b className="text-sm tabular-nums">
+                            {job.slot_start.slice(0, 5)}–{job.slot_end.slice(0, 5)}
+                          </b>
+                          <Badge variant="outline">{STATUS[job.status] ?? job.status}</Badge>
+                        </div>
+                        <span className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                          <Wrench size={14} aria-hidden="true" />
+                          {job.service || 'Geen dienst'}
+                          {job.kenteken && (
+                            <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-xs font-medium text-foreground">
+                              {job.kenteken}
+                            </span>
+                          )}
+                        </span>
+                        {job.place && (
+                          <span className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                            <MapPin size={14} aria-hidden="true" />
+                            {job.place}
+                          </span>
+                        )}
+                        {job.price ? <span className="mt-1 block text-sm font-semibold tabular-nums">{EUR.format(job.price)}</span> : null}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

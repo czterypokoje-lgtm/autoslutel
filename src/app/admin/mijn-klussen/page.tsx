@@ -4,7 +4,9 @@ import { PageHead, Card, Empty } from '../_ui';
 import { slotLabel } from '@/lib/crmJobs';
 import { getBrandLogo } from '@/lib/brandLogos';
 import { SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
+import { STUDIO_UI } from '@/config/install';
 import JobHistoryList, { type HistoryRow, type ToolOption } from './JobHistoryList';
+import StudioJobHistoryList from './StudioJobHistoryList';
 import styles from './klussen.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -123,6 +125,65 @@ export default async function MijnKlussenPage({
   const planned = rows.filter((r) => r.status === 'gepland' || r.status === 'onderweg' || r.status === 'bezig').length;
   const withNotes = rows.filter((r) => r.toolUsedId || r.keyUsed || r.adapterUsed || r.techNote).length;
   const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+  if (STUDIO_UI) {
+    return (
+      <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight">Mijn klussen</h1>
+          <p className="text-muted-foreground text-sm">
+            Al je klussen, nieuwste eerst. Klik een klus open om op te schrijven welk gereedschap, welke sleutel en welke adapter werkte. Zo
+            vind je het de volgende keer terug.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+          {[
+            ['Klussen', rows.length],
+            ['Afgerond', doneRows.length],
+            ['Gepland', planned],
+            ['Omzet afgerond', EUR.format(turnover)],
+            ['Met notitie', withNotes],
+          ].map(([label, value]) => (
+            <div key={label as string} className="rounded-xl bg-card p-3 ring-1 ring-foreground/10">
+              <span className="text-muted-foreground text-xs">{label}</span>
+              <b className="block text-lg font-medium tabular-nums">{value}</b>
+            </div>
+          ))}
+        </div>
+
+        <form className="flex gap-2" action="/admin/mijn-klussen" role="search">
+          <input
+            type="search"
+            name="q"
+            defaultValue={q}
+            aria-label="Zoek op merk of model"
+            placeholder="Zoek op merk of model, bijv. Toyota of Prius"
+            className="h-11 w-full min-w-0 rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          />
+          <button
+            type="submit"
+            className="h-11 shrink-0 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/80"
+          >
+            Zoeken
+          </button>
+          {q && (
+            <a href="/admin/mijn-klussen" className="flex shrink-0 items-center text-sm text-muted-foreground underline">
+              Wis zoekterm
+            </a>
+          )}
+        </form>
+
+        {rows.length === 0 ? (
+          <p className="text-muted-foreground text-sm">
+            {q ? 'Geen eerdere klussen gevonden met deze zoekterm.' : 'Nog geen afgeronde klussen.'}
+          </p>
+        ) : (
+          <StudioJobHistoryList rows={rows} tools={toolOptions} />
+        )}
+      </div>
+    );
+  }
 
   return (
     <>

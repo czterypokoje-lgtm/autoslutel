@@ -1035,4 +1035,85 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
 .languageBanner button[aria-pressed=true] { border-color: #eab79c; background: white; }
 /* Bottom-right corner on every width: at the top it covered the search bar. */
 .languageBanner { inset: auto 16px 16px auto; transform: none; }
+/* In the KeyForCars header: no fixed position, a quiet pill next to the breadcrumb. */
+.languageInline { position: static; background: var(--muted, #f4f4f5); border-radius: 999px; font-size: 12px; color: var(--muted-foreground, #666); }
+.languageInline button { color: inherit; }
+.languageInline button[aria-pressed=true] { border-color: var(--border, #ddd); background: var(--card, #fff); color: var(--foreground, #111); }
 @media (max-width: 600px) { .languageBanner { inset: auto 10px 10px auto; } }
+
+:global(.crm-keyforcars) .sidebar { border-inline-end: 1px solid var(--crm-rule); background: var(--crm-sidebar); }
+:global(.crm-keyforcars) .navDrawer { background: var(--crm-sidebar); }
+:global(.crm-keyforcars) .brand { color: var(--crm-ink); font-weight: 750; }
+:global(.crm-keyforcars) .brandRow { background: var(--crm-sidebar); }
+:global(.crm-keyforcars) .navLinkActive svg { color: var(--crm-accent); }
+:global(.crm-keyforcars) .navLinkActive,
+:global(.crm-keyforcars) .navSubLinkActive { color: var(--crm-accent); background: var(--crm-accent-soft); }
+:global(.crm-keyforcars) .topBar { padding-inline: 28px 20px; border-bottom: 1px solid var(--crm-rule); background: var(--crm-panel); }
+:global(.crm-keyforcars) .topSearch { background: var(--crm-sunk); border: 1px solid var(--crm-rule); }
+:global(.crm-keyforcars) .topSearch input { color: var(--crm-ink); }
+:global(.crm-keyforcars) .topAvatar { background: var(--crm-accent); color: white; }
+:global(.crm-keyforcars) .main { max-width: 1560px; width: 100%; margin-inline: auto; }
+:global(.crm-keyforcars).shell { --ff-body: var(--ff-accent); font-size: 14px; line-height: 1.55; }
+:global(.crm-keyforcars) .main :is(h1, h2, h3, h4, th),
+:global(.crm-keyforcars) :is(.navLabel, .navSubLink) { text-transform: capitalize; }
+.shell[data-appearance="studio"] { --ff-body: var(--ff-crm-studio); }
+.shell[data-appearance="studio"] .main { max-width: 1440px; padding-bottom: 72px; }
+.shell[data-appearance="studio"][data-surface="document"] .main { max-width: 1150px; }
+.shell[data-appearance="studio"] .nav { padding: 8px; }
+.shell[data-appearance="studio"] :is(.navLink, .navSubLink) { border-radius: 7px; }
+.shell[data-appearance="studio"] .navLinkActive { box-shadow: inset 3px 0 var(--crm-accent); }
+.shell[data-appearance="studio"] .topSearch { height: 34px; }
+.shell[data-appearance="studio"] .brandMark { border-radius: 10px; }
+.appearanceSwitch { position: fixed; inset: auto 107px 16px auto; z-index: 1000; display: flex; gap: 4px; padding: 4px; border: 1px solid var(--crm-rule2); border-radius: 999px; background: var(--crm-panel); box-shadow: 0 3px 12px #153c3020; }
+.appearanceSwitch button { border: 1px solid transparent; border-radius: 999px; padding: 3px 8px; font: inherit; font-size: 12px; line-height: 1.4; color: var(--crm-accent); background: transparent; cursor: pointer; }
+.appearanceSwitch button[aria-pressed=true] { background: var(--crm-accent-soft); border-color: var(--crm-rule2); font-weight: 650; }
+@media (max-width: 600px) { .appearanceSwitch { inset: auto 99px 10px auto; } }
+@media print { .appearanceSwitch, .languageBanner { display: none; } }
+:global(.crm-keyforcars) .navLink { min-height: 37px; font-size: 13px; gap: 10px; }
+:global(.crm-keyforcars) .navLink svg { width: 16px; height: 16px; }
+:global(.crm-keyforcars) .navSubLink { min-height: 30px; padding-inline-start: 45px; font-size: 13px; }
+:global(.crm-keyforcars) .navSub { margin: 3px 8px 8px 22px; padding-inline-start: 6px; border-inline-start: 2px solid var(--crm-rule2); background: transparent; }
+:global(.crm-keyforcars) .navSubLink { margin-block: 2px; padding-inline: 10px; border-radius: 6px; }
+:global(.crm-keyforcars) .navSubLinkActive { box-shadow: inset 3px 0 var(--crm-accent); font-weight: 700; }
+:global(.crm-keyforcars) .navLink:hover,
+:global(.crm-keyforcars) .navLink:hover svg,
+:global(.crm-keyforcars) .navSubLink:hover { color: var(--crm-accent); }
+@media (min-width: 901px) {
+  :global(.crm-keyforcars) .sidebar { width: 222px; }
+  :global(.crm-keyforcars) .brandRow, :global(.crm-keyforcars) .topBar { height: 54px; }
+  :global(.crm-keyforcars) .main { padding-top: 22px; }
+}
+.languageBanner { padding: 4px; background: #fff; border: 1px solid #b6cec8; box-shadow: 0 3px 12px #153c3020; }
+.languageBanner button { color: #145d51; min-width: 32px; }
+.languageBanner button[aria-pressed=true] { background: #e0f1ec; border-color: #b6cec8; }
+.integrationGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; margin-top: 24px; }
+.integrationCard { background: var(--crm-panel); border: 1px solid var(--crm-rule); border-radius: 12px; padding: 22px; }
+.integrationCard svg { color: var(--crm-accent); }
+.integrationCard h2 { margin: 10px 0 4px; font-size: 17px; }
+.integrationCard p { margin: 0; color: var(--crm-muted); }
+.integrationPrimary { display: inline-flex; align-items: center; gap: 6px; padding: 8px 13px; border: 1px solid var(--crm-accent); border-radius: 8px; background: var(--crm-accent); color: white; font-weight: 650; }
+.integrationPrimary:disabled { opacity: .55; }
+.integrationStatus { display: inline-block; margin-block: 12px; padding: 3px 8px; border-radius: 999px; background: var(--crm-accent-soft); color: var(--crm-accent); font-size: 12px; }
+.integrationLink { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; color: var(--crm-accent); text-decoration: underline; }
+.integrationDialog { position: fixed; inset: 0; margin: auto; width: min(540px, calc(100% - 28px)); max-height: calc(100dvh - 28px); overflow: auto; padding: 24px; border: 1px solid var(--crm-rule2); border-radius: 16px; color: var(--crm-ink); background: var(--crm-panel); box-shadow: 0 18px 65px #14213d40; }
+.integrationDialog::backdrop { background: #172d2a66; }
+.integrationDialog p { margin-block: 8px 16px; color: var(--crm-muted); }
+.integrationChoices { display: grid; gap: 8px; margin: 0; padding: 0; border: 0; }
+.integrationChoices legend { margin-bottom: 8px; font-weight: 650; }
+.integrationChoice { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 10px; align-items: center; padding: 9px 12px; border: 1px solid var(--crm-rule); border-radius: 9px; cursor: pointer; }
+.integrationChoice:has(:checked) { background: var(--crm-accent-soft); border-color: var(--crm-accent); }
+.integrationChoice small { display: block; color: var(--crm-muted); }
+.integrationCancel { padding: 8px 13px; border: 1px solid var(--crm-rule2); border-radius: 8px; color: var(--crm-ink); background: var(--crm-panel); cursor: pointer; }
+.integrationCardTop { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+.integrationHelp { position: relative; }
+.integrationHelp summary { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; color: #fff; background: linear-gradient(135deg, #2457aa, #146358); font-weight: 700; cursor: pointer; list-style: none; }
+.integrationHelp summary::-webkit-details-marker { display: none; }
+.integrationHelp > div { position: absolute; z-index: 5; inset: 36px 0 auto auto; width: min(225px, 64vw); padding: 12px; border: 1px solid var(--crm-rule2); border-radius: 8px; background: var(--crm-panel); box-shadow: 0 6px 18px #14213d26; }
+.integrationHelp p { margin-top: 5px; }
+.quickCreate { position: relative; }
+.quickCreate summary { list-style: none; cursor: pointer; white-space: nowrap; background: var(--crm-accent); color: var(--crm-on-accent); border-radius: 7px; padding: 7px 12px; font-weight: 650; }
+.quickCreate > div { position: absolute; z-index: 40; inset: calc(100% + 6px) 0 auto auto; min-width: 160px; padding: 5px; border: 1px solid var(--crm-rule2); border-radius: 8px; background: var(--crm-panel); box-shadow: 0 5px 18px #14213d26; }
+.quickCreate a { display: block; padding: 6px 9px; color: var(--crm-ink); border-radius: 5px; }
+.quickCreate a:hover, .quickCreate a:focus-visible { background: var(--crm-sunk); }
+.integrationActions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px; }
+.readonlyInline { color: var(--crm-muted); font-size: 12px; margin-bottom: 10px; }

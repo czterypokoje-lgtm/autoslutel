@@ -341,6 +341,10 @@ textarea.input { height: auto; padding: var(--sp-2) var(--sp-3); line-height: 1.
 
 .table tr:last-child td { border-bottom: none; }
 .table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+:global([data-appearance="studio"]) .title { font-size: clamp(22px, 2vw, 29px); font-weight: 700; letter-spacing: -.035em; }
+:global([data-appearance="studio"]) .table th { background: var(--crm-sunk); }
+:global([data-appearance="studio"]) .table tbody tr:nth-child(even) { background: #f8faff; }
+:global([data-appearance="studio"]) .table tbody tr:hover { background: var(--crm-accent-soft); }
 .numeric { text-align: right; }
 
 /* ── empty & notices ─────────────────────────────────────────────────── */
@@ -449,6 +453,16 @@ textarea.input { height: auto; padding: var(--sp-2) var(--sp-3); line-height: 1.
 .toneNavy { background: var(--crm-nav); }
 .toneAccent { background: var(--crm-accent); }
 .toneBlue { background: var(--crm-blue); }
+
+:global(.crm-keyforcars) .tileBig {
+  background: var(--crm-panel);
+  border-color: var(--crm-rule);
+  border-radius: 12px;
+}
+:global(.crm-keyforcars) .tileBig .tileIcon { background: var(--crm-accent-soft); color: var(--crm-accent); }
+:global(.crm-keyforcars) .tileBig .tileTitle { color: var(--crm-ink); }
+:global(.crm-keyforcars) .tileBig .tileSub { color: var(--crm-muted); }
+:global(.crm-keyforcars) .tileBig:hover { border-color: var(--crm-accent); filter: none; }
 
 /* Tones for a small tile's icon. */
 .iconOk { background: var(--crm-ok-bg); color: var(--crm-ok); }

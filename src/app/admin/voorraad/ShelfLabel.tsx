@@ -1,55 +1,22 @@
 import { QRCodeSVG } from 'qrcode.react';
 import type { StockArticle, StockBin } from '@/lib/keyforcarsStock';
-import type { ProductProfileData, VehicleFit } from '@/lib/productProfiles';
-import { Code39 } from './StockLabel';
+import type { ProductProfileData } from '@/lib/productProfiles';
+import { labelLink, modelRows } from './ShelfLabelRows';
+import { LabelBarcode } from './StockLabel';
 import styles from './keyforcars.module.css';
+import { usePreviewLanguage } from '../PreviewLanguage';
 
 /** `rows`: how many model lines fit; make headings count as a line. */
 export const LABEL_SIZES = {
   '62x100': { name: '62 × 100 mm (Brother)', page: '62mm 100mm', rows: 6 },
   '100x50': { name: '100 × 50 mm (termisch)', page: '100mm 50mm', rows: 9 },
+  // The 100 x 50 label four to a page (Brother 102 mm roll), with a cut line between them.
+  '100x50-4': { name: '100 × 50 mm, 4 onder elkaar (Brother 102 mm rol)', page: '100mm 200mm', rows: 9 },
   'a4-70x37': { name: 'A4-vel 70 × 37 mm (24 per vel)', page: 'A4', rows: 7 },
 } as const;
 export type LabelSize = keyof typeof LABEL_SIZES;
 
-const TWO_WORD_MAKE = /^(Alfa Romeo|Land Rover|Aston Martin|Rolls[- ]Royce|Mercedes[- ]Benz)\b/i;
-
-export interface ModelRow { make?: string; model?: string; years?: string }
-
-/**
- * The vehicle list as lines a person reads at the shelf: a make heading, then
- * one model per line with full years ("Brera  2005–2010"). Cut to the rows the
- * label has; the rest is counted and is one QR scan away on the profile.
- */
-export function modelRows(fits: VehicleFit[], rows: number) {
-  const byMake = new Map<string, { model: string; years: string }[]>();
-  for (const fit of fits) {
-    if (fit.from === null) continue;
-    const make = fit.vehicle.match(TWO_WORD_MAKE)?.[1] ?? fit.vehicle.split(' ')[0];
-    const model = fit.vehicle.slice(make.length).trim() || make;
-    const years = `${fit.from}–${fit.to ?? ''}`;
-    const list = byMake.get(make) ?? [];
-    if (!list.some((entry) => entry.model === model && entry.years === years)) list.push({ model, years });
-    byMake.set(make, list);
-  }
-  const total = [...byMake.values()].reduce((sum, list) => sum + list.length, 0);
-  const lines: ModelRow[] = [];
-  let shown = 0;
-  const headings = byMake.size > 1;
-  for (const [make, list] of byMake) {
-    if (headings) {
-      if (lines.length + 2 > rows) break;
-      lines.push({ make });
-    }
-    for (const entry of list) {
-      if (lines.length >= rows) break;
-      lines.push(headings ? entry : { model: `${make} ${entry.model}`.trim(), years: entry.years });
-      shown += 1;
-    }
-    if (lines.length >= rows) break;
-  }
-  return { lines, more: total - shown };
-}
+export { modelRows, plausibleFit, type ModelRow } from './ShelfLabelRows';
 
 /**
  * The label that goes on the shelf or drawer. What decides a pick comes
@@ -57,13 +24,16 @@ export function modelRows(fits: VehicleFit[], rows: number) {
  * Chip, frequency and buttons follow in one line; photo to compare with the
  * part; barcode + QR carry the product number for the scanner.
  */
-export default function ShelfLabel({ article, bin, code, profile, size }: {
+export default function ShelfLabel({ article, bin, code, number, profile, size }: {
   article: StockArticle;
   bin?: StockBin;
   code: string;
+  /** The shop's own drawer number (a learned barcode, e.g. 3921962874003): printed instead of our code. */
+  number?: string | null;
   profile: ProductProfileData | null;
   size: LabelSize;
 }) {
+  const { english, t } = usePreviewLanguage();
   const facts = profile?.facts;
   const housing = facts?.kind === 'Behuizing';
   // Always printed, with "—" when unknown, so nobody mistakes a gap for "no chip".
@@ -72,40 +42,45 @@ export default function ShelfLabel({ article, bin, code, profile, size }: {
     ['Frequentie', facts?.frequency.length ? facts.frequency.slice(0, 2).join(' / ') : '—'],
     ['Knoppen', facts?.buttons ? facts.buttons.replace(/\s*(?:buttons?|knoppen|knops)\s*/i, '') : '—'],
   ];
-  const models = profile ? modelRows(profile.fits, LABEL_SIZES[size].rows) : { lines: [], more: 0 };
+  // Derived models (a blade fits where its key fits) take one row for the "via" line.
+  const via = profile?.via?.length ? `via ${profile.via.slice(0, 3).join(', ')}${profile.via.length > 3 ? ' …' : ''}` : '';
+  const models = profile ? modelRows(profile.fits, LABEL_SIZES[size].rows - (via ? 1 : 0)) : { lines: [], more: 0 };
   const image = profile?.image || article.image;
   const location = [bin?.shelf, bin?.box].filter(Boolean).join(' · ');
 
   // Every part is a direct child so each size can place it on its own grid.
   return (
-    <article className={styles.shelfLabel} data-size={size}>
+    <article className={styles.shelfLabel} data-size={size === '100x50-4' ? '100x50' : size}>
       {image ? <img className={styles.shelfPhoto} src={image} alt="" referrerPolicy="no-referrer" loading="eager" decoding="sync" /> : <span className={styles.shelfPhoto} />}
       <header className={styles.shelfTitle}>
         <strong className={styles.shelfSku}>{article.sku || article.id}</strong>
-        <span className={styles.shelfName}>{profile?.nameNl || article.name}</span>
+        <span className={styles.shelfName}>{(english ? profile?.name : profile?.nameNl) || article.name}</span>
       </header>
 
       <div className={styles.shelfBlade}>
-        <span>{housing ? 'Sleutelbaard (past)' : 'Sleutelbaard'}</span>
+        <span>{t(housing ? 'Sleutelbaard (past op)' : 'Sleutelbaard')}</span>
         <strong>{facts?.blade.length ? facts.blade.slice(0, 2).join(' / ') : '—'}</strong>
       </div>
       <dl className={styles.shelfFacts}>
-        {specs.map(([name, value]) => <div key={name}><dt>{name}</dt><dd>{value}</dd></div>)}
+        {specs.map(([name, value]) => <div key={name}><dt>{t(name)}</dt><dd>{value}</dd></div>)}
       </dl>
 
       <ul className={styles.shelfModels}>
+        {via && <li className={styles.shelfMore}>{via}</li>}
         {models.lines.map((row, index) => row.make
           ? <li key={index} className={styles.shelfMake}>{row.make}</li>
           : <li key={index}><span>{row.model}</span><b>{row.years}</b></li>)}
-        {!models.lines.length && <li><span>Modellen: scan QR</span></li>}
-        {models.more > 0 && <li className={styles.shelfMore}>+{models.more} meer · scan QR</li>}
+        {!models.lines.length && <li><span>{t('Modellen: scan QR')}</span></li>}
+        {models.more > 0 && <li className={styles.shelfMore}>+{models.more} {t('meer · scan QR')}</li>}
       </ul>
 
       <footer className={styles.shelfCodes}>
-        <Code39 code={code} className={styles.shelfBarcode} />
-        <span className={styles.shelfMeta}>{code}{location ? ` · ${location}` : ''}</span>
+        <LabelBarcode number={number} code={code} className={styles.shelfBarcode} />
+        <span className={styles.shelfMeta}>{number || code}{location ? ` · ${location}` : ''}</span>
       </footer>
-      <QRCodeSVG className={styles.shelfQr} value={code} size={64} marginSize={2} level="M" />
+      {/* A link, so a phone camera opens the article in the CRM; the stock scanner reads the code from it. */}
+      <QRCodeSVG className={styles.shelfQr} value={labelLink(article.sources ?? [], profile?.links ?? [],
+        `${process.env.NEXT_PUBLIC_SITE_URL || (typeof window === 'undefined' ? '' : window.location.origin)}/admin/voorraad/artikel/${encodeURIComponent(code)}`)} size={64} marginSize={2} level="L" />
     </article>
   );
 }

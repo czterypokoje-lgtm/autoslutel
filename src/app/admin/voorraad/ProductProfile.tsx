@@ -18,7 +18,7 @@ const WHEN = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', 
  * stock record by article id; the rest is the profile built from the shops.
  */
 export default function ProductProfile({ profile, articles, demo }: { profile: ProductProfileData; articles: string[]; demo: boolean }) {
-  const { t } = usePreviewLanguage();
+  const { english, t } = usePreviewLanguage();
   const [stock, setStock] = useState<StockState | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -43,8 +43,8 @@ export default function ProductProfile({ profile, articles, demo }: { profile: P
 
       <header className={styles.profileHead}>
         <span>
-          <h1>{profile.nameNl || profile.name}</h1>
-          {profile.nameNl && <p className={styles.muted}>{profile.name}</p>}
+          <h1>{english ? profile.name : profile.nameNl || profile.name}</h1>
+          {!english && profile.nameNl && profile.nameNl !== profile.name && <p className={styles.muted}>{profile.name}</p>}
         </span>
       </header>
 

@@ -12,6 +12,7 @@ export interface PriceInput {
   toYear: string;
   keyless: string; // '' = beide, 'true' | 'false'
   price: string;
+  servicePrice?: string;
   note: string;
 }
 
@@ -33,6 +34,11 @@ export async function addPrice(input: PriceInput): Promise<{ ok: true } | { erro
 
   const price = Number(input.price.replace(',', '.'));
   if (!Number.isFinite(price) || price <= 0) return { error: 'Ongeldige prijs.' };
+  const serviceInput = input.servicePrice?.trim();
+  const servicePrice = serviceInput ? Number(serviceInput.replace(',', '.')) : null;
+  if (servicePrice !== null && (!Number.isFinite(servicePrice) || servicePrice < 0 || servicePrice >= 100_000_000)) {
+    return { error: 'Ongeldig diensttarief.' };
+  }
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from('dispatch_pricing').upsert(
@@ -44,6 +50,7 @@ export async function addPrice(input: PriceInput): Promise<{ ok: true } | { erro
       to_year: parseYear(input.toYear),
       keyless: input.keyless === '' ? null : input.keyless === 'true',
       price,
+      ...(input.servicePrice !== undefined && { service_price: servicePrice }),
       note: input.note.trim() || null,
       updated_at: new Date().toISOString(),
     },
@@ -82,6 +89,11 @@ export async function updatePrice(
 
   const price = Number(input.price.replace(',', '.'));
   if (!Number.isFinite(price) || price <= 0) return { error: 'Ongeldige prijs.' };
+  const serviceInput = input.servicePrice?.trim();
+  const servicePrice = serviceInput ? Number(serviceInput.replace(',', '.')) : null;
+  if (servicePrice !== null && (!Number.isFinite(servicePrice) || servicePrice < 0 || servicePrice >= 100_000_000)) {
+    return { error: 'Ongeldig diensttarief.' };
+  }
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase
@@ -94,6 +106,7 @@ export async function updatePrice(
       to_year: parseYear(input.toYear),
       keyless: input.keyless === '' ? null : input.keyless === 'true',
       price,
+      ...(input.servicePrice !== undefined && { service_price: servicePrice }),
       note: input.note.trim() || null,
       updated_at: new Date().toISOString(),
     })

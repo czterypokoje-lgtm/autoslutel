@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useMemo } from 'react';
 import styles from '../jobs.module.css';
 
@@ -20,7 +21,8 @@ export const SERVICE_OPTIONS = [
   'Transponder programmeren',
 ];
 
-const OTHER = '__anders__';
+/** Exported so the Studio twin of this picker uses the same sentinel. */
+export const OTHER = '__anders__';
 const THIS_YEAR = new Date().getFullYear();
 
 /**
@@ -65,7 +67,7 @@ function PickOrType({
             onChange={(e) => onChange(e.target.value || OTHER)}
           />
           <button type="button" className={styles.pickBack} onClick={() => onChange('')}>
-            Lijst
+            <PreviewText>{"Lijst"}</PreviewText>
           </button>
         </div>
       ) : (

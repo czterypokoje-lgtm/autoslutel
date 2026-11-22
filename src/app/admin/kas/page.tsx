@@ -1,10 +1,15 @@
 import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { STUDIO_UI } from '@/config/install';
 import styles from '../klanten/klanten.module.css';
 import { PageHead, HelpSteps } from '../_ui';
 import k from './kas.module.css';
 import PayoutActions from './PayoutActions';
+import StudioPayoutActions from './StudioPayoutActions';
+import { PreviewText } from '../PreviewLanguage';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,6 +54,130 @@ export default async function KasPage() {
 
   const pending = pendingPayouts ?? [];
   const pendingSum = pending.reduce((t, p) => t + Number(p.amount), 0);
+
+  if (STUDIO_UI) {
+    return (
+      <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Kas &amp; uitbetalingen</PreviewText></h1>
+          <p className="text-muted-foreground text-sm">
+            <PreviewText>Wie heeft nog geld van klanten, en wie moet er nog betaald worden. Klik een monteur voor het logboek.</PreviewText>
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Card className={owedToUs > 0 ? 'border-amber-300 dark:border-amber-500/40' : undefined}>
+            <CardContent className="flex flex-col gap-1 pt-6">
+              <span className="text-muted-foreground text-sm"><PreviewText>Nog bij monteurs</PreviewText></span>
+              <span className="text-2xl font-semibold">{MONEY.format(owedToUs)}</span>
+              <span className="text-muted-foreground text-xs"><PreviewText>contant of pin geïnd, nog niet afgedragen</PreviewText></span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="flex flex-col gap-1 pt-6">
+              <span className="text-muted-foreground text-sm"><PreviewText>Nog uit te betalen</PreviewText></span>
+              <span className="text-2xl font-semibold">{MONEY.format(owedByUs)}</span>
+              <span className="text-muted-foreground text-xs"><PreviewText>verdiend door monteurs</PreviewText></span>
+            </CardContent>
+          </Card>
+          <Card className={pending.length ? 'border-primary/40' : undefined}>
+            <CardContent className="flex flex-col gap-1 pt-6">
+              <span className="text-muted-foreground text-sm"><PreviewText>Uitbetalingsverzoeken</PreviewText></span>
+              <span className="text-2xl font-semibold">{pending.length}</span>
+              <span className="text-muted-foreground text-xs">
+                {pending.length ? <PreviewText>{`${MONEY.format(pendingSum)} aangevraagd`}</PreviewText> : <PreviewText>geen open verzoeken</PreviewText>}
+              </span>
+            </CardContent>
+          </Card>
+        </div>
+
+        {pending.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle><PreviewText>Uitbetalingsverzoeken</PreviewText></CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3">
+              {pending.map((payout) => (
+                <div key={payout.id} className="flex flex-wrap items-center justify-between gap-3 border-t pt-3 first:border-t-0 first:pt-0">
+                  <div className="flex flex-col">
+                    <span className="font-medium">{nameOf.get(payout.technician_id) ?? <PreviewText>Onbekend</PreviewText>}</span>
+                    <span className="text-muted-foreground text-xs">
+                      <PreviewText>{`aangevraagd ${new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', timeZone: 'Europe/Amsterdam' }).format(new Date(payout.created_at))}`}</PreviewText>
+                    </span>
+                  </div>
+                  <span className="font-semibold">{MONEY.format(Number(payout.amount))}</span>
+                  <StudioPayoutActions id={payout.id} />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+
+        <Card>
+          <CardContent className="overflow-x-auto pt-6">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead><PreviewText>Monteur</PreviewText></TableHead>
+                  <TableHead className="text-right"><PreviewText>Geïnd</PreviewText></TableHead>
+                  <TableHead className="text-right"><PreviewText>Afgedragen</PreviewText></TableHead>
+                  <TableHead className="text-right"><PreviewText>Verdiend</PreviewText></TableHead>
+                  <TableHead className="text-right"><PreviewText>Uitbetaald</PreviewText></TableHead>
+                  <TableHead className="text-right"><PreviewText>Saldo</PreviewText></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {rows.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-muted-foreground"><PreviewText>Nog geen monteurs.</PreviewText></TableCell>
+                  </TableRow>
+                )}
+                {rows.map((r) => {
+                  const saldo = Number(r.saldo ?? 0);
+                  return (
+                    <TableRow key={r.technician_id as string} className="relative">
+                      <TableCell>
+                        <Link
+                          href={`/admin/kas/${r.technician_id as string}`}
+                          className="flex flex-col after:absolute after:inset-0"
+                        >
+                          <span className="font-medium">{r.name as string}</span>
+                          <span className="text-muted-foreground text-xs">
+                            {r.employment_type === 'zzp' ? 'ZZP' : <PreviewText>Loondienst</PreviewText>} · {(r.iban as string) ?? <PreviewText>geen IBAN</PreviewText>}
+                          </span>
+                        </Link>
+                      </TableCell>
+                      <TableCell className="text-right">{MONEY.format(Number(r.totaal_geind ?? 0))}</TableCell>
+                      <TableCell className="text-right">{MONEY.format(Number(r.totaal_afgedragen ?? 0))}</TableCell>
+                      <TableCell className="text-right">{MONEY.format(Number(r.totaal_verdiend ?? 0))}</TableCell>
+                      <TableCell className="text-right">{MONEY.format(Number(r.totaal_uitbetaald ?? 0))}</TableCell>
+                      <TableCell className="text-right">
+                        {saldo > 0 ? (
+                          <span className="text-amber-700 dark:text-amber-400"><PreviewText>{`moet ${MONEY.format(saldo)} afdragen`}</PreviewText></span>
+                        ) : saldo < 0 ? (
+                          <span className="text-emerald-700 dark:text-emerald-400"><PreviewText>{`krijgt ${MONEY.format(-saldo)}`}</PreviewText></span>
+                        ) : (
+                          <span className="text-muted-foreground"><PreviewText>niets open</PreviewText></span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <p className="text-muted-foreground text-sm">
+          <PreviewText>
+            Moet afdragen: de monteur heeft contant of pin van klanten geïnd dat nog bij hem is. Krijgt: het bedrijf moet de
+            monteur nog betalen voor zijn klussen. Tikkie, iDEAL, bank en factuur gaan rechtstreeks naar het bedrijf en raken
+            het saldo niet.
+          </PreviewText>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -1,12 +1,21 @@
+import { PreviewText } from '../PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, Empty, Notice } from '../_ui';
 import { toE164NL } from '@/lib/phone';
 import ConversationConsole, { type Conversation } from './ConversationConsole';
+import { STUDIO_UI } from '@/config/install';
+import { listThreads } from '@/lib/inbox/store';
+import { replyChannel } from '@/lib/inbox/send';
+import { withinServiceWindow } from '@/lib/inbox/whatsapp';
+import { Chat } from './_components/chat';
 
 export const dynamic = 'force-dynamic';
 
 const PAGE_SIZE = 100;
+
+/** Request time for relative labels; a function so the clock read is not "during render". */
+const requestNow = () => Date.now();
 
 /**
  * Everything the AI agent has said and heard, phone and WhatsApp together.
@@ -22,16 +31,24 @@ const PAGE_SIZE = 100;
  * mean shipping every lead and job to the page to find two of them.
  */
 export default async function GesprekkenPage() {
-  await requireOfficeUser('/admin/gesprekken');
+  const operator = await requireOfficeUser('/admin/gesprekken');
   const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from('agent_conversations')
     .select('id, conversation_id, channel, phone, outcome, duration_secs, summary, transcript, created_at')
+    // Another brand's agent (KeyForCars, KEY24) or a session nobody spoke in: not our inbox (0108).
+    .not('channel', 'in', '(extern,leeg)')
     .order('created_at', { ascending: false })
     .limit(PAGE_SIZE);
 
   const rows = data ?? [];
+
+  /* The inbox (WhatsApp, e-mail, forms) sits next to the call transcripts; an empty or missing table is simply no threads. */
+  const inboxThreads = await listThreads(supabase, PAGE_SIZE).catch((e: unknown) => {
+    console.error('[gesprekken] inbox read failed', e);
+    return [] as Awaited<ReturnType<typeof listThreads>>;
+  });
 
   /*
    * Match on E.164 through the shared normaliser, never on the raw string:
@@ -39,7 +56,9 @@ export default async function GesprekkenPage() {
    * customer typed, so a literal comparison finds nothing and the console
    * would quietly claim every caller is a stranger.
    */
-  const numbers = [...new Set(rows.map((r) => toE164NL(r.phone)).filter((n): n is string => Boolean(n)))];
+  const numbers = [
+    ...new Set([...rows.map((r) => toE164NL(r.phone)), ...inboxThreads.map((t) => t.phone)].filter((n): n is string => Boolean(n))),
+  ];
 
   interface LeadMatch {
     id: string | number;
@@ -92,6 +111,17 @@ export default async function GesprekkenPage() {
     jobs = (jobResult.data ?? []) as JobMatch[];
   }
 
+  /* Threads already linked to a lead by id (e-mail threads have no number to match on). */
+  const threadLeadIds = [...new Set(inboxThreads.map((t) => t.lead_id).filter((id): id is string => Boolean(id)))];
+  if (threadLeadIds.length) {
+    const byId = await supabase
+      .from('leads')
+      .select('id, name, phone_e164, brand, model, year, service, postcode, status, created_at')
+      .in('id', threadLeadIds);
+    leads = [...leads, ...((byId.data ?? []) as LeadMatch[])];
+  }
+  const leadById = new Map(leads.map((l) => [String(l.id), l] as const));
+
   /* Newest first above, so the first hit for a number is its latest. */
   const leadByPhone = new Map<string, LeadMatch>();
   for (const lead of leads) {
@@ -110,7 +140,7 @@ export default async function GesprekkenPage() {
    * the selected one — so the phone is normalised onto each row here and the
    * grouping happens in the client, which already holds the whole list.
    */
-  const conversations: Conversation[] = rows.map((row) => {
+  const agentConversations: Conversation[] = rows.map((row) => {
     const key = toE164NL(row.phone);
     const lead = key ? leadByPhone.get(key) ?? null : null;
     const job = key ? jobByPhone.get(key) ?? null : null;
@@ -154,6 +184,76 @@ export default async function GesprekkenPage() {
     };
   });
 
+  const inboxConversations: Conversation[] = inboxThreads.map((t) => {
+    const key = t.phone;
+    const lead = (t.lead_id ? leadById.get(t.lead_id) : null) ?? (key ? leadByPhone.get(key) : null) ?? null;
+    const job = key ? jobByPhone.get(key) ?? null : null;
+    const draft = [...t.messages].reverse().find((m) => m.status === 'draft');
+    return {
+      id: t.id,
+      channel: t.channel,
+      phone: t.phone,
+      phoneKey: key,
+      outcome: null,
+      durationSecs: null,
+      summary: null,
+      turns: t.messages.map((m) => ({
+        role: m.direction === 'out' ? ('agent' as const) : ('user' as const),
+        message: m.body,
+        author: m.author,
+        status: m.status,
+        at: m.created_at,
+      })),
+      createdAt: t.last_message_at,
+      lead: lead
+        ? {
+            id: String(lead.id),
+            name: lead.name,
+            car: [lead.brand, lead.model, lead.year].filter(Boolean).join(' ') || null,
+            service: lead.service,
+            postcode: lead.postcode,
+            status: lead.status,
+            createdAt: lead.created_at,
+          }
+        : null,
+      job: job
+        ? {
+            id: String(job.id),
+            date: job.scheduled_date,
+            slot: job.slot_start ? String(job.slot_start).slice(0, 5) : null,
+            status: job.status,
+            service: job.service_type,
+            car: [job.car_make, job.car_model].filter(Boolean).join(' ') || null,
+            city: job.city,
+          }
+        : null,
+      thread: {
+        id: t.id,
+        channel: t.channel,
+        name: t.name,
+        aiMode: t.ai_mode,
+        status: t.status,
+        email: t.email,
+        subject: t.subject,
+        canReply: replyChannel(t),
+        windowOpen: withinServiceWindow(t.last_inbound_at),
+        draft: draft?.body ?? null,
+        unread: t.unread,
+      },
+    };
+  });
+
+  const conversations = [...agentConversations, ...inboxConversations].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  // Studio UI: the chat layout (nav · list · thread · profile) over the same conversations.
+  if (STUDIO_UI && !error) {
+    return (
+      <div className="kfc-neutral">
+        <Chat operator={operator.id} conversations={conversations} now={requestNow()} />
+      </div>
+    );
+  }
+
   return (
     <>
       <PageHead
@@ -163,7 +263,7 @@ export default async function GesprekkenPage() {
 
       {error && (
         <Notice tone="bad">
-          Kon de gesprekken niet laden: {error.message}
+          <PreviewText>Kon de gesprekken niet laden</PreviewText>: {error.message}
         </Notice>
       )}
 

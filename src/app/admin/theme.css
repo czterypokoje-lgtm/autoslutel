@@ -40,6 +40,48 @@ body {
   background: #f6f8fb;
 }
 
+.crm.crm-keyforcars {
+  --crm-bg: #f3f7f6;
+  --crm-sidebar: #ffffff;
+  --crm-sunk: #f3f7f6;
+  --crm-ink: #172d2a;
+  --crm-text: #344e49;
+  --crm-muted: #506b66;
+  --crm-rule: #dbe7e3;
+  --crm-rule2: #b8cec8;
+  --crm-nav: #143e37;
+  --crm-nav-deep: #e6f2ee;
+  --crm-nav-hover: #eff6f3;
+  --crm-nav-text: #344e49;
+  --crm-nav-muted: #536d67;
+  --crm-nav-rule: #dbe7e3;
+  --crm-accent: #126557;
+  --crm-accent-hover: #0c5045;
+  --crm-accent-soft: #e4f3ed;
+  --crm-on-accent: #fff;
+}
+
+.crm.crm-keyforcars[data-appearance="studio"] {
+  --crm-bg: #f4f6fa;
+  --crm-panel: #fff;
+  --crm-sunk: #f0f4fa;
+  --crm-ink: #14213d;
+  --crm-text: #23314d;
+  --crm-muted: #536178;
+  --crm-rule: #dce3ee;
+  --crm-rule2: #bccade;
+  --crm-nav: #14213d;
+  --crm-nav-deep: #e7effb;
+  --crm-nav-hover: #edf3fd;
+  --crm-nav-text: #23314d;
+  --crm-nav-muted: #536178;
+  --crm-nav-rule: #dce3ee;
+  --crm-accent: #2157a6;
+  --crm-accent-hover: #174580;
+  --crm-accent-soft: #e4eefc;
+  --crm-on-accent: #fff;
+}
+
 .crm {
   /* ── surfaces, from the page up ──
      Warm rather than blue-grey: a neutral with a trace of the accent's hue
@@ -198,7 +240,7 @@ body {
  * (navy, 28px, semibold) without touching thirty stylesheets. An inline style
  * on a heading inside a card still wins.
  */
-.crm main h1 {
+.crm main h1:not(.kfc-neutral *) {
   font-size: 28px;
   font-weight: 600;
   color: var(--crm-nav);
@@ -206,5 +248,5 @@ body {
   line-height: 1.2;
 }
 @media (max-width: 640px) {
-  .crm main h1 { font-size: 24px; }
+  .crm main h1:not(.kfc-neutral *) { font-size: 24px; }
 }

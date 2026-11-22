@@ -1,12 +1,18 @@
 import 'server-only';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { IS_KEYFORCARS } from '@/config/install';
+import { catalogProfiles } from '@/lib/stockCatalog';
 
 /**
- * Product profiles: what a key is and which cars it fits, one per SKU across
- * remkeys.com, keyforcars.nl and klapsleutels.nl. Built by
- * scripts/build-profiles.mjs; read on the server only, because the file is a
- * few megabytes and holds the whole catalogue.
+ * Product profiles: what a key is and which cars it fits, one per SKU.
+ *
+ * On KeyForCars they come from remkeys.com, keyforcars.nl and klapsleutels.nl,
+ * built by scripts/build-profiles.mjs. On Autosleutel24 there is no such
+ * scrape, so they are derived from the shop's own key catalogue instead —
+ * src/lib/stockCatalog.ts decides which. Either way: read on the server only
+ * and on first use, because the file is a few megabytes and holds the whole
+ * catalogue.
  */
 
 export interface VehicleFit { text: string; vehicle: string; from: number | null; to: number | null }
@@ -33,6 +39,8 @@ export interface ProductProfileData {
   fits: VehicleFit[];
   links: { shop: string; url: string }[];
   ean: string[];
+  /** Set when `fits` are derived: the products this part belongs to (its blade), not a vehicle list of its own. */
+  via?: string[];
 }
 
 export interface ProfileHit { profile: ProductProfileData; fits: VehicleFit[] }
@@ -43,7 +51,13 @@ function profiles() {
   if (!cache) {
     let all: ProductProfileData[] = [];
     try {
-      all = JSON.parse(readFileSync(join(process.cwd(), 'src', 'data', 'keyforcars-profiles.json'), 'utf8')) as ProductProfileData[];
+      // Two literal paths on purpose: Vercel's file tracer resolves path.join with string
+      // literals; a spread array made it pull the whole project (322 MB of public/images)
+      // into every function that imports this module.
+      const file = JSON.parse(IS_KEYFORCARS
+        ? readFileSync(join(process.cwd(), 'src', 'data', 'keyforcars-profiles.json'), 'utf8')
+        : readFileSync(join(process.cwd(), 'src', 'lib', 'catalog.json'), 'utf8'));
+      all = IS_KEYFORCARS ? (file as ProductProfileData[]) : catalogProfiles(file.products);
     } catch {
       // No profile file yet: every lookup finds nothing instead of crashing the page.
     }
@@ -109,7 +123,22 @@ export function searchProfiles(query: string, limit = 40): ProfileHit[] {
   return exact ? [{ profile: exact, fits: [] }, ...results.slice(0, limit - 1)] : results;
 }
 
+/**
+ * Catalogue products that take this part as their key blade (AUKB01 -> AURC04,
+ * AURK06 ...): where a part without a vehicle list of its own fits.
+ */
+export function bladeUsers(sku: string): string[] {
+  const code = sku.trim().toUpperCase();
+  return profiles().all
+    .filter((profile) => profile.sku.toUpperCase() !== code && profile.facts.blade.some((blade) => blade.trim().toUpperCase() === code))
+    .map((profile) => profile.sku);
+}
+
 export function profileCount() {
   const { all } = profiles();
   return { total: all.length, withFits: all.filter((profile) => profile.fits.length).length, withEan: all.filter((profile) => profile.ean.length).length };
+}
+
+export function productNamesInEnglish() {
+  return Object.fromEntries(profiles().all.map(({ sku, name }) => [sku.toUpperCase(), name]));
 }

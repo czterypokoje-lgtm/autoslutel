@@ -16,6 +16,7 @@ export interface PriceRow {
   to_year: number | null;
   keyless: boolean | null;
   price: number;
+  service_price?: number | null;
 }
 
 const norm = (value: string | null | undefined) =>
@@ -26,6 +27,7 @@ const norm = (value: string | null | undefined) =>
 
 export interface PriceResult {
   price: number;
+  servicePrice?: number;
   confidence: 'model' | 'merk';
 }
 
@@ -59,5 +61,5 @@ export function priceFor(
    * including exact model-and-year matches, all the way out to the voice
    * agent. The model term is the thing being asked about, so read it.
    */
-  return { price: row.price, confidence: row.model ? 'model' : 'merk' };
+  return { price: row.price, confidence: row.model ? 'model' : 'merk', ...(row.service_price != null && { servicePrice: row.service_price }) };
 }

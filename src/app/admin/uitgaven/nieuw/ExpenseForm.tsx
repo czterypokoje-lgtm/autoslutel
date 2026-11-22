@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ui } from '../../_ui';
@@ -22,7 +23,7 @@ const CATEGORIES = [
   { id: 'other', label: 'Overig' }
 ];
 
-export default function ExpenseForm({ technicians, isOffice, myTechId }: { technicians: any[], isOffice: boolean, myTechId: string | null }) {
+export default function ExpenseForm({ technicians, isOffice, myTechId }: { technicians: { id: string; name: string }[], isOffice: boolean, myTechId: string | null }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -50,6 +51,7 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        purchase_order_id: new URLSearchParams(window.location.search).get('inkoop'),
         category,
         description,
         amount: numAmount,
@@ -75,7 +77,7 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
       <div className={x.formGrid}>
         
         <label>
-          <div className={x.formLabel}>Categorie</div>
+          <div className={x.formLabel}><PreviewText>{"Categorie"}</PreviewText></div>
           <select value={category} onChange={e => setCategory(e.target.value)} className={ui.input} required>
             {CATEGORIES.map(c => (
               <option key={c.id} value={c.id}>{c.label}</option>
@@ -89,12 +91,12 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
         </label>
 
         <label>
-          <div className={x.formLabel}>Datum</div>
+          <div className={x.formLabel}><PreviewText>{"Datum"}</PreviewText></div>
           <input type="date" value={dateIncurred} onChange={e => setDateIncurred(e.target.value)} className={ui.input} required />
         </label>
 
         <label>
-          <div className={x.formLabel}>Omschrijving</div>
+          <div className={x.formLabel}><PreviewText>{"Omschrijving"}</PreviewText></div>
           <input type="text" value={description} onChange={e => setDescription(e.target.value)} className={ui.input} required placeholder="bijv. Tanken BP, Google Ads factuur..." />
         </label>
 
@@ -120,9 +122,9 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
         {error && <div className={x.err}>{error}</div>}
 
         <div className={x.formActions}>
-          <button type="button" onClick={() => router.back()} className={ui.btn} disabled={busy}>Annuleren</button>
+          <button type="button" onClick={() => router.back()} className={ui.btn} disabled={busy}><PreviewText>{"Annuleren"}</PreviewText></button>
           <button type="submit" className={`${ui.btn} ${ui.btnPrimary}`} disabled={busy}>
-            {busy ? 'Opslaan...' : 'Opslaan'}
+            <PreviewText>{busy ? 'Opslaan...' : 'Opslaan'}</PreviewText>
           </button>
         </div>
 

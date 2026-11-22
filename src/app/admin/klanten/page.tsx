@@ -1,3 +1,9 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
+import { IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
+import { listCustomers } from '@/lib/kfcReceivables';
+import { Customers } from './_components/customers';
+import StudioKlanten from './_studio/StudioKlanten';
+import type { CustomerRow } from './_studio/data';
 import Link from 'next/link';
 import { MessageCircle, Phone, Search } from 'lucide-react';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -11,19 +17,6 @@ export const dynamic = 'force-dynamic';
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 const DATE = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Europe/Amsterdam' });
 
-interface CustomerRow {
-  phone_e164: string;
-  name: string | null;
-  email: string | null;
-  first_seen: string;
-  last_seen: string;
-  lead_count: number;
-  sold_count: number;
-  total_value: number | string;
-  consent_marketing: boolean | null;
-  postcode: string | null;
-}
-
 const initials = (name: string | null) =>
   (name ?? '?')
     .split(/\s+/)
@@ -36,7 +29,22 @@ const initials = (name: string | null) =>
  * Every customer once, keyed on the phone number (crm_customers): who they
  * are, how often they asked, what they bought, and a call or WhatsApp away.
  */
-export default async function KlantenPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+export default async function KlantenPage({ searchParams }: { searchParams: Promise<{ q?: string; view?: string }> }) {
+  return <>
+    <div className="mb-3 flex justify-end">
+      <Link href="/admin/klanten/relaties" className="text-sm underline underline-offset-4"><PreviewText>Klantaccounts en contactpersonen</PreviewText></Link>
+    </div>
+    <CustomerList searchParams={searchParams} />
+  </>;
+}
+
+async function CustomerList({ searchParams }: { searchParams: Promise<{ q?: string; view?: string }> }) {
+  if (IS_KEYFORCARS) {
+    await requireOfficeUser('/admin/klanten');
+    const sp = await searchParams;
+    // Filtering happens in the table; ?view=overdue and ?q= only preset it (old links keep working).
+    return <Customers rows={await listCustomers()} initialStatus={sp.view === 'overdue' ? 'Vervallen' : undefined} initialQuery={sp.q?.trim()} />;
+  }
   await requireOfficeUser('/admin/klanten');
 
   const { q } = await searchParams;
@@ -71,6 +79,9 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
   }
 
   const rows = (data ?? []) as unknown as CustomerRow[];
+  // Same rows, same ?q=, same links — a shadcn table instead of the CSS list.
+  if (STUDIO_UI) return <StudioKlanten rows={rows} search={search} />;
+
   const buyers = rows.filter((c) => c.sold_count > 0).length;
   const turnover = rows.reduce((t, c) => t + Number(c.total_value ?? 0), 0);
   const consent = rows.filter((c) => c.consent_marketing).length;
@@ -85,18 +96,18 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
       <form className={k.search} method="get" action="/admin/klanten" role="search">
         <Search size={18} aria-hidden="true" />
         <input type="search" name="q" defaultValue={search} placeholder="Zoek op naam, telefoon, e-mail of postcode" aria-label="Zoek klant" />
-        <button type="submit">Zoeken</button>
+        <button type="submit"><PreviewText>{"Zoeken"}</PreviewText></button>
         {search && (
           <Link href="/admin/klanten" className={k.clear}>
-            Wis
+            <PreviewText>{"Wis"}</PreviewText>
           </Link>
         )}
       </form>
 
       <div className={k.stats}>
-        <div><span>{search ? 'Gevonden' : 'Klanten'}</span><b>{rows.length}</b></div>
+        <div><span><PreviewText>{search ? 'Gevonden' : 'Klanten'}</PreviewText></span><b>{rows.length}</b></div>
         <div><span>Kochten iets</span><b>{buyers}</b></div>
-        <div><span>Omzet</span><b>{MONEY.format(turnover)}</b></div>
+        <div><span><PreviewText>{"Omzet"}</PreviewText></span><b>{MONEY.format(turnover)}</b></div>
         <div><span>Mag gemaild worden</span><b>{consent}</b></div>
       </div>
 
@@ -121,7 +132,7 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
                 </Link>
                 <span className={k.counts}>
                   <span className={k.chip}>{c.lead_count} aanvra{c.lead_count === 1 ? 'ag' : 'gen'}</span>
-                  {c.sold_count > 0 && <span className={`${k.chip} ${k.chipOk}`}>{c.sold_count} verkocht</span>}
+                  {c.sold_count > 0 && <span className={`${k.chip} ${k.chipOk}`}>{c.sold_count} <PreviewText>{"verkocht"}</PreviewText></span>}
                 </span>
                 <span className={k.money}>{MONEY.format(Number(c.total_value ?? 0))}</span>
                 <span className={k.last}>{DATE.format(new Date(c.last_seen))}</span>

@@ -1,12 +1,13 @@
 import { requireOfficeUser } from '@/lib/crmSession';
 import { findProfile, lookupCode } from '@/lib/productProfiles';
-import catalog from '@/data/keyforcars-stock.json';
+import { EXAMPLE_SKU, stockCatalog } from '@/lib/stockCatalog';
+import { BRAND } from '@/config/install';
 import ProductProfile from '../../ProductProfile';
 import ProfileSearch from '../../ProfileSearch';
 import styles from '../../keyforcars.module.css';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Productprofiel | KeyForCars', robots: { index: false } };
+export const metadata = { title: `Productprofiel | ${BRAND.name}`, robots: { index: false } };
 
 /**
  * The page a label link opens. Staff only: without a CRM session the visitor
@@ -22,12 +23,12 @@ export default async function ProductProfilePage({ params, searchParams }: {
   const profile = findProfile(code);
   const query = lookupCode(code);
   if (!profile) {
-    return <main className={styles.workspace}><ProfileSearch query={query} hits={[]} demo={demo} /></main>;
+    return <main className={styles.workspace}><ProfileSearch query={query} hits={[]} demo={demo} example={EXAMPLE_SKU} /></main>;
   }
-  const articles = catalog.filter((article) => article.sku.trim().toUpperCase() === profile.sku).map((article) => article.id);
+  const articles = stockCatalog.filter((article) => article.sku.trim().toUpperCase() === profile.sku).map((article) => article.id);
   return (
     <main className={styles.workspace}>
-      <ProfileSearch query="" demo={demo} />
+      <ProfileSearch query="" demo={demo} example={EXAMPLE_SKU} />
       <ProductProfile profile={profile} articles={articles} demo={demo} />
     </main>
   );

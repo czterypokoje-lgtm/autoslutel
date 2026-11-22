@@ -1,0 +1,17 @@
+[Unit]
+Description=KeyForCars isolated CRM demo
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=kfc-demo
+Group=kfc-demo
+WorkingDirectory=/srv/keyforcars-demo
+EnvironmentFile=/etc/keyforcars-demo.env
+ExecStart=/usr/bin/node /srv/keyforcars-demo/deploy/keyforcars-demo/start.mjs start
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

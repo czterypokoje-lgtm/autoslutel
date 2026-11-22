@@ -28,6 +28,7 @@ export default function PriceForm() {
       toYear: String(form.get('toYear') ?? ''),
       keyless: String(form.get('keyless') ?? ''),
       price: String(form.get('price') ?? ''),
+      servicePrice: String(form.get('servicePrice') ?? ''),
       note: String(form.get('note') ?? ''),
     });
 
@@ -81,6 +82,8 @@ export default function PriceForm() {
         <div className={styles.field}>
           <label htmlFor="price">Prijs (€)</label>
           <input id="price" name="price" required placeholder="195,00" />
+          <label htmlFor="servicePrice">Diensttarief excl. btw (€)</label>
+          <input id="servicePrice" name="servicePrice" inputMode="decimal" />
         </div>
         <div className={styles.field}>
           <label htmlFor="note">Notitie</label>

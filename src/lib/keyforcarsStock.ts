@@ -28,6 +28,7 @@ export interface StockMove {
   note?: string;
   requestFingerprint?: string;
   amountCents?: number;
+  invoiceId?: string;
   bot?: { eventId: string };
   /** Bulk count this movement belongs to. */
   batch?: string;
@@ -65,6 +66,14 @@ export const STOCK_OPERATIONS = {
   return: 'Retour',
   transfer: 'Verplaatsing',
 };
+
+/**
+ * The journal's label for any move, including the ones nobody books by hand: an
+ * assembly (0112) and a correction. STOCK_OPERATIONS stays the list of manual
+ * choices; reading it for these left the journal line without a label.
+ */
+export const moveLabel = (operation: string): string =>
+  (STOCK_OPERATIONS as Record<string, string>)[operation] ?? ({ assembly: 'Montage', correction: 'Correctie' } as Record<string, string>)[operation] ?? operation;
 
 export const STOCK_TIME_ZONE = 'Europe/Amsterdam';
 export function stockChange(move: StockMove, english = false) {
@@ -165,7 +174,8 @@ export interface ReorderLine {
 const DAY = 86_400_000;
 const STATUS_ORDER: ReorderStatus[] = ['order', 'uncounted', 'soon', 'dead', 'ok'];
 
-export function reorderAdvice(state: StockState, now: Date, settings: ReorderSettings = REORDER_DEFAULTS): ReorderLine[] {
+/** `incoming`: units already on order at the supplier per article (kfc_stock_position), subtracted from the suggestion. */
+export function reorderAdvice(state: StockState, now: Date, settings: ReorderSettings = REORDER_DEFAULTS, incoming: Record<string, number> = {}): ReorderLine[] {
   const windowStart = now.getTime() - settings.windowDays * DAY;
   const deadSince = now.getTime() - 90 * DAY;
   const ids = new Set([
@@ -200,7 +210,7 @@ export function reorderAdvice(state: StockState, now: Date, settings: ReorderSet
     else if (expected > 0 && (!lastUse || Date.parse(lastUse) < deadSince)) status = 'dead';
 
     const target = Math.max(reorderPoint + 1, Math.ceil(perDay * (settings.leadDays + settings.coverDays)));
-    const suggest = status === 'order' || status === 'soon' || status === 'uncounted' ? Math.max(0, target - (expected ?? 0)) : 0;
+    const suggest = status === 'order' || status === 'soon' || status === 'uncounted' ? Math.max(0, target - (expected ?? 0) - (incoming[article] ?? 0)) : 0;
     lines.push({ article, status, shelf, expected, minimum, lastCount, usedInWindow, perDay, coverDays, reorderPoint, suggest, unitCostCents, lastUse });
   }
   return lines.sort((a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status)

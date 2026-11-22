@@ -79,7 +79,7 @@ export default function ProductFacts({ profile: given, sku, demo, compact = fals
             </button>
           )}
         </>
-      ) : <p className={styles.muted}>{t('Geen voertuiglijst. Vul aan in remkeys.com.')}</p>}
+      ) : <p className={styles.muted}>{t('Geen voertuiglijst. Vul aan in Artikelbeheer.')}</p>}
 
       {compact && <Link className={styles.secondary} href={`/admin/voorraad/p/${encodeURIComponent(profile.sku)}${demo ? '?demo=1' : ''}`}>{t('Volledig productprofiel')}</Link>}
     </div>

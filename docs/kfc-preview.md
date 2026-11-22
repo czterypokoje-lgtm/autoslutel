@@ -18,7 +18,9 @@
 - **Not run yet:** the Supabase storage path for stock (`src/lib/kfcStockStore.ts`)
   against a cloud project; English labels for sign-out and the top search.
 
-Branch `kfc/preview`. One codebase: with `CRM_INSTALL=keyforcars` this app is
+Repo `czterypokoje-lgtm/DARARII`, branch `main` (moved here from the autoslutel
+repo on 18 Nov 2026; it started as a copy of the Autosleutel24 CRM, so fixes
+made there must be carried over by hand). One codebase: with `CRM_INSTALL=keyforcars` this app is
 KeyForCars's CRM — dashboard, orders, stock, product finder — and everything
 else (our public site, our CRM modules, crons, webhooks) answers 404. Without
 that variable it is Autosleutel24 exactly as before.
@@ -69,8 +71,9 @@ and keys in `.env.local` with `CRM_INSTALL=keyforcars` and
    autosleutel24.nl. The owner sets each password in Supabase → Authentication
    → Users. Roles are only `owner` and `kantoor` in the preview; separate warehouse
    and picker roles come with the real install.
-5. **Vercel.** New project from the same GitHub repo, production branch
-   `kfc/preview`, function region `fra1`. Env vars (all from the **new** Supabase
+5. **Vercel.** Project `keyforcars-crm` (already created), connected to the
+   `czterypokoje-lgtm/DARARII` repo, production branch `main`, function region
+   `fra1`. Env vars (all from the **new** Supabase
    project; never copy Autosleutel24's):
 
    | Name | Value |
@@ -81,9 +84,6 @@ and keys in `.env.local` with `CRM_INSTALL=keyforcars` and
    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | new project anon key |
    | `SUPABASE_SERVICE_ROLE_KEY` | new project service-role key |
 
-   Settings → Git → Ignored Build Step:
-   `[ "$VERCEL_GIT_COMMIT_REF" = "kfc/preview" ] && exit 1 || exit 0`
-   so pushes to our other branches do not build here.
    The `vercel.json` cron is registered on this project too; its route answers
    404 on this install, so it does nothing.
 6. **Domain (optional).** `crm.klapsleutels.nl`: a CNAME to `cname.vercel-dns.com`,

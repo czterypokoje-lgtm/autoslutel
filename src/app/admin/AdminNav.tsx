@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import {
   BadgeCheck,
   BarChart3,
@@ -15,10 +15,12 @@ import {
   Handshake,
   History,
   Inbox,
+  Landmark,
   LayoutDashboard,
   MessageSquare,
   Package,
   PhoneCall,
+  Plug,
   Settings,
   Truck,
   Users,
@@ -27,8 +29,9 @@ import {
 } from 'lucide-react';
 import styles from './admin.module.css';
 import { usePreviewLanguage } from './PreviewLanguage';
-import { IS_KEYFORCARS } from '@/config/install';
+import { IS_KEYFORCARS, WAREHOUSE, installServes } from '@/config/install';
 import type { CrmRole } from '@/lib/crmSession';
+import { inventoryHref, inventoryView } from './voorraad/inventoryViews';
 
 /**
  * The sidebar menu.
@@ -46,7 +49,7 @@ interface Leaf {
   label: string;
 }
 
-interface NavItem {
+export interface NavItem {
   label: string;
   icon: LucideIcon;
   href?: string;
@@ -55,7 +58,24 @@ interface NavItem {
   children?: Leaf[];
 }
 
-const OFFICE_NAV: NavItem[] = [
+export const reportLinks = [
+  { label: 'Prestaties', href: '/admin/rapport' },
+  { label: 'Winst & verbruik', href: '/admin/winst' },
+  { label: 'Rapportage', href: '/admin/rapportage' },
+  { label: 'Advertentieklikken', href: '/admin/attributie' },
+  { label: 'WhatsApp en advertenties', href: '/admin/whatsapp-advertenties' },
+  { label: 'WhatsApp-analyse', href: '/admin/whatsapp-analyse' },
+  { label: 'Klikfraude', href: '/admin/klikfraude' },
+  { label: 'Live', href: '/admin/live' },
+  { label: 'Kantoor', href: '/admin/kantoor' },
+  { label: 'Verkoop & diensten', href: '/admin/rapport/verkoop' },
+  { label: 'Voorraadstand', href: '/admin/rapport/voorraad', warehouse: true },
+  { label: 'Voorraadbewegingen', href: '/admin/rapport/voorraadbewegingen', warehouse: true },
+  { label: 'Webshopmarge', href: '/admin/winst/webshop', warehouse: true },
+  { label: 'Alle rapporten', href: '/admin/rapporten' },
+].filter(link => (!link.warehouse || WAREHOUSE) && installServes(link.href));
+
+export const OFFICE_NAV: NavItem[] = [
   { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/overzicht' },
   { label: 'Leads', icon: Inbox, href: '/admin/leads' },
   { label: 'Gesprekken', icon: PhoneCall, href: '/admin/gesprekken', ai: true },
@@ -91,25 +111,13 @@ const OFFICE_NAV: NavItem[] = [
       { href: '/admin/monteurtarieven', label: 'Monteurtarieven' },
     ],
   },
-  {
-    label: 'Rapporten',
-    icon: BarChart3,
-    children: [
-      { href: '/admin/rapport', label: 'Prestaties' },
-      { href: '/admin/winst', label: 'Winst & verbruik' },
-      { href: '/admin/rapportage', label: 'Rapportage' },
-      { href: '/admin/attributie', label: 'Advertentieklikken' },
-      { href: '/admin/whatsapp-advertenties', label: 'WhatsApp en advertenties' },
-      { href: '/admin/klikfraude', label: 'Klikfraude' },
-      { href: '/admin/live', label: 'Live' },
-      { href: '/admin/kantoor', label: 'Kantoor' },
-    ],
-  },
+  // One merged reports page with tabs; the detail pages are linked from inside it.
+  { label: 'Rapporten', icon: BarChart3, children: reportLinks },
   { label: 'Netwerk', icon: MessageSquare, href: '/admin/netwerk' },
   { label: 'Instellingen', icon: Settings, href: '/admin/instellingen' },
 ];
 
-const MONTEUR_NAV: NavItem[] = [
+export const MONTEUR_NAV: NavItem[] = [
   { label: 'Overzicht', icon: LayoutDashboard, href: '/admin/overzicht' },
   { label: 'Vandaag', icon: Truck, href: '/admin/vandaag' },
   { label: 'Aanbod', icon: Handshake, href: '/admin/aanbod' },
@@ -158,12 +166,28 @@ const KEYFORCARS_NAV: NavItem[] = [
   },
   { label: 'Klanten', icon: Users, href: '/admin/klanten' },
   { label: 'Bestellingen', icon: Package, href: '/admin/orders' },
+  { label: 'Verzending', icon: Truck, href: '/admin/verzending' },
+  { label: 'Best verkocht', icon: BarChart3, href: '/admin/best-verkocht' },
+  {
+    label: 'Bank',
+    icon: Landmark,
+    children: [
+      { href: '/admin/bank/rekeningen', label: 'Financiële rekeningen' },
+      { href: '/admin/bank/transacties', label: 'Banktransacties' },
+      { href: '/admin/bank/betalingen', label: 'Betalingen' },
+      { href: '/admin/bank/verwacht', label: 'Verwachte betalingen' },
+    ],
+  },
   {
     label: 'Voorraad',
     icon: Boxes,
     children: [
-      { href: '/admin/voorraad', label: 'Magazijn' },
+      { href: '/admin/voorraad', label: 'Artikelen' },
       { href: '/admin/voorraad/p', label: 'Productzoeker' },
+      { href: inventoryHref('reorder'), label: 'Bestelvoorstel' },
+      { href: '/admin/inkoop', label: 'Inkoop' },
+      { href: inventoryHref('reports'), label: 'Voorraadrapporten' },
+      { href: inventoryHref('journal'), label: 'Voorraadlogboek' },
     ],
   },
   {
@@ -177,15 +201,10 @@ const KEYFORCARS_NAV: NavItem[] = [
   {
     label: 'Rapporten',
     icon: BarChart3,
-    children: [
-      { href: '/admin/rapport', label: 'Prestaties' },
-      { href: '/admin/winst', label: 'Winst & verbruik' },
-      { href: '/admin/rapportage', label: 'Rapportage' },
-      { href: '/admin/attributie', label: 'Advertentieklikken' },
-      { href: '/admin/whatsapp-advertenties', label: 'WhatsApp en advertenties' },
-      { href: '/admin/klikfraude', label: 'Klikfraude' },
-    ],
+    children: reportLinks,
   },
+  { label: 'Integraties', icon: Plug, href: '/admin/integraties' },
+  { label: 'Boekhoudtest', icon: BadgeCheck, href: '/admin/boekhoudtest' },
   { label: 'Instellingen', icon: Settings, href: '/admin/instellingen' },
 ];
 
@@ -194,11 +213,13 @@ const KEYFORCARS_NAV: NavItem[] = [
  * own Permissions-Policy header — so they are opened as a full page load,
  * not a client-side navigation that would keep the previous page's policy.
  */
-const fullLoad = (href: string) => href === '/admin/voorraad' || href.startsWith('/admin/voorraad/');
+const fullLoad = (href: string) => /^\/admin\/voorraad(?:[/?]|$)/.test(href);
 
 export default function AdminNav({ role }: { role: CrmRole | null }) {
   const { t } = usePreviewLanguage();
   const pathname = usePathname() ?? '';
+  const query = useSearchParams();
+  const demo = query?.get('demo') === '1';
   const nav = IS_KEYFORCARS ? KEYFORCARS_NAV : role === 'monteur' ? MONTEUR_NAV : OFFICE_NAV;
 
   /*
@@ -206,7 +227,7 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
    * "Klus inplannen" and not "Agenda", while /admin/jobs/123 still lights up
    * "Agenda".
    */
-  const active =
+  const active = IS_KEYFORCARS && pathname === '/admin/voorraad' ? inventoryHref(inventoryView(query?.get('view'))) :
     allHrefs(nav)
       .filter((h) => pathname === h || pathname.startsWith(`${h}/`))
       .sort((a, b) => b.length - a.length)[0] ?? null;
@@ -265,7 +286,7 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
                   return (
                     <NavLink
                       key={c.href}
-                      href={c.href}
+                      href={demo && fullLoad(c.href) ? `${c.href}${c.href.includes('?') ? '&' : '?'}demo=1` : c.href}
                       aria-current={on ? 'page' : undefined}
                       className={on ? `${styles.navSubLink} ${styles.navSubLinkActive}` : styles.navSubLink}
                     >

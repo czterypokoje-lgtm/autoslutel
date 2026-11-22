@@ -1,19 +1,31 @@
 import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
-import catalog from '@/data/keyforcars-stock.json';
+import { ARTICLE_CODE, stockCatalog as catalog, WORKSHOP_PREFIX } from '@/lib/stockCatalog';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { hasLanCookie, lanMode } from '@/lib/lanPreview';
-import { requireOfficeUserApi } from '@/lib/crmSession';
-import { IS_KEYFORCARS } from '@/config/install';
+import { requireWarehouseUserApi } from '@/lib/crmSession';
+import { kfcGet, kfcPost } from '@/lib/kfcInventory';
+import { WAREHOUSE } from '@/config/install';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { loadStock, readPhoto, saveStock, writePhoto, type StockSlot } from '@/lib/kfcStockStore';
 import { EMPTY_STOCK, STOCK_OPERATIONS, type StockBin, type StockMove, type StockState } from '@/lib/keyforcarsStock';
 import { findProfile } from '@/lib/productProfiles';
+import { labelProfiles } from '@/lib/labelProfiles';
 
 export const runtime = 'nodejs';
+/** Online KeyForCars install: the ledger tables (0090). Local pilot and ?demo=1 keep the JSON record. */
+const LEDGER = WAREHOUSE && !CRM_PREVIEW;
 const articles = new Set(catalog.map(({ id }) => id));
-const articleCode = /^KFC-[123]-[0-9]+$/;
+let catalogResponse: { body: string; etag: string } | undefined;
 const binCode = /^[A-Z0-9-]{1,24}$/;
+/**
+ * The three articles the ?demo=1 walkthrough books movements on. KeyForCars's
+ * own cards when they are there, otherwise simply the first three of this
+ * install's catalogue — the demo is about the screens, not these keys.
+ */
 const demoSkus = ['ALRK05', 'ALRK03', 'ALRK04'];
-const demoArticles = demoSkus.map((sku) => catalog.find((article) => article.sku === sku)!);
+const demoArticles = demoSkus.every((sku) => catalog.some((article) => article.sku === sku))
+  ? demoSkus.map((sku) => catalog.find((article) => article.sku === sku)!)
+  : catalog.slice(0, 3);
 
 type Save = (state: StockState) => Promise<boolean>;
 
@@ -50,8 +62,8 @@ async function allowed(request: Request): Promise<boolean> {
     if (lanMode()) return hasLanCookie(request.headers.get('cookie'));
     return /^(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/.test(host);
   }
-  if (!IS_KEYFORCARS) return false;
-  return !(await requireOfficeUserApi()).response;
+  if (!WAREHOUSE) return false;
+  return !(await requireWarehouseUserApi()).response;
 }
 
 async function readStock(demo = false): Promise<{ state: StockState; version: number }> {
@@ -98,15 +110,30 @@ function jpeg(image: Uint8Array) {
 export async function GET(request: Request) {
   if (!(await allowed(request))) return reply({}, 404);
   const query = new URL(request.url).searchParams;
+  if (query.get('catalog') === '1') {
+    if (!catalogResponse) {
+      const body = JSON.stringify(catalog);
+      catalogResponse = { body, etag: `"${createHash('sha256').update(body).digest('base64url')}"` };
+    }
+    const { body, etag } = catalogResponse;
+    const headers = { 'Cache-Control': 'private, no-cache', 'Content-Type': 'application/json', ETag: etag };
+    if (request.headers.get('if-none-match') === etag) return new Response(null, { status: 304, headers });
+    return new Response(body, { headers });
+  }
   const demo = query.get('demo') === '1';
   const profile = query.get('profile');
-  if (profile !== null) return reply(/^[A-Za-z0-9._\-/ ]{1,80}$/.test(profile) ? findProfile(profile) ?? null : null);
+  // Live: the CRM's own specs and fitments first (labelProfiles); demo: the catalogue only.
+  if (profile !== null) {
+    if (!/^[A-Za-z0-9._\-/ ]{1,80}$/.test(profile)) return reply(null);
+    return reply(LEDGER && !demo ? (await labelProfiles([profile]))[profile] ?? null : findProfile(profile) ?? null);
+  }
   // Labels for a print run: up to 300 SKUs in one call, comma-separated.
   const profiles = query.get('profiles');
   if (profiles !== null) {
     const skus = [...new Set(profiles.split(',').map((sku) => sku.trim()).filter((sku) => /^[A-Za-z0-9._\-/ ]{1,80}$/.test(sku)))].slice(0, 300);
-    return reply(Object.fromEntries(skus.map((sku) => [sku, findProfile(sku) ?? null])));
+    return reply(LEDGER && !demo ? await labelProfiles(skus) : Object.fromEntries(skus.map((sku) => [sku, findProfile(sku) ?? null])));
   }
+  if (LEDGER && !demo) return kfcGet(query);
   const movement = query.get('movement');
   if (movement) {
     if (!/^[a-f0-9-]{36}$/i.test(movement)) return reply({}, 404);
@@ -116,17 +143,25 @@ export async function GET(request: Request) {
     return image ? jpeg(image) : reply({}, 404);
   }
   const photo = query.get('foto');
-  if (!photo) return reply((await readStock(demo)).state);
-  if (!articleCode.test(photo) || !(await readStock()).state.photos[photo]) return reply({}, 404);
+  if (!photo) {
+    const { state } = await readStock(demo);
+    if (query.get('movementCatalog') === '1') {
+      const used = new Set(state.moves.map(move => move.article));
+      return reply({ state, catalog: catalog.filter(article => used.has(article.id)) });
+    }
+    return reply(state);
+  }
+  if (!ARTICLE_CODE.test(photo) || !(await readStock()).state.photos[photo]) return reply({}, 404);
   const image = await readPhoto(`${photo}.jpg`);
   return image ? jpeg(image) : reply({}, 404);
 }
 
-/** Same-origin only: https online, http on the local pilot. */
+/** Same-origin only: https online, http on the local pilot and in `next dev`. */
 function sameOrigin(request: Request) {
   const origin = request.headers.get('origin');
   const host = request.headers.get('host');
-  return origin === `https://${host}` || (CRM_PREVIEW && origin === `http://${host}`);
+  const http = CRM_PREVIEW || process.env.NODE_ENV === 'development';
+  return origin === `https://${host}` || (http && origin === `http://${host}`);
 }
 
 export async function POST(request: Request) {
@@ -143,6 +178,7 @@ export async function POST(request: Request) {
   }
   const input = await request.json().catch(() => null);
   if (!input || typeof input !== 'object') return reply({ error: 'Ongeldige invoer.' }, 400);
+  if (LEDGER && !demo && !external) return kfcPost(input as Record<string, unknown>);
 
   const { state, version } = await readStock(demo);
   const save: Save = (next) => saveStock(slotOf(demo), next, version);
@@ -151,7 +187,7 @@ export async function POST(request: Request) {
   if (input.operation === 'photo') {
     if (demo) return reply({ error: 'Wijzig de etiketfoto via de lokale voorraad.' }, 400);
     const { article, photo } = input;
-    if (typeof article !== 'string' || !articleCode.test(article) || !hasArticle(article) ||
+    if (typeof article !== 'string' || !ARTICLE_CODE.test(article) || !hasArticle(article) ||
         typeof photo !== 'string' || photo.length > 240_000 || !/^[A-Za-z0-9+/]+={0,2}$/.test(photo)) {
       return reply({ error: 'Kies een kleinere geldige foto.' }, 400);
     }
@@ -168,7 +204,7 @@ export async function POST(request: Request) {
     const name = typeof input.name === 'string' ? input.name.trim() : '';
     const sku = typeof input.sku === 'string' ? input.sku.trim() : '';
     if (!name || name.length > 180 || sku.length > 80) return reply({ error: 'Controleer de artikelnaam en SKU.' }, 400);
-    const id = `KFC-3-${state.workshop.length + 1}`;
+    const id = `${WORKSHOP_PREFIX}${state.workshop.length + 1}`;
     state.workshop.push({ id, name, sku, image: '', category: 'Werkplaats', sources: [] });
     if (!(await save(state))) return conflict();
     return reply({ state, id });
@@ -183,6 +219,11 @@ export async function POST(request: Request) {
   const note = typeof input.note === 'string' ? input.note.trim() : '';
   if (note.length > 500) return reply({ error: 'De notitie is te lang.' }, 400);
   const amountCents: unknown = input.amountCents;
+  const invoiceId = input.invoiceId;
+  if (invoiceId !== undefined && (input.operation !== 'sale' || typeof invoiceId !== 'string' ||
+    !/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(invoiceId))) {
+    return reply({ error: 'Ongeldige factuur-ID.' }, 400);
+  }
   if (amountCents !== undefined && ((input.operation !== 'sale' && input.operation !== 'receive') ||
     typeof amountCents !== 'number' || !Number.isSafeInteger(amountCents) || amountCents < 0 || amountCents > 100_000_000)) {
     return reply({ error: 'Controleer het bedrag in euro.' }, 400);
@@ -198,6 +239,7 @@ export async function POST(request: Request) {
     input.article, input.operation, input.shelf, input.box, input.quantity, input.minimum,
     input.destinationShelf || '', input.destinationBox || '', note, photo ?? null,
     ...(amountCents === undefined ? [] : [amountCents]),
+    ...(invoiceId === undefined ? [] : [invoiceId]),
   ])).digest('hex');
   if (duplicate) {
     if (duplicate.requestFingerprint !== requestFingerprint) {
@@ -205,7 +247,14 @@ export async function POST(request: Request) {
     }
     return reply({ state, movement: duplicate });
   }
-  const result = bookMovement(state, input, { id, photo: Boolean(image), note, requestFingerprint, amountCents });
+  if (typeof invoiceId === 'string') {
+    if (CRM_PREVIEW || demo) return reply({ error: 'Facturen koppelen vereist een actieve CRM-database.' }, 409);
+    const supabase = await createSupabaseServerClient();
+    const invoice = await supabase.from('sales_invoices').select('id').eq('id', invoiceId).maybeSingle();
+    if (invoice.error) return reply({ error: 'De factuur kon niet worden gecontroleerd.' }, 503);
+    if (!invoice.data) return reply({ error: 'Factuur niet gevonden.' }, 404);
+  }
+  const result = bookMovement(state, input, { id, photo: Boolean(image), note, requestFingerprint, amountCents, ...(invoiceId ? { invoiceId } : {}) });
   if (result) return result;
   if (image) await writePhoto(movementPhoto(id, demo), image);
   if (!(await save(state))) return conflict();
@@ -260,7 +309,7 @@ async function bulkCount(state: StockState, input: Record<string, unknown>, hasA
   return reply({ state, saved: lines.length });
 }
 
-function bookMovement(state: StockState, input: Record<string, unknown>, details: Pick<StockMove, 'id' | 'photo' | 'note' | 'bot' | 'requestFingerprint' | 'amountCents' | 'batch'> = {}) {
+function bookMovement(state: StockState, input: Record<string, unknown>, details: Pick<StockMove, 'id' | 'photo' | 'note' | 'bot' | 'requestFingerprint' | 'amountCents' | 'batch' | 'invoiceId'> = {}) {
   const { article, operation, shelf, box, quantity, minimum, destinationShelf, destinationBox } = input;
   const unlocated = shelf === '' && box === '' && ['receive', 'issue', 'sale', 'return'].includes(String(operation));
   if (typeof operation !== 'string' || !Object.hasOwn(STOCK_OPERATIONS, operation) ||

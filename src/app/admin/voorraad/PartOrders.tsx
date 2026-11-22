@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardHead, Badge, Empty, ui } from '../_ui';
@@ -99,7 +100,7 @@ export default function PartOrders({ orders }: { orders: PartOrderRow[] }) {
                       onClick={() => setStatus(order.id, 'besteld')}
                       disabled={busy === order.id}
                     >
-                      Besteld
+                      <PreviewText>{"Besteld"}</PreviewText>
                     </button>
                   )}
                   <button

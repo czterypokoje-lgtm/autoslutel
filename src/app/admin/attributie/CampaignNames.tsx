@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardHead, ui } from '../_ui';
@@ -58,7 +59,7 @@ export default function CampaignNames({ campaigns }: { campaigns: CampaignSeen[]
     return (
       <div style={{ marginBottom: '1rem' }}>
         <button className={ui.btn} onClick={() => setOpen(true)}>
-          Campagnes benoemen
+          <PreviewText>{"Campagnes benoemen"}</PreviewText>
           {unnamed > 0 && ` — ${unnamed} zonder naam`}
         </button>
       </div>
@@ -68,7 +69,7 @@ export default function CampaignNames({ campaigns }: { campaigns: CampaignSeen[]
   return (
     <Card>
       <CardHead>
-        Campagnes benoemen — Google stuurt alleen een nummer
+        <PreviewText>{"Campagnes benoemen — Google stuurt alleen een nummer"}</PreviewText>
       </CardHead>
       <div style={{ padding: '0 16px 16px' }}>
         <p className={styles.muted} style={{ marginTop: 12 }}>
@@ -82,10 +83,10 @@ export default function CampaignNames({ campaigns }: { campaigns: CampaignSeen[]
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Nummer</th>
-                <th>Belklikken</th>
-                <th>Meeste landingen op</th>
-                <th>Naam</th>
+                <th><PreviewText>{"Nummer"}</PreviewText></th>
+                <th><PreviewText>{"Belklikken"}</PreviewText></th>
+                <th><PreviewText>{"Meeste landingen op"}</PreviewText></th>
+                <th><PreviewText>{"Naam"}</PreviewText></th>
                 <th />
               </tr>
             </thead>
@@ -127,7 +128,7 @@ export default function CampaignNames({ campaigns }: { campaigns: CampaignSeen[]
         </div>
 
         <button className={ui.btn} style={{ marginTop: 12 }} onClick={() => setOpen(false)}>
-          Sluiten
+          <PreviewText>{"Sluiten"}</PreviewText>
         </button>
       </div>
     </Card>

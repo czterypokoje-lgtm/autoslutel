@@ -93,7 +93,7 @@ export async function readPhoto(name: string): Promise<Uint8Array | null> {
   return data ? new Uint8Array(await data.arrayBuffer()) : null;
 }
 
-export async function writePhoto(name: string, image: Uint8Array): Promise<void> {
+export async function writePhoto(name: string, image: Uint8Array, contentType = 'image/jpeg'): Promise<void> {
   if (!DATABASE) {
     mkdirSync(folder, { recursive: true });
     const path = join(folder, name);
@@ -103,6 +103,6 @@ export async function writePhoto(name: string, image: Uint8Array): Promise<void>
   }
   const { error } = await createSupabaseAdminClient()
     .storage.from(BUCKET)
-    .upload(name, image, { contentType: 'image/jpeg', upsert: true });
+    .upload(name, image, { contentType, upsert: true });
   if (error) throw new Error(`Foto opslaan mislukt: ${error.message}`);
 }

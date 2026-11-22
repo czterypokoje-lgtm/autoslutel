@@ -294,6 +294,16 @@
 .reportWideLabels .rankedLabel, .reportWideLabels .donutKeyLabel { white-space: normal; overflow-wrap: anywhere; }
 .reportWideLabels .donutKeyValue { white-space: nowrap; }
 .reportWideLabels .donutWrap { justify-content: center; }
+.inventoryRanks .rankedFill { background: #5261d8; }
+.inventoryRanks .rankedRow:nth-child(4n+2) .rankedFill { background: #078365; }
+.inventoryRanks .rankedRow:nth-child(4n+3) .rankedFill { background: #087cae; }
+.inventoryRanks .rankedRow:nth-child(4n+4) .rankedFill { background: #a54ac0; }
+.dashboardPlot .barPlot { gap: clamp(2px, .65vw, 10px); }
+.dashboardPlot .barCol { position: relative; }
+.dashboardPlot .barLabel { bottom: -20px; }
+@media (max-width: 640px) {
+  .dashboardPlot .barCol:nth-child(even) .barLabel { visibility: hidden; }
+}
 
 /* The wide row (chart beside a ranking) stacks before either half gets too
    narrow to read; a 240px line chart is a squiggle, not a chart. */

@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../admin.module.css';
@@ -103,7 +104,7 @@ export default function LoginForm({ next }: { next: string }) {
   return (
     <form onSubmit={signInWithPassword}>
       <label className={styles.label} htmlFor="crm-email">
-        E-mailadres
+        <PreviewText>{"E-mailadres"}</PreviewText>
       </label>
       <input
         id="crm-email"
@@ -118,7 +119,7 @@ export default function LoginForm({ next }: { next: string }) {
       />
 
       <label className={`${styles.label} ${styles.labelSpaced}`} htmlFor="crm-password">
-        Wachtwoord
+        <PreviewText>{"Wachtwoord"}</PreviewText>
       </label>
       <input
         id="crm-password"
@@ -132,7 +133,7 @@ export default function LoginForm({ next }: { next: string }) {
       />
 
       <button className={styles.button} type="submit" disabled={state === 'busy'}>
-        {state === 'busy' ? 'Bezig…' : 'Inloggen'}
+        <PreviewText>{state === 'busy' ? 'Bezig…' : 'Inloggen'}</PreviewText>
       </button>
 
       <button
@@ -141,11 +142,11 @@ export default function LoginForm({ next }: { next: string }) {
         onClick={sendMagicLink}
         disabled={state === 'busy'}
       >
-        Wachtwoord kwijt? Stuur een inloglink
+        <PreviewText>{"Wachtwoord kwijt? Stuur een inloglink"}</PreviewText>
       </button>
 
       {state === 'error' && (
-        <div className={`${styles.note} ${styles.noteBad}`}>{message}</div>
+        <div className={`${styles.note} ${styles.noteBad}`}><PreviewText>{message}</PreviewText></div>
       )}
     </form>
   );

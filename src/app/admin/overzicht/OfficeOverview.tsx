@@ -14,6 +14,10 @@ import {
   Wrench,
 } from 'lucide-react';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { CRM_PREVIEW } from '@/lib/supabase/env';
+import { BRAND, IS_KEYFORCARS } from '@/config/install';
+import { sampleOrders } from '@/lib/kfcSampleOrders';
+import { PreviewDate, PreviewText } from '../PreviewLanguage';
 import { waLink } from '@/lib/whatsapp';
 import { PageHead, Label, TileGrid, Tile, Badge } from '../_ui';
 import { readDashboard, PERIOD_LABEL, sourceLabel, type Kpi, type Period } from './dashboardData';
@@ -44,12 +48,12 @@ function greeting(now: Date): string {
 
 /** ↑ 12% / ↓ 5% against the previous period; "lower is better" flips the colour. */
 function Trend({ k, lowerIsBetter = false }: { k: Kpi; lowerIsBetter?: boolean }) {
-  if (k.value === null || k.prev === null || k.prev === 0) return <span className={styles.trendNone}>geen vergelijking</span>;
+  if (k.value === null || k.prev === null || k.prev === 0) return <span className={styles.trendNone}><PreviewText>geen vergelijking</PreviewText></span>;
   const change = Math.round(((k.value - k.prev) / Math.abs(k.prev)) * 100);
   const good = lowerIsBetter ? change <= 0 : change >= 0;
   return (
     <span className={good ? styles.trendUp : styles.trendDown}>
-      {change >= 0 ? '↑' : '↓'} {Math.abs(change)}% vs vorige
+      {change >= 0 ? '↑' : '↓'} {Math.abs(change)}% <PreviewText>vs vorige</PreviewText>
     </span>
   );
 }
@@ -65,16 +69,16 @@ function KpiCard({
   label: string;
   value: string;
   k: Kpi;
-  foot?: string;
+  foot?: React.ReactNode;
   lowerIsBetter?: boolean;
   strong?: boolean;
 }) {
   return (
     <div className={strong ? `${styles.kpi} ${styles.kpiStrong}` : styles.kpi}>
-      <span className={styles.kpiLabel}>{label}</span>
-      <span className={styles.kpiValue}>{value}</span>
+      <span className={styles.kpiLabel}><PreviewText>{label}</PreviewText></span>
+      <span className={styles.kpiValue}><PreviewText>{value}</PreviewText></span>
       <Trend k={k} lowerIsBetter={lowerIsBetter} />
-      {foot && <span className={styles.kpiFoot}>{foot}</span>}
+      {foot && <span className={styles.kpiFoot}>{typeof foot === 'string' ? <PreviewText>{foot}</PreviewText> : foot}</span>}
     </div>
   );
 }
@@ -92,7 +96,7 @@ const shortDate = (iso: string) =>
   new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'short', timeZone: 'Europe/Amsterdam' }).format(new Date(iso));
 
 export default async function OfficeOverview({ period }: { period: Period }) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = CRM_PREVIEW ? null : await createSupabaseServerClient();
   const d = await readDashboard(supabase, period);
   const now = new Date();
 
@@ -108,23 +112,18 @@ export default async function OfficeOverview({ period }: { period: Period }) {
   const margePct = d.revenue.value ? Math.round(((d.margin.value ?? 0) / d.revenue.value) * 100) : null;
   const roas = d.adSpend.value ? (d.revenue.value ?? 0) / d.adSpend.value : null;
 
-  return (
-    <div className={styles.page}>
-      <PageHead
-        title={greeting(now)}
-        sub={new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Amsterdam' }).format(now)}
-      />
-
-      <Label>Quick start</Label>
+  const quickActions = (
+    <>
+      <Label><PreviewText>Snel starten</PreviewText></Label>
       <TileGrid>
-        <Tile big tone="navy" href="/admin/jobs/nieuw" icon={<CalendarPlus size={26} strokeWidth={1.8} />} title="Klus inplannen" sub="Lead of bestelling naar een monteur" />
-        <Tile big tone="accent" href="/admin/leads" icon={<Phone size={26} strokeWidth={1.8} />} title="Leads bellen" sub={d.todo.newLeads ? `${d.todo.newLeads} wachten op een belletje` : 'Alles is gebeld'} />
-        <Tile big tone="blue" href="/admin/facturen/nieuw" icon={<FilePlus2 size={26} strokeWidth={1.8} />} title="Factuur maken" sub="Voor een afgeronde klus" />
+        <Tile big tone="navy" href="/admin/jobs/nieuw" icon={<CalendarPlus size={26} strokeWidth={1.8} />} title={<PreviewText>Klus inplannen</PreviewText>} sub={<PreviewText>Lead of bestelling naar een monteur</PreviewText>} />
+        <Tile big tone="accent" href="/admin/leads" icon={<Phone size={26} strokeWidth={1.8} />} title={<PreviewText>Leads bellen</PreviewText>} sub={d.todo.newLeads ? <>{d.todo.newLeads} <PreviewText>wachten op een belletje</PreviewText></> : <PreviewText>Alles is gebeld</PreviewText>} />
+        <Tile big tone="blue" href="/admin/facturen/nieuw" icon={<FilePlus2 size={26} strokeWidth={1.8} />} title={<PreviewText>Factuur maken</PreviewText>} sub={<PreviewText>Voor een afgeronde klus</PreviewText>} />
       </TileGrid>
 
-      <Label>Nu doen</Label>
+      <Label><PreviewText>Nu doen</PreviewText></Label>
       {todo.length === 0 ? (
-        <p className={styles.allClear}>Niets dat wacht. Alles is bij.</p>
+        <p className={styles.allClear}><PreviewText>Niets dat wacht. Alles is bij.</PreviewText></p>
       ) : (
         <TileGrid>
           {todo.map((t) => (
@@ -132,19 +131,31 @@ export default async function OfficeOverview({ period }: { period: Period }) {
           ))}
         </TileGrid>
       )}
+    </>
+  );
+  const recent = IS_KEYFORCARS && CRM_PREVIEW ? sampleOrders(now.getTime()).slice(0, 4) : [];
+
+  return (
+    <div className={styles.page}>
+      <PageHead
+        title={<PreviewText>{greeting(now)}</PreviewText>}
+        sub={<PreviewDate value={now.getTime()} />}
+        actions={IS_KEYFORCARS && <Link className={styles.newInvoice} href="/admin/facturen/nieuw"><FilePlus2 size={16} aria-hidden="true" /><PreviewText>Nieuwe factuur</PreviewText></Link>}
+      />
+      {!IS_KEYFORCARS && quickActions}
 
       <div className={styles.kpiHead}>
-        <Label>Cijfers · {PERIOD_LABEL[period].toLowerCase()}</Label>
+        <Label><PreviewText>Cijfers</PreviewText> · <PreviewText>{PERIOD_LABEL[period].toLowerCase()}</PreviewText></Label>
         <nav className={styles.periods} aria-label="Periode">
           {(['vandaag', 'week', 'maand'] as Period[]).map((p) => (
             <Link key={p} href={`/admin/overzicht?periode=${p}`} className={p === period ? styles.periodOn : styles.period}>
-              {PERIOD_LABEL[p]}
+              <PreviewText>{PERIOD_LABEL[p]}</PreviewText>
             </Link>
           ))}
         </nav>
       </div>
       <div className={styles.kpis}>
-        <KpiCard label="Omzet" value={money(d.revenue.value)} k={d.revenue} foot={`${d.jobsDone.value} klussen afgerond`} />
+        <KpiCard label="Omzet" value={money(d.revenue.value)} k={d.revenue} foot={<>{d.jobsDone.value} <PreviewText>klussen afgerond</PreviewText></>} />
         <KpiCard label="Brutowinst" value={money(d.margin.value)} k={d.margin} foot={margePct === null ? 'na materiaal, reis en monteur' : `${margePct}% van de omzet`} />
         <KpiCard label="Gemiddelde klus" value={money(d.avgTicket.value)} k={d.avgTicket} foot="omzet per afgeronde klus" />
         <KpiCard label="Leads binnen" value={String(d.leads.value ?? 0)} k={d.leads} foot={d.conversion.value === null ? 'nog geen leads' : `${d.conversion.value}% verkocht`} />
@@ -159,10 +170,29 @@ export default async function OfficeOverview({ period }: { period: Period }) {
         <KpiCard strong label="Netto over" value={money(d.net.value)} k={d.net} foot="brutowinst − advertenties − uitgaven" />
       </div>
 
+      {!!recent.length && (
+        <section className={styles.card}>
+          <header className={styles.cardHead}>
+            <span><PreviewText>Recente voorbeeldbestellingen</PreviewText></span>
+            <Link href="/admin/orders"><PreviewText>Alle bestellingen →</PreviewText></Link>
+          </header>
+          <ul className={styles.recentOrders}>
+            {recent.map(order => (
+              <li key={`${order.shop}-${order.number}`}>
+                <span className={styles.orderIcon}><Boxes size={16} aria-hidden="true" /></span>
+                <Link href={`/admin/orders?q=${encodeURIComponent(order.number)}`}><b>#{order.number}</b><small>{order.shop}</small></Link>
+                <span><b>{money(order.totalExcl / 100)}</b><small>{shortDate(order.created)}</small></span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {IS_KEYFORCARS && quickActions}
+
       <section className={styles.card}>
         <header className={styles.cardHead}>
-          <span>Verkoop per dag · laatste {d.series.length} dagen</span>
-          <Link href="/admin/winst">Winst & verbruik →</Link>
+          <span><PreviewText>Verkoop per dag · laatste</PreviewText> {d.series.length} <PreviewText>dagen</PreviewText></span>
+          <Link href="/admin/winst"><PreviewText>Winst & verbruik →</PreviewText></Link>
         </header>
         <SalesChart data={d.series} />
       </section>
@@ -170,20 +200,20 @@ export default async function OfficeOverview({ period }: { period: Period }) {
       <div className={styles.twoCol}>
         <section className={styles.card}>
           <header className={styles.cardHead}>
-            <span>Monteurs</span>
-            <Link href="/admin/jobs">Agenda →</Link>
+            <span><PreviewText>Monteurs</PreviewText></span>
+            <Link href="/admin/jobs"><PreviewText>Agenda →</PreviewText></Link>
           </header>
           {d.technicians.length === 0 ? (
-            <p className={styles.empty}>Geen actieve monteurs.</p>
+            <p className={styles.empty}><PreviewText>Geen actieve monteurs.</PreviewText></p>
           ) : (
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Monteur</th>
-                  <th>Vandaag</th>
+                  <th><PreviewText>{"Monteur"}</PreviewText></th>
+                  <th><PreviewText>{"Vandaag"}</PreviewText></th>
                   <th className={styles.num}>Week</th>
-                  <th className={styles.num}>Omzet week</th>
-                  <th className={styles.num}>Winst week</th>
+                  <th className={styles.num}><PreviewText>{"Omzet week"}</PreviewText></th>
+                  <th className={styles.num}><PreviewText>{"Winst week"}</PreviewText></th>
                 </tr>
               </thead>
               <tbody>
@@ -195,10 +225,10 @@ export default async function OfficeOverview({ period }: { period: Period }) {
                     </td>
                     <td>
                       {t.todayTotal === 0 ? (
-                        <span className={styles.muted}>vrij</span>
+                        <span className={styles.muted}><PreviewText>{"vrij"}</PreviewText></span>
                       ) : (
                         <>
-                          {t.todayDone}/{t.todayTotal} klaar {t.todayBusy && <Badge tone="warn">onderweg</Badge>}
+                          {t.todayDone}/{t.todayTotal} <PreviewText>{"klaar"}</PreviewText> {t.todayBusy && <Badge tone="warn"><PreviewText>{"onderweg"}</PreviewText></Badge>}
                         </>
                       )}
                     </td>
@@ -214,11 +244,11 @@ export default async function OfficeOverview({ period }: { period: Period }) {
 
         <section className={styles.card}>
           <header className={styles.cardHead}>
-            <span>Vandaag op de weg · {d.today.length}</span>
-            <Link href="/admin/jobs">Planning →</Link>
+            <span><PreviewText>Vandaag op de weg</PreviewText> · {d.today.length}</span>
+            <Link href="/admin/jobs"><PreviewText>Planning →</PreviewText></Link>
           </header>
           {d.today.length === 0 ? (
-            <p className={styles.empty}>Vandaag staan er geen klussen gepland.</p>
+            <p className={styles.empty}><PreviewText>Vandaag staan er geen klussen gepland.</PreviewText></p>
           ) : (
             <ul className={styles.list}>
               {d.today.slice(0, 8).map((j) => {
@@ -231,7 +261,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
                       <span className={styles.grow}>
                         <b>{j.car}</b>
                         <span className={styles.muted}>
-                          {j.place} · {j.technician ?? <span className={styles.warnText}>geen monteur</span>}
+                          {j.place} · {j.technician ?? <span className={styles.warnText}><PreviewText>{"geen monteur"}</PreviewText></span>}
                         </span>
                       </span>
                       <Badge tone={st.tone}>{st.label}</Badge>
@@ -248,23 +278,22 @@ export default async function OfficeOverview({ period }: { period: Period }) {
         <section className={`${styles.card} ${styles.cardChance}`}>
           <header className={styles.cardHead}>
             <span>
-              <KeyRound size={17} aria-hidden="true" /> Tweede sleutel verkopen · {d.spareKeys.length}
+              <KeyRound size={17} aria-hidden="true" /> <PreviewText>Tweede sleutel verkopen</PreviewText> · {d.spareKeys.length}
             </span>
-            {d.spareKeyPrice !== null && <span className={styles.muted}>gem. bijmaken {money(d.spareKeyPrice)}</span>}
+            {d.spareKeyPrice !== null && <span className={styles.muted}><PreviewText>{"gem. bijmaken"}</PreviewText> {money(d.spareKeyPrice)}</span>}
           </header>
           <p className={styles.explain}>
-            Klanten met <b>alle sleutels kwijt</b> rijden nu met één sleutel. Bied een reservesleutel aan: zelfde auto,
-            tevreden klant, snelle klus. Ze verdwijnen hier zodra ze een bijmaak-klus boeken.
+            <PreviewText>Klanten met alle sleutels kwijt rijden nu met één sleutel. Bied een reservesleutel aan: zelfde auto, tevreden klant, snelle klus. Ze verdwijnen hier zodra ze een bijmaak-klus boeken.</PreviewText>
           </p>
           {d.spareKeys.length === 0 ? (
-            <p className={styles.empty}>Geen open kansen.</p>
+            <p className={styles.empty}><PreviewText>Geen open kansen.</PreviewText></p>
           ) : (
             <ul className={styles.list}>
               {d.spareKeys.slice(0, 6).map((c) => {
                 const first = c.name?.split(' ')[0];
                 const link = waLink(
                   c.phone,
-                  `Goedendag${first ? ` ${first}` : ''}, hier Autosleutel24. Op ${shortDate(c.date)} hebben we een nieuwe sleutel voor uw ${c.car} gemaakt. Met maar één sleutel staat u stil als die kwijtraakt. Zullen we een reservesleutel voor u bijmaken? Dat kan op locatie, meestal binnen een uur.`
+                  `Goedendag${first ? ` ${first}` : ''}, hier ${BRAND.name}. Op ${shortDate(c.date)} hebben we een nieuwe sleutel voor uw ${c.car} gemaakt. Met maar één sleutel staat u stil als die kwijtraakt. Zullen we een reservesleutel voor u bijmaken? Dat kan op locatie, meestal binnen een uur.`
                 );
                 return (
                   <li key={c.jobId} className={styles.listRow}>
@@ -281,7 +310,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
                       </a>
                     )}
                     <a href={`tel:${c.phone}`} className={styles.ghostBtn}>
-                      Bellen
+                      <PreviewText>{"Bellen"}</PreviewText>
                     </a>
                   </li>
                 );
@@ -292,12 +321,12 @@ export default async function OfficeOverview({ period }: { period: Period }) {
 
         <section className={styles.card}>
           <header className={styles.cardHead}>
-            <span>Offertes opvolgen · {d.followUps.length}</span>
+            <span><PreviewText>Offertes opvolgen</PreviewText> · {d.followUps.length}</span>
             <Link href="/admin/leads">Leads →</Link>
           </header>
-          <p className={styles.explain}>Gebeld of gekwalificeerd, maar nog niet verkocht (laatste 14 dagen). Oudste eerst.</p>
+          <p className={styles.explain}><PreviewText>Gebeld of gekwalificeerd, maar nog niet verkocht (laatste 14 dagen). Oudste eerst.</PreviewText></p>
           {d.followUps.length === 0 ? (
-            <p className={styles.empty}>Niets op te volgen.</p>
+            <p className={styles.empty}><PreviewText>Niets op te volgen.</PreviewText></p>
           ) : (
             <ul className={styles.list}>
               {d.followUps.map((f) => (
@@ -322,19 +351,19 @@ export default async function OfficeOverview({ period }: { period: Period }) {
 
       <section className={styles.card}>
         <header className={styles.cardHead}>
-          <span>Waar komen de leads vandaan · {PERIOD_LABEL[period].toLowerCase()}</span>
-          <Link href="/admin/rapportage">Rapportage →</Link>
+          <span><PreviewText>Waar komen de leads vandaan</PreviewText> · <PreviewText>{PERIOD_LABEL[period].toLowerCase()}</PreviewText></span>
+          <Link href="/admin/rapportage"><PreviewText>Rapportage →</PreviewText></Link>
         </header>
         {d.sources.length === 0 ? (
-          <p className={styles.empty}>Nog geen leads in deze periode.</p>
+          <p className={styles.empty}><PreviewText>Nog geen leads in deze periode.</PreviewText></p>
         ) : (
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Bron</th>
+                <th><PreviewText>{"Bron"}</PreviewText></th>
                 <th className={styles.num}>Leads</th>
-                <th className={styles.num}>Verkocht</th>
-                <th className={styles.num}>Conversie</th>
+                <th className={styles.num}><PreviewText>{"Verkocht"}</PreviewText></th>
+                <th className={styles.num}><PreviewText>{"Conversie"}</PreviewText></th>
               </tr>
             </thead>
             <tbody>
@@ -351,12 +380,12 @@ export default async function OfficeOverview({ period }: { period: Period }) {
         )}
       </section>
 
-      <Label>Snel naar</Label>
+      <Label><PreviewText>Snel naar</PreviewText></Label>
       <TileGrid>
-        <Tile href="/admin/gesprekken" ai iconTone="ai" icon={<PhoneCall size={20} strokeWidth={1.8} />} title="Gesprekken" sub="Wat de AI-agent deed" />
-        <Tile href="/admin/jobs" iconTone="steel" icon={<CalendarDays size={20} strokeWidth={1.8} />} title="Agenda" sub="Wie is waar" />
-        <Tile href="/admin/rapport" iconTone="ok" icon={<BarChart3 size={20} strokeWidth={1.8} />} title="Prestaties" sub="Week, maand, jaar en per monteur" />
-        <Tile href="/admin/monteurs" icon={<Wrench size={20} strokeWidth={1.8} />} title="Monteurs" sub="Team en dekking" />
+        <Tile href="/admin/gesprekken" ai iconTone="ai" icon={<PhoneCall size={20} strokeWidth={1.8} />} title={<PreviewText>Gesprekken</PreviewText>} sub={<PreviewText>Wat de AI-agent deed</PreviewText>} />
+        <Tile href="/admin/jobs" iconTone="steel" icon={<CalendarDays size={20} strokeWidth={1.8} />} title={<PreviewText>Agenda</PreviewText>} sub={<PreviewText>Wie is waar</PreviewText>} />
+        <Tile href="/admin/rapport" iconTone="ok" icon={<BarChart3 size={20} strokeWidth={1.8} />} title={<PreviewText>Prestaties</PreviewText>} sub={<PreviewText>Week, maand, jaar en per monteur</PreviewText>} />
+        {!IS_KEYFORCARS && <Tile href="/admin/monteurs" icon={<Wrench size={20} strokeWidth={1.8} />} title="Monteurs" sub="Team en dekking" />}
       </TileGrid>
     </div>
   );

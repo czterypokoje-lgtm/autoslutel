@@ -1,7 +1,8 @@
-import type { DayPoint } from './dashboardData';
-import styles from './dashboard.module.css';
+'use client';
 
-const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+import type { DayPoint } from './dashboardData';
+import { usePreviewLanguage } from '../PreviewLanguage';
+import styles from './dashboard.module.css';
 
 /** A clean step for the money axis: 500, 1.000, 2.500, 5.000 … */
 function niceMax(v: number): number {
@@ -11,8 +12,7 @@ function niceMax(v: number): number {
 
 /**
  * Sales per day: revenue as orange bars, gross profit as a navy line, and the
- * number of leads that came in that day printed under each bar. Plain SVG,
- * drawn on the server, so it costs nothing to load.
+ * number of leads that came in that day printed under each bar.
  */
 export default function SalesChart({
   data,
@@ -27,6 +27,11 @@ export default function SalesChart({
   /** What the small number under each bar counts (leads, klussen …). */
   countLabel?: string;
 }) {
+  const { english, t } = usePreviewLanguage();
+  const EUR = new Intl.NumberFormat(english ? 'en-GB' : 'nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  const revenueLabel = t(barLabel);
+  const marginLabel = t(lineLabel);
+  const quantityLabel = t(countLabel);
   const W = 960;
   const H = 280;
   const pad = { l: 60, r: 16, t: 16, b: 52 };
@@ -55,11 +60,11 @@ export default function SalesChart({
   return (
     <div className={styles.chartWrap}>
       <div className={styles.chartLegend}>
-        <span><i className={styles.legendBar} /> {barLabel} {EUR.format(totalRevenue)}</span>
-        <span><i className={styles.legendLine} /> {lineLabel} {EUR.format(totalMargin)}</span>
-        <span className={styles.muted}>Getal onder de balk = {countLabel} · totaal {totalLeads}</span>
+        <span><i className={styles.legendBar} /> {revenueLabel} {EUR.format(totalRevenue)}</span>
+        <span><i className={styles.legendLine} /> {marginLabel} {EUR.format(totalMargin)}</span>
+        <span className={styles.muted}>{t('Getal onder de balk')} = {quantityLabel} · {t('totaal')} {totalLeads}</span>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className={styles.chart} role="img" aria-label={`${barLabel} en ${lineLabel.toLowerCase()} per dag, laatste ${data.length} dagen`}>
+      <svg viewBox={`0 0 ${W} ${H}`} className={styles.chart} role="img" aria-label={`${revenueLabel} ${t('en')} ${marginLabel.toLowerCase()} ${t('per dag')}, ${t('laatste')} ${data.length} ${t('dagen')}`}>
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
           <g key={f}>
             <line x1={pad.l} x2={W - pad.r} y1={y(top * f)} y2={y(top * f)} stroke="#eef1f5" />
@@ -76,9 +81,9 @@ export default function SalesChart({
               width={barW}
               height={Math.max(0, pad.t + h - y(d.revenue))}
               rx="4"
-              fill={i === data.length - 1 ? '#c2410c' : '#f0a77f'}
+              fill={i === data.length - 1 ? 'var(--crm-accent)' : 'color-mix(in srgb, var(--crm-accent) 48%, white)'}
             >
-              <title>{`${label(d.day)}: ${barLabel.toLowerCase()} ${EUR.format(d.revenue)}, ${lineLabel.toLowerCase()} ${EUR.format(d.margin)}, ${d.leads} ${countLabel}`}</title>
+              <title>{`${label(d.day)}: ${revenueLabel.toLowerCase()} ${EUR.format(d.revenue)}, ${marginLabel.toLowerCase()} ${EUR.format(d.margin)}, ${d.leads} ${quantityLabel}`}</title>
             </rect>
             {i % every === 0 && (
               <text x={x(i)} y={H - pad.b + 18} textAnchor="middle" fontSize="11" fill="#5b6880">

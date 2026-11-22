@@ -6,6 +6,7 @@ import { notifyNewLead } from '@/lib/leadNotify';
 import { toE164NL } from '@/lib/phone';
 import { sendOpenAiEvent } from '@/lib/openaiAds';
 import { leadToken } from '@/lib/leadToken';
+import { recordFormSubmission } from '@/lib/inbox/form';
 
 /**
  * Lead capture.
@@ -242,6 +243,20 @@ export async function POST(request: Request) {
         });
       } catch (notifyError) {
         console.error('[leads] lead saved but the alert failed', leadId, notifyError);
+      }
+
+      /* The same submission as a thread in the inbox, so it can be answered from there. */
+      try {
+        await recordFormSubmission({
+          leadId: leadId ?? null,
+          source,
+          name,
+          phone,
+          email,
+          fields: { Naam: name, Telefoon: phone, 'E-mail': email, Merk: brand, Model: model, Bouwjaar: year, Dienst: service, Locatie: location, Postcode: postcode, Foto: photoUrl },
+        });
+      } catch (inboxError) {
+        console.error('[leads] inbox thread failed', leadId, inboxError);
       }
 
       /*

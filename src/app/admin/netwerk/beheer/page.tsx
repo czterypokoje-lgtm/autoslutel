@@ -1,8 +1,11 @@
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { STUDIO_UI } from '@/config/install';
 import { PageHead, Notice } from '../../_ui';
+import { PreviewText } from '../../PreviewLanguage';
 import brands from '@/lib/brands.json';
 import NetworkAdmin, { type ServerRow, type ChannelRow } from './NetworkAdmin';
+import StudioNetworkAdmin from './StudioNetworkAdmin';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,6 +46,35 @@ export default async function NetwerkBeheerPage() {
     technicians: perServer.get(server.id) ?? 0,
     channels: (channels ?? []).filter((c) => c.server_id === server.id).length,
   }));
+
+  if (STUDIO_UI) {
+    return (
+      <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Netwerk beheren</PreviewText></h1>
+          <p className="text-muted-foreground text-sm">
+            <PreviewText>
+              Een server is een land — het prijsblad, de btw en het contract verschillen erover. Een kanaal is een
+              onderwerp: een merk, een regio, of gewoon een plek om te praten.
+            </PreviewText>
+          </p>
+        </div>
+
+        {serverRows.length === 0 && (
+          <p className="text-destructive text-sm">
+            <PreviewText>Er zijn nog geen servers. Voer 0014_network.sql uit, of maak er hieronder een.</PreviewText>
+          </p>
+        )}
+
+        <StudioNetworkAdmin
+          servers={serverRows}
+          channels={(channels ?? []) as ChannelRow[]}
+          makes={(brands as { make: string }[]).map((b) => b.make)}
+          canDelete={user.role === 'owner'}
+        />
+      </div>
+    );
+  }
 
   return (
     <>

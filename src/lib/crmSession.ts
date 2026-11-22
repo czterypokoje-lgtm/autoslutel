@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { cache } from 'react';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 
@@ -14,16 +15,37 @@ import { CRM_PREVIEW } from '@/lib/supabase/env';
  * the token against the Auth server. A forged or stale cookie fails here.
  */
 
-export const CRM_ROLES = ['owner', 'kantoor', 'monteur'] as const;
+export const CRM_ROLES = ['owner', 'kantoor', 'monteur', 'magazijn', 'inpak'] as const;
 export type CrmRole = (typeof CRM_ROLES)[number];
 
 /** Roles allowed to see leads, jobs, orders and invoices. */
 export const OFFICE_ROLES: readonly CrmRole[] = ['owner', 'kantoor'];
+/**
+ * KeyForCars warehouse (magazijn) and picker (inpak): stock, counts, purchase
+ * receipts and pick lists. They never receive prices, margins or balances;
+ * the server strips those before responding (kfcInventory.ts).
+ */
+export const WAREHOUSE_ROLES: readonly CrmRole[] = ['owner', 'kantoor', 'magazijn', 'inpak'];
+/** True when this user may see purchase prices and money (and do office-only stock work). */
+export const seesPrices = (user: CrmUser) => !!user.role && OFFICE_ROLES.includes(user.role);
+
+/**
+ * Display only: may this user *see* purchase prices on stock screens? Office
+ * always; a magazijn user when the owner switched it on for that person
+ * (app_metadata.prices, Instellingen › Medewerkers); picker never. It grants
+ * no office actions: those keep checking seesPrices.
+ */
+export const seesPurchasePrices = (user: CrmUser) =>
+  seesPrices(user) || (user.role === 'magazijn' && user.pricesAllowed === true);
+
+export const canBookReturns = (user: CrmUser) => seesPrices(user) || user.role === 'magazijn';
 
 export interface CrmUser {
   id: string;
   email: string | null;
   role: CrmRole | null;
+  /** app_metadata.prices: a magazijn user allowed to see purchase prices (see seesPrices). */
+  pricesAllowed?: boolean;
 }
 
 function readRole(appMetadata: Record<string, unknown> | undefined): CrmRole | null {
@@ -34,7 +56,7 @@ function readRole(appMetadata: Record<string, unknown> | undefined): CrmRole | n
 }
 
 /** The signed-in CRM user, or null. Never throws. */
-export async function getCrmUser(): Promise<CrmUser | null> {
+export const getCrmUser = cache(async (): Promise<CrmUser | null> => {
   if (CRM_PREVIEW) {
     return { id: '00000000-0000-4000-8000-000000000000', email: 'preview@example.invalid', role: 'owner' };
   }
@@ -53,8 +75,9 @@ export async function getCrmUser(): Promise<CrmUser | null> {
     id: data.user.id,
     email: data.user.email ?? null,
     role: readRole(data.user.app_metadata),
+    pricesAllowed: data.user.app_metadata?.prices === true,
   };
-}
+});
 
 /**
  * For pages. Redirects instead of returning null.
@@ -118,4 +141,27 @@ export async function requireOfficeUserApi(): Promise<
   }
 
   return { user };
+}
+
+/** Route handlers on the KeyForCars stock API: office, warehouse and picker. */
+export async function requireWarehouseUserApi(): Promise<
+  { user: CrmUser; response?: never } | { user?: never; response: Response }
+> {
+  const user = CRM_PREVIEW ? null : await getCrmUser();
+  if (!user) return { response: Response.json({ error: 'Niet ingelogd' }, { status: 401 }) };
+  if (!user.role || !WAREHOUSE_ROLES.includes(user.role)) {
+    return { response: Response.json({ error: 'Geen toegang' }, { status: 403 }) };
+  }
+  return { user };
+}
+
+/** Pages the warehouse and picker may open (stock, purchasing, pick list). */
+export async function requireWarehouseUser(returnTo?: string): Promise<CrmUser> {
+  const user = await getCrmUser();
+  if (!user) {
+    const next = returnTo ? `?next=${encodeURIComponent(returnTo)}` : '';
+    redirect(`/admin/login${next}`);
+  }
+  if (!user.role || !WAREHOUSE_ROLES.includes(user.role)) redirect('/admin/geen-toegang');
+  return user;
 }

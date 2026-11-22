@@ -1,7 +1,11 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
+import { STUDIO_UI } from '@/config/install';
 import { PageHead, Card, CardHead, Notice } from '../_ui';
 import styles from './instellingen.module.css';
 import { CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+import { Card as SCard, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export const dynamic = 'force-dynamic';
 
@@ -166,6 +170,83 @@ export default async function InstellingenPage() {
 
   const leadsReachNobody = leadAlert.state !== 'live' && mail.state === 'off';
 
+  if (STUDIO_UI) {
+    const stateBadge = (state: State) => (
+      <Badge
+        variant={state === 'off' ? 'destructive' : 'outline'}
+        className={
+          state === 'live'
+            ? 'border-emerald-200 bg-emerald-100 text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/15 dark:text-emerald-300'
+            : state === 'partial'
+              ? 'border-amber-200 bg-amber-100 text-amber-700 dark:border-amber-500/20 dark:bg-amber-500/15 dark:text-amber-300'
+              : undefined
+        }
+      >
+        {state === 'live' ? <CheckCircle2 data-icon="inline-start" /> : state === 'partial' ? <AlertTriangle data-icon="inline-start" /> : <XCircle data-icon="inline-start" />}
+        <PreviewText>{state === 'live' ? 'actief' : state === 'partial' ? 'deels' : 'uit'}</PreviewText>
+      </Badge>
+    );
+
+    return (
+      <div className="kfc-neutral flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Instellingen</PreviewText></h1>
+          <p className="text-muted-foreground text-sm">
+            <PreviewText>Welke koppelingen actief zijn. Deze pagina leest de serverinstellingen — ze toont nooit een sleutel.</PreviewText>
+          </p>
+        </div>
+
+        {leadsReachNobody && (
+          <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            <PreviewText>
+              Er is geen enkel kanaal ingesteld voor nieuwe leads. Een aanvraag wordt wel opgeslagen, maar niemand krijgt er
+              bericht van.
+            </PreviewText>
+          </p>
+        )}
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          {groups.map((group) => (
+            <SCard key={group.title}>
+              <CardHeader>
+                <CardTitle><PreviewText>{group.title}</PreviewText></CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
+                {group.items.map((item, i) => (
+                  <div key={item.name} className={i > 0 ? 'flex flex-col gap-1.5 border-t pt-4' : 'flex flex-col gap-1.5'}>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium"><PreviewText>{item.name}</PreviewText></span>
+                      {stateBadge(item.state)}
+                    </div>
+                    <p className="text-muted-foreground text-sm"><PreviewText>{item.what}</PreviewText></p>
+                    <p className="text-sm"><PreviewText>{item.detail}</PreviewText></p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.vars.map((v) => (
+                        <code
+                          key={v}
+                          className={`rounded border px-1.5 py-0.5 text-xs ${has(v) ? 'border-border text-foreground' : 'border-dashed text-muted-foreground'}`}
+                        >
+                          {v}
+                        </code>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </SCard>
+          ))}
+        </div>
+
+        <p className="text-muted-foreground text-sm">
+          <PreviewText>
+            Een grijze naam betekent dat de instelling ontbreekt. Zet ze in Vercel onder Project → Settings → Environment
+            Variables; een nieuwe waarde werkt pas na de eerstvolgende deploy.
+          </PreviewText>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <PageHead
@@ -175,15 +256,14 @@ export default async function InstellingenPage() {
 
       {leadsReachNobody && (
         <Notice tone="bad">
-          Er is geen enkel kanaal ingesteld voor nieuwe leads. Een aanvraag wordt
-          wel opgeslagen, maar niemand krijgt er bericht van.
+          <PreviewText>{"Er is geen enkel kanaal ingesteld voor nieuwe leads. Een aanvraag wordt wel opgeslagen, maar niemand krijgt er bericht van."}</PreviewText>
         </Notice>
       )}
 
       <div className={styles.groups}>
         {groups.map((group) => (
           <Card key={group.title}>
-            <CardHead>{group.title}</CardHead>
+            <CardHead><PreviewText>{group.title}</PreviewText></CardHead>
             <ul className={styles.list}>
               {group.items.map((item) => (
                 <li key={item.name} className={styles.row}>
@@ -199,13 +279,13 @@ export default async function InstellingenPage() {
 
                   <span className={styles.body}>
                     <span className={styles.name}>
-                      {item.name}
+                      <PreviewText>{item.name}</PreviewText>
                       <span className={`${styles.tag} ${styles[item.state]}`}>
-                        {item.state === 'live' ? 'actief' : item.state === 'partial' ? 'deels' : 'uit'}
+                        <PreviewText>{item.state === 'live' ? 'actief' : item.state === 'partial' ? 'deels' : 'uit'}</PreviewText>
                       </span>
                     </span>
-                    <span className={styles.what}>{item.what}</span>
-                    <span className={styles.detail}>{item.detail}</span>
+                    <span className={styles.what}><PreviewText>{item.what}</PreviewText></span>
+                    <span className={styles.detail}><PreviewText>{item.detail}</PreviewText></span>
                     <span className={styles.vars}>
                       {item.vars.map((v) => (
                         <code key={v} className={has(v) ? styles.varSet : styles.varMissing}>
@@ -222,9 +302,7 @@ export default async function InstellingenPage() {
       </div>
 
       <p className={styles.foot}>
-        Een grijze naam betekent dat de instelling ontbreekt. Zet ze in Vercel
-        onder Project → Settings → Environment Variables; een nieuwe waarde
-        werkt pas na de eerstvolgende deploy.
+        <PreviewText>{"Een grijze naam betekent dat de instelling ontbreekt. Zet ze in Vercel onder Project → Settings → Environment Variables; een nieuwe waarde werkt pas na de eerstvolgende deploy."}</PreviewText>
       </p>
     </>
   );

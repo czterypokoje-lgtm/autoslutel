@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import localFont from 'next/font/local';
 import './theme.css';
+import './kfc.css';
 import styles from './admin.module.css';
 import { getCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -8,8 +10,16 @@ import MobileTabBar from './MobileTabBar';
 import TopBar from './TopBar';
 import { CRM_READONLY, READONLY_MESSAGE } from '@/lib/readonly';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
-import PreviewLanguage from './PreviewLanguage';
+import { BRAND, IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
+import PreviewLanguage, { PreviewText } from './PreviewLanguage';
+import KeyForCarsAppearance from './KeyForCarsAppearance';
+import KfcShell from './KfcShell';
+import { shippingTestEnabled } from '@/lib/kfcShippingTest';
+
+const inter = localFont({ src: '../fonts/inter-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--ff-crm-studio', preload: false });
+// KeyForCars shell: Geist, the Studio Admin template font.
+const geist = localFont({ src: '../fonts/geist-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--font-geist', preload: false });
+const geistMono = localFont({ src: '../fonts/geist-mono-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--font-geist-mono', preload: false });
 
 /**
  * The CRM shell.
@@ -64,7 +74,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
    * keep the initials; that is the fallback, not a failure.
    */
   let photoUrl: string | null = null;
-  if (user) {
+  // KeyForCars office and warehouse logins have no technicians row: skip a query that ran before every page for nothing.
+  if (user && !CRM_PREVIEW && (!IS_KEYFORCARS || user.role === 'monteur')) {
     try {
       const supabase = await createSupabaseServerClient();
       const { data } = await supabase
@@ -79,9 +90,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   const isMonteur = user?.role === 'monteur';
+  const readonlyStatus = CRM_READONLY && (
+    <div role="status" className={IS_KEYFORCARS ? styles.readonlyInline : styles.readonlyBanner}>
+      <PreviewText>{READONLY_MESSAGE}</PreviewText>
+    </div>
+  );
 
+  const Shell = IS_KEYFORCARS ? KeyForCarsAppearance : 'div';
   const panel = (
-    <div className={`crm ${styles.shell}`}>
+    <Shell className={`crm ${IS_KEYFORCARS ? `crm-keyforcars ${inter.variable}` : ''} ${styles.shell}`}>
       {user && (
         <Sidebar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
       )}
@@ -90,18 +107,26 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <TopBar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
         )}
         <main className={user ? `${styles.main} ${isMonteur ? styles.mainWithTabBar : ''}` : undefined}>
+          {IS_KEYFORCARS && readonlyStatus}
           {children}
         </main>
       </div>
       {isMonteur && <MobileTabBar />}
-      {CRM_READONLY && (
-        <div role="status" className={styles.readonlyBanner}>
-          {READONLY_MESSAGE}
-        </div>
-      )}
-    </div>
+      {!IS_KEYFORCARS && readonlyStatus}
+    </Shell>
   );
 
+  // The shadcn shell (KfcShell) once signed in: always on KeyForCars, on Autosleutel24 behind CRM_UI=studio. The login page keeps the plain panel.
+  if (STUDIO_UI && user) {
+    return (
+      <PreviewLanguage floating={false} loadNames={IS_KEYFORCARS}>
+        <KfcShell shippingTest={shippingTestEnabled} role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
+          {readonlyStatus}
+          {children}
+        </KfcShell>
+      </PreviewLanguage>
+    );
+  }
   // KeyForCars reads Dutch and English: the switch sits in the corner of every screen.
   return IS_KEYFORCARS || CRM_PREVIEW ? <PreviewLanguage>{panel}</PreviewLanguage> : panel;
 }

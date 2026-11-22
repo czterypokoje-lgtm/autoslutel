@@ -38,6 +38,20 @@ export async function DELETE(
     return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
   }
 
+  const admin = createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  // This route exists for monteur logins only. Without this check any office
+  // login could delete any account by id, the owner's included.
+  const { data: target, error: targetError } = await admin.auth.admin.getUserById(id);
+  if (targetError || !target?.user) {
+    return NextResponse.json({ error: 'Login niet gevonden' }, { status: 404 });
+  }
+  if (target.user.app_metadata?.role !== 'monteur') {
+    return NextResponse.json({ error: 'Alleen monteur-logins kunnen hier worden verwijderd' }, { status: 403 });
+  }
+
   try {
     const supabase = await createSupabaseServerClient();
     const { error: unlinkError } = await supabase
@@ -52,9 +66,6 @@ export async function DELETE(
     return NextResponse.json({ error: 'CRM is niet geconfigureerd' }, { status: 503 });
   }
 
-  const admin = createClient(url, serviceKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
   const { error } = await admin.auth.admin.deleteUser(id);
   if (error) {
     console.error('CRM login delete failed:', error.message);

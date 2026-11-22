@@ -1,5 +1,7 @@
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { jobAccountOptions } from '@/lib/jobAccounts';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate, suggestTechnicians, type TechnicianLike } from '@/lib/crmJobs';
@@ -7,6 +9,8 @@ import styles from '../jobs.module.css';
 import PlanForm, { type PlanLead } from './PlanForm';
 import { catalogTree } from '@/lib/carCatalog';
 import type { PickerMake } from './CarPicker';
+import { STUDIO_UI } from '@/config/install';
+import StudioNewJob from '../_studio/new-job';
 
 export const dynamic = 'force-dynamic';
 
@@ -174,10 +178,33 @@ export default async function NewJobPage({
     models: c.models.map((m) => ({ model: m.model, from: m.fromYear, to: m.toYear, keyless: m.keyless, blade: m.nonKeyless })),
   }));
 
+  const slotParam = slot && /^\d{2}:\d{2}$/.test(slot) ? slot : undefined;
+
+  const accounts = await jobAccountOptions();
+
+  /* Studio (shadcn) look. Same lead, same suggestions, same form fields and
+     the same POST to /api/admin/jobs — only the markup differs. */
+  if (STUDIO_UI) {
+    return (
+      <StudioNewJob
+        accounts={accounts}
+        lead={lead}
+        order={order}
+        date={date}
+        suggestions={suggestions}
+        initialSlot={slotParam}
+        initialTechnicianId={monteur}
+        cars={cars}
+        recentWork={recentWork}
+        noTechnicians={technicians?.length === 0}
+      />
+    );
+  }
+
   return (
     <>
       <div className={styles.head}>
-        <h1 className={styles.title}>Klus inplannen</h1>
+        <h1 className={styles.title}><PreviewText>{"Klus inplannen"}</PreviewText></h1>
         <span className={styles.count}>
           {order ? 'vanuit een webshopbestelling' : lead ? 'vanuit een lead' : 'handmatig'}
         </span>
@@ -204,7 +231,7 @@ export default async function NewJobPage({
         <p className={styles.warning}>
           Er zijn nog geen monteurs. Voeg ze eerst toe bij{' '}
           <Link className={styles.link} href="/admin/monteurs">
-            Monteurs
+            <PreviewText>{"Monteurs"}</PreviewText>
           </Link>{' '}
           — zonder monteurs heeft de agenda geen kolommen en kan er niemand
           worden toegewezen.
@@ -212,11 +239,12 @@ export default async function NewJobPage({
       )}
 
       <PlanForm
+        accounts={accounts}
         lead={lead}
         order={order}
         date={date}
         suggestions={suggestions}
-        initialSlot={slot && /^\d{2}:\d{2}$/.test(slot) ? slot : undefined}
+        initialSlot={slotParam}
         initialTechnicianId={monteur}
         cars={cars}
       />

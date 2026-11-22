@@ -187,7 +187,7 @@ export const sourceLabel = (s: string | null) => SOURCE_LABEL[s ?? 'unknown'] ??
 const pct = (part: number, whole: number) => (whole > 0 ? Math.round((part / whole) * 100) : null);
 const slot = (a: string | null, b: string | null) => (a ? `${a.slice(0, 5)}${b ? `–${b.slice(0, 5)}` : ''}` : '—');
 
-export async function readDashboard(supabase: SupabaseClient, period: Period): Promise<Dashboard> {
+export async function readDashboard(supabase: SupabaseClient | null, period: Period): Promise<Dashboard> {
   const today = isoDate(new Date());
   const { cur, prev } = ranges(period, today);
   const mon = weekStart(today);
@@ -197,6 +197,8 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
   const earliest = [prev.from, mon, chartFrom].sort()[0];
   const yearAgo = addDays(today, -365);
   const twoWeeksAgo = new Date(Date.now() - 14 * 86_400_000).toISOString();
+  const emptyRows = { data: null };
+  const emptyCount = { count: null };
 
   const [
     { data: jobsData },
@@ -211,7 +213,7 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
     { data: payoutData },
     { data: stockData },
     { count: unassignedCount },
-  ] = await Promise.all([
+  ] = supabase ? await Promise.all([
     supabase.from('jobs').select(JOB_COLUMNS).eq('status', 'afgerond').gte('scheduled_date', addDays(earliest, -7)),
     supabase.from('jobs').select(JOB_COLUMNS).eq('scheduled_date', today).neq('status', 'geannuleerd').order('slot_start'),
     supabase
@@ -242,7 +244,10 @@ export async function readDashboard(supabase: SupabaseClient, period: Period): P
       .is('technician_id', null)
       .eq('status', 'gepland')
       .gte('scheduled_date', today),
-  ]);
+  ]) : [
+    emptyRows, emptyRows, emptyRows, emptyRows, emptyRows, emptyRows,
+    emptyRows, emptyRows, emptyCount, emptyRows, emptyRows, emptyCount,
+  ] as const;
 
   const jobs = (jobsData ?? []) as Job[];
   const done = (r: Range) => jobs.filter((j) => inRange(dayOf(j), r));

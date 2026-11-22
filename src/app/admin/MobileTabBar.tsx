@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CalendarDays, Handshake, Package, Truck } from 'lucide-react';
@@ -27,7 +28,7 @@ export default function MobileTabBar() {
         className={`${styles.tabItem} ${isActive('/admin/vandaag') ? styles.tabItemActive : ''}`}
       >
         <Truck size={22} strokeWidth={1.9} aria-hidden="true" />
-        <span>Vandaag</span>
+        <span><PreviewText>{"Vandaag"}</PreviewText></span>
       </Link>
 
       <Link

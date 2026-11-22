@@ -1,5 +1,6 @@
 'use client';
 
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -25,7 +26,7 @@ export default function MarkOrdered({ orderIds }: { orderIds: string[] }) {
   return (
     <div style={{ marginTop: '1rem' }}>
       <button type="button" onClick={run} disabled={busy || !orderIds.length} style={{ background: '#16a34a', color: '#fff', border: 0, borderRadius: 8, padding: '.75rem 1.25rem', fontWeight: 700, cursor: 'pointer' }}>
-        {busy ? 'Bezig…' : 'Besteld bij A-Key → zet op In behandeling'}
+        <PreviewText>{busy ? 'Bezig…' : 'Besteld bij A-Key → zet op In behandeling'}</PreviewText>
       </button>
       {error && <p style={{ color: '#b91c1c' }}>{error}</p>}
     </div>

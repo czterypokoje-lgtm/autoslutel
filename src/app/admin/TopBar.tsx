@@ -1,8 +1,12 @@
+'use client';
+
+import { PreviewText } from '@/app/admin/PreviewLanguage';
 import Link from 'next/link';
 import { Bot, Search } from 'lucide-react';
 import styles from './admin.module.css';
 import type { CrmRole } from '@/lib/crmSession';
 import { IS_KEYFORCARS } from '@/config/install';
+import { usePreviewLanguage } from './PreviewLanguage';
 
 /**
  * The bar above every CRM page on desktop: search, the AI agent, and you.
@@ -22,6 +26,7 @@ export default function TopBar({
   initials: string;
   photoUrl?: string | null;
 }) {
+  const { t } = usePreviewLanguage();
   const office = role === 'owner' || role === 'kantoor';
   const avatar = photoUrl ? (
     // eslint-disable-next-line @next/next/no-img-element
@@ -39,11 +44,18 @@ export default function TopBar({
           <input
             type="search"
             name="q"
-            placeholder="Zoek product: code, EAN, naam of auto en bouwjaar…"
-            aria-label="Zoek product"
+            placeholder={t('Zoek product: code, EAN, naam of auto en bouwjaar…')}
+            aria-label={t('Zoek product')}
           />
         </form>
         <div className={styles.topRight}>
+          {office && <details className={styles.quickCreate}>
+            <summary>+ {t('Nieuw')}</summary>
+            <div onClick={event => event.currentTarget.closest('details')?.removeAttribute('open')}>
+              <Link href="/admin/facturen/nieuw">{t('Nieuwe factuur')}</Link>
+              <Link href="/admin/verzending">{t('Verzending')}</Link>
+            </div>
+          </details>}
           <span className={styles.topAvatar} title={email ?? ''}>{avatar}</span>
         </div>
       </header>
@@ -70,7 +82,7 @@ export default function TopBar({
         {office && (
           <Link href="/admin/gesprekken" className={styles.topAgent} title="Gesprekken van de AI-agent">
             <span className={styles.topAgentDot} aria-hidden="true" />
-            AI-agent
+            <PreviewText>{"AI-agent"}</PreviewText>
             <span className={styles.topAgentIcon} aria-hidden="true">
               <Bot size={18} strokeWidth={1.9} />
             </span>

@@ -1,8 +1,10 @@
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { addDays, isoDate, weekStart } from '@/lib/crmJobs';
+import { STUDIO_UI } from '@/config/install';
 import { PageHead, Notice } from '../_ui';
 import MyAgenda, { type AgendaDay } from './MyAgenda';
+import StudioMyAgenda from './StudioMyAgenda';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,12 +82,13 @@ export default async function MijnAgendaPage({ searchParams }: { searchParams: P
     };
   });
 
-  return (
-    <MyAgenda
-      days={days}
-      name={me.name as string}
-      icalToken={(me.ical_token as string) ?? null}
-      currentMonth={displayMonthStr.substring(0, 7)}
-    />
-  );
+  const agendaProps = {
+    days,
+    name: me.name as string,
+    icalToken: (me.ical_token as string) ?? null,
+    currentMonth: displayMonthStr.substring(0, 7),
+  };
+
+  if (STUDIO_UI) return <StudioMyAgenda {...agendaProps} />;
+  return <MyAgenda {...agendaProps} />;
 }
