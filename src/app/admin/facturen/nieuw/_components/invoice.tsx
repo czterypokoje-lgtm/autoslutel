@@ -1,6 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import type { JobBillingRecipient } from '@/lib/jobAccounts';
+import type { JobInvoiceDraft } from '@/lib/jobInvoiceDraft';
 import { useRouter } from 'next/navigation';
 import { Save, Send } from 'lucide-react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -25,6 +27,9 @@ export function Invoice({
   previousClients,
   technicians,
   invoiceId,
+  jobId,
+  jobDraft,
+  billing,
   initial,
 }: {
   customers: CustomerOption[];
@@ -42,6 +47,9 @@ export function Invoice({
   technicians?: { id: string; name: string }[];
   /** Editing an existing invoice: PATCH instead of POST, same payload. */
   invoiceId?: string;
+  jobId?: string;
+  jobDraft?: JobInvoiceDraft;
+  billing?: JobBillingRecipient;
   initial?: InvoiceFormValues;
 }) {
   const router = useRouter();
@@ -55,8 +63,18 @@ export function Invoice({
   const singleSave = isEdit || freeTextClient;
 
   const initialCustomer = customers.find((c) => c.id === initialCustomerId) ?? customers[0];
+  const recipient = initialCustomer ? customerToDetails(initialCustomer) : billing ? {
+    ...walkInClient, name: billing.company, email: billing.email ?? '', phone: billing.phone ?? '',
+    street: billing.street ?? '', postcode: billing.postcode ?? '', city: billing.city ?? '', btw: billing.vat_number ?? '',
+  } : freeTextClient && jobDraft ? { ...walkInClient, name: jobDraft.customerName } : walkInClient;
   const form = useForm<InvoiceFormValues>({
-    defaultValues: initial ?? defaultInvoiceValues(from, initialCustomer ? customerToDetails(initialCustomer) : walkInClient),
+    defaultValues: initial ?? {
+      ...defaultInvoiceValues(from, recipient),
+      ...(jobDraft && {
+        technicianId: jobDraft.technicianId,
+        items: jobDraft.rows.map((row) => ({ ...row, unitPrice: row.unitPrice ?? NaN })),
+      }),
+    },
   });
   const invoice = useWatch({ control: form.control }) as InvoiceFormValues;
 
@@ -64,13 +82,16 @@ export function Invoice({
     setError('');
     const values = form.getValues();
     if (!values.to.name.trim()) return setError(t('Naam van de klant is verplicht.'));
+    if (values.items.some((item) => item.job_line_kind && !Number.isFinite(item.unitPrice))) {
+      return setError(t('Vul de prijs in voor elke klusregel.'));
+    }
     if (!getInvoiceItems(values).length) return setError(t('Voeg minstens één regel toe met een omschrijving, aantal en prijs.'));
 
     setBusy(status);
     const response = await fetch(isEdit ? `/api/admin/invoices/${invoiceId}` : '/api/admin/invoices', {
       method: isEdit ? 'PATCH' : 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(toApiPayload(values)),
+      body: JSON.stringify({ ...toApiPayload(values), job_id: jobId }),
     }).catch(() => null);
     const body = await response?.json().catch(() => null);
     if (!response?.ok || (!isEdit && !body?.id)) {
@@ -95,7 +116,11 @@ export function Invoice({
   }
 
   const title = isEdit ? `Factuur ${initial?.referenceNumber ?? ''} bewerken`.trim() : t('Nieuwe factuur');
-  const subtitle = isEdit
+  const agreed = jobDraft?.agreedTotal;
+  const money = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
+  const subtitle = jobDraft
+    ? [t('Controleer de verdeling tussen product en dienst.'), agreed == null ? '' : t('Afgesproken totaal') + ' ' + money.format(agreed)].filter(Boolean).join(' · ')
+    : isEdit
     ? 'Wijzigingen slaan direct op — het nummer en de status blijven hetzelfde.'
     : freeTextClient
       ? 'Vul de klant en de regels in — het nummer, de btw en het totaal worden voor u berekend.'

@@ -1,5 +1,8 @@
 'use client';
 
+import JobAccountFields from '../JobAccountFields';
+import type { JobAccountOption } from '@/lib/jobAccounts';
+
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -44,6 +47,7 @@ const NONE = '__none__';
 
 export default function StudioPlanForm({
   lead,
+  accounts = [],
   order,
   date,
   suggestions,
@@ -51,6 +55,7 @@ export default function StudioPlanForm({
   initialTechnicianId,
   cars,
 }: {
+  accounts?: JobAccountOption[];
   lead: PlanLead | null;
   order: { id: string; order_number: string; total_inc: number } | null;
   date: string;
@@ -79,6 +84,8 @@ export default function StudioPlanForm({
   const [carModel, setCarModel] = useState(lead?.model ?? '');
   const [carYear, setCarYear] = useState(lead?.year ?? '');
   const [keylessChoice, setKeylessChoice] = useState<'' | 'true' | 'false'>('');
+  const [accountId, setAccountId] = useState("");
+  const [contactId, setContactId] = useState("");
   const [customerName, setCustomerName] = useState(lead?.name ?? '');
   const [customerPhone, setCustomerPhone] = useState(lead?.phone_e164 ?? lead?.phone ?? '');
 
@@ -175,6 +182,8 @@ export default function StudioPlanForm({
         // order case and would otherwise be written into a lead column.
         lead_id: order ? null : linkedLeadId,
         order_id: order?.id ?? null,
+        billing_account_id: accountId || null,
+        communication_contact_id: contactId || null,
         customer_name: customerName.trim() || null,
         customer_phone: customerPhone.trim() || null,
         technician_id: technicianId || null,
@@ -213,6 +222,14 @@ export default function StudioPlanForm({
 
   return (
     <form className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_20rem] md:gap-6" onSubmit={submit}>
+      {accounts.length > 0 && <div className="lg:col-span-2">
+        <JobAccountFields accounts={accounts} onSelect={(account, contact, name, phone) => {
+          setAccountId(account);
+          setContactId(contact);
+          if (name !== undefined) setCustomerName(name);
+          if (phone !== undefined) setCustomerPhone(phone);
+        }} />
+      </div>}
       <Card>
         <CardHeader>
           <CardTitle>
@@ -251,6 +268,7 @@ export default function StudioPlanForm({
               autoComplete="off"
               placeholder="Naam van de klant"
               value={customerName}
+              readOnly={Boolean(contactId)}
               onChange={(e) => setCustomerName(e.target.value)}
             />
           </Field>
@@ -281,6 +299,7 @@ export default function StudioPlanForm({
               autoComplete="off"
               placeholder="06 12 34 56 78"
               value={customerPhone}
+              readOnly={Boolean(contactId)}
               onChange={(e) => setCustomerPhone(e.target.value)}
             />
             {linkedLeadId && !lead && (

@@ -26,9 +26,10 @@ export default async function LeadsPage(props: { searchParams: Promise<Record<st
           <h1 className="text-3xl leading-none font-medium tracking-tight"><PreviewText>Leads</PreviewText></h1>
           <p className="text-muted-foreground text-sm"><PreviewText>Aanvragen, offertes en verkoop van de afgelopen twaalf maanden.</PreviewText></p>
         </div>
+        <div className="flex flex-wrap gap-2"><Button variant="outline" asChild><Link href="/admin/leads/opvolging"><PreviewText>Leadopvolging</PreviewText></Link></Button>
         <Button variant="outline" asChild>
           <Link href="/admin/leads/lijst"><List data-icon="inline-start" /><PreviewText>Alle leads</PreviewText></Link>
-        </Button>
+        </Button></div>
       </div>
       <OverviewCards data={data} />
       <InsightCards data={data} />

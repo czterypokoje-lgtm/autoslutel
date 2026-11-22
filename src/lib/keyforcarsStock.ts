@@ -67,6 +67,14 @@ export const STOCK_OPERATIONS = {
   transfer: 'Verplaatsing',
 };
 
+/**
+ * The journal's label for any move, including the ones nobody books by hand: an
+ * assembly (0112) and a correction. STOCK_OPERATIONS stays the list of manual
+ * choices; reading it for these left the journal line without a label.
+ */
+export const moveLabel = (operation: string): string =>
+  (STOCK_OPERATIONS as Record<string, string>)[operation] ?? ({ assembly: 'Montage', correction: 'Correctie' } as Record<string, string>)[operation] ?? operation;
+
 export const STOCK_TIME_ZONE = 'Europe/Amsterdam';
 export function stockChange(move: StockMove, english = false) {
   const change = `${move.delta > 0 ? '+' : ''}${move.delta}`;

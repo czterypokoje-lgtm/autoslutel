@@ -11,6 +11,15 @@ import StudioOfferList from './StudioOfferList';
 
 export const dynamic = 'force-dynamic';
 
+/** One row of crm_my_open_offers() (migration 0109): the offer plus the job's safe fields. */
+type OpenOffer = {
+  id: string; rank: number | null; score: number | null; reason: string | null; offered_at: string; expires_at: string;
+  jobs: {
+    id: string; scheduled_date: string; slot_start: string | null; slot_end: string | null; postcode: string | null; city: string | null;
+    car_make: string | null; car_model: string | null; car_year: number | null; scenario: string | null; keyless: boolean | null; technician_id: string | null;
+  } | null;
+};
+
 /**
  * Work being offered to this technician right now.
  *
@@ -56,14 +65,10 @@ export default async function AanbodPage() {
     );
   }
 
-  const { data, error } = await supabase
-    .from('job_offers')
-    .select(
-      'id, rank, score, reason, offered_at, expires_at, jobs (id, scheduled_date, slot_start, slot_end, postcode, city, car_make, car_model, car_year, scenario, quoted_price, keyless, technician_id)'
-    )
-    .eq('technician_id', me.id)
-    .is('response', null)
-    .order('expires_at');
+  // Not a job_offers ⨝ jobs select: a monteur may only read jobs assigned to them, and an
+  // offered job is not assigned yet. The function returns the safe fields only (0109).
+  const { data: rows, error } = await supabase.rpc('crm_my_open_offers');
+  const data = rows as OpenOffer[] | null;
 
   if (error) {
     return (
@@ -82,7 +87,7 @@ export default async function AanbodPage() {
 
   const offers: OfferRow[] = (data ?? [])
     .flatMap((row) => {
-      const job = Array.isArray(row.jobs) ? row.jobs[0] : row.jobs;
+      const job = row.jobs;
       if (!job) return [];
       // Already taken by someone faster, or the window has not opened yet.
       if (job.technician_id) return [];

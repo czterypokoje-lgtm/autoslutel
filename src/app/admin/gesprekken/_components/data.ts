@@ -23,11 +23,11 @@ export function shortTime(iso: string, now: number) {
   if (min < 60) return `${min}m`;
   if (min < 24 * 60) return `${Math.round(min / 60)}u`;
   if (min < 7 * 24 * 60) return `${Math.round(min / (24 * 60))}d`;
-  return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
+  return d.toLocaleDateString('nl-NL', { timeZone:'Europe/Amsterdam', day: 'numeric', month: 'short' });
 }
 
-export const longDate = (iso: string) => new Date(iso).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
-export const clock = (iso: string) => new Date(iso).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+export const longDate = (iso: string) => new Date(iso).toLocaleDateString('nl-NL', { timeZone:'Europe/Amsterdam', day: 'numeric', month: 'long', year: 'numeric' });
+export const clock = (iso: string) => new Date(iso).toLocaleTimeString('nl-NL', { timeZone:'Europe/Amsterdam', hour: '2-digit', minute: '2-digit' });
 
 export function duration(secs: number | null) {
   if (!secs) return null;

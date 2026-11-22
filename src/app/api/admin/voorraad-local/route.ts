@@ -9,6 +9,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { loadStock, readPhoto, saveStock, writePhoto, type StockSlot } from '@/lib/kfcStockStore';
 import { EMPTY_STOCK, STOCK_OPERATIONS, type StockBin, type StockMove, type StockState } from '@/lib/keyforcarsStock';
 import { findProfile } from '@/lib/productProfiles';
+import { labelProfiles } from '@/lib/labelProfiles';
 
 export const runtime = 'nodejs';
 /** Online KeyForCars install: the ledger tables (0090). Local pilot and ?demo=1 keep the JSON record. */
@@ -121,12 +122,16 @@ export async function GET(request: Request) {
   }
   const demo = query.get('demo') === '1';
   const profile = query.get('profile');
-  if (profile !== null) return reply(/^[A-Za-z0-9._\-/ ]{1,80}$/.test(profile) ? findProfile(profile) ?? null : null);
+  // Live: the CRM's own specs and fitments first (labelProfiles); demo: the catalogue only.
+  if (profile !== null) {
+    if (!/^[A-Za-z0-9._\-/ ]{1,80}$/.test(profile)) return reply(null);
+    return reply(LEDGER && !demo ? (await labelProfiles([profile]))[profile] ?? null : findProfile(profile) ?? null);
+  }
   // Labels for a print run: up to 300 SKUs in one call, comma-separated.
   const profiles = query.get('profiles');
   if (profiles !== null) {
     const skus = [...new Set(profiles.split(',').map((sku) => sku.trim()).filter((sku) => /^[A-Za-z0-9._\-/ ]{1,80}$/.test(sku)))].slice(0, 300);
-    return reply(Object.fromEntries(skus.map((sku) => [sku, findProfile(sku) ?? null])));
+    return reply(LEDGER && !demo ? await labelProfiles(skus) : Object.fromEntries(skus.map((sku) => [sku, findProfile(sku) ?? null])));
   }
   if (LEDGER && !demo) return kfcGet(query);
   const movement = query.get('movement');

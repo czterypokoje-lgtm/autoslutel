@@ -230,7 +230,9 @@
   .printSheet { display: block; position: static; padding: 0; }
   .printSheet[data-size='a4-70x37'] { display: grid; grid-template-columns: repeat(3, 70mm); grid-auto-rows: 37mm; }
   .printSheet .shelfLabel { break-inside: avoid; }
-  .printSheet:not([data-size='a4-70x37']) .shelfLabel:not(:last-child) { break-after: page; }
+  .printSheet:not([data-size='a4-70x37']):not([data-size='100x50-4']) .shelfLabel:not(:last-child) { break-after: page; }
+  .printSheet[data-size='100x50-4'] .shelfLabel:nth-of-type(4n):not(:last-of-type) { break-after: page; }
+  .printSheet[data-size='100x50-4'] .shelfLabel:not(:nth-of-type(4n)):not(:last-of-type) { border-bottom: 0.2mm dashed #999; }
   .printSheet[data-size='a4-70x37'] .shelfLabel:nth-child(24n + 1):not(:first-child) { break-before: page; }
 }
 
@@ -305,7 +307,7 @@
 .shelfQr { grid-area: qr; align-self: end; justify-self: end; }
 
 /* 62 × 100 mm, Brother QL: one column, photo large enough to compare with the part. */
-.shelfLabel[data-size='62x100'] { width: 62mm; height: 100mm; padding: 2.5mm 3mm; gap: 1.4mm 2.5mm;
+.shelfLabel[data-size='62x100'] { width: 62mm; height: 100mm; padding: 4mm 3mm 2.5mm 4.5mm; gap: 1.4mm 2.5mm;
   grid-template-columns: 26mm minmax(0, 1fr); grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   grid-template-areas: 'photo title' 'blade blade' 'facts facts' 'models models' 'codes qr'; }
 .shelfLabel[data-size='62x100'] .shelfPhoto { width: 26mm; height: 26mm; }
@@ -321,9 +323,10 @@
 .shelfLabel[data-size='62x100'] .shelfQr { width: 12mm; height: 12mm; }
 
 /* 100 × 50 mm, thermal: photo, number, blade and facts left, models right, codes along the bottom. */
-.shelfLabel[data-size='100x50'] { width: 100mm; height: 50mm; padding: 2.5mm 3mm; gap: 1mm 2.5mm;
-  grid-template-columns: 19mm minmax(0, 1fr) minmax(0, 1.05fr); grid-template-rows: auto auto auto minmax(0, 1fr) auto;
-  grid-template-areas: 'photo title models' 'photo blade models' 'facts facts models' '. . models' 'codes codes qr'; }
+.shelfLabel[data-size='100x50'] { width: 100mm; height: 50mm; padding: 3.5mm 3mm 2mm 5mm; gap: 1mm 2.5mm; /* extra top/left: label printers (Zebra) clip the first millimetres */
+  grid-template-columns: 19mm minmax(0, 1fr) minmax(0, 1.05fr); grid-template-rows: auto auto minmax(0, 1fr) auto;
+  /* Chip / frequency / buttons beside the photo, under the blade: a row of their own pushed the barcode off a 50 mm label. */
+  grid-template-areas: 'photo title models' 'photo blade models' 'photo facts models' 'codes codes qr'; }
 .shelfLabel[data-size='100x50'] .shelfPhoto { width: 19mm; height: 19mm; }
 .shelfLabel[data-size='100x50'] .shelfSku { font-size: 5mm; }
 .shelfLabel[data-size='100x50'] .shelfName { font-size: 2mm; }
@@ -359,4 +362,19 @@
   .labelActions { display: grid; grid-template-columns: 1fr 1fr; justify-content: stretch; }
   .labelActions > * { width: 100%; }
   .labelActions > .primary { grid-column: 1 / -1; }
+}
+
+/*
+ * Phones: iOS Safari zooms the whole page when a focused field is smaller than
+ * 16 px, so counting on a phone meant pinching back out after every field.
+ * 16 px text and a 44 px touch height on small screens; desktop keeps its
+ * compact fields. Last in the file so it wins over the 36/40 px rules above.
+ */
+@media (max-width: 640px) {
+  .workspace :is(input:not([type=checkbox]), select, textarea),
+  .bulk :is(input:not([type=checkbox]), select),
+  .camera :is(input:not([type=checkbox]), select) { font-size: 16px; min-height: 44px; }
+  .workspace :is(.primary, .secondary),
+  .bulk :is(.primary, .secondary),
+  .camera :is(.primary, .secondary) { min-height: 44px; }
 }

@@ -172,7 +172,7 @@ export function Row({
 /* ── the number that is the point of a screen ────────────────────────── */
 
 export function StatGrid({ children }: { children: ReactNode }) {
-  if (STUDIO_UI) return <div className="kfc-neutral grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{children}</div>;
+  if (STUDIO_UI) return <div data-stat-grid className="kfc-neutral grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-3 xl:grid-cols-4">{children}</div>;
   return <div className={styles.stats}>{children}</div>;
 }
 
@@ -196,13 +196,13 @@ export function Stat({
   const footNode = foot && (typeof foot === 'string' ? <PreviewText>{foot}</PreviewText> : foot);
   if (STUDIO_UI) {
     return (
-      <ShadCard className="gap-1 py-4">
+      <ShadCard data-stat-card className="min-w-0 gap-1 border-t-2 border-t-slate-300 py-4">
         <CardHeader className="flex flex-row items-center justify-between px-4 pb-0">
           <CardDescription>{label}</CardDescription>
           {icon && <span className={join('[&>svg]:size-4', tone && TONE_TEXT[tone])} aria-hidden="true">{icon}</span>}
         </CardHeader>
         <CardContent className="px-4">
-          <div className="text-2xl font-semibold tabular-nums tracking-tight">{value}</div>
+          <div data-stat-value className="break-words text-xl font-semibold tabular-nums tracking-tight lg:text-2xl">{value}</div>
           {footNode && <div className="text-muted-foreground mt-1 text-xs">{footNode}</div>}
         </CardContent>
       </ShadCard>

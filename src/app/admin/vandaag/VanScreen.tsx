@@ -1,5 +1,8 @@
 'use client';
 
+import VanMaterialUse from './VanMaterialUse';
+import JobWarehouseStock from '../jobs/JobWarehouseStock';
+
 import {
   useCallback,
   useEffect,
@@ -32,6 +35,7 @@ const STATUS_ACCENT: Record<string, string> = {
 };
 
 export interface VanJob {
+  warehouseEnabled?: boolean;
   id: string;
   status: string;
   scheduled_date: string;
@@ -442,6 +446,7 @@ function JobCard({
         </div>
       </div>
 
+      {job.status === 'bezig' && <VanMaterialUse jobId={job.id} />}
       {finishing && job.status === 'bezig' && (
         <FinishPanel
           job={job}
@@ -735,6 +740,7 @@ function FinishPanel({
 
       <div className={styles.field}>
         <span className={styles.label}>Materiaal</span>
+        {job.warehouseEnabled && <JobWarehouseStock jobId={job.id} />}
         {materials.map((m, i) => (
           <div key={`${m}-${i}`} className={styles.materialRow}>
             <span>{m}</span>

@@ -1,9 +1,14 @@
 import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { StockError } from '@/lib/kfcInventory';
+import { PostnlError, createPostnlLabel, postnlConfigured } from '@/lib/kfcPostnl';
 
 /*
  * The label step between picking and shipping.
+ *
+ * With PostNL set up (src/lib/kfcPostnl.ts) the label comes from PostNL: a
+ * barcode, then a confirmed shipment whose PDF is stored for printing.
+ * Otherwise:
  *
  * With SENDCLOUD_PUBLIC_KEY and SENDCLOUD_SECRET_KEY set, a parcel is created
  * at Sendcloud with a label requested; the carrier, tracking code and label
@@ -15,7 +20,7 @@ import { StockError } from '@/lib/kfcInventory';
 
 export const sendcloudConfigured = () => !!(process.env.SENDCLOUD_PUBLIC_KEY && process.env.SENDCLOUD_SECRET_KEY);
 
-type Label = { carrier: string; tracking: string | null; label_url: string; provider: 'sendcloud' | 'eigen' };
+type Label = { carrier: string; tracking: string | null; label_url: string; provider: 'postnl' | 'sendcloud' | 'eigen' };
 
 const ORDER_COLUMNS = 'id, shop, number, status, fulfilment, ship_name, ship_company, ship_street, ship_postcode, ship_city, country, ship_phone, ship_email, weight_grams, label_url, carrier, tracking_code, sendcloud_parcel_id, label_claimed_at';
 
@@ -25,7 +30,7 @@ const ORDER_COLUMNS = 'id, shop, number, status, fulfilment, ship_name, ship_com
    accepted for rows labelled before 0098, which have no parcel id. */
 function existing(order: { carrier: string | null; tracking_code: string | null; label_url: string | null; sendcloud_parcel_id: string | null }): Label | null {
   if (order.sendcloud_parcel_id) return { carrier: order.carrier ?? 'sendcloud', tracking: order.tracking_code, label_url: order.label_url ?? '', provider: 'sendcloud' };
-  if (order.label_url && order.carrier) return { carrier: order.carrier, tracking: order.tracking_code, label_url: order.label_url, provider: order.carrier === 'eigen' ? 'eigen' : 'sendcloud' };
+  if (order.label_url && order.carrier) return { carrier: order.carrier, tracking: order.tracking_code, label_url: order.label_url, provider: order.carrier === 'eigen' ? 'eigen' : order.carrier === 'postnl' ? 'postnl' : 'sendcloud' };
   return null;
 }
 
@@ -39,7 +44,7 @@ export async function createLabel(orderId: string): Promise<Label> {
   if (!order.ship_name || !order.ship_street || !order.ship_postcode || !order.ship_city) throw new StockError('Geen volledig verzendadres op deze bestelling.', 409);
 
   /* The own label is a URL, not a purchase: no claim needed, repeating is free. */
-  if (!sendcloudConfigured()) {
+  if (!postnlConfigured() && !sendcloudConfigured()) {
     const result: Label = { carrier: 'eigen', tracking: null, label_url: `/admin/bestellingen/${orderId}/label`, provider: 'eigen' };
     const { error: saveError } = await db.from('kfc_shop_orders').update({ carrier: 'eigen', label_url: result.label_url, label_created_at: new Date().toISOString() }).eq('id', orderId);
     if (saveError) throw new StockError(`Label opslaan mislukt: ${saveError.message}`, 500);
@@ -63,6 +68,28 @@ export async function createLabel(orderId: string): Promise<Label> {
     throw new StockError('Label wordt al gemaakt.', 409);
   }
   const release = () => db.from('kfc_shop_orders').update({ label_claimed_at: null }).eq('id', orderId);
+
+  /* PostNL first when it is set up. A refused or unreachable call releases the
+     claim: a PostNL pre-announcement costs nothing until a parcel is handed in,
+     so trying again is safe (unlike a Sendcloud parcel, which is bought). */
+  if (postnlConfigured()) {
+    let made: { barcode: string; warnings: string[] };
+    try {
+      made = await createPostnlLabel(order);
+    } catch (problem) {
+      await release();
+      if (problem instanceof PostnlError) throw new StockError(problem.message, problem.status);
+      throw problem;
+    }
+    const result: Label = { carrier: 'postnl', tracking: made.barcode, label_url: `/api/admin/kfc-orders/label-file?id=${orderId}`, provider: 'postnl' };
+    const { error: saveError } = await db.from('kfc_shop_orders')
+      .update({ carrier: 'postnl', tracking_code: made.barcode, label_url: result.label_url, label_created_at: new Date().toISOString() })
+      .eq('id', orderId);
+    if (saveError) {
+      throw new StockError(`PostNL-zending ${made.barcode} is gemaakt, maar opslaan mislukte: ${saveError.message}. Vul vervoerder en trackingcode met de hand in.`, 500);
+    }
+    return result;
+  }
 
   const auth = Buffer.from(`${process.env.SENDCLOUD_PUBLIC_KEY}:${process.env.SENDCLOUD_SECRET_KEY}`).toString('base64');
   const body = { parcel: {

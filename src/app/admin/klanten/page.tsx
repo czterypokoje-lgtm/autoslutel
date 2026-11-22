@@ -30,6 +30,15 @@ const initials = (name: string | null) =>
  * are, how often they asked, what they bought, and a call or WhatsApp away.
  */
 export default async function KlantenPage({ searchParams }: { searchParams: Promise<{ q?: string; view?: string }> }) {
+  return <>
+    <div className="mb-3 flex justify-end">
+      <Link href="/admin/klanten/relaties" className="text-sm underline underline-offset-4"><PreviewText>Klantaccounts en contactpersonen</PreviewText></Link>
+    </div>
+    <CustomerList searchParams={searchParams} />
+  </>;
+}
+
+async function CustomerList({ searchParams }: { searchParams: Promise<{ q?: string; view?: string }> }) {
   if (IS_KEYFORCARS) {
     await requireOfficeUser('/admin/klanten');
     const sp = await searchParams;

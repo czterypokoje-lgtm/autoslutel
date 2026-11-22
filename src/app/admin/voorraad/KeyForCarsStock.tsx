@@ -7,9 +7,10 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { createPortal } from 'react-dom';
 import { Barcode, Camera, ChevronLeft, ChevronRight, ClipboardList, Images, Package, Plus, Printer, Save, ScanLine, X } from 'lucide-react';
-import { EMPTY_STOCK, STOCK_OPERATIONS, stockChange, type StockArticle, type StockBin, type StockMove } from '@/lib/keyforcarsStock';
+import { EMPTY_STOCK, STOCK_OPERATIONS, moveLabel, stockChange, type StockArticle, type StockBin, type StockMove } from '@/lib/keyforcarsStock';
 import { labelCode } from './StockLabel';
 import { BRAND } from '@/config/install';
+import SalePriceEditor from './SalePriceEditor';
 import ProductFacts from './ProductFacts';
 import { inventoryCategory } from './inventoryCategories';
 import { inventoryHref, inventoryViews, type InventoryView } from './inventoryViews';
@@ -24,6 +25,7 @@ const StockReports = dynamic(() => import('./StockReports'));
 const StockReorder = dynamic(() => import('./StockReorder'));
 const StockBulkCount = dynamic(() => import('./StockBulkCount'));
 const StockCamera = dynamic(() => import('./StockCamera'));
+const StockLiveCount = dynamic(() => import('./StockLiveCount'));
 const pageSize = 12;
 type Operation = keyof typeof STOCK_OPERATIONS;
 
@@ -64,7 +66,7 @@ function saveLabelSize(size: LabelSize) {
   window.dispatchEvent(new Event(LABEL_SIZE_KEY));
 }
 
-export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInvoice }: { initialCatalog: StockArticle[]; demo: boolean; view: InventoryView; canLinkInvoice: boolean }) {
+export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInvoice, canEditPrice }: { canEditPrice: boolean; initialCatalog: StockArticle[]; demo: boolean; view: InventoryView; canLinkInvoice: boolean }) {
   const { t, english } = usePreviewLanguage();
   const [state, setState] = useState(EMPTY_STOCK);
   /** Physical · unusable · reserved · available · incoming per article (ledger install only). */
@@ -94,6 +96,19 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
   const [lastMovement, setLastMovement] = useState<{ move: StockMove; article: StockArticle; file?: File }>();
   const [scanStatus, setScanStatus] = useState('');
   const [scanReview, setScanReview] = useState(false);
+  /** Barcode → article id, learned on the shop floor (the manufacturer's EAN on a product). */
+  const [barcodes, setBarcodes] = useState<Record<string, string>>({});
+  // A drawer's own number (learned barcode, all digits) per article: the shelf label prints it, so the drawer keeps its number.
+  const drawerNumbers = useMemo(() => {
+    const numbers = new Map<string, string>();
+    for (const [barcode, article] of Object.entries(barcodes)) if (/^\d{8,14}$/.test(barcode) && !numbers.has(article)) numbers.set(article, barcode);
+    return numbers;
+  }, [barcodes]);
+  /** A scanned code no article has yet; `to` is the article the person then picked for it. */
+  const [unknownScan, setUnknownScan] = useState<{ code: string; to?: string }>();
+  const [linking, setLinking] = useState(false);
+  /** The continuous count: camera stays open, every label that comes into view adds one. */
+  const [live, setLive] = useState(false);
   const search = useRef<HTMLInputElement>(null);
   const details = useRef<HTMLElement>(null);
   const movementForm = useRef<HTMLFormElement>(null);
@@ -135,6 +150,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
           if (Array.isArray(stock.positions)) {
             setPositions(Object.fromEntries(stock.positions.map((row: { article_code: string }) => [row.article_code, row])));
           }
+          if (stock.barcodes && typeof stock.barcodes === 'object') setBarcodes(stock.barcodes);
           if (compactCatalog) {
             setFullCatalog(stock.catalog);
             setCatalogFailed(false);
@@ -211,8 +227,8 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
       categories.set(id, { label, count: (categories.get(id)?.count ?? 0) + 1 });
       return [article.id, id];
     }));
-    return { articles, categories, categoryByArticle, codeIndex: articleIndex(articles), byId: new Map(articles.map(article => [article.id, article])) };
-  }, [catalog, state.photos, state.workshop]);
+    return { articles, categories, categoryByArticle, codeIndex: articleIndex(articles, barcodes), byId: new Map(articles.map(article => [article.id, article])) };
+  }, [catalog, state.photos, state.workshop, barcodes]);
   // A SKU printed on a label must lead back to exactly one card, the same rule the counts use.
   const codeFor = (article: StockArticle) => labelCode(article, (sku) => codeIndex.get(sku) === article.id);
   const displayedArticle = byId.get(selected.id) ?? selected;
@@ -237,7 +253,22 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
   const selectedProfile = loadedProfile && loadedProfile.sku === selectedSku ? loadedProfile.profile : selectedSku ? undefined : null;
   const moves = state.moves.filter((move) => move.article === selected.id).slice(0, 30);
 
+  /** Bind a barcode to an article; resolves to the server's message when it refuses, null when done. */
+  async function linkBarcode(barcode: string, articleId: string): Promise<string | null> {
+    try {
+      const response = await fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ operation: 'linkBarcode', article: articleId, barcode }) });
+      const body = await response.json().catch(() => null);
+      if (!response.ok) return body?.error ?? 'Barcode koppelen mislukt.';
+      if (body?.barcodes && typeof body.barcodes === 'object') setBarcodes(body.barcodes);
+      return null;
+    } catch {
+      return 'Geen verbinding: de barcode is niet gekoppeld.';
+    }
+  }
+
   function select(article: StockArticle, scroll = true) {
+    // After an unknown scan, the article picked next is the one the barcode can be bound to.
+    setUnknownScan((scan) => (scan ? { ...scan, to: article.id } : scan));
     setScanReview(false);
     setSelected(article);
     setLocation(state.bins.find((bin) => bin.article === article.id));
@@ -250,10 +281,17 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
     setMovementPhoto(file);
     setScanReview(true);
     setScanStatus('Code lezen…');
+    setUnknownScan(undefined);
     try {
       // Same on-device decoder as the bulk count: reads every code in a full-size phone photo.
       const { scanPhotos } = await import('./bulkScanPool');
-      const matching = (code: string) => articles.filter((article) => [article.id, article.sku].some((value) => value.toUpperCase() === code));
+      // Our own code or SKU first; otherwise a barcode learned for exactly one article (codeIndex).
+      const matching = (code: string) => {
+        const own = articles.filter((article) => [article.id, article.sku].some((value) => value.toUpperCase() === code));
+        if (own.length) return own;
+        const learned = byId.get(codeIndex.get(code) ?? '');
+        return learned ? [learned] : [];
+      };
       let codes: string[] = [];
       let failure = '';
       await scanPhotos([file], { onResult: (result) => {
@@ -275,6 +313,8 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
       } else {
         const read = codes.length > 1 ? `${codes.length} codes gelezen: ${codes.join(', ')}` : `Code gelezen: ${code}`;
         setScanStatus(`${read}. Niet in de catalogus: zoek of kies het artikel voordat je boekt.`);
+        // Offer to bind this barcode to the article the person picks next, so the next scan finds it.
+        if (!demo) setUnknownScan({ code });
       }
     } catch (error) {
       const failure = error instanceof Error && error.message !== 'no code' ? `${error.message} ` : '';
@@ -285,7 +325,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
   }
 
   function shareMovement({ move, article, file }: NonNullable<typeof lastMovement>) {
-    const text = `${BRAND.name} · ${t(STOCK_OPERATIONS[move.operation as Operation])}\n${article.name} (${article.sku || article.id})\nAantal: ${Math.abs(move.delta)}${move.shelf ? `\nLocatie: ${move.shelf} / ${move.box}` : ''}${move.note ? `\n${move.note}` : ''}\nReferentie: ${move.id}`;
+    const text = `${BRAND.name} · ${t(moveLabel(move.operation))}\n${article.name} (${article.sku || article.id})\nAantal: ${Math.abs(move.delta)}${move.shelf ? `\nLocatie: ${move.shelf} / ${move.box}` : ''}${move.note ? `\n${move.note}` : ''}\nReferentie: ${move.id}`;
     if (file && navigator.canShare?.({ files: [file] })) {
       void navigator.share({ text, files: [file] }).catch((error) => {
         if (error.name !== 'AbortError') setNotice('Delen mislukt. Gebruik de WhatsApp-tekst en voeg de foto handmatig toe.');
@@ -386,6 +426,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
           {view === 'products' && <>
           <button type="button" className={styles.primary} disabled={!fullCatalog} onClick={() => setCamera('scan')}><ScanLine size={16} /> Scan QR / barcode</button>
           <Link className={styles.secondary} href={`/admin/voorraad/p${demo ? '?demo=1' : ''}`}><Barcode size={16} /> {t('Productprofiel')}</Link>
+          <button type="button" className={styles.secondary} disabled={!ready} onClick={() => setLive(true)}><ScanLine size={16} /> {t('Doorlopend scannen')}</button>
           <button type="button" className={styles.secondary} disabled={!ready} onClick={() => setBulk(true)}><Images size={16} /> {t('Bulktelling')}</button>
           {!demo && <button type="button" className={styles.secondary} onClick={() => setShowNew(!showNew)}><Plus size={16} /> {t("Werkplaatsartikel")}</button>}
           </>}
@@ -398,6 +439,17 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         ))}
       </nav>
       {scanStatus && <p className={styles.muted} role="status">{scanStatus.startsWith('Gescand:') ? scanStatus.replace('Gescand', t('Gescand')) : t(scanStatus)}</p>}
+      {unknownScan?.to && unknownScan.to === selected.id && <p className={styles.notice}>
+        <button type="button" className={styles.primary} disabled={linking} onClick={async () => {
+          setLinking(true);
+          const problem = await linkBarcode(unknownScan.code, selected.id);
+          setLinking(false);
+          if (problem) { setNotice(problem); return; }
+          setScanStatus(`Barcode ${unknownScan.code} gekoppeld aan ${selected.sku || selected.id}. Vanaf nu wordt hij herkend.`);
+          setUnknownScan(undefined);
+        }}><Barcode size={16} aria-hidden="true" /> {t('Koppel barcode')} {unknownScan.code} {t('aan')} {selected.sku || selected.id}</button>{' '}
+        <button type="button" className={styles.secondary} onClick={() => setUnknownScan(undefined)}>{t('Niet koppelen')}</button>
+      </p>}
 
       {showNew && <form className={`${styles.panel} ${styles.inline}`} onSubmit={(event) => save(event, true)}>
         <label>{t("Artikelnaam")}<input name="name" required maxLength={180} /></label>
@@ -409,7 +461,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         <p role="alert">{t('Voorraad kon niet geladen worden.')} <button type="button" className={styles.secondary} onClick={() => { setCatalogFailed(false); setCatalogAttempt(attempt => attempt + 1); }}>{t('Opnieuw')}</button></p>
       ) : <p className={styles.muted} role="status">{t('Laden…')}</p>)}
       {lastMovement && <section className={`${styles.panel} ${styles.inline}`} aria-label={t("Opgeslagen beweging")}>
-        <strong>{t(STOCK_OPERATIONS[lastMovement.move.operation as Operation])} {t('opgeslagen')} · {lastMovement.article.sku || lastMovement.article.id}</strong>
+        <strong>{t(moveLabel(lastMovement.move.operation))} {t('opgeslagen')} · {lastMovement.article.sku || lastMovement.article.id}</strong>
         <button type="button" className={styles.secondary} onClick={() => shareMovement(lastMovement)}>{t("Delen via WhatsApp")}</button>
         {lastMovement.move.photo && <a href={`${api}?movement=${lastMovement.move.id}${demo ? '&demo=1' : ''}`} download={`keyforcars-${lastMovement.move.id}.jpg`}>{t("Foto downloaden")}</a>}
       </section>}
@@ -493,6 +545,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         </section>
 
         <section className={styles.detail} ref={details} aria-label={t("Artikelvoorraad")}>
+          {canEditPrice && <SalePriceEditor key={selected.id} code={selected.id} name={selected.name} />}
           <div className={styles.panel}>
             <div className={styles.listHead}><h2>{t("Bak- en locatie-etiket")}</h2>
               <div className={styles.labelActions}>
@@ -506,7 +559,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
             </div>
             {/* What you see is what prints: the same label, at the chosen size. */}
             <div className={styles.labelPreview}>
-              <ShelfLabel article={displayedArticle} bin={currentBin} code={codeFor(displayedArticle)} profile={selectedProfile ?? null} size={labelSize} />
+              <ShelfLabel article={displayedArticle} bin={currentBin} code={codeFor(displayedArticle)} number={drawerNumbers.get(displayedArticle.id)} profile={selectedProfile ?? null} size={labelSize} />
             </div>
             {!!selected.sources.length && <div className={styles.sources}>{selected.sources.map((source) => (
               <a key={source.shop} href={source.url} target="_blank" rel="noreferrer">{source.shop} ↗</a>
@@ -571,7 +624,7 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
           <div className={styles.panel}>
             <h2>{t("Voorraadhistorie")}</h2>
             {moves.length ? <ul className={styles.locations}>{moves.map((move, index) => (
-              <li key={`${move.time}/${index}`}><span>{t(STOCK_OPERATIONS[move.operation as Operation])}{move.shelf && ` · ${move.shelf} / ${move.box}`}</span>
+              <li key={`${move.time}/${index}`}><span>{t(moveLabel(move.operation))}{move.shelf && ` · ${move.shelf} / ${move.box}`}</span>
                 <strong>{stockChange(move, english)}</strong>
                 {move.photo && <a href={`${api}?movement=${move.id}${demo ? '&demo=1' : ''}`} target="_blank" rel="noreferrer">{t("Foto")}</a>}
                 <time dateTime={move.time}>{new Date(move.time).toLocaleString('nl-NL')}</time></li>
@@ -584,15 +637,23 @@ export default function KeyForCarsStock({ initialCatalog, demo, view, canLinkInv
         <div className={styles.printSheet} data-stock-print data-size={labelSize}>
           <style>{`@page { size: ${LABEL_SIZES[labelSize].page}; margin: 0; }`}</style>
           {printJob.labels.map(({ article, bin }) => <ShelfLabel key={`${article.id}/${bin?.shelf}/${bin?.box}`} article={article} bin={bin}
-            code={codeFor(article)} profile={printJob.profiles[article.sku.trim().toUpperCase()] ?? null} size={labelSize} />)}
+            code={codeFor(article)} number={drawerNumbers.get(article.id)} profile={printJob.profiles[article.sku.trim().toUpperCase()] ?? null} size={labelSize} />)}
         </div>,
         document.body,
       )}
-      {bulk && <StockBulkCount state={state} articles={articles} demo={demo} onClose={() => setBulk(false)} onSaved={(next, saved) => {
+      {bulk && <StockBulkCount state={state} articles={articles} barcodes={barcodes} demo={demo} onClose={() => setBulk(false)} onSaved={(next, saved) => {
         setState(next);
         setBulk(false);
         setNotice(`${saved} tellingen opgeslagen.`);
       }} />}
+      {live && <StockLiveCount resolve={(code) => codeIndex.get(code) ?? null} byId={byId} articles={articles} bins={state.bins} demo={demo}
+        onClose={() => setLive(false)}
+        onSaved={(next, saved) => {
+          setState(next);
+          setLive(false);
+          setNotice(`${saved} tellingen opgeslagen.`);
+        }}
+        onLink={demo ? undefined : linkBarcode} />}
       {camera && <StockCamera onClose={() => setCamera(undefined)} onPhoto={(file) => {
         setCamera(undefined);
         if (camera === 'scan') void scanPhoto(file);

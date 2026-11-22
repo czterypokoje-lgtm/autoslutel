@@ -34,7 +34,10 @@ export default function KfcCustomerCard({ customer, balance, entries, openInvoic
         <div>
           <Button asChild variant="ghost" size="sm" className="-ml-2"><Link href="/admin/klanten">← Klanten</Link></Button>
           <h1 className="text-2xl font-semibold tracking-tight">{customer.company}</h1>
-          <p className="text-muted-foreground text-sm">{[customer.contact_name, customer.email, customer.phone, customer.vat_number].filter(Boolean).join(' · ')}</p>
+          <p className="text-muted-foreground text-sm">{[customer.contact_name, customer.email, customer.phone].filter(Boolean).join(' · ')}</p>
+          <p className="text-muted-foreground text-sm">{[customer.kvk && `KvK ${customer.kvk}`, customer.vat_number && `Btw ${customer.vat_number}`, customer.iban, customer.invoice_email && `Facturen: ${customer.invoice_email}`].filter(Boolean).join(' · ')}</p>
+          {customer.street && <p className="text-muted-foreground text-sm">{customer.street}, {customer.postcode} {customer.city} {customer.country !== 'NL' && customer.country}</p>}
+          {customer.account_kind === 'company' && !(customer.kvk || customer.country !== 'NL') && <p className="text-destructive text-sm"><PreviewText>{"KvK-nummer ontbreekt. Vul de bedrijfsgegevens aan."}</PreviewText></p>}
           <p className="text-muted-foreground text-sm">Betalingstermijn {customer.terms_days} <PreviewText>{"dagen"}</PreviewText>{customer.credit_limit_cents != null && ` · limiet ${MONEY.format(customer.credit_limit_cents / 100)}`}{customer.reverse_charge && ' · btw verlegd'}</p>
         </div>
         <div className="flex flex-wrap gap-2">

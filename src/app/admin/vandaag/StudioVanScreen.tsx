@@ -1,5 +1,8 @@
 'use client';
 
+import VanMaterialUse from './VanMaterialUse';
+import JobWarehouseStock from '../jobs/JobWarehouseStock';
+
 import {
   useCallback,
   useEffect,
@@ -392,6 +395,7 @@ function JobCard({
         </div>
       </CardContent>
 
+      {job.status === 'bezig' && <VanMaterialUse jobId={job.id} />}
       {finishing && job.status === 'bezig' && (
         <FinishPanel job={job} onPatch={onPatch} onDone={() => setFinishing(false)} vanStock={vanStock} />
       )}
@@ -634,6 +638,7 @@ function FinishPanel({
 
       <div className="flex flex-col gap-2">
         <span className="text-sm font-medium">Materiaal</span>
+        {job.warehouseEnabled && <JobWarehouseStock jobId={job.id} />}
         {materials.map((m, i) => (
           <div key={`${m}-${i}`} className="flex items-center justify-between text-sm">
             <span>{m}</span>

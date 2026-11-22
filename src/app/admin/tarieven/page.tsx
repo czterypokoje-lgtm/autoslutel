@@ -23,7 +23,7 @@ export default async function TarievenPage() {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('dispatch_pricing')
-    .select('id, make, model, scenario, from_year, to_year, keyless, price, note')
+    .select('id, make, model, scenario, from_year, to_year, keyless, price, service_price, note')
     .order('make', { ascending: true })
     .order('model', { ascending: true });
 

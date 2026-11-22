@@ -2,7 +2,7 @@ import 'server-only';
 import { createHash, randomUUID } from 'node:crypto';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { readPhoto, writePhoto } from '@/lib/kfcStockStore';
-import { getCrmUser, seesPrices, type CrmUser } from '@/lib/crmSession';
+import { getCrmUser, seesPurchasePrices, type CrmUser } from '@/lib/crmSession';
 import type { StockArticle, StockBatch, StockBin, StockMove, StockState } from '@/lib/keyforcarsStock';
 import catalog from '@/data/keyforcars-stock.json';
 import { ARTICLE_CODE, WORKSHOP_PREFIX } from '@/lib/stockCatalog';
@@ -34,14 +34,47 @@ const RPC_MESSAGES: Record<string, [string, number]> = {
   KFC_INSUFFICIENT: ['Onvoldoende voorraad op deze locatie.', 409],
   KFC_HAS_LOCATED_STOCK: ['Dit artikel heeft getelde voorraad. Kies een locatie en bak.', 409],
   KFC_LOCATION_REQUIRED: ['Kies een locatie en bak.', 400],
+  KFC_NOT_SHIPPED: ['Deze regel is nog niet verzonden.', 409],
+  KFC_RETURN_EXCEEDS: ['Het aantal is hoger dan het aantal dat nog retour kan.', 409],
+  KFC_NO_ORDER_LINE: ['Bestelregel niet gevonden.', 404],
   KFC_ZERO_MOVE: ['Het aantal is nul.', 400],
   KFC_BAD_TRANSFER: ['Kies een andere geldige bestemming.', 400],
   KFC_NEGATIVE_COUNT: ['Een telling kan niet negatief zijn.', 400],
+  KFC_PART_IS_OUTPUT: ['Het product kan niet ook een onderdeel zijn.', 400],
+  KFC_NO_COMPONENTS: ['Voeg minstens één onderdeel toe.', 400],
+  KFC_UNKNOWN_ARTICLE: ['Onbekend artikel.', 400],
+  KFC_BAD_LABOUR: ['Controleer het arbeidsloon.', 400],
   kfc_count_photos_pkey: ['Een of meer foto\'s zijn al eerder geteld. Haal ze uit de selectie.', 409],
+  // Purchase order close (0139).
+  KFC_PO_NOT_ORDERED: ['Alleen een bestelde inkooporder kan worden afgesloten.', 409],
+  KFC_PO_REASON_REQUIRED: ['Geef een reden voor het afsluiten.', 400],
+  KFC_PO_FULLY_RECEIVED: ['Alles is al ontvangen; deze order hoeft niet afgesloten te worden.', 409],
+  KFC_PO_NOT_FOUND: ['Inkooporder niet gevonden.', 404],
+  KFC_PO_CLOSED: ['Deze inkooporder is afgesloten; er kan niets meer op ontvangen worden.', 409],
+  KFC_PO_CANCELLED: ['Deze inkooporder is geannuleerd; er kan niets op ontvangen worden.', 409],
+  // Raised by other migrations; listed here so their errors read well everywhere.
+  KFC_NOT_PICKED: ['Nog niet alles is gepickt. Pick eerst alle regels.', 409],
+  KFC_PERIOD_LOCKED: ['Deze periode is afgesloten. Boek op een latere datum of laat de eigenaar de periode heropenen.', 409],
 };
 
 export class StockError extends Error {
   constructor(message: string, readonly status = 400) { super(message); }
+}
+
+/**
+ * PostgREST returns at most 1,000 rows per call; page through for larger reads.
+ * Lives here, next to StockError, so every kfc module can use it without an
+ * import cycle (kfcOrders re-exports it for its existing importers).
+ */
+export async function fetchAll<T>(build: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>, pageSize = 1000, max = 50000): Promise<T[]> {
+  const out: T[] = [];
+  for (let from = 0; from < max; from += pageSize) {
+    const { data, error } = await build(from, from + pageSize - 1);
+    if (error) throw new StockError(`Lezen mislukt: ${error.message}`, 500);
+    out.push(...(data ?? []));
+    if (!data || data.length < pageSize) break;
+  }
+  return out;
 }
 
 function rpcError(error: { message: string }): StockError {
@@ -63,26 +96,43 @@ async function locations(): Promise<Map<string, LocationRow>> {
   return new Map((data as LocationRow[]).map((row) => [row.id, row]));
 }
 
+export async function returnLocations() {
+  return [...(await locations()).values()].filter((location) => location.kind === 'shelf')
+    .sort((a, b) => a.shelf.localeCompare(b.shelf) || a.box.localeCompare(b.box));
+}
+
+export async function returnShopLine(line: string, quantity: number, location: string, key: string, user: CrmUser) {
+  if ((await locations()).get(location)?.kind !== 'shelf') throw new StockError('Kies een geldige retourlocatie.');
+  const { error } = await admin().rpc('kfc_return_line', {
+    p_line: line, p_quantity: quantity, p_location: location,
+    p_key: ['return', line, key].join('-'), p_created_by: user.id,
+  });
+  if (error) throw rpcError(error);
+}
+
 /** The whole record in the shape the screens already render. */
 export async function loadState(user: CrmUser): Promise<StockState> {
   const db = admin();
   const [locs, workshop, levels, moves, photos, batches] = await Promise.all([
     locations(),
     db.from('kfc_articles').select('code, name, sku, image, category').like('code', `${WORKSHOP_PREFIX}%`).order('code'),
-    db.from('kfc_stock_levels').select('article_code, location_id, quantity, minimum'),
+    // Paged: past 1,000 bins a single call silently dropped the rest, and the screen showed stock as missing.
+    fetchAll<{ article_code: string; location_id: string; quantity: number; minimum: number }>((a, b) =>
+      db.from('kfc_stock_levels').select('article_code, location_id, quantity, minimum').order('article_code').order('location_id').range(a, b)),
     db.from('kfc_stock_moves')
       .select('article_code, location_id, delta, quantity_after, unit_cost_cents, reason, sales_invoice_id, count_batch_id, note, photo_path, created_at, idempotency_key')
       .order('created_at', { ascending: false }).limit(MOVE_LIMIT),
-    db.from('kfc_articles').select('code, photo_version').not('photo_version', 'is', null),
+    fetchAll<{ code: string; photo_version: string }>((a, b) =>
+      db.from('kfc_articles').select('code, photo_version').not('photo_version', 'is', null).order('code').range(a, b)),
     db.from('kfc_count_batches').select('id, line_count, created_at, kfc_count_photos (sha256)').order('created_at', { ascending: false }).limit(500),
   ]);
-  for (const result of [workshop, levels, moves, photos, batches]) {
+  for (const result of [workshop, moves, batches]) {
     if (result.error) throw new StockError(`Voorraad lezen mislukt: ${result.error.message}`, 500);
   }
   const at = (id: string | null) => (id ? locs.get(id) : undefined);
   const state: StockState = {
     workshop: (workshop.data ?? []).map((row) => ({ id: row.code, name: row.name, sku: row.sku, image: row.image, category: row.category, sources: [] }) as StockArticle),
-    bins: (levels.data ?? []).map((row): StockBin => ({
+    bins: levels.map((row): StockBin => ({
       article: row.article_code, shelf: at(row.location_id)?.shelf ?? '', box: at(row.location_id)?.box ?? '',
       quantity: row.quantity, minimum: row.minimum,
     })),
@@ -99,13 +149,13 @@ export async function loadState(user: CrmUser): Promise<StockState> {
       if (row.count_batch_id) move.batch = row.count_batch_id;
       return move;
     }),
-    photos: Object.fromEntries((photos.data ?? []).map((row) => [row.code, row.photo_version as string])),
+    photos: Object.fromEntries(photos.map((row) => [row.code, row.photo_version])),
     batches: (batches.data ?? []).map((row): StockBatch => ({
       id: row.id, time: row.created_at, lines: row.line_count,
       photos: ((row.kfc_count_photos as { sha256: string }[] | null) ?? []).map((p) => p.sha256),
     })),
   };
-  return seesPrices(user) ? state : stripPrices(state);
+  return seesPurchasePrices(user) ? state : stripPrices(state);
 }
 
 function stripPrices(state: StockState): StockState {
@@ -114,10 +164,59 @@ function stripPrices(state: StockState): StockState {
 
 /** Physical · unusable · reserved · available · incoming, for articles that have any of them. */
 export async function positions(): Promise<Position[]> {
-  const { data, error } = await admin().from('kfc_stock_position').select('*')
-    .or('physical.neq.0,reserved.neq.0,incoming.neq.0');
-  if (error) throw new StockError(`Voorraadstanden lezen mislukt: ${error.message}`, 500);
-  return data as Position[];
+  return fetchAll<Position>((a, b) => admin().from('kfc_stock_position').select('*')
+    .or('physical.neq.0,reserved.neq.0,incoming.neq.0').order('article_code').range(a, b));
+}
+
+/**
+ * Barcode → article code, for scanning: the manufacturer's EAN on a product,
+ * next to our own label code. Only barcodes that belong to exactly one
+ * article: a barcode on two cards cannot pick one, so it stays "unknown".
+ */
+export async function barcodeIndex(): Promise<Record<string, string>> {
+  const rows = await fetchAll<{ code: string; ean: string[] | null }>((a, b) =>
+    admin().from('kfc_articles').select('code, ean').neq('ean', '{}').order('code').range(a, b));
+  const index: Record<string, string> = {};
+  const shared = new Set<string>();
+  for (const row of rows) {
+    for (const raw of row.ean ?? []) {
+      const key = raw.trim().toUpperCase();
+      if (!key) continue;
+      if (index[key] && index[key] !== row.code) shared.add(key);
+      else index[key] = row.code;
+    }
+  }
+  for (const key of shared) delete index[key];
+  return index;
+}
+
+const BARCODE = /^[0-9A-Za-z.\-]{4,40}$/;
+
+/**
+ * Teach the system a barcode while counting: the scan was unknown, the person
+ * picked the article, and from now on that barcode finds it. Appends only
+ * (never removes one), through the same checked write the article editor uses
+ * (migration 0134): a barcode that already belongs to another article is
+ * refused there, and the change lands in the article's history.
+ */
+export async function linkBarcode(article: string, barcode: string, user: CrmUser): Promise<void> {
+  const code = barcode.trim();
+  if (!articleCode.test(article) || !BARCODE.test(code)) throw new StockError('Controleer de barcode (4 tot 40 letters, cijfers, punt of streepje).');
+  const db = admin();
+  const current = await db.from('kfc_articles').select('ean').eq('code', article).maybeSingle();
+  if (current.error) throw new StockError(`Artikel lezen mislukt: ${current.error.message}`, 500);
+  if (!current.data) throw new StockError('Onbekend artikel.', 404);
+  const ean = (current.data.ean as string[] | null) ?? [];
+  if (ean.some((existing) => existing.trim().toUpperCase() === code.toUpperCase())) return;
+  if (ean.length >= 20) throw new StockError('Dit artikel heeft al 20 barcodes.', 409);
+  const { error } = await db.rpc('kfc_bulk_update_articles', {
+    p_changes: [{ code: article, before: { ean }, after: { ean: [...ean, code] } }], p_user: user.id,
+  });
+  if (!error) return;
+  const taken = /KFC_DUPLICATE_BARCODE:(\S+)/.exec(error.message);
+  if (taken) throw new StockError(`Barcode ${taken[1]} hoort al bij een ander artikel.`, 409);
+  if (error.message.includes('KFC_CONFLICT')) throw new StockError('Het artikel is intussen gewijzigd. Probeer het opnieuw.', 409);
+  throw new StockError(`Barcode koppelen mislukt: ${error.message}`, 500);
 }
 
 export async function articleExists(code: string): Promise<boolean> {
@@ -239,12 +338,35 @@ export async function bulkCount(batchId: string, photos: string[], lines: { arti
 }
 
 /** A workshop article made on the spot (no shop listing): KFC-3-<n>. */
-export async function newArticle(name: string, sku: string): Promise<string> {
+/** An article whose code, SKU or EAN is exactly this scan, or null. Case-insensitive for code and SKU. */
+export async function findArticlesByScan(scan: string) {
+  const key = scan.trim();
+  if (!key || key.length > 80) return [];
   const db = admin();
-  const { count } = await db.from('kfc_articles').select('code', { count: 'exact', head: true }).like('code', `${WORKSHOP_PREFIX}%`);
-  const code = `${WORKSHOP_PREFIX}${(count ?? 0) + 1}`;
-  const { error } = await db.from('kfc_articles').insert({ code, name, sku, category: 'Werkplaats' });
-  if (error) throw new StockError(`Artikel aanmaken mislukt: ${error.message}`, 500);
+  const query = () => db.from('kfc_articles').select('code, name, sku, tracking');
+  const exact = key.replace(/[\\%_]/g, (char) => '\\' + char);
+  const results = await Promise.all([query().ilike('code', exact), query().ilike('sku', exact), query().contains('ean', [key]), query().ilike('supplier_ref', exact)]);
+  const matches = new Map<string, { id: string; name: string; sku: string; tracking: string }>();
+  for (const result of results) {
+    if (result.error) throw new StockError('Artikelen zoeken mislukt.', 500);
+    for (const row of result.data) matches.set(row.code, { id: row.code, name: row.name, sku: row.sku ?? '', tracking: row.tracking });
+  }
+  return [...matches.values()];
+}
+
+/**
+ * A new workshop article, opened once: an existing article with the same SKU or
+ * EAN is returned instead of a second card (spec S2). The code takes the highest
+ * number in use + 1, not the row count, so a deleted card cannot cause a clash.
+ */
+export type ArticleCondition = 'new' | 'opened' | 'used';
+
+export async function newArticle(name: string, sku: string, ean: string | null = null, condition: ArticleCondition = 'new', ref = '', category = 'Werkplaats', tracking = condition === 'used' ? 'serial' : 'quantity', cost: number | null = null): Promise<string> {
+  const { data: code, error } = await admin().rpc('kfc_quick_article_details', {
+    p_prefix: WORKSHOP_PREFIX, p_name: name, p_sku: sku, p_ean: ean, p_condition: condition, p_ref: ref, p_category: category, p_tracking: tracking, p_cost: cost,
+  });
+  if (error?.message.includes('KFC_AMBIGUOUS_CARD')) throw new StockError('Meerdere artikelen gevonden. Kies een artikel.', 409);
+  if (error) throw new StockError('Artikel aanmaken mislukt.', 500);
   return code;
 }
 
@@ -309,7 +431,9 @@ export async function kfcGet(query: URLSearchParams): Promise<Response> {
     const used = new Set(state.moves.map((move) => move.article));
     return reply({
       state,
-      ...(wantPositions ? { positions: await positions() } : {}),
+      // barcodes: what a scan may match besides our own label code (see barcodeIndex). An extra:
+      // if it cannot be read, scanning falls back to code and SKU and the stock screen still loads.
+      ...(wantPositions ? { positions: await positions(), barcodes: await barcodeIndex().catch((error: unknown) => { console.error('[stock] barcode index failed', error); return {}; }) } : {}),
       ...(wantCatalog ? { catalog: catalog.filter((article) => used.has(article.id)) } : {}),
     });
   } catch (error) {
@@ -326,6 +450,10 @@ export async function kfcPost(input: Record<string, unknown>): Promise<Response>
       if (typeof input.article !== 'string' || !articleCode.test(input.article)) throw new StockError('Onbekend artikel.');
       await setArticlePhoto(input.article, decodeJpeg(input.photo, 240_000));
       return reply({ state: await loadState(user) });
+    }
+    if (input.operation === 'linkBarcode') {
+      await linkBarcode(typeof input.article === 'string' ? input.article : '', typeof input.barcode === 'string' ? input.barcode : '', user);
+      return reply({ ok: true, barcodes: await barcodeIndex() });
     }
     if (input.operation === 'new') {
       const name = typeof input.name === 'string' ? input.name.trim() : '';
@@ -393,37 +521,72 @@ export async function kfcPost(input: Record<string, unknown>): Promise<Response>
 // scan is the only writer of 'received' moves.
 // ---------------------------------------------------------------------------
 
-export interface PurchaseLine { id: string; article_code: string; name: string; sku: string; quantity: number; received: number; unit_cost_cents: number | null }
+export interface PurchaseLine { photos: number[]; id: string; article_code: string; name: string; sku: string; quantity: number; received: number; unit_cost_cents: number | null }
 export interface PurchaseOrder {
-  id: string; supplier: string; status: 'draft' | 'ordered' | 'received' | 'cancelled'; expected_on: string | null;
+  id: string; supplier: string; supplier_id: string | null; status: PurchaseOrderStatus; expected_on: string | null;
   note: string | null; created_at: string; ordered_at: string | null; received_at: string | null; lines: PurchaseLine[];
+  /** The supplier's invoice number, and whether its PDF/photo is attached (0111). */
+  invoice_ref: string | null; document_type: string | null;
+  /** Closed short (0139): the rest will not come. Lines keep ordered and received. */
+  closed_at: string | null; close_reason: string | null;
 }
+export type PurchaseOrderStatus = 'draft' | 'ordered' | 'received' | 'cancelled' | 'closed';
 
 export async function listPurchaseOrders(user: CrmUser): Promise<PurchaseOrder[]> {
   const { data, error } = await admin().from('kfc_purchase_orders')
-    .select('id, supplier, status, expected_on, note, created_at, ordered_at, received_at, kfc_purchase_order_lines (id, article_code, quantity, received, unit_cost_cents, kfc_articles (name, sku))')
+    .select('id, supplier, supplier_id, status, expected_on, note, created_at, ordered_at, received_at, invoice_ref, document_type, closed_at, close_reason, kfc_purchase_order_lines (id, article_code, quantity, received, unit_cost_cents, kfc_stock_moves(id,kfc_receipt_photos(move_id)), kfc_articles (name, sku))')
     .order('created_at', { ascending: false }).limit(200);
   if (error) throw new StockError(`Inkooporders lezen mislukt: ${error.message}`, 500);
-  const prices = seesPrices(user);
+  const prices = seesPurchasePrices(user);
   return (data ?? []).map((row) => {
-    const lines = (row.kfc_purchase_order_lines as unknown as { id: string; article_code: string; quantity: number; received: number; unit_cost_cents: number | null; kfc_articles: { name: string; sku: string } | null }[]) ?? [];
+    const lines = (row.kfc_purchase_order_lines as unknown as { kfc_stock_moves: { id: number; kfc_receipt_photos: { move_id: number } | null }[]; id: string; article_code: string; quantity: number; received: number; unit_cost_cents: number | null; kfc_articles: { name: string; sku: string } | null }[]) ?? [];
     return {
-      id: row.id, supplier: row.supplier, status: row.status, expected_on: row.expected_on, note: row.note,
+      id: row.id, supplier: row.supplier, supplier_id: row.supplier_id ?? null, status: row.status, expected_on: row.expected_on, note: row.note,
       created_at: row.created_at, ordered_at: row.ordered_at, received_at: row.received_at,
+      invoice_ref: row.invoice_ref ?? null, document_type: row.document_type ?? null,
+      closed_at: row.closed_at ?? null, close_reason: row.close_reason ?? null,
       lines: lines.map((line) => ({
-        id: line.id, article_code: line.article_code, name: line.kfc_articles?.name ?? line.article_code, sku: line.kfc_articles?.sku ?? '',
+        photos: line.kfc_stock_moves.filter(move => move.kfc_receipt_photos?.move_id).map(move => move.id), id: line.id, article_code: line.article_code, name: line.kfc_articles?.name ?? line.article_code, sku: line.kfc_articles?.sku ?? '',
         quantity: line.quantity, received: line.received, unit_cost_cents: prices ? line.unit_cost_cents : null,
       })),
     };
   });
 }
 
-export interface NewPurchaseOrder { supplier: string; expected_on?: string | null; note?: string | null; lines: { article: string; quantity: number; unit_cost_cents?: number | null }[] }
+export interface NewPurchaseOrder { supplier: string; supplier_id?: string | null; expected_on?: string | null; note?: string | null; invoice_ref?: string | null; lines: { article: string; quantity: number; unit_cost_cents?: number | null }[] }
+
+const cleanInvoiceRef = (value: string | null | undefined) => {
+  const ref = (value ?? '').trim();
+  if (ref.length > 80) throw new StockError('Factuurnummer is te lang (max. 80 tekens).');
+  return ref || null;
+};
+
+/**
+ * The supplier account for an order (0130): the picked supplier_id, or, for an
+ * old caller that still sends a name, the supplier with that name (created
+ * when new). The name on the order is the account's name at the time.
+ */
+async function orderSupplier(input: NewPurchaseOrder, user: CrmUser): Promise<{ id: string; name: string }> {
+  const db = admin();
+  if (input.supplier_id) {
+    const { data } = await db.from('kfc_suppliers').select('id, name, active').eq('id', input.supplier_id).maybeSingle();
+    if (!data) throw new StockError('Leverancier niet gevonden.', 404);
+    if (!data.active) throw new StockError('Deze leverancier staat op inactief.', 409);
+    return { id: data.id, name: data.name };
+  }
+  const name = input.supplier.trim();
+  if (!name || name.length > 120) throw new StockError('Kies een leverancier.');
+  const found = await db.from('kfc_suppliers').select('id, name').ilike('name', name.replace(/[\\%_]/g, (c) => '\\' + c)).limit(1);
+  if (found.data?.[0]) return found.data[0];
+  const created = await db.from('kfc_suppliers').insert({ name, created_by: user.id }).select('id, name').single();
+  if (created.error) throw new StockError(`Leverancier aanmaken mislukt: ${created.error.message}`, 500);
+  return created.data;
+}
 
 /** A draft purchase order. `article` may be the code (KFC-1-…) or the SKU. */
 export async function createPurchaseOrder(input: NewPurchaseOrder, user: CrmUser): Promise<string> {
-  const supplier = input.supplier.trim();
-  if (!supplier || supplier.length > 120) throw new StockError('Vul de leverancier in.');
+  const account = await orderSupplier(input, user);
+  const supplier = account.name;
   if (input.expected_on && !/^\d{4}-\d{2}-\d{2}$/.test(input.expected_on)) throw new StockError('Controleer de verwachte datum.');
   if (!input.lines.length || input.lines.length > 200) throw new StockError('Tussen 1 en 200 regels per inkooporder.');
   const db = admin();
@@ -436,7 +599,8 @@ export async function createPurchaseOrder(input: NewPurchaseOrder, user: CrmUser
     if (found.error || found.data?.length !== 1) throw new StockError(`Artikel ${key} niet eenduidig gevonden.`);
     lines.push({ article_code: found.data[0].code, quantity: line.quantity, unit_cost_cents: line.unit_cost_cents ?? null });
   }
-  const po = await db.from('kfc_purchase_orders').insert({ supplier, expected_on: input.expected_on || null, note: input.note?.trim() || null, created_by: user.id }).select('id').single();
+  const invoice_ref = cleanInvoiceRef(input.invoice_ref);
+  const po = await db.from('kfc_purchase_orders').insert({ supplier, supplier_id: account.id, expected_on: input.expected_on || null, note: input.note?.trim() || null, invoice_ref, created_by: user.id }).select('id').single();
   if (po.error) throw new StockError(`Inkooporder aanmaken mislukt: ${po.error.message}`, 500);
   const inserted = await db.from('kfc_purchase_order_lines').insert(lines.map((line) => ({ ...line, po_id: po.data.id })));
   if (inserted.error) throw new StockError(`Regels opslaan mislukt: ${inserted.error.message}`, 500);
@@ -453,15 +617,117 @@ export async function setPurchaseOrderStatus(id: string, status: 'ordered' | 'ca
   if (error) throw new StockError(`Status wijzigen mislukt: ${error.message}`, 500);
 }
 
+/**
+ * Close an ordered purchase order short (0139): the supplier will not deliver
+ * the rest. What was received stays; the rest stops counting as incoming.
+ * Calling it again on a closed order is a quiet no-op.
+ */
+export async function closePurchaseOrder(id: string, reason: string, user: CrmUser): Promise<void> {
+  const text = reason.trim();
+  if (!text) throw new StockError(RPC_MESSAGES.KFC_PO_REASON_REQUIRED[0], 400);
+  if (text.length > 500) throw new StockError('De reden is te lang (max. 500 tekens).');
+  const { error } = await admin().rpc('kfc_close_purchase_order', { p_po: id, p_reason: text, p_user: user.id });
+  if (error) throw rpcError(error);
+}
+
+// ---------------------------------------------------------------------------
+// Assembly (0112, spec S3): parts off their shelves, one product onto its shelf,
+// in one database transaction. Cost = parts + labour; unknown part cost → null.
+// ---------------------------------------------------------------------------
+
+export interface AssemblyInput {
+  output: string; shelf: string; box: string; quantity: number; labour_cents: number; note?: string | null; key: string;
+  components: { article: string; shelf: string; box: string; quantity: number }[];
+}
+export interface AssemblyRow {
+  id: string; output_article: string; output_name: string; quantity: number; labour_cents: number;
+  unit_cost_cents: number | null; components: { article: string; quantity: number; unit_cost_cents: number | null }[]; created_at: string;
+}
+
+export async function assemble(input: AssemblyInput, user: CrmUser): Promise<AssemblyRow> {
+  const output = input.output.trim().toUpperCase();
+  if (!(await articleExists(output))) throw new StockError('Kies het product dat je maakt.');
+  if (!Number.isSafeInteger(input.quantity) || input.quantity < 1 || input.quantity > 1000) throw new StockError('Controleer het aantal.');
+  if (!Number.isSafeInteger(input.labour_cents) || input.labour_cents < 0 || input.labour_cents > 10_000_000) throw new StockError('Controleer het arbeidsloon.');
+  if (!binCode.test(input.shelf) || !binCode.test(input.box)) throw new StockError('Controleer locatie en bakcode van het product.');
+  if (!input.components.length || input.components.length > 50) throw new StockError('Voeg 1 tot 50 onderdelen toe.');
+  const parts = [];
+  for (const part of input.components) {
+    const article = part.article.trim().toUpperCase();
+    if (!Number.isSafeInteger(part.quantity) || part.quantity < 1 || part.quantity > 10_000) throw new StockError('Controleer de aantallen van de onderdelen.');
+    if (!binCode.test(part.shelf) || !binCode.test(part.box)) throw new StockError(`Controleer de locatie van ${article}.`);
+    const location = await locationId(part.shelf, part.box, false);
+    if (!location || !(await levelExists(article, location))) throw new StockError(`${article} ligt niet op ${part.shelf} / ${part.box}. Tel deze locatie eerst.`, 409);
+    parts.push({ article, location, quantity: part.quantity });
+  }
+  const outputLocation = await locationId(input.shelf, input.box, true);
+  const { data, error } = await admin().rpc('kfc_assemble', {
+    p_output: output, p_output_location: outputLocation, p_quantity: input.quantity, p_components: parts,
+    p_labour_cents: input.labour_cents, p_key: input.key, p_created_by: user.id, p_note: input.note?.trim() || null,
+  });
+  if (error) throw rpcError(error);
+  return (await recentAssemblies(1, data.id))[0];
+}
+
+/** Purchase price per article, for the cost preview. The caller checks seesPurchasePrices. */
+export async function articleCosts(codes: string[]): Promise<Record<string, number | null>> {
+  const clean = [...new Set(codes.map((c) => c.trim().toUpperCase()).filter((c) => articleCode.test(c) || c.startsWith(WORKSHOP_PREFIX)))].slice(0, 60);
+  if (!clean.length) return {};
+  const { data } = await admin().from('kfc_articles').select('code, purchase_price_cents').in('code', clean);
+  return Object.fromEntries((data ?? []).map((row) => [row.code, row.purchase_price_cents]));
+}
+
+export async function recentAssemblies(limit = 20, id?: string): Promise<AssemblyRow[]> {
+  let query = admin().from('kfc_assemblies').select('id, output_article, quantity, labour_cents, unit_cost_cents, components, created_at, kfc_articles (name)')
+    .order('created_at', { ascending: false }).limit(limit);
+  if (id) query = query.eq('id', id);
+  const { data, error } = await query;
+  if (error) throw new StockError(`Montages lezen mislukt: ${error.message}`, 500);
+  return (data ?? []).map((row) => ({
+    id: row.id, output_article: row.output_article, output_name: (row.kfc_articles as unknown as { name: string } | null)?.name ?? row.output_article,
+    quantity: row.quantity, labour_cents: row.labour_cents, unit_cost_cents: row.unit_cost_cents,
+    components: row.components as AssemblyRow['components'], created_at: row.created_at,
+  }));
+}
+
+/** The supplier's invoice number on an order; empty clears it. Any status: the invoice often arrives after the goods. */
+export async function setPurchaseInvoiceRef(id: string, value: string): Promise<void> {
+  const { data, error } = await admin().from('kfc_purchase_orders').update({ invoice_ref: cleanInvoiceRef(value) }).eq('id', id).select('id');
+  if (error) throw new StockError(`Factuurnummer opslaan mislukt: ${error.message}`, 500);
+  if (!data?.length) throw new StockError('Inkooporder niet gevonden.', 404);
+}
+
+const DOCUMENT_TYPES: Record<string, string> = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png' };
+const MAX_DOCUMENT_BYTES = 10 * 1024 * 1024;
+
+/** Attach (or replace) the supplier invoice or receipt: PDF, JPEG or PNG, up to 10 MB. */
+export async function attachPurchaseDocument(id: string, bytes: Uint8Array, type: string): Promise<void> {
+  const ext = DOCUMENT_TYPES[type];
+  if (!ext) throw new StockError('Alleen PDF, JPG of PNG.');
+  if (bytes.length === 0 || bytes.length > MAX_DOCUMENT_BYTES) throw new StockError('Bestand is leeg of groter dan 10 MB.');
+  const exists = await admin().from('kfc_purchase_orders').select('id').eq('id', id).maybeSingle();
+  if (!exists.data) throw new StockError('Inkooporder niet gevonden.', 404);
+  const path = `po-${id}.${ext}`;
+  await writePhoto(path, bytes, type);
+  const { error } = await admin().from('kfc_purchase_orders').update({ document_path: path, document_type: type }).eq('id', id);
+  if (error) throw new StockError(`Document koppelen mislukt: ${error.message}`, 500);
+}
+
+/** The attached invoice or receipt, or null. */
+export async function purchaseDocument(id: string): Promise<{ bytes: Uint8Array; type: string } | null> {
+  const { data } = await admin().from('kfc_purchase_orders').select('document_path, document_type').eq('id', id).maybeSingle();
+  if (!data?.document_path || !data.document_type) return null;
+  const bytes = await readPhoto(data.document_path);
+  return bytes ? { bytes, type: data.document_type } : null;
+}
+
 /** Goods received for one line, onto a shelf and box (created if new). */
-export async function receivePurchaseLine(lineId: string, quantity: number, shelf: string, box: string, key: string, user: CrmUser): Promise<void> {
+export async function receivePurchaseLine(lineId: string, quantity: number, shelf: string, box: string, key: string, user: CrmUser, photo: string | null, mime: string | null): Promise<number> {
   if (!Number.isSafeInteger(quantity) || quantity < 1 || quantity > 100_000) throw new StockError('Controleer het ontvangen aantal.');
   if (!binCode.test(shelf) || !binCode.test(box)) throw new StockError('Controleer locatie en bakcode.');
-  const line = await admin().from('kfc_purchase_order_lines').select('id, quantity, received, kfc_purchase_orders (status)').eq('id', lineId).maybeSingle();
-  if (!line.data) throw new StockError('Inkoopregel niet gevonden.', 404);
-  if ((line.data.kfc_purchase_orders as unknown as { status: string } | null)?.status !== 'ordered') throw new StockError('Deze inkooporder is niet besteld.', 409);
-  if (line.data.received + quantity > line.data.quantity) throw new StockError('Meer ontvangen dan besteld. Pas het aantal aan.', 409);
   const location = await locationId(shelf, box, true);
-  const { error } = await admin().rpc('kfc_receive_po_line', { p_line: lineId, p_quantity: quantity, p_location: location, p_key: key, p_created_by: user.id });
+  const { data, error } = await admin().rpc('kfc_receive_with_photo', { p_line: lineId, p_quantity: quantity, p_location: location, p_key: key, p_created_by: user.id, p_photo: photo, p_mime: mime });
+  if (error?.message.includes('KFC_RECEIPT_CONFLICT')) throw new StockError('Controleer de openstaande hoeveelheid en de ontvangst.', 409);
   if (error) throw rpcError(error);
+  return data;
 }

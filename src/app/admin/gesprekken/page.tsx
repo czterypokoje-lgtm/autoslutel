@@ -31,7 +31,7 @@ const requestNow = () => Date.now();
  * mean shipping every lead and job to the page to find two of them.
  */
 export default async function GesprekkenPage() {
-  await requireOfficeUser('/admin/gesprekken');
+  const operator = await requireOfficeUser('/admin/gesprekken');
   const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
@@ -249,7 +249,7 @@ export default async function GesprekkenPage() {
   if (STUDIO_UI && !error) {
     return (
       <div className="kfc-neutral">
-        <Chat conversations={conversations} now={requestNow()} />
+        <Chat operator={operator.id} conversations={conversations} now={requestNow()} />
       </div>
     );
   }

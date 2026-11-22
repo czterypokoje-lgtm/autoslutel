@@ -181,13 +181,13 @@ export default async function KfcDashboard({ period }: { period: KfcPeriod; embe
       </div>
 
       {showSampleNotice && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs">
-        <PreviewText>Proefversie met voorbeeldbestellingen: echte producten en prijzen uit de webshops, verzonnen aantallen. In de echte versie komen hier de bestellingen van keyforcars.nl, klapsleutels.nl en remkeys.com binnen.</PreviewText>
+        <PreviewText>Proefversie met voorbeeldbestellingen: echte producten en prijzen uit de webshops, verzonnen aantallen. In de echte versie komen hier de bestellingen van keyforcars.nl en klapsleutels.nl binnen.</PreviewText>
       </p>}
 
       <div className="kfc-kpi-strip">
         <Kpi label="Bestellingen" value={number(cur.orders)} now={cur.orders} before={prev.orders} foot="betaald of verzonden" />
         <Kpi strong label="Omzet excl. btw" value={euro(cur.revenue)} now={cur.revenue} before={prev.revenue} foot="producten en verzending, zonder 21% btw" />
-        <Kpi label="Stuks verkocht" value={number(cur.units)} now={cur.units} before={prev.units} foot="alle drie de webshops" />
+        <Kpi label="Stuks verkocht" value={number(cur.units)} now={cur.units} before={prev.units} foot="alle webshops" />
         <Kpi label="Gemiddelde bestelling" value={euro(cur.orders ? cur.revenue / cur.orders : 0)}
           now={cur.orders ? cur.revenue / cur.orders : 0} before={prev.orders ? prev.revenue / prev.orders : 0} foot="omzet excl. btw per bestelling" />
         <Kpi label="Wacht op betaling" value={number(onHold)} foot="bankoverschrijvingen nog niet binnen" />

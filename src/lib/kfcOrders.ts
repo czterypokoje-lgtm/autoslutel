@@ -1,8 +1,8 @@
 import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { LABEL_BATCH_MAX } from '@/lib/kfcLabels';
-import { StockError } from '@/lib/kfcInventory';
-import { pushCompleted, isWooShop } from '@/lib/kfcWoo';
+import { StockError, fetchAll } from '@/lib/kfcInventory';
+import { pushCompleted, isWooShop, wooConfigured, WOO_SHOPS, type WooShop } from '@/lib/kfcWoo';
 import { OWN_SHOP, pushOwnShipped } from '@/lib/kfcOwnShop';
 import type { CrmUser } from '@/lib/crmSession';
 import { sampleOrders, type SampleOrder, type OrderStatus } from '@/lib/kfcSampleOrders';
@@ -26,17 +26,8 @@ export interface ShopOrder {
 
 const db = () => createSupabaseAdminClient();
 
-/** PostgREST returns at most 1,000 rows per call; page through for larger reads. */
-export async function fetchAll<T>(build: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>, pageSize = 1000, max = 50000): Promise<T[]> {
-  const out: T[] = [];
-  for (let from = 0; from < max; from += pageSize) {
-    const { data, error } = await build(from, from + pageSize - 1);
-    if (error) throw new StockError(`Lezen mislukt: ${error.message}`, 500);
-    out.push(...(data ?? []));
-    if (!data || data.length < pageSize) break;
-  }
-  return out;
-}
+/** The paging helper now lives next to StockError in kfcInventory; re-exported for the modules that import it from here. */
+export { fetchAll };
 
 const ORDER_COLUMNS = 'id, shop, woo_order_id, number, status, fulfilment, created_at, paid_at, shipped_at, shop_completed_at, country, total_incl_cents, total_excl_cents, shipping_incl_cents, ship_name, ship_company, ship_street, ship_postcode, ship_city, ship_phone, ship_email, carrier, tracking_code, label_url, label_created_at';
 const LINE_COLUMNS = 'id, sku, article_code, name, quantity, reserved, picked, state, unit_incl_cents';
@@ -74,6 +65,8 @@ function toOrder(row: Record<string, unknown>): ShopOrder {
 
 /** Detail with, per line, the best shelf to pick from and the article's availability. */
 export async function getShopOrder(id: string): Promise<ShopOrder | null> {
+  // A stale or mistyped link is "not found", not a database error.
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
   const { data, error } = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`).eq('id', id).maybeSingle();
   if (error) throw new StockError(`Bestelling lezen mislukt: ${error.message}`, 500);
   if (!data) return null;
@@ -83,6 +76,18 @@ export async function getShopOrder(id: string): Promise<ShopOrder | null> {
 }
 
 export { LABEL_BATCH_MAX };
+
+export async function shopReturnHistory(lines: ShopLine[]) {
+  const ids = lines.filter((line) => line.state === 'shipped').map((line) => line.id);
+  const quantities = new Map<string, number>();
+  const moves = ids.length ? await fetchAll<{ id: number; order_line_id: string; delta: number; reason: 'sale' | 'return'; created_at: string }>((from, to) =>
+    db().from('kfc_stock_moves').select('id, order_line_id, delta, reason, created_at').in('order_line_id', ids)
+      .in('reason', ['sale', 'return']).order('created_at', { ascending: false }).order('id').range(from, to)) : [];
+  for (const move of moves) {
+    quantities.set(move.order_line_id, (quantities.get(move.order_line_id) ?? 0) - move.delta);
+  }
+  return { quantities, returns: moves.filter((move) => move.reason === 'return') };
+}
 
 /** Several orders at once, for the bulk label sheet. Keeps the order of `ids`. */
 export async function getShopOrdersByIds(ids: string[]): Promise<ShopOrder[]> {
@@ -100,8 +105,8 @@ async function decorate(lines: ShopLine[]) {
   const codes = [...new Set(lines.map((l) => l.article_code).filter((c): c is string => !!c))];
   if (!codes.length) return;
   const [levels, positions] = await Promise.all([
-    db().from('kfc_stock_levels').select('article_code, quantity, kfc_locations (shelf, box, kind)').in('article_code', codes).order('quantity', { ascending: false }),
-    db().from('kfc_stock_position').select('article_code, available, incoming').in('article_code', codes),
+    db().from('kfc_stock_levels').select('article_code, quantity, kfc_locations!inner (shelf, box, kind)').in('article_code', codes).is('kfc_locations.technician_id', null).order('quantity', { ascending: false }),
+    db().from('kfc_webshop_position').select('article_code, available, incoming').in('article_code', codes),
   ]);
   const shelfOf = new Map<string, { shelf: string; box: string }>();
   for (const row of levels.data ?? []) {
@@ -146,20 +151,38 @@ export async function markPicked(lineId: string, picked: boolean): Promise<strin
 export async function shipOrder(id: string, key: string, user: CrmUser): Promise<{ writeback: 'done' | 'pending' }> {
   const { error } = await db().rpc('kfc_ship_order', { p_order: id, p_key: key, p_created_by: user.id });
   if (error) {
+    // 0138: the database refuses an order with a line that is not fully reserved and picked.
+    if (error.message.includes('KFC_NOT_PICKED')) throw new StockError(SHIP_NOT_PICKED, 409);
+    if (error.message.includes('KFC_CENTRAL_STOCK_REQUIRED')) throw new StockError('Onvoldoende voorraad in het centrale magazijn.', 409);
     if (error.message.includes('KFC_NOT_PAID')) throw new StockError('Deze bestelling is niet betaald (status is niet processing).', 409);
+    if (error.message.includes('KFC_STOCK_RESERVED_FOR_JOB')) throw new StockError('Voorraad is gereserveerd voor een klus.', 409);
     if (error.message.includes('KFC_NO_ORDER')) throw new StockError('Bestelling niet gevonden.', 404);
     throw new StockError(`Verzenden mislukt: ${error.message}`, 500);
   }
+  // The stock side is committed; from here on only the shop's status is at stake.
+  // Anything we cannot confirm is 'pending', so the nightly reconcile retries it.
   const order = await db().from('kfc_shop_orders').select('shop, woo_order_id, number').eq('id', id).single();
+  if (order.error || !order.data) {
+    console.error(`shipOrder ${id}: order not readable for the shop write-back`, order.error);
+    return { writeback: 'pending' };
+  }
   try {
     // Our own webshop sits in this same database: the write-back is a status update on public.orders.
-    if (order.data?.shop === OWN_SHOP) await pushOwnShipped(order.data.number);
-    else if (order.data && isWooShop(order.data.shop)) await pushCompleted(order.data.shop, order.data.woo_order_id);
+    if (order.data.shop === OWN_SHOP) await pushOwnShipped(order.data.number);
+    else if (isWooShop(order.data.shop)) await pushCompleted(order.data.shop, order.data.woo_order_id);
     return { writeback: 'done' };
-  } catch {
-    return { writeback: 'pending' }; // the nightly reconcile retries
+  } catch (writeback) {
+    console.error(`shipOrder ${id}: shop write-back for ${order.data.shop} #${order.data.number} failed`, writeback);
+    return { writeback: 'pending' };
   }
 }
+
+/**
+ * What the warehouse sees when the database refuses to ship (KFC_NOT_PICKED).
+ * OrderParts.tsx (a client component, so it cannot import this server-only
+ * module) keeps the same text to recognise it and refresh a stale screen.
+ */
+const SHIP_NOT_PICKED = 'Nog niet alles is gepickt. Pick eerst alle regels.';
 
 /** The dashboard's shape: the last `days` days of orders, as SampleOrder. */
 /**
@@ -206,7 +229,7 @@ export async function loadSampleData(user: CrmUser): Promise<{ orders: number; l
     const { data } = await db().from('kfc_articles').select('code, sku').in('sku', skus.slice(i, i + 500));
     for (const a of data ?? []) articles.set(a.sku.toUpperCase(), a.code);
   }
-  const shopIndex: Record<string, number> = { 'keyforcars.nl': 1, 'klapsleutels.nl': 2, 'remkeys.com': 3 };
+  const shopIndex: Record<string, number> = { 'keyforcars.nl': 1, 'klapsleutels.nl': 2 };
   const rows = all.map((o) => ({
     shop: o.shop, woo_order_id: 900000000 + shopIndex[o.shop] * 1000000 + Number(o.number), number: o.number, status: o.status,
     created_at: o.created, modified_at: o.created, paid_at: o.status === 'processing' || o.status === 'completed' ? o.created : null,
@@ -246,6 +269,16 @@ export async function loadSampleData(user: CrmUser): Promise<{ orders: number; l
 
 /** Wipes orders, reservations, moves and levels. Only for the demo period, before the shops are connected. */
 export async function clearSampleData(): Promise<void> {
+  /* The wipe is unconditional (every order, movement and stock level, not only
+     the sample rows), so it only runs while there is nothing real to lose. */
+  if ((Object.keys(WOO_SHOPS) as WooShop[]).some(wooConfigured)) {
+    throw new StockError('Wissen kan niet meer: er is een webshop gekoppeld. Dit zou alle echte bestellingen en voorraadstanden verwijderen.', 409);
+  }
+  const real = await db().from('kfc_shop_orders').select('id', { count: 'exact', head: true }).lt('woo_order_id', 900000000);
+  if (real.error) throw new StockError(`Wissen gestopt: bestellingen controleren mislukt (${real.error.message}).`, 500);
+  if ((real.count ?? 0) > 0) {
+    throw new StockError('Wissen kan niet meer: er staan echte bestellingen in het systeem.', 409);
+  }
   for (const [table, col] of [['kfc_shop_order_refunds', 'id'], ['kfc_shop_order_lines', 'id'], ['kfc_shop_orders', 'id'], ['kfc_reservations', 'id'], ['kfc_stock_moves', 'id'], ['kfc_stock_levels', 'article_code'], ['kfc_import_runs', 'id']] as const) {
     const { error } = await db().from(table).delete().not(col, 'is', null);
     if (error) throw new StockError(`Wissen mislukt (${table}): ${error.message}`, 500);

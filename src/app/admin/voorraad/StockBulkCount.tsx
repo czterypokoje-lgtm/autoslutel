@@ -25,9 +25,11 @@ interface LineEdit { quantity?: number; bin?: string; include?: boolean }
  * Count a shelf from a stack of photos. Codes are read on the device, the
  * office checks the result, and one confirmation books every count at once.
  */
-export default function StockBulkCount({ state, articles, demo, onClose, onSaved }: {
+export default function StockBulkCount({ state, articles, barcodes, demo, onClose, onSaved }: {
   state: StockState;
   articles: StockArticle[];
+  /** Barcode → article id learned on the shop floor, so a manufacturer's EAN in a photo counts too. */
+  barcodes?: Record<string, string>;
   demo: boolean;
   onClose: () => void;
   onSaved: (state: StockState, saved: number) => void;
@@ -44,7 +46,7 @@ export default function StockBulkCount({ state, articles, demo, onClose, onSaved
   const [fallback, setFallback] = useState({ shelf: '', box: '' });
   const [notice, setNotice] = useState('');
   const [batchId, setBatchId] = useState('');
-  const index = useMemo(() => articleIndex(articles), [articles]);
+  const index = useMemo(() => articleIndex(articles, barcodes), [articles, barcodes]);
   const byId = useMemo(() => new Map(articles.map((article) => [article.id, article])), [articles]);
   const countedBefore = useMemo(() => new Set((state.batches ?? []).flatMap((batch) => batch.photos)), [state.batches]);
   const number = new Intl.NumberFormat(english ? 'en-GB' : 'nl-NL', { maximumFractionDigits: 1 });

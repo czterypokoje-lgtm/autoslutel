@@ -20,6 +20,7 @@ export interface PriceRowData {
   to_year: number | null;
   keyless: boolean | null;
   price: number;
+  service_price: number | null;
   note: string | null;
 }
 
@@ -44,6 +45,7 @@ export default function PriceRow({ row }: { row: PriceRowData }) {
   const [toYear, setToYear] = useState(row.to_year === null ? '' : String(row.to_year));
   const [keyless, setKeyless] = useState(row.keyless === null ? '' : String(row.keyless));
   const [price, setPrice] = useState(String(row.price));
+  const [servicePrice, setServicePrice] = useState(row.service_price == null ? '' : String(row.service_price));
   const [note, setNote] = useState(row.note ?? '');
 
   function cancel() {
@@ -55,6 +57,7 @@ export default function PriceRow({ row }: { row: PriceRowData }) {
     setToYear(row.to_year === null ? '' : String(row.to_year));
     setKeyless(row.keyless === null ? '' : String(row.keyless));
     setPrice(String(row.price));
+    setServicePrice(row.service_price == null ? '' : String(row.service_price));
     setNote(row.note ?? '');
     setError('');
     setEditing(false);
@@ -71,6 +74,7 @@ export default function PriceRow({ row }: { row: PriceRowData }) {
       toYear,
       keyless,
       price,
+      servicePrice,
       note,
     });
     setBusy(false);
@@ -94,7 +98,9 @@ export default function PriceRow({ row }: { row: PriceRowData }) {
         <td className={styles.muted}>
           {row.keyless === true ? 'Keyless' : row.keyless === false ? 'Baard/contact' : 'Beide'}
         </td>
-        <td className={styles.money}>{MONEY.format(row.price)}</td>
+        <td className={styles.money}>{MONEY.format(row.price)}
+          {row.service_price != null && <small> · Diensttarief excl. btw {MONEY.format(row.service_price)}</small>}
+        </td>
         <td className={`${styles.muted} ${styles.noteCell}`} title={row.note ?? undefined}>{row.note ?? ''}</td>
         <td className={styles.rowActions}>
           <button className={styles.ghostBtn} onClick={() => setEditing(true)}>
@@ -178,6 +184,7 @@ export default function PriceRow({ row }: { row: PriceRowData }) {
           onChange={(e) => setPrice(e.target.value)}
           aria-label="Prijs in euro"
         />
+        <label>Diensttarief excl. btw<input className={styles.cellInput} value={servicePrice} onChange={(e) => setServicePrice(e.target.value)} inputMode="decimal" /></label>
       </td>
       <td>
         <input

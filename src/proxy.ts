@@ -2,7 +2,14 @@ import { NextResponse } from 'next/server';
 import type { NextFetchEvent, NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { isAuthorized, adminAuthConfigured } from '@/lib/adminAuth';
-import { CRM_PREVIEW, SUPABASE_URL, SUPABASE_ANON_KEY, supabaseAuthConfigured } from '@/lib/supabase/env';
+import {
+  CRM_PREVIEW,
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  supabaseAuthConfigured,
+  supabaseInstallProblem,
+  supabaseMarkerProblem,
+} from '@/lib/supabase/env';
 import { CRM_READONLY, READONLY_MESSAGE, isSafeMethod } from '@/lib/readonly';
 import { IS_KEYFORCARS, installServes } from '@/config/install';
 import { LAN_COOKIE, hasLanCookie, lanMode, lanToken, lanTokenMatches } from '@/lib/lanPreview';
@@ -272,8 +279,41 @@ async function handlePaidLanding(
   return response;
 }
 
+/**
+ * The install guard (src/lib/supabase/installGuard.ts), on every request.
+ *
+ * The project-ref check is a string comparison. The database marker costs one
+ * small request, so its answer is kept per server instance for five minutes.
+ */
+const MARKER_TTL_MS = 5 * 60_000;
+let markerCheck: { at: number; result: Promise<string | null> } | null = null;
+
+function installGuardProblem(): Promise<string | null> {
+  const problem = supabaseInstallProblem();
+  if (problem) return Promise.resolve(problem);
+  if (CRM_PREVIEW) return Promise.resolve(null);
+  if (!markerCheck || Date.now() - markerCheck.at > MARKER_TTL_MS) {
+    markerCheck = { at: Date.now(), result: supabaseMarkerProblem() };
+  }
+  return markerCheck.result;
+}
+
 export async function proxy(request: NextRequest, event: NextFetchEvent) {
   const { pathname } = request.nextUrl;
+
+  /*
+   * Wrong database for this install: refuse everything — pages, APIs,
+   * webhooks, the public site — before anything can read or write. The
+   * detail goes to the server log only.
+   */
+  const installProblem = await installGuardProblem();
+  if (installProblem) {
+    console.error(`[install-guard] ${installProblem}`);
+    return new NextResponse('Deze installatie is geblokkeerd: verkeerde database. Zie de serverlog.', {
+      status: 503,
+      headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' },
+    });
+  }
 
   /*
    * A customer install answers only its own screens. Everything else in this

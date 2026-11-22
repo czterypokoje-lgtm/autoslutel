@@ -1,6 +1,7 @@
 import { isScenario, scenarioFromLabel } from '@/lib/scenarios';
 import { NextResponse, after } from 'next/server';
 import { requireOfficeUserApi } from '@/lib/crmSession';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { TIME_SLOTS, trimTime } from '@/lib/crmJobs';
 import { jobBriefing } from '@/lib/whatsapp';
@@ -61,7 +62,32 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Ongeldige aanvraag' }, { status: 400 });
   }
 
-  const customerPhone = text(body.customer_phone, 40);
+  const accountId = text(body.billing_account_id, 40);
+  const contactId = text(body.communication_contact_id, 40);
+  if ((accountId && !UUID.test(accountId)) || (contactId && (!UUID.test(contactId) || !accountId))) {
+    return NextResponse.json({ error: 'Ongeldig klantaccount of contactpersoon.' }, { status: 400 });
+  }
+  let customerPhone = text(body.customer_phone, 40);
+  let customerName = text(body.customer_name, 120);
+  if (accountId) {
+    const db = createSupabaseAdminClient();
+    const { data: account, error } = await db.from('kfc_customers').select('account_kind')
+      .eq('id', accountId).not('account_kind', 'is', null).is('merged_into', null).is('anonymised_at', null).maybeSingle();
+    if (error) return NextResponse.json({ error: 'Klantaccount ophalen mislukt.' }, { status: 500 });
+    if (!account || (contactId && account.account_kind !== 'company')) {
+      return NextResponse.json({ error: 'Ongeldig klantaccount of contactpersoon.' }, { status: 400 });
+    }
+    if (contactId) {
+      const { data: member, error: contactError } = await db.from('kfc_customer_contacts')
+        .select('contacts!inner(display_name, phone_e164)').eq('customer_id', accountId).eq('contact_id', contactId)
+        .eq('contacts.active', true).maybeSingle();
+      if (contactError) return NextResponse.json({ error: 'Contactpersoon ophalen mislukt.' }, { status: 500 });
+      const contact = member?.contacts as unknown as { display_name: string; phone_e164: string } | undefined;
+      if (!contact) return NextResponse.json({ error: 'Deze contactpersoon hoort niet bij het gekozen bedrijf.' }, { status: 400 });
+      customerName = contact.display_name;
+      customerPhone = contact.phone_e164;
+    }
+  }
   if (!customerPhone || customerPhone.replace(/\D/g, '').length < 9) {
     return NextResponse.json(
       { error: 'Vul het telefoonnummer van de klant in (minimaal 9 cijfers). Zonder nummer kunnen we de klant niet bellen of de klus aan de aanvraag koppelen.' },
@@ -205,7 +231,9 @@ export async function POST(request: Request) {
     car_model: text(body.car_model, 60),
     car_year: carYear,
     keyless: bool(body.keyless),
-    customer_name: text(body.customer_name, 120),
+    billing_account_id: accountId,
+    communication_contact_id: contactId,
+    customer_name: customerName,
     customer_phone: customerPhone,
     service_type: text(body.service_type, 120),
     /* The office picks "Sleutel bijmaken" from a list; that IS the scenario,

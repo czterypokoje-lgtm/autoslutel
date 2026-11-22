@@ -28,6 +28,8 @@ export interface DecodedCode {
  */
 export function trustedUnknownCode(code: DecodedCode, normalised: string) {
   const lines = code.lines ?? 0;
+  // A web link (the QR on our shelf labels points to the shop) names no stock code: the label's barcode counts it.
+  if (/^HTTPS?:\/\//.test(normalised)) return false;
   if (code.format === 'QRCode' || code.format === 'MicroQRCode' || code.format === 'DataMatrix') return true;
   if (['EAN13', 'EAN8', 'UPCA', 'UPCE'].includes(code.format)) return lines >= 3 && /^\d{8,14}$/.test(normalised);
   if (code.format === 'Code128') return lines >= 5 && normalised.length >= 6;
@@ -59,7 +61,8 @@ export interface BulkLine {
  * KFC. A label QR may hold a profile link (…/p/ALRK03); the code is its end.
  */
 export function normaliseCode(value: string) {
-  const link = value.trim().match(/^https?:\/\/[^\s]*\/p\/([^/?#\s]+)/i);
+  // Profile link (/p/ALRK03) or the article page our printed shelf label's QR holds (/admin/voorraad/artikel/KFC-1-2703).
+  const link = value.trim().match(/^https?:\/\/[^\s]*\/(?:p|admin\/voorraad\/artikel)\/([^/?#\s]+)/i);
   let code = value.trim();
   if (link) {
     try { code = decodeURIComponent(link[1]); } catch { code = link[1]; }
@@ -67,7 +70,12 @@ export function normaliseCode(value: string) {
   return code.toUpperCase().replace(/^H(?=FC-[123]-\d+$)/, 'K');
 }
 
-export function articleIndex(articles: StockArticle[]) {
+/**
+ * What a scanned code may stand for: an article's own code, its SKU, or a
+ * barcode learned for it (`barcodes`: barcode → article id, e.g. the
+ * manufacturer's EAN on the product). Our own codes win over a barcode.
+ */
+export function articleIndex(articles: StockArticle[], barcodes: Record<string, string> = {}) {
   const index = new Map<string, string>();
   const ambiguous = new Set<string>();
   for (const article of articles) {
@@ -79,6 +87,11 @@ export function articleIndex(articles: StockArticle[]) {
   }
   // A SKU shared by two articles cannot be counted safely: treat it as unknown.
   for (const key of ambiguous) index.delete(key);
+  const known = new Set(articles.map((article) => article.id));
+  for (const [barcode, id] of Object.entries(barcodes)) {
+    const key = barcode.trim().toUpperCase();
+    if (key && known.has(id) && !index.has(key) && !ambiguous.has(key)) index.set(key, id);
+  }
   return index;
 }
 

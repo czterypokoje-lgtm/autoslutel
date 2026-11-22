@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
 import { WOO_SHOPS, reconcile, wooConfigured, type WooShop } from '@/lib/kfcWoo';
 import { importOwnOrders } from '@/lib/kfcOwnShop';
+import { runStockPush } from '@/lib/kfcWooStock';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300;
@@ -22,5 +23,7 @@ export async function GET(request: Request) {
   const shops = (Object.keys(WOO_SHOPS) as WooShop[]).filter(wooConfigured);
   const results = [];
   for (const shop of shops) results.push(await reconcile(shop));
-  return NextResponse.json({ ran: results, skipped: (Object.keys(WOO_SHOPS) as WooShop[]).filter((s) => !wooConfigured(s)) });
+  // Stock push (0132): also drained here, so a missing frequent cron still syncs nightly.
+  const stock = await runStockPush({ budgetMs: 60_000 }).then((r) => ({ claimed: r.claimed, skipped: r.skipped }), (error: Error) => ({ error: error.message }));
+  return NextResponse.json({ ran: results, skipped: (Object.keys(WOO_SHOPS) as WooShop[]).filter((s) => !wooConfigured(s)), stock });
 }

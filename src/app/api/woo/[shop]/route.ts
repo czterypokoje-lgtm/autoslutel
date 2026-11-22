@@ -2,6 +2,7 @@ import { after } from 'next/server';
 import { IS_KEYFORCARS } from '@/config/install';
 import { isWooShop, upsertOrder, verifyWebhook, type WooOrder } from '@/lib/kfcWoo';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
+import { runStockPush } from '@/lib/kfcWooStock';
 
 export const runtime = 'nodejs';
 
@@ -32,6 +33,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ sho
     } catch (error) {
       await db.from('kfc_import_runs').insert({ shop, kind: 'webhook', finished_at: new Date().toISOString(), orders: 0, error: (error as Error).message });
     }
+    // A new or changed order moves reservations, so other shops' numbers change: push
+    // right away (a no-op while every WOO_<SHOP>_STOCK_PUSH is off). The cron catches misses.
+    await runStockPush({ budgetMs: 8_000, limit: 50 }).catch(() => undefined);
   });
   return Response.json({ ok: true });
 }

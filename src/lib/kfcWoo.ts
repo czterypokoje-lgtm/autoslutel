@@ -9,7 +9,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
  * Credentials come from the environment, one pair per shop:
  *   WOO_<SHOP>_KEY, WOO_<SHOP>_SECRET          REST API key (read/write)
  *   WOO_<SHOP>_WEBHOOK_SECRET                  the webhook's secret
- * with <SHOP> = KEYFORCARS, KLAPSLEUTELS, REMKEYS. The owner creates them in
+ * with <SHOP> = KEYFORCARS, KLAPSLEUTELS. The owner creates them in
  * WooCommerce (Settings → Advanced → REST API) and pastes them into Vercel.
  *
  * Import rules (docs/kfc-crm-plan.md §5.2): unique on (shop, order id), an
@@ -21,18 +21,22 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 export const WOO_SHOPS = {
   'keyforcars.nl': 'KEYFORCARS',
   'klapsleutels.nl': 'KLAPSLEUTELS',
-  'remkeys.com': 'REMKEYS',
 } as const;
 export type WooShop = keyof typeof WOO_SHOPS;
 export const isWooShop = (value: string): value is WooShop => value in WOO_SHOPS;
 
-export function wooCredentials(shop: WooShop) {
+/**
+ * A shop setting from the environment. Names are case-sensitive, and the shop
+ * part gets typed in lower case (WOO_keyforcars_SECRET): both spellings count,
+ * and stray spaces around a pasted value are dropped.
+ */
+export function wooSetting(shop: WooShop, name: string): string {
   const tag = WOO_SHOPS[shop];
-  return {
-    key: process.env[`WOO_${tag}_KEY`] ?? '',
-    secret: process.env[`WOO_${tag}_SECRET`] ?? '',
-    webhook: process.env[`WOO_${tag}_WEBHOOK_SECRET`] ?? '',
-  };
+  return (process.env[`WOO_${tag}_${name}`] ?? process.env[`WOO_${tag.toLowerCase()}_${name}`] ?? process.env[`woo_${tag.toLowerCase()}_${name.toLowerCase()}`] ?? '').trim();
+}
+
+export function wooCredentials(shop: WooShop) {
+  return { key: wooSetting(shop, 'KEY'), secret: wooSetting(shop, 'SECRET'), webhook: wooSetting(shop, 'WEBHOOK_SECRET') };
 }
 export const wooConfigured = (shop: WooShop) => { const c = wooCredentials(shop); return !!(c.key && c.secret); };
 
@@ -50,16 +54,62 @@ export interface WooOrder {
 const cents = (value: string | number | null | undefined) => Math.round(Number(value ?? 0) * 100);
 const gmt = (value: string | null | undefined) => (value ? `${value}Z` : null);
 
-async function wooFetch(shop: WooShop, path: string, init: RequestInit = {}) {
+/**
+ * One authenticated request to a shop. Basic auth first. Some hosts drop the
+ * Authorization header before WordPress sees it, and WooCommerce then answers
+ * 401 to a valid key; its documented way around that is the key pair as query
+ * parameters (HTTPS only), so a 401 is retried once that way. The timeout keeps
+ * a hung shop from holding the import, the nightly reconcile or the "ship"
+ * write-back until the platform kills the function.
+ */
+export async function wooRequest(shop: WooShop, path: string, init: RequestInit = {}, timeoutMs = 20_000): Promise<Response> {
   const { key, secret } = wooCredentials(shop);
   if (!key || !secret) throw new Error(`WooCommerce credentials for ${shop} are not configured.`);
-  const response = await fetch(`https://${shop}/wp-json/wc/v3${path}`, {
-    ...init,
-    headers: { Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}`, 'Content-Type': 'application/json', ...(init.headers ?? {}) },
-    cache: 'no-store',
-  });
-  if (!response.ok) throw new Error(`${shop} ${path}: HTTP ${response.status}`);
+  const url = `https://${shop}/wp-json/wc/v3${path}`;
+  const headers = { 'Content-Type': 'application/json', ...(init.headers ?? {}) };
+  const signal = () => init.signal ?? AbortSignal.timeout(timeoutMs);
+  const first = await fetch(url, { ...init, cache: 'no-store', signal: signal(), headers: { Authorization: `Basic ${Buffer.from(`${key}:${secret}`).toString('base64')}`, ...headers } });
+  if (first.status !== 401) return first;
+  const pair = new URLSearchParams({ consumer_key: key, consumer_secret: secret }).toString();
+  return fetch(`${url}${url.includes('?') ? '&' : '?'}${pair}`, { ...init, cache: 'no-store', signal: signal(), headers });
+}
+
+/** WooCommerce's own words for a refusal ({code, message}), so the screen says why and not only "HTTP 401". */
+export async function wooReason(response: Response): Promise<string> {
+  const body = (await response.text().catch(() => '')).slice(0, 400);
+  try {
+    const json = JSON.parse(body) as { code?: string; message?: string };
+    return [json.code, json.message].filter(Boolean).join(': ').slice(0, 200);
+  } catch {
+    return body.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+  }
+}
+
+async function wooFetch(shop: WooShop, path: string, init: RequestInit = {}) {
+  const response = await wooRequest(shop, path, init);
+  if (!response.ok) {
+    const reason = await wooReason(response);
+    // The path without its query: a retried request carries the key pair there.
+    throw new Error(`${shop} ${path.split('?')[0]}: HTTP ${response.status}${reason ? ` (${reason})` : ''}`);
+  }
   return response;
+}
+
+async function syncRefunds(shop: WooShop, order: WooOrder, orderId: string) {
+  const db = createSupabaseAdminClient();
+  for (const summary of order.refunds ?? []) {
+    const { data: previous, error: readError } = await db.from('kfc_shop_order_refunds')
+      .select('created_at').eq('order_id', orderId).eq('woo_refund_id', summary.id).maybeSingle();
+    if (readError) throw readError;
+    if (previous?.created_at) continue;
+    const response = await wooFetch(shop, `/orders/${order.id}/refunds/${summary.id}`);
+    const detail = await response.json();
+    const { error } = await db.from('kfc_shop_order_refunds').upsert({
+      order_id: orderId, woo_refund_id: summary.id, amount_cents: Math.abs(cents(summary.total)),
+      created_at: gmt(detail.date_created_gmt), raw: detail,
+    }, { onConflict: 'order_id,woo_refund_id' });
+    if (error) throw error;
+  }
 }
 
 /** Store or refresh one order. Returns 'inserted' | 'updated' | 'unchanged'. */
@@ -67,7 +117,10 @@ export async function upsertOrder(shop: WooShop, order: WooOrder): Promise<'inse
   const db = createSupabaseAdminClient();
   const modified = gmt(order.date_modified_gmt)!;
   const existing = await db.from('kfc_shop_orders').select('id, modified_at, fulfilment').eq('shop', shop).eq('woo_order_id', order.id).maybeSingle();
-  if (existing.data && existing.data.modified_at >= modified) return 'unchanged';
+  if (existing.data && Date.parse(existing.data.modified_at) >= Date.parse(modified)) {
+    await syncRefunds(shop, order, existing.data.id);
+    return 'unchanged';
+  }
 
   const closed = ['cancelled', 'refunded', 'failed', 'trash'].includes(order.status);
   const fulfilment = existing.data
@@ -102,11 +155,7 @@ export async function upsertOrder(shop: WooShop, order: WooOrder): Promise<'inse
     const result = await db.from('kfc_shop_order_lines').upsert(lines, { onConflict: 'order_id,woo_line_id' });
     if (result.error) throw new Error(`Lines ${shop}#${order.number}: ${result.error.message}`);
   }
-  if (order.refunds?.length) {
-    await db.from('kfc_shop_order_refunds').upsert(order.refunds.map((refund) => ({
-      order_id: orderId, woo_refund_id: refund.id, amount_cents: Math.abs(cents(refund.total)), raw: refund,
-    })), { onConflict: 'order_id,woo_refund_id' });
-  }
+  await syncRefunds(shop, order, orderId);
   return existing.data ? 'updated' : 'inserted';
 }
 
