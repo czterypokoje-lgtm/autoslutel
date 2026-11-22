@@ -13,7 +13,7 @@ const MAX_ROWS = 10000;
 const ANY_CLICK_ID = 'gclid.not.is.null,wbraid.not.is.null,gbraid.not.is.null';
 const CLICK_COLUMNS = 'id, ref, created_at, claimed_by_job_id, gclid, wbraid, gbraid';
 
-async function readPaged<T>(
+export async function readPaged<T>(
   supabase: SupabaseClient,
   table: string,
   columns: string,

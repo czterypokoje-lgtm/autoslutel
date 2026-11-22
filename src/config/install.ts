@@ -83,6 +83,7 @@ const KEYFORCARS_HIDDEN = [
   '/admin/whatsapp-analyse',
   '/admin/klikfraude',
   '/admin/attributie',
+  '/admin/conversies', // Google Ads conversion review (Autosleutel24 ads); also closes /api/admin/conversies
 ];
 
 /**

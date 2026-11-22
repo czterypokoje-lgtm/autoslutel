@@ -63,6 +63,7 @@ export const reportLinks = [
   { label: 'Winst & verbruik', href: '/admin/winst' },
   { label: 'Rapportage', href: '/admin/rapportage' },
   { label: 'Advertentieklikken', href: '/admin/attributie' },
+  { label: 'Conversies naar Google', href: '/admin/conversies' },
   { label: 'WhatsApp en advertenties', href: '/admin/whatsapp-advertenties' },
   { label: 'WhatsApp-analyse', href: '/admin/whatsapp-analyse' },
   { label: 'Klikfraude', href: '/admin/klikfraude' },
