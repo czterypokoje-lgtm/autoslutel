@@ -7,11 +7,13 @@
  * home address, and never an address you do not actually work with. Only our
  * own phone is shown; the partner's number never goes on the site.
  *
- * Add a partner: one object, keyed by the city slug from src/config/cities.ts.
+ * Add a partner: one object, listing the city slugs from src/config/cities.ts
+ * whose pages show it -- its own city, plus nearby city pages when its own
+ * town has no page. The card names the partner's own town, never the page's.
  */
 export type PartnerLocation = {
-  /** City slug from CITIES, e.g. 'amsterdam'. */
-  citySlug: string;
+  /** City slugs from CITIES whose pages show this partner, e.g. ['amsterdam']. */
+  citySlugs: readonly string[];
   name: string;
   street: string;
   postalCode: string;
@@ -25,7 +27,7 @@ export type PartnerLocation = {
 
 export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
   {
-    citySlug: 'amsterdam',
+    citySlugs: ['amsterdam'],
     name: 'Garage NRD',
     street: 'Draaierweg 10',
     postalCode: '1032 KS',
@@ -35,9 +37,9 @@ export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
     schemaType: 'AutoRepair',
   },
   {
-    // Heerhugowaard has no city page of its own; it sits next to Alkmaar
-    // (gemeente Dijk en Waard), so the card goes on the Alkmaar page.
-    citySlug: 'alkmaar',
+    // Heerhugowaard has no city page of its own, so the card goes on the
+    // nearest ones: Alkmaar (~6 km) and Purmerend (~25 km).
+    citySlugs: ['alkmaar', 'purmerend'],
     name: 'Key For Cars Autobedrijf sleutels hhw',
     street: 'Pascalstraat 27',
     postalCode: '1704 RE',
@@ -48,7 +50,7 @@ export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
   },
 ];
 
-export const partnerForCity = (slug: string) => PARTNER_LOCATIONS.find((p) => p.citySlug === slug);
+export const partnerForCity = (slug: string) => PARTNER_LOCATIONS.find((p) => p.citySlugs.includes(slug));
 
 /** The address only, so Google's card shows the street address (owner's choice, 25 Oct 2026). */
 export const partnerMapsQuery = (p: PartnerLocation) => `${p.street}, ${p.postalCode} ${p.locality}`;

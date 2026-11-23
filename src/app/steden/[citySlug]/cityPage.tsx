@@ -884,7 +884,7 @@ export async function CityPageBody({ citySlug }: { citySlug: string }) {
 
 
         {/* ── PARTNER LOCATION ──────────────────────────────────
-          A real partner garage in this city (src/config/partnerLocations.ts):
+          A real partner garage in or near this city (src/config/partnerLocations.ts):
           address card with an auto-loading Google map. The partner's name and
           phone are not shown on the page (owner's choice, 25 Oct 2026); the
           call and appointment buttons go to Autosleutel24. */}
@@ -892,7 +892,7 @@ export async function CityPageBody({ citySlug }: { citySlug: string }) {
           <section style={{ padding: '3.5rem 0', background: '#f9fafb' }}>
             <div className="container">
               <p style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#f97316', marginBottom: '0.5rem' }}>
-                ONZE PARTNER IN {city.city.toUpperCase()}
+                ONZE PARTNER IN {partner.locality.toUpperCase()}
               </p>
               <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: '0 0 1.5rem 0' }}>
                 Autosleutel bijmaken in {city.city}
