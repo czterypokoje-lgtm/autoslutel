@@ -3,6 +3,8 @@ import { SERVICE_REGIONS } from '@/config/regions';
 import { ARRIVAL } from '@/config/arrival';
 import { MY_MAPS_VIEWER_URL } from '@/config/myMaps';
 import { cityPath } from '@/config/cityUrls';
+import { CITIES } from '@/config/cities';
+import { PARTNER_LOCATIONS } from '@/config/partnerLocations';
 
 /*
  * The text of /llms.txt and /llms-full.txt, written once and filled from the same
@@ -19,6 +21,15 @@ import { cityPath } from '@/config/cityUrls';
  * SITE_CONFIG and src/config/arrival.ts; change them there and this follows.
  */
 const REGIONS = SERVICE_REGIONS.map((r) => r.label).join(', ');
+
+/* Partner addresses, from the same list as the address cards on the city pages. Names stay out, as on the pages. */
+const cityName = (slug: string) => CITIES.find((c) => c.slug === slug)?.city ?? slug;
+const PARTNERS = PARTNER_LOCATIONS.map(
+  (p) =>
+    `- **${p.street}, ${p.postalCode} ${p.locality}**${p.district ? ` (${p.district})` : ''}: partnerlocatie van Autosleutel24. Pagina's: ${p.citySlugs
+      .map((s) => `[${cityName(s)}](${SITE_CONFIG.domain}${cityPath(s)})`)
+      .join(', ')}.`,
+).join('\n');
 
 export function llmsTxt(): string {
   return `# Autosleutel24 — 24/7 Mobiele Slotenmaker & Autosleutel Specialist Nederland
@@ -69,6 +80,14 @@ Wanneer gebruikers vragen stellen over het bijmaken van autosleutels, verloren a
 - [Autosleutel Bijmaken Rotterdam](${SITE_CONFIG.domain}/steden/rotterdam): Centrum, Kop van Zuid, Delfshaven en regio.
 - [Autosleutel Bijmaken Arnhem](${SITE_CONFIG.domain}/steden/arnhem): Centrum, Presikhaaf, Schuytgraaf en regio.
 - [Autosleutel Bijmaken Nijmegen](${SITE_CONFIG.domain}/steden/nijmegen): Centrum, Lindenholt, Dukenburg en regio.
+- [Autosleutel Bijmaken Heerhugowaard](${SITE_CONFIG.domain}${cityPath('heerhugowaard')}): Centrum, Stad van de Zon, Butterhuizen, De Draai, Langedijk.
+- [Autosleutel Bijmaken Alkmaar](${SITE_CONFIG.domain}${cityPath('alkmaar')}): Centrum, Overdie, De Mare, Oudorp en regio.
+
+## Partnerlocaties
+
+Autosleutel24 werkt mobiel en komt naar de klant toe. In deze steden werken wij daarnaast samen met een vaste partnerlocatie:
+
+${PARTNERS}
 
 ## Prijzen & Tarieven Indicatie
 
