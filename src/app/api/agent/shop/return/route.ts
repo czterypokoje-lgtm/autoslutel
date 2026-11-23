@@ -1,7 +1,8 @@
 import { asText, checkShopAgent } from '@/lib/agentAuth';
 import { toE164NL } from '@/lib/phone';
+import { sendMail } from '@/lib/email';
 import {
-  NOT_FOUND, RETURN_LABEL, asCondition, decideReturn, normEmail, orderItems, orderNumberCandidates, ownsOrder,
+  NOT_FOUND, RETURN_LABEL, asCondition, decideReturn, normEmail, orderItems, orderNumberCandidates, ownsOrder, returnConfirmationMail,
 } from '@/lib/shopAgent';
 import { conversationId, findOrder, json, markReturnRequested, readBody, tellOffice, withinLimits } from '@/lib/shopAgentServer';
 
@@ -13,12 +14,20 @@ export const dynamic = 'force-dynamic';
  * Body: { order_number, email?, postcode?, condition, reason, items?, customer_name?, customer_phone?, conversation_id, dry_run? }
  * condition is one of ongebruikt | bewerkt | defect (an enum in the tool schema).
  *
- * Registers the request on the order (return_requested_at, return_reason) and
- * puts it in Gesprekken and Telegram. It does not accept or refuse a return
- * and it promises no refund: decideReturn sorts it into retour, garantie or
- * beoordeling, and the office answers by e-mail with the return address and
- * what happens next. dry_run checks everything and writes nothing.
+ * decideReturn sorts the request by EU/NL consumer law; the agent never
+ * refuses, the office judges exceptions. A withdrawal (and every other
+ * request) is put on the order, in Gesprekken and Telegram, and confirmed to
+ * the order's e-mail with date and time: a withdrawal made in the chat is
+ * valid (art. 11 CRD) and wants an acknowledgement on a durable medium.
+ *
+ * A defect is not a withdrawal: it does not set return_requested_at, so an
+ * earlier return never blocks a later warranty report; its own bucket keeps a
+ * retried call from reporting it twice.
+ *
+ * Every answer the agent should read out is a 200 with `say`.
  */
+const BUSY = { registered: false, say: 'Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan regelt een collega de retour.' };
+
 export async function POST(request: Request) {
   const auth = checkShopAgent(request);
   if (!auth.ok) return json({ error: auth.error }, auth.status);
@@ -32,35 +41,55 @@ export async function POST(request: Request) {
   }
   const condition = asCondition(body.condition);
   if (!condition) {
-    return json({ registered: false, say: 'Is het artikel nog ongebruikt (uitpakken en bekijken mag), is het gefreesd, ingeleerd of geopend, of werkt het niet?' });
+    return json({ registered: false, say: 'Is het artikel nog ongebruikt (uitpakken en bekijken mag), heeft u het al gebruikt, laten frezen of inleren, of werkt het niet?' });
   }
   const reason = asText(body.reason, 400);
   if (!reason) return json({ registered: false, say: 'Wat is de reden dat u het wilt terugsturen?' });
 
   const conversation = conversationId(body);
   const allowed = await withinLimits([
-    [`return:${candidates[0]}`, 4, 3600],
     ...(conversation ? [[`return-conv:${conversation}`, 3, 3600] as [string, number, number]] : []),
     ['return-all', 60, 3600],
   ]);
-  if (!allowed) return json({ registered: false, say: 'Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan regelt een collega de retour.' });
+  if (!allowed) return json(BUSY);
 
+  let order;
   try {
-    const order = await findOrder(candidates);
-    if (!order || !ownsOrder(order, body)) return json({ registered: false, ...NOT_FOUND });
+    order = await findOrder(candidates);
+    if (!order) return json({ registered: false, ...NOT_FOUND });
+    if (!(await withinLimits([[`verify:${order.order_number}`, 6, 3600]]))) return json(BUSY);
+    if (!ownsOrder(order, body)) return json({ registered: false, ...NOT_FOUND });
+  } catch (error) {
+    console.error('[shop agent] return lookup failed:', error instanceof Error ? error.message : error);
+    return json({ registered: false, service_error: true, say: 'Het registreren lukt nu niet. Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan regelt een collega de retour.' });
+  }
 
-    const decision = decideReturn(order, condition);
-    if (!decision.register) return json({ registered: false, outcome: decision.outcome, say: decision.say });
+  const decision = decideReturn(order, condition);
+  if (!decision.register) return json({ registered: false, outcome: decision.outcome, say: decision.say });
+  if (body.dry_run === true) return json({ registered: false, dry_run: true, kind: decision.kind, say: decision.say });
 
-    const items = asText(body.items, 300);
-    if (body.dry_run === true) return json({ registered: false, dry_run: true, kind: decision.kind, say: decision.say });
-
-    const written = await markReturnRequested(order.order_number, `${decision.kind}: ${condition} — ${reason}`);
-    if (!written) {
+  /* The write that makes it a registered request. Everything after it is telling people. */
+  try {
+    if (decision.kind === 'garantie') {
+      if (!(await withinLimits([[`garantie:${order.order_number}`, 1, 86_400]]))) {
+        return json({ registered: false, outcome: 'al_aangevraagd', say: 'Deze melding heb ik vandaag al doorgegeven. Een collega neemt contact met u op.' });
+      }
+    } else if (!(await markReturnRequested(order.order_number, `${decision.kind}: ${condition} — ${reason}`))) {
       return json({ registered: false, outcome: 'al_aangevraagd', say: 'Voor deze bestelling is al een retourverzoek ingediend. Een collega neemt daarover contact met u op.' });
     }
+  } catch (error) {
+    console.error('[shop agent] return write failed:', error instanceof Error ? error.message : error);
+    return json({ registered: false, service_error: true, say: 'Het registreren lukt nu niet. Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan regelt een collega de retour.' });
+  }
+
+  let confirmed = false;
+  try {
+    const to = normEmail(order.email);
+    const mail = returnConfirmationMail(order.order_number, decision.kind, new Date());
+    confirmed = to ? await sendMail({ to, subject: mail.subject, text: mail.text }) : false;
 
     const ordered = orderItems(order.items).map((i) => `${i.quantity}× ${i.title}`).join(', ');
+    const items = asText(body.items, 300);
     await tellOffice({
       label: RETURN_LABEL[decision.kind],
       subject: `Retour ${order.order_number}`,
@@ -71,6 +100,7 @@ export async function POST(request: Request) {
         `Staat: ${condition}`,
         `Reden: ${reason}`,
         order.delivered_at ? `Bezorgd: ${order.delivered_at.slice(0, 10)}` : 'Bezorgdatum onbekend',
+        confirmed ? 'Bevestiging per e-mail verstuurd.' : 'LET OP: bevestigingsmail niet verstuurd — bevestig de ontvangst zelf per e-mail.',
       ],
       name: asText(body.customer_name, 80),
       email: normEmail(order.email),
@@ -78,10 +108,14 @@ export async function POST(request: Request) {
       conversation,
       meta: { kind: decision.kind, order_number: order.order_number },
     });
-    /* The request is on the order whether or not Telegram worked: the promise stands. */
-    return json({ registered: true, kind: decision.kind, say: decision.say });
   } catch (error) {
-    console.error('[shop agent] return failed:', error instanceof Error ? error.message : error);
-    return json({ registered: false, service_error: true, say: 'Het registreren lukt nu niet. Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan regelt een collega de retour.' }, 503);
+    /* Registered on the order (or in the warranty bucket) all the same: the promise stands. */
+    console.error('[shop agent] return notify failed:', error instanceof Error ? error.message : error);
   }
+
+  return json({
+    registered: true,
+    kind: decision.kind,
+    say: confirmed ? `${decision.say} U ontvangt hiervan ook een bevestiging per e-mail.` : decision.say,
+  });
 }

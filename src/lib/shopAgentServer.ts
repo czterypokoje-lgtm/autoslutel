@@ -37,7 +37,7 @@ export function conversationId(body: Record<string, unknown>): string | null {
 /**
  * Every bucket must have room, or the call is refused.
  *
- * In production a missing limiter refuses too: the site-wide rateLimit fails
+ * In production a missing or failing limiter refuses too: the site-wide rateLimit fails
  * open so a forms outage never costs a lead, but here failing open means an
  * anonymous script can read orders or fill the office's Telegram unchecked.
  * ElevenLabs calls from its own servers, so a per-IP bucket would put every
@@ -46,9 +46,11 @@ export function conversationId(body: Record<string, unknown>): string | null {
  */
 export async function withinLimits(buckets: [key: string, limit: number, windowSeconds: number][]): Promise<boolean> {
   if (!rateLimitConfigured && process.env.VERCEL_ENV === 'production') return false;
+  const production = process.env.VERCEL_ENV === 'production';
   for (const [key, limit, windowSeconds] of buckets) {
     const result = await rateLimit(`shop-agent:${key}`, limit, windowSeconds);
-    if (!result.ok) return false;
+    /* rateLimit lets a request through when Upstash errors (degraded); here that is a no in production. */
+    if (!result.ok || (result.degraded && production)) return false;
   }
   return true;
 }
@@ -140,15 +142,18 @@ export async function tellOffice(input: {
     console.error('[shop agent] inbox thread failed:', error instanceof Error ? error.message : error);
   }
 
+  /*
+   * Telegram has no processing agreement and keeps messages indefinitely, so
+   * it gets the label and the subject only; the customer's details and words
+   * stay in Gesprekken. Only when the thread could not be written does the
+   * message carry the content, because then it is the only record.
+   */
   const { data: recipients } = await db.from('admin_telegram').select('telegram_chat_id');
   const contact = [input.name, input.email, input.phone].filter(Boolean).join(' · ');
-  const message = [
-    esc(input.label),
-    contact ? `Klant: ${esc(contact)}` : null,
-    '',
-    ...lines.map(esc),
-    thread ? '\nStaat in Gesprekken.' : null,
-  ].filter((l) => l !== null).join('\n');
+  const message = (thread
+    ? [esc(input.label), esc(input.subject), 'Staat in Gesprekken.']
+    : [esc(input.label), contact ? `Klant: ${esc(contact)}` : null, '', ...lines.map(esc), '\nNIET in Gesprekken opgeslagen.']
+  ).filter((l) => l !== null).join('\n');
 
   let delivered = 0;
   for (const r of recipients ?? []) {

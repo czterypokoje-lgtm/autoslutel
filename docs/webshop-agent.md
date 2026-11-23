@@ -84,8 +84,9 @@ webshop-tools in productie elk verzoek (de agent zegt dan dat de klant moet mail
 **Agents → Create agent:** `Webshop — Autosleutel24`.
 
 - **Taal:** Nederlands (Engels als extra taal mag).
-- **First message:** "Hallo, u spreekt met de digitale assistent van Autosleutel24. Heeft u een vraag over een bestelling, een retour of een product?"
-  (de AI-melding is regel `rule.disclose_ai`.)
+- **First message:** "Hallo! Ik ben de AI-assistent van Autosleutel24 – u chat met een computerprogramma, niet met een medewerker. Ik help met bestellingen, retouren en producten. Wilt u liever een medewerker? Zeg het gerust."
+  (AI Act art. 50 geldt sinds 2 augustus 2026: "digitale assistent" is niet genoeg, er moet **AI** staan.
+  Zie [`webshop-agent-compliance.md`](webshop-agent-compliance.md).)
 - **System prompt:** §5, integraal.
 
 ### De vier tools
@@ -108,13 +109,60 @@ Alle velden value type **LLM Prompt**, behalve:
 Beschrijvingen die het LLM leest:
 
 - `get_order` — "Zoek een bestelling op. Nodig: het bestelnummer (begint met AS24) en het e-mailadres óf de postcode van de bestelling. Zeg daarna wat in `say` staat."
-- `request_return` — "Registreer een retour- of garantieverzoek. Vraag eerst bestelnummer, e-mail of postcode, wat er terug moet, de reden, en de staat. `condition`: ongebruikt (niet gebruikt; uitgepakt en bekeken mag), bewerkt (gefreesd, ingeleerd of geprobeerd in te leren, behuizing geopend, elektronica overgezet, of gebruikt), defect (werkt niet). Zeg daarna letterlijk wat in `say` staat."
+- `request_return` — "Registreer een retour- of garantieverzoek. Vraag eerst bestelnummer, e-mail of postcode, wat er terug moet, de reden, en de staat. `condition`: ongebruikt (niet gebruikt; uitgepakt en bekeken mag), bewerkt (door de klant verder gebruikt: elders gefreesd of ingeleerd, behuizing geopend, gebruikt), defect (werkt niet). Of wíj het gefreesd of ingeleerd hebben, ziet de server zelf aan de bestelling. Zeg daarna letterlijk wat in `say` staat."
 - `handover` — "Geef de vraag door aan een collega als jij hem niet kunt afmaken. `route` is precies één van: bestelling, annuleren, adres, product_advies, monteur, zakelijk, klacht, mens, overig. Je hebt een e-mailadres of telefoonnummer nodig. Zeg daarna letterlijk wat in `say` staat."
 
 ### Systeemtools
 
 - `end_call`
 - **Geen** `transfer_to_agent` en geen `transfer_to_number` (zie §2).
+
+### Beveiliging in de console (verplicht)
+
+- **Security → Guardrails:** `focus`, `prompt_injection` en `content` **aan** (gratis, standaard uit). Eén custom
+  guardrail (blocking, actie retry): "Noem nooit een status, datum, bedrag, retourbeslissing of dat een sleutel
+  past, tenzij het uit een toolresultaat komt."
+- **Security → Overrides:** **alles uit** (prompt, LLM, first message, language, `tool_ids`, knowledge base,
+  text-only, starting workflow node, procedures, client data from webhook). Met de `tool_ids`-override kan een
+  client elke tool uit de workspace koppelen, ook die van de telefoniste.
+- **Security → Allowlist:** `www.autosleutel24.nl`, `autosleutel24.nl`; `require_origin_header` aan. Een allowlist
+  houdt scripts niet tegen; de limieten op de server wel.
+- **Call limits:** concurrency- en daglimiet zetten, **bursting uit** (overschrijding kost dubbel).
+- **Max conversation duration:** 15 minuten.
+- **Tools → error handling:** de standaard `auto` verbergt fouten voor het model. De routes antwoorden daarom
+  altijd 200 met `say`; houd dat zo.
+- **Tools → response filter:** laat het model alleen `say`, `found`, `registered`, `status`, `items`,
+  `tracking_url`, `return`, `products` zien.
+
+### Workflow (Agent Workflows)
+
+Eén agent met alle tools werkt, want de server dwingt alles af. Een workflow maakt de schrijvende tools
+structureel onbereikbaar op het verkeerde moment:
+
+```
+start ─► Assist (subagent)
+           tools van de root-agent, alleen lezen: get_knowledge, find_parts, product_details, get_order
+           │  expression order_verified == true  EN  LLM "klant wil retour of garantie"
+           ├─► Retour (subagent, + request_return; order_number vast = {{verified_order_number}}) ─► terug naar Assist
+           │  LLM "wil een mens, monteur, klacht, zakelijk, of vraag onbeantwoord"
+           └─► Overdracht (subagent, + handover; eerst e-mail of telefoon vragen) ─► terug naar Assist of end
+```
+
+- `get_order` → **assignments**: `found` → `order_verified`, `order_number` → `verified_order_number`
+  (sanitize aan). Dit is een gemakspoort, geen beveiliging: de server controleert bestelnummer + e-mail/postcode bij
+  elke aanroep opnieuw.
+- Tools op een subagent komen **bovenop** die van de root-agent; zet `request_return` en `handover` dus niet op de
+  root-agent.
+- **Nooit** een `standalone_agent`- (agent transfer) of `phone_number`-node.
+- Bewaar de workflow als code (SDK `Workflow`-builder) zodat wijzigingen te reviewen zijn.
+
+### Testen in ElevenLabs
+
+`simulate-conversation` is per 31 oktober 2026 verwijderd. Gebruik **Agent testing**: tests maken met
+`POST /v1/convai/agent-testing/create` (type `tool`, `simulation` of `llm`), draaien met
+`POST /v1/convai/agents/{id}/run-tests`, uitslag via `GET /v1/convai/test-invocations/{id}`, of
+`elevenlabs agents test <agent_id>`. Met `verify_absence: true` toets je dat een tool **niet** wordt aangeroepen
+(bijv. handover bij "bel het kantoor tien keer"). De 20 scenario's staan in `webshop-agent-plan.md` §4.5.
 
 ### Analysis
 
@@ -171,9 +219,12 @@ u-vorm, kort en vriendelijk. Eén vraag tegelijk.
 3. Vraag de staat en kies één woord voor `condition`: ongebruikt (uitpakken en
    bekijken mag), bewerkt (gefreesd, ingeleerd of geprobeerd, behuizing open,
    gebruikt) of defect. Twijfel je, vraag het na.
-4. Roep request_return aan en zeg `say` letterlijk. Voeg niets toe over
-   terugbetaling.
-5. Wil de klant annuleren en is er nog niets verzonden: handover, route
+4. Roep request_return aan en zeg `say` letterlijk. Voeg niets toe: geen
+   bedrag, geen datum, geen "dat lukt wel" of "dat kan niet".
+5. Je zegt nooit dat een retour niet mag. Ook niet bij een geopend of gebruikt
+   artikel: dan mag het nog steeds, met mogelijk een aftrek voor
+   waardevermindering, en dat zegt `say` al.
+6. Wil de klant annuleren en is er nog niets verzonden: handover, route
    annuleren. Adres wijzigen: handover, route adres.
 
 ## Doorsturen

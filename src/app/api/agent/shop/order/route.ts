@@ -13,7 +13,12 @@ export const dynamic = 'force-dynamic';
  *
  * Returns status, items, dates, track & trace and the return window. Never the
  * address, the phone number or what anything cost.
+ *
+ * Every answer the agent should read out is a 200 with `say`: a tool error
+ * status may not reach the model's context at all.
  */
+const BUSY = { found: false, say: 'Ik kan deze bestelling nu niet opzoeken. Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan kijkt een collega ernaar.' };
+
 export async function POST(request: Request) {
   const auth = checkShopAgent(request);
   if (!auth.ok) return json({ error: auth.error }, auth.status);
@@ -30,21 +35,21 @@ export async function POST(request: Request) {
   }
 
   const conversation = conversationId(body);
-  const allowed = await withinLimits([
-    [`order:${candidates[0]}`, 6, 3600],
-    ...(conversation ? [[`order-conv:${conversation}`, 10, 3600] as [string, number, number]] : []),
-    ['order-all', 300, 3600],
+  const lookups = await withinLimits([
+    ...(conversation ? [[`lookup-conv:${conversation}`, 10, 3600] as [string, number, number]] : []),
+    ['lookup-all', 300, 3600],
   ]);
-  if (!allowed) {
-    return json({ found: false, say: 'Ik kan deze bestelling nu niet opzoeken. Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan kijkt een collega ernaar.' });
-  }
+  if (!lookups) return json(BUSY);
 
   try {
     const order = await findOrder(candidates);
-    if (!order || !ownsOrder(order, body)) return json(NOT_FOUND);
+    if (!order) return json(NOT_FOUND);
+    /* Guesses at the e-mail or postcode of one real order: one budget per order, shared with request_return. */
+    if (!(await withinLimits([[`verify:${order.order_number}`, 6, 3600]]))) return json(BUSY);
+    if (!ownsOrder(order, body)) return json(NOT_FOUND);
     return json(orderView(order, new Date(), body.postcode));
   } catch (error) {
     console.error('[shop agent] order lookup failed:', error instanceof Error ? error.message : error);
-    return json({ found: false, service_error: true, say: 'Ik kan de bestellingen op dit moment niet inzien. Zal ik een collega vragen contact met u op te nemen?' }, 503);
+    return json({ found: false, service_error: true, say: 'Ik kan de bestellingen op dit moment niet inzien. Zal ik een collega vragen contact met u op te nemen?' });
   }
 }

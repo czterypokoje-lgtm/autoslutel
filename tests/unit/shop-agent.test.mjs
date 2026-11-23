@@ -49,13 +49,16 @@ test('fourteen days from delivery; without a delivery date, from shipping plus t
   for (const status of ['pending', 'cancelled', 'refunded']) assert.equal(returnWindow(order({ status }), NOW).state, 'not_applicable');
 });
 
-test('the agent never refuses a return; the office decides', () => {
+test('EU law: used beyond inspection keeps the right (loss in value); the office decides exceptions', () => {
   assert.equal(decideReturn(order(), 'ongebruikt', NOW).kind, 'retour');
   assert.equal(decideReturn(order(), 'defect', NOW).kind, 'garantie');
-  assert.equal(decideReturn(order(), 'bewerkt', NOW).kind, 'beoordeling');
+  assert.equal(decideReturn(order(), 'bewerkt', NOW).kind, 'waardevermindering');
+  assert.doesNotMatch(decideReturn(order(), 'bewerkt', NOW).say, /niet (retour|terug)/i);
   assert.equal(decideReturn(order({ delivered_at: '2026-10-01T10:00:00Z' }), 'ongebruikt', NOW).kind, 'beoordeling');
   assert.equal(decideReturn(order({ delivered_at: '2026-10-01T10:00:00Z' }), 'defect', NOW).kind, 'garantie');
   assert.equal(decideReturn(order({ return_requested_at: '2026-11-20T10:00:00Z' }), 'ongebruikt', NOW).outcome, 'al_aangevraagd');
+  // A defect months after an earlier return is still a new warranty report.
+  assert.equal(decideReturn(order({ return_requested_at: '2026-11-20T10:00:00Z' }), 'defect', NOW).kind, 'garantie');
   assert.equal(decideReturn(order({ status: 'processing', shipped_at: null, delivered_at: null }), 'ongebruikt', NOW).outcome, 'nog_niet_verzonden');
   assert.equal(decideReturn(order({ status: 'refunded' }), 'ongebruikt', NOW).outcome, 'niet_van_toepassing');
 });
@@ -65,7 +68,9 @@ test('made to order (a service on any line) is always for a person', () => {
   assert.equal(madeToOrder(cut.items), true);
   assert.equal(madeToOrder(order().items), false);
   assert.equal(madeToOrder([{ title: 'oud', quantity: 1 }]), false);
-  assert.equal(decideReturn(cut, 'ongebruikt', NOW).kind, 'beoordeling');
+  assert.equal(decideReturn(cut, 'ongebruikt', NOW).kind, 'maatwerk');
+  assert.equal(decideReturn(cut, 'bewerkt', NOW).kind, 'maatwerk');
+  assert.match(decideReturn(cut, 'ongebruikt', NOW).say, /in principe niet/);
   assert.equal(decideReturn(cut, 'defect', NOW).kind, 'garantie');
 });
 
@@ -78,11 +83,32 @@ test('the item\'s state is one of three exact words, never guessed from a senten
   }
 });
 
-test('the plain return repeats the published page and promises no refund', () => {
+test('the plain withdrawal states what the law gives: return in 14 days, refund incl. standard delivery', () => {
   const say = decideReturn(order(), 'ongebruikt', NOW).say;
-  assert.match(say, /binnen 14 dagen/);
+  assert.match(say, /binnen 14 dagen terug/);
   assert.match(say, /retourkosten zijn voor uw rekening/);
-  assert.doesNotMatch(say, /terugbetaal|geld terug|terugstort/i);
+  assert.match(say, /standaard verzendkosten binnen 14 dagen terug/);
+});
+
+test('the last day of the period counts in full, in Amsterdam calendar days', () => {
+  // delivered 9 Nov 10:00 Amsterdam; 23 Nov late evening is still day 14
+  const o = order({ delivered_at: '2026-11-09T09:00:00Z' });
+  assert.equal(returnWindow(o, new Date('2026-11-23T22:30:00Z')).state, 'open');
+  assert.equal(returnWindow(o, new Date('2026-11-23T23:30:00Z')).state, 'closed'); // 24 Nov 00:30 in Amsterdam
+  assert.equal(orderView(o, new Date('2026-11-23T10:00:00Z')).return.until, 'maandag 23 november');
+});
+
+test('Belgian postcodes verify too', () => {
+  assert.equal(ownsOrder(order({ postcode: '1000' }), { postcode: '1000' }), true);
+  assert.equal(ownsOrder(order({ postcode: '1000' }), { postcode: '2000' }), false);
+});
+
+test('the confirmation e-mail names the order, the moment and what was received', async () => {
+  const { returnConfirmationMail } = await import('../../src/lib/shopAgent.ts');
+  const mail = returnConfirmationMail('AS24-26-K7Q2XM', 'retour', new Date('2026-11-23T13:05:00Z'));
+  assert.match(mail.subject, /Bevestiging herroeping — bestelling AS24-26-K7Q2XM/);
+  assert.match(mail.text, /23 november 2026 om 14:05/);
+  assert.match(mail.text, /herroeping ontvangen/);
 });
 
 test('the order view leaks no address, phone, prices or postcode', () => {

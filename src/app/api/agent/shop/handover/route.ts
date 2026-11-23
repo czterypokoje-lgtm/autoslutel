@@ -40,12 +40,17 @@ export async function POST(request: Request) {
   ]);
   if (!allowed) return json({ handed_over: false, say: handoverSay(route, false, true) });
 
-  const { reached } = await tellOffice({
-    label: ROUTES[route].label,
-    subject: orderNumber ? `${ROUTES[route].subject} ${orderNumber}` : ROUTES[route].subject,
-    lines: [orderNumber ? `Bestelling: ${orderNumber} (niet geverifieerd)` : null, summary],
-    name, email, phone, conversation,
-    meta: { route, order_number: orderNumber },
-  });
+  let reached = false;
+  try {
+    ({ reached } = await tellOffice({
+      label: ROUTES[route].label,
+      subject: orderNumber ? `${ROUTES[route].subject} ${orderNumber}` : ROUTES[route].subject,
+      lines: [orderNumber ? `Bestelling: ${orderNumber} (niet geverifieerd)` : null, summary],
+      name, email, phone, conversation,
+      meta: { route, order_number: orderNumber },
+    }));
+  } catch (error) {
+    console.error('[shop agent] handover failed:', error instanceof Error ? error.message : error);
+  }
   return json({ handed_over: reached, say: handoverSay(route, reached, true) });
 }

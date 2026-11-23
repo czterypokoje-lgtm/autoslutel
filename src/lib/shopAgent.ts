@@ -49,9 +49,10 @@ export const normEmail = (value: unknown): string | null => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? v : null;
 };
 
+/** Dutch (1404HT) or Belgian (1000) postcode; the shop's checkout accepts both. */
 export const normPostcode = (value: unknown): string | null => {
   const v = typeof value === 'string' ? value.toUpperCase().replace(/\s+/g, '') : '';
-  return /^\d{4}[A-Z]{2}$/.test(v) ? v : null;
+  return /^[1-9]\d{3}([A-Z]{2})?$/.test(v) ? v : null;
 };
 
 /* ── the order as the agent may see it ───────────────────────────────── */
@@ -146,7 +147,16 @@ export const RETURN_DAYS = 14;
  * this many days after shipping; later than that a person decides.
  */
 export const TRANSIT_DAYS = 7;
-const DAY = 86_400_000;
+
+/** YYYY-MM-DD of an instant in Amsterdam. */
+export function amsterdamDate(d: Date): string {
+  return new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Europe/Amsterdam' }).format(d);
+}
+function addDays(day: string, n: number): string {
+  const d = new Date(`${day}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
 
 export type ReturnWindow =
   | { state: 'open'; until: string | null }      // within 14 days of delivery (or of the latest likely delivery)
@@ -157,13 +167,18 @@ export type ReturnWindow =
 export function returnWindow(order: Pick<OrderRow, 'status' | 'shipped_at' | 'delivered_at'>, now = new Date()): ReturnWindow {
   if (['pending', 'cancelled', 'refunded'].includes(order.status)) return { state: 'not_applicable' };
   if (order.status === 'paid' || order.status === 'processing') return { state: 'not_shipped' };
-  const start = order.delivered_at
-    ? new Date(order.delivered_at).getTime()
-    : order.shipped_at ? new Date(order.shipped_at).getTime() + TRANSIT_DAYS * DAY : NaN;
+  const from = order.delivered_at ?? order.shipped_at;
   /* Shipped with no date at all: nothing to count from, a person decides if it is late. */
-  if (Number.isNaN(start)) return { state: 'open', until: null };
-  const until = new Date(start + RETURN_DAYS * DAY);
-  return until.getTime() >= now.getTime() ? { state: 'open', until: until.toISOString() } : { state: 'closed', until: until.toISOString() };
+  if (!from || Number.isNaN(new Date(from).getTime())) return { state: 'open', until: null };
+  /*
+   * Calendar days in Amsterdam, and the last day counts in full: delivered on
+   * the 9th, the period runs to the end of the 23rd. Day arithmetic on the
+   * date, not on milliseconds, so a DST change cannot move it.
+   */
+  const days = RETURN_DAYS + (order.delivered_at ? 0 : TRANSIT_DAYS);
+  const lastDay = addDays(amsterdamDate(new Date(from)), days);
+  const until = `${lastDay}T12:00:00Z`; // noon UTC: the same calendar day in Amsterdam, for dutchDate
+  return amsterdamDate(now) <= lastDay ? { state: 'open', until } : { state: 'closed', until };
 }
 
 /* ── what the agent says about an order ──────────────────────────────── */
@@ -227,9 +242,8 @@ export const NOT_FOUND = {
  * The item's state, as one of three words the agent picks (an enum in the tool
  * schema, not free text: "niet geopend" must never read as "geopend").
  *   ongebruikt  not used; unpacked and looked at, as in a shop, still counts
- *               (shop page /verzending-en-retour)
- *   bewerkt     cut, programmed or tried, housing opened, electronics moved,
- *               or otherwise used
+ *   bewerkt     used beyond that by the customer: cut, programmed or tried
+ *               elsewhere, housing opened, worn
  *   defect      does not work
  */
 export const CONDITIONS = ['ongebruikt', 'bewerkt', 'defect'] as const;
@@ -240,18 +254,37 @@ export function asCondition(value: unknown): Condition | null {
   return (CONDITIONS as readonly string[]).includes(text) ? (text as Condition) : null;
 }
 
-export type ReturnKind = 'retour' | 'garantie' | 'beoordeling';
+/*
+ * EU/NL consumer law (Directive 2011/83/EU, BW 6:230o-230s), as the owner
+ * asked the agent to follow it:
+ *   - 14 days from receipt; opening and inspecting "as in a shop" is allowed;
+ *   - used beyond that: the right to withdraw REMAINS, the trader may charge
+ *     the loss in value (art. 14(2), BW 6:230s) — never "no return";
+ *   - cut, programmed or transferred BY US on the order: made to order
+ *     (art. 16(c), BW 6:230p) — normally no withdrawal right, a person confirms;
+ *   - defect: the legal guarantee (BW 7:17-7:23), not withdrawal;
+ *   - a clear statement in the chat is a valid withdrawal (art. 11(1)); it is
+ *     registered and confirmed by e-mail, the office only judges exceptions.
+ * Outside the period, B2B and anything unclear: a person.
+ */
+export type ReturnKind = 'retour' | 'waardevermindering' | 'maatwerk' | 'garantie' | 'beoordeling';
 
 export type ReturnDecision =
   | { register: true; kind: ReturnKind; say: string }
   | { register: false; outcome: 'al_aangevraagd' | 'nog_niet_verzonden' | 'niet_van_toepassing'; say: string };
 
-/**
- * Register or not, and in which drawer. Never a refusal: anything that is not
- * a plain return inside the period becomes "beoordeling" for the office.
- */
+const SAY: Record<ReturnKind, string> = {
+  retour: 'Ik heb uw herroeping geregistreerd. Stuur het artikel binnen 14 dagen terug, compleet en in de originele verpakking; het retouradres staat op de pagina Verzending en retour en de retourkosten zijn voor uw rekening. Wij betalen het aankoopbedrag en de standaard verzendkosten binnen 14 dagen terug, zodra wij het artikel of uw verzendbewijs hebben.',
+  waardevermindering: 'U mag het artikel nog steeds retourneren, en ik heb uw herroeping geregistreerd. Omdat het verder is gebruikt dan nodig om het te bekijken, kunnen wij de waardevermindering in rekening brengen. Een collega beoordeelt dat en laat u het bedrag weten. Stuur het artikel binnen 14 dagen terug; het retouradres staat op de pagina Verzending en retour.',
+  maatwerk: 'Deze bestelling is op uw verzoek voor uw auto gefreesd, ingeleerd of overgezet, en is daarmee op maat gemaakt; daarvoor geldt de bedenktijd in principe niet. Ik heb uw verzoek wel doorgezet en een collega neemt contact met u op. Stuurt u nog niets terug voordat u van ons hoort.',
+  garantie: 'Bij een defect heeft u recht op een product dat goed werkt; dat is de wettelijke garantie, los van onze eigen garantie. Ik heb uw melding geregistreerd en een collega kijkt of herstel of vervanging mogelijk is. Stuurt u nog niets terug voordat u van ons hoort.',
+  beoordeling: 'Ik heb uw verzoek geregistreerd. Volgens onze gegevens is de bedenktijd van 14 dagen mogelijk voorbij; een collega kijkt ernaar en neemt contact met u op. Stuurt u nog niets terug voordat u van ons hoort.',
+};
+
+/** Register or not, and in which drawer. The agent never refuses; only the office can. */
 export function decideReturn(order: OrderRow, condition: Condition | null, now = new Date()): ReturnDecision {
-  if (order.return_requested_at) {
+  /* A defect can surface long after an earlier return request: it is never "already requested". */
+  if (order.return_requested_at && condition !== 'defect') {
     return { register: false, outcome: 'al_aangevraagd', say: 'Voor deze bestelling is al een retourverzoek ingediend. Een collega neemt daarover contact met u op; u hoeft niets opnieuw aan te vragen.' };
   }
   const window = returnWindow(order, now);
@@ -261,21 +294,43 @@ export function decideReturn(order: OrderRow, condition: Condition | null, now =
   if (window.state === 'not_shipped') {
     return { register: false, outcome: 'nog_niet_verzonden', say: 'Deze bestelling is nog niet verzonden, dus terugsturen is niet nodig. Wilt u hem annuleren? Dan geef ik dat door aan een collega.' };
   }
-  if (condition === 'defect') {
-    return { register: true, kind: 'garantie', say: 'Ik heb uw melding over het defecte artikel geregistreerd. Een collega neemt per e-mail contact met u op over de garantie. Stuurt u nog niets terug voordat u van ons hoort.' };
-  }
-  if (window.state === 'open' && condition === 'ongebruikt' && !madeToOrder(order.items)) {
-    /* Same words as the published page (shop /verzending-en-retour). No refund promise: that follows the inspection. */
-    return { register: true, kind: 'retour', say: 'Ik heb uw retour geregistreerd. Stuur het artikel binnen 14 dagen terug, compleet en in de originele verpakking. Het retouradres staat op de pagina Verzending en retour, en de retourkosten zijn voor uw rekening. Na ontvangst controleren wij het artikel en hoort u van ons.' };
-  }
-  return { register: true, kind: 'beoordeling', say: 'Ik heb uw verzoek geregistreerd. Omdat het artikel bewerkt of op maat gemaakt is, of de bedenktijd mogelijk voorbij is, beoordeelt een collega het. U hoort per e-mail van ons. Stuurt u nog niets terug voordat u van ons hoort.' };
+  const kind: ReturnKind =
+    condition === 'defect' ? 'garantie'
+    : madeToOrder(order.items) ? 'maatwerk'
+    : window.state === 'closed' ? 'beoordeling'
+    : condition === 'bewerkt' ? 'waardevermindering'
+    : 'retour';
+  return { register: true, kind, say: SAY[kind] };
 }
 
 export const RETURN_LABEL: Record<ReturnKind, string> = {
-  retour: '↩️ Retourverzoek webshop',
+  retour: '↩️ Herroeping webshop (ongebruikt, binnen termijn)',
+  waardevermindering: '↩️ Herroeping met mogelijke waardevermindering (gebruikt)',
+  maatwerk: '⚖️ Retourverzoek maatwerk (door ons gefreesd/ingeleerd) — beslissen',
   garantie: '🛠️ Garantiemelding webshop (defect)',
-  beoordeling: '⚖️ Retour ter beoordeling (bewerkt, op maat of buiten termijn)',
+  beoordeling: '⚖️ Retourverzoek mogelijk buiten de termijn — beslissen',
 };
+
+/** Confirmation on a durable medium (art. 11(3) CRD): what we received, and when. */
+export function returnConfirmationMail(orderNumber: string, kind: ReturnKind, at: Date): { subject: string; text: string } {
+  const when = new Intl.DateTimeFormat('nl-NL', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Amsterdam' }).format(at);
+  const withdrawal = kind === 'retour' || kind === 'waardevermindering';
+  return {
+    subject: `${withdrawal ? 'Bevestiging herroeping' : 'Uw verzoek ontvangen'} — bestelling ${orderNumber}`,
+    text: [
+      'Beste klant,',
+      '',
+      `Op ${when} hebben wij via de chat uw ${withdrawal ? 'herroeping' : kind === 'garantie' ? 'garantiemelding' : 'retourverzoek'} ontvangen voor bestelling ${orderNumber}.`,
+      '',
+      SAY[kind],
+      '',
+      'Heeft u vragen, beantwoord dan deze e-mail.',
+      '',
+      'Met vriendelijke groet,',
+      'Autosleutel24',
+    ].join('\n'),
+  };
+}
 
 /* ── routing: who takes over ─────────────────────────────────────────── */
 
