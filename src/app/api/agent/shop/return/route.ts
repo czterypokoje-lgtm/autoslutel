@@ -1,17 +1,17 @@
 import { asText, checkShopAgent } from '@/lib/agentAuth';
-import { rateLimit } from '@/lib/rateLimit';
 import { toE164NL } from '@/lib/phone';
 import {
   NOT_FOUND, RETURN_LABEL, asCondition, decideReturn, normEmail, orderItems, orderNumberCandidates, ownsOrder,
 } from '@/lib/shopAgent';
-import { findOrder, json, markReturnRequested, readBody, tellOffice } from '@/lib/shopAgentServer';
+import { conversationId, findOrder, json, markReturnRequested, readBody, tellOffice, withinLimits } from '@/lib/shopAgentServer';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * Tool `request_return` of the webshop agent.
  *
- * Body: { order_number, email?, postcode?, condition, reason, items?, customer_name?, customer_phone?, dry_run? }
+ * Body: { order_number, email?, postcode?, condition, reason, items?, customer_name?, customer_phone?, conversation_id, dry_run? }
+ * condition is one of ongebruikt | bewerkt | defect (an enum in the tool schema).
  *
  * Registers the request on the order (return_requested_at, return_reason) and
  * puts it in Gesprekken and Telegram. It does not accept or refuse a return
@@ -32,13 +32,18 @@ export async function POST(request: Request) {
   }
   const condition = asCondition(body.condition);
   if (!condition) {
-    return json({ registered: false, say: 'Is het artikel nog ongebruikt en in de verpakking, is het geopend, is het gefreesd of geprogrammeerd, of is het defect?' });
+    return json({ registered: false, say: 'Is het artikel nog ongebruikt (uitpakken en bekijken mag), is het gefreesd, ingeleerd of geopend, of werkt het niet?' });
   }
   const reason = asText(body.reason, 400);
   if (!reason) return json({ registered: false, say: 'Wat is de reden dat u het wilt terugsturen?' });
 
-  const limit = await rateLimit(`shop-order:${candidates[0]}`, 6, 3600);
-  if (!limit.ok) return json({ registered: false, say: 'Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan regelt een collega de retour.' });
+  const conversation = conversationId(body);
+  const allowed = await withinLimits([
+    [`return:${candidates[0]}`, 4, 3600],
+    ...(conversation ? [[`return-conv:${conversation}`, 3, 3600] as [string, number, number]] : []),
+    ['return-all', 60, 3600],
+  ]);
+  if (!allowed) return json({ registered: false, say: 'Mailt u ons op info@autosleutel24.nl met het bestelnummer, dan regelt een collega de retour.' });
 
   try {
     const order = await findOrder(candidates);
@@ -70,6 +75,7 @@ export async function POST(request: Request) {
       name: asText(body.customer_name, 80),
       email: normEmail(order.email),
       phone: toE164NL(asText(body.customer_phone, 40)),
+      conversation,
       meta: { kind: decision.kind, order_number: order.order_number },
     });
     /* The request is on the order whether or not Telegram worked: the promise stands. */

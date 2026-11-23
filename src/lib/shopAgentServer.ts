@@ -1,13 +1,19 @@
 import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { sendTelegram } from '@/lib/telegram';
+import { esc } from '@/lib/telegramText';
+import { rateLimit, rateLimitConfigured } from '@/lib/rateLimit';
 import { addMessage, formThread } from '@/lib/inbox/store';
 import { OWN_SHOP } from '@/lib/kfcOwnShop';
 import type { OrderRow } from '@/lib/shopAgent';
 
 /*
  * The database half of the webshop agent (/api/agent/shop/*). The decisions
- * live in shopAgent.ts; this file reads the order and tells the office.
+ * live in shopAgent.ts; this file reads the order, keeps the limits and tells
+ * the office.
+ *
+ * The chat widget is public: anyone can talk to the agent and talk it into
+ * calling a tool. Everything below assumes the arguments are hostile.
  */
 
 export const json = (body: unknown, status = 200) =>
@@ -22,16 +28,42 @@ export async function readBody(request: Request): Promise<Record<string, unknown
   }
 }
 
+/** ElevenLabs' conversation id, sent by the console as {{system__conversation_id}}; never typed by the model. */
+export function conversationId(body: Record<string, unknown>): string | null {
+  const v = body.conversation_id;
+  return typeof v === 'string' && /^[A-Za-z0-9_-]{6,80}$/.test(v) ? v : null;
+}
+
+/**
+ * Every bucket must have room, or the call is refused.
+ *
+ * In production a missing limiter refuses too: the site-wide rateLimit fails
+ * open so a forms outage never costs a lead, but here failing open means an
+ * anonymous script can read orders or fill the office's Telegram unchecked.
+ * ElevenLabs calls from its own servers, so a per-IP bucket would put every
+ * customer in one: the buckets are per order number, per conversation and
+ * global.
+ */
+export async function withinLimits(buckets: [key: string, limit: number, windowSeconds: number][]): Promise<boolean> {
+  if (!rateLimitConfigured && process.env.VERCEL_ENV === 'production') return false;
+  for (const [key, limit, windowSeconds] of buckets) {
+    const result = await rateLimit(`shop-agent:${key}`, limit, windowSeconds);
+    if (!result.ok) return false;
+  }
+  return true;
+}
+
 const ORDER_COLUMNS =
   'order_number, status, email, postcode, items, created_at, paid_at, shipped_at, delivered_at, refunded_at, carrier, tracking_code, return_requested_at, needs_technician';
 
 /**
- * The order by number, with the track & trace the CRM made.
+ * The order by number, corrected by the CRM ledger.
  *
- * A label printed in the CRM (kfcShipping.createLabel) stores carrier and
- * tracking code on the ledger row (kfc_shop_orders), not on public.orders, so
- * the shop's own row can be shipped without a code. The ledger fills the gap;
- * a code typed on the order itself wins.
+ * A label printed in the CRM (kfcShipping.createLabel) puts carrier and
+ * tracking code on the ledger row (kfc_shop_orders), and "Verzonden" there
+ * reaches public.orders only when the write-back succeeds (kfcOwnShop
+ * pushOwnShipped, retried nightly). Without this the agent would say "nog niet
+ * verzonden, wilt u annuleren?" about a parcel that is on its way.
  */
 export async function findOrder(candidates: string[]): Promise<OrderRow | null> {
   if (!candidates.length) return null;
@@ -41,15 +73,17 @@ export async function findOrder(candidates: string[]): Promise<OrderRow | null> 
   if (!data) return null;
   const order = data as OrderRow;
 
-  if (!order.tracking_code) {
-    const ledger = await db.from('kfc_shop_orders').select('carrier, tracking_code, shipped_at')
-      .eq('shop', OWN_SHOP).eq('number', order.order_number).maybeSingle();
-    /* The ledger is optional here: a database without it still answers from public.orders. */
-    if (!ledger.error && ledger.data?.tracking_code) {
-      order.carrier = ledger.data.carrier ?? order.carrier;
-      order.tracking_code = ledger.data.tracking_code;
-      order.shipped_at = order.shipped_at ?? ledger.data.shipped_at ?? null;
+  const ledger = await db.from('kfc_shop_orders').select('carrier, tracking_code, shipped_at, fulfilment')
+    .eq('shop', OWN_SHOP).eq('number', order.order_number).maybeSingle();
+  /* The ledger is optional here: a database without it still answers from public.orders. */
+  if (!ledger.error && ledger.data) {
+    const l = ledger.data as { carrier: string | null; tracking_code: string | null; shipped_at: string | null; fulfilment: string | null };
+    if (!order.tracking_code && l.tracking_code) {
+      order.carrier = l.carrier ?? order.carrier;
+      order.tracking_code = l.tracking_code;
     }
+    if (l.fulfilment === 'shipped' && (order.status === 'paid' || order.status === 'processing')) order.status = 'shipped';
+    order.shipped_at = order.shipped_at ?? l.shipped_at ?? null;
   }
   return order;
 }
@@ -69,9 +103,13 @@ export async function markReturnRequested(orderNumber: string, reason: string): 
 }
 
 /**
- * Tell the office: a thread in Gesprekken (so it can be answered by e-mail
- * from the same screen) and a Telegram message. Returns whether anyone was
- * actually reached, so the agent only promises what happened.
+ * Tell the office: a thread in Gesprekken (answerable by e-mail from the same
+ * screen) and a Telegram message. Returns whether anyone was actually reached.
+ *
+ * The text is the agent's summary of what an anonymous visitor said, so it is
+ * stored as the agent's, the thread gets ai_mode 'off' (no AI draft written
+ * from text a stranger controls), and every value is escaped for Telegram's
+ * HTML parser, which otherwise drops the whole message on a stray '<'.
  */
 export async function tellOffice(input: {
   label: string;
@@ -80,26 +118,41 @@ export async function tellOffice(input: {
   name: string | null;
   email: string | null;
   phone: string | null;
+  conversation: string | null;
   meta: Record<string, unknown>;
 }): Promise<{ reached: boolean; thread: string | null }> {
-  const body = input.lines.filter((l): l is string => typeof l === 'string' && l.trim() !== '').join('\n');
+  const lines = input.lines.filter((l): l is string => typeof l === 'string' && l.trim() !== '');
+  if (input.conversation) lines.push(`ElevenLabs-gesprek: ${input.conversation}`);
+  const db = createSupabaseAdminClient();
+
   let thread: string | null = null;
   try {
     const created = await formThread({ leadId: null, phone: input.phone, email: input.email, name: input.name, subject: input.subject });
-    await addMessage(created, { direction: 'in', author: 'customer', body, meta: { source: 'webshop_agent', ...input.meta } });
+    await db.from('inbox_threads').update({ ai_mode: 'off' }).eq('id', created.id);
+    await addMessage(created, {
+      direction: 'in',
+      author: 'webshop_agent',
+      body: lines.join('\n'),
+      meta: { source: 'webshop_agent', conversation_id: input.conversation, ...input.meta },
+    });
     thread = created.id;
   } catch (error) {
     console.error('[shop agent] inbox thread failed:', error instanceof Error ? error.message : error);
   }
 
-  const { data: recipients } = await createSupabaseAdminClient().from('admin_telegram').select('telegram_chat_id');
+  const { data: recipients } = await db.from('admin_telegram').select('telegram_chat_id');
   const contact = [input.name, input.email, input.phone].filter(Boolean).join(' · ');
-  const message = [input.label, contact ? `Klant: ${contact}` : null, '', body, thread ? '\nStaat in Gesprekken.' : null]
-    .filter((l) => l !== null).join('\n');
-  let notified = 0;
+  const message = [
+    esc(input.label),
+    contact ? `Klant: ${esc(contact)}` : null,
+    '',
+    ...lines.map(esc),
+    thread ? '\nStaat in Gesprekken.' : null,
+  ].filter((l) => l !== null).join('\n');
+
+  let delivered = 0;
   for (const r of recipients ?? []) {
-    await sendTelegram(r.telegram_chat_id, message);
-    notified += 1;
+    if (await sendTelegram(r.telegram_chat_id, message)) delivered += 1;
   }
-  return { reached: notified > 0 || thread !== null, thread };
+  return { reached: delivered > 0 || thread !== null, thread };
 }

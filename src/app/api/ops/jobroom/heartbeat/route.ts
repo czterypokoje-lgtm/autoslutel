@@ -21,7 +21,7 @@ export async function GET(request: Request) {
       expected: expectedServices(),
       alert: (input as URL).searchParams.get('alert') === '1',
       alertsOn: process.env.JOBROOM_ALERTS === 'on' && !!chat,
-      notify: (text) => sendTelegram(chat, text),
+      notify: async (text) => { await sendTelegram(chat, text); },
     });
   });
 }

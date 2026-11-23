@@ -12,9 +12,9 @@ import { providerRequestsEnabled } from '@/lib/providerRequests';
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
 /** Best-effort, on purpose: never on the critical path of whatever triggered it. */
-async function callTelegram(method: string, payload: Record<string, unknown>): Promise<void> {
-  if (!providerRequestsEnabled()) return;
-  if (!TOKEN) return;
+async function callTelegram(method: string, payload: Record<string, unknown>): Promise<boolean> {
+  if (!providerRequestsEnabled()) return false;
+  if (!TOKEN) return false;
   try {
     const res = await fetch(`https://api.telegram.org/bot${TOKEN}/${method}`, {
       method: 'POST',
@@ -26,9 +26,12 @@ async function callTelegram(method: string, payload: Record<string, unknown>): P
     });
     if (!res.ok) {
       console.error(`Telegram ${method} failed:`, await res.text());
+      return false;
     }
+    return true;
   } catch (err) {
     console.error(`Telegram ${method} failed:`, err instanceof Error ? err.message : err);
+    return false;
   }
 }
 
@@ -42,9 +45,10 @@ async function callTelegram(method: string, payload: Record<string, unknown>): P
  * model number occasionally looks like a link to Telegram and a preview card
  * under a two-line job is noise.
  */
-export async function sendTelegram(chatId: string | null | undefined, message: string): Promise<void> {
-  if (!chatId) return;
-  await callTelegram('sendMessage', {
+/** True when Telegram accepted the message; callers that ignore it lose nothing. */
+export async function sendTelegram(chatId: string | null | undefined, message: string): Promise<boolean> {
+  if (!chatId) return false;
+  return callTelegram('sendMessage', {
     chat_id: chatId,
     text: message,
     parse_mode: 'HTML',

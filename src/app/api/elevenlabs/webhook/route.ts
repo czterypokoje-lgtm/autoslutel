@@ -212,7 +212,7 @@ export async function POST(request: Request) {
 
   const shopAgent = isShopAgent(data.agent_id);
   const header = [
-    shopAgent ? '🛒 Gesprek met de webshop-assistent afgerond' : '📞 Gesprek met de spraakassistent afgerond',
+    '📞 Gesprek met de spraakassistent afgerond',
     `Uitkomst: ${outcome} · Duur: ${duration}`,
     summary ? `\nSamenvatting:\n${summary}` : null,
   ]
@@ -258,6 +258,12 @@ export async function POST(request: Request) {
 
     // Another brand's conversation is kept for the record, but it is not ours to be woken for.
     if (!ownAgent(data.agent_id)) return;
+    /*
+     * The webshop chat is public and busy; a transcript per chat would bury the
+     * phone calls in Telegram. Its returns and handovers already reach the
+     * office through /api/agent/shop/*, and every transcript is in Gesprekken.
+     */
+    if (shopAgent) return;
 
     const { data: recipients, error: recipientsError } = await admin
       .from('admin_telegram')

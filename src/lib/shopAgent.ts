@@ -19,22 +19,28 @@
 
 /* ── reading what the agent sends ────────────────────────────────────── */
 
-/** Spoken or typed order number → the numbers worth looking up. */
+/**
+ * Spoken or typed order number → the numbers worth looking up.
+ *
+ * The shop issues AS24-YY-XXXXXX: two year digits and six random characters
+ * from an alphabet without I, O, 0 and 1 (shop/src/app/api/checkout/route.ts
+ * orderNumber). Customers say it with spaces, drop the dashes, or leave off
+ * "AS24". The old AS24-YYYY-NNNNN shape from before the random codes is still
+ * accepted, for orders placed with it.
+ */
 export function orderNumberCandidates(value: unknown): string[] {
   if (typeof value !== 'string' && typeof value !== 'number') return [];
-  const raw = String(value).toUpperCase().replace(/[\s.#]+/g, ' ').trim();
+  const raw = String(value).toUpperCase().trim();
   if (!raw || raw.length > 40) return [];
+  const compact = raw.replace(/[^A-Z0-9]/g, '');
 
   const out = new Set<string>();
-  /* AS24-2026-00042, "AS 24 2026 42", "as24/2026/42" */
-  const full = raw.match(/^A\s*S\s*-?\s*2\s*4\D*(\d{4})\D*(\d{1,5})$/);
-  /* "2026-42", "2026 00042" — the year and the counter, no prefix */
-  const short = raw.match(/^(20\d{2})\D+(\d{1,5})$/);
-  const parts = full ?? short;
-  if (parts) out.add(`AS24-${parts[1]}-${parts[2].padStart(5, '0')}`);
-
-  const compact = raw.replace(/\s+/g, '');
-  if (/^[A-Z0-9-]{3,40}$/.test(compact)) out.add(compact);
+  const current = compact.match(/^(?:AS24)?(\d{2})([A-HJ-NP-Z2-9]{6})$/);
+  if (current) out.add(`AS24-${current[1]}-${current[2]}`);
+  /* Legacy: the year and the counter need a separator, or "2026 42" and "AS24-26-…" blur. */
+  const legacy = raw.match(/^(?:A\s*S\s*-?\s*24\W*)?(20\d{2})\W+(\d{1,5})$/);
+  if (legacy) out.add(`AS24-${legacy[1]}-${legacy[2].padStart(5, '0')}`);
+  if (/^[A-Z0-9-]{3,40}$/.test(raw.replace(/\s+/g, ''))) out.add(raw.replace(/\s+/g, ''));
   return [...out];
 }
 
@@ -81,6 +87,20 @@ export function ownsOrder(order: Pick<OrderRow, 'email' | 'postcode'>, input: { 
   return false;
 }
 
+/**
+ * Made to order: a line bought with a service (frezen, inleren, overzetten…)
+ * instead of 'product_only' (shop checkout, items[].service). No withdrawal
+ * right applies to those (BW 6:230p), so a return of such an order is always
+ * for a person to judge. Older orders have no service field: plain product.
+ */
+export function madeToOrder(items: unknown): boolean {
+  if (!Array.isArray(items)) return false;
+  return items.some((item) => {
+    const service = item && typeof item === 'object' ? (item as Record<string, unknown>).service : undefined;
+    return typeof service === 'string' && service !== '' && service !== 'product_only';
+  });
+}
+
 /** Item names and quantities, nothing else from the line (no cost, no supplier code). */
 export function orderItems(items: unknown): { title: string; quantity: number }[] {
   if (!Array.isArray(items)) return [];
@@ -101,6 +121,11 @@ export function dutchDate(iso: string | null): string | null {
   return new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Amsterdam' }).format(d);
 }
 
+/**
+ * PostNL's link carries the postcode. Only the one the caller gave is used: a
+ * caller who proved ownership with the e-mail address must not learn the
+ * delivery postcode from the link.
+ */
 export function trackingUrl(carrier: string | null, code: string | null, postcode: string | null): string | null {
   if (!code) return null;
   const c = (carrier ?? '').toLowerCase();
@@ -115,22 +140,30 @@ export function trackingUrl(carrier: string | null, code: string | null, postcod
 
 /** Herroepingsrecht: fourteen days, and the clock starts at delivery (0009_webshop_orders.sql). */
 export const RETURN_DAYS = 14;
+/**
+ * delivered_at is only stamped when the office sets "delivered" by hand, so
+ * most orders never get one. For those the delivery is assumed to be at most
+ * this many days after shipping; later than that a person decides.
+ */
+export const TRANSIT_DAYS = 7;
+const DAY = 86_400_000;
 
 export type ReturnWindow =
-  | { state: 'open'; until: string | null }      // delivered within 14 days, or shipped and not yet delivered
-  | { state: 'closed'; until: string }           // delivered more than 14 days ago
+  | { state: 'open'; until: string | null }      // within 14 days of delivery (or of the latest likely delivery)
+  | { state: 'closed'; until: string }           // past that
   | { state: 'not_shipped' }                     // paid, still with us: that is a cancellation
   | { state: 'not_applicable' };                 // unpaid, cancelled or already refunded
 
 export function returnWindow(order: Pick<OrderRow, 'status' | 'shipped_at' | 'delivered_at'>, now = new Date()): ReturnWindow {
   if (['pending', 'cancelled', 'refunded'].includes(order.status)) return { state: 'not_applicable' };
   if (order.status === 'paid' || order.status === 'processing') return { state: 'not_shipped' };
-  if (order.delivered_at) {
-    const until = new Date(new Date(order.delivered_at).getTime() + RETURN_DAYS * 86_400_000);
-    return until.getTime() >= now.getTime() ? { state: 'open', until: until.toISOString() } : { state: 'closed', until: until.toISOString() };
-  }
-  /* Shipped, no delivery date recorded: the period has not started yet. */
-  return { state: 'open', until: null };
+  const start = order.delivered_at
+    ? new Date(order.delivered_at).getTime()
+    : order.shipped_at ? new Date(order.shipped_at).getTime() + TRANSIT_DAYS * DAY : NaN;
+  /* Shipped with no date at all: nothing to count from, a person decides if it is late. */
+  if (Number.isNaN(start)) return { state: 'open', until: null };
+  const until = new Date(start + RETURN_DAYS * DAY);
+  return until.getTime() >= now.getTime() ? { state: 'open', until: until.toISOString() } : { state: 'closed', until: until.toISOString() };
 }
 
 /* ── what the agent says about an order ──────────────────────────────── */
@@ -160,7 +193,7 @@ export function statusSentence(order: OrderRow): string {
 }
 
 /** Everything the order tool returns. No address, no phone, no amounts per line. */
-export function orderView(order: OrderRow, now = new Date()) {
+export function orderView(order: OrderRow, now = new Date(), callerPostcode: unknown = null) {
   const window = returnWindow(order, now);
   return {
     found: true as const,
@@ -173,7 +206,7 @@ export function orderView(order: OrderRow, now = new Date()) {
     delivered_on: dutchDate(order.delivered_at),
     carrier: order.carrier,
     tracking_code: order.tracking_code,
-    tracking_url: trackingUrl(order.carrier, order.tracking_code, order.postcode),
+    tracking_url: trackingUrl(order.carrier, order.tracking_code, normPostcode(callerPostcode)),
     includes_technician_visit: order.needs_technician === true,
     return: {
       window: window.state,
@@ -185,28 +218,26 @@ export function orderView(order: OrderRow, now = new Date()) {
 
 export const NOT_FOUND = {
   found: false as const,
-  say: 'Ik kan geen bestelling vinden met dit nummer en dit e-mailadres of deze postcode. Wilt u het bestelnummer uit de bevestigingsmail nog eens noemen?',
+  say: 'Ik kan geen bestelling vinden met dit nummer en dit e-mailadres of deze postcode. Het bestelnummer staat in de bevestigingsmail en ziet eruit als AS24-26-K7Q2XM. Wilt u het nog eens noemen?',
 };
 
 /* ── return requests ─────────────────────────────────────────────────── */
 
-export const CONDITIONS = ['ongebruikt', 'geopend', 'bewerkt', 'defect'] as const;
+/**
+ * The item's state, as one of three words the agent picks (an enum in the tool
+ * schema, not free text: "niet geopend" must never read as "geopend").
+ *   ongebruikt  not used; unpacked and looked at, as in a shop, still counts
+ *               (shop page /verzending-en-retour)
+ *   bewerkt     cut, programmed or tried, housing opened, electronics moved,
+ *               or otherwise used
+ *   defect      does not work
+ */
+export const CONDITIONS = ['ongebruikt', 'bewerkt', 'defect'] as const;
 export type Condition = (typeof CONDITIONS)[number];
 
-/**
- * What the customer says about the item, in their words, to one of four.
- * "bewerkt" is gefreesd, geprogrammeerd or overgezet: the shop's own return
- * policy names those, and they need a person to decide.
- */
 export function asCondition(value: unknown): Condition | null {
-  const text = typeof value === 'string' ? value.toLowerCase() : '';
-  if (!text.trim()) return null;
-  if ((CONDITIONS as readonly string[]).includes(text.trim())) return text.trim() as Condition;
-  if (/defect|kapot|stuk|werkt niet|doet (het )?niet|beschadigd/.test(text)) return 'defect';
-  if (/gefreesd|frezen|geslepen|geprogrammeerd|programmeren|ingeleerd|overgezet|bewerkt/.test(text)) return 'bewerkt';
-  if (/geopend|open(gemaakt)?|uitgepakt|verpakking/.test(text)) return 'geopend';
-  if (/ongebruikt|nieuw|niet gebruikt|dicht|ongeopend/.test(text)) return 'ongebruikt';
-  return null;
+  const text = typeof value === 'string' ? value.trim().toLowerCase() : '';
+  return (CONDITIONS as readonly string[]).includes(text) ? (text as Condition) : null;
 }
 
 export type ReturnKind = 'retour' | 'garantie' | 'beoordeling';
@@ -233,16 +264,17 @@ export function decideReturn(order: OrderRow, condition: Condition | null, now =
   if (condition === 'defect') {
     return { register: true, kind: 'garantie', say: 'Ik heb uw melding over het defecte artikel geregistreerd. Een collega neemt per e-mail contact met u op over de garantie. Stuurt u nog niets terug voordat u van ons hoort.' };
   }
-  if (window.state === 'open' && condition === 'ongebruikt') {
-    return { register: true, kind: 'retour', say: 'Ik heb uw retourverzoek geregistreerd. U ontvangt van ons per e-mail hoe en waarheen u het pakket terugstuurt. Stuurt u nog niets terug voordat u die e-mail heeft.' };
+  if (window.state === 'open' && condition === 'ongebruikt' && !madeToOrder(order.items)) {
+    /* Same words as the published page (shop /verzending-en-retour). No refund promise: that follows the inspection. */
+    return { register: true, kind: 'retour', say: 'Ik heb uw retour geregistreerd. Stuur het artikel binnen 14 dagen terug, compleet en in de originele verpakking. Het retouradres staat op de pagina Verzending en retour, en de retourkosten zijn voor uw rekening. Na ontvangst controleren wij het artikel en hoort u van ons.' };
   }
-  return { register: true, kind: 'beoordeling', say: 'Ik heb uw verzoek geregistreerd. Omdat het artikel niet meer ongebruikt is, of de bedenktijd voorbij is, beoordeelt een collega het. U hoort per e-mail van ons. Stuurt u nog niets terug voordat u van ons hoort.' };
+  return { register: true, kind: 'beoordeling', say: 'Ik heb uw verzoek geregistreerd. Omdat het artikel bewerkt of op maat gemaakt is, of de bedenktijd mogelijk voorbij is, beoordeelt een collega het. U hoort per e-mail van ons. Stuurt u nog niets terug voordat u van ons hoort.' };
 }
 
 export const RETURN_LABEL: Record<ReturnKind, string> = {
   retour: '↩️ Retourverzoek webshop',
   garantie: '🛠️ Garantiemelding webshop (defect)',
-  beoordeling: '⚖️ Retour ter beoordeling (geopend/bewerkt of buiten termijn)',
+  beoordeling: '⚖️ Retour ter beoordeling (bewerkt, op maat of buiten termijn)',
 };
 
 /* ── routing: who takes over ─────────────────────────────────────────── */
@@ -251,15 +283,16 @@ export const RETURN_LABEL: Record<ReturnKind, string> = {
  * The webshop agent's handover reasons, and what each means for the office.
  * Decided here, not by the agent: none of these rings a phone at night. A
  * webshop question is never an emergency; someone standing next to a locked
- * car is a service caller, and the agent transfers those to the phone agent
- * (transfer_to_agent in the console) or gives them the service number.
+ * car is a service caller and gets the service number. No transfer_to_agent
+ * to the phone agent: the widget is public and that agent's tools (book,
+ * escalate) ring the office; a webshop visitor must never reach them.
  */
 export const ROUTES = {
   bestelling: { label: '📦 Probleem met bestelling (niet ontvangen, beschadigd, verkeerd artikel)', subject: 'Bestelling', say: 'Ik heb dit doorgegeven aan een collega van de webshop. U krijgt zo snel mogelijk antwoord.' },
   annuleren: { label: '✋ Annuleringsverzoek (nog niet verzonden)', subject: 'Annuleren', say: 'Ik heb uw annuleringsverzoek doorgegeven. Een collega houdt de bestelling tegen als die nog niet verzonden is en bevestigt dat per e-mail.' },
   adres: { label: '🏠 Adres wijzigen', subject: 'Adreswijziging', say: 'Ik heb de adreswijziging doorgegeven. Een collega bevestigt per e-mail of het nog lukt voordat het pakket verzonden wordt.' },
   product_advies: { label: '🔑 Productadvies: welke sleutel past', subject: 'Productadvies', say: 'Een collega zoekt uit welke sleutel op uw auto past en neemt contact met u op.' },
-  monteur: { label: '🚐 Wil een monteur (service, niet webshop)', subject: 'Service via webshop', say: 'Ik heb gevraagd of een collega van de service u terugbelt om een afspraak te maken.' },
+  monteur: { label: '🚐 Wil een monteur (service, niet webshop)', subject: 'Service via webshop', say: 'Voor een monteur belt u het snelst 06 11 75 12 31, dag en nacht. Ik heb ook doorgegeven dat een collega van de service u terugbelt.' },
   zakelijk: { label: '🏢 Zakelijke klant via webshop', subject: 'Zakelijk', say: 'Ik heb uw vraag doorgegeven aan een collega voor zakelijke klanten. U hoort zo snel mogelijk van ons.' },
   klacht: { label: '😠 Klacht via webshop', subject: 'Klacht', say: 'Het spijt me dat het zo gelopen is. Ik heb uw klacht doorgegeven; klachten beantwoorden we binnen twee werkdagen.' },
   mens: { label: '🙋 Webshopklant vraagt om een mens', subject: 'Wil een medewerker', say: 'Ik heb een collega gevraagd contact met u op te nemen.' },
@@ -267,7 +300,7 @@ export const ROUTES = {
 } as const;
 
 export type Route = keyof typeof ROUTES;
-export const isRoute = (value: unknown): value is Route => typeof value === 'string' && value in ROUTES;
+export const isRoute = (value: unknown): value is Route => typeof value === 'string' && Object.hasOwn(ROUTES, value);
 
 /** What the agent may promise, by what actually happened. */
 export function handoverSay(route: Route, reached: boolean, hasContact: boolean): string {

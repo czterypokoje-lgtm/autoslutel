@@ -1,18 +1,19 @@
 import { asText, checkShopAgent } from '@/lib/agentAuth';
 import { toE164NL } from '@/lib/phone';
 import { ROUTES, handoverSay, isRoute, normEmail, orderNumberCandidates } from '@/lib/shopAgent';
-import { json, readBody, tellOffice } from '@/lib/shopAgentServer';
+import { conversationId, json, readBody, tellOffice, withinLimits } from '@/lib/shopAgentServer';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * Tool `handover` of the webshop agent: the answer is a person.
  *
- * Body: { route, summary, customer_name?, email?, customer_phone?, order_number?, dry_run? }
+ * Body: { route, summary, customer_name?, email?, customer_phone?, order_number?, conversation_id, dry_run? }
  * route is one of ROUTES in src/lib/shopAgent.ts. Which label the office sees
  * is decided here; nothing here rings a phone (a webshop question is never a
- * night-time emergency). Someone who needs a technician now is transferred to
- * the phone agent in the console, not through this route.
+ * night-time emergency). Someone who needs a technician gets the service
+ * number in `say`; there is deliberately no transfer to the phone agent.
+ * Limited per conversation and globally: every call is a Telegram message.
  */
 export async function POST(request: Request) {
   const auth = checkShopAgent(request);
@@ -32,11 +33,18 @@ export async function POST(request: Request) {
   if (!email && !phone) return json({ handed_over: false, say: handoverSay(route, false, false) });
   if (body.dry_run === true) return json({ handed_over: false, dry_run: true, label: ROUTES[route].label, say: ROUTES[route].say });
 
+  const conversation = conversationId(body);
+  const allowed = await withinLimits([
+    ...(conversation ? [[`handover-conv:${conversation}`, 3, 3600] as [string, number, number]] : []),
+    ['handover-all', 60, 3600],
+  ]);
+  if (!allowed) return json({ handed_over: false, say: handoverSay(route, false, true) });
+
   const { reached } = await tellOffice({
     label: ROUTES[route].label,
     subject: orderNumber ? `${ROUTES[route].subject} ${orderNumber}` : ROUTES[route].subject,
     lines: [orderNumber ? `Bestelling: ${orderNumber} (niet geverifieerd)` : null, summary],
-    name, email, phone,
+    name, email, phone, conversation,
     meta: { route, order_number: orderNumber },
   });
   return json({ handed_over: reached, say: handoverSay(route, reached, true) });

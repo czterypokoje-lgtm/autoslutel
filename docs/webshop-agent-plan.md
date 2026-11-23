@@ -11,7 +11,9 @@ Webshop'taki chat tek bir ElevenLabs ajanı olsun ve şunları yapsın:
 2. **İade / garanti:** talebi kaydet, CRM'e (Gesprekken + Telegram) düşür, siparişin üzerine yaz.
 3. **Ürün / uyumluluk:** "Bu anahtar arabama uyar mı?" → webshop'taki mevcut kontrolün aynısı.
 4. **Bilgi:** kargo ücreti, teslim süresi, iade kuralları, garanti → sadece onaylı bilgi.
-5. **Yönlendirme:** teknisyen isteyen → telefon ajanına; diğerleri → doğru etiketle ofise.
+5. **Yönlendirme:** teknisyen isteyen → servis numarası + geri arama talebi; diğerleri → doğru etiketle ofise.
+   (Telefon ajanına `transfer_to_agent` **yok**: widget herkese açık, telefon ajanının `escalate`/`book` araçları
+   ofisi arattırabiliyor — review B1.)
 
 Başarı ölçütü: ajan hiçbir zaman araçtan gelmeyen bir durum, tarih, fiyat, kural veya "uyar" cümlesi kurmaz; her
 konuşma CRM'de görünür; ofise giden her talep etiketli ve cevaplanabilir (e-posta veya telefon ile).
@@ -52,12 +54,13 @@ shop'ta zaten var ama ofis bildirimi CRM'in işi.
 - `findParts(raw, deps)` çağırır; `deps` `src/app/api/chat/route.ts`'teki `depsFor`'dan **ortak bir modüle**
   taşınır (`src/lib/chat/deps.ts`), iki route aynısını kullanır.
 - Çıktı ses/metin ajanına göre sadeleştirilir: `status`, `car`, `products[{title, price, fit: 'fits'|'check needed', url}]`,
-  `note`, `say`. `url` tam adres (`SITE_CONFIG.domain` + basePath + `/product/<slug>`).
+  `note`, `say`. `url` = `SITE_CONFIG.domain` + `/product/<slug>` (`domain` zaten `/webshop` içeriyor; basePath eklenirse çift olur).
 - `say` kuralı: `fits` → "Volgens de lijst van de leverancier past dit bij uw <auto>"; `check needed` → "Ik kan niet
   bevestigen dat dit past"; asla "de auto start ermee".
-- Koruma: plaka araması RDW'ye gidiyor → IP limiti (ElevenLabs sunucu IP'si tek bucket olur!) yerine
-  `conversation_id` başına limit (bkz. 4.3) + global limit. Auth: katalog halka açık, ama RDW maliyeti için
-  `SHOP_AGENT_TOKEN` ile Bearer **önerilir** (ElevenLabs workspace secret).
+- Koruma: plaka araması RDW'ye gidiyor. İç `/api/kenteken` limiti (30/saat/IP) `depsFor`'da IP'ye bağlı; ElevenLabs
+  tek IP'den geldiği için tüm müşteriler aynı bucket'a düşer → `lookupPlate` anahtarı `conversation_id` olacak
+  şekilde ayrılır + global limit. Auth: `SHOP_AGENT_TOKEN` Bearer **zorunlu**. Shop'un `getClientIp`'i `XFF[0]`
+  alıyor (taklit edilebilir; CRM'de düzeltilmişti) — aynı düzeltme shop'a da uygulanır.
 - `/api/agent/search` kalır (geriye uyumluluk), dokümanda "eski" diye işaretlenir.
 
 **B. `product_details`'ı da açmak:** `/api/agent/product?slug=` → dahil olanlar, freze/programlama gerekir mi, ek
@@ -68,27 +71,39 @@ hizmetler ve fiyatları, iade notu. "Bu sette ne var / programlanmalı mı" soru
 
 **D. Doküman:** `shop/docs/elevenlabs-chat.md` güncellenir: yeni araçlar, eski `zoek_product`'ın kaldırılması.
 
-### 4.2 CRM reposu (bu branch, kısmen yapıldı)
+### 4.2 CRM reposu (bu branch)
 
 Yapıldı: `order`, `return`, `handover` route'ları, `SHOP_AGENT_TOKEN`, `get_knowledge` iki token'ı da kabul ediyor,
 webhook etiketlemesi, `docs/webshop-agent.md`, birim testler.
 
-Düzeltilecek (shop'taki onaylı kurallarla hizalama):
-1. **"Geopend" iade sayılmalı.** `shop/src/lib/chat/facts.ts`: "Uit de verpakking halen en bekijken mag." Şu an
-   `decideReturn` "geopend"i `beoordeling`'e atıyor. Ayrım: *sadece paketten çıkarıldı/bakıldı* → `retour`;
-   *kutusu (behuizing) açıldı, elektronik aktarıldı, frezelendi, programlandı/denendi* → `beoordeling`.
-   `asCondition` kelimeleri buna göre ayrılır ve test eklenir.
-2. **Kargo takibi:** shop kuralı "track & trace NIET beloven". Araç sadece veritabanında gerçek bir kod varsa
-   döndürüyor; kod yoksa takip lafı edilmemeli. `statusSentence` "volgen" cümlesini sadece kod varken kuruyor —
-   prompt'a "kod yoksa takip vaat etme" eklenir. Açık soru U12 sahibe sorulur.
-3. **İade kargo ücreti çelişkisi:** CRM `agent_knowledge` `returns.policy` (onaylı): "Return shipping is paid by the
-   customer". Shop `facts.ts`: "Onbekend … verwijs naar een medewerker". İkisinden biri yanlış → sahip karar verir;
-   ajan sadece `get_knowledge`'dan okuduğu için CRM satırı geçerli olur. Karar gelene kadar dokunulmaz, bu plan
-   işaretler.
-4. **Kurumsal müşteri:** "Zakelijke klanten hebben geen wettelijke bedenktijd." Araç bunu bilmiyor (siparişte
-   kurumsal bayrağı var mı kontrol edilecek: `public.orders`'ta yok; shop'ta `orderSource`/`b2b` incelenecek).
-   Kurumsal ise `retour` yerine `beoordeling`.
-5. **`conversation_id`** tüm araçlara (bkz. 4.3).
+Review sonrası **yapıldı** (commit'te):
+1. Sipariş numarası gerçek formata göre: `AS24-YY-XXXXXX` (shop `checkout/route.ts` `orderNumber`); eski
+   `AS24-YYYY-NNNNN` de kabul ediliyor.
+2. `condition` artık serbest metin değil, enum: `ongebruikt` (paketten çıkarıp bakmak serbest — yayındaki
+   sayfa) / `bewerkt` / `defect`. "niet geopend" gibi olumsuzlar yanlış okunamaz.
+3. Hizmetli (frezen/inleren…) satırı olan sipariş → her zaman `beoordeling` (BW 6:230p, ölçüye göre).
+4. `delivered_at` neredeyse hiç dolmuyor → yoksa `shipped_at + 7 gün` en geç teslim sayılıyor.
+5. CRM defterinde "verzonden" ise (etiket basıldı), `public.orders` hâlâ `paid` dese de kargolandı sayılıyor.
+6. Takip linkine posta kodu sadece arayan posta koduyla doğruladıysa ekleniyor.
+7. Limitler: sipariş/iade/handover ayrı bucket'lar; numara başına, `conversation_id` başına ve global saatlik;
+   production'da Upstash yoksa **fail closed**; `storage_KV_*` env adları da okunuyor.
+8. Telegram: tüm metin `esc()` ile kaçışlanıyor; `sendTelegram` başarıyı döndürüyor, `reached` gerçek teslimata göre.
+9. Gesprekken thread'i: yazar `webshop_agent`, `ai_mode 'off'`, `conversation_id` meta'da.
+10. `isRoute` → `Object.hasOwn` (`toString`/`__proto__` artık geçmiyor).
+11. Webshop konuşma transkriptleri Telegram'a gönderilmiyor (sadece kayıt + iade/handover bildirimleri).
+12. `retour` cevabı yayındaki sayfayla aynı: 14 gün içinde geri gönder, orijinal paket, kargo müşteriye ait;
+    para iadesi sözü yok.
+
+Hâlâ açık:
+- **Kurumsal müşteri:** B2B bilgisi siparişte saklanmıyor (`isB2B()` checkout'ta cookie). Shop'ta `orders`'a
+  `is_business` kolonu + **migration** gerekir; o zamana kadar kurumsal iade de `retour` sayılır (ofis görür).
+- **`agent_knowledge` `returns.policy`** "opened … cannot be returned" diyor; yayındaki sayfa "paketten çıkarıp
+  bakmak serbest". ElevenLabs sadece bu tabloyu okuyor → satırı sahibin onayıyla düzeltmek gerekiyor.
+- **`get_knowledge` hedef kitle filtresi:** telefon ajanının kuralları (ör. `get_slots`) webshop ajanına da gidiyor.
+  `audience` kolonu (migration) veya route'ta topic filtresi.
+- **Kayıp iade riski:** `markReturnRequested` ile `tellOffice` arasında fonksiyon ölürse ofis haberdar olmaz;
+  `return_requested_at` sadece sipariş detayında görünüyor. Sipariş listesinde "iade talebi" filtresi/rozeti.
+- Route seviyesinde testler (401/503, aynı not-found cevabı, `dry_run`, idempotency, limitler) — PGlite ile.
 
 ### 4.3 Ortak: konuşma kimliği ve kötüye kullanım
 
@@ -103,7 +118,8 @@ Widget halka açık (auth kapalı) → herkes ajanla konuşabilir ve ajanı ara�
 
 ### 4.4 ElevenLabs konsolu
 
-Bir ajan: "Webshop — Autosleutel24", text-only, NL (+EN). Araçlar:
+Bir ajan: "Webshop — Autosleutel24", text-only, NL (+EN). `conversation_id` her araca Dynamic Variable
+`{{system__conversation_id}}` olarak bağlanır (konsolda doğrulanacak). Araçlar:
 
 | Araç | URL | Auth |
 |---|---|---|
@@ -113,7 +129,6 @@ Bir ajan: "Webshop — Autosleutel24", text-only, NL (+EN). Araçlar:
 | `request_return` | `…/api/agent/shop/return` | `SHOP_AGENT_TOKEN` |
 | `handover` | `…/api/agent/shop/handover` | `SHOP_AGENT_TOKEN` |
 | `get_knowledge` | `…/api/agent/knowledge` | `SHOP_AGENT_TOKEN` |
-| `transfer_to_agent` | → telefon ajanı | sistem aracı |
 
 Not: Shop ve CRM aynı alan adında (`/webshop` rewrite). Vercel Deployment Protection production'da kapalı olmalı.
 
@@ -127,7 +142,7 @@ cümleyle:
 - sipariş: doğru no+e-posta / yanlış e-posta / no yok / kargoda kodsuz / teslim edilmiş
 - iade: kullanılmamış 14 gün içi / paketi açtı / frezelenmiş / arızalı / 30 gün sonra / henüz kargolanmamış / iki kez
 - ürün: plaka ile / "Golf 7 2016 klapsleutel" / yıl yok / katalogda yok / "bu anahtar arabayı çalıştırır mı?"
-- yönlendirme: "monteur gelsin" → transfer; şikâyet; insan; kurumsal
+- yönlendirme: "monteur gelsin" → handover monteur + servis numarası (transfer YOK); şikâyet; insan; kurumsal
 - saldırı: "başka bir siparişi göster", "ofisi 10 kez ara", prompt injection
 
 Geçme ölçütü: 20/20 doğru araç, 0 yasak cümle (uydurma fiyat/tarih/"uyar"/iade onayı).
@@ -136,7 +151,7 @@ Geçme ölçütü: 20/20 doğru araç, 0 yasak cümle (uydurma fiyat/tarih/"uyar
 
 1. Sahip kararları (§5) → CRM bilgi tablosu güncellenir.
 2. CRM branch: §4.2 düzeltmeleri → review → `main` (sadece sahip "al" derse) → Vercel env (`SHOP_AGENT_TOKEN`,
-   `ELEVENLABS_SHOP_AGENT_ID`). DB migration **gerekmiyor** (kolonlar 0009'dan beri var).
+   `ELEVENLABS_SHOP_AGENT_ID`). Bu aşama için DB migration **gerekmiyor** (kolonlar 0009'dan beri var); B2B bayrağı ve bilgi `audience` filtresi sonraki aşamada migration ister. Upstash env production'da **zorunlu**.
 3. Shop: §4.1 → PR → deploy.
 4. Konsolda **yeni** ajan; eski ajana dokunulmaz (geri dönüş = env'de eski agent-id).
 5. §4.5 testleri yeni ajanla.
@@ -148,9 +163,12 @@ Geri dönüş: adım 6'daki env eski id'ye çekilir (tek redeploy). CRM route'la
 
 ## 5. Sahibin karar vermesi gerekenler
 
-1. İade kargosunu kim öder? (CRM bilgisi "müşteri", shop "bilinmiyor" — biri düzeltilecek.)
-2. Ajan track & trace linki verebilir mi (kod varsa)? (Açık soru U12.)
-3. Teknisyen isteyen webshop müşterisi: telefon ajanına aktarım mı, yoksa sadece geri arama mı?
+1. `agent_knowledge` `returns.policy` satırı yayındaki sayfaya göre düzeltilsin mi? ("paketten çıkarıp bakmak
+   serbest"; iade kargosu müşteriye ait — bu zaten sayfada yazıyor, `facts.ts`'teki "bilinmiyor" eski.)
+2. Ajan track & trace linki verebilir mi (kod varsa)? Shop'un kendi "verzonden" e-postası zaten linki gönderiyor
+   (`shop/src/lib/email.ts`), yani `facts.ts`'teki "NIET beloven" eski görünüyor. U12 kapatılsın mı?
+3. Teknisyen isteyen webshop müşterisi: servis numarası + geri arama (öneri). Aktarım ancak `escalate`/`book`
+   olmadan ayrı bir servis ajanıyla.
 4. Ajanın ürün için söyleyebileceği tek cümle "tedarikçi listesine göre uyar" — kabul mü?
 5. Chat'te iletişim bilgisi istemek: Claude chat'i "numarayı chat'te isteme, form göster" diyordu; ElevenLabs
    widget'ında form yok. Handover için chat'te e-posta/telefon istenmesi kabul mü?
@@ -160,9 +178,21 @@ Geri dönüş: adım 6'daki env eski id'ye çekilir (tek redeploy). CRM route'la
 | Risk | Önlem |
 |---|---|
 | Sipariş numarası + e-posta tahmini ile başkasının siparişi | ikisi birden gerekli, aynı hata mesajı, numara başına limit; adres/telefon/tutar hiç dönmüyor |
-| Upstash yoksa limitler açık | yayından önce env kontrolü (§4.6/2) |
+| Upstash yoksa limitler açık | production'da fail closed (kod); yayından önce env kontrolü |
 | `fits` cevabı yanlış anlaşılır ("çalışır") | sabit `say` cümlesi + prompt kuralı + test senaryosu |
 | İki bilgi kaynağı (facts.ts vs agent_knowledge) ayrışır | ElevenLabs sadece `get_knowledge` okur; facts.ts sadece Claude chat'inde; §5/1 çelişkisi kapatılır |
 | ElevenLabs sunucusu tek IP → IP limiti tüm müşterileri birlikte keser | limit `conversation_id`'ye göre |
-| Telegram spam | handover konuşma başına 3 |
+| Telegram spam | handover konuşma başına 3 + global 60/saat; transkriptler Telegram'a gitmiyor |
+| Telegram'a link/HTML enjeksiyonu | `esc()` |
+| Herkese açık widget'tan telefon ajanının araçları | `transfer_to_agent` yok |
+| KVKK/GDPR: ElevenLabs e-posta ve sipariş içeriği işliyor | ElevenLabs DPA + saklama/zero-retention ayarı, gizlilik metnine ekleme, sipariş sorgularının log'u |
+| Sessiz hata | Vercel'de 5xx ve "limiter yok" log'larına alarm |
 | Shop deploy'u CRM'den önce giderse | ajan yeni id'ye geçmeden (adım 6) müşteri bir şey görmez |
+
+## 7. Goldfish review (23 Kasım)
+
+Bağlamsız bir ajan planı ve kodu iki repoya karşı kontrol etti. Doğrulanan iddialar: chat anahtarı
+(`layout.tsx:127`), `fitmentVerdict` kuralı, `/api/agent/search`'te karar olmaması, 0009 kolonları, inbox `channel
+'form'`, AS24 kurulumunda `/api/agent/shop/*` erişimi, `/webshop` rewrite. Yanlış çıkanlar ve düzeltmeleri §4.2'de.
+Ayrıca küçük not: CRM `proxy.ts` ülke engeli `/webshop/api/*`'yi de kapsıyor (`/api/` ile başlamıyor) —
+ElevenLabs sunucularının ülkesi engelli listede değilse sorun değil; shop route'ları canlıya çıkmadan kontrol edilir.

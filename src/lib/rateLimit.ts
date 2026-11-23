@@ -7,14 +7,15 @@
  * to know whether limiting is actually active.
  *
  * Env vars (Vercel → Storage → Upstash Redis wires these up automatically):
- *   KV_REST_API_URL / UPSTASH_REDIS_REST_URL
- *   KV_REST_API_TOKEN / UPSTASH_REDIS_REST_TOKEN
+ *   KV_REST_API_URL / UPSTASH_REDIS_REST_URL / storage_KV_REST_API_URL
+ *   KV_REST_API_TOKEN / UPSTASH_REDIS_REST_TOKEN / storage_KV_REST_API_TOKEN
  */
 
+// storage_KV_*: the names Vercel gives a store connected with the "storage" prefix (as the shop project has it).
 const REST_URL =
-  process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '';
+  process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || process.env.storage_KV_REST_API_URL || '';
 const REST_TOKEN =
-  process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '';
+  process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || process.env.storage_KV_REST_API_TOKEN || '';
 
 export const rateLimitConfigured = Boolean(REST_URL && REST_TOKEN);
 

@@ -18,15 +18,18 @@ Daarom heeft elk zijn **eigen token** (`SHOP_AGENT_TOKEN` naast
 
 | Risico | Waar het tegengehouden wordt |
 |---|---|
-| iemand vraagt andermans bestelling op | `get_order` geeft alleen iets terug met bestelnummer **én** het e-mailadres of de postcode van die bestelling; een verkeerde combinatie krijgt hetzelfde antwoord als een nummer dat niet bestaat; max. 6 pogingen per nummer per uur |
+| iemand vraagt andermans bestelling op | `get_order` geeft alleen iets terug met bestelnummer (`AS24-26-K7Q2XM`, zes willekeurige tekens) **én** het e-mailadres of de postcode van die bestelling; een verkeerde combinatie krijgt hetzelfde antwoord als een nummer dat niet bestaat; limieten per nummer, per gesprek en totaal |
+| misbruik via de openbare chat | elke tool heeft limieten per `conversation_id` en per uur in totaal; in productie zonder Upstash weigeren de tools (fail closed); geen doorverbinding naar de telefoniste (die kan het kantoor laten bellen) |
 | adres, telefoon of bedragen uitlekken | de tool geeft ze niet terug: alleen status, artikelnamen, data en track & trace |
-| de agent weigert een retour die wél mag (of belooft geld) | `request_return` weigert nooit en belooft geen terugbetaling. Het sorteert in **retour** (ongebruikt, binnen 14 dagen), **garantie** (defect) of **beoordeling** (geopend/bewerkt of buiten de termijn); het kantoor beslist |
+| de agent weigert een retour die wél mag (of belooft geld) | `request_return` weigert nooit en belooft geen terugbetaling. Het sorteert in **retour** (ongebruikt — uitpakken en bekijken mag —, binnen de termijn, geen dienst op de bestelling), **garantie** (defect) of **beoordeling** (bewerkt, op maat gemaakt met frezen/inleren, of buiten de termijn); het kantoor beslist |
 | een retour twee keer aangevraagd | `return_requested_at` wordt één keer gezet; de tweede keer zegt de agent "is al aangevraagd" |
 | een belofte die niemand nakomt | `handover` zegt alleen "een collega neemt contact op" als Gesprekken of Telegram het echt ontvangen heeft |
 | verzonnen beleid (verzendkosten, retouradres, levertijd) | staat niet in de prompt; komt uit `get_knowledge` (alleen door de eigenaar bevestigde regels) |
 
-Termijn: 14 dagen bedenktijd vanaf **bezorging** (`delivered_at`). Verzonden maar
-nog niet als bezorgd gemarkeerd = termijn nog niet begonnen = retour kan.
+Termijn: 14 dagen bedenktijd vanaf **bezorging** (`delivered_at`). Die datum
+wordt alleen gezet als iemand de bestelling met de hand op "bezorgd" zet; zonder
+die datum telt de code verzenddatum + 7 dagen als uiterste bezorging. Verzonden in
+de CRM (label, "Verzonden") telt ook als de webshop zelf nog "betaald" zegt.
 
 ## 2 · Waar het terechtkomt
 
@@ -36,7 +39,9 @@ antwoorden) én een **Telegram-bericht**. De retour staat bovendien op de
 bestelling zelf (`return_requested_at`, `return_reason`).
 
 Het volledige gesprek komt via de bestaande post-call webhook binnen, gemarkeerd
-met `agent_role: 'webshop'` en kanaal `webchat` (widget) of `phone`.
+met `agent_role: 'webshop'` (kanaal `webchat` voor de widget). Anders dan bij de
+telefoniste gaat het transcript **niet** naar Telegram: alleen retouren en
+overdrachten doen dat. Gesprekken-threads van de agent staan op AI-modus "uit".
 
 | `route` (handover) | Telegram-label | Voor |
 |---|---|---|
@@ -44,7 +49,7 @@ met `agent_role: 'webshop'` en kanaal `webchat` (widget) of `phone`.
 | `annuleren` | ✋ Annuleringsverzoek | nog niet verzonden |
 | `adres` | 🏠 Adres wijzigen | vóór verzending |
 | `product_advies` | 🔑 Productadvies | welke sleutel past, als de agent het niet zeker weet |
-| `monteur` | 🚐 Wil een monteur | alleen als doorverbinden naar de telefoniste niet lukt (§4) |
+| `monteur` | 🚐 Wil een monteur | de agent geeft het servicenummer en vraagt een terugbelverzoek aan |
 | `zakelijk` | 🏢 Zakelijke klant | garages, lease, meerdere auto's |
 | `klacht` | 😠 Klacht | antwoord binnen 2 werkdagen (bevestigd feit) |
 | `mens` | 🙋 Vraagt om een mens | |
@@ -52,7 +57,9 @@ met `agent_role: 'webshop'` en kanaal `webchat` (widget) of `phone`.
 
 Geen van deze laat 's nachts een telefoon overgaan. Een webshopvraag is nooit
 een noodgeval; iemand die naast een dichte auto staat, is een servicebeller en
-gaat naar de telefoniste.
+krijgt het servicenummer. **Geen `transfer_to_agent` naar de telefoniste:** de
+widget is openbaar, en de telefoniste heeft `escalate` (laat het kantoor bellen)
+en `book_job`.
 
 ## 3 · Vercel
 
@@ -64,8 +71,11 @@ gaat naar de telefoniste.
 Staat `ELEVENLABS_AGENT_IDS` ingevuld, dan hoeft de webshop-agent er niet bij:
 `ELEVENLABS_SHOP_AGENT_ID` telt altijd als eigen agent.
 
-Optioneel maar aanbevolen: Upstash (`KV_REST_API_URL`/`KV_REST_API_TOKEN`) voor
-de limiet per bestelnummer. Zonder Upstash werkt alles, maar zonder die limiet.
+**Verplicht in productie:** Upstash (`KV_REST_API_URL`/`KV_REST_API_TOKEN`, of
+`storage_KV_REST_API_URL`/`storage_KV_REST_API_TOKEN`). Zonder limiter weigeren de
+webshop-tools in productie elk verzoek (de agent zegt dan dat de klant moet mailen).
+
+**Noodstop:** `SHOP_AGENT_TOKEN` weghalen + redeploy → alle tools 503.
 
 ## 4 · ElevenLabs-console
 
@@ -85,25 +95,26 @@ workspace secret `SHOP_AGENT_TOKEN`.
 
 | Tool | Methode | URL | Body / query |
 |---|---|---|---|
-| `get_order` | POST | `https://<site>/api/agent/shop/order` | `order_number`, `email`, `postcode` |
-| `request_return` | POST | `https://<site>/api/agent/shop/return` | `order_number`, `email`, `postcode`, `condition`, `reason`, `items`, `customer_name`, `customer_phone` |
-| `handover` | POST | `https://<site>/api/agent/shop/handover` | `route`, `summary`, `customer_name`, `email`, `customer_phone`, `order_number` |
+| `get_order` | POST | `https://<site>/api/agent/shop/order` | `order_number`, `email`, `postcode`, `conversation_id` |
+| `request_return` | POST | `https://<site>/api/agent/shop/return` | `order_number`, `email`, `postcode`, `condition` (enum), `reason`, `items`, `customer_name`, `customer_phone`, `conversation_id` |
+| `handover` | POST | `https://<site>/api/agent/shop/handover` | `route` (enum), `summary`, `customer_name`, `email`, `customer_phone`, `order_number`, `conversation_id` |
 | `get_knowledge` | GET | `https://<site>/api/agent/knowledge` | query `topic`, `q` (zie [`agent-knowledge.md`](agent-knowledge.md)) |
 
-Alle velden value type **LLM Prompt**, behalve `customer_phone` bij een
-telefoongesprek: Dynamic Variable `{{system__caller_id}}`.
+Alle velden value type **LLM Prompt**, behalve:
+- `conversation_id`: **Dynamic Variable** `{{system__conversation_id}}` (het model vult hem niet in; de limieten hangen eraan);
+- `condition`: LLM Prompt met **enum** `ongebruikt`, `bewerkt`, `defect`;
+- `route`: LLM Prompt met **enum** `bestelling`, `annuleren`, `adres`, `product_advies`, `monteur`, `zakelijk`, `klacht`, `mens`, `overig`.
 
 Beschrijvingen die het LLM leest:
 
 - `get_order` — "Zoek een bestelling op. Nodig: het bestelnummer (begint met AS24) en het e-mailadres óf de postcode van de bestelling. Zeg daarna wat in `say` staat."
-- `request_return` — "Registreer een retour- of garantieverzoek. Vraag eerst bestelnummer, e-mail of postcode, wat er terug moet, de reden, en de staat: ongebruikt, geopend, bewerkt (gefreesd/geprogrammeerd) of defect. Zeg daarna letterlijk wat in `say` staat."
+- `request_return` — "Registreer een retour- of garantieverzoek. Vraag eerst bestelnummer, e-mail of postcode, wat er terug moet, de reden, en de staat. `condition`: ongebruikt (niet gebruikt; uitgepakt en bekeken mag), bewerkt (gefreesd, ingeleerd of geprobeerd in te leren, behuizing geopend, elektronica overgezet, of gebruikt), defect (werkt niet). Zeg daarna letterlijk wat in `say` staat."
 - `handover` — "Geef de vraag door aan een collega als jij hem niet kunt afmaken. `route` is precies één van: bestelling, annuleren, adres, product_advies, monteur, zakelijk, klacht, mens, overig. Je hebt een e-mailadres of telefoonnummer nodig. Zeg daarna letterlijk wat in `say` staat."
 
 ### Systeemtools
 
 - `end_call`
-- **`transfer_to_agent`** → de telefoniste. Voorwaarde: *"De klant wil dat er een monteur komt, staat bij een auto die niet open of niet start, of wil een sleutel laten bijmaken of inleren op locatie."* Zo komt een servicevraag in de webshop-chat bij de agent die kan boeken, zonder dat de klant opnieuw hoeft te beginnen.
-- `transfer_to_number` alleen als de webshop-assistent ook aan een telefoonnummer hangt; anders weglaten.
+- **Geen** `transfer_to_agent` en geen `transfer_to_number` (zie §2).
 
 ### Analysis
 
@@ -141,12 +152,13 @@ u-vorm, kort en vriendelijk. Eén vraag tegelijk.
 
 ## Bestelling: waar is mijn pakket?
 
-1. Vraag het bestelnummer (staat in de bevestigingsmail, begint met AS24).
+1. Vraag het bestelnummer (staat in de bevestigingsmail, ziet eruit als
+   AS24-26-K7Q2XM).
 2. Vraag het e-mailadres van de bestelling. Weet de klant dat niet, vraag de
    postcode van het bezorgadres.
-3. Roep get_order aan. Zeg `say`. Is er een trackingcode: in de chat geef je
-   `tracking_url`; aan de telefoon noem je de vervoerder en dat de code in de
-   verzendmail staat.
+3. Roep get_order aan. Zeg `say`. Alleen als er een `tracking_code` is, geef je
+   `tracking_url` (of zeg je dat de code in de verzendmail staat). Zonder code
+   beloof je geen track & trace.
 4. `found: false`: zeg `say`. Na twee mislukte pogingen: handover, route
    bestelling, met wat de klant wel weet.
 5. Niet ontvangen terwijl het als bezorgd staat, beschadigd, of verkeerd
@@ -156,18 +168,19 @@ u-vorm, kort en vriendelijk. Eén vraag tegelijk.
 
 1. Bestelnummer en e-mail of postcode, zoals hierboven.
 2. Vraag welk artikel terug moet en waarom.
-3. Vraag de staat: nog ongebruikt in de verpakking, geopend, al gefreesd of
-   geprogrammeerd, of defect.
-4. Roep request_return aan en zeg `say` letterlijk. Zeg erbij dat de klant
-   niets terugstuurt voordat er een e-mail van ons is.
+3. Vraag de staat en kies één woord voor `condition`: ongebruikt (uitpakken en
+   bekijken mag), bewerkt (gefreesd, ingeleerd of geprobeerd, behuizing open,
+   gebruikt) of defect. Twijfel je, vraag het na.
+4. Roep request_return aan en zeg `say` letterlijk. Voeg niets toe over
+   terugbetaling.
 5. Wil de klant annuleren en is er nog niets verzonden: handover, route
    annuleren. Adres wijzigen: handover, route adres.
 
 ## Doorsturen
 
 - De klant wil een monteur, staat bij een auto die niet open of niet start, of
-  wil een sleutel laten bijmaken of inleren op locatie: transfer_to_agent naar
-  de telefoniste. Lukt dat niet: handover, route monteur, met telefoonnummer.
+  wil een sleutel laten bijmaken of inleren op locatie: handover, route
+  monteur (met telefoonnummer), en zeg `say` — daarin staat het servicenummer.
 - Zakelijke klant (garage, lease, verhuur, meerdere auto's): handover, route
   zakelijk.
 - Klacht, of de klant is boos: handover, route klacht.
@@ -194,13 +207,13 @@ webshop; die repo zit niet in deze sessie en is dus niet aangepast.
 ```bash
 curl -s -X POST https://<site>/api/agent/shop/order \
   -H "Authorization: Bearer $SHOP_AGENT_TOKEN" -H "Content-Type: application/json" \
-  -d '{"order_number":"AS24-2026-00042","email":"klant@voorbeeld.nl"}'
+  -d '{"order_number":"AS24-26-K7Q2XM","email":"klant@voorbeeld.nl"}'
 ```
 
 ```bash
 curl -s -X POST https://<site>/api/agent/shop/return \
   -H "Authorization: Bearer $SHOP_AGENT_TOKEN" -H "Content-Type: application/json" \
-  -d '{"order_number":"AS24-2026-00042","email":"klant@voorbeeld.nl","condition":"ongebruikt","reason":"past niet","dry_run":true}'
+  -d '{"order_number":"AS24-26-K7Q2XM","email":"klant@voorbeeld.nl","condition":"ongebruikt","reason":"past niet","dry_run":true}'
 ```
 
 ```bash
@@ -212,7 +225,7 @@ curl -s -X POST https://<site>/api/agent/shop/handover \
 `dry_run: true` controleert alles en schrijft niets. Daarna in de widget: een
 echte bestelling opvragen, een retour aanvragen (staat het in Gesprekken, in
 Telegram, en op de bestelling?), en "ik wil dat er iemand komt" (komt de
-telefoniste aan de lijn?).
+servicenummer?).
 
 ## 8 · Waar het stukloopt
 
@@ -222,7 +235,8 @@ telefoniste aan de lijn?).
 | elke tool 401 | token in de console ≠ die op Vercel |
 | agent valt stil na een vraag | Vercel Deployment Protection: de tool krijgt een inlogpagina |
 | `get_knowledge` 401 | de tool stuurt een ander token dan `SHOP_AGENT_TOKEN` of `AGENT_API_TOKEN` (beide worden geaccepteerd) |
-| bestelling "niet gevonden" terwijl hij bestaat | e-mail of postcode wijkt af van de bestelling; of het nummer is anders dan `AS24-JJJJ-NNNNN` |
+| bestelling "niet gevonden" terwijl hij bestaat | e-mail of postcode wijkt af van de bestelling; of het nummer is verkeerd verstaan (I/O/0/1 komen er niet in voor) |
+| elke tool zegt "mailt u ons" | Upstash ontbreekt in productie (fail closed), of een limiet is bereikt |
 | gesprekken staan als `extern` | `ELEVENLABS_SHOP_AGENT_ID` ontbreekt of klopt niet |
 | geen trackingcode terwijl er een label is | label buiten de CRM gemaakt en de code nergens ingevuld |
 
