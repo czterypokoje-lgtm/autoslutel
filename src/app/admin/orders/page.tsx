@@ -4,6 +4,7 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
 import KfcOrders from './KfcOrders';
+import LiveRefresh from '../live/LiveRefresh';
 import { IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
 
 export const dynamic = 'force-dynamic';
@@ -34,7 +35,13 @@ export default async function OrdersPage({
 
   const sp = await searchParams;
   // Warehouse installs: the order ledger. The WooCommerce import panel is KeyForCars's; Autosleutel24 imports its own webshop.
-  if (WAREHOUSE) return <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} requestedPage={sp.page} canImport={IS_KEYFORCARS} canImportOwn={!IS_KEYFORCARS} />;
+  // New orders appear without a reload (paused while the tab is hidden).
+  if (WAREHOUSE) return (
+    <>
+      <LiveRefresh seconds={10} />
+      <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} requestedPage={sp.page} canImport={IS_KEYFORCARS} canImportOwn={!IS_KEYFORCARS} />
+    </>
+  );
   const status = TABS.some((t) => t.value === sp.status) ? sp.status : undefined;
   const search = (sp.q ?? '').replace(/[,()%*\\]/g, ' ').trim().slice(0, 60);
 
@@ -85,6 +92,7 @@ export default async function OrdersPage({
 
   return (
     <>
+      <LiveRefresh seconds={10} />
       <div className={styles.head}>
         <h1 className={styles.title}><PreviewText>{"Bestellingen"}</PreviewText></h1>
         <Link className={styles.link} href="/admin/orders/inkoop">A-Key inkoop vandaag →</Link>
