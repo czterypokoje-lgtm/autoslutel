@@ -268,6 +268,27 @@ export async function importOwnOrders({ since, kind = 'backfill' }: { since?: st
 }
 
 /**
+ * Catch-up when the order screen opens: copy the last week's webshop orders
+ * into the ledger, so a new paid order shows right away instead of after the
+ * nightly reconcile (which only runs on production with CRON_SECRET, never on
+ * a preview). At most once a minute across all viewers; never throws, the
+ * screen still shows what the ledger has.
+ */
+export async function syncOwnOrdersOnView(minIntervalMs = 60_000): Promise<void> {
+  try {
+    const db = await adminDb();
+    const { data } = await db.from('kfc_import_runs').select('started_at')
+      .eq('shop', OWN_SHOP).order('started_at', { ascending: false }).limit(1).maybeSingle();
+    const last = data?.started_at ? Date.parse(data.started_at as string) : 0;
+    if (Date.now() - last < minIntervalMs) return;
+    const since = new Date(Date.now() - 7 * 24 * 3600_000).toISOString();
+    await importOwnOrders({ since, kind: 'reconcile' });
+  } catch (cause) {
+    console.error('[orders] own webshop catch-up failed:', (cause as Error).message);
+  }
+}
+
+/**
  * Tell the webshop an order left the building: the one write back into
  * `public.orders`. Guarded on the statuses a shipment may follow, so a
  * cancelled or refunded order is never resurrected as 'shipped'.

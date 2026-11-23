@@ -1,6 +1,7 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { notFound } from 'next/navigation';
-import { BRAND, WAREHOUSE } from '@/config/install';
+import { BRAND, IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
+import { syncOwnOrdersOnView } from '@/lib/kfcOwnShop';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireWarehouseUser } from '@/lib/crmSession';
 import { pickList } from '@/lib/kfcOrders';
@@ -16,6 +17,8 @@ const requestNow = () => Date.now();
 export default async function PickPage() {
   if (!WAREHOUSE || CRM_PREVIEW) notFound();
   await requireWarehouseUser('/admin/bestellingen/picken');
+  // Autosleutel24: new paid webshop orders into the ledger first, so they can be picked.
+  if (!IS_KEYFORCARS) await syncOwnOrdersOnView();
   const orders = await pickList();
   return (
     <div className="flex flex-col gap-6">

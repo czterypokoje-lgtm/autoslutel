@@ -10,7 +10,7 @@ import { listShopOrders, sampleShopOrdersExist, shopOrdersExist } from '@/lib/kf
 import { WOO_SHOPS, wooConfigured, type WooShop } from '@/lib/kfcWoo';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { IS_KEYFORCARS } from '@/config/install';
-import { OWN_SHOP } from '@/lib/kfcOwnShop';
+import { OWN_SHOP, syncOwnOrdersOnView } from '@/lib/kfcOwnShop';
 import { FulfilmentBadge, ImportPanel, OwnImportPanel } from '../bestellingen/OrderParts';
 import type { Fulfilment } from '@/lib/kfcOrders';
 
@@ -43,6 +43,8 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
   const dispatched = status === 'dispatched';
   const query = (q ?? '').trim().toUpperCase();
   const requested = Number(requestedPage);
+  // Autosleutel24: the webshop writes public.orders; bring new paid orders into the ledger before listing it.
+  if (canImportOwn) await syncOwnOrdersOnView();
   const [live, hasSamples] = await Promise.all([shopOrdersExist().catch(() => false), sampleShopOrdersExist().catch(() => false)]);
   // The sample orders are KeyForCars's shops; Autosleutel24 shows its own empty ledger instead.
   const showSampleNotice = IS_KEYFORCARS && (!live || hasSamples);
