@@ -4,12 +4,9 @@ import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { jobInvoiceSourcesValid, readJobInvoiceLineSource, type JobInvoiceLineSource } from '@/lib/jobInvoiceSources';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SITE_CONFIG } from '@/config/site.config';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
 
-/* Blank biller fields fall back to the company's own details — never to the other install's. */
-const BILLER_DEFAULTS = IS_KEYFORCARS
-  ? { fullName: BRAND.name, email: null, phone: null, kvk: null, btw: null, iban: null }
-  : SITE_CONFIG;
+/* Blank biller fields fall back to the company's own details. */
+const BILLER_DEFAULTS = SITE_CONFIG;
 
 export const dynamic = 'force-dynamic';
 
@@ -185,8 +182,6 @@ export async function POST(request: Request) {
       biller_btw: text(body.biller_btw, 40) ?? BILLER_DEFAULTS.btw,
       biller_iban: text(body.biller_iban, 40) ?? BILLER_DEFAULTS.iban,
       client_name: clientName,
-      // sales_invoices.customer_id exists only on KeyForCars (migration 0093); Autosleutel24's table has no such column.
-      ...(IS_KEYFORCARS ? { customer_id: typeof body.customer_id === 'string' && /^[a-f0-9-]{36}$/i.test(body.customer_id) ? body.customer_id : null } : {}),
       client_street: text(body.client_street, 200),
       client_postcode: text(body.client_postcode, 20),
       client_city: text(body.client_city, 100),

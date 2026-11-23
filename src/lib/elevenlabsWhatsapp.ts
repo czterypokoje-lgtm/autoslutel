@@ -1,5 +1,4 @@
 import 'server-only';
-import { providerRequestsEnabled } from '@/lib/providerRequests';
 
 /**
  * Outbound WhatsApp job offers to technicians, via ElevenLabs' Technician
@@ -44,7 +43,6 @@ export async function sendWhatsAppOffer(
   technicianPhone: string | null | undefined,
   params: JobOfferTemplateParams
 ): Promise<void> {
-  if (!providerRequestsEnabled()) return;
   if (!API_KEY || !PHONE_NUMBER_ID || !TECHNICIAN_AGENT_ID || !TEMPLATE_NAME) return;
 
   const userId = toWhatsAppUserId(String(technicianPhone ?? ''));

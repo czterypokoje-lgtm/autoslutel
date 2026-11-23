@@ -15,8 +15,7 @@ import {
 } from 'lucide-react';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
-import { sampleOrders } from '@/lib/kfcSampleOrders';
+import { BRAND } from '@/config/install';
 import { PreviewDate, PreviewText } from '../PreviewLanguage';
 import { waLink } from '@/lib/whatsapp';
 import { PageHead, Label, TileGrid, Tile, Badge } from '../_ui';
@@ -133,16 +132,14 @@ export default async function OfficeOverview({ period }: { period: Period }) {
       )}
     </>
   );
-  const recent = IS_KEYFORCARS && CRM_PREVIEW ? sampleOrders(now.getTime()).slice(0, 4) : [];
 
   return (
     <div className={styles.page}>
       <PageHead
         title={<PreviewText>{greeting(now)}</PreviewText>}
         sub={<PreviewDate value={now.getTime()} />}
-        actions={IS_KEYFORCARS && <Link className={styles.newInvoice} href="/admin/facturen/nieuw"><FilePlus2 size={16} aria-hidden="true" /><PreviewText>Nieuwe factuur</PreviewText></Link>}
       />
-      {!IS_KEYFORCARS && quickActions}
+      {quickActions}
 
       <div className={styles.kpiHead}>
         <Label><PreviewText>Cijfers</PreviewText> · <PreviewText>{PERIOD_LABEL[period].toLowerCase()}</PreviewText></Label>
@@ -170,24 +167,6 @@ export default async function OfficeOverview({ period }: { period: Period }) {
         <KpiCard strong label="Netto over" value={money(d.net.value)} k={d.net} foot="brutowinst − advertenties − uitgaven" />
       </div>
 
-      {!!recent.length && (
-        <section className={styles.card}>
-          <header className={styles.cardHead}>
-            <span><PreviewText>Recente voorbeeldbestellingen</PreviewText></span>
-            <Link href="/admin/orders"><PreviewText>Alle bestellingen →</PreviewText></Link>
-          </header>
-          <ul className={styles.recentOrders}>
-            {recent.map(order => (
-              <li key={`${order.shop}-${order.number}`}>
-                <span className={styles.orderIcon}><Boxes size={16} aria-hidden="true" /></span>
-                <Link href={`/admin/orders?q=${encodeURIComponent(order.number)}`}><b>#{order.number}</b><small>{order.shop}</small></Link>
-                <span><b>{money(order.totalExcl / 100)}</b><small>{shortDate(order.created)}</small></span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-      {IS_KEYFORCARS && quickActions}
 
       <section className={styles.card}>
         <header className={styles.cardHead}>
@@ -385,7 +364,7 @@ export default async function OfficeOverview({ period }: { period: Period }) {
         <Tile href="/admin/gesprekken" ai iconTone="ai" icon={<PhoneCall size={20} strokeWidth={1.8} />} title={<PreviewText>Gesprekken</PreviewText>} sub={<PreviewText>Wat de AI-agent deed</PreviewText>} />
         <Tile href="/admin/jobs" iconTone="steel" icon={<CalendarDays size={20} strokeWidth={1.8} />} title={<PreviewText>Agenda</PreviewText>} sub={<PreviewText>Wie is waar</PreviewText>} />
         <Tile href="/admin/rapport" iconTone="ok" icon={<BarChart3 size={20} strokeWidth={1.8} />} title={<PreviewText>Prestaties</PreviewText>} sub={<PreviewText>Week, maand, jaar en per monteur</PreviewText>} />
-        {!IS_KEYFORCARS && <Tile href="/admin/monteurs" icon={<Wrench size={20} strokeWidth={1.8} />} title="Monteurs" sub="Team en dekking" />}
+        <Tile href="/admin/monteurs" icon={<Wrench size={20} strokeWidth={1.8} />} title="Monteurs" sub="Team en dekking" />
       </TileGrid>
     </div>
   );

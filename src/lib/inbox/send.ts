@@ -1,7 +1,6 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { deliverMail } from '@/lib/email';
-import { providerRequestsEnabled } from '@/lib/providerRequests';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { addMessage, threadMessages, type Message, type Thread } from './store';
 import { sendWhatsAppText, whatsappConfigured, withinServiceWindow } from './whatsapp';
@@ -31,7 +30,6 @@ export async function sendReply(
   if (!body) return { ok: false, error: 'Leeg bericht' };
   const via = replyChannel(thread);
   if (!via) return { ok: false, error: 'Geen e-mailadres of WhatsApp-nummer bij dit gesprek' };
-  if (!providerRequestsEnabled()) return { ok: false, error: 'Demo: verzenden staat uit' };
 
   let externalId: string | null = null;
   if (via === 'whatsapp') {

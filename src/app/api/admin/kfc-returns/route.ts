@@ -1,10 +1,8 @@
-import { after } from 'next/server';
-import { IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { canBookReturns, requireWarehouseUserApi } from '@/lib/crmSession';
 import { StockError } from '@/lib/kfcInventory';
 import { receiveReturn, scanReturnLine, type ReturnCondition } from '@/lib/kfcReturns';
-import { runStockPush } from '@/lib/kfcWooStock';
 
 export const runtime = 'nodejs';
 
@@ -43,8 +41,6 @@ export async function POST(request: Request) {
         return reply({ error: 'Ongeldige invoer.' }, 400);
       }
       const result = await receiveReturn({ line, key, quantity, condition, location, refund, scan: text(input.scan, 80), note: text(input.note, 300) }, user);
-      // The return move queued the article; push it now (no-op while every shop is off).
-      if (IS_KEYFORCARS) after(() => runStockPush({ budgetMs: 15_000, limit: 50 }).catch(() => undefined));
       return reply({ ok: true, ...result });
     }
     return reply({ error: 'Onbekende actie.' }, 400);

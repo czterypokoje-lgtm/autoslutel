@@ -1,12 +1,11 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState, useSyncExternalStore, type ComponentProps, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useSyncExternalStore, type ComponentProps, type ReactNode } from 'react';
 import { Input } from '@/components/ui/input';
 import styles from './admin.module.css';
 
 const storageKey = 'keyforcars-preview-language';
 const Language = createContext(false);
-const ProductNames = createContext<Record<string, string>>({});
 const dictionary: Record<string, string> = {
   'ElevenLabs-gesprekken': 'ElevenLabs Conversations',
   'Werkplaatsagenda': 'Workshop Calendar',
@@ -1079,10 +1078,9 @@ export function PreviewText({ children }: { children: string }) {
   return usePreviewLanguage().t(children);
 }
 
-export function PreviewProductName({ sku, children, limit }: { sku: string; children: string; limit?: number }) {
+export function PreviewProductName({ children, limit }: { sku: string; children: string; limit?: number }) {
   const { english } = usePreviewLanguage();
-  const names = useContext(ProductNames);
-  const name = english ? (names[sku.toUpperCase()] ?? children)
+  const name = english ? children
     .replace(/\b(\d+)\s*knop(?:pen|s)?\b/gi, '$1-button')
     .replace(/\bklap(?:sleutel|sluetel)\b/gi, 'flip key')
     .replace(/\bexterne afstandsbediening\b/gi, 'external remote')
@@ -1121,38 +1119,16 @@ export function PreviewStyledInput({ placeholder, 'aria-label': label, ...props 
   return <Input {...props} placeholder={placeholder && t(placeholder)} aria-label={label && t(label)} />;
 }
 
-/*
- * English product names (~240 KB for the whole catalogue) used to travel in the
- * admin layout's payload on every page load. They are only needed when the
- * panel is in English, so they are fetched once from /api/admin/product-names
- * and kept for the session. Until they arrive, names fall back to the Dutch
- * name with the word replacements in PreviewProductName.
- */
-let productNamesRequest: Promise<Record<string, string>> | null = null;
-function loadProductNames() {
-  productNamesRequest ??= fetch('/api/admin/product-names', { credentials: 'same-origin' })
-    .then((response) => response.ok ? response.json() : {})
-    .catch(() => { productNamesRequest = null; return {}; });
-  return productNamesRequest;
-}
-
-export default function PreviewLanguage({ children, floating = true, loadNames = false }: { children: ReactNode; floating?: boolean; loadNames?: boolean }) {
+export default function PreviewLanguage({ children, floating = true }: { children: ReactNode; floating?: boolean }) {
   const english = useSyncExternalStore(subscribe, () => localStorage.getItem(storageKey) === 'en', () => false);
-  const [productNames, setProductNames] = useState<Record<string, string>>({});
   useEffect(() => {
     const root = document.documentElement;
     const previous = root.lang;
     root.lang = english ? 'en' : 'nl';
     return () => { root.lang = previous; };
   }, [english]);
-  useEffect(() => {
-    if (!english || !loadNames) return;
-    let active = true;
-    void loadProductNames().then((names) => { if (active) setProductNames(names); });
-    return () => { active = false; };
-  }, [english, loadNames]);
   return <Language.Provider value={english}>
-    <ProductNames.Provider value={productNames}>{children}</ProductNames.Provider>
+    {children}
     {floating && <LanguageToggle />}
   </Language.Provider>;
 }

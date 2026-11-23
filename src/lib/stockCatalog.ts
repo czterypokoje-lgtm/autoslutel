@@ -1,53 +1,31 @@
-import { IS_KEYFORCARS } from '@/config/install';
-import keyforcars from '@/data/keyforcars-stock.json';
 import autosleutel24 from '@/data/autosleutel24-stock.json';
 import type { StockArticle } from '@/lib/keyforcarsStock';
 import type { CatalogProduct } from '@/lib/catalog';
 import type { ProductProfileData, VehicleFit } from '@/lib/productProfiles';
 
 /**
- * Which article master the stock ledger works from — the one switch.
+ * The article master the stock ledger works from.
  *
  * The ledger itself (migrations 0089–0099, src/lib/kfcInventory.ts, the screens
- * under /admin/voorraad) is the same code on both installs; only the catalogue
- * behind it differs. KeyForCars's is scraped from its own web shops
- * (src/data/keyforcars-stock.json, built by scripts/kfc-seed-articles.mjs's
- * source files); Autosleutel24's is derived from the key catalogue the shop
- * sells from (src/data/autosleutel24-stock.json, built by
+ * under /admin/voorraad) reads its catalogue from here: derived from the key
+ * catalogue the shop sells from (src/data/autosleutel24-stock.json, built by
  * scripts/build-as24-stock.mjs). Anything reading the catalogue, the prices or
- * the product profiles goes through this module, so a new install is one
- * branch here and not a grep.
- *
- * Nothing here is install-conditional at runtime: CRM_INSTALL is fixed at
- * build time (next.config env), so KeyForCars behaves exactly as before.
+ * the product profiles goes through this module.
  */
-export const stockCatalog: StockArticle[] = IS_KEYFORCARS ? keyforcars : autosleutel24;
+export const stockCatalog: StockArticle[] = autosleutel24;
 
 /**
  * The internal article code, which is also what a shelf label falls back to
  * when the SKU cannot be printed as Code 39. Segment 1 is a shop listing,
- * 3 a workshop article made on the spot; 2 is KeyForCars's second shop.
+ * 3 a workshop article made on the spot.
  */
-export const ARTICLE_CODE = IS_KEYFORCARS ? /^KFC-[123]-[0-9]+$/ : /^AS24-[123]-[0-9]+$/;
+export const ARTICLE_CODE = /^AS24-[123]-[0-9]+$/;
 
 /** Prefix for a workshop article made on the spot: <prefix><n>. */
-export const WORKSHOP_PREFIX = IS_KEYFORCARS ? 'KFC-3-' : 'AS24-3-';
+export const WORKSHOP_PREFIX = 'AS24-3-';
 
 /** A SKU that exists, for the "try an example" button in the product finder. */
-export const EXAMPLE_SKU = IS_KEYFORCARS ? 'ALRK03' : 'TOYR110K';
-
-/**
- * Where the product profiles come from, relative to the project root.
- *
- * KeyForCars has a built file (scripts/build-profiles.mjs) scraped from the
- * shops; Autosleutel24 has no equivalent scrape, but its own catalogue already
- * carries the same facts — chip, frequency, blade, buttons, the spec table and
- * the vehicle fitments — so the profiles are derived from it instead of
- * generated into a second file that could fall out of step.
- */
-export const PROFILES_FILE = IS_KEYFORCARS
-  ? ['src', 'data', 'keyforcars-profiles.json']
-  : ['src', 'lib', 'catalog.json'];
+export const EXAMPLE_SKU = 'TOYR110K';
 
 /** The slug of an article's own product page: the join back to the catalogue. */
 const slugOf = (article: StockArticle) => article.sources[0]?.url.replace(/\/+$/, '').split('/').pop() ?? '';

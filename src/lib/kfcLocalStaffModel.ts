@@ -28,7 +28,7 @@ export function wrongLanguage(text: string, english: boolean) {
 }
 
 export async function askLocalStaffModel(message: string, history: unknown, english: boolean) {
-  if (process.env.NODE_ENV !== 'development' && process.env.KFC_DEMO_MODE !== '1' && process.env.KFC_LOCAL_MODEL !== '1') return null;
+  if (process.env.NODE_ENV !== 'development' && process.env.KFC_LOCAL_MODEL !== '1') return null;
   // Only turns written while the panel had the current language. Turns from before an
   // EN/NL switch (or without a language tag) would steer the reply into the old language.
   const language = english ? 'en' : 'nl';

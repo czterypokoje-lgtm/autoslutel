@@ -5,8 +5,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle, Clock, Download, FileText, Search, Send, X } from 'lucide-react';
 import styles from './facturen-list.module.css';
-import { IS_KEYFORCARS } from '@/config/install';
-import { invoiceDay, invoiceDueDate as dueDate, invoiceToday, PAYMENT_REMINDER_DAYS, PAYMENT_TERM_DAYS } from '@/lib/invoiceDue';
+import { invoiceDay, invoiceDueDate as dueDate, invoiceToday, PAYMENT_TERM_DAYS } from '@/lib/invoiceDue';
 import { usePreviewLanguage } from '../PreviewLanguage';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -162,11 +161,6 @@ const FILTERS: { id: Filter; label: string }[] = [
 
 export default function FacturenTable({ rows, showTechnician = false }: { rows: InvoiceRow[]; showTechnician?: boolean }) {
   const { english, t } = usePreviewLanguage();
-  const today = invoiceDay(invoiceToday());
-  const dueSoon = IS_KEYFORCARS && showTechnician ? rows.filter(row => {
-    const days = invoiceDay(row.issue_date) + PAYMENT_TERM_DAYS - today;
-    return row.status === 'verzonden' && days >= 0 && days <= PAYMENT_REMINDER_DAYS;
-  }).length : 0;
   const [selected, setSelected] = useState<InvoiceRow | null>(null);
   const [filter, setFilter] = useState<Filter>('alle');
   const [search, setSearch] = useState('');
@@ -207,9 +201,6 @@ export default function FacturenTable({ rows, showTechnician = false }: { rows: 
 
   return (
     <>
-      {dueSoon > 0 && <p><Link href="/admin/bank/verwacht">
-        {english ? `${dueSoon} due within ${PAYMENT_REMINDER_DAYS} days · View Expected Payments` : `${dueSoon} binnen ${PAYMENT_REMINDER_DAYS} dagen · Bekijk Verwachte Betalingen`}
-      </Link></p>}
       <div className={styles.metrics}>
         <button type="button" className={filter === 'open' ? styles.metricOn : styles.metric} onClick={() => setFilter('open')}>
           <span className={styles.metricLabel}><FileText size={15} /> <PreviewText>{"Openstaand"}</PreviewText></span>

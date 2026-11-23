@@ -1,6 +1,4 @@
 import { requireOfficeUser } from '@/lib/crmSession';
-import { redirect } from 'next/navigation';
-import { IS_KEYFORCARS } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isoDate } from '@/lib/crmJobs';
 import { readReport, parseSpan } from './reportData';
@@ -15,7 +13,6 @@ export const dynamic = 'force-dynamic';
  */
 export default async function RapportPage({ searchParams }: { searchParams: Promise<{ p?: string; d?: string }> }) {
   await requireOfficeUser('/admin/rapport');
-  if (IS_KEYFORCARS) redirect('/admin/winst');
   const sp = await searchParams;
   const span = parseSpan(sp.p);
   const anchor = sp.d && /^\d{4}-\d{2}-\d{2}$/.test(sp.d) ? sp.d : isoDate(new Date());

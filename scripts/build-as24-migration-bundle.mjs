@@ -17,7 +17,6 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { transactionProblem } from './build-kfc-migration-bundle.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MIGRATIONS = join(ROOT, 'supabase', 'migrations');
@@ -26,6 +25,21 @@ export const FIRST = 129;
 export const LAST = 141;
 
 const pad = (number) => String(number).padStart(4, '0');
+
+/** Statements that would end or break the one wrapping transaction. */
+const NOT_IN_A_TRANSACTION = [
+  /^\s*(begin|start\s+transaction|commit|rollback)\s*;/im,
+  /\bconcurrently\b/i,
+  /^\s*vacuum\b/im,
+  /\balter\s+type\b[^;]*\badd\s+value\b/i,
+];
+
+export function transactionProblem(sql) {
+  // Comments may mention these words; only code counts.
+  const code = sql.replace(/\/\*[\s\S]*?\*\//g, '').replace(/--[^\n]*/g, '');
+  const hit = NOT_IN_A_TRANSACTION.find((pattern) => pattern.test(code));
+  return hit ? `contains ${hit}` : null;
+}
 
 /** Exactly one NNNN_*.sql per number from FIRST to LAST, in order. */
 export function selectMigrations(names) {

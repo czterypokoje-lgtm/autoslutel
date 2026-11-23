@@ -1,5 +1,9 @@
 import type { SampleOrder, Shop } from '@/lib/kfcSampleOrders';
 
+const dayFormatter = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Amsterdam', dateStyle: 'short' });
+/** YYYY-MM-DD in Amsterdam time. */
+export const dayKey = (time: number | string) => dayFormatter.format(new Date(time));
+
 export function rankProducts(orders: SampleOrder[], least = false) {
   const products = new Map<string, { sku: string; name: string; units: number; minPrice: number; maxPrice: number; stores: Map<Shop, number> }>();
   for (const order of orders) {

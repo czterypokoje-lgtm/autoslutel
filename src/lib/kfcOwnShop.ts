@@ -3,11 +3,12 @@ import { createHash } from 'node:crypto';
 /*
  * Autosleutel24's own webshop into the same order ledger.
  *
- * KeyForCars pulls its orders out of three WooCommerce shops (kfcWoo.ts).
  * Autosleutel24's shop is our own Next.js app writing straight into
  * `public.orders` in this same database, so there is nothing to fetch: the
  * import is a read of that table mapped onto kfc_shop_orders /
- * kfc_shop_order_lines, exactly the columns kfcWoo.upsertOrder writes.
+ * kfc_shop_order_lines. (The ledger was first built for KeyForCars's
+ * WooCommerce shops, which is why its columns are named woo_order_id /
+ * woo_line_id; KeyForCars now has its own repository.)
  *
  * The ledger speaks WooCommerce's status vocabulary and the allocator, the
  * pick list and kfc_ship_order all key on `status = 'processing'`. So the

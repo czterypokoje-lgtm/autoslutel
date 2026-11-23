@@ -1,5 +1,0 @@
-abi <abi/4.0>,
-include <tunables/global>
-profile keyforcars-openclaw-chrome /srv/keyforcars-openclaw/browsers/chromium-1255/chrome-linux64/chrome flags=(unconfined) {
-  userns,
-}

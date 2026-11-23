@@ -6,8 +6,7 @@ import { Card, Notice, PageHead, Table, ui } from '../_ui';
 import { PreviewProductName, PreviewInput, PreviewText } from '../PreviewLanguage';
 import catalog from '@/data/keyforcars-stock.json';
 import { inventoryCategory, inventoryCategories } from '../voorraad/inventoryCategories';
-import { dayKey } from '../overzicht/KfcDashboard';
-import { rankProducts } from '../overzicht/productRanking';
+import { dayKey, rankProducts } from '../overzicht/productRanking';
 import styles from '../overzicht/dashboard.module.css';
 
 const periods = [

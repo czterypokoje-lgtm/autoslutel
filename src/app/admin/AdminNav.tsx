@@ -15,12 +15,10 @@ import {
   Handshake,
   History,
   Inbox,
-  Landmark,
   LayoutDashboard,
   MessageSquare,
   Package,
   PhoneCall,
-  Plug,
   Settings,
   Truck,
   Users,
@@ -29,9 +27,8 @@ import {
 } from 'lucide-react';
 import styles from './admin.module.css';
 import { usePreviewLanguage } from './PreviewLanguage';
-import { IS_KEYFORCARS, WAREHOUSE, installServes } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 import type { CrmRole } from '@/lib/crmSession';
-import { inventoryHref, inventoryView } from './voorraad/inventoryViews';
 
 /**
  * The sidebar menu.
@@ -74,7 +71,7 @@ export const reportLinks = [
   { label: 'Voorraadbewegingen', href: '/admin/rapport/voorraadbewegingen', warehouse: true },
   { label: 'Webshopmarge', href: '/admin/winst/webshop', warehouse: true },
   { label: 'Alle rapporten', href: '/admin/rapporten' },
-].filter(link => (!link.warehouse || WAREHOUSE) && installServes(link.href));
+].filter(link => !link.warehouse || WAREHOUSE);
 
 export const OFFICE_NAV: NavItem[] = [
   { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/overzicht' },
@@ -149,66 +146,6 @@ function allHrefs(nav: NavItem[]): string[] {
   return nav.flatMap((i) => (i.children ? i.children.map((c) => c.href) : i.href ? [i.href] : []));
 }
 
-/**
- * KeyForCars's install: three web shops and one warehouse, no technicians.
- * Every other screen answers 404 there (src/config/install.ts).
- */
-const KEYFORCARS_NAV: NavItem[] = [
-  { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/overzicht' },
-  { label: 'Leads', icon: Inbox, href: '/admin/leads' },
-  { label: 'Gesprekken', icon: PhoneCall, href: '/admin/gesprekken', ai: true },
-  {
-    label: 'Planning',
-    icon: CalendarDays,
-    children: [
-      { href: '/admin/jobs', label: 'Agenda' },
-      { href: '/admin/jobs/nieuw', label: 'Klus inplannen' },
-    ],
-  },
-  { label: 'Klanten', icon: Users, href: '/admin/klanten' },
-  { label: 'Bestellingen', icon: Package, href: '/admin/orders' },
-  { label: 'Verzending', icon: Truck, href: '/admin/verzending' },
-  { label: 'Best verkocht', icon: BarChart3, href: '/admin/best-verkocht' },
-  {
-    label: 'Bank',
-    icon: Landmark,
-    children: [
-      { href: '/admin/bank/rekeningen', label: 'Financiële rekeningen' },
-      { href: '/admin/bank/transacties', label: 'Banktransacties' },
-      { href: '/admin/bank/betalingen', label: 'Betalingen' },
-      { href: '/admin/bank/verwacht', label: 'Verwachte betalingen' },
-    ],
-  },
-  {
-    label: 'Voorraad',
-    icon: Boxes,
-    children: [
-      { href: '/admin/voorraad', label: 'Artikelen' },
-      { href: '/admin/voorraad/p', label: 'Productzoeker' },
-      { href: inventoryHref('reorder'), label: 'Bestelvoorstel' },
-      { href: '/admin/inkoop', label: 'Inkoop' },
-      { href: inventoryHref('reports'), label: 'Voorraadrapporten' },
-      { href: inventoryHref('journal'), label: 'Voorraadlogboek' },
-    ],
-  },
-  {
-    label: 'Geld',
-    icon: Euro,
-    children: [
-      { href: '/admin/facturen', label: 'Facturen' },
-      { href: '/admin/uitgaven', label: 'Uitgaven' },
-    ],
-  },
-  {
-    label: 'Rapporten',
-    icon: BarChart3,
-    children: reportLinks,
-  },
-  { label: 'Integraties', icon: Plug, href: '/admin/integraties' },
-  { label: 'Boekhoudtest', icon: BadgeCheck, href: '/admin/boekhoudtest' },
-  { label: 'Instellingen', icon: Settings, href: '/admin/instellingen' },
-];
-
 /*
  * The stock screens use the camera, which needs the destination document's
  * own Permissions-Policy header — so they are opened as a full page load,
@@ -221,17 +158,16 @@ export default function AdminNav({ role }: { role: CrmRole | null }) {
   const pathname = usePathname() ?? '';
   const query = useSearchParams();
   const demo = query?.get('demo') === '1';
-  const nav = IS_KEYFORCARS ? KEYFORCARS_NAV : role === 'monteur' ? MONTEUR_NAV : OFFICE_NAV;
+  const nav = role === 'monteur' ? MONTEUR_NAV : OFFICE_NAV;
 
   /*
    * The most specific match wins, so /admin/jobs/nieuw lights up
    * "Klus inplannen" and not "Agenda", while /admin/jobs/123 still lights up
    * "Agenda".
    */
-  const active = IS_KEYFORCARS && pathname === '/admin/voorraad' ? inventoryHref(inventoryView(query?.get('view'))) :
-    allHrefs(nav)
-      .filter((h) => pathname === h || pathname.startsWith(`${h}/`))
-      .sort((a, b) => b.length - a.length)[0] ?? null;
+  const active = allHrefs(nav)
+    .filter((h) => pathname === h || pathname.startsWith(`${h}/`))
+    .sort((a, b) => b.length - a.length)[0] ?? null;
 
   const [toggled, setToggled] = useState<Record<string, boolean>>({});
 

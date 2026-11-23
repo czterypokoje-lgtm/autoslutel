@@ -97,5 +97,5 @@ Debiteuren & crediteuren (KeyForCars and Autosleutel24-with-warehouse). TITLES:
 - **Merge suppliers**: duplicates from the free-text backfill (e.g. "KeyDIY" vs
   "KeyDIY Europe") must be renamed/merged by hand; no merge action yet.
 - **VIES check** for EU VAT numbers (format only today).
-- After merging 0129–0134, rebuild the KeyForCars migration bundle
-  (`node scripts/build-kfc-migration-bundle.mjs`, see the kfc-switch notes).
+- The KeyForCars migration bundle now lives in the KeyForCars repository
+  (czterypokoje-lgtm/keyforcars-crm1).

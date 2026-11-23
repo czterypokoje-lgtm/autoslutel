@@ -39,7 +39,7 @@ export function checkAgent(request: Request): AgentAuth {
 }
 
 /**
- * The KeyForCars Workshop Service agent's own secret, separate from
+ * The Workshop Service agent's own secret, separate from
  * AGENT_API_TOKEN. Only the two workshop routes accept it, so the write right
  * to the workshop calendar belongs to that agent's appointment flow and to no
  * other agent (the webshop support agent and the staff chat never hold it).

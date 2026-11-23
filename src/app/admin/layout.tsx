@@ -10,14 +10,11 @@ import MobileTabBar from './MobileTabBar';
 import TopBar from './TopBar';
 import { CRM_READONLY, READONLY_MESSAGE } from '@/lib/readonly';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
-import { BRAND, IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
+import { BRAND, STUDIO_UI } from '@/config/install';
 import PreviewLanguage, { PreviewText } from './PreviewLanguage';
-import KeyForCarsAppearance from './KeyForCarsAppearance';
 import KfcShell from './KfcShell';
-import { shippingTestEnabled } from '@/lib/kfcShippingTest';
 
-const inter = localFont({ src: '../fonts/inter-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--ff-crm-studio', preload: false });
-// KeyForCars shell: Geist, the Studio Admin template font.
+// Studio shell (KfcShell): Geist, the Studio Admin template font.
 const geist = localFont({ src: '../fonts/geist-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--font-geist', preload: false });
 const geistMono = localFont({ src: '../fonts/geist-mono-latin-wght-normal.woff2', weight: '100 900', display: 'swap', variable: '--font-geist-mono', preload: false });
 
@@ -37,8 +34,7 @@ const geistMono = localFont({ src: '../fonts/geist-mono-latin-wght-normal.woff2'
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  // The site-wide "| Autosleutel24" suffix must not reach another company's tab title.
-  title: IS_KEYFORCARS ? { absolute: BRAND.crm, template: '%s' } : 'CRM · Autosleutel24',
+  title: 'CRM · Autosleutel24',
   robots: { index: false, follow: false, nocache: true },
   /*
    * Without this, "Voeg toe aan beginscherm" still works — every browser can
@@ -74,8 +70,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
    * keep the initials; that is the fallback, not a failure.
    */
   let photoUrl: string | null = null;
-  // KeyForCars office and warehouse logins have no technicians row: skip a query that ran before every page for nothing.
-  if (user && !CRM_PREVIEW && (!IS_KEYFORCARS || user.role === 'monteur')) {
+  if (user && !CRM_PREVIEW) {
     try {
       const supabase = await createSupabaseServerClient();
       const { data } = await supabase
@@ -91,14 +86,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const isMonteur = user?.role === 'monteur';
   const readonlyStatus = CRM_READONLY && (
-    <div role="status" className={IS_KEYFORCARS ? styles.readonlyInline : styles.readonlyBanner}>
+    <div role="status" className={styles.readonlyBanner}>
       <PreviewText>{READONLY_MESSAGE}</PreviewText>
     </div>
   );
 
-  const Shell = IS_KEYFORCARS ? KeyForCarsAppearance : 'div';
   const panel = (
-    <Shell className={`crm ${IS_KEYFORCARS ? `crm-keyforcars ${inter.variable}` : ''} ${styles.shell}`}>
+    <div className={`crm ${styles.shell}`}>
       {user && (
         <Sidebar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
       )}
@@ -107,26 +101,24 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <TopBar role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} />
         )}
         <main className={user ? `${styles.main} ${isMonteur ? styles.mainWithTabBar : ''}` : undefined}>
-          {IS_KEYFORCARS && readonlyStatus}
           {children}
         </main>
       </div>
       {isMonteur && <MobileTabBar />}
-      {!IS_KEYFORCARS && readonlyStatus}
-    </Shell>
+      {readonlyStatus}
+    </div>
   );
 
-  // The shadcn shell (KfcShell) once signed in: always on KeyForCars, on Autosleutel24 behind CRM_UI=studio. The login page keeps the plain panel.
+  // The shadcn shell (KfcShell) once signed in, behind CRM_UI=studio. The login page keeps the plain panel.
   if (STUDIO_UI && user) {
     return (
-      <PreviewLanguage floating={false} loadNames={IS_KEYFORCARS}>
-        <KfcShell shippingTest={shippingTestEnabled} role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
+      <PreviewLanguage floating={false}>
+        <KfcShell role={user.role} email={user.email} initials={initials} photoUrl={photoUrl} fontClass={`${geist.variable} ${geistMono.variable}`}>
           {readonlyStatus}
           {children}
         </KfcShell>
       </PreviewLanguage>
     );
   }
-  // KeyForCars reads Dutch and English: the switch sits in the corner of every screen.
-  return IS_KEYFORCARS || CRM_PREVIEW ? <PreviewLanguage>{panel}</PreviewLanguage> : panel;
+  return CRM_PREVIEW ? <PreviewLanguage>{panel}</PreviewLanguage> : panel;
 }

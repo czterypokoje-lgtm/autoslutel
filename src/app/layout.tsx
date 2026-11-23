@@ -12,7 +12,6 @@ import WhatsAppButton from '@/components/WhatsAppButton/WhatsAppButton';
 
 
 import { SITE_CONFIG } from '@/config/site.config';
-import { IS_KEYFORCARS } from '@/config/install';
 
 /*
  * The two fonts the stylesheet actually uses, self-hosted.
@@ -127,13 +126,6 @@ import AdParameterTracker from '@/components/Tracking/AdParameterTracker';
 import AdVisitBeacon from '@/components/Tracking/AdVisitBeacon';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  if (IS_KEYFORCARS) {
-    return (
-      <html lang="nl" className={`${ibmPlexSans.variable} ${chivo.variable}`}>
-        <body>{children}</body>
-      </html>
-    );
-  }
   return (
     <html lang="nl" className={`${ibmPlexSans.variable} ${chivo.variable}`}>
       <head>

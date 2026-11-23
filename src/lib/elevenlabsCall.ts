@@ -1,5 +1,4 @@
 import 'server-only';
-import { providerRequestsEnabled } from '@/lib/providerRequests';
 import { toE164NL } from '@/lib/phone';
 
 /**
@@ -36,7 +35,6 @@ export interface Briefing {
 }
 
 export async function callOffice(briefing: Briefing): Promise<boolean> {
-  if (!providerRequestsEnabled()) return false;
   if (!API_KEY || !AGENT_ID || !PHONE_NUMBER_ID || !OFFICE_PHONE) return false;
 
   const to = toE164NL(OFFICE_PHONE);

@@ -2,7 +2,6 @@ import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { seesPrices, type CrmRole, type CrmUser } from '@/lib/crmSession';
 import { SITE_CONFIG } from '@/config/site.config';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
 import { findArticlesByScan, StockError } from '@/lib/kfcInventory';
 
 /**
@@ -112,16 +111,8 @@ function toSession(row: Record<string, unknown>): PosSession {
   };
 }
 
-/** The seller on the receipt and invoice: this install's own details, never the other company's. */
+/** The seller on the receipt and invoice: our own company details. */
 export function posBiller() {
-  if (IS_KEYFORCARS) {
-    const env = process.env;
-    return {
-      name: env.POS_BILLER_NAME || BRAND.name, street: env.POS_BILLER_STREET || null, postcode: env.POS_BILLER_POSTCODE || null,
-      city: env.POS_BILLER_CITY || null, email: env.POS_BILLER_EMAIL || null, phone: env.POS_BILLER_PHONE || null,
-      kvk: env.POS_BILLER_KVK || null, btw: env.POS_BILLER_BTW || null, iban: env.POS_BILLER_IBAN || null,
-    };
-  }
   return {
     name: SITE_CONFIG.fullName, street: SITE_CONFIG.address.street || null, postcode: SITE_CONFIG.address.postal || null,
     city: SITE_CONFIG.address.city || null, email: SITE_CONFIG.email || null, phone: SITE_CONFIG.phone || null,

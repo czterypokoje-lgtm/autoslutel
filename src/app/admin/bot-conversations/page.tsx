@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ArrowDownToLine, AudioLines, CheckCircle2, PackageSearch, PhoneForwarded } from 'lucide-react';
-import { DEMO_BOT_AGENT } from '@/lib/kfcDemoBotRules';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { reviewAgentIds, type ReviewMetadata } from '../../../../supabase/functions/_shared/kfcCallReview';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -21,7 +20,7 @@ type Row = {
   duration_secs: number | null;
   summary: string | null;
   created_at: string;
-  metadata: { kfc_call_review: Omit<ReviewMetadata, 'channel'> & { channel: ReviewMetadata['channel'] | 'email' }; kfc_demo_bot?: { technician_requested?: boolean } };
+  metadata: { kfc_call_review: Omit<ReviewMetadata, 'channel'> & { channel: ReviewMetadata['channel'] | 'email' } };
   transcript?: { role: 'agent' | 'user'; message: string }[];
 };
 
@@ -40,7 +39,6 @@ export default async function BotConversationsPage({ searchParams }: { searchPar
   const channel = requested === 'phone' || requested === 'whatsapp' ? requested : undefined;
   const db = await createSupabaseServerClient();
   const allowed = reviewAgentIds(process.env.KFC_REVIEW_AGENT_IDS);
-  if (process.env.KFC_DEMO_MODE === '1') allowed.push(DEMO_BOT_AGENT);
   const active = agent && allowed.includes(agent) ? [agent] : allowed;
   let conversations = db.from('agent_conversations')
     .select('conversation_id, phone, outcome, duration_secs, summary, created_at, metadata')
@@ -111,7 +109,6 @@ export default async function BotConversationsPage({ searchParams }: { searchPar
               <div><dt className="text-muted-foreground"><ReviewText en="Issue resolved" nl="Probleem opgelost" /></dt><dd><ReviewText en={verdictLabels[info.resolved][0]} nl={verdictLabels[info.resolved][1]} /></dd></div>
               <div><dt className="text-muted-foreground"><ReviewText en="Product recommended" nl="Product aanbevolen" /></dt><dd><ReviewText en={verdictLabels[info.recommended][0]} nl={verdictLabels[info.recommended][1]} />{info.product_skus.length > 0 && ' · ' + info.product_skus.join(', ')}</dd></div>
               <div><dt className="text-muted-foreground"><ReviewText en="Technician transfer" nl="Overdracht naar technicus" /></dt><dd><ReviewText en={transferLabels[info.transfer][0]} nl={transferLabels[info.transfer][1]} /></dd></div>
-              {picked.metadata.kfc_demo_bot?.technician_requested && <div><dt className="text-muted-foreground"><ReviewText en="Technician request" nl="Verzoek om technicus" /></dt><dd><ReviewText en="Recorded in demo" nl="Vastgelegd in demo" /></dd></div>}
               <div><dt className="text-muted-foreground"><ReviewText en="Transfer destination" nl="Bestemming overdracht" /></dt><dd>{info.transfer_number ?? '—'}</dd></div>
             </dl>
             <section className="grid gap-2">

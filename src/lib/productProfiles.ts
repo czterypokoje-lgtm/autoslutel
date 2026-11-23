@@ -1,18 +1,14 @@
 import 'server-only';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { IS_KEYFORCARS } from '@/config/install';
 import { catalogProfiles } from '@/lib/stockCatalog';
 
 /**
  * Product profiles: what a key is and which cars it fits, one per SKU.
  *
- * On KeyForCars they come from remkeys.com, keyforcars.nl and klapsleutels.nl,
- * built by scripts/build-profiles.mjs. On Autosleutel24 there is no such
- * scrape, so they are derived from the shop's own key catalogue instead —
- * src/lib/stockCatalog.ts decides which. Either way: read on the server only
- * and on first use, because the file is a few megabytes and holds the whole
- * catalogue.
+ * Derived from the shop's own key catalogue (src/lib/stockCatalog.ts). Read
+ * on the server only and on first use, because the file is a few megabytes and
+ * holds the whole catalogue.
  */
 
 export interface VehicleFit { text: string; vehicle: string; from: number | null; to: number | null }
@@ -51,13 +47,11 @@ function profiles() {
   if (!cache) {
     let all: ProductProfileData[] = [];
     try {
-      // Two literal paths on purpose: Vercel's file tracer resolves path.join with string
+      // A literal path on purpose: Vercel's file tracer resolves path.join with string
       // literals; a spread array made it pull the whole project (322 MB of public/images)
       // into every function that imports this module.
-      const file = JSON.parse(IS_KEYFORCARS
-        ? readFileSync(join(process.cwd(), 'src', 'data', 'keyforcars-profiles.json'), 'utf8')
-        : readFileSync(join(process.cwd(), 'src', 'lib', 'catalog.json'), 'utf8'));
-      all = IS_KEYFORCARS ? (file as ProductProfileData[]) : catalogProfiles(file.products);
+      const file = JSON.parse(readFileSync(join(process.cwd(), 'src', 'lib', 'catalog.json'), 'utf8'));
+      all = catalogProfiles(file.products);
     } catch {
       // No profile file yet: every lookup finds nothing instead of crashing the page.
     }
@@ -137,8 +131,4 @@ export function bladeUsers(sku: string): string[] {
 export function profileCount() {
   const { all } = profiles();
   return { total: all.length, withFits: all.filter((profile) => profile.fits.length).length, withEan: all.filter((profile) => profile.ean.length).length };
-}
-
-export function productNamesInEnglish() {
-  return Object.fromEntries(profiles().all.map(({ sku, name }) => [sku.toUpperCase(), name]));
 }

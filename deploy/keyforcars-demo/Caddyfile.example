@@ -1,7 +1,0 @@
-# Example only. Use the real demo hostname and a Caddy password hash.
-demo.example.com {
-    basic_auth {
-        reviewer REPLACE_WITH_CADDY_PASSWORD_HASH
-    }
-    reverse_proxy 127.0.0.1:3017
-}

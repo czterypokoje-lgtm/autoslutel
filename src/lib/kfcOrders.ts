@@ -2,15 +2,12 @@ import 'server-only';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { LABEL_BATCH_MAX } from '@/lib/kfcLabels';
 import { StockError, fetchAll } from '@/lib/kfcInventory';
-import { pushCompleted, isWooShop, wooConfigured, WOO_SHOPS, type WooShop } from '@/lib/kfcWoo';
 import { OWN_SHOP, pushOwnShipped } from '@/lib/kfcOwnShop';
 import type { CrmUser } from '@/lib/crmSession';
-import { sampleOrders, type SampleOrder, type OrderStatus } from '@/lib/kfcSampleOrders';
 
 /*
  * Shop orders for the screens: the list, the detail, the pick list, and the
- * two actions the warehouse takes (pick, ship). Reads kfc_shop_orders; the
- * dashboard gets them in the SampleOrder shape it already renders.
+ * two actions the warehouse takes (pick, ship). Reads kfc_shop_orders.
  */
 
 export type LineState = 'open' | 'short' | 'reserved' | 'picked' | 'shipped' | 'cancelled';
@@ -31,18 +28,6 @@ export { fetchAll };
 
 const ORDER_COLUMNS = 'id, shop, woo_order_id, number, status, fulfilment, created_at, paid_at, shipped_at, shop_completed_at, country, total_incl_cents, total_excl_cents, shipping_incl_cents, ship_name, ship_company, ship_street, ship_postcode, ship_city, ship_phone, ship_email, carrier, tracking_code, label_url, label_created_at';
 const LINE_COLUMNS = 'id, sku, article_code, name, quantity, reserved, picked, state, unit_incl_cents';
-
-// Existence checks read one row instead of counting the table: an exact count
-// over the jsonb filter scanned every order on each dashboard and orders view.
-export async function shopOrdersExist(): Promise<boolean> {
-  const { data } = await db().from('kfc_shop_orders').select('id').limit(1);
-  return (data?.length ?? 0) > 0;
-}
-
-export async function sampleShopOrdersExist(): Promise<boolean> {
-  const { data } = await db().from('kfc_shop_orders').select('id').contains('raw', { source: 'sample' }).limit(1);
-  return (data?.length ?? 0) > 0;
-}
 
 export async function listShopOrders(filter: { shop?: string; status?: string; fulfilment?: Fulfilment; q?: string; page: number; limit: number }) {
   let query = db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`, { count: 'exact' })
@@ -124,10 +109,9 @@ async function decorate(lines: ShopLine[]) {
 }
 
 /** Paid, not yet shipped, oldest first: what the warehouse works through. */
-export async function pickList(sampleOnly = false): Promise<ShopOrder[]> {
-  const query = db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`)
+export async function pickList(): Promise<ShopOrder[]> {
+  const { data, error } = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`)
     .eq('status', 'processing').in('fulfilment', ['open', 'picked']).order('created_at').limit(500);
-  const { data, error } = await (sampleOnly ? query.eq('raw->>source', 'sample') : query);
   if (error) throw new StockError(`Picklijst lezen mislukt: ${error.message}`, 500);
   const orders = (data ?? []).map(toOrder);
   await decorate(orders.flatMap((o) => o.lines));
@@ -161,7 +145,7 @@ export async function shipOrder(id: string, key: string, user: CrmUser): Promise
   }
   // The stock side is committed; from here on only the shop's status is at stake.
   // Anything we cannot confirm is 'pending', so the nightly reconcile retries it.
-  const order = await db().from('kfc_shop_orders').select('shop, woo_order_id, number').eq('id', id).single();
+  const order = await db().from('kfc_shop_orders').select('shop, number').eq('id', id).single();
   if (order.error || !order.data) {
     console.error(`shipOrder ${id}: order not readable for the shop write-back`, order.error);
     return { writeback: 'pending' };
@@ -169,7 +153,6 @@ export async function shipOrder(id: string, key: string, user: CrmUser): Promise
   try {
     // Our own webshop sits in this same database: the write-back is a status update on public.orders.
     if (order.data.shop === OWN_SHOP) await pushOwnShipped(order.data.number);
-    else if (isWooShop(order.data.shop)) await pushCompleted(order.data.shop, order.data.woo_order_id);
     return { writeback: 'done' };
   } catch (writeback) {
     console.error(`shipOrder ${id}: shop write-back for ${order.data.shop} #${order.data.number} failed`, writeback);
@@ -183,118 +166,3 @@ export async function shipOrder(id: string, key: string, user: CrmUser): Promise
  * module) keeps the same text to recognise it and refresh a stale screen.
  */
 const SHIP_NOT_PICKED = 'Nog niet alles is gepickt. Pick eerst alle regels.';
-
-/** The dashboard's shape: the last `days` days of orders, as SampleOrder. */
-/**
- * Orders for the dashboard: only the columns it reads, and only the window it
- * needs (the period, the period before it, and 90 days for "not sold"). The
- * first page also returns the total, so the remaining pages load in parallel
- * instead of one round trip after another.
- */
-export async function ordersForDashboard(days = 120): Promise<SampleOrder[]> {
-  const since = new Date(Date.now() - days * 86_400_000).toISOString();
-  const columns = 'number, shop, created_at, status, country, total_incl_cents, total_excl_cents, shipping_incl_cents, kfc_shop_order_lines (sku, name, quantity, unit_incl_cents)';
-  const page = 1000;
-  const query = (from: number, count = false) => db().from('kfc_shop_orders').select(columns, count ? { count: 'exact' } : undefined)
-    .gte('created_at', since).order('created_at', { ascending: false }).order('id').range(from, from + page - 1);
-  const first = await query(0, true);
-  if (first.error) throw new StockError(`Lezen mislukt: ${first.error.message}`, 500);
-  const total = Math.min(first.count ?? 0, 50000);
-  const rest = await Promise.all(Array.from({ length: Math.max(0, Math.ceil(total / page) - 1) }, (_, i) => query((i + 1) * page)));
-  const failed = rest.find((result) => result.error);
-  if (failed?.error) throw new StockError(`Lezen mislukt: ${failed.error.message}`, 500);
-  type Row = { number: string; shop: string; created_at: string; status: string; country: string | null; total_incl_cents: number; total_excl_cents: number; shipping_incl_cents: number; kfc_shop_order_lines: { sku: string; name: string; quantity: number; unit_incl_cents: number | null }[] | null };
-  const rows = [first, ...rest].flatMap((result) => (result.data ?? []) as unknown as Row[]);
-  return rows.map((order) => ({
-    number: order.number, shop: order.shop as SampleOrder['shop'], created: order.created_at,
-    status: (['processing', 'completed', 'on-hold', 'cancelled', 'refunded'].includes(order.status) ? order.status : 'cancelled') as OrderStatus,
-    country: order.country ?? '', shippingIncl: order.shipping_incl_cents, totalIncl: order.total_incl_cents, totalExcl: order.total_excl_cents,
-    lines: (order.kfc_shop_order_lines ?? []).sort((a, b) => a.name.localeCompare(b.name))
-      .map((line) => ({ sku: line.sku, name: line.name, image: '', quantity: line.quantity, unitIncl: line.unit_incl_cents ?? 0 })),
-  }));
-}
-
-/**
- * Demo mode before the shops are connected: the generated sample orders go
- * into the real tables (woo_order_id 900000000+, raw.source = 'sample') and
- * the 40 best-selling articles get 12 units on shelf A-01 / B1, so
- * reservations, the pick list, shipping, dashboard and reports all run on
- * real rows. clearSampleData removes every order, move and level again.
- */
-export async function loadSampleData(user: CrmUser): Promise<{ orders: number; lines: number; stocked: number }> {
-  const all = sampleOrders();
-  const skus = [...new Set(all.flatMap((o) => o.lines.map((l) => l.sku.toUpperCase())))];
-  const articles = new Map<string, string>();
-  for (let i = 0; i < skus.length; i += 500) {
-    const { data } = await db().from('kfc_articles').select('code, sku').in('sku', skus.slice(i, i + 500));
-    for (const a of data ?? []) articles.set(a.sku.toUpperCase(), a.code);
-  }
-  const shopIndex: Record<string, number> = { 'keyforcars.nl': 1, 'klapsleutels.nl': 2 };
-  const rows = all.map((o) => ({
-    shop: o.shop, woo_order_id: 900000000 + shopIndex[o.shop] * 1000000 + Number(o.number), number: o.number, status: o.status,
-    created_at: o.created, modified_at: o.created, paid_at: o.status === 'processing' || o.status === 'completed' ? o.created : null,
-    country: o.country, total_incl_cents: o.totalIncl, total_excl_cents: o.totalExcl, shipping_incl_cents: o.shippingIncl, tax_cents: o.totalIncl - o.totalExcl,
-    fulfilment: o.status === 'completed' ? 'external' : o.status === 'processing' ? 'open' : 'cancelled', raw: { source: 'sample' },
-    ...sampleAddress(o.number, o.country),
-  }));
-  let orders = 0, lines = 0;
-  for (let i = 0; i < rows.length; i += 300) {
-    const { data, error } = await db().from('kfc_shop_orders').upsert(rows.slice(i, i + 300), { onConflict: 'shop,woo_order_id' }).select('id, shop, number');
-    if (error) throw new StockError(`Voorbeeldbestellingen laden mislukt: ${error.message}`, 500);
-    const idOf = new Map((data ?? []).map((r) => [`${r.shop}/${r.number}`, r.id]));
-    const lineRows = all.slice(i, i + 300).flatMap((o) => o.lines.map((l, index) => ({
-      order_id: idOf.get(`${o.shop}/${o.number}`), woo_line_id: index + 1, sku: l.sku, article_code: articles.get(l.sku.toUpperCase()) ?? null, name: l.name.slice(0, 200),
-      quantity: l.quantity, unit_incl_cents: l.unitIncl, total_excl_cents: Math.round((l.unitIncl * l.quantity) / 1.21),
-    }))).filter((l) => l.order_id);
-    for (let j = 0; j < lineRows.length; j += 150) {
-      const result = await db().from('kfc_shop_order_lines').upsert(lineRows.slice(j, j + 150), { onConflict: 'order_id,woo_line_id' });
-      if (result.error) throw new StockError(`Voorbeeldregels laden mislukt: ${result.error.message}`, 500);
-      lines += Math.min(150, lineRows.length - j);
-    }
-    orders += data?.length ?? 0;
-  }
-  // Shelf stock for the 40 best sellers, so the allocator has something to reserve.
-  const sold = new Map<string, number>();
-  for (const o of all) for (const l of o.lines) { const code = articles.get(l.sku.toUpperCase()); if (code) sold.set(code, (sold.get(code) ?? 0) + l.quantity); }
-  const top = [...sold.entries()].sort((a, b) => b[1] - a[1]).slice(0, 40).map(([code]) => code);
-  const loc = await db().from('kfc_locations').upsert({ warehouse: 'main', shelf: 'A-01', box: 'B1' }, { onConflict: 'warehouse,shelf,box' }).select('id').single();
-  if (loc.error) throw new StockError(`Locatie aanmaken mislukt: ${loc.error.message}`, 500);
-  let stocked = 0;
-  for (const code of top) {
-    const { error } = await db().rpc('kfc_count_bin', { p_article: code, p_location: loc.data.id, p_counted: 12, p_minimum: 3, p_key: `sample-count-${code}`, p_created_by: user.id, p_note: 'Voorbeeldvoorraad' });
-    if (!error) stocked++;
-  }
-  return { orders, lines, stocked };
-}
-
-/** Wipes orders, reservations, moves and levels. Only for the demo period, before the shops are connected. */
-export async function clearSampleData(): Promise<void> {
-  /* The wipe is unconditional (every order, movement and stock level, not only
-     the sample rows), so it only runs while there is nothing real to lose. */
-  if ((Object.keys(WOO_SHOPS) as WooShop[]).some(wooConfigured)) {
-    throw new StockError('Wissen kan niet meer: er is een webshop gekoppeld. Dit zou alle echte bestellingen en voorraadstanden verwijderen.', 409);
-  }
-  const real = await db().from('kfc_shop_orders').select('id', { count: 'exact', head: true }).lt('woo_order_id', 900000000);
-  if (real.error) throw new StockError(`Wissen gestopt: bestellingen controleren mislukt (${real.error.message}).`, 500);
-  if ((real.count ?? 0) > 0) {
-    throw new StockError('Wissen kan niet meer: er staan echte bestellingen in het systeem.', 409);
-  }
-  for (const [table, col] of [['kfc_shop_order_refunds', 'id'], ['kfc_shop_order_lines', 'id'], ['kfc_shop_orders', 'id'], ['kfc_reservations', 'id'], ['kfc_stock_moves', 'id'], ['kfc_stock_levels', 'article_code'], ['kfc_import_runs', 'id']] as const) {
-    const { error } = await db().from(table).delete().not(col, 'is', null);
-    if (error) throw new StockError(`Wissen mislukt (${table}): ${error.message}`, 500);
-  }
-}
-
-/** Clearly fictional recipients for the demo period, deterministic per order number. */
-function sampleAddress(number: string, country: string) {
-  const n = Number(number) || 0;
-  const names = ['J. de Vries', 'M. Jansen', 'S. Bakker', 'L. Visser', 'K. Smit', 'A. Meijer', 'P. de Boer', 'R. Mulder', 'T. Bos', 'E. Vos'];
-  const streets = ['Dorpsstraat', 'Kerkweg', 'Stationsplein', 'Industrieweg', 'Molenlaan', 'Hoofdstraat', 'Beukenlaan', 'Havenkade'];
-  const cities: Record<string, string[]> = { NL: ['Utrecht', 'Eindhoven', 'Zwolle', 'Breda', 'Almere'], BE: ['Antwerpen', 'Gent', 'Leuven'], DE: ['Köln', 'Essen', 'Münster'], FR: ['Lille', 'Lyon'], AT: ['Graz', 'Linz'], PL: ['Poznań', 'Wrocław'] };
-  const city = (cities[country] ?? ['Utrecht'])[n % (cities[country] ?? ['Utrecht']).length];
-  return {
-    ship_name: names[n % names.length], ship_company: n % 4 === 0 ? 'Autobedrijf Voorbeeld' : null,
-    ship_street: `${streets[n % streets.length]} ${(n % 180) + 1}`, ship_postcode: country === 'NL' ? `${1000 + (n % 8999)} ${String.fromCharCode(65 + (n % 26))}${String.fromCharCode(65 + ((n >> 3) % 26))}` : String(10000 + (n % 89999)),
-    ship_city: city, ship_phone: `+31 6 ${String(10000000 + (n % 89999999))}`, ship_email: `voorbeeld${n % 97}@example.invalid`,
-  };
-}

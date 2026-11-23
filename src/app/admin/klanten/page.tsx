@@ -1,7 +1,5 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
-import { IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
-import { listCustomers } from '@/lib/kfcReceivables';
-import { Customers } from './_components/customers';
+import { STUDIO_UI } from '@/config/install';
 import StudioKlanten from './_studio/StudioKlanten';
 import type { CustomerRow } from './_studio/data';
 import Link from 'next/link';
@@ -39,12 +37,6 @@ export default async function KlantenPage({ searchParams }: { searchParams: Prom
 }
 
 async function CustomerList({ searchParams }: { searchParams: Promise<{ q?: string; view?: string }> }) {
-  if (IS_KEYFORCARS) {
-    await requireOfficeUser('/admin/klanten');
-    const sp = await searchParams;
-    // Filtering happens in the table; ?view=overdue and ?q= only preset it (old links keep working).
-    return <Customers rows={await listCustomers()} initialStatus={sp.view === 'overdue' ? 'Vervallen' : undefined} initialQuery={sp.q?.trim()} />;
-  }
   await requireOfficeUser('/admin/klanten');
 
   const { q } = await searchParams;

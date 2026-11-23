@@ -1,7 +1,5 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
-import { IS_KEYFORCARS } from '@/config/install';
-import KfcReports from './KfcReports';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { PageHead, StatGrid, Stat, Card, CardHead, Table, Empty, Notice } from '../_ui';
 import { RankedBars, Donut, LineChart, chart } from '../_ui/charts';
@@ -11,7 +9,7 @@ import Filters from './Filters';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: IS_KEYFORCARS ? 'Winst & rapporten | KeyForCars' : 'Winst & verbruik | Autosleutel24' };
+export const metadata = { title: 'Winst & verbruik | Autosleutel24' };
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 const money = (value: number) => MONEY.format(value);
@@ -28,7 +26,6 @@ export default async function WinstPage({
   searchParams: Promise<{ van?: string; tot?: string }>;
 }) {
   await requireOfficeUser('/admin/winst');
-  if (IS_KEYFORCARS) return <KfcReports />;
   const supabase = await createSupabaseServerClient();
   const params = await searchParams;
 

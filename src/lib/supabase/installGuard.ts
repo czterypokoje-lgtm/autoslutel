@@ -1,33 +1,36 @@
-import type { Install } from '../../config/install.ts';
-
 /**
- * One install, one database — enforced, not assumed.
+ * One codebase, one database — enforced, not assumed.
  *
- * Autosleutel24 and KeyForCars run the same code against two Supabase
- * projects. On 21 Nov 2026 a local Autosleutel24 setup was pointed at the
- * KeyForCars database by mistake: every screen worked, and any save would have
- * written Autosleutel24 data into KeyForCars's books. This module makes that
- * configuration refuse to run instead.
+ * This CRM runs on Autosleutel24's Supabase project only. KeyForCars used to
+ * run the same code against its own project and has since moved to its own
+ * repository, but its database still exists next to ours: on 21 Nov 2026 a
+ * local Autosleutel24 setup was pointed at the KeyForCars database by mistake,
+ * every screen worked, and any save would have written Autosleutel24 data into
+ * KeyForCars's books. This module makes such a configuration refuse to run.
  *
  * Two checks:
- *  1. The project ref in the Supabase URL must be this install's live project,
+ *  1. The project ref in the Supabase URL must be Autosleutel24's live project,
  *     or one listed in CRM_SUPABASE_TEST_PROJECTS (test/staging projects, or a
- *     host such as 127.0.0.1 for a local Supabase). The OTHER install's live
- *     project is refused even when listed there, so the allow-list cannot be
- *     used to switch installs.
+ *     host such as 127.0.0.1 for a local Supabase). KeyForCars's live project is
+ *     refused even when listed there, so the allow-list cannot be used to reach
+ *     the other company's data.
  *  2. Optional, DB side: migration 0133 adds a one-row crm_install table. When
- *     a row is present it must name this install. The runbook says which value
- *     each database gets; CRM_REQUIRE_INSTALL_MARKER=1 makes a missing row an
- *     error too.
+ *     a row is present it must say 'autosleutel24'; CRM_REQUIRE_INSTALL_MARKER=1
+ *     makes a missing row an error too.
  *
  * Pure: no imports with side effects, nothing read from process.env here, so
  * node --test can exercise it without a database (tests/unit).
  */
 
-/** The live Supabase project of each install. */
-export const LIVE_PROJECTS: Record<Install, string> = {
-  keyforcars: 'lzdwxkhlscsitstxdgar',
-  autosleutel24: 'utctfircycpjmpjqmtmm',
+/** The value the crm_install marker row (migration 0133) has in our database. */
+export const INSTALL_MARKER = 'autosleutel24';
+
+/** Autosleutel24's live Supabase project. */
+export const LIVE_PROJECT = 'utctfircycpjmpjqmtmm';
+
+/** Other companies' live projects: never ours, not even through the test allow-list. */
+export const FOREIGN_PROJECTS: Record<string, string> = {
+  lzdwxkhlscsitstxdgar: 'KeyForCars',
 };
 
 /** "<ref>.supabase.co" → ref; any other host (local, custom domain) → null. */
@@ -49,7 +52,6 @@ export function parseAllowList(raw: string | undefined | null): string[] {
 }
 
 export type GuardInput = {
-  install: Install;
   /** Every Supabase URL this deployment has; empty ones are ignored. */
   urls: (string | undefined | null)[];
   /** CRM_SUPABASE_TEST_PROJECTS, already parsed. */
@@ -57,8 +59,7 @@ export type GuardInput = {
 };
 
 /** A sentence saying why this deployment must not run, or null when it may. */
-export function supabaseProjectProblem({ install, urls, allowed }: GuardInput): string | null {
-  const expected = LIVE_PROJECTS[install];
+export function supabaseProjectProblem({ urls, allowed }: GuardInput): string | null {
   for (const url of urls) {
     if (!url) continue;
     let host: string;
@@ -68,28 +69,25 @@ export function supabaseProjectProblem({ install, urls, allowed }: GuardInput): 
       return `Supabase-URL "${url}" is ongeldig.`;
     }
     const ref = supabaseProjectRef(url);
-    if (ref === expected) continue;
-    const otherInstall = (Object.keys(LIVE_PROJECTS) as Install[]).find(
-      (name) => name !== install && LIVE_PROJECTS[name] === ref
-    );
-    if (otherInstall) {
+    if (ref === LIVE_PROJECT) continue;
+    const owner = ref ? FOREIGN_PROJECTS[ref] : undefined;
+    if (owner) {
       return (
-        `Supabase-project ${ref} is de live database van ${otherInstall}, ` +
-        `maar deze installatie is ${install} (CRM_INSTALL). Verwacht: ${expected}. ` +
+        `Supabase-project ${ref} is de live database van ${owner}, ` +
+        `niet van Autosleutel24. Verwacht: ${LIVE_PROJECT}. ` +
         'Gestopt zodat data van de twee bedrijven nooit mengt.'
       );
     }
     if ((ref && allowed.includes(ref)) || allowed.includes(host)) continue;
     return (
-      `Supabase-project ${ref ?? host} hoort niet bij installatie ${install} ` +
-      `(verwacht ${expected}). Is het een testproject, zet het dan in CRM_SUPABASE_TEST_PROJECTS.`
+      `Supabase-project ${ref ?? host} is niet de database van Autosleutel24 ` +
+      `(verwacht ${LIVE_PROJECT}). Is het een testproject, zet het dan in CRM_SUPABASE_TEST_PROJECTS.`
     );
   }
   return null;
 }
 
 export type MarkerInput = {
-  install: Install;
   url: string;
   anonKey: string;
   /** CRM_REQUIRE_INSTALL_MARKER=1: no marker row is an error too. */
@@ -105,7 +103,6 @@ export type MarkerInput = {
  * guard, and an unreachable database stops the CRM by itself.
  */
 export async function installMarkerProblem({
-  install,
   url,
   anonKey,
   required,
@@ -127,11 +124,11 @@ export async function installMarkerProblem({
     return null;
   }
   if (typeof profile === 'string' && profile) {
-    return profile === install
+    return profile === INSTALL_MARKER
       ? null
-      : `Deze database is gemarkeerd als "${profile}" (tabel crm_install), maar deze installatie is ${install}. Gestopt.`;
+      : `Deze database is gemarkeerd als "${profile}" (tabel crm_install), maar dit is de CRM van Autosleutel24. Gestopt.`;
   }
   return required
-    ? 'De database heeft geen installatiemarkering (crm_install), en CRM_REQUIRE_INSTALL_MARKER=1 vraagt er een. Zie docs/keyforcars-installatie.md.'
+    ? `De database heeft geen installatiemarkering (crm_install), en CRM_REQUIRE_INSTALL_MARKER=1 vraagt er een ('${INSTALL_MARKER}', migratie 0133).`
     : null;
 }

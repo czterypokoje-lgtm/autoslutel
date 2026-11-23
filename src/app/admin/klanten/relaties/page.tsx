@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { fetchAll } from '@/lib/kfcOrders';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { IS_KEYFORCARS } from '@/config/install';
 import { ACCOUNT_PROBLEMS } from '@/lib/accountValidation';
 import AccountFields from '../AccountFields';
 import { addContact, createAccount, updateAccount } from './actions';
@@ -94,10 +93,6 @@ export default async function Accounts({ searchParams }: { searchParams: Promise
               <dt><PreviewText>Termijn</PreviewText></dt><dd>{selected.terms_days} <PreviewText>dagen</PreviewText>{selected.reverse_charge && ' · btw verlegd'}</dd>
             </dl>
             {selected.account_kind === 'company' && selected.country === 'NL' && !selected.kvk && <p className="text-destructive text-sm"><PreviewText>KvK-nummer ontbreekt. Vul de bedrijfsgegevens aan.</PreviewText></p>}
-            {IS_KEYFORCARS && <div className="flex flex-wrap gap-3 text-sm">
-              <Link className="underline underline-offset-4" href={`/admin/klanten/${selected.id}`}><PreviewText>Cari-kaart en saldo</PreviewText></Link>
-              <Link className="underline underline-offset-4" href={`/admin/klanten/${selected.id}/ekstre`} target="_blank"><PreviewText>Rekeningoverzicht</PreviewText></Link>
-            </div>}
             <details className="rounded-md border p-3">
               <summary className="cursor-pointer text-sm font-medium"><PreviewText>Gegevens wijzigen</PreviewText></summary>
               <form action={updateAccount.bind(null, selected.id)} className="mt-3 grid gap-3">

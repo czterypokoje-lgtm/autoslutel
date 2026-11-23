@@ -11,8 +11,7 @@
     "catalog": "node scripts/build-catalog.mjs",
     "test:erp": "node --test --env-file=.env.local \"tests/erp/*.test.mjs\"",
     "test:unit": "node --test \"tests/unit/*.test.mjs\"",
-    "test:pglite": "node --test \"tests/pglite/*.test.mjs\"",
-    "kfc:bundle": "node scripts/build-kfc-migration-bundle.mjs"
+    "test:pglite": "node --test \"tests/pglite/*.test.mjs\""
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.12.0",

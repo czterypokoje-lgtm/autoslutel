@@ -2,10 +2,9 @@ import { requireCrmUser, OFFICE_ROLES } from '@/lib/crmSession';
 import OfficeOverview from './OfficeOverview';
 import MonteurOverview from './MonteurOverview';
 import { parsePeriod } from './dashboardData';
-import KfcDashboard, { parseKfcPeriod } from './KfcDashboard';
 import StudioOfficeOverview from './_studio/StudioOfficeOverview';
 import StudioMonteurOverview from './_studio/StudioMonteurOverview';
-import { IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
+import { STUDIO_UI } from '@/config/install';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,13 +16,11 @@ export const dynamic = 'force-dynamic';
 export default async function OverzichtPage({
   searchParams,
 }: {
-  searchParams: Promise<{ periode?: string; webshop?: string }>;
+  searchParams: Promise<{ periode?: string }>;
 }) {
   const user = await requireCrmUser('/admin/overzicht');
 
-  const { periode, webshop } = await searchParams;
-  // KeyForCars: the web-shop owner's dashboard; the locksmith office view does not apply.
-  if (IS_KEYFORCARS) return <KfcDashboard period={parseKfcPeriod(webshop)} />;
+  const { periode } = await searchParams;
   if (user.role && OFFICE_ROLES.includes(user.role)) {
     // Same numbers, same links — shadcn cards instead of the hand-rolled CSS.
     if (STUDIO_UI) return <StudioOfficeOverview period={parsePeriod(periode)} />;

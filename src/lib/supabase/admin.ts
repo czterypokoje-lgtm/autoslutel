@@ -19,7 +19,7 @@ import { assertSupabaseInstall } from './env';
  * and the conversion export.
  */
 export function createSupabaseAdminClient(): SupabaseClient {
-  // The service-role key bypasses RLS: never hand it to the other install's database.
+  // The service-role key bypasses RLS: never hand it to another company's database.
   assertSupabaseInstall();
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
   const key =

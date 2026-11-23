@@ -1,28 +1,28 @@
 import 'server-only';
 import catalog from '@/data/keyforcars-stock.json';
 import prices from '@/data/keyforcars-prices.json';
-import { IS_KEYFORCARS } from '@/config/install';
 import { OWN_SHOP } from '@/lib/kfcOwnShop';
 
 /**
  * Sample orders for the KeyForCars preview.
  *
- * The products, photos and prices are real (the shops' public catalogue and
- * Store API prices, see scripts/kfc-sample-prices.mjs). The orders are
+ * The products, photos and prices are real (KeyForCars's public catalogue and
+ * Store API prices, from before KeyForCars moved to its own repository). The orders are
  * invented: how many, which product, which shop. They are generated from a
  * fixed seed per day, so a reload shows the same numbers, yesterday stays
  * yesterday, and today fills up as the clock moves. Nothing here is stored.
  *
- * In the real install this module is replaced by the WooCommerce import; the
- * screens read the same SampleOrder shape.
+ * Still read by the /admin/best-verkocht preview and as a fallback on the
+ * order detail page; the real order screens read the ledger (kfcOrders.ts) in
+ * the same SampleOrder shape.
  */
 
-/** The three WooCommerce shops. Sample orders only ever come from these. */
+/** The KeyForCars shops the sample orders come from. */
 export const KFC_SHOPS = ['keyforcars.nl', 'klapsleutels.nl'] as const;
 export type KfcShop = (typeof KFC_SHOPS)[number];
 export type Shop = KfcShop | typeof OWN_SHOP;
-/** What this install sells through: three shops on KeyForCars, our own webshop on Autosleutel24. */
-export const SHOPS: readonly Shop[] = IS_KEYFORCARS ? KFC_SHOPS : [OWN_SHOP];
+/** What we sell through: our own webshop. */
+export const SHOPS: readonly Shop[] = [OWN_SHOP];
 export type OrderStatus = 'processing' | 'completed' | 'on-hold' | 'cancelled' | 'refunded';
 
 export interface SampleLine {
@@ -192,9 +192,4 @@ export function sampleOrders(now = Date.now()): SampleOrder[] {
   orders.sort((a, b) => b.created.localeCompare(a.created));
   cache = { key, orders };
   return orders;
-}
-
-/** Every product with a price, for the "not sold" list. */
-export function sampleCatalogue() {
-  return products;
 }

@@ -1,7 +1,6 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { DEMO_BOT_AGENT } from '@/lib/kfcDemoBotRules';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { normalizeKfcCall, reviewAgentIds } from '../../../../supabase/functions/_shared/kfcCallReview';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
@@ -44,13 +43,8 @@ export async function syncBotConversations() {
 }
 
 export async function deleteBotConversation(formData: FormData) {
-  const user = await requireOfficeUser(path);
+  await requireOfficeUser(path);
   const id = formData.get('conversation_id');
-  if (typeof id === 'string' && /^kfc-sim-[a-f0-9-]{36}$/.test(id) && user.role === 'owner' && process.env.KFC_DEMO_MODE === '1') {
-    const { error } = await createSupabaseAdminClient().from('agent_conversations').delete()
-      .eq('conversation_id', id).eq('metadata->kfc_call_review->>agent_id', DEMO_BOT_AGENT);
-    redirect(path + (error ? '?deleted=error' : '?deleted=yes'));
-  }
   if (typeof id !== 'string' || !/^conv_[a-z0-9]+$/i.test(id)) redirect(path + '?deleted=error');
   const { data, error } = await createSupabaseAdminClient().rpc('kfc_delete_bot_conversation', {
     p_id: id, p_agents: reviewAgentIds(process.env.KFC_REVIEW_AGENT_IDS),

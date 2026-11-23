@@ -1,5 +1,4 @@
 import 'server-only';
-import { providerRequestsEnabled } from '@/lib/providerRequests';
 
 /**
  * Notifications to technicians, via a Telegram bot instead of WhatsApp's
@@ -13,7 +12,6 @@ const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
 /** Best-effort, on purpose: never on the critical path of whatever triggered it. */
 async function callTelegram(method: string, payload: Record<string, unknown>): Promise<boolean> {
-  if (!providerRequestsEnabled()) return false;
   if (!TOKEN) return false;
   try {
     const res = await fetch(`https://api.telegram.org/bot${TOKEN}/${method}`, {

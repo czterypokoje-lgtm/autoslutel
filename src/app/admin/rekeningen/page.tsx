@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { BRAND, IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
+import { BRAND, WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
@@ -114,8 +114,7 @@ async function CustomerAging() {
   const rows = (await listCustomers()).filter((r) => r.open_cents !== 0 || r.overdue_cents !== 0)
     .sort((a, b) => b.overdue_cents - a.overdue_cents || b.open_cents - a.open_cents)
     .map((r) => ({ ...r, name: r.company }));
-  return <AgingTable rows={rows} link={(id) => IS_KEYFORCARS ? `/admin/klanten/${id}` : `/admin/klanten/relaties?account=${id}`}
-    statement={IS_KEYFORCARS ? (id) => `/admin/klanten/${id}/ekstre` : undefined} />;
+  return <AgingTable rows={rows} link={(id) => `/admin/klanten/relaties?account=${id}`} />;
 }
 
 async function SupplierAging() {

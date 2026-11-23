@@ -1,3 +1,5 @@
+> **Güncelleme:** KeyForCars'ın kodu artık kendi reposunda: [`czterypokoje-lgtm/keyforcars-crm1`](https://github.com/czterypokoje-lgtm/keyforcars-crm1). Bu repo yalnızca Autosleutel24'ü çalıştırıyor (`CRM_INSTALL` kaldırıldı); aşağıdaki metin ayrışma anındaki durumu anlatıyor.
+
 # KeyForCars ile ayrışma: veri ve hesaplar
 
 _23 Kasım 2026. Karar: veri ve hesaplar tamamen ayrılır, kod şimdilik ortak kalır (tek repo, `CRM_INSTALL`)._

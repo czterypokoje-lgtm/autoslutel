@@ -33,12 +33,8 @@ import StudioSalesChart from './StudioSalesChart';
  * The office home screen in the Studio look: the same four questions, the
  * same numbers from readDashboard() and the same links as OfficeOverview,
  * laid out with shadcn cards and a recharts chart. Presentation only — this
- * screen reads nothing OfficeOverview does not read.
- *
- * Only reachable on Autosleutel24 with CRM_UI=studio: page.tsx answers
- * KeyForCars with KfcDashboard before this branch, so the KeyForCars-only
- * parts of the old screen (the sample-order list, the invoice button) have
- * no place here.
+ * screen reads nothing OfficeOverview does not read. Only reachable with
+ * CRM_UI=studio.
  */
 
 const EUR = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });

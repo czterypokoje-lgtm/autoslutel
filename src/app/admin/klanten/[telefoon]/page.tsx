@@ -1,7 +1,5 @@
 import { PreviewText } from '@/app/admin/PreviewLanguage';
-import { IS_KEYFORCARS, STUDIO_UI } from '@/config/install';
-import { getCustomer } from '@/lib/kfcReceivables';
-import KfcCustomerCard from '../KfcCustomerCard';
+import { STUDIO_UI } from '@/config/install';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireOfficeUser } from '@/lib/crmSession';
@@ -42,14 +40,6 @@ export default async function KlantPage({
 }: {
   params: Promise<{ telefoon: string }>;
 }) {
-  if (IS_KEYFORCARS) {
-    await requireOfficeUser('/admin/klanten');
-    const { telefoon: id } = await params;
-    if (!/^[a-f0-9-]{36}$/i.test(id)) notFound();
-    const data = await getCustomer(id);
-    if (!data) notFound();
-    return <KfcCustomerCard {...data} />;
-  }
   const { telefoon } = await params;
   const phone = decodeURIComponent(telefoon);
   await requireOfficeUser(`/admin/klanten/${telefoon}`);

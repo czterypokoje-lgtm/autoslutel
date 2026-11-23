@@ -1,8 +1,7 @@
 # Product master data, categories and staff roles (migration 0134)
 
-For the KeyForCars install (`CRM_INSTALL=keyforcars`), and for Autosleutel24 with
-`CRM_WAREHOUSE=1`. Each install runs the migration against its own Supabase
-project, so KeyForCars data never mixes with Autosleutel24 data.
+For Autosleutel24 with `CRM_WAREHOUSE=1`. (KeyForCars, which this was first
+built for, now has its own repository and database.)
 
 ## Database (`supabase/migrations/0134_kfc_product_master.sql`)
 

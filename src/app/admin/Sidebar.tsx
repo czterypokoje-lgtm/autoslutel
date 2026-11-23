@@ -8,7 +8,6 @@ import styles from './admin.module.css';
 import AdminNav from './AdminNav';
 import SignOutButton from './SignOutButton';
 import type { CrmRole } from '@/lib/crmSession';
-import { IS_KEYFORCARS } from '@/config/install';
 import { usePreviewLanguage } from './PreviewLanguage';
 
 /**
@@ -55,7 +54,7 @@ export default function Sidebar({
             <KeyRound size={16} strokeWidth={2.2} />
           </span>
           <span>
-            {IS_KEYFORCARS ? 'KeyForCars' : <>Autosleutel<span className={styles.brand24}>24</span></>}
+            <>Autosleutel<span className={styles.brand24}>24</span></>
           </span>
           <span className={styles.brandRole}>{role === 'monteur' ? 'Monteur' : 'CRM'}</span>
         </Link>
@@ -64,7 +63,7 @@ export default function Sidebar({
         {/* Only office roles have the global search to Klanten */}
         {(role === 'owner' || role === 'kantoor') && (
           <Link
-            href={IS_KEYFORCARS ? '/admin/voorraad/p' : '/admin/klanten'}
+            href="/admin/klanten"
             className={`${styles.iconGhost} ${styles.mobileOnly}`}
             title={t('Zoeken')}
           >
@@ -73,7 +72,7 @@ export default function Sidebar({
         )}
 
         <Link
-          href={IS_KEYFORCARS ? '/admin/overzicht' : '/admin/mijn-profiel'}
+          href="/admin/mijn-profiel"
           className={`${styles.avatar} ${styles.mobileOnly}`}
           title={email ?? 'Profiel'}
         >
@@ -117,18 +116,16 @@ export default function Sidebar({
         </div>
 
         <div className={styles.sidebarBottom}>
-          {!IS_KEYFORCARS && (
-            <a
-              className={styles.navLink}
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="De site openen zoals een bezoeker hem ziet"
-            >
-              <ExternalLink size={16} strokeWidth={1.9} aria-hidden="true" />
-              <PreviewText>{"Site bekijken"}</PreviewText>
-            </a>
-          )}
+          <a
+            className={styles.navLink}
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="De site openen zoals een bezoeker hem ziet"
+          >
+            <ExternalLink size={16} strokeWidth={1.9} aria-hidden="true" />
+            <PreviewText>{"Site bekijken"}</PreviewText>
+          </a>
 
           <SignOutButton />
 

@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import styles from '../klanten/klanten.module.css';
 import KfcOrders from './KfcOrders';
 import LiveRefresh from '../live/LiveRefresh';
-import { IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
+import { WAREHOUSE } from '@/config/install';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,12 +34,12 @@ export default async function OrdersPage({
   await requireOfficeUser('/admin/orders');
 
   const sp = await searchParams;
-  // Warehouse installs: the order ledger. The WooCommerce import panel is KeyForCars's; Autosleutel24 imports its own webshop.
+  // CRM_WAREHOUSE=1: the order ledger, imported from our own webshop.
   // New orders appear without a reload (paused while the tab is hidden).
   if (WAREHOUSE) return (
     <>
       <LiveRefresh seconds={10} />
-      <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} requestedPage={sp.page} canImport={IS_KEYFORCARS} canImportOwn={!IS_KEYFORCARS} />
+      <KfcOrders shop={sp.shop} status={sp.status} q={sp.q} requestedPage={sp.page} />
     </>
   );
   const status = TABS.some((t) => t.value === sp.status) ? sp.status : undefined;

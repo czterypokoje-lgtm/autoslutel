@@ -87,15 +87,6 @@ export const dateFormatter = (english: boolean) =>
 export const carOf = (row: InvoiceRow) =>
   row.job ? [row.job.car_make, row.job.car_model].filter(Boolean).join(' ') || 'Auto' : null;
 
-/** Verzonden invoices whose term runs out within PAYMENT_REMINDER_DAYS. */
-export function dueSoonCount(rows: InvoiceRow[]) {
-  const today = invoiceDay(invoiceToday());
-  return rows.filter((row) => {
-    const days = invoiceDay(row.issue_date) + PAYMENT_TERM_DAYS - today;
-    return row.status === 'verzonden' && days >= 0 && days <= PAYMENT_REMINDER_DAYS;
-  }).length;
-}
-
 /** The three headline numbers above the table, unchanged from the old list. */
 export function invoiceMetrics(rows: InvoiceRow[]) {
   const now = new Date();

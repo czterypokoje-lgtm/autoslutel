@@ -2,7 +2,6 @@ import 'server-only';
 import { createHash } from 'node:crypto';
 import * as XLSX from 'xlsx';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { IS_KEYFORCARS } from '@/config/install';
 import { ARTICLE_CODE } from '@/lib/stockCatalog';
 import { euroToCents } from '@/lib/money';
 import type { CrmUser } from '@/lib/crmSession';
@@ -397,7 +396,7 @@ export const FIELD_LABELS: Record<string, string> = {
   key_type: 'Sleuteltype', frequency: 'Frequentie', chip: 'Chip', buttons: 'Knoppen', blade: 'Baard', fitments: 'Voertuigen',
 };
 
-const importPrefix = () => (IS_KEYFORCARS ? 'KFC-1-' : 'AS24-1-');
+const importPrefix = () => 'AS24-1-';
 
 async function buildPlan(bytes: Buffer, fileName: string, matchBy: MatchBy): Promise<{ plan: ImportPlan; rpc: RpcRow[] }> {
   if (bytes.length > MAX_IMPORT_BYTES) throw new MasterError('Het bestand is groter dan 5 MB.');

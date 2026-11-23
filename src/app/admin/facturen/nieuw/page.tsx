@@ -7,12 +7,11 @@ import { isScenario, scenarioFromLabel } from '@/lib/scenarios';
 import { prepareJobInvoice, type JobInvoiceDraft } from '@/lib/jobInvoiceDraft';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { SITE_CONFIG } from '@/config/site.config';
-import { BRAND, IS_KEYFORCARS, STUDIO_UI, WAREHOUSE } from '@/config/install';
+import { BRAND, STUDIO_UI, WAREHOUSE } from '@/config/install';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { PageHead, Notice } from '../../_ui';
 import { PreviewText } from '../../PreviewLanguage';
 import InvoiceForm from '../InvoiceForm';
-import { customerOptions } from '@/lib/kfcReceivables';
 import { Invoice as KfcInvoice } from './_components/invoice';
 
 export const dynamic = 'force-dynamic';
@@ -20,13 +19,13 @@ export const dynamic = 'force-dynamic';
 export default async function NieuweFactuurPage({ searchParams }: { searchParams: Promise<{ klant?: string; klus?: string }> }) {
   const { klant, klus } = await searchParams;
   const user = await requireCrmUser('/admin/facturen/nieuw');
-  const keyForCarsBiller = { name: BRAND.name, email: '', phone: '', kvk: '', btw: '', iban: '' };
+  const previewBiller = { name: BRAND.name, email: '', phone: '', kvk: '', btw: '', iban: '' };
   if (CRM_PREVIEW) {
     return (
       <>
         <PageHead title={<PreviewText>Nieuwe factuur</PreviewText>} />
         <Notice><PreviewText>Factuurvoorbeeld: bedragen worden berekend in het formulier. Opslaan vereist een werkende CRM-verbinding.</PreviewText></Notice>
-        <InvoiceForm technicians={[]} showTechnicianPicker={false} biller={keyForCarsBiller} preview />
+        <InvoiceForm technicians={[]} showTechnicianPicker={false} biller={previewBiller} preview />
       </>
     );
   }
@@ -66,19 +65,6 @@ export default async function NieuweFactuurPage({ searchParams }: { searchParams
         jobDraft = prepareJobInvoice(job, used, serviceTariff);
       }
     }
-  }
-
-  // KeyForCars: the Studio Admin invoice screen (form + live A4 preview), billing ledger customers.
-  if (IS_KEYFORCARS) {
-    return (
-      <KfcInvoice
-        jobDraft={jobDraft}
-        jobId={klus}
-        customers={await customerOptions()}
-        initialCustomerId={billing?.id ?? klant ?? null}
-        from={{ name: BRAND.name, email: '', phone: '', website: '', street: '', postcode: '', city: '', kvk: '', btw: '', iban: '', accountName: BRAND.name }}
-      />
-    );
   }
 
   /* The office may bill on any technician's behalf; a monteur only ever
@@ -143,10 +129,9 @@ export default async function NieuweFactuurPage({ searchParams }: { searchParams
         jobDraft={jobDraft}
         jobId={klus}
         technicians={technicians as { id: string; name: string }[]}
-        showTechnicianPicker={!IS_KEYFORCARS && user.role !== 'monteur'}
-        customers={IS_KEYFORCARS ? await customerOptions() : undefined}
+        showTechnicianPicker={user.role !== 'monteur'}
         initialCustomerId={klant ?? null}
-        biller={IS_KEYFORCARS ? keyForCarsBiller : {
+        biller={{
           name: SITE_CONFIG.fullName,
           email: SITE_CONFIG.email,
           phone: SITE_CONFIG.phone,

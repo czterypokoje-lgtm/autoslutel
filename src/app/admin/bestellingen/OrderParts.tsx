@@ -216,61 +216,8 @@ export function ReturnLine({ line, maximum, locations }: {
   );
 }
 
-/** Backfill panel: imports one page per request until the shop reports no more. */
-export function ImportPanel({ shops }: { shops: { shop: string; configured: boolean; orders: number }[] }) {
-  const router = useRouter();
-  const [state, setState] = useState<Record<string, string>>({});
-  async function run(shop: string, days: number) {
-    let page = 1, inserted = 0, updated = 0;
-    setState((s) => ({ ...s, [shop]: 'bezig…' }));
-    for (;;) {
-      const result = await post({ action: 'import', shop, page, days }) as { error?: string; inserted?: number; updated?: number; hasMore?: boolean; totalPages?: number };
-      if (result.error) { setState((s) => ({ ...s, [shop]: result.error! })); return; }
-      inserted += result.inserted ?? 0; updated += result.updated ?? 0;
-      setState((s) => ({ ...s, [shop]: `pagina ${page}/${result.totalPages ?? '?'} · ${inserted} nieuw, ${updated} bijgewerkt` }));
-      if (!result.hasMore || page >= 60) break;
-      page++;
-    }
-    setState((s) => ({ ...s, [shop]: `klaar · ${inserted} nieuw, ${updated} bijgewerkt` }));
-    router.refresh();
-  }
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base"><PreviewText>{"Webshops importeren"}</PreviewText></CardTitle>
-        <CardDescription><PreviewText>{"Haalt bestellingen op via de WooCommerce API. Daarna houden de webhooks en de nachtelijke controle alles bij."}</PreviewText></CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-2 sm:grid-cols-3">
-        <div className="flex flex-col gap-2 rounded-lg border border-dashed p-3 text-sm sm:col-span-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-medium"><PreviewText>{"Voorbeeldgegevens"}</PreviewText></span>
-            <span className="text-muted-foreground text-xs"><PreviewText>{"Zolang de webshops niet gekoppeld zijn: laad de voorbeeldbestellingen plus voorraad voor de 40 bestsellers, zodat reserveren, picken, verzenden en de rapporten echt werken."}</PreviewText></span>
-            <span className="ml-auto flex gap-2">
-              <Button size="sm" variant="outline" disabled={state.sample === 'bezig…'} onClick={async () => { setState((s) => ({ ...s, sample: 'bezig…' })); const r = await post({ action: 'sample-load' }) as { error?: string; orders?: number; lines?: number; stocked?: number }; setState((s) => ({ ...s, sample: r.error ?? `${r.orders} bestellingen, ${r.lines} regels, ${r.stocked} artikelen op voorraad gezet` })); router.refresh(); }}><PreviewText>{"Laad voorbeeldgegevens"}</PreviewText></Button>
-              <Button size="sm" variant="ghost" onClick={async () => { if (!window.confirm('Alle bestellingen, reserveringen, voorraadbewegingen en voorraadstanden wissen?')) return; const r = await post({ action: 'sample-clear' }); setState((s) => ({ ...s, sample: r.error ?? 'Gewist.' })); router.refresh(); }}><PreviewText>{"Wis alles"}</PreviewText></Button>
-            </span>
-          </div>
-          {state.sample && <span className="text-muted-foreground text-xs">{state.sample}</span>}
-        </div>
-        {shops.map(({ shop, configured, orders }) => (
-          <div key={shop} className="flex flex-col gap-2 rounded-lg border p-3 text-sm">
-            <div className="flex items-center justify-between"><span className="font-medium">{shop}</span><span className="text-muted-foreground tabular-nums">{orders} orders</span></div>
-            {configured ? (
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => run(shop, 90)}><Download className="size-4" /> <PreviewText>{"90 dagen"}</PreviewText></Button>
-                <Button size="sm" variant="outline" onClick={() => run(shop, 365)}>12 maanden</Button>
-              </div>
-            ) : <span className="text-muted-foreground text-xs"><PreviewText>{"Geen API-sleutel ingesteld (WOO_… in Vercel)."}</PreviewText></span>}
-            {state[shop] && <span className="text-muted-foreground text-xs">{state[shop]}</span>}
-          </div>
-        ))}
-      </CardContent>
-    </Card>
-  );
-}
-
 /**
- * Autosleutel24: its own webshop writes into `public.orders` in this same
+ * Our own webshop writes into `public.orders` in this same
  * database, so there is nothing to fetch — one request reads that table into
  * the ledger. No per-shop keys, no paging from the browser.
  */

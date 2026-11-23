@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
-import { KeyRound, Printer } from 'lucide-react';
+import { BRAND } from '@/config/install';
+import { Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PreviewText } from '@/app/admin/PreviewLanguage';
 import styles from './reportPreview.module.css';
@@ -33,7 +33,8 @@ export default function ReportPreview({ back, children, columns }: { back: strin
     </aside>
     <article className={styles.sheet} data-report-sheet>
       <header className={styles.brand}>
-        {IS_KEYFORCARS ? <KeyRound size={32} aria-hidden="true" /> : <img src="/logo.png" alt="" width={120} />}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="" width={120} />
         <strong>{BRAND.name}</strong>
       </header>
       {children}

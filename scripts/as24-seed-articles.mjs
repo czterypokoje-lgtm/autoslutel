@@ -4,7 +4,7 @@
  *   node scripts/as24-seed-articles.mjs --dry-run   # print, write nothing
  *   node scripts/as24-seed-articles.mjs             # upsert all cards
  *
- * The twin of scripts/kfc-seed-articles.mjs, reading this install's own files:
+ * Reads our own files:
  * src/data/autosleutel24-stock.json (built by scripts/build-as24-stock.mjs from
  * the key catalogue) and src/data/autosleutel24-prices.json (sale prices in
  * cents, by SKU). Purchase prices are in neither and stay null until a purchase

@@ -3,7 +3,7 @@
  * replays the first result, keeps the old treatment of unmapped and zero-quantity lines, and never
  * drives a bin below zero. Run: node --test tests/pglite/ship-rule.test.mjs
  *
- * Orders are written the way kfcWoo.upsertOrder writes them; stock moves only through the real RPCs
+ * Orders are written the way the order import writes them (one order row, then its lines); stock moves only through the real RPCs
  * (kfc_count_bin, kfc_allocate via its triggers, kfc_pick_line, kfc_ship_order).
  */
 import { test } from 'node:test';
@@ -27,7 +27,7 @@ async function setup(plus = RULE) {
 const count = (db, article, location, quantity) =>
   db.rpc('kfc_count_bin', { p_article: article, p_location: location, p_counted: quantity, p_minimum: 0, p_key: `count-${randomUUID()}` });
 
-/** Like kfcWoo.upsertOrder: one order row, then its lines (the line trigger runs the allocator). */
+/** Like the order import: one order row, then its lines (the line trigger runs the allocator). */
 async function order(db, lines) {
   const now = new Date().toISOString();
   const id = ++wooId;

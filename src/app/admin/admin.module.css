@@ -1116,4 +1116,3 @@ a.rowTitle:hover { text-decoration: underline; text-underline-offset: 2px; }
 .quickCreate a { display: block; padding: 6px 9px; color: var(--crm-ink); border-radius: 5px; }
 .quickCreate a:hover, .quickCreate a:focus-visible { background: var(--crm-sunk); }
 .integrationActions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px; }
-.readonlyInline { color: var(--crm-muted); font-size: 12px; margin-bottom: 10px; }

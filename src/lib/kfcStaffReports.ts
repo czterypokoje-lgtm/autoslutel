@@ -1,7 +1,6 @@
 import 'server-only';
 
 import { reviewAgentIds } from '../../supabase/functions/_shared/kfcCallReview';
-import { DEMO_BOT_AGENT } from '@/lib/kfcDemoBotRules';
 import { fetchAll } from '@/lib/kfcOrders';
 import { addDays, periodBounds, type StaffFulfilment, type StaffPeriod, type StaffQuery, type StaffTopic } from '@/lib/kfcStaffFilters';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
@@ -233,7 +232,6 @@ export async function readStaffReport(intent: ReportIntent, english: boolean, of
   }
 
   const agents = reviewAgentIds(process.env.KFC_REVIEW_AGENT_IDS);
-  if (process.env.KFC_DEMO_MODE === '1') agents.push(DEMO_BOT_AGENT);
   const bounds = query.period ? periodBounds(query.period) : null;
   const countChannel = (channel: keyof typeof channelNames) => {
     let rows = db.from('agent_conversations').select('conversation_id', { count: 'exact', head: true })

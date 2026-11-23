@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "openclaw": "2026.11.6",
-    "playwright": "1.65.1"
-  }
-}

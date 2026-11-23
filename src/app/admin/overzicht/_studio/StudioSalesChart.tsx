@@ -7,8 +7,7 @@ import { usePreviewLanguage } from '../../PreviewLanguage';
 
 /**
  * The same series as the old SalesChart — revenue as bars, gross profit as a
- * line — drawn with recharts inside the shadcn chart frame, like KfcCharts
- * does. The leads per day move to the tooltip's label line.
+ * line — drawn with recharts inside the shadcn chart frame. The leads per day move to the tooltip's label line.
  */
 export default function StudioSalesChart({
   data,

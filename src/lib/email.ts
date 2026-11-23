@@ -1,4 +1,3 @@
-import { providerRequestsEnabled } from '@/lib/providerRequests';
 import { SITE_CONFIG } from '@/config/site.config';
 
 /**
@@ -53,7 +52,6 @@ export async function sendMail(mail: Mail): Promise<boolean> {
 
 /** Same as sendMail, but hands back the provider's id so the inbox can track the message. */
 export async function deliverMail({ to, subject, text, replyTo, headers }: Mail): Promise<{ id: string } | null> {
-  if (!providerRequestsEnabled()) return null;
   const key = process.env.RESEND_API_KEY;
   if (!key) {
     console.error(

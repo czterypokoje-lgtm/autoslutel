@@ -13,8 +13,7 @@ export const metadata = { title: `Voorraad | ${BRAND.name}` };
 /**
  * /admin/voorraad.
  *
- * Warehouse installs (KeyForCars, Autosleutel24 with CRM_WAREHOUSE=1) get the
- * stock ledger here: articles, product finder, reorder proposal, reports and
+ * With CRM_WAREHOUSE=1 this is the stock ledger: articles, product finder, reorder proposal, reports and
  * journal; warehouse and picker roles work here too and prices are stripped
  * server-side. Autosleutel24's own store-and-vans stock lives on at
  * /admin/voorraad/bussen (and here, while the ledger is off).

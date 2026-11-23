@@ -15,13 +15,12 @@ import {
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from 'cn';
-import { IS_KEYFORCARS } from '@/config/install';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { dataTableFeatures } from '@/lib/data-table-features';
 import { PreviewText, usePreviewLanguage } from '../../PreviewLanguage';
 
 import {
-  ALL, dueSoonCount, type InvoiceFilter, invoiceFilters, type InvoiceRow, invoiceMetrics, MONEY, PAYMENT_REMINDER_DAYS,
+  ALL, type InvoiceFilter, invoiceFilters, type InvoiceRow, invoiceMetrics, MONEY,
 } from './data';
 import { invoicesColumns } from './invoices-columns';
 import { InvoicesTable } from './invoices-table';
@@ -64,8 +63,6 @@ export function Invoices({ rows, showTechnician, isMonteur }: {
   });
 
   const metrics = React.useMemo(() => invoiceMetrics(rows), [rows]);
-  // Only the office on KeyForCars sees this nudge, exactly as the old list did.
-  const dueSoon = IS_KEYFORCARS && showTechnician ? dueSoonCount(rows) : 0;
 
   const searchQuery = (table.getColumn('search')?.getFilterValue() as string | undefined) ?? '';
   const filter = ((table.getColumn('status')?.getFilterValue() as InvoiceFilter | undefined) ?? ALL);
@@ -88,14 +85,6 @@ export function Invoices({ rows, showTechnician, isMonteur }: {
           <Link href="/admin/facturen/nieuw"><Plus data-icon="inline-start" /><PreviewText>Nieuwe factuur</PreviewText></Link>
         </Button>
       </div>
-
-      {dueSoon > 0 && (
-        <Link href="/admin/bank/verwacht" className="text-sm underline-offset-4 hover:underline">
-          {english
-            ? `${dueSoon} due within ${PAYMENT_REMINDER_DAYS} days · View Expected Payments`
-            : `${dueSoon} binnen ${PAYMENT_REMINDER_DAYS} dagen · Bekijk Verwachte Betalingen`}
-        </Link>
-      )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 [&>button:last-child]:max-sm:col-span-2">
         <MetricCard

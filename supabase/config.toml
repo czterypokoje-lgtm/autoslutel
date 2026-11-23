@@ -424,7 +424,3 @@ entrypoint = "./functions/kfc-catalog/index.js"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/kfc-conversation-sync/index.js"
-
-[functions.kfc-order-tracking]
-entrypoint = "./functions/kfc-order-tracking/index.js"
-verify_jwt = false

@@ -3,7 +3,7 @@ import styles from '../admin.module.css';
 import LoginForm from './LoginForm';
 import lg from './login.module.css';
 import { safeNext } from '../auth/safeNext';
-import { BRAND, IS_KEYFORCARS } from '@/config/install';
+import { BRAND } from '@/config/install';
 
 export default async function LoginPage({
   searchParams,
@@ -13,23 +13,16 @@ export default async function LoginPage({
   const { next, error } = await searchParams;
 
   return (
-    <div className={`crm ${lg.split} ${IS_KEYFORCARS ? lg.keyforcars : ""}`}>
+    <div className={`crm ${lg.split}`}>
       <div className={lg.brand}>
         <span className={lg.logo}>
-          {IS_KEYFORCARS ? 'KeyForCars' : <>Autosleutel<span>24</span></>}
+          <>Autosleutel<span>24</span></>
           <small>CRM</small>
         </span>
-        {IS_KEYFORCARS ? (
-          <div>
-            <div className={lg.pitch}><PreviewText>Drie webshops, één magazijn, één overzicht.</PreviewText></div>
-            <div className={lg.pitchSub}><PreviewText>Bestellingen, voorraad en etiketten: aan het bureau of op de telefoon in het magazijn.</PreviewText></div>
-          </div>
-        ) : (
-          <div>
-            <div className={lg.pitch}>Elke klus, elke sleutel, elke euro op één plek.</div>
-            <div className={lg.pitchSub}>Voor kantoor en monteurs: aan het bureau of op de telefoon in de bus.</div>
-          </div>
-        )}
+        <div>
+          <div className={lg.pitch}>Elke klus, elke sleutel, elke euro op één plek.</div>
+          <div className={lg.pitchSub}>Voor kantoor en monteurs: aan het bureau of op de telefoon in de bus.</div>
+        </div>
         <span className={lg.foot}><PreviewText>{BRAND.staff}</PreviewText></span>
       </div>
       <div className={lg.side}>

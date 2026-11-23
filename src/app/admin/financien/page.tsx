@@ -3,7 +3,6 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
-import { shippingTestEnabled } from '@/lib/kfcShippingTest';
 import { fetchAll } from '@/lib/kfcOrders';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,8 +22,6 @@ export default async function FinanceOverview({ searchParams }: { searchParams: 
   await requireOfficeUser('/admin/financien');
   const params = await searchParams;
   const weekly = params.period !== 'month';
-  const sample = shippingTestEnabled && params.chart !== 'bank';
-  const period = weekly ? 'week' : 'month';
   const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Amsterdam' }).format(new Date());
   const month = today.slice(0, 7) + '-01';
   const day = new Date(today + 'T00:00:00Z');
@@ -56,17 +53,7 @@ export default async function FinanceOverview({ searchParams }: { searchParams: 
       bucket.outgoing += Math.max(0, -row.amount_cents);
     }
   }
-  const chartRows = sample ? buckets.flatMap((bucket, index) =>
-    (weekly ? [1, 7, 13, 19] : [1, 8, 15, 22]).flatMap((slot, segment) => {
-      const date = weekly ? bucket.date + 'T' + String(slot).padStart(2, '0') + ':00:00Z'
-        : bucket.date.slice(0, 8) + String(slot).padStart(2, '0');
-      const n = index * 4 + segment;
-      return date.slice(0, 10) <= today ? [{
-        date, tick: segment === 0,
-        incoming: 7300 + n * 210 + (n * 793 % 3800),
-        outgoing: 3200 + n * 145 + (n * 1733 % 6400),
-      }] : [];
-    })) : buckets.filter((row) => recordedBuckets.has(row.key));
+  const chartRows = buckets.filter((row) => recordedBuckets.has(row.key));
   const categories = new Map<string, number>();
   for (const row of expenses.status === 'fulfilled' ? expenses.value : []) {
     const amount = Math.round(Number(row.amount) * 100);
@@ -107,16 +94,13 @@ export default async function FinanceOverview({ searchParams }: { searchParams: 
           <CardTitle><PreviewText>Inkomend en uitgaand</PreviewText></CardTitle>
           <div className="flex gap-1">{([['week','7 dagen'],['month','6 maanden']] as const).map(([id, label]) =>
             <Button key={id} size="sm" variant={(id === 'week') === weekly ? 'secondary' : 'ghost'} asChild>
-              <Link aria-current={(id === 'week') === weekly ? 'page' : undefined} href={'?period=' + id + (sample ? '' : '&chart=bank')}><PreviewText>{label}</PreviewText></Link>
+              <Link aria-current={(id === 'week') === weekly ? 'page' : undefined} href={'?period=' + id + '&chart=bank'}><PreviewText>{label}</PreviewText></Link>
             </Button>)}</div>
         </div><CardDescription className="flex flex-wrap items-center justify-between gap-2">
-          <PreviewText>{sample ? 'Voorbeeldgrafiek met gesimuleerde transacties' : 'Geïmporteerde bankbewegingen, inclusief overschrijvingen'}</PreviewText>
-          {shippingTestEnabled && <Link className="underline underline-offset-4" href={'?period=' + period + '&chart=' + (sample ? 'bank' : 'sample')}>
-            <PreviewText>{sample ? 'Toon bankafschrift' : 'Toon voorbeeldgrafiek'}</PreviewText>
-          </Link>}
+          <PreviewText>Geïmporteerde bankbewegingen, inclusief overschrijvingen</PreviewText>
         </CardDescription></CardHeader>
         <CardContent>
-          {!sample && bank.status === 'rejected' ? <PreviewText>Gegevens niet beschikbaar</PreviewText> : !chartRows.length ? <PreviewText>Geen bankbewegingen in deze periode</PreviewText> : <BankFlowChart rows={chartRows} weekly={weekly} />}
+          {bank.status === 'rejected' ? <PreviewText>Gegevens niet beschikbaar</PreviewText> : !chartRows.length ? <PreviewText>Geen bankbewegingen in deze periode</PreviewText> : <BankFlowChart rows={chartRows} weekly={weekly} />}
         </CardContent>
       </Card>
       <Card>

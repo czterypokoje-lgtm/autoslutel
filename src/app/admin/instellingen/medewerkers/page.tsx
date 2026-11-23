@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { PreviewText } from '@/app/admin/PreviewLanguage';
-import { BRAND, IS_KEYFORCARS, WAREHOUSE } from '@/config/install';
+import { BRAND, WAREHOUSE } from '@/config/install';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { listStaff, ROLE_INFO, STAFF_ROLES, type StaffMember } from '@/lib/kfcStaff';
@@ -37,7 +37,7 @@ export default async function MedewerkersPage() {
         me={user.id}
         canManage={user.role === 'owner'}
         roles={STAFF_ROLES.map((role) => ({ role, ...ROLE_INFO[role] }))}
-        monteurNote={!IS_KEYFORCARS}
+        monteurNote
       />
     </>
   );

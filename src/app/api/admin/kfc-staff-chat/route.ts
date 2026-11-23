@@ -2,7 +2,6 @@ import { readStaffReport, reportIntents, topicReport, type ReportIntent } from '
 import { parseStaffQuery } from '@/lib/kfcStaffFilters';
 import { getProducts } from '@/lib/catalog';
 import { reviewAgentIds } from '../../../../../supabase/functions/_shared/kfcCallReview';
-import { DEMO_BOT_AGENT } from '@/lib/kfcDemoBotRules';
 import { askLocalStaffModel, wrongLanguage } from '@/lib/kfcLocalStaffModel';
 import { WAREHOUSE } from '@/config/install';
 import { requireWarehouseUserApi, seesPrices } from '@/lib/crmSession';
@@ -79,7 +78,6 @@ export async function POST(request: Request) {
     if (summary || routed?.intent === 'summary') {
       if (!office) return reply(say('Conversation summaries are available to office staff.', 'Gesprekssamenvattingen zijn beschikbaar voor kantoormedewerkers.'));
       const agents = reviewAgentIds(process.env.KFC_REVIEW_AGENT_IDS);
-      if (process.env.KFC_DEMO_MODE === '1') agents.push(DEMO_BOT_AGENT);
       const { data, error } = await db.from('agent_conversations').select('conversation_id,summary')
         .in('metadata->kfc_call_review->>agent_id', agents).not('summary', 'is', null).order('created_at', { ascending: false }).order('id').limit(1);
       if (error) throw error;

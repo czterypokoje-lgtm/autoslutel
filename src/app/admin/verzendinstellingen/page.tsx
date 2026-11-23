@@ -4,15 +4,13 @@ import { sendcloudConfigured } from '@/lib/kfcShipping';
 import { postnlConfigured, postnlMissing, postnlSandbox } from '@/lib/kfcPostnl';
 import { PreviewText } from '../PreviewLanguage';
 import { requireOfficeUser } from '@/lib/crmSession';
-import { shippingTestEnabled } from '@/lib/kfcShippingTest';
-import { CarrierSetup } from '../verzending/CarrierSetup';
 
 export default async function ShippingSettingsPage() {
   if (!WAREHOUSE) notFound();
   await requireOfficeUser('/admin/verzendinstellingen');
   const missing = postnlMissing();
   return <div className="grid gap-5">
-    {shippingTestEnabled ? <CarrierSetup /> : <h1 className="text-2xl font-semibold"><PreviewText>Verzendinstellingen</PreviewText></h1>}
+    <h1 className="text-2xl font-semibold"><PreviewText>Verzendinstellingen</PreviewText></h1>
     <section className="grid gap-1 rounded-lg border p-4">
       <h2 className="font-semibold">PostNL</h2>
       <p className="text-sm"><PreviewText>{postnlConfigured()

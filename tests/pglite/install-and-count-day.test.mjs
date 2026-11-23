@@ -1,11 +1,13 @@
 /*
- * Rehearsal of the KeyForCars installation day, on an in-process Postgres (no network, no real database):
+ * Rehearsal of a stock-count day on the warehouse ledger, on an in-process Postgres (no network, no real database):
  *
- *   1. the database as that install stands today (migrations 0001-0105, without 0104z),
- *      with the real article catalogue and some stock already counted;
- *   2. the generated bundle (supabase/kfc_apply_0104z_0106-0134.sql) run on top, exactly as the runbook says;
- *   3. a full stock-count day on the result: two phones, single counts and bulk batches, retries on a bad
+ *   1. a database built from the migrations (through 0135), with a real article catalogue and some stock
+ *      already counted;
+ *   2. a full stock-count day on it: two phones, single counts and bulk batches, retries on a bad
  *      connection, recounts, the same bin counted twice — and then "all stock in one place".
+ *
+ * (Until the KeyForCars split this also rehearsed KeyForCars's migration bundle on its 0105 database;
+ * that part moved to the KeyForCars repository with the bundle.)
  *
  * What this cannot show: the real data in production, the Supabase API layer (its 1,000-row page), the camera.
  *   node --test tests/pglite/install-and-count-day.test.mjs
@@ -14,10 +16,10 @@ import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
-import { dbAt, prepareSql, freshDb } from './harness.mjs';
+import { dbAt } from './harness.mjs';
 
 const ROOT = new URL('../../', import.meta.url);
-const BUNDLE = readFileSync(new URL('supabase/kfc_apply_0104z_0106-0134.sql', ROOT), 'utf8');
+// A large real catalogue (1,704 cards) to count against; any article master would do.
 const CATALOG = JSON.parse(readFileSync(new URL('src/data/keyforcars-stock.json', ROOT), 'utf8'));
 
 let pg;
@@ -25,32 +27,16 @@ const q = async (text, params = []) => (await pg.query(text, params)).rows;
 const one = async (text, params = []) => (await q(text, params))[0];
 after(async () => { await pg?.close(); });
 
-const SCHEMA = {
-  columns: `select c.relname as t, a.attname as c, format_type(a.atttypid, a.atttypmod) as ty, a.attnotnull as nn
-              from pg_attribute a join pg_class c on c.oid = a.attrelid join pg_namespace n on n.oid = c.relnamespace
-             where n.nspname = 'public' and a.attnum > 0 and not a.attisdropped and c.relkind in ('r', 'v', 'm') order by 1, 2`,
-  functions: `select p.proname as f, pg_get_function_identity_arguments(p.oid) as args, md5(p.prosrc) as body
-                from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' order by 1, 2`,
-  triggers: `select c.relname as t, tg.tgname as name from pg_trigger tg join pg_class c on c.oid = tg.tgrelid
-               join pg_namespace n on n.oid = c.relnamespace where n.nspname = 'public' and not tg.tgisinternal order by 1, 2`,
-};
-const lines = (rows) => rows.map((r) => Object.values(r).join(' | '));
+test('setup: database at 0135 with the article master and some stock already counted', async () => {
+  pg = await dbAt(135);
 
-test('the bundle on disk is the one that stops at 0135', () => {
-  assert.match(BUNDLE, /0135_revoke_anon_execute\.sql/);
-  assert.doesNotMatch(BUNDLE, /013[6-9]_|0140_/, 'this rehearsal is about the verified bundle, not the new migrations');
-});
-
-test('install: 0105 database with data, then the bundle', async (t) => {
-  pg = await dbAt(105, { exclude: ['0104z_park_old_inbox.sql'] });
-
-  // The article master, loaded the way scripts/kfc-seed-articles.mjs does.
+  // The article master, loaded the way scripts/as24-seed-articles.mjs does.
   await q(`insert into public.kfc_articles (code, name, sku, image, category)
            select x->>'id', x->>'name', coalesce(x->>'sku', ''), coalesce(x->>'image', ''), coalesce(x->>'category', '')
              from jsonb_array_elements($1::jsonb) x`, [JSON.stringify(CATALOG)]);
   assert.equal((await one('select count(*)::int n from public.kfc_articles')).n, CATALOG.length);
 
-  // Some stock that already exists before the upgrade: it must come out the other side unchanged.
+  // Some stock that exists before the count day.
   const { id: loc } = await one(`insert into public.kfc_locations (warehouse, shelf, box) values ('main', 'OUD-01', 'B1') returning id`);
   for (const article of CATALOG.slice(0, 30)) {
     await q(`select public.kfc_count_bin($1, $2::uuid, 5, 1, $3)`, [article.id, loc, `pre-${article.id}`]);
@@ -58,39 +44,6 @@ test('install: 0105 database with data, then the bundle', async (t) => {
   const before = await one(`select (select count(*)::int from public.kfc_stock_levels) levels, (select coalesce(sum(quantity), 0)::int from public.kfc_stock_levels) units,
                                    (select count(*)::int from public.kfc_stock_moves) moves`);
   assert.deepEqual(before, { levels: 30, units: 150, moves: 30 });
-
-  const started = Date.now();
-  await pg.exec(prepareSql(BUNDLE));
-  t.diagnostic(`bundle applied in ${Date.now() - started} ms`);
-
-  const afterInstall = await one(`select (select count(*)::int from public.kfc_stock_levels) levels, (select coalesce(sum(quantity), 0)::int from public.kfc_stock_levels) units,
-                                         (select count(*)::int from public.kfc_stock_moves) moves, (select count(*)::int from public.kfc_articles) articles`);
-  assert.deepEqual(afterInstall, { ...before, articles: CATALOG.length }, 'stock and articles survive the upgrade');
-
-  // A second run must not half-apply anything.
-  let second = 'applied again without an error';
-  try { await pg.exec(prepareSql(BUNDLE)); } catch (e) { second = `refused: ${e.message}`; try { await pg.exec('rollback'); } catch { /* not in a transaction */ } }
-  t.diagnostic(`second run of the bundle: ${second}`);
-  assert.deepEqual(await one(`select (select count(*)::int from public.kfc_stock_levels) levels, (select coalesce(sum(quantity), 0)::int from public.kfc_stock_levels) units,
-                                     (select count(*)::int from public.kfc_stock_moves) moves, (select count(*)::int from public.kfc_articles) articles`), afterInstall);
-});
-
-test('install: the upgraded database has the same shape as one built from the migrations in order', async (t) => {
-  const reference = await freshDb();
-  try {
-    for (const [what, text] of Object.entries(SCHEMA)) {
-      const want = new Set(lines(await reference.sql(text)));
-      const got = new Set(lines(await q(text)));
-      const missing = [...want].filter((l) => !got.has(l));
-      const extra = [...got].filter((l) => !want.has(l));
-      t.diagnostic(`${what}: ${got.size} in the upgraded database, ${missing.length} missing, ${extra.length} extra`);
-      for (const l of missing.slice(0, 15)) t.diagnostic(`  missing ${what}: ${l}`);
-      for (const l of extra.slice(0, 15)) t.diagnostic(`  extra ${what}: ${l}`);
-      assert.deepEqual({ missing, extra }, { missing: [], extra: [] }, `${what} differ`);
-    }
-  } finally {
-    await reference.close();
-  }
 });
 
 test('count day: two phones, 1,704 articles, single counts and bulk batches', async (t) => {

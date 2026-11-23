@@ -62,6 +62,14 @@ Ayrıntılar: [`webshop-agent.md`](webshop-agent.md).
 - [ ] Geri dönüş: eski agent-id'yi geri yazıp redeploy.
 
 ### 7. KeyForCars ayrışması
+
+⚠️ **Sıra önemli:** KeyForCars kodu artık ayrı repoda: `czterypokoje-lgtm/keyforcars-crm1`. Bu
+branch `main`'e alınınca Autosleutel24 reposunda KeyForCars kodu kalmaz. KeyForCars'ın Vercel projesi
+hâlâ bu repodan (veya `uroborosoftware/autosleutel-crm-erp`'den) deploy ediyorsa, **önce** onu yeni
+repoya bağlayın: Vercel → `keyforcars-crm` → Settings → Git → `czterypokoje-lgtm/keyforcars-crm1`,
+branch `main` (adımlar o reponun `docs/keyforcars-installatie.md` §4.2'sinde). Ancak ondan sonra
+"main'e al" deyin.
+
 [`keyforcars-ayrisma.md`](keyforcars-ayrisma.md): kendi ElevenLabs workspace'i, kendi anahtarları, sonra eski
 ajanların bizim workspace'imizden silinmesi. Sözleşme taslağı:
 [`verwerkersovereenkomst-keyforcars.md`](verwerkersovereenkomst-keyforcars.md).

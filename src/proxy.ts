@@ -11,7 +11,6 @@ import {
   supabaseMarkerProblem,
 } from '@/lib/supabase/env';
 import { CRM_READONLY, READONLY_MESSAGE, isSafeMethod } from '@/lib/readonly';
-import { IS_KEYFORCARS, installServes } from '@/config/install';
 import { LAN_COOKIE, hasLanCookie, lanMode, lanToken, lanTokenMatches } from '@/lib/lanPreview';
 import { AD_CLICK_PARAMS, readClickOrigin } from '@/lib/adClickId';
 import { getClientIp, rateLimit } from '@/lib/rateLimit';
@@ -152,8 +151,7 @@ async function handleCrm(request: NextRequest): Promise<NextResponse> {
   }
 
   if (user && pathname === '/admin/login') {
-    const home = IS_KEYFORCARS ? '/admin/overzicht' : '/admin/leads';
-    return crmHeaders(NextResponse.redirect(new URL(home, request.url)));
+    return crmHeaders(NextResponse.redirect(new URL('/admin/leads', request.url)));
   }
 
   return crmHeaders(response);
@@ -315,21 +313,6 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     });
   }
 
-  /*
-   * A customer install answers only its own screens. Everything else in this
-   * codebase — our public site, our other CRM modules, our crons and webhooks —
-   * is a plain 404 there, before any auth or database call.
-   */
-  if (IS_KEYFORCARS) {
-    if (!installServes(pathname)) {
-      return new NextResponse(null, {
-        status: 404,
-        headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' },
-      });
-    }
-    if (pathname === '/') return NextResponse.redirect(new URL('/admin/overzicht', request.url));
-  }
-
   if (CRM_PREVIEW && pathname === '/api/admin/voorraad-local') {
     return crmHeaders(NextResponse.next());
   }
@@ -343,9 +326,8 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     );
   }
 
-  // The country block is spam defence for the Autosleutel24 public site;
-  // the KeyForCars CRM has staff and testers abroad and no public pages.
-  if (!IS_KEYFORCARS && !pathname.startsWith('/api/')) {
+  // The country block is spam defence for the public site.
+  if (!pathname.startsWith('/api/')) {
     const country = request.headers.get('x-vercel-ip-country') ?? '';
     const userAgent = request.headers.get('user-agent') ?? '';
     if (BLOCKED_COUNTRIES.has(country) && !KNOWN_CRAWLER.test(userAgent)) {

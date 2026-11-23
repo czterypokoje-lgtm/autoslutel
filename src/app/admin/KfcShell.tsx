@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
 import {
-  AudioLines, BarChart3, Boxes, CalendarDays, ChevronRight, Euro, Inbox, KeyRound, LayoutDashboard, LogOut, Package, PackageCheck, PhoneCall, Search,
-  Settings, ShoppingCart, Store, Tags, UserCog, Users, type LucideIcon,
+  AudioLines, BarChart3, Boxes, ChevronRight, Euro, KeyRound, LogOut, Package, PackageCheck, Search,
+  Settings, Store, Tags, UserCog, type LucideIcon,
 } from 'lucide-react';
-import { Lock, RefreshCw, Truck, Undo2 } from 'lucide-react';
+import { Lock, Truck, Undo2 } from 'lucide-react';
 import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarInset,
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
@@ -24,107 +24,72 @@ import { Separator } from '@/components/ui/separator';
 import { StaffChat } from './StaffChat';
 import { LanguageToggle, usePreviewLanguage } from './PreviewLanguage';
 import type { CrmRole } from '@/lib/crmSession';
-import { BRAND, IS_KEYFORCARS, WAREHOUSE, installServes } from '@/config/install';
-import { MONTEUR_NAV, OFFICE_NAV, reportLinks, type NavItem } from './AdminNav';
+import { BRAND, WAREHOUSE } from '@/config/install';
+import { MONTEUR_NAV, OFFICE_NAV, type NavItem } from './AdminNav';
 import MobileTabBar from './MobileTabBar';
 import styles from './admin.module.css';
 
 /*
- * The KeyForCars shell: shadcn sidebar + header, modelled on the Kiranism
- * dashboard starter. Office roles see everything; warehouse and picker see
- * the stock and purchasing group only, so a link they may not open is not
- * shown to them in the first place.
+ * The Studio shell (CRM_UI=studio): shadcn sidebar + header, modelled on the
+ * Kiranism dashboard starter. Autosleutel24 keeps its own menus (AdminNav) and
+ * only borrows the shell; monteurs get theirs. Office roles see everything;
+ * warehouse and picker see the stock and purchasing group only, so a link they
+ * may not open is not shown to them in the first place.
  */
 
 type Item = { label: string; href?: string; icon: LucideIcon; children?: { label: string; href: string }[]; office?: boolean };
 type Group = { label: string; items: Item[] };
 
-const GROUPS: Group[] = [
-  {
-    label: 'Overzicht',
-    items: [
-      { label: 'Dashboard', icon: LayoutDashboard, href: '/admin/overzicht', office: true },
-      { label: 'Eigenaarsoverzicht', icon: BarChart3, href: '/admin/rapporten/eigenaar', office: true },
-      { label: 'Bestellingen', icon: ShoppingCart, href: '/admin/orders', office: true },
-      { label: 'Klanten', icon: Users, href: '/admin/klanten', office: true },
-      { label: 'Werkplaatsagenda', icon: CalendarDays, href: '/admin/agenda' },
-    ],
-  },
-  {
-    label: 'Magazijn',
-    items: [
-      { label: 'Kassa', icon: Store, href: '/admin/kassa' },
-      // 0136: closed till sessions with their stored Z-reports.
-      { label: 'Z-rapporten', icon: BarChart3, href: '/admin/kassa/sessies' },
-      {
-        label: 'Voorraad', icon: Boxes, children: [
-          { label: 'Artikelen', href: '/admin/voorraad' },
-          { label: 'Productzoeker', href: '/admin/voorraad/p' },
-          { label: 'Bestelvoorstel', href: '/admin/voorraad?view=reorder' },
-          { label: 'Voorraadrapporten', href: '/admin/voorraad?view=reports' },
-          { label: 'Voorraadlogboek', href: '/admin/voorraad?view=journal' },
-          { label: 'Artikellijst', href: '/admin/voorraad/artikelen' },
-          { label: 'Analyse en rapporten', href: '/admin/voorraad/analyse' },
-          { label: 'Montage', href: '/admin/voorraad/montage' },
-        ],
-      },
-      { label: 'Picklijst', icon: PackageCheck, href: '/admin/bestellingen/picken' },
-      { label: 'Retouren', icon: Undo2, href: '/admin/retouren' },
-      { label: 'Inkoop', icon: Package, href: '/admin/inkoop' },
-      { label: 'Leveranciers', icon: Truck, href: '/admin/leveranciers', office: true },
-      {
-        label: 'Artikelbeheer', icon: Tags, office: true, children: [
-          { label: 'Datakwaliteit', href: '/admin/artikelbeheer/kwaliteit' },
-          { label: 'Categorieën', href: '/admin/artikelbeheer/categorieen' },
-          { label: 'Bulk bewerken', href: '/admin/artikelbeheer/bulk' },
-          { label: 'Import en export', href: '/admin/artikelbeheer/import' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Kantoor',
-    items: [
-      { label: 'Leads', icon: Inbox, href: '/admin/leads', office: true },
-      { label: 'Agentcentrum', icon: AudioLines, office: true, children: [
-        { label: 'Spraakgesprekken', href: '/admin/bot-conversations?channel=phone' },
-        { label: 'WhatsApp-gesprekken', href: '/admin/bot-conversations?channel=whatsapp' },
-        { label: 'Alle botgesprekken', href: '/admin/bot-conversations' },
-      ] },
-      { label: 'Gesprekken', icon: PhoneCall, href: '/admin/gesprekken', office: true },
-      {
-        label: 'Geld', icon: Euro, office: true, children: [
-          { label: 'Financieel overzicht', href: '/admin/financien' },
-          { label: 'Inkoop', href: '/admin/inkoop' },
-          { label: 'Facturen', href: '/admin/facturen' },
-          { label: 'Uitgaven', href: '/admin/uitgaven' },
-          { label: 'Bank', href: '/admin/bank/transacties' },
-          { label: 'Debiteuren & crediteuren', href: '/admin/rekeningen' },
-        ],
-      },
-      {
-        label: 'Rapporten', icon: BarChart3, office: true, children: reportLinks,
-      },
-      { label: 'Webshop-sync', icon: RefreshCw, office: true, children: [
-        { label: 'Sync-status', href: '/admin/webshop-sync' },
-        { label: 'Koppelingen', href: '/admin/webshop-sync/koppelingen' },
-      ] },
-      { label: 'Instellingen', icon: Settings, href: '/admin/instellingen', office: true },
-    ],
-  },
-];
+/** The warehouse block (CRM_WAREHOUSE=1): stock ledger, pick list, purchasing. */
+const MAGAZIJN: Group = {
+  label: 'Magazijn',
+  items: [
+    { label: 'Kassa', icon: Store, href: '/admin/kassa' },
+    // 0136: closed till sessions with their stored Z-reports.
+    { label: 'Z-rapporten', icon: BarChart3, href: '/admin/kassa/sessies' },
+    {
+      label: 'Voorraad', icon: Boxes, children: [
+        { label: 'Artikelen', href: '/admin/voorraad' },
+        { label: 'Productzoeker', href: '/admin/voorraad/p' },
+        { label: 'Bestelvoorstel', href: '/admin/voorraad?view=reorder' },
+        { label: 'Voorraadrapporten', href: '/admin/voorraad?view=reports' },
+        { label: 'Voorraadlogboek', href: '/admin/voorraad?view=journal' },
+        { label: 'Artikellijst', href: '/admin/voorraad/artikelen' },
+        { label: 'Analyse en rapporten', href: '/admin/voorraad/analyse' },
+        { label: 'Montage', href: '/admin/voorraad/montage' },
+      ],
+    },
+    { label: 'Picklijst', icon: PackageCheck, href: '/admin/bestellingen/picken' },
+    { label: 'Retouren', icon: Undo2, href: '/admin/retouren' },
+    { label: 'Inkoop', icon: Package, href: '/admin/inkoop' },
+    { label: 'Leveranciers', icon: Truck, href: '/admin/leveranciers', office: true },
+    {
+      label: 'Artikelbeheer', icon: Tags, office: true, children: [
+        { label: 'Datakwaliteit', href: '/admin/artikelbeheer/kwaliteit' },
+        { label: 'Categorieën', href: '/admin/artikelbeheer/categorieen' },
+        { label: 'Bulk bewerken', href: '/admin/artikelbeheer/bulk' },
+        { label: 'Import en export', href: '/admin/artikelbeheer/import' },
+      ],
+    },
+  ],
+};
 
-/** Autosleutel24 keeps its own menus (AdminNav) and only borrows the shell; monteurs get theirs. */
+const AGENT_CENTRE: Item = { label: 'Agentcentrum', icon: AudioLines, office: true, children: [
+  { label: 'Spraakgesprekken', href: '/admin/bot-conversations?channel=phone' },
+  { label: 'WhatsApp-gesprekken', href: '/admin/bot-conversations?channel=whatsapp' },
+  { label: 'Alle botgesprekken', href: '/admin/bot-conversations' },
+] };
+
 const fromNav = (label: string, nav: NavItem[]): Group[] => [{ label, items: nav.map((item) => ({ label: item.label, icon: item.icon, href: item.href, children: item.children })) }];
 const AUTOSLEUTEL_OFFICE = fromNav('Kantoor', OFFICE_NAV);
 const AUTOSLEUTEL_MONTEUR = fromNav('Monteur', MONTEUR_NAV);
 
 /**
- * Autosleutel24 with CRM_WAREHOUSE=1: the same Magazijn block KeyForCars has
- * (stock ledger, pick list, purchasing; shipping is appended per role below),
- * the agent centre, and the finance, bank and webshop-margin entries folded
- * into the existing Geld and Rapporten menus. The old store-and-vans stock
- * keeps its place under Voorraad at its new address.
+ * CRM_WAREHOUSE=1: the Magazijn block (stock ledger, pick list, purchasing;
+ * shipping is appended per role below), the agent centre, and the finance,
+ * bank and webshop-margin entries folded into the existing Geld and Rapporten
+ * menus. The old store-and-vans stock keeps its place under Voorraad at its
+ * new address.
  */
 const withWarehouse = (groups: Group[]): Group[] => {
   const [kantoor] = groups;
@@ -133,19 +98,17 @@ const withWarehouse = (groups: Group[]): Group[] => {
     if (item.label === 'Geld') return { ...item, children: [{ label: 'Financieel overzicht', href: '/admin/financien' }, {label:'Inkoop',href:'/admin/inkoop'}, ...(item.children ?? []), { label: 'Bank', href: '/admin/bank/transacties' }, { label: 'Debiteuren & crediteuren', href: '/admin/rekeningen' }] };
     return item;
   });
-  const agentCentre = GROUPS.flatMap((group) => group.items).find((item) => item.label === 'Agentcentrum');
-  const magazijn = GROUPS.find((group) => group.label === 'Magazijn')!;
-  return [{ label: 'Kantoor', items: agentCentre ? [...items, agentCentre] : items }, magazijn];
+  return [{ label: 'Kantoor', items: [...items, AGENT_CENTRE] }, MAGAZIJN];
 };
 const AUTOSLEUTEL_OFFICE_WAREHOUSE = withWarehouse(AUTOSLEUTEL_OFFICE);
 
 const TITLES: Record<string, string> = {
   overzicht: 'Dashboard', orders: 'Bestellingen', klanten: 'Klanten', voorraad: 'Voorraad', inkoop: 'Inkoop', leads: 'Leads',
   'bot-conversations': 'ElevenLabs-gesprekken', gesprekken: 'Gesprekken', financien: 'Financieel overzicht', facturen: 'Facturen', uitgaven: 'Uitgaven', bank: 'Bank', 'best-verkocht': 'Best verkocht', winst: 'Winst & verbruik',
-  rapport: 'Prestaties', attributie: 'Advertentieklikken', conversies: 'Conversies naar Google', instellingen: 'Instellingen', budget: 'AI-budget', 'agent-centrum': 'Agentcentrum', p: 'Productzoeker', nieuw: 'Nieuw', lijst: 'Alle leads', jobs: 'Planning',
+  rapport: 'Prestaties', attributie: 'Advertentieklikken', conversies: 'Conversies naar Google', instellingen: 'Instellingen', budget: 'AI-budget', p: 'Productzoeker', nieuw: 'Nieuw', lijst: 'Alle leads', jobs: 'Planning',
   verzending: 'Verzending', agenda: 'Werkplaatsagenda', verzendinstellingen: 'Verzendinstellingen', bestellingen: 'Bestellingen', picken: 'Picklijst',
   bussen: 'Magazijn en bussen', webshop: 'Webshopmarge', montage: 'Montage', rapporten: 'Alle rapporten', kassa: 'Kassa',
-  retouren: 'Retouren', 'webshop-sync': 'Webshop-sync', koppelingen: 'Webshopkoppelingen',
+  retouren: 'Retouren',
   // Autosleutel24 screens
   aanbod: 'Aanbod', biedingen: 'Biedingen', vandaag: 'Vandaag', monteurs: 'Monteurs', bestellen: 'Onderdelen bestellen', kas: 'Kas & uitbetalingen',
   tarieven: 'Tarieven', monteurtarieven: 'Monteurtarieven', rapportage: 'Rapportage', 'whatsapp-advertenties': 'WhatsApp en advertenties', 'whatsapp-analyse': 'WhatsApp-analyse', klikfraude: 'Klikfraude',
@@ -158,18 +121,6 @@ const TITLES: Record<string, string> = {
   // Product master data and staff (0134)
   artikelbeheer: 'Artikelbeheer', kwaliteit: 'Datakwaliteit', categorieen: 'Categorieën', bulk: 'Bulk bewerken', import: 'Import en export', medewerkers: 'Medewerkers',
 };
-
-/**
- * Never link to a screen this install answers with 404 (installServes, the
- * same rule src/proxy.ts enforces): hidden links are dropped, and a menu whose
- * links are all hidden disappears with them.
- */
-const served = (href: string) => installServes(href.split('?')[0]);
-const servedItems = (items: Item[]): Item[] => items.flatMap((item) => {
-  if (!item.children) return item.href && served(item.href) ? [item] : [];
-  const children = item.children.filter((child) => served(child.href));
-  return children.length ? [{ ...item, children }] : [];
-});
 
 /** The stock screens use the camera, which needs a full page load for its Permissions-Policy. */
 const fullLoad = (href: string) => /^\/admin\/voorraad(?:[/?]|$)/.test(href);
@@ -190,8 +141,8 @@ function CloseMobileSidebar({ location }: { location: string }) {
   return null;
 }
 
-export default function KfcShell({ children, role, email, initials, photoUrl, fontClass = '', shippingTest = false }: {
-  children: ReactNode; role: CrmRole | null; email: string | null; initials: string; photoUrl: string | null; fontClass?: string; shippingTest?: boolean;
+export default function KfcShell({ children, role, email, initials, photoUrl, fontClass = '' }: {
+  children: ReactNode; role: CrmRole | null; email: string | null; initials: string; photoUrl: string | null; fontClass?: string;
 }) {
   // Radix portals (mobile menu sheet, dialogs, dropdowns) render on <body>, outside the shell div:
   // the class on body makes the kfc.css resets and tokens reach them too.
@@ -217,16 +168,15 @@ export default function KfcShell({ children, role, email, initials, photoUrl, fo
   const crumbs = pathname === '/admin/verzending/nieuw' ? ['Verzending', 'Zending maken'] : pathname.replace(/^\/admin\/?/, '').split('/').filter((part) => TITLES[part]).map((part) => TITLES[part]);
   const shippingPages = [
     ...(office ? [{ label: 'Zending maken', href: '/admin/verzending/nieuw' }] : []),
-    ...(shippingTest ? [{ label: 'Verzendwachtrij', href: '/admin/verzending' }] : []),
     ...(office ? [{ label: 'Verzendinstellingen', href: '/admin/verzendinstellingen' }] : []),
   ];
   const shipping: Group = {
     label: 'Verzending',
     items: shippingPages.length ? [{ label: 'Verzending', icon: PackageCheck, children: shippingPages }] : [],
   };
-  const groups = IS_KEYFORCARS ? GROUPS : role === 'monteur' ? AUTOSLEUTEL_MONTEUR : WAREHOUSE ? AUTOSLEUTEL_OFFICE_WAREHOUSE : AUTOSLEUTEL_OFFICE;
+  const groups = role === 'monteur' ? AUTOSLEUTEL_MONTEUR : WAREHOUSE ? AUTOSLEUTEL_OFFICE_WAREHOUSE : AUTOSLEUTEL_OFFICE;
   const visible = groups.flatMap((group) => {
-    const items = servedItems(group.items.filter((item) => office || !item.office));
+    const items = group.items.filter((item) => office || !item.office);
     if (WAREHOUSE && group.label === 'Kantoor' && office) {
       items.push({ label: 'Medewerkers', href: '/admin/instellingen/medewerkers', icon: UserCog });
     }

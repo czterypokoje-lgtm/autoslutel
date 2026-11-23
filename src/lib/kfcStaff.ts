@@ -1,7 +1,6 @@
 import 'server-only';
 import type { User } from '@supabase/supabase-js';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { IS_KEYFORCARS } from '@/config/install';
 import { CRM_ROLES, type CrmRole, type CrmUser } from '@/lib/crmSession';
 
 /*
@@ -65,11 +64,11 @@ async function allUsers(): Promise<User[]> {
   return users;
 }
 
-/** Everyone with a CRM role (or none yet), monteurs only on Autosleutel24. */
+/** Everyone with a CRM role (or none yet), monteurs included. */
 export async function listStaff(): Promise<StaffMember[]> {
   return (await allUsers())
     .map(toMember)
-    .filter((m) => m.email && (m.role === null || m.role !== 'monteur' || !IS_KEYFORCARS))
+    .filter((m) => m.email)
     .sort((a, b) => (STAFF_ROLES.indexOf(a.role ?? 'monteur') - STAFF_ROLES.indexOf(b.role ?? 'monteur')) || a.email.localeCompare(b.email));
 }
 
