@@ -92,6 +92,23 @@ export function redactExample(text: unknown): string {
 
 /* ── what an agent sees ──────────────────────────────────────────────── */
 
+/**
+ * The rows the webshop agent may see. The table was written for the phone
+ * agent too: rows about arrival times, the service area or the phone agent's
+ * own tools (get_price, get_slots, check_car, book_job, escalate) would send
+ * the webshop agent looking for tools it does not have, or quoting on-site
+ * rules to a parcel customer. Two filters, no migration: whole topics that are
+ * on-site only, and any row that names a phone-only tool.
+ */
+const PHONE_ONLY_TOPICS = new Set(['arrival', 'service_area', 'duration', 'cancellation', 'documents']);
+const PHONE_ONLY_TOOL = /\b(get_price|get_slots|check_car|book_job|escalate)\b/i;
+
+export function forShopAgent(rows: KnowledgeRow[]): KnowledgeRow[] {
+  return (Array.isArray(rows) ? rows : []).filter((r) =>
+    !PHONE_ONLY_TOPICS.has(r.topic) && !PHONE_ONLY_TOOL.test(`${r.answer ?? ''} ${r.rule ?? ''}`));
+}
+
+
 export type AgentFact = { topic: string; question: string; answer: string | null; rule: string | null };
 export type AgentView = {
   facts: AgentFact[];

@@ -12,7 +12,7 @@
  * environment variable serves nobody rather than serving everybody.
  */
 
-export type AgentAuth = { ok: true } | { ok: false; status: number; error: string };
+export type AgentAuth = { ok: true; agent?: 'phone' | 'shop' } | { ok: false; status: number; error: string };
 
 /** Constant-time-ish compare, so a wrong token leaks no timing. */
 function same(a: string, b: string): boolean {
@@ -72,9 +72,9 @@ export function checkShopAgent(request: Request): AgentAuth {
 /** The shared reads (agent_knowledge): either agent's token will do. */
 export function checkAnyAgent(request: Request): AgentAuth {
   const phone = checkAgent(request);
-  if (phone.ok) return phone;
+  if (phone.ok) return { ok: true, agent: 'phone' };
   const shop = checkShopAgent(request);
-  if (shop.ok) return shop;
+  if (shop.ok) return { ok: true, agent: 'shop' };
   /* 401 when at least one secret is configured, so a wrong token reads as wrong, not as down. */
   return phone.status === 401 || shop.status === 401 ? { ok: false, status: 401, error: 'Geen toegang' } : phone;
 }

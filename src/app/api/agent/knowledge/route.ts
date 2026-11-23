@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { checkAnyAgent } from '@/lib/agentAuth';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
-import { TOPICS, forAgent, isTopic, type KnowledgeRow } from '@/lib/agentKnowledge';
+import { TOPICS, forAgent, forShopAgent, isTopic, type KnowledgeRow } from '@/lib/agentKnowledge';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,5 +34,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Lezen mislukt' }, { status: 500 });
   }
 
-  return NextResponse.json(forAgent((data ?? []) as KnowledgeRow[], { topic, q }));
+  /* The webshop agent sees only what applies to a parcel customer (forShopAgent). */
+  const rows = (data ?? []) as KnowledgeRow[];
+  return NextResponse.json(forAgent(auth.agent === 'shop' ? forShopAgent(rows) : rows, { topic, q }));
 }

@@ -112,3 +112,19 @@ test('handover routes are own keys only, and promise only what happened', () => 
   assert.match(handoverSay('klacht', true, true), /twee werkdagen/);
   assert.match(ROUTES.monteur.say, /06 11 75 12 31/);
 });
+
+test('the webshop agent does not see the phone agent\'s on-site rows', async () => {
+  const { forShopAgent } = await import('../../src/lib/agentKnowledge.ts');
+  const row = (key, topic, answer = 'x', rule = null) => ({ key, topic, question: key, answer, rule, status: 'confirmed', asked_count: 0, last_asked_at: null, example: null, source: null, approved_at: null });
+  const kept = forShopAgent([
+    row('shipping.cost', 'shipping'),
+    row('returns.policy', 'returns'),
+    row('arrival.slots_only', 'arrival'),
+    row('service_area.radius', 'service_area'),
+    row('prices.rule', 'prices', null, 'Default is only the get_price figure.'),
+    row('key_types.brand_coverage', 'key_types', 'Coverage is decided per vehicle with the check_car tool.'),
+    row('rule.handover', 'other', null, 'Hand over (escalate) for: child or animal in the car'),
+    row('warranty.webshop', 'warranty'),
+  ]).map((r) => r.key);
+  assert.deepEqual(kept, ['shipping.cost', 'returns.policy', 'warranty.webshop']);
+});
