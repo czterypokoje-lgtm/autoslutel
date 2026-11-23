@@ -65,8 +65,12 @@ dan weigert `src/lib/agentAuth.ts` élk verzoek met 503 — met opzet.
 
 Zonder dat secret in Vercel antwoordt de route 401 op alles, ook op echte
 verzoeken (`src/lib/elevenlabsWebhook.ts` faalt dicht). Hierna landt elk gesprek
-in `/admin/gesprekken` én in Telegram, inclusief het transcript. Dat is je
-vangnet: zelfs een gesprek dat helemaal misliep, kun je nalezen.
+in `/admin/gesprekken`, met transcript; Telegram krijgt alleen de uitkomst en de duur
+(Telegram heeft geen verwerkersovereenkomst, zie [`webshop-agent-compliance.md`](webshop-agent-compliance.md)).
+Dat is je vangnet: zelfs een gesprek dat helemaal misliep, kun je nalezen in Gesprekken.
+Gesprekken worden na 12 maanden (telefoon/WhatsApp) of 6 maanden (webchat) automatisch
+verwijderd door `/api/cron/privacy-retention`; die van andere merken in dezelfde workspace
+worden niet opgeslagen.
 
 ## 4 · Telefoonnummer — hier kan het stilvallen
 
@@ -143,8 +147,11 @@ drie uur 's nachts te laten bellen.
   `eleven_v3_conversational` (~280 ms) als je de expressievere stem belangrijker
   vindt dan de wachttijd. Niet `eleven_turbo_v2_5`: afgeschreven.
 - **First message:** één zin, en niet "waarmee kan ik u helpen" — de meeste
-  bellers staan naast hun auto: *"Autosleutel24, u spreekt met de assistent —
-  wat is er met de sleutel?"*
+  bellers staan naast hun auto: *"Autosleutel24, u spreekt met een AI-assistent;
+  dit gesprek wordt vastgelegd. Wat is er met de sleutel?"* "AI" moet erin
+  (AI Act art. 50, geldt sinds 2 augustus 2026).
+- **Privacy:** Advanced → Data retention 30 dagen; profiel → "Improve the models"
+  uit. Zie [`webshop-agent-compliance.md`](webshop-agent-compliance.md) §2.
 - **Tools:** de vijf hierboven, plus de systeemtools `end_call` en
   `transfer_to_number` (§6).
 - **Analysis → Evaluation criteria:** twee stuks. **geboekt** — "Is er een klus
@@ -333,7 +340,7 @@ en de CRM, zoals bedoeld.
 | agent valt stil na een vraag | tool geeft geen JSON — bijna altijd Vercel Deployment Protection: de agent krijgt een inlogpagina |
 | elke tool 401 | `AGENT_API_TOKEN` in de console ≠ die op Vercel |
 | elke tool 503 | token staat niet op Vercel, of is korter dan 24 tekens |
-| geen transcript in Telegram | `ELEVENLABS_WEBHOOK_SECRET` ontbreekt of hoort bij een andere webhook → route antwoordt 401 |
+| geen melding in Telegram / geen gesprek in Gesprekken | `ELEVENLABS_WEBHOOK_SECRET` ontbreekt of hoort bij een andere webhook → route antwoordt 401 (transcripten gaan bewust niet meer naar Telegram) |
 | doorverbinden werkt, maar je hoort niet waarom | native nummer in plaats van Twilio-import (§4) |
 | jouw telefoon gaat niet bij een noodgeval | `OFFICE_PHONE`, `ELEVENLABS_BRIEFING_AGENT_ID` of `ELEVENLABS_OUTBOUND_PHONE_NUMBER_ID` leeg — `escalate` geeft dan `called: false` terug |
 | briefing-agent zegt "onbekend" bij alles | variabelenamen wijken af van de vier in §7 |

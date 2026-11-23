@@ -157,31 +157,13 @@ function minutesSeconds(totalSeconds: number | undefined): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-/** Telegram caps a message at 4096 characters — split on line breaks, never mid-line. */
-function chunkText(text: string, maxLen: number): string[] {
-  const lines = text.split('\n');
-  const chunks: string[] = [];
-  let current = '';
-  for (const line of lines) {
-    const candidate = current ? `${current}\n${line}` : line;
-    if (candidate.length > maxLen && current) {
-      chunks.push(current);
-      current = line;
-    } else {
-      current = candidate;
-    }
-  }
-  if (current) chunks.push(current);
-  return chunks;
-}
-
 /**
  * ElevenLabs' post-call webhook, for the AI agent that answers the phone and
  * replies on WhatsApp. This is the only place a conversation enters our own
  * systems — everything else lives on ElevenLabs' side.
  *
  * Does two things, in this order: writes the conversation to
- * agent_conversations, then pushes outcome + summary + transcript to every
+ * agent_conversations, then pushes the outcome (no summary, no transcript) to every
  * office user who has connected their Telegram (admin_telegram). The write
  * comes first because it is the half that cannot be redone later.
  */
@@ -211,18 +193,17 @@ export async function POST(request: Request) {
   const summary = data.analysis?.transcript_summary?.trim();
 
   const shopAgent = isShopAgent(data.agent_id);
+  /*
+   * Telegram gets the outcome and where to read it, not the summary or the
+   * transcript: Telegram has no processing agreement with us and keeps
+   * messages indefinitely (docs/webshop-agent-compliance.md). The full
+   * conversation is in Gesprekken, which is the record anyway.
+   */
   const header = [
     '📞 Gesprek met de spraakassistent afgerond',
     `Uitkomst: ${outcome} · Duur: ${duration}`,
-    summary ? `\nSamenvatting:\n${summary}` : null,
-  ]
-    .filter(Boolean)
-    .join('\n');
-
-  const lines = (data.transcript ?? [])
-    .filter((turn) => turn.message)
-    .map((turn) => `${turn.role === 'agent' ? 'Agent' : 'Klant'}: ${turn.message}`);
-  const transcriptText = lines.length ? lines.join('\n') : null;
+    'Samenvatting en transcript staan in Gesprekken.',
+  ].join('\n');
 
   after(async () => {
     const admin = createSupabaseAdminClient();
@@ -235,12 +216,19 @@ export async function POST(request: Request) {
      * onConflict on conversation_id makes a retried delivery a no-op instead of
      * a duplicate — webhooks retry, and ElevenLabs is no exception.
      */
+    /*
+     * Another brand's agent in the same ElevenLabs workspace: not our customer,
+     * and we have no purpose to keep their words. Nothing is stored; the
+     * nightly privacy-retention job removes rows stored before this change.
+     */
+    if (!ownAgent(data.agent_id)) return;
+
     const { error: storeError } = await admin
       .from('agent_conversations')
       .upsert(
         {
           conversation_id: data.conversation_id ?? `onbekend-${Date.now()}`,
-          channel: ownAgent(data.agent_id) ? detectChannel(data) : 'extern',
+          channel: detectChannel(data),
           agent_id: data.agent_id ?? null,
           phone: detectPhone(data),
           status: data.status ?? null,
@@ -256,8 +244,6 @@ export async function POST(request: Request) {
       console.error('Storing agent conversation failed:', storeError.message);
     }
 
-    // Another brand's conversation is kept for the record, but it is not ours to be woken for.
-    if (!ownAgent(data.agent_id)) return;
     /*
      * The webshop chat is public and busy; a transcript per chat would bury the
      * phone calls in Telegram. Its returns and handovers already reach the
@@ -274,13 +260,8 @@ export async function POST(request: Request) {
     }
     if (!recipients?.length) return;
 
-    const chunks = transcriptText ? chunkText(transcriptText, 3900) : [];
     for (const recipient of recipients) {
       await sendTelegram(recipient.telegram_chat_id, header);
-      for (const [index, chunk] of chunks.entries()) {
-        const label = chunks.length > 1 ? `Transcript (${index + 1}/${chunks.length}):\n` : 'Transcript:\n';
-        await sendTelegram(recipient.telegram_chat_id, `${label}${chunk}`);
-      }
     }
   });
 

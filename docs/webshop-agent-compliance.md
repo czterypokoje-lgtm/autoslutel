@@ -23,7 +23,7 @@ worden.** Dit document is geen juridisch advies.
 - `agent_knowledge` `returns.policy` en `rule.shop_vs_onsite` zijn bijgewerkt in migratie
   `0143_returns_policy_eu_law.sql` (de oude tekst "opened items cannot be returned" was onjuist).
 
-**Ontbreekt nog in de webshop (boeterisico):** sinds **19 juni 2026** verplicht art. 11a CRD (Richtlijn
+**Herroepingsknop (gebouwd in de shop, `/herroepen` + link in de footer):** sinds **19 juni 2026** verplicht art. 11a CRD (Richtlijn
 2023/2673, BW 6:230oa) een **herroepingsknop** op de website ("hier herroepen" of vergelijkbaar), met een
 bevestigingsstap en een ontvangstbevestiging op een duurzame drager. De chat vervangt die knop niet.
 
@@ -59,14 +59,14 @@ belangenafweging en recht van bezwaar).
 | # | Wat | Status |
 |---|---|---|
 | 1 | Eerste bericht zegt expliciet **AI** (AI Act art. 50, geldt sinds 2 aug 2026) | tekst hieronder; in de console zetten |
-| 2 | Privacyverklaring: alinea over de AI-assistent en ElevenLabs; verwerkerslijst aanvullen (ElevenLabs, Twilio, Anthropic, Upstash, Telegram, OpenAI) | tekst hieronder; in de shop plaatsen |
-| 3 | Melding bij de Chat-knop | tekst hieronder; in `ChatButton` |
-| 4 | Telegram zonder klantgegevens | **gedaan** voor de webshop-agent; de telefoniste stuurt nog volledige transcripten |
-| 5 | Bewaartermijn `agent_conversations` (webchat 6 mnd, telefoon 12 mnd) met automatisch opschonen | open: cron + migratie |
-| 6 | Gesprekken van andere merken (`extern`) niet opslaan, of een overeenkomst | open: beslissing eigenaar |
+| 2 | Privacyverklaring: alinea over de AI-assistent en ElevenLabs; verwerkerslijst aanvullen | **gedaan** in de shop (`/privacybeleid` 4a en 4b) |
+| 3 | Melding bij de Chat-knop, vóór er iets van ElevenLabs laadt | **gedaan** in de shop (`ChatButton`) |
+| 4 | Telegram zonder klantgegevens | **gedaan**: webshop-agent label + onderwerp; telefoniste alleen uitkomst en duur. Uitzondering: `escalate` (noodgeval/terugbellen) stuurt naam en nummer, omdat iemand 's nachts moet kunnen terugbellen |
+| 5 | Bewaartermijn `agent_conversations` (webchat 6 mnd, telefoon/WhatsApp 12 mnd) met automatisch opschonen | **gedaan**: `/api/cron/privacy-retention`, dagelijks 02:30 (`vercel.json`) |
+| 6 | Gesprekken van andere merken (`extern`) niet opslaan | **gedaan**: de webhook slaat ze niet meer op; de cron verwijdert de oude |
 | 7 | Verwerkingsregister (art. 30), belangenafweging, korte DPIA | open: tekst hieronder als basis |
 | 8 | Inzage/verwijderen: zoeken in transcripten op e-mail/bestelnummer, ook bij ElevenLabs verwijderen | open |
-| 9 | Widget-script zelf hosten in plaats van unpkg | open (shop) |
+| 9 | Widget-script zelf hosten in plaats van unpkg | **gedaan** (`public/vendor`). Let op: de widget laadt zelf nog een Google-lettertype en bevat FingerprintJS-code; vermeld in 4b, laat een FG beoordelen |
 | 10 | Minimale tool-output, eigendomscheck, limieten, RLS, ondertekende webhook, AI-modus uit voor agent-threads | **gedaan** |
 
 **Jurist/FG:** is een DPIA verplicht; rol onder de AI Act (aanbieder of gebruiksverantwoordelijke); Telegram als
