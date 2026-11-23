@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { timingSafeEqual } from 'node:crypto';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import {
@@ -1332,7 +1333,16 @@ async function handleNewJob(chatId: number | string, text: string) {
  */
 export async function POST(request: Request) {
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  if (!secret || request.headers.get('x-telegram-bot-api-secret-token') !== secret) {
+  const provided = request.headers.get('x-telegram-bot-api-secret-token');
+  // `!==` on secrets leaks timing info char-by-char; compare constant-time
+  // instead. Buffers of unequal length can't go through timingSafeEqual, so
+  // that case (and the unset-secret case) just fails closed directly.
+  const authorized =
+    !!secret &&
+    !!provided &&
+    Buffer.byteLength(provided) === Buffer.byteLength(secret) &&
+    timingSafeEqual(Buffer.from(provided), Buffer.from(secret));
+  if (!authorized) {
     return NextResponse.json({ error: 'Niet geautoriseerd' }, { status: 401 });
   }
 

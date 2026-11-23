@@ -2,6 +2,7 @@
 
 import { reportLeadConversion } from '@/lib/leadTracking';
 import { tagLeadClaritySession } from '@/lib/clarity';
+import WhatsAppNotice from '@/components/WhatsAppNotice/WhatsAppNotice';
 
 import React, { useState } from 'react';
 
@@ -191,6 +192,7 @@ export default function ContactForm() {
       >
         {status === 'submitting' ? 'Bezig met verzenden...' : '📋 Offerte Aanvragen'}
       </button>
+      <WhatsAppNotice />
     </form>
   );
 }

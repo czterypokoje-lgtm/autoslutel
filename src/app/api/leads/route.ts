@@ -7,6 +7,7 @@ import { toE164NL } from '@/lib/phone';
 import { sendOpenAiEvent } from '@/lib/openaiAds';
 import { leadToken } from '@/lib/leadToken';
 import { recordFormSubmission } from '@/lib/inbox/form';
+import { WHATSAPP_NOTICE_VERSION } from '@/components/WhatsAppNotice/version';
 
 /**
  * Lead capture.
@@ -183,6 +184,10 @@ export async function POST(request: Request) {
       source,
       consent_marketing: body.consentMarketing === true,
       consent_at: body.consentMarketing === true ? new Date().toISOString() : null,
+      // Every public lead form now shows the WhatsApp-review notice, so every
+      // insert records which wording the visitor actually saw — independent
+      // of consent_marketing, which stays about marketing opt-in only.
+      consent_text_version: WHATSAPP_NOTICE_VERSION,
       scenario,
       quoted_price: quotedPrice,
       /* Enriched row only — the legacy fallback shape predates this column,

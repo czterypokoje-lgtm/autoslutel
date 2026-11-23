@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import styles from './KentekenForm.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
+import WhatsAppNotice from '@/components/WhatsAppNotice/WhatsAppNotice';
 import { reportLeadConversion } from '@/lib/leadTracking';
 import { tagLeadClaritySession } from '@/lib/clarity';
 
@@ -186,6 +187,10 @@ export default function KentekenForm() {
           >
             {isSubmitting ? 'Verzenden...' : 'Prijs opvragen'}
           </button>
+
+          <div style={{ marginTop: '0.75rem' }}>
+            <WhatsAppNotice />
+          </div>
 
           <span style={{ color: '#475569', display: 'block', textAlign: 'center', marginTop: '1rem' }}>of bel direct</span>
 

@@ -4,6 +4,7 @@ import { priceFor, type PriceRow } from '@/lib/dispatchPricing';
 import { isScenario, SCENARIO_INFO, type Scenario } from '@/lib/scenarios';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { repairMake, repairModel, repairYear, repairPostcode, repairPhone } from '@/lib/agentInput';
+import { recordAgentQuote } from '@/lib/leadQuotes';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,50 +81,69 @@ export async function POST(request: Request) {
     }
   };
 
+  const supabase = createSupabaseAdminClient();
+
   // Lock work and repairs are labour on the customer's own hardware — flat,
   // and never depended on either catalogue.
+  let total: number;
+  let confidence: 'model' | 'merk' = 'model';
+
   if (!info.programming) {
-    return NextResponse.json({
-      quoted: true,
-      scenario,
-      scenario_label: info.label,
-      total: info.labour,
-      minutes: info.minutes,
-      confidence: 'model',
-      say: say(info.labour, scenario),
-    });
+    total = info.labour;
+  } else {
+    const { data: priceRows } = await supabase
+      .from('dispatch_pricing')
+      .select('make, model, scenario, from_year, to_year, keyless, price')
+      .eq('scenario', scenario);
+    const rows = (priceRows ?? []) as PriceRow[];
+
+    const result = priceFor(rows, car, scenario, keyless);
+
+    /*
+     * Every refusal is written down with the car and the postcode. This is not
+     * an error log — it is the recruitment list, and it answers "which car and
+     * which region do we add a price for next" with evidence instead of a hunch.
+     */
+    if (!result) {
+      await logRefusal('geen_prijs', 'geen_tarief');
+      return NextResponse.json({
+        quoted: false,
+        reason: 'geen_prijs',
+        say: 'Voor deze auto heb ik geen prijs paraat. Ik laat een collega u terugbellen met een prijs.',
+      });
+    }
+    total = result.price;
+    confidence = result.confidence;
   }
 
-  const supabase = createSupabaseAdminClient();
-  const { data: priceRows } = await supabase
-    .from('dispatch_pricing')
-    .select('make, model, scenario, from_year, to_year, keyless, price')
-    .eq('scenario', scenario);
-  const rows = (priceRows ?? []) as PriceRow[];
-
-  const result = priceFor(rows, car, scenario, keyless);
-
-  /*
-   * Every refusal is written down with the car and the postcode. This is not an
-   * error log — it is the recruitment list, and it answers "which car and
-   * which region do we add a price for next" with evidence instead of a hunch.
-   */
-  if (!result) {
-    await logRefusal('geen_prijs', 'geen_tarief');
-    return NextResponse.json({
-      quoted: false,
-      reason: 'geen_prijs',
-      say: 'Voor deze auto heb ik geen prijs paraat. Ik laat een collega u terugbellen met een prijs.',
-    });
-  }
-
-  return NextResponse.json({
+  const response = {
     quoted: true,
     scenario,
     scenario_label: info.label,
-    total: result.price,
+    total,
     minutes: info.minutes,
-    confidence: result.confidence,
-    say: say(result.price, scenario),
-  });
+    confidence,
+    say: say(total, scenario),
+  };
+
+  /*
+   * Every price actually said out loud becomes a confirmed lead_quotes row —
+   * docs/lead-quotes.md §3.2. A logging failure must never cost the caller
+   * their answer, so it is swallowed here rather than left to bubble.
+   */
+  try {
+    await recordAgentQuote(supabase, {
+      make: car.make,
+      model: car.model,
+      year: car.year,
+      scenario,
+      price: total,
+      evidenceRef: asText(body.conversation_id, 80),
+      evidenceQuote: response.say,
+    });
+  } catch (err) {
+    console.error('agent quote logging failed:', err);
+  }
+
+  return NextResponse.json(response);
 }

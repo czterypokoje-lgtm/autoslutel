@@ -5,6 +5,7 @@ import { tagLeadClaritySession } from '@/lib/clarity';
 
 import React, { useState } from 'react';
 import styles from './B2BForm.module.css';
+import WhatsAppNotice from '@/components/WhatsAppNotice/WhatsAppNotice';
 
 /**
  * The enquiry form on the zakelijk pages.
@@ -141,6 +142,7 @@ export default function B2BForm({
       <button className={styles.submit} type="submit" disabled={sending}>
         {sending ? 'Versturen…' : 'Voorstel aanvragen'}
       </button>
+      <WhatsAppNotice />
     </form>
   );
 }

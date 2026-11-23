@@ -11,6 +11,7 @@ import { CAR_MODELS, BRANDS_LIST, SERVICES_LIST, YEARS_LIST } from "@/data/carMo
 import { SITE_CONFIG } from "@/config/site.config";
 import { reportLeadConversion } from "@/lib/leadTracking";
 import { tagLeadClaritySession } from "@/lib/clarity";
+import WhatsAppNotice from "@/components/WhatsAppNotice/WhatsAppNotice";
 import styles from "./LeadCaptureForm.module.css";
 
 declare global {
@@ -334,6 +335,10 @@ export default function LeadCaptureForm({ city = "", phone, theme = 'dark', init
         </button>
       </form>
 
+      {/* theme defaults to 'dark' (hero overlay); only 'light' gets dark-on-white text. */}
+      <div style={{ marginTop: '0.6rem' }}>
+        <WhatsAppNotice dark={theme !== 'light'} />
+      </div>
     </div>
   );
 }

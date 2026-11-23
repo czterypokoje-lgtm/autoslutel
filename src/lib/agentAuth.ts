@@ -88,3 +88,18 @@ export const asPostcode = (value: unknown): string | null => {
   const text = String(value ?? '').toUpperCase().replace(/\s+/g, '');
   return /^\d{4}[A-Z]{0,2}$/.test(text) ? text : null;
 };
+
+/**
+ * The owner's personal agent: tasks and the owner's Google Calendar. Its own
+ * secret, like the workshop agent's, so the customer-facing telephonist's
+ * token can never reach the owner's agenda even if a tool is wired to the
+ * wrong agent in the ElevenLabs console.
+ */
+export function checkOwnerAgent(request: Request): AgentAuth {
+  const secret = process.env.OWNER_AGENT_TOKEN;
+  if (!secret || secret.length < 32) return { ok: false, status: 503, error: 'Niet beschikbaar' };
+  const header = request.headers.get('authorization') ?? '';
+  const token = header.startsWith('Bearer ') ? header.slice(7).trim() : '';
+  if (!token || !same(token, secret)) return { ok: false, status: 401, error: 'Geen toegang' };
+  return { ok: true };
+}

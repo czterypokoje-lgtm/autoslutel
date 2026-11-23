@@ -86,7 +86,10 @@ export function withinServiceWindow(lastInboundAt: string | null): boolean {
 
 export const whatsappConfigured = () => Boolean(process.env.WHATSAPP_PHONE_NUMBER_ID && process.env.WHATSAPP_ACCESS_TOKEN);
 
-export async function sendWhatsAppText(toE164: string, text: string): Promise<{ ok: true; id: string } | { ok: false; error: string }> {
+type SendResult = { ok: true; id: string } | { ok: false; error: string };
+
+/** POST one message payload to the Graph API. Shared by the text and template senders below. */
+async function postMessage(body: Record<string, unknown>): Promise<SendResult> {
   const phoneId = process.env.WHATSAPP_PHONE_NUMBER_ID;
   const token = process.env.WHATSAPP_ACCESS_TOKEN;
   if (!phoneId || !token) return { ok: false, error: 'WhatsApp is niet geconfigureerd' };
@@ -94,13 +97,7 @@ export async function sendWhatsAppText(toE164: string, text: string): Promise<{ 
     const res = await fetch(`${GRAPH}/${phoneId}/messages`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messaging_product: 'whatsapp',
-        recipient_type: 'individual',
-        to: toE164.replace(/\D/g, ''),
-        type: 'text',
-        text: { preview_url: false, body: text.slice(0, 4096) },
-      }),
+      body: JSON.stringify({ messaging_product: 'whatsapp', recipient_type: 'individual', ...body }),
       signal: AbortSignal.timeout(10_000),
     });
     const json = (await res.json().catch(() => null)) as { messages?: { id: string }[]; error?: { message?: string } } | null;
@@ -111,4 +108,29 @@ export async function sendWhatsAppText(toE164: string, text: string): Promise<{ 
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : 'Verzenden mislukt' };
   }
+}
+
+export async function sendWhatsAppText(toE164: string, text: string): Promise<SendResult> {
+  return postMessage({
+    to: toE164.replace(/\D/g, ''),
+    type: 'text',
+    text: { preview_url: false, body: text.slice(0, 4096) },
+  });
+}
+
+/**
+ * A Meta-approved template, the only way to open a chat outside the 24-hour
+ * service window (see withinServiceWindow above) — a business-initiated
+ * review request always is.
+ */
+export async function sendWhatsAppTemplate(toE164: string, name: string, language = 'nl', bodyParams: string[] = []): Promise<SendResult> {
+  return postMessage({
+    to: toE164.replace(/\D/g, ''),
+    type: 'template',
+    template: {
+      name,
+      language: { code: language },
+      components: bodyParams.length ? [{ type: 'body', parameters: bodyParams.map((text) => ({ type: 'text', text })) }] : [],
+    },
+  });
 }

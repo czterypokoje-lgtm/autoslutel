@@ -1,0 +1,22 @@
+/* One short paragraph of small print — no breakpoint needed. */
+.notice {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--gray-600);
+}
+
+.notice a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* For forms rendered on a dark/navy surface (AfspraakForm, VehicleWizard
+   step, LeadCaptureForm's default hero theme). */
+.dark {
+  color: var(--navy-100);
+}
+
+.dark a {
+  color: var(--orange-300);
+}

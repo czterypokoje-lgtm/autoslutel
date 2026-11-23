@@ -6,6 +6,7 @@ import { tagLeadClaritySession } from '@/lib/clarity';
 import React, { useState, useRef } from 'react';
 import styles from './HorizontalKentekenForm.module.css';
 import { SITE_CONFIG } from '@/config/site.config';
+import WhatsAppNotice from '@/components/WhatsAppNotice/WhatsAppNotice';
 import { publicQuoteFor, type StartType, type WorkingKeyType } from '@/lib/publicQuote';
 
 declare global {
@@ -316,6 +317,11 @@ export default function HorizontalKentekenForm() {
             {quote.service} vanaf <strong>€{quote.from}</strong>
           </span>
         )}
+      </div>
+
+      {/* No room for this in the compact inputsRow, so it sits below it. */}
+      <div style={{ marginTop: '0.75rem' }}>
+        <WhatsAppNotice />
       </div>
     </div>
   );

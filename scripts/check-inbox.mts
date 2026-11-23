@@ -11,6 +11,7 @@
 import assert from 'node:assert/strict';
 import { createHmac } from 'node:crypto';
 import { isAutomated, stripQuoted, verifySvix } from '../src/lib/inbox/emailIn.ts';
+import { replyGuard } from '../src/lib/inbox/guard.ts';
 import { parseWebhook, verifyMetaSignature, withinServiceWindow } from '../src/lib/inbox/whatsapp.ts';
 
 let n = 0;
@@ -111,6 +112,33 @@ check('resend: bounces, out-of-office and lists are not conversations', () => {
   assert.equal(isAutomated({ ...base, from: 'mailer-daemon@googlemail.com' }), true);
   assert.equal(isAutomated({ ...base, from: 'noreply@shop.nl' }), true);
   assert.equal(isAutomated({ ...base, subject: 'Automatisch antwoord: Vraag' }), true);
+});
+
+/* ── Reply guard (price/time gate before an auto-send) ──────────────── */
+check('replyGuard: a quoted price verbatim in the facts passes', () => {
+  assert.equal(replyGuard('Dat kost €95.', 'Standaardtarief: €95 per auto.'), null);
+});
+check('replyGuard: a price not in the facts is blocked', () => {
+  assert.equal(replyGuard('Dat kost €150.', 'Standaardtarief: €95 per auto.'), 'price');
+});
+check('replyGuard: a clock time is always blocked', () => {
+  assert.equal(replyGuard('We komen om 14:30 langs.', ''), 'time');
+});
+check('replyGuard: "binnen X minuten" is always blocked', () => {
+  assert.equal(replyGuard('De monteur is binnen 30 minuten ter plaatse.', ''), 'time');
+});
+check('replyGuard: plain text without price or time passes', () => {
+  assert.equal(replyGuard('Bedankt voor uw bericht, we nemen het in behandeling.', ''), null);
+});
+check('replyGuard: space variants around the € sign still match', () => {
+  assert.equal(replyGuard('Dat is € 95 voor dit type sleutel.', 'ons tarief is €95'), null);
+});
+check('replyGuard: "95 euro" and "95,-" are recognised as amounts', () => {
+  assert.equal(replyGuard('Dat is 95 euro.', '95 euro staat in de feiten'), null);
+  assert.equal(replyGuard('Dat is 95,-.', 'elders 50,- genoemd'), 'price');
+});
+check('replyGuard: day-part promises are blocked like a clock time', () => {
+  assert.equal(replyGuard('We plannen dit vandaag nog in.', ''), 'time');
 });
 
 console.log(`check-inbox: ${n} checks passed`);

@@ -12,6 +12,7 @@ import { tagLeadClaritySession } from '@/lib/clarity';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import styles from './VehicleWizard.module.css';
+import WhatsAppNotice from '@/components/WhatsAppNotice/WhatsAppNotice';
 import { serviceLimit } from '@/lib/serviceLimits';
 import { SITE_CONFIG } from '@/config/site.config';
 import {
@@ -498,6 +499,8 @@ export default function VehicleWizard({ fallback, city = '' }: Props) {
                 .
               </p>
             )}
+
+            <WhatsAppNotice />
 
             <button type="submit" className={styles.cta} disabled={sending}>
               {sending ? 'Versturen…' : 'Bel mij terug'}

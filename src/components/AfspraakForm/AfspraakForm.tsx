@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './AfspraakForm.module.css';
+import WhatsAppNotice from '@/components/WhatsAppNotice/WhatsAppNotice';
 import { SITE_CONFIG } from '@/config/site.config';
 import { CITIES } from '@/config/cities';
 import { SERVICE_REGIONS } from '@/config/regions';
@@ -218,6 +219,7 @@ export default function AfspraakForm() {
       <button type="submit" className={styles.submit} disabled={isSubmitting}>
         {isSubmitting ? 'Versturen...' : 'Afspraak aanvragen'}
       </button>
+      <WhatsAppNotice dark />
     </form>
   );
 }

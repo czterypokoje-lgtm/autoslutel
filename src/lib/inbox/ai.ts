@@ -19,6 +19,9 @@ export interface Draft {
   reply: string;
   needsHuman: boolean;
   reason: string;
+  /** The confirmed facts the model was given, so callers can run replyGuard
+   *  (src/lib/inbox/guard.ts) against the same facts before an auto-send. */
+  facts: string;
 }
 
 export const aiConfigured = () => Boolean(process.env.ANTHROPIC_API_KEY);
@@ -105,7 +108,9 @@ export async function draftReply(thread: Thread, messages: Message[]): Promise<D
       ],
       output_config: { effort: 'medium', format: { type: 'json_schema', schema: SCHEMA as unknown as Record<string, unknown> } },
     });
-    if (response.stop_reason === 'refusal') return { reply: '', needsHuman: true, reason: 'De assistent heeft dit bericht geweigerd te beantwoorden.' };
+    if (response.stop_reason === 'refusal') {
+      return { reply: '', needsHuman: true, reason: 'De assistent heeft dit bericht geweigerd te beantwoorden.', facts };
+    }
     const text = response.content.find((b) => b.type === 'text')?.text ?? '';
     const parsed = JSON.parse(text) as { reply?: unknown; needs_human?: unknown; reason?: unknown };
     const reply = typeof parsed.reply === 'string' ? parsed.reply.trim() : '';
@@ -113,6 +118,7 @@ export async function draftReply(thread: Thread, messages: Message[]): Promise<D
       reply,
       needsHuman: parsed.needs_human === true || !reply,
       reason: typeof parsed.reason === 'string' ? parsed.reason.slice(0, 300) : '',
+      facts,
     };
   } catch (error) {
     if (error instanceof Anthropic.AuthenticationError) console.error('[inbox-ai] ANTHROPIC_API_KEY is rejected');
