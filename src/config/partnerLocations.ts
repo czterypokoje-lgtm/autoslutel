@@ -34,6 +34,18 @@ export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
     url: 'https://www.garage-nrd.nl/',
     schemaType: 'AutoRepair',
   },
+  {
+    // Heerhugowaard has no city page of its own; it sits next to Alkmaar
+    // (gemeente Dijk en Waard), so the card goes on the Alkmaar page.
+    citySlug: 'alkmaar',
+    name: 'KeyForCars',
+    street: 'Pascalstraat 27',
+    postalCode: '1704 RE',
+    locality: 'Heerhugowaard',
+    district: 'regio Alkmaar',
+    url: 'https://www.keyforcars.nl/',
+    schemaType: 'AutoPartsStore',
+  },
 ];
 
 export const partnerForCity = (slug: string) => PARTNER_LOCATIONS.find((p) => p.citySlug === slug);
