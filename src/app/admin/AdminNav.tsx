@@ -22,7 +22,6 @@ import {
   Package,
   PhoneCall,
   Plug,
-  Receipt,
   Settings,
   Truck,
   Users,
@@ -77,7 +76,6 @@ export const OFFICE_NAV: NavItem[] = [
   },
   { label: 'Klanten', icon: Users, href: '/admin/klanten' },
   { label: 'Taken', icon: ListChecks, href: '/admin/taken' },
-  { label: 'Offertes', icon: Receipt, href: '/admin/offertes' },
   { label: 'Monteurs', icon: Wrench, href: '/admin/monteurs' },
   {
     label: 'Voorraad',
@@ -165,7 +163,6 @@ const KEYFORCARS_NAV: NavItem[] = [
   },
   { label: 'Klanten', icon: Users, href: '/admin/klanten' },
   { label: 'Taken', icon: ListChecks, href: '/admin/taken' },
-  { label: 'Offertes', icon: Receipt, href: '/admin/offertes' },
   { label: 'Bestellingen', icon: Package, href: '/admin/orders' },
   { label: 'Verzending', icon: Truck, href: '/admin/verzending' },
   { label: 'Best verkocht', icon: BarChart3, href: '/admin/best-verkocht' },

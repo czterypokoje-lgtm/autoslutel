@@ -3,32 +3,15 @@ import { requireOfficeUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { STUDIO_UI } from '@/config/install';
 import styles from '../klanten/klanten.module.css';
-import { PageHead, Notice } from '../_ui';
+import { PageHead } from '../_ui';
 import { sourceLabel } from '../overzicht/dashboardData';
 import { SCENARIO_INFO, isScenario, type Scenario } from '@/lib/scenarios';
-import { CHANNEL_LABEL, LOST_REASON_LABEL, type Channel, type LostReason } from '../offertes/types';
 import StudioRapportagePage from './StudioRapportagePage';
 import r from './rapportage.module.css';
 
 export const dynamic = 'force-dynamic';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
-
-/** One row of the crm_report_quotes view (docs/lead-quotes.md §3.3). Local on
-    purpose — not imported from src/lib/leadQuotes.ts. */
-interface QuoteReportRow {
-  dimensie: 'merk_scenario' | 'prijsband_scenario' | 'kanaal' | 'verliesreden';
-  sleutel: string;
-  scenario: string | null;
-  offertes: number;
-  gewonnen: number;
-  verloren: number;
-  geen_reactie: number;
-  conversie_pct: number;
-  mediaan_gewonnen: number | null;
-  mediaan_verloren: number | null;
-  tarief_nu: number | null;
-}
 
 /** Never invent a number. No data means an em dash, not a zero that reads as fact. */
 function show(value: unknown, format?: (n: number) => string): string {
@@ -41,63 +24,6 @@ function show(value: unknown, format?: (n: number) => string): string {
 function percent(part: number, whole: number): string {
   if (!whole) return '—';
   return `${Math.round((part / whole) * 100)}%`;
-}
-
-const scenarioLabel = (value: string) => (isScenario(value) ? SCENARIO_INFO[value as Scenario].label : value);
-
-/** One of the four dimension tables under "Offertes". Same shape, different key column. */
-function QuotesTable({
-  title,
-  keyHeader,
-  rows,
-  keyLabel,
-}: {
-  title: string;
-  keyHeader: string;
-  rows: QuoteReportRow[];
-  keyLabel: (row: QuoteReportRow) => string;
-}) {
-  return (
-    <div className={styles.wrap} style={{ marginTop: 16 }}>
-      <h3>{title}</h3>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>{keyHeader}</th>
-            <th>Offertes</th>
-            <th>Gewonnen</th>
-            <th>Verloren</th>
-            <th>Geen reactie</th>
-            <th>Conversie %</th>
-            <th style={{ textAlign: 'right' }}>Mediaan gewonnen</th>
-            <th style={{ textAlign: 'right' }}>Mediaan verloren</th>
-            <th style={{ textAlign: 'right' }}>Tarief nu</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.length === 0 ? (
-            <tr>
-              <td colSpan={9} className={styles.empty}>Nog geen data.</td>
-            </tr>
-          ) : (
-            rows.map((row, i) => (
-              <tr key={i}>
-                <td className={styles.strong}>{keyLabel(row)}</td>
-                <td>{show(row.offertes)}</td>
-                <td>{show(row.gewonnen)}</td>
-                <td>{show(row.verloren)}</td>
-                <td>{show(row.geen_reactie)}</td>
-                <td>{show(row.conversie_pct, (n) => `${n}%`)}</td>
-                <td className={styles.money}>{show(row.mediaan_gewonnen, (n) => MONEY.format(n))}</td>
-                <td className={styles.money}>{show(row.mediaan_verloren, (n) => MONEY.format(n))}</td>
-                <td className={styles.money}>{show(row.tarief_nu, (n) => MONEY.format(n))}</td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
 }
 
 export default async function RapportagePage() {
@@ -172,39 +98,6 @@ export default async function RapportagePage() {
     );
   }
 
-  /* Offertes reads a separate view. A missing migration 0107 must not take
-     down the nine reports above it — only this section falls back to a Notice. */
-  const quotesRes = await supabase.from('crm_report_quotes').select('*');
-  const quotesError = quotesRes.error?.message ?? null;
-  const quotesRows = (quotesRes.data ?? []) as QuoteReportRow[];
-  const byDimension = (dim: QuoteReportRow['dimensie']) => quotesRows.filter((row) => row.dimensie === dim);
-  const withScenario = (row: QuoteReportRow) => `${row.sleutel}${row.scenario ? ` · ${scenarioLabel(row.scenario)}` : ''}`;
-
-  const quotesSection = quotesError ? (
-    <Notice tone="bad">
-      Offertes-rapport kon niet worden geladen: {quotesError}. Controleer of migratie 0107 (lead_quotes) is toegepast.
-    </Notice>
-  ) : (
-    <div className={`${styles.panel} ${r.anchor}`} id="offertes">
-      <h2>Offertes</h2>
-      <QuotesTable title="Per merk × scenario" keyHeader="Merk × scenario" rows={byDimension('merk_scenario')} keyLabel={withScenario} />
-      <QuotesTable title="Per prijsband × scenario" keyHeader="Prijsband × scenario" rows={byDimension('prijsband_scenario')} keyLabel={withScenario} />
-      <QuotesTable
-        title="Per kanaal"
-        keyHeader="Kanaal"
-        rows={byDimension('kanaal')}
-        keyLabel={(row) => CHANNEL_LABEL[row.sleutel as Channel] ?? row.sleutel}
-      />
-      <QuotesTable
-        title="Per verliesreden"
-        keyHeader="Verliesreden"
-        rows={byDimension('verliesreden')}
-        keyLabel={(row) => LOST_REASON_LABEL[row.sleutel as LostReason] ?? row.sleutel}
-      />
-      <p className={styles.note}>Alleen bevestigde offertes. Boven welk bedrag verliezen we — en aan wie.</p>
-    </div>
-  );
-
   // The source view is split per month; the office wants the total.
   const bySource = new Map<
     string,
@@ -229,23 +122,20 @@ export default async function RapportagePage() {
 
   if (STUDIO_UI) {
     return (
-      <>
-        <StudioRapportagePage
-          sources={sources}
-          latestWeek={latestWeek}
-          service={service.data ?? []}
-          technician={technician.data ?? []}
-          region={region.data ?? []}
-          make={make.data ?? []}
-          makeRegion={makeRegion.data ?? []}
-          commission={commission.data ?? []}
-          capabilityGap={capabilityGap.data ?? []}
-          allLeads={allLeads}
-          allSold={allSold}
-          missed={missed}
-        />
-        {quotesSection}
-      </>
+      <StudioRapportagePage
+        sources={sources}
+        latestWeek={latestWeek}
+        service={service.data ?? []}
+        technician={technician.data ?? []}
+        region={region.data ?? []}
+        make={make.data ?? []}
+        makeRegion={makeRegion.data ?? []}
+        commission={commission.data ?? []}
+        capabilityGap={capabilityGap.data ?? []}
+        allLeads={allLeads}
+        allSold={allSold}
+        missed={missed}
+      />
     );
   }
 
@@ -809,8 +699,6 @@ export default async function RapportagePage() {
           tool of monteur zich het snelst terugbetaalt.
         </p>
       </div>
-
-      {quotesSection}
     </>
   );
 }

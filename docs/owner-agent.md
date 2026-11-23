@@ -1,6 +1,6 @@
 # De eigenaarsagent: taken en Google Calendar
 
-Status: gebouwd op branch `feat/taken`, migratie `0106_crm_tasks_access.sql`. Scherm:
+Status: gebouwd op branch `feat/taken`, migratie `0141_crm_tasks_access.sql`. Scherm:
 `/admin/taken`. Eén eigen tool: `/api/agent/tasks`. De agenda loopt niet door onze code.
 
 **Özet (Türkçe):** Takvim için kod yazmadık: ElevenLabs'in yerleşik Google Calendar
@@ -25,7 +25,7 @@ bir araç ve bir entegrasyon.
 cd ~/keyforcars-crm && npx supabase db push    # 0106 — KeyForCars
 ```
 
-Autosleutel24: `supabase/migrations/0106_crm_tasks_access.sql` in de SQL-editor van project
+Autosleutel24: `supabase/migrations/0141_crm_tasks_access.sql` in de SQL-editor van project
 `utctfircycpjmpjqmtmm` plakken (idempotent), tot dat project aan de CLI hangt.
 
 ### 1. Vercel → Environment Variables

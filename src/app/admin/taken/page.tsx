@@ -48,7 +48,7 @@ export default async function TakenPage() {
 
       {dbError && (
         <Notice tone="bad">
-          Taken konden niet worden geladen: {dbError}. Controleer of <code>supabase/migrations/0106_crm_tasks_access.sql</code> is toegepast.
+          Taken konden niet worden geladen: {dbError}. Controleer of <code>supabase/migrations/0141_crm_tasks_access.sql</code> is toegepast.
         </Notice>
       )}
 
