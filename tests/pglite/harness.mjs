@@ -38,7 +38,8 @@
  *             btree_gist, pg_trgm, uuid-ossp, citext, hstore, fuzzystrmatch: PGlite's bundled contrib (real).
  *             pgcrypto: NOT bundled in PGlite 0.2.17. `create extension pgcrypto` is turned into a no-op;
  *               gen_random_uuid() is core Postgres (real). extensions.digest(text|bytea, text) is a stub over core
- *               md5/sha224/sha256/sha384/sha512 (same output for those algorithms); extensions.gen_random_bytes(int)
+ *               md5/sha224/sha256/sha384/sha512 plus a plpgsql SHA-1 (extensions.sha1_stub) (same output for
+ *               those algorithms); extensions.gen_random_bytes(int)
  *               is a stub built from random() (NOT cryptographically secure). crypt/gen_salt/pgp_* do not exist.
  *             unaccent: NOT bundled. `create extension unaccent` is a no-op; extensions.unaccent(text) is a
  *               stub that strips common Latin diacritics with translate() (no dictionary).
@@ -172,9 +173,44 @@ create function storage.extension(name text) returns text language sql immutable
 grant execute on all functions in schema storage to anon, authenticated, service_role;
 
 -- pgcrypto (partial stub; gen_random_uuid() is core)
+-- SHA-1 is not in core Postgres: a plain plpgsql implementation (FIPS 180-4), same output as pgcrypto.
+create function extensions.sha1_stub(data bytea) returns bytea language plpgsql immutable strict as $$
+declare
+  m constant bigint := 4294967295;
+  h0 bigint := 1732584193; h1 bigint := 4023233417; h2 bigint := 2562383102; h3 bigint := 271733878; h4 bigint := 3285377520;
+  msg bytea := data || decode('80', 'hex');
+  w bigint[]; a bigint; b bigint; c bigint; d bigint; e bigint; f bigint; k bigint; t bigint; o integer;
+begin
+  while length(msg) % 64 <> 56 loop msg := msg || decode('00', 'hex'); end loop;
+  msg := msg || int8send(length(data)::bigint * 8);
+  for chunk in 0 .. length(msg) / 64 - 1 loop
+    w := array_fill(0::bigint, array[80]);
+    for i in 0 .. 15 loop
+      o := chunk * 64 + i * 4;
+      w[i + 1] := (get_byte(msg, o)::bigint << 24) | (get_byte(msg, o + 1)::bigint << 16) | (get_byte(msg, o + 2)::bigint << 8) | get_byte(msg, o + 3)::bigint;
+    end loop;
+    for i in 16 .. 79 loop
+      t := w[i - 2] # w[i - 7] # w[i - 13] # w[i - 15];
+      w[i + 1] := ((t << 1) | (t >> 31)) & m;
+    end loop;
+    a := h0; b := h1; c := h2; d := h3; e := h4;
+    for i in 0 .. 79 loop
+      if i < 20 then f := (b & c) | ((~b & m) & d); k := 1518500249;
+      elsif i < 40 then f := b # c # d; k := 1859775393;
+      elsif i < 60 then f := (b & c) | (b & d) | (c & d); k := 2400959708;
+      else f := b # c # d; k := 3395469782; end if;
+      t := ((((a << 5) | (a >> 27)) & m) + f + e + k + w[i + 1]) & m;
+      e := d; d := c; c := ((b << 30) | (b >> 2)) & m; b := a; a := t;
+    end loop;
+    h0 := (h0 + a) & m; h1 := (h1 + b) & m; h2 := (h2 + c) & m; h3 := (h3 + d) & m; h4 := (h4 + e) & m;
+  end loop;
+  return substring(int8send(h0) from 5) || substring(int8send(h1) from 5) || substring(int8send(h2) from 5)
+      || substring(int8send(h3) from 5) || substring(int8send(h4) from 5);
+end $$;
 create function extensions.digest(data bytea, type text) returns bytea language sql immutable strict as $$
   select case lower(type)
-    when 'md5' then decode(md5(data), 'hex') when 'sha224' then sha224(data) when 'sha256' then sha256(data)
+    when 'md5' then decode(md5(data), 'hex') when 'sha1' then extensions.sha1_stub(data)
+    when 'sha224' then sha224(data) when 'sha256' then sha256(data)
     when 'sha384' then sha384(data) when 'sha512' then sha512(data) end $$;
 create function extensions.digest(data text, type text) returns bytea language sql immutable strict as $$
   select extensions.digest(convert_to(data, 'UTF8'), type) $$;
