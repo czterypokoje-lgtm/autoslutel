@@ -25,7 +25,7 @@
 do $$
 begin
   if to_regprocedure('extensions.digest(bytea, text)') is null then
-    raise exception 'extensions.digest (pgcrypto) is missing: run "create extension if not exists pgcrypto with schema extensions" first.';
+    raise exception 'extensions.digest is missing: enable the pgcrypto extension in schema extensions (Database > Extensions) first.';
   end if;
   if to_regclass('public.kfc_shop_orders') is null or to_regclass('public.orders') is null then
     raise exception 'public.orders or public.kfc_shop_orders is missing: this database is not an Autosleutel24 CRM at 0091+.';
