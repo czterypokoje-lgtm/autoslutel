@@ -26,7 +26,7 @@ const REGIONS = SERVICE_REGIONS.map((r) => r.label).join(', ');
 const cityName = (slug: string) => CITIES.find((c) => c.slug === slug)?.city ?? slug;
 const PARTNERS = PARTNER_LOCATIONS.map(
   (p) =>
-    `- **${p.street}, ${p.postalCode} ${p.locality}**${p.district ? ` (${p.district})` : ''}: partnerlocatie van Autosleutel24. Op de pagina's ${p.citySlugs
+    `- **${p.street}, ${p.postalCode} ${p.locality}**${p.district ? ` (${p.district})` : ''}: partnerlocatie van Autosleutel24. Pagina's: ${p.citySlugs
       .map((s) => `[${cityName(s)}](${SITE_CONFIG.domain}${cityPath(s)})`)
       .join(', ')}.`,
 ).join('\n');
