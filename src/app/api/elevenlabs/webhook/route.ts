@@ -14,6 +14,7 @@ interface PostCallPayload {
   type: string;
   data?: {
     conversation_id?: string;
+    agent_id?: string;
     status?: string;
     transcript?: TranscriptTurn[];
     /*
@@ -50,6 +51,25 @@ interface PostCallPayload {
  * evidence of a phone call, and a wrong label is worse than an honest blank
  * when someone later filters the list by channel.
  */
+/**
+ * Is this one of Autosleutel24's own agents?
+ *
+ * ElevenLabs sends post-call webhooks per workspace, not per agent, so the
+ * KeyForCars and KEY24 agents in the same workspace post here too. Measured on
+ * 21 Nov 2026: their test and demo chats sat in our Gesprekken as 'unknown'.
+ * ELEVENLABS_AGENT_IDS lists our agent ids (comma-separated); any other agent
+ * is stored as channel 'extern' and kept out of the inbox. Unset means every
+ * agent counts as ours: a missing setting must never hide a customer.
+ */
+function ownAgent(agentId: string | undefined): boolean {
+  const allow = (process.env.ELEVENLABS_AGENT_IDS ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (!allow.length || !agentId) return true;
+  return allow.includes(agentId);
+}
+
 function detectChannel(data: NonNullable<PostCallPayload['data']>): string {
   const meta = data.metadata;
   if (!meta) return 'unknown';
@@ -76,6 +96,12 @@ function detectChannel(data: NonNullable<PostCallPayload['data']>): string {
   const source = String(meta.conversation_initiation_source ?? '').toLowerCase();
   if (source.includes('whatsapp')) return 'whatsapp';
   if (source.includes('twilio') || source.includes('phone')) return 'phone';
+  /*
+   * The embed widget on the webshop (convai-widget-embed) reports 'widget'.
+   * Measured on 21 Nov 2026: 14 such rows, all from the shop's chat button,
+   * none with a phone_call/whatsapp/sms object. It is a website chat.
+   */
+  if (source === 'widget') return 'webchat';
 
   return 'unknown';
 }
@@ -202,7 +228,8 @@ export async function POST(request: Request) {
       .upsert(
         {
           conversation_id: data.conversation_id ?? `onbekend-${Date.now()}`,
-          channel: detectChannel(data),
+          channel: ownAgent(data.agent_id) ? detectChannel(data) : 'extern',
+          agent_id: data.agent_id ?? null,
           phone: detectPhone(data),
           status: data.status ?? null,
           outcome: data.analysis?.call_successful ?? null,
@@ -216,6 +243,9 @@ export async function POST(request: Request) {
     if (storeError) {
       console.error('Storing agent conversation failed:', storeError.message);
     }
+
+    // Another brand's conversation is kept for the record, but it is not ours to be woken for.
+    if (!ownAgent(data.agent_id)) return;
 
     const { data: recipients, error: recipientsError } = await admin
       .from('admin_telegram')

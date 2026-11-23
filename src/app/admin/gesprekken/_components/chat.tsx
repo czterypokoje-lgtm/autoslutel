@@ -2,7 +2,7 @@
 
 import { type CSSProperties, useMemo, useState } from 'react';
 import { cn } from 'cn';
-import { Calendar, Inbox, Mail, MessageCircle, MessageSquareText, Phone, type LucideIcon, UserRoundX } from 'lucide-react';
+import { Bot, Calendar, CircleHelp, Inbox, Mail, MessageCircle, MessageSquare, MessageSquareText, Phone, type LucideIcon, UserRoundX } from 'lucide-react';
 
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
@@ -17,7 +17,11 @@ import { ChatThread } from './chat-thread';
 import { groupOf } from './data';
 
 export type View = 'inbox' | 'today' | 'unassigned' | 'appointment';
-export type Channel = 'phone' | 'whatsapp' | 'email' | 'form';
+export type Channel = 'phone' | 'whatsapp' | 'email' | 'form' | 'webchat' | 'sms' | 'unknown';
+
+/** Channels with their own menu entry. Anything else (old 'unknown' rows, a new source) lands under "Overig", never nowhere. */
+const KNOWN: ReadonlySet<string> = new Set(['phone', 'whatsapp', 'email', 'form', 'webchat', 'sms']);
+const channelOf = (c: Conversation): Channel => (KNOWN.has(c.channel) ? (c.channel as Channel) : 'unknown');
 
 export function Chat({ conversations, now }: { conversations: Conversation[]; now: number }) {
   const { t } = usePreviewLanguage();
@@ -34,15 +38,18 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
     today: conversations.filter((c) => groupOf(c.createdAt, now) === 'Vandaag').length,
     unassigned: conversations.filter((c) => !c.lead).length,
     appointment: conversations.filter((c) => c.job).length,
-    phone: conversations.filter((c) => c.channel === 'phone').length,
-    whatsapp: conversations.filter((c) => c.channel === 'whatsapp').length,
-    email: conversations.filter((c) => c.channel === 'email').length,
-    form: conversations.filter((c) => c.channel === 'form').length,
+    phone: conversations.filter((c) => channelOf(c) === 'phone').length,
+    whatsapp: conversations.filter((c) => channelOf(c) === 'whatsapp').length,
+    email: conversations.filter((c) => channelOf(c) === 'email').length,
+    form: conversations.filter((c) => channelOf(c) === 'form').length,
+    webchat: conversations.filter((c) => channelOf(c) === 'webchat').length,
+    sms: conversations.filter((c) => channelOf(c) === 'sms').length,
+    unknown: conversations.filter((c) => channelOf(c) === 'unknown').length,
   }), [conversations, now]);
 
   const visible = useMemo(() => conversations.filter((c) =>
     (view === 'inbox' || (view === 'today' && groupOf(c.createdAt, now) === 'Vandaag') || (view === 'unassigned' && !c.lead) || (view === 'appointment' && !!c.job))
-    && (!channel || c.channel === channel)), [conversations, view, channel, now]);
+    && (!channel || channelOf(c) === channel)), [conversations, view, channel, now]);
 
   const active = visible.find((c) => c.id === selected) ?? visible[0] ?? null;
 
@@ -58,6 +65,9 @@ export function Chat({ conversations, now }: { conversations: Conversation[]; no
     { id: 'whatsapp', title: 'WhatsApp', icon: MessageCircle, label: counts.whatsapp },
     { id: 'email', title: t('E-mail'), icon: Mail, label: counts.email },
     { id: 'form', title: t('Websiteformulier'), icon: MessageSquareText, label: counts.form },
+    { id: 'webchat', title: t('Webchat'), icon: Bot, label: counts.webchat },
+    ...(counts.sms ? [{ id: 'sms' as const, title: 'SMS', icon: MessageSquare, label: counts.sms }] : []),
+    ...(counts.unknown ? [{ id: 'unknown' as const, title: t('Overig'), icon: CircleHelp, label: counts.unknown }] : []),
   ];
 
   return (
