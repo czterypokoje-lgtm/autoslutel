@@ -53,6 +53,32 @@ export function checkWorkshopAgent(request: Request): AgentAuth {
   return { ok: true };
 }
 
+/**
+ * The Autosleutel24 webshop agent's own secret (SHOP_AGENT_TOKEN), separate
+ * from AGENT_API_TOKEN. The webshop agent reads orders and registers returns;
+ * it must not be able to book a technician or ring the office, and the phone
+ * agent must not be able to read orders. One token per agent keeps those two
+ * apart and lets either be revoked without touching the other.
+ */
+export function checkShopAgent(request: Request): AgentAuth {
+  const secret = process.env.SHOP_AGENT_TOKEN;
+  if (!secret || secret.length < 24) return { ok: false, status: 503, error: 'Niet beschikbaar' };
+  const header = request.headers.get('authorization') ?? '';
+  const token = header.startsWith('Bearer ') ? header.slice(7).trim() : '';
+  if (!token || !same(token, secret)) return { ok: false, status: 401, error: 'Geen toegang' };
+  return { ok: true };
+}
+
+/** The shared reads (agent_knowledge): either agent's token will do. */
+export function checkAnyAgent(request: Request): AgentAuth {
+  const phone = checkAgent(request);
+  if (phone.ok) return phone;
+  const shop = checkShopAgent(request);
+  if (shop.ok) return shop;
+  /* 401 when at least one secret is configured, so a wrong token reads as wrong, not as down. */
+  return phone.status === 401 || shop.status === 401 ? { ok: false, status: 401, error: 'Geen toegang' } : phone;
+}
+
 /* ── reading what the agent sends ────────────────────────────────────── */
 
 export const asText = (value: unknown, max = 80): string | null => {

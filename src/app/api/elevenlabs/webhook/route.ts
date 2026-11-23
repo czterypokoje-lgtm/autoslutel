@@ -67,7 +67,18 @@ function ownAgent(agentId: string | undefined): boolean {
     .map((s) => s.trim())
     .filter(Boolean);
   if (!allow.length || !agentId) return true;
-  return allow.includes(agentId);
+  return allow.includes(agentId) || isShopAgent(agentId);
+}
+
+/**
+ * The webshop agent (docs/webshop-agent.md), set as ELEVENLABS_SHOP_AGENT_ID.
+ * Always ours, also when ELEVENLABS_AGENT_IDS forgets it, and marked in the
+ * stored metadata (agent_role 'webshop') so its conversations can be told
+ * apart from the phone agent's on the same channel.
+ */
+function isShopAgent(agentId: string | undefined): boolean {
+  const shop = (process.env.ELEVENLABS_SHOP_AGENT_ID ?? '').trim();
+  return Boolean(shop && agentId && agentId === shop);
 }
 
 function detectChannel(data: NonNullable<PostCallPayload['data']>): string {
@@ -199,8 +210,9 @@ export async function POST(request: Request) {
   const duration = minutesSeconds(data.metadata?.call_duration_secs);
   const summary = data.analysis?.transcript_summary?.trim();
 
+  const shopAgent = isShopAgent(data.agent_id);
   const header = [
-    '📞 Gesprek met de spraakassistent afgerond',
+    shopAgent ? '🛒 Gesprek met de webshop-assistent afgerond' : '📞 Gesprek met de spraakassistent afgerond',
     `Uitkomst: ${outcome} · Duur: ${duration}`,
     summary ? `\nSamenvatting:\n${summary}` : null,
   ]
@@ -236,7 +248,7 @@ export async function POST(request: Request) {
           duration_secs: data.metadata?.call_duration_secs ?? null,
           summary: summary ?? null,
           transcript: data.transcript ?? null,
-          metadata: data.metadata ?? null,
+          metadata: shopAgent ? { ...(data.metadata ?? {}), agent_role: 'webshop' } : data.metadata ?? null,
         },
         { onConflict: 'conversation_id' },
       );

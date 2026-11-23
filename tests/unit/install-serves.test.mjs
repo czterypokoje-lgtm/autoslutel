@@ -89,6 +89,7 @@ const TABLE = [
   ['/api/webhooks/whatsapp', false],
   ['/api/leads', false],
   ['/api/agent/book', false],
+  ['/api/agent/shop/order', false], // Autosleutel24's webshop agent reads our orders; never on KeyForCars
   ['/api/elevenlabs/webhook', false],
   ['/api/agenda/token123', false],
   ['/diensten/autosleutel-bijmaken', false],

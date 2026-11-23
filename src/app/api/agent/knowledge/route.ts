@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { checkAgent } from '@/lib/agentAuth';
+import { checkAnyAgent } from '@/lib/agentAuth';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { TOPICS, forAgent, isTopic, type KnowledgeRow } from '@/lib/agentKnowledge';
 
@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
  * as "unknown" so the agent knows not to improvise an answer to them.
  */
 export async function GET(request: Request) {
-  const auth = checkAgent(request);
+  const auth = checkAnyAgent(request);
   if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const url = new URL(request.url);
