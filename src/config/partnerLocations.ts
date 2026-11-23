@@ -23,6 +23,10 @@ export type PartnerLocation = {
   url?: string;
   /** schema.org type of the partner itself, e.g. 'AutoRepair'. */
   schemaType: string;
+  /** Coordinates of the address, for the partner's schema.org `geo`. */
+  geo?: { lat: number; lng: number };
+  /** The partner's Google Business Profile link, as schema.org `hasMap`. */
+  googleMapsUrl?: string;
 };
 
 export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
@@ -37,9 +41,9 @@ export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
     schemaType: 'AutoRepair',
   },
   {
-    // Heerhugowaard has no city page of its own, so the card goes on the
-    // nearest ones: Alkmaar (~6 km) and Purmerend (~25 km).
-    citySlugs: ['alkmaar', 'purmerend'],
+    // Its own town first, then the nearest other city pages: Alkmaar (~6 km)
+    // and Purmerend (~25 km).
+    citySlugs: ['heerhugowaard', 'alkmaar', 'purmerend'],
     name: 'Key For Cars Autobedrijf sleutels hhw',
     street: 'Pascalstraat 27',
     postalCode: '1704 RE',
@@ -47,6 +51,10 @@ export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
     district: 'regio Alkmaar',
     url: 'https://www.keyforcars.nl/',
     schemaType: 'AutoRepair',
+    // Same point as the KeyForCars shipping origin (src/lib/kfcShippingTestModel.ts).
+    geo: { lat: 52.6824279, lng: 4.82907106 },
+    // Google profile link the owner sent (23 Nov 2026).
+    googleMapsUrl: 'https://share.google/mQrj1NCPP5K68awH3',
   },
 ];
 

@@ -940,6 +940,8 @@ export async function CityPageBody({ citySlug }: { citySlug: string }) {
                     addressLocality: partner.locality,
                     addressCountry: 'NL',
                   },
+                  ...(partner.geo ? { geo: { '@type': 'GeoCoordinates', latitude: partner.geo.lat, longitude: partner.geo.lng } } : {}),
+                  ...(partner.googleMapsUrl ? { hasMap: partner.googleMapsUrl } : {}),
                   ...(partner.url ? { url: partner.url } : {}),
                 }),
               }}
