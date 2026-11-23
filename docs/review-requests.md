@@ -57,7 +57,7 @@ Een klant die op WhatsApp antwoordt met een expliciet afmeldwoord — `stop`,
 zie `isStopMessage` in `src/lib/reviewRequest.ts`) — wordt nooit meer
 business-initiated benaderd, dus ook niet voor een volgende review-aanvraag.
 `src/lib/inbox/handleInbound.ts` herkent dit vóór de AI-stap, zet het nummer
-in `public.whatsapp_optouts` (migratie 0109) en schakelt `ai_mode` van het
+in `public.whatsapp_optouts` (migratie 0143) en schakelt `ai_mode` van het
 gesprek uit. De cron hier laadt die tabel één keer per run en slaat elke job
 van een afgemeld nummer over (`review_request_status = 'skipped'`,
 `review_request_note = 'opt-out'`) — een tabel per telefoonnummer, omdat één

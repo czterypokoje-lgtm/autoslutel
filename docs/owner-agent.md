@@ -22,7 +22,7 @@ bir araç ve bir entegrasyon.
 ### 0. Migratie
 
 ```bash
-cd ~/keyforcars-crm && npx supabase db push    # 0106 — KeyForCars
+cd ~/keyforcars-crm && npx supabase db push    # 0141 — KeyForCars
 ```
 
 Autosleutel24: `supabase/migrations/0141_crm_tasks_access.sql` in de SQL-editor van project
