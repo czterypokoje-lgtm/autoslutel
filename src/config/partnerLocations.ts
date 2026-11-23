@@ -38,13 +38,13 @@ export const PARTNER_LOCATIONS: readonly PartnerLocation[] = [
     // Heerhugowaard has no city page of its own; it sits next to Alkmaar
     // (gemeente Dijk en Waard), so the card goes on the Alkmaar page.
     citySlug: 'alkmaar',
-    name: 'KeyForCars',
+    name: 'Key For Cars Autobedrijf sleutels hhw',
     street: 'Pascalstraat 27',
     postalCode: '1704 RE',
     locality: 'Heerhugowaard',
     district: 'regio Alkmaar',
     url: 'https://www.keyforcars.nl/',
-    schemaType: 'AutoPartsStore',
+    schemaType: 'AutoRepair',
   },
 ];
 
