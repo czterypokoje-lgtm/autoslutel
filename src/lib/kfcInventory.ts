@@ -408,6 +408,20 @@ function decodeJpeg(photo: unknown, max: number): Uint8Array {
   return image;
 }
 
+const bundledIds = new Set((catalog as StockArticle[]).map((article) => article.id));
+
+/**
+ * Article cards that exist only in the database (imported in Artikelbeheer or by SQL), in the catalogue's shape.
+ * The stock screens work from the bundled shop catalogue (src/data/keyforcars-stock.json); without these, a card
+ * added after the build could not be found, scanned or counted there. Workshop articles come with the state.
+ */
+export async function databaseCatalog(): Promise<StockArticle[]> {
+  const rows = await fetchAll<{ code: string; name: string; sku: string | null; image: string | null; category: string | null }>((from, to) =>
+    admin().from('kfc_articles').select('code, name, sku, image, category').not('code', 'like', `${WORKSHOP_PREFIX}%`).order('code').range(from, to));
+  return rows.filter((row) => !bundledIds.has(row.code))
+    .map((row) => ({ id: row.code, name: row.name, sku: row.sku ?? '', image: row.image ?? '', category: row.category ?? '', sources: [] }));
+}
+
 export async function kfcGet(query: URLSearchParams): Promise<Response> {
   const user = await getCrmUser();
   if (!user) return reply({ error: 'Niet ingelogd' }, 401);
@@ -434,7 +448,7 @@ export async function kfcGet(query: URLSearchParams): Promise<Response> {
       // barcodes: what a scan may match besides our own label code (see barcodeIndex). An extra:
       // if it cannot be read, scanning falls back to code and SKU and the stock screen still loads.
       ...(wantPositions ? { positions: await positions(), barcodes: await barcodeIndex().catch((error: unknown) => { console.error('[stock] barcode index failed', error); return {}; }) } : {}),
-      ...(wantCatalog ? { catalog: catalog.filter((article) => used.has(article.id)) } : {}),
+      ...(wantCatalog ? { catalog: [...catalog, ...await databaseCatalog()].filter((article) => used.has(article.id)) } : {}),
     });
   } catch (error) {
     if (error instanceof StockError) return reply({ error: error.message }, error.status);
