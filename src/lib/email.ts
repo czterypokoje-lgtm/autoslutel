@@ -30,6 +30,8 @@ export interface Mail {
   replyTo?: string;
   /** Extra headers, e.g. In-Reply-To / References so a reply threads in the customer's mail client. */
   headers?: Record<string, string>;
+  /** Sender override; default is MAIL_FROM. The inbox answers as info@, orders keep their own address. */
+  from?: string;
 }
 
 /** Very small text-to-HTML: paragraphs only, everything escaped. */
@@ -52,7 +54,7 @@ export async function sendMail(mail: Mail): Promise<boolean> {
 }
 
 /** Same as sendMail, but hands back the provider's id so the inbox can track the message. */
-export async function deliverMail({ to, subject, text, replyTo, headers }: Mail): Promise<{ id: string } | null> {
+export async function deliverMail({ to, subject, text, replyTo, headers, from: fromOverride }: Mail): Promise<{ id: string } | null> {
   if (!providerRequestsEnabled()) return null;
   const key = process.env.RESEND_API_KEY;
   if (!key) {
@@ -62,7 +64,7 @@ export async function deliverMail({ to, subject, text, replyTo, headers }: Mail)
     return null;
   }
 
-  const from = process.env.MAIL_FROM ?? `${SITE_CONFIG.name} <${SITE_CONFIG.email}>`;
+  const from = fromOverride ?? process.env.MAIL_FROM ?? `${SITE_CONFIG.name} <${SITE_CONFIG.email}>`;
 
   try {
     const res = await fetch(RESEND_ENDPOINT, {

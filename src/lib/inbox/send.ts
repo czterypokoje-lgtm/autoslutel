@@ -1,5 +1,7 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { BRAND } from '@/config/install';
+import { SITE_CONFIG } from '@/config/site.config';
 import { deliverMail } from '@/lib/email';
 import { providerRequestsEnabled } from '@/lib/providerRequests';
 import { createSupabaseAdminClient } from '@/lib/supabase/admin';
@@ -54,7 +56,9 @@ export async function sendReply(
       headers['In-Reply-To'] = inboundIds[inboundIds.length - 1];
       headers['References'] = inboundIds.join(' ');
     }
-    const sent = await deliverMail({ to: thread.email!, subject, text: body, headers });
+    /* Customer replies leave as info@ (INBOX_FROM), not as the order-confirmation sender in MAIL_FROM. */
+    const from = process.env.INBOX_FROM || `${BRAND.name} <${SITE_CONFIG.email}>`;
+    const sent = await deliverMail({ to: thread.email!, subject, text: body, headers, from });
     if (!sent) {
       await addMessage(thread, { direction: 'out', author, body, status: 'failed', meta: { error: 'E-mail niet verzonden' } }, db);
       return { ok: false, error: 'E-mail niet verzonden (zie serverlog)' };
