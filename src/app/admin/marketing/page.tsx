@@ -40,17 +40,19 @@ async function loadMarketing() {
 
 export default async function MarketingPage() {
   await requireOfficeUser('/admin/marketing');
-  const { sends, sup, orders, since } = await loadMarketing();
-
-  const err = sends.error ?? sup.error;
-  if (err) {
+  // A thrown client (no database configured, preview mode) reads the same as a failed query: say so, show nothing fake.
+  const loaded = await loadMarketing().catch((e: Error) => ({ error: e }));
+  const err = 'error' in loaded ? loaded.error : loaded.sends.error ?? loaded.sup.error;
+  if (err || 'error' in loaded) {
+    const message = err?.message ?? 'onbekende fout';
     return (
       <div className={styles.warning}>
-        Marketinggegevens konden niet worden geladen: {err.message}
-        {/does not exist|relation|permission denied/i.test(err.message) && <><br />Voer in de webshop-repo <code>supabase/0081_marketing_consent.sql</code> uit.</>}
+        Marketinggegevens konden niet worden geladen: {message}
+        {/does not exist|relation|permission denied/i.test(message) && <><br />Voer in de webshop-repo <code>supabase/0081_marketing_consent.sql</code> uit.</>}
       </div>
     );
   }
+  const { sends, sup, orders, since } = loaded;
 
   const rows = sends.data ?? [];
   const last30 = rows.filter((r) => r.sent_at >= since(30));
