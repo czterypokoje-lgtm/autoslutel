@@ -26,6 +26,15 @@ const TABS = [
   { value: 'refunded', label: 'Terugbetaald' },
 ] as const;
 
+const STATUS_CLASS: Record<string, string> = {
+  paid: styles.stPaid, delivered: styles.stDelivered, processing: styles.stProcessing, shipped: styles.stShipped,
+  pending: styles.stPending, cancelled: styles.stCancelled, refunded: styles.stRefunded,
+};
+const STATUS_LABEL: Record<string, string> = Object.fromEntries(TABS.filter((t) => t.value).map((t) => [t.value, t.label]));
+const StatusBadge = ({ status }: { status: string }) => (
+  <span className={`${styles.badge} ${STATUS_CLASS[status] ?? styles.no}`}>{STATUS_LABEL[status] ?? status}</span>
+);
+
 /** First 90 characters of the note; a key code line stays readable because this screen is office-only anyway. */
 function noteSnippet(note: string | null): string {
   const t = (note ?? '').trim().replace(/\s+/g, ' ');
@@ -196,9 +205,7 @@ export default async function OrdersPage({
                   </td>
                   <td>{[o.postcode, o.city].filter(Boolean).join(' ')}</td>
                   <td>
-                    <span className={`${styles.badge} ${styles.no}`}>
-                      {o.status as string}
-                    </span>
+                    <StatusBadge status={o.status as string} />
                   </td>
                   <td>
                     {o.needs_technician ? (
@@ -240,7 +247,7 @@ export default async function OrdersPage({
                   {o.order_number as string}
                   <span className={styles.sub}>{o.name as string}</span>
                 </Link>
-                <span className={`${styles.badge} ${styles.no}`}>{o.status as string}</span>
+                <StatusBadge status={o.status as string} />
               </div>
               <div className={styles.cardRow}>
                 <span className={styles.cardLabel}><PreviewText>{"Plaats"}</PreviewText></span>

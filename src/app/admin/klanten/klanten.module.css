@@ -332,3 +332,11 @@
     display: flex;
   }
 }
+
+/* Webshop order statuses: one colour per state, so the list reads at a glance. */
+.stPaid, .stDelivered { color: var(--crm-ok); background: var(--crm-ok-bg); }
+.stProcessing { color: var(--crm-warn); background: var(--crm-warn-bg); }
+.stShipped { color: #1d4ed8; background: rgba(37, 99, 235, 0.10); }
+.stPending { color: var(--crm-muted); background: var(--crm-sunk); }
+.stCancelled { color: var(--crm-stop); background: var(--crm-stop-bg); }
+.stRefunded { color: #6d28d9; background: rgba(124, 58, 237, 0.10); }
