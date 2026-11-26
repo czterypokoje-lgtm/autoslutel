@@ -183,7 +183,12 @@ const KEYFORCARS_NAV: NavItem[] = [
   { label: 'Bestellingen', icon: Package, href: '/admin/orders' },
   { label: 'Verzending', icon: Truck, href: '/admin/verzending' },
   { label: 'Best verkocht', icon: BarChart3, href: '/admin/best-verkocht' },
-  { label: 'E-mailmarketing', icon: BarChart3, href: '/admin/marketing' },
+  /*
+   * No E-mailmarketing here. That screen reads the marketing tables the
+   * Autosleutel24 webshop writes (its own 0081); KeyForCars sells through
+   * WooCommerce and has none of them, so the entry would open a warning
+   * instead of a report. Add it the day KeyForCars runs those flows.
+   */
   {
     label: 'Bank',
     icon: Landmark,
