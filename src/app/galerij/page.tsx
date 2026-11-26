@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { SITE_CONFIG } from '@/config/site.config';
 import GallerySlider from '@/components/GallerySlider/GallerySlider';
 import { REAL_GALLERY_PROJECTS } from '@/config/gallery';
+import { cityPath } from '@/config/cityUrls';
 
 export const metadata: Metadata = {
   title: `Galerij | ${SITE_CONFIG.name}`,
@@ -55,7 +56,7 @@ export default function GalerijPage() {
         <span className="section-label">GALERIJ & PROJECTEN</span>
         <h1 style={{ color: '#fff', marginBottom: '1rem' }}>Ons Werk in Beelden</h1>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, margin: '0 auto' }}>
-          Bekijk onze {REAL_GALLERY_PROJECTS.length} recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in <Link href="/autosleutel-bijmaken/utrecht" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href="/autosleutel-bijmaken/amsterdam" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href="/autosleutel-bijmaken/almere" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link> en heel Nederland.
+          Bekijk onze {REAL_GALLERY_PROJECTS.length} recente sleutelreparaties, sleutel programmeringen en smart key inleerprojecten op locatie in <Link href={cityPath('utrecht')} style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Utrecht</Link>, <Link href={cityPath('amsterdam')} style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Amsterdam</Link>, <Link href="/steden/arnhem" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Arnhem</Link>, <Link href="/steden/den-haag" style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Den Haag</Link>, <Link href={cityPath('almere')} style={{color: 'var(--orange-500)', textDecoration: 'underline'}}>Almere</Link> en heel Nederland.
         </p>
       </section>
 

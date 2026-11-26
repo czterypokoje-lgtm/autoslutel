@@ -45,11 +45,17 @@ export const BRANDS_WITH_LOGOS = [
   { name: 'Subaru', slug: 'subaru-autosleutel-bijmaken', models: 'Impreza, Forester, Outback', svg: '/brands/subaru_sleutel_bijmaken.svg' },
   { name: 'Dacia', slug: 'dacia-autosleutel-bijmaken', models: 'Duster, Sandero, Logan, Spring', svg: '/brands/dacia_sleutel_bijmaken.svg' },
   { name: 'Dodge', slug: 'dodge-autosleutel-bijmaken', models: 'RAM, Challenger, Charger, Caliber', svg: '/brands/dodge_sleutel_bijmaken.webp' },
-  { name: 'Ferrari', slug: 'ferrari-autosleutel-bijmaken', models: '458, 488, California, F430', svg: '/brands/ferrari_sleutel_bijmaken.webp' },
   { name: 'Jaguar', slug: 'jaguar-autosleutel-bijmaken', models: 'F-Type, XF, XE, F-Pace', svg: '/brands/jaguar_sleutel_bijmaken.webp' },
   { name: 'Saab', slug: 'saab-autosleutel-bijmaken', models: '9-3, 9-5', svg: '/brands/saab_sleutel_bijmaken.webp' },
-  { name: 'GMC', slug: 'gmc-autosleutel-bijmaken', models: 'Sierra, Yukon, Acadia', svg: '/brands/gmc_sleutel_bijmaken.webp' },
   { name: 'Bentley', slug: 'bentley-autosleutel-bijmaken', models: 'Continental GT, Bentayga, Flying Spur', svg: '/brands/bentley_sleutel_bijmaken.webp' }
+  /*
+   * Ferrari and GMC were in this list until 26 Nov 2026. The brand audit
+   * deleted both pages and next.config.ts 301s their URLs to /merken, but
+   * this grid is its own hand-written list rather than a view of BRANDS, so
+   * it kept shipping the two dead logos on every page that renders it --
+   * a click on either landed on the overview. Anything added here needs a
+   * matching entry in src/config/brands.ts or it does the same again.
+   */
 ];
 
 export default function BrandsLogoGrid({
@@ -68,7 +74,7 @@ export default function BrandsLogoGrid({
 
   /*
    * Thirty-five logos at once buried Volkswagen and BMW — the makes people
-   * actually arrive looking for — under Bentley, Ferrari and Saab. The common
+   * actually arrive looking for — under Bentley, Maserati and Saab. The common
    * ones lead; the rest are one click away.
    */
   const lead = BRANDS_WITH_LOGOS.slice(0, initiallyVisible);

@@ -6,7 +6,7 @@ import { CityPageBody, cityMetadata, cityStaticParams } from './cityPage';
 /*
  * The original home of every city page, and still the home of 58 of them.
  *
- * The four pilot cities moved to /autosleutel-bijmaken/<stad> (see
+ * The four pilot cities moved to /autosleutel-bijmaken-<stad> (see
  * src/config/cityUrls.ts for why and for how to judge it). This route keeps
  * serving the rest unchanged and 301s the four, so no link anywhere -- ours,
  * Google's, or a customer's bookmark -- breaks on the way.

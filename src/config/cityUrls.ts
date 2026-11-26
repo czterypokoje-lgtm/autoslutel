@@ -16,7 +16,7 @@
  * amsterdam 9.7 on 330 for none. They are where a URL change can be measured
  * and where there is almost nothing to lose.
  *
- * The hyphen, not a nested /autosleutel-bijmaken/<stad>: four of the six
+ * The hyphen, not a nested /autosleutel-bijmaken/<stad> path: four of the six
  * pages outranking us for this query family use the hyphenated form at root
  * depth and only one nests it. Next cannot express `autosleutel-bijmaken-[stad]`
  * as a dynamic segment, so each pilot city is its own small route file. That is

@@ -5,24 +5,29 @@ import styles from './Footer.module.css';
 import { SITE_CONFIG, WHATSAPP_URL, isBtwConfigured } from '@/config/site.config';
 import { BRANDS } from '../../config/brands';
 import { BRAND_COUNT } from '@/config/brands';
+import { cityPath } from '@/config/cityUrls';
 
 const diensten = [
   ['Autosleutel Bijmaken', '/diensten/autosleutel-bijmaken'],
   ['Transponder Sleutel', '/diensten/transponder-programmeren'],
   ['Smart Key / Keyless', '/diensten/smart-key-programmeren'],
   ['Contactslot Auto Vervangen', '/diensten/contactslot-auto-vervangen'],
-  ['Reservesleutel Maken', '/diensten/reservesleutel-maken'],
   ['Autosleutels Repareren', '/diensten/autosleutels-repareren'],
   /*
-   * These three were live, in the sitemap, and linked from nowhere. A page
-   * nothing points at is one Google finds and nobody else does -- and the
-   * queries behind them are 708, 798 and a position-8 local term, which is
-   * exactly the traffic an orphan cannot collect.
+   * These were live, in the sitemap, and linked from nowhere. A page nothing
+   * points at is one Google finds and nobody else does -- and the queries
+   * behind them run to hundreds a month plus a position-8 local term, which
+   * is exactly the traffic an orphan cannot collect.
+   *
+   * Three of the group have since gone: reservesleutel-maken,
+   * autosleutel-kopieren and autosleutel-laten-maken were folded into
+   * /diensten/autosleutel-bijmaken (next.config.ts) and the links here were
+   * never updated, so each was a 301 landing on the page already linked at
+   * the top of this same list -- three rows spending a redirect to arrive
+   * where row one already goes. Removed 26 Nov 2026.
    */
-  ['Autosleutel Kopiëren', '/autosleutel-kopieren'],
   ['Mobiele Sleutelmaker', '/mobiele-sleutelmaker'],
   ['Bijmaken in de Buurt', '/autosleutel-bijmaken-in-de-buurt'],
-  ['Autosleutel Laten Maken', '/autosleutel-laten-maken'],
   ['Renault Sleutelkaart', '/renault-sleutelkaart-kwijt-of-kapot'],
   ['Motorsleutel Bijmaken', '/motorsleutel-bijmaken'],
   ['Alle diensten →', '/diensten'],
@@ -33,13 +38,13 @@ const steden = [
   ['Regio Gelderland', '/regio/gelderland'],
   ['Regio Utrecht', '/regio/utrecht'],
   ['Regio Noord-Holland', '/regio/noord-holland'],
-  ['Amsterdam', '/autosleutel-bijmaken/amsterdam'],
+  ['Amsterdam', cityPath('amsterdam')],
   ['Den Haag', '/steden/den-haag'],
-  ['Utrecht', '/autosleutel-bijmaken/utrecht'],
+  ['Utrecht', cityPath('utrecht')],
   ['Arnhem', '/steden/arnhem'],
   ['Nijmegen', '/steden/nijmegen'],
   ['Apeldoorn', '/steden/apeldoorn'],
-  ['Almere', '/autosleutel-bijmaken/almere'],
+  ['Almere', cityPath('almere')],
   ['Amersfoort', '/steden/amersfoort'],
   ['Ede', '/steden/ede'],
   ['Hilversum', '/steden/hilversum'],
@@ -47,7 +52,7 @@ const steden = [
   ['Zeist', '/steden/zeist'],
   ['Nieuwegein', '/steden/nieuwegein'],
   ['Houten', '/steden/houten'],
-  ['Amstelveen', '/autosleutel-bijmaken/amstelveen'],
+  ['Amstelveen', cityPath('amstelveen')],
   ['Breukelen', '/steden/breukelen'],
   ['Naarden', '/steden/naarden'],
   ['Soest', '/steden/soest'],
@@ -81,7 +86,7 @@ export default function Footer() {
                 style={{ height: '42px', width: 'auto', display: 'block' }}
               />
             </div>
-            <p className={styles.footerDesc}>Mobiele autosleutelspecialist voor alle merken: autosleutel kwijt, kapot of bijmaken, en auto open zonder schade. Binnen 30-60 min ter plaatse, 24/7. Wij komen naar u toe in <Link href="/autosleutel-bijmaken/amsterdam" className={styles.seoLink}>Amsterdam</Link>, <Link href="/autosleutel-bijmaken/utrecht" className={styles.seoLink}>Utrecht</Link>, <Link href="/autosleutel-bijmaken/almere" className={styles.seoLink}>Almere</Link>, <Link href="/steden/den-haag" className={styles.seoLink}>Den Haag</Link>, <Link href="/steden/rotterdam" className={styles.seoLink}>Rotterdam</Link>, <Link href="/steden/arnhem" className={styles.seoLink}>Arnhem</Link>, <Link href="/steden/amersfoort" className={styles.seoLink}>Amersfoort</Link>, <Link href="/steden/hilversum" className={styles.seoLink}>Hilversum</Link>, <Link href="/steden/nijmegen" className={styles.seoLink}>Nijmegen</Link> en <Link href="/steden/apeldoorn" className={styles.seoLink}>Apeldoorn</Link>, en in heel <Link href="/regio/utrecht" className={styles.seoLink}>Utrecht</Link>, <Link href="/regio/noord-holland" className={styles.seoLink}>Noord-Holland</Link>, <Link href="/regio/zuid-holland" className={styles.seoLink}>Zuid-Holland</Link>, <Link href="/regio/gelderland" className={styles.seoLink}>Gelderland</Link> en <Link href="/regio/flevoland" className={styles.seoLink}>Flevoland</Link>.</p>
+            <p className={styles.footerDesc}>Mobiele autosleutelspecialist voor alle merken: autosleutel kwijt, kapot of bijmaken, en auto open zonder schade. Binnen 30-60 min ter plaatse, 24/7. Wij komen naar u toe in <Link href={cityPath('amsterdam')} className={styles.seoLink}>Amsterdam</Link>, <Link href={cityPath('utrecht')} className={styles.seoLink}>Utrecht</Link>, <Link href={cityPath('almere')} className={styles.seoLink}>Almere</Link>, <Link href="/steden/den-haag" className={styles.seoLink}>Den Haag</Link>, <Link href="/steden/rotterdam" className={styles.seoLink}>Rotterdam</Link>, <Link href="/steden/arnhem" className={styles.seoLink}>Arnhem</Link>, <Link href="/steden/amersfoort" className={styles.seoLink}>Amersfoort</Link>, <Link href="/steden/hilversum" className={styles.seoLink}>Hilversum</Link>, <Link href="/steden/nijmegen" className={styles.seoLink}>Nijmegen</Link> en <Link href="/steden/apeldoorn" className={styles.seoLink}>Apeldoorn</Link>, en in heel <Link href="/regio/utrecht" className={styles.seoLink}>Utrecht</Link>, <Link href="/regio/noord-holland" className={styles.seoLink}>Noord-Holland</Link>, <Link href="/regio/zuid-holland" className={styles.seoLink}>Zuid-Holland</Link>, <Link href="/regio/gelderland" className={styles.seoLink}>Gelderland</Link> en <Link href="/regio/flevoland" className={styles.seoLink}>Flevoland</Link>.</p>
             <div className={styles.footerBadges}>
               <span>KVK: {SITE_CONFIG.kvk}</span>
               {isBtwConfigured() && <span>BTW: {SITE_CONFIG.btw}</span>}
@@ -216,7 +221,7 @@ export default function Footer() {
           <div className={styles.bottomInner}>
             <div className={styles.footerSeoText} style={{ marginBottom: '2rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', lineHeight: '1.6', marginBottom: '1rem' }}>
-                Autosleutel24 is uw betrouwbare, mobiele autosleutelspecialist in Nederland. Met onze geavanceerde diagnoseapparatuur en CNC-freesmachines openen wij schadevrij deuren, programmeren wij smart keys en lossen wij 'All Keys Lost' situaties op locatie op. 24/7 bereikbaar in regio <Link href="/autosleutel-bijmaken/utrecht" className={styles.seoLink}>Utrecht</Link>, <Link href="/autosleutel-bijmaken/amsterdam" className={styles.seoLink}>Amsterdam</Link>, <Link href="/steden/den-haag" className={styles.seoLink}>Den Haag</Link>, <Link href="/autosleutel-bijmaken/almere" className={styles.seoLink}>Almere</Link>, <Link href="/steden/amersfoort" className={styles.seoLink}>Amersfoort</Link>, <Link href="/steden/arnhem" className={styles.seoLink}>Arnhem</Link>, <Link href="/steden/nijmegen" className={styles.seoLink}>Nijmegen</Link>, <Link href="/steden/apeldoorn" className={styles.seoLink}>Apeldoorn</Link> en de rest van de Randstad met standaard 12 maanden garantie.
+                Autosleutel24 is uw betrouwbare, mobiele autosleutelspecialist in Nederland. Met onze geavanceerde diagnoseapparatuur en CNC-freesmachines openen wij schadevrij deuren, programmeren wij smart keys en lossen wij 'All Keys Lost' situaties op locatie op. 24/7 bereikbaar in regio <Link href={cityPath('utrecht')} className={styles.seoLink}>Utrecht</Link>, <Link href={cityPath('amsterdam')} className={styles.seoLink}>Amsterdam</Link>, <Link href="/steden/den-haag" className={styles.seoLink}>Den Haag</Link>, <Link href={cityPath('almere')} className={styles.seoLink}>Almere</Link>, <Link href="/steden/amersfoort" className={styles.seoLink}>Amersfoort</Link>, <Link href="/steden/arnhem" className={styles.seoLink}>Arnhem</Link>, <Link href="/steden/nijmegen" className={styles.seoLink}>Nijmegen</Link>, <Link href="/steden/apeldoorn" className={styles.seoLink}>Apeldoorn</Link> en de rest van de Randstad met standaard 12 maanden garantie.
               </p>
             </div>
             <p>© {year} {SITE_CONFIG.fullName}. Alle rechten voorbehouden.</p>

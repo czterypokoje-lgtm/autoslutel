@@ -48,11 +48,15 @@ const DienstenStructure = [
       { href: '/diensten/transponder-programmeren', label: 'Transponder Programmeren' },
       { href: '/diensten/afstandsbediening-bijmaken', label: 'Afstandsbediening Bijmaken' },
       { href: '/diensten/smart-key-programmeren', label: 'Smart Key / Keyless' },
-      { href: '/diensten/reservesleutel-maken', label: 'Reservesleutel Maken' },
       { href: '/autosleutel-bestellen-op-kenteken', label: 'Bestellen op Kenteken' },
-      { href: '/autosleutel-kopieren', label: 'Autosleutel Kopiëren' },
+      /*
+       * Reservesleutel Maken, Autosleutel Kopieren and Autosleutel Laten
+       * Maken stood here until 26 Nov 2026. All three pages were folded into
+       * this group's own parent, /diensten/autosleutel-bijmaken
+       * (next.config.ts), so the submenu offered three extra ways to reach
+       * the heading directly above them -- each one a 301.
+       */
       { href: '/autosleutel-bijmaken-in-de-buurt', label: 'Bijmaken in de Buurt' },
-      { href: '/autosleutel-laten-maken', label: 'Autosleutel Laten Maken' },
       { href: '/motorsleutel-bijmaken', label: 'Motorsleutel Bijmaken' },
     ]
   },

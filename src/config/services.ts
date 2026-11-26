@@ -455,18 +455,34 @@ export function getRelatedBlogPosts(serviceSlug: string) {
     ],
   };
 
+  /*
+   * The mapping above and the fallback below both still name posts that have
+   * since been folded into a service page -- the six in
+   * REDIRECTED_BLOG_SLUGS. The blog index and the sitemap already drop those
+   * (both filter on the same set); this list did not, so every "lees ook"
+   * block offering one shipped an internal link that 301s away. The fallback
+   * was the worst of it: 'autosleutel-bijmaken-tips-snel-veilig' leads it, so
+   * every page with no mapping of its own showed a redirect first.
+   *
+   * Filtered here rather than by editing the eight lists, so a post added to
+   * REDIRECTED_BLOG_SLUGS tomorrow disappears from these blocks on its own.
+   */
+  const live = (posts: typeof BLOG_POSTS) =>
+    posts.filter(post => !REDIRECTED_BLOG_SLUGS.has(post.slug));
+
   const slugs = mapping[serviceSlug];
   if (slugs) {
-    return BLOG_POSTS.filter(post => slugs.includes(post.slug));
+    return live(BLOG_POSTS.filter(post => slugs.includes(post.slug)));
   }
 
   // Fallback: general helpful articles shown when no specific mapping matches
-  return BLOG_POSTS.filter(post => 
+  return live(BLOG_POSTS.filter(post =>
     [
-      'autosleutel-bijmaken-tips-snel-veilig',
+      // Replaces 'autosleutel-bijmaken-tips-snel-veilig', which now redirects.
+      'autosleutel-bijmaken-kosten-prijslijst',
       'dealer-vs-mobiele-sleutelmaker',
       'verzekering-dekt-autosleutel-vervangen',
       'autosleutel-kosten-per-merk-2026',
     ].includes(post.slug)
-  );
+  ));
 }
