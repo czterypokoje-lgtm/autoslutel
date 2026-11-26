@@ -26,6 +26,13 @@ const TABS = [
   { value: 'refunded', label: 'Terugbetaald' },
 ] as const;
 
+/** First 90 characters of the note; a key code line stays readable because this screen is office-only anyway. */
+function noteSnippet(note: string | null): string {
+  const t = (note ?? '').trim().replace(/\s+/g, ' ');
+  if (!t) return '—';
+  return t.length > 90 ? `${t.slice(0, 90)}…` : t;
+}
+
 export default async function OrdersPage({
   searchParams,
 }: {
@@ -50,7 +57,7 @@ export default async function OrdersPage({
   let query = supabase
     .from('orders')
     .select(
-      'id, order_number, status, name, email, postcode, city, total_inc, needs_technician, kenteken, tracking_code, created_at, paid_at'
+      'id, order_number, status, name, email, postcode, city, total_inc, needs_technician, kenteken, tracking_code, internal_note, created_at, paid_at'
     )
     .order('created_at', { ascending: false })
     .limit(200);
@@ -159,6 +166,7 @@ export default async function OrdersPage({
               <th>Status</th>
               <th>Monteur nodig</th>
               <th>Track &amp; trace</th>
+              <th><PreviewText>{"Notitie"}</PreviewText></th>
               <th style={{ textAlign: 'right' }}><PreviewText>{"Totaal"}</PreviewText></th>
               <th><PreviewText>{"Datum"}</PreviewText></th>
             </tr>
@@ -166,7 +174,7 @@ export default async function OrdersPage({
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={8} className={styles.empty}>
+                <td colSpan={9} className={styles.empty}>
                   Geen bestellingen. De webshop is offline; hier staan alleen bestellingen
                   van vóór die tijd.
                 </td>
@@ -200,6 +208,10 @@ export default async function OrdersPage({
                     )}
                   </td>
                   <td>{(o.tracking_code as string) ?? '—'}</td>
+                  {/* The office's own note, readable from the list; the full text on hover, the last line first since that is the newest. */}
+                  <td title={(o.internal_note as string) ?? ''} style={{ maxWidth: 260, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {noteSnippet(o.internal_note as string | null)}
+                  </td>
                   <td className={styles.money}>
                     {MONEY.format(Number(o.total_inc ?? 0))}
                   </td>
@@ -242,6 +254,12 @@ export default async function OrdersPage({
                 <span className={styles.cardLabel}>Track &amp; trace</span>
                 <span className={styles.cardValue}>{(o.tracking_code as string) ?? '—'}</span>
               </div>
+              {o.internal_note ? (
+                <div className={styles.cardRow}>
+                  <span className={styles.cardLabel}><PreviewText>{"Notitie"}</PreviewText></span>
+                  <span className={styles.cardValue} style={{ whiteSpace: 'pre-line' }}>{o.internal_note as string}</span>
+                </div>
+              ) : null}
               <div className={styles.cardRow}>
                 <span className={styles.cardLabel}><PreviewText>{"Totaal"}</PreviewText></span>
                 <span className={styles.cardValue}>{MONEY.format(Number(o.total_inc ?? 0))}</span>
