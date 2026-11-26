@@ -143,6 +143,8 @@ export default async function InventoryReport({ searchParams }: { searchParams: 
         </p>
         <div className="flex flex-wrap gap-2">
           {office && !CRM_PREVIEW && <Button asChild variant="secondary"><Link href="/admin/voorraad/bustransfer"><PreviewText>Voorraad verplaatsen</PreviewText></Link></Button>}
+          {/* A plain anchor, not a Link: the route answers with a file to download, not a page to route to. */}
+          {office && !CRM_PREVIEW && <Button asChild variant="secondary"><a href="/api/admin/voorraad/backup"><PreviewText>Back-up (Excel)</PreviewText></a></Button>}
           <Button asChild variant="secondary"><Link href={back + '&preview=1'}><PreviewText>PDF-voorbeeld</PreviewText></Link></Button>
         </div>
       </div>
