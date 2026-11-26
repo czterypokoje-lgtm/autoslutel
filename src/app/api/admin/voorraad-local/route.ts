@@ -3,7 +3,7 @@ import { ARTICLE_CODE, stockCatalog as catalog, WORKSHOP_PREFIX } from '@/lib/st
 import { CRM_PREVIEW } from '@/lib/supabase/env';
 import { hasLanCookie, lanMode } from '@/lib/lanPreview';
 import { requireWarehouseUserApi } from '@/lib/crmSession';
-import { kfcGet, kfcPost } from '@/lib/kfcInventory';
+import { databaseCatalog, kfcGet, kfcPost } from '@/lib/kfcInventory';
 import { WAREHOUSE } from '@/config/install';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { loadStock, readPhoto, saveStock, writePhoto, type StockSlot } from '@/lib/kfcStockStore';
@@ -111,6 +111,14 @@ export async function GET(request: Request) {
   if (!(await allowed(request))) return reply({}, 404);
   const query = new URL(request.url).searchParams;
   if (query.get('catalog') === '1') {
+    if (LEDGER) {
+      // Live: the bundled catalogue plus the cards added in the database since the build (not cached: they change).
+      const body = JSON.stringify([...catalog, ...await databaseCatalog()]);
+      const etag = `"${createHash('sha256').update(body).digest('base64url')}"`;
+      const headers = { 'Cache-Control': 'private, no-cache', 'Content-Type': 'application/json', ETag: etag };
+      if (request.headers.get('if-none-match') === etag) return new Response(null, { status: 304, headers });
+      return new Response(body, { headers });
+    }
     if (!catalogResponse) {
       const body = JSON.stringify(catalog);
       catalogResponse = { body, etag: `"${createHash('sha256').update(body).digest('base64url')}"` };
