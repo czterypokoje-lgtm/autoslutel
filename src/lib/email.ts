@@ -32,6 +32,8 @@ export interface Mail {
   headers?: Record<string, string>;
   /** Sender override; default is MAIL_FROM. The inbox answers as info@, orders keep their own address. */
   from?: string;
+  /** Files to attach; content is base64. */
+  attachments?: { filename: string; content: string }[];
 }
 
 /** Very small text-to-HTML: paragraphs only, everything escaped. */
@@ -54,7 +56,7 @@ export async function sendMail(mail: Mail): Promise<boolean> {
 }
 
 /** Same as sendMail, but hands back the provider's id so the inbox can track the message. */
-export async function deliverMail({ to, subject, text, replyTo, headers, from: fromOverride }: Mail): Promise<{ id: string } | null> {
+export async function deliverMail({ to, subject, text, replyTo, headers, from: fromOverride, attachments }: Mail): Promise<{ id: string } | null> {
   if (!providerRequestsEnabled()) return null;
   const key = process.env.RESEND_API_KEY;
   if (!key) {
@@ -81,6 +83,7 @@ export async function deliverMail({ to, subject, text, replyTo, headers, from: f
         html: asHtml(text),
         reply_to: replyTo ?? SITE_CONFIG.email,
         ...(headers && Object.keys(headers).length ? { headers } : {}),
+        ...(attachments?.length ? { attachments } : {}),
       }),
       signal: AbortSignal.timeout(10000),
     });

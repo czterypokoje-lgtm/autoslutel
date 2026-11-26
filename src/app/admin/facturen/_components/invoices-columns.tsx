@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { ColumnDef } from '@tanstack/react-table';
 import { cn } from 'cn';
-import { CheckCircle, MoreHorizontal, Send } from 'lucide-react';
+import { CheckCircle, Mail, MoreHorizontal, Send } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -42,6 +42,23 @@ function RowActions({ row, t }: { row: InvoiceRow; t: T }) {
   const router = useRouter();
   const [busy, setBusy] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
+  const [note, setNote] = React.useState('');
+
+  /* Sends the PDF from the CRM (POST .../send), not the user's mail program. */
+  async function sendByMail() {
+    setBusy(true); setFailed(false); setNote('');
+    try {
+      const response = await fetch(`/api/admin/invoices/${row.id}/send`, { method: 'POST' });
+      const body = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(body?.error ?? String(response.status));
+      setNote(`${t('Verstuurd naar')} ${body?.to ?? row.client_email}`);
+      router.refresh();
+    } catch (e) {
+      setFailed(true); setNote(e instanceof Error ? e.message : '');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function setStatus(next: InvoiceRow['status']) {
     setBusy(true);
@@ -63,7 +80,7 @@ function RowActions({ row, t }: { row: InvoiceRow; t: T }) {
 
   return (
     <div className="flex items-center justify-end gap-2">
-      {failed && <span className="text-destructive text-xs">{t('Opslaan mislukt')}</span>}
+      {note ? <span className={failed ? 'text-destructive text-xs' : 'text-muted-foreground text-xs'}>{note}</span> : failed && <span className="text-destructive text-xs">{t('Opslaan mislukt')}</span>}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -89,7 +106,7 @@ function RowActions({ row, t }: { row: InvoiceRow; t: T }) {
           {row.client_email && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild><a href={`mailto:${row.client_email}`}>{t('E-mail sturen')}</a></DropdownMenuItem>
+              <DropdownMenuItem disabled={busy} onSelect={() => void sendByMail()}><Mail /> {t('E-mail sturen')}</DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>

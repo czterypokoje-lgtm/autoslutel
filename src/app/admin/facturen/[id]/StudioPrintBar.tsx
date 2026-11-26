@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ArrowLeft, Pencil, Printer, Trash2 } from 'lucide-react';
+import { ArrowLeft, Mail, Pencil, Printer, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -28,13 +28,27 @@ const STATUS_LABEL: Record<Status, string> = {
  * surface because the sheet page is deliberately light whatever the CRM theme
  * is, and token-coloured buttons need a matching ground to stay readable.
  */
-export default function StudioPrintBar({ invoiceId, status }: { invoiceId: string; status: Status }) {
+export default function StudioPrintBar({ invoiceId, status, clientEmail }: { invoiceId: string; status: Status; clientEmail?: string | null }) {
   const router = useRouter();
   const { t } = usePreviewLanguage();
   const [current, setCurrent] = useState<Status>(status);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(false);
+  const [mailing, setMailing] = useState(false);
+  const [mailed, setMailed] = useState('');
+
+  /* The PDF goes out from the CRM through Resend; a concept becomes "verzonden". */
+  async function sendByMail() {
+    setMailing(true); setError(''); setMailed('');
+    const response = await fetch(`/api/admin/invoices/${invoiceId}/send`, { method: 'POST' }).catch(() => null);
+    const body = await response?.json().catch(() => null);
+    if (!response || !response.ok) { setError(body?.error ?? 'Versturen mislukt.'); setMailing(false); return; }
+    setMailed(`Verstuurd naar ${body?.to ?? clientEmail ?? ''}`);
+    if (current === 'concept') setCurrent('verzonden');
+    setMailing(false);
+    router.refresh();
+  }
 
   /* Only a concept can go: a sent or paid factuur carries a number from a
      gap-free sequence and is reversed with a creditfactuur, not removed. */
@@ -88,6 +102,7 @@ export default function StudioPrintBar({ invoiceId, status }: { invoiceId: strin
 
         <div className="flex flex-wrap items-center gap-2">
           {error && <span className="text-destructive text-xs">{error}</span>}
+          {mailed && <span className="text-muted-foreground text-xs">{mailed}</span>}
           <Select value={current} disabled={saving} onValueChange={(value) => void changeStatus(value as Status)}>
             <SelectTrigger size="sm" className="w-36" aria-label="Status">
               <SelectValue />
@@ -105,6 +120,9 @@ export default function StudioPrintBar({ invoiceId, status }: { invoiceId: strin
           </Button>
           <Button size="sm" onClick={() => window.print()}>
             <Printer data-icon="inline-start" />Afdrukken / Opslaan als PDF
+          </Button>
+          <Button size="sm" variant="outline" disabled={mailing || !clientEmail} title={clientEmail ? `Stuur de pdf naar ${clientEmail}` : 'Geen e-mailadres op de factuur'} onClick={() => void sendByMail()}>
+            <Mail data-icon="inline-start" />{mailing ? 'Versturen…' : 'E-mail sturen'}
           </Button>
           {current === 'concept' && (
             <Button

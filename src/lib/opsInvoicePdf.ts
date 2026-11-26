@@ -11,7 +11,12 @@ import { degrees, PDFDocument, rgb, StandardFonts, type PDFFont } from 'pdf-lib'
 export interface PdfInvoice {
   invoice_number: string;
   issue_date: string;
+  /** Stored per invoice since 0144; without it the final PDF shows issue date + 14 days. */
+  due_date?: string | null;
   biller_name: string;
+  biller_street?: string | null;
+  biller_postcode?: string | null;
+  biller_city?: string | null;
   biller_email: string | null;
   biller_phone: string | null;
   biller_kvk: string | null;
@@ -73,9 +78,17 @@ function wrap(value: string, font: PDFFont, size: number, width: number) {
   return out;
 }
 
-export async function buildInvoicePdf(invoice: PdfInvoice, lines: PdfLine[]): Promise<Uint8Array> {
+export interface PdfOptions {
+  /** true (default): every page stamped CONCEPT, as the WhatsApp drafts need. false: the final factuur the customer receives. */
+  draft?: boolean;
+  /** PNG bytes of the logo for the final version; omitted = the company name in text. */
+  logoPng?: Uint8Array | null;
+}
+
+export async function buildInvoicePdf(invoice: PdfInvoice, lines: PdfLine[], options: PdfOptions = {}): Promise<Uint8Array> {
+  const draft = options.draft ?? true;
   const pdf = await PDFDocument.create();
-  pdf.setTitle(`Concept factuur ${invoice.invoice_number}`);
+  pdf.setTitle(`${draft ? 'Concept factuur' : 'Factuur'} ${invoice.invoice_number}`);
   const regular = await pdf.embedFont(StandardFonts.Helvetica);
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
 
@@ -84,6 +97,7 @@ export async function buildInvoicePdf(invoice: PdfInvoice, lines: PdfLine[]): Pr
   let y = PAGE.height - PAGE.margin;
 
   const stamp = () => {
+    if (!draft) return;
     page.drawText('CONCEPT', {
       x: 120, y: 280, size: 90, font: bold, color: RED, opacity: 0.1, rotate: degrees(45),
     });
@@ -107,18 +121,30 @@ export async function buildInvoicePdf(invoice: PdfInvoice, lines: PdfLine[]): Pr
 
   stamp();
 
-  put(invoice.biller_name, PAGE.margin, 13, bold);
+  const dueDate = new Date(invoice.due_date ? `${invoice.due_date}T00:00:00Z` : Date.parse(invoice.issue_date) + 14 * 86_400_000);
+  if (options.logoPng && !draft) {
+    const logo = await pdf.embedPng(options.logoPng);
+    const w = 150, h = (logo.height / logo.width) * w;
+    page.drawImage(logo, { x: PAGE.margin, y: y - h + 10, width: w, height: h });
+  } else {
+    put(invoice.biller_name, PAGE.margin, 13, bold);
+  }
   putRight(`Factuur ${invoice.invoice_number}`, right, 16, bold);
   y -= 20;
-  putRight(`Datum van uitgifte: ${DATE.format(new Date(invoice.issue_date))}`, right, 10, regular, DIM);
+  putRight(`Factuurdatum: ${DATE.format(new Date(invoice.issue_date))}`, right, 10, regular, DIM);
+  if (!draft) { y -= 14; putRight(`Vervaldatum: ${DATE.format(dueDate)}`, right, 10, regular, DIM); }
   y -= 34;
 
+  const billerPlace = [invoice.biller_postcode, invoice.biller_city].filter(Boolean).join(' ');
   const left = [
+    ...(!draft && options.logoPng ? [invoice.biller_name] : []),
+    invoice.biller_street ?? null,
+    billerPlace || null,
     invoice.biller_email,
     invoice.biller_phone,
-    invoice.biller_kvk && `KVK: ${invoice.biller_kvk}`,
-    invoice.biller_btw ? `BTW: ${invoice.biller_btw}` : 'BTW: nog invullen',
-    invoice.biller_iban ? `IBAN: ${invoice.biller_iban}` : 'IBAN: nog invullen',
+    invoice.biller_kvk && `KvK: ${invoice.biller_kvk}`,
+    invoice.biller_btw ? `Btw-id: ${invoice.biller_btw}` : (draft ? 'BTW: nog invullen' : null),
+    invoice.biller_iban ? `IBAN: ${invoice.biller_iban}` : (draft ? 'IBAN: nog invullen' : null),
   ].filter((v): v is string => Boolean(v));
   const place = [invoice.client_postcode, invoice.client_city].filter(Boolean).join(' ');
   const client = [
@@ -126,7 +152,7 @@ export async function buildInvoicePdf(invoice: PdfInvoice, lines: PdfLine[]): Pr
     place,
     invoice.client_email,
     invoice.client_phone,
-    invoice.client_btw && `BTW: ${invoice.client_btw}`,
+    invoice.client_btw && `Btw-id: ${invoice.client_btw}`,
   ].filter((v): v is string => Boolean(v));
 
   const top = y;
@@ -191,6 +217,13 @@ export async function buildInvoicePdf(invoice: PdfInvoice, lines: PdfLine[]): Pr
       put(row, PAGE.margin, 9, regular, DIM);
       y -= 12;
     }
+  }
+
+  if (!draft) {
+    newPageIfNeeded(40);
+    y -= 10;
+    const pay = `Gelieve te betalen voor ${DATE.format(dueDate)}${invoice.biller_iban ? ` op IBAN ${invoice.biller_iban}` : ''} t.n.v. ${invoice.biller_name}, o.v.v. ${invoice.invoice_number}.`;
+    for (const row of wrap(pay, regular, 10, right - PAGE.margin)) { put(row, PAGE.margin, 10, regular, INK); y -= 13; }
   }
 
   return pdf.save();

@@ -89,7 +89,7 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
     <div className={styles.page}>
       {/* Only the on-screen controls change; the printed sheet below is the same markup in both looks. */}
       {STUDIO_UI
-        ? <StudioPrintBar invoiceId={inv.id} status={inv.status} />
+        ? <StudioPrintBar invoiceId={inv.id} status={inv.status} clientEmail={inv.client_email} />
         : <PrintButton invoiceId={inv.id} status={inv.status} />}
 
       <div className={styles.sheet} id="invoice-sheet">
