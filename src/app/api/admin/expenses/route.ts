@@ -21,7 +21,12 @@ export async function POST(req: NextRequest) {
       technician_id: body.technician_id || null,
       is_reimbursable: body.is_reimbursable || false,
       created_by: user.id,
-      status: 'pending'
+      status: 'pending',
+      // From the scan step: the stored file and what was read from it (migration 0145 for the last two).
+      receipt_url: typeof body.receipt_url === 'string' && /^[\w-]+\/[\w-]+\.[a-z0-9]+$/i.test(body.receipt_url) ? body.receipt_url : null,
+      supplier_name: typeof body.supplier_name === 'string' ? body.supplier_name.slice(0, 120) || null : null,
+      invoice_number: typeof body.invoice_number === 'string' ? body.invoice_number.slice(0, 60) || null : null,
+      receipt_text: typeof body.receipt_text === 'string' ? body.receipt_text.slice(0, 4000) || null : null,
     });
 
   if (purchase && error?.code === '23505') return NextResponse.json({error:'Kosten voor dit inkoopdocument zijn al geregistreerd.'},{status:409});

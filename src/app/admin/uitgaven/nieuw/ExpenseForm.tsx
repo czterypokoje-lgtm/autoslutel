@@ -34,6 +34,36 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
   const [dateIncurred, setDateIncurred] = useState(new Date().toISOString().split('T')[0]);
   const [technicianId, setTechnicianId] = useState(isOffice ? '' : myTechId || '');
   const [isReimbursable, setIsReimbursable] = useState(false);
+  /* From the scan step: the stored file and what the reader got out of it. */
+  const [receiptUrl, setReceiptUrl] = useState<string | null>(null);
+  const [supplier, setSupplier] = useState('');
+  const [invoiceNumber, setInvoiceNumber] = useState('');
+  const [receiptText, setReceiptText] = useState('');
+  const [scanning, setScanning] = useState(false);
+  const [scanNote, setScanNote] = useState('');
+
+  /* Photo or PDF in, fields out. The file is stored at once; the reading only fills the form, the user confirms. */
+  async function scan(file: File) {
+    setScanning(true); setScanNote(''); setError('');
+    const fd = new FormData(); fd.append('file', file);
+    const res = await fetch('/api/admin/expenses/scan', { method: 'POST', body: fd }).catch(() => null);
+    const body = await res?.json().catch(() => null);
+    if (!res || !res.ok) { setError(body?.error || 'Bestand kon niet worden verwerkt.'); setScanning(false); return; }
+    setReceiptUrl(body.receipt_url ?? null);
+    const r = body.reading;
+    if (r) {
+      if (r.total != null) setAmount(String(r.total));
+      if (r.date) setDateIncurred(r.date);
+      if (r.category) setCategory(r.category);
+      if (r.description) setDescription(r.description);
+      setSupplier(r.supplier ?? ''); setInvoiceNumber(r.invoiceNumber ?? ''); setReceiptText(r.text ?? '');
+      const parts = [r.supplier, r.total != null ? `€ ${Number(r.total).toFixed(2).replace('.', ',')}` : null, r.date].filter(Boolean).join(' · ');
+      setScanNote(`${r.confidence < 0.6 ? 'Onzeker gelezen, controleer: ' : 'Gelezen: '}${parts || 'geen velden herkend'}`);
+    } else {
+      setScanNote(body.note || 'Bon opgeslagen; vul de velden zelf in.');
+    }
+    setScanning(false);
+  }
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -57,7 +87,11 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
         amount: numAmount,
         date_incurred: dateIncurred,
         technician_id: technicianId || null,
-        is_reimbursable: isReimbursable
+        is_reimbursable: isReimbursable,
+        receipt_url: receiptUrl,
+        supplier_name: supplier || null,
+        invoice_number: invoiceNumber || null,
+        receipt_text: receiptText || null,
       })
     });
 
@@ -75,7 +109,16 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
   return (
     <form onSubmit={save} className={x.form}>
       <div className={x.formGrid}>
-        
+
+        <label>
+          <div className={x.formLabel}>Bon of factuur (foto of pdf)</div>
+          <input type="file" accept="image/*,application/pdf" capture="environment" className={ui.input} disabled={scanning}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) void scan(f); }} />
+          <div className={x.formLabel} style={{ marginTop: 6, fontWeight: 400 }}>
+            {scanning ? 'Bezig met lezen…' : scanNote || 'Maak een foto of kies een pdf; bedrag, datum, leverancier en categorie worden ingevuld. U controleert en slaat op.'}
+          </div>
+        </label>
+
         <label>
           <div className={x.formLabel}><PreviewText>{"Categorie"}</PreviewText></div>
           <select value={category} onChange={e => setCategory(e.target.value)} className={ui.input} required>
@@ -98,6 +141,16 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
         <label>
           <div className={x.formLabel}><PreviewText>{"Omschrijving"}</PreviewText></div>
           <input type="text" value={description} onChange={e => setDescription(e.target.value)} className={ui.input} required placeholder="bijv. Tanken BP, Google Ads factuur..." />
+        </label>
+
+        <label>
+          <div className={x.formLabel}>Leverancier</div>
+          <input type="text" value={supplier} onChange={e => setSupplier(e.target.value)} className={ui.input} placeholder="bijv. Esso, Google, A-Key" />
+        </label>
+
+        <label>
+          <div className={x.formLabel}>Factuurnummer (optioneel)</div>
+          <input type="text" value={invoiceNumber} onChange={e => setInvoiceNumber(e.target.value)} className={ui.input} />
         </label>
 
         {isOffice && (
@@ -123,7 +176,7 @@ export default function ExpenseForm({ technicians, isOffice, myTechId }: { techn
 
         <div className={x.formActions}>
           <button type="button" onClick={() => router.back()} className={ui.btn} disabled={busy}><PreviewText>{"Annuleren"}</PreviewText></button>
-          <button type="submit" className={`${ui.btn} ${ui.btnPrimary}`} disabled={busy}>
+          <button type="submit" className={`${ui.btn} ${ui.btnPrimary}`} disabled={busy || scanning}>
             <PreviewText>{busy ? 'Opslaan...' : 'Opslaan'}</PreviewText>
           </button>
         </div>

@@ -18,16 +18,19 @@ export const metadata = {
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 
-export default async function UitgavenPage() {
+export default async function UitgavenPage({ searchParams }: { searchParams?: Promise<{ q?: string }> }) {
   const user = await requireCrmUser('/admin/uitgaven');
   const supabase = await createSupabaseServerClient();
   const isOffice = user.role !== 'monteur';
+  const q = ((await searchParams)?.q ?? '').replace(/[,()%*\\]/g, ' ').trim().slice(0, 60);
 
   let query = supabase
     .from('expenses')
     .select('*, technician:technician_id(name), job:job_id(customer_name)')
     .order('created_at', { ascending: false })
     .limit(100);
+  // Finds a bon by anything printed on it: description, supplier, invoice number, or the text the reader kept (0145).
+  if (q) query = query.or(['description', 'supplier_name', 'invoice_number', 'receipt_text'].map((c) => `${c}.ilike.%${q}%`).join(','));
 
   if (!isOffice) {
     const me = await supabase.from('technicians').select('id').eq('user_id', user.id).single();
@@ -98,6 +101,11 @@ export default async function UitgavenPage() {
           </Link>
         }
       />
+
+      <form method="get" action="/admin/uitgaven" className={x.itemMeta} style={{ display: 'flex', gap: 8, margin: '0 0 12px' }}>
+        <input type="search" name="q" defaultValue={q} placeholder="Zoek op leverancier, omschrijving, factuurnummer of tekst op de bon" className={ui.input} style={{ maxWidth: 480 }} />
+        <button type="submit" className={ui.btn}><PreviewText>{"Zoek"}</PreviewText></button>
+      </form>
 
       <div className={x.stats}>
         <div className={countOf('pending') ? x.statWarn : undefined}>
