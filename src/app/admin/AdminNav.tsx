@@ -65,7 +65,6 @@ export const reportLinks = [
   { label: 'Advertentieklikken', href: '/admin/attributie' },
   { label: 'Conversies naar Google', href: '/admin/conversies' },
   { label: 'WhatsApp en advertenties', href: '/admin/whatsapp-advertenties' },
-  { label: 'E-mailmarketing webshop', href: '/admin/marketing' },
   { label: 'WhatsApp-analyse', href: '/admin/whatsapp-analyse' },
   { label: 'Klikfraude', href: '/admin/klikfraude' },
   { label: 'Live', href: '/admin/live' },
@@ -93,6 +92,19 @@ export const OFFICE_NAV: NavItem[] = [
     ],
   },
   { label: 'Klanten', icon: Users, href: '/admin/klanten' },
+  {
+    // The webshop came back (autosleutel24.nl/webshop); these screens never left.
+    label: 'Webshop',
+    icon: Package,
+    children: [
+      { href: '/admin/orders', label: 'Bestellingen' },
+      { href: '/admin/verzending', label: 'Verzending' },
+      { href: '/admin/producten', label: 'Producten' },
+      { href: '/admin/best-verkocht', label: 'Best verkocht' },
+      { href: '/admin/winst/webshop', label: 'Webshopmarge' },
+      { href: '/admin/marketing', label: 'E-mailmarketing' },
+    ],
+  },
   { label: 'Monteurs', icon: Wrench, href: '/admin/monteurs' },
   {
     label: 'Voorraad',
@@ -170,6 +182,7 @@ const KEYFORCARS_NAV: NavItem[] = [
   { label: 'Bestellingen', icon: Package, href: '/admin/orders' },
   { label: 'Verzending', icon: Truck, href: '/admin/verzending' },
   { label: 'Best verkocht', icon: BarChart3, href: '/admin/best-verkocht' },
+  { label: 'E-mailmarketing', icon: BarChart3, href: '/admin/marketing' },
   {
     label: 'Bank',
     icon: Landmark,
