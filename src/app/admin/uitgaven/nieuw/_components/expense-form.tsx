@@ -53,6 +53,36 @@ export function StudioExpenseForm({ technicians, isOffice, myTechId }: {
   const [dateIncurred, setDateIncurred] = useState(new Date().toISOString().split('T')[0]);
   const [technicianId, setTechnicianId] = useState(isOffice ? '' : myTechId || '');
   const [isReimbursable, setIsReimbursable] = useState(false);
+  /* From the scan step: the stored file and what the reader got out of it. */
+  const [receiptUrl, setReceiptUrl] = useState<string | null>(null);
+  const [supplier, setSupplier] = useState('');
+  const [invoiceNumber, setInvoiceNumber] = useState('');
+  const [receiptText, setReceiptText] = useState('');
+  const [scanning, setScanning] = useState(false);
+  const [scanNote, setScanNote] = useState('');
+
+  /* Photo or PDF in, fields out. The file is stored at once; the reading only fills the form, the user confirms. */
+  async function scan(file: File) {
+    setScanning(true); setScanNote(''); setError('');
+    const fd = new FormData(); fd.append('file', file);
+    const res = await fetch('/api/admin/expenses/scan', { method: 'POST', body: fd }).catch(() => null);
+    const body = await res?.json().catch(() => null);
+    if (!res || !res.ok) { setError(body?.error || 'Bestand kon niet worden verwerkt.'); setScanning(false); return; }
+    setReceiptUrl(body.receipt_url ?? null);
+    const r = body.reading;
+    if (r) {
+      if (r.total != null) setAmount(String(r.total));
+      if (r.date) setDateIncurred(r.date);
+      if (r.category) setCategory(r.category);
+      if (r.description) setDescription(r.description);
+      setSupplier(r.supplier ?? ''); setInvoiceNumber(r.invoiceNumber ?? ''); setReceiptText(r.text ?? '');
+      const parts = [r.supplier, r.total != null ? `€ ${Number(r.total).toFixed(2).replace('.', ',')}` : null, r.date].filter(Boolean).join(' · ');
+      setScanNote(`${r.confidence < 0.6 ? 'Onzeker gelezen, controleer: ' : 'Gelezen: '}${parts || 'geen velden herkend'}`);
+    } else {
+      setScanNote(body.note || 'Bon opgeslagen; vul de velden zelf in.');
+    }
+    setScanning(false);
+  }
 
   async function save(event: React.FormEvent) {
     event.preventDefault();
@@ -77,6 +107,10 @@ export function StudioExpenseForm({ technicians, isOffice, myTechId }: {
         date_incurred: dateIncurred,
         technician_id: technicianId || null,
         is_reimbursable: isReimbursable,
+        receipt_url: receiptUrl,
+        supplier_name: supplier || null,
+        invoice_number: invoiceNumber || null,
+        receipt_text: receiptText || null,
       }),
     });
 
@@ -104,11 +138,18 @@ export function StudioExpenseForm({ technicians, isOffice, myTechId }: {
         <CardHeader className="border-b">
           <CardTitle className="text-xl leading-none"><PreviewText>Uitgave</PreviewText></CardTitle>
           <CardDescription className="leading-snug">
-            <PreviewText>Vul het bedrag, de datum en een korte omschrijving in.</PreviewText>
+            <PreviewText>Maak een foto van de bon of kies een pdf: bedrag, datum, leverancier en categorie worden ingevuld. Controleer en sla op.</PreviewText>
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={save} className="flex flex-col gap-5">
+            <Field className="gap-1">
+              <FieldLabel className="text-xs" htmlFor="expense-file">Bon of factuur (foto of pdf)</FieldLabel>
+              <Input id="expense-file" type="file" accept="image/*,application/pdf" capture="environment" disabled={scanning}
+                onChange={(event) => { const f = event.target.files?.[0]; if (f) void scan(f); }} />
+              <p className="text-muted-foreground text-xs">{scanning ? 'Bezig met lezen…' : scanNote || 'Optioneel. Zonder bestand vult u de velden zelf in.'}</p>
+            </Field>
+
             <div className="grid gap-5 md:grid-cols-2">
               <Field className="gap-1">
                 <FieldLabel className="text-xs" htmlFor="expense-category"><PreviewText>Categorie</PreviewText></FieldLabel>
@@ -161,6 +202,16 @@ export function StudioExpenseForm({ technicians, isOffice, myTechId }: {
                 />
               </Field>
 
+              <Field className="gap-1">
+                <FieldLabel className="text-xs" htmlFor="expense-supplier">Leverancier</FieldLabel>
+                <Input id="expense-supplier" value={supplier} onChange={(event) => setSupplier(event.target.value)} placeholder="bijv. Esso, Google, A-Key" />
+              </Field>
+
+              <Field className="gap-1">
+                <FieldLabel className="text-xs" htmlFor="expense-invoice">Factuurnummer (optioneel)</FieldLabel>
+                <Input id="expense-invoice" value={invoiceNumber} onChange={(event) => setInvoiceNumber(event.target.value)} />
+              </Field>
+
               {isOffice && (
                 <Field className="gap-1 md:col-span-2">
                   <FieldLabel className="text-xs" htmlFor="expense-technician">Monteur (optioneel)</FieldLabel>
@@ -197,7 +248,7 @@ export function StudioExpenseForm({ technicians, isOffice, myTechId }: {
               <Button type="button" variant="outline" disabled={busy} onClick={() => router.back()}>
                 <PreviewText>Annuleren</PreviewText>
               </Button>
-              <Button type="submit" disabled={busy}>
+              <Button type="submit" disabled={busy || scanning}>
                 <PreviewText>{busy ? 'Opslaan...' : 'Opslaan'}</PreviewText>
               </Button>
             </div>
