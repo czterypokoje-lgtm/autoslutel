@@ -83,6 +83,9 @@ const KEYFORCARS_HIDDEN = [
   '/admin/whatsapp-analyse',
   '/admin/klikfraude',
   '/admin/attributie',
+  // E-mailmarketing reads the tables the Autosleutel24 webshop writes; KeyForCars
+  // sells through WooCommerce and has none of them, so the screen has nothing to show.
+  '/admin/marketing',
   '/admin/conversies', // Google Ads conversion review (Autosleutel24 ads); also closes /api/admin/conversies
 ];
 
