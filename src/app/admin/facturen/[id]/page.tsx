@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { requireCrmUser } from '@/lib/crmSession';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import PrintButton from './PrintButton';
+import { invoiceDueDateOf } from '@/lib/invoiceDue';
 import StudioPrintBar from './StudioPrintBar';
 import styles from './invoice.module.css';
 
@@ -30,6 +31,7 @@ interface Invoice {
   id: string;
   invoice_number: string;
   issue_date: string;
+  due_date?: string | null;
   biller_name: string;
   biller_street: string | null;
   biller_postcode: string | null;
@@ -98,9 +100,12 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
             ? <strong className={styles.logo} style={{ fontSize: 22, letterSpacing: '-0.02em' }}>{inv.biller_name}</strong>
             : <img src="/logo.png" alt={inv.biller_name} className={styles.logo} />}
           <div className={styles.topRight}>
-            <h1 className={styles.h1}><PreviewText>{"Factuur"}</PreviewText> {inv.invoice_number}</h1>
+            {/* The sheet is what the customer receives: always Dutch, whatever the interface language. */}
+            <h1 className={styles.h1}>Factuur {inv.invoice_number}</h1>
             <p className={styles.issueDate}>
-              Datum van uitgifte: <strong>{DATE.format(new Date(inv.issue_date))}</strong>
+              Factuurdatum: <strong>{DATE.format(new Date(inv.issue_date))}</strong>
+              <br />
+              Vervaldatum: <strong>{DATE.format(invoiceDueDateOf(inv))}</strong>
             </p>
           </div>
         </div>
@@ -135,12 +140,12 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
         <table className={styles.lines}>
           <thead>
             <tr>
-              <th className={styles.left}>Beschrijving</th>
-              <th><PreviewText>{"Aantal"}</PreviewText></th>
-              <th className={styles.right}><PreviewText>{"Prijs"}</PreviewText></th>
+              <th className={styles.left}>Omschrijving</th>
+              <th>Aantal</th>
+              <th className={styles.right}>Prijs</th>
               <th className={styles.right}>Korting</th>
-              <th className={styles.right}><PreviewText>{"Btw"}</PreviewText></th>
-              <th className={styles.right}><PreviewText>{"Totaal"}</PreviewText></th>
+              <th className={styles.right}>Btw</th>
+              <th className={styles.right}>Totaal</th>
             </tr>
           </thead>
           <tbody>
@@ -179,8 +184,12 @@ export default async function FactuurPage({ params }: { params: Promise<{ id: st
               <TotalLine label={`Credit toegepast op ${DATE.format(new Date(inv.issue_date))}`} value={MONEY.format(credit)} />
             )}
             <TotalLine label="Totaal verschuldigd (EUR)" value={MONEY.format(Number(inv.total))} final />
-            {inv.status === 'betaald' && inv.paid_at && (
+            {inv.status === 'betaald' && inv.paid_at ? (
               <p className={styles.paidNote}>Betaald op {DATE.format(new Date(inv.paid_at))}</p>
+            ) : (
+              <p className={styles.paidNote}>
+                Gelieve te betalen vóór {DATE.format(invoiceDueDateOf(inv))}{inv.biller_iban ? ` op IBAN ${inv.biller_iban}` : ''} t.n.v. {inv.biller_name}, o.v.v. {inv.invoice_number}.
+              </p>
             )}
           </div>
         </div>
@@ -220,7 +229,7 @@ function Party({
       {street && <p>{street}</p>}
       {(postcode || city) && (
         <p>
-          {city} {postcode}
+          {postcode} {city}
         </p>
       )}
       <p>{country}</p>
@@ -235,13 +244,13 @@ function Party({
         <p className={styles.partyGap}>
           {kvk && (
             <>
-              KVK: <span className={styles.dim}>{kvk}</span>
+              KvK: <span className={styles.dim}>{kvk}</span>
               <br />
             </>
           )}
           {btw && (
             <>
-              BTW: <span className={styles.dim}>{btw}</span>
+              Btw-id: <span className={styles.dim}>{btw}</span>
               {iban && <br />}
             </>
           )}
