@@ -43,9 +43,11 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
 
   const phoneCall = conversation.channel === 'phone';
   const [expanded,setExpanded] = React.useState(false);
+  /* The summary starts folded: the messages are what the office reads; it opens on demand and never takes more than a third of the pane. */
+  const [showSummary, setShowSummary] = React.useState(false);
   const brief = briefOf(conversation);
   return (
-    <div className={cn('flex h-full flex-col overflow-y-auto py-3', className)}>
+    <div className={cn('flex h-full min-h-0 flex-col overflow-hidden py-3', className)}>
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between gap-4 px-2">
           <div className="flex items-center gap-3">
@@ -117,8 +119,12 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
         <Separator />
       </div>
 
-      <section className="m-3 grid shrink-0 max-h-[66svh] md:max-h-[45svh] overflow-y-auto gap-3 rounded-xl border border-blue-100 bg-slate-50 p-4 text-sm text-slate-900">
-        <h2 className="font-semibold">{t(phoneCall ? 'Gespreksverslag' : 'Samenvatting')}</h2>
+      <section className="m-3 grid shrink-0 gap-2 rounded-xl border border-blue-100 bg-slate-50 px-4 py-2.5 text-sm text-slate-900">
+        <button type="button" aria-expanded={showSummary} onClick={() => setShowSummary(!showSummary)} className="flex min-w-0 items-center justify-between gap-3 text-left">
+          <span className="min-w-0 truncate"><span className="font-semibold">{t(phoneCall ? 'Gespreksverslag' : 'Samenvatting')}</span>{!showSummary && conversation.summary && <span className="text-slate-600"> · {conversation.summary}</span>}</span>
+          <span className="shrink-0 text-xs font-medium text-slate-600 underline">{t(showSummary ? 'Inklappen' : 'Tonen')}</span>
+        </button>
+        {showSummary && <div className="grid max-h-[32svh] gap-3 overflow-y-auto pb-1">
         {phoneCall && <p>{t('Beller')} · {t(name)} · {t('Duur')} · {duration(conversation.durationSecs) || t('Onbekend')}</p>}
         {conversation.summary && <p className="leading-relaxed">{conversation.summary}</p>}
         <dl className="grid gap-2 sm:grid-cols-2">
@@ -127,10 +133,11 @@ export function ChatThread({ conversation, showBackButton, onBack, onOpenContact
         </dl>
         <ConversationTags conversation={conversation}/>
         {!phoneCall && brief.index >= 0 && <a className="underline" href={'#turn-'+conversation.id+'-'+brief.index}>{t('Bronbericht')}</a>}
+        </div>}
       </section>
       {phoneCall && <button aria-expanded={expanded} className="mx-3 mb-2 self-start rounded-lg border px-3 py-2 text-sm font-medium" onClick={()=>setExpanded(!expanded)}>{t(expanded ? 'Transcript sluiten' : 'Volledig transcript openen')}</button>}
       {(!phoneCall || expanded) && <MessageScrollerProvider autoScroll>
-        <MessageScroller className="min-h-48 flex-1">
+        <MessageScroller className="min-h-0 flex-1">
           <MessageScrollerViewport>
             <MessageScrollerContent className="gap-6 px-2 py-8">
               <Marker variant="separator">
