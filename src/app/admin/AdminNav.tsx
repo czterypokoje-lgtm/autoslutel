@@ -101,7 +101,8 @@ export const OFFICE_NAV: NavItem[] = [
       { href: '/admin/verzending', label: 'Verzending' },
       { href: '/admin/producten', label: 'Producten' },
       { href: '/admin/best-verkocht', label: 'Best verkocht' },
-      { href: '/admin/winst/webshop', label: 'Webshopmarge' },
+      // Reads the stock ledger, so it exists only once CRM_WAREHOUSE=1 (the page itself answers 404 before that).
+      ...(WAREHOUSE ? [{ href: '/admin/winst/webshop', label: 'Webshopmarge' }] : []),
       { href: '/admin/marketing', label: 'E-mailmarketing' },
     ],
   },
