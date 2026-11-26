@@ -18,6 +18,7 @@ import {
   BID_SLOTS,
 } from '@/lib/telegram';
 import { parseExpenseCaption, readAmount, EXPENSE_CATEGORIES } from '@/lib/expenseCaption';
+import { scanReceipt } from '@/lib/receiptScan';
 import { SCENARIO_INFO, scenarioFromLabel, type Scenario } from '@/lib/scenarios';
 import { priceFor, type PricedCoverageRow } from '@/lib/capability';
 import { parseJobLine, JOB_TEMPLATE } from '@/lib/jobFromText';
@@ -27,6 +28,8 @@ import { offerJobToTechnicians } from '@/lib/offerJob';
 export const dynamic = 'force-dynamic';
 /** Buffer and the storage upload below are Node, not edge. */
 export const runtime = 'nodejs';
+/* Reading a bon with the model takes a few seconds; the default 15s is too tight on a cold start. */
+export const maxDuration = 60;
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
 
@@ -275,16 +278,27 @@ async function handleReceipt(
   }
 
   const parsed = parseExpenseCaption(caption);
+  /*
+   * What the caption does not say, the bon itself usually does. Same reader
+   * as the web form (src/lib/receiptScan.ts). A typed amount always wins —
+   * the monteur was holding the receipt — and a failed reading changes
+   * nothing: the row is filed at zero and the bot asks, exactly as before.
+   */
+  const reading = parsed.amount === null ? await scanReceipt(file.bytes, file.mimeType) : null;
+  const amount = parsed.amount ?? reading?.total ?? 0;
   const { data: expense, error } = await supabase
     .from('expenses')
     .insert({
-      category: parsed.category,
-      description: parsed.description,
-      amount: parsed.amount ?? 0,
-      date_incurred: today(),
+      category: caption?.trim() ? parsed.category : reading?.category ?? parsed.category,
+      description: parsed.description || reading?.description || '',
+      amount,
+      date_incurred: reading?.date ?? today(),
       technician_id: technician.id,
       is_reimbursable: parsed.isReimbursable,
       receipt_url: objectPath,
+      supplier_name: reading?.supplier ?? null,
+      invoice_number: reading?.invoiceNumber ?? null,
+      receipt_text: reading?.text ?? null,
       status: 'pending',
     })
     .select('id, amount, category, description, is_reimbursable')
@@ -296,12 +310,33 @@ async function handleReceipt(
     return;
   }
 
-  if (parsed.amount === null) {
+  if (amount === 0) {
     await sendTelegram(
       String(chatId),
-      `📸 Bon ontvangen (${EXPENSE_CATEGORIES[parsed.category]}). Wat was het bedrag? ` +
+      `📸 Bon ontvangen (${EXPENSE_CATEGORIES[expense.category] ?? expense.category}). Wat was het bedrag? ` +
         'Stuur alleen het bedrag, bijvoorbeeld 35,20.'
     );
+    return;
+  }
+
+  /* Read off the bon rather than typed: say so, so a wrong number is spotted now and not at the month's end. */
+  if (parsed.amount === null && reading) {
+    await sendTelegram(
+      String(chatId),
+      block(
+        '✅ Bon gelezen',
+        [
+          ['Bedrag', euro(expense.amount)],
+          ['Soort', EXPENSE_CATEGORIES[expense.category] ?? expense.category],
+          ...(reading.supplier ? [['Leverancier', reading.supplier] as [string, string]] : []),
+          ...(reading.date ? [['Datum', reading.date] as [string, string]] : []),
+        ],
+        reading.confidence < 0.6
+          ? 'Niet alles was goed leesbaar. Klopt het bedrag niet? Stuur het juiste bedrag.'
+          : 'Klopt het bedrag niet? Stuur het juiste bedrag.'
+      )
+    );
+    await announceExpense(supabase, expense, technician.name);
     return;
   }
 
