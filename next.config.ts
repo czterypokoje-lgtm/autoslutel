@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 import { SITE_CONFIG } from "./src/config/site.config";
+import { CITIES } from "./src/config/cities";
+import { cityPath } from "./src/config/cityUrls";
 
 const brands = [
   'volkswagen', 'bmw', 'mercedes', 'audi', 'toyota', 'peugeot', 'ford', 'renault', 
@@ -8,6 +10,28 @@ const brands = [
   'lexus', 'jaguar', 'alfa-romeo', 'smart', 'jeep', 'chevrolet', 'subaru', 'lancia', 
   'ds', 'saab', 'dodge', 'ssangyong'
 ];
+
+/*
+ * /autosleutel-bijmaken/<stad> -- the shape that was never a route.
+ *
+ * When the four pilot cities moved to /autosleutel-bijmaken-<stad>, the
+ * footer, the homepage and the gallery were edited by hand and the nested
+ * form was written instead of the hyphenated one. Next has no such route, so
+ * every page on the site carried a 404 in its footer until 26 Nov 2026 --
+ * long enough for Google to have crawled it and for the odd bookmark to
+ * exist. Fixing the links leaves those visitors on the 404.
+ *
+ * One entry per city rather than a :slug pattern, because the destination is
+ * not uniform: the four pilot cities go to their own URL and the other 72 go
+ * to /steden/<stad>. cityPath() decides, the same function the links, the
+ * canonicals, the schema and the sitemap use, so this list cannot drift from
+ * them when the pilot set changes.
+ */
+const nestedCityRedirects = CITIES.map(c => ({
+  source: `/autosleutel-bijmaken/${c.slug}`,
+  destination: cityPath(c.slug),
+  permanent: true,
+}));
 
 const brandRedirects = brands.map(brand => ({
   source: `/merken/${brand}`,
@@ -163,6 +187,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       ...brandRedirects,
+      ...nestedCityRedirects,
       ...removedBrandRedirects,
       /*
        * Search-term URLs people (and old links) guess. All were 404s while
