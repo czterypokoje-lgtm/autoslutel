@@ -181,10 +181,12 @@
   body:has([data-print-root]) [data-print-root] {
     display: block !important; width: 210mm !important; height: 297mm !important; margin: 0 !important; overflow: hidden !important; background: white !important;
   }
-  [data-print-root] [data-print-paper] { width: 210mm !important; height: 297mm !important; margin: 0 !important; box-shadow: none !important; }
+  /* One sheet, one page: the paper is a hair under A4 so sub-pixel rounding can never spill a blank second page. */
+  html:has([data-print-root]), body:has([data-print-root]) { height: auto !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; }
+  [data-print-root] [data-print-paper] { width: 210mm !important; height: 296mm !important; max-height: 296mm !important; margin: 0 !important; box-shadow: none !important; overflow: hidden !important; break-after: avoid; page-break-after: avoid; break-inside: avoid; }
   [data-print-root] [data-print-paper], [data-print-root] [data-print-paper] * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
-@page { margin: 0; }
+@page { size: A4; margin: 0; }
 
 /* Variants the current shadcn components use (from the shadcn package tailwind.css). */
 @custom-variant data-open {
