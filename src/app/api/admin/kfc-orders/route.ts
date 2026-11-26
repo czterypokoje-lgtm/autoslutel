@@ -71,6 +71,17 @@ export async function POST(request: Request) {
       await returnShopLine(line, quantity, location, key, user);
       return reply({ ok: true });
     }
+    if (input.action === 'note') {
+      // The office's own remark on an order. Warehouse roles read the screen but do not rewrite the note.
+      if (!seesPrices(user)) return reply({ error: 'Alleen kantoor kan de notitie wijzigen.' }, 403);
+      if (typeof input.id !== 'string' || !uuid.test(input.id)) return reply({ error: 'Ongeldige invoer.' }, 400);
+      const note = typeof input.note === 'string' ? input.note.trim().slice(0, 2000) : '';
+      const { error } = await createSupabaseAdminClient().from('kfc_shop_orders').update({ note: note || null }).eq('id', input.id);
+      if (error) {
+        return reply({ error: /note/i.test(error.message) ? 'Voer supabase/migrations/0146_kfc_shop_order_note.sql uit.' : `Opslaan mislukt: ${error.message}` }, 500);
+      }
+      return reply({ ok: true, order: await getShopOrder(input.id) });
+    }
     if (input.action === 'pick') {
       if (typeof input.line !== 'string' || !uuid.test(input.line)) return reply({ error: 'Ongeldige regel.' }, 400);
       const orderId = await markPicked(input.line, input.picked !== false);

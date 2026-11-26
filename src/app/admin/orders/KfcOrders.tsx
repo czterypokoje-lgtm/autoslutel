@@ -21,12 +21,19 @@ import type { Fulfilment } from '@/lib/kfcOrders';
  * adds the per-line fulfilment states.
  */
 
-const STATUS: Record<OrderStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-  processing: { label: 'In behandeling', variant: 'default' },
-  completed: { label: 'Afgerond', variant: 'secondary' },
-  'on-hold': { label: 'Wacht op betaling', variant: 'outline' },
-  cancelled: { label: 'Geannuleerd', variant: 'outline' },
-  refunded: { label: 'Terugbetaald', variant: 'destructive' },
+/* One colour per state, the same palette and dark-mode handling the invoice badges use. */
+const STATUS: Record<OrderStatus, { label: string; className: string }> = {
+  processing: { label: 'In behandeling', className: 'border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400' },
+  completed: { label: 'Afgerond', className: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
+  'on-hold': { label: 'Wacht op betaling', className: 'border-border bg-muted/40 text-muted-foreground' },
+  cancelled: { label: 'Geannuleerd', className: 'border-destructive/20 bg-destructive/10 text-destructive' },
+  refunded: { label: 'Terugbetaald', className: 'border-violet-500/20 bg-violet-500/10 text-violet-600 dark:text-violet-400' },
+};
+
+/** The office's note, short enough for a table cell; the full text is the cell's tooltip. */
+const snippet = (note: string | null | undefined) => {
+  const text = (note ?? '').trim().replace(/\s+/g, ' ');
+  return text.length > 70 ? `${text.slice(0, 70)}…` : text;
 };
 
 const LIMIT = 30;
@@ -37,7 +44,7 @@ function Filter({ on, href, children }: { on: boolean; href: string; children: R
   return <Button asChild size="sm" variant={on ? 'default' : 'ghost'}><Link href={href}>{children}</Link></Button>;
 }
 
-type Row = SampleOrder & { id?: string; fulfilment?: Fulfilment };
+type Row = SampleOrder & { id?: string; fulfilment?: Fulfilment; note?: string | null };
 
 export default async function KfcOrders({ shop, status, q, requestedPage, canImport = false, canImportOwn = false }: { shop?: string; status?: string; q?: string; requestedPage?: string; canImport?: boolean; canImportOwn?: boolean }) {
   const dispatched = status === 'dispatched';
@@ -55,7 +62,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
     total = result.total;
     shown = result.orders.map((o) => ({
       id: o.id, fulfilment: o.fulfilment, number: o.number, shop: o.shop as SampleOrder['shop'], created: o.created_at,
-      status: (o.status in STATUS ? o.status : 'cancelled') as OrderStatus, country: o.country ?? '',
+      status: (o.status in STATUS ? o.status : 'cancelled') as OrderStatus, country: o.country ?? '', note: o.note ?? null,
       shippingIncl: o.shipping_incl_cents, totalIncl: o.total_incl_cents, totalExcl: o.total_excl_cents,
       lines: o.lines.map((l) => ({ sku: l.sku, name: l.name, image: '', quantity: l.quantity, unitIncl: l.unit_incl_cents ?? 0 })),
     }));
@@ -137,7 +144,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
                 <div className="text-xs">
                   {order.lines.map((line) => <div key={line.sku} className="truncate">{line.quantity} × <span className="font-medium">{line.sku}</span> <span className="text-muted-foreground"><PreviewProductName sku={line.sku} limit={40}>{line.name}</PreviewProductName></span></div>)}
                 </div>
-                <div className="flex flex-wrap gap-1 pt-0.5"><Badge variant={STATUS[order.status].variant}><PreviewText>{STATUS[order.status].label}</PreviewText></Badge>{order.fulfilment && order.fulfilment !== 'external' && <FulfilmentBadge value={order.fulfilment} />}</div>
+                <div className="flex flex-wrap gap-1 pt-0.5"><Badge variant="outline" className={STATUS[order.status].className}><PreviewText>{STATUS[order.status].label}</PreviewText></Badge>{order.fulfilment && order.fulfilment !== 'external' && <FulfilmentBadge value={order.fulfilment} />}</div>
               </li>
             ))}
           </ul>
@@ -150,6 +157,7 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
                 <TableHead><PreviewText>Bestelling</PreviewText></TableHead>
                 <TableHead><PreviewText>Producten</PreviewText></TableHead>
                 <TableHead><PreviewText>Land</PreviewText></TableHead>
+                <TableHead><PreviewText>Notitie</PreviewText></TableHead>
                 <TableHead className="text-right"><PreviewText>Excl. btw</PreviewText></TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
@@ -169,8 +177,9 @@ export default async function KfcOrders({ shop, status, q, requestedPage, canImp
                     ))}
                   </TableCell>
                   <TableCell>{order.country}</TableCell>
+                  <TableCell className="text-muted-foreground max-w-[18rem] truncate" title={order.note ?? ''}>{snippet(order.note) || '—'}</TableCell>
                   <TableCell className="text-right tabular-nums">{MONEY.format(order.totalExcl / 100)}</TableCell>
-                  <TableCell className="space-x-1 whitespace-nowrap"><Badge variant={STATUS[order.status].variant}><PreviewText>{STATUS[order.status].label}</PreviewText></Badge>{order.fulfilment && order.fulfilment !== 'external' && <FulfilmentBadge value={order.fulfilment} />}</TableCell>
+                  <TableCell className="space-x-1 whitespace-nowrap"><Badge variant="outline" className={STATUS[order.status].className}><PreviewText>{STATUS[order.status].label}</PreviewText></Badge>{order.fulfilment && order.fulfilment !== 'external' && <FulfilmentBadge value={order.fulfilment} />}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -22,6 +22,8 @@ export interface ShopOrder {
   total_incl_cents: number; total_excl_cents: number; shipping_incl_cents: number; lines: ShopLine[];
   ship_name?: string | null; ship_company?: string | null; ship_street?: string | null; ship_postcode?: string | null; ship_city?: string | null; ship_phone?: string | null; ship_email?: string | null;
   carrier?: string | null; tracking_code?: string | null; label_url?: string | null; label_created_at?: string | null;
+  /** The office's own note (migration 0146); undefined on a database that has not run it. */
+  note?: string | null;
 }
 
 const db = () => createSupabaseAdminClient();
@@ -29,7 +31,10 @@ const db = () => createSupabaseAdminClient();
 /** The paging helper now lives next to StockError in kfcInventory; re-exported for the modules that import it from here. */
 export { fetchAll };
 
-const ORDER_COLUMNS = 'id, shop, woo_order_id, number, status, fulfilment, created_at, paid_at, shipped_at, shop_completed_at, country, total_incl_cents, total_excl_cents, shipping_incl_cents, ship_name, ship_company, ship_street, ship_postcode, ship_city, ship_phone, ship_email, carrier, tracking_code, label_url, label_created_at';
+const ORDER_COLUMNS_BASE = 'id, shop, woo_order_id, number, status, fulfilment, created_at, paid_at, shipped_at, shop_completed_at, country, total_incl_cents, total_excl_cents, shipping_incl_cents, ship_name, ship_company, ship_street, ship_postcode, ship_city, ship_phone, ship_email, carrier, tracking_code, label_url, label_created_at';
+const ORDER_COLUMNS = `${ORDER_COLUMNS_BASE}, note`;
+/** True while the database has not run migration 0146; the orders screen must keep working either way. */
+const missingNote = (message: string) => /note/i.test(message) && /column|schema cache/i.test(message);
 const LINE_COLUMNS = 'id, sku, article_code, name, quantity, reserved, picked, state, unit_incl_cents';
 
 // Existence checks read one row instead of counting the table: an exact count
@@ -45,15 +50,42 @@ export async function sampleShopOrdersExist(): Promise<boolean> {
 }
 
 export async function listShopOrders(filter: { shop?: string; status?: string; fulfilment?: Fulfilment; q?: string; page: number; limit: number }) {
-  let query = db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`, { count: 'exact' })
-    .order('created_at', { ascending: false }).range((filter.page - 1) * filter.limit, filter.page * filter.limit - 1);
-  if (filter.shop) query = query.eq('shop', filter.shop);
-  if (filter.status) query = query.eq('status', filter.status);
-  if (filter.fulfilment) query = query.eq('fulfilment', filter.fulfilment);
-  if (filter.q) query = query.ilike('number', `%${filter.q.replace(/[%_]/g, '')}%`);
-  const { data, error, count } = await query;
-  if (error) throw new StockError(`Bestellingen lezen mislukt: ${error.message}`, 500);
-  return { orders: (data ?? []).map(toOrder), total: count ?? 0 };
+  /*
+   * The select string is written out twice on purpose. Supabase infers the
+   * row type from it as a literal, so handing it in as a `string` parameter
+   * throws that typing away. The second form is the fallback for a database
+   * that has not run migration 0146: the orders screen must not go dark over
+   * one missing column.
+   */
+  const filtered = <T extends { eq(column: string, value: string): T; ilike(column: string, value: string): T }>(query: T): T => {
+    let q = query;
+    if (filter.shop) q = q.eq('shop', filter.shop);
+    if (filter.status) q = q.eq('status', filter.status);
+    if (filter.fulfilment) q = q.eq('fulfilment', filter.fulfilment);
+    if (filter.q) q = q.ilike('number', `%${filter.q.replace(/[%_]/g, '')}%`);
+    return q;
+  };
+  const lo = (filter.page - 1) * filter.limit;
+  const hi = filter.page * filter.limit - 1;
+
+  const first = await filtered(
+    db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`, { count: 'exact' })
+      .order('created_at', { ascending: false }).range(lo, hi)
+  );
+  let rows: unknown[] = first.data ?? [];
+  let total = first.count ?? 0;
+  let failure = first.error;
+  if (failure && missingNote(failure.message)) {
+    const again = await filtered(
+      db().from('kfc_shop_orders').select(`${ORDER_COLUMNS_BASE}, kfc_shop_order_lines (${LINE_COLUMNS})`, { count: 'exact' })
+        .order('created_at', { ascending: false }).range(lo, hi)
+    );
+    rows = again.data ?? [];
+    total = again.count ?? 0;
+    failure = again.error;
+  }
+  if (failure) throw new StockError(`Bestellingen lezen mislukt: ${failure.message}`, 500);
+  return { orders: rows.map((row) => toOrder(row as Record<string, unknown>)), total };
 }
 
 function toOrder(row: Record<string, unknown>): ShopOrder {
@@ -67,10 +99,18 @@ function toOrder(row: Record<string, unknown>): ShopOrder {
 export async function getShopOrder(id: string): Promise<ShopOrder | null> {
   // A stale or mistyped link is "not found", not a database error.
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
-  const { data, error } = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`).eq('id', id).maybeSingle();
-  if (error) throw new StockError(`Bestelling lezen mislukt: ${error.message}`, 500);
-  if (!data) return null;
-  const order = toOrder(data);
+  // Same two-literal shape as listShopOrders above, and for the same reason.
+  const first = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS}, kfc_shop_order_lines (${LINE_COLUMNS})`).eq('id', id).maybeSingle();
+  let row: unknown = first.data;
+  let failure = first.error;
+  if (failure && missingNote(failure.message)) {
+    const again = await db().from('kfc_shop_orders').select(`${ORDER_COLUMNS_BASE}, kfc_shop_order_lines (${LINE_COLUMNS})`).eq('id', id).maybeSingle();
+    row = again.data;
+    failure = again.error;
+  }
+  if (failure) throw new StockError(`Bestelling lezen mislukt: ${failure.message}`, 500);
+  if (!row) return null;
+  const order = toOrder(row as Record<string, unknown>);
   await decorate(order.lines);
   return order;
 }

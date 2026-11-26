@@ -12,7 +12,7 @@ import { sampleOrders } from '@/lib/kfcSampleOrders';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { receiveLocations, returnPanel } from '@/lib/kfcReturns';
-import { FulfilmentBadge, OrderLines } from '../OrderParts';
+import { FulfilmentBadge, OrderLines, OrderNote } from '../OrderParts';
 import { ReturnPanel } from '../ReturnPanel';
 
 // Formatters live here, not in the client module: a server component cannot call a client export.
@@ -55,6 +55,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       </div>
       {sample && <p className="text-muted-foreground rounded-lg border border-dashed px-3 py-2 text-xs">Voorbeeldbestelling. Picken en verzenden werken zodra de echte bestellingen van de webshops zijn geïmporteerd.</p>}
       <OrderLines order={order} canAct={!sample} />
+      {!sample && <OrderNote order={order} canEdit={prices} />}
       {returns && <ReturnPanel orderId={order.id} panel={returns} locations={locations} canBook={canBook} prices={prices} />}
       {trackingCode && viaPostnl && <p className="text-sm"><a className="underline" target="_blank" rel="noreferrer"
         href={postnlTrackUrl(trackingCode, order.country ?? null, 'ship_postcode' in order ? order.ship_postcode ?? null : null)}>Volg bij PostNL · {trackingCode}</a></p>}

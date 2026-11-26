@@ -305,4 +305,59 @@ export function OwnImportPanel({ orders, last }: { orders: number; last: string 
   );
 }
 
+/**
+ * The office's note on an order — "sleutelcode nagevraagd", "klant belt
+ * terug", "wacht op levering". WooCommerce carries no such field, so it is
+ * ours (migration 0146), and it is what the orders list shows in its Notitie
+ * column so the office reads it without opening anything.
+ */
+export function OrderNote({ order, canEdit }: { order: ShopOrder; canEdit: boolean }) {
+  const [text, setText] = useState(order.note ?? '');
+  const [saved, setSaved] = useState(order.note ?? '');
+  const [state, setState] = useState('');
+  const [busy, setBusy] = useState(false);
+  const router = useRouter();
+
+  async function save() {
+    setBusy(true);
+    setState('');
+    const result = await post({ action: 'note', id: order.id, note: text });
+    setBusy(false);
+    if (result.error) { setState(result.error); return; }
+    setSaved(text);
+    setState('Opgeslagen.');
+    router.refresh();
+  }
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-muted-foreground text-xs font-medium uppercase"><PreviewText>Notitie</PreviewText></CardTitle>
+        <CardDescription>Alleen voor kantoor. De klant ziet dit niet.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-2">
+        {canEdit ? (
+          <>
+            <textarea
+              className="border-input bg-background min-h-20 w-full rounded-md border px-3 py-2 text-sm"
+              value={text}
+              maxLength={2000}
+              placeholder="bijv. sleutelcode nagevraagd, klant belt terug"
+              onChange={(event) => setText(event.target.value)}
+            />
+            <div className="flex items-center gap-3">
+              <Button size="sm" disabled={busy || text === saved} onClick={() => void save()}>
+                <PreviewText>{busy ? 'Opslaan…' : 'Opslaan'}</PreviewText>
+              </Button>
+              {state && <span className="text-muted-foreground text-xs">{state}</span>}
+            </div>
+          </>
+        ) : (
+          <p className="text-sm whitespace-pre-line">{saved || <span className="text-muted-foreground">Geen notitie.</span>}</p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export function PickIcon() { return <PackageCheck className="size-4" />; }
