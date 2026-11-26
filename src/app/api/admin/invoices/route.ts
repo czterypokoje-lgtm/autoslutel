@@ -63,6 +63,14 @@ function issueDate(value: unknown): string | null | undefined {
   return days > 1.5 || days < -730 ? null : value;
 }
 
+/** The due date the office chose: a calendar date, not before the issue date and at most a year after it. */
+function dueDate(value: unknown, issue: string | undefined): string | undefined {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
+  const from = issue ?? new Date().toISOString().slice(0, 10);
+  const days = (Date.parse(`${value}T12:00:00Z`) - Date.parse(`${from}T12:00:00Z`)) / 86_400_000;
+  return Number.isFinite(days) && days >= 0 && days <= 366 ? value : undefined;
+}
+
 function readLine(raw: unknown): LineInput | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Record<string, unknown>;
@@ -171,10 +179,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Het factuurtotaal moet overeenkomen met het afgesproken totaal.' }, { status: 409 });
   }
 
-  const { data: invoice, error } = await supabase
-    .from('sales_invoices')
-    .insert({
+  const due = dueDate(body.due_date, issue ?? undefined);
+  const header = {
       ...(issue ? { issue_date: issue } : {}),
+      ...(due ? { due_date: due } : {}),
       biller_name: text(body.biller_name, 200) ?? BILLER_DEFAULTS.fullName,
       biller_street: text(body.biller_street, 200),
       biller_postcode: text(body.biller_postcode, 20),
@@ -201,9 +209,14 @@ export async function POST(request: Request) {
       created_by: user.id,
       technician_id: technicianId,
       job_id: jobId ?? null,
-    })
-    .select('id, invoice_number')
-    .single();
+  };
+  let { data: invoice, error } = await supabase.from('sales_invoices').insert(header).select('id, invoice_number').single();
+  // Before migration 0144 the column is not there: save without it rather than refuse the invoice.
+  if (error && /due_date/.test(error.message)) {
+    const { due_date: _skip, ...withoutDue } = header as typeof header & { due_date?: string };
+    void _skip;
+    ({ data: invoice, error } = await supabase.from('sales_invoices').insert(withoutDue).select('id, invoice_number').single());
+  }
 
   if (error || !invoice) {
     return NextResponse.json(
@@ -215,6 +228,23 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+
+  /*
+   * Remember what this user typed, so the next invoice starts from it: the
+   * Van block and the payment term. Best effort — a missing table (0144 not
+   * run yet) must never fail a saved invoice.
+   */
+  const termsDays = Number.isInteger(body.terms_days) && (body.terms_days as number) >= 0 && (body.terms_days as number) <= 180 ? (body.terms_days as number) : null;
+  await supabase.from('crm_user_prefs').upsert({
+    user_id: user.id,
+    invoice_from: {
+      name: text(body.biller_name, 200), street: text(body.biller_street, 200), postcode: text(body.biller_postcode, 20), city: text(body.biller_city, 100),
+      email: text(body.biller_email, 200), phone: text(body.biller_phone, 40), kvk: text(body.biller_kvk, 40), btw: text(body.biller_btw, 40), iban: text(body.biller_iban, 40),
+      website: text(body.biller_website, 200), accountName: text(body.biller_account_name, 200),
+    },
+    ...(termsDays !== null ? { invoice_terms_days: termsDays } : {}),
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'user_id' }).then(({ error: prefError }) => { if (prefError && !/does not exist|relation|schema cache/i.test(prefError.message)) console.error('Invoice prefs not stored', prefError.message); });
 
   const { error: lineError } = await supabase.from('sales_invoice_lines').insert(
     goodLines.map((l, index) => ({

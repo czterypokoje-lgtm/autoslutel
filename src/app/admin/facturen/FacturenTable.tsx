@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { CheckCircle, Clock, Download, FileText, Search, Send, X } from 'lucide-react';
 import styles from './facturen-list.module.css';
 import { IS_KEYFORCARS } from '@/config/install';
-import { invoiceDay, invoiceDueDate as dueDate, invoiceToday, PAYMENT_REMINDER_DAYS, PAYMENT_TERM_DAYS } from '@/lib/invoiceDue';
+import { invoiceDay, invoiceDueDateOf, invoiceDueDay, invoiceToday, PAYMENT_REMINDER_DAYS } from '@/lib/invoiceDue';
 import { usePreviewLanguage } from '../PreviewLanguage';
 
 const MONEY = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' });
@@ -16,6 +16,7 @@ interface InvoiceRow {
   id: string;
   invoice_number: string;
   issue_date: string;
+  due_date?: string | null;
   client_name: string;
   client_city: string | null;
   client_email: string | null;
@@ -33,14 +34,14 @@ interface InvoiceRow {
   } | null;
 }
 
-const isOverdue = (row: { status: string; issue_date: string }) => row.status === 'verzonden' &&
-  invoiceDay(row.issue_date) + PAYMENT_TERM_DAYS < invoiceDay(invoiceToday());
+const isOverdue = (row: { status: string; issue_date: string; due_date?: string | null }) => row.status === 'verzonden' &&
+  invoiceDueDay(row) < invoiceDay(invoiceToday());
 
 function StatusPill({ row, status }: { row: InvoiceRow; status?: InvoiceRow['status'] }) {
   const st = status ?? row.status;
   if (st === 'betaald') return <span className={`${styles.pill} ${styles.pillPaid}`}><PreviewText>{"Betaald"}</PreviewText></span>;
   if (st === 'concept') return <span className={`${styles.pill} ${styles.pillDraft}`}><PreviewText>{"Concept"}</PreviewText></span>;
-  if (isOverdue({ status: st, issue_date: row.issue_date })) return <span className={`${styles.pill} ${styles.pillLate}`}><PreviewText>{"Te laat"}</PreviewText></span>;
+  if (isOverdue({ status: st, issue_date: row.issue_date, due_date: row.due_date })) return <span className={`${styles.pill} ${styles.pillLate}`}><PreviewText>{"Te laat"}</PreviewText></span>;
   return <span className={`${styles.pill} ${styles.pillOpen}`}><PreviewText>{"Openstaand"}</PreviewText></span>;
 }
 
@@ -74,7 +75,7 @@ function Drawer({ invoice, onClose, showTechnician }: { invoice: InvoiceRow; onC
     }
   }
 
-  const overdue = isOverdue({ status, issue_date: invoice.issue_date });
+  const overdue = isOverdue({ status, issue_date: invoice.issue_date, due_date: invoice.due_date });
   const car = carOf(invoice);
 
   return (
@@ -135,7 +136,7 @@ function Drawer({ invoice, onClose, showTechnician }: { invoice: InvoiceRow; onC
         </div>
         <div>
           <dt>Vervaldatum</dt>
-          <dd className={overdue ? styles.lateText : undefined}>{DATE.format(dueDate(invoice.issue_date))}</dd>
+          <dd className={overdue ? styles.lateText : undefined}>{DATE.format(invoiceDueDateOf(invoice))}</dd>
         </div>
       </dl>
 
@@ -164,7 +165,7 @@ export default function FacturenTable({ rows, showTechnician = false }: { rows: 
   const { english, t } = usePreviewLanguage();
   const today = invoiceDay(invoiceToday());
   const dueSoon = IS_KEYFORCARS && showTechnician ? rows.filter(row => {
-    const days = invoiceDay(row.issue_date) + PAYMENT_TERM_DAYS - today;
+    const days = invoiceDueDay(row) - today;
     return row.status === 'verzonden' && days >= 0 && days <= PAYMENT_REMINDER_DAYS;
   }).length : 0;
   const [selected, setSelected] = useState<InvoiceRow | null>(null);
@@ -288,7 +289,7 @@ export default function FacturenTable({ rows, showTechnician = false }: { rows: 
                 </span>
                 {showTechnician && <span className={`${styles.tech} ${styles.colTech}`}>{row.technician_name ?? '—'}</span>}
                 <span className={`${styles.num} ${styles.amount}`}>{MONEY.format(Number(row.total))}</span>
-                <span className={`${late ? styles.lateText : styles.due} ${styles.colDue}`}>{new Intl.DateTimeFormat(english ? 'en-GB' : 'nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(dueDate(row.issue_date))}</span>
+                <span className={`${late ? styles.lateText : styles.due} ${styles.colDue}`}>{new Intl.DateTimeFormat(english ? 'en-GB' : 'nl-NL', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(invoiceDueDateOf(row))}</span>
                 <span>
                   <StatusPill row={row} />
                 </span>

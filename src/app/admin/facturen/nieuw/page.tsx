@@ -102,6 +102,16 @@ export default async function NieuweFactuurPage({ searchParams }: { searchParams
       : ((await supabase.from('technicians').select('id, name').eq('active', true).order('name'))
           .data ?? []);
 
+  /*
+   * What this user filled in last time: the Van block and the payment term,
+   * saved by /api/admin/invoices on every successful save (crm_user_prefs,
+   * migration 0144). Missing table or row: the config defaults as before.
+   */
+  const prefs = CRM_PREVIEW ? null : (await supabase.from('crm_user_prefs').select('invoice_from, invoice_terms_days').eq('user_id', user.id).maybeSingle()).data as
+    { invoice_from?: Partial<Record<'name' | 'email' | 'phone' | 'website' | 'street' | 'postcode' | 'city' | 'kvk' | 'btw' | 'iban' | 'accountName', string>> | null; invoice_terms_days?: number | null } | null;
+  const remembered = prefs?.invoice_from ?? {};
+  const rememberedTerm = typeof prefs?.invoice_terms_days === 'number' ? prefs.invoice_terms_days : undefined;
+
   /* Autosleutel24's Studio look: the same Studio screen, with a free-text
      client, the price list and (for the office) the monteur picker. */
   if (STUDIO_UI) {
@@ -115,6 +125,7 @@ export default async function NieuweFactuurPage({ searchParams }: { searchParams
         freeTextClient
         previousClients={uniqueClients}
         technicians={user.role === 'monteur' ? undefined : (technicians as { id: string; name: string }[])}
+        termsDays={rememberedTerm}
         from={{
           name: SITE_CONFIG.fullName,
           email: SITE_CONFIG.email,
@@ -127,6 +138,7 @@ export default async function NieuweFactuurPage({ searchParams }: { searchParams
           btw: SITE_CONFIG.btw,
           iban: SITE_CONFIG.iban,
           accountName: SITE_CONFIG.fullName,
+          ...Object.fromEntries(Object.entries(remembered).filter(([, v]) => typeof v === 'string' && v.trim())),
         }}
       />
     );
@@ -147,12 +159,12 @@ export default async function NieuweFactuurPage({ searchParams }: { searchParams
         customers={IS_KEYFORCARS ? await customerOptions() : undefined}
         initialCustomerId={klant ?? null}
         biller={IS_KEYFORCARS ? keyForCarsBiller : {
-          name: SITE_CONFIG.fullName,
-          email: SITE_CONFIG.email,
-          phone: SITE_CONFIG.phone,
-          kvk: SITE_CONFIG.kvk,
-          btw: SITE_CONFIG.btw,
-          iban: SITE_CONFIG.iban,
+          name: remembered.name || SITE_CONFIG.fullName,
+          email: remembered.email || SITE_CONFIG.email,
+          phone: remembered.phone || SITE_CONFIG.phone,
+          kvk: remembered.kvk || SITE_CONFIG.kvk,
+          btw: remembered.btw || SITE_CONFIG.btw,
+          iban: remembered.iban || SITE_CONFIG.iban,
         }}
         previousClients={uniqueClients}
       />

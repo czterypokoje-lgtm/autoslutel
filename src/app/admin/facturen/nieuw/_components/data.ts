@@ -95,7 +95,7 @@ export interface CustomerOption {
 /** A buyer without a ledger account: name and address typed by hand. */
 export const WALK_IN_ID = 'walk-in';
 export const walkInClient: InvoiceToDetails = {
-  id: WALK_IN_ID, name: '', email: '', phone: '', street: '', postcode: '', city: '', btw: '', termsDays: 1,
+  id: WALK_IN_ID, name: '', email: '', phone: '', street: '', postcode: '', city: '', btw: '', termsDays: 14,
 };
 
 /**
@@ -264,8 +264,12 @@ export function toApiPayload(invoice: InvoiceFormValues) {
   const { from, to } = invoice;
   return {
     issue_date: invoice.issuedDate,
+    /* The term is the office's choice per invoice (default: the last one used); the ledger stores the date it yields. */
+    due_date: getInvoiceDueDate(invoice),
+    terms_days: to.termsDays,
     biller_name: from.name, biller_street: from.street, biller_postcode: from.postcode, biller_city: from.city,
     biller_email: from.email, biller_phone: from.phone, biller_kvk: from.kvk, biller_btw: from.btw, biller_iban: from.iban,
+    biller_website: from.website, biller_account_name: from.accountName,
     client_name: to.name, customer_id: to.id === WALK_IN_ID ? null : to.id,
     client_street: to.street, client_postcode: to.postcode, client_city: to.city,
     client_email: to.email, client_phone: to.phone, client_btw: to.btw,

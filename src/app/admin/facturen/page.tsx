@@ -21,6 +21,7 @@ export default async function FacturenPage() {
       id, 
       invoice_number, 
       issue_date, 
+      due_date,
       client_name, 
       client_city,
       client_email,
@@ -56,7 +57,11 @@ export default async function FacturenPage() {
    * and it is the only one.
    */
 
-  const { data, error } = await query;
+  let { data, error }: { data: unknown; error: { message: string } | null } = await query;
+  // Before migration 0144 there is no due_date column: read the list without it instead of showing an error.
+  if (error && /due_date/.test(error.message)) {
+    ({ data, error } = await supabase.from('sales_invoices').select(`id, invoice_number, issue_date, client_name, client_city, client_email, client_phone, total, status, technician:technician_id ( name ), job:job_id ( id, car_make, car_model, kenteken, service_type )`).order('created_at', { ascending: false }).limit(300));
+  }
 
   /* Same query, same role split — only the markup differs. */
   const rows = ((data ?? []) as unknown as Record<string, unknown>[]).map((r) => {

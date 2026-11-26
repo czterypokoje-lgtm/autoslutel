@@ -18,9 +18,8 @@ export function InvoiceDetails({ readOnlyIssueDate = false }: { readOnlyIssueDat
   const { control, register, getValues, setValue, watch } = useFormContext<InvoiceFormValues>();
   const { t } = usePreviewLanguage();
 
-  /* Read-only on purpose: the ledger computes the due date from the invoice
-     date and the customer's payment term (trigger kfc_post_invoice), so a
-     typed-in date would only disagree with the receivable. */
+  /* The due date is issue date + the term chosen here; the API stores that
+     date on the invoice and the ledger trigger uses it (0144). */
   const values = watch();
   const dueDate = getInvoiceDueDate(values);
 
@@ -74,10 +73,27 @@ export function InvoiceDetails({ readOnlyIssueDate = false }: { readOnlyIssueDat
           />
 
           <Field className="gap-1">
-            <FieldLabel className="text-xs">{t('Vervaldatum')}</FieldLabel>
-            <p className="text-muted-foreground flex h-9 items-center text-sm">
-              {format(parseISO(dueDate), 'PPP', { locale: nl })} · {t('betaaltermijn')} {values.to?.termsDays ?? 0} {t('dagen')}
-            </p>
+            <FieldLabel className="text-xs" htmlFor="terms-days">{t('Betaaltermijn')}</FieldLabel>
+            {/* The office picks the term per invoice; the due date follows. The last term used comes back as the default. */}
+            <Controller
+              control={control}
+              name="to.termsDays"
+              render={({ field }) => (
+                <InputGroup>
+                  <InputGroupInput
+                    id="terms-days" type="number" min={0} max={180} inputMode="numeric"
+                    value={Number.isFinite(field.value) ? field.value : ''}
+                    onChange={(e) => {
+                      const days = Math.max(0, Math.min(180, Math.floor(Number(e.target.value) || 0)));
+                      field.onChange(days);
+                      setValue('paymentDueDate', dueDateFor(getValues('issuedDate'), days));
+                    }}
+                  />
+                  <InputGroupAddon align="inline-end">{t('dagen')}</InputGroupAddon>
+                </InputGroup>
+              )}
+            />
+            <p className="text-muted-foreground text-xs">{t('Vervaldatum')}: {format(parseISO(dueDate), 'PPP', { locale: nl })}</p>
           </Field>
         </div>
       </FieldGroup>

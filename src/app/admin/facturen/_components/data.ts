@@ -1,4 +1,4 @@
-import { invoiceDay, invoiceDueDate, invoiceToday, PAYMENT_REMINDER_DAYS, PAYMENT_TERM_DAYS } from '@/lib/invoiceDue';
+import { invoiceDay, invoiceDueDate, invoiceDueDay, invoiceToday, PAYMENT_REMINDER_DAYS } from '@/lib/invoiceDue';
 
 /*
  * Row shape and money/date rules for the Studio facturen list. Every rule here
@@ -11,6 +11,7 @@ export interface InvoiceRow {
   id: string;
   invoice_number: string;
   issue_date: string;
+  due_date?: string | null;
   client_name: string;
   client_city: string | null;
   client_email: string | null;
@@ -42,8 +43,8 @@ export const invoiceFilters: { id: InvoiceFilter; label: string }[] = [
 ];
 
 /** Verzonden and past the payment term — the same test the old list used. */
-export const isOverdue = (row: { status: string; issue_date: string }) =>
-  row.status === 'verzonden' && invoiceDay(row.issue_date) + PAYMENT_TERM_DAYS < invoiceDay(invoiceToday());
+export const isOverdue = (row: { status: string; issue_date: string; due_date?: string | null }) =>
+  row.status === 'verzonden' && invoiceDueDay(row) < invoiceDay(invoiceToday());
 
 /** Which bucket a row sits in: the status column's accessor and the chip filter share it. */
 export function invoiceBucket(row: InvoiceRow): Exclude<InvoiceFilter, 'alle'> {
@@ -91,7 +92,7 @@ export const carOf = (row: InvoiceRow) =>
 export function dueSoonCount(rows: InvoiceRow[]) {
   const today = invoiceDay(invoiceToday());
   return rows.filter((row) => {
-    const days = invoiceDay(row.issue_date) + PAYMENT_TERM_DAYS - today;
+    const days = invoiceDueDay(row) - today;
     return row.status === 'verzonden' && days >= 0 && days <= PAYMENT_REMINDER_DAYS;
   }).length;
 }

@@ -31,9 +31,12 @@ export function Invoice({
   jobDraft,
   billing,
   initial,
+  termsDays,
 }: {
   customers: CustomerOption[];
   from: InvoiceFromDetails;
+  /** The payment term to start from (the office's last choice); a ledger customer keeps its own. */
+  termsDays?: number;
   initialCustomerId: string | null;
   /**
    * Autosleutel24: no kfc_customers ledger, so the client is free text with an
@@ -63,10 +66,11 @@ export function Invoice({
   const singleSave = isEdit || freeTextClient;
 
   const initialCustomer = customers.find((c) => c.id === initialCustomerId) ?? customers[0];
+  const walkIn = termsDays != null ? { ...walkInClient, termsDays } : walkInClient;
   const recipient = initialCustomer ? customerToDetails(initialCustomer) : billing ? {
-    ...walkInClient, name: billing.company, email: billing.email ?? '', phone: billing.phone ?? '',
+    ...walkIn, name: billing.company, email: billing.email ?? '', phone: billing.phone ?? '',
     street: billing.street ?? '', postcode: billing.postcode ?? '', city: billing.city ?? '', btw: billing.vat_number ?? '',
-  } : freeTextClient && jobDraft ? { ...walkInClient, name: jobDraft.customerName } : walkInClient;
+  } : freeTextClient && jobDraft ? { ...walkIn, name: jobDraft.customerName } : walkIn;
   const form = useForm<InvoiceFormValues>({
     defaultValues: initial ?? {
       ...defaultInvoiceValues(from, recipient),
