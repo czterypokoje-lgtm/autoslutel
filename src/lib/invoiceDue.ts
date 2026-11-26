@@ -1,4 +1,4 @@
-export const PAYMENT_TERM_DAYS = 14;
+export const PAYMENT_TERM_DAYS = 1;
 export const PAYMENT_REMINDER_DAYS = 3;
 const DAY_MS = 86_400_000;
 

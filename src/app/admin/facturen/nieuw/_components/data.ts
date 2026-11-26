@@ -95,7 +95,7 @@ export interface CustomerOption {
 /** A buyer without a ledger account: name and address typed by hand. */
 export const WALK_IN_ID = 'walk-in';
 export const walkInClient: InvoiceToDetails = {
-  id: WALK_IN_ID, name: '', email: '', phone: '', street: '', postcode: '', city: '', btw: '', termsDays: 14,
+  id: WALK_IN_ID, name: '', email: '', phone: '', street: '', postcode: '', city: '', btw: '', termsDays: 1,
 };
 
 /**

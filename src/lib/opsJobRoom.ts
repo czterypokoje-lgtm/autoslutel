@@ -1188,7 +1188,7 @@ export async function proposeInvoice(supabase: SupabaseClient, raw: unknown): Pr
 
   const name = safeGreetingName(String(contact.data.display_name));
   const greeting = name ? `Beste ${name}` : 'Beste klant';
-  const body = `${greeting}, hierbij de factuur ${snap.invoiceNumber} van Autosleutel24, totaal € ${euro(snap.total)}. Betalen kan binnen 14 dagen. Bedankt!`;
+  const body = `${greeting}, hierbij de factuur ${snap.invoiceNumber} van Autosleutel24, totaal € ${euro(snap.total)}. Graag binnen 1 dag betalen. Bedankt!`;
 
   return insertOutbox(supabase, {
     jobRoomId: room.data.id as string,
@@ -1197,7 +1197,7 @@ export async function proposeInvoice(supabase: SupabaseClient, raw: unknown): Pr
     kind: `invoice:${snap.invoiceNumber}:${snap.hash.slice(0, 12)}`,
     tier: 2,
     body,
-    allow: ['payment'], // the fixed invoice text says "Betalen kan binnen 14 dagen"; it has no link and no bank number
+    allow: ['payment'], // the fixed invoice text says "Graag binnen 1 dag betalen"; it has no link and no bank number
     attachment: {
       type: 'invoice_pdf',
       invoiceNumber: snap.invoiceNumber,
