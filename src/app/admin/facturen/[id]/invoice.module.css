@@ -127,9 +127,27 @@
 }
 
 @media print {
+  /*
+   * THE SECOND PAGE. The studio shell wraps every screen in `min-h-svh`, and
+   * on paper one svh is one sheet of A4 — so the invoice was followed by a
+   * reserved, empty page whatever its length. Nothing above the sheet may
+   * claim a height; the sheet alone decides how long the document is.
+   */
+  :global(html):has(.page),
+  :global(body):has(.page),
+  :global(body):has(.page) :global(.kfc-shell),
+  :global(body):has(.page) :global([data-slot='sidebar-wrapper']),
+  :global(body):has(.page) :global([data-slot='sidebar-inset']) {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
   .page {
     background: #fff;
     padding: 0;
+    gap: 0;
+    display: block;
+    min-height: 0;
   }
   .bar {
     display: none;
@@ -152,7 +170,8 @@
 @media print {
   .sheet {
     box-shadow: none;
-    padding: 24px 0;
+    /* The global @page has no margin, so the sheet carries its own; 0 left the text against the paper's edge. */
+    padding: 10mm 12mm;
     max-width: none;
   }
 }
@@ -418,4 +437,25 @@
   .totals {
     width: 100%;
   }
+}
+
+/*
+ * Print spacing, deliberately the LAST rules in this file.
+ *
+ * An earlier attempt put these in the @media print block halfway up and they
+ * did nothing: the base .top/.parties/.lines rules come after it, carry the
+ * same specificity, and therefore win. Measured with headless Chrome — the
+ * computed margin stayed 48px. Order is the whole fix, so keep this block at
+ * the bottom.
+ *
+ * Screen spacing is generous because there is room to scroll; on A4 that is
+ * what pushes an invoice onto a second page. A genuinely long invoice still
+ * flows over, as it must.
+ */
+@media print {
+  .top { margin-bottom: 26px; }
+  .parties { margin-bottom: 22px; }
+  .lines { margin-bottom: 18px; }
+  .lines tbody td { padding: 7px 0; }
+  .paidNote { margin-top: 10px; }
 }
