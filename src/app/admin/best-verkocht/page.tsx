@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { requireOfficeUser } from '@/lib/crmSession';
 import { sampleOrders, SHOPS, SOLD } from '@/lib/kfcSampleOrders';
+import { ordersForDashboard } from '@/lib/kfcOrders';
+import { CRM_PREVIEW } from '@/lib/supabase/env';
+import { IS_KEYFORCARS } from '@/config/install';
 import { findProfile } from '@/lib/productProfiles';
 import { Card, Notice, PageHead, Table, ui } from '../_ui';
 import { PreviewProductName, PreviewInput, PreviewText } from '../PreviewLanguage';
@@ -35,7 +38,9 @@ export default async function BestSellersPage({ searchParams }: { searchParams: 
   const start = new Date(`${dayKey(now)}T00:00:00Z`);
   start.setUTCDate(start.getUTCDate() - days + 1);
   const from = start.toISOString().slice(0, 10);
-  const sold = sampleOrders(now).filter(order => SOLD.includes(order.status) && (!shop || shop === order.shop) && dayKey(order.created) >= from);
+  /* Real orders from the ledger (own webshop via 0142, WooCommerce via the import); the generated samples only in preview mode. */
+  const orders = CRM_PREVIEW ? sampleOrders(now) : await ordersForDashboard(days).catch(() => [] as ReturnType<typeof sampleOrders>);
+  const sold = orders.filter(order => SOLD.includes(order.status) && (!shop || shop === order.shop) && dayKey(order.created) >= from);
   const ranked = rankProducts(sold, least).filter(product =>
     product.units >= minimum && (!category || category === (categoryBySku.get(product.sku) ?? 'other')) &&
     `${product.sku} ${product.name}`.toLowerCase().includes(search.toLowerCase()));
@@ -49,7 +54,11 @@ export default async function BestSellersPage({ searchParams }: { searchParams: 
   return (
     <div className={styles.page}>
       <PageHead title={<PreviewText>Best verkocht</PreviewText>} />
-      <Notice><PreviewText>Voorbeeldbestellingen uit de drie webshops. Alleen producten met verkoop in de gekozen periode tellen mee.</PreviewText></Notice>
+      <Notice>{CRM_PREVIEW
+        ? <PreviewText>Voorbeeldbestellingen uit de drie webshops. Alleen producten met verkoop in de gekozen periode tellen mee.</PreviewText>
+        : IS_KEYFORCARS
+          ? <PreviewText>Betaalde bestellingen uit de webshops. Alleen producten met verkoop in de gekozen periode tellen mee.</PreviewText>
+          : <PreviewText>Betaalde bestellingen uit de webshop autosleutel24.nl. Alleen producten met verkoop in de gekozen periode tellen mee.</PreviewText>}</Notice>
       <div className={styles.orderFilters}>
         <nav className={styles.periods} aria-label="Periode">
           {periods.map(period => <Link key={period.days} href={href(period.days, least)} aria-current={days === period.days ? 'true' : undefined} className={days === period.days ? styles.periodOn : styles.period}><PreviewText>{period.label}</PreviewText></Link>)}
