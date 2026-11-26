@@ -7,8 +7,22 @@
  */
 @media print {
   :global(body):has(.page) :global(aside),
-  :global(body):has(.page) :global(nav[aria-label='Snelmenu']) {
+  :global(body):has(.page) :global(nav[aria-label='Snelmenu']),
+  :global(body):has(.page) :global(header.kfc-toolbar),
+  :global(body):has(.page) :global([data-slot='sidebar']),
+  :global(body):has(.page) :global([data-slot='sidebar-rail']),
+  :global(body):has(.page) :global(button[aria-label='Teamassistent openen']) {
     display: none !important;
+  }
+  /* The studio shell's workspace frame must not clip or inset the sheet on paper. */
+  :global(body):has(.page) :global(.kfc-workspace) {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    min-height: 0 !important;
+    overflow: visible !important;
   }
 }
 
